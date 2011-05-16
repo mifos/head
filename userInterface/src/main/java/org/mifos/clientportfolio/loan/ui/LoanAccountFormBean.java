@@ -23,6 +23,7 @@ package org.mifos.clientportfolio.loan.ui;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
@@ -33,6 +34,7 @@ import org.joda.time.LocalDate;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanDisbursementDateValidationServiceFacade;
 import org.mifos.clientportfolio.newloan.applicationservice.VariableInstallmentWithFeeValidationResult;
 import org.mifos.clientportfolio.newloan.applicationservice.VariableInstallmentsFeeValidationServiceFacade;
+import org.mifos.dto.domain.FeeDto;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.mifos.platform.validations.ErrorEntry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,6 +125,8 @@ public class LoanAccountFormBean implements Serializable {
     private Integer[] clientLoanPurposeId = new Integer[] {0};
     
     // fees
+    private List<FeeDto> defaultFees;
+    private List<FeeDto> additionalFees;
     private Boolean[] defaultFeeSelected;
     private Number[] defaultFeeAmountOrRate;
     private Number[] defaultFeeId;
@@ -310,46 +314,8 @@ public class LoanAccountFormBean implements Serializable {
             errors.rejectValue("loanPurposeId", "loanAccountFormBean.PurposeOfLoan.invalid", "Please specify loan purpose.");
         }
         
-        // validate additional fees not duplicated
-        Set<Integer> feeSet = new HashSet<Integer>();
-        if (this.selectedFeeId != null) {
-            for (Number feeId : this.selectedFeeId) {
-                if (feeId != null) {
-                    boolean noDuplicateExists = feeSet.add(feeId.intValue());
-                    if (!noDuplicateExists) {
-                        errors.rejectValue("selectedFeeId", "loanAccountFormBean.additionalfees.invalid", "Multiple instances of the same fee are not allowed.");
-                        break;
-                    }
-                }
-            }
-        }
-
-        int additionalFeeIndex = 0;
-        if (this.selectedFeeId != null) {
-            for (Number feeId : this.selectedFeeId) {
-                if (feeId != null) {
-                    Number amountOrRate = this.selectedFeeAmount[additionalFeeIndex];
-                    if (amountOrRate == null) {
-                        errors.rejectValue("selectedFeeId", "loanAccountFormBean.additionalfees.amountOrRate.invalid", "Please specify fee amount for additional fee " + Integer.valueOf(additionalFeeIndex+1).toString());
-                    }
-                }
-                additionalFeeIndex++;
-            }
-        }
-        
-        int defaultFeeIndex = 0;
-        if (this.defaultFeeId != null) {
-            for (Number feeId : this.defaultFeeId) {
-                if (feeId != null) {
-                    Number amountOrRate = this.defaultFeeAmountOrRate[defaultFeeIndex];
-                    if (amountOrRate == null) {
-                        errors.rejectValue("defaultFeeId", "loanAccountFormBean.defaultfees.amountOrRate.invalid", "Please specify fee amount for administrative fee " + Integer.valueOf(defaultFeeIndex+1).toString());
-                    }
-                }
-                defaultFeeIndex++;
-            }
-        }
-        
+        validateAdministrativeAndAdditionalFees(errors);
+                
         if (this.repaymentScheduleIndependentOfCustomerMeeting) {
             if (isInvalidRecurringFrequency(this.repaymentRecursEvery)) {
                 errors.rejectValue("repaymentRecursEvery", "loanAccountFormBean.repaymentDay.recursEvery.invalid", "Please specify a valid recurring frequency for repayment day.");
@@ -396,6 +362,137 @@ public class LoanAccountFormBean implements Serializable {
                 messageContext.addMessage(builder.build());
             }
         }
+    }
+
+    private void validateAdministrativeAndAdditionalFees(Errors errors) {
+        Set<Integer> feeSet = new HashSet<Integer>();
+        if (this.selectedFeeId != null) {
+            boolean noDuplicateExists = true;
+            for (Number feeId : this.selectedFeeId) {
+                if (feeId != null) {
+                    noDuplicateExists = feeSet.add(feeId.intValue());
+                    if (!noDuplicateExists) {
+                        errors.rejectValue("selectedFeeId", "loanAccountFormBean.additionalfees.invalid", "Multiple instances of the same fee are not allowed.");
+                        break;
+                    }
+                }
+            }
+        }
+        
+        int defaultFeeIndex = 0;
+        if (this.defaultFeeId != null) {
+            for (Number feeId : this.defaultFeeId) {
+                if (feeId != null) {
+
+                    Boolean feeSelectedForRemoval = this.defaultFeeSelected[defaultFeeIndex];
+                    if (feeSelectedForRemoval == null || !feeSelectedForRemoval) {
+
+                        Number amountOrRate = this.defaultFeeAmountOrRate[defaultFeeIndex];
+                        if (amountOrRate == null) {
+                            errors.rejectValue(
+                                    "defaultFeeId",
+                                    "loanAccountFormBean.defaultfees.amountOrRate.invalid",
+                                    "Please specify fee amount for administrative fee "
+                                            + Integer.valueOf(defaultFeeIndex + 1).toString());
+                        } else {
+                            FeeDto selectedFee = findDefaultFee(feeId.intValue());
+                            if (selectedFee.isRateBasedFee()) {
+                                // maybe check based on 'interest rate' decimals?
+                            } else {
+                                BigDecimal feeAmountAsDecimal = new BigDecimal(amountOrRate.toString())
+                                        .stripTrailingZeros();
+                                int places = feeAmountAsDecimal.scale();
+                                if (places > this.digitsAfterDecimalForMonetaryAmounts) {
+                                    errors.rejectValue(
+                                            "selectedFeeId",
+                                            "loanAccountFormBean.defaultfees.amountOrRate.digits.after.decimal.invalid",
+                                            new Object[] { Integer.valueOf(defaultFeeIndex + 1),
+                                                    this.digitsAfterDecimalForMonetaryAmounts },
+                                            "Please specify fee amount for additional fee "
+                                                    + Integer.valueOf(defaultFeeIndex + 1).toString());
+                                }
+
+                                int digitsBefore = feeAmountAsDecimal.toBigInteger().toString().length();
+                                if (digitsBefore > this.digitsBeforeDecimalForMonetaryAmounts) {
+                                    errors.rejectValue(
+                                            "selectedFeeId",
+                                            "loanAccountFormBean.defaultfees.amountOrRate.digits.before.decimal.invalid",
+                                            new Object[] { Integer.valueOf(defaultFeeIndex + 1),
+                                                    this.digitsAfterDecimalForMonetaryAmounts },
+                                            "Please specify fee amount for additional fee "
+                                                    + Integer.valueOf(defaultFeeIndex + 1).toString());
+                                }
+
+                            }
+                        }
+                    }
+                }
+                defaultFeeIndex++;
+            }
+        }
+
+        int additionalFeeIndex = 0;
+        if (this.selectedFeeId != null) {
+            for (Number feeId : this.selectedFeeId) {
+                if (feeId != null) {
+                    Number amountOrRate = this.selectedFeeAmount[additionalFeeIndex];
+                    if (amountOrRate == null) {
+                        errors.rejectValue("selectedFeeId", "loanAccountFormBean.additionalfees.amountOrRate.invalid", "Please specify fee amount for additional fee " + Integer.valueOf(additionalFeeIndex+1).toString());
+                    } else {
+                        FeeDto selectedFee = findAdditionalFee(feeId.intValue());
+                        if (selectedFee.isRateBasedFee()) {
+                            // maybe check based on 'interest rate' decimals?
+                        } else {
+                            BigDecimal feeAmountAsDecimal = new BigDecimal(amountOrRate.toString())
+                                    .stripTrailingZeros();
+                            int places = feeAmountAsDecimal.scale();
+                            if (places > this.digitsAfterDecimalForMonetaryAmounts) {
+                                errors.rejectValue(
+                                        "selectedFeeId",
+                                        "loanAccountFormBean.additionalfees.amountOrRate.digits.after.decimal.invalid",
+                                        new Object[] { Integer.valueOf(additionalFeeIndex + 1),
+                                                this.digitsAfterDecimalForMonetaryAmounts },
+                                        "Please specify fee amount for additional fee "
+                                                + Integer.valueOf(additionalFeeIndex + 1).toString());
+                            }
+
+                            int digitsBefore = feeAmountAsDecimal.toBigInteger().toString().length();
+                            if (digitsBefore > this.digitsBeforeDecimalForMonetaryAmounts) {
+                                errors.rejectValue(
+                                        "selectedFeeId",
+                                        "loanAccountFormBean.additionalfees.amountOrRate.digits.before.decimal.invalid",
+                                        new Object[] { Integer.valueOf(additionalFeeIndex + 1),
+                                                this.digitsAfterDecimalForMonetaryAmounts },
+                                        "Please specify fee amount for additional fee "
+                                                + Integer.valueOf(additionalFeeIndex + 1).toString());
+                            }
+                        }
+                    }           
+                    
+                }
+                additionalFeeIndex++;
+            }
+        }
+    }
+
+    private FeeDto findDefaultFee(Integer feeId) {
+        FeeDto found = null;
+        for (FeeDto fee :this.defaultFees) {
+            if (fee.getId().equals(feeId.toString())) {
+                found = fee;
+            }
+        }
+        return found;
+    }
+
+    private FeeDto findAdditionalFee(Integer feeId) {
+        FeeDto found = null;
+        for (FeeDto fee :this.additionalFees) {
+            if (fee.getId().equals(feeId.toString())) {
+                found = fee;
+            }
+        }
+        return found;
     }
 
     private boolean isInvalidDayOfMonthEntered() {
@@ -1022,5 +1119,21 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setExternalIdMandatory(boolean externalIdMandatory) {
         this.externalIdMandatory = externalIdMandatory;
+    }
+    
+    public List<FeeDto> getDefaultFees() {
+        return defaultFees;
+    }
+
+    public void setDefaultFees(List<FeeDto> defaultFees) {
+        this.defaultFees = defaultFees;
+    }
+
+    public List<FeeDto> getAdditionalFees() {
+        return additionalFees;
+    }
+
+    public void setAdditionalFees(List<FeeDto> additionalFees) {
+        this.additionalFees = additionalFees;
     }
 }
