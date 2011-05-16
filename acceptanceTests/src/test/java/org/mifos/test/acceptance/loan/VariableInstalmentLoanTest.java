@@ -20,7 +20,6 @@
 
 package org.mifos.test.acceptance.loan;
 
-
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.admin.FeeTestHelper;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -40,7 +39,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(sequential = true, groups = {"loanproduct", "acceptance", "ui"})
@@ -82,7 +80,7 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=true)
+    @Test(enabled=false)
     public void verifyRepaymentScheduleField() throws Exception {
         int noOfInstallments = 5;
         int loanAmount = 1000;
@@ -112,7 +110,7 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=true)
+    @Test(enabled=false)
     public void verifyInvalidFees() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(5, 1000, 20);
         applicationDatabaseOperation.updateLSIM(1);
@@ -159,4 +157,3 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
         return accountSearchParameters;
     }
 }
-
