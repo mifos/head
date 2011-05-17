@@ -273,6 +273,6 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "9999");
         loanAccountEntryPage.selectGLIMClients(1, "Stu1233266309851 Client1233266309851 Client Id: 0002-000000013", "99999");
         loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "99999");
-        loanAccountEntryPage.checkTotalAmount("209997");
+        loanAccountEntryPage.checkTotalAmount("209997.0");
     }
 }
