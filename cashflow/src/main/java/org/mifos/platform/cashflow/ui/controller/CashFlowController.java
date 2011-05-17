@@ -70,7 +70,7 @@ public class CashFlowController {
         CashFlowBoundary cashFlowBoundary = cashFlowService.getCashFlowBoundary(cashFlowSettings.getFirstInstallmentDueDate(), cashFlowSettings.getLastInstallmentDueDate());
         
         CashFlowDetail cashFlowDetail = cashFlowService.cashFlowFor(cashFlowBoundary.getStartYear(), cashFlowBoundary.getStartMonth(), cashFlowBoundary.getNumberOfMonths());
-        return new CashFlowForm(cashFlowDetail, cashFlowSettings.isCaptureCapitalLiabilityInfo(), cashFlowSettings.getLoanAmount(), cashFlowSettings.getIndebtednessRatio(), Locale.getDefault());
+        return new CashFlowForm(cashFlowDetail, cashFlowSettings.isCaptureCapitalLiabilityInfo(), cashFlowSettings.getLoanAmount(), cashFlowSettings.getIndebtednessRatio(), cashFlowSettings.getMifosLocale());
     }
     
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
