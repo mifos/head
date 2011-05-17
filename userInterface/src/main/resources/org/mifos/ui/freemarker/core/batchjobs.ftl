@@ -95,20 +95,19 @@
                     <p class="font15"><span class="orangeheading">[@spring.message "systemAdministration.batchjobs.scheduledTasks" /]</span></p>
                 </div>
                 <div class="span-21">
-                    <div class="span-21 paddingLeft bglightblue">
-                	   <span class="span-1">
-                		  <input id="selectAll1" type="checkbox" name="selectAll1" onchange="javascript:selectAll(this)"/>
-            		  </span>
-            		  <span class="span-9">
-                		  <strong>[@spring.message "systemAdministration.batchjobs.scheduledTasks"/]</strong>
-                	   </span>
-            	    </div>
-                	<div class="clear">&nbsp;</div>
+                    <span class="span-1">
+                        <input id="selectAll1" type="checkbox" name="selectAll1" onchange="javascript:selectAll(this)"/>
+                    </span>
+                    <span class="span-9">
+                        [@spring.message "systemAdministration.batchjobs.selectAll"/]
+                    </span>
+                    <div class="clear">&nbsp;</div>
                     [#list model.batchjobs as batchjobs]
                         <div class="span-21 paddingLeft">
                             <span class="span-1">
                                 <input id="${batchjobs.name}" type="checkbox" name="ONDEMAND" value="${batchjobs.name}" />
                             </span>
+                            <span class="span-1">${batchjobs_index + 1}.</span>
                             <span class="span-9"><strong>${batchjobs.name}</strong></span>
                             <!-- Secific task pausing to be implemented in the future.
                             <span class="span-8">
@@ -122,7 +121,7 @@
                             -->
                         </div>
                         <div class="span-21">
-                            <span class="span-1">&nbsp;</span>
+                            <span class="span-2">&nbsp;</span>
                             <span class="span-8">
                                 [@spring.message "systemAdministration.batchjobs.nextStart" /]:&nbsp;
                                 [#if batchjobs.nextStartTime?datetime != model.date0?datetime]
@@ -138,7 +137,7 @@
                             </span>
                         </div>
                         <div class="span-21">
-                            <span class="span-1">&nbsp;</span>
+                            <span class="span-2">&nbsp;</span>
                             <span class="span-8">
                                 [@spring.message "systemAdministration.batchjobs.previousRunStart" /]:&nbsp;
                                 [#if batchjobs.lastStartTime?datetime != model.date0?datetime]
@@ -162,7 +161,7 @@
                         </div>
                         [#if batchjobs.lastSuccessfulRun?datetime != batchjobs.lastStartTime?datetime]
                             <div class="span-21">
-                                <span class="span-1">&nbsp;</span>
+                                <span class="span-2">&nbsp;</span>
                                 <span class="span-8">
                                     [@spring.message "systemAdministration.batchjobs.mostRecentSuccessfulRun" /]:&nbsp;
                                     [#if batchjobs.lastSuccessfulRun?datetime != model.date0?datetime]
@@ -174,7 +173,7 @@
                             </div>
                         [/#if]
                         <div class="span-21">
-                            <span class="span-1">&nbsp;</span>
+                            <span class="span-2">&nbsp;</span>
                             <span class="span-8">
                                 [@spring.message "systemAdministration.batchjobs.taskType" /]:&nbsp;
                                 [#if batchjobs.taskType == ""]
