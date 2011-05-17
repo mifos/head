@@ -55,10 +55,6 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
     public void verifyEditScheduleDisabled() {
         Assert.assertTrue(selenium.isElementPresent(editScheduleButton));
     }
-    
-    public void verifyDueDate(int installement, String dueDate) {
-        Assert.assertEquals(selenium.getText("//table[@id='installments']//tbody//tr[" + (installement ) + "]/td[2]"), dueDate);
-    }
 
     public CreateLoanAccountConfirmationPage submit() {
         selenium.click("_eventId_submit");
@@ -119,11 +115,5 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
         selenium.click("_eventId_cancel");
         waitForPageToLoad();
         return new ClientsAndAccountsHomepage(selenium);
-    }
-    
-    public CreateLoanAccountEntryPage editAccountInformation() {
-        selenium.click("createloanpreview.button.edit");
-        waitForPageToLoad();
-        return new CreateLoanAccountEntryPage(selenium);
     }
 }

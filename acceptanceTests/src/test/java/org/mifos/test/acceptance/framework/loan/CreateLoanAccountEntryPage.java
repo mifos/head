@@ -331,7 +331,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         return this;
     }
 
-    public void setDisbursalDate(String dd, String mm, String yy) {
+    private void setDisbursalDate(String dd, String mm, String yy) {
         selenium.type("disbursementDateDD",dd);
         selenium.fireEvent("name=disbursementDateDD", "blur");
 
@@ -341,20 +341,11 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         selenium.type("disbursementDateYY",yy);
         selenium.fireEvent("name=disbursementDateYY", "blur");
     }
-
-    public void setInterestRate(String interestRate) {
-        selenium.type("loancreationdetails.input.interestRate", interestRate);
-    }
     
     public CreateLoanAccountCashFlowPage clickContinueToNavigateToCashFlowPage() {
         selenium.click(continueButton);
         selenium.waitForPageToLoad("3000");
         return new CreateLoanAccountCashFlowPage(selenium);
-    }
-
-    public CreateLoanAccountEntryPage setInstallments(int noOfInstallment) {
-        typeText("numberOfInstallments",String.valueOf(noOfInstallment));
-        return this;
     }
     
     public CreateLoanAccountEntryPage setInstallments(String noOfInstallment) {
@@ -440,10 +431,6 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     public String getLoanAmount() {
         return selenium.getValue("loancreationdetails.input.sumLoanAmount");
     }
-
-    public void verifyNoError(String error) {
-        Assert.assertFalse(selenium.isElementPresent("//span[@id='loancreationdetails.error.message']/div/ul/li/span[text()='"+error+"']"));
-    }
     
     public void verifyError(String error) {
         Assert.assertTrue(selenium.isElementPresent("//span[@id='loancreationdetails.error.message']/div/ul/li/span[text()='"+error+"']"));
@@ -464,9 +451,4 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     public void setAmount(String amount) {
         selenium.type("loancreationdetails.input.sumLoanAmount", amount);
     }
-    
-    public void verifyDisbsursalDate(String dd, String mm, String yyyy) {
-        Assert.assertEquals(selenium.getValue("disbursementDateDD") + "-" + selenium.getValue("disbursementDateMM") + "-" + selenium.getValue("disbursementDateYY") , dd+ "-" +mm+ "-"+yyyy);
-    }
-    
 }

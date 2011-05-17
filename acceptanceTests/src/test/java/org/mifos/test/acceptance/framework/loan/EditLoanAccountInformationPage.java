@@ -74,10 +74,6 @@ public class EditLoanAccountInformationPage extends MifosPage {
         }
         return this;
     }
-
-    public void setAmount(String amount) {
-        selenium.type("editLoanAccount.input.loanAmount", amount);
-    }
     
     public void verifyGLIMClient(int clientNumber, String expectedClientName, String loanAmount, String loanPurpose){
         Assert.assertEquals(selenium.getText("GLIMLoanAccounts.clientName." + clientNumber), expectedClientName);
