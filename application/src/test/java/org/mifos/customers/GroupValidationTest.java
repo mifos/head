@@ -49,6 +49,7 @@ import org.mifos.domain.builders.PersonnelBuilder;
 import org.mifos.domain.builders.SavingsAccountBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.service.BusinessRuleException;
 
 public class GroupValidationTest {
 
@@ -146,8 +147,8 @@ public class GroupValidationTest {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void givenGroupWithNullMeetingShouldThrowIllegalArgumentException() {
+    @Test(expected = BusinessRuleException.class)
+    public void givenGroupWithNullMeetingShouldThrowBusinessRuleException() {
         OfficeBO office = new OfficeBuilder().build();
         PersonnelBO loanOfficer = new PersonnelBuilder().asLoanOfficer().build();
         group = new GroupBuilder().withName("group-On-branch").withOffice(office).withLoanOfficer(loanOfficer).withMeeting(null).buildAsTopOfHierarchy();

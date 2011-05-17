@@ -451,7 +451,7 @@ public class PersonAction extends SearchAction {
 
             return mapping.findForward(ActionForwards.update_success.toString());
         } catch (BusinessRuleException e) {
-            throw new PersonnelException(e.getMessageKey(), e);
+            throw new PersonnelException(e.getMessageKey(), e.getMessageValues());
         }
     }
 
