@@ -98,6 +98,7 @@
     <script type="text/javascript">
     	function calculateTotalLoanAmount() {
     		$(document).ready(function () {
+    		    var decimalPlaces = ${loanAccountFormBean.digitsAfterDecimalForMonetaryAmounts};
 				var total = 0;
 				$('.amountfield').each(function(index) {
 					var fieldamount = parseFloat($(this).val());
@@ -111,7 +112,7 @@
 					});	
   				});
   				
-				$('#glimsumloanamount').val(total);
+				$('#glimsumloanamount').val(total.toFixed(decimalPlaces));
     		});
     	}
     
