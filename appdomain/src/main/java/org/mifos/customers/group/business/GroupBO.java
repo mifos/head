@@ -113,7 +113,9 @@ public class GroupBO extends CustomerBO {
         Assert.notNull(customerStatus, "customerStatus cannot be null");
 
         if (customerStatus.isGroupActive()) {
-            throw new BusinessRuleException(GroupConstants.MEETING_REQUIRED);
+            if (meeting == null) {
+                throw new BusinessRuleException(GroupConstants.MEETING_REQUIRED);
+            }
         }
 
         GroupBO group = new GroupBO(userContext, groupName, formedBy, meeting, loanOfficer, office, customerStatus, mfiJoiningDate, activationDate);
