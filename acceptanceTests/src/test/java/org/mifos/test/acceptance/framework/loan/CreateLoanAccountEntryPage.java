@@ -348,8 +348,8 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         return new CreateLoanAccountCashFlowPage(selenium);
     }
     
-    public CreateLoanAccountEntryPage setInstallments(String noOfInstallment) {
-        typeText("numberOfInstallments",noOfInstallment);
+    public CreateLoanAccountEntryPage setInstallments(int noOfInstallment) {
+        typeText("numberOfInstallments", String.valueOf(noOfInstallment));
         return this;
     }
 
