@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -44,5 +45,8 @@ public class CreateLoanAccountConfirmationPage extends MifosPage {
         loanAccountPage.verifyLoanDetails(submitAccountParameters, new EditLoanAccountInformationParameters());
       return loanAccountPage;
     }
-
+    
+    public void verifyTextPresent(String expectedText, String errorMessage) {
+        Assert.assertTrue(selenium.isTextPresent(expectedText), errorMessage);
+    }
 }

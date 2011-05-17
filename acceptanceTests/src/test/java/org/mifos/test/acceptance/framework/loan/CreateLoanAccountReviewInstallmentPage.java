@@ -412,6 +412,10 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         String result = selenium.getText("//table[@id='installments']//tbody//tr[" + (row ) + "]/td[" + column + "]");
         Assert.assertEquals(result, value, "expected was: " + result + " but was: " + value);
     }
+    
+    public void verifyDueDate(int installement, String dueDate) {
+        Assert.assertEquals(selenium.getText("//table[@id='installments']//tbody//tr[" + (installement ) + "]/td[2]"), dueDate);
+    }
 
     private void setInstallmentTotal(int installment, String total) {
         selenium.type("installmentAmounts["+ (installment-1) +"]",total);
