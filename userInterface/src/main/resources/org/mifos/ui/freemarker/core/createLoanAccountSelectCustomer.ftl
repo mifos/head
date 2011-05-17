@@ -49,6 +49,12 @@
 <br/>
 <div class="search-results">
 <table id="customerSearchResults" class="datatable">
+	<thead>
+		<tr>
+			<th style="display: none;">Index</th>
+			<th style="display: none;">Customer</th>
+		</tr>
+	</thead>
     <tbody>
         [#list customerSearchResultsDto.pagedDetails as customer]
             <tr>
