@@ -22,6 +22,7 @@ package org.mifos.dto.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Locale;
 
 import org.joda.time.DateTime;
 
@@ -35,15 +36,17 @@ public class CashFlowDto implements Serializable {
     private final BigDecimal loanAmount;
     private final Double indebtednessRatio;
     private final Double repaymentCapacity;
+    private final Locale mifosLocale;
 
     public CashFlowDto(DateTime firstInstallmentDueDate, DateTime lastInstallmentDueDate,
-            boolean captureCapitalLiabilityInfo, BigDecimal loanAmount, Double indebtednessRatio, Double repaymentCapacity) {
+            boolean captureCapitalLiabilityInfo, BigDecimal loanAmount, Double indebtednessRatio, Double repaymentCapacity, Locale mifosLocale) {
         this.firstInstallmentDueDate = firstInstallmentDueDate;
         this.lastInstallmentDueDate = lastInstallmentDueDate;
         this.captureCapitalLiabilityInfo = captureCapitalLiabilityInfo;
         this.loanAmount = loanAmount;
         this.indebtednessRatio = indebtednessRatio;
         this.repaymentCapacity = repaymentCapacity;
+        this.mifosLocale = mifosLocale;
     }
 
     public DateTime getFirstInstallmentDueDate() {
@@ -68,5 +71,9 @@ public class CashFlowDto implements Serializable {
     
     public Double getRepaymentCapacity() {
         return repaymentCapacity;
+    }
+    
+    public Locale getMifosLocale() {
+        return mifosLocale;
     }
 }

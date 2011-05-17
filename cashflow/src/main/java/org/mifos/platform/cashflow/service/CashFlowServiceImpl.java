@@ -45,7 +45,6 @@ public class CashFlowServiceImpl implements CashFlowService {
 
     @Override
     public Integer save(CashFlowDetail cashFlowDetail) {
-        // TODO: service side validation
         return cashFlowDao.create(mapToCashFlow(cashFlowDetail));
     }
 
