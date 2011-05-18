@@ -237,9 +237,13 @@ $(function() {
 		[/#list]
 	</tbody>
 </table>
-<form action="${flowExecutionUrl}" method="post">
-	[@form.submitButton label="widget.form.buttonLabel.editcashflowinfo" id="createloanpreview.button.edit.cashflow" webflowEvent="editCashflow" /]
-</form>
+	[#if loanProductReferenceData.variableInstallmentsAllowed]
+		<input type="submit" id="previewBtn" class="submit" style="margin-left: 0px;" name="_eventId_editCashflow" value='[@spring.message "widget.form.buttonLabel.editcashflowinfo" /]' />
+	[#else]
+	<form action="${flowExecutionUrl}" method="post">
+		<input type="submit" id="previewBtn" class="submit" style="margin-left: 0px;" name="_eventId_editCashflow" value='[@spring.message "widget.form.buttonLabel.editcashflowinfo" /]' />
+	</form>
+	[/#if]
 [/#if]
 
 [#if loanProductReferenceData.variableInstallmentsAllowed]
