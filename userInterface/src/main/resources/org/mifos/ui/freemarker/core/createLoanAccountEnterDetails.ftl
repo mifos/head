@@ -76,7 +76,11 @@
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "productSummary.variabeInstallments.maxGap"/]</div>
+        [#if loanProductReferenceData.maxGapInDays??]
         <div class="value">${loanProductReferenceData.maxGapInDays?string.number}<span>&nbsp;[@spring.message "productSummary.variabeInstallments.days"/]</span></div>
+        [#else]
+		<div class="value">[@spring.message "productSummary.variabeInstallments.minInstallmentAmount.notapplicable"/]</div>        
+        [/#if]
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "productSummary.variabeInstallments.minInstallmentAmount"/]</div>
