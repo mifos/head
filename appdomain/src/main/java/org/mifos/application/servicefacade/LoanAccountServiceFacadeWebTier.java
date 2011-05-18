@@ -20,24 +20,53 @@
 
 package org.mifos.application.servicefacade;
 
+import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.framework.util.CollectionUtils.collect;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.api.AccountService;
-import org.mifos.accounts.business.*;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountFlagMapping;
+import org.mifos.accounts.business.AccountNotesEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.business.AccountStateFlagEntity;
+import org.mifos.accounts.business.AccountStateMachines;
+import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
+import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
-import org.mifos.accounts.loan.business.*;
+import org.mifos.accounts.loan.business.LoanActivityEntity;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.RepaymentResultsHolder;
+import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.productdefinition.business.*;
+import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.LoanAmountOption;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
+import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
@@ -77,9 +106,47 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
-import org.mifos.dto.domain.*;
+import org.mifos.dto.domain.AccountPaymentParametersDto;
+import org.mifos.dto.domain.AccountStatusDto;
+import org.mifos.dto.domain.AccountUpdateStatus;
+import org.mifos.dto.domain.CenterCreation;
+import org.mifos.dto.domain.CreateAccountFeeDto;
+import org.mifos.dto.domain.CreateAccountNote;
+import org.mifos.dto.domain.CreateLoanRequest;
+import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.InstallmentDetailsDto;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
+import org.mifos.dto.domain.LoanActivityDto;
+import org.mifos.dto.domain.LoanInstallmentDetailsDto;
+import org.mifos.dto.domain.LoanPaymentDto;
+import org.mifos.dto.domain.MeetingDto;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.PaymentTypeDto;
-import org.mifos.dto.screen.*;
+import org.mifos.dto.domain.PersonnelDto;
+import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.dto.domain.SurveyDto;
+import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.AccountFeesDto;
+import org.mifos.dto.screen.ChangeAccountStatusDto;
+import org.mifos.dto.screen.ListElement;
+import org.mifos.dto.screen.LoanAccountDetailDto;
+import org.mifos.dto.screen.LoanAccountInfoDto;
+import org.mifos.dto.screen.LoanAccountMeetingDto;
+import org.mifos.dto.screen.LoanCreationGlimDto;
+import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
+import org.mifos.dto.screen.LoanCreationPreviewDto;
+import org.mifos.dto.screen.LoanCreationProductDetailsDto;
+import org.mifos.dto.screen.LoanCreationResultDto;
+import org.mifos.dto.screen.LoanDisbursalDto;
+import org.mifos.dto.screen.LoanInformationDto;
+import org.mifos.dto.screen.LoanPerformanceHistoryDto;
+import org.mifos.dto.screen.LoanScheduledInstallmentDto;
+import org.mifos.dto.screen.LoanSummaryDto;
+import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
+import org.mifos.dto.screen.RepayLoanDto;
+import org.mifos.dto.screen.RepayLoanInfoDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
@@ -101,13 +168,6 @@ import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.math.BigDecimal;
-import java.util.*;
-
-import static org.apache.commons.lang.StringUtils.EMPTY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.framework.util.CollectionUtils.collect;
 
 public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade {
 
@@ -282,7 +342,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         final MeetingBO customerMeeting = customer.getCustomerMeetingValue();
         for (LoanOfferingBO loanProduct : loanOfferings) {
-            if (MeetingBO.isMeetingMatched(customerMeeting, loanProduct.getLoanOfferingMeetingValue())) {
+            if (loanProduct.getLoanOfferingMeetingValue().hasSameRecurrenceAs(customerMeeting)) {
                 applicableLoanProducts.add(loanProduct);
             }
         }
@@ -1082,28 +1142,32 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(mifosUser);
 
+        PaymentTypeDto paymentType = null;
         try {
-            PaymentTypeDto paymentType = null;
             for (org.mifos.dto.domain.PaymentTypeDto paymentTypeDto : accountService.getLoanDisbursementTypes()) {
                 if (paymentTypeDto.getValue() == paymentTypeId) {
                     paymentType = paymentTypeDto;
                 }
             }
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
 
-            if (paymentType == null) {
-                throw new MifosRuntimeException("Expected loan PaymentTypeDto not found for id: " + paymentTypeId);
-            }
+        if (paymentType == null) {
+            throw new MifosRuntimeException("Expected loan PaymentTypeDto not found for id: " + paymentTypeId);
+        }
 
-            loanDisbursement.setPaymentType(paymentType);
+        loanDisbursement.setPaymentType(paymentType);
 
-            Date trxnDate = DateUtils.getDateWithoutTimeStamp(loanDisbursement.getPaymentDate().toDateMidnight().toDate());
-            if (!isTrxnDateValid(Integer.valueOf(loanDisbursement.getAccountId()), trxnDate)) {
-                throw new BusinessRuleException("errors.invalidTxndate");
-            }
+        Date trxnDate = DateUtils.getDateWithoutTimeStamp(loanDisbursement.getPaymentDate().toDateMidnight().toDate());
+        if (!isTrxnDateValid(Integer.valueOf(loanDisbursement.getAccountId()), trxnDate)) {
+            throw new BusinessRuleException("errors.invalidTxndate");
+        }
 
-            List<AccountPaymentParametersDto> loanDisbursements = new ArrayList<AccountPaymentParametersDto>();
-            loanDisbursements.add(loanDisbursement);
+        List<AccountPaymentParametersDto> loanDisbursements = new ArrayList<AccountPaymentParametersDto>();
+        loanDisbursements.add(loanDisbursement);
 
+        try {
             accountService.disburseLoans(loanDisbursements, userContext.getPreferredLocale());
         } catch (Exception e) {
             throw new MifosRuntimeException(e.getMessage(), e);

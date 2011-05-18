@@ -2388,14 +2388,11 @@ public class LoanBO extends AccountBO {
             final Date disbursementDate) throws AccountException {
         if (customerMeeting != null
                 && loanOfferingMeeting != null
-                && customerMeeting.getMeetingDetails().getRecurrenceType().getRecurrenceId().equals(
-                        loanOfferingMeeting.getMeetingDetails().getRecurrenceType().getRecurrenceId())
-                && isMultiple(loanOfferingMeeting.getMeetingDetails().getRecurAfter(), customerMeeting
-                        .getMeetingDetails().getRecurAfter())) {
+                && customerMeeting.hasSameRecurrenceAs(loanOfferingMeeting)) {
 
             RecurrenceType meetingFrequency = customerMeeting.getMeetingDetails().getRecurrenceTypeEnum();
             MeetingType meetingType = MeetingType.fromInt(customerMeeting.getMeetingType().getMeetingTypeId());
-            Short recurAfter = loanOfferingMeeting.getMeetingDetails().getRecurAfter();
+            Short recurAfter = customerMeeting.getMeetingDetails().getRecurAfter();
             try {
                 MeetingBO meetingToReturn;
                 if (meetingFrequency.equals(RecurrenceType.MONTHLY)) {
@@ -2421,10 +2418,6 @@ public class LoanBO extends AccountBO {
         } else {
             throw new AccountException(AccountExceptionConstants.CHANGEINLOANMEETING);
         }
-    }
-
-    private boolean isMultiple(final Short valueToBeChecked, final Short valueToBeCheckedWith) {
-        return valueToBeChecked % valueToBeCheckedWith == 0;
     }
 
     private LoanSummaryEntity buildLoanSummary() {
