@@ -349,7 +349,11 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
         for (LoanCreationInstallmentDto variableInstallment : this.variableInstallments) {
             variableInstallment.setDueDate(new LocalDate(this.installments.get(index)));
             
-            Double newTotal = this.installmentAmounts.get(index).doubleValue();
+            Double newTotal = Double.valueOf("0.0");
+            Number newTotalEntry = this.installmentAmounts.get(index);
+            if (newTotalEntry != null) {
+                newTotal = newTotalEntry.doubleValue();
+            }
             // adjust principal based on total and interest + fees
             if (index == this.variableInstallments.size()-1) {
                 // sum up all totals and make final total = loan principal + interest and fees due - sum of other installment totals
