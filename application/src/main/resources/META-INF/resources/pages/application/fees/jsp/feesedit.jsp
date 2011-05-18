@@ -40,8 +40,8 @@ explanation of the license and how it is applied.
 							</html-el:link> / <html-el:link href="feeaction.do?method=viewAll&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Fees.viewfees" />
 
-							</html-el:link> / <html-el:link href="feeaction.do?method=cancelEdit&feeId=${model.id}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
-								<c:out value="${model.name}"></c:out>
+							</html-el:link> / <html-el:link href="feeaction.do?method=cancelEdit&feeId=${feeModel.id}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								<c:out value="${feeModel.name}"></c:out>
 							</html-el:link> </span>
 					</td>
 				</tr>
@@ -53,7 +53,7 @@ explanation of the license and how it is applied.
 							<tr>
 								<font class="fontnormalRedBold">
 								<td class="headingorange">
-									<span class="heading"> <c:out value="${model.name}"></c:out> - </span>
+									<span class="heading"> <c:out value="${feeModel.name}"></c:out> - </span>
 									<mifos:mifoslabel name="Fees.editfeeinformation" />
 								</td>
 							</tr>
@@ -78,7 +78,7 @@ explanation of the license and how it is applied.
 							<tr class="fontnormal">
 								<td width="27%" align="right">
 									<c:choose>
-										<c:when test="${model.rateBasedFee}">
+										<c:when test="${feeModel.rateBasedFee}">
 											<mifos:mifoslabel name="Fees.calculatefeeas" mandatory="yes" />
 										</c:when>
 										<c:otherwise>
@@ -89,10 +89,10 @@ explanation of the license and how it is applied.
 								</td>
 								<td width="73%" valign="top">
 									<c:choose>
-										<c:when test="${model.rateBasedFee}">
+										<c:when test="${feeModel.rateBasedFee}">
 											<html-el:text property="rate" size="3"/>
 											<mifos:mifoslabel name="Fees.percentof" />
-											<c:out value="${model.feeFormula.name}" />
+											<c:out value="${feeModel.feeFormula.name}" />
 										</c:when>
 										<c:otherwise>
 											<html-el:text property="amount" />
@@ -128,7 +128,7 @@ explanation of the license and how it is applied.
 										<mifos:mifoslabel name="Fees.preview" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button property="cancelBtn" styleClass="cancelbuttn" onclick="javascript:fnOnEditCancel(${model.id})">
+									<html-el:button property="cancelBtn" styleClass="cancelbuttn" onclick="javascript:fnOnEditCancel(${feeModel.id})">
 										<mifos:mifoslabel name="Fees.cancel" />
 									</html-el:button>
 								</td>
