@@ -155,7 +155,7 @@ public class FeeAction extends BaseAction {
 
         Short feeId = ((FeeActionForm) form).getFeeIdValue();
         FeeDto feeDto = this.feeDao.findDtoById(feeId);
-        request.setAttribute("model", feeDto);
+        request.setAttribute("feeModel", feeDto);
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
@@ -171,7 +171,7 @@ public class FeeAction extends BaseAction {
 
         SessionUtils.setCollectionAttribute(FeeConstants.STATUSLIST, feeStatuses, request);
         feeActionForm.updateWithFee(fee);
-        request.getSession().setAttribute("model", fee);
+        request.getSession().setAttribute("feeModel", fee);
         return mapping.findForward(ActionForwards.manage_success.toString());
     }
 
@@ -182,7 +182,7 @@ public class FeeAction extends BaseAction {
         Short feeId = ((FeeActionForm) form).getFeeIdValue();
         FeeDto feeDto = this.feeDao.findDtoById(feeId);
 
-        request.getSession().setAttribute("model", feeDto);
+        request.getSession().setAttribute("feeModel", feeDto);
         return mapping.findForward(ActionForwards.editPreview_success.toString());
     }
 
@@ -193,7 +193,7 @@ public class FeeAction extends BaseAction {
         Short feeId = ((FeeActionForm) form).getFeeIdValue();
         FeeDto feeDto = this.feeDao.findDtoById(feeId);
 
-        request.setAttribute("model", feeDto);
+        request.setAttribute("feeModel", feeDto);
         return mapping.findForward(ActionForwards.editprevious_success.toString());
     }
 
