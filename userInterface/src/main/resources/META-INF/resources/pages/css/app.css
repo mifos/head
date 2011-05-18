@@ -128,9 +128,8 @@ form.two-columns input.submit
 
 .product-summary .attribute
 {
-    width: 27em;
+    width: 24em;
     margin-right: 0.5em;
-    text-align: right;
     float: left;
 }
 
