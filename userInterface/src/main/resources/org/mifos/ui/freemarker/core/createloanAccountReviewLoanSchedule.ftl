@@ -98,7 +98,11 @@ $(function() {
 	</div>
 	<div class="row">
 	    <div class="attribute"><span class="standout">[@spring.message "productSummary.variabeInstallments.maxGap"/]</span></div>
-	    <div class="value">${loanProductReferenceData.maxGapInDays?string.number}<span>&nbsp;[@spring.message "productSummary.variabeInstallments.days"/]</span></div>
+	    [#if loanProductReferenceData.maxGapInDays??]
+        <div class="value">${loanProductReferenceData.maxGapInDays?string.number}<span>&nbsp;[@spring.message "productSummary.variabeInstallments.days"/]</span></div>
+        [#else]
+		<div class="value">[@spring.message "productSummary.variabeInstallments.minInstallmentAmount.notapplicable"/]</div>        
+        [/#if]
 	</div>
 [/#if]
 </div>
@@ -191,16 +195,24 @@ $(function() {
 			[#if loanProductReferenceData.variableInstallmentsAllowed]
 				[@spring.bind "loanScheduleFormBean.installmentAmounts[${ind}]"/]
 				[#if loanProductReferenceData.compareCashflowEnabled]
-					[#if ind == loanAccountFormBean.numberOfInstallments - 1]
-					<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.installmentAmounts[ind]?c}" disabled="disabled" /></td>
+					[#if cashFlowSummaryFormBean.installmentAmounts[ind]??]
+						[#if ind == loanAccountFormBean.numberOfInstallments - 1]
+						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.installmentAmounts[ind]?c}" disabled="disabled" /></td>
+						[#else]
+						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.installmentAmounts[ind]?c}" /></td>
+						[/#if]
 					[#else]
-					<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.installmentAmounts[ind]?c}" /></td>
+						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="0" /></td>
 					[/#if]
 				[#else]
-					[#if ind == loanAccountFormBean.numberOfInstallments - 1]
-					<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]?c}" disabled="disabled" /></td>
+					[#if loanScheduleFormBean.installmentAmounts[ind]??]
+						[#if ind == loanAccountFormBean.numberOfInstallments - 1]
+						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]?c}" disabled="disabled" /></td>
+						[#else]
+						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]?c}" /></td>
+						[/#if]
 					[#else]
-					<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]?c}" /></td>
+						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="0" /></td>
 					[/#if]
 				[/#if]
 			[#else]
@@ -237,9 +249,13 @@ $(function() {
 		[/#list]
 	</tbody>
 </table>
-<form action="${flowExecutionUrl}" method="post">
-	[@form.submitButton label="widget.form.buttonLabel.editcashflowinfo" id="createloanpreview.button.edit.cashflow" webflowEvent="editCashflow" /]
-</form>
+	[#if loanProductReferenceData.variableInstallmentsAllowed]
+		<input type="submit" id="previewBtn" class="submit" style="margin-left: 0px;" name="_eventId_editCashflow" value='[@spring.message "widget.form.buttonLabel.editcashflowinfo" /]' />
+	[#else]
+	<form action="${flowExecutionUrl}" method="post">
+		<input type="submit" id="previewBtn" class="submit" style="margin-left: 0px;" name="_eventId_editCashflow" value='[@spring.message "widget.form.buttonLabel.editcashflowinfo" /]' />
+	</form>
+	[/#if]
 [/#if]
 
 [#if loanProductReferenceData.variableInstallmentsAllowed]
