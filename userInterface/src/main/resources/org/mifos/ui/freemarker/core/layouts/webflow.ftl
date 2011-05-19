@@ -122,7 +122,7 @@ table {
     
     <!-- flow content -->
     <br/>
-    <div class="content borders no-top-border span-24">
+    <div class="content borders no-top-border span-24" style="margin-bottom: 5px; padding-bottom: 5px;">
         <div class="span-1">&nbsp;</div>
         <div class="span-21">
             <br/>
