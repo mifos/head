@@ -62,7 +62,7 @@
             <set name="flowScope.productId" value="requestParameters.productId" type="int"/>
         </transition>
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
-        <transition on="detailsEntered" to="calculateAndReviewLoanSchedule" />
+        <transition on="detailsEntered" to="checkIfCompareForCashFlowIsEnabledForLoanCreation" />
     </view-state>
     
     <decision-state id="checkIfQuestionGroupsExistForLoanCreation">
