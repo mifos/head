@@ -245,7 +245,6 @@ public class CustomerServiceImpl implements CustomerService {
                     SavingsBO savingsAccount = new SavingsBO(userContext, clientSavingsProduct, client,
                             AccountState.SAVINGS_ACTIVE, clientSavingsProduct.getRecommendedAmount(),
                             savingCustomFieldViews);
-
                     savingsAccounts.add(savingsAccount);
                 }
             } catch (AccountException pe) {
@@ -260,6 +259,19 @@ public class CustomerServiceImpl implements CustomerService {
         try {
             this.hibernateTransactionHelper.startTransaction();
             this.customerDao.save(customer);
+            this.hibernateTransactionHelper.flushSession();
+            
+            // generate globalids for savings accounts, as they require accouont_id the savings accounts
+            // must first be saved via the customer save.
+            for (AccountBO account: customer.getAccounts()) {
+                if (account.isSavingsAccount()) {
+                    SavingsBO savingsAccount = (SavingsBO)account;
+                    savingsAccount.setUserContext(customer.getUserContext());
+                    savingsAccount.generateSystemId(customer.getOffice().getGlobalOfficeNum());
+                }
+            }
+            this.customerDao.save(customer);
+            this.hibernateTransactionHelper.flushSession();
 
             CalendarEvent applicableCalendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
             CustomerAccountBO customerAccount = this.customerAccountFactory.create(customer, accountFees, meeting, applicableCalendarEvents);
