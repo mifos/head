@@ -1784,9 +1784,9 @@ public class SavingsBO extends AccountBO {
         return savingsPerformance;
     }
 
-    public void generateSystemId(String officeSearchId) {
+    public void generateSystemId(String officeGlobalNumber) {
         try {
-            this.globalAccountNum = generateId(officeSearchId);
+            this.globalAccountNum = generateId(officeGlobalNumber);
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
