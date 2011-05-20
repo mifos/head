@@ -85,4 +85,22 @@ public class EditLoanAccountInformationPage extends MifosPage {
     public void verifyErrorInForm(String error) {
         Assert.assertTrue(selenium.isTextPresent(error));
     }
+    
+    public void verifyLoanAmount(String loanAmount) {
+        Assert.assertEquals(selenium.getValue("editLoanAccount.input.loanAmount"), loanAmount);
+    }
+    
+    public void verifyInterestRate(String interestRate) {
+        Assert.assertEquals(selenium.getValue("editLoanAccount.input.interestRate"), interestRate);
+    }
+    
+    public void verifyInstallments(String installments) {
+        Assert.assertEquals(selenium.getValue("editLoanAccount.input.numberOfInstallments"), installments);
+    }
+    
+    public void verifyDisbursalDate(String disbursalDateDD, String disbursalDateMM, String disbursalDateYYYY) {
+        Assert.assertEquals(selenium.getValue("disbursementDateDD"), disbursalDateDD);
+        Assert.assertEquals(selenium.getValue("disbursementDateMM"), disbursalDateMM);
+        Assert.assertEquals(selenium.getValue("disbursementDateYY"), disbursalDateYYYY);
+    }
 }

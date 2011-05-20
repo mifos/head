@@ -51,6 +51,12 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         return this;
     }
 
+    public void verifyErrorsOnPage(String... errors) {
+        for (String error : errors) {
+            Assert.assertTrue(selenium.isTextPresent(error));
+        }
+    }
+    
     public HomePage navigateToHomePage() {
         selenium.click("id=clientsAndAccountsHeader.link.home");
         waitForPageToLoad();
@@ -275,10 +281,10 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         boolean cashflowAdded = false;
         // TODO - English locale hard-coded
         DecimalFormat df = new DecimalFormat("#.0", new DecimalFormatSymbols(Locale.ENGLISH));
-        for (int rowIndex = 1; rowIndex <= noOfMonths ; rowIndex++) {
+        for (int rowIndex = 0; rowIndex < noOfMonths - 1; rowIndex++) {
             String cashFlowDisplayed = selenium.getText(tableXpath + "//tr[" + (rowIndex + 1) + "]/td[2]");
             Assert.assertEquals(cashFlowDisplayed, df.format(cashFlow));
-            Assert.assertEquals(selenium.getText(tableXpath + "//tr[" + (rowIndex + 1) + "]/td[5]"), "notes" + rowIndex);
+            Assert.assertEquals(selenium.getText(tableXpath + "//tr[" + (rowIndex + 1) + "]/td[5]"), "notes" + (rowIndex+1));
             if(!cashflowAdded){
                 cashFlow += loanAmount;
                 cashflowAdded = true;
@@ -286,6 +292,21 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
             cashFlow = cashFlow + cashFlowIncremental;
         }
         return this;
+    }
+    
+    public CreateLoanAccountReviewInstallmentPage verifyCashFlow(double cashFlowIncremental, double loanAmount, String[] cumulativeCashFlowTIAPM, String[] totalInstallmentAmount) {
+        int rowIndex = 1;
+        for(String cash : cumulativeCashFlowTIAPM) {
+            Assert.assertEquals(selenium.getText(tableXpath + "//tr[" + rowIndex + "]/td[3]"), cash);
+            rowIndex++;
+        }
+        
+        rowIndex = 1;
+        for(String cash : totalInstallmentAmount) {
+            Assert.assertEquals(selenium.getText(tableXpath + "//tr[" + rowIndex + "]/td[4]"), cash);
+            rowIndex++;
+        }
+        return verifyCashFlow(cashFlowIncremental, loanAmount);
     }
 
     public void verifyCashFlowCalcualted(int cashFlowIncremental) {
@@ -539,5 +560,11 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         selenium.click("schedulePreview.button.cancel");
         waitForPageToLoad();
         return new ClientsAndAccountsHomepage(selenium);
+    }
+    
+    public CreateLoanAccountCashFlowPage editCashFlow() {
+        selenium.click("_eventId_editCashflow");
+        waitForPageToLoad();
+        return new CreateLoanAccountCashFlowPage(selenium);
     }
 }
