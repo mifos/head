@@ -363,6 +363,7 @@ public class LoanAccountFormBean implements Serializable {
                                 }
                             }
                         }
+                        defaultFeeIndex++;
                     }
                 }
             }
