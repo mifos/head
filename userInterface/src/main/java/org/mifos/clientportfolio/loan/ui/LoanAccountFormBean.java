@@ -350,6 +350,21 @@ public class LoanAccountFormBean implements Serializable {
                         }
                     }
                 }
+                
+                int defaultFeeIndex = 0;
+                if (this.defaultFeeId != null) {
+                    for (Number feeId : this.defaultFeeId) {
+                        if (feeId != null) {
+                            Boolean feeSelectedForRemoval = this.defaultFeeSelected[defaultFeeIndex];
+                            if (feeSelectedForRemoval == null || !feeSelectedForRemoval) {
+                                VariableInstallmentWithFeeValidationResult result = variableInstallmentsFeeValidationServiceFacade.validateFeeCanBeAppliedToVariableInstallmentLoan(feeId.longValue());
+                                if (!result.isFeeCanBeAppliedToVariableInstallmentLoan()) {
+                                    errors.rejectValue("selectedFeeId", "loanAccountFormBean.defaultfees.variableinstallments.invalid", new String[] {result.getFeeName()}, "This type of fee cannot be applied to loan with variable installments.");
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         
