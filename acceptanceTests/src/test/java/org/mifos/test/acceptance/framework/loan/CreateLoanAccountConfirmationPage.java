@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -34,7 +35,7 @@ public class CreateLoanAccountConfirmationPage extends MifosPage {
     public LoanAccountPage navigateToLoanAccountDetailsPage() {
         selenium.click("CreateLoanAccountConfirmation.link.viewLoanDetails");
         waitForPageToLoad();
-      return new LoanAccountPage(selenium);
+        return new LoanAccountPage(selenium);
     }
 
     public LoanAccountPage navigateToLoanAccountDetailsPage(CreateLoanAccountSubmitParameters submitAccountParameters) {
@@ -42,7 +43,11 @@ public class CreateLoanAccountConfirmationPage extends MifosPage {
         waitForPageToLoad();
         LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
         loanAccountPage.verifyLoanDetails(submitAccountParameters, new EditLoanAccountInformationParameters());
-      return loanAccountPage;
+        return loanAccountPage;
+    }
+    
+    public void isTextPresentInPage(String text) {
+       Assert.assertTrue(selenium.isTextPresent(text));
     }
 
 }

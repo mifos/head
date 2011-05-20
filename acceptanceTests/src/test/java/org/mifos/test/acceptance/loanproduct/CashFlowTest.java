@@ -25,8 +25,13 @@ import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountCashFlowPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountPreviewPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountReviewInstallmentPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
@@ -173,6 +178,7 @@ public class CashFlowTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled=false)
     public void verifyCashFlowPageInLoanAccountCreationFlow() throws Exception {
+        applicationDatabaseOperation.updateLSIM(1);
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
         productParams.setOfferingName("productCF1");
         productParams.setOfferingShortName("PCF1");
@@ -183,8 +189,9 @@ public class CashFlowTest extends UiTestCaseBase {
         loanSearchParams.setLoanProduct("productCF1");
         DateTime disbursalDate = systemDateTime.plusDays(1);
 
-        loanProductTestHelper.navigateToDefineNewLoanPageAndFillMandatoryFields(productParams).
-                fillCashFlow("", "", "")
+        loanProductTestHelper.navigateToDefineNewLoanPageAndFillMandatoryFields(productParams)
+                .fillCashFlow("", "49", "400")
+                .fillVariableInstalmentOption("", "1", "")
                 .submitAndGotoNewLoanProductPreviewPage()
                 .submit();
         CreateLoanAccountCashFlowPage cashFlowPage = loanTestHelper.navigateToCreateLoanAccountCashFlowPage(loanSearchParams);
@@ -195,10 +202,50 @@ public class CashFlowTest extends UiTestCaseBase {
         cashFlowPage.submitWithErrors();
         cashFlowPage.verifyInvalidTextTyped();
         cashFlowPage.verifyErrorsOnPage();
+        cashFlowPage.verifyMonths();
         cashFlowPage.verifyErrorsOnFields();
-        cashFlowPage.enterValidData("1000", 500, 400, null, null);
+        cashFlowPage.enterValidData("1000", 1000, 100, "4000", "5000");
+        cashFlowPage = cashFlowPage.submitWithErrors();
+        cashFlowPage.verifyErrorsOnPage("Indebtedness rate of the client is 175 % which should be lesser than the allowable value of 49 %");
+        cashFlowPage.enterValidData("1000", 1000, 100, "5000", "400");
         CreateLoanAccountReviewInstallmentPage reviewPage = cashFlowPage.clickContinue();
-        reviewPage.verifyCashFlow(-100.0, 2000.0);
+        reviewPage.verifyCashFlow(100.0, 2000.0, new String[]{"100.0","1858.0","1445.0","1716.0","2333.0","2600.0"}, new String[]{"0.0", "15.5","37.2","28.5","6.7","0.0"});
+        reviewPage = reviewPage.clickPreview();
+        reviewPage.verifyErrorsOnPage("Repayment Capacity of the client is 224.61 % which should be greater than the required value of 400.0 %");
+        cashFlowPage = reviewPage.editCashFlow();
+        cashFlowPage.enterValidData("1000", 1000, 1000, "5000", "400");
+        reviewPage = cashFlowPage.clickContinue();
+        CreateLoanAccountPreviewPage createLoanAccountPreviewPage = reviewPage.clickPreviewAndNavigateToPreviewPage();
+        createLoanAccountPreviewPage.verifyLoanAmount("2,000");
+        createLoanAccountPreviewPage.verifyInterestTypeInLoanPreview("Declining Balance");
+        CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountPreviewPage.submit();
+        createLoanAccountConfirmationPage.isTextPresentInPage("View loan account details now");
+        LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
+        loanAccountPage.verifyDisbursalDate("Disbursal date: 12/10/2010");
+        ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
+        
+        String[][] tableAfterLastInstallment = { { "Future Installments", "", "", "", "", "" },
+                { "1", "19-Oct-2010", "-", "163.7", "7.3", "0.0", "171.0" },
+                { "2", "26-Oct-2010", "-", "164.3", "6.7", "0.0", "171.0" },
+                { "3", "02-Nov-2010", "-", "164.9", "6.1", "0.0", "171.0" },
+                { "4", "09-Nov-2010", "-", "165.5", "5.5", "0.0", "171.0" },
+                { "5", "16-Nov-2010", "-", "166.1", "4.9", "0.0", "171.0" },
+                { "6", "23-Nov-2010", "-", "166.7", "4.3", "0.0", "171.0" },
+                { "7", "30-Nov-2010", "-", "167.3", "3.7", "0.0", "171.0" },
+                { "8", "07-Dec-2010", "-", "167.9", "3.1", "0.0", "171.0" },
+                { "9", "14-Dec-2010", "-", "168.5", "2.5", "0.0", "171.0" },
+                { "10", "21-Dec-2010", "-", "169.1", "1.9", "0.0", "171.0" },
+                { "11", "28-Dec-2010", "-", "169.8", "1.2", "0.0", "171.0" },
+                { "12", "04-Jan-2011", "-", "166.2", "0.8", "0.0", "167.0" } };
+        
+        viewRepaymentSchedulePage.verifyScheduleTable(tableAfterLastInstallment);
+        
+        loanAccountPage = viewRepaymentSchedulePage.navigateToLoanAccountPage();
+        EditLoanAccountInformationPage editLoanAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
+        editLoanAccountInformationPage.verifyInstallments("12");
+        editLoanAccountInformationPage.verifyInterestRate("19");
+        editLoanAccountInformationPage.verifyDisbursalDate("12", "10", "2010");
+        editLoanAccountInformationPage.verifyLoanAmount("2000.0");
     }
     
     private void verifyNegativeAndZeroCashFlow(DefineNewLoanProductPage.SubmitFormParameters formParameters, DateTime disbursalDate, int installment) {
