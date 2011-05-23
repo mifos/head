@@ -31,6 +31,8 @@ public class UserContextFactory {
 
     public UserContext create(MifosUser user) {
         Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
+        Locale.setDefault(preferredLocale);
+        Locale defaultLocale = Locale.getDefault();
         Short localeId = Localization.getInstance().getLocaleId();
         UserContext userContext = new UserContext(preferredLocale, localeId);
         userContext.setBranchId(user.getBranchId());
