@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.joda.time.LocalDate;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
@@ -89,6 +90,11 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
      */
     public void validateSummaryOfCashflow(ValidationContext context) {
         MessageContext messageContext = context.getMessageContext();
+        
+        if (!Locale.getDefault().getLanguage().equalsIgnoreCase("en")) {
+            // FIXME - date are getting bind errors in different locale?
+            messageContext.clearMessages();
+        }
         
         Date firstInstallmentDueDate = installments.get(0);
         Date lastInstallmentDueDate = installments.get(installments.size()-1);
