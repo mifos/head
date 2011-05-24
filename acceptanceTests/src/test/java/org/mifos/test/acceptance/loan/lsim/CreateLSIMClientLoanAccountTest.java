@@ -308,12 +308,12 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
     private void verify50SearchResults() {
         selenium.select("name=customerSearchResults_length", "value=50");
-        Assert.assertEquals(selenium.getXpathCount("//table[@id='customerSearchResults']/tbody/tr").intValue(), 31);
+        Assert.assertTrue(selenium.getXpathCount("//table[@id='customerSearchResults']/tbody/tr").intValue() > 30);
     }
 
     private void verify100SearchResults() {
         selenium.select("name=customerSearchResults_length", "value=100");
-        Assert.assertEquals(selenium.getXpathCount("//table[@id='customerSearchResults']/tbody/tr").intValue(), 31);
+        Assert.assertTrue(selenium.getXpathCount("//table[@id='customerSearchResults']/tbody/tr").intValue() > 30);
     }
 
     private void setTime(int year, int monthOfYear, int dayOfMonth) throws UnsupportedEncodingException {
@@ -331,7 +331,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
         //When
         DefineNewLoanProductPage.SubmitFormParameters defineNewLoanProductformParameters = FormParametersHelper.getWeeklyLoanProductParameters();
-        defineNewLoanProductformParameters.setOfferingName("ProdTest123");
+        defineNewLoanProductformParameters.setOfferingName("ProdTest121");
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Stu1233171716380 Client1233171716380");
@@ -360,10 +360,6 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-124
-    /*
-     * suppressing for MIFOS-4060 - KEITHW 
-     */
-    @Test(enabled=false)
     public void verifyGracePeriodEffectOnLoanSchedule() throws Exception{
         //Given
         applicationDatabaseOperation.updateLSIM(1);
@@ -381,9 +377,15 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
             .checkConfigureVariableInstalmentsCheckbox()
             .submitAndGotoNewLoanProductPreviewPage()
             .submit();
+        
+        CreateLoanAccountSubmitParameters createLoanAccountSubmitParameters = new CreateLoanAccountSubmitParameters();
+        
+        createLoanAccountSubmitParameters.setDd("22");
+        createLoanAccountSubmitParameters.setMm("2");
+        createLoanAccountSubmitParameters.setYy("2011");
 
         //Then
-        loanTestHelper.createLoanAccount(searchParameters, new CreateLoanAccountSubmitParameters())
+        loanTestHelper.createLoanAccount(searchParameters, createLoanAccountSubmitParameters)
             .navigateToRepaymentSchedulePage()
             .verifySchedulePrincipalWithGrace(Integer.parseInt(formParameters.getGracePeriodDuration()));
     }
