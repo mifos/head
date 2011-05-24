@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
@@ -139,6 +140,12 @@ public class LoanAccountFormBean implements Serializable {
     private int digitsAfterDecimalForInterest;
     private int digitsBeforeDecimalForMonetaryAmounts;
     private int digitsAfterDecimalForMonetaryAmounts;
+
+    private Locale locale;
+
+    public Locale getLocale() {
+        return locale;
+    }
 
     public void validateEditAccountDetailsStep(ValidationContext context) {
         validateEnterAccountDetailsStep(context);
@@ -1151,5 +1158,9 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setAdditionalFees(List<FeeDto> additionalFees) {
         this.additionalFees = additionalFees;
+    }
+
+    public void setLocale(Locale default1) {
+        this.locale = default1;
     }
 }
