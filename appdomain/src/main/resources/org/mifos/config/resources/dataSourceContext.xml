@@ -6,39 +6,36 @@
 
     <import resource="classpath:org/mifos/config/resources/propertyConfigurer.xml" />
 
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-        p:driverClass="${${mifos.mode}.database.driver}"
-        p:jdbcUrl="jdbc:mysql://${${mifos.mode}.database.host}:${${mifos.mode}.database.port}/${${mifos.mode}.database}?${${mifos.mode}.database.params}"
-        p:user="${${mifos.mode}.database.user}"
-        p:password="${${mifos.mode}.database.password}"
-        p:initialPoolSize="5"
-        p:minPoolSize="${${mifos.mode}.database.hibernate.c3p0.min_size}"
-        p:maxPoolSize="${${mifos.mode}.database.hibernate.c3p0.max_size}"
-        p:checkoutTimeout="${${mifos.mode}.database.hibernate.c3p0.timeout}"
-        p:maxStatements="${${mifos.mode}.database.hibernate.c3p0.max_statements}"
-        p:testConnectionOnCheckout="false"
-        p:idleConnectionTestPeriod="${${mifos.mode}.database.hibernate.c3p0.idle_test_period}" destroy-method="close" />
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    	<property name="driverClassName" value="${${mifos.mode}.database.driver}" />
+     	<property name="url" value="jdbc:mysql://${${mifos.mode}.database.host}:${${mifos.mode}.database.port}/${${mifos.mode}.database}?${${mifos.mode}.database.params}" />
+        <property name="username" value="${${mifos.mode}.database.user}" />
+        <property name="password" value="${${mifos.mode}.database.password}" />
+ 	</bean>
 
-
-    <bean id="dbSpecificHibernateProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="properties">
-            <props>
-                <prop key="hibernate.dialect">${${mifos.mode}.database.hibernate.dialect}</prop>
-                <prop key="hibernate.show_sql">${${mifos.mode}.database.hibernate.show_sql}</prop>
-                <prop key="hibernate.generate_statistics">false</prop>
-                <prop key="hibernate.format_sql">false</prop>
-                <prop key="hibernate.use_sql_comments">false</prop>
-                <prop key="hibernate.cache.use_query_cache">${${mifos.mode}.database.hibernate.cache.use_query_cache}
-                </prop>
-                <prop key="hibernate.cache.use_second_level_cache">
-                    ${${mifos.mode}.database.hibernate.cache.use_second_level_cache}
-                </prop>
-                <prop key="hibernate.connection.provider_class">
-                    ${${mifos.mode}.database.hibernate.connection.provider_class}
-                </prop>
-
-            </props>
-        </property>
-    </bean>
+	<bean id="dbSpecificHibernateProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="properties">
+			<props>
+				<prop key="hibernate.connection.url">jdbc:mysql://${${mifos.mode}.database.host}:${${mifos.mode}.database.port}/${${mifos.mode}.database}?${${mifos.mode}.database.params}</prop>
+				<prop key="hibernate.connection.driver_class">${${mifos.mode}.database.driver}</prop>
+				<prop key="hibernate.connection.username">${${mifos.mode}.database.user}</prop>
+				<prop key="hibernate.connection.password">${${mifos.mode}.database.password}</prop>
+				<prop key="hibernate.dialect">${${mifos.mode}.database.hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${${mifos.mode}.database.hibernate.show_sql}</prop>
+				<prop key="hibernate.generate_statistics">false</prop>
+				<prop key="hibernate.format_sql">false</prop>
+				<prop key="hibernate.use_sql_comments">false</prop>
+				<prop key="hibernate.cache.use_query_cache">${${mifos.mode}.database.hibernate.cache.use_query_cache}</prop>
+				<prop key="hibernate.cache.use_second_level_cache">${${mifos.mode}.database.hibernate.cache.use_second_level_cache}</prop>
+				<prop key="hibernate.connection.provider_class">${${mifos.mode}.database.hibernate.connection.provider_class}</prop>
+				<prop key="hibernate.connection.isolation">${${mifos.mode}.database.hibernate.connection.isolation}</prop>
+				<prop key="hibernate.c3p0.acquire_increment">${${mifos.mode}.database.hibernate.c3p0.acquire_increment}</prop>
+				<prop key="hibernate.c3p0.idle_test_period">${${mifos.mode}.database.hibernate.c3p0.idle_test_period}</prop>
+				<prop key="hibernate.c3p0.max_size">${${mifos.mode}.database.hibernate.c3p0.max_size}</prop>
+				<prop key="hibernate.c3p0.max_statements">${${mifos.mode}.database.hibernate.c3p0.max_statements}</prop>
+				<prop key="hibernate.c3p0.min_size">${${mifos.mode}.database.hibernate.c3p0.min_size}</prop>
+				<prop key="hibernate.c3p0.timeout">${${mifos.mode}.database.hibernate.c3p0.timeout}</prop>
+			</props>
+		</property>
+	</bean>
 </beans>
