@@ -45,9 +45,14 @@ $(document).ready(function() {
     });
   }
 );
+
 $(function() {
-	$.datepicker.setDefaults($.datepicker.regional[""]);
-});
+		[#if loanAccountFormBean.locale.country == "GB"]
+			$.datepicker.setDefaults($.datepicker.regional['']);
+		[#else]
+			$.datepicker.setDefaults($.datepicker.regional['${loanAccountFormBean.locale.country}']);
+		[/#if]
+	}); 
 </script>
 
 [#if customerSearchFormBean.redoLoanAccount]
