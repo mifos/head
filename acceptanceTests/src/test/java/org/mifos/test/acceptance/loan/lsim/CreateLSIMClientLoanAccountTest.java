@@ -24,9 +24,15 @@ import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.account.AccountStatus;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountPreviewPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountReviewInstallmentPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
@@ -34,11 +40,13 @@ import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -51,6 +59,7 @@ import java.sql.SQLException;
 @Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
+    private NavigationHelper navigationHelper;
     private LoanTestHelper loanTestHelper;
     private LoanProductTestHelper loanProductTestHelper;
     private String expectedDate;
@@ -64,6 +73,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         applicationDatabaseOperation.updateLSIM(1);
+        navigationHelper = new NavigationHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
@@ -137,31 +147,173 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     @Test(enabled=true)
     public void createLoanAccountWithNonMeetingDatesForDisburseAndRepay() throws Exception {
         //Given
-        setTime(2011, 02, 24);
-        DefineNewLoanProductPage.SubmitFormParameters defineNewLoanProductformParameters = FormParametersHelper.getMonthlyLoanProductParameters();
-        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("Client - Mary Monthly");
-        searchParameters.setLoanProduct(defineNewLoanProductformParameters.getOfferingName());
-        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
-        submitAccountParameters.setDd("24");
-        submitAccountParameters.setMm("02");
-        submitAccountParameters.setYy("2011");
-        EditLoanAccountStatusParameters editLoanAccountStatusParameters = new EditLoanAccountStatusParameters();
-        editLoanAccountStatusParameters.setStatus(AccountStatus.LOAN_APPROVED.getStatusText());
-        editLoanAccountStatusParameters.setNote("activate account");
-        DisburseLoanParameters disburseLoanParameters = new DisburseLoanParameters();
-        disburseLoanParameters.setDisbursalDateDD("24");
-        disburseLoanParameters.setDisbursalDateMM("02");
-        disburseLoanParameters.setDisbursalDateYYYY("2011");
-        disburseLoanParameters.setPaymentType(PaymentParameters.CASH);
-        //When
-        loanProductTestHelper.defineNewLoanProduct(defineNewLoanProductformParameters);
-        //Then
-        String loanId = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters).getAccountId();
-        loanTestHelper.changeLoanAccountStatus(loanId, editLoanAccountStatusParameters);
         setTime(2011, 03, 24);
-        loanTestHelper.disburseLoan(loanId, disburseLoanParameters);
-        loanTestHelper.repayLoan(loanId);
+        String errorMessage = "";
+        CreateLoanAccountSearchParameters formParameters = new CreateLoanAccountSearchParameters();
+        formParameters.setLoanProduct("ClientEmergencyLoan");
+        formParameters.setSearchString("UpdateCustomProperties TestClient");
+
+        for(int i=0;i<2;i++)
+        {
+            CreateLoanAccountSearchPage createLoanAccountSearchPage = navigationHelper.navigateToClientsAndAccountsPage().navigateToCreateLoanAccountUsingLeftMenu();
+            formParameters.setSearchString("1");
+            createLoanAccountSearchPage = createLoanAccountSearchPage.navigateToCreateLoanAccountEntryPage(formParameters);
+            errorMessage = "No text <Stu12332659912419 Client12332659912419:ID0002-000000030> present on the page";
+            createLoanAccountSearchPage.verifyTextPresent("Stu12332659912419 Client12332659912419:ID0002-000000030", errorMessage);
+            
+            createLoanAccountSearchPage = navigationHelper.navigateToClientsAndAccountsPage().navigateToCreateLoanAccountUsingLeftMenu();
+            formParameters.setSearchString(" ");
+            createLoanAccountSearchPage = createLoanAccountSearchPage.navigateToCreateLoanAccountEntryPage(formParameters);
+            errorMessage = "No text <Stu1233266063395 Client1233266063395:ID0002-000000003> present on the page";
+            createLoanAccountSearchPage.verifyTextPresent("Stu1233266063395 Client1233266063395:ID0002-000000003", errorMessage);
+            
+            createLoanAccountSearchPage = navigationHelper.navigateToClientsAndAccountsPage().navigateToCreateLoanAccountUsingLeftMenu();
+            formParameters.setSearchString("%");
+            createLoanAccountSearchPage = createLoanAccountSearchPage.navigateToCreateLoanAccountEntryPage(formParameters);
+
+            verify10SearchResults();
+            verify25SearchResults();
+            verify50SearchResults();
+            verify100SearchResults();
+            
+            formParameters.setSearchString("UpdateCustomProperties TestClient");
+            navigationHelper.navigateToClientsAndAccountsPage().navigateToCreateLoanAccountUsingLeftMenu().verifyNoSelectLoanProduct(formParameters, "Please select a Loan product name");
+            
+            createLoanAccountSearchPage = navigationHelper.navigateToClientsAndAccountsPage().navigateToCreateLoanAccountUsingLeftMenu();
+            formParameters.setSearchString("UpdateCustomProperties TestClient");
+            CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage.searchAndNavigateToCreateLoanAccountPage(formParameters);
+            
+            createLoanAccountEntryPage = navigationHelper.navigateToClientsAndAccountsPage().navigateToCreateLoanAccountUsingLeftMenu().searchAndNavigateToCreateLoanAccountPage(formParameters); 
+            
+            createLoanAccountEntryPage.verifyAllowedAmounts("1000.0", "10000.0", "1000.0");
+            createLoanAccountEntryPage.verifyDisbsursalDate("25", "3", "2011");
+            
+            createLoanAccountEntryPage.setAmount("");
+            createLoanAccountEntryPage.setInstallments("");
+            createLoanAccountEntryPage.setDisbursalDate("", "", "");
+            createLoanAccountEntryPage.setInterestRate("");
+            
+            createLoanAccountEntryPage = createLoanAccountEntryPage.clickContinueButExpectValidationFailure();
+            
+            createLoanAccountEntryPage.verifyError("Please specify valid Amount. Amount should be a value between 1,000 and 10,000, inclusive.");
+            createLoanAccountEntryPage.verifyError("Please specify valid Interest rate. Interest rate should be a value between 0 and 0, inclusive.");
+            createLoanAccountEntryPage.verifyError("Please specify valid No. of installments. No. of installments should be a value between 1 and 10, inclusive.");
+            createLoanAccountEntryPage.verifyError("You have entered an invalid disbursal date. Please check the date format.");
+            
+            createLoanAccountEntryPage.setDisbursalDate("26", "02", "2011");
+            
+            createLoanAccountEntryPage = createLoanAccountEntryPage.clickContinueButExpectValidationFailure();
+            
+            createLoanAccountEntryPage.verifyError("The disbursement date is invalid. Disbursement date must be on or after todays date.");
+            
+            createLoanAccountEntryPage.setDisbursalDate("21", "01", "2012");
+            
+            createLoanAccountEntryPage = createLoanAccountEntryPage.clickContinueButExpectValidationFailure();
+            if(i%2 == 0) {
+                createLoanAccountEntryPage.verifyNoError("The disbursement date is invalid. It must fall on a valid customer meeting schedule.");
+            } 
+            else {
+                createLoanAccountEntryPage.verifyError("The disbursement date is invalid. It must fall on a valid customer meeting schedule.");
+            }
+            createLoanAccountEntryPage.setDisbursalDate("25", "3", "2011");
+            createLoanAccountEntryPage.setAmount("999999999999999999.88888888");
+            createLoanAccountEntryPage.setInterestRate("999999999999.88888888");
+            
+            createLoanAccountEntryPage = createLoanAccountEntryPage.clickContinueButExpectValidationFailure();
+
+            createLoanAccountEntryPage.verifyError("The interest rate is invalid as the number of digits after the decimal separator exceeds the allowed number of 5.");
+            createLoanAccountEntryPage.verifyError("The amount is invalid because the number of digits before the decimal separator exceeds the allowed number of 14.");
+            
+            createLoanAccountEntryPage.setAmount("12345678901234");
+            createLoanAccountEntryPage.setInterestRate("999999999999.88888888");
+            
+            createLoanAccountEntryPage = createLoanAccountEntryPage.clickContinueButExpectValidationFailure();
+            
+            createLoanAccountEntryPage.verifyError("The interest rate is invalid as the number of digits after the decimal separator exceeds the allowed number of 5.");
+
+            CreateLoanAccountSubmitParameters formParametersFees = new CreateLoanAccountSubmitParameters();
+            formParametersFees.setAdditionalFee1("loanWeeklyFee");
+            formParametersFees.setAdditionalFee2("oneTimeFee");
+            
+            createLoanAccountEntryPage.setAmount("5000");
+            createLoanAccountEntryPage.setInterestRate("0.0");
+            createLoanAccountEntryPage.setInstallments("10");
+            createLoanAccountEntryPage.fillAdditionalFee(formParametersFees);
+            
+            CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = createLoanAccountEntryPage.clickContinue();
+            
+            createLoanAccountReviewInstallmentPage.verifyLoanAmount("5,000");
+            createLoanAccountReviewInstallmentPage.verifyDueDate(1, "01-Apr-2011");
+            createLoanAccountReviewInstallmentPage.verifyDueDate(2, "08-Apr-2011");
+            createLoanAccountReviewInstallmentPage.verifyDueDate(10, "03-Jun-2011");
+            
+            CreateLoanAccountPreviewPage createLoanAccountPreviewPage = createLoanAccountReviewInstallmentPage.clickPreviewAndNavigateToPreviewPage();
+            
+            createLoanAccountPreviewPage.verifyLoanAmount("5,000");
+            createLoanAccountPreviewPage.verifyInterestTypeInLoanPreview("Flat");
+            createLoanAccountPreviewPage.verifyDueDate(1, "01-Apr-2011");
+            createLoanAccountPreviewPage.verifyDueDate(2, "08-Apr-2011");
+            createLoanAccountPreviewPage.verifyDueDate(10, "03-Jun-2011");
+            
+            createLoanAccountEntryPage = createLoanAccountPreviewPage.editAccountInformation();
+            
+            createLoanAccountEntryPage.setAmount("2000.0");
+            
+            createLoanAccountPreviewPage = createLoanAccountEntryPage.clickContinue().clickPreviewAndNavigateToPreviewPage();
+            createLoanAccountPreviewPage.verifyLoanAmount("2,000");
+            CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountPreviewPage.submitForApprovalAndNavigateToConfirmationPage();
+            
+            errorMessage = "No text <View loan account details now> present on the page";
+            createLoanAccountConfirmationPage.verifyTextPresent("View loan account details now", errorMessage);
+            LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
+            
+            loanAccountPage.verifyStatus("Application Pending Approval");
+            loanAccountPage.verifyDisbursalDate("Disbursal date: 25/03/2011");
+            
+            String[][] accountSummaryTable = {{"", "Original Loan", "Amount paid", "Loan balance"},
+                    {"Principal", "2000.0", "0.0", "2000.0"},
+                    {"Interest", "0.0", "0.0", "0.0"},
+                    {"Fees", "1010.0", "0.0", "1010.0"},
+                    {"Penalty", "0.0", "0.0", "0.0"},
+                    {"Total", "3010.0", "0.0", "3010.0"}};
+            loanAccountPage.verifyAccountSummary(accountSummaryTable);
+            loanAccountPage.verifyInterestRate("0.0");
+            
+            ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToRepaymentSchedulePage();
+            
+            viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, 1, "01-Apr-2011");
+            viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(4, 1, "08-Apr-2011");
+            viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(6, 1, "22-Apr-2011");
+            
+            loanAccountPage = viewRepaymentSchedulePage.navigateToLoanAccountPage();
+            EditLoanAccountInformationPage editLoanAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
+            
+            editLoanAccountInformationPage.setAmount("3000.0");
+            loanAccountPage = editLoanAccountInformationPage.submitAndNavigateToAccountInformationPreviewPage().submitAndNavigateToLoanAccountPage();
+            
+            loanAccountPage.verifyLoanAmount("3000.0");
+            applicationDatabaseOperation.updateLSIM(0);
+        }
+    }
+
+    private void verify10SearchResults() {
+        selenium.select("name=customerSearchResults_length", "value=10");
+        Assert.assertEquals(selenium.getXpathCount("//table[@id='customerSearchResults']/tbody/tr").intValue(), 10);
+    }
+
+    private void verify25SearchResults() {
+        selenium.select("name=customerSearchResults_length", "value=25");
+        Assert.assertEquals(selenium.getXpathCount("//table[@id='customerSearchResults']/tbody/tr").intValue(), 25);
+    }
+
+    private void verify50SearchResults() {
+        selenium.select("name=customerSearchResults_length", "value=50");
+        Assert.assertEquals(selenium.getXpathCount("//table[@id='customerSearchResults']/tbody/tr").intValue(), 31);
+    }
+
+    private void verify100SearchResults() {
+        selenium.select("name=customerSearchResults_length", "value=100");
+        Assert.assertEquals(selenium.getXpathCount("//table[@id='customerSearchResults']/tbody/tr").intValue(), 31);
     }
 
     private void setTime(int year, int monthOfYear, int dayOfMonth) throws UnsupportedEncodingException {

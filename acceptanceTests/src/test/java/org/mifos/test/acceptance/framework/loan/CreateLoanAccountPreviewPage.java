@@ -116,4 +116,14 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
         waitForPageToLoad();
         return new ClientsAndAccountsHomepage(selenium);
     }
+    
+    public void verifyDueDate(int installement, String dueDate) {
+        Assert.assertEquals(selenium.getText("//table[@id='installments']//tbody//tr[" + (installement ) + "]/td[2]"), dueDate);
+    }
+    
+    public CreateLoanAccountEntryPage editAccountInformation() {
+        selenium.click("createloanpreview.button.edit");
+        waitForPageToLoad();
+        return new CreateLoanAccountEntryPage(selenium);
+    }
 }
