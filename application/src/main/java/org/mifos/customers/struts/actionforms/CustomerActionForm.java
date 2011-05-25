@@ -487,7 +487,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
         String feeRecur = fee.getFeeSchedule().split(" ")[0];
         return (((fee.isMonthly() && meeting.isMonthly())
                 || (fee.isWeekly() && meeting.isWeekly())) 
-                && meeting.getRecurAfter().equals(Short.valueOf(feeRecur)));
+                && Short.valueOf(feeRecur)%meeting.getRecurAfter() == 0);
     }
 
     protected void validateForFeeAmount(ActionErrors errors, Locale locale) {
