@@ -50,7 +50,7 @@ $(document).ready(function() {
 		[#if loanAccountFormBean.locale.country == "GB"]
 			$.datepicker.setDefaults($.datepicker.regional['']);
 		[#else]
-			$.datepicker.setDefaults($.datepicker.regional['${loanAccountFormBean.locale.country}']);
+			$.datepicker.setDefaults($.datepicker.regional['${loanAccountFormBean.locale.country?lower_case}']);
 		[/#if]
 	}); 
 </script>
