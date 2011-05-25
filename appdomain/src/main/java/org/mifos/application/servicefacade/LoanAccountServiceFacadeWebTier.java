@@ -1717,7 +1717,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         for (LoanBO individualLoan : individualLoans) {
             LoanAccountDetailsDto loandetails = new LoanAccountDetailsDto();
-            loandetails.setClientId(individualLoan.getCustomer().getCustomerId().toString());
+            loandetails.setClientId(individualLoan.getCustomer().getGlobalCustNum());
             loandetails.setClientName(individualLoan.getCustomer().getDisplayName());
             loandetails.setLoanAmount(null != individualLoan.getLoanAmount()
                     && !EMPTY.equals(individualLoan.getLoanAmount().toString()) ? individualLoan.getLoanAmount()
