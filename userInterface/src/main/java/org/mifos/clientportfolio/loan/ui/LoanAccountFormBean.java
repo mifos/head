@@ -181,7 +181,7 @@ public class LoanAccountFormBean implements Serializable {
 
                         Number clientAmount = this.clientAmount[index];
 
-                        if (clientAmount == null || exceedsMax(clientAmount, this.maxAllowedAmount)) {
+                        if (clientAmount == null || exceedsMinOrMax(clientAmount, Integer.valueOf(1), this.maxAllowedAmount)) {
                             String defaultErrorMessage = "Please specify valid Amount.";
                             rejectGlimClientAmountField(index + 1, errors, defaultErrorMessage);
                         }

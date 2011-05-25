@@ -95,7 +95,11 @@
 <br/>
 <br/>
 
+[#if loanProductReferenceData.glimApplicable]
+<p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.accountDetail.glim.individualdetails.header" /]</span></p>
+[#else]
 <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.accountDetail.header" /]</span></p>
+[/#if]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
     <fieldset>
     [#if loanProductReferenceData.glimApplicable]
@@ -176,6 +180,7 @@
     		<td>&nbsp;</td>
     	</tr>
     </table>
+    <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.accountDetail.header" /]</span></p>
     [#else]
     <div class="row">
         [@form.label "amount" true ][@spring.message "createLoanAccount.amount"/][/@form.label]
@@ -183,6 +188,7 @@
         <span id="createloan.allowedamounttext">([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string("0.#")} - ${loanProductReferenceData.maxLoanAmount?string("0.#")})</span>
     </div>
     [/#if]
+    
     <div class="row">
         [@form.label "interestRate" true ][@spring.message "createLoanAccount.interestRate"/][/@form.label]
         [@form.input path="loanAccountFormBean.interestRate" id="loancreationdetails.input.interestRate" /]
