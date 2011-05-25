@@ -623,10 +623,6 @@ public class LoanAccountFormBean implements Serializable {
         return defaultValue.doubleValue() > maxValue.doubleValue() || defaultValue.doubleValue() < minValue.doubleValue();
     }
     
-    private boolean exceedsMax(Number defaultValue, Number maxValue) {
-        return defaultValue.doubleValue() > maxValue.doubleValue();
-    }
-
     public Number[] getSelectedFeeId() {
 		return selectedFeeId;
 	}
