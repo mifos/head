@@ -42,6 +42,13 @@ $(document).ready(function() {
     	[#if loanAccountFormBean.locale.language?lower_case == "zh"]
 			dateFormat: 'y-m-d',
 		[/#if]
+		[#if loanAccountFormBean.locale.language?lower_case == "en"]
+			[#if loanAccountFormBean.locale.country?lower_case == "us"]
+			dateFormat: 'mm/dd/y',
+			[#else]
+			dateFormat: 'dd/mm/y',
+			[/#if]
+		[/#if]
         showOn: "button",
         buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
 		buttonImageOnly: true
