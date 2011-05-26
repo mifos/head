@@ -1,110 +1,124 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd 
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    <import resource="classpath:org/mifos/config/resources/webflow-config.xml" />
+	<context:component-scan base-package="org.mifos.ui.core.controller" />
+	
+	<mvc:annotation-driven conversion-service="webflowAndMvcConversionService"/>
 
-    <context:annotation-config/>
-    <bean id="localeResolver" class="org.mifos.ui.core.localisation.MifosLocaleResolver">
-        <constructor-arg ref="adminServiceFacade" />
-    </bean>
+	<import resource="classpath:org/mifos/config/resources/webflow-config.xml" />
 
-    <bean id="webExceptionResolverHandler" class="org.mifos.framework.servlet.UncaughtExceptionHandler">
-        <property name="exceptionMappings">
-            <props>
-                <prop key="java.lang.Exception">uncaughtException</prop>
-                <prop key="org.springframework.security.access.AccessDeniedException">accessDenied</prop>
-            </props>
-        </property>
-        <property name="exceptionAttribute" value="exception" />
-    </bean>
+	<context:annotation-config />
 
-    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
-        <property name="templateLoaderPaths">
-            <list>
-                <value>/WEB-INF/freemarker/</value>
-                <value>classpath:org/mifos/ui/freemarker/core</value>
-                <value>classpath:org/mifos/ui/freemarker/core/lookups</value>
-                <value>classpath:org/mifos/ui/freemarker/css</value>
-                <value>classpath:org/mifos/platform/questionnaire/ui/views</value>
-                <value>classpath:org/mifos/platform/cashflow/ui/views</value>
-                <value>classpath:org/mifos/platform/accounting/ui/views</value>
-            </list>
-        </property>
-        <property name="preferFileSystemAccess" value="false"/>
-        <property name="defaultEncoding" value="UTF-8" />
-        <property name="freemarkerVariables">
-            <map>
-                <entry key="xml_escape" value-ref="fmXmlEscape"/>
-            </map>
-        </property>
-        <property name="freemarkerSettings">
-        	<props>
-		        <prop key="auto_import">
-		       		widgets/widgets.ftl as widget,
-		       		widgets/form.ftl as form,
-		       		widgets/i18n.ftl as i18n,
-		        	layouts/layouts.ftl as layout,
-		        	/lookups/lookups.ftl as lookup,
-		        	/spring.ftl as spring
+	<bean id="localeResolver" class="org.mifos.ui.core.localisation.MifosLocaleResolver">
+		<constructor-arg ref="adminServiceFacade" />
+	</bean>
+
+	<bean id="webExceptionResolverHandler" class="org.mifos.framework.servlet.UncaughtExceptionHandler">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.lang.Exception">uncaughtException</prop>
+				<prop key="org.springframework.security.access.AccessDeniedException">accessDenied</prop>
+			</props>
+		</property>
+		<property name="exceptionAttribute" value="exception" />
+	</bean>
+
+	<bean id="freemarkerConfig"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPaths">
+			<list>
+				<value>/WEB-INF/freemarker/</value>
+				<value>classpath:org/mifos/ui/freemarker/core</value>
+				<value>classpath:org/mifos/ui/freemarker/core/lookups</value>
+				<value>classpath:org/mifos/ui/freemarker/css</value>
+				<value>classpath:org/mifos/platform/questionnaire/ui/views</value>
+				<value>classpath:org/mifos/platform/cashflow/ui/views</value>
+				<value>classpath:org/mifos/platform/accounting/ui/views</value>
+			</list>
+		</property>
+		<property name="preferFileSystemAccess" value="false" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="freemarkerVariables">
+			<map>
+				<entry key="xml_escape" value-ref="fmXmlEscape" />
+			</map>
+		</property>
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="auto_import">
+					widgets/widgets.ftl as widget,
+					widgets/form.ftl as form,
+					widgets/i18n.ftl as i18n,
+					layouts/layouts.ftl as layout,
+					/lookups/lookups.ftl as lookup,
+					/spring.ftl as spring
 		        </prop>
-        	</props>
-        </property>
-    </bean>
+			</props>
+		</property>
+	</bean>
 
-    <bean id="freemarkerViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
-        <property name="cache" value="false"/>
-        <property name="prefix" value=""/>
-        <property name="suffix" value=".ftl"/>
-        <property name="contentType" value="text/html; charset=UTF-8" />
-        <!-- if you want to use the Spring FreeMarker macros, set this property to true -->
-        <property name="exposeSpringMacroHelpers" value="true"/>
-    </bean>
+	<bean id="freemarkerViewResolver"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="cache" value="false" />
+		<property name="prefix" value="" />
+		<property name="suffix" value=".ftl" />
+		<property name="contentType" value="text/html; charset=UTF-8" />
+		<!-- if you want to use the Spring FreeMarker macros, set this property 
+			to true -->
+		<property name="exposeSpringMacroHelpers" value="true" />
+	</bean>
 
-    <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
+	<bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape" />
 
-    <bean class= "org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
 
-    <!-- Dispatches requests mapped to POJO @Controllers implementations -->
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-        <property name="webBindingInitializer">
-            <bean class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
-                <property name="validator" ref="validator" />
-            </bean>
-        </property>
-    </bean>
+	<!-- Dispatches requests mapped to POJO @Controllers implementations -->
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="webBindingInitializer">
+			<bean
+				class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+				<property name="validator" ref="validator" />
+			</bean>
+		</property>
+	</bean>
 
-    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
-    <bean id="mifosBeanValidator" class="org.mifos.platform.validation.MifosBeanValidator">
-        <property name="targetValidator" ref="validator"/>
-    </bean>
+	<bean id="mifosBeanValidator" class="org.mifos.platform.validation.MifosBeanValidator">
+		<property name="targetValidator" ref="validator" />
+	</bean>
 
-    <bean name="testingService" class="org.mifos.framework.util.StandardTestingService"/>
+	<bean name="testingService" class="org.mifos.framework.util.StandardTestingService" />
 
-    <context:component-scan base-package="org.mifos.ui.core.controller"/>
-    <context:component-scan base-package="org.mifos.clientportfolio">
-        <context:include-filter type="regex" expression="org.mifos.clientportfolio.[^\.]*.ui.*" />
-    </context:component-scan>
-    <context:component-scan base-package="org.mifos.platform">
-        <context:include-filter type="regex" expression="org.mifos.platform.[^\.]*.ui.*" />
-    </context:component-scan>
+	<context:component-scan base-package="org.mifos.clientportfolio">
+		<context:include-filter type="regex"
+			expression="org.mifos.clientportfolio.[^\.]*.ui.*" />
+	</context:component-scan>
+	<context:component-scan base-package="org.mifos.platform">
+		<context:include-filter type="regex"
+			expression="org.mifos.platform.[^\.]*.ui.*" />
+	</context:component-scan>
 
-    <bean name="genericController" class="org.mifos.ui.core.controller.GenericController"/>
+	<bean name="genericController" class="org.mifos.ui.core.controller.GenericController" />
 
 
-    <bean name="initializeApplicationController" class="org.mifos.ui.core.controller.InitializeApplicationController">
-        <property name="testingService" ref="testingService" />
-    </bean>
+	<bean name="initializeApplicationController"
+		class="org.mifos.ui.core.controller.InitializeApplicationController">
+		<property name="testingService" ref="testingService" />
+	</bean>
 
-    <bean name="dateTimeUpdateController" class="org.mifos.ui.core.controller.DateTimeUpdateController">
-        <property name="testingService" ref="testingService" />
-    </bean>
+	<bean name="dateTimeUpdateController" class="org.mifos.ui.core.controller.DateTimeUpdateController">
+		<property name="testingService" ref="testingService" />
+	</bean>
 
-    <bean name="customPropertiesUpdateController" class="org.mifos.ui.core.controller.CustomPropertiesUpdateController">
-        <property name="testingService" ref="testingService" />
-    </bean>
+	<bean name="customPropertiesUpdateController"
+		class="org.mifos.ui.core.controller.CustomPropertiesUpdateController">
+		<property name="testingService" ref="testingService" />
+	</bean>
 
 </beans>

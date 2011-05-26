@@ -110,7 +110,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     
     @PreAuthorize("isFullyAuthenticated()")
     LoanCreationResultDto createLoan(CreateLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups, 
-            LoanAccountCashFlow loanAccountCashFlow, List<Date> installments, List<Number> installmentPrincipalAmounts);
+            LoanAccountCashFlow loanAccountCashFlow, List<DateTime> installments, List<Number> installmentPrincipalAmounts);
     
     @PreAuthorize("isFullyAuthenticated()")
     LoanCreationResultDto createGroupLoanWithIndividualMonitoring(CreateGlimLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);
@@ -122,7 +122,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     @PreAuthorize("isFullyAuthenticated()")
     LoanCreationResultDto createBackdatedLoan(CreateLoanAccount loanAccountDetails,
             List<LoanPaymentDto> backdatedLoanPayments, List<QuestionGroupDetail> questionGroups,
-            LoanAccountCashFlow loanAccountCashFlow, List<Date> installmentDates,
+            LoanAccountCashFlow loanAccountCashFlow, List<DateTime> installmentDates,
             List<Number> installmentPrincipalAmounts);
     
     /**
