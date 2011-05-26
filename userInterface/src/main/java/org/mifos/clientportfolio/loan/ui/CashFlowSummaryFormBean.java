@@ -27,7 +27,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormatter;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.dto.domain.FeeDto;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
@@ -40,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
@@ -57,10 +60,12 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
     private BigDecimal cashFlowTotalBalance;
     
     // variable installments
-    private List<Date> installments = new ArrayList<Date>();
+    @DateTimeFormat(style="S-")
+    private List<DateTime> installments = new ArrayList<DateTime>();
     private List<Number> installmentAmounts = new ArrayList<Number>();
-    // loans backdated with payments 
-    private List<Date> actualPaymentDates = new ArrayList<Date>();
+    // loans backdated with payments
+    @DateTimeFormat(style="S-")
+    private List<DateTime> actualPaymentDates = new ArrayList<DateTime>();
     private List<Number> actualPaymentAmounts = new ArrayList<Number>();
     
     // variable installments only for validation purposes
@@ -84,6 +89,16 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
     public CashFlowSummaryFormBean() {
         // constructor
     }
+    
+    public String parseInstallment(int index) {
+        DateTimeFormatter formatter = org.joda.time.format.DateTimeFormat.forStyle("S-").withLocale(Locale.getDefault());
+        return formatter.print(this.installments.get(index));
+    }
+    
+    public String parseActualPaymentDates(int index) {
+        DateTimeFormatter formatter = org.joda.time.format.DateTimeFormat.forStyle("S-").withLocale(Locale.getDefault());
+        return formatter.print(this.actualPaymentDates.get(index));
+    }
 
     /**
      * validateXXXX is invoked on transition from state 
@@ -91,14 +106,9 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
     public void validateSummaryOfCashflow(ValidationContext context) {
         MessageContext messageContext = context.getMessageContext();
         
-        if (!Locale.getDefault().getLanguage().equalsIgnoreCase("en")) {
-            // FIXME - date are getting bind errors in different locale?
-            messageContext.clearMessages();
-        }
-        
-        Date firstInstallmentDueDate = installments.get(0);
-        Date lastInstallmentDueDate = installments.get(installments.size()-1);
-        this.loanInstallmentsDto = new LoanInstallmentsDto(this.loanInstallmentsDto.getLoanAmount(), this.loanInstallmentsDto.getTotalInstallmentAmount(), firstInstallmentDueDate, lastInstallmentDueDate);
+        DateTime firstInstallmentDueDate = installments.get(0);
+        DateTime lastInstallmentDueDate = installments.get(installments.size()-1);
+        this.loanInstallmentsDto = new LoanInstallmentsDto(this.loanInstallmentsDto.getLoanAmount(), this.loanInstallmentsDto.getTotalInstallmentAmount(), firstInstallmentDueDate.toDate(), lastInstallmentDueDate.toDate());
         
         Errors warnings = loanAccountServiceFacade.validateCashFlowForInstallmentsForWarnings(cashFlowDataDtos, productId);
         Errors errors = loanAccountServiceFacade.validateCashFlowForInstallments(loanInstallmentsDto, monthlyCashFlows, repaymentCapacity, cashFlowTotalBalance);
@@ -291,7 +301,7 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
         }
     }
     
-    private void validatePaymentsAndAmounts(MessageContext messageContext, List<Date> actualPaymentDates, List<Number> actualPaymentAmounts) {
+    private void validatePaymentsAndAmounts(MessageContext messageContext, List<DateTime> actualPaymentDates, List<Number> actualPaymentAmounts) {
         int index = 0;
         LocalDate lastPaymentDate = null;
         BigDecimal totalPayment = BigDecimal.ZERO;
@@ -528,21 +538,21 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
         this.loanPrincipal = loanPrincipal;
     }
 
-    public List<Date> getInstallments() {
+    public List<DateTime> getInstallments() {
         return installments;
     }
 
     @Override
-    public void setInstallments(List<Date> installments) {
+    public void setInstallments(List<DateTime> installments) {
         this.installments = installments;
     }
     
-    public List<Date> getActualPaymentDates() {
+    public List<DateTime> getActualPaymentDates() {
         return actualPaymentDates;
     }
 
     @Override
-    public void setActualPaymentDates(List<Date> actualPaymentDates) {
+    public void setActualPaymentDates(List<DateTime> actualPaymentDates) {
         this.actualPaymentDates = actualPaymentDates;
     }
 

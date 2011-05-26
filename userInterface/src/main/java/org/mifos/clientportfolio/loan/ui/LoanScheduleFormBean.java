@@ -27,7 +27,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormatter;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.dto.domain.FeeDto;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
@@ -37,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2", "DLS_DEAD_LOCAL_STORE"}, justification="should disable at filter level and also for pmd - not important for us")
@@ -45,8 +48,9 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
     @Autowired
     private transient LoanAccountServiceFacade loanAccountServiceFacade;
     
-    private List<Date> installments = new ArrayList<Date>();
-    private List<Date> actualPaymentDates = new ArrayList<Date>();
+    @DateTimeFormat(style="S-")
+    private List<DateTime> installments = new ArrayList<DateTime>();
+    private List<DateTime> actualPaymentDates = new ArrayList<DateTime>();
     private List<Number> installmentAmounts = new ArrayList<Number>();
     private List<Number> actualPaymentAmounts = new ArrayList<Number>();
     
@@ -72,6 +76,16 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
 
     public LoanScheduleFormBean() {
         // constructor
+    }
+    
+    public String parseInstallment(int index) {
+        DateTimeFormatter formatter = org.joda.time.format.DateTimeFormat.forStyle("S-").withLocale(Locale.getDefault());
+        return formatter.print(this.installments.get(index));
+    }
+    
+    public String parseActualPaymentDates(int index) {
+        DateTimeFormatter formatter = org.joda.time.format.DateTimeFormat.forStyle("S-").withLocale(Locale.getDefault());
+        return formatter.print(new DateTime(this.actualPaymentDates.get(index)));
     }
     
     private void addErrorMessageToContext(MessageContext messageContext, ErrorEntry fieldError) {
@@ -100,11 +114,6 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
      */
     public void validateCalculateAndReviewLoanSchedule(ValidationContext context) {
         MessageContext messageContext = context.getMessageContext();
-        
-        if (!Locale.getDefault().getLanguage().equalsIgnoreCase("en")) {
-            // FIXME - date are getting bind errors in different locale?
-            messageContext.clearMessages();
-        }
         
         if (this.variableInstallmentsAllowed) {
             // validate input in total fields
@@ -280,7 +289,7 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
         }
     }
     
-    private void validatePaymentsAndAmounts(MessageContext messageContext, List<Date> actualPaymentDates, List<Number> actualPaymentAmounts) {
+    private void validatePaymentsAndAmounts(MessageContext messageContext, List<DateTime> actualPaymentDates, List<Number> actualPaymentAmounts) {
         int index = 0;
         LocalDate lastPaymentDate = null;
         BigDecimal totalPayment = BigDecimal.ZERO;
@@ -387,12 +396,12 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
         return BigDecimal.valueOf(newTotal).subtract(fees.add(interest)).doubleValue();
     }
 
-    public List<Date> getInstallments() {
+    public List<DateTime> getInstallments() {
         return installments;
     }
 
     @Override
-    public void setInstallments(List<Date> installments) {
+    public void setInstallments(List<DateTime> installments) {
         this.installments = installments;
     }
 
@@ -487,12 +496,12 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
         this.loanPrincipal = loanPrincipal;
     }
     
-    public List<Date> getActualPaymentDates() {
+    public List<DateTime> getActualPaymentDates() {
         return actualPaymentDates;
     }
 
     @Override
-    public void setActualPaymentDates(List<Date> actualPaymentDates) {
+    public void setActualPaymentDates(List<DateTime> actualPaymentDates) {
         this.actualPaymentDates = actualPaymentDates;
     }
 
