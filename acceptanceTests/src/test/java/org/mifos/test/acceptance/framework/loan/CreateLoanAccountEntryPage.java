@@ -138,16 +138,20 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         submitAndWaitForPage();
     }
 
-    public void fillAdditionalFee(CreateLoanAccountSubmitParameters formParameters){
-        if(formParameters.getAdditionalFee1()!=null) {
-            selenium.select("selectedFeeId0", "label=" + formParameters.getAdditionalFee1());
+    public CreateLoanAccountEntryPage fillAdditionalFee(CreateLoanAccountSubmitParameters formParameters){
+        if(formParameters != null)
+        {
+            if(formParameters.getAdditionalFee1()!=null) {
+                selenium.select("selectedFeeId0", "label=" + formParameters.getAdditionalFee1());
+            }
+            if(formParameters.getAdditionalFee2()!=null) {
+                selenium.select("selectedFeeId1", "label=" + formParameters.getAdditionalFee2());
+            }
+            if(formParameters.getAdditionalFee3()!=null) {
+                selenium.select("selectedFeeId2", "label=" + formParameters.getAdditionalFee3());
+            }
         }
-        if(formParameters.getAdditionalFee2()!=null) {
-            selenium.select("selectedFeeId1", "label=" + formParameters.getAdditionalFee2());
-        }
-        if(formParameters.getAdditionalFee3()!=null) {
-            selenium.select("selectedFeeId2", "label=" + formParameters.getAdditionalFee3());
-        }
+        return this;
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {

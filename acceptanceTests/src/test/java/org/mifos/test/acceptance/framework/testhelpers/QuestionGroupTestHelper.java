@@ -28,6 +28,7 @@ import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
@@ -415,11 +416,12 @@ public class QuestionGroupTestHelper {
             .submitAndNavigateToQuestionResponsePage(disburseParams);
     }
 
-    public QuestionResponsePage navigateToQuestionResponsePageDuringLoanCreation(CreateLoanAccountSearchParameters createLoanAccountSearchParameters) {
+    public QuestionResponsePage navigateToQuestionResponsePageDuringLoanCreation(CreateLoanAccountSearchParameters createLoanAccountSearchParameters, CreateLoanAccountSubmitParameters formParameters) {
         return navigationHelper
         .navigateToClientsAndAccountsPage()
         .navigateToCreateLoanAccountUsingLeftMenu()
         .searchAndNavigateToCreateLoanAccountPage(createLoanAccountSearchParameters)
+        .fillAdditionalFee(formParameters)
         .submitAndNavigateToQuestionResponsePage();
     }
 
