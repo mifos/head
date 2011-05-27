@@ -196,11 +196,11 @@ $(document).ready(function() {
 			[#else]
 				[#if loanProductReferenceData.compareCashflowEnabled]
 					[@spring.bind "cashFlowSummaryFormBean.installments[${ind}]"/]
-					<td style="border-top: 1px solid grey;">${cashFlowSummaryFormBean.installments[ind]?date?string.medium}</td>
+					<td style="border-top: 1px solid grey;">${cashFlowSummaryFormBean.parseInstallment(ind)}</td>
 					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentDates[${ind}]" size="10" value="${cashFlowSummaryFormBean.parseActualPaymentDates(ind)}" id="installment.actualPaymentDate.${ind}" class="date-pick" /></td>
 				[#else]
 					[@spring.bind "loanScheduleFormBean.installments[${ind}]"/]
-					<td style="border-top: 1px solid grey;">${loanScheduleFormBean.installments[ind]?date?string.medium}</td>
+					<td style="border-top: 1px solid grey;">${loanScheduleFormBean.parseInstallment(ind)}</td>
 					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentDates[${ind}]" size="10" value="${loanScheduleFormBean.parseActualPaymentDates(ind)}" id="installment.actualPaymentDate.${ind}" class="date-pick" /></td>
 				[/#if]
 			[/#if]

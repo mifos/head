@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -44,6 +43,7 @@ import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -192,12 +192,15 @@ public class LoanBusinessService implements BusinessService {
     public List<LoanBO> getActiveLoansForAllClientsAssociatedWithGroupLoan(final LoanBO loan) throws ServiceException {
         List<LoanBO> activeLoans = new ArrayList<LoanBO>();
         Collection<CustomerBO> clients = getClientsAssociatedWithGroupLoan(loan);
+        
         if (clients != null && clients.size() > 0) {
-            for (CustomerBO customerBO : clients) {
-                for (AccountBO accountBO : customerBO.getAccounts()) {
-                    if (accountBO.isActiveLoanAccount()) {
-                        activeLoans.add((LoanBO) accountBO);
-                    }
+            for (CustomerBO client : clients) {
+                
+                try {
+                    List<LoanBO> clientLoans = getlegacyLoanDao().getLoanAccountsActiveInGoodBadStanding(client.getCustomerId());
+                    activeLoans.addAll(clientLoans);
+                } catch (PersistenceException e) {
+                    throw new MifosRuntimeException(e);
                 }
             }
         }

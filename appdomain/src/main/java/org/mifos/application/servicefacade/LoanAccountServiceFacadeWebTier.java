@@ -981,6 +981,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         OfficeBO userOffice = this.officeDao.findOfficeById(user.getBranchId());
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
         CustomerBO customer = this.customerDao.findCustomerById(loanAccountInfo.getCustomerId());
+        if (customer.isGroup()) {
+            customer = this.customerDao.findGroupBySystemId(customer.getGlobalCustNum());
+        }
 
         // assemble
         LoanAccountDetail loanAccountDetail = assembleLoanAccountDetail(loanAccountInfo);
@@ -999,9 +1002,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
 
         List<DateTime> loanScheduleDates = new ArrayList<DateTime>(loanScheduleInstallmentDates);
-//        for (Date loanScheduleInstallmentDate : loanScheduleInstallmentDates) {
-//            loanScheduleDates.add(new DateTime(loanScheduleInstallmentDate));
-//        }
 
         LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, loanScheduleDates);
         if (!installmentPrincipalAmounts.isEmpty()) {
