@@ -96,10 +96,9 @@ public class FeeFrequencyEntity extends AbstractEntity {
 
     public FeeFrequencyDto toDto() {
         FeeFrequencyDto feeFrequencyDto = new FeeFrequencyDto();
-//        feeFrequencyDto.setType(this.feeFrequencyType.getName());
         if (this.feeFrequencyType.isOneTime()) {
-//            feeFrequencyDto.setPayment(this.feePayment.getName());
             feeFrequencyDto.setOneTime(true);
+            feeFrequencyDto.setPaymentId(this.feePayment.getId().intValue());
         } else {
             feeFrequencyDto.setMonthly(this.feeMeetingFrequency.isMonthly());
             feeFrequencyDto.setWeekly(this.feeMeetingFrequency.isWeekly());

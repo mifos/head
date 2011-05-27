@@ -20,40 +20,22 @@
 
 package org.mifos.accounts.loan.business.service;
 
-import static java.util.Arrays.asList;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.PaymentData;
-import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.ApplicationContextProvider;
-import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -117,43 +99,5 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
-    }
-
-    private PaymentData createPaymentViewObject(final AccountBO accountBO) {
-        PaymentData paymentData = PaymentData.createPaymentData(TestUtils.createMoney("212.0"),
-                accountBO.getPersonnel(), Short.valueOf("1"), new Date(System.currentTimeMillis()));
-        paymentData.setReceiptDate(new Date(System.currentTimeMillis()));
-        paymentData.setReceiptNum("423423");
-        return paymentData;
-    }
-
-    @Test
-    public void testGetActiveLoansForAllClientsUnderGroup() throws Exception {
-        int groupLoanAccountId = 1;
-        GroupBO groupMock = createMock(GroupBO.class);
-        CustomerBO clientMock = createMock(ClientBO.class);
-        LoanBO groupLoanMock = createMock(LoanBO.class);
-        ConfigurationBusinessService configServiceMock = createMock(ConfigurationBusinessService.class);
-        LoanBO loanMock1 = createMock(LoanBO.class);
-        LoanBO loanMock2 = createMock(LoanBO.class);
-        AccountBusinessService accountBusinessServiceMock = createMock(AccountBusinessService.class);
-
-        expect(accountBusinessServiceMock.getCoSigningClientsForGlim(groupLoanAccountId)).andReturn(
-                Arrays.asList(clientMock));
-        expect(configServiceMock.isGlimEnabled()).andReturn(true);
-        expect(loanMock1.isActiveLoanAccount()).andReturn(true);
-        expect(loanMock2.isActiveLoanAccount()).andReturn(false);
-        expect(groupLoanMock.getAccountId()).andReturn(groupLoanAccountId);
-
-        expect(clientMock.getAccounts()).andReturn(new HashSet<AccountBO>(asList(loanMock1, loanMock2)));
-
-        replay(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock, configServiceMock,
-                accountBusinessServiceMock);
-
-        Assert.assertEquals(asList(loanMock1), new LoanBusinessService(legacyLoanDao, configServiceMock,
-                accountBusinessServiceMock, createMock(HolidayService.class), createMock(ScheduleCalculatorAdaptor.class)).getActiveLoansForAllClientsAssociatedWithGroupLoan(groupLoanMock));
-
-        verify(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock, configServiceMock,
-                accountBusinessServiceMock);
     }
 }
