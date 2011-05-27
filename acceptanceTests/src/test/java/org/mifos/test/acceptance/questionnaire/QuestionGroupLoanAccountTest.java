@@ -273,13 +273,13 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[@class='row'][1]/div[@class='value']"), "10,000 (Allowed amount: 1,000 - 10,000)");
         Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[@class='row'][4]/div[@class='value']"), "25-Feb-2011");
         
-        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments.table']//tr[1]//td[2]"), "04-Mar-2011");
-        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments.table']//tr[1]//td[5]"), "110");
-        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments.table']//tr[1]//td[6]"), "1,156");
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments']//tr[1]//td[2]"), "04-Mar-2011");
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments']//tr[1]//td[5]"), "110");
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments']//tr[1]//td[6]"), "1,156");
         
-        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments.table']//tr[4]//td[2]"), "25-Mar-2011");
-        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments.table']//tr[4]//td[5]"), "100");
-        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments.table']//tr[4]//td[6]"), "1,146");
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments']//tr[4]//td[2]"), "25-Mar-2011");
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments']//tr[4]//td[5]"), "100");
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments']//tr[4]//td[6]"), "1,146");
         
         Assert.assertEquals(selenium.getText("xpath=//div[@class='summary']/div[@class='row']/div[@class='value']"), "04/02/2011");
         Assert.assertEquals(selenium.getText("xpath=//div[@class='summary']/div[@class='row'][2]/div[@class='value']"), "free text");
