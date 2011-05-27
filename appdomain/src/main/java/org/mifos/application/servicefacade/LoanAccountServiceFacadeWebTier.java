@@ -925,13 +925,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     @Override
     public LoanCreationResultDto createLoan(CreateLoanAccount loanAccountInfo, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow) {
 
-        return createLoanAccount(loanAccountInfo, new ArrayList<LoanPaymentDto>(), questionGroups, loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>(), new ArrayList<GroupMemberAccountDto>(), false);
+        return createLoanAccount(loanAccountInfo, new ArrayList<LoanPaymentDto>(), questionGroups, loanAccountCashFlow, new ArrayList<DateTime>(), new ArrayList<Number>(), new ArrayList<GroupMemberAccountDto>(), false);
     }
     
     @Override
     public LoanCreationResultDto createLoan(CreateLoanAccount loanAccountInfo,
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, 
-            List<Date> loanScheduleInstallmentDates, List<Number> installmentPrincipalAmounts) {
+            List<DateTime> loanScheduleInstallmentDates, List<Number> installmentPrincipalAmounts) {
 
         return createLoanAccount(loanAccountInfo, new ArrayList<LoanPaymentDto>(), questionGroups, loanAccountCashFlow, loanScheduleInstallmentDates, installmentPrincipalAmounts, new ArrayList<GroupMemberAccountDto>(), false);
     }
@@ -940,7 +940,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     public LoanCreationResultDto createGroupLoanWithIndividualMonitoring(CreateGlimLoanAccount glimLoanAccount,
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow) {
 
-        return createLoanAccount(glimLoanAccount.getGroupLoanAccountDetails(), new ArrayList<LoanPaymentDto>(), questionGroups, loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>(), glimLoanAccount.getMemberDetails(), false);
+        return createLoanAccount(glimLoanAccount.getGroupLoanAccountDetails(), new ArrayList<LoanPaymentDto>(), questionGroups, loanAccountCashFlow, new ArrayList<DateTime>(), new ArrayList<Number>(), glimLoanAccount.getMemberDetails(), false);
     }
     
     @Override
@@ -951,13 +951,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         CreateLoanAccount loanAccountInfo = glimLoanAccount.getGroupLoanAccountDetails();
         
         return createLoanAccount(loanAccountInfo, backdatedLoanPayments, questionGroups, 
-                loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>(), glimLoanAccount.getMemberDetails(), true);
+                loanAccountCashFlow, new ArrayList<DateTime>(), new ArrayList<Number>(), glimLoanAccount.getMemberDetails(), true);
     }
     
     @Override
     public LoanCreationResultDto createBackdatedLoan(CreateLoanAccount loanAccountInfo,
             List<LoanPaymentDto> backdatedLoanPayments, List<QuestionGroupDetail> questionGroups,
-            LoanAccountCashFlow loanAccountCashFlow, List<Date> loanScheduleInstallmentDates,
+            LoanAccountCashFlow loanAccountCashFlow, List<DateTime> loanScheduleInstallmentDates,
             List<Number> installmentPrincipalAmounts) {
         return createLoanAccount(loanAccountInfo, backdatedLoanPayments, questionGroups, 
                 loanAccountCashFlow, loanScheduleInstallmentDates, installmentPrincipalAmounts, new ArrayList<GroupMemberAccountDto>(), true);
@@ -968,11 +968,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             List<LoanPaymentDto> backdatedLoanPayments, List<QuestionGroupDetail> questionGroups,
             LoanAccountCashFlow loanAccountCashFlow) {
         return createLoanAccount(loanAccountInfo, backdatedLoanPayments, questionGroups, 
-                loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>(), new ArrayList<GroupMemberAccountDto>(), true);
+                loanAccountCashFlow, new ArrayList<DateTime>(), new ArrayList<Number>(), new ArrayList<GroupMemberAccountDto>(), true);
     }
     
     private LoanCreationResultDto createLoanAccount(CreateLoanAccount loanAccountInfo, List<LoanPaymentDto> backdatedLoanPayments,
-            List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, List<Date> loanScheduleInstallmentDates,
+            List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, List<DateTime> loanScheduleInstallmentDates,
             List<Number> installmentPrincipalAmounts, List<GroupMemberAccountDto> memberDetails, boolean isBackdatedLoan) {
         
         // 1. assemble loan details
@@ -998,10 +998,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             repaymentDayMeeting = this.createNewMeetingForRepaymentDay(loanAccountInfo.getDisbursementDate(), loanAccountInfo, loanAccountDetail.getCustomer());
         }
 
-        List<DateTime> loanScheduleDates = new ArrayList<DateTime>();
-        for (Date loanScheduleInstallmentDate : loanScheduleInstallmentDates) {
-            loanScheduleDates.add(new DateTime(loanScheduleInstallmentDate));
-        }
+        List<DateTime> loanScheduleDates = new ArrayList<DateTime>(loanScheduleInstallmentDates);
+//        for (Date loanScheduleInstallmentDate : loanScheduleInstallmentDates) {
+//            loanScheduleDates.add(new DateTime(loanScheduleInstallmentDate));
+//        }
 
         LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, loanScheduleDates);
         if (!installmentPrincipalAmounts.isEmpty()) {
@@ -1717,7 +1717,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         for (LoanBO individualLoan : individualLoans) {
             LoanAccountDetailsDto loandetails = new LoanAccountDetailsDto();
-            loandetails.setClientId(individualLoan.getCustomer().getCustomerId().toString());
+            loandetails.setClientId(individualLoan.getCustomer().getGlobalCustNum());
             loandetails.setClientName(individualLoan.getCustomer().getDisplayName());
             loandetails.setLoanAmount(null != individualLoan.getLoanAmount()
                     && !EMPTY.equals(individualLoan.getLoanAmount().toString()) ? individualLoan.getLoanAmount()

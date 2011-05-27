@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
@@ -140,6 +141,12 @@ public class LoanAccountFormBean implements Serializable {
     private int digitsBeforeDecimalForMonetaryAmounts;
     private int digitsAfterDecimalForMonetaryAmounts;
 
+    private Locale locale;
+
+    public Locale getLocale() {
+        return locale;
+    }
+
     public void validateEditAccountDetailsStep(ValidationContext context) {
         validateEnterAccountDetailsStep(context);
     }
@@ -174,7 +181,7 @@ public class LoanAccountFormBean implements Serializable {
 
                         Number clientAmount = this.clientAmount[index];
 
-                        if (clientAmount == null || exceedsMax(clientAmount, this.maxAllowedAmount)) {
+                        if (clientAmount == null || exceedsMinOrMax(clientAmount, Integer.valueOf(1), this.maxAllowedAmount)) {
                             String defaultErrorMessage = "Please specify valid Amount.";
                             rejectGlimClientAmountField(index + 1, errors, defaultErrorMessage);
                         }
@@ -616,10 +623,6 @@ public class LoanAccountFormBean implements Serializable {
         return defaultValue.doubleValue() > maxValue.doubleValue() || defaultValue.doubleValue() < minValue.doubleValue();
     }
     
-    private boolean exceedsMax(Number defaultValue, Number maxValue) {
-        return defaultValue.doubleValue() > maxValue.doubleValue();
-    }
-
     public Number[] getSelectedFeeId() {
 		return selectedFeeId;
 	}
@@ -1151,5 +1154,9 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setAdditionalFees(List<FeeDto> additionalFees) {
         this.additionalFees = additionalFees;
+    }
+
+    public void setLocale(Locale default1) {
+        this.locale = default1;
     }
 }

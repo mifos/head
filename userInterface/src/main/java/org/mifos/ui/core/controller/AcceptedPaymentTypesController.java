@@ -64,7 +64,7 @@ public class AcceptedPaymentTypesController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    @ModelAttribute("formBean")
+    @ModelAttribute("acceptedPaymentTypesBean")
     public AcceptedPaymentTypesBean showPopulatedForm() {
         AcceptedPaymentTypeDto acceptedPaymentTypeDto = adminServiceFacade.retrieveAcceptedPaymentTypes();
 
@@ -160,7 +160,7 @@ public class AcceptedPaymentTypesController {
 
     @RequestMapping(method = RequestMethod.POST)
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
-                                    @ModelAttribute("formBean") AcceptedPaymentTypesBean formBean,
+                                    @ModelAttribute("acceptedPaymentTypesBean") AcceptedPaymentTypesBean formBean,
                                     BindingResult result,
                                     SessionStatus status) {
         String viewName = REDIRECT_TO_ADMIN_SCREEN;

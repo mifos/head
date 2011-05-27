@@ -90,6 +90,7 @@
     		<evaluate expression="loanAccountController.retrieveCashFlowSettings(flowScope.loanScheduleReferenceData, flowScope.productId)" result="flowScope.cashFlowSettings"/>
     		<evaluate expression="cashFlowController.retrieveCashFlowForm(flowScope.cashFlowSettings)" result="flowScope.cashFlow"/>
     	</on-entry>
+    	
         <transition on="capture" to="summaryOfCashflow" validate="true">
         	<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean)" result="flowScope.loanScheduleReferenceData"/>
     	    <evaluate expression="cashFlowController.retrieveMonthlyCashflowDetails(flowScope.cashFlow, flowScope.loanScheduleReferenceData.disbursementDate, flowScope.loanScheduleReferenceData.loanAmount)" result="flowScope.monthlyCashFlowDetails"/>
