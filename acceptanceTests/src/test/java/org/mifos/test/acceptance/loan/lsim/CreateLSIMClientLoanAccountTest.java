@@ -243,9 +243,9 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
             CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = createLoanAccountEntryPage.clickContinue();
             
             createLoanAccountReviewInstallmentPage.verifyLoanAmount("5,000");
-            createLoanAccountReviewInstallmentPage.verifyDueDate(1, "01-Apr-2011");
-            createLoanAccountReviewInstallmentPage.verifyDueDate(2, "08-Apr-2011");
-            createLoanAccountReviewInstallmentPage.verifyDueDate(10, "03-Jun-2011");
+            createLoanAccountReviewInstallmentPage.verifyDueDate(1, "01/04/11");
+            createLoanAccountReviewInstallmentPage.verifyDueDate(2, "08/04/2011");
+            createLoanAccountReviewInstallmentPage.verifyDueDate(10, "03/06/2011");
             
             CreateLoanAccountPreviewPage createLoanAccountPreviewPage = createLoanAccountReviewInstallmentPage.clickPreviewAndNavigateToPreviewPage();
             
