@@ -50,6 +50,7 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
     
     @DateTimeFormat(style="S-")
     private List<DateTime> installments = new ArrayList<DateTime>();
+    @DateTimeFormat(style="S-")
     private List<DateTime> actualPaymentDates = new ArrayList<DateTime>();
     private List<Number> installmentAmounts = new ArrayList<Number>();
     private List<Number> actualPaymentAmounts = new ArrayList<Number>();

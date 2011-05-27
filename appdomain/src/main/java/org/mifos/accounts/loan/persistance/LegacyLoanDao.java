@@ -20,6 +20,18 @@
 
 package org.mifos.accounts.loan.persistance;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -62,9 +74,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.math.BigDecimal;
-import java.util.*;
 
 public class LegacyLoanDao extends LegacyGenericDao {
 
@@ -312,6 +321,7 @@ public class LegacyLoanDao extends LegacyGenericDao {
 
     @SuppressWarnings( { "cast", "unchecked" })
     public List<LoanBO> getLoanAccountsActiveInGoodBadStanding(final Integer customerId) throws PersistenceException {
+        List<LoanBO> activeLoanAccounts = new ArrayList<LoanBO>();
         try {
             HashMap<String, Object> queryParameters = new HashMap<String, Object>();
             queryParameters.put(LoanConstants.LOANACTIVEINGOODSTAND, AccountStates.LOANACC_ACTIVEINGOODSTANDING);
@@ -319,8 +329,11 @@ public class LegacyLoanDao extends LegacyGenericDao {
             queryParameters.put(LoanConstants.LOANACTIVEINBADSTAND, AccountStates.LOANACC_BADSTANDING);
             queryParameters.put(LoanConstants.ACCOUNTTYPE_ID, AccountTypes.LOAN_ACCOUNT.getValue());
 
-            return (List<LoanBO>) executeNamedQuery(NamedQueryConstants.ACCOUNT_GETALLLOANBYCUSTOMER, queryParameters);
-
+            List<LoanBO> customerLoans = (List<LoanBO>) executeNamedQuery(NamedQueryConstants.ACCOUNT_GETALLLOANBYCUSTOMER, queryParameters);
+            if (customerLoans != null) {
+                activeLoanAccounts = new ArrayList<LoanBO>(customerLoans);
+            }
+            return activeLoanAccounts;
         } catch (Exception e) {
             throw new PersistenceException(e);
         }
