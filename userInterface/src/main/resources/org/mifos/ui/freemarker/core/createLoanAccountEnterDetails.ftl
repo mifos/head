@@ -315,23 +315,24 @@
 		    <div class="row">
 		        [@form.label "defaultFeeAmountOrRate[${index}]" false ]${defaultFee.name}:[/@form.label]
 		        
-		        [#if defaultFee.feeFrequencyType == "Periodic"]
-		        	[@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmountOrRate[${index}]" attributes="disabled='disabled'"/]
+		        [#if defaultFee.feeFrequency.oneTime]
+		        	[@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmountOrRate[${index}]" /]
 		        [#else]
-					[@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmountOrRate[${index}]" /]		        	
+					[@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmountOrRate[${index}]" attributes="disabled='disabled'"/]							        	
 		        [/#if]
 		        
 		        <span style="margin-left: 20px;">
-		        [#if defaultFee.feeFrequencyType == "Periodic"]
+		        [#if defaultFee.feeFrequency.oneTime]
+		        	[@spring.message "createLoanAccount.periodicity"/] ${defaultFee.feeFrequencyType}
+		        [#else]
 		        	[@spring.message "createLoanAccount.periodicity"/] ${defaultFee.feeFrequency.recurAfterPeriod}
 		        	[#if defaultFee.feeFrequency.weekly]
 		        		<span>[@spring.message "createLoanAccount.weeks"/]</span>
 		       		[#else]
 		        		<span>[@spring.message "createLoanAccount.months"/]</span>
 		       		[/#if]
-		       	[#else]
-		       		[@spring.message "createLoanAccount.periodicity"/] ${defaultFee.feeFrequencyType}
-		       	[/#if]
+		        [/#if]
+		        
 		       	[#if defaultFee.rateBasedFee]
 		        	<span style="position:relative; left: -116px; top: 15px">[@spring.message "createLoanAccount.formula"/] ${defaultFee.feeFormula.name}</span>
 		       	[/#if]
@@ -371,7 +372,6 @@
         [@form.submitButton label="widget.form.buttonLabel.continue" id="loancreationdetails.button.continue" webflowEvent="detailsEntered" /]
         [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>
-    
     
     [#list loanProductReferenceData.additionalFees as additionalFee]
     	<input type="hidden" id="hiddenFeeAmount${additionalFee.id}" value="${additionalFee.amountOrRate}" />

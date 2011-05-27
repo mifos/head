@@ -333,7 +333,6 @@ public abstract class FeeBO extends AbstractBusinessObject {
 
         FeeFrequencyDto feeFrequencyDto = this.feeFrequency.toDto();
         feeDto.setFeeFrequency(feeFrequencyDto);
-//        feeDto.setFeeFrequencyType(feeFrequencyDto.getType());
 
         GLCodeDto glCodeDto = this.glCode.toDto();
         feeDto.setGlCodeDto(glCodeDto);

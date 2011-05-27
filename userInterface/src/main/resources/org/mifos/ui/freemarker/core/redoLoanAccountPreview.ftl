@@ -165,7 +165,6 @@
     [/#if]
 </div>
 <br/>
-[#if loanProductReferenceData.compareCashflowEnabled]
 <div class="product-summary">
 	[#assign index = 0]
 	
@@ -175,35 +174,35 @@
 		    <div class="row">
 		        <div class="attribute"><span class="standout">${defaultFee.name}</span></div>
 		        <div class="value">
-			        [#if defaultFee.rateBasedFee]
-		        		[#setting number_format="#.###"]
-		        		${defaultFee.rate?string.number}%
-						[#setting number_format=loanAccountFormBean.numberFormatForMonetaryAmounts]	        		
-		        	[#else]
-		        		${defaultFee.amountAsNumber?string.number}
-		        	[/#if]
-	
-					[#if defaultFee.rateBasedFee]
-			        	${defaultFee.feeFormula.name}
-			       	[/#if]
-			       		        	
-					[#if defaultFee.feeFrequencyType == "Periodic"]
-			        	<span class="standout">[@spring.message "createLoanAccount.periodicity"/]:</span> ${defaultFee.feeFrequency.recurAfterPeriod}
-			        	[#if defaultFee.feeFrequency.weekly]
-			        		<span>[@spring.message "createLoanAccount.weeks"/]</span>
-			       		[#else]
-			        		<span>[@spring.message "createLoanAccount.months"/]</span>
-			       		[/#if]
-			       	[#else]
-			       		<span class="standout">[@spring.message "createLoanAccount.periodicity"/]</span> 
-			       		<span style="margin-left: 5px;">[#if defaultFee.feeFrequency.oneTime][@spring.message "createLoanAccount.periodicity.onetime"/][/#if]</span>
-			       		<span class="standout" style="margin-left: 5px;">[@spring.message "createLoanAccount.frequency"/]</span>
-			       		<span style="margin-left: 5px;">
-			       			[#if defaultFee.feeFrequency.payment == "Time Of Disburstment"][@spring.message "createLoanAccount.frequency.timeofdisbursement"/][/#if]
-			       			[#if defaultFee.feeFrequency.payment == "Upfront"][@spring.message "createLoanAccount.frequency.upfront"/][/#if]
-			       			[#if defaultFee.feeFrequency.payment == "Time of First Loan Repayment"][@spring.message "createLoanAccount.frequency.timeoffirstloanrepayment"/][/#if]
-			       		</span>
-			       	[/#if]
+				[#if defaultFee.rateBasedFee]
+	        		[#setting number_format="#.###"]
+	        		${defaultFee.rate?string.number}%
+					[#setting number_format=loanAccountFormBean.numberFormatForMonetaryAmounts]	        		
+	        	[#else]
+	        		${defaultFee.amountAsNumber?string.number}
+	        	[/#if]
+	        	
+				[#if defaultFee.rateBasedFee]
+		        	${defaultFee.feeFormula.name}
+		       	[/#if]
+		       	
+		       	[#if defaultFee.feeFrequency.oneTime]
+		       		<span class="standout">[@spring.message "createLoanAccount.periodicity"/]</span> 
+		       		<span style="margin-left: 5px;">[#if defaultFee.feeFrequency.oneTime][@spring.message "createLoanAccount.periodicity.onetime"/][/#if]</span>
+		       		<span class="standout" style="margin-left: 5px;">[@spring.message "createLoanAccount.frequency"/]</span>
+		       		<span style="margin-left: 5px;">
+		       			[#if defaultFee.feeFrequency.paymentId == 1][@spring.message "createLoanAccount.frequency.upfront"/][/#if]
+		       			[#if defaultFee.feeFrequency.paymentId == 2][@spring.message "createLoanAccount.frequency.timeofdisbursement"/][/#if]
+		       			[#if defaultFee.feeFrequency.paymentId == 3][@spring.message "createLoanAccount.frequency.timeoffirstloanrepayment"/][/#if]
+		       		</span>
+				[#else]		       		        	
+		        	<span class="standout">[@spring.message "createLoanAccount.periodicity"/]</span> ${defaultFee.feeFrequency.recurAfterPeriod}
+		        	[#if defaultFee.feeFrequency.weekly]
+		        		<span>[@spring.message "createLoanAccount.weeks"/]</span>
+		       		[#else]
+		        		<span>[@spring.message "createLoanAccount.months"/]</span>
+		       		[/#if]
+		       	[/#if]
 		       	</div>
 		    <!-- end of row -->
 		    </div>
@@ -215,35 +214,35 @@
 		    <div class="row">
 		        <div class="attribute"><span class="standout">${defaultFee.name}</span></div>
 		        <div class="value">
-			        [#if defaultFee.rateBasedFee]
-		        		[#setting number_format="#.###"]
-		        		${defaultFee.rate?string.number}%
-						[#setting number_format=loanAccountFormBean.numberFormatForMonetaryAmounts]	        		
-		        	[#else]
-		        		${defaultFee.amountAsNumber?string.number}
-		        	[/#if]
-	
-					[#if defaultFee.rateBasedFee]
-			        	${defaultFee.feeFormula.name}
-			       	[/#if]
-			       		        	
-					[#if defaultFee.feeFrequencyType == "Periodic"]
-			        	<span class="standout">[@spring.message "createLoanAccount.periodicity"/]:</span> ${defaultFee.feeFrequency.recurAfterPeriod}
-			        	[#if defaultFee.feeFrequency.weekly]
-			        		<span>[@spring.message "createLoanAccount.weeks"/]</span>
-			       		[#else]
-			        		<span>[@spring.message "createLoanAccount.months"/]</span>
-			       		[/#if]
-			       	[#else]
-			       		<span class="standout">[@spring.message "createLoanAccount.periodicity"/]</span> 
-			       		<span style="margin-left: 5px;">[#if defaultFee.feeFrequency.oneTime][@spring.message "createLoanAccount.periodicity.onetime"/][/#if]</span>
-			       		<span class="standout" style="margin-left: 5px;">[@spring.message "createLoanAccount.frequency"/]</span>
-			       		<span style="margin-left: 5px;">
-			       			[#if defaultFee.feeFrequency.payment == "Time Of Disburstment"][@spring.message "createLoanAccount.frequency.timeofdisbursement"/][/#if]
-			       			[#if defaultFee.feeFrequency.payment == "Upfront"][@spring.message "createLoanAccount.frequency.upfront"/][/#if]
-			       			[#if defaultFee.feeFrequency.payment == "Time of First Loan Repayment"][@spring.message "createLoanAccount.frequency.timeoffirstloanrepayment"/][/#if]
-			       		</span>
-			       	[/#if]
+			    [#if defaultFee.rateBasedFee]
+	        		[#setting number_format="#.###"]
+	        		${defaultFee.rate?string.number}%
+					[#setting number_format=loanAccountFormBean.numberFormatForMonetaryAmounts]	        		
+	        	[#else]
+	        		${defaultFee.amountAsNumber?string.number}
+	        	[/#if]
+	        	
+				[#if defaultFee.rateBasedFee]
+		        	${defaultFee.feeFormula.name}
+		       	[/#if]
+		       	
+		       	[#if defaultFee.feeFrequency.oneTime]
+		       		<span class="standout">[@spring.message "createLoanAccount.periodicity"/]</span> 
+		       		<span style="margin-left: 5px;">[#if defaultFee.feeFrequency.oneTime][@spring.message "createLoanAccount.periodicity.onetime"/][/#if]</span>
+		       		<span class="standout" style="margin-left: 5px;">[@spring.message "createLoanAccount.frequency"/]</span>
+		       		<span style="margin-left: 5px;">
+		       			[#if defaultFee.feeFrequency.paymentId == 1][@spring.message "createLoanAccount.frequency.upfront"/][/#if]
+		       			[#if defaultFee.feeFrequency.paymentId == 2][@spring.message "createLoanAccount.frequency.timeofdisbursement"/][/#if]
+		       			[#if defaultFee.feeFrequency.paymentId == 3][@spring.message "createLoanAccount.frequency.timeoffirstloanrepayment"/][/#if]
+		       		</span>
+				[#else]		       		        	
+		        	<span class="standout">[@spring.message "createLoanAccount.periodicity"/]</span> ${defaultFee.feeFrequency.recurAfterPeriod}
+		        	[#if defaultFee.feeFrequency.weekly]
+		        		<span>[@spring.message "createLoanAccount.weeks"/]</span>
+		       		[#else]
+		        		<span>[@spring.message "createLoanAccount.months"/]</span>
+		       		[/#if]
+		       	[/#if]
 		       	</div>
 		    <!-- end of row -->
 		    </div>
@@ -257,7 +256,6 @@
 	<br/>
 	<br/>
 	[/#if]
-[/#if]
 <br/>
 <form action="${flowExecutionUrl}" method="post">
 	[@form.submitButton label="widget.form.buttonLabel.editaccountinfo" id="createloanpreview.button.edit" webflowEvent="editAccountDetails" /]
