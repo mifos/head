@@ -146,7 +146,17 @@ function selectAllOptions(outSel)
                             <br/>
                             <div class="margin10topbottomrgin">
                                 <span class="span-4" style="width:auto">
-                                    [@spring.formMultiSelect "formBean.notAllowed", formBean.notAllowedProductOptions, "class=listSize" /]
+                                	[@spring.bind "formBean.notAllowed"/]
+					                <select name="${spring.status.expression}" class="listSize" multiple="multiple">
+										[#list formBean.notAllowedProductOptions?keys as optionKey]
+											[#if spring.status.value?default("")?string == optionKey?string]
+											<option selected="true" value="${optionKey}">${options[optionKey]}
+											[#else]
+											<option value="${optionKey}">${formBean.notAllowedProductOptions[optionKey]}
+											[/#if]
+											</option>
+										[/#list]
+									</select>
                                 </span>
                                 <span class="span-3 width80px">
                                     <br />
@@ -155,7 +165,17 @@ function selectAllOptions(outSel)
                                     <input id="defineProductMix.button.remove" class="buttn2 width70px" name="remove" type="button" value="<< [@spring.message "remove"/]" onclick="moveOptions(this.form.allowed, this.form.notAllowed);"/>
                                 </span>
                                 <span class="span-4" style="width:auto">
-                                    [@spring.formMultiSelect "formBean.allowed", formBean.allowedProductOptions, "class=listSize" /]
+                                	[@spring.bind "formBean.allowed"/]
+					                <select name="${spring.status.expression}" class="listSize" multiple="multiple">
+										[#list formBean.allowedProductOptions?keys as optionKey]
+											[#if spring.status.value?default("")?string == optionKey?string]
+											<option selected="true" value="${optionKey}">${options[optionKey]}
+											[#else]
+											<option value="${optionKey}">${formBean.allowedProductOptions[optionKey]}
+											[/#if]
+											</option>
+										[/#list]
+									</select>
                                 </span>
                             </div>
                            </span>
