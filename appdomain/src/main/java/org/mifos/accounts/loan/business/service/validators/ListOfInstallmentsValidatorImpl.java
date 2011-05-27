@@ -6,6 +6,7 @@ import org.mifos.platform.util.Transformer;
 import org.mifos.platform.validations.ErrorEntry;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -35,7 +36,9 @@ public class ListOfInstallmentsValidatorImpl implements ListOfInstallmentsValida
         List<ErrorEntry> errorEntries = new ArrayList<ErrorEntry>();
         for (List<String> installments : dateInstallmentsLookup.values()) {
             if (installments.size() > 1) {
-                errorEntries.add(new ErrorEntry(INSTALLMENT_DUEDATE_DUPLICATE, installments.toString()));
+                ErrorEntry error = new ErrorEntry(INSTALLMENT_DUEDATE_DUPLICATE, "dueDate");
+                error.setArgs(Arrays.asList(installments.toString()));
+                errorEntries.add(error);
             }
         }
         return errorEntries;
@@ -48,8 +51,9 @@ public class ListOfInstallmentsValidatorImpl implements ListOfInstallmentsValida
             List<Date> dueDates = CollectionUtils.collect(installments, getDueDateTransformer());
             int index = CollectionUtils.itemIndexOutOfAscendingOrder(dueDates);
             if (index >= 0) {
-                String fieldName = installments.get(index).getInstallmentNumberAsString();
-                errorEntries.add(new ErrorEntry(INSTALLMENT_DUEDATE_INVALID_ORDER, fieldName));
+                ErrorEntry error = new ErrorEntry(INSTALLMENT_DUEDATE_INVALID_ORDER, "installmentNumber");
+                error.setArgs(Arrays.asList(installments.get(index).getInstallmentNumberAsString()));
+                errorEntries.add(error);
             }
         }
         return errorEntries;
@@ -63,5 +67,4 @@ public class ListOfInstallmentsValidatorImpl implements ListOfInstallmentsValida
             }
         };
     }
-
 }
