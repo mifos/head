@@ -226,7 +226,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
         formSavingsParameters.setStartDateYy("2011");
         formSavingsParameters.setApplicableFor(formSavingsParameters.CLIENTS);
         formSavingsParameters.setStatus(formSavingsParameters.ACTIVE);
-        formSavingsParameters.setInterestRate("3");
+        formSavingsParameters.setInterestRate("3.0");
         formSavingsParameters.setFrequencyInterest("3");
         formSavingsParameters.setTimePeriodInterest("1");
         formSavingsParameters.setDepositType(formSavingsParameters.MANDATORY);
