@@ -95,7 +95,17 @@ function selectAllOptions(outSel)
             <div class="span-21 prepend-3 ">
                 <span class="span-4 rightAlign">[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.fees" /]</span>
                 <span class="span-4">
-                [@spring.formMultiSelect "formBean.chosenNonAcceptedFees", formBean.nonAcceptedFeePaymentTypes, "class=listSize" /]
+                [@spring.bind "acceptedPaymentTypesBean.chosenNonAcceptedFees"/]
+                <select name="${spring.status.expression}" class="listSize" multiple="multiple">
+					[#list acceptedPaymentTypesBean.nonAcceptedFeePaymentTypes?keys as optionKey]
+						[#if spring.status.value?default("")?string == optionKey?string]
+						<option selected="true" value="${optionKey}">${options[optionKey]}
+						[#else]
+						<option value="${optionKey}">${acceptedPaymentTypesBean.nonAcceptedFeePaymentTypes[optionKey]}
+						[/#if]
+						</option>
+					[/#list]
+				</select>
                 [@spring.showErrors "<br/>"/]
                 </span>
 
@@ -106,7 +116,17 @@ function selectAllOptions(outSel)
                 </span>
 
                 <span class="span-4">
-                [@spring.formMultiSelect "formBean.chosenAcceptedFees", formBean.acceptedFeePaymentTypes, "class=listSize" /]
+                [@spring.bind "acceptedPaymentTypesBean.chosenAcceptedFees"/]
+                <select name="${spring.status.expression}" class="listSize" multiple="multiple">
+					[#list acceptedPaymentTypesBean.acceptedFeePaymentTypes?keys as optionKey]
+						[#if spring.status.value?default("")?string == optionKey?string]
+						<option selected="true" value="${optionKey}">${options[optionKey]}
+						[#else]
+						<option value="${optionKey}">${acceptedPaymentTypesBean.acceptedFeePaymentTypes[optionKey]}
+						[/#if]
+						</option>
+					[/#list]
+				</select>
                 </span>
             </div>
         </div>
@@ -116,7 +136,17 @@ function selectAllOptions(outSel)
             <div class="span-21 prepend-3 ">
                 <span class="span-4 rightAlign">[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.disbursements" /]</span>
                 <span class="span-4">
-                [@spring.formMultiSelect "formBean.chosenNonAcceptedLoanDisbursements", formBean.nonAcceptedLoanDisbursementPaymentTypes, "class=listSize" /]
+				[@spring.bind "acceptedPaymentTypesBean.chosenNonAcceptedLoanDisbursements"/]
+                <select name="${spring.status.expression}" class="listSize" multiple="multiple">
+					[#list acceptedPaymentTypesBean.nonAcceptedLoanDisbursementPaymentTypes?keys as optionKey]
+						[#if spring.status.value?default("")?string == optionKey?string]
+						<option selected="true" value="${optionKey}">${options[optionKey]}
+						[#else]
+						<option value="${optionKey}">${acceptedPaymentTypesBean.nonAcceptedLoanDisbursementPaymentTypes[optionKey]}
+						[/#if]
+						</option>
+					[/#list]
+				</select>
                 [@spring.showErrors "<br/>"/]
                 </span>
 
@@ -127,14 +157,34 @@ function selectAllOptions(outSel)
                 </span>
 
                 <span class="span-4">
-                [@spring.formMultiSelect "formBean.chosenAcceptedLoanDisbursements", formBean.acceptedLoanDisbursementPaymentTypes, "class=listSize" /]
+                [@spring.bind "acceptedPaymentTypesBean.chosenAcceptedLoanDisbursements"/]
+                <select name="${spring.status.expression}" class="listSize" multiple="multiple">
+					[#list acceptedPaymentTypesBean.acceptedLoanDisbursementPaymentTypes?keys as optionKey]
+						[#if spring.status.value?default("")?string == optionKey?string]
+						<option selected="true" value="${optionKey}">${options[optionKey]}
+						[#else]
+						<option value="${optionKey}">${acceptedPaymentTypesBean.acceptedLoanDisbursementPaymentTypes[optionKey]}
+						[/#if]
+						</option>
+					[/#list]
+				</select>
                 </span>
             </div>
 
             <div class="span-21 prepend-3 ">
                 <span class="span-4 rightAlign">[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.repayments"/]</span>
                 <span class="span-4">
-                [@spring.formMultiSelect "formBean.chosenNonAcceptedLoanRepayments", formBean.nonAcceptedLoanRepaymentPaymentTypes, "class=listSize" /]
+                [@spring.bind "acceptedPaymentTypesBean.chosenNonAcceptedLoanRepayments"/]
+                <select name="${spring.status.expression}" class="listSize" multiple="multiple">
+					[#list acceptedPaymentTypesBean.nonAcceptedLoanRepaymentPaymentTypes?keys as optionKey]
+						[#if spring.status.value?default("")?string == optionKey?string]
+						<option selected="true" value="${optionKey}">${options[optionKey]}
+						[#else]
+						<option value="${optionKey}">${acceptedPaymentTypesBean.nonAcceptedLoanRepaymentPaymentTypes[optionKey]}
+						[/#if]
+						</option>
+					[/#list]
+				</select>
                 [@spring.showErrors "<br/>"/]
                 </span>
 
@@ -145,7 +195,17 @@ function selectAllOptions(outSel)
                 </span>
 
                 <span class="span-4">
-                [@spring.formMultiSelect "formBean.chosenAcceptedLoanRepayments", formBean.acceptedLoanRepaymentPaymentTypes, "class=listSize" /]
+                [@spring.bind "acceptedPaymentTypesBean.chosenAcceptedLoanRepayments"/]
+				<select name="${spring.status.expression}" class="listSize" multiple="multiple">
+					[#list acceptedPaymentTypesBean.acceptedLoanRepaymentPaymentTypes?keys as optionKey]
+						[#if spring.status.value?default("")?string == optionKey?string]
+						<option selected="true" value="${optionKey}">${options[optionKey]}
+						[#else]
+						<option value="${optionKey}">${acceptedPaymentTypesBean.acceptedLoanRepaymentPaymentTypes[optionKey]}
+						[/#if]
+						</option>
+					[/#list]
+				</select>
                 </span>
             </div>
         </div>
@@ -155,7 +215,17 @@ function selectAllOptions(outSel)
             <div class="span-21 prepend-3 ">
                 <span class="span-4 rightAlign">[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.withdrawals"/]</span>
                 <span class="span-4">
-                [@spring.formMultiSelect "formBean.chosenNonAcceptedSavingWithdrawals", formBean.nonAcceptedSavingWithdrawalPaymentTypes, "class=listSize" /]
+                [@spring.bind "acceptedPaymentTypesBean.chosenNonAcceptedSavingWithdrawals"/]
+                <select name="${spring.status.expression}" class="listSize" multiple="multiple">
+					[#list acceptedPaymentTypesBean.nonAcceptedSavingWithdrawalPaymentTypes?keys as optionKey]
+						[#if spring.status.value?default("")?string == optionKey?string]
+						<option selected="true" value="${optionKey}">${options[optionKey]}
+						[#else]
+						<option value="${optionKey}">${acceptedPaymentTypesBean.nonAcceptedSavingWithdrawalPaymentTypes[optionKey]}
+						[/#if]
+						</option>
+					[/#list]
+				</select>
                 [@spring.showErrors "<br/>"/]
                 </span>
 
@@ -166,13 +236,33 @@ function selectAllOptions(outSel)
                 </span>
 
                 <span class="span-4">
-                [@spring.formMultiSelect "formBean.chosenAcceptedSavingWithdrawals", formBean.acceptedSavingWithdrawalPaymentTypes, "class=listSize" /]
+                [@spring.bind "acceptedPaymentTypesBean.chosenAcceptedSavingWithdrawals"/]
+				<select name="${spring.status.expression}" class="listSize" multiple="multiple">
+					[#list acceptedPaymentTypesBean.acceptedSavingWithdrawalPaymentTypes?keys as optionKey]
+						[#if spring.status.value?default("")?string == optionKey?string]
+						<option selected="true" value="${optionKey}">${options[optionKey]}
+						[#else]
+						<option value="${optionKey}">${acceptedPaymentTypesBean.acceptedSavingWithdrawalPaymentTypes[optionKey]}
+						[/#if]
+						</option>
+					[/#list]
+				</select>
                 </span>
             </div>
             <div class="span-21 prepend-3 ">
                 <span class="span-4 rightAlign">[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.deposits"/]</span>
                 <span class="span-4">
-                [@spring.formMultiSelect "formBean.chosenNonAcceptedSavingDeposits", formBean.nonAcceptedSavingDepositsPaymentTypes, "class=listSize" /]
+                [@spring.bind "acceptedPaymentTypesBean.chosenNonAcceptedSavingDeposits"/]
+                <select name="${spring.status.expression}" class="listSize" multiple="multiple">
+					[#list acceptedPaymentTypesBean.nonAcceptedSavingDepositsPaymentTypes?keys as optionKey]
+						[#if spring.status.value?default("")?string == optionKey?string]
+						<option selected="true" value="${optionKey}">${options[optionKey]}
+						[#else]
+						<option value="${optionKey}">${acceptedPaymentTypesBean.nonAcceptedSavingDepositsPaymentTypes[optionKey]}
+						[/#if]
+						</option>
+					[/#list]
+				</select>
                 [@spring.showErrors "<br/>"/]
                 </span>
 
@@ -183,7 +273,17 @@ function selectAllOptions(outSel)
                 </span>
 
                 <span class="span-4">
-                [@spring.formMultiSelect "formBean.chosenAcceptedSavingDeposits", formBean.acceptedSavingDepositsPaymentTypes, "class=listSize" /]
+                [@spring.bind "acceptedPaymentTypesBean.chosenAcceptedSavingDeposits"/]
+				<select name="${spring.status.expression}" class="listSize" multiple="multiple">
+					[#list acceptedPaymentTypesBean.acceptedSavingDepositsPaymentTypes?keys as optionKey]
+						[#if spring.status.value?default("")?string == optionKey?string]
+						<option selected="true" value="${optionKey}">${options[optionKey]}
+						[#else]
+						<option value="${optionKey}">${acceptedPaymentTypesBean.acceptedSavingDepositsPaymentTypes[optionKey]}
+						[/#if]
+						</option>
+					[/#list]
+				</select>
                 </span>
             </div>
         </div>
