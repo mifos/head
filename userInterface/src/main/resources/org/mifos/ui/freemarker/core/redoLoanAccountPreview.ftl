@@ -281,6 +281,9 @@
 		[/#list]
 		</tbody>
 </table>
+<form action="${flowExecutionUrl}" method="post">
+	[@form.submitButton label="widget.form.buttonLabel.editloanscheduleinfo" id="redoloanpreview.button.editloanschedule" webflowEvent="editLoanSchedule" /]
+</form>
 
 [#if loanAccountQuestionGroupFormBean.questionGroups?size > 0]
 <br/>

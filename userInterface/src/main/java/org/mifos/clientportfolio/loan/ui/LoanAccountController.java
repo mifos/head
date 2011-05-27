@@ -130,10 +130,10 @@ public class LoanAccountController {
             Integer weekOfMonth = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth();
             Integer dayOfWeek = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek();
             Integer recurrenceType = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceTypeId();
+            
             Integer customerRecurrenceType = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceTypeId();
     	    if (recurrenceType.equals(customerRecurrenceType)) {
-    	        // if customer and product meeting frequencies are the same e.g. weekly or monthly, then default to customer details
-    	        recursEvery = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getEvery();
+    	        // if customer and product meeting frequencies are the same e.g. weekly or monthly, then default to customer details except for recurrence details
                 dayOfMonth = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayNumber();
                 weekOfMonth = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth();
                 dayOfWeek = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek();

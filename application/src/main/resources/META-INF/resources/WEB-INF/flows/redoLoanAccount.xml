@@ -128,6 +128,7 @@
     
     <view-state id="previewStep" view="redoLoanAccountPreview">
         <transition on="editAccountDetails" to="editAccountDetailsStep" validate="false" bind="false"/>
+        <transition on="editLoanSchedule" to="reviewLoanSchedule" validate="false" bind="false"/>
         <transition on="editQuestionGroups" to="answerQuestionGroupStep" validate="false" bind="false"/>
         
         <transition on="submit" to="confirmation">

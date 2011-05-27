@@ -116,24 +116,144 @@ public class LoanScheduleFormBean implements Serializable {
         this.loanRepaymentFutureInstallments = new ArrayList<LoanRepaymentFutureInstallments>();
         // if any actual payment data exists, calculate
         validatePaymentsAndAmounts(messageContext, this.actualPaymentDates, this.actualPaymentAmounts);
+        List<LoanInstallmentPostPayment> installmentsPostPayment = new ArrayList<LoanInstallmentPostPayment>();
+        
         int paymentIndex = 0;
-        CumulativePaymentDetail cumulativePaymentDetail = new CumulativePaymentDetail();
         for (Number actualPayment : this.actualPaymentAmounts) {
-
+            
+            BigDecimal remainingPayment = BigDecimal.valueOf(actualPayment.doubleValue());
             LocalDate paymentDate = new LocalDate(this.actualPaymentDates.get(paymentIndex));
-            BigDecimal payment = BigDecimal.valueOf(actualPayment.doubleValue());
-            cumulativePaymentDetail.setRemainingPayment(payment);  
-            loanRepaymentTransaction.add(new LoanRepaymentTransaction(paymentDate, payment));
-          
-            int currentInstallmentIndex = paymentIndex;
-            while (cumulativePaymentDetail.getRemainingPayment().doubleValue() > BigDecimal.ZERO.doubleValue() && currentInstallmentIndex < this.actualPaymentAmounts.size()-1) {
-                LoanCreationInstallmentDto installmentDetails = this.repaymentInstallments.get(currentInstallmentIndex);
-                cumulativePaymentDetail = handlePayment(currentInstallmentIndex, cumulativePaymentDetail, installmentDetails, paymentDate);
-                currentInstallmentIndex++;
+            loanRepaymentTransaction.add(new LoanRepaymentTransaction(paymentDate, remainingPayment));
+            
+            int installmentIndex = 0;
+            while (remainingPayment.doubleValue() > BigDecimal.ZERO.doubleValue()
+                    && installmentIndex < this.actualPaymentAmounts.size() - 1) {
+                
+                LoanCreationInstallmentDto installmentDetails = this.repaymentInstallments.get(installmentIndex);
+                Double installmentTotalAmount = this.installmentAmounts.get(installmentIndex).doubleValue();
+                LocalDate dueDate = new LocalDate(this.installments.get(installmentIndex));
+
+                if (installmentsPostPayment.isEmpty() || installmentsPostPayment.size() <= installmentIndex) {
+
+                    BigDecimal feesPaid = BigDecimal.valueOf(installmentDetails.getFees());
+                    if (remainingPayment.doubleValue() >= installmentDetails.getFees()) {
+                        remainingPayment = remainingPayment.subtract(feesPaid);
+                    } else {
+                        feesPaid = remainingPayment;
+                        remainingPayment = remainingPayment.subtract(feesPaid);
+                    }
+
+                    BigDecimal interestPaid = BigDecimal.valueOf(installmentDetails.getInterest());
+                    if (remainingPayment.doubleValue() >= installmentDetails.getInterest()) {
+                        remainingPayment = remainingPayment.subtract(interestPaid);
+                    } else {
+                        interestPaid = remainingPayment;
+                        remainingPayment = remainingPayment.subtract(interestPaid);
+                    }
+
+                    BigDecimal principalPaid = BigDecimal.valueOf(installmentDetails.getPrincipal());
+                    if (remainingPayment.doubleValue() >= installmentDetails.getPrincipal()) {
+                        remainingPayment = remainingPayment.subtract(principalPaid);
+                    } else {
+                        principalPaid = remainingPayment;
+                        remainingPayment = remainingPayment.subtract(principalPaid);
+                    }
+
+                    BigDecimal totalInstallmentPaid = feesPaid.add(interestPaid).add(principalPaid);
+
+                    LoanInstallmentPostPayment loanInstallmentPostPayment = new LoanInstallmentPostPayment(
+                            installmentDetails.getInstallmentNumber(), dueDate, paymentDate, feesPaid, interestPaid,
+                            principalPaid, totalInstallmentPaid, installmentTotalAmount);
+                    installmentsPostPayment.add(loanInstallmentPostPayment);
+                } else {
+                    LoanInstallmentPostPayment paidInstallment = installmentsPostPayment.get(installmentIndex);
+                    if (paidInstallment.isNotFullyPaid()) {
+                        BigDecimal feesToBePaid = BigDecimal.valueOf(installmentDetails.getFees()).subtract(paidInstallment.getFeesPaid());
+                        if (remainingPayment.doubleValue() >= feesToBePaid.doubleValue()) {
+                            remainingPayment = remainingPayment.subtract(feesToBePaid);
+                        } else {
+                            feesToBePaid = remainingPayment;
+                            remainingPayment = remainingPayment.subtract(feesToBePaid);
+                        }
+
+                        BigDecimal interestToBePaid = BigDecimal.valueOf(installmentDetails.getInterest()).subtract(paidInstallment.getInterestPaid());
+                        if (remainingPayment.doubleValue() >= interestToBePaid.doubleValue()) {
+                            remainingPayment = remainingPayment.subtract(interestToBePaid);
+                        } else {
+                            interestToBePaid = remainingPayment;
+                            remainingPayment = remainingPayment.subtract(interestToBePaid);
+                        }
+
+                        BigDecimal principalToBePaid = BigDecimal.valueOf(installmentDetails.getPrincipal()).subtract(paidInstallment.getPrincipalPaid());
+                        if (remainingPayment.doubleValue() >= principalToBePaid.doubleValue()) {
+                            remainingPayment = remainingPayment.subtract(principalToBePaid);
+                        } else {
+                            principalToBePaid = remainingPayment;
+                            remainingPayment = remainingPayment.subtract(principalToBePaid);
+                        }
+                        
+                        BigDecimal totalInstallmentPaid = feesToBePaid.add(interestToBePaid).add(principalToBePaid);
+                        
+                        paidInstallment.setLastPaymentDate(paymentDate);
+                        paidInstallment.setFeesPaid(paidInstallment.getFeesPaid().add(feesToBePaid));
+                        paidInstallment.setInterestPaid(paidInstallment.getInterestPaid().add(interestToBePaid));
+                        paidInstallment.setPrincipalPaid(paidInstallment.getPrincipalPaid().add(principalToBePaid));
+                        paidInstallment.setTotalInstallmentPaid(paidInstallment.getTotalInstallmentPaid().add(totalInstallmentPaid));
+                    }
+                }
+                installmentIndex++;
             }
             paymentIndex++;
         }
         
+        // remaining running balance
+        BigDecimal cumulativeFeesPaid = BigDecimal.ZERO;
+        BigDecimal cumulativeInterestPaid = BigDecimal.ZERO;
+        BigDecimal cumulativePrincipalPaid = BigDecimal.ZERO;
+        BigDecimal cumulativeTotalInstallmentPaid = BigDecimal.ZERO;
+        for (LoanInstallmentPostPayment installment : installmentsPostPayment) {
+            
+            cumulativeFeesPaid = cumulativeFeesPaid.add(installment.getFeesPaid());
+            cumulativeInterestPaid = cumulativeInterestPaid.add(installment.getInterestPaid());
+            cumulativePrincipalPaid = cumulativePrincipalPaid.add(installment.getPrincipalPaid());
+            cumulativeTotalInstallmentPaid = cumulativeTotalInstallmentPaid.add(installment.getTotalInstallmentPaid());
+            if (installment.isNotFullyPaid()) {
+                BigDecimal remainingFees = this.totalLoanFees.subtract(cumulativeFeesPaid);
+                BigDecimal remainingInterest = this.totalLoanInterest.subtract(cumulativeInterestPaid);
+                BigDecimal remainingTotalInstallment = this.loanPrincipal.add(this.totalLoanFees).add(this.totalLoanInterest).subtract(cumulativeTotalInstallmentPaid);
+                BigDecimal remainingPrincipal = remainingTotalInstallment.subtract(remainingInterest).subtract(remainingFees);
+                
+                LoanCreationInstallmentDto installmentDetails = this.repaymentInstallments.get(installment.getInstallmentNumber()-1);
+                
+                LoanCreationInstallmentDto installmentPaidDetails = new LoanCreationInstallmentDto(installment.getInstallmentNumber(), 
+                        new LocalDate(installmentDetails.getDueDate()), 
+                        installment.getPrincipalPaid().doubleValue(), 
+                        installment.getInterestPaid().doubleValue(),
+                        installment.getFeesPaid().doubleValue(),
+                        BigDecimal.ZERO.doubleValue(),
+                        installment.getTotalInstallmentPaid().doubleValue());                
+                this.loanRepaymentPaidInstallmentsWithRunningBalance.add(new LoanRepaymentRunningBalance(installmentPaidDetails, installment.getTotalInstallmentPaid(), remainingPrincipal, remainingInterest, remainingFees, remainingTotalInstallment, installment.getLastPaymentDate()));
+                
+              BigDecimal outstandingInstallmentPrincipal = BigDecimal.valueOf(installmentDetails.getPrincipal()).subtract(installment.getPrincipalPaid());
+              BigDecimal outstandingInstallmentInterest = BigDecimal.valueOf(installmentDetails.getInterest()).subtract(installment.getInterestPaid());
+              BigDecimal outstandingInstallmentFees = BigDecimal.valueOf(installmentDetails.getFees()).subtract(installment.getFeesPaid());
+              this.loanRepaymentFutureInstallments.add(new LoanRepaymentFutureInstallments(installmentDetails.getInstallmentNumber(), 
+                      installmentDetails.getDueDate(), 
+                      outstandingInstallmentPrincipal, 
+                      outstandingInstallmentInterest, 
+                      outstandingInstallmentFees, 
+                      outstandingInstallmentPrincipal.add(outstandingInstallmentInterest).add(outstandingInstallmentFees)));
+            } else {
+                BigDecimal remainingFees = this.totalLoanFees.subtract(cumulativeFeesPaid);
+                BigDecimal remainingInterest = this.totalLoanInterest.subtract(cumulativeInterestPaid);
+                BigDecimal remainingTotalInstallment = this.loanPrincipal.add(this.totalLoanFees).add(this.totalLoanInterest).subtract(cumulativeTotalInstallmentPaid);
+                BigDecimal remainingPrincipal = remainingTotalInstallment.subtract(remainingInterest).subtract(remainingFees);
+                
+                LoanCreationInstallmentDto installmentDetails = this.repaymentInstallments.get(installment.getInstallmentNumber()-1);
+                this.loanRepaymentPaidInstallmentsWithRunningBalance.add(new LoanRepaymentRunningBalance(installmentDetails, installment.getTotalInstallmentPaid(), remainingPrincipal, remainingInterest, remainingFees, remainingTotalInstallment, installment.getLastPaymentDate()));                
+            }
+        }
+      
         int lastHandledFutureInstallmentNumber = loanRepaymentPaidInstallmentsWithRunningBalance.size();
         if (!this.loanRepaymentFutureInstallments.isEmpty()) {
             lastHandledFutureInstallmentNumber = this.loanRepaymentFutureInstallments.get(this.loanRepaymentFutureInstallments.size()-1).getInstallmentNumber();
@@ -200,76 +320,6 @@ public class LoanScheduleFormBean implements Serializable {
             ErrorEntry fieldError = new ErrorEntry("totalPayments.exceeded.invalid", "disbursementDate", defaultMessage);
             addErrorMessageToContext(messageContext, fieldError);
         }
-    }
-
-    private CumulativePaymentDetail handlePayment(int paymentIndex, CumulativePaymentDetail cumulativePaymentDetail, LoanCreationInstallmentDto installmentDetails, LocalDate paymentDate) {
-        
-        BigDecimal payment = BigDecimal.ZERO;
-        BigDecimal cumulativeTotalInstallmentPaid = BigDecimal.ZERO;
-        BigDecimal cumulativeFeesPaid = BigDecimal.ZERO;
-        BigDecimal cumulativeInterestPaid = BigDecimal.ZERO;
-        BigDecimal totalInstallmentDue = BigDecimal.valueOf(installmentAmounts.get(paymentIndex).doubleValue()); 
-        if (cumulativePaymentDetail.getRemainingPayment().doubleValue() >= totalInstallmentDue.doubleValue()) {
-            // pay off total installment amount
-            payment = cumulativePaymentDetail.getRemainingPayment().subtract(totalInstallmentDue);
-            // sum total amounts paid to date.
-            cumulativeTotalInstallmentPaid = cumulativePaymentDetail.getCumulativeTotalPaid().add(totalInstallmentDue);
-            cumulativeFeesPaid = cumulativePaymentDetail.getCumulativeFeesPaid().add(BigDecimal.valueOf(installmentDetails.getFees()));
-            cumulativeInterestPaid = cumulativePaymentDetail.getCumulativeInterestPaid().add(BigDecimal.valueOf(installmentDetails.getInterest()));
-            
-            // remaining running balance
-            BigDecimal remainingFees = this.totalLoanFees.subtract(cumulativeFeesPaid);
-            BigDecimal remainingInterest = this.totalLoanInterest.subtract(cumulativeInterestPaid);
-            BigDecimal remainingTotalInstallment = this.loanPrincipal.add(this.totalLoanFees).add(this.totalLoanInterest).subtract(cumulativeTotalInstallmentPaid);
-            BigDecimal remainingPrincipal = remainingTotalInstallment.subtract(remainingInterest).subtract(remainingFees);
-            
-            this.loanRepaymentPaidInstallmentsWithRunningBalance.add(new LoanRepaymentRunningBalance(installmentDetails, BigDecimal.valueOf(installmentDetails.getTotal()), remainingPrincipal, remainingInterest, remainingFees, remainingTotalInstallment, paymentDate));
-        } else {
-            // pay off total installment amount
-            BigDecimal feesPaid = BigDecimal.ZERO;
-            BigDecimal interestPaid = BigDecimal.ZERO;
-            payment = BigDecimal.ZERO;
-            // sum total amounts paid to date.
-            cumulativeTotalInstallmentPaid = cumulativePaymentDetail.getCumulativeTotalPaid().add(cumulativePaymentDetail.getRemainingPayment());
-            
-            if (cumulativePaymentDetail.getRemainingPayment().doubleValue() > installmentDetails.getFees()) {
-                feesPaid = BigDecimal.valueOf(installmentDetails.getFees());
-                cumulativeFeesPaid = cumulativePaymentDetail.getCumulativeFeesPaid().add(feesPaid);
-                BigDecimal remainingPaymentAmount = cumulativePaymentDetail.getRemainingPayment().subtract(feesPaid);
-                
-                if (remainingPaymentAmount.doubleValue() > installmentDetails.getInterest()) {
-                    interestPaid = BigDecimal.valueOf(installmentDetails.getInterest());
-                    cumulativeInterestPaid = cumulativePaymentDetail.getCumulativeInterestPaid().add(interestPaid);
-                } else {
-                    interestPaid = remainingPaymentAmount;
-                    cumulativeInterestPaid = cumulativePaymentDetail.getCumulativeInterestPaid().add(remainingPaymentAmount);
-                }
-            } else {
-                feesPaid = cumulativePaymentDetail.getRemainingPayment();
-                interestPaid = BigDecimal.ZERO;
-                cumulativeFeesPaid = cumulativePaymentDetail.getCumulativeFeesPaid().add(feesPaid);
-                cumulativeInterestPaid = cumulativePaymentDetail.getCumulativeInterestPaid().add(interestPaid);
-            }
-            
-            // remaining running balance
-            BigDecimal remainingFees = this.totalLoanFees.subtract(cumulativeFeesPaid);
-            BigDecimal remainingInterest = this.totalLoanInterest.subtract(cumulativeInterestPaid);
-            BigDecimal remainingTotalInstallment = this.loanPrincipal.add(this.totalLoanFees).add(this.totalLoanInterest).subtract(cumulativeTotalInstallmentPaid);
-            BigDecimal remainingPrincipal = remainingTotalInstallment.subtract(remainingInterest).subtract(remainingFees);
-            this.loanRepaymentPaidInstallmentsWithRunningBalance.add(new LoanRepaymentRunningBalance(installmentDetails, cumulativePaymentDetail.getRemainingPayment(), remainingPrincipal, remainingInterest, remainingFees, remainingTotalInstallment, paymentDate));
-            
-            BigDecimal outstandingInstallmentPrincipal = BigDecimal.valueOf(installmentDetails.getTotal()).subtract(cumulativePaymentDetail.getRemainingPayment());
-            BigDecimal outstandingInstallmentInterest = BigDecimal.valueOf(installmentDetails.getInterest()).subtract(interestPaid);
-            BigDecimal outstandingInstallmentFees = BigDecimal.valueOf(installmentDetails.getFees()).subtract(feesPaid);
-            this.loanRepaymentFutureInstallments.add(new LoanRepaymentFutureInstallments(installmentDetails.getInstallmentNumber(), 
-                    installmentDetails.getDueDate(), 
-                    outstandingInstallmentPrincipal, 
-                    outstandingInstallmentInterest, 
-                    outstandingInstallmentFees, 
-                    outstandingInstallmentPrincipal.add(outstandingInstallmentInterest).add(outstandingInstallmentFees)));
-        }
-        
-        return new CumulativePaymentDetail(payment, cumulativeTotalInstallmentPaid, cumulativeInterestPaid, cumulativeFeesPaid);
     }
 
     private void handleErrors(MessageContext messageContext, Errors inputInstallmentsErrors, Errors scheduleErrors) {
