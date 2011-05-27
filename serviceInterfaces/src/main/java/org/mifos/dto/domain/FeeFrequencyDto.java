@@ -28,6 +28,7 @@ public class FeeFrequencyDto implements Serializable {
 
     private String type;
     private String payment;
+    private Integer paymentId;
     private String recurAfterPeriod;
     private boolean weekly;
     private boolean monthly;
@@ -79,5 +80,13 @@ public class FeeFrequencyDto implements Serializable {
 
     public String getPayment() {
         return payment;
+    }
+    
+    public Integer getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(Integer paymentId) {
+        this.paymentId = paymentId;
     }
 }
