@@ -53,7 +53,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(singleThreaded = true, groups = { "center", "acceptance", "ui", "no_db_unit" })
+@Test(singleThreaded = true, groups = { "center", "acceptance", "ui", "no_db_unit"})
 public class CenterTest extends UiTestCaseBase {
 
     private CenterTestHelper centerTestHelper;
@@ -84,6 +84,7 @@ public class CenterTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-246
+    @Test(enabled=true)
     public void verifyAcceptedPaymentTypesForCenter() throws Exception {
         // When
         CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
@@ -119,6 +120,7 @@ public class CenterTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
     public void createCenterTest() throws Exception {
         String officeName = "MyOfficeDHMFT";
         String qG1Name = "CreateCenterQG";
@@ -172,6 +174,7 @@ public class CenterTest extends UiTestCaseBase {
     }
     
     // http://mifosforge.jira.com/browse/MIFOSTEST-1176
+    @Test(enabled=true)
     public void editingCenterMeetinSchedule(){
     	//Given
     	String centerName="DefineNewSavingsProductTestCenter";
@@ -251,5 +254,4 @@ public class CenterTest extends UiTestCaseBase {
         formParameters.setMeeting(meetingFormParameters);
         return formParameters;
     }
-
 }

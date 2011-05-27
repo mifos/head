@@ -22,7 +22,13 @@
 
     <bean id="flowExpressionParser" class="org.springframework.webflow.expression.WebFlowOgnlExpressionParser"/>
 
-    <webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator" expression-parser="flowExpressionParser" development="true" />
+	<bean id="defaultConversionService" class="org.mifos.ui.core.controller.CustomDefaultConversionService">
+    	<constructor-arg ref="webflowAndMvcConversionService"/>
+    </bean>
+
+    <webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator" 
+    	expression-parser="flowExpressionParser" development="true" conversion-service="defaultConversionService" />
+    	
     <bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
        <property name="viewResolvers" ref="freemarkerViewResolver"/>
        <property name="useSpringBeanBinding" value="true" />

@@ -38,19 +38,27 @@
 $(document).ready(function() {
 
     $(":regex(id, .*\\.[0-9]+)").datepicker({
-        dateFormat: 'dd-M-yy',
+    	[#if loanAccountFormBean.locale.language?lower_case == "zh"]
+			dateFormat: 'y-m-d',
+		[/#if]
+		[#if loanAccountFormBean.locale.language?lower_case == "en"]
+			[#if loanAccountFormBean.locale.country?lower_case == "us"]
+			dateFormat: 'mm/dd/y',
+			[#else]
+			dateFormat: 'dd/mm/y',
+			[/#if]
+		[/#if]
         showOn: "button",
         buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
 		buttonImageOnly: true
     });
-  }
+  } 
 );
-
-$(function() {
-		[#if loanAccountFormBean.locale.country == "GB"]
+	$(function() {
+		[#if loanAccountFormBean.locale.language == "en"]
 			$.datepicker.setDefaults($.datepicker.regional['']);
 		[#else]
-			$.datepicker.setDefaults($.datepicker.regional['${loanAccountFormBean.locale.country?lower_case}']);
+			$.datepicker.setDefaults($.datepicker.regional['${loanAccountFormBean.locale.language?lower_case}']);
 		[/#if]
 	}); 
 </script>
@@ -178,21 +186,22 @@ $(function() {
 			[#if loanProductReferenceData.variableInstallmentsAllowed]
 				[#if loanProductReferenceData.compareCashflowEnabled]
 					[@spring.bind "cashFlowSummaryFormBean.installments[${ind}]"/]
-					<td style="border-top: 1px solid grey;"><input type="text" name="installments[${ind}]" size="10" value="${cashFlowSummaryFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" class="date-pick" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="installments[${ind}]" size="10" value="${cashFlowSummaryFormBean.parseInstallment(ind)}" id="installment.dueDate.${ind}" class="date-pick" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentDates[${ind}]" size="10" value="${cashFlowSummaryFormBean.parseActualPaymentDates(ind)}" id="installment.actualPaymentDate.${ind}" class="date-pick" /></td>
 				[#else]
 					[@spring.bind "loanScheduleFormBean.installments[${ind}]"/]
-					<td style="border-top: 1px solid grey;"><input type="text" name="installments[${ind}]" size="10" value="${loanScheduleFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" class="date-pick" /></td>
-					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentDates[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentDates[ind]?date?string.medium}" id="installment.actualPaymentDate.${ind}" class="date-pick" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="installments[${ind}]" size="10" value="${loanScheduleFormBean.parseInstallment(ind)}" id="installment.dueDate.${ind}" class="date-pick" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentDates[${ind}]" size="10" value="${loanScheduleFormBean.parseActualPaymentDates(ind)}" id="installment.actualPaymentDate.${ind}" class="date-pick" /></td>
 				[/#if]
 			[#else]
 				[#if loanProductReferenceData.compareCashflowEnabled]
 					[@spring.bind "cashFlowSummaryFormBean.installments[${ind}]"/]
 					<td style="border-top: 1px solid grey;">${cashFlowSummaryFormBean.installments[ind]?date?string.medium}</td>
-					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentDates[${ind}]" size="10" value="${cashFlowSummaryFormBean.actualPaymentDates[ind]?date?string.medium}" id="installment.actualPaymentDate.${ind}" class="date-pick" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentDates[${ind}]" size="10" value="${cashFlowSummaryFormBean.parseActualPaymentDates(ind)}" id="installment.actualPaymentDate.${ind}" class="date-pick" /></td>
 				[#else]
 					[@spring.bind "loanScheduleFormBean.installments[${ind}]"/]
 					<td style="border-top: 1px solid grey;">${loanScheduleFormBean.installments[ind]?date?string.medium}</td>
-					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentDates[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentDates[ind]?date?string.medium}" id="installment.actualPaymentDate.${ind}" class="date-pick" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentDates[${ind}]" size="10" value="${loanScheduleFormBean.parseActualPaymentDates(ind)}" id="installment.actualPaymentDate.${ind}" class="date-pick" /></td>
 				[/#if]
 			[/#if]
 			<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
@@ -208,6 +217,7 @@ $(function() {
 						[#else]
 						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.installmentAmounts[ind]?c}" /></td>
 						[/#if]
+						<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.actualPaymentAmounts[ind]?c}" /</td>
 					[#else]
 						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="0" /></td>
 					[/#if]
