@@ -422,7 +422,7 @@ public class CustomerPersistence extends LegacyGenericDao {
                 for (int i = 3; i < words.size(); ++i) {
                     words.set(2, words.get(2) + " " + words.get(i));
                 }
-                words = words.subList(0, 2);
+                words = words.subList(0, 3);
             } else if (words.size() < 3) {
                 int elementsToAdd = 3 - words.size();
                 for (int i = 0; i < elementsToAdd; ++i) {
