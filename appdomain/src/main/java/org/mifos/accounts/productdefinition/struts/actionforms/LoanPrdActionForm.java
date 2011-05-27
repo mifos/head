@@ -2179,10 +2179,13 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     private void isFrequencyMatchingOfferingFrequency(FeeBO fee, ActionErrors errors) {
         logger.debug("start Loan prd Action Form isFrequencyMatchingOfferingFrequency - fee:" + fee);
+        
         if (getFreqOfInstallmentsValue() != null
                 && fee.isPeriodic()
-                && !(fee.getFeeFrequency().getFeeMeetingFrequency().getMeetingDetails().getRecurrenceType()
-                        .getRecurrenceId().equals(getFreqOfInstallmentsValue()))) {
+                && (!(fee.getFeeFrequency().getFeeMeetingFrequency().getMeetingDetails().getRecurrenceType()
+                        .getRecurrenceId().equals(getFreqOfInstallmentsValue())) 
+                || !(fee.getFeeFrequency().getFeeMeetingFrequency().getMeetingDetails().getRecurAfter()
+                        %getRecurAfterValue() == 0))) {
             addError(errors, "Fee", ProductDefinitionConstants.ERRORFEEFREQUENCY, fee.getFeeName());
         }
         logger.debug("Loan prd Action Form isFrequencyMatchingOfferingFrequency called - fee:" + fee);
