@@ -172,7 +172,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[1]/div[1]"), ("oneTimeFee"));
         Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[1]/div[2]"), ("10 Periodicity: One Time Frequency: Upfront"));
         Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[2]/div[1]"), ("loanWeeklyFee"));
-        Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[2]/div[2]"), ("100 Periodicity:: 1 week(s)"));
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[2]/div[2]"), ("100 Periodicity: 1 week(s)"));
     }
             
     private void selectAdditionalFees() {
