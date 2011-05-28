@@ -154,6 +154,15 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
             }
         } else {
             prevalidateTotalIsNonNull(messageContext);
+            for (int index=0; index<this.installmentAmounts.size(); index++) {
+                Double newTotal = Double.valueOf("0.0");
+                Number newTotalEntry = this.installmentAmounts.get(index);
+                if (newTotalEntry != null) {
+                    newTotal = newTotalEntry.doubleValue();
+                } else {
+                    this.installmentAmounts.set(index, newTotal);
+                }
+            }
         }
 
         List<LoanRepaymentTransaction> loanRepaymentTransaction = new ArrayList<LoanRepaymentTransaction>();
@@ -328,6 +337,7 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
         }
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DLS_DEAD_LOCAL_STORE"},justification = "")
     private void prevalidateTotalIsNonNull(MessageContext messageContext) {
         Integer installmentIndex = 1;
         for (Number totalAmount : this.installmentAmounts) {
@@ -343,8 +353,20 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
         }
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DLS_DEAD_LOCAL_STORE"},justification = "")
     private void prevalidateAmountPaidIsNonNull(MessageContext messageContext) {
+        Integer installmentIndex = 1;
+        for (Number amountPaid : this.actualPaymentAmounts) {
+            if (amountPaid == null) {
+                String defaultMessage = "The amount paid field for installment {0} was blank and has been defaulted to zero.";
+                ErrorEntry fieldError = new ErrorEntry("installment.amount.paid.blank.and.invalid",
+                        "actualPaymentAmounts", defaultMessage);
+                fieldError.setArgs(Arrays.asList(installmentIndex.toString()));
 
+                addErrorMessageToContext(messageContext, fieldError);
+            }
+            installmentIndex++;
+        }
     }
 
     private void validatePaymentsAndAmounts(MessageContext messageContext, List<DateTime> actualPaymentDates,
@@ -423,6 +445,12 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
             } else {
                 this.installmentAmounts.set(index, newTotal);
             }
+            
+            Number newAmountPaidEntry = this.actualPaymentAmounts.get(index);
+            if (newAmountPaidEntry == null) {
+                this.actualPaymentAmounts.set(index, Double.valueOf("0.0"));
+            }
+            
             // adjust principal based on total and interest + fees
             if (index == this.variableInstallments.size() - 1) {
                 // sum up all totals and make final total = loan principal + interest and fees due - sum of other
