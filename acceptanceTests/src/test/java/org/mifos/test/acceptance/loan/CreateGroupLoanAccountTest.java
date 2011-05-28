@@ -151,7 +151,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
             
     private void verifyFirstInstallmentDateAndDisbursalDateOnReviewPage(){
         Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary']/div[3]/div[2]"), ("25-Feb-2011"));
-        Assert.assertEquals(selenium.getTable("installments.1.1"), ("04-Mar-2011"));
+        Assert.assertEquals(selenium.getTable("installments.1.1"), ("04/03/11"));
     }
             
     private void verifyAdditionalFeesOnReviewPage(){
