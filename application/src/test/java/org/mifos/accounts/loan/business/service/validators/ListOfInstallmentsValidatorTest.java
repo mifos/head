@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,9 +44,10 @@ public class ListOfInstallmentsValidatorTest {
                 asList(installment1, installment2, installment3, installment4, installment5, installment6, installment7));
         assertThat(errorEntries.size(), is(2));
         assertThat(errorEntries.get(0).getErrorCode(), is(AccountConstants.INSTALLMENT_DUEDATE_DUPLICATE));
-        assertThat(errorEntries.get(0).getFieldName(), is("[1, 2, 6]"));
+        assertThat(errorEntries.get(0).getArgs(), is(Arrays.asList("[1, 2, 6]")));
+        
         assertThat(errorEntries.get(1).getErrorCode(), is(AccountConstants.INSTALLMENT_DUEDATE_DUPLICATE));
-        assertThat(errorEntries.get(1).getFieldName(), is("[5, 7]"));
+        assertThat(errorEntries.get(1).getArgs(), is(Arrays.asList("[5, 7]")));
     }
 
     @Test
@@ -58,7 +60,7 @@ public class ListOfInstallmentsValidatorTest {
         List<ErrorEntry> errorEntries = listOfInstallmentsValidator.validateOrderingOfDueDates(
                 asList(installment0, installment1, installment2, installment3, installment4));
         assertThat(errorEntries.get(0).getErrorCode(), is(AccountConstants.INSTALLMENT_DUEDATE_INVALID_ORDER));
-        assertThat(errorEntries.get(0).getFieldName(), is("2"));
+        assertThat(errorEntries.get(0).getArgs(), is(Arrays.asList("2")));
     }
 }
 
