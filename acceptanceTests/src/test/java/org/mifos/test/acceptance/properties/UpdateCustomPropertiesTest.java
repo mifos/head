@@ -29,8 +29,8 @@ import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
 import org.mifos.test.acceptance.framework.center.CreateMeetingPage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
-import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
+import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
@@ -187,27 +187,27 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         centerViewDetailsPage.verifyActiveCenter(formParameters);
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    //http://mifosforge.jira.com/browse/MIFOSTEST-216
-    @Test(enabled=true)
-    public void verifyPropertySavingsPendingApprovalStateEnabled() throws Exception{
-        //Given
-        propertiesHelper.setSavingsPendingApprovalStateEnabled("false");
-        //When
-        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("UpdateCustomProperties TestClient");
-        searchParameters.setSavingsProduct("MandatorySavingsAccount");
-        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
-        submitAccountParameters.setAmount("248.0");
-        SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccountWithoutPendingApprovalState(searchParameters, submitAccountParameters);
-        savingsAccountPage.verifyPage();
-        //Then
-        savingsAccountPage.verifySavingsAmount(submitAccountParameters.getAmount());
-        savingsAccountPage.verifySavingsProduct(searchParameters.getSavingsProduct());
-        savingsAccountPage.verifyStatus("Active");
-
-        propertiesHelper.setSavingsPendingApprovalStateEnabled("true");
-    }
+//    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+//    //http://mifosforge.jira.com/browse/MIFOSTEST-216
+//    @Test(enabled=true)
+//    public void verifyPropertySavingsPendingApprovalStateEnabled() throws Exception{
+//        //Given
+//        propertiesHelper.setSavingsPendingApprovalStateEnabled("false");
+//        //When
+//        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+//        searchParameters.setSearchString("UpdateCustomProperties TestClient");
+//        searchParameters.setSavingsProduct("MandatorySavingsAccount");
+//        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+//        submitAccountParameters.setAmount("248.0");
+//        SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccountWithoutPendingApprovalState(searchParameters, submitAccountParameters);
+//        savingsAccountPage.verifyPage();
+//        //Then
+//        savingsAccountPage.verifySavingsAmount(submitAccountParameters.getAmount());
+//        savingsAccountPage.verifySavingsProduct(searchParameters.getSavingsProduct());
+//        savingsAccountPage.verifyStatus("Active");
+//
+//        propertiesHelper.setSavingsPendingApprovalStateEnabled("true");
+//    }
 
     /*
      * FIXME - keithw - test passes when run individually but not as part of ci build. it appears that question groups data is not
@@ -218,8 +218,8 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     @Test(enabled=false)
     public void verifyPropertyPendingApprovalStateEnabledForSavingsAndLoanAccounts() throws Exception{
         //Given
-        propertiesHelper.setSavingsPendingApprovalStateEnabled("true");
-        propertiesHelper.setLoanPendingApprovalStateEnabled("true");
+//        propertiesHelper.setSavingsPendingApprovalStateEnabled("true");
+//        propertiesHelper.setLoanPendingApprovalStateEnabled("true");
         propertiesHelper.setGroupPendingApprovalStateEnabled("true");
         //When
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
