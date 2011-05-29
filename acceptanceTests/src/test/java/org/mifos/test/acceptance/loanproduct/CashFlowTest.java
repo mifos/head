@@ -204,7 +204,7 @@ public class CashFlowTest extends UiTestCaseBase {
         cashFlowPage.verifyErrorsOnFields();
         cashFlowPage.enterValidData("1000", 1000, 100, "4000", "5000");
         cashFlowPage = cashFlowPage.submitWithErrors();
-        cashFlowPage.verifyErrorsOnPage("Indebtedness rate of the client is 175 % is greater than allowed value of 49 %.");
+        cashFlowPage.verifyErrorsOnPage("Indebtedness rate of the client is 175 % which is greater than allowed value of 49 %.");
         cashFlowPage.enterValidData("1000", 1000, 100, "5000", "400");
         CreateLoanAccountReviewInstallmentPage reviewPage = cashFlowPage.clickContinue();
         reviewPage.verifyCashFlow(100.0, 2000.0, new String[]{"100.0","1858.0","1445.0","1716.0","2333.0","2600.0"}, new String[]{"0.0", "15.5","37.2","28.5","6.7","0.0"});
