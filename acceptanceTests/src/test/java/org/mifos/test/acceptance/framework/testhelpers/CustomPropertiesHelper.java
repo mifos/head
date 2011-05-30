@@ -188,15 +188,13 @@ public class CustomPropertiesHelper {
         selenium.open(UPDATE_PAGE + "?ProcessFlow.GroupPendingApprovalStateEnabled=" + enabled);
     }
 
-    // SAVINGS IS NOT AUTOMATICALLY activated
-//    public void setSavingsPendingApprovalStateEnabled(String enabled){
-//        selenium.open(UPDATE_PAGE + "?ProcessFlow.SavingsPendingApprovalStateEnabled=" + enabled);
-//    }
-//
-//  Loan now always goes through approval process/not allowed to go straight to approved.
-//    public void setLoanPendingApprovalStateEnabled(String enabled){
-//        selenium.open(UPDATE_PAGE + "?ProcessFlow.LoanPendingApprovalStateEnabled=" + enabled);
-//    }
+    public void setSavingsPendingApprovalStateEnabled(String enabled){
+        selenium.open(UPDATE_PAGE + "?ProcessFlow.SavingsPendingApprovalStateEnabled=" + enabled);
+    }
+
+    public void setLoanPendingApprovalStateEnabled(String enabled){
+        selenium.open(UPDATE_PAGE + "?ProcessFlow.LoanPendingApprovalStateEnabled=" + enabled);
+    }
 
     public void setClientPendingApprovalStateEnabled(String enabled){
         selenium.open(UPDATE_PAGE + "?ProcessFlow.ClientPendingApprovalStateEnabled=" + enabled);
