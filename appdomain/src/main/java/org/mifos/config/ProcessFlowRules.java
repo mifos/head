@@ -20,11 +20,16 @@
 
 package org.mifos.config;
 
+import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
+import org.mifos.accounts.persistence.LegacyAccountDao;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**
@@ -44,8 +49,8 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
  * override in the config file.
  */
 public class ProcessFlowRules {
-//    private static final String SAVINGS_PENDING_APPROVAL = "ProcessFlow.SavingsPendingApprovalStateEnabled";
-//    private static final String LOAN_PENDING_APPROVAL = "ProcessFlow.LoanPendingApprovalStateEnabled";
+    private static final String SAVINGS_PENDING_APPROVAL = "ProcessFlow.SavingsPendingApprovalStateEnabled";
+    private static final String LOAN_PENDING_APPROVAL = "ProcessFlow.LoanPendingApprovalStateEnabled";
     private static final String GROUP_PENDING_APPROVAL = "ProcessFlow.GroupPendingApprovalStateEnabled";
     private static final String CLIENT_PENDING_APPROVAL = "ProcessFlow.ClientPendingApprovalStateEnabled";
 
@@ -55,12 +60,12 @@ public class ProcessFlowRules {
      * class. This method is only intended to be used during startup, ie: in a
      * single thread.
      */
-    public static void init() throws ConfigurationException {
+    public static void init() throws PersistenceException, ConfigurationException {
         try {
             initClientPendingApprovalState();
             initGroupPendingApprovalState();
-//            initLoanPendingApprovalState();
-//            initSavingsPendingApprovalState();
+            initLoanPendingApprovalState();
+            initSavingsPendingApprovalState();
 
             StaticHibernateUtil.commitTransaction();
         } catch (ConfigurationException ce) {
@@ -185,79 +190,75 @@ public class ProcessFlowRules {
         return cm.getBoolean(GROUP_PENDING_APPROVAL);
     }
 
-//    private static void initLoanPendingApprovalState() throws ConfigurationException {
-//
-//        LegacyAccountDao ap = ApplicationContextProvider.getBean(LegacyAccountDao.class);
-//        AccountStateEntity ase = ap.loadPersistentObject(AccountStateEntity.class, AccountState.LOAN_PENDING_APPROVAL.getValue());
-//
-//        boolean fromDb = isLoanPendingApprovalStateEnabledOnDatabaseConfig(ase);
-//        boolean fromCfg = isLoanPendingApprovalStateEnabled();
-//
-//        if (databaseAndCustomConfigurationAreNotTheSame(fromDb, fromCfg)) {
-//            int count = ApplicationContextProvider.getBean(LegacyLoanDao.class).countOfLoanAccounts();
-//            if (count > 0) {
-//                String errMsg = getBadOverrideMsg(LOAN_PENDING_APPROVAL, "Records for loans in the 'pending approval' state"
-//                        + " may already exist.");
-//                throw new ConfigurationException(errMsg);
-//            }
-//
-//            makeDatabaseConfigurationMatchPropertiesFileConfiguration(ap, ase, fromCfg);
-//        }
-//    }
+    private static void initLoanPendingApprovalState() throws ConfigurationException {
 
-//    private static void makeDatabaseConfigurationMatchPropertiesFileConfiguration(LegacyAccountDao persistence,
-//            AccountStateEntity entity, boolean fromCfg) {
-//        entity.setIsOptional(fromCfg);
-//        try {
-//            persistence.createOrUpdate(entity);
-//            StaticHibernateUtil.commitTransaction();
-//        } catch (PersistenceException e) {
-//            StaticHibernateUtil.rollbackTransaction();
-//        } finally {
-//            StaticHibernateUtil.closeSession();
-//        }
-//
-//    }
+        LegacyAccountDao ap = ApplicationContextProvider.getBean(LegacyAccountDao.class);
+        AccountStateEntity ase = ap.loadPersistentObject(AccountStateEntity.class, AccountState.LOAN_PENDING_APPROVAL.getValue());
 
-//    private static boolean isSavingPendingApprovalStateEnabledOnDatabaseConfig(AccountStateEntity ase) {
-//        return ase.getIsOptional();
-//    }
-//
-//    private static boolean isLoanPendingApprovalStateEnabledOnDatabaseConfig(AccountStateEntity ase) {
-//        return ase.getIsOptional();
-//    }
+        boolean fromDb = isLoanPendingApprovalStateEnabledOnDatabaseConfig(ase);
+        boolean fromCfg = isLoanPendingApprovalStateEnabled();
 
-    public static boolean isLoanPendingApprovalStateEnabled() {
-//        MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
-//        return cm.getBoolean(LOAN_PENDING_APPROVAL);
-        // always enabled now and not configurable.
-        return true;
+        if (databaseAndCustomConfigurationAreNotTheSame(fromDb, fromCfg)) {
+            int count = ApplicationContextProvider.getBean(LegacyLoanDao.class).countOfLoanAccounts();
+            if (count > 0) {
+                String errMsg = getBadOverrideMsg(LOAN_PENDING_APPROVAL, "Records for loans in the 'pending approval' state"
+                        + " may already exist.");
+                throw new ConfigurationException(errMsg);
+            }
+
+            makeDatabaseConfigurationMatchPropertiesFileConfiguration(ap, ase, fromCfg);
+        }
     }
 
-//    private static void initSavingsPendingApprovalState() throws ConfigurationException {
-//
-//        LegacyAccountDao ap = ApplicationContextProvider.getBean(LegacyAccountDao.class);
-//        AccountStateEntity ase = ap.loadPersistentObject(AccountStateEntity.class, AccountState.SAVINGS_PENDING_APPROVAL.getValue());
-//
-//        boolean fromDb = isSavingPendingApprovalStateEnabledOnDatabaseConfig(ase);
-//        boolean fromCfg = isSavingsPendingApprovalStateEnabled();
-//
-//        if (databaseAndCustomConfigurationAreNotTheSame(fromDb, fromCfg)) {
-//            int count = ApplicationContextProvider.getBean(LegacyLoanDao.class).countOfSavingsAccounts();
-//            if (count > 0) {
-//                String errMsg = getBadOverrideMsg(SAVINGS_PENDING_APPROVAL,
-//                        "Records for savings accounts in the 'pending approval' state" + " may already exist.");
-//                throw new ConfigurationException(errMsg);
-//            }
-//
-//            makeDatabaseConfigurationMatchPropertiesFileConfiguration(ap, ase, fromCfg);
-//        }
-//    }
+    private static void makeDatabaseConfigurationMatchPropertiesFileConfiguration(LegacyAccountDao persistence,
+            AccountStateEntity entity, boolean fromCfg) {
+        entity.setIsOptional(fromCfg);
+        try {
+            persistence.createOrUpdate(entity);
+            StaticHibernateUtil.commitTransaction();
+        } catch (PersistenceException e) {
+            StaticHibernateUtil.rollbackTransaction();
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+
+    }
+
+    private static boolean isSavingPendingApprovalStateEnabledOnDatabaseConfig(AccountStateEntity ase) {
+        return ase.getIsOptional();
+    }
+
+    private static boolean isLoanPendingApprovalStateEnabledOnDatabaseConfig(AccountStateEntity ase) {
+        return ase.getIsOptional();
+    }
+
+    public static boolean isLoanPendingApprovalStateEnabled() {
+        MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
+        return cm.getBoolean(LOAN_PENDING_APPROVAL);
+    }
+
+    private static void initSavingsPendingApprovalState() throws ConfigurationException {
+
+        LegacyAccountDao ap = ApplicationContextProvider.getBean(LegacyAccountDao.class);
+        AccountStateEntity ase = ap.loadPersistentObject(AccountStateEntity.class, AccountState.SAVINGS_PENDING_APPROVAL.getValue());
+
+        boolean fromDb = isSavingPendingApprovalStateEnabledOnDatabaseConfig(ase);
+        boolean fromCfg = isSavingsPendingApprovalStateEnabled();
+
+        if (databaseAndCustomConfigurationAreNotTheSame(fromDb, fromCfg)) {
+            int count = ApplicationContextProvider.getBean(LegacyLoanDao.class).countOfSavingsAccounts();
+            if (count > 0) {
+                String errMsg = getBadOverrideMsg(SAVINGS_PENDING_APPROVAL,
+                        "Records for savings accounts in the 'pending approval' state" + " may already exist.");
+                throw new ConfigurationException(errMsg);
+            }
+
+            makeDatabaseConfigurationMatchPropertiesFileConfiguration(ap, ase, fromCfg);
+        }
+    }
 
     public static boolean isSavingsPendingApprovalStateEnabled() {
-//        MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
-//        return cm.getBoolean(SAVINGS_PENDING_APPROVAL);
-        // never enabled now and not configurable.
-        return false;
+        MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
+        return cm.getBoolean(SAVINGS_PENDING_APPROVAL);
     }
 }
