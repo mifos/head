@@ -24,10 +24,11 @@ import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.testng.Assert;
 
+@SuppressWarnings("PMD")
 public class RedoLoanAccountPreviewPage extends AbstractPage {
     String editScheduleButton = "//input[@id='createloanpreview.button.edit' and @name='editButton' and @value='Edit Loan Schedule Information']";
-    String scheduleTable = "//table[@id='repaymentScheduleTable']";
-    String balanceTable = "//table[@id='runningBalanceTable']";
+    String scheduleTable = "//table[@id='installments']";
+    String futureInstallmentsTable = "//table[@id='futureInstallments']";
     String editScheduleInformation = "//input[@id='createloanpreview.button.edit' and @name='editButton' and @value='Edit Loan Schedule Information']";
 
     public RedoLoanAccountPreviewPage(Selenium selenium) {
@@ -43,28 +44,40 @@ public class RedoLoanAccountPreviewPage extends AbstractPage {
         Assert.assertTrue(!selenium.isElementPresent(editScheduleButton));
     }
 
-    @SuppressWarnings("PMD.PositionLiteralsFirstInComparisons")
-    public RedoLoanAccountPreviewPage verifyRunningBalance(String[][] loanSchedule, String[][] runningBalance) {
+    @SuppressWarnings("PMD")
+    public RedoLoanAccountPreviewPage verifyRunningBalance(String[][] loanSchedule, String[][] futureInstallments, String[][] runningBalance) {
          for (int rowIndex = 0; rowIndex < loanSchedule.length; rowIndex++) {
             String[] installment = loanSchedule[rowIndex];
             for (int columnIndex = 0; columnIndex < installment.length; columnIndex++) {
                 String value = installment[columnIndex];
-                int row = rowIndex+3;
+                int row = rowIndex + 1;
                 if (!"".equals(value)) {
                     int column = columnIndex + 1;
                     String actualCellValue = selenium.getText(scheduleTable + "//tr[" + row + "]/td[" + column + "]");
                     Assert.assertEquals(actualCellValue, value, "In Schedule Table for row " + row + " and column " + column + " expected value is " + value + " but the actual value is " + actualCellValue);
                 }
             }
-        }
+         }
+         for (int rowIndex = 0; rowIndex < futureInstallments.length; rowIndex++) {
+             String[] installment = futureInstallments[rowIndex];
+             for (int columnIndex = 0; columnIndex < installment.length; columnIndex++) {
+                 String value = installment[columnIndex];
+                 int row = rowIndex + 1;
+                 if (!"".equals(value)) {
+                     int column = columnIndex + 1;
+                     String actualCellValue = selenium.getText(futureInstallmentsTable + "//tr[" + row + "]/td[" + column + "]");
+                     Assert.assertEquals(actualCellValue, value, "In Future Installments Table for row " + row + " and column " + column + " expected value is " + value + " but the actual value is " + actualCellValue);
+                 }
+             }
+         }
          for (int rowIndex = 0; rowIndex < runningBalance.length; rowIndex++) {
             String[] installment = runningBalance[rowIndex];
             for (int columnIndex = 0; columnIndex < installment.length; columnIndex++) {
                 String value = installment[columnIndex];
-                int row = rowIndex+4;
+                int row = rowIndex + 1;
                 if (!value.equals("")) {
-                    int column = columnIndex + 1;
-                    String actualCellValue = selenium.getText(balanceTable + "//tr[" + row + "]/td[" + column + "]");
+                    int column = columnIndex + 8;
+                    String actualCellValue = selenium.getText(scheduleTable + "//tr[" + row + "]/td[" + column + "]");
                     Assert.assertEquals(actualCellValue, value, "In Schedule Table for row " + row + " and column " + column + " expected value is " + value + " but the actual value is " + actualCellValue);
                 }
             }

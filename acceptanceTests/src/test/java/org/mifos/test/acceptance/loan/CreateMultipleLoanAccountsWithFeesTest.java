@@ -51,7 +51,6 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-54
-    @Test(enabled=false)
     public void createBulkLoanAccountsInPendingApprovalStatus() throws Exception {
         //Given
         CreateMultipleLoanAccountSelectParameters multipleAccParameters = new CreateMultipleLoanAccountSelectParameters();
@@ -72,7 +71,6 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-55
-    @Test(enabled=false)
     public void createBulkLoanAccountsInPartialApplicationStatus() throws Exception {
         //Given
         CreateMultipleLoanAccountSelectParameters multipleAccParameters = new CreateMultipleLoanAccountSelectParameters();
