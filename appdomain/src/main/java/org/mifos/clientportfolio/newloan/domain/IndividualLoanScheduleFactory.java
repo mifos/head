@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
@@ -54,12 +55,13 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
     }
 
     @Override
-    public LoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, 
+    public LoanSchedule create(LocalDate disbursementDate, List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, 
             CustomerBO customer, MeetingBO loanMeeting, Money loanAmount, Double interestRate, Integer interestDays, Integer gracePeriodDuration, 
             List<AccountFeesEntity> accountFees) {
 
         GraceType graceType = loanProduct.getGraceType();
         InterestType interestType = loanProduct.getInterestType();
+        boolean variableInstallmentLoanProduct = loanProduct.isVariableInstallmentsAllowed();
         Integer numberOfInstallments = loanScheduleDates.size();
 
         RecurringScheduledEventFactory scheduledEventFactory = new RecurringScheduledEventFactoryImpl();
@@ -88,16 +90,17 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         Double durationInYears = loanDurationInAccountingYearsCalculator.calculate(loanMeeting.getRecurAfter().intValue(), numberOfInstallments, interestDays);
 
         LoanInterestCalculationDetails loanInterestCalculationDetails = new LoanInterestCalculationDetails(loanAmount, interestRate, graceType, gracePeriodDuration,
-                numberOfInstallments, durationInYears, interestFractionalRatePerInstallment);
+                numberOfInstallments, durationInYears, interestFractionalRatePerInstallment, disbursementDate, loanScheduleDates);
 
         LoanInterestCalculatorFactory loanInterestCalculatorFactory = new LoanInterestCalculatorFactoryImpl();
-        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType);
+        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType, variableInstallmentLoanProduct);
         Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
         // end of loan Interest creation
 
         EqualInstallmentGeneratorFactory equalInstallmentGeneratorFactory = new EqualInstallmentGeneratorFactoryImpl();
         PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
 
+        // FIXME - add EMIInstallments for daily interest
         List<InstallmentPrincipalAndInterest> EMIInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
         List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(dueInstallmentDates, loanInterest, loanAmount, 
                 meetingScheduledEvent, EMIInstallments, accountFees, customer);

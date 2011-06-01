@@ -20,6 +20,10 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
+import java.util.List;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.framework.util.helpers.Money;
 
@@ -32,10 +36,12 @@ public class LoanInterestCalculationDetails {
     private final Integer numberOfInstallments;
     private final Double durationInYears;
     private final Double interestFractionalRatePerInstallment;
+    private final LocalDate disbursementDate;
+    private final List<DateTime> loanScheduleDates;
 
     public LoanInterestCalculationDetails(Money loanAmount, Double interestRate, GraceType graceType,
             Integer gracePeriodDuration, Integer numberOfInstallments, Double durationInYears,
-            Double interestFractionalRatePerInstallment) {
+            Double interestFractionalRatePerInstallment, LocalDate disbursementDate, List<DateTime> loanScheduleDates) {
         this.loanAmount = loanAmount;
         this.interestRate = interestRate;
         this.graceType = graceType;
@@ -43,6 +49,8 @@ public class LoanInterestCalculationDetails {
         this.numberOfInstallments = numberOfInstallments;
         this.durationInYears = durationInYears;
         this.interestFractionalRatePerInstallment = interestFractionalRatePerInstallment;
+        this.disbursementDate = disbursementDate;
+        this.loanScheduleDates = loanScheduleDates;
     }
 
     public Money getLoanAmount() {
@@ -73,4 +81,11 @@ public class LoanInterestCalculationDetails {
         return this.interestFractionalRatePerInstallment;
     }
 
+    public LocalDate getDisbursementDate() {
+        return disbursementDate;
+    }
+
+    public List<DateTime> getLoanScheduleDates() {
+        return loanScheduleDates;
+    }
 }

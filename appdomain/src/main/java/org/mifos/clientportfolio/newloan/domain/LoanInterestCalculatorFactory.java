@@ -24,6 +24,6 @@ import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 
 public interface LoanInterestCalculatorFactory {
 
-    LoanInterestCalculator create(InterestType interestType);
+    LoanInterestCalculator create(InterestType interestType, boolean variableInstallmentLoanProduct);
 
 }

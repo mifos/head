@@ -26,8 +26,23 @@ import org.mifos.core.MifosRuntimeException;
 public class LoanInterestCalculatorFactoryImpl implements LoanInterestCalculatorFactory {
 
     @Override
-    public LoanInterestCalculator create(InterestType interestType) {
+    public LoanInterestCalculator create(InterestType interestType, boolean variableInstallmentLoanProduct) {
 
+        if (variableInstallmentLoanProduct) {
+            switch (interestType) {
+            case FLAT:
+                throw new MifosRuntimeException("interestType not supported: " + interestType);
+            case DECLINING:
+                return new DecliningBalanceWithInterestCalculatedDailyLoanInterestCalculator();
+            case DECLINING_EPI:
+                throw new MifosRuntimeException("interestType not supported: " + interestType);
+            case DECLINING_PB:
+                throw new MifosRuntimeException("interestType not supported: " + interestType);
+            default:
+                throw new MifosRuntimeException("interestType not supported: " + interestType);
+            }
+        }
+        
         switch (interestType) {
         case FLAT:
             return new FlatLoanInterestCalculator();
