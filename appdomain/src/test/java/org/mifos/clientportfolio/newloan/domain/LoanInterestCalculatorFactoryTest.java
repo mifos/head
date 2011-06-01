@@ -45,7 +45,7 @@ public class LoanInterestCalculatorFactoryTest {
     public void shouldUseFlatLoanInterestCalculator() {
 
         // exercise test
-        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(InterestType.FLAT);
+        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(InterestType.FLAT, false);
 
         // verification
         assertThat(loanInterestCalculator, is(instanceOf(FlatLoanInterestCalculator.class)));
@@ -55,7 +55,7 @@ public class LoanInterestCalculatorFactoryTest {
     public void shouldUseDecliningBalanceLoanInterestCalculator() {
 
         // exercise test
-        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(InterestType.DECLINING);
+        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(InterestType.DECLINING, false);
 
         // verification
         assertThat(loanInterestCalculator, is(instanceOf(DecliningBalanceLoanInterestCalculator.class)));
@@ -65,7 +65,7 @@ public class LoanInterestCalculatorFactoryTest {
     public void shouldUseDecliningBalanceWithEqualPrincipalInstallmentsLoanInterestCalculator() {
 
         // exercise test
-        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(InterestType.DECLINING_EPI);
+        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(InterestType.DECLINING_EPI, false);
 
         // verification
         assertThat(loanInterestCalculator, is(instanceOf(DecliningBalanceWithEqualPrincipalInstallmentsLoanInterestCalculator.class)));
@@ -75,7 +75,7 @@ public class LoanInterestCalculatorFactoryTest {
     public void shouldUseNullLoanInterestCalculatorForDecliningPbInterestType() {
 
         // exercise test
-        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(InterestType.DECLINING_PB);
+        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(InterestType.DECLINING_PB, false);
 
         // verification
         assertThat(loanInterestCalculator, is(instanceOf(NullLoanInterestCalculator.class)));
@@ -85,6 +85,6 @@ public class LoanInterestCalculatorFactoryTest {
     public void shouldThrowRuntimeExceptionForCompoundInterestType() {
 
         // exercise test
-        loanInterestCalculatorFactory.create(InterestType.COMPOUND);
+        loanInterestCalculatorFactory.create(InterestType.COMPOUND, false);
     }
 }

@@ -20,6 +20,11 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.framework.util.helpers.Money;
 
@@ -32,9 +37,11 @@ public class LoanInterestCalculationDetailsBuilder {
     private Integer numberOfInstallments;
     private Double durationInYears;
     private Double interestFractionalRatePerInstallment;
+    private LocalDate disbursementDate = new LocalDate();
+    private List<DateTime> loanSchedules = new ArrayList<DateTime>();
 
     public LoanInterestCalculationDetails build() {
-        return new LoanInterestCalculationDetails(loanAmount, interestRate, graceType, gracePeriodDuration, numberOfInstallments, durationInYears, interestFractionalRatePerInstallment);
+        return new LoanInterestCalculationDetails(loanAmount, interestRate, graceType, gracePeriodDuration, numberOfInstallments, durationInYears, interestFractionalRatePerInstallment, disbursementDate, loanSchedules);
     }
 
     public LoanInterestCalculationDetailsBuilder withLoanAmount(String loanAmount) {

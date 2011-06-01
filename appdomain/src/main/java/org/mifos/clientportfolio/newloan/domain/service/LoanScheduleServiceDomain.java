@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -56,19 +57,19 @@ public class LoanScheduleServiceDomain implements LoanScheduleService {
     @Override
     public LoanSchedule generate(LoanOfferingBO loanProduct, CustomerBO customer, MeetingBO loanMeeting,
             LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, Short userBranchOfficeId, 
-            List<AccountFeesEntity> accountFees) {
+            List<AccountFeesEntity> accountFees, LocalDate disbursementDate) {
         
         List<DateTime> loanScheduleDates = generateScheduleDates(loanProduct, loanMeeting, overridenDetail, configuration, userBranchOfficeId);
         
-        return loanScheduleFactory.create(loanScheduleDates, loanProduct, customer, loanMeeting, overridenDetail.getLoanAmount(), 
+        return loanScheduleFactory.create(disbursementDate, loanScheduleDates, loanProduct, customer, loanMeeting, overridenDetail.getLoanAmount(), 
                 overridenDetail.getInterestRate(), configuration.getNumberOfInterestDays(), overridenDetail.getGraceDuration(), accountFees);
     }
     
     @Override
     public LoanSchedule generate(LoanOfferingBO loanProduct, CustomerBO customer, MeetingBO loanMeeting,LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, 
-            List<AccountFeesEntity> accountFees, List<DateTime> loanScheduleDates) {
+            List<AccountFeesEntity> accountFees, LocalDate disbursementDate, List<DateTime> loanScheduleDates) {
         
-        return loanScheduleFactory.create(loanScheduleDates, loanProduct, customer, loanMeeting, overridenDetail.getLoanAmount(), 
+        return loanScheduleFactory.create(disbursementDate, loanScheduleDates, loanProduct, customer, loanMeeting, overridenDetail.getLoanAmount(), 
                 overridenDetail.getInterestRate(), configuration.getNumberOfInterestDays(), overridenDetail.getGraceDuration(), accountFees);
     }
 

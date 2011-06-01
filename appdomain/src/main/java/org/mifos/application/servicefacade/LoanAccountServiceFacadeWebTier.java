@@ -732,7 +732,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
 
-        LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, loanMeeting, overridenDetail, configuration, userContext.getBranchId(), accountFeeEntities);
+        LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, loanMeeting, overridenDetail, configuration, userContext.getBranchId(), accountFeeEntities, createLoanSchedule.getDisbursementDate());
 
         // translate to DTO form
         List<LoanCreationInstallmentDto> installments = new ArrayList<LoanCreationInstallmentDto>();
@@ -772,13 +772,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     private LoanSchedule assembleLoanSchedule(CustomerBO customer, LoanOfferingBO loanProduct,
             LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration,
-            MeetingBO repaymentDayMeeting, OfficeBO userOffice, List<DateTime> loanScheduleDates) {
+            MeetingBO repaymentDayMeeting, OfficeBO userOffice, List<DateTime> loanScheduleDates, LocalDate disbursementDate) {
 
         LoanSchedule loanSchedule = null;
         if (loanScheduleDates.isEmpty()) {
-            loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, userOffice.getOfficeId(), overridenDetail.getAccountFeeEntities());
+            loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, userOffice.getOfficeId(), overridenDetail.getAccountFeeEntities(), disbursementDate);
         } else {
-            loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, overridenDetail.getAccountFeeEntities(), loanScheduleDates);
+            loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, overridenDetail.getAccountFeeEntities(), disbursementDate, loanScheduleDates);
         }
 
         return loanSchedule;
@@ -1003,7 +1003,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         List<DateTime> loanScheduleDates = new ArrayList<DateTime>(loanScheduleInstallmentDates);
 
-        LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, loanScheduleDates);
+        LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, loanScheduleDates, loanAccountInfo.getDisbursementDate());
         if (!installmentPrincipalAmounts.isEmpty()) {
             loanSchedule.modifyPrincipalAmounts(installmentPrincipalAmounts);
         }
@@ -1049,7 +1049,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 Money loanAmount = new Money(loanAccountDetail.getLoanProduct().getCurrency(), groupMemberAccount.getLoanAmount());
                 LoanProductOverridenDetail memberOverridenDetail = new LoanProductOverridenDetail(loanAmount, new ArrayList<AccountFeesEntity>(), overridenDetail);
 
-                LoanSchedule memberSchedule = assembleLoanSchedule(member, loanAccountDetail.getLoanProduct(), memberOverridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>());
+                LoanSchedule memberSchedule = assembleLoanSchedule(member, loanAccountDetail.getLoanProduct(), memberOverridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>(), loanAccountInfo.getDisbursementDate());
 
                 GroupMemberLoanDetail groupMemberLoanDetail = new GroupMemberLoanDetail(member, memberOverridenDetail, memberSchedule, groupMemberAccount.getLoanPurposeId());
                 individualMembersOfGroupLoan.add(groupMemberLoanDetail);
