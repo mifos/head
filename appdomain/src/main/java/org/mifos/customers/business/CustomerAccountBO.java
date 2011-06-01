@@ -137,16 +137,16 @@ public class CustomerAccountBO extends AccountBO {
         // synch up generated schedule for center/group/client or group/client hierarchy
         CustomerBO upmostParent = upmostParentOf(customer);
         if (upmostParent != null) {
-            DateTime parentCustomerActiviationDate = new DateTime(upmostParent.getCustomerActivationDate());
-            DateTime childCustomerActiviationDate = new DateTime(customer.getCustomerActivationDate());
+            LocalDate parentCustomerActiviationDate = new LocalDate(upmostParent.getCustomerActivationDate());
+            LocalDate childCustomerActiviationDate = new LocalDate(customer.getCustomerActivationDate());
 
-            DateTime validCustomerMeetingMatch = customerMeetingEvent.nearestMatchNotTakingIntoAccountScheduleFrequency(parentCustomerActiviationDate);
+            LocalDate validCustomerMeetingMatch = new LocalDate(customerMeetingEvent.nearestMatchNotTakingIntoAccountScheduleFrequency(parentCustomerActiviationDate.toDateMidnight().toDateTime()));
             
             while (childCustomerActiviationDate.isAfter(validCustomerMeetingMatch)) {
-                validCustomerMeetingMatch = customerMeetingEvent.rollFrowardDateByFrequency(validCustomerMeetingMatch);
+                validCustomerMeetingMatch = new LocalDate(customerMeetingEvent.rollFrowardDateByFrequency(validCustomerMeetingMatch.toDateMidnight().toDateTime()));
             }
             
-            beginningFrom = validCustomerMeetingMatch;
+            beginningFrom = validCustomerMeetingMatch.toDateMidnight().toDateTime();
         }
         
         createInitialSetOfCustomerScheduleEntities(customer, beginningFrom, applicableCalendarEvents, customerMeetingEvent);
