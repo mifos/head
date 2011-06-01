@@ -24,7 +24,7 @@ public class RedoLoanScheduleData {
             {"598.3", "5.5", "0.0", "603.8"},
             {"398.1", "2.7", "0.0", "400.8"}};
 
-    public static final String[][] DECLINING_PRINCIPAL_LATE_PAYMENT_1 = {{"19-Oct-2010", "410.0"}, {"", ""}, {"", ""}, {"", ""}, {"", ""}};
+    public static final String[][] DECLINING_PRINCIPAL_LATE_PAYMENT_1 = {{"19/10/10", "410.0"}, {"22/10/10", "0"}, {"29/10/10", "0"}, {"05/11/10", "0"}, {"12/11/10", "0"}};
     public static final String[][] DECLINING_PRINCIPAL_LATE_SCHEDULE_1 = {{"Installments paid", "", "", "", "", ""},
             {"1", "12-Oct-2010", "19-Oct-2010", "202.3", "0.7", "100.0", "303.0"},
             {"2", "19-Oct-2010", "19-Oct-2010", "2.4", "4.6", "100.0", "107.0"},
