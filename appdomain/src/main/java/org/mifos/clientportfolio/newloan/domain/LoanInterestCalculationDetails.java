@@ -20,6 +20,7 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -38,6 +39,7 @@ public class LoanInterestCalculationDetails {
     private final Double interestFractionalRatePerInstallment;
     private final LocalDate disbursementDate;
     private final List<DateTime> loanScheduleDates;
+    private List<Money> totalInstallmentAmounts = new ArrayList<Money>();
 
     public LoanInterestCalculationDetails(Money loanAmount, Double interestRate, GraceType graceType,
             Integer gracePeriodDuration, Integer numberOfInstallments, Double durationInYears,
@@ -87,5 +89,13 @@ public class LoanInterestCalculationDetails {
 
     public List<DateTime> getLoanScheduleDates() {
         return loanScheduleDates;
+    }
+    
+    public List<Money> getTotalInstallmentAmounts() {
+        return totalInstallmentAmounts;
+    }
+
+    public void setTotalInstallmentAmounts(List<Money> totalInstallmentAmounts) {
+        this.totalInstallmentAmounts = totalInstallmentAmounts;
     }
 }

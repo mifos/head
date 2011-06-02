@@ -52,7 +52,7 @@ public class EqualInstallmentGeneratorFactoryTest {
         InterestType interestType = InterestType.FLAT;
 
         // exercise test
-        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
+        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest, false);
 
         // verification
         assertThat(equalInstallmentGenerator, is(instanceOf(FlatLoanPrincipalWithInterestGenerator.class)));
@@ -64,7 +64,7 @@ public class EqualInstallmentGeneratorFactoryTest {
         InterestType interestType = InterestType.DECLINING;
 
         // exercise test
-        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
+        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest, false);
 
         // verification
         assertThat(equalInstallmentGenerator, is(instanceOf(DecliningBalancePrincipalWithInterestGenerator.class)));
@@ -76,7 +76,7 @@ public class EqualInstallmentGeneratorFactoryTest {
         InterestType interestType = InterestType.DECLINING_PB;
 
         // exercise test
-        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
+        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest, false);
 
         // verification
         assertThat(equalInstallmentGenerator, is(instanceOf(DecliningBalancePrincipalWithInterestGenerator.class)));
@@ -88,7 +88,7 @@ public class EqualInstallmentGeneratorFactoryTest {
         InterestType interestType = InterestType.DECLINING_EPI;
 
         // exercise test
-        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
+        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest, false);
 
         // verification
         assertThat(equalInstallmentGenerator, is(instanceOf(DecliningBalanceEqualPrincipalWithInterestGenerator.class)));
@@ -100,7 +100,7 @@ public class EqualInstallmentGeneratorFactoryTest {
         InterestType interestType = InterestType.COMPOUND;
 
         // exercise test
-        equalInstallmentGeneratorFactory.create(interestType, loanInterest);
+        equalInstallmentGeneratorFactory.create(interestType, loanInterest, false);
     }
 
 }
