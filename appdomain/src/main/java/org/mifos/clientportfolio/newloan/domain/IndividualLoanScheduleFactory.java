@@ -20,6 +20,7 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,8 +90,15 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
 
         Double durationInYears = loanDurationInAccountingYearsCalculator.calculate(loanMeeting.getRecurAfter().intValue(), numberOfInstallments, interestDays);
 
+        List<Money> totalInstallmentAmountsAsMoney = new ArrayList<Money>();
+        for (Number totalInstallmentAmount : totalInstallmentAmounts) {
+            Money totalAmount = new Money(loanAmount.getCurrency(), BigDecimal.valueOf(totalInstallmentAmount.doubleValue()));
+            totalInstallmentAmountsAsMoney.add(totalAmount);
+        }
+        
         LoanInterestCalculationDetails loanInterestCalculationDetails = new LoanInterestCalculationDetails(loanAmount, interestRate, graceType, gracePeriodDuration,
                 numberOfInstallments, durationInYears, interestFractionalRatePerInstallment, disbursementDate, loanScheduleDates);
+        loanInterestCalculationDetails.setTotalInstallmentAmounts(totalInstallmentAmountsAsMoney);
 
         LoanInterestCalculatorFactory loanInterestCalculatorFactory = new LoanInterestCalculatorFactoryImpl();
         LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType, variableInstallmentLoanProduct);
@@ -98,7 +106,7 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         // end of loan Interest creation
 
         EqualInstallmentGeneratorFactory equalInstallmentGeneratorFactory = new EqualInstallmentGeneratorFactoryImpl();
-        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
+        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest, variableInstallmentLoanProduct);
 
         // FIXME - add EMIInstallments for daily interest
         List<InstallmentPrincipalAndInterest> EMIInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);

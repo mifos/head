@@ -2711,7 +2711,7 @@ public class LoanBO extends AccountBO implements Loan {
 		Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
 
 		EqualInstallmentGeneratorFactory equalInstallmentGeneratorFactory = new EqualInstallmentGeneratorFactoryImpl();
-		PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
+		PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest, this.loanOffering.isVariableInstallmentsAllowed());
 
 		List<InstallmentPrincipalAndInterest> principalWithInterestInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
 		List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(installmentDates, loanInterest, this.loanAmount, meetingScheduledEvent, principalWithInterestInstallments, this.getAccountFees());
@@ -3155,7 +3155,7 @@ public class LoanBO extends AccountBO implements Loan {
         Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
 
         EqualInstallmentGeneratorFactory equalInstallmentGeneratorFactory = new EqualInstallmentGeneratorFactoryImpl();
-        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
+        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest, this.loanOffering.isVariableInstallmentsAllowed());
 
         List<InstallmentPrincipalAndInterest> principalWithInterestInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
         List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(installmentDates, loanInterest, this.loanAmount, meetingScheduledEvent, principalWithInterestInstallments, this.getAccountFees());
