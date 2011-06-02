@@ -772,13 +772,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     private LoanSchedule assembleLoanSchedule(CustomerBO customer, LoanOfferingBO loanProduct,
             LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration,
-            MeetingBO repaymentDayMeeting, OfficeBO userOffice, List<DateTime> loanScheduleDates, LocalDate disbursementDate) {
+            MeetingBO repaymentDayMeeting, OfficeBO userOffice, List<DateTime> loanScheduleDates, LocalDate disbursementDate, 
+            List<Number> totalInstallmentAmounts) {
 
         LoanSchedule loanSchedule = null;
-        if (loanScheduleDates.isEmpty()) {
+        if (loanScheduleDates.isEmpty() && totalInstallmentAmounts.isEmpty()) {
             loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, userOffice.getOfficeId(), overridenDetail.getAccountFeeEntities(), disbursementDate);
         } else {
-            loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, overridenDetail.getAccountFeeEntities(), disbursementDate, loanScheduleDates);
+            loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, overridenDetail.getAccountFeeEntities(), disbursementDate, loanScheduleDates, totalInstallmentAmounts);
         }
 
         return loanSchedule;
@@ -931,9 +932,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     @Override
     public LoanCreationResultDto createLoan(CreateLoanAccount loanAccountInfo,
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, 
-            List<DateTime> loanScheduleInstallmentDates, List<Number> installmentPrincipalAmounts) {
+            List<DateTime> loanScheduleInstallmentDates, List<Number> totalInstallmentAmounts) {
 
-        return createLoanAccount(loanAccountInfo, new ArrayList<LoanPaymentDto>(), questionGroups, loanAccountCashFlow, loanScheduleInstallmentDates, installmentPrincipalAmounts, new ArrayList<GroupMemberAccountDto>(), false);
+        return createLoanAccount(loanAccountInfo, new ArrayList<LoanPaymentDto>(), questionGroups, loanAccountCashFlow, loanScheduleInstallmentDates, totalInstallmentAmounts, new ArrayList<GroupMemberAccountDto>(), false);
     }
     
     @Override
@@ -973,7 +974,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     
     private LoanCreationResultDto createLoanAccount(CreateLoanAccount loanAccountInfo, List<LoanPaymentDto> backdatedLoanPayments,
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, List<DateTime> loanScheduleInstallmentDates,
-            List<Number> installmentPrincipalAmounts, List<GroupMemberAccountDto> memberDetails, boolean isBackdatedLoan) {
+            List<Number> totalInstallmentAmounts, List<GroupMemberAccountDto> memberDetails, boolean isBackdatedLoan) {
         
         // 1. assemble loan details
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -1003,9 +1004,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         List<DateTime> loanScheduleDates = new ArrayList<DateTime>(loanScheduleInstallmentDates);
 
-        LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, loanScheduleDates, loanAccountInfo.getDisbursementDate());
-        if (!installmentPrincipalAmounts.isEmpty()) {
-            loanSchedule.modifyPrincipalAmounts(installmentPrincipalAmounts);
+        LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, loanScheduleDates, loanAccountInfo.getDisbursementDate(), totalInstallmentAmounts);
+        if (!totalInstallmentAmounts.isEmpty()) {
+            loanSchedule.modifyPrincipalAmounts(totalInstallmentAmounts);
         }
 
         // 2. create loan
@@ -1049,7 +1050,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 Money loanAmount = new Money(loanAccountDetail.getLoanProduct().getCurrency(), groupMemberAccount.getLoanAmount());
                 LoanProductOverridenDetail memberOverridenDetail = new LoanProductOverridenDetail(loanAmount, new ArrayList<AccountFeesEntity>(), overridenDetail);
 
-                LoanSchedule memberSchedule = assembleLoanSchedule(member, loanAccountDetail.getLoanProduct(), memberOverridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>(), loanAccountInfo.getDisbursementDate());
+                LoanSchedule memberSchedule = assembleLoanSchedule(member, loanAccountDetail.getLoanProduct(), memberOverridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>(), loanAccountInfo.getDisbursementDate(), new ArrayList<Number>());
 
                 GroupMemberLoanDetail groupMemberLoanDetail = new GroupMemberLoanDetail(member, memberOverridenDetail, memberSchedule, groupMemberAccount.getLoanPurposeId());
                 individualMembersOfGroupLoan.add(groupMemberLoanDetail);
