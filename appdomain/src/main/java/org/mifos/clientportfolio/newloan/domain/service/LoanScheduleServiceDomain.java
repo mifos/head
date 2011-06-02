@@ -61,15 +61,15 @@ public class LoanScheduleServiceDomain implements LoanScheduleService {
         
         List<DateTime> loanScheduleDates = generateScheduleDates(loanProduct, loanMeeting, overridenDetail, configuration, userBranchOfficeId);
         
-        return loanScheduleFactory.create(disbursementDate, loanScheduleDates, loanProduct, customer, loanMeeting, overridenDetail.getLoanAmount(), 
+        return loanScheduleFactory.create(disbursementDate, loanScheduleDates, new ArrayList<Number>(), loanProduct, customer, loanMeeting, overridenDetail.getLoanAmount(), 
                 overridenDetail.getInterestRate(), configuration.getNumberOfInterestDays(), overridenDetail.getGraceDuration(), accountFees);
     }
     
     @Override
     public LoanSchedule generate(LoanOfferingBO loanProduct, CustomerBO customer, MeetingBO loanMeeting,LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, 
-            List<AccountFeesEntity> accountFees, LocalDate disbursementDate, List<DateTime> loanScheduleDates) {
+            List<AccountFeesEntity> accountFees, LocalDate disbursementDate, List<DateTime> loanScheduleDates, List<Number> totalInstallmentAmounts) {
         
-        return loanScheduleFactory.create(disbursementDate, loanScheduleDates, loanProduct, customer, loanMeeting, overridenDetail.getLoanAmount(), 
+        return loanScheduleFactory.create(disbursementDate, loanScheduleDates, totalInstallmentAmounts, loanProduct, customer, loanMeeting, overridenDetail.getLoanAmount(), 
                 overridenDetail.getInterestRate(), configuration.getNumberOfInterestDays(), overridenDetail.getGraceDuration(), accountFees);
     }
 

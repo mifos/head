@@ -55,7 +55,7 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
     }
 
     @Override
-    public LoanSchedule create(LocalDate disbursementDate, List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, 
+    public LoanSchedule create(LocalDate disbursementDate, List<DateTime> loanScheduleDates, List<Number> totalInstallmentAmounts, LoanOfferingBO loanProduct, 
             CustomerBO customer, MeetingBO loanMeeting, Money loanAmount, Double interestRate, Integer interestDays, Integer gracePeriodDuration, 
             List<AccountFeesEntity> accountFees) {
 

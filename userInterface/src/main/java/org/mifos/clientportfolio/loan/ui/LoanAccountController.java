@@ -580,15 +580,15 @@ public class LoanAccountController {
 
             if (formBean.isVariableInstallmentsAllowed()) {
                 List<DateTime> installmentDates = cashFlowSummaryFormBean.getInstallments();
-                List<Number> installmentPrincipalAmounts = cashFlowSummaryFormBean.getInstallmentAmounts();
+                List<Number> totalInstallmentAmounts = cashFlowSummaryFormBean.getInstallmentAmounts();
                 if (installmentDates.isEmpty()) {
                     installmentDates = loanScheduleFormBean.getInstallments();
-                    installmentPrincipalAmounts = loanScheduleFormBean.getInstallmentAmounts();
+                    totalInstallmentAmounts = loanScheduleFormBean.getInstallmentAmounts();
                 }
                 // api for creating loan with premade loan schedule
                 
                 loanCreationResultDto = loanAccountServiceFacade.createLoan(loanAccountDetails,
-                        loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, installmentDates, installmentPrincipalAmounts);
+                        loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, installmentDates, totalInstallmentAmounts);
             } else {
                 loanCreationResultDto = loanAccountServiceFacade.createLoan(loanAccountDetails,
                         loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);

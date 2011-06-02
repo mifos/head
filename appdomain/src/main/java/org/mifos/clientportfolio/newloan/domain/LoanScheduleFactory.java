@@ -32,8 +32,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public interface LoanScheduleFactory {
 
-    LoanSchedule create(LocalDate disbursementDate, List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, CustomerBO customer, MeetingBO loanMeeting,
+    LoanSchedule create(LocalDate disbursementDate, List<DateTime> loanScheduleDates, List<Number> totalInstallmentAmounts, LoanOfferingBO loanProduct, CustomerBO customer, MeetingBO loanMeeting,
             Money loanAmountDisbursed, Double interestRate, Integer interestDays, Integer graceDuration,
             List<AccountFeesEntity> accountFees);
-
 }
