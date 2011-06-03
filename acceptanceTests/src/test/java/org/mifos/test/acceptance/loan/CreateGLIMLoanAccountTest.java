@@ -114,7 +114,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         String loanId = loanAccountPage.getAccountId();
         loanAccountPage.verifyLoanIsPendingApproval();
         loanAccountPage.verifyNumberOfInstallments("4");
-        loanAccountPage.verifyDisbursalDate("Disbursal date: 04/03/2011");
+        loanAccountPage.verifyDisbursalDate("04/03/2011");
         loanAccountPage.verifyPrincipalOriginal("39999.6");
         loanAccountPage.verifyLoanTotalBalance("41147.0");
         loanAccountPage.verifyFeesOriginal("410.0");
