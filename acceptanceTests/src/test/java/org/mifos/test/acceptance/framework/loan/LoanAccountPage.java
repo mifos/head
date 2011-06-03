@@ -20,6 +20,9 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -435,6 +438,15 @@ public class LoanAccountPage extends MifosPage {
 
     public String getOriginalLoanAmount() {
         return selenium.getTable("loanSummaryTable.1.1").trim();
+    }
+    
+    public String getDisbursalDate(){
+    	return selenium.getText("loanaccountdetail.details.disbursaldate");
+    }
+    
+    public void verifyDisbursalDate(DateTime disbursalDate){
+    	DateTimeFormatter formater = DateTimeFormat.forPattern("dd/MM/yyyy");
+    	Assert.assertEquals(getDisbursalDate(), formater.print(disbursalDate));
     }
 
     public LoanAccountPage verifyInterestTypeInLoanAccountDetails(String interestType) {

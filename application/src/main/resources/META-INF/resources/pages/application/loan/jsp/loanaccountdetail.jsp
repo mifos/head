@@ -121,13 +121,13 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</c:forEach> </span></td>
 						</tr>
 						<tr>
-							<td class="fontnormal"><span id="loanaccountdetail.details.disbursaldateline"><mifos:mifoslabel
-								name="loan.proposed_date" />: <c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,loanInformationDto.disbursementDate)}" />
+							<td class="fontnormal"><mifos:mifoslabel
+								name="loan.proposed_date" />: <span id="loanaccountdetail.details.disbursaldate"><c:out
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,loanInformationDto.disbursementDate)}" /></span>
 							<c:if test="${loanInformationDto.redone}">
                                         &nbsp(<mifos:mifoslabel
 									name="loan.is_redo_loan" />)
-                                    </c:if></span></td>
+                                    </c:if></td>
 						</tr>
 						<tr id="Loan.PurposeOfLoan">
 							<td class="fontnormal"><mifos:mifoslabel
