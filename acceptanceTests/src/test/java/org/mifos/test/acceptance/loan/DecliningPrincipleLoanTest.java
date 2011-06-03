@@ -41,8 +41,6 @@ import org.testng.annotations.Test;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
-import java.util.Calendar;
-
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(singleThreaded = true, groups = {"loanproduct", "acceptance", "ui", "no_db_unit"})
