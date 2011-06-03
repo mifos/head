@@ -82,13 +82,16 @@ public class HolidayTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void createHoliday() throws Exception {
+        //Given
+        dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2010,1,1,13,0,0,0));
+    	
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         CreateHolidayEntryPage createHolidayEntryPage = adminPage.navigateToDefineHolidayPage();
 
-        CreateHolidaySubmitParameters params = this.getHolidayParameters("09");
+        CreateHolidaySubmitParameters params = this.getHolidayParameters();
         CreateHolidayConfirmationPage confirmationPage = createHolidayEntryPage.submitAndNavigateToHolidayConfirmationPage(params);
         confirmationPage.submitAndNavigateToViewHolidaysPage();
 
@@ -96,7 +99,7 @@ public class HolidayTest extends UiTestCaseBase {
         createHolidayEntryPage = adminPage.navigateToDefineHolidayPage();
         params.setName("Test Holiday 2");
         confirmationPage = createHolidayEntryPage.submitAndNavigateToHolidayConfirmationPage(params);
-        assertTextFoundOnPage("Holiday with the same date already exists: Test Holiday",
+        assertTextFoundOnPage("Holiday with the same date already exists:",
                 "Text about duplicated holidays was not found.");
     }
 
@@ -112,7 +115,7 @@ public class HolidayTest extends UiTestCaseBase {
      * 'nextPayment_loanAccount' page to see 'review of installments'??? 
      */
     //http://mifosforge.jira.com/browse/MIFOSTEST-79
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void holidaysRepaymentRule() throws Exception {
         //Given
             dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2031,1,1,13,0,0,0));
@@ -128,7 +131,7 @@ public class HolidayTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-78
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void holidaysRepaymentRuleSameDay() throws Exception {
         //Given
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2032,1,1,13,0,0,0));
@@ -146,7 +149,7 @@ public class HolidayTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-81
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void holidaysRepaymentRuleNextWorkingDay() throws Exception {
         //Given
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2033,1,1,13,0,0,0));
@@ -165,7 +168,7 @@ public class HolidayTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-75
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void holidaysRepaymentRuleWithBatchJobs() throws Exception {
         //Given
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2034,1,1,13,0,0,0));
@@ -189,7 +192,7 @@ public class HolidayTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-74
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void holidaysRepaymentRuleSameDayWithBatchJobs() throws Exception {
         //Given
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2035,1,1,13,0,0,0));
@@ -214,7 +217,7 @@ public class HolidayTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-76
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void holidaysRepaymentRuleNextWorkingDayWithBatchJobs() throws Exception {
         //Given
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2036,1,1,13,0,0,0));
@@ -239,7 +242,7 @@ public class HolidayTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-72
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void definedAndViewHoliday() throws Exception {
         //Given
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2037,1,1,13,0,0,0));
@@ -276,6 +279,20 @@ public class HolidayTest extends UiTestCaseBase {
         params.setThruDateYYYY(year);
         params.setRepaymentRule(CreateHolidaySubmitParameters.NEXT_MEETING_OR_REPAYMENT);
         params.setSelectedOfficeIds("1");
+        params.addOffice("Mifos HO");
+        return params;
+    }
+    
+    private CreateHolidaySubmitParameters getHolidayParameters() {
+        CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
+        params.setName("Holiday Test" + StringUtil.getRandomString(2));
+        params.setFromDateDD("14");
+        params.setFromDateMM("02");
+        params.setFromDateYYYY("2010");
+        params.setThruDateDD("28");
+        params.setThruDateMM("02");
+        params.setThruDateYYYY("2010");
+        params.setRepaymentRule(CreateHolidaySubmitParameters.NEXT_MEETING_OR_REPAYMENT);
         params.addOffice("Mifos HO");
         return params;
     }
