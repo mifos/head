@@ -97,7 +97,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     /*
      * loan creation for setup is stepping into questionnaire page when it shouldnt
      */
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void createTwoWeeklyLoansInDifferentOffices() throws Exception {
         DateTime targetTime = new DateTime(2011, 3, 9, 0, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
