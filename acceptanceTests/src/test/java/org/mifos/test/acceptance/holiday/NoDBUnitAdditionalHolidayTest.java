@@ -62,7 +62,7 @@ public class NoDBUnitAdditionalHolidayTest extends UiTestCaseBase {
     /*
      * loan creation for setup is stepping into questionnaire page when it shouldnt
      */
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void createHolidayOnAMeetingWithRepaymentSameDay() throws Exception {
         //Given
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2041,1,1,13,0,0,0));

@@ -26,7 +26,6 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.util.UiTestUtils;
 
 import com.thoughtworks.selenium.Selenium;
 import com.thoughtworks.selenium.Wait;
