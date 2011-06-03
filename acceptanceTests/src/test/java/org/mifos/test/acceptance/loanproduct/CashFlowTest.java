@@ -221,7 +221,7 @@ public class CashFlowTest extends UiTestCaseBase {
         CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountPreviewPage.submit();
         createLoanAccountConfirmationPage.isTextPresentInPage("View loan account details now");
         LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
-        loanAccountPage.verifyDisbursalDate("Disbursal date: 12/10/2010");
+        loanAccountPage.verifyDisbursalDate("12/10/2010");
         ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
         
         String[][] tableAfterLastInstallment = { { "Future Installments", "", "", "", "", "" },

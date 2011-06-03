@@ -110,7 +110,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         String loanId = loanAccountPage.getAccountId();
         loanAccountPage.verifyLoanIsPendingApproval();
         loanAccountPage.verifyNumberOfInstallments("4");
-        loanAccountPage.verifyDisbursalDate("Disbursal date: 25/02/2011");
+        loanAccountPage.verifyDisbursalDate("25/02/2011");
         loanAccountPage.verifyPrincipalOriginal("3000.0");
         loanAccountPage.verifyLoanTotalBalance("3466.0");
         loanAccountPage.verifyFeesOriginal("410.0");
@@ -202,7 +202,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
         loanAccountPage.verifyLoanIsPendingApproval();
         loanAccountPage.verifyNumberOfInstallments("10");
-        loanAccountPage.verifyDisbursalDate("Disbursal date: 29/04/2011");
+        loanAccountPage.verifyDisbursalDate("29/04/2011");
         loanAccountPage.verifyPrincipalOriginal("1500.0");
         loanAccountPage.verifyLoanTotalBalance("1500.0");
         ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
