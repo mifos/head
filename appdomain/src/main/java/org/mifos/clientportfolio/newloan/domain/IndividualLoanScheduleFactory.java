@@ -110,20 +110,24 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
 
         // FIXME - add EMIInstallments for daily interest
         List<InstallmentPrincipalAndInterest> EMIInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
+        
         List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(dueInstallmentDates, loanInterest, loanAmount, 
                 meetingScheduledEvent, EMIInstallments, accountFees, customer);
 
         Money rawAmount = calculateTotalFeesAndInterestForLoanSchedules(unroundedLoanSchedules, loanAmount.getCurrency(), accountFees);
         
         List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
-        
-        LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
-        LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
 
-        List<LoanScheduleEntity> roundedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration.shortValue(), loanAmount,
-        		interestType, unroundedLoanSchedules, allExistingLoanSchedules);
+        List<LoanScheduleEntity> finalisedLoanSchedules = new ArrayList<LoanScheduleEntity>(unroundedLoanSchedules);
+        if (!variableInstallmentLoanProduct) {
+            LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
+            LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
+    
+            finalisedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration.shortValue(), loanAmount,
+            		interestType, unroundedLoanSchedules, allExistingLoanSchedules);
+        }
         
-        return new LoanSchedule(roundedLoanSchedules, rawAmount);
+        return new LoanSchedule(finalisedLoanSchedules, rawAmount);
     }
     
     private List<LoanScheduleEntity> createUnroundedLoanSchedulesFromInstallments(List<InstallmentDate> installmentDates,

@@ -1005,9 +1005,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         List<DateTime> loanScheduleDates = new ArrayList<DateTime>(loanScheduleInstallmentDates);
 
         LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, loanScheduleDates, loanAccountInfo.getDisbursementDate(), totalInstallmentAmounts);
-        if (!totalInstallmentAmounts.isEmpty()) {
-            loanSchedule.modifyPrincipalAmounts(totalInstallmentAmounts);
-        }
 
         // 2. create loan
         InstallmentRange installmentRange = new MaxMinNoOfInstall(loanAccountInfo.getMinAllowedNumberOfInstallments().shortValue(),

@@ -19,24 +19,42 @@ public class VariableInstallmentPrincipalWithInterestGenerator implements Princi
         
         Double interestRate = loanInterestCalculationDetails.getInterestRate();
         Money principalOutstanding = loanInterestCalculationDetails.getLoanAmount();
+        LocalDate interestPeriodStartDate = loanInterestCalculationDetails.getDisbursementDate();
+        
+        Money totalPrincipal = new Money(principalOutstanding.getCurrency(), Double.valueOf("0"));
         
         if (loanInterestCalculationDetails.getTotalInstallmentAmounts().isEmpty()) {
 
             // if empty just divide loan amount by number of installments to get principal due per installment
             Money installmentPrincipalDue = principalOutstanding.divide(loanInterestCalculationDetails.getNumberOfInstallments());
             
-            LocalDate interestPeriodStartDate = loanInterestCalculationDetails.getDisbursementDate();
+            int index=0;
             for (DateTime installmentDueDate : loanInterestCalculationDetails.getLoanScheduleDates()) {
                 Money interestForInstallment = formula.calculate(principalOutstanding, interestRate, interestPeriodStartDate, new LocalDate(installmentDueDate));
                 principalOutstanding = principalOutstanding.subtract(installmentPrincipalDue);
                 interestPeriodStartDate = new LocalDate(installmentDueDate);
                 
+                totalPrincipal = totalPrincipal.add(installmentPrincipalDue);
+                
+                if (index == loanInterestCalculationDetails.getLoanScheduleDates().size()-1) {
+                    // last installment
+                    if (totalPrincipal.isLessThan(loanInterestCalculationDetails.getLoanAmount())) {
+                        Money difference = loanInterestCalculationDetails.getLoanAmount().subtract(totalPrincipal);
+                        installmentPrincipalDue = installmentPrincipalDue.add(difference);
+//                        interestForInstallment = interestForInstallment.subtract(difference);
+                    } else if (totalPrincipal.isGreaterThan(loanInterestCalculationDetails.getLoanAmount())) {
+                        Money difference = totalPrincipal.subtract(loanInterestCalculationDetails.getLoanAmount());
+                        installmentPrincipalDue = installmentPrincipalDue.subtract(difference);
+//                        interestForInstallment = interestForInstallment.add(difference);
+                    }
+                }
+                
                 principalAndInterestDetails.add(new InstallmentPrincipalAndInterest(installmentPrincipalDue, interestForInstallment));
+                index++;
             }
         } else {
             int index=0;
             List<Money> totalInstallmentAmounts = loanInterestCalculationDetails.getTotalInstallmentAmounts();
-            LocalDate interestPeriodStartDate = loanInterestCalculationDetails.getDisbursementDate();
             for (DateTime installmentDueDate : loanInterestCalculationDetails.getLoanScheduleDates()) {
                 
                 Money totalInstallmentPayment = totalInstallmentAmounts.get(index);
@@ -47,6 +65,23 @@ public class VariableInstallmentPrincipalWithInterestGenerator implements Princi
                 interestPeriodStartDate = new LocalDate(installmentDueDate);
                 
                 Money installmentPrincipalDue = totalInstallmentPayment.subtract(interestForInstallment);
+                
+                totalPrincipal = totalPrincipal.add(installmentPrincipalDue);
+                
+                if (index == loanInterestCalculationDetails.getLoanScheduleDates().size()-1) {
+                    // last installment
+                    if (totalPrincipal.isLessThan(loanInterestCalculationDetails.getLoanAmount())) {
+                        Money difference = loanInterestCalculationDetails.getLoanAmount().subtract(totalPrincipal);
+                        installmentPrincipalDue = installmentPrincipalDue.add(difference);
+//                        interestForInstallment = interestForInstallment.subtract(difference);
+                    } else if (totalPrincipal.isGreaterThan(loanInterestCalculationDetails.getLoanAmount())) {
+                        Money difference = totalPrincipal.subtract(loanInterestCalculationDetails.getLoanAmount());
+                        installmentPrincipalDue = installmentPrincipalDue.subtract(difference);
+//                        interestForInstallment = interestForInstallment.add(difference);
+                    }
+                }
+                
+                
                 principalAndInterestDetails.add(new InstallmentPrincipalAndInterest(installmentPrincipalDue, interestForInstallment));
                 
                 index++;
@@ -55,5 +90,4 @@ public class VariableInstallmentPrincipalWithInterestGenerator implements Princi
         }
         return principalAndInterestDetails;
     }
-
 }
