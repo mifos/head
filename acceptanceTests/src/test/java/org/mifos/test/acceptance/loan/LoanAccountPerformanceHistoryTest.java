@@ -74,7 +74,7 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         searchParameters.setLoanProduct("WeeklyClientFlatLoanWithNoFee");
-        searchParameters.setSearchString("Stu1233266319760");
+        searchParameters.setSearchString("WeeklyOld Monday");
         submitAccountParameters.setInterestRate("24.0");
         submitAccountParameters.setNumberOfInstallments("10");
         DisburseLoanParameters disburseParameters = new DisburseLoanParameters();
