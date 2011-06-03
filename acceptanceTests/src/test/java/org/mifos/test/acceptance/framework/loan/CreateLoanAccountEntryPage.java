@@ -43,14 +43,14 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public void verifyAdditionalFeesAreEmpty() {
-        Assert.assertEquals(selenium.getSelectedValue("selectedFee[0].feeId"), "");
-        Assert.assertEquals(selenium.getValue("selectedFee[0].amount"), "");
+        Assert.assertEquals(selenium.getSelectedValue("selectedFeeId[0]"), "");
+        Assert.assertEquals(selenium.getValue("selectedFeeAmount[0]"), "");
 
-        Assert.assertEquals(selenium.getSelectedValue("selectedFee[1].feeId"), "");
-        Assert.assertEquals(selenium.getValue("selectedFee[1].amount"), "");
+        Assert.assertEquals(selenium.getSelectedValue("selectedFeeId[1]"), "");
+        Assert.assertEquals(selenium.getValue("selectedFeeAmount[1]"), "");
 
-        Assert.assertEquals(selenium.getSelectedValue("selectedFee[2].feeId"), "");
-        Assert.assertEquals(selenium.getValue("selectedFee[2].amount"), "");
+        Assert.assertEquals(selenium.getSelectedValue("selectedFeeId[2]"), "");
+        Assert.assertEquals(selenium.getValue("selectedFeeAmount[2]"), "");
     }
 
     public CreateLoanAccountEntryPage(Selenium selenium) {
@@ -195,16 +195,16 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public HomePage navigateToHomePage(){
-        selenium.click("id=clientsAndAccountsHeader.link.home");
+        selenium.click("id=header.link.home");
         waitForPageToLoad();
         return new HomePage(selenium);
     }
 
     public void selectAdditionalFees() {
-        selenium.select("selectedFeeId0", "label=One Time Upfront Fee");
+        selenium.select("selectedFeeId0", "label=oneTimeFee");
         selenium.type("selectedFeeId0Amount", "6.6");
 
-        selenium.select("selectedFeeId1", "label=One Time Upfront Fee");
+        selenium.select("selectedFeeId1", "label=oneTimeFee");
         selenium.type("selectedFeeId1Amount", "3.3");
     }
 

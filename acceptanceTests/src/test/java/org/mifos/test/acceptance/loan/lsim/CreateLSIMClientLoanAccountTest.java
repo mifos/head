@@ -87,7 +87,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(enabled=false, groups = {"loan", "acceptance", "ui"})
+    @Test(groups = {"loan", "acceptance", "ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-127
     public void newWeeklyLSIMClientLoanAccount() throws Exception {
@@ -107,7 +107,6 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @Test(enabled=false)
     public void newMonthlyClientLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Mary Monthly1");
@@ -125,7 +124,6 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @Test(enabled=false)
     public void newMonthlyClientLoanAccountWithMeetingOnSameWeekAndWeekday() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Monthly3rdFriday");
@@ -268,7 +266,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
             LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
             
             loanAccountPage.verifyStatus("Application Pending Approval");
-            loanAccountPage.verifyDisbursalDate("Disbursal date: 25/03/2011");
+            loanAccountPage.verifyDisbursalDate("25/03/2011");
             
             String[][] accountSummaryTable = {{"", "Original Loan", "Amount paid", "Loan balance"},
                     {"Principal", "2000.0", "0.0", "2000.0"},
