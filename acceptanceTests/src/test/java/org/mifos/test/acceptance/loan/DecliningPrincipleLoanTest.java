@@ -41,6 +41,7 @@ import org.testng.annotations.Test;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.Calendar;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
@@ -208,10 +209,11 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         makePaymentAndVerifyPayment(accountId, paymentDate, "100", RepaymentScheduleData.EARLY_LESS_FIRST_PAYMENT); //verifying interest till date
     }
 
-    @Test(enabled = false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void createLoan() throws Exception {
-        createAndDisburseLoanAccount(4, systemDateTime.plusDays(1), "productWeekly7466");
+        DateTime testDateTime = new DateTime(2011, 02, 22, 10, 0, 0, 0);
+        loanTestHelper.setApplicationTime(testDateTime);
+        createAndDisburseLoanAccount(4, testDateTime, "WeeklyClientFlatLoanWithNoFee");
     }
 
     private void verifyEarlyExcessPayment(String accountID) throws UnsupportedEncodingException {
@@ -229,7 +231,6 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
 
     private LoanAccountPage createAndDisburseLoanAccount(int noOfInstallments, DateTime disbursalDate, String loanProductName) throws UnsupportedEncodingException {
         DisburseLoanParameters disburseLoanParameters = loanTestHelper.setDisbursalParams(disbursalDate.minusDays(1));
-        loanTestHelper.setApplicationTime(systemDateTime);
         navigationHelper.navigateToHomePage();
         return loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(clientName, loanProductName).

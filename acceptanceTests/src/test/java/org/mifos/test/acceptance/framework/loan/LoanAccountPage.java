@@ -519,7 +519,7 @@ public class LoanAccountPage extends MifosPage {
     }
     
     public void verifyDisbursalDate(String disbursalDate) {
-        Assert.assertEquals(selenium.getText("loanaccountdetail.details.disbursaldateline"), disbursalDate);
+        Assert.assertEquals(selenium.getText("loanaccountdetail.details.disbursaldate"), disbursalDate);
     }
 }
 
