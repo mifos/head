@@ -108,7 +108,6 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         EqualInstallmentGeneratorFactory equalInstallmentGeneratorFactory = new EqualInstallmentGeneratorFactoryImpl();
         PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest, variableInstallmentLoanProduct);
 
-        // FIXME - add EMIInstallments for daily interest
         List<InstallmentPrincipalAndInterest> EMIInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
         
         List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(dueInstallmentDates, loanInterest, loanAmount, 
@@ -119,12 +118,16 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
 
         List<LoanScheduleEntity> finalisedLoanSchedules = new ArrayList<LoanScheduleEntity>(unroundedLoanSchedules);
-        if (!variableInstallmentLoanProduct) {
+        if (variableInstallmentLoanProduct && totalInstallmentAmounts.isEmpty()) {
+            // only round inital loan schedule of variable installments product.
+            LoanScheduleRounder loanScheduleInstallmentRounder = new VariableInstallmentLoanScheduleRounder();
+            finalisedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration.shortValue(), loanAmount,
+                    interestType, unroundedLoanSchedules, allExistingLoanSchedules);
+        } else if (!variableInstallmentLoanProduct) {
             LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
             LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
-    
             finalisedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration.shortValue(), loanAmount,
-            		interestType, unroundedLoanSchedules, allExistingLoanSchedules);
+                    interestType, unroundedLoanSchedules, allExistingLoanSchedules);
         }
         
         return new LoanSchedule(finalisedLoanSchedules, rawAmount);
