@@ -142,8 +142,9 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
             CreateGlimLoanAccount glimLoanAccount, List<LoanPaymentDto> backdatedLoanPayments,
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);
     
-    LoanScheduleDto createLoanSchedule(CreateLoanSchedule createLoanAccount);
-
+    LoanScheduleDto createLoanSchedule(CreateLoanSchedule createLoanSchedule);
+    
+    LoanScheduleDto createLoanSchedule(CreateLoanSchedule createLoanSchedule, List<DateTime> installments, List<Number> installmentAmounts);
 
     @PreAuthorize("isFullyAuthenticated()")
     List<LoanActivityDto> retrieveAllLoanAccountActivities(String globalAccountNum);

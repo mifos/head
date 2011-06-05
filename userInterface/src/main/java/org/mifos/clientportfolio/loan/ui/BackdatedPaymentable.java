@@ -13,8 +13,12 @@ import org.mifos.dto.domain.LoanCreationInstallmentDto;
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2", "DLS_DEAD_LOCAL_STORE"}, justification="should disable at filter level and also for pmd - not important for us")
 public interface BackdatedPaymentable extends Serializable {
 
+    List<DateTime> getInstallments();
+    
     void setInstallments(List<DateTime> installments);
 
+    List<Number> getInstallmentAmounts();
+    
     void setInstallmentAmounts(List<Number> installmentAmounts);
 
     void setActualPaymentDates(List<DateTime> actualPaymentDates);
@@ -47,4 +51,5 @@ public interface BackdatedPaymentable extends Serializable {
 
     void setApplicableFees(List<FeeDto> applicableFees);
 
+    void setLoanAccountFormBean(LoanAccountFormBean loanAccountFormBean);
 }

@@ -36,6 +36,7 @@ import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.LoanInstallmentsDto;
+import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.platform.validations.ErrorEntry;
 import org.mifos.platform.validations.Errors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,9 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
 
     @Autowired
     private transient LoanAccountServiceFacade loanAccountServiceFacade;
+    
+    @Autowired
+    private transient LoanAccountController loanAccountController;
 
     private Integer productId;
     private List<CashFlowDataDto> cashFlowDataDtos;
@@ -86,6 +90,8 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
     private List<LoanCreationInstallmentDto> repaymentInstallments;
     private List<LoanRepaymentRunningBalance> loanRepaymentPaidInstallmentsWithRunningBalance;
     private List<LoanRepaymentFutureInstallments> loanRepaymentFutureInstallments;
+
+    private LoanAccountFormBean loanAccountFormBean;
 
     public CashFlowSummaryFormBean() {
         // constructor
@@ -135,7 +141,21 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
             prevalidateTotalIsNonNull(messageContext);
             prevalidateAmountPaidIsNonNull(messageContext);
 
-            recalculatePrincipalBasedOnTotalAmountForEachInstallmentWhileSettingInstallmentDate();
+            if (!messageContext.hasErrorMessages()) {
+
+                LoanScheduleDto recalculatedLoanSchedule = this.loanAccountController.retrieveLoanSchedule(customerId,
+                        productId, loanAccountFormBean, this);
+
+                // set values on fields
+                this.variableInstallments = recalculatedLoanSchedule.getInstallments();
+
+                int installIndex = 0;
+                for (LoanCreationInstallmentDto installment : this.variableInstallments) {
+                    this.installmentAmounts.set(installIndex, installment.getTotal());
+                    installIndex++;
+                }
+            }
+            
             Errors inputInstallmentsErrors = loanAccountServiceFacade.validateInputInstallments(disbursementDate,
                     minGapInDays, maxGapInDays, minInstallmentAmount, variableInstallments, customerId);
             Errors scheduleErrors = loanAccountServiceFacade.validateInstallmentSchedule(variableInstallments,
@@ -426,58 +446,6 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
         }
     }
 
-    private void recalculatePrincipalBasedOnTotalAmountForEachInstallmentWhileSettingInstallmentDate() {
-        int index = 0;
-        Double cumulativeNewInstallmentTotal = Double.valueOf("0.0");
-        BigDecimal totalInterestAndFeesDue = BigDecimal.ZERO;
-        for (LoanCreationInstallmentDto variableInstallment : this.variableInstallments) {
-            totalInterestAndFeesDue = totalInterestAndFeesDue.add(BigDecimal.valueOf(variableInstallment.getInterest())
-                    .add(BigDecimal.valueOf(variableInstallment.getFees())));
-        }
-
-        for (LoanCreationInstallmentDto variableInstallment : this.variableInstallments) {
-            variableInstallment.setDueDate(new LocalDate(this.installments.get(index)));
-
-            Double newTotal = Double.valueOf("0.0");
-            Number newTotalEntry = this.installmentAmounts.get(index);
-            if (newTotalEntry != null) {
-                newTotal = newTotalEntry.doubleValue();
-            } else {
-                this.installmentAmounts.set(index, newTotal);
-            }
-            
-            Number newAmountPaidEntry = this.actualPaymentAmounts.get(index);
-            if (newAmountPaidEntry == null) {
-                this.actualPaymentAmounts.set(index, Double.valueOf("0.0"));
-            }
-            
-            // adjust principal based on total and interest + fees
-            if (index == this.variableInstallments.size() - 1) {
-                // sum up all totals and make final total = loan principal + interest and fees due - sum of other
-                // installment totals
-                Double finalInstallmentTotal = this.loanPrincipal.add(totalInterestAndFeesDue)
-                        .subtract(BigDecimal.valueOf(cumulativeNewInstallmentTotal)).doubleValue();
-                Double finalInstallmentPrincipal = calculatePrincipalBasedOnNewTotal(variableInstallment,
-                        finalInstallmentTotal);
-                variableInstallment.setTotal(finalInstallmentTotal);
-                variableInstallment.setPrincipal(finalInstallmentPrincipal);
-                this.installmentAmounts.set(index, finalInstallmentTotal);
-            } else {
-                variableInstallment.setTotal(newTotal);
-                variableInstallment.setPrincipal(calculatePrincipalBasedOnNewTotal(variableInstallment, newTotal));
-                cumulativeNewInstallmentTotal += newTotal;
-            }
-            index++;
-        }
-    }
-
-    private Double calculatePrincipalBasedOnNewTotal(LoanCreationInstallmentDto variableInstallment, Double newTotal) {
-        BigDecimal fees = BigDecimal.valueOf(variableInstallment.getFees());
-        BigDecimal interest = BigDecimal.valueOf(variableInstallment.getInterest());
-
-        return BigDecimal.valueOf(newTotal).subtract(fees.add(interest)).doubleValue();
-    }
-
     private void addErrorMessageToContext(MessageContext messageContext, ErrorEntry fieldError) {
         String[] errorCodes = new String[1];
         errorCodes[0] = fieldError.getErrorCode();
@@ -603,6 +571,7 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
         this.variableInstallments = variableInstallments;
     }
 
+    @Override
     public List<Number> getInstallmentAmounts() {
         return installmentAmounts;
     }
@@ -621,6 +590,7 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
         this.loanPrincipal = loanPrincipal;
     }
 
+    @Override
     public List<DateTime> getInstallments() {
         return installments;
     }
@@ -699,5 +669,10 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
     @Override
     public void setApplicableFees(List<FeeDto> applicableFees) {
         this.applicableFees = applicableFees;
+    }
+
+    @Override
+    public void setLoanAccountFormBean(LoanAccountFormBean loanAccountFormBean) {
+        this.loanAccountFormBean = loanAccountFormBean;
     }
 }
