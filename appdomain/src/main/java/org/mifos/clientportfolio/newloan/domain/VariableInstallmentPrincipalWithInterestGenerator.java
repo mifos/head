@@ -41,11 +41,9 @@ public class VariableInstallmentPrincipalWithInterestGenerator implements Princi
                     if (totalPrincipal.isLessThan(loanInterestCalculationDetails.getLoanAmount())) {
                         Money difference = loanInterestCalculationDetails.getLoanAmount().subtract(totalPrincipal);
                         installmentPrincipalDue = installmentPrincipalDue.add(difference);
-//                        interestForInstallment = interestForInstallment.subtract(difference);
                     } else if (totalPrincipal.isGreaterThan(loanInterestCalculationDetails.getLoanAmount())) {
                         Money difference = totalPrincipal.subtract(loanInterestCalculationDetails.getLoanAmount());
                         installmentPrincipalDue = installmentPrincipalDue.subtract(difference);
-//                        interestForInstallment = interestForInstallment.add(difference);
                     }
                 }
                 
