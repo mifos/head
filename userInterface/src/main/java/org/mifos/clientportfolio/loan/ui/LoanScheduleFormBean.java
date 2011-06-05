@@ -51,7 +51,6 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
     @Autowired
     private transient LoanAccountController loanAccountController;
 
-    private Integer productId;
     @DateTimeFormat(style="S-")
     private List<DateTime> installments = new ArrayList<DateTime>();
     @DateTimeFormat(style="S-")
@@ -128,7 +127,7 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
             
             if (!messageContext.hasErrorMessages()) {
 
-                LoanScheduleDto recalculatedLoanSchedule = this.loanAccountController.retrieveLoanSchedule(customerId, productId, loanAccountFormBean, this);
+                LoanScheduleDto recalculatedLoanSchedule = this.loanAccountController.retrieveLoanSchedule(customerId, loanAccountFormBean.getProductId(), loanAccountFormBean, this);
 
                 // set values on fields
                 this.variableInstallments = recalculatedLoanSchedule.getInstallments();
@@ -629,13 +628,5 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
     @Override
     public void setLoanAccountFormBean(LoanAccountFormBean loanAccountFormBean) {
         this.loanAccountFormBean = loanAccountFormBean;
-    }
-    
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
     }
 }
