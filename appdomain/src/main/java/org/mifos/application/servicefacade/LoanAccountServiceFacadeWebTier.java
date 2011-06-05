@@ -702,6 +702,58 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         return new LoanCreationPreviewDto(isGlimEnabled, isGroup, loanAccountDetailsView);
     }
+    
+    @Override
+    public LoanScheduleDto createLoanSchedule(CreateLoanSchedule createLoanSchedule, List<DateTime> loanScheduleDates, List<Number> totalInstallmentAmounts) {
+        
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        // assemble into domain entities
+        LoanOfferingBO loanProduct = this.loanProductDao.findById(createLoanSchedule.getProductId());
+        CustomerBO customer = this.customerDao.findCustomerById(createLoanSchedule.getCustomerId());
+
+        Money loanAmountDisbursed = new Money(loanProduct.getCurrency(), createLoanSchedule.getLoanAmount());
+
+        List<AccountFeesEntity> accountFeeEntities = assembleAccountFees(createLoanSchedule.getAccountFeeEntities());
+        LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAmountDisbursed, createLoanSchedule.getDisbursementDate(),
+                createLoanSchedule.getInterestRate(), createLoanSchedule.getNumberOfInstallments(), createLoanSchedule.getGraceDuration(), accountFeeEntities);
+
+        Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
+        boolean loanScheduleIndependentOfCustomerMeetingEnabled = createLoanSchedule.isRepaymentIndependentOfCustomerMeetingSchedule();
+
+        MeetingBO loanMeeting = customer.getCustomerMeetingValue();
+        if (loanScheduleIndependentOfCustomerMeetingEnabled) {
+            loanMeeting = this.createNewMeetingForRepaymentDay(createLoanSchedule.getDisbursementDate(), createLoanSchedule, customer);
+            
+            if (loanProduct.isVariableInstallmentsAllowed()) {
+                loanMeeting.setMeetingStartDate(createLoanSchedule.getDisbursementDate().toDateMidnight().toDate());
+            }
+        }
+        LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
+
+        LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, loanMeeting, overridenDetail, configuration, accountFeeEntities, createLoanSchedule.getDisbursementDate(), loanScheduleDates, totalInstallmentAmounts);
+
+        // translate to DTO form
+        List<LoanCreationInstallmentDto> installments = new ArrayList<LoanCreationInstallmentDto>();
+        Short digitsAfterDecimal = AccountingRules.getDigitsAfterDecimal();
+        for (LoanScheduleEntity loanScheduleEntity : loanSchedule.getRoundedLoanSchedules()) {
+            Integer installmentNumber = loanScheduleEntity.getInstallmentId().intValue();
+            LocalDate dueDate = new LocalDate(loanScheduleEntity.getActionDate());
+            String principal = loanScheduleEntity.getPrincipal().toString(digitsAfterDecimal);
+            String interest = loanScheduleEntity.getInterest().toString(digitsAfterDecimal);
+            String fees = loanScheduleEntity.getTotalFees().toString(digitsAfterDecimal);
+            String penalty = "0.0";
+            String total = loanScheduleEntity.getPrincipal().add(loanScheduleEntity.getInterest()).add(loanScheduleEntity.getTotalFees()).toString(digitsAfterDecimal);
+            LoanCreationInstallmentDto installment = new LoanCreationInstallmentDto(installmentNumber, dueDate,
+                    Double.valueOf(principal), Double.valueOf(interest), Double.valueOf(fees), Double.valueOf(penalty),
+                    Double.valueOf(total));
+            installments.add(installment);
+        }
+
+        return new LoanScheduleDto(customer.getDisplayName(), Double.valueOf(createLoanSchedule.getLoanAmount().doubleValue()), 
+                createLoanSchedule.getDisbursementDate(), loanProduct.getGraceType().getValue().intValue(), installments);
+    }
 
     @Override
     public LoanScheduleDto createLoanSchedule(CreateLoanSchedule createLoanSchedule) {

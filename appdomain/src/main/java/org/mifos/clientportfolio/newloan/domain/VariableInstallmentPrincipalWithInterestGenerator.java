@@ -38,11 +38,12 @@ public class VariableInstallmentPrincipalWithInterestGenerator implements Princi
                 
                 if (index == loanInterestCalculationDetails.getLoanScheduleDates().size()-1) {
                     // last installment
-                    if (totalPrincipal.isLessThan(loanInterestCalculationDetails.getLoanAmount())) {
-                        Money difference = loanInterestCalculationDetails.getLoanAmount().subtract(totalPrincipal);
+                    Money realTotalPrincipal = new Money(totalPrincipal.getCurrency(), totalPrincipal.toString());
+                    if (realTotalPrincipal.isLessThan(loanInterestCalculationDetails.getLoanAmount())) {
+                        Money difference = loanInterestCalculationDetails.getLoanAmount().subtract(realTotalPrincipal);
                         installmentPrincipalDue = installmentPrincipalDue.add(difference);
-                    } else if (totalPrincipal.isGreaterThan(loanInterestCalculationDetails.getLoanAmount())) {
-                        Money difference = totalPrincipal.subtract(loanInterestCalculationDetails.getLoanAmount());
+                    } else if (realTotalPrincipal.isGreaterThan(loanInterestCalculationDetails.getLoanAmount())) {
+                        Money difference = realTotalPrincipal.subtract(loanInterestCalculationDetails.getLoanAmount());
                         installmentPrincipalDue = installmentPrincipalDue.subtract(difference);
                     }
                 }
@@ -68,17 +69,15 @@ public class VariableInstallmentPrincipalWithInterestGenerator implements Princi
                 
                 if (index == loanInterestCalculationDetails.getLoanScheduleDates().size()-1) {
                     // last installment
-                    if (totalPrincipal.isLessThan(loanInterestCalculationDetails.getLoanAmount())) {
-                        Money difference = loanInterestCalculationDetails.getLoanAmount().subtract(totalPrincipal);
+                    Money realTotalPrincipal = new Money(totalPrincipal.getCurrency(), totalPrincipal.toString());
+                    if (realTotalPrincipal.isLessThan(loanInterestCalculationDetails.getLoanAmount())) {
+                        Money difference = loanInterestCalculationDetails.getLoanAmount().subtract(realTotalPrincipal);
                         installmentPrincipalDue = installmentPrincipalDue.add(difference);
-//                        interestForInstallment = interestForInstallment.subtract(difference);
-                    } else if (totalPrincipal.isGreaterThan(loanInterestCalculationDetails.getLoanAmount())) {
-                        Money difference = totalPrincipal.subtract(loanInterestCalculationDetails.getLoanAmount());
+                    } else if (realTotalPrincipal.isGreaterThan(loanInterestCalculationDetails.getLoanAmount())) {
+                        Money difference = realTotalPrincipal.subtract(loanInterestCalculationDetails.getLoanAmount());
                         installmentPrincipalDue = installmentPrincipalDue.subtract(difference);
-//                        interestForInstallment = interestForInstallment.add(difference);
                     }
                 }
-                
                 
                 principalAndInterestDetails.add(new InstallmentPrincipalAndInterest(installmentPrincipalDue, interestForInstallment));
                 

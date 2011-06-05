@@ -261,7 +261,7 @@ public class LoanAccountController {
         return this.loanAccountServiceFacade.isCompareWithCashFlowEnabledOnProduct(productId);
     }
 
-    public LoanScheduleDto retrieveLoanSchedule(int customerId, int productId, LoanAccountFormBean formBean, LoanScheduleFormBean loanScheduleFormBean) {
+    public LoanScheduleDto retrieveLoanSchedule(int customerId, int productId, LoanAccountFormBean formBean, BackdatedPaymentable loanScheduleFormBean) {
 
         LocalDate disbursementDate = translateDisbursementDateToLocalDate(formBean);
 
@@ -273,8 +273,13 @@ public class LoanAccountController {
         CreateLoanSchedule createLoanAccount = new CreateLoanSchedule(customerId, productId, BigDecimal.valueOf(formBean.getAmount().doubleValue()), formBean.getInterestRate().doubleValue(), disbursementDate,
                 formBean.getNumberOfInstallments().intValue(), formBean.getGraceDuration().intValue(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule, accountFees);
 
-        LoanScheduleDto loanSchedule = loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
-
+        LoanScheduleDto loanSchedule = null;
+        if (formBean.isVariableInstallmentsAllowed() && !loanScheduleFormBean.getInstallments().isEmpty()) {
+            loanSchedule = loanAccountServiceFacade.createLoanSchedule(createLoanAccount, loanScheduleFormBean.getInstallments(), loanScheduleFormBean.getInstallmentAmounts());
+        } else {
+            loanSchedule = loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
+        }
+            
         populateFormBeanFromDto(customerId, productId, formBean, loanScheduleFormBean, disbursementDate, loanSchedule);
 
         return loanSchedule;
@@ -325,6 +330,7 @@ public class LoanAccountController {
             
             loanScheduleFormBean.setCustomerId(formBean.getCustomerId());
             loanScheduleFormBean.setVariableInstallments(loanSchedule.getInstallments());
+            loanScheduleFormBean.setLoanAccountFormBean(formBean);
         }
 
         List<FeeDto> applicableFees = new ArrayList<FeeDto>();
