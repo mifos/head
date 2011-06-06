@@ -309,6 +309,7 @@ public class LoanAccountController {
             }
         }
         loanScheduleFormBean.setInstallments(installments);
+        loanScheduleFormBean.setVariableInstallments(loanSchedule.getInstallments());
         loanScheduleFormBean.setInstallmentAmounts(installmentAmounts);
         loanScheduleFormBean.setActualPaymentDates(actualPaymentDates);
         loanScheduleFormBean.setActualPaymentAmounts(actualPaymentAmounts);
@@ -329,7 +330,6 @@ public class LoanAccountController {
             loanScheduleFormBean.setMinInstallmentAmount(formBean.getMinInstallmentAmount());
             
             loanScheduleFormBean.setCustomerId(formBean.getCustomerId());
-            loanScheduleFormBean.setVariableInstallments(loanSchedule.getInstallments());
             loanScheduleFormBean.setLoanAccountFormBean(formBean);
         }
 
