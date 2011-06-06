@@ -349,7 +349,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
 //        verifyCellValueOfCashFlow(3,1,"Cumulative cash flow-Total installment amount per month");
         verifyCellValueOfCashFlow(3,1,"1.0");
         verifyCellValueOfCashFlow(3,2,"330.0");
-        verifyCellValueOfCashFlow(3,3,"667.0");
+        verifyCellValueOfCashFlow(3,3,"667.4");
         verifyCellValueOfCashFlow(3,4,"1004.0");
 //        verifyCellValueOfCashFlow(4,1,"Total installment amount per month as % of cash flow");
         verifyCellValueOfCashFlow(4,1,"0.0");

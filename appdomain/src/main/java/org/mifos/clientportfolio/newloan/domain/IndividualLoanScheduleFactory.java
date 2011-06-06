@@ -20,10 +20,12 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
@@ -54,12 +56,13 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
     }
 
     @Override
-    public LoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, 
+    public LoanSchedule create(LocalDate disbursementDate, List<DateTime> loanScheduleDates, List<Number> totalInstallmentAmounts, LoanOfferingBO loanProduct, 
             CustomerBO customer, MeetingBO loanMeeting, Money loanAmount, Double interestRate, Integer interestDays, Integer gracePeriodDuration, 
             List<AccountFeesEntity> accountFees) {
 
         GraceType graceType = loanProduct.getGraceType();
         InterestType interestType = loanProduct.getInterestType();
+        boolean variableInstallmentLoanProduct = loanProduct.isVariableInstallmentsAllowed();
         Integer numberOfInstallments = loanScheduleDates.size();
 
         RecurringScheduledEventFactory scheduledEventFactory = new RecurringScheduledEventFactoryImpl();
@@ -87,32 +90,47 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
 
         Double durationInYears = loanDurationInAccountingYearsCalculator.calculate(loanMeeting.getRecurAfter().intValue(), numberOfInstallments, interestDays);
 
+        List<Money> totalInstallmentAmountsAsMoney = new ArrayList<Money>();
+        for (Number totalInstallmentAmount : totalInstallmentAmounts) {
+            Money totalAmount = new Money(loanAmount.getCurrency(), BigDecimal.valueOf(totalInstallmentAmount.doubleValue()));
+            totalInstallmentAmountsAsMoney.add(totalAmount);
+        }
+        
         LoanInterestCalculationDetails loanInterestCalculationDetails = new LoanInterestCalculationDetails(loanAmount, interestRate, graceType, gracePeriodDuration,
-                numberOfInstallments, durationInYears, interestFractionalRatePerInstallment);
+                numberOfInstallments, durationInYears, interestFractionalRatePerInstallment, disbursementDate, loanScheduleDates);
+        loanInterestCalculationDetails.setTotalInstallmentAmounts(totalInstallmentAmountsAsMoney);
 
         LoanInterestCalculatorFactory loanInterestCalculatorFactory = new LoanInterestCalculatorFactoryImpl();
-        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType);
+        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType, variableInstallmentLoanProduct);
         Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
         // end of loan Interest creation
 
         EqualInstallmentGeneratorFactory equalInstallmentGeneratorFactory = new EqualInstallmentGeneratorFactoryImpl();
-        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
+        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest, variableInstallmentLoanProduct);
 
         List<InstallmentPrincipalAndInterest> EMIInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
+        
         List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(dueInstallmentDates, loanInterest, loanAmount, 
                 meetingScheduledEvent, EMIInstallments, accountFees, customer);
 
         Money rawAmount = calculateTotalFeesAndInterestForLoanSchedules(unroundedLoanSchedules, loanAmount.getCurrency(), accountFees);
         
         List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
-        
-        LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
-        LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
 
-        List<LoanScheduleEntity> roundedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration.shortValue(), loanAmount,
-        		interestType, unroundedLoanSchedules, allExistingLoanSchedules);
+        List<LoanScheduleEntity> finalisedLoanSchedules = new ArrayList<LoanScheduleEntity>(unroundedLoanSchedules);
+        if (variableInstallmentLoanProduct && totalInstallmentAmounts.isEmpty()) {
+            // only round inital loan schedule of variable installments product.
+            LoanScheduleRounder loanScheduleInstallmentRounder = new VariableInstallmentLoanScheduleRounder();
+            finalisedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration.shortValue(), loanAmount,
+                    interestType, unroundedLoanSchedules, allExistingLoanSchedules);
+        } else if (!variableInstallmentLoanProduct) {
+            LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
+            LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
+            finalisedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration.shortValue(), loanAmount,
+                    interestType, unroundedLoanSchedules, allExistingLoanSchedules);
+        }
         
-        return new LoanSchedule(roundedLoanSchedules, rawAmount);
+        return new LoanSchedule(finalisedLoanSchedules, rawAmount);
     }
     
     private List<LoanScheduleEntity> createUnroundedLoanSchedulesFromInstallments(List<InstallmentDate> installmentDates,

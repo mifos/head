@@ -23,6 +23,7 @@ package org.mifos.clientportfolio.newloan.domain.service;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -38,11 +39,12 @@ import org.mifos.customers.business.CustomerBO;
 public interface LoanScheduleService {
 
     LoanSchedule generate(LoanOfferingBO loanProduct, CustomerBO customer, MeetingBO loanMeeting,LoanProductOverridenDetail overridenDetail, 
-            LoanScheduleConfiguration configuration, List<AccountFeesEntity> accountFees, List<DateTime> loanScheduleDates);
+            LoanScheduleConfiguration configuration, List<AccountFeesEntity> accountFees, LocalDate disbursementDate, 
+            List<DateTime> loanScheduleDates, List<Number> totalInstallmentAmounts);
     
     // FIXME - keithw - when struts/jsp is gone, will be able to refactor away use of userBranchOfficeId
     LoanSchedule generate(LoanOfferingBO loanProduct, CustomerBO customer, MeetingBO loanRepaymentMeeting,
             LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, 
-            Short userBranchOfficeId, List<AccountFeesEntity> accountFees);
+            Short userBranchOfficeId, List<AccountFeesEntity> accountFees, LocalDate disbursementDate);
 
 }

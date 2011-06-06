@@ -2698,16 +2698,20 @@ public class LoanBO extends AccountBO implements Loan {
 		LoanDurationInAccountingYearsCalculator loanDurationInAccountingYearsCalculator = new LoanDurationInAccountingYearsCalculatorFactory().create(loanMeeting.getRecurrenceType());
 		Double durationInYears = loanDurationInAccountingYearsCalculator.calculate(loanMeeting.getRecurAfter().intValue(), numberOfInstallments, interestDays);
 
+		List<DateTime> scheduledInstallments = new ArrayList<DateTime>();
+        for (InstallmentDate installmentDate : installmentDates) {
+            scheduledInstallments.add(new DateTime(installmentDate.getInstallmentDueDate()));
+        }
 		LoanInterestCalculationDetails loanInterestCalculationDetails = new LoanInterestCalculationDetails(loanAmount, interestRate, graceType, gracePeriodDuration.intValue(),
-		        numberOfInstallments, durationInYears, interestFractionalRatePerInstallment);
+		        numberOfInstallments, durationInYears, interestFractionalRatePerInstallment, actualDisbursementDate, scheduledInstallments);
 
 		LoanInterestCalculatorFactory loanInterestCalculatorFactory = new LoanInterestCalculatorFactoryImpl();
-		LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType);
+		LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType, this.loanOffering.isVariableInstallmentsAllowed());
 
 		Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
 
 		EqualInstallmentGeneratorFactory equalInstallmentGeneratorFactory = new EqualInstallmentGeneratorFactoryImpl();
-		PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
+		PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest, this.loanOffering.isVariableInstallmentsAllowed());
 
 		List<InstallmentPrincipalAndInterest> principalWithInterestInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
 		List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(installmentDates, loanInterest, this.loanAmount, meetingScheduledEvent, principalWithInterestInstallments, this.getAccountFees());
@@ -3138,16 +3142,20 @@ public class LoanBO extends AccountBO implements Loan {
         LoanDurationInAccountingYearsCalculator loanDurationInAccountingYearsCalculator = new LoanDurationInAccountingYearsCalculatorFactory().create(loanMeeting.getRecurrenceType());
         Double durationInYears = loanDurationInAccountingYearsCalculator.calculate(loanMeeting.getRecurAfter().intValue(), numberOfInstallments, interestDays);
 
+        List<DateTime> scheduledInstallments = new ArrayList<DateTime>();
+        for (InstallmentDate installmentDate : installmentDates) {
+            scheduledInstallments.add(new DateTime(installmentDate.getInstallmentDueDate()));
+        }
         LoanInterestCalculationDetails loanInterestCalculationDetails = new LoanInterestCalculationDetails(loanAmount, interestRate, graceType, gracePeriodDuration.intValue(),
-                numberOfInstallments, durationInYears, interestFractionalRatePerInstallment);
+                numberOfInstallments, durationInYears, interestFractionalRatePerInstallment, actualDisbursementDate, scheduledInstallments);
 
         LoanInterestCalculatorFactory loanInterestCalculatorFactory = new LoanInterestCalculatorFactoryImpl();
-        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType);
+        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType, this.loanOffering.isVariableInstallmentsAllowed());
 
         Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
 
         EqualInstallmentGeneratorFactory equalInstallmentGeneratorFactory = new EqualInstallmentGeneratorFactoryImpl();
-        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
+        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest, this.loanOffering.isVariableInstallmentsAllowed());
 
         List<InstallmentPrincipalAndInterest> principalWithInterestInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
         List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(installmentDates, loanInterest, this.loanAmount, meetingScheduledEvent, principalWithInterestInstallments, this.getAccountFees());

@@ -23,6 +23,7 @@ package org.mifos.clientportfolio.newloan.domain;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -31,8 +32,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public interface LoanScheduleFactory {
 
-    LoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, CustomerBO customer, MeetingBO loanMeeting,
+    LoanSchedule create(LocalDate disbursementDate, List<DateTime> loanScheduleDates, List<Number> totalInstallmentAmounts, LoanOfferingBO loanProduct, CustomerBO customer, MeetingBO loanMeeting,
             Money loanAmountDisbursed, Double interestRate, Integer interestDays, Integer graceDuration,
             List<AccountFeesEntity> accountFees);
-
 }

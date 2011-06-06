@@ -261,7 +261,7 @@ public class LoanAccountController {
         return this.loanAccountServiceFacade.isCompareWithCashFlowEnabledOnProduct(productId);
     }
 
-    public LoanScheduleDto retrieveLoanSchedule(int customerId, int productId, LoanAccountFormBean formBean, LoanScheduleFormBean loanScheduleFormBean) {
+    public LoanScheduleDto retrieveLoanSchedule(int customerId, int productId, LoanAccountFormBean formBean, BackdatedPaymentable loanScheduleFormBean) {
 
         LocalDate disbursementDate = translateDisbursementDateToLocalDate(formBean);
 
@@ -273,8 +273,13 @@ public class LoanAccountController {
         CreateLoanSchedule createLoanAccount = new CreateLoanSchedule(customerId, productId, BigDecimal.valueOf(formBean.getAmount().doubleValue()), formBean.getInterestRate().doubleValue(), disbursementDate,
                 formBean.getNumberOfInstallments().intValue(), formBean.getGraceDuration().intValue(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule, accountFees);
 
-        LoanScheduleDto loanSchedule = loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
-
+        LoanScheduleDto loanSchedule = null;
+        if (formBean.isVariableInstallmentsAllowed() && !loanScheduleFormBean.getInstallments().isEmpty()) {
+            loanSchedule = loanAccountServiceFacade.createLoanSchedule(createLoanAccount, loanScheduleFormBean.getInstallments(), loanScheduleFormBean.getInstallmentAmounts());
+        } else {
+            loanSchedule = loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
+        }
+            
         populateFormBeanFromDto(customerId, productId, formBean, loanScheduleFormBean, disbursementDate, loanSchedule);
 
         return loanSchedule;
@@ -304,6 +309,7 @@ public class LoanAccountController {
             }
         }
         loanScheduleFormBean.setInstallments(installments);
+        loanScheduleFormBean.setVariableInstallments(loanSchedule.getInstallments());
         loanScheduleFormBean.setInstallmentAmounts(installmentAmounts);
         loanScheduleFormBean.setActualPaymentDates(actualPaymentDates);
         loanScheduleFormBean.setActualPaymentAmounts(actualPaymentAmounts);
@@ -324,7 +330,7 @@ public class LoanAccountController {
             loanScheduleFormBean.setMinInstallmentAmount(formBean.getMinInstallmentAmount());
             
             loanScheduleFormBean.setCustomerId(formBean.getCustomerId());
-            loanScheduleFormBean.setVariableInstallments(loanSchedule.getInstallments());
+            loanScheduleFormBean.setLoanAccountFormBean(formBean);
         }
 
         List<FeeDto> applicableFees = new ArrayList<FeeDto>();
@@ -580,15 +586,15 @@ public class LoanAccountController {
 
             if (formBean.isVariableInstallmentsAllowed()) {
                 List<DateTime> installmentDates = cashFlowSummaryFormBean.getInstallments();
-                List<Number> installmentPrincipalAmounts = cashFlowSummaryFormBean.getInstallmentAmounts();
+                List<Number> totalInstallmentAmounts = cashFlowSummaryFormBean.getInstallmentAmounts();
                 if (installmentDates.isEmpty()) {
                     installmentDates = loanScheduleFormBean.getInstallments();
-                    installmentPrincipalAmounts = loanScheduleFormBean.getInstallmentAmounts();
+                    totalInstallmentAmounts = loanScheduleFormBean.getInstallmentAmounts();
                 }
                 // api for creating loan with premade loan schedule
                 
                 loanCreationResultDto = loanAccountServiceFacade.createLoan(loanAccountDetails,
-                        loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, installmentDates, installmentPrincipalAmounts);
+                        loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, installmentDates, totalInstallmentAmounts);
             } else {
                 loanCreationResultDto = loanAccountServiceFacade.createLoan(loanAccountDetails,
                         loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
