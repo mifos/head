@@ -43,7 +43,9 @@ import org.springframework.binding.validation.ValidationContext;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2", "DLS_DEAD_LOCAL_STORE"}, justification="should disable at filter level and also for pmd - not important for us")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2",
+                                                          "DLS_DEAD_LOCAL_STORE" },
+                                                  justification = "should disable at filter level and also for pmd - not important for us")
 public class LoanScheduleFormBean implements BackdatedPaymentable {
 
     @Autowired
@@ -51,19 +53,19 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
     @Autowired
     private transient LoanAccountController loanAccountController;
 
-    @DateTimeFormat(style="S-")
+    @DateTimeFormat(style = "S-")
     private List<DateTime> installments = new ArrayList<DateTime>();
-    @DateTimeFormat(style="S-")
+    @DateTimeFormat(style = "S-")
     private List<DateTime> actualPaymentDates = new ArrayList<DateTime>();
     private List<Number> installmentAmounts = new ArrayList<Number>();
     private List<Number> actualPaymentAmounts = new ArrayList<Number>();
-    
+
     // variable installments only for validation purposes
     private boolean variableInstallmentsAllowed;
     private Integer minGapInDays;
     private Integer maxGapInDays;
     private BigDecimal minInstallmentAmount;
-    
+
     private Date disbursementDate;
     private Integer customerId;
     private List<LoanCreationInstallmentDto> variableInstallments = new ArrayList<LoanCreationInstallmentDto>();
@@ -83,17 +85,29 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
     public LoanScheduleFormBean() {
         // constructor
     }
-    
+
     public String parseInstallment(int index) {
-        DateTimeFormatter formatter = org.joda.time.format.DateTimeFormat.forStyle("S-").withLocale(Locale.getDefault());
-        return formatter.print(this.installments.get(index));
+        DateTimeFormatter formatter = org.joda.time.format.DateTimeFormat.forStyle("S-")
+                .withLocale(Locale.getDefault());
+        DateTime dueDate = this.installments.get(index);
+        String printedDate = "";
+        if (dueDate != null) {
+            printedDate = formatter.print(dueDate);
+        }
+        return printedDate;
     }
-    
+
     public String parseActualPaymentDates(int index) {
-        DateTimeFormatter formatter = org.joda.time.format.DateTimeFormat.forStyle("S-").withLocale(Locale.getDefault());
-        return formatter.print(new DateTime(this.actualPaymentDates.get(index)));
+        DateTimeFormatter formatter = org.joda.time.format.DateTimeFormat.forStyle("S-")
+                .withLocale(Locale.getDefault());
+        DateTime actualPaymentDate = this.actualPaymentDates.get(index);
+        String printedDate = "";
+        if (actualPaymentDate != null) {
+            printedDate = formatter.print(actualPaymentDate);
+        }
+        return printedDate;
     }
-    
+
     private void addErrorMessageToContext(MessageContext messageContext, ErrorEntry fieldError) {
         String[] errorCodes = new String[1];
         errorCodes[0] = fieldError.getErrorCode();
@@ -101,33 +115,35 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
         if (fieldError.hasErrorArgs()) {
             args = new ArrayList<Object>(fieldError.getArgs());
         }
-        MessageBuilder builder = new MessageBuilder().error().source(fieldError.getFieldName())
-                                              .codes(errorCodes)
-                                              .defaultText(fieldError.getDefaultMessage()).args(args.toArray());
-        
+        MessageBuilder builder = new MessageBuilder().error().source(fieldError.getFieldName()).codes(errorCodes)
+                .defaultText(fieldError.getDefaultMessage()).args(args.toArray());
+
         messageContext.addMessage(builder.build());
     }
-    
+
     /**
-     * validateXXXX is invoked on transition from state 
+     * validateXXXX is invoked on transition from state
      */
     public void validateReviewLoanSchedule(ValidationContext context) {
         validateCalculateAndReviewLoanSchedule(context);
     }
-    
+
     /**
-     * validateXXXX is invoked on transition from state 
+     * validateXXXX is invoked on transition from state
      */
     public void validateCalculateAndReviewLoanSchedule(ValidationContext context) {
         MessageContext messageContext = context.getMessageContext();
-        
+
         if (this.variableInstallmentsAllowed) {
+            prevalidateDueDateIsNonNull(messageContext);
+            prevalidateActualPaymentDateIsNonNull(messageContext);
             prevalidateTotalIsNonNull(messageContext);
             prevalidateAmountPaidIsNonNull(messageContext);
-            
+
             if (!messageContext.hasErrorMessages()) {
 
-                LoanScheduleDto recalculatedLoanSchedule = this.loanAccountController.retrieveLoanSchedule(customerId, loanAccountFormBean.getProductId(), loanAccountFormBean, this);
+                LoanScheduleDto recalculatedLoanSchedule = this.loanAccountController.retrieveLoanSchedule(customerId,
+                        loanAccountFormBean.getProductId(), loanAccountFormBean, this);
 
                 // set values on fields
                 this.variableInstallments = recalculatedLoanSchedule.getInstallments();
@@ -138,14 +154,16 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
                     installIndex++;
                 }
             }
-//            recalculatePrincipalBasedOnTotalAmountForEachInstallmentWhileSettingInstallmentDate();
-            Errors inputInstallmentsErrors = loanAccountServiceFacade.validateInputInstallments(disbursementDate, minGapInDays, maxGapInDays, minInstallmentAmount, variableInstallments, customerId);
-            Errors scheduleErrors = loanAccountServiceFacade.validateInstallmentSchedule(variableInstallments, minInstallmentAmount);
-            
+
+            Errors inputInstallmentsErrors = loanAccountServiceFacade.validateInputInstallments(disbursementDate,
+                    minGapInDays, maxGapInDays, minInstallmentAmount, variableInstallments, customerId);
+            Errors scheduleErrors = loanAccountServiceFacade.validateInstallmentSchedule(variableInstallments,
+                    minInstallmentAmount);
+
             handleErrors(messageContext, inputInstallmentsErrors, scheduleErrors);
         } else {
             prevalidateAmountPaidIsNonNull(messageContext);
-            for (int index=0; index<this.actualPaymentAmounts.size(); index++) {
+            for (int index = 0; index < this.actualPaymentAmounts.size(); index++) {
                 Double newTotal = Double.valueOf("0.0");
                 Number newTotalEntry = this.actualPaymentAmounts.get(index);
                 if (newTotalEntry != null) {
@@ -155,109 +173,115 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
                 }
             }
         }
-        
+
         List<LoanRepaymentTransaction> loanRepaymentTransaction = new ArrayList<LoanRepaymentTransaction>();
         this.loanRepaymentPaidInstallmentsWithRunningBalance = new ArrayList<LoanRepaymentRunningBalance>();
         this.loanRepaymentFutureInstallments = new ArrayList<LoanRepaymentFutureInstallments>();
         // if any actual payment data exists, calculate
         validatePaymentsAndAmounts(messageContext, this.actualPaymentDates, this.actualPaymentAmounts);
         List<LoanInstallmentPostPayment> installmentsPostPayment = new ArrayList<LoanInstallmentPostPayment>();
-        
+
         int paymentIndex = 0;
-        for (Number actualPayment : this.actualPaymentAmounts) {
-            
-            BigDecimal remainingPayment = BigDecimal.valueOf(actualPayment.doubleValue());
-            LocalDate paymentDate = new LocalDate(this.actualPaymentDates.get(paymentIndex));
-            loanRepaymentTransaction.add(new LoanRepaymentTransaction(paymentDate, remainingPayment));
-            
-            int installmentIndex = 0;
-            while (remainingPayment.doubleValue() > BigDecimal.ZERO.doubleValue()
-                    && installmentIndex < this.actualPaymentAmounts.size()) {
-                
-                LoanCreationInstallmentDto installmentDetails = this.repaymentInstallments.get(installmentIndex);
-                Double installmentTotalAmount = this.installmentAmounts.get(installmentIndex).doubleValue();
-                LocalDate dueDate = new LocalDate(this.installments.get(installmentIndex));
+        if (!messageContext.hasErrorMessages()) {
+            for (Number actualPayment : this.actualPaymentAmounts) {
 
-                if (installmentsPostPayment.isEmpty() || installmentsPostPayment.size() <= installmentIndex) {
+                BigDecimal remainingPayment = BigDecimal.valueOf(actualPayment.doubleValue());
+                LocalDate paymentDate = new LocalDate(this.actualPaymentDates.get(paymentIndex));
+                loanRepaymentTransaction.add(new LoanRepaymentTransaction(paymentDate, remainingPayment));
 
-                    BigDecimal feesPaid = BigDecimal.valueOf(installmentDetails.getFees());
-                    if (remainingPayment.doubleValue() >= installmentDetails.getFees()) {
-                        remainingPayment = remainingPayment.subtract(feesPaid);
-                    } else {
-                        feesPaid = remainingPayment;
-                        remainingPayment = remainingPayment.subtract(feesPaid);
-                    }
+                int installmentIndex = 0;
+                while (remainingPayment.doubleValue() > BigDecimal.ZERO.doubleValue()
+                        && installmentIndex < this.actualPaymentAmounts.size()) {
 
-                    BigDecimal interestPaid = BigDecimal.valueOf(installmentDetails.getInterest());
-                    if (remainingPayment.doubleValue() >= installmentDetails.getInterest()) {
-                        remainingPayment = remainingPayment.subtract(interestPaid);
-                    } else {
-                        interestPaid = remainingPayment;
-                        remainingPayment = remainingPayment.subtract(interestPaid);
-                    }
+                    LoanCreationInstallmentDto installmentDetails = this.repaymentInstallments.get(installmentIndex);
+                    Double installmentTotalAmount = this.installmentAmounts.get(installmentIndex).doubleValue();
+                    LocalDate dueDate = new LocalDate(this.installments.get(installmentIndex));
 
-                    BigDecimal principalPaid = BigDecimal.valueOf(installmentDetails.getPrincipal());
-                    if (remainingPayment.doubleValue() >= installmentDetails.getPrincipal()) {
-                        remainingPayment = remainingPayment.subtract(principalPaid);
-                    } else {
-                        principalPaid = remainingPayment;
-                        remainingPayment = remainingPayment.subtract(principalPaid);
-                    }
+                    if (installmentsPostPayment.isEmpty() || installmentsPostPayment.size() <= installmentIndex) {
 
-                    BigDecimal totalInstallmentPaid = feesPaid.add(interestPaid).add(principalPaid);
-
-                    LoanInstallmentPostPayment loanInstallmentPostPayment = new LoanInstallmentPostPayment(
-                            installmentDetails.getInstallmentNumber(), dueDate, paymentDate, feesPaid, interestPaid,
-                            principalPaid, totalInstallmentPaid, installmentTotalAmount);
-                    installmentsPostPayment.add(loanInstallmentPostPayment);
-                } else {
-                    LoanInstallmentPostPayment paidInstallment = installmentsPostPayment.get(installmentIndex);
-                    if (paidInstallment.isNotFullyPaid()) {
-                        BigDecimal feesToBePaid = BigDecimal.valueOf(installmentDetails.getFees()).subtract(paidInstallment.getFeesPaid());
-                        if (remainingPayment.doubleValue() >= feesToBePaid.doubleValue()) {
-                            remainingPayment = remainingPayment.subtract(feesToBePaid);
+                        BigDecimal feesPaid = BigDecimal.valueOf(installmentDetails.getFees());
+                        if (remainingPayment.doubleValue() >= installmentDetails.getFees()) {
+                            remainingPayment = remainingPayment.subtract(feesPaid);
                         } else {
-                            feesToBePaid = remainingPayment;
-                            remainingPayment = remainingPayment.subtract(feesToBePaid);
+                            feesPaid = remainingPayment;
+                            remainingPayment = remainingPayment.subtract(feesPaid);
                         }
 
-                        BigDecimal interestToBePaid = BigDecimal.valueOf(installmentDetails.getInterest()).subtract(paidInstallment.getInterestPaid());
-                        if (remainingPayment.doubleValue() >= interestToBePaid.doubleValue()) {
-                            remainingPayment = remainingPayment.subtract(interestToBePaid);
+                        BigDecimal interestPaid = BigDecimal.valueOf(installmentDetails.getInterest());
+                        if (remainingPayment.doubleValue() >= installmentDetails.getInterest()) {
+                            remainingPayment = remainingPayment.subtract(interestPaid);
                         } else {
-                            interestToBePaid = remainingPayment;
-                            remainingPayment = remainingPayment.subtract(interestToBePaid);
+                            interestPaid = remainingPayment;
+                            remainingPayment = remainingPayment.subtract(interestPaid);
                         }
 
-                        BigDecimal principalToBePaid = BigDecimal.valueOf(installmentDetails.getPrincipal()).subtract(paidInstallment.getPrincipalPaid());
-                        if (remainingPayment.doubleValue() >= principalToBePaid.doubleValue()) {
-                            remainingPayment = remainingPayment.subtract(principalToBePaid);
+                        BigDecimal principalPaid = BigDecimal.valueOf(installmentDetails.getPrincipal());
+                        if (remainingPayment.doubleValue() >= installmentDetails.getPrincipal()) {
+                            remainingPayment = remainingPayment.subtract(principalPaid);
                         } else {
-                            principalToBePaid = remainingPayment;
-                            remainingPayment = remainingPayment.subtract(principalToBePaid);
+                            principalPaid = remainingPayment;
+                            remainingPayment = remainingPayment.subtract(principalPaid);
                         }
-                        
-                        BigDecimal totalInstallmentPaid = feesToBePaid.add(interestToBePaid).add(principalToBePaid);
-                        
-                        paidInstallment.setLastPaymentDate(paymentDate);
-                        paidInstallment.setFeesPaid(paidInstallment.getFeesPaid().add(feesToBePaid));
-                        paidInstallment.setInterestPaid(paidInstallment.getInterestPaid().add(interestToBePaid));
-                        paidInstallment.setPrincipalPaid(paidInstallment.getPrincipalPaid().add(principalToBePaid));
-                        paidInstallment.setTotalInstallmentPaid(paidInstallment.getTotalInstallmentPaid().add(totalInstallmentPaid));
+
+                        BigDecimal totalInstallmentPaid = feesPaid.add(interestPaid).add(principalPaid);
+
+                        LoanInstallmentPostPayment loanInstallmentPostPayment = new LoanInstallmentPostPayment(
+                                installmentDetails.getInstallmentNumber(), dueDate, paymentDate, feesPaid,
+                                interestPaid, principalPaid, totalInstallmentPaid, installmentTotalAmount);
+                        installmentsPostPayment.add(loanInstallmentPostPayment);
+                    } else {
+                        LoanInstallmentPostPayment paidInstallment = installmentsPostPayment.get(installmentIndex);
+                        if (paidInstallment.isNotFullyPaid()) {
+                            BigDecimal feesToBePaid = BigDecimal.valueOf(installmentDetails.getFees()).subtract(
+                                    paidInstallment.getFeesPaid());
+                            if (remainingPayment.doubleValue() >= feesToBePaid.doubleValue()) {
+                                remainingPayment = remainingPayment.subtract(feesToBePaid);
+                            } else {
+                                feesToBePaid = remainingPayment;
+                                remainingPayment = remainingPayment.subtract(feesToBePaid);
+                            }
+
+                            BigDecimal interestToBePaid = BigDecimal.valueOf(installmentDetails.getInterest())
+                                    .subtract(paidInstallment.getInterestPaid());
+                            if (remainingPayment.doubleValue() >= interestToBePaid.doubleValue()) {
+                                remainingPayment = remainingPayment.subtract(interestToBePaid);
+                            } else {
+                                interestToBePaid = remainingPayment;
+                                remainingPayment = remainingPayment.subtract(interestToBePaid);
+                            }
+
+                            BigDecimal principalToBePaid = BigDecimal.valueOf(installmentDetails.getPrincipal())
+                                    .subtract(paidInstallment.getPrincipalPaid());
+                            if (remainingPayment.doubleValue() >= principalToBePaid.doubleValue()) {
+                                remainingPayment = remainingPayment.subtract(principalToBePaid);
+                            } else {
+                                principalToBePaid = remainingPayment;
+                                remainingPayment = remainingPayment.subtract(principalToBePaid);
+                            }
+
+                            BigDecimal totalInstallmentPaid = feesToBePaid.add(interestToBePaid).add(principalToBePaid);
+
+                            paidInstallment.setLastPaymentDate(paymentDate);
+                            paidInstallment.setFeesPaid(paidInstallment.getFeesPaid().add(feesToBePaid));
+                            paidInstallment.setInterestPaid(paidInstallment.getInterestPaid().add(interestToBePaid));
+                            paidInstallment.setPrincipalPaid(paidInstallment.getPrincipalPaid().add(principalToBePaid));
+                            paidInstallment.setTotalInstallmentPaid(paidInstallment.getTotalInstallmentPaid().add(
+                                    totalInstallmentPaid));
+                        }
                     }
+                    installmentIndex++;
                 }
-                installmentIndex++;
+                paymentIndex++;
             }
-            paymentIndex++;
         }
-        
+
         // remaining running balance
         BigDecimal cumulativeFeesPaid = BigDecimal.ZERO;
         BigDecimal cumulativeInterestPaid = BigDecimal.ZERO;
         BigDecimal cumulativePrincipalPaid = BigDecimal.ZERO;
         BigDecimal cumulativeTotalInstallmentPaid = BigDecimal.ZERO;
         for (LoanInstallmentPostPayment installment : installmentsPostPayment) {
-            
+
             cumulativeFeesPaid = cumulativeFeesPaid.add(installment.getFeesPaid());
             cumulativeInterestPaid = cumulativeInterestPaid.add(installment.getInterestPaid());
             cumulativePrincipalPaid = cumulativePrincipalPaid.add(installment.getPrincipalPaid());
@@ -265,56 +289,98 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
             if (installment.isNotFullyPaid()) {
                 BigDecimal remainingFees = this.totalLoanFees.subtract(cumulativeFeesPaid);
                 BigDecimal remainingInterest = this.totalLoanInterest.subtract(cumulativeInterestPaid);
-                BigDecimal remainingTotalInstallment = this.loanPrincipal.add(this.totalLoanFees).add(this.totalLoanInterest).subtract(cumulativeTotalInstallmentPaid);
-                BigDecimal remainingPrincipal = remainingTotalInstallment.subtract(remainingInterest).subtract(remainingFees);
-                
-                LoanCreationInstallmentDto installmentDetails = this.repaymentInstallments.get(installment.getInstallmentNumber()-1);
-                
-                LoanCreationInstallmentDto installmentPaidDetails = new LoanCreationInstallmentDto(installment.getInstallmentNumber(), 
-                        new LocalDate(installmentDetails.getDueDate()), 
-                        installment.getPrincipalPaid().doubleValue(), 
-                        installment.getInterestPaid().doubleValue(),
-                        installment.getFeesPaid().doubleValue(),
-                        BigDecimal.ZERO.doubleValue(),
-                        installment.getTotalInstallmentPaid().doubleValue());                
-                this.loanRepaymentPaidInstallmentsWithRunningBalance.add(new LoanRepaymentRunningBalance(installmentPaidDetails, installment.getTotalInstallmentPaid(), remainingPrincipal, remainingInterest, remainingFees, remainingTotalInstallment, installment.getLastPaymentDate()));
-                
-              BigDecimal outstandingInstallmentPrincipal = BigDecimal.valueOf(installmentDetails.getPrincipal()).subtract(installment.getPrincipalPaid());
-              BigDecimal outstandingInstallmentInterest = BigDecimal.valueOf(installmentDetails.getInterest()).subtract(installment.getInterestPaid());
-              BigDecimal outstandingInstallmentFees = BigDecimal.valueOf(installmentDetails.getFees()).subtract(installment.getFeesPaid());
-              this.loanRepaymentFutureInstallments.add(new LoanRepaymentFutureInstallments(installmentDetails.getInstallmentNumber(), 
-                      installmentDetails.getDueDate(), 
-                      outstandingInstallmentPrincipal, 
-                      outstandingInstallmentInterest, 
-                      outstandingInstallmentFees, 
-                      outstandingInstallmentPrincipal.add(outstandingInstallmentInterest).add(outstandingInstallmentFees)));
+                BigDecimal remainingTotalInstallment = this.loanPrincipal.add(this.totalLoanFees)
+                        .add(this.totalLoanInterest).subtract(cumulativeTotalInstallmentPaid);
+                BigDecimal remainingPrincipal = remainingTotalInstallment.subtract(remainingInterest).subtract(
+                        remainingFees);
+
+                LoanCreationInstallmentDto installmentDetails = this.repaymentInstallments.get(installment
+                        .getInstallmentNumber() - 1);
+
+                LoanCreationInstallmentDto installmentPaidDetails = new LoanCreationInstallmentDto(
+                        installment.getInstallmentNumber(), new LocalDate(installmentDetails.getDueDate()), installment
+                                .getPrincipalPaid().doubleValue(), installment.getInterestPaid().doubleValue(),
+                        installment.getFeesPaid().doubleValue(), BigDecimal.ZERO.doubleValue(), installment
+                                .getTotalInstallmentPaid().doubleValue());
+                this.loanRepaymentPaidInstallmentsWithRunningBalance.add(new LoanRepaymentRunningBalance(
+                        installmentPaidDetails, installment.getTotalInstallmentPaid(), remainingPrincipal,
+                        remainingInterest, remainingFees, remainingTotalInstallment, installment.getLastPaymentDate()));
+
+                BigDecimal outstandingInstallmentPrincipal = BigDecimal.valueOf(installmentDetails.getPrincipal())
+                        .subtract(installment.getPrincipalPaid());
+                BigDecimal outstandingInstallmentInterest = BigDecimal.valueOf(installmentDetails.getInterest())
+                        .subtract(installment.getInterestPaid());
+                BigDecimal outstandingInstallmentFees = BigDecimal.valueOf(installmentDetails.getFees()).subtract(
+                        installment.getFeesPaid());
+                this.loanRepaymentFutureInstallments.add(new LoanRepaymentFutureInstallments(installmentDetails
+                        .getInstallmentNumber(), installmentDetails.getDueDate(), outstandingInstallmentPrincipal,
+                        outstandingInstallmentInterest, outstandingInstallmentFees, outstandingInstallmentPrincipal
+                                .add(outstandingInstallmentInterest).add(outstandingInstallmentFees)));
             } else {
                 BigDecimal remainingFees = this.totalLoanFees.subtract(cumulativeFeesPaid);
                 BigDecimal remainingInterest = this.totalLoanInterest.subtract(cumulativeInterestPaid);
-                BigDecimal remainingTotalInstallment = this.loanPrincipal.add(this.totalLoanFees).add(this.totalLoanInterest).subtract(cumulativeTotalInstallmentPaid);
-                BigDecimal remainingPrincipal = remainingTotalInstallment.subtract(remainingInterest).subtract(remainingFees);
-                
-                LoanCreationInstallmentDto installmentDetails = this.repaymentInstallments.get(installment.getInstallmentNumber()-1);
-                this.loanRepaymentPaidInstallmentsWithRunningBalance.add(new LoanRepaymentRunningBalance(installmentDetails, installment.getTotalInstallmentPaid(), remainingPrincipal, remainingInterest, remainingFees, remainingTotalInstallment, installment.getLastPaymentDate()));                
+                BigDecimal remainingTotalInstallment = this.loanPrincipal.add(this.totalLoanFees)
+                        .add(this.totalLoanInterest).subtract(cumulativeTotalInstallmentPaid);
+                BigDecimal remainingPrincipal = remainingTotalInstallment.subtract(remainingInterest).subtract(
+                        remainingFees);
+
+                LoanCreationInstallmentDto installmentDetails = this.repaymentInstallments.get(installment
+                        .getInstallmentNumber() - 1);
+                this.loanRepaymentPaidInstallmentsWithRunningBalance.add(new LoanRepaymentRunningBalance(
+                        installmentDetails, installment.getTotalInstallmentPaid(), remainingPrincipal,
+                        remainingInterest, remainingFees, remainingTotalInstallment, installment.getLastPaymentDate()));
             }
         }
-      
+
         int lastHandledFutureInstallmentNumber = loanRepaymentPaidInstallmentsWithRunningBalance.size();
         if (!this.loanRepaymentFutureInstallments.isEmpty()) {
-            lastHandledFutureInstallmentNumber = this.loanRepaymentFutureInstallments.get(this.loanRepaymentFutureInstallments.size()-1).getInstallmentNumber();
+            lastHandledFutureInstallmentNumber = this.loanRepaymentFutureInstallments.get(
+                    this.loanRepaymentFutureInstallments.size() - 1).getInstallmentNumber();
         }
 
         for (LoanCreationInstallmentDto installmentDto : this.repaymentInstallments) {
             if (installmentDto.getInstallmentNumber() > lastHandledFutureInstallmentNumber) {
-                this.loanRepaymentFutureInstallments.add(new LoanRepaymentFutureInstallments(installmentDto.getInstallmentNumber(), installmentDto.getDueDate(), BigDecimal.valueOf(installmentDto.getPrincipal()), 
-                        BigDecimal.valueOf(installmentDto.getInterest()), 
-                        BigDecimal.valueOf(installmentDto.getFees()), 
-                        BigDecimal.valueOf(installmentDto.getTotal())));
+                this.loanRepaymentFutureInstallments.add(new LoanRepaymentFutureInstallments(installmentDto
+                        .getInstallmentNumber(), installmentDto.getDueDate(), BigDecimal.valueOf(installmentDto
+                        .getPrincipal()), BigDecimal.valueOf(installmentDto.getInterest()), BigDecimal
+                        .valueOf(installmentDto.getFees()), BigDecimal.valueOf(installmentDto.getTotal())));
             }
         }
     }
     
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DLS_DEAD_LOCAL_STORE"},justification = "")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DLS_DEAD_LOCAL_STORE" }, justification = "")
+    private void prevalidateActualPaymentDateIsNonNull(MessageContext messageContext) {
+        Integer installmentIndex = 1;
+        for (DateTime dueDate : this.actualPaymentDates) {
+            if (dueDate == null) {
+                String defaultMessage = "The actual payment date field for installment {0} is blank.";
+                ErrorEntry fieldError = new ErrorEntry("installment.actualpaymentdate.blank.and.invalid", "installmentAmounts",
+                        defaultMessage);
+                fieldError.setArgs(Arrays.asList(installmentIndex.toString()));
+
+                addErrorMessageToContext(messageContext, fieldError);
+            }
+            installmentIndex++;
+        }
+    }
+    
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DLS_DEAD_LOCAL_STORE" }, justification = "")
+    private void prevalidateDueDateIsNonNull(MessageContext messageContext) {
+        Integer installmentIndex = 1;
+        for (DateTime dueDate : this.installments) {
+            if (dueDate == null) {
+                String defaultMessage = "The due date field for installment {0} is blank.";
+                ErrorEntry fieldError = new ErrorEntry("installment.duedate.blank.and.invalid", "installmentAmounts",
+                        defaultMessage);
+                fieldError.setArgs(Arrays.asList(installmentIndex.toString()));
+
+                addErrorMessageToContext(messageContext, fieldError);
+            }
+            installmentIndex++;
+        }
+    }
+
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DLS_DEAD_LOCAL_STORE" }, justification = "")
     private void prevalidateTotalIsNonNull(MessageContext messageContext) {
         Integer installmentIndex = 1;
         for (Number totalAmount : this.installmentAmounts) {
@@ -323,14 +389,14 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
                 ErrorEntry fieldError = new ErrorEntry("installment.total.amount.blank.and.invalid",
                         "installmentAmounts", defaultMessage);
                 fieldError.setArgs(Arrays.asList(installmentIndex.toString()));
-
+                this.installmentAmounts.set(installmentIndex-1, Integer.valueOf(0));
                 addErrorMessageToContext(messageContext, fieldError);
             }
             installmentIndex++;
         }
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DLS_DEAD_LOCAL_STORE"},justification = "")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DLS_DEAD_LOCAL_STORE" }, justification = "")
     private void prevalidateAmountPaidIsNonNull(MessageContext messageContext) {
         Integer installmentIndex = 1;
         for (Number amountPaid : this.actualPaymentAmounts) {
@@ -339,50 +405,54 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
                 ErrorEntry fieldError = new ErrorEntry("installment.amount.paid.blank.and.invalid",
                         "actualPaymentAmounts", defaultMessage);
                 fieldError.setArgs(Arrays.asList(installmentIndex.toString()));
-
+                this.actualPaymentAmounts.set(installmentIndex-1, Integer.valueOf(0));
                 addErrorMessageToContext(messageContext, fieldError);
             }
             installmentIndex++;
         }
     }
-    
-    private void validatePaymentsAndAmounts(MessageContext messageContext, List<DateTime> actualPaymentDates, List<Number> actualPaymentAmounts) {
+
+    private void validatePaymentsAndAmounts(MessageContext messageContext, List<DateTime> actualPaymentDates,
+            List<Number> actualPaymentAmounts) {
         int index = 0;
         LocalDate lastPaymentDate = null;
         BigDecimal totalPayment = BigDecimal.ZERO;
-        
+
         for (Number actualPayment : actualPaymentAmounts) {
-            String installment = Integer.valueOf(index+1).toString();
+            String installment = Integer.valueOf(index + 1).toString();
             LocalDate paymentDate = new LocalDate(actualPaymentDates.get(index));
-            
+
             if (paymentDate.isBefore(new LocalDate(this.disbursementDate))) {
-                
+
                 String defaultMessage = "The payment date cannot be before disbursement date";
-                ErrorEntry fieldError = new ErrorEntry("paymentDate.before.disbursementDate.invalid", "disbursementDate", defaultMessage);
+                ErrorEntry fieldError = new ErrorEntry("paymentDate.before.disbursementDate.invalid",
+                        "disbursementDate", defaultMessage);
                 fieldError.setArgs(Arrays.asList(installment));
-                
+
                 addErrorMessageToContext(messageContext, fieldError);
             }
-            
+
             if (paymentDate.isAfter(new LocalDate()) && actualPayment.doubleValue() > 0) {
-                
+
                 String defaultMessage = "The payment date cannot be in the future.";
-                ErrorEntry fieldError = new ErrorEntry("paymentDate.is.future.date.invalid", "disbursementDate", defaultMessage);
+                ErrorEntry fieldError = new ErrorEntry("paymentDate.is.future.date.invalid", "disbursementDate",
+                        defaultMessage);
                 fieldError.setArgs(Arrays.asList(installment));
-                
+
                 addErrorMessageToContext(messageContext, fieldError);
             }
-            
+
             if (lastPaymentDate != null) {
                 if (!paymentDate.isEqual(lastPaymentDate) && !paymentDate.isAfter(lastPaymentDate)) {
                     String defaultMessage = "The payment date cannot be before the previous payment date";
-                    ErrorEntry fieldError = new ErrorEntry("paymentDate.before.lastPaymentDate.invalid", "disbursementDate", defaultMessage);
+                    ErrorEntry fieldError = new ErrorEntry("paymentDate.before.lastPaymentDate.invalid",
+                            "disbursementDate", defaultMessage);
                     fieldError.setArgs(Arrays.asList(installment));
-                    
+
                     addErrorMessageToContext(messageContext, fieldError);
                 }
             }
-            
+
             BigDecimal payment = BigDecimal.valueOf(actualPayment.doubleValue());
             if (payment.doubleValue() > BigDecimal.ZERO.doubleValue()) {
                 totalPayment = totalPayment.add(payment);
@@ -390,7 +460,7 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
             index++;
             lastPaymentDate = paymentDate;
         }
-        
+
         BigDecimal totalAllowedPayments = this.loanPrincipal.add(this.totalLoanFees).add(this.totalLoanInterest);
         if (totalPayment.doubleValue() > totalAllowedPayments.doubleValue()) {
             String defaultMessage = "Exceeds total payments allowed for loan.";
@@ -405,61 +475,13 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
                 addErrorMessageToContext(messageContext, fieldError);
             }
         }
-        
+
         if (scheduleErrors.hasErrors()) {
             for (ErrorEntry fieldError : scheduleErrors.getErrorEntries()) {
                 addErrorMessageToContext(messageContext, fieldError);
             }
         }
     }
-
-//    private void recalculatePrincipalBasedOnTotalAmountForEachInstallmentWhileSettingInstallmentDate() {
-//        int index=0;
-//        Double cumulativeNewInstallmentTotal = Double.valueOf("0.0");
-//        BigDecimal totalInterestAndFeesDue = BigDecimal.ZERO;
-//        for (LoanCreationInstallmentDto variableInstallment : this.variableInstallments) {
-//            totalInterestAndFeesDue = totalInterestAndFeesDue.add(BigDecimal.valueOf(variableInstallment.getInterest()).add(BigDecimal.valueOf(variableInstallment.getFees())));
-//        }
-//        
-//        for (LoanCreationInstallmentDto variableInstallment : this.variableInstallments) {
-//            variableInstallment.setDueDate(new LocalDate(this.installments.get(index)));
-//            
-//            Double newTotal = Double.valueOf("0.0");
-//            Number newTotalEntry = this.installmentAmounts.get(index);
-//            if (newTotalEntry != null) {
-//                newTotal = newTotalEntry.doubleValue();
-//            } else {
-//                this.installmentAmounts.set(index, newTotal);
-//            }
-//            
-//            Number newAmountPaidEntry = this.actualPaymentAmounts.get(index);
-//            if (newAmountPaidEntry == null) {
-//                this.actualPaymentAmounts.set(index, Double.valueOf("0.0"));
-//            }
-//
-//            // adjust principal based on total and interest + fees
-//            if (index == this.variableInstallments.size()-1) {
-//                // sum up all totals and make final total = loan principal + interest and fees due - sum of other installment totals
-//                Double finalInstallmentTotal = this.loanPrincipal.add(totalInterestAndFeesDue).subtract(BigDecimal.valueOf(cumulativeNewInstallmentTotal)).doubleValue();
-//                Double finalInstallmentPrincipal = calculatePrincipalBasedOnNewTotal(variableInstallment, finalInstallmentTotal);
-//                variableInstallment.setTotal(finalInstallmentTotal);
-//                variableInstallment.setPrincipal(finalInstallmentPrincipal);
-//                this.installmentAmounts.set(index, finalInstallmentTotal);
-//            } else {
-//                variableInstallment.setTotal(newTotal);
-//                variableInstallment.setPrincipal(calculatePrincipalBasedOnNewTotal(variableInstallment, newTotal));
-//                cumulativeNewInstallmentTotal += newTotal;
-//            }
-//            index++;
-//        }
-//    }
-//    
-//    private Double calculatePrincipalBasedOnNewTotal(LoanCreationInstallmentDto variableInstallment, Double newTotal) {
-//        BigDecimal fees = BigDecimal.valueOf(variableInstallment.getFees());
-//        BigDecimal interest = BigDecimal.valueOf(variableInstallment.getInterest());
-//        
-//        return BigDecimal.valueOf(newTotal).subtract(fees.add(interest)).doubleValue();
-//    }
 
     @Override
     public List<DateTime> getInstallments() {
@@ -534,7 +556,7 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
     public void setVariableInstallments(List<LoanCreationInstallmentDto> variableInstallments) {
         this.variableInstallments = variableInstallments;
     }
-    
+
     public List<FeeDto> getApplicableFees() {
         return applicableFees;
     }
@@ -543,7 +565,7 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
     public void setApplicableFees(List<FeeDto> applicableFees) {
         this.applicableFees = applicableFees;
     }
-    
+
     @Override
     public List<Number> getInstallmentAmounts() {
         return installmentAmounts;
@@ -553,7 +575,7 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
     public void setInstallmentAmounts(List<Number> installmentAmounts) {
         this.installmentAmounts = installmentAmounts;
     }
-    
+
     public BigDecimal getLoanPrincipal() {
         return loanPrincipal;
     }
@@ -562,7 +584,7 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
     public void setLoanPrincipal(BigDecimal loanPrincipal) {
         this.loanPrincipal = loanPrincipal;
     }
-    
+
     public List<DateTime> getActualPaymentDates() {
         return actualPaymentDates;
     }
@@ -602,12 +624,12 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
     public List<LoanCreationInstallmentDto> getRepaymentInstallments() {
         return repaymentInstallments;
     }
-    
+
     @Override
     public void setRepaymentInstallments(List<LoanCreationInstallmentDto> repaymentInstallments) {
         this.repaymentInstallments = repaymentInstallments;
     }
-    
+
     public List<LoanRepaymentFutureInstallments> getLoanRepaymentFutureInstallments() {
         return loanRepaymentFutureInstallments;
     }
@@ -624,7 +646,7 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
             List<LoanRepaymentRunningBalance> loanRepaymentPaidInstallmentsWithRunningBalance) {
         this.loanRepaymentPaidInstallmentsWithRunningBalance = loanRepaymentPaidInstallmentsWithRunningBalance;
     }
-    
+
     @Override
     public void setLoanAccountFormBean(LoanAccountFormBean loanAccountFormBean) {
         this.loanAccountFormBean = loanAccountFormBean;
