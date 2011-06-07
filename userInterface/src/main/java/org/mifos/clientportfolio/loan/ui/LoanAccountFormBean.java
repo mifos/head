@@ -187,15 +187,10 @@ public class LoanAccountFormBean implements Serializable {
                         }
 
                         // check error message of loan purpose for each client when its mandatory..
-                        
-                        for (Integer loanPurposeId : this.clientLoanPurposeId) {
-                            if (loanPurposeId == null) {
-                                this.clientLoanPurposeId[index] = 0;
-                            }
-                        }
                         Integer clientLoanPurposeId = this.clientLoanPurposeId[index];
                         if (this.purposeOfLoanMandatory && isInvalidSelection(clientLoanPurposeId)) {
                             errors.rejectValue("clientLoanPurposeId", "loanAccountFormBean.glim.purposeOfLoan.invalid", new Object[] {index+1}, "Please specify loan purpose.");
+                            this.clientLoanPurposeId[index] = 0;
                         }
 
                         selectedCount++;
