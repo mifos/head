@@ -52,7 +52,7 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
 
     @Autowired
     private transient LoanAccountServiceFacade loanAccountServiceFacade;
-    
+
     @Autowired
     private transient LoanAccountController loanAccountController;
 
@@ -100,13 +100,23 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
     public String parseInstallment(int index) {
         DateTimeFormatter formatter = org.joda.time.format.DateTimeFormat.forStyle("S-")
                 .withLocale(Locale.getDefault());
-        return formatter.print(this.installments.get(index));
+        DateTime dueDate = this.installments.get(index);
+        String printedDate = "";
+        if (dueDate != null) {
+            printedDate = formatter.print(dueDate);
+        }
+        return printedDate;
     }
 
     public String parseActualPaymentDates(int index) {
         DateTimeFormatter formatter = org.joda.time.format.DateTimeFormat.forStyle("S-")
                 .withLocale(Locale.getDefault());
-        return formatter.print(this.actualPaymentDates.get(index));
+        DateTime actualPaymentDate = this.actualPaymentDates.get(index);
+        String printedDate = "";
+        if (actualPaymentDate != null) {
+            printedDate = formatter.print(actualPaymentDate);
+        }
+        return printedDate;
     }
 
     /**
@@ -138,6 +148,8 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
         }
 
         if (this.variableInstallmentsAllowed) {
+            prevalidateDueDateIsNonNull(messageContext);
+            prevalidateActualPaymentDateIsNonNull(messageContext);
             prevalidateTotalIsNonNull(messageContext);
             prevalidateAmountPaidIsNonNull(messageContext);
 
@@ -155,7 +167,7 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
                     installIndex++;
                 }
             }
-            
+
             Errors inputInstallmentsErrors = loanAccountServiceFacade.validateInputInstallments(disbursementDate,
                     minGapInDays, maxGapInDays, minInstallmentAmount, variableInstallments, customerId);
             Errors scheduleErrors = loanAccountServiceFacade.validateInstallmentSchedule(variableInstallments,
@@ -174,7 +186,7 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
             }
         } else {
             prevalidateTotalIsNonNull(messageContext);
-            for (int index=0; index<this.installmentAmounts.size(); index++) {
+            for (int index = 0; index < this.installmentAmounts.size(); index++) {
                 Double newTotal = Double.valueOf("0.0");
                 Number newTotalEntry = this.installmentAmounts.get(index);
                 if (newTotalEntry != null) {
@@ -193,95 +205,97 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
         List<LoanInstallmentPostPayment> installmentsPostPayment = new ArrayList<LoanInstallmentPostPayment>();
 
         int paymentIndex = 0;
-        for (Number actualPayment : this.actualPaymentAmounts) {
+        if (!messageContext.hasErrorMessages()) {
+            for (Number actualPayment : this.actualPaymentAmounts) {
 
-            BigDecimal remainingPayment = BigDecimal.valueOf(actualPayment.doubleValue());
-            LocalDate paymentDate = new LocalDate(this.actualPaymentDates.get(paymentIndex));
-            loanRepaymentTransaction.add(new LoanRepaymentTransaction(paymentDate, remainingPayment));
+                BigDecimal remainingPayment = BigDecimal.valueOf(actualPayment.doubleValue());
+                LocalDate paymentDate = new LocalDate(this.actualPaymentDates.get(paymentIndex));
+                loanRepaymentTransaction.add(new LoanRepaymentTransaction(paymentDate, remainingPayment));
 
-            int installmentIndex = 0;
-            while (remainingPayment.doubleValue() > BigDecimal.ZERO.doubleValue()
-                    && installmentIndex < this.actualPaymentAmounts.size()) {
+                int installmentIndex = 0;
+                while (remainingPayment.doubleValue() > BigDecimal.ZERO.doubleValue()
+                        && installmentIndex < this.actualPaymentAmounts.size()) {
 
-                LoanCreationInstallmentDto installmentDetails = this.repaymentInstallments.get(installmentIndex);
-                Double installmentTotalAmount = this.installmentAmounts.get(installmentIndex).doubleValue();
-                LocalDate dueDate = new LocalDate(this.installments.get(installmentIndex));
+                    LoanCreationInstallmentDto installmentDetails = this.repaymentInstallments.get(installmentIndex);
+                    Double installmentTotalAmount = this.installmentAmounts.get(installmentIndex).doubleValue();
+                    LocalDate dueDate = new LocalDate(this.installments.get(installmentIndex));
 
-                if (installmentsPostPayment.isEmpty() || installmentsPostPayment.size() <= installmentIndex) {
+                    if (installmentsPostPayment.isEmpty() || installmentsPostPayment.size() <= installmentIndex) {
 
-                    BigDecimal feesPaid = BigDecimal.valueOf(installmentDetails.getFees());
-                    if (remainingPayment.doubleValue() >= installmentDetails.getFees()) {
-                        remainingPayment = remainingPayment.subtract(feesPaid);
-                    } else {
-                        feesPaid = remainingPayment;
-                        remainingPayment = remainingPayment.subtract(feesPaid);
-                    }
-
-                    BigDecimal interestPaid = BigDecimal.valueOf(installmentDetails.getInterest());
-                    if (remainingPayment.doubleValue() >= installmentDetails.getInterest()) {
-                        remainingPayment = remainingPayment.subtract(interestPaid);
-                    } else {
-                        interestPaid = remainingPayment;
-                        remainingPayment = remainingPayment.subtract(interestPaid);
-                    }
-
-                    BigDecimal principalPaid = BigDecimal.valueOf(installmentDetails.getPrincipal());
-                    if (remainingPayment.doubleValue() >= installmentDetails.getPrincipal()) {
-                        remainingPayment = remainingPayment.subtract(principalPaid);
-                    } else {
-                        principalPaid = remainingPayment;
-                        remainingPayment = remainingPayment.subtract(principalPaid);
-                    }
-
-                    BigDecimal totalInstallmentPaid = feesPaid.add(interestPaid).add(principalPaid);
-
-                    LoanInstallmentPostPayment loanInstallmentPostPayment = new LoanInstallmentPostPayment(
-                            installmentDetails.getInstallmentNumber(), dueDate, paymentDate, feesPaid, interestPaid,
-                            principalPaid, totalInstallmentPaid, installmentTotalAmount);
-                    installmentsPostPayment.add(loanInstallmentPostPayment);
-                } else {
-                    LoanInstallmentPostPayment paidInstallment = installmentsPostPayment.get(installmentIndex);
-                    if (paidInstallment.isNotFullyPaid()) {
-                        BigDecimal feesToBePaid = BigDecimal.valueOf(installmentDetails.getFees()).subtract(
-                                paidInstallment.getFeesPaid());
-                        if (remainingPayment.doubleValue() >= feesToBePaid.doubleValue()) {
-                            remainingPayment = remainingPayment.subtract(feesToBePaid);
+                        BigDecimal feesPaid = BigDecimal.valueOf(installmentDetails.getFees());
+                        if (remainingPayment.doubleValue() >= installmentDetails.getFees()) {
+                            remainingPayment = remainingPayment.subtract(feesPaid);
                         } else {
-                            feesToBePaid = remainingPayment;
-                            remainingPayment = remainingPayment.subtract(feesToBePaid);
+                            feesPaid = remainingPayment;
+                            remainingPayment = remainingPayment.subtract(feesPaid);
                         }
 
-                        BigDecimal interestToBePaid = BigDecimal.valueOf(installmentDetails.getInterest()).subtract(
-                                paidInstallment.getInterestPaid());
-                        if (remainingPayment.doubleValue() >= interestToBePaid.doubleValue()) {
-                            remainingPayment = remainingPayment.subtract(interestToBePaid);
+                        BigDecimal interestPaid = BigDecimal.valueOf(installmentDetails.getInterest());
+                        if (remainingPayment.doubleValue() >= installmentDetails.getInterest()) {
+                            remainingPayment = remainingPayment.subtract(interestPaid);
                         } else {
-                            interestToBePaid = remainingPayment;
-                            remainingPayment = remainingPayment.subtract(interestToBePaid);
+                            interestPaid = remainingPayment;
+                            remainingPayment = remainingPayment.subtract(interestPaid);
                         }
 
-                        BigDecimal principalToBePaid = BigDecimal.valueOf(installmentDetails.getPrincipal()).subtract(
-                                paidInstallment.getPrincipalPaid());
-                        if (remainingPayment.doubleValue() >= principalToBePaid.doubleValue()) {
-                            remainingPayment = remainingPayment.subtract(principalToBePaid);
+                        BigDecimal principalPaid = BigDecimal.valueOf(installmentDetails.getPrincipal());
+                        if (remainingPayment.doubleValue() >= installmentDetails.getPrincipal()) {
+                            remainingPayment = remainingPayment.subtract(principalPaid);
                         } else {
-                            principalToBePaid = remainingPayment;
-                            remainingPayment = remainingPayment.subtract(principalToBePaid);
+                            principalPaid = remainingPayment;
+                            remainingPayment = remainingPayment.subtract(principalPaid);
                         }
 
-                        BigDecimal totalInstallmentPaid = feesToBePaid.add(interestToBePaid).add(principalToBePaid);
+                        BigDecimal totalInstallmentPaid = feesPaid.add(interestPaid).add(principalPaid);
 
-                        paidInstallment.setLastPaymentDate(paymentDate);
-                        paidInstallment.setFeesPaid(paidInstallment.getFeesPaid().add(feesToBePaid));
-                        paidInstallment.setInterestPaid(paidInstallment.getInterestPaid().add(interestToBePaid));
-                        paidInstallment.setPrincipalPaid(paidInstallment.getPrincipalPaid().add(principalToBePaid));
-                        paidInstallment.setTotalInstallmentPaid(paidInstallment.getTotalInstallmentPaid().add(
-                                totalInstallmentPaid));
+                        LoanInstallmentPostPayment loanInstallmentPostPayment = new LoanInstallmentPostPayment(
+                                installmentDetails.getInstallmentNumber(), dueDate, paymentDate, feesPaid,
+                                interestPaid, principalPaid, totalInstallmentPaid, installmentTotalAmount);
+                        installmentsPostPayment.add(loanInstallmentPostPayment);
+                    } else {
+                        LoanInstallmentPostPayment paidInstallment = installmentsPostPayment.get(installmentIndex);
+                        if (paidInstallment.isNotFullyPaid()) {
+                            BigDecimal feesToBePaid = BigDecimal.valueOf(installmentDetails.getFees()).subtract(
+                                    paidInstallment.getFeesPaid());
+                            if (remainingPayment.doubleValue() >= feesToBePaid.doubleValue()) {
+                                remainingPayment = remainingPayment.subtract(feesToBePaid);
+                            } else {
+                                feesToBePaid = remainingPayment;
+                                remainingPayment = remainingPayment.subtract(feesToBePaid);
+                            }
+
+                            BigDecimal interestToBePaid = BigDecimal.valueOf(installmentDetails.getInterest())
+                                    .subtract(paidInstallment.getInterestPaid());
+                            if (remainingPayment.doubleValue() >= interestToBePaid.doubleValue()) {
+                                remainingPayment = remainingPayment.subtract(interestToBePaid);
+                            } else {
+                                interestToBePaid = remainingPayment;
+                                remainingPayment = remainingPayment.subtract(interestToBePaid);
+                            }
+
+                            BigDecimal principalToBePaid = BigDecimal.valueOf(installmentDetails.getPrincipal())
+                                    .subtract(paidInstallment.getPrincipalPaid());
+                            if (remainingPayment.doubleValue() >= principalToBePaid.doubleValue()) {
+                                remainingPayment = remainingPayment.subtract(principalToBePaid);
+                            } else {
+                                principalToBePaid = remainingPayment;
+                                remainingPayment = remainingPayment.subtract(principalToBePaid);
+                            }
+
+                            BigDecimal totalInstallmentPaid = feesToBePaid.add(interestToBePaid).add(principalToBePaid);
+
+                            paidInstallment.setLastPaymentDate(paymentDate);
+                            paidInstallment.setFeesPaid(paidInstallment.getFeesPaid().add(feesToBePaid));
+                            paidInstallment.setInterestPaid(paidInstallment.getInterestPaid().add(interestToBePaid));
+                            paidInstallment.setPrincipalPaid(paidInstallment.getPrincipalPaid().add(principalToBePaid));
+                            paidInstallment.setTotalInstallmentPaid(paidInstallment.getTotalInstallmentPaid().add(
+                                    totalInstallmentPaid));
+                        }
                     }
+                    installmentIndex++;
                 }
-                installmentIndex++;
+                paymentIndex++;
             }
-            paymentIndex++;
         }
 
         // remaining running balance
@@ -357,7 +371,39 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
         }
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DLS_DEAD_LOCAL_STORE"},justification = "")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DLS_DEAD_LOCAL_STORE" }, justification = "")
+    private void prevalidateActualPaymentDateIsNonNull(MessageContext messageContext) {
+        Integer installmentIndex = 1;
+        for (DateTime dueDate : this.actualPaymentDates) {
+            if (dueDate == null) {
+                String defaultMessage = "The actual payment date field for installment {0} is blank.";
+                ErrorEntry fieldError = new ErrorEntry("installment.actualpaymentdate.blank.and.invalid",
+                        "installmentAmounts", defaultMessage);
+                fieldError.setArgs(Arrays.asList(installmentIndex.toString()));
+
+                addErrorMessageToContext(messageContext, fieldError);
+            }
+            installmentIndex++;
+        }
+    }
+
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DLS_DEAD_LOCAL_STORE" }, justification = "")
+    private void prevalidateDueDateIsNonNull(MessageContext messageContext) {
+        Integer installmentIndex = 1;
+        for (DateTime dueDate : this.installments) {
+            if (dueDate == null) {
+                String defaultMessage = "The due date field for installment {0} is blank.";
+                ErrorEntry fieldError = new ErrorEntry("installment.duedate.blank.and.invalid", "installmentAmounts",
+                        defaultMessage);
+                fieldError.setArgs(Arrays.asList(installmentIndex.toString()));
+
+                addErrorMessageToContext(messageContext, fieldError);
+            }
+            installmentIndex++;
+        }
+    }
+
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DLS_DEAD_LOCAL_STORE" }, justification = "")
     private void prevalidateTotalIsNonNull(MessageContext messageContext) {
         Integer installmentIndex = 1;
         for (Number totalAmount : this.installmentAmounts) {
@@ -373,7 +419,7 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
         }
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DLS_DEAD_LOCAL_STORE"},justification = "")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DLS_DEAD_LOCAL_STORE" }, justification = "")
     private void prevalidateAmountPaidIsNonNull(MessageContext messageContext) {
         Integer installmentIndex = 1;
         for (Number amountPaid : this.actualPaymentAmounts) {
