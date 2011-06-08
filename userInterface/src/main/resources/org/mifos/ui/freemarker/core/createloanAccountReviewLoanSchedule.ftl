@@ -230,6 +230,9 @@ $(function() {
 		[/#list]
 	</tbody>
 </table>
+<form action="${flowExecutionUrl}" method="post">
+	[@form.submitButton label="widget.form.buttonLabel.editcashflowinfo" id="createloanpreview.button.edit.cashflow" webflowEvent="editCashflow" /]
+</form>
 [/#if]
 
 [#if loanProductReferenceData.variableInstallmentsAllowed]
