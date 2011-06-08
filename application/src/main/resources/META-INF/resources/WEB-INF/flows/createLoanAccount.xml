@@ -98,6 +98,15 @@
         <transition on="cancel" to="cancel" bind="false" validate="false" history="invalidate"/>
     </view-state>
     
+    <view-state id="editCashflow" view="createLoanAccountCashFlow" model="cashFlow">
+        <transition on="capture" to="summaryOfCashflow" validate="true">
+        	<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean)" result="flowScope.loanScheduleReferenceData"/>
+    	    <evaluate expression="cashFlowController.retrieveMonthlyCashflowDetails(flowScope.cashFlow, flowScope.loanScheduleReferenceData.disbursementDate, flowScope.loanScheduleReferenceData.loanAmount)" result="flowScope.monthlyCashFlowDetails"/>
+            <evaluate expression="loanAccountController.retrieveCashflowSummaryDetails(cashFlowSummaryFormBean, flowScope.cashFlowSettings, flowScope.monthlyCashFlowDetails, flowScope.loanScheduleReferenceData, flowScope.productId, loanAccountFormBean)" result="flowScope.cashflowSummaryDetails"/>
+        </transition>
+        <transition on="cancel" to="cancel" bind="false" validate="false" history="invalidate"/>
+    </view-state>
+    
     <view-state id="calculateAndReviewLoanSchedule" view="createloanAccountReviewLoanSchedule" model="loanScheduleFormBean">
     	<on-entry>
 	    	<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean)" result="flowScope.loanScheduleReferenceData"/>
@@ -114,6 +123,7 @@
     </view-state>
     
     <view-state id="summaryOfCashflow" view="createloanAccountReviewLoanSchedule" model="cashFlowSummaryFormBean">
+    	<transition on="editCashflow" to="editCashflow" validate="false"/>
         <transition on="validate" to="summaryOfCashflow" validate="true" />
         <transition on="preview" to="previewStep" validate="true" />
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
