@@ -184,10 +184,6 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         Assert.assertTrue(selenium.isTextPresent("You must select at least two individual members in the \"Individual Details\" section in order to successfully create a loan."));
     }
     
-    /**
-     * FIXME - keithw - stepping into questionaire page rather than reivew installments page
-     */
-    @Test(enabled = false)
     // http://mifosforge.jira.com/browse/MIFOSTEST-133
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void checkGLIMLoanCreatedBySaveForLater() throws Exception {
@@ -234,9 +230,6 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
    }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    /**
-     * FIXME - keithw - stepping into questionaire page rather than reivew installments page
-     */
     @Test(enabled = false)
     public void newWeeklyGLIMAccount() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
@@ -248,10 +241,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPage();
     }
 
-    /**
-     * FIXME - keithw - calculated amount from javascript isnt to one decimal, check with kay.
-     */
-    @Test(enabled = false)
+    @Test(enabled = true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void checkGLIMAccountTotalCalculationWithDecimal() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();

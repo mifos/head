@@ -46,11 +46,15 @@ public class DefineHiddenMandatoryFieldsPage extends MifosPage {
     public void uncheckHideRelativeSecondLastName(){
         selenium.uncheck("hideClientSpouseFatherSecondLastName");
     }
+    
+    public void checkMandatoryLoanAccountPurpose(){
+        selenium.check("mandatoryLoanAccountPurpose");
+    }
 
     public void verifyPage(){
         verifyPage("defineMandatoryHiddenFields");
     }
-
+    
     public void verifyAccessDenied(){
         Assert.assertEquals("Access Denied", selenium.getText("accessDeniedHeading") );
         Assert.assertEquals("You are not allowed to access this page.", selenium.getText("accessDeniedMessage"));

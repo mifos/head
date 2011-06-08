@@ -180,7 +180,7 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         selenium.type(totalCapital, capital);
         selenium.type(totalLiability, liability);
         clickContinue();
-        Assert.assertTrue(selenium.isTextPresent("Indebtedness rate of the client is 49.99 % which should be lesser than the allowable value of " + maxValue + " %"));
+        Assert.assertTrue(selenium.isTextPresent("Indebtedness rate of the client is 49.99 % which is greater than allowed value of " + maxValue + " %"));
         return this;
     }
 
