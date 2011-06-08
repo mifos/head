@@ -2427,7 +2427,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         if (repaymentCapacity == null || repaymentCapacity == 0) {
             return;
         }
-        Double calculatedRepaymentCapacity = totalBalance.add(loanAmount).multiply(CashFlowConstants.HUNDRED).divide(totalInstallmentAmount, 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        Double calculatedRepaymentCapacity = totalBalance.multiply(CashFlowConstants.HUNDRED).divide(totalInstallmentAmount, 2, BigDecimal.ROUND_HALF_UP).doubleValue();
         if (calculatedRepaymentCapacity < repaymentCapacity) {
             errors.addError(AccountConstants.REPAYMENT_CAPACITY_LESS_THAN_ALLOWED, new String[]{calculatedRepaymentCapacity.toString(), repaymentCapacity.toString()});
         }
