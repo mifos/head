@@ -266,14 +266,14 @@ public class EditLoanProductTest extends UiTestCaseBase {
         applicationDatabaseOperation.updateLSIM(0);
     }
 
-    @Test(enabled=true)
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlow() throws Exception {
         createNewLoanProductAndNavigateToEditLoanPage();
         setAndValidateCashFlow("89.9", "45.02", "150.11");
     }
 
-    @Test(enabled=true)
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowWithNullValue() throws Exception {
         createNewLoanProductAndNavigateToEditLoanPage();

@@ -85,7 +85,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    @Test(enabled=true)
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyCapturingResponsesDuringLoanDisburse() throws Exception {
 
@@ -293,7 +293,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    @Test(enabled=true)
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyResponsesDuringLoanAccountApproval() throws Exception {
         questionGroupTestHelper.markQuestionGroupAsActive("QGForApproveLoan1");
