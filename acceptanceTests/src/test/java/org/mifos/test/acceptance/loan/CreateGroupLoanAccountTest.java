@@ -258,7 +258,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         Assert.assertFalse(selenium.isTextPresent("This is an invalid Disbursement date."));
     }
     
-    @Test(enabled=true)
+    @Test(enabled=false)
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException"})
     public void newMonthlyGroupLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
         //Given
@@ -285,7 +285,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
     }
 
-    @Test(enabled=true)
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newMonthlyGroupLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
         homePage = loginSuccessfully();
@@ -307,7 +307,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
     }
     
-    @Test(enabled=true)
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void tryCreateGroupLoanWithGlimEnabledWithoutMandatoryPurposeOfLoan() throws Exception {
         applicationDatabaseOperation.updateGLIM(1);

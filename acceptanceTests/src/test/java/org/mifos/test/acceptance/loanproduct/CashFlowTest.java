@@ -81,7 +81,7 @@ public class CashFlowTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=true)
+    @Test(enabled=false)
     public void verifyCashFlowWithNullValue() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         createAndValidateLoanProductWithCashFlow("", formParameters, "", "", false);
