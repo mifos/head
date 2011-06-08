@@ -297,7 +297,7 @@ public class LoanScheduleFormBean implements Serializable {
             }
             
             if (lastPaymentDate != null) {
-                if (!paymentDate.isEqual(lastPaymentDate) || !paymentDate.isAfter(lastPaymentDate)) {
+                if (!paymentDate.isEqual(lastPaymentDate) && !paymentDate.isAfter(lastPaymentDate)) {
                     String defaultMessage = "The payment date cannot be before the previous payment date";
                     ErrorEntry fieldError = new ErrorEntry("paymentDate.before.lastPaymentDate.invalid", "disbursementDate", defaultMessage);
                     fieldError.setArgs(Arrays.asList(installment));
