@@ -85,10 +85,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    /*
-     * FIXME - keithw - disabled 
-     */
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyCapturingResponsesDuringLoanDisburse() throws Exception {
 
@@ -111,7 +108,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
 
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "07/02/2011");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "20");
-            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].values2", "three");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].valuesAsArray", "three");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "free text2");
 
             LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(createLoanAccountSearchParameters);
@@ -296,10 +293,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    /*
-     * FIXME - keithw - disabled 
-     */
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyResponsesDuringLoanAccountApproval() throws Exception {
         questionGroupTestHelper.markQuestionGroupAsActive("QGForApproveLoan1");
@@ -321,7 +315,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
 
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "07/02/2011");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "20");
-            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].values2", "three");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].valuesAsArray", "three");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "free text2");
 
             CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();

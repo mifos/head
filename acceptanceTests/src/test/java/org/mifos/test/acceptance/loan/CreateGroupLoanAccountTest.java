@@ -28,6 +28,8 @@ import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.DefineHiddenMandatoryFieldsPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountPreviewPage;
@@ -256,7 +258,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         Assert.assertFalse(selenium.isTextPresent("This is an invalid Disbursement date."));
     }
     
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException"})
     public void newMonthlyGroupLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
         //Given
@@ -283,7 +285,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
     }
 
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newMonthlyGroupLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
         homePage = loginSuccessfully();
@@ -304,12 +306,8 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
 
         createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
     }
-
-    /*
-     * FIXME - keithw - creating group loans without mandatory loan purpose does cause validation
-     *                  but is not triggered in automated test for some reason.
-     */
-    @Test(enabled=false)
+    
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void tryCreateGroupLoanWithGlimEnabledWithoutMandatoryPurposeOfLoan() throws Exception {
         applicationDatabaseOperation.updateGLIM(1);
@@ -321,9 +319,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
             CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
 
             loanAccountEntryPage.selectTwoClientsForGlim();
-
-            loanAccountEntryPage = loanAccountEntryPage.clickContinueButExpectValidationFailure();
-            loanAccountEntryPage.verifyError("Please specify loan purpose for member 1.");
+            loanAccountEntryPage.navigateToReviewInstallmentsPage();
         } finally {
             applicationDatabaseOperation.updateGLIM(0);
         }
@@ -334,6 +330,12 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     public void tryCreateGroupLoanWithMandatoryPurposeOfLoan() throws Exception {
         applicationDatabaseOperation.updateGLIM(1);
         try {
+        	AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        	DefineHiddenMandatoryFieldsPage defineHiddenMandatoryFieldsPage = adminPage.navigateToDefineHiddenMandatoryFields();
+            defineHiddenMandatoryFieldsPage.checkMandatoryLoanAccountPurpose();
+            defineHiddenMandatoryFieldsPage.submit();
+            adminPage.navigateToClientsAndAccountsPageUsingHeaderTab();
+            
             CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
             searchParameters.setSearchString("Default Group");
             searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
@@ -341,6 +343,8 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
             CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
 
             loanAccountEntryPage.selectTwoClientsForGlim();
+            loanAccountEntryPage = loanAccountEntryPage.clickContinueButExpectValidationFailure();
+            loanAccountEntryPage.verifyError("Please specify loan purpose for member 1.");
             loanAccountEntryPage.selectPurposeForGlim();
             loanAccountEntryPage.clickContinue();
         } finally {

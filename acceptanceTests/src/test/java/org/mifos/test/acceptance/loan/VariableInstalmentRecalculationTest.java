@@ -115,7 +115,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
     /*
      * supressed this test for now. cant see anything wrong functionality. not sure why timing out after pressing button. - keithw
      */
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void verifyPrincipalAndInterestRecalculation() throws Exception {
         int noOfInstallments = 4;
         int loanAmount = 1000;

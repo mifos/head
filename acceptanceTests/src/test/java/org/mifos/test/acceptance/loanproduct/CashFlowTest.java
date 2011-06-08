@@ -81,7 +81,7 @@ public class CashFlowTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void verifyCashFlowWithNullValue() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         createAndValidateLoanProductWithCashFlow("", formParameters, "", "", false);
@@ -138,7 +138,7 @@ public class CashFlowTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void verifyWarningsForVariableInstallmentLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -153,10 +153,7 @@ public class CashFlowTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    /*
-     * cant find disbursementDateDD element?
-     */
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void verifyCashFlowForVariableInstallmentLoan() throws Exception {
         String minRC = "999.99";
         applicationDatabaseOperation.updateLSIM(1);
