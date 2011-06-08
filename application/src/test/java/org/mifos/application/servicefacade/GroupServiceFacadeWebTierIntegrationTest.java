@@ -182,8 +182,6 @@ public class GroupServiceFacadeWebTierIntegrationTest extends MifosIntegrationTe
         Short officeId2 = branch2.getOfficeId();
         CustomerDetailsDto group2Details = createGroup("group2", officeId2);
         CustomerDetailsDto newlyCreatedCustomerDetails = createClient(group1Details.getId().toString());
-        // flush and clear the session to set us up for a transfer starting from a clean session
-        StaticHibernateUtil.flushAndClearSession();
 
         GroupBO group1 = customerDao.findGroupBySystemId(group1Details.getGlobalCustNum());
         groupServiceFacade.transferGroupToBranch(group1Details.getGlobalCustNum(), officeId2, group1.getVersionNo());
