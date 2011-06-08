@@ -68,7 +68,7 @@ public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
                     officeDao.validateNoOfficesExistGivenOfficeLevel(OfficeLevel.REGIONALOFFICE);
                 }
                 this.officeDao.save(entity);
-                transactionHelper.flushSession();
+                transactionHelper.flushAndClearSession();
             }
 
             if (updateRequest.isSubRegionalOfficeEnabled() != existingOfficeLevels.isSubRegionalOfficeEnabled()) {
@@ -79,7 +79,7 @@ public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
                 }
 
                 this.officeDao.save(entity);
-                transactionHelper.flushSession();
+                transactionHelper.flushAndClearSession();
             }
 
             if (updateRequest.isAreaOfficeEnabled() != existingOfficeLevels.isAreaOfficeEnabled()) {
@@ -90,7 +90,7 @@ public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
                 }
 
                 this.officeDao.save(entity);
-                transactionHelper.flushSession();
+                transactionHelper.flushAndClearSession();
             }
 
             transactionHelper.commitTransaction();

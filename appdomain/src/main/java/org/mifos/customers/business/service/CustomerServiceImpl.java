@@ -962,7 +962,7 @@ public class CustomerServiceImpl implements CustomerService {
             client.updateDetails(userContext);
             customerDao.save(client);
 
-            hibernateTransactionHelper.flushSession();
+            hibernateTransactionHelper.flushAndClearSession();
 
             if (regenerateSchedules) {
                 client = customerDao.findClientBySystemId(clientGlobalCustNum);
