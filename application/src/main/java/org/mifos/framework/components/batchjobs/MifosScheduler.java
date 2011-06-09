@@ -21,75 +21,47 @@
 package org.mifos.framework.components.batchjobs;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.Collection;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.hibernate.SessionFactory;
-import org.hibernate.connection.ConnectionProvider;
-import org.hibernate.engine.SessionFactoryImplementor;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.util.ConfigurationLocator;
-import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
-import org.quartz.impl.StdSchedulerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.BatchStatus;
+import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobInstance;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.configuration.JobFactory;
 import org.springframework.batch.core.configuration.JobLocator;
 import org.springframework.batch.core.configuration.JobRegistry;
-import org.springframework.batch.core.configuration.JobFactory;
-import org.springframework.batch.core.configuration.support.MapJobRegistry;
-import org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor;
 import org.springframework.batch.core.explore.JobExplorer;
-import org.springframework.batch.core.explore.support.SimpleJobExplorer;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.support.SimpleJobLauncher;
-import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.batch.core.repository.dao.JdbcJobInstanceDao;
-import org.springframework.batch.core.repository.dao.JdbcJobExecutionDao;
-import org.springframework.batch.core.repository.dao.JdbcStepExecutionDao;
-import org.springframework.batch.core.repository.dao.JdbcExecutionContextDao;
-import org.springframework.batch.core.repository.support.SimpleJobRepository;
 import org.springframework.batch.core.job.SimpleJob;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.BatchStatus;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.step.tasklet.TaskletStep;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.core.step.tasklet.TaskletStep;
 import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.scheduling.quartz.JobDetailBean;
-import org.springframework.orm.hibernate3.LocalDataSourceConnectionProvider;
-import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.core.io.Resource;
-import org.springframework.core.task.SyncTaskExecutor;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
-import org.springframework.jdbc.support.incrementer.MySQLMaxValueIncrementer;
+import org.springframework.scheduling.quartz.JobDetailBean;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 public class MifosScheduler {
 
@@ -117,17 +89,7 @@ public class MifosScheduler {
                 jobLauncher = (JobLauncher)springTaskContext.getBean(SchedulerConstants.JOB_LAUNCHER_BEAN_NAME);
                 jobLocator = (JobLocator)springTaskContext.getBean(SchedulerConstants.JOB_LOCATOR_BEAN_NAME);
             } else { // old legacy Mifos Scheduler
-                StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
-                Resource config = getQuartzSchedulerConfigurationResource();
-                InputStream is = config.getInputStream();
-                schedulerFactory.initialize(is);
-                is.close();
-                scheduler = schedulerFactory.getScheduler();
-                if (!scheduler.isInStandbyMode()) {
-                    scheduler.standby();
-                }
-                registerTasksOldConfigurationFile(document);
-                scheduler.start();
+                throw new MifosRuntimeException("The legacy custom Mifos format for task.xml is no longer supported.  Please convert your custom tasks.xml file to the new format.  The tasks.xml that ships with Mifos can be used as an example.");
             }
         } catch (Exception e) {
             throw new TaskSystemException(e);
@@ -303,138 +265,6 @@ public class MifosScheduler {
         }
     }
 
-    /**
-     * This method reads all the task from an xml file and registers them with
-     * the MifosScheduler
-     *
-     * @param document Task configuration document
-     * @throws TaskSystemException when something goes wrong
-     */
-    @Deprecated
-    private void registerTasksOldConfigurationFile(Document document) throws TaskSystemException {
-        try {
-            logger.warn("Old format task.xml configuration file is deprecated. Please configure scheduler using spring managed beans.");
-            NodeList rootSchedulerTasks = document.getElementsByTagName(SchedulerConstants.SCHEDULER_TASKS);
-            Element rootNodeName = (Element) rootSchedulerTasks.item(0);
-            NodeList collectionOfScheduledTasks = rootNodeName.getElementsByTagName(SchedulerConstants.SCHEDULER);
-
-            DataSource dataSource = SessionFactoryUtils.getDataSource(StaticHibernateUtil.getSessionFactory());
-            SimpleJdbcTemplate jdbcTemplate = new SimpleJdbcTemplate(dataSource);
-
-            JobRegistry jobRegistry = new MapJobRegistry();
-            this.jobLocator = jobRegistry;
-
-            JdbcJobInstanceDao jobInstanceDao = new JdbcJobInstanceDao();
-            jobInstanceDao.setJdbcTemplate(jdbcTemplate);
-            jobInstanceDao.setJobIncrementer(new MySQLMaxValueIncrementer(dataSource, "BATCH_JOB_SEQ", "id"));
-            jobInstanceDao.afterPropertiesSet();
-
-            JdbcJobExecutionDao jobExecutionDao = new JdbcJobExecutionDao();
-            jobExecutionDao.setJdbcTemplate(jdbcTemplate);
-            jobExecutionDao.setJobExecutionIncrementer(new MySQLMaxValueIncrementer(dataSource, "BATCH_JOB_EXECUTION_SEQ", "id"));
-            jobExecutionDao.afterPropertiesSet();
-
-            JdbcStepExecutionDao stepExecutionDao = new JdbcStepExecutionDao();
-            stepExecutionDao.setJdbcTemplate(jdbcTemplate);
-            stepExecutionDao.setStepExecutionIncrementer(new MySQLMaxValueIncrementer(dataSource, "BATCH_STEP_EXECUTION_SEQ", "id"));
-            stepExecutionDao.afterPropertiesSet();
-
-            JdbcExecutionContextDao executionContextDao = new JdbcExecutionContextDao();
-            executionContextDao.setJdbcTemplate(jdbcTemplate);
-            executionContextDao.afterPropertiesSet();
-
-            JobRepository jobRepository = new SimpleJobRepository(jobInstanceDao, jobExecutionDao, stepExecutionDao, executionContextDao);
-            this.jobRepository = jobRepository;
-
-            SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
-            jobLauncher.setJobRepository(jobRepository);
-            jobLauncher.setTaskExecutor(new SyncTaskExecutor());
-            jobLauncher.afterPropertiesSet();
-            this.jobLauncher = jobLauncher;
-
-            JobExplorer jobExplorer = new SimpleJobExplorer(jobInstanceDao, jobExecutionDao, stepExecutionDao, executionContextDao);
-            this.jobExplorer = jobExplorer;
-
-            Map<String, Object> jobData = new HashMap<String, Object>();
-            jobData.put("jobLocator", jobRegistry);
-            jobData.put("jobLauncher", jobLauncher);
-            jobData.put("jobExplorer", jobExplorer);
-            jobData.put("jobRepository", jobRepository);
-
-            JobRegistryBeanPostProcessor jobRegistryProcessor = new JobRegistryBeanPostProcessor();
-            jobRegistryProcessor.setJobRegistry(jobRegistry);
-            ResourcelessTransactionManager transactionManager = new ResourcelessTransactionManager();
-
-            Date loanArrearsTaskInitialTime = null;
-            Long loanArrearsTaskDelayTime = null;
-            boolean portfolioAtRiskTaskExists = false;
-
-            for (int i = 0; i < collectionOfScheduledTasks.getLength(); i++) {
-                Element scheduledTask = (Element) collectionOfScheduledTasks.item(i);
-                Element subNodeName1 = (Element) scheduledTask.getElementsByTagName(SchedulerConstants.TASK_CLASS_NAME)
-                        .item(0);
-                String taskName = ((Text) subNodeName1.getFirstChild()).getData().trim();
-                Element subNodeName2 = (Element) scheduledTask.getElementsByTagName(SchedulerConstants.INITIAL_TIME)
-                        .item(0);
-                String initialTime = ((Text) subNodeName2.getFirstChild()).getData().trim();
-                Element subNodeName3;
-                String delayTime = null;
-                if ((scheduledTask.getElementsByTagName(SchedulerConstants.DELAY_TIME)) != null) {
-                    subNodeName3 = (Element) scheduledTask.getElementsByTagName(SchedulerConstants.DELAY_TIME).item(0);
-                    if (subNodeName3.getFirstChild() != null) {
-                        delayTime = ((Text) subNodeName3.getFirstChild()).getData().trim();
-                    }
-                }
-                if (Long.parseLong(delayTime) < 86400) {
-                    throw new IllegalArgumentException("Please specify the delay time >= 86400(1 day)");
-                }
-                if(scheduler.getJobDetail(taskName, Scheduler.DEFAULT_GROUP) != null) {
-                    scheduler.unscheduleJob(taskName, Scheduler.DEFAULT_GROUP);
-                }
-                if ("LoanArrearsTask".equals(taskName)) {
-                    loanArrearsTaskInitialTime = parseInitialTime(initialTime);
-                    loanArrearsTaskDelayTime = Long.parseLong(delayTime) * 1000;
-                    continue;
-                }
-                if ("PortfolioAtRiskTask".equals(taskName)) {
-                    portfolioAtRiskTaskExists = true;
-                    continue;
-                }
-                schedule(taskName, parseInitialTime(initialTime), Long.parseLong(delayTime) * 1000, jobRegistry, jobRepository, jobData, transactionManager);
-            }
-            if (loanArrearsTaskInitialTime != null) {
-                if (portfolioAtRiskTaskExists) {
-                    scheduleLoanArrearsAndPortfolioAtRisk(loanArrearsTaskInitialTime, loanArrearsTaskDelayTime, jobRegistry, jobRepository, jobData, transactionManager);
-                }
-                else {
-                    schedule("LoanArrearsTask", loanArrearsTaskInitialTime, loanArrearsTaskDelayTime, jobRegistry, jobRepository, jobData, transactionManager);
-                }
-            }
-        } catch (Exception e) {
-            throw new TaskSystemException(e);
-        }
-    }
-
-    /**
-     *  This is a helper method that parses the initialtime string and returns a
-     * valid Date time.
-     *
-     * @param initialTime String describing initial time
-     * @return Valid Date time
-     */
-    private Date parseInitialTime(String initialTime) {
-        int firstIndex = initialTime.indexOf(':');
-        int lastIndex = initialTime.indexOf(':', firstIndex);
-        Calendar time = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
-        int hourOfTheDay = Integer.parseInt(initialTime.substring(0, firstIndex));
-        int minutes = Integer.parseInt(initialTime.substring(firstIndex + 1, lastIndex + firstIndex + 1));
-        int seconds = Integer.parseInt(initialTime.substring(lastIndex + firstIndex + 2, initialTime.length()));
-        time.set(Calendar.HOUR_OF_DAY, hourOfTheDay);
-        time.set(Calendar.MINUTE, minutes);
-        time.set(Calendar.SECOND, seconds);
-        return time.getTime();
-    }
-
     public List<String> getTaskNames() throws TaskSystemException {
         try {
             List<String> taskNames = new ArrayList<String>();
@@ -580,12 +410,6 @@ public class MifosScheduler {
     private Resource getTaskConfigurationResource() throws IOException {
         Resource configuration = getConfigurationLocator().getResource(SchedulerConstants.CONFIGURATION_FILE_NAME);
         logger.info("Reading task configuration from: " + configuration.getDescription());
-        return configuration;
-    }
-
-    private Resource getQuartzSchedulerConfigurationResource() throws IOException {
-        Resource configuration = getConfigurationLocator().getResource(SchedulerConstants.SCHEDULER_CONFIGURATION_FILE_NAME);
-        logger.info("Reading scheduler configuration from: " + configuration.getDescription());
         return configuration;
     }
 
