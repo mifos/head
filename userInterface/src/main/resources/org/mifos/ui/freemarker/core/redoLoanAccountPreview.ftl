@@ -266,7 +266,7 @@
 <table style="margin-bottom: 15px;" id="installments">
 		<thead>
 		<tr>
-			<th style="border-top: 1px solid grey; width: 50px;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
 			<th style="border-top: 1px solid grey; width: 75px;">[@spring.message "reviewInstallments.dueDateHeading" /]</th>
 			<th style="border-top: 1px solid grey; width: 75px;">[@spring.message "reviewInstallments.redo.datePaidHeading" /]</th>
 			<th style="border-top: 1px solid grey; width: 50px;">[@spring.message "reviewInstallments.principalHeading" /]</th>
@@ -325,7 +325,7 @@
 <table style="margin-bottom: 15px; width: 515px;" id="futureInstallments">
 		<thead>
 		<tr>
-			<th style="border-top: 1px solid grey; width: 50px;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
 			<th style="border-top: 1px solid grey; width: 75px;">[@spring.message "reviewInstallments.dueDateHeading" /]</th>
 			<th style="border-top: 1px solid grey; width: 75px;">[@spring.message "reviewInstallments.redo.datePaidHeading" /]</th>
 			<th style="border-top: 1px solid grey; width: 50px;">[@spring.message "reviewInstallments.principalHeading" /]</th>
