@@ -20,8 +20,10 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.test.context.ContextConfiguration;
 
-@Ignore
+@ContextConfiguration(locations = { "/integration-test-context.xml", "/org/mifos/config/resources/task.xml", "/org/mifos/config/resources/applicationContext.xml"})
 public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
 
     MifosScheduler mifosScheduler;
@@ -61,6 +63,7 @@ public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Ignore
     @Test
     public void testRunningSpecificTaskOnOldConfigurationFile() throws Exception {
         mifosScheduler = getMifosSchedulerOldConfigurationFile("org/mifos/framework/components/batchjobs/old-task.xml", "org/mifos/framework/components/batchjobs/quartz.properties");
@@ -73,6 +76,7 @@ public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertTrue(jobName.equals(executedJobs.get(0)));
     }
 
+    @Ignore
     @Test
     public void testRunningAllTasksOnOldConfigurationFile() throws Exception {
         mifosScheduler = getMifosSchedulerOldConfigurationFile("org/mifos/framework/components/batchjobs/old-task.xml", "org/mifos/framework/components/batchjobs/quartz2.properties");
