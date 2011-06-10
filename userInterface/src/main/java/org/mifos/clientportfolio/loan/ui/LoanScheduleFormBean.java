@@ -142,8 +142,9 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
 
             if (!messageContext.hasErrorMessages()) {
 
+                boolean resetRedoLoanAccountDetails = false;
                 LoanScheduleDto recalculatedLoanSchedule = this.loanAccountController.retrieveLoanSchedule(customerId,
-                        loanAccountFormBean.getProductId(), loanAccountFormBean, this);
+                        loanAccountFormBean.getProductId(), loanAccountFormBean, this, resetRedoLoanAccountDetails);
 
                 // set values on fields
                 this.variableInstallments = recalculatedLoanSchedule.getInstallments();

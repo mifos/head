@@ -156,7 +156,7 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
             if (!messageContext.hasErrorMessages()) {
 
                 LoanScheduleDto recalculatedLoanSchedule = this.loanAccountController.retrieveLoanSchedule(customerId,
-                        productId, loanAccountFormBean, this);
+                        productId, loanAccountFormBean, this, false);
 
                 // set values on fields
                 this.variableInstallments = recalculatedLoanSchedule.getInstallments();
