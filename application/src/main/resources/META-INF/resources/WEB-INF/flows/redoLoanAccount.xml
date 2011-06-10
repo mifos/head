@@ -93,12 +93,12 @@
     
     <view-state id="captureCashFlowDetails" view="createLoanAccountCashFlow" model="cashFlow">
     	<on-entry>
-    		<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean)" result="flowScope.loanScheduleReferenceData"/>
+    		<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean, true)" result="flowScope.loanScheduleReferenceData"/>
     		<evaluate expression="loanAccountController.retrieveCashFlowSettings(flowScope.loanScheduleReferenceData, flowScope.productId)" result="flowScope.cashFlowSettings"/>
     		<evaluate expression="cashFlowController.retrieveCashFlowForm(flowScope.cashFlowSettings)" result="flowScope.cashFlow"/>
     	</on-entry>
         <transition on="capture" to="summaryOfCashflow" validate="true">
-        	<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean)" result="flowScope.loanScheduleReferenceData"/>
+        	<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean, true)" result="flowScope.loanScheduleReferenceData"/>
     	    <evaluate expression="cashFlowController.retrieveMonthlyCashflowDetails(flowScope.cashFlow, flowScope.loanScheduleReferenceData.disbursementDate, flowScope.loanScheduleReferenceData.loanAmount)" result="flowScope.monthlyCashFlowDetails"/>
             <evaluate expression="loanAccountController.retrieveCashflowSummaryDetails(cashFlowSummaryFormBean, flowScope.cashFlowSettings, flowScope.monthlyCashFlowDetails, flowScope.loanScheduleReferenceData, flowScope.productId, loanAccountFormBean)" result="flowScope.cashflowSummaryDetails"/>
         </transition>
@@ -115,7 +115,7 @@
     
     <view-state id="calculateAndReviewLoanSchedule" view="redoloanAccountReviewLoanSchedule" model="loanScheduleFormBean">
     	<on-entry>
-	    	<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean)" result="flowScope.loanScheduleReferenceData"/>
+	    	<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean, true)" result="flowScope.loanScheduleReferenceData"/>
         </on-entry>
         <transition on="validate" to="reviewLoanSchedule" validate="true"/>
         <transition on="preview" to="previewStep" />

@@ -446,7 +446,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             final MeetingBO customerMeeting = customer.getCustomerMeetingValue();
             for (LoanOfferingBO loanProduct : loanOfferings) {
                 if (loanProduct.getLoanOfferingMeetingValue().hasSameRecurrenceAs(customerMeeting)
-                        && customerMeeting.recursOnMultipleOf(loanProduct.getLoanOfferingMeetingValue())) {
+                        && customerMeeting.recursOnMultipleOf(loanProduct.getLoanOfferingMeetingValue()) && !loanProduct.isVariableInstallmentsAllowed()) {
                     applicableLoanProducts.add(loanProduct);
                 }
             }
