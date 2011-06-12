@@ -5,10 +5,10 @@
     <groupId>org.mifos</groupId>
     <!-- TODO Could rename this module from mifos-webapp to mifos-application (in line with physical module folder name!),
          now that we have a mifos-war, and that this is actually not a 'webapp' (?!) anymore, for clarity? -->
-    <artifactId>mifos-webapp</artifactId>
+    <artifactId>mifos-webservices</artifactId>
     <packaging>jar</packaging>
     <version>1.10-SNAPSHOT</version>
-    <name>Mifos - Application</name>
+    <name>Mifos - Web Services</name>
 
     <parent>
         <groupId>org.mifos</groupId>
@@ -26,12 +26,6 @@
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <jdk.version>1.6</jdk.version>
-        <test.database.properties.file>${basedir}/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</test.database.properties.file>
-        <main.database.properties.file>${basedir}/src/main/resources/org/mifos/config/resources/mainDatabase.properties</main.database.properties.file>
-        <sql.resources.src.directory>${modules.root.dir}/application/src/main/resources/sql</sql.resources.src.directory>
-        <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
-        <!-- TODO test.sql.resources.src.directory application/src/test/(resources/)sql doesn't seem to be used, remove? -->
-        <test.sql.resources.src.directory>${modules.root.dir}/application/src/test/resources/sql</test.sql.resources.src.directory>
         <create.props.skip>true</create.props.skip>
         <!-- mimics ConfigurationLocator directory search behavior -->
         <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
@@ -52,15 +46,6 @@
             </activation>
             <properties>
                 <create.props.skip>false</create.props.skip>
-            </properties>
-        </profile>
-        <profile>
-            <id>jacoco-coverage</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <surefire.jacoco.agent>-javaagent:${jacoco.agent.path}=destfile=${jacoco.file.path},includes=org.mifos.*,excludes=*_javassist_*</surefire.jacoco.agent>
             </properties>
         </profile>
     </profiles>
@@ -116,14 +101,6 @@
             <artifactId>mifos-appdomain</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.mifos</groupId>
-            <artifactId>mifos-reporting</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mifos</groupId>
-            <artifactId>mifos-webservices</artifactId>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
             <scope>provided</scope>
@@ -133,7 +110,41 @@
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-ws-core</artifactId>
         </dependency>
-			
+        <dependency>
+		    <groupId>wsdl4j</groupId>
+		    <artifactId>wsdl4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>jdom</groupId>
+			<artifactId>jdom</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>jaxen</groupId>
+			<artifactId>jaxen</artifactId>
+		</dependency>
+		<!-- 
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+         -->
+		<!-- 
+		<dependency>
+            <groupId>javax.xml.soap</groupId>
+            <artifactId>saaj-api</artifactId>
+            <version>1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.messaging.saaj</groupId>
+            <artifactId>saaj-impl</artifactId>
+            <version>1.3</version>
+        </dependency>
+		-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
@@ -379,73 +390,7 @@
         </dependency>
     </dependencies>
     <build>
-        <resources>
-            <resource>
-                <directory>${sql.resources.src.directory}</directory>
-                <filtering>true</filtering>
-                <targetPath>sql</targetPath>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <filtering>false</filtering>
-            </testResource>
-            <testResource>
-                <directory>${test.sql.resources.src.directory}</directory>
-                <filtering>true</filtering>
-                <targetPath>sql</targetPath>
-            </testResource>
-        </testResources>
-
         <plugins>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${basedir}/target/test-classes/WEB-INF</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/webapp/WEB-INF</directory>
-                                    <includes>
-                                        <include>*.xml</include>
-                                    </includes>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-main-resources-binarysafe</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${basedir}/target/classes</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/resources</directory>
-                                    <!-- these must be filtered by native2ascii, don't just copy them -->
-                                    <excludes>
-                                        <exclude>**/localizedResources/*.properties</exclude>
-                                    </excludes>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                            <nonFilteredFileExtensions>
-                                <nonFilteredFileExtension>ico</nonFilteredFileExtension>
-                            </nonFilteredFileExtensions>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -454,55 +399,6 @@
                     <source>1.6</source>
                     <target>1.6</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>net.alchim31.maven</groupId>
-                <artifactId>yuicompressor-maven-plugin</artifactId>
-                <version>0.9</version>
-                <configuration>
-                    <!-- Whether show JS warnings -->
-                    <jswarn>false</jswarn>
-                    <!-- Whether to add suffix to compressed files -->
-                    <nosuffix>true</nosuffix>
-                    <!-- Whether to obfuscate compressed files -->
-                    <nomunge>true</nomunge>
-                    <statistics>false</statistics>
-                    <!-- Files to exclude -->
-                    <excludes>
-                        <exclude>**/**.min.js</exclude>
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>compress</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>properties-maven-plugin</artifactId>
-                <version>1.0-alpha-1</version>
-                <executions>
-                    <execution>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>read-project-properties</goal>
-                        </goals>
-                        <configuration>
-                            <quiet>true</quiet>
-                            <files>
-                                <file>${main.database.properties.file}</file>
-                                <file>${test.database.properties.file}</file>
-                                <file>${mifos.overrides.conf}</file>
-                                <file>${mifos.overrides.env}</file>
-                                <file>${mifos.overrides.home}</file>
-                            </files>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -572,128 +468,6 @@
                         <goals>
                             <goal>report-only</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-<!--            
-            <plugin>
-                <groupId>org.codehaus.mojo.jspc</groupId>
-                <artifactId>jspc-maven-plugin</artifactId>
-                <version>2.0-alpha-3</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.mojo.jspc</groupId>
-                        <artifactId>jspc-compiler-tomcat6</artifactId>
-                        <version>2.0-alpha-3</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <includeInProject>false</includeInProject>
-                    < ! - -
-                        we'll still catch noncompliance with taglibs even if this is false, and if it is true, the
-                        compiled JSPs are included in the project (even if includeInProject=false!)
-                    - - >
-                    <compile>false</compile>
-                    < ! - - makes output cleaner (less verbose) - - >
-                    <showSuccess>false</showSuccess>
-                    <sources>
-                        <directory>${basedir}/src/main/resources/META-INF/resources</directory>
-                        <includes>
-                            <include>**/*.jsp</include>
-                        </includes>
-                    </sources>
-                </configuration>
-            </plugin>
- -->
-            <plugin>
-                <groupId>org.mifos.maven</groupId>
-                <artifactId>mifos-pseudoloc-gen</artifactId>
-                <version>1.0</version>
-                <configuration>
-                    <inputDirectory>src/main/resources/org/mifos/config/localizedResources</inputDirectory>
-                    <outputDirectory>target/classes/org/mifos/config/localizedResources</outputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>pseudolocalize</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!--
-            <plugin>
-                <groupId>org.mifos.maven</groupId>
-                <artifactId>mifos-settings-sanitizer</artifactId>
-                <version>0.0.1</version>
-                <executions>
-                    <execution>
-                        <id>create_sanitized_application_settings_file</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>sanitize</goal>
-                        </goals>
-                        <configuration>
-                            <inputFile>src/main/resources/org/mifos/config/resources/applicationConfiguration.default.properties</inputFile>
-                            <outputFile>target/applicationConfiguration.custom.properties</outputFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
-            <plugin>
-                <groupId>org.codehaus.groovy.maven</groupId>
-                <artifactId>gmaven-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Fetch build version information, store for use in Mifos -->
-                            <source>
-                                def env = System.getenv()
-                                def gitcmd = "git"
-                                if (env['OS'] =~ /^Windows/)
-                                    gitcmd = "cmd /c ${gitcmd}"
-                                def gitShaProc = """${gitcmd} log --pretty=format:%H -n1""".execute()
-                                gitShaProc.waitFor()
-                                project.properties['this.commit.id'] = gitShaProc.in.text
-                                project.properties['ci.build.tag'] = env['BUILD_TAG'] ?: 'DEVELOPMENT'
-                                project.properties['ci.build.date'] = "" + new Date()
-                            </source>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <!-- this goes away once we're completely off Struts -->
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>native2ascii-maven-plugin</artifactId>
-                <version>1.0-alpha-1</version>
-                <executions>
-                    <execution>
-                        <id>native2ascii</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>native2ascii</goal>
-                        </goals>
-                        <configuration>
-                            <encoding>UTF8</encoding>
-                            <src>src/main/resources/org/mifos/config/localizedResources</src>
-                            <dest>target/classes/org/mifos/config/localizedResources</dest>
-                            <includes>*.properties</includes>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
