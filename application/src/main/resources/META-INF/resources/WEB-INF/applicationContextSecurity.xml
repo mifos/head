@@ -24,6 +24,7 @@
 
     <http auto-config="false" entry-point-ref="loginFormAuthentication" use-expressions="true">
         <custom-filter position="FORM_LOGIN_FILTER" ref="mifosLegacyAuthenticationFilter" />
+        <intercept-url pattern="/webservices/*" filters="none" />
         <intercept-url pattern="/ping.ftl" filters="none" />
         <intercept-url pattern="/dateTimeUpdate.ftl*" filters="none" />
         <intercept-url pattern="/initializeApplication.ftl*" filters="none" />

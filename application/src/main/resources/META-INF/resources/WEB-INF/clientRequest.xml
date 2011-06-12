@@ -1,0 +1,6 @@
+<ClientRequest xmlns="http://mifos.org/portfolio/schemas">
+	<Client>
+	    <FirstName>Test</FirstName>
+	    <LastName>Lastname</LastName>
+	</Client>
+</ClientRequest>

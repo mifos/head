@@ -243,6 +243,21 @@
         <servlet-name>cheetah</servlet-name>
         <url-pattern>*.ftl</url-pattern>
     </servlet-mapping>
+    
+    <!-- web services integration -->
+     <servlet>
+        <servlet-name>spring-ws</servlet-name>
+        <servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>transformWsdlLocations</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>spring-ws</servlet-name>
+        <url-pattern>/webservices/*</url-pattern>
+    </servlet-mapping>
 
     <error-page>
         <error-code>404</error-code>

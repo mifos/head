@@ -1,0 +1,18 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:p="http://mifos.org/portfolio/schemas"
+        elementFormDefault="qualified"
+        targetNamespace="http://mifos.org/portfolio/schemas">
+    <xs:element name="ClientRequest">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="Client" type="p:ClientType"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="ClientType">
+        <xs:sequence>
+            <xs:element name="FirstName" type="xs:string"/>
+            <xs:element name="LastName" type="xs:string"/>                               
+        </xs:sequence>                                                                   
+    </xs:complexType>
+</xs:schema>

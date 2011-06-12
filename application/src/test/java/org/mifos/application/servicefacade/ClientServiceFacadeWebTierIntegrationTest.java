@@ -107,7 +107,7 @@ public class ClientServiceFacadeWebTierIntegrationTest extends MifosIntegrationT
         Short formedBy = loanOfficerId;
         Date dateOfBirth = new LocalDate(1990, 1, 1).toDateMidnight().toDate();
         String governmentId ="";
-        Date trainedDate = new LocalDate(2000, 1, 1).toDateMidnight().toDate();;
+        Date trainedDate = new LocalDate(2000, 1, 1).toDateMidnight().toDate();
         Short groupFlag = YesNoFlag.NO.getValue(); // not in a group
         Integer salutation = 1;
         String firstName = "first";

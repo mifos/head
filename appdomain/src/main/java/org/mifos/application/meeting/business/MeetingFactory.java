@@ -50,7 +50,8 @@ public class MeetingFactory {
                 weekDay = WeekDay.getWeekDay(meetingDetailsDto.getRecurrenceDetails().getDayOfWeek());
             }
 
-            if (meetingDetailsDto.getRecurrenceDetails().getDayNumber() > 0) {
+            Integer dayNumber = meetingDetailsDto.getRecurrenceDetails().getDayNumber();
+            if (dayNumber != null && dayNumber > 0) {
                 meeting.update(meetingDetailsDto.getRecurrenceDetails().getDayNumber().shortValue(), meetingDto
                         .getMeetingPlace());
             }
