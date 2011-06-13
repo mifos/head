@@ -29,6 +29,7 @@ import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.util.UiTestUtils;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -105,7 +106,6 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     public CreateLoanAccountReviewInstallmentPage submitAndNavigateToLoanReviewInstallmentsPage(CreateLoanAccountSubmitParameters formParameters) {
         submitLoanAccount(formParameters);
-        waitForPageToLoad();
         return new CreateLoanAccountReviewInstallmentPage(selenium).verifyPage();
     }
 

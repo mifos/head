@@ -107,7 +107,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void newMonthlyClientLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Mary Monthly1");
@@ -124,7 +124,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false) // TODO: temporary disabled due to failures on hudson after changes related to MIFOS-5004
+    @Test(enabled=true)
     public void newMonthlyClientLoanAccountWithMeetingOnSameWeekAndWeekday() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Monthly3rdFriday");
