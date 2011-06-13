@@ -14,8 +14,13 @@ public class DecliningBalanceWithInterestCalculatedDailyFormula implements Inter
 
     @Override
     public Money calculate(Money principalOutstanding, Double aprInterestRate, LocalDate interestPeriodStartDate, LocalDate interestPeriodEndDate) {
-        
-        Interval installmentPeriod = new Interval(interestPeriodStartDate.toDateMidnight().toDateTime(), interestPeriodEndDate.toDateMidnight().toDateTime()); 
+
+        Interval installmentPeriod = null;
+        if (interestPeriodStartDate.isAfter(interestPeriodEndDate)) {
+            installmentPeriod = new Interval(interestPeriodEndDate.toDateMidnight().toDateTime(), interestPeriodStartDate.toDateMidnight().toDateTime());
+        } else {
+            installmentPeriod = new Interval(interestPeriodStartDate.toDateMidnight().toDateTime(), interestPeriodEndDate.toDateMidnight().toDateTime());
+        }
         Integer installmentPeriodDuration = Days.daysIn(installmentPeriod).getDays();
         
         BigDecimal periodicInterestRate = BigDecimal.valueOf(aprInterestRate / Double.valueOf("365.0"));
