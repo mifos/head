@@ -452,7 +452,7 @@ public class ClientTest extends UiTestCaseBase {
         createQuestionGroupPage.submit(parameters);
     }
     
-    public void verifyQuestionResponsesExistInDatabase(String clientID, String event, Map<String, String> questions) throws SQLException {
+    private void verifyQuestionResponsesExistInDatabase(String clientID, String event, Map<String, String> questions) throws SQLException {
         for (String question : questions.keySet()) {
             Assert.assertTrue(applicationDatabaseOperation.deosQuestionResponseForClientExist(clientID, event, question, questions.get(question)));
         }
@@ -791,10 +791,10 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-35
-    @Test(enabled = false) //blocked by MIFOS-4858
+    @Test(enabled = false) //blocked by MIFOS-5063
     public void addingMemeberToGroupWithDiffrentStatuses() throws Exception {
         String groupName = "testGroup";
-        String clientName = "test";
+        String clientName;
         CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
         groupParams.setGroupName(groupName);
         EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
@@ -803,8 +803,9 @@ public class ClientTest extends UiTestCaseBase {
         // When
         ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer",
                 "MyOfficeDHMFT");
+        clientName = clientDetailsPage.getHeading();
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
-        groupTestHelper.createNewGroupPartialApplication("MyCenter1233171688286", groupParams);
+        groupTestHelper.createNewGroupPartialApplication("Default Center", groupParams);
         // Then
         clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
 
