@@ -323,24 +323,24 @@
 		</tbody>
 </table>
 
-[#if cashFlowSummaryFormBean.loanRepaymentFutureInstallments?has_content]
-<table style="margin-bottom: 15px; width: 605px;" id="futureInstallments">
-		<thead>
-		<tr>
-			<th style="border-top: 1px solid grey; width: 100px;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
-			<th style="border-top: 1px solid grey; width: 100px;">[@spring.message "reviewInstallments.dueDateHeading" /]</th>
-			<th style="border-top: 1px solid grey; width: 100px;">[@spring.message "reviewInstallments.redo.datePaidHeading" /]</th>
-			<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.principalHeading" /]</th>
-			<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.interestHeading" /]</th>
-			<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.feesHeading" /]</th>
-			<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.totalHeading" /]</th>
-		</tr>
-		<tr>
-			<th colspan="7" style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.redo.futureInstallmentsHeading" /]</th>
-		</tr>
-		</thead>
-		<tbody>
-		[#if loanProductReferenceData.compareCashflowEnabled]
+[#if loanProductReferenceData.compareCashflowEnabled]
+	[#if cashFlowSummaryFormBean.loanRepaymentFutureInstallments?has_content]
+	<table style="margin-bottom: 15px; width: 605px;" id="futureInstallments">
+			<thead>
+			<tr>
+				<th style="border-top: 1px solid grey; width: 100px;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
+				<th style="border-top: 1px solid grey; width: 100px;">[@spring.message "reviewInstallments.dueDateHeading" /]</th>
+				<th style="border-top: 1px solid grey; width: 100px;">[@spring.message "reviewInstallments.redo.datePaidHeading" /]</th>
+				<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.principalHeading" /]</th>
+				<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.interestHeading" /]</th>
+				<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.feesHeading" /]</th>
+				<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.totalHeading" /]</th>
+			</tr>
+			<tr>
+				<th colspan="7" style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.redo.futureInstallmentsHeading" /]</th>
+			</tr>
+			</thead>
+			<tbody>
 			[#list cashFlowSummaryFormBean.loanRepaymentFutureInstallments as row]
 			<tr>
 				<td style="border-top: 1px solid grey;">${row.installmentNumber?string.number}</td>
@@ -352,7 +352,30 @@
 				<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
 			</tr>
 			[/#list]
-		[#else]
+			</tbody>
+	</table>
+	<form action="${flowExecutionUrl}" method="post">
+		[@form.submitButton label="widget.form.buttonLabel.editloanscheduleinfo" id="redoloanpreview.button.editloanschedule" webflowEvent="editLoanSchedule" /]
+	</form>
+	[/#if]
+	[#else]
+	[#if loanScheduleFormBean.loanRepaymentFutureInstallments?has_content]
+	<table style="margin-bottom: 15px; width: 605px;" id="futureInstallments">
+			<thead>
+			<tr>
+				<th style="border-top: 1px solid grey; width: 100px;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
+				<th style="border-top: 1px solid grey; width: 100px;">[@spring.message "reviewInstallments.dueDateHeading" /]</th>
+				<th style="border-top: 1px solid grey; width: 100px;">[@spring.message "reviewInstallments.redo.datePaidHeading" /]</th>
+				<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.principalHeading" /]</th>
+				<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.interestHeading" /]</th>
+				<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.feesHeading" /]</th>
+				<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.totalHeading" /]</th>
+			</tr>
+			<tr>
+				<th colspan="7" style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.redo.futureInstallmentsHeading" /]</th>
+			</tr>
+			</thead>
+			<tbody>
 			[#list loanScheduleFormBean.loanRepaymentFutureInstallments as row]
 			<tr>
 				<td style="border-top: 1px solid grey;">${row.installmentNumber?string.number}</td>
@@ -364,12 +387,12 @@
 				<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
 			</tr>
 			[/#list]
-		[/#if]
-		</tbody>
-</table>
-<form action="${flowExecutionUrl}" method="post">
-	[@form.submitButton label="widget.form.buttonLabel.editloanscheduleinfo" id="redoloanpreview.button.editloanschedule" webflowEvent="editLoanSchedule" /]
-</form>
+			</tbody>
+	</table>
+	<form action="${flowExecutionUrl}" method="post">
+		[@form.submitButton label="widget.form.buttonLabel.editloanscheduleinfo" id="redoloanpreview.button.editloanschedule" webflowEvent="editLoanSchedule" /]
+	</form>
+	[/#if]	
 [/#if]
 
 [#if loanAccountQuestionGroupFormBean.questionGroups?size > 0]
