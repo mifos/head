@@ -185,7 +185,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
     }
     
     // http://mifosforge.jira.com/browse/MIFOSTEST-133
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void checkGLIMLoanCreatedBySaveForLater() throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
@@ -231,7 +231,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
    }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void newWeeklyGLIMAccount() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Default Group");
@@ -242,7 +242,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPage();
     }
 
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void checkGLIMAccountTotalCalculationWithDecimal() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
