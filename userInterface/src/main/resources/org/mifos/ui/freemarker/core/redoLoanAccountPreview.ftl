@@ -354,9 +354,6 @@
 			[/#list]
 			</tbody>
 	</table>
-	<form action="${flowExecutionUrl}" method="post">
-		[@form.submitButton label="widget.form.buttonLabel.editloanscheduleinfo" id="redoloanpreview.button.editloanschedule" webflowEvent="editLoanSchedule" /]
-	</form>
 	[/#if]
 	[#else]
 	[#if loanScheduleFormBean.loanRepaymentFutureInstallments?has_content]
@@ -389,12 +386,11 @@
 			[/#list]
 			</tbody>
 	</table>
-	<form action="${flowExecutionUrl}" method="post">
-		[@form.submitButton label="widget.form.buttonLabel.editloanscheduleinfo" id="redoloanpreview.button.editloanschedule" webflowEvent="editLoanSchedule" /]
-	</form>
 	[/#if]	
 [/#if]
-
+<form action="${flowExecutionUrl}" method="post">
+	[@form.submitButton label="widget.form.buttonLabel.editloanscheduleinfo" id="redoloanpreview.button.editloanschedule" webflowEvent="editLoanSchedule" /]
+</form>
 [#if loanAccountQuestionGroupFormBean.questionGroups?size > 0]
 <br/>
 <br/>
