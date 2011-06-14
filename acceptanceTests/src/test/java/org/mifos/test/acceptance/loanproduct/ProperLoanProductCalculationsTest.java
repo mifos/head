@@ -30,13 +30,14 @@ import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups = {"loanproduct", "acceptance","no_db_unit"}, enabled = false)
+@Test(singleThreaded = true, groups = {"loanproduct", "acceptance","no_db_unit"})
 public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
 
     private LoanProductTestHelper loanProductTestHelper;
@@ -76,8 +77,9 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyProperInterestAndPaymentWeeklyFlatProduct() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
-        productParams.setOfferingName("product63");
-        productParams.setOfferingShortName("p63");
+        String productName = "LoanProduct" + StringUtil.getRandomString(5);
+        productParams.setOfferingName(productName);
+        productParams.setOfferingShortName(StringUtil.getRandomString(4));
         productParams.setDefaultInterestRate("36");
         productParams.setMaxInterestRate("50");
         productParams.setInterestTypes(SubmitFormParameters.FLAT);
@@ -88,7 +90,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
 
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
         searchParams.setSearchString("Stu1233266063395 Client1233266063395");
-        searchParams.setLoanProduct("product63");
+        searchParams.setLoanProduct(productName);
         LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(searchParams);
 
         loanAccountPage.verifyPrincipalOriginal("2500.0");
@@ -106,8 +108,9 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyProperInterestAndPaymentMonthlyFlatProduct() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getMonthlyLoanProductParameters();
-        productParams.setOfferingName("product64");
-        productParams.setOfferingShortName("p64");
+        String productName = "LoanProduct" + StringUtil.getRandomString(5);
+        productParams.setOfferingName(productName);
+        productParams.setOfferingShortName(StringUtil.getRandomString(4));
         productParams.setDefaultInterestRate("23");
         productParams.setMaxInterestRate("50");
         productParams.setInterestTypes(SubmitFormParameters.FLAT);
@@ -115,7 +118,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         productParams.setDefInstallments("23");
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
         searchParams.setSearchString("Client - Mary Monthly");
-        searchParams.setLoanProduct("product64");
+        searchParams.setLoanProduct(productName);
 
         loanProductTestHelper.defineNewLoanProduct(productParams);
         LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(searchParams);
@@ -136,8 +139,9 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyProperInterestAndPaymentWeeklyDecliningBalanceProduct() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
-        productParams.setOfferingName("product66");
-        productParams.setOfferingShortName("p66");
+        String productName = "LoanProduct" + StringUtil.getRandomString(5);
+        productParams.setOfferingName(productName);
+        productParams.setOfferingShortName(StringUtil.getRandomString(4));
         productParams.setDefaultInterestRate("15.3");
         productParams.setMaxInterestRate("50");
         productParams.setInterestTypes(SubmitFormParameters.DECLINING_BALANCE);
@@ -145,7 +149,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         productParams.setDefInstallments("13");
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
         searchParams.setSearchString("Stu1233266063395 Client1233266063395");
-        searchParams.setLoanProduct("product66");
+        searchParams.setLoanProduct(productName);
 
         loanProductTestHelper.defineNewLoanProduct(productParams);
         LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(searchParams);
@@ -166,8 +170,9 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyProperInterestAndPaymentMonthlyDecliningFixedProduct() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getMonthlyLoanProductParameters();
-        productParams.setOfferingName("product67");
-        productParams.setOfferingShortName("p67");
+        String productName = "LoanProduct" + StringUtil.getRandomString(5);
+        productParams.setOfferingName(productName);
+        productParams.setOfferingShortName(StringUtil.getRandomString(4));
         productParams.setDefaultInterestRate("19.9");
         productParams.setMaxInterestRate("50");
         productParams.setInterestTypes(SubmitFormParameters.DECLINING_BALANCE_EPI);
@@ -175,7 +180,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         productParams.setDefInstallments("32");
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
         searchParams.setSearchString("Client - Mary Monthly");
-        searchParams.setLoanProduct("product67");
+        searchParams.setLoanProduct(productName);
 
         loanProductTestHelper.defineNewLoanProduct(productParams);
         LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(searchParams);
@@ -204,8 +209,9 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         customPropertiesHelper.setInitialRoundOffMultiple("0.01");
 
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
-        productParams.setOfferingName("product69");
-        productParams.setOfferingShortName("p69");
+        String productName = "LoanProduct" + StringUtil.getRandomString(5);
+        productParams.setOfferingName(productName);
+        productParams.setOfferingShortName(StringUtil.getRandomString(4));
         productParams.setDefaultInterestRate("29.001");
         productParams.setMaxInterestRate("50");
         productParams.setInterestTypes(SubmitFormParameters.FLAT);
@@ -214,7 +220,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         productParams.setMaxInstallments("200");
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
         searchParams.setSearchString("Stu1233266063395 Client1233266063395");
-        searchParams.setLoanProduct("product69");
+        searchParams.setLoanProduct(productName);
 
         loanProductTestHelper.defineNewLoanProduct(productParams);
         LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(searchParams);
@@ -243,8 +249,9 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         customPropertiesHelper.setFinalRoundOffMultiple("0.1");
 
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
-        productParams.setOfferingName("product70");
-        productParams.setOfferingShortName("p70");
+        String productName = "LoanProduct" + StringUtil.getRandomString(5);
+        productParams.setOfferingName(productName);
+        productParams.setOfferingShortName(StringUtil.getRandomString(4));
         productParams.setDefaultInterestRate("9.5");
         productParams.setMinInterestRate("5");
         productParams.setInterestTypes(SubmitFormParameters.DECLINING_BALANCE_EPI);
@@ -253,7 +260,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         productParams.setMaxInstallments("79");
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
         searchParams.setSearchString("Stu1233266063395 Client1233266063395");
-        searchParams.setLoanProduct("product70");
+        searchParams.setLoanProduct(productName);
 
         loanProductTestHelper.defineNewLoanProduct(productParams);
         LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(searchParams);
@@ -273,14 +280,14 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyInterestCalculatedWith365Days() throws Exception {
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
-        searchParams.setSearchString("000100000000060");
+        searchParams.setSearchString("000100000000052");
 
         LoanAccountPage loanAccountPage = loanTestHelper.navigateToLoanAccountPage(searchParams);
 
-        loanAccountPage.verifyPrincipalOriginal("2000.0");
-        loanAccountPage.verifyInterestOriginal("13.0");
+        loanAccountPage.verifyPrincipalOriginal("10000.0");
+        loanAccountPage.verifyInterestOriginal("461.0");
         loanAccountPage.verifyFeesOriginal("0.0");
         loanAccountPage.verifyPenaltyOriginal("0.0");
-        loanAccountPage.verifyTotalOriginalLoan("2013.0");
+        loanAccountPage.verifyTotalOriginalLoan("10461.0");
     }
 }
