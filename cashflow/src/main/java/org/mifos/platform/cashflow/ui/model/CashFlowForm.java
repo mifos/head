@@ -115,6 +115,10 @@ public class CashFlowForm implements Serializable {
         CashFlowValidator validator = new CashFlowValidator();
         validator.validateCaptureCashFlow(this, context);
     }
+    
+    public void validateEditCashflow(ValidationContext context) {
+        validateCaptureCashFlowDetails(context);
+    }
 
     public BigDecimal getTotalRevenues() {
         return totalRevenues;
