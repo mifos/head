@@ -119,6 +119,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setLsimFrequencyMonths("on");
         submitAccountParameters.setLsimMonthTypeDayOfMonth("on");
         submitAccountParameters.setLsimDayOfMonth("5");
+        submitAccountParameters.setLoanPurpose("0010-Camel");
 
         createLSIMLoanAndCheckAmountAndInstallmentDate(searchParameters, submitAccountParameters, expectedDate);
     }
@@ -138,6 +139,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setLsimMonthTypeNthWeekdayOfMonth("on");
         submitAccountParameters.setLsimMonthRank("Second");
         submitAccountParameters.setLsimWeekDay("Thursday");
+        submitAccountParameters.setLoanPurpose("0010-Camel");
 
         createLSIMLoanAndCheckAmountAndInstallmentDate(searchParameters, submitAccountParameters, expectedDate);
     }
