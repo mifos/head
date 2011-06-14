@@ -135,6 +135,9 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         if (formParameters.getDd() != null && formParameters.getMm() != null && formParameters.getYy() != null){
             setDisbursalDate(formParameters.getDd(), formParameters.getMm(), formParameters.getYy());
         }
+        if(formParameters.getLoanPurpose() != null){
+        	selenium.select("loanPurposeId", "label="+formParameters.getLoanPurpose());
+        }
         fillAdditionalFee(formParameters);
         submitAndWaitForPage();
     }

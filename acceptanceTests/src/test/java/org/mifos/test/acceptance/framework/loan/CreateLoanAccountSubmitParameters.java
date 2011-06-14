@@ -40,9 +40,18 @@ public class CreateLoanAccountSubmitParameters {
     private String additionalFee1;
     private String additionalFee2;
     private String additionalFee3;
+    private String loanPurpose;
 
 
-    public String getInterestRate() {
+    public String getLoanPurpose() {
+		return loanPurpose;
+	}
+
+	public void setLoanPurpose(String loanPurpose) {
+		this.loanPurpose = loanPurpose;
+	}
+
+	public String getInterestRate() {
         return this.interestRate;
     }
 
