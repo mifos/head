@@ -107,6 +107,10 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         submitLoanAccount(formParameters);
         return new CreateLoanAccountReviewInstallmentPage(selenium).verifyPage();
     }
+    
+    public void setLonaPurpose(String loanPurpose){
+    	selenium.select("loanPurposeId", "label="+loanPurpose);
+    }
 
     private void submitLoanAccount(CreateLoanAccountSubmitParameters formParameters) {
         if(formParameters.getAmount() != null){
@@ -136,7 +140,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
             setDisbursalDate(formParameters.getDd(), formParameters.getMm(), formParameters.getYy());
         }
         if(formParameters.getLoanPurpose() != null){
-        	selenium.select("loanPurposeId", "label="+formParameters.getLoanPurpose());
+        	setLonaPurpose(formParameters.getLoanPurpose());
         }
         fillAdditionalFee(formParameters);
         submitAndWaitForPage();

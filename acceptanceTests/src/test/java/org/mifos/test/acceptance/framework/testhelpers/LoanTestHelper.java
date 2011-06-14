@@ -801,6 +801,7 @@ public class LoanTestHelper {
             .navigateToClientsAndAccountsPage()
             .navigateToCreateLoanAccountUsingLeftMenu()
             .searchAndNavigateToCreateLoanAccountPage(searchParams);
+        createLoanAccountEntryPage.setLonaPurpose("0013-Hybrid Cow");
         
         Double loanAmountDouble = Double.valueOf(createLoanAccountEntryPage.getLoanAmount());
         
