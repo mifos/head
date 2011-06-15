@@ -125,28 +125,6 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
     public void validateSummaryOfCashflow(ValidationContext context) {
         MessageContext messageContext = context.getMessageContext();
 
-        DateTime firstInstallmentDueDate = installments.get(0);
-        DateTime lastInstallmentDueDate = installments.get(installments.size() - 1);
-        this.loanInstallmentsDto = new LoanInstallmentsDto(this.loanInstallmentsDto.getLoanAmount(),
-                this.loanInstallmentsDto.getTotalInstallmentAmount(), firstInstallmentDueDate.toDate(),
-                lastInstallmentDueDate.toDate());
-
-        Errors warnings = loanAccountServiceFacade.validateCashFlowForInstallmentsForWarnings(cashFlowDataDtos,
-                productId);
-        Errors errors = loanAccountServiceFacade.validateCashFlowForInstallments(loanInstallmentsDto, monthlyCashFlows,
-                repaymentCapacity, cashFlowTotalBalance);
-        if (warnings.hasErrors()) {
-            for (ErrorEntry fieldError : warnings.getErrorEntries()) {
-                addErrorMessageToContext(messageContext, fieldError);
-            }
-        }
-
-        if (errors.hasErrors()) {
-            for (ErrorEntry fieldError : errors.getErrorEntries()) {
-                addErrorMessageToContext(messageContext, fieldError);
-            }
-        }
-
         if (this.variableInstallmentsAllowed) {
             prevalidateDueDateIsNonNull(messageContext);
             prevalidateActualPaymentDateIsNonNull(messageContext);
@@ -193,6 +171,30 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
                     newTotal = newTotalEntry.doubleValue();
                 } else {
                     this.installmentAmounts.set(index, newTotal);
+                }
+            }
+        }
+        
+        if (!messageContext.hasErrorMessages()) {
+            DateTime firstInstallmentDueDate = installments.get(0);
+            DateTime lastInstallmentDueDate = installments.get(installments.size() - 1);
+            this.loanInstallmentsDto = new LoanInstallmentsDto(this.loanInstallmentsDto.getLoanAmount(),
+                    this.loanInstallmentsDto.getTotalInstallmentAmount(), firstInstallmentDueDate.toDate(),
+                    lastInstallmentDueDate.toDate());
+    
+            Errors warnings = loanAccountServiceFacade.validateCashFlowForInstallmentsForWarnings(cashFlowDataDtos,
+                    productId);
+            Errors errors = loanAccountServiceFacade.validateCashFlowForInstallments(loanInstallmentsDto, monthlyCashFlows,
+                    repaymentCapacity, cashFlowTotalBalance);
+            if (warnings.hasErrors()) {
+                for (ErrorEntry fieldError : warnings.getErrorEntries()) {
+                    addErrorMessageToContext(messageContext, fieldError);
+                }
+            }
+    
+            if (errors.hasErrors()) {
+                for (ErrorEntry fieldError : errors.getErrorEntries()) {
+                    addErrorMessageToContext(messageContext, fieldError);
                 }
             }
         }
@@ -412,7 +414,7 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
                 ErrorEntry fieldError = new ErrorEntry("installment.total.amount.blank.and.invalid",
                         "installmentAmounts", defaultMessage);
                 fieldError.setArgs(Arrays.asList(installmentIndex.toString()));
-
+                this.installmentAmounts.set(installmentIndex-1, Integer.valueOf(0));
                 addErrorMessageToContext(messageContext, fieldError);
             }
             installmentIndex++;
@@ -428,7 +430,7 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
                 ErrorEntry fieldError = new ErrorEntry("installment.amount.paid.blank.and.invalid",
                         "actualPaymentAmounts", defaultMessage);
                 fieldError.setArgs(Arrays.asList(installmentIndex.toString()));
-
+                this.actualPaymentAmounts.set(installmentIndex-1, Integer.valueOf(0));
                 addErrorMessageToContext(messageContext, fieldError);
             }
             installmentIndex++;
