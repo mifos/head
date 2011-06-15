@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -208,6 +210,28 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     public void unselectAdditionalFee() {
         selenium.select("selectedFeeId1", "label=--Select--");
+    }
+    
+    public CreateLoanAccountEntryPage unselectAdditionalFees() {
+    	for(int i=0; i<3; i++){
+    		selenium.select("selectedFeeId"+i, "label=--Select--");
+    	}
+    	return this;
+    }
+    
+    public CreateLoanAccountEntryPage applyAdditionalFees(String[] fees) {
+    	for(int i=0; i<fees.length && i<3; i++){
+    		selenium.select("selectedFeeId"+i, "label="+fees[i]);
+    	}
+    	return this;
+    }
+    
+    public CreateLoanAccountEntryPage submitWithErrors(List<String> errors) {
+    	submitAndWaitForPage();
+    	for (String error : errors) {
+    		selenium.isTextPresent(error);
+		}
+        return this;
     }
 
     public void selectTwoClientsForGlim() {

@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework.loanproduct;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -128,6 +129,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String startDateYy;
         private int status;
         private int productCategory;
+        private final List<String> fees = new ArrayList<String>();
         private String additionalFee1;
         private String additionalFee2;
         private String additionalFee3;
@@ -547,8 +549,44 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public void setAdditionalFee3(String additionalFee3) {
             this.additionalFee3 = additionalFee3;
         }
+        
+        public List<String> getFees() {
+			return fees;
+		}
+        
+        public void addFee(String feeName){
+        	fees.add(feeName);
+        }
+    }
+    
+    private void addSelectionFee(String feeName){
+    	selenium.addSelection("feeId", "label="+feeName);
+    }
+    
+    private void selectFee(String feeName){
+    	selenium.select("feeId", "label="+feeName);
+    }
+    
+    private void addSelectedFees(){
+    	selenium.click("LoanFeesList.button.add");
+    }
+    
+    private void selectAddedFee(String feeName){
+    	selenium.addSelection("prdOfferinFees", "label="+feeName);
+    }
+    
+    private void removeAddedFees(){
+    	selenium.click("LoanFeesList.button.remove");
+    }
+    
+    public void removeFees(List<String> fees){
+    	for (String fee : fees) {
+			selectAddedFee(fee);
+		}
+    	removeAddedFees();
     }
 
+    @SuppressWarnings("PMD.NPathComplexity")
     public DefineNewLoanProductPage fillLoanParameters(SubmitFormParameters parameters) {
         selenium.type("createLoanProduct.input.prdOffering", parameters.getOfferingName());
         selenium.type("createLoanProduct.input.prdOfferingShortName", parameters.getOfferingShortName());
@@ -578,7 +616,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
             }
         }
         selectWaiverInterest(parameters);
-        selenium.select("interestTypes", "value=" + parameters.getInterestTypes());
+        setInterestRateType(parameters.getInterestTypes());
         selenium.type("createLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
         selenium.type("createLoanProduct.input.minInterestRate", parameters.getMinInterestRate());
         selenium.type("createLoanProduct.input.defInterestRate", parameters.getDefaultInterestRate());
@@ -605,6 +643,17 @@ public class DefineNewLoanProductPage extends AbstractPage {
                 selenium.type("defCycleInstallment"+i, parameters.getDefCycleInstallment(i-1));
             }
         }
+        
+        if(parameters.getFees().size()>0){
+        	for (int i=0;i<parameters.getFees().size();i++){
+        		if(i==0){
+        			selectFee(parameters.getFees().get(i));
+        		}else{
+    				addSelectionFee(parameters.getFees().get(i));
+        		}
+			}
+        	addSelectedFees();
+        }
         selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodType());
         selenium.fireEvent("gracePeriodType", "change");
         if(parameters.getGracePeriodType()>1){
@@ -615,6 +664,10 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selectQuestionGroups(parameters.getQuestionGroups());
         selectSourceOfFund("Funding Org A");
         return this;
+    }
+    
+    public void setInterestRateType(int interestType){
+    	selenium.select("interestTypes", "value=" + interestType);
     }
 
     private void selectSourceOfFund(String sourceOfFund) {
@@ -646,6 +699,12 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     public DefineNewLoanProductPage submitWithErrors() {
         submit();
+        return this;
+    }
+    
+    public DefineNewLoanProductPage submitWithErrors(String error) {
+        submit();
+        selenium.isTextPresent(error);
         return this;
     }
 

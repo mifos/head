@@ -77,6 +77,54 @@ public class EditLoanAccountInformationPage extends MifosPage {
         }
         return this;
     }
+    
+    public String getLoanAmount(){
+    	return selenium.getValue("editLoanAccount.input.loanAmount");
+    }
+    
+    public String getInterestRate(){
+    	return selenium.getValue("editLoanAccount.input.interestRate");
+    }
+    
+    public String getNoOfInstallments(){
+    	return selenium.getValue("editLoanAccount.input.numberOfInstallments");
+    }
+    
+    public String getDisbursalDay(){
+    	return selenium.getValue("disbursementDateDD");
+    }
+    
+    public String getDisbursalMonth(){
+    	return selenium.getValue("disbursementDateMM");
+    }
+    
+    public String getDisbursalYear(){
+    	return selenium.getValue("disbursementDateYY");
+    }
+    
+    public String getGracePeriodForRepayments(){
+    	return selenium.getValue("editLoanAccount.input.gracePeriod");
+    }
+    
+    public void verifyAccountParams(CreateLoanAccountSubmitParameters accountSubmitParameters, EditLoanAccountInformationParameters editAccountParameters) {
+        if (accountSubmitParameters.getAmount() != null) {
+            Assert.assertEquals(getLoanAmount(), accountSubmitParameters.getAmount());
+        }
+        if (accountSubmitParameters.getInterestRate() != null) {
+        	Assert.assertEquals(getInterestRate(), accountSubmitParameters.getInterestRate());
+        }
+        if (accountSubmitParameters.getNumberOfInstallments() != null) {
+        	Assert.assertEquals(getNoOfInstallments(), accountSubmitParameters.getNumberOfInstallments());
+        }
+        if (accountSubmitParameters.getDd() != null && accountSubmitParameters.getMm() != null && accountSubmitParameters.getYy() != null ) {
+        	Assert.assertEquals(getDisbursalDay(), accountSubmitParameters.getDd());
+        	Assert.assertEquals(getDisbursalMonth(), accountSubmitParameters.getMm());
+        	Assert.assertEquals(getDisbursalYear(), accountSubmitParameters.getYy());
+        }
+        if (editAccountParameters.getGracePeriod() != null) {
+        	Assert.assertEquals(getGracePeriodForRepayments(), editAccountParameters.getGracePeriod());
+        }
+    }
 
     public void verifyGLIMClient(int clientNumber, String expectedClientName, String loanAmount, String loanPurpose){
         Assert.assertEquals(selenium.getText("GLIMLoanAccounts.clientName." + clientNumber), expectedClientName);
