@@ -84,10 +84,6 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-18
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    /*
-     * suppressed after adding in ability to handle cashflow for redo 
-     */
-    @Test(enabled=false)
     public void redoLoanOnPastDateWithLSIMAndGLIM() throws Exception {
         applicationDatabaseOperation.updateGLIM(1);
         applicationDatabaseOperation.updateLSIM(1);
@@ -109,7 +105,6 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-28
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false)
     public void redoLoanDisbursalWithPastDate() throws Exception {
         RedoLoanDisbursalParameters paramsPastDate = new RedoLoanDisbursalParameters();
         paramsPastDate.setDisbursalDateDD("25");
@@ -137,7 +132,6 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-15
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false)
     public void redoLoanDisbursalWithPastDateUnpaid() throws Exception {
         // Testing redo loan
         RedoLoanDisbursalParameters paramsPastDate = new RedoLoanDisbursalParameters();
@@ -185,11 +179,10 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
 
         loanAccountPage.verifyLoanTotalBalance(loanBalance + ".0");
         loanAccountPage.verifyPerformanceHistory("48", "3");
-        loanAccountPage.verifyStatus("Active in Bad Standing");
+        loanAccountPage.verifyStatus("Active in Good Standing");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true)
     public void redoLoanDisbursalForVariableInstallmentLoan() throws Exception {
         dataSetUpForVariableInstallmentLoan();
         applicationDatabaseOperation.updateLSIM(1);
@@ -226,7 +219,6 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false)
     public void redoLoanDisbursalForDecliningBalanceLoan() throws Exception {
         dataSetUpForVariableInstallmentLoan();
         applicationDatabaseOperation.updateLSIM(1);
@@ -244,21 +236,21 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         
         RedoLoanAccountPreviewPage redoLoanAccountPreviewPage = redoLoanDisbursalSchedulePreviewPage.setPaidField(RedoLoanScheduleData.DECLINING_PRINCIPAL_LATE_PAYMENT_1).clickPreviewAndGoToReviewLoanAccountPage();
         
-        String[][] expectedRepaymentSchedule = new String[][] {{"Installments paid", "", "", "", "", ""},
-                {"1", "15-Oct-2010", "19-Oct-2010", "200.4", "4.6", "100.0", "305.0"},
-                {"2", "22-Oct-2010", "19-Oct-2010", "0.4", "4.6", "100.0", "105.0"},
-                {"Installments due", "", "", "", "", ""},
-                {"2", "22-Oct-2010", "-", "200.0", "0.0", "0.0", "200.0"},
-                {"Future Installments", "", "", "", "", ""}, //future installment
-                {"3", "29-Oct-2010", "-", "200.4", "4.6", "100.0", "305.0"},
-                {"4", "05-Nov-2010", "-", "200.4", "4.6", "100.0", "305.0"},
-                {"5", "12-Nov-2010", "-", "198.4", "5.6", "100.0", "304.0"}};
+        String[][] expectedRepaymentSchedule = new String[][] {
+                {"1", "15-Oct-2010", "19-Oct-2010", "200.4", "4.6", "100", "305"},
+                {"2", "22-Oct-2010", "19-Oct-2010", "0.4", "4.6", "100", "105"}};
+
+        String[][] expectedFutureInstallments = new String[][] {
+                {"2", "22-Oct-2010", "-", "200", "0", "0", "200"},
+                {"3", "29-Oct-2010", "-", "200.4", "4.6", "100", "305"},
+                {"4", "05-Nov-2010", "-", "200.4", "4.6", "100", "305"},
+                {"5", "12-Nov-2010", "-", "198.4", "5.6", "100", "304"}};
         
         String[][] expectedRepaymentBalance = new String[][] {
-                {"799.6", "19.4", "400.0", "1219.0"},
-                {"799.2", "14.8", "300.0", "1114.0"}};
+                {"799.6", "19.4", "400", "1,219"},
+                {"799.2", "14.8", "300", "1,114"}};
         
-        redoLoanAccountPreviewPage.verifyRunningBalance(expectedRepaymentSchedule, expectedRepaymentBalance);
+        redoLoanAccountPreviewPage.verifyRunningBalance(expectedRepaymentSchedule, expectedFutureInstallments, expectedRepaymentBalance);
     }
 
     private RedoLoanDisbursalEntryPage navigateToRedoLoanPage() {

@@ -40,7 +40,7 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
 
     public void verifyFutureDateInputError() {
         verifyPage();
-        Assert.assertTrue(selenium.isTextPresent("You have entered an invalid disbursal date. Enter a disbursal date less than today's date"));
+        Assert.assertTrue(selenium.isTextPresent("The disbursement date is invalid. Disbursement date must be less than todays date."));
     }
 
     public void verifyAllFormErrors() {
@@ -48,7 +48,7 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
         Assert.assertTrue(selenium.isTextPresent("Please specify valid Amount. Amount should be a value between 100 and 1,000,000, inclusive."));
         Assert.assertTrue(selenium.isTextPresent("Please specify valid Interest rate. Interest rate should be a value between 1 and 99, inclusive."));
         Assert.assertTrue(selenium.isTextPresent("Please specify valid No. of installments. No. of installments should be a value between 1 and 100, inclusive."));
-        Assert.assertTrue(selenium.isTextPresent("Please specify a valid disbursal date."));
+        Assert.assertTrue(selenium.isTextPresent("You have entered an invalid disbursal date. Please check the date format."));
     }
 
     public RedoLoanDisbursalSchedulePreviewPage submitWithGLIMandLSIPAndNavigateToPreviewPage(RedoLoanDisbursalParameters params) {
