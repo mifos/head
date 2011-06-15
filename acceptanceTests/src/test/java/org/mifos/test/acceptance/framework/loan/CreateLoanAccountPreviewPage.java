@@ -20,11 +20,14 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
-import com.thoughtworks.selenium.Selenium;
+import java.util.List;
+
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.testng.Assert;
+
+import com.thoughtworks.selenium.Selenium;
 
 public class CreateLoanAccountPreviewPage extends AbstractPage {
     String editScheduleButton = "//input[@id='createloanpreview.button.edit']";
@@ -115,5 +118,30 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
         selenium.click("_eventId_cancel");
         waitForPageToLoad();
         return new ClientsAndAccountsHomepage(selenium);
+    }
+
+    public void verifyDueDate(int installement, String dueDate) {
+        Assert.assertEquals(selenium.getText("//table[@id='installments']//tbody//tr[" + (installement ) + "]/td[2]"), dueDate);
+    }
+    
+    public CreateLoanAccountEntryPage editAccountInformation() {
+        selenium.click("createloanpreview.button.edit");
+        waitForPageToLoad();
+        return new CreateLoanAccountEntryPage(selenium);
+    }
+    
+    private String getDueDateForInstallment(Integer installment){
+    	return selenium.getText("//div[2]/table/tbody/tr["  + installment + "]/td[2]");
+    }
+    
+    private String getTotalForInstallment(Integer installment){
+    	return selenium.getText("//div[2]/table/tbody/tr["  + installment + "]/td[6]");
+    }
+    
+    public void verifyInstallmentsSchedule(List<String> totals, List<String> dueDates, Integer noOfIntallments){
+    	for(int i=0; i<noOfIntallments; i++){
+    		Assert.assertEquals(getDueDateForInstallment((i+1)), dueDates.get(i));
+    		Assert.assertEquals(getTotalForInstallment((i+1)), totals.get(i));
+    	}
     }
 }

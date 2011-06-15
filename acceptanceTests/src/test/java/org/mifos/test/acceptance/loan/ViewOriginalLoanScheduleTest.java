@@ -2,6 +2,9 @@ package org.mifos.test.acceptance.loan;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.admin.FeeTestHelper;
@@ -10,8 +13,14 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage.CreateHolidaySubmitParameters;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountPreviewPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountReviewInstallmentPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
@@ -100,22 +109,83 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         verifyOriginalSchedule(tableOnOriginalInstallment);
     }
 
-    @Test(enabled=true)
+    @Test(enabled=false)
+    // http://mifosforge.jira.com/browse/MIFOSTEST-1163
+    //blocked by http://mifosforge.jira.com/browse/MIFOS-5026
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForVariableInstallmentLoanEarlyDisbursal() throws Exception {
+    	//Given
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE;
+        DateTime disbursalDate = systemDateTime.plusDays(1);
         applicationDatabaseOperation.updateLSIM(1);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(interestType);
-        loanProductTestHelper.
+        CreateLoanAccountSubmitParameters accountSubmitParameters = new CreateLoanAccountSubmitParameters();
+        accountSubmitParameters.setAmount("1000.0");
+        accountSubmitParameters.setInterestRate("20");
+        accountSubmitParameters.setNumberOfInstallments("5");
+        accountSubmitParameters.setDd("11");
+        accountSubmitParameters.setMm("10");
+        accountSubmitParameters.setYy("2011");
+        String[] fees = {"fixedFeePerAmountAndInterest", "fixedFeePerInterest"};
+        EditLoanAccountInformationParameters editAccountParameters = new EditLoanAccountInformationParameters();
+        editAccountParameters.setGracePeriod("0");
+        formParameters.addFee("fixedFeePerAmountAndInterest");
+        formParameters.addFee("fixedFeePerInterest");
+        
+        //When
+        DefineNewLoanProductPage defineNewLoanProductPage = loanProductTestHelper.
                 navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
-                fillVariableInstalmentOption("30","1","100").
-                submitAndGotoNewLoanProductPreviewPage().submit();
+                fillVariableInstalmentOption("30","1","100");
+        defineNewLoanProductPage.submitWithErrors("fee cannot be applied to variable installment loan product");
+        defineNewLoanProductPage.setInterestRateType(DefineNewLoanProductPage.SubmitFormParameters.FLAT);
+        defineNewLoanProductPage.submitWithErrors("The selected interest type is invalid for variable installment loan product");
+        defineNewLoanProductPage.setInterestRateType(interestType);
+        defineNewLoanProductPage.submitAndGotoNewLoanProductPreviewPage().submit();
+        
+        List<String> errors = new ArrayList<String>();
+        errors.add("fixedFeePerAmountAndInterest fee cannot be applied to loan with variable installments");
+        errors.add("fixedFeePerInterest fee cannot be applied to loan with variable installments.");
         
         navigationHelper.navigateToHomePage();
-        loanTestHelper.
+        CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters()).
-                setDisbursalDate(systemDateTime.plusDays(1)).
-                clickContinue().clickPreviewAndGoToReviewLoanAccountPage().submit().navigateToLoanAccountDetailsPage();
+                setDisbursalDate(disbursalDate).
+                applyAdditionalFees(fees).
+                submitWithErrors(errors).
+                unselectAdditionalFees().
+                clickContinue();
+        createLoanAccountReviewInstallmentPage.isDueDatesEditable(Integer.parseInt(formParameters.getDefInstallments()));
+        createLoanAccountReviewInstallmentPage.isTotalsEditable(Integer.parseInt(formParameters.getDefInstallments()));
+        String total = createLoanAccountReviewInstallmentPage.getTotalForInstallment(1);
+        createLoanAccountReviewInstallmentPage.setTotalForInstallment(1, "3");
+        createLoanAccountReviewInstallmentPage.submitWithErrors("has total amount less than the sum of interest and fees");
+        createLoanAccountReviewInstallmentPage.setTotalForInstallment(1, "5");
+        createLoanAccountReviewInstallmentPage.submitWithErrors("has total amount less than the allowed value");
+        createLoanAccountReviewInstallmentPage.setTotalForInstallment(1, total);
+        createLoanAccountReviewInstallmentPage.validate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2011, 9, 13);
+        String prevDueDate = createLoanAccountReviewInstallmentPage.getDueDateForInstallment(1);
+        createLoanAccountReviewInstallmentPage.typeInstallmentDueDateByPicker(1, calendar);
+        createLoanAccountReviewInstallmentPage.setDueDateForInstallment(1, prevDueDate);
+        prevDueDate = createLoanAccountReviewInstallmentPage.getDueDateForInstallment(5);
+        createLoanAccountReviewInstallmentPage.setDueDateForInstallment(5, "07/11/11");
+        createLoanAccountReviewInstallmentPage.submitWithErrors("Gap between the due dates of installment 5 and the previous installment is less than allowed");
+        createLoanAccountReviewInstallmentPage.setDueDateForInstallment(5, prevDueDate);
+        List<String> totals = createLoanAccountReviewInstallmentPage.getTotalsInstallments(Integer.parseInt(formParameters.getDefInstallments()));
+        List<String> dueDates = createLoanAccountReviewInstallmentPage.getDueDatesInstallments(Integer.parseInt(formParameters.getDefInstallments()));
+        CreateLoanAccountPreviewPage createLoanAccountPreviewPage =createLoanAccountReviewInstallmentPage
+                .clickPreviewAndGoToReviewLoanAccountPage();
+        createLoanAccountPreviewPage.verifyInstallmentsSchedule(totals, dueDates, Integer.parseInt(formParameters.getDefInstallments()));
+        LoanAccountPage loanAccountPage = createLoanAccountPreviewPage.submit()
+                .navigateToLoanAccountDetailsPage();
+        loanAccountPage.verifyDisbursalDate(disbursalDate);
+        ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToRepaymentSchedulePage();
+        viewRepaymentSchedulePage.verifyScheduleAndAmounts(totals, dueDates);
+        viewRepaymentSchedulePage.navigateBack();
+        EditLoanAccountInformationPage editLoanAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
+        editLoanAccountInformationPage.verifyAccountParams(accountSubmitParameters, editAccountParameters);
+        editLoanAccountInformationPage.navigateBack();
         loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
         loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
         loanTestHelper.approveLoan();
@@ -127,6 +197,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
         verifyOriginalSchedule(tableOnOriginalInstallment);
         loanTestHelper.makePayment(systemDateTime.plusDays(5), "100");
+        //Then
         verifyOriginalSchedule(tableOnOriginalInstallment);
         applicationDatabaseOperation.updateLSIM(0);
     }

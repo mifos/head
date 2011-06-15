@@ -36,8 +36,8 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
     String previewButton = "previewBtn";
     String totalField = "paymentDataBeans[%s].total";
     String dateField = "paymentDataBeans[%s].dueDate";
-    String paidDateField = "paymentDataBeans[%s].date";
-    String paidAmountField = "paymentDataBeans[%s].amount";
+    String paidDateField = "actualPaymentDates[%s]";
+    String paidAmountField = "actualPaymentAmounts[%s]";
     String dateFieldDatePicker = "//input[@name='paymentDataBeans[%s].dueDate']/following-sibling::img[@class='ui-datepicker-trigger']";
     String actualDateFieldDatePicker = "//input[@name='paymentDataBeans[%s].date']/following-sibling::img[@class='ui-datepicker-trigger']";
     String editScheduleInformation = "//input[@id='createloanpreview.button.edit' and @name='editButton' and @value='Edit Loan Schedule Information']";
@@ -296,7 +296,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
     }
 
     public RedoLoanAccountPreviewPage clickPreviewAndGoToReviewLoanAccountPage() {
-        selenium.click(previewButton);
+        selenium.click("schedulePreview.button.preview");
         selenium.waitForPageToLoad("3000");
         return new RedoLoanAccountPreviewPage(selenium);
     }

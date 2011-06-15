@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -41,14 +43,14 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public void verifyAdditionalFeesAreEmpty() {
-        Assert.assertEquals(selenium.getSelectedValue("selectedFee[0].feeId"), "");
-        Assert.assertEquals(selenium.getValue("selectedFee[0].amount"), "");
+        Assert.assertEquals(selenium.getSelectedValue("selectedFeeId[0]"), "");
+        Assert.assertEquals(selenium.getValue("selectedFeeAmount[0]"), "");
 
-        Assert.assertEquals(selenium.getSelectedValue("selectedFee[1].feeId"), "");
-        Assert.assertEquals(selenium.getValue("selectedFee[1].amount"), "");
+        Assert.assertEquals(selenium.getSelectedValue("selectedFeeId[1]"), "");
+        Assert.assertEquals(selenium.getValue("selectedFeeAmount[1]"), "");
 
-        Assert.assertEquals(selenium.getSelectedValue("selectedFee[2].feeId"), "");
-        Assert.assertEquals(selenium.getValue("selectedFee[2].amount"), "");
+        Assert.assertEquals(selenium.getSelectedValue("selectedFeeId[2]"), "");
+        Assert.assertEquals(selenium.getValue("selectedFeeAmount[2]"), "");
     }
 
     public CreateLoanAccountEntryPage(Selenium selenium) {
@@ -103,8 +105,11 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     public CreateLoanAccountReviewInstallmentPage submitAndNavigateToLoanReviewInstallmentsPage(CreateLoanAccountSubmitParameters formParameters) {
         submitLoanAccount(formParameters);
-        waitForPageToLoad();
         return new CreateLoanAccountReviewInstallmentPage(selenium).verifyPage();
+    }
+    
+    public void setLonaPurpose(String loanPurpose){
+    	selenium.select("loanPurposeId", "label="+loanPurpose);
     }
 
     private void submitLoanAccount(CreateLoanAccountSubmitParameters formParameters) {
@@ -134,20 +139,27 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         if (formParameters.getDd() != null && formParameters.getMm() != null && formParameters.getYy() != null){
             setDisbursalDate(formParameters.getDd(), formParameters.getMm(), formParameters.getYy());
         }
+        if(formParameters.getLoanPurpose() != null){
+        	setLonaPurpose(formParameters.getLoanPurpose());
+        }
         fillAdditionalFee(formParameters);
         submitAndWaitForPage();
     }
 
-    public void fillAdditionalFee(CreateLoanAccountSubmitParameters formParameters){
-        if(formParameters.getAdditionalFee1()!=null) {
-            selenium.select("selectedFeeId0", "label=" + formParameters.getAdditionalFee1());
+    public CreateLoanAccountEntryPage fillAdditionalFee(CreateLoanAccountSubmitParameters formParameters){
+        if(formParameters != null)
+        {
+            if(formParameters.getAdditionalFee1()!=null) {
+                selenium.select("selectedFeeId0", "label=" + formParameters.getAdditionalFee1());
+            }
+            if(formParameters.getAdditionalFee2()!=null) {
+                selenium.select("selectedFeeId1", "label=" + formParameters.getAdditionalFee2());
+            }
+            if(formParameters.getAdditionalFee3()!=null) {
+                selenium.select("selectedFeeId2", "label=" + formParameters.getAdditionalFee3());
+            }
         }
-        if(formParameters.getAdditionalFee2()!=null) {
-            selenium.select("selectedFeeId1", "label=" + formParameters.getAdditionalFee2());
-        }
-        if(formParameters.getAdditionalFee3()!=null) {
-            selenium.select("selectedFeeId2", "label=" + formParameters.getAdditionalFee3());
-        }
+        return this;
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {
@@ -189,21 +201,43 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public HomePage navigateToHomePage(){
-        selenium.click("id=clientsAndAccountsHeader.link.home");
+        selenium.click("id=header.link.home");
         waitForPageToLoad();
         return new HomePage(selenium);
     }
 
     public void selectAdditionalFees() {
-        selenium.select("selectedFeeId0", "label=One Time Upfront Fee");
+        selenium.select("selectedFeeId0", "label=oneTimeFee");
         selenium.type("selectedFeeId0Amount", "6.6");
 
-        selenium.select("selectedFeeId1", "label=One Time Upfront Fee");
+        selenium.select("selectedFeeId1", "label=oneTimeFee");
         selenium.type("selectedFeeId1Amount", "3.3");
     }
 
     public void unselectAdditionalFee() {
         selenium.select("selectedFeeId1", "label=--Select--");
+    }
+    
+    public CreateLoanAccountEntryPage unselectAdditionalFees() {
+    	for(int i=0; i<3; i++){
+    		selenium.select("selectedFeeId"+i, "label=--Select--");
+    	}
+    	return this;
+    }
+    
+    public CreateLoanAccountEntryPage applyAdditionalFees(String[] fees) {
+    	for(int i=0; i<fees.length && i<3; i++){
+    		selenium.select("selectedFeeId"+i, "label="+fees[i]);
+    	}
+    	return this;
+    }
+    
+    public CreateLoanAccountEntryPage submitWithErrors(List<String> errors) {
+    	submitAndWaitForPage();
+    	for (String error : errors) {
+    		selenium.isTextPresent(error);
+		}
+        return this;
     }
 
     public void selectTwoClientsForGlim() {
@@ -331,7 +365,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         return this;
     }
 
-    private void setDisbursalDate(String dd, String mm, String yy) {
+    public void setDisbursalDate(String dd, String mm, String yy) {
         selenium.type("disbursementDateDD",dd);
         selenium.fireEvent("name=disbursementDateDD", "blur");
 
@@ -450,5 +484,22 @@ public class CreateLoanAccountEntryPage extends MifosPage {
             
     public void setAmount(String amount) {
         selenium.type("loancreationdetails.input.sumLoanAmount", amount);
+    }
+    
+    public void setInterestRate(String interestRate) {
+        selenium.type("loancreationdetails.input.interestRate", interestRate);
+    }
+    
+    public CreateLoanAccountEntryPage setInstallments(String noOfInstallment) {
+        typeText("numberOfInstallments",noOfInstallment);
+        return this;
+    }
+    
+    public void verifyNoError(String error) {
+        Assert.assertFalse(selenium.isElementPresent("//span[@id='loancreationdetails.error.message']/div/ul/li/span[text()='"+error+"']"));
+    }
+    
+    public void verifyDisbsursalDate(String dd, String mm, String yyyy) {
+        Assert.assertEquals(selenium.getValue("disbursementDateDD") + "-" + selenium.getValue("disbursementDateMM") + "-" + selenium.getValue("disbursementDateYY") , dd+ "-" +mm+ "-"+yyyy);
     }
 }

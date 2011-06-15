@@ -37,6 +37,8 @@ public class EditLoanProductPage extends MifosPage {
     String minInstalmentAmountTextBox = "minimumInstallmentAmount";
     String cashFlowCheckbox = "cashFlowValidation";
     String cashFlowThresholdTextBox = "cashFlowThreshold";
+    String indebtednessRatioTextBox = "indebtednessRatio";
+    String repaymentCapacityTextBox = "repaymentCapacity";
     public EditLoanProductPage(Selenium selenium) {
         super(selenium);
     }
@@ -183,6 +185,16 @@ public class EditLoanProductPage extends MifosPage {
             selenium.click(cashFlowCheckbox);
         }
         selenium.type(cashFlowThresholdTextBox, warningThreshold);
+        return this;
+    }
+    
+    public EditLoanProductPage setIndebtednessRate(String warningThreshold) {
+        selenium.type(indebtednessRatioTextBox, warningThreshold);
+        return this;
+    }
+    
+    public EditLoanProductPage setRepaymentCapacity(String warningThreshold) {
+        selenium.type(repaymentCapacityTextBox, warningThreshold);
         return this;
     }
 

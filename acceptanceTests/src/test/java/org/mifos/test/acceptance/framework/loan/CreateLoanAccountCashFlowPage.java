@@ -58,6 +58,15 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         Assert.assertEquals(selenium.getText("//thead/tr[1]/th[3]"), "*Revenue");
         Assert.assertEquals(selenium.getText("//thead/tr[1]/th[4]"), "Notes");
     }
+    
+    public void verifyMonths() {
+        Assert.assertEquals(selenium.getText("xpath=//table/tbody/tr[1]"), "September 2010");
+        Assert.assertEquals(selenium.getText("xpath=//table/tbody/tr[2]"), "October 2010");
+        Assert.assertEquals(selenium.getText("xpath=//table/tbody/tr[3]"), "November 2010");
+        Assert.assertEquals(selenium.getText("xpath=//table/tbody/tr[4]"), "December 2010");
+        Assert.assertEquals(selenium.getText("xpath=//table/tbody/tr[5]"), "January 2011");
+        Assert.assertEquals(selenium.getText("xpath=//table/tbody/tr[6]"), "February 2011");
+    }
 
     public void verifyInvalidTextTyped() {
         String keys = "qwertyuiop[]asdfghjkl;'zxcvbnm ?><{}|\\_+-=!@#$%^&*()";
@@ -74,6 +83,12 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
     public void verifyErrorsOnPage() {
         Assert.assertTrue(selenium.isTextPresent("Please specify expense for "));
         Assert.assertTrue(selenium.isTextPresent("Please specify revenue for "));
+    }
+    
+    public void verifyErrorsOnPage(String... errors) {
+        for (String error : errors) {
+            Assert.assertTrue(selenium.isTextPresent(error));
+        }
     }
 
     private String getNumbers(int length) {
@@ -165,7 +180,7 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         selenium.type(totalCapital, capital);
         selenium.type(totalLiability, liability);
         clickContinue();
-        Assert.assertTrue(selenium.isTextPresent("Indebtedness rate of the client is 49.99 % which should be lesser than the allowable value of " + maxValue + " %"));
+        Assert.assertTrue(selenium.isTextPresent("Indebtedness rate of the client is 49.99 % which is greater than allowed value of " + maxValue + " %"));
         return this;
     }
 

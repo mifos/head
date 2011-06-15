@@ -114,7 +114,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         String loanId = loanAccountPage.getAccountId();
         loanAccountPage.verifyLoanIsPendingApproval();
         loanAccountPage.verifyNumberOfInstallments("4");
-        loanAccountPage.verifyDisbursalDate("Disbursal date: 04/03/2011");
+        loanAccountPage.verifyDisbursalDate("04/03/2011");
         loanAccountPage.verifyPrincipalOriginal("39999.6");
         loanAccountPage.verifyLoanTotalBalance("41147.0");
         loanAccountPage.verifyFeesOriginal("410.0");
@@ -184,11 +184,8 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         Assert.assertTrue(selenium.isTextPresent("You must select at least two individual members in the \"Individual Details\" section in order to successfully create a loan."));
     }
     
-    /**
-     * FIXME - keithw - stepping into questionaire page rather than reivew installments page
-     */
-    @Test(enabled = false)
     // http://mifosforge.jira.com/browse/MIFOSTEST-133
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void checkGLIMLoanCreatedBySaveForLater() throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
@@ -234,24 +231,18 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
    }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    /**
-     * FIXME - keithw - stepping into questionaire page rather than reivew installments page
-     */
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void newWeeklyGLIMAccount() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Default Group");
         searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
         CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
-        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "301");
-        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "401");
+        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "301", "0012-Sheep Purchase");
+        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "401", "0012-Sheep Purchase");
         loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPage();
     }
 
-    /**
-     * FIXME - keithw - calculated amount from javascript isnt to one decimal, check with kay.
-     */
-    @Test(enabled = false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void checkGLIMAccountTotalCalculationWithDecimal() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();

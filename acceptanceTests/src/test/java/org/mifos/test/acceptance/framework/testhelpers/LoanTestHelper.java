@@ -149,11 +149,16 @@ public class LoanTestHelper {
         CreateLoanAccountEntryPage loanAccountEntryPage = this.navigateToCreateLoanAccountEntryPage(searchParameters);
 
         List<GLIMClient> clients= new ArrayList<GLIMClient>();
-        clients.add(new GLIMClient(0,"Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "9999.9", "0009-Horse"));
-        clients.add(new GLIMClient(1, "Stu1233266309851 Client1233266309851 Client Id: 0002-000000013", "99999.9", "0001-Cow Purchase"));
-        clients.add(new GLIMClient(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "99999.9", "0003-Goat Purchase"));
+        clients.add(new GLIMClient(0,"Stu1233266299995 Client1233266299995 \n Client Id: 0002-000000012", "9999.9", "0009-Horse"));
+        clients.add(new GLIMClient(1, "Stu1233266309851 Client1233266309851 \n Client Id: 0002-000000013", "99999.9", "0001-Cow Purchase"));
+        clients.add(new GLIMClient(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0002-000000014", "99999.9", "0003-Goat Purchase"));
+        
+        List<GLIMClient> clients2= new ArrayList<GLIMClient>();
+        clients2.add(new GLIMClient(0,"Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "9999.9", "0009-Horse"));
+        clients2.add(new GLIMClient(1, "Stu1233266309851 Client1233266309851 Client Id: 0002-000000013", "99999.9", "0001-Cow Purchase"));
+        clients2.add(new GLIMClient(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "99999.9", "0003-Goat Purchase"));
 
-        for (GLIMClient glimClient : clients) {
+        for (GLIMClient glimClient : clients2) {
             loanAccountEntryPage.selectGLIMClients(glimClient.getClientNumber(), glimClient.getClientName(), glimClient.getLoanAmount(), glimClient.getLoanPurpose());
         }
         CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage;
@@ -796,6 +801,7 @@ public class LoanTestHelper {
             .navigateToClientsAndAccountsPage()
             .navigateToCreateLoanAccountUsingLeftMenu()
             .searchAndNavigateToCreateLoanAccountPage(searchParams);
+        createLoanAccountEntryPage.setLonaPurpose("0013-Hybrid Cow");
         
         Double loanAmountDouble = Double.valueOf(createLoanAccountEntryPage.getLoanAmount());
         

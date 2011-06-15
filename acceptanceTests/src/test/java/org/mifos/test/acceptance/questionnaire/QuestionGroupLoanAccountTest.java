@@ -31,7 +31,9 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.account.AccountStatus;
 import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountPreviewPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
@@ -83,9 +85,6 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    /*
-     * FIXME - keithw - disabled 
-     */
     @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyCapturingResponsesDuringLoanDisburse() throws Exception {
@@ -109,7 +108,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
 
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "07/02/2011");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "20");
-            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].values2", "three");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].valuesAsArray", "three");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "free text2");
 
             LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(createLoanAccountSearchParameters);
@@ -163,20 +162,20 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    /*
-     * FIXME - keithw - disabled 
-     */
-    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyResponsesDuringCreationOfLoanAccount() throws Exception {
+        CreateLoanAccountSearchParameters createLoanAccountSearchParameters = new CreateLoanAccountSearchParameters();
+        createLoanAccountSearchParameters.setLoanProduct("WeeklyClientFlatLoanWithNoFee");
+        createLoanAccountSearchParameters.setSearchString("ClientWithLoan 20110221");
+        
+        CreateLoanAccountSubmitParameters formParameters = new CreateLoanAccountSubmitParameters();
+        formParameters.setAdditionalFee1("oneTimeFee");
+        formParameters.setAdditionalFee2("loanWeeklyFee");
+        
+        verifyQGNotDisplayed(createLoanAccountSearchParameters);
         questionGroupTestHelper.markQuestionGroupAsActive("QGForCreateLoan1");
         questionGroupTestHelper.markQuestionGroupAsActive("QGForCreateLoan2");
         try {
-
-            CreateLoanAccountSearchParameters createLoanAccountSearchParameters = new CreateLoanAccountSearchParameters();
-            createLoanAccountSearchParameters.setLoanProduct("WeeklyClientFlatLoanWithNoFee");
-            createLoanAccountSearchParameters.setSearchString("ClientWithLoan 20110221");
-
             QuestionResponseParameters questionResponseParameters = new QuestionResponseParameters();
             questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "04/02/2011");
             questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "free text");
@@ -184,7 +183,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
 
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "07/02/2011");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "20");
-            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].values2", "three");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].values", "three");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "free text2");
 
             CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();
@@ -202,13 +201,18 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
             questionsAndAnswers.put("Date", "04/02/2011");
 
 
-            QuestionResponsePage questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanCreation(createLoanAccountSearchParameters);
+            QuestionResponsePage questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanCreation(createLoanAccountSearchParameters, formParameters);
             questionResponsePage.populateAnswers(questionResponseParameters);
-            questionResponsePage = questionResponsePage
+            CreateLoanAccountPreviewPage createLoanAccountPreviewPage = questionResponsePage
                     .continueAndNavigateToCreateLoanAccountReviewInstallmentPage()
-                    .clickPreviewAndGoToReviewLoanAccountPage()
-                    .navigateToQuestionResponsePage();
-            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "blue");
+                    .clickPreviewAndGoToReviewLoanAccountPage();
+            
+            verifyCreateLoanAccountPreviewPage();
+            
+            questionResponsePage = createLoanAccountPreviewPage.navigateToQuestionResponsePage();
+            
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "blue");
+            
             questionResponsePage.populateAnswers(questionResponseParameters);
             LoanAccountPage loanAccountPage = questionResponsePage
                     .continueAndNavigateToCreateLoanAccountReviewInstallmentPage()
@@ -216,16 +220,29 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
                     .submit()
                     .navigateToLoanAccountDetailsPage();
             String loanID = loanAccountPage.getAccountId();
+            
+            verifyFees();
+            
+            ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = questionGroupTestHelper.navigateToLoanViewQuestionResponseDetailPage(loanID);
+            
+            viewQuestionResponseDetailPage.verifyQuestionPresent("Date", "04/02/2011");
+            viewQuestionResponseDetailPage.verifyQuestionPresent("ToBeDisabled", "free text");
+            viewQuestionResponseDetailPage.verifyQuestionPresent("FreeText", "free text1");
+            viewQuestionResponseDetailPage.verifyQuestionPresent("SingleSelect", "blue");
+            viewQuestionResponseDetailPage.verifyQuestionPresent("DateQuestion", "07/02/2011");
+            viewQuestionResponseDetailPage.verifyQuestionPresent("Number", "20");
+            viewQuestionResponseDetailPage.verifyQuestionPresent("MultiSelect", "three");
+            viewQuestionResponseDetailPage.verifyQuestionPresent("Text", "free text2");
 
             questionGroupTestHelper.markQuestionAsInactive("ToBeDisabled");
             questionGroupTestHelper.markQuestionGroupAsInactive("QGForCreateLoan2");
             questionGroupTestHelper.addNewQuestionsToQuestionGroup("QGForCreateLoan1", newQuestionList);
 
-            questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanCreation(createLoanAccountSearchParameters);
+            questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanCreation(createLoanAccountSearchParameters, null);
             questionResponsePage.verifyQuestionsExists(questionsExist);
             questionResponsePage.verifyQuestionsDoesnotappear(questionsInactive);
 
-            ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = questionGroupTestHelper.navigateToLoanViewQuestionResponseDetailPage(loanID);
+            viewQuestionResponseDetailPage = questionGroupTestHelper.navigateToLoanViewQuestionResponseDetailPage(loanID);
             viewQuestionResponseDetailPage.verifyQuestionPresent("MultiSelect", "three");
             viewQuestionResponseDetailPage.verifyQuestionPresent("Number", "20");
             viewQuestionResponseDetailPage.verifyQuestionPresent("Date", "04/02/2011");
@@ -238,14 +255,43 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         }
     }
 
+    private void verifyQGNotDisplayed(CreateLoanAccountSearchParameters createLoanAccountSearchParameters) {
+        loanTestHelper.navigateToCreateLoanAccountEntryPage(createLoanAccountSearchParameters)
+            .clickContinue()
+            .verifyPage();
+    }
+            
+    private void verifyFees() {
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='loanSummaryTable']//tr[4]//td[2]"), "1010.0");
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='loanSummaryTable']//tr[4]//td[4]"), "1010.0");
+    }
+    
+    private void verifyCreateLoanAccountPreviewPage() {
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[@class='row'][1]/div[@class='value']"), "10,000 (Allowed amount: 1,000 - 10,000)");
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[@class='row'][4]/div[@class='value']"), "25-Feb-2011");
+        
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments']//tr[1]//td[2]"), "04-Mar-2011");
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments']//tr[1]//td[5]"), "110");
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments']//tr[1]//td[6]"), "1,156");
+        
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments']//tr[4]//td[2]"), "25-Mar-2011");
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments']//tr[4]//td[5]"), "100");
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='installments']//tr[4]//td[6]"), "1,146");
+        
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='summary']/div[@class='row']/div[@class='value']"), "04/02/2011");
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='summary']/div[@class='row'][2]/div[@class='value']"), "free text");
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='summary']/div[@class='row'][3]/div[@class='value']"), "free text1");
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='summary']/div[@class='row'][6]/div[@class='value']"), "07/02/2011");
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='summary']/div[@class='row'][7]/div[@class='value']"), "20");
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='summary']/div[@class='row'][8]/div[@class='value']"), "three");
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='summary']/div[@class='row'][9]/div[@class='value']"), "free text2");
+    }
+    
     /**
      * Capturing responses while approving Loan account
      * http://mifosforge.jira.com/browse/MIFOSTEST-684
      *
      * @throws Exception
-     */
-    /*
-     * FIXME - keithw - disabled 
      */
     @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -269,7 +315,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
 
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "07/02/2011");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "20");
-            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].values2", "three");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].valuesAsArray", "three");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "free text2");
 
             CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();

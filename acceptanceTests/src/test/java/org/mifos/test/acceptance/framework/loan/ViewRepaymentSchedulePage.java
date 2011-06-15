@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.mifos.test.acceptance.framework.AbstractPage;
@@ -64,6 +66,18 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
 
     private String getPrincipalOfInstallmentFromSchedule(int row) {
         return getCellOfScheduleTable(row, 3);
+    }
+    
+    private String getTotalOfInstallmentFromSchedule(int row) {
+        return getCellOfScheduleTable(row, 6);
+    }
+    
+    private void verifyTotalOfInstallmentFromSchedule(int row, String amount) {
+    	Assert.assertEquals(getTotalOfInstallmentFromSchedule(row), amount+".0");
+    }
+    
+    private void verifyDateOfInstallmentFromSchedule(int row, String date) {
+    	Assert.assertEquals(getDateOfInstallmentFromSchedule(row), date);
     }
 
     public LoanAccountPage navigateToLoanAccountPage() {
@@ -220,6 +234,18 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
     
     public void verifyRepaymentScheduleTableDueDate(int row, int column, String value) {
         Assert.assertEquals(selenium.getTable("installments." + row + "." + column), value);
+    }
+    
+    public void verifyScheduleAndAmounts(List<String> totals, List<String> dueDates){
+        int rowCount = selenium.getXpathCount("//table[@id='installments']/tbody/tr").intValue();
+        int j=0;
+        for (int i = 1; i < rowCount; i++) {
+            if (getNoOfInstallmentFromSchedule(i).matches("^[0-9]+$")){
+            	verifyTotalOfInstallmentFromSchedule(i, totals.get(j));
+            	verifyDateOfInstallmentFromSchedule(i, dueDates.get(j));
+            	j++;
+            }
+        }
     }
 
     public void verifyRepaymentScheduleTablePrincipal(int row, int column, String value) {

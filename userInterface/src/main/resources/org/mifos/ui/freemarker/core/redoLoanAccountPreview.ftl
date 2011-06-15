@@ -263,7 +263,7 @@
 <br />
 
 <h1><span class="standout">[@spring.message "reviewInstallments.heading" /]</span></h1>
-<table style="margin-bottom: 15px;">
+<table style="margin-bottom: 15px;" id="installments">
 		<thead>
 		<tr>
 			<th style="border-top: 1px solid grey; width: 100px;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
@@ -325,7 +325,7 @@
 
 [#if loanProductReferenceData.compareCashflowEnabled]
 	[#if cashFlowSummaryFormBean.loanRepaymentFutureInstallments?has_content]
-	<table style="margin-bottom: 15px; width: 605px;">
+	<table style="margin-bottom: 15px; width: 605px;" id="futureInstallments">
 			<thead>
 			<tr>
 				<th style="border-top: 1px solid grey; width: 100px;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
@@ -345,7 +345,7 @@
 			<tr>
 				<td style="border-top: 1px solid grey;">${row.installmentNumber?string.number}</td>
 				<td style="border-top: 1px solid grey;">${row.dueDate?date?string.medium}</td>
-				<th style="border-top: 1px solid grey; width: 20px;">-</th>
+				<td style="border-top: 1px solid grey; width: 20px;">-</td>
 				<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
 				<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
 				<td style="border-top: 1px solid grey;">${row.fees?string.number}</td>
@@ -377,7 +377,7 @@
 			<tr>
 				<td style="border-top: 1px solid grey;">${row.installmentNumber?string.number}</td>
 				<td style="border-top: 1px solid grey;">${row.dueDate?date?string.medium}</td>
-				<th style="border-top: 1px solid grey; width: 20px;">-</th>
+				<td style="border-top: 1px solid grey; width: 20px;">-</td>
 				<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
 				<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
 				<td style="border-top: 1px solid grey;">${row.fees?string.number}</td>

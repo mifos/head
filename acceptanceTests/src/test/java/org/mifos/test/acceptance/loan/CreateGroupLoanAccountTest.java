@@ -28,6 +28,8 @@ import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.DefineHiddenMandatoryFieldsPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountPreviewPage;
@@ -85,14 +87,10 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-303
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-     /*
-     * suppressing for MIFOS-4060 - KEITHW 
-     */
-    @Test(enabled=false)
     public void newWeeklyGroupLoanAccount() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011, 2, 18, 1, 0, 0, 0);
+        DateTime targetTime = new DateTime(2011, 2, 25, 1, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         //When
         ClientsAndAccountsHomepage clientsAndAccountsHomepage = navigationHelper.navigateToClientsAndAccountsPage();
@@ -102,7 +100,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         formParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
         CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage.searchAndNavigateToCreateLoanAccountPage(formParameters);
         createLoanAccountEntryPage.setAmount("3000.0");
-        createLoanAccountEntryPage.setDisbursalDate(new DateTime(2011, 2, 18, 15, 0, 0, 0));
+        createLoanAccountEntryPage.setDisbursalDate(new DateTime(2011, 2, 25, 15, 0, 0, 0));
         selectAdditionalFees();
         CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = createLoanAccountEntryPage.navigateToReviewInstallmentsPage();
         verifyFirstInstallmentDateAndDisbursalDateOnReviewPage();
@@ -114,17 +112,17 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         String loanId = loanAccountPage.getAccountId();
         loanAccountPage.verifyLoanIsPendingApproval();
         loanAccountPage.verifyNumberOfInstallments("4");
-        loanAccountPage.verifyDisbursalDate("Disbursal date: 18/02/2011");
+        loanAccountPage.verifyDisbursalDate("25/02/2011");
         loanAccountPage.verifyPrincipalOriginal("3000.0");
         loanAccountPage.verifyLoanTotalBalance("3466.0");
         loanAccountPage.verifyFeesOriginal("410.0");
         loanAccountPage.verifyInterestOriginal("56.0");
         verifyFees();
         ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, 1, "25-Feb-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(4, 1, "04-Mar-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(5, 1, "11-Mar-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(6, 1, "18-Mar-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, 1, "04-Mar-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(4, 1, "11-Mar-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(5, 1, "18-Mar-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(6, 1, "25-Mar-2011");
         viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(3, 3, "750.2");
         viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(4, 3, "750.2");
         viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(5, 3, "750.2");
@@ -142,7 +140,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
 
         DisburseLoanParameters disburseParameters = new DisburseLoanParameters();
         disburseParameters.setPaymentType(DisburseLoanParameters.CASH);
-        disburseParameters.setDisbursalDateDD("18");
+        disburseParameters.setDisbursalDateDD("25");
         disburseParameters.setDisbursalDateMM("02");
         disburseParameters.setDisbursalDateYYYY("2011");
         loanTestHelper.disburseLoan(loanId, disburseParameters);
@@ -154,8 +152,8 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     }
             
     private void verifyFirstInstallmentDateAndDisbursalDateOnReviewPage(){
-        Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary']/div[3]/div[2]"), ("18-Feb-2011"));
-        Assert.assertEquals(selenium.getTable("installments.1.1"), ("25-Feb-2011"));
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary']/div[3]/div[2]"), ("25-Feb-2011"));
+        Assert.assertEquals(selenium.getTable("installments.1.1"), ("04-Mar-2011"));
     }
             
     private void verifyAdditionalFeesOnReviewPage(){
@@ -164,8 +162,8 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     }
             
     private void verifyFirstInstallmentDateAndDisbursalDateOnPreviewPage(){
-        Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[4]/div[2]"), ("18-Feb-2011"));
-        Assert.assertEquals(selenium.getTable("installments.1.1"), ("25-Feb-2011"));
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[4]/div[2]"), ("25-Feb-2011"));
+        Assert.assertEquals(selenium.getTable("installments.1.1"), ("04-Mar-2011"));
     }
             
     private void verifyFees() {
@@ -180,10 +178,6 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     * @throws Exception
     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    /*
-     * suppressing for MIFOS-4060 - KEITHW 
-     */
-    @Test(enabled=false)
     public void CreateLoanWithGLIMandLSIMenabled() throws Exception {
         applicationDatabaseOperation.updateGLIM(1);
         applicationDatabaseOperation.updateLSIM(1);
@@ -199,7 +193,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         verifyDisbursalDateErrorMessage();
         createLoanAccountEntryPage.setDisbursalDate(new DateTime(2011, 4, 21, 15, 0, 0, 0));
         verifyDisbursalDateErrorMessage();
-        createLoanAccountEntryPage.setDisbursalDate(new DateTime(2011, 4, 24, 15, 0, 0, 0));
+        createLoanAccountEntryPage.setDisbursalDate(new DateTime(2011, 4, 29, 15, 0, 0, 0));
         createLoanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "500", "0000-Animal Husbandry");
         createLoanAccountEntryPage.selectGLIMClients(1, "Stu1233266309851 Client1233266309851 Client Id: 0002-000000013", "1000", "0001-Cow Purchase");
         CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = createLoanAccountEntryPage.navigateToReviewInstallmentsPage();
@@ -210,21 +204,22 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
         loanAccountPage.verifyLoanIsPendingApproval();
         loanAccountPage.verifyNumberOfInstallments("10");
-        loanAccountPage.verifyDisbursalDate("Disbursal date: 24/04/2011");
+        loanAccountPage.verifyDisbursalDate("29/04/2011");
         loanAccountPage.verifyPrincipalOriginal("1500.0");
         loanAccountPage.verifyLoanTotalBalance("1500.0");
         ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, 1, "29-Apr-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(5, 1, "06-May-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(6, 1, "13-May-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(7, 1, "20-May-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(8, 1, "27-May-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(9, 1, "03-Jun-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(10, 1, "10-Jun-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(11, 1, "17-Jun-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(12, 1, "24-Jun-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(13, 1, "01-Jul-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, 1, "06-May-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(4, 1, "13-May-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(5, 1, "20-May-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(6, 1, "27-May-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(7, 1, "03-Jun-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(8, 1, "10-Jun-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(9, 1, "17-Jun-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(10, 1, "24-Jun-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(11, 1, "01-Jul-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(12, 1, "08-Jul-2011");
         viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(3, 3, "150.0");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(4, 3, "150.0");
         viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(5, 3, "150.0");
         viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(6, 3, "150.0");
         viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(7, 3, "150.0");
@@ -233,20 +228,19 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(10, 3, "150.0");
         viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(11, 3, "150.0");
         viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(12, 3, "150.0");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(13, 3, "150.0");
         viewRepaymentSchedulePage.navigateToLoanAccountPage();
         applicationDatabaseOperation.updateGLIM(0);
         applicationDatabaseOperation.updateLSIM(0);
     }
         
     private void verifyFirstInstallmentAndDisbursalDateOnReviewPage(){
-        Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary']/div[3]/div[2]"), ("24-Apr-2011"));
-        Assert.assertEquals(selenium.getTable("installments.1.1"), ("29-Apr-2011"));
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary']/div[3]/div[2]"), ("29-Apr-2011"));
+        Assert.assertEquals(selenium.getTable("installments.1.1"), ("06-May-2011"));
     }
         
     private void verifyFirstInstallmentAndDisbursalDateOnPreviewPage(){
-        Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[4]/div[2]"), ("24-Apr-2011"));
-        Assert.assertEquals(selenium.getTable("installments.1.1"), ("29-Apr-2011"));
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[4]/div[2]"), ("29-Apr-2011"));
+        Assert.assertEquals(selenium.getTable("installments.1.1"), ("06-May-2011"));
     }
         
     private void setAppDate(DateTime dateTime) throws UnsupportedEncodingException {
@@ -264,7 +258,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         Assert.assertFalse(selenium.isTextPresent("This is an invalid Disbursement date."));
     }
     
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException"})
     public void newMonthlyGroupLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
         //Given
@@ -291,7 +285,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
     }
 
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newMonthlyGroupLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
         homePage = loginSuccessfully();
@@ -312,12 +306,8 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
 
         createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
     }
-
-    /*
-     * FIXME - keithw - creating group loans without mandatory loan purpose does cause validation
-     *                  but is not triggered in automated test for some reason.
-     */
-    @Test(enabled=false)
+    
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void tryCreateGroupLoanWithGlimEnabledWithoutMandatoryPurposeOfLoan() throws Exception {
         applicationDatabaseOperation.updateGLIM(1);
@@ -329,9 +319,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
             CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
 
             loanAccountEntryPage.selectTwoClientsForGlim();
-
-            loanAccountEntryPage = loanAccountEntryPage.clickContinueButExpectValidationFailure();
-            loanAccountEntryPage.verifyError("Please specify loan purpose for member 1.");
+            loanAccountEntryPage.navigateToReviewInstallmentsPage();
         } finally {
             applicationDatabaseOperation.updateGLIM(0);
         }
@@ -342,6 +330,12 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     public void tryCreateGroupLoanWithMandatoryPurposeOfLoan() throws Exception {
         applicationDatabaseOperation.updateGLIM(1);
         try {
+        	AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        	DefineHiddenMandatoryFieldsPage defineHiddenMandatoryFieldsPage = adminPage.navigateToDefineHiddenMandatoryFields();
+            defineHiddenMandatoryFieldsPage.checkMandatoryLoanAccountPurpose();
+            defineHiddenMandatoryFieldsPage.submit();
+            adminPage.navigateToClientsAndAccountsPageUsingHeaderTab();
+            
             CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
             searchParameters.setSearchString("Default Group");
             searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
@@ -349,6 +343,8 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
             CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
 
             loanAccountEntryPage.selectTwoClientsForGlim();
+            loanAccountEntryPage = loanAccountEntryPage.clickContinueButExpectValidationFailure();
+            loanAccountEntryPage.verifyError("Please specify loan purpose for member 1.");
             loanAccountEntryPage.selectPurposeForGlim();
             loanAccountEntryPage.clickContinue();
         } finally {

@@ -234,7 +234,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled = false)    //IGNORED BY VIVEK SINGH
+    //@Test(enabled = false)    //IGNORED BY VIVEK SINGH
     public void tryClientLoanAccountWithAdditionalFees() throws Exception {
         setDateAsToday();
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
@@ -248,7 +248,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
         // there should be an error
         loanAccountEntryPage.submitAndWaitForPage();
-        loanAccountEntryPage.verifyError("Multiple instances of the same one-time fee are not allowed");
+        loanAccountEntryPage.verifyError("Multiple instances of the same fee are not allowed.");
 
         // after unselect everything should pass
         loanAccountEntryPage.unselectAdditionalFee();
@@ -393,7 +393,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     /*
      * passing locally but not on hudson. 
      */
-    @Test(enabled=false)
+    //@Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //CreateClient: weekly, Stu12332659912419 Client12332659912419, monday, activate
     public void verifyAccountFromProductInstallmentsSame() throws Exception {
@@ -439,7 +439,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     /*
      * passing locally but not on hudson. 
      */
-    @Test(enabled=false)
+    //@Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyCreatingLoanAccountsOnProductWithLoanCycles() throws Exception {
         setAppDate(new DateTime(2011, 1, 24, 15, 0, 0, 0));
@@ -578,7 +578,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
         loanAccountPage.verifyLoanIsInPartialApplication();
         loanAccountPage.verifyNumberOfInstallments("10");
-        loanAccountPage.verifyDisbursalDate("Disbursal date: 02/05/2011");
+        loanAccountPage.verifyDisbursalDate("02/05/2011");
         loanAccountPage.verifyPrincipalOriginal("1000.0");
         loanAccountPage.verifyLoanTotalBalance("1000.0");
         ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();

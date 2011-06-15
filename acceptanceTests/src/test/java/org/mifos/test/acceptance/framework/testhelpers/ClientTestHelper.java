@@ -231,7 +231,7 @@ public class ClientTestHelper {
         clientViewDetailsPage.verifyMeetingSchedule(oldMeetingshedule);
         clientViewDetailsPage.verifyNotes(note);
         clientViewDetailsPage.navigateToClientViewChangeLog()
-                .verifyLastEntryOnChangeLog("Name", groupName, "-", "mifos");
+                .verifyLastEntryOnChangeLog("Group Name", groupName, "-", "mifos");
 
         groupViewDetailsPage = navigationHelper.navigateToGroupViewDetailsPage(groupName);
         groupViewDetailsPage.verifyNumberOfClientsInGroup(Integer.toString(activeClients - 1));

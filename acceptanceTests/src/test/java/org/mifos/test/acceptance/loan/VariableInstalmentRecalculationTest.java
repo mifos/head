@@ -78,7 +78,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
     }
 
     // TODO - this test do not work on systems with other locale than English.
-    @Test(enabled=true)
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowRecalculationAndWarnings() throws Exception {
         int noOfInstallments = 3;

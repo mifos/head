@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -69,5 +70,20 @@ public class CreateLoanAccountSearchPage extends AbstractPage {
         selenium.click("link=*" + formParameters.getSearchString() + "*");
         waitForPageToLoad();
         return new CreateLoanAccountSelectLoanProductPage(selenium);
+    }
+    
+    public void verifyTextPresent(String expectedText, String errorMessage) {
+        Assert.assertTrue(selenium.isTextPresent(expectedText), errorMessage);
+    }
+            
+    public void verifyNoSelectLoanProduct(CreateLoanAccountSearchParameters formParameters, String expectedMessage) {
+        selenium.type("cust_search_account.input.searchString", formParameters.getSearchString());
+        selenium.click("cust_search_account.button.search");
+        waitForPageToLoad();
+        selenium.click("link=*" + formParameters.getSearchString() + "*");
+        waitForPageToLoad();
+        selenium.click("id=loancreationprdofferingselect.button.continue");
+        waitForPageToLoad();
+        verifyTextPresent(expectedMessage, "No text <"+ expectedMessage +"> present on the page");     
     }
 }
