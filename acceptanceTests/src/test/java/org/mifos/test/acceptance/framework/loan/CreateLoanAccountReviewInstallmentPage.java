@@ -567,4 +567,8 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         waitForPageToLoad();
         return new CreateLoanAccountCashFlowPage(selenium);
     }
+    
+    public void verifyDueDate(int installement, String dueDate) {
+        Assert.assertEquals(selenium.getText("//table[@id='installments']//tbody//tr[" + (installement ) + "]/td[2]"), dueDate);
+    }
 }

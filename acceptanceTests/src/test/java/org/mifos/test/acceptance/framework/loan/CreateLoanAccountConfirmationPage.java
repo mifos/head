@@ -49,5 +49,8 @@ public class CreateLoanAccountConfirmationPage extends MifosPage {
     public void isTextPresentInPage(String text) {
        Assert.assertTrue(selenium.isTextPresent(text));
     }
-
+    
+    public void verifyTextPresent(String expectedText, String errorMessage) {
+        Assert.assertTrue(selenium.isTextPresent(expectedText), errorMessage);
+    }
 }

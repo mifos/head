@@ -52,6 +52,9 @@ public class EditLoanAccountInformationPage extends MifosPage {
         selenium.type("externalId", params.getExternalID());
     }
 
+    public void setAmount(String amount) {
+        selenium.type("editLoanAccount.input.loanAmount", amount);
+    }
 
     public EditLoanAccountInformationPage editAccountParams(CreateLoanAccountSubmitParameters accountSubmitParameters, EditLoanAccountInformationParameters editAccountParameters) {
         if (accountSubmitParameters.getAmount() != null) {

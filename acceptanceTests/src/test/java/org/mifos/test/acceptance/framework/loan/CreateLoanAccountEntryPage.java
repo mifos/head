@@ -331,7 +331,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         return this;
     }
 
-    private void setDisbursalDate(String dd, String mm, String yy) {
+    public void setDisbursalDate(String dd, String mm, String yy) {
         selenium.type("disbursementDateDD",dd);
         selenium.fireEvent("name=disbursementDateDD", "blur");
 
@@ -450,5 +450,22 @@ public class CreateLoanAccountEntryPage extends MifosPage {
             
     public void setAmount(String amount) {
         selenium.type("loancreationdetails.input.sumLoanAmount", amount);
+    }
+    
+    public void setInterestRate(String interestRate) {
+        selenium.type("loancreationdetails.input.interestRate", interestRate);
+    }
+    
+    public CreateLoanAccountEntryPage setInstallments(String noOfInstallment) {
+        typeText("numberOfInstallments",noOfInstallment);
+        return this;
+    }
+    
+    public void verifyNoError(String error) {
+        Assert.assertFalse(selenium.isElementPresent("//span[@id='loancreationdetails.error.message']/div/ul/li/span[text()='"+error+"']"));
+    }
+    
+    public void verifyDisbsursalDate(String dd, String mm, String yyyy) {
+        Assert.assertEquals(selenium.getValue("disbursementDateDD") + "-" + selenium.getValue("disbursementDateMM") + "-" + selenium.getValue("disbursementDateYY") , dd+ "-" +mm+ "-"+yyyy);
     }
 }
