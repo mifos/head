@@ -237,8 +237,8 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         searchParameters.setSearchString("Default Group");
         searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
         CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
-        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "301");
-        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "401");
+        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "301", "0012-Sheep Purchase");
+        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "401", "0012-Sheep Purchase");
         loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPage();
     }
 
