@@ -175,7 +175,7 @@
     		<td>&nbsp;</td>
     		<td>&nbsp;</td>
     		<td>Total amount:</td>
-    		<td>[@form.input path="loanAccountFormBean.amount"  id="glimsumloanamount" /]</td>
+    		<td>[@form.input path="loanAccountFormBean.amount"  id="glimsumloanamount" attributes="readonly=readonly"/]</td>
     		<td><span id="createloan.allowedamounttext">([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string("0.#")} - ${loanProductReferenceData.maxLoanAmount?string("0.#")})</span></td>
     		<td>&nbsp;</td>
     	</tr>
