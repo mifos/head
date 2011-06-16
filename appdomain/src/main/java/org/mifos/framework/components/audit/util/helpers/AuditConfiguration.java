@@ -32,8 +32,6 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.Localization;
-import org.mifos.config.business.MifosConfiguration;
-import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.customers.office.business.OfficeStatusEntity;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
@@ -59,7 +57,6 @@ public class AuditConfiguration {
 
     private PropertyResourceBundle columnNames;
     static private Locale locale;
-    private MifosConfiguration labelConfig = MifosConfiguration.getInstance();
 
     private List<Short> locales;
 
@@ -330,11 +327,7 @@ public class AuditConfiguration {
             if (key.contains(".")) {
                 columnName = columnName + " " + columnNames.getString(key);
             } else {
-                try {
-                    columnName = columnName + " " + labelConfig.getLabel(key);
-                } catch (ConfigurationException ce) {
-                    // ignore it user may not see the label
-                }
+                    columnName = columnName + " " + MessageLookup.getInstance().lookupLabel(key);
             }
         }
         return columnName;
