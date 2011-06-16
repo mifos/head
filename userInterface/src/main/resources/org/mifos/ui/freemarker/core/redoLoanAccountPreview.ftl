@@ -357,7 +357,7 @@
 	[/#if]
 	[#else]
 	[#if loanScheduleFormBean.loanRepaymentFutureInstallments?has_content]
-	<table style="margin-bottom: 15px; width: 605px;">
+	<table style="margin-bottom: 15px; width: 605px;"  id="futureInstallments">
 			<thead>
 			<tr>
 				<th style="border-top: 1px solid grey; width: 100px;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
