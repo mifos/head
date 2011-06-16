@@ -275,6 +275,39 @@
 			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.totalHeading" /]</th>
 		</tr>
 		</thead>
+[#if loanProductReferenceData.variableInstallmentsAllowed]
+	[#if loanProductReferenceData.compareCashflowEnabled]
+		<tbody>
+		[#list cashFlowSummaryFormBean.variableInstallments as row]
+		<tr>
+			<td style="border-top: 1px solid grey;">${row.installmentNumber?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.dueDate?date?string.medium}</td>
+			<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.fees?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
+		</tr>
+		[/#list]
+		</tbody>
+	[#else]
+		<tbody>
+		[#list loanScheduleFormBean.variableInstallments as row]
+		<tr>
+			<td style="border-top: 1px solid grey;">${row.installmentNumber?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.dueDate?date?string.medium}</td>
+			<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.fees?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
+		</tr>
+		[/#list]
+		</tbody>
+	[/#if]
+</table>
+<form action="${flowExecutionUrl}" method="post">
+	[@form.submitButton label="widget.form.buttonLabel.editloanscheduleinfo" id="redoloanpreview.button.editloanschedule" webflowEvent="editLoanSchedule" /]
+</form>
+[#else]
 		<tbody>
 		[#list loanScheduleReferenceData.installments as row]
 		<tr>
@@ -288,6 +321,7 @@
 		[/#list]
 		</tbody>
 </table>
+[/#if]
 
 [#if loanAccountQuestionGroupFormBean.questionGroups?size > 0]
 <br/>
