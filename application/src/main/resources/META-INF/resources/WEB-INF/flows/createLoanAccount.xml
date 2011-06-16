@@ -131,6 +131,7 @@
     
     <view-state id="previewStep" view="createLoanAccountPreview">
         <transition on="editAccountDetails" to="editAccountDetailsStep" validate="false" bind="false"/>
+        <transition on="editLoanSchedule" to="chooseCorrectViewForEditLoanSchedule" validate="false" bind="false"/>
         <transition on="editQuestionGroups" to="answerQuestionGroupStep" validate="false" bind="false"/>
         
         <transition on="saveForLater" to="confirmation">
@@ -146,6 +147,10 @@
         
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
     </view-state>
+    
+    <decision-state id="chooseCorrectViewForEditLoanSchedule">
+        <if test="flowScope.cashFlowEnabled" then="summaryOfCashflow" else="reviewLoanSchedule"/>
+    </decision-state>
     
     <end-state id="confirmation" view="createLoanAccountConfirmation"/>
     <end-state id="cancel" view="externalRedirect:contextRelative:/custSearchAction.do?method=loadMainSearch"/>

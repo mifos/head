@@ -119,6 +119,9 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
         return printedDate;
     }
 
+    public void validateReviewLoanSchedule(ValidationContext context) {
+        validateSummaryOfCashflow(context);
+    }
     /**
      * validateXXXX is invoked on transition from state
      */
