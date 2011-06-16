@@ -59,7 +59,6 @@ public class AuditConfiguration {
 
     private PropertyResourceBundle columnNames;
     static private Locale locale;
-    private MifosConfiguration labelConfig = MifosConfiguration.getInstance();
 
     private List<Short> locales;
 
@@ -330,11 +329,7 @@ public class AuditConfiguration {
             if (key.contains(".")) {
                 columnName = columnName + " " + columnNames.getString(key);
             } else {
-                try {
-                    columnName = columnName + " " + labelConfig.getLabel(key);
-                } catch (ConfigurationException ce) {
-                    // ignore it user may not see the label
-                }
+                    columnName = columnName + " " + MessageLookup.getInstance().lookupLabel(key);
             }
         }
         return columnName;
