@@ -201,7 +201,7 @@ public class LoanAccountFormBean implements Serializable {
                                 String defaultErrorMessage = "The number of digits before the decimal separator exceeds the allowed number.";
                                 rejectInterestRateFieldValue(errors, defaultErrorMessage,
                                         "loanAccountFormBean.client.amount.digitsBeforeDecimal.invalid",
-                                        new Object[] { this.digitsBeforeDecimalForMonetaryAmounts});
+                                        new Object[] {index+1, this.digitsBeforeDecimalForMonetaryAmounts});
                             }
                         }
 
