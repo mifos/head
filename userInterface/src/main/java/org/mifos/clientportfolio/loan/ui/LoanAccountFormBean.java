@@ -185,6 +185,25 @@ public class LoanAccountFormBean implements Serializable {
                             String defaultErrorMessage = "Please specify valid Amount.";
                             rejectGlimClientAmountField(index + 1, errors, defaultErrorMessage);
                         }
+                        
+                        if (clientAmount != null) {
+                            BigDecimal amountAsDecimal = new BigDecimal(clientAmount.toString()).stripTrailingZeros();
+                            int places = amountAsDecimal.scale();
+                            if (places > this.digitsAfterDecimalForMonetaryAmounts) {
+                                String defaultErrorMessage = "The number of digits after the decimal separator exceeds the allowed number.";
+                                rejectInterestRateFieldValue(errors, defaultErrorMessage,
+                                        "loanAccountFormBean.client.amount.digitsAfterDecimal.invalid",
+                                        new Object[] {index+1, this.digitsAfterDecimalForMonetaryAmounts });
+                            }
+                            
+                            int digitsBefore = amountAsDecimal.toBigInteger().toString().length();
+                            if (digitsBefore > this.digitsBeforeDecimalForMonetaryAmounts) {
+                                String defaultErrorMessage = "The number of digits before the decimal separator exceeds the allowed number.";
+                                rejectInterestRateFieldValue(errors, defaultErrorMessage,
+                                        "loanAccountFormBean.client.amount.digitsBeforeDecimal.invalid",
+                                        new Object[] { this.digitsBeforeDecimalForMonetaryAmounts});
+                            }
+                        }
 
                         // check error message of loan purpose for each client when its mandatory..
                         Integer clientLoanPurposeId = this.clientLoanPurposeId[index];
