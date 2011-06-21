@@ -172,9 +172,6 @@ explanation of the license and how it is applied.
 								&nbsp; <c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoanAllowed') == true}">
 									<html-el:link styleId="viewgroupdetails.link.newLoanAccount"
 									href="createLoanAccount.ftl?customerId=${groupInformationDto.groupDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
-									<!--
-									href="loanAccountAction.do?method=getPrdOfferings&customerId=${groupInformationDto.groupDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
-									 -->
 										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"></mifos:mifoslabel>
 									</html-el:link> &nbsp;|&nbsp;
 		              </c:if> <html-el:link styleId="viewgroupdetails.link.newSavingsAccount"

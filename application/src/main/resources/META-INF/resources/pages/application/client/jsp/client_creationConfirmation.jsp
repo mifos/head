@@ -97,10 +97,7 @@ explanation of the license and how it is applied.
 						</c:if> <!-- Link to create a new loan  account link --> <!-- bug id 29352. Added if condition to show link to open accounts if only client is active-->
 						<c:if test="${requestScope.clientVO.statusId == 3}">
 							<html-el:link styleId="client_creationConfirmation.link.createNewLoanAccount"
-								href="createLoanAccount.ftl?customerId=${sessionScope.clientCustActionForm.customerId}&randomNUm=${sessionScope.randomNUm}">
-								<!-- 								
-								href="loanAction.do?method=getPrdOfferings&customer.customerId=${sessionScope.clientCustActionForm.customerId}&randomNUm=${sessionScope.randomNUm}">
-	 							-->							
+								href="createLoanAccount.ftl?customerId=${sessionScope.clientCustActionForm.customerId}&randomNUm=${sessionScope.randomNUm}">					
 								<fmt:message key="client.CreateNewClientLink">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 								</fmt:message>

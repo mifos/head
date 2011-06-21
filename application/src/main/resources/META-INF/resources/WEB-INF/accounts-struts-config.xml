@@ -191,6 +191,8 @@
             <forward name="getLoanRepaymentScheduleFailure" path="/pages/application/loan/jsp/loanRepayment.jsp"/>
             <forward name="viewOriginalSchedule" path="/pages/application/loan/jsp/viewOriginalSchedule.jsp"/>
             <forward name="viewStatusHistory" path="/pages/application/loan/jsp/viewLoanStatusHistory.jsp"/>
+            
+            <!-- 
             <forward name="getPrdOfferigs_success"
                      path="/pages/application/loan/jsp/loancreationprdofferingselect.jsp"/>
             <forward name="getPrdOfferigs_failure"
@@ -202,6 +204,13 @@
             <forward name="preview_failure" path="/pages/application/loan/jsp/schedulePreview.jsp"/>
             <forward name="create_failure" path="/pages/application/loan/jsp/createloanpreview.jsp"/>
             <forward name="create_success" path="/pages/application/loan/jsp/CreateLoanAccountConfirmation.jsp"/>
+            <forward name="beginRedoLoanDisbursal_success"
+                     path="/custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan&amp;perspective=redoLoan"/>
+            <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
+            <forward name="validateInstallments_success" path="/pages/application/loan/jsp/schedulePreview.jsp"/>
+            <forward name="validateInstallments_failure" path="/pages/application/loan/jsp/schedulePreview.jsp"/>
+            <forward name="capture_cash_flow" path="/captureCashFlow.ftl"/>
+             -->
             <forward name="manage_success" path="/pages/application/loan/jsp/editLoanAccount.jsp"/>
             <forward name="managepreview_success" path="/pages/application/loan/jsp/editPreviewLoanAccount.jsp"/>
             <forward name="managepreview_failure" path="/pages/application/loan/jsp/editLoanAccount.jsp"/>
@@ -209,27 +218,13 @@
             <forward name="update_failure" path="/pages/application/loan/jsp/editPreviewLoanAccount.jsp"/>
             <forward name="manageprevious_success" path="/pages/application/loan/jsp/editLoanAccount.jsp"/>
             <forward name="loan_detail_page" path="/loanAccountAction.do?method=get"/>
-            <forward name="beginRedoLoanDisbursal_success"
-                     path="/custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan&amp;perspective=redoLoan"/>
 
             <!--  Audit Log -->
             <forward name="viewLoanChangeLog" path="/pages/application/loan/jsp/viewChangeLog.jsp"/>
             <forward name="cancelLoanChangeLog" path="/loanAccountAction.do?method=get"/>
-            <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
-            <forward name="validateInstallments_success" path="/pages/application/loan/jsp/schedulePreview.jsp"/>
-            <forward name="validateInstallments_failure" path="/pages/application/loan/jsp/schedulePreview.jsp"/>
-            <forward name="capture_cash_flow" path="/captureCashFlow.ftl"/>
+            
             <forward name="viewAndEditAdditionalInformation" path="/viewAndEditQuestionnaire.ftl"/>
         </action>
-
-        <!--
-        <action path="/cashFlowForward" type="org.apache.struts.actions.ForwardAction"
-            parameter="/pages/application/loan/jsp/schedulePreview.jsp" input="/loanAccountAction.do?method=schedulePreview" scope="request"
-            validate="false">
-        </action>
-        -->
-
-
 
         <action path="/savingsDepositWithdrawalAction"
                 type="org.mifos.accounts.savings.struts.action.SavingsDepositWithdrawalAction"
@@ -304,9 +299,11 @@
         </action>
     </action-mappings>
 
+<!-- 
     <message-resources key="cashflow_messages"
                        parameter="org.mifos.platform.cashflow.ui.localizedProperties.cashflow_messages"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+-->
     <message-resources key="loanUIResources"
                        parameter="org.mifos.config.localizedResources.LoanUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
