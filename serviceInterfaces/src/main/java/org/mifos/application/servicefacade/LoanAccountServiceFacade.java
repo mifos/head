@@ -50,8 +50,6 @@ import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.dto.screen.LoanAccountDetailDto;
-import org.mifos.dto.screen.LoanAccountInfoDto;
-import org.mifos.dto.screen.LoanAccountMeetingDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationPreviewDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
@@ -60,7 +58,6 @@ import org.mifos.dto.screen.LoanDisbursalDto;
 import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.LoanInstallmentsDto;
 import org.mifos.dto.screen.LoanScheduleDto;
-import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
@@ -70,20 +67,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface LoanAccountServiceFacade extends LoanDisbursementDateValidationServiceFacade, VariableInstallmentsFeeValidationServiceFacade {
     
-    /**
-     * use other methods for creating loans
-     */
-    @Deprecated
-    @PreAuthorize("isFullyAuthenticated()")
-    LoanCreationResultDto createLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanScheduledInstallmentDto> loanRepayments);
-    
-    /**
-     * use other methods for creating back dated loans
-     */
-    @Deprecated
-    @PreAuthorize("isFullyAuthenticated()")
-    LoanCreationResultDto redoLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanPaymentDto> existingLoanPayments, List<LoanScheduledInstallmentDto> installmentDtos);
-
     @PreAuthorize("isFullyAuthenticated()")
     AccountStatusDto retrieveAccountStatuses(Long loanAccountId);
 

@@ -89,7 +89,6 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
-import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
@@ -100,7 +99,6 @@ import org.mifos.accounts.util.helpers.AccountSearchResultsDto;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
-import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
@@ -136,7 +134,6 @@ import org.mifos.clientportfolio.newloan.domain.LoanDisbursmentDateFactoryImpl;
 import org.mifos.clientportfolio.newloan.domain.LoanProductOverridenDetail;
 import org.mifos.clientportfolio.newloan.domain.LoanSchedule;
 import org.mifos.clientportfolio.newloan.domain.LoanScheduleConfiguration;
-import org.mifos.clientportfolio.newloan.domain.LoanService;
 import org.mifos.clientportfolio.newloan.domain.service.LoanScheduleService;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
@@ -193,7 +190,6 @@ import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.LoanAccountDetailDto;
-import org.mifos.dto.screen.LoanAccountInfoDto;
 import org.mifos.dto.screen.LoanAccountMeetingDto;
 import org.mifos.dto.screen.LoanCreationGlimDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
@@ -205,7 +201,6 @@ import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.LoanInstallmentsDto;
 import org.mifos.dto.screen.LoanPerformanceHistoryDto;
 import org.mifos.dto.screen.LoanScheduleDto;
-import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.mifos.dto.screen.LoanSummaryDto;
 import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.dto.screen.RepayLoanDto;
@@ -219,9 +214,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Transformer;
@@ -252,11 +245,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private final PersonnelDao personnelDao;
     private final FundDao fundDao;
     private final LoanDao loanDao;
-    private final HolidayDao holidayDao;
     private final AccountService accountService;
     private final ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
     private final LoanBusinessService loanBusinessService;
-    private final LoanService loanService;
     private final LoanScheduleService loanScheduleService;
     private final HibernateTransactionHelper transactionHelper;
 
@@ -279,9 +270,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Autowired
     public LoanAccountServiceFacadeWebTier(OfficeDao officeDao, LoanProductDao loanProductDao, CustomerDao customerDao,
-                                           PersonnelDao personnelDao, FundDao fundDao, LoanDao loanDao, HolidayDao holidayDao,
+                                           PersonnelDao personnelDao, FundDao fundDao, LoanDao loanDao,
                                            AccountService accountService, ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
-                                           LoanBusinessService loanBusinessService, LoanService loanService, LoanScheduleService loanScheduleService,
+                                           LoanBusinessService loanBusinessService, LoanScheduleService loanScheduleService,
                                            InstallmentsValidator installmentsValidator, HolidayServiceFacade holidayServiceFacade) {
         this.officeDao = officeDao;
         this.loanProductDao = loanProductDao;
@@ -289,11 +280,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         this.personnelDao = personnelDao;
         this.fundDao = fundDao;
         this.loanDao = loanDao;
-        this.holidayDao = holidayDao;
         this.accountService = accountService;
         this.scheduleCalculatorAdaptor = scheduleCalculatorAdaptor;
         this.loanBusinessService = loanBusinessService;
-        this.loanService = loanService;
         this.loanScheduleService = loanScheduleService;
         this.installmentsValidator = installmentsValidator;
         this.holidayServiceFacade = holidayServiceFacade;
@@ -838,144 +827,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
     
     @Override
-    public LoanCreationResultDto redoLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto,
-                                          List<LoanPaymentDto> existingLoanPayments, List<LoanScheduledInstallmentDto> installmentDtos) {
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
-        OfficeBO userOffice = this.officeDao.findOfficeById(userContext.getBranchId());
-
-        CustomerBO customer = this.customerDao.findCustomerById(loanAccountInfoDto.getCustomerId());
-        LoanBO loan = getLoanBOForRedo(customer, loanAccountMeetingDto, loanAccountInfoDto, existingLoanPayments, installmentDtos);
-
-        StaticHibernateUtil.startTransaction();
-        PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
-        try {
-            loan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(loan.getAccountState(), loan
-                    .getAccountState(), createdBy, loan));
-            this.loanDao.save(loan);
-            StaticHibernateUtil.flushSession();
-
-            loan.setGlobalAccountNum(loan.generateId(userOffice.getGlobalOfficeNum()));
-            this.loanDao.save(loan);
-            loanBusinessService.persistOriginalSchedule(loan);
-            StaticHibernateUtil.commitTransaction();
-        } catch (AccountException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new BusinessRuleException(e.getKey(), e);
-        } catch (PersistenceException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new BusinessRuleException(e.getKey(), e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-
-        return new LoanCreationResultDto(new ConfigurationPersistence().isGlimEnabled() && customer.isGroup(), loan.getAccountId(), loan.getGlobalAccountNum());
-    }
-
-    private LoanBO getLoanBOForRedo(CustomerBO customer, LoanAccountMeetingDto loanAccountMeetingDto,
-                                   LoanAccountInfoDto loanAccountInfoDto, List<LoanPaymentDto> existingLoanPayments,
-                                   List<LoanScheduledInstallmentDto> installmentDtos) {
-
-        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = new UserContextFactory().create(mifosUser);
-
-        try {
-            boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-
-            MeetingBO newMeetingForRepaymentDay = null;
-            if (isRepaymentIndepOfMeetingEnabled) {
-                newMeetingForRepaymentDay = createNewMeetingForRepaymentDay(loanAccountInfoDto.getDisbursementDate(), loanAccountMeetingDto, customer);
-            }
-
-            Short productId = loanAccountInfoDto.getProductId();
-
-            LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(productId, userContext.getLocaleId());
-
-            Money loanAmount = new Money(loanOffering.getCurrency(), loanAccountInfoDto.getLoanAmount());
-            Short numOfInstallments = loanAccountInfoDto.getNumOfInstallments();
-            boolean isInterestDeductedAtDisbursement = loanAccountInfoDto.isInterestDeductedAtDisbursement();
-            Double interest = loanAccountInfoDto.getInterest();
-            Short gracePeriod = loanAccountInfoDto.getGracePeriod();
-
-            List<AccountFeesEntity> fees = new ArrayList<AccountFeesEntity>();
-            List<CreateAccountFeeDto> accouontFees = loanAccountInfoDto.getFees();
-            for (CreateAccountFeeDto accountFee : accouontFees) {
-                FeeBO feeEntity = feeDao.findById(accountFee.getFeeId().shortValue());
-                Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(accountFee.getAmount());
-                fees.add(new AccountFeesEntity(null, feeEntity, feeAmount));
-            }
-
-            Double maxLoanAmount = Double.valueOf(loanAccountInfoDto.getMaxLoanAmount());
-            Double minLoanAmount = Double.valueOf(loanAccountInfoDto.getMinLoanAmount());
-            Short maxNumOfInstallments = loanAccountInfoDto.getMaxNumOfInstallments();
-            Short minNumOfShortInstallments = loanAccountInfoDto.getMinNumOfInstallments();
-            String externalId = loanAccountInfoDto.getExternalId();
-            Integer selectedLoanPurpose = loanAccountInfoDto.getSelectedLoanPurpose();
-            String collateralNote = loanAccountInfoDto.getCollateralNote();
-            Integer selectedCollateralType = loanAccountInfoDto.getSelectedCollateralType();
-
-            AccountState accountState = null;
-            Short accountStateValue = loanAccountInfoDto.getAccountState();
-            if (accountStateValue != null) {
-                accountState = AccountState.fromShort(accountStateValue);
-            } else {
-                accountState = AccountState.LOAN_PARTIAL_APPLICATION;
-            }
-
-            FundBO fund = null;
-            Short fundId = loanAccountInfoDto.getFundId();
-            if (fundId != null) {
-                fund = this.fundDao.findById(fundId);
-            }
-
-            LoanBO redoLoan = LoanBO.redoLoan(userContext, loanOffering, customer, accountState, loanAmount,
-                    numOfInstallments, loanAccountInfoDto.getDisbursementDate().toDateMidnight().toDate(),
-                    isInterestDeductedAtDisbursement, interest, gracePeriod,
-                    fund, fees, maxLoanAmount, minLoanAmount, maxNumOfInstallments,
-                    minNumOfShortInstallments, isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
-            redoLoan.setExternalId(externalId);
-            redoLoan.setBusinessActivityId(selectedLoanPurpose);
-            redoLoan.setCollateralNote(collateralNote);
-            redoLoan.setCollateralTypeId(selectedCollateralType);
-
-            PersonnelBO user = personnelDao.findPersonnelById(userContext.getId());
-
-            redoLoan.changeStatus(AccountState.LOAN_APPROVED, null, "Automatic Status Update (Redo Loan)", user);
-
-            // We're assuming cash disbursal for this situation right now
-            redoLoan.disburseLoan(user, PaymentTypes.CASH.getValue(), false);
-
-            copyInstallmentSchedule(installmentDtos, userContext, redoLoan);
-
-            for (LoanPaymentDto payment : existingLoanPayments) {
-                if (StringUtils.isNotBlank(payment.getAmount()) && payment.getPaymentDate() != null) {
-                    if (!customer.getCustomerMeeting().getMeeting().isValidMeetingDate(payment.getPaymentDate().toDateMidnight().toDate(),
-                            DateUtils.getLastDayOfNextYear())) {
-                        throw new BusinessRuleException("errors.invalidTxndate");
-                    }
-                    Money totalAmount = new Money(loanOffering.getCurrency(), payment.getAmount());
-                    PersonnelBO personnel  = this.personnelDao.findPersonnelById(payment.getPaidByUserId());
-                    Short paymentId = payment.getPaymentTypeId().shortValue();
-                    Date transactionDate = payment.getPaymentDate().toDateMidnight().toDate();
-                    PaymentData paymentData = new PaymentData(totalAmount, personnel, paymentId, transactionDate);
-                    redoLoan.applyPayment(paymentData);
-                }
-            }
-            return redoLoan;
-        } catch (MeetingException e) {
-                throw new MifosRuntimeException(e);
-        } catch (ServiceException e2) {
-            throw new MifosRuntimeException(e2);
-        } catch (PersistenceException e1) {
-            throw new MifosRuntimeException(e1);
-        } catch (AccountException e) {
-            throw new BusinessRuleException(e.getKey(), e);
-        }
-    }
-    
-    @Override
     public LoanCreationResultDto createLoan(CreateLoanAccount loanAccountInfo, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow) {
 
         return createLoanAccount(loanAccountInfo, new ArrayList<LoanPaymentDto>(), questionGroups, loanAccountCashFlow, new ArrayList<DateTime>(), new ArrayList<Number>(), new ArrayList<GroupMemberAccountDto>(), false);
@@ -1220,74 +1071,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
         return accountFeeEntities;
     }
-    
-    @Override
-    public LoanCreationResultDto createLoan(LoanAccountMeetingDto loanAccountMeetingDto,
-                                            LoanAccountInfoDto loanAccountInfo,
-                                            List<LoanScheduledInstallmentDto> loanRepayments) {
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-        OfficeBO userOffice = this.officeDao.findOfficeById(userContext.getBranchId());
-
-        CustomerBO customer = this.customerDao.findCustomerById(loanAccountInfo.getCustomerId());
-        boolean isGlimApplicable = new ConfigurationPersistence().isGlimEnabled() && customer.isGroup();
-
-        if (!isPermissionAllowed(loanAccountInfo.getAccountState(), userContext, customer.getOffice().getOfficeId(),
-                customer.getPersonnel().getPersonnelId())) {
-            throw new BusinessRuleException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-        }
-
-        boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-
-        MeetingBO newMeetingForRepaymentDay = null;
-        if (isRepaymentIndependentOfMeetingEnabled) {
-            newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(loanAccountInfo.getDisbursementDate(), loanAccountMeetingDto, customer);
-        }
-
-        FundBO fund = null;
-        if (loanAccountInfo.getFundId() != null) {
-            fund = this.fundDao.findById(loanAccountInfo.getFundId());
-        }
-
-        LoanBO loan = assembleLoan(userContext, customer, loanAccountInfo.getDisbursementDate(), fund,
-                                   isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay, loanAccountInfo);
-
-        copyInstallmentSchedule(loanRepayments, userContext, loan);
-
-        try {
-            StaticHibernateUtil.startTransaction();
-            PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
-            loan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(loan.getAccountState(), loan
-                    .getAccountState(), createdBy, loan));
-            this.loanDao.save(loan);
-            StaticHibernateUtil.flushSession();
-
-            loan.setGlobalAccountNum(loan.generateId(userOffice.getGlobalOfficeNum()));
-            this.loanDao.save(loan);
-            StaticHibernateUtil.commitTransaction();
-        } catch (AccountException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new BusinessRuleException(e.getKey(), e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-
-        return new LoanCreationResultDto(isGlimApplicable, loan.getAccountId(), loan.getGlobalAccountNum());
-    }
-
-    private void copyInstallmentSchedule(List<LoanScheduledInstallmentDto> loanRepayments, UserContext userContext, LoanBO loan) {
-        List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
-        for (LoanScheduledInstallmentDto installment : loanRepayments) {
-            RepaymentScheduleInstallment repaymentScheduleInstallment = RepaymentScheduleInstallment.createForScheduleCopy(
-                                                                        installment.getInstallmentNumber(),
-                                                                        installment.getPrincipal(), installment.getInterest(),
-                                                                        installment.getDueDate(), userContext.getPreferredLocale(),
-                                                                        loan.getCurrency());
-            installments.add(repaymentScheduleInstallment);
-        }
-
-        loan.updateInstallmentSchedule(installments);
-    }
 
     private MeetingBO createNewMeetingForRepaymentDay(LocalDate disbursementDate, RecurringSchedule recurringSchedule, CustomerBO customer) {
         MeetingBO newMeetingForRepaymentDay = null;
@@ -1363,62 +1146,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             throw new MifosRuntimeException(nfe);
         } catch (MeetingException me) {
             throw new BusinessRuleException(me.getKey(), me);
-        }
-    }
-
-    private LoanBO assembleLoan(UserContext userContext, CustomerBO customer, LocalDate disbursementDate, FundBO fund,
-            boolean isRepaymentIndependentOfMeetingEnabled, MeetingBO newMeetingForRepaymentDay,
-            LoanAccountInfoDto loanActionForm) {
-
-        try {
-            Short productId = loanActionForm.getProductId();
-            LoanOfferingBO loanOffering = this.loanProductDao.findById(productId.intValue());
-
-            Money loanAmount = new Money(loanOffering.getCurrency(), loanActionForm.getLoanAmount());
-            Short numOfInstallments = loanActionForm.getNumOfInstallments();
-            boolean isInterestDeductedAtDisbursement = loanActionForm.isInterestDeductedAtDisbursement();
-            Double interest = loanActionForm.getInterest();
-            Short gracePeriod = loanActionForm.getGracePeriod();
-
-            List<AccountFeesEntity> fees = new ArrayList<AccountFeesEntity>();
-            List<CreateAccountFeeDto> accouontFees = loanActionForm.getFees();
-            for (CreateAccountFeeDto accountFee : accouontFees) {
-                FeeBO feeEntity = feeDao.findById(accountFee.getFeeId().shortValue());
-                Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(accountFee.getAmount());
-                fees.add(new AccountFeesEntity(null, feeEntity, feeAmount));
-            }
-
-            Double maxLoanAmount = Double.valueOf(loanActionForm.getMaxLoanAmount());
-            Double minLoanAmount = Double.valueOf(loanActionForm.getMinLoanAmount());
-            Short maxNumOfInstallments = loanActionForm.getMaxNumOfInstallments();
-            Short minNumOfShortInstallments = loanActionForm.getMinNumOfInstallments();
-            String externalId = loanActionForm.getExternalId();
-            Integer selectedLoanPurpose = loanActionForm.getSelectedLoanPurpose();
-            String collateralNote = loanActionForm.getCollateralNote();
-            Integer selectedCollateralType = loanActionForm.getSelectedCollateralType();
-            Short accountState = loanActionForm.getAccountState();
-
-            AccountState accountStateType = null;
-            if (accountState != null) {
-                accountStateType = AccountState.fromShort(accountState);
-            }
-            if (accountStateType == null) {
-                accountStateType = AccountState.LOAN_PARTIAL_APPLICATION;
-            }
-
-            LoanBO loan = LoanBO.createLoan(userContext, loanOffering, customer, accountStateType, loanAmount,
-                    numOfInstallments, disbursementDate.toDateMidnight().toDate(), isInterestDeductedAtDisbursement, interest, gracePeriod,
-                    fund, fees, maxLoanAmount, minLoanAmount, maxNumOfInstallments,
-                    minNumOfShortInstallments, isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay);
-
-            loan.setExternalId(externalId);
-            loan.setBusinessActivityId(selectedLoanPurpose);
-            loan.setCollateralNote(collateralNote);
-            loan.setCollateralTypeId(selectedCollateralType);
-
-            return loan;
-        } catch (AccountException e) {
-            throw new BusinessRuleException(e.getKey(), e);
         }
     }
     

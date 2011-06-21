@@ -20,11 +20,10 @@
 
 package org.mifos.service;
 
-import org.mifos.platform.cashflow.CashFlowService;
+import javax.servlet.http.HttpServletRequest;
+
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import javax.servlet.http.HttpServletRequest;
 
 @SuppressWarnings("PMD")
 public class MifosServiceFactory {
@@ -36,15 +35,6 @@ public class MifosServiceFactory {
     public static QuestionnaireServiceFacade getQuestionnaireServiceFacade(HttpServletRequest request) {
         try {
             return (QuestionnaireServiceFacade) getSpringBean(request, "questionnaireServiceFacade");
-        } catch (Exception e) {
-            // to support existing struts tests
-            return null;
-        }
-    }
-
-    public static CashFlowService getCashFlowService(HttpServletRequest request) {
-        try {
-            return (CashFlowService) getSpringBean(request, "cashFlowService");
         } catch (Exception e) {
             // to support existing struts tests
             return null;

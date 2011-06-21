@@ -429,58 +429,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     }
 
-    /*
-     * public void testManagePreview() throws ServiceException,
-     * SystemException, ApplicationException {
-     * request.setAttribute(Constants.CURRENTFLOWKEY, flowKey); Date startDate =
-     * new Date(System.currentTimeMillis()); accountBO =
-     * getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1); ((LoanBO)
-     * accountBO).setBusinessActivityId(1); accountBO.update();
-     * StaticHibernateUtil.commitTransaction(); LoanBO loan = (LoanBO)
-     * accountBO; LoanOfferingBO loanOffering = loan.getLoanOffering();
-     * loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-     * SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-     *
-     * setRequestPathInfo("/loanAccountAction.do");
-     * addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
-     * .getAttribute(Constants.CURRENTFLOWKEY)); addRequestParameter("method",
-     * "manage"); actionPerform();
-     *
-     * setRequestPathInfo("/loanAccountAction.do");
-     * addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
-     * .getAttribute(Constants.CURRENTFLOWKEY)); addRequestParameter("method",
-     * "managePreview"); addRequestParameter("loanAmount",
-     * loan.getLoanOffering() .getDefaultLoanAmount().toString());
-     * addRequestParameter("interestRate", loan.getLoanOffering()
-     * .getDefInterestRate().toString());
-     * addRequestParameter("noOfInstallments", loan.getLoanOffering()
-     * .getDefNoInstallments().toString());
-     * addRequestParameter("disbursementDate", DateUtils
-     * .getCurrentDate(((UserContext) request.getSession()
-     * .getAttribute("UserContext")).getPreferredLocale()));
-     * addRequestParameter("gracePeriodDuration", "1");
-     * addRequestParameter("intDedDisbursement", "1"); actionPerform();
-     * verifyForward(ActionForwards.managepreview_success.toString());
-     *
-     * Assert.assertNotNull(SessionUtils.getAttribute(
-     * MasterConstants.COLLATERAL_TYPE_NAME, request));
-     * Assert.assertNotNull(SessionUtils.getAttribute(
-     * MasterConstants.BUSINESS_ACTIVITIE_NAME, request)); }
-     */
-
-    // Commented because not able to inject LoanBO as a dependency into the
-    // action servlet
-    // public void testManagePrevious() {
-    // request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-    // LoanBO loanMock = createMock(LoanBO.class);
-    // request.getSession().setAttribute(Constants.BUSINESS_KEY, loanMock);
-    // setRequestPathInfo("/loanAccountAction.do");
-    // addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
-    // .getAttribute(Constants.CURRENTFLOWKEY));
-    // addRequestParameter("method", "managePrevious");
-    // actionPerform();
-    // verifyForward(ActionForwards.manageprevious_success.toString());
-    // }
     @Test
     public void testCancel() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
