@@ -64,6 +64,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         monthsMap.put("October", 9);
         monthsMap.put("November", 10);
         monthsMap.put("December", 11);
+        verifyPage();
     }
     public CreateLoanAccountReviewInstallmentPage submitWithErrors(String error) {
         selenium.click(previewButton);
