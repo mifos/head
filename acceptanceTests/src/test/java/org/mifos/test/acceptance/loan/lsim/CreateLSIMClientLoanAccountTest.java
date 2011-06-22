@@ -20,6 +20,9 @@
 
 package org.mifos.test.acceptance.loan.lsim;
 
+import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
+
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -50,9 +53,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
@@ -87,7 +87,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(enabled=false, groups = {"loan", "acceptance", "ui"})
+    @Test(enabled=true, groups = {"loan", "acceptance", "ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-127
     public void newWeeklyLSIMClientLoanAccount() throws Exception {
@@ -101,6 +101,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setLsimFrequencyWeeks("on");
         submitAccountParameters.setLsimWeekFrequency("1");
         submitAccountParameters.setLsimWeekDay("Friday");
+        submitAccountParameters.setLoanPurpose("0008-Animal Trading");
 
         createLSIMLoanAndCheckAmountAndInstallmentDate(searchParameters, submitAccountParameters, expectedDate);
     }
@@ -115,6 +116,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         expectedDate = "05-Feb-2010";
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1234.0");
+        submitAccountParameters.setLoanPurpose("0008-Animal Trading");
         // create LSIM loan that has repayments on 5th of every month
         submitAccountParameters.setLsimFrequencyMonths("on");
         submitAccountParameters.setLsimMonthTypeDayOfMonth("on");
@@ -135,6 +137,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("2765.0");
+        submitAccountParameters.setLoanPurpose("0008-Animal Trading");
         // create LSIM loan that has repayments on 2nd Thursday of each month
         submitAccountParameters.setLsimFrequencyMonths("on");
         submitAccountParameters.setLsimMonthTypeNthWeekdayOfMonth("on");
@@ -146,7 +149,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-123
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void createLoanAccountWithNonMeetingDatesForDisburseAndRepay() throws Exception {
         //Given
         setTime(2011, 03, 24);
@@ -194,6 +197,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
             createLoanAccountEntryPage.setInstallments("");
             createLoanAccountEntryPage.setDisbursalDate("", "", "");
             createLoanAccountEntryPage.setInterestRate("");
+            createLoanAccountEntryPage.setLonaPurpose("0008-Animal Trading");
             
             createLoanAccountEntryPage = createLoanAccountEntryPage.clickContinueButExpectValidationFailure();
             
@@ -327,14 +331,13 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-121
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void createWeeklyLoanAccountWithNonMeetingDatesForDisburseAndRepay() throws Exception {
         //Given
         setTime(2011, 02, 23);
 
         //When
         DefineNewLoanProductPage.SubmitFormParameters defineNewLoanProductformParameters = FormParametersHelper.getWeeklyLoanProductParameters();
-        defineNewLoanProductformParameters.setOfferingName("ProdTest121");
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Stu1233171716380 Client1233171716380");
@@ -342,6 +345,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters = createSearchParameters("23","02","2011");
+        submitAccountParameters.setLoanPurpose("0008-Animal Trading");
 
         EditLoanAccountStatusParameters editLoanAccountStatusParameters = new EditLoanAccountStatusParameters();
         editLoanAccountStatusParameters.setStatus(AccountStatus.LOAN_APPROVED.getStatusText());
@@ -363,7 +367,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-124
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void verifyGracePeriodEffectOnLoanSchedule() throws Exception{
         //Given
         applicationDatabaseOperation.updateLSIM(1);
@@ -387,6 +391,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         createLoanAccountSubmitParameters.setDd("22");
         createLoanAccountSubmitParameters.setMm("2");
         createLoanAccountSubmitParameters.setYy("2011");
+        createLoanAccountSubmitParameters.setLoanPurpose("0008-Animal Trading");
 
         //Then
         loanTestHelper.createLoanAccount(searchParameters, createLoanAccountSubmitParameters)

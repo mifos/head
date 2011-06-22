@@ -86,7 +86,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void defaultAdminUserSelectsValidCollectionSheetEntryParameters() throws Exception {
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters.setBranch("Office1");
@@ -115,7 +115,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void twoLoansWithSameProductHasMergedLoanAmount() throws Exception {
         SubmitFormParameters formParameters = getFormParametersForTestOffice();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
@@ -128,7 +128,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     //http://mifosforge.jira.com/browse/MIFOSTEST-3
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void defaultAmountsForMediumCenterSavedToDatabase() throws Exception {
         // Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_medium_005_dbunit.xml", dataSource, selenium);
