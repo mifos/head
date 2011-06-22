@@ -34,7 +34,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups = {"acceptance", "ui", "loan", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"acceptance", "ui", "loan", "no_db_unit"}, enabled=false) // TODO - ldomzalski - changing account status (good/bad standing doesn't work properly)
 public class LoanAccountAdjustmentsTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
 
@@ -61,8 +61,7 @@ public class LoanAccountAdjustmentsTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false) // TODO - ldomzalski - changing account status (good/bad standing doesn't work properly)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") 
     public void verifyAccountStatusAfterMultipleAdjustments() throws Exception {
         String client = "Stu1233266063395 Client1233266063395";
         RedoLoanDisbursalParameters redoParams = new RedoLoanDisbursalParameters();
@@ -84,7 +83,6 @@ public class LoanAccountAdjustmentsTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false) // TODO - ldomzalski - changing account status (good/bad standing doesn't work properly)
     public void verifyChangesInTransactionHistory() throws Exception {
         RedoLoanDisbursalParameters redoParams = new RedoLoanDisbursalParameters();
         redoParams.setDisbursalDateDD("04");

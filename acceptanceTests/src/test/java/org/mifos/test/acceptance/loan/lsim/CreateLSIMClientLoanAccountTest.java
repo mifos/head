@@ -101,6 +101,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setLsimFrequencyWeeks("on");
         submitAccountParameters.setLsimWeekFrequency("1");
         submitAccountParameters.setLsimWeekDay("Friday");
+        submitAccountParameters.setLoanPurpose("0008-Animal Trading");
 
         createLSIMLoanAndCheckAmountAndInstallmentDate(searchParameters, submitAccountParameters, expectedDate);
     }
@@ -115,6 +116,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         expectedDate = "05-Feb-2010";
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1234.0");
+        submitAccountParameters.setLoanPurpose("0008-Animal Trading");
         // create LSIM loan that has repayments on 5th of every month
         submitAccountParameters.setLsimFrequencyMonths("on");
         submitAccountParameters.setLsimMonthTypeDayOfMonth("on");
@@ -135,6 +137,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("2765.0");
+        submitAccountParameters.setLoanPurpose("0008-Animal Trading");
         // create LSIM loan that has repayments on 2nd Thursday of each month
         submitAccountParameters.setLsimFrequencyMonths("on");
         submitAccountParameters.setLsimMonthTypeNthWeekdayOfMonth("on");
@@ -194,6 +197,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
             createLoanAccountEntryPage.setInstallments("");
             createLoanAccountEntryPage.setDisbursalDate("", "", "");
             createLoanAccountEntryPage.setInterestRate("");
+            createLoanAccountEntryPage.setLonaPurpose("0008-Animal Trading");
             
             createLoanAccountEntryPage = createLoanAccountEntryPage.clickContinueButExpectValidationFailure();
             
@@ -340,6 +344,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters = createSearchParameters("23","02","2011");
+        submitAccountParameters.setLoanPurpose("0008-Animal Trading");
 
         EditLoanAccountStatusParameters editLoanAccountStatusParameters = new EditLoanAccountStatusParameters();
         editLoanAccountStatusParameters.setStatus(AccountStatus.LOAN_APPROVED.getStatusText());
@@ -385,6 +390,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         createLoanAccountSubmitParameters.setDd("22");
         createLoanAccountSubmitParameters.setMm("2");
         createLoanAccountSubmitParameters.setYy("2011");
+        createLoanAccountSubmitParameters.setLoanPurpose("0008-Animal Trading");
 
         //Then
         loanTestHelper.createLoanAccount(searchParameters, createLoanAccountSubmitParameters)
