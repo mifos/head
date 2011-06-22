@@ -114,7 +114,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-234
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void verifyPropertyGroupCanApplyLoansTrue() throws Exception{
         //Given
         propertiesHelper.setGroupCanApplyLoans("true");
@@ -214,7 +214,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-215
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void verifyPropertyPendingApprovalStateEnabledForSavingsAndLoanAccounts() throws Exception{
         //Given
         propertiesHelper.setSavingsPendingApprovalStateEnabled("true");

@@ -75,7 +75,7 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void verifyRepaymentScheduleField() throws Exception {
         int noOfInstallments = 5;
         int maxGap = 10;
@@ -103,7 +103,7 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void verifyInvalidFees() throws Exception {
         DateTime disbursalDate = systemDateTime.plusDays(1);
         String periodicFees = feeTestHelper.createPeriodicFee("loanWeeklyFee", FeesCreatePage.SubmitFormParameters.LOAN, FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 1, 100);

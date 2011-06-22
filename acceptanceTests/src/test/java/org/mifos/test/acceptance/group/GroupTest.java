@@ -76,7 +76,7 @@ public class GroupTest extends UiTestCaseBase {
     private NavigationHelper navigationHelper;
     private static final String NUMBER = "Number";
     private static final String SMART_SELECT = "Smart Select";
-
+    private QuestionGroupTestHelper questionGroupTestHelper;
     private GroupTestHelper groupTestHelper;
 
     @Override
@@ -88,6 +88,7 @@ public class GroupTest extends UiTestCaseBase {
         navigationHelper = new NavigationHelper(selenium);
         random = new Random();
         groupTestHelper = new GroupTestHelper(selenium);
+        questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
     }
 
     @AfterMethod(alwaysRun = true)
@@ -265,15 +266,34 @@ public class GroupTest extends UiTestCaseBase {
         groupViewDetailsPage.navigateToGroupsCenter(newCenterName);
     }
 
-    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui"}, enabled = false)
+    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui"}, enabled = true)
     // http://mifosforge.jira.com/browse/MIFOSTEST-682
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createGroupWithQuestionGroup() throws Exception {
         //Given
-
+    	
+    	CreateQuestionGroupParameters questionGroupParams = new CreateQuestionGroupParameters();
+    	questionGroupParams.setTitle("CreateGroupQG");
+    	questionGroupParams.setAppliesTo("Create Group");
+    	questionGroupParams.setAnswerEditable(true);
+    	questionGroupParams.addExistingQuestion("Sec 1", "Date");
+    	questionGroupParams.addExistingQuestion("Sec 1", "ToBeDisabled");
+    	questionGroupParams.addExistingQuestion("Sec 2", "FreeText");
+    	questionGroupParams.addExistingQuestion("Sec 2", "SingleSelect");
+    	questionGroupTestHelper.createQuestionGroup(questionGroupParams);
+    	
+    	CreateQuestionGroupParameters questionGroupParams2 = new CreateQuestionGroupParameters();
+    	questionGroupParams2.setTitle("CreateGroupQG2");
+    	questionGroupParams2.setAppliesTo("Create Group");
+    	questionGroupParams2.setAnswerEditable(true);
+    	questionGroupParams2.addExistingQuestion("Sec 1", "DateQuestion");
+    	questionGroupParams2.addExistingQuestion("Sec 1", "Number");
+    	questionGroupParams2.addExistingQuestion("Sec 2", "MultiSelect");
+    	questionGroupParams2.addExistingQuestion("Sec 2", "Text");
+    	questionGroupTestHelper.createQuestionGroup(questionGroupParams2);
         CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
         groupParams.setGroupName("GroupTest");
-        String centerName = "MyCenter1232993841778";
+        String centerName = "Default Center";
         String qG_1 = "CreateGroupQG";
         String qG_2 = "CreateGroupQG2";
         QuestionResponseParameters responseParams = getQuestionResponseParametersForGroupCreation("answer1");
@@ -283,8 +303,8 @@ public class GroupTest extends UiTestCaseBase {
         questionsList.add(newFreeTextQuestionParameters("new question 2"));
         questionsList.add(newFreeTextQuestionParameters("new question 3"));
         String[] newActiveQuestions = {"new question 1", "new question 2"};
-        String[] deactivateArray = {"new question 3", "MultiSelect", "question 3", "question 3", "SmartSelect"};
-        String[] deactivatedGroupArray = {"SingleSelect", "question 6"};
+        String[] deactivateArray = {"new question 3", "SingleSelect", "ToBeDisabled"};
+        String[] deactivatedGroupArray = {"MultiSelect", "DateQuestion"};
         List<String> deactivateList = Arrays.asList(deactivateArray);
         //When / Then
         GroupViewDetailsPage groupViewDetailsPage = groupTestHelper.createGroupWithQuestionGroupsEdited(
@@ -307,25 +327,31 @@ public class GroupTest extends UiTestCaseBase {
         QuestionnairePage questionnairePage = responseDetailsPage.navigateToEditSection("0");
         questionnairePage.verifyField("details[0].sectionDetails[0].questions[0].value", "");
         questionnairePage.verifyField("details[0].sectionDetails[0].questions[1].value", "");
+        questionGroupTestHelper.markQuestionGroupAsInactive(qG_1);
     }
 
     private QuestionResponseParameters getQuestionResponseParametersForGroupCreation(String answer) {
         QuestionResponseParameters responseParams = new QuestionResponseParameters();
         responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "24/01/2011");
-        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray", "first");
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "10");
+        //responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray", "first");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "text");
 
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "24/01/2011");
-        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "yes");
-        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[2].valuesAsArray", "february:feb");
+        //responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "24/01/2011");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "text2");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "red");
+        //responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[2].valuesAsArray", "february:feb");
 
         responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "24/01/2011");
-        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[1].valuesAsArray", "first");
-        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[2].value", "10");
+        //responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[1].valuesAsArray", "first");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "10");
 
-        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].valuesAsArray", "february:feb");
-        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "good");
-        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[2].valuesAsArray", "answer2:2");
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].valuesAsArray", "one");
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].valuesAsArray", "four");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "text3");
+        //responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "good");
+        //responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].valuesAsArray", "february:feb");
+        //responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "good");
+        //responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[2].valuesAsArray", "answer2:2");
 
         return responseParams;
     }

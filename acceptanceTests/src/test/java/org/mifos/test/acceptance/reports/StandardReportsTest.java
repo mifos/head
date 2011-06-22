@@ -62,12 +62,12 @@ public class StandardReportsTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(enabled = false)
+    @Test(enabled = true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void generateCollectionSheetEntryReport() throws Exception {
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters.setBranch("MyOfficeDHMFT");
-        formParameters.setLoanOfficer("loan officer");
+        formParameters.setLoanOfficer("ALL");
         formParameters.setCenter("c1");
         formParameters.setTransactionDay("23");
         formParameters.setTransactionMonth("04");

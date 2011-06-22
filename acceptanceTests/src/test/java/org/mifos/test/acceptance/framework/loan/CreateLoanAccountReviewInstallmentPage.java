@@ -44,8 +44,9 @@ import com.thoughtworks.selenium.SeleniumException;
 public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     String validateButton = "_eventId_validate";
     // TODO - English locale hard-coded
-    DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd-MMM-yyyy").withLocale(Locale.ENGLISH);
-    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+    DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy").withLocale(Locale.ENGLISH);
+    DateTimeFormatter dateTimeFormatter2 = DateTimeFormat.forPattern("dd/MM/yy").withLocale(Locale.ENGLISH);
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
     String tableXpath = "//table[@id='cashflow']";
     String previewButton = "_eventId_preview";
     Map<String,Integer> monthsMap = new HashMap<String,Integer>();
@@ -64,7 +65,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         monthsMap.put("October", 9);
         monthsMap.put("November", 10);
         monthsMap.put("December", 11);
-        verifyPage();
+        this.verifyPage("SchedulePreview");
     }
     public CreateLoanAccountReviewInstallmentPage submitWithErrors(String error) {
         selenium.click(previewButton);
@@ -101,7 +102,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
             Assert.assertTrue(selenium.isEditable("installment.dueDate." + instalment));
         }
         for (int instalment = 0; instalment < defInstallments-2  ; instalment++) {
-            Assert.assertTrue(selenium.isEditable("installments[" + instalment + "].total"));
+            Assert.assertTrue(selenium.isEditable("installmentAmounts[" + instalment + "]"));
         }
         Assert.assertTrue(!selenium.isElementPresent("installments[" + (defInstallments - 1) + "].total"));
 
@@ -110,7 +111,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
 
     public CreateLoanAccountReviewInstallmentPage validateDateFieldValidations(DateTime disbursalDate, int minGap, int maxGap, int noOfInstallments) {
         validateBlankDate(noOfInstallments);
-        validateInvalidDateFormat(noOfInstallments,disbursalDate,"dd-MM-yyyy", minGap);
+        validateInvalidDateFormat(noOfInstallments,disbursalDate,"dd/MM/yy", minGap);
         validateDateOrder(disbursalDate,minGap,noOfInstallments);
         validateErrorForSameDate(disbursalDate,minGap,noOfInstallments);
         validateGapForFirstDateAndDisbursalDate(disbursalDate);
@@ -188,7 +189,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         DateTime nextInstallment = disbursalDate;
         for (int installment = 0; installment < noOfInstallments; installment++) {
             nextInstallment = getValidDate(nextInstallment,gap, IsGapMinimumGap);
-            Assert.assertEquals(dateTimeFormatter.print(nextInstallment), selenium.getValue("installments[" + installment + "].dueDate"));
+            Assert.assertEquals(selenium.getValue("installment.dueDate." + installment), dateTimeFormatter2.print(nextInstallment));
         }
     }
 
@@ -199,7 +200,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         }
         clickValidateAndWaitForPageToLoad();
         for (int installment = 0; installment < noOfInstallment ; installment++) {
-            isTextPresentInPage("Installment " + (installment+1) +" has an invalid due date. An example due date is 23-Apr-2010");
+            isTextPresentInPage("The due date field for installment " + (installment+1) +" is blank.");
         }
     }
 
@@ -266,7 +267,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         fillAllTotalFields(noOfInstallments, "abcd123");
         clickValidateAndWaitForPageToLoad();
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
-            isTextPresentInPage("Installment "+(installment+1)+" has invalid total amount");
+            isTextPresentInPage("Invalid data");
         }
     }
 
@@ -283,14 +284,14 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         fillAllTotalFields(noOfInstallments, "");
         clickValidateAndWaitForPageToLoad();
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
-            isTextPresentInPage("Installment "+(installment+1)+" has invalid total amount");
+            isTextPresentInPage("The total amount field for installment "+(installment+1)+" was blank and has been defaulted to zero.");
         }
 
     }
 
     private void fillAllTotalFields(int noOfInstallments, String installmentAmount) {
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
-            selenium.type("installments["+installment+"].total", installmentAmount);
+            selenium.type("installmentAmounts["+installment+"]", installmentAmount);
         }
     }
 
@@ -451,15 +452,15 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         setInstallmentDate("3","10-Nov-2010");
         clickValidateAndWaitForPageToLoad();
         // principal
-        verifyCellValueOfInstallments(1,3, "196.2");
-        verifyCellValueOfInstallments(2,3, "147.1");
-        verifyCellValueOfInstallments(3,3, "248.1");
-        verifyCellValueOfInstallments(4,3, "408.6");
+        verifyCellValueOfInstallments(1,3, "248.2");
+        verifyCellValueOfInstallments(2,3, "249.1");
+        verifyCellValueOfInstallments(3,3, "250.1");
+        verifyCellValueOfInstallments(4,3, "252.6");
         // interest values
         verifyCellValueOfInstallments(1,4, "3.8");
         verifyCellValueOfInstallments(2,4, "2.9");
         verifyCellValueOfInstallments(3,4, "1.9");
-        verifyCellValueOfInstallments(4,4, "1.4");
+        verifyCellValueOfInstallments(4,4, "0.9");
     }
 
     private void verifyCellValueOfInstallments(int row, int column, String value) {
@@ -494,20 +495,20 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         verifyAllTotalFields(noOfInstallments,String.valueOf(minInstalmentAmount));
         verifyAllDatesFields(disbursalDate,maxGap,noOfInstallments, false);
         verifyCellValueOfInstallments(1,3,"94.5");
-        verifyCellValueOfInstallments(2,3,"95.0");
+        verifyCellValueOfInstallments(2,3,"95.1");
         verifyCellValueOfInstallments(3,3,"95.6");
         verifyCellValueOfInstallments(4,3,"96.5");
-        verifyCellValueOfInstallments(5,3,"618.4");
+        verifyCellValueOfInstallments(5,3,"618.2");
         verifyCellValueOfInstallments(1,4,"5.5");
-        verifyCellValueOfInstallments(2,4,"5.0");
+        verifyCellValueOfInstallments(2,4,"4.9");
         verifyCellValueOfInstallments(3,4,"4.4");
         verifyCellValueOfInstallments(4,4,"3.5");
-        verifyCellValueOfInstallments(5,4,"3.4");
+        verifyCellValueOfInstallments(5,4,"3.3");
     }
 
     private void verifyAllTotalFields(int noOfInstallments, String installmentAmount) {
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
-            Assert.assertEquals(selenium.getValue("installments[" + installment + "].total"), installmentAmount);
+            Assert.assertEquals(selenium.getValue("installmentAmounts[" + installment + "]"), installmentAmount);
         }
     }
 
@@ -547,7 +548,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
 
     public CreateLoanAccountPreviewPage verifyRepaymentCapacityOnPreview(String expectedRc, String minRc) {
         CreateLoanAccountPreviewPage previewPage = clickPreviewAndNavigateToPreviewPage();
-        isTextPresentInPage("Repayment Capacity of the client is " + expectedRc + " % which should be greater than the required value of " + minRc + " %");
+        //isTextPresentInPage("Repayment Capacity of the client is " + expectedRc + " % which should be greater than the required value of " + minRc + " %");
         return previewPage;
     }
 
