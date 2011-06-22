@@ -68,7 +68,7 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-359
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void repayMultipleLoansAndVerifyPerformanceHistory() throws Exception {
         //Given
