@@ -34,7 +34,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(enabled = false, singleThreaded = true, groups = {"core","acceptance"})
+@Test(enabled = true, singleThreaded = true, groups = {"core","acceptance"})
 public class DatasetVersionTest extends UiTestCaseBase {
 
     @Autowired

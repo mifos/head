@@ -30,7 +30,7 @@ import org.testng.Assert;
 import com.thoughtworks.selenium.Selenium;
 
 public class CreateLoanAccountPreviewPage extends AbstractPage {
-    String editScheduleButton = "//input[@id='createloanpreview.button.edit']";
+    String editScheduleButton = "//input[@id='redoloanpreview.button.editloanschedule']";
 
     public CreateLoanAccountPreviewPage(Selenium selenium) {
         super(selenium);

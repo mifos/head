@@ -42,8 +42,8 @@ import java.io.UnsupportedEncodingException;
 @Test(singleThreaded = true, groups = {"collectionsheet", "acceptance", "ui", "no_db_unit"})
 public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
 
-    private static final String VALID_RECEIPT_DAY = "4";
-    private static final String VALID_TRANSACTION_DAY = "7";
+    private static final String VALID_RECEIPT_DAY = "04";
+    private static final String VALID_TRANSACTION_DAY = "23";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -86,7 +86,7 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(enabled = false) // TODO js - temporarily disabled broken test
+    @Test(enabled = true) // TODO js - temporarily disabled broken test
     public void checkThatPreviewEditButtonWorks() throws Exception {
         SubmitFormParameters formParameters = getFormParameters();
         CollectionSheetEntrySelectPage selectPage =
@@ -118,7 +118,7 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
         formParameters.setReceiptMonth("11");
         formParameters.setReceiptYear("2009");
         formParameters.setTransactionDay(transactionDay);
-        formParameters.setTransactionMonth("2");
+        formParameters.setTransactionMonth("02");
         formParameters.setTransactionYear("2009");
         return formParameters;
     }
