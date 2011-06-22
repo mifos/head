@@ -1450,12 +1450,6 @@ public class AccountBO extends AbstractBusinessObject {
             final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
     }
 
-    @Deprecated
-    protected List<FeeInstallment> handlePeriodic(final AccountFeesEntity accountFees,
-            final List<InstallmentDate> installmentDates) throws AccountException {
-        return null;
-    }
-
     protected List<FeeInstallment> handlePeriodic(final AccountFeesEntity accountFees,
             final List<InstallmentDate> installmentDates, final List<InstallmentDate> nonAdjustedInstallmentDates)
             throws AccountException {

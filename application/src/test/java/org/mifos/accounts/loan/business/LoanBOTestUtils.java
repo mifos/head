@@ -40,8 +40,6 @@ import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
@@ -63,7 +61,6 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
@@ -174,48 +171,6 @@ public class LoanBOTestUtils {
         loan.setCreatedDate(new Date(System.currentTimeMillis()));
 
         setLoanSummary(loan, currency);
-        return loan;
-    }
-
-    public static LoanBO createIndividualLoanAccount(final String globalNum, final CustomerBO customer, final AccountState state,
-            final Date startDate, final LoanOfferingBO loanOfering) {
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(startDate);
-        MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
-        List<Date> meetingDates = TestObjectFactory.getMeetingDates(customer.getOfficeId(), meeting, 6);
-
-        LoanBO loan;
-        try {
-            loan = LoanBO.createIndividualLoan(TestUtils.makeUser(), loanOfering, customer, state, TestUtils.createMoney(
-                    "300.0"), Short.valueOf("6"), meetingDates.get(0), false, false, 0.0, (short) 0, null,
-                    new ArrayList<FeeDto>(), null, false);
-        } catch (ApplicationException e) {
-            throw new RuntimeException(e);
-        }
-        FeeBO maintanenceFee = TestObjectFactory.createPeriodicAmountFee("Mainatnence Fee", FeeCategory.LOAN, "100",
-                RecurrenceType.WEEKLY, Short.valueOf("1"));
-        AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(loan, maintanenceFee,
-                ((AmountFeeBO) maintanenceFee).getFeeAmount().getAmountDoubleValue());
-        AccountTestUtils.addAccountFees(accountPeriodicFee, loan);
-        loan.setLoanMeeting(meeting);
-        short i = 0;
-        for (Date date : meetingDates) {
-            LoanScheduleEntity actionDate = (LoanScheduleEntity) loan.getAccountActionDate(++i);
-            actionDate.setPrincipal(TestUtils.createMoney("100.0"));
-            actionDate.setInterest(TestUtils.createMoney("12.0"));
-            actionDate.setActionDate(new java.sql.Date(date.getTime()));
-            actionDate.setPaymentStatus(PaymentStatus.UNPAID);
-            AccountTestUtils.addAccountActionDate(actionDate, loan);
-
-            AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(actionDate, maintanenceFee,
-                    accountPeriodicFee, TestUtils.createMoney("100.0"));
-            setFeeAmountPaid(accountFeesaction, TestUtils.createMoney("0.0"));
-            actionDate.addAccountFeesAction(accountFeesaction);
-        }
-        loan.setCreatedBy(Short.valueOf("1"));
-        loan.setCreatedDate(new Date(System.currentTimeMillis()));
-
-        setLoanSummary(loan, TestUtils.RUPEE);
         return loan;
     }
 

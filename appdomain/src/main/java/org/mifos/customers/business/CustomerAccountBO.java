@@ -258,34 +258,6 @@ public class CustomerAccountBO extends AccountBO {
      * @deprecated - use static factory methods for creating {@link CustomerAccountBO}.
      */
     @Deprecated
-    public CustomerAccountBO(final CustomerBO customer, final Set<AmountFeeBO> accountFees, final OfficeBO office,
-            final PersonnelBO loanOfficer, final Date createdDate, final Short createdByUserId,
-            final boolean buildForIntegrationTests) {
-        super(AccountTypes.CUSTOMER_ACCOUNT, AccountState.CUSTOMER_ACCOUNT_ACTIVE, customer, Integer.valueOf(1),
-                new LinkedHashSet<AccountActionDateEntity>(), new HashSet<AccountFeesEntity>(), createdDate, createdByUserId);
-        this.customer.addCustomerAccount(this);
-
-        this.userContext = customer.getUserContext();
-
-        for (AmountFeeBO amountFee : accountFees) {
-            AccountFeesEntity accountFeesEntity = new AccountFeesEntity(this, amountFee, amountFee.getFeeAmount()
-                    .getAmountDoubleValue());
-            this.addAccountFees(accountFeesEntity);
-        }
-
-        if (buildForIntegrationTests) {
-            try {
-                generateCustomerFeeSchedule(customer);
-            } catch (AccountException e) {
-                throw new IllegalStateException("Unable to setup customer fee schedule", e);
-            }
-        }
-    }
-
-    /**
-     * @deprecated - use static factory methods for creating {@link CustomerAccountBO}.
-     */
-    @Deprecated
     public CustomerAccountBO(final UserContext userContext, final CustomerBO customer, final List<FeeDto> fees)
             throws AccountException {
         super(userContext, customer, AccountTypes.CUSTOMER_ACCOUNT, AccountState.CUSTOMER_ACCOUNT_ACTIVE);
@@ -947,25 +919,6 @@ public class CustomerAccountBO extends AccountBO {
         } catch (AccountException e) {
             throw new CustomerException(e);
         }
-    }
-
-    @Override
-    protected final List<FeeInstallment> handlePeriodic(final AccountFeesEntity accountFees,
-            final List<InstallmentDate> installmentDates) throws AccountException {
-        Money accountFeeAmount = accountFees.getAccountFeeAmount();
-        MeetingBO feeMeetingFrequency = accountFees.getFees().getFeeFrequency().getFeeMeetingFrequency();
-        List<Date> feeDates = getFeeDates(feeMeetingFrequency, installmentDates);
-        ListIterator<Date> feeDatesIterator = feeDates.listIterator();
-        List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
-        while (feeDatesIterator.hasNext()) {
-            Date feeDate = feeDatesIterator.next();
-            logger.debug(
-                    "FeeInstallmentGenerator:handlePeriodic date considered after removal.." + feeDate);
-            Short installmentId = getMatchingInstallmentId(installmentDates, feeDate);
-            feeInstallmentList.add(buildFeeInstallment(installmentId, accountFeeAmount, accountFees));
-            break;
-        }
-        return feeInstallmentList;
     }
 
     @Override

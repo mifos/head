@@ -50,7 +50,7 @@ public class CreateLoanAccount implements RecurringSchedule {
     private final int maxAllowedNumberOfInstallments;
     private final BigDecimal minAllowedLoanAmount;
     private final BigDecimal maxAllowedLoanAmount;
-
+    
     public CreateLoanAccount(Integer customerId, Integer productId, Integer accountState, 
             BigDecimal loanAmount, BigDecimal minAllowedLoanAmount, BigDecimal maxAllowedLoanAmount, 
             Double interestRate, LocalDate disbursementDate, int numberOfInstallments, int minAllowedNumberOfInstallments, int maxAllowedNumberOfInstallments, 

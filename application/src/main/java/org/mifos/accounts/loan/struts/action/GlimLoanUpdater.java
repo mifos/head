@@ -20,46 +20,16 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import java.util.ArrayList;
-
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
-import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
-import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
 
 public class GlimLoanUpdater {
-
-    /**
-     * delete me.
-     */
-    @Deprecated
-    public void createIndividualLoan(LoanAccountActionForm loanAccountActionForm, LoanBO loan,
-            boolean isRepaymentIndepOfMeetingEnabled, LoanAccountDetailsDto loanAccountDetail)
-            throws AccountException, ServiceException {
-        LoanBO individualLoan = LoanBO.createIndividualLoan(loan.getUserContext(), loan.getLoanOffering(),
-                new CustomerBusinessService().getCustomer(Integer.valueOf(loanAccountDetail.getClientId())),
-                loanAccountActionForm.getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount()), loan
-                        .getNoOfInstallments(), loan.getDisbursementDate(), false, isRepaymentIndepOfMeetingEnabled,
-                loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeDto>(),
-                new ArrayList<CustomFieldDto>(), true);
-
-        individualLoan.setParentAccount(loan);
-
-        if (!StringUtils.isBlank(loanAccountDetail.getBusinessActivity())) {
-            individualLoan.setBusinessActivityId(Integer.valueOf(loanAccountDetail.getBusinessActivity()));
-        }
-
-        individualLoan.save();
-    }
 
     void updateIndividualLoan(final LoanAccountDetailsDto loanAccountDetail, LoanBO individualLoan)
             throws AccountException {

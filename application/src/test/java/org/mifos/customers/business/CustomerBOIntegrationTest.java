@@ -20,7 +20,13 @@
 
 package org.mifos.customers.business;
 
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +52,6 @@ import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.customers.group.business.GroupTestUtils;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -56,11 +61,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import java.sql.Date;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
 
 public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
 
@@ -72,8 +72,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     private MeetingBO meeting;
     private SavingsTestHelper helper = new SavingsTestHelper();
     private SavingsOfferingBO savingsOffering;
-    private PersonnelBO loanOfficer;
-    private OfficeBO createdBranchOffice;
 
     @Before
     public void setUp() throws Exception {
@@ -86,11 +84,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
             client = null;
             group = null;
             center = null;
-
-            loanOfficer = null;
-            createdBranchOffice = null;
         } catch (Exception e) {
-
         }
         StaticHibernateUtil.flushAndClearSession();
     }
@@ -221,23 +215,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
         Assert.assertEquals(1, group.getActiveLoanCounts().intValue());
         StaticHibernateUtil.flushSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-    }
-
-    @Test
-    public void testGetOpenIndividualLoanAccounts() {
-        createInitialObjects();
-        accountBO = getIndividualLoanAccount(group, meeting);
-        StaticHibernateUtil.flushSession();
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        List<LoanBO> loans = group.getOpenIndividualLoanAccounts();
-        Assert.assertEquals(1, loans.size());
-
-        StaticHibernateUtil.flushSession();
-
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
         client = TestObjectFactory.getClient(client.getCustomerId());
@@ -385,14 +362,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         return TestObjectFactory.createLoanAccount("42423142341", customer, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
-
-    }
-
-    private AccountBO getIndividualLoanAccount(CustomerBO customer, MeetingBO meeting) {
-        Date startDate = new Date(System.currentTimeMillis());
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
-        return TestObjectFactory.createIndividualLoanAccount("42423142341", customer,
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
 
     }
 

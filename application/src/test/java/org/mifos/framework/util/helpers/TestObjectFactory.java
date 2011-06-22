@@ -46,7 +46,6 @@ import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.CategoryTypeEntity;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -810,13 +809,6 @@ public class TestObjectFactory {
 
         LoanBO loan = LoanBOTestUtils.createLoanAccount(globalNum, customer, state, startDate, loanProduct);
 
-        return loan;
-    }
-
-    public static LoanBO createIndividualLoanAccount(final String globalNum, final CustomerBO customer,
-                                                     final AccountState state, final Date startDate, final LoanOfferingBO offering) {
-        LoanBO loan = LoanBOTestUtils.createIndividualLoanAccount(globalNum, customer, state, startDate, offering);
-        IntegrationTestObjectMother.saveLoanAccount(loan);
         return loan;
     }
 

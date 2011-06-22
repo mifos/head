@@ -30,9 +30,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -43,6 +41,9 @@ import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.builders.MifosUserBuilder;
+import org.mifos.clientportfolio.loan.service.RecurringSchedule;
+import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.center.business.CenterBO;
@@ -55,13 +56,19 @@ import org.mifos.domain.builders.ClientBuilder;
 import org.mifos.domain.builders.FeeBuilder;
 import org.mifos.domain.builders.GroupBuilder;
 import org.mifos.domain.builders.MeetingBuilder;
+import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.security.util.UserContext;
+import org.mifos.security.MifosUser;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 /**
  * Class contains utility methods for setting up, processing and configuring a sample collection sheet hierarchy for
@@ -108,13 +115,11 @@ public class TestSaveCollectionSheetUtils {
     private ClientBO anotherClient;
 
     private CollectionSheetService collectionSheetService;
-    private UserContext userContext;
     private MifosCurrency currency;
 
     public TestSaveCollectionSheetUtils() {
         collectionSheetService = ApplicationContextProvider.getBean(CollectionSheetService.class);
         currency = Money.getDefaultCurrency();
-        userContext = TestUtils.makeUser();
     }
 
     /**
@@ -189,19 +194,43 @@ public class TestSaveCollectionSheetUtils {
 
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.CLIENTS, date,
                 PrdStatus.LOAN_ACTIVE, 1200.0, 1.2, 12, InterestType.FLAT, loanMeeting);
+        
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        
+        BigDecimal loanAmount = BigDecimal.valueOf(Double.valueOf("1200.0"));
+        BigDecimal minAllowedLoanAmount = loanAmount;
+        BigDecimal maxAllowedLoanAmount = loanAmount;
+        Double interestRate = Double.valueOf("10.0");
+        LocalDate disbursementDate = new LocalDate(date);
+        int numberOfInstallments = 12;
+        int minAllowedNumberOfInstallments = loanOffering.getEligibleInstallmentSameForAllLoan().getMaxNoOfInstall();
+        int maxAllowedNumberOfInstallments = loanOffering.getEligibleInstallmentSameForAllLoan().getMaxNoOfInstall();
+        int graceDuration = 0;
+        Integer sourceOfFundId = null;
+        Integer loanPurposeId = null;
+        Integer collateralTypeId = null;
+        String collateralNotes = null;
+        String externalId = null;
+        boolean repaymentScheduleIndependentOfCustomerMeeting = false;
+        RecurringSchedule recurringSchedule = null;
+        List<CreateAccountFeeDto> accountFees = new ArrayList<CreateAccountFeeDto>();
 
-        loan = null;
-        try {
-            loan = LoanBO.createIndividualLoan(userContext, loanOffering, client, AccountState.LOAN_APPROVED,
-                    new Money(currency, "1200.0"), Short.valueOf("12"), date, false, false, 10.0, (short) 0, null,
-                    new ArrayList<FeeDto>(), null, false);
-
-        } catch (AccountException e) {
-            throw new Exception(e);
-        }
-
-        loan.save();
-
+        CreateLoanAccount createLoanAccount = new CreateLoanAccount(client.getCustomerId(), loanOffering.getPrdOfferingId().intValue(), 
+                AccountState.LOAN_APPROVED.getValue().intValue(), 
+                loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount, 
+                interestRate, disbursementDate, numberOfInstallments, 
+                minAllowedNumberOfInstallments, maxAllowedNumberOfInstallments, 
+                graceDuration, sourceOfFundId, loanPurposeId, 
+                collateralTypeId, collateralNotes, externalId, 
+                repaymentScheduleIndependentOfCustomerMeeting, 
+                recurringSchedule, accountFees);
+        
+        loan = IntegrationTestObjectMother.createClientLoan(createLoanAccount);
+        loan.updateDetails(TestUtils.makeUser());
     }
 
     public CenterBO getCenter() {

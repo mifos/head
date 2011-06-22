@@ -57,7 +57,6 @@ import org.mifos.accounts.business.AccountTypeEntity;
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
@@ -162,7 +161,6 @@ import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
-import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -267,26 +265,6 @@ public class LoanBO extends AccountBO implements Loan {
         this.performanceHistory = null;
     }
 
-    /**
-     * use constructor that does not use feeDtos
-     */
-    @Deprecated
-    public LoanBO(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer,
-            final AccountState accountState, final Money loanAmount, final Short noOfinstallments,
-            final Date disbursementDate, final boolean interestDeductedAtDisbursement, final Double interestRate,
-            final Short gracePeriodDuration, final FundBO fund, final List<FeeDto> feeDtos,
-            final List<CustomFieldDto> customFields, final Boolean isRedone, final Double maxLoanAmount,
-            final Double minLoanAmount, final Double maxInterestRate, final Double minInterestRate,
-            final Short maxNoOfInstall, final Short minNoOfInstall, final boolean isRepaymentIndepOfMeetingEnabled,
-            final MeetingBO newMeetingForRepaymentDay) throws AccountException {
-        this(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments, disbursementDate,
-                interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos, customFields,
-                isRedone, AccountTypes.LOAN_ACCOUNT, isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
-        this.maxMinLoanAmount = new MaxMinLoanAmount(maxLoanAmount, minLoanAmount, this);
-        this.maxMinInterestRate = new MaxMinInterestRate(maxInterestRate, minInterestRate, this);
-        this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxNoOfInstall, minNoOfInstall, this);
-    }
-
     // opening balance loan constructor
     public LoanBO(LoanOfferingBO loanProduct, CustomerBO customer, AccountState loanState, LoanProductOverridenDetail overridenDetail, 
             MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanScheduleConfiguration configuration, 
@@ -334,95 +312,6 @@ public class LoanBO extends AccountBO implements Loan {
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey());
         }
-    }
-
-    /**
-     * @deprecated use constructor that does not use feeDto
-     */
-    @Deprecated
-    private LoanBO(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer,
-            final AccountState accountState, final Money loanAmount, final Short noOfinstallments,
-            final Date disbursementDate, final boolean interestDeductedAtDisbursement, final Double interestRate,
-            final Short gracePeriodDuration, final FundBO fund, final List<FeeDto> feeDtos,
-            final List<CustomFieldDto> customFields, final Boolean isRedone, final AccountTypes accountType,
-            final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
-            throws AccountException {
-        super(userContext, customer, accountType, accountState);
-        setCreateDetails();
-        this.redone = isRedone;
-        this.loanOffering = loanOffering;
-        this.loanAmount = loanAmount;
-        this.loanBalance = loanAmount;
-        this.noOfInstallments = noOfinstallments;
-        this.interestType = loanOffering.getInterestTypes();
-        this.interestRate = interestRate;
-        setInterestDeductedAtDisbursement(interestDeductedAtDisbursement);
-        setGracePeriodTypeAndDuration(interestDeductedAtDisbursement, gracePeriodDuration, noOfinstallments);
-        this.gracePeriodPenalty = Short.valueOf("0");
-        this.fund = fund;
-        this.loanMeeting = buildLoanMeeting(customer.getCustomerMeeting().getMeeting(), loanOffering
-                .getLoanOfferingMeeting().getMeeting(), disbursementDate);
-        buildAccountFee(feeDtos);
-        this.disbursementDate = disbursementDate;
-        this.performanceHistory = new LoanPerformanceHistoryEntity(this);
-        this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
-        generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
-        this.loanSummary = buildLoanSummary();
-        this.maxMinLoanAmount = null;
-        this.maxMinInterestRate = null;
-        this.maxMinNoOfInstall = null;
-    }
-
-    /**
-     * no longer used in application. usuage in GlimLoanUpdater is invalid now.
-     */
-    @Deprecated
-    public static LoanBO createIndividualLoan(final UserContext userContext, final LoanOfferingBO loanOffering,
-            final CustomerBO customer, final AccountState accountState, final Money loanAmount,
-            final Short noOfinstallments, final Date disbursementDate, final boolean interestDeductedAtDisbursement,
-            final boolean isRepaymentIndepOfMeetingEnabled, final Double interestRate, final Short gracePeriodDuration,
-            final FundBO fund, final List<FeeDto> feeDtos, final List<CustomFieldDto> customFields, boolean isUpdate)
-            throws AccountException {
-
-        commonValidationsForCreateAndRedoIndividualLoans(loanOffering, customer, loanAmount, noOfinstallments,
-                disbursementDate, interestRate, isRepaymentIndepOfMeetingEnabled, interestDeductedAtDisbursement);
-
-        if (!isUpdate && isDisbursementDateLessThanCurrentDate(disbursementDate)) {
-            throw new AccountException(LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
-        }
-
-        return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
-                disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos,
-                customFields, false, AccountTypes.INDIVIDUAL_LOAN_ACCOUNT, false, null);
-    }
-
-    private static void commonValidationsForCreateAndRedoIndividualLoans(final LoanOfferingBO loanOffering,
-            final CustomerBO customer, final Money loanAmount, final Short noOfinstallments,
-            final Date disbursementDate, final Double interestRate, final boolean isRepaymentIndepOfMeetingEnabled,
-            final boolean interestDeductedAtDisbursement) throws AccountException {
-        if (isAnyLoanParamsNull(loanOffering, customer, loanAmount, noOfinstallments, disbursementDate, interestRate)) {
-            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
-        }
-
-        if (!customer.isActive()) {
-            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTIONCUSTOMERINACTIVE);
-        }
-
-        if (!loanOffering.isActive()) {
-            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTIONPRDINACTIVE);
-        }
-
-        if (!isRepaymentIndepOfMeetingEnabled && !isDisbursementDateValid(customer, disbursementDate)) {
-            throw new AccountException(LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
-        }
-
-        if (interestDeductedAtDisbursement && noOfinstallments.shortValue() <= 1) {
-            throw new AccountException(LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
-        }
-    }
-
-    private static boolean isAnyLoanParamsNull(final Object... args) {
-        return Arrays.asList(args).contains(null);
     }
 
     public static LoanBO openStandardLoanAccount(LoanOfferingBO loanProduct, CustomerBO customer,
@@ -1925,24 +1814,6 @@ public class LoanBO extends AccountBO implements Loan {
         return date.getTime() + cal1.get(Calendar.ZONE_OFFSET) + cal1.get(Calendar.DST_OFFSET);
     }
 
-    @Override
-    @Deprecated
-    protected final List<FeeInstallment> handlePeriodic(final AccountFeesEntity accountFees,
-            final List<InstallmentDate> installmentDates) throws AccountException {
-        Money accountFeeAmount = accountFees.getAccountFeeAmount();
-        MeetingBO feeMeetingFrequency = accountFees.getFees().getFeeFrequency().getFeeMeetingFrequency();
-        List<Date> feeDates = getFeeDates(feeMeetingFrequency, installmentDates);
-        ListIterator<Date> feeDatesIterator = feeDates.listIterator();
-        List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
-        while (feeDatesIterator.hasNext()) {
-            Date feeDate = feeDatesIterator.next();
-            logger.debug("Handling periodic fee.." + feeDate);
-            Short installmentId = getMatchingInstallmentId(installmentDates, feeDate);
-            feeInstallmentList.add(buildFeeInstallment(installmentId, accountFeeAmount, accountFees));
-        }
-        return feeInstallmentList;
-    }
-
     /**
      * Calculate and return the list of {@link FeeInstallment}s to be applied. A fee installment will apply to one of
      * the given loan installmentDates if the installmentIds match. Here's the criteria for matching a fee installment
@@ -2023,23 +1894,6 @@ public class LoanBO extends AccountBO implements Loan {
                 loanSummary.getInterestPaid()), fees,
                 loanSummary.getOriginalFees().subtract(loanSummary.getFeesPaid()), penalty, loanSummary
                         .getOriginalPenalty().subtract(loanSummary.getPenaltyPaid()), trxnDate);
-    }
-
-    private Short getInstallmentSkipToStartRepayment(final boolean isRepaymentIndepOfMeetingEnabled) {
-        // in the default case of loan schedules tied to meeting schedules,
-        // the loan is disbursed at the first meeting (#0) and the first
-        // payment is made at the following meeting (#1)
-        short firstRepaymentInstallment = 1;
-        // if LoanScheduleIndependentofMeeting is on, then repayments start on
-        // the first meeting in the schedule (#0)
-        if (isRepaymentIndepOfMeetingEnabled) {
-            firstRepaymentInstallment = 0;
-        }
-
-        if (getGraceType() == GraceType.PRINCIPALONLYGRACE || getGraceType() == GraceType.NONE) {
-            return firstRepaymentInstallment;
-        }
-        return (short) (getGracePeriodDuration() + firstRepaymentInstallment);
     }
 
     /**
@@ -2351,34 +2205,6 @@ public class LoanBO extends AccountBO implements Loan {
         return fees;
     }
 
-    private void buildAccountFee(final List<FeeDto> feeDtos) {
-        if (feeDtos != null && feeDtos.size() > 0) {
-            for (FeeDto feeDto : feeDtos) {
-                FeeBO fee = getFeeDao().findById(feeDto.getFeeIdValue());
-                this.addAccountFees(new AccountFeesEntity(this, fee, feeDto.getAmountMoney()));
-            }
-        }
-    }
-
-    private void setGracePeriodTypeAndDuration(final boolean interestDeductedAtDisbursement,
-            final Short gracePeriodDuration, final Short noOfInstallments) throws AccountException {
-        if (interestDeductedAtDisbursement) {
-            setGracePeriodType(GraceType.NONE);
-            this.gracePeriodDuration = (short) 0;
-        } else {
-            if (!loanOffering.getGracePeriodType().getId().equals(GraceType.NONE.getValue())) {
-                if (gracePeriodDuration == null || gracePeriodDuration >= noOfInstallments) {
-                    throw new AccountException("errors.gracePeriod");
-                }
-                if (gracePeriodDuration > loanOffering.getGracePeriodDuration()) {
-                    throw new AccountException("errors.gracePeriodProductDef");
-                }
-            }
-            setGracePeriodType(loanOffering.getGracePeriodType());
-            this.gracePeriodDuration = gracePeriodDuration;
-        }
-    }
-
     private void updateCustomerHistoryOnLastInstlPayment(final Money totalAmount) throws AccountException {
         try {
             getCustomer().updatePerformanceHistoryOnLastInstlPayment(this, totalAmount);
@@ -2428,6 +2254,10 @@ public class LoanBO extends AccountBO implements Loan {
         }
     }
 
+    /**
+     * pull this logic out of LoanBO entity and reuse LoanSchedule behaviour used from service facades at a service level
+     */
+    @Deprecated
     private void regeneratePaymentSchedule(final boolean isRepaymentIndepOfMeetingEnabled,
             final MeetingBO newMeetingForRepaymentDay) throws AccountException {
         Money miscFee = getMiscFee();
@@ -2886,80 +2716,6 @@ public class LoanBO extends AccountBO implements Loan {
 
     public boolean isOfProductOffering(final LoanOfferingBO loanOfferingBO) {
         return this.loanOffering.isOfSameOffering(loanOfferingBO);
-    }
-
-    /**
-     * @deprecated - pull this capability out of loan and into something more isolated and resuseable
-     */
-    @Deprecated
-    private void generateMeetingSchedule(final boolean isRepaymentIndepOfMeetingEnabled,
-            final MeetingBO newMeetingForRepaymentDay) {
-
-        // FIXME - keithw - newMeetingForRepaymentDay is only populated when updating loan see LoanAccountAction.update
-        if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null) {
-            setLoanMeeting(newMeetingForRepaymentDay);
-        }
-
-        RecurringScheduledEventFactory scheduledEventFactory = new RecurringScheduledEventFactoryImpl();
-        ScheduledEvent meetingScheduledEvent = scheduledEventFactory.createScheduledEventFrom(this.loanMeeting);
-
-        LoanInstallmentFactory loanInstallmentFactory = new LoanInstallmentFactoryImpl(scheduledEventFactory);
-        LoanInstallmentGenerator loanInstallmentGenerator = loanInstallmentFactory.create(this.getLoanMeeting(), isRepaymentIndepOfMeetingEnabled);
-
-        LocalDate actualDisbursementDate = new LocalDate(this.disbursementDate);
-        List<InstallmentDate> installmentDates = loanInstallmentGenerator.generate(actualDisbursementDate, this.noOfInstallments, this.gracePeriodType.asEnum(), this.gracePeriodDuration, this.office.getOfficeId());
-
-        Integer numberOfInstallments = installmentDates.size();
-        GraceType graceType = this.gracePeriodType.asEnum();
-        InterestType interestType = InterestType.fromInt(this.interestType.getId());
-        Integer interestDays = AccountingRules.getNumberOfInterestDays().intValue();
-
-        LoanDecliningInterestAnnualPeriodCalculator decliningInterestAnnualPeriodCalculator = new LoanDecliningInterestAnnualPeriodCalculatorFactory().create(loanMeeting.getRecurrenceType());
-        Double decliningInterestAnnualPeriod = decliningInterestAnnualPeriodCalculator.calculate(loanMeeting.getRecurAfter().intValue(), interestDays);
-        Double interestFractionalRatePerInstallment = interestRate / decliningInterestAnnualPeriod / 100;
-
-        LoanDurationInAccountingYearsCalculator loanDurationInAccountingYearsCalculator = new LoanDurationInAccountingYearsCalculatorFactory().create(loanMeeting.getRecurrenceType());
-        Double durationInYears = loanDurationInAccountingYearsCalculator.calculate(loanMeeting.getRecurAfter().intValue(), numberOfInstallments, interestDays);
-
-        List<DateTime> scheduledInstallments = new ArrayList<DateTime>();
-        for (InstallmentDate installmentDate : installmentDates) {
-            scheduledInstallments.add(new DateTime(installmentDate.getInstallmentDueDate()));
-        }
-        LoanInterestCalculationDetails loanInterestCalculationDetails = new LoanInterestCalculationDetails(loanAmount, interestRate, graceType, gracePeriodDuration.intValue(),
-                numberOfInstallments, durationInYears, interestFractionalRatePerInstallment, actualDisbursementDate, scheduledInstallments);
-
-        LoanInterestCalculatorFactory loanInterestCalculatorFactory = new LoanInterestCalculatorFactoryImpl();
-        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType, this.loanOffering.isVariableInstallmentsAllowed());
-
-        Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
-
-        EqualInstallmentGeneratorFactory equalInstallmentGeneratorFactory = new EqualInstallmentGeneratorFactoryImpl();
-        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest, this.loanOffering.isVariableInstallmentsAllowed());
-
-        List<InstallmentPrincipalAndInterest> principalWithInterestInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
-        List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(installmentDates, loanInterest, this.loanAmount, meetingScheduledEvent, principalWithInterestInstallments, this.getAccountFees());
-
-        Money rawAmount = calculateTotalFeesAndInterestForLoanSchedules(unroundedLoanSchedules);
-
-        if (loanSummary == null) {
-            // save it to LoanBO first and when loan summary is created it will
-            // be retrieved and save to loan summary
-            setRawAmountTotal(rawAmount);
-        } else {
-            loanSummary.setRawAmountTotal(rawAmount);
-        }
-
-        List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
-
-        LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
-        LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
-
-        List<LoanScheduleEntity> roundedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration, loanAmount,
-        		interestType, unroundedLoanSchedules, allExistingLoanSchedules);
-
-        for (LoanScheduleEntity roundedLoanSchedule : roundedLoanSchedules) {
-            addAccountActionDate(roundedLoanSchedule);
-        }
     }
 
     private Money calculateTotalFeesAndInterestForLoanSchedules(List<LoanScheduleEntity> unroundedLoanSchedules) {

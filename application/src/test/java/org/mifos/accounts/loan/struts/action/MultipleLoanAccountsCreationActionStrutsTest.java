@@ -28,7 +28,6 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -53,19 +52,17 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.builders.MifosUserBuilder;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.builders.MifosUserBuilder;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.MifosUser;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -73,20 +70,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
 public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrutsTestCase {
-
-
 
     private UserContext userContext;
 
@@ -335,7 +319,6 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         TestObjectFactory.removeObject(loanOffering1);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testGet() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -447,38 +430,6 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         Assert.assertEquals(Short.valueOf("1"), loan.getAccountState().getId());
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         loan = null;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testCreateWithoutPermission() throws Exception {
-        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        UserContext userContext = TestUtils.makeUser();
-        userContext.setRoles(new HashSet());
-        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-        createInitialCustomers();
-        LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg", ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
-        setRequestPathInfo("/multipleloansaction.do");
-        addRequestParameter("method", "get");
-        addRequestParameter("branchOfficeId", center.getOffice().getOfficeId().toString());
-        addRequestParameter("loanOfficerId", center.getPersonnel().getPersonnelId().toString());
-        addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId().toString());
-        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, Constants.YES, request);
-        addRequestParameter("centerId", center.getCustomerId().toString());
-        addRequestParameter("centerSearchId", center.getSearchId().toString());
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        addRequestParameter("clientDetails[0].selected", "true");
-        addRequestParameter("clientDetails[0].loanAmount", "300");
-        addRequestParameter("clientDetails[0].businessActivity", "0001");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        setRequestPathInfo("/multipleloansaction.do");
-        addRequestParameter("method", "create");
-        addRequestParameter("stateSelected", "1");
-        actionPerform();
-        verifyActionErrors(new String[] { SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED });
-        verifyForward(ActionForwards.create_failure.toString());
-        TestObjectFactory.removeObject(loanOffering);
     }
 
     @Test
