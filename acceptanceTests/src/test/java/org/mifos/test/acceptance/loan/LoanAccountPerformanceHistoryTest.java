@@ -78,6 +78,7 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
         searchParameters.setSearchString("WeeklyOld Monday");
         submitAccountParameters.setInterestRate("24.0");
         submitAccountParameters.setNumberOfInstallments("10");
+        submitAccountParameters.setLoanPurpose("0008-Animal Trading");
         DisburseLoanParameters disburseParameters = new DisburseLoanParameters();
         disburseParameters.setDisbursalDateDD("04");
         disburseParameters.setDisbursalDateMM("03");
