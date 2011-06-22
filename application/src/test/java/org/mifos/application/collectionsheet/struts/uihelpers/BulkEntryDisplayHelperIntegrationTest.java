@@ -37,7 +37,6 @@ import junitx.framework.StringAssert;
 import org.junit.After;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDto;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -81,8 +80,6 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
 
     private ClientBO client;
 
-    private AccountBO account;
-
     private LoanBO groupAccount;
 
     private LoanBO clientAccount;
@@ -103,7 +100,6 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         clientSavingsAccount = null;
         groupAccount = null;
         clientAccount = null;
-        account = null;
         client = null;
         group = null;
         center = null;
@@ -208,7 +204,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering("Loan2345", "313f", startDate, meeting);
         groupAccount = TestObjectFactory.createLoanAccount("42423142341", group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering1);
-        clientAccount = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1, loanOffering2);
+        clientAccount = getLoanAccount(AccountState.LOAN_APPROVED, startDate, loanOffering2);
         java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
         SavingsOfferingBO savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd1", "ased", currentDate, RecommendedAmountUnit.COMPLETE_GROUP);
         SavingsOfferingBO savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "cvdf", currentDate, RecommendedAmountUnit.COMPLETE_GROUP);
@@ -285,8 +281,8 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    private LoanBO getLoanAccount(final AccountState state, final Date startDate, final int disbursalType,
-            final LoanOfferingBO loanOfferingBO) {
+    private LoanBO getLoanAccount(final AccountState state, final Date startDate, final LoanOfferingBO loanOfferingBO) {
+        final int disbursalType = 1;
         return TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group, state, startDate,
                 loanOfferingBO, disbursalType);
 

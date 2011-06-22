@@ -154,6 +154,7 @@ public class LegacyLoanDaoIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(0, listLoanBO.size());
     }
 
+    @Ignore
     @Test
     public void testGetFeeAmountAtDisbursement() throws Exception {
         loanAccountForDisbursement = getLoanAccount("cdfg", group, meeting, AccountState.LOAN_APPROVED);
@@ -209,7 +210,7 @@ public class LegacyLoanDaoIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testGetLastPaymentAction() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
-        loanAccountForDisbursement = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
+        loanAccountForDisbursement = getLoanAccount(AccountState.LOAN_APPROVED, startDate);
         disburseLoan(startDate);
         Assert.assertEquals("Last payment action should be 'PAYMENT'", AccountActionTypes.DISBURSAL.getValue(),
                 legacyLoanDao.getLastPaymentAction(loanAccountForDisbursement.getAccountId()));
@@ -231,9 +232,10 @@ public class LegacyLoanDaoIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.flushSession();
     }
 
-    private AccountBO getLoanAccount(final AccountState state, final Date startDate, final int disbursalType) {
+    private AccountBO getLoanAccount(final AccountState state, final Date startDate) {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loanvcfg", "bhgf", ApplicableTo.GROUPS,
                 startDate, PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3, InterestType.FLAT, meeting);
+        final int disbursalType = 1;
         return TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group, state, startDate,
                 loanOffering, disbursalType);
     }
@@ -243,8 +245,8 @@ public class LegacyLoanDaoIntegrationTest extends MifosIntegrationTestCase {
         Date startDate = new Date(System.currentTimeMillis());
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan123", shortName, ApplicableTo.GROUPS,
                 startDate, PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3, InterestType.FLAT, meeting);
-        return TestObjectFactory.createLoanAccountWithDisbursement("42423142341", customer, state, startDate,
-                loanOffering, 1);
+        final int disbursalType = 1;
+        return TestObjectFactory.createLoanAccountWithDisbursement("42423142341", customer, state, startDate, loanOffering, disbursalType);
 
     }
 

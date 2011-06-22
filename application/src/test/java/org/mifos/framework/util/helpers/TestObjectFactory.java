@@ -1499,18 +1499,11 @@ public class TestObjectFactory {
     }
 
     public static LoanBO createLoanAccountWithDisbursement(final String globalNum, final CustomerBO customer,
-                                                           final AccountState state, final Date startDate, final LoanOfferingBO loanOfering, final int disbursalType) {
+                                                           final AccountState state, final Date startDate, final LoanOfferingBO loanOfering, 
+                                                           final int disbursalType) {
 
         final LoanBO loan = LoanBOTestUtils.createLoanAccountWithDisbursement(customer, state, startDate, loanOfering,
                 disbursalType, Short.valueOf("6"));
-
-        try {
-            loan.save();
-        } catch (AccountException e) {
-            throw new RuntimeException(e);
-        }
-
-        StaticHibernateUtil.flushSession();
         return loan;
     }
 

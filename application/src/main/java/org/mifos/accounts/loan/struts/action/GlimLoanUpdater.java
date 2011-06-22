@@ -38,6 +38,10 @@ import org.mifos.framework.util.helpers.Money;
 
 public class GlimLoanUpdater {
 
+    /**
+     * delete me.
+     */
+    @Deprecated
     public void createIndividualLoan(LoanAccountActionForm loanAccountActionForm, LoanBO loan,
             boolean isRepaymentIndepOfMeetingEnabled, LoanAccountDetailsDto loanAccountDetail)
             throws AccountException, ServiceException {

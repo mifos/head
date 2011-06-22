@@ -46,7 +46,6 @@ import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -110,6 +109,7 @@ public class LoanBOTestUtils {
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
         IntegrationTestObjectMother.saveFee(maintanenceFee);
         
+        
         BigDecimal loanAmount = BigDecimal.valueOf(DEFAULT_LOAN_AMOUNT);
         BigDecimal minAllowedLoanAmount = loanAmount;
         BigDecimal maxAllowedLoanAmount = loanAmount;
@@ -130,7 +130,7 @@ public class LoanBOTestUtils {
         accountFees.add(new CreateAccountFeeDto(maintanenceFee.getFeeId().intValue(), maintanenceFee.getFeeAmount().toString()));
         
         CreateLoanAccount createLoanAccount = new CreateLoanAccount(customer.getCustomerId(), loanOffering.getPrdOfferingId().intValue(), 
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue().intValue(), 
+                state.getValue().intValue(), 
                 loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount, 
                 interestRate, disbursementDate, numberOfInstallments, 
                 minAllowedNumberOfInstallments, maxAllowedNumberOfInstallments, 
@@ -235,38 +235,80 @@ public class LoanBOTestUtils {
         MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(customer.getOfficeId(), meeting, 6);
 
-        LoanBO loan;
         MifosCurrency currency = TestUtils.RUPEE;
-        LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
 
-        try {
-            loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(currency, "300.0"),
-                    noOfInstallments, meetingDates.get(0), false, 10.0, (short) 0, null,
-                    new ArrayList<FeeDto>(), null, DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange
-                            .getMaxNoOfInstall(), eligibleInstallmentRange.getMinNoOfInstall(), false, null);
-        } catch (ApplicationException e) {
-            throw new RuntimeException(e);
-        }
-        FeeBO maintanenceFee = TestObjectFactory.createPeriodicAmountFee("Mainatnence Fee", FeeCategory.LOAN, "100",
+        List<CreateAccountFeeDto> accountFees = new ArrayList<CreateAccountFeeDto>();
+        
+        AmountFeeBO maintanenceFee = (AmountFeeBO)TestObjectFactory.createPeriodicAmountFee("Mainatnence Fee", FeeCategory.LOAN, "100",
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
-        AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(loan, maintanenceFee, new Double("10.0"));
-        AccountTestUtils.addAccountFees(accountPeriodicFee, loan);
+        IntegrationTestObjectMother.saveFee(maintanenceFee);
+        accountFees.add(new CreateAccountFeeDto(maintanenceFee.getFeeId().intValue(), maintanenceFee.getFeeAmount().toString()));
+        
         AccountFeesEntity accountDisbursementFee = null;
-        FeeBO disbursementFee = null;
+        AmountFeeBO disbursementFee = null;
         AccountFeesEntity accountDisbursementFee2 = null;
-        FeeBO disbursementFee2 = null;
+        AmountFeeBO disbursementFee2 = null;
 
         if (disbursalType == 1 || disbursalType == 2) {
-            disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursement Fee 1", FeeCategory.LOAN, "10",
+            disbursementFee = (AmountFeeBO)TestObjectFactory.createOneTimeAmountFee("Disbursement Fee 1", FeeCategory.LOAN, "10",
                     FeePayment.TIME_OF_DISBURSEMENT);
+            IntegrationTestObjectMother.saveFee(disbursementFee);
+            accountFees.add(new CreateAccountFeeDto(disbursementFee.getFeeId().intValue(), disbursementFee.getFeeAmount().toString()));
+            
+            disbursementFee2 = (AmountFeeBO)TestObjectFactory.createOneTimeAmountFee("Disbursement Fee 2", FeeCategory.LOAN, "20",
+                    FeePayment.TIME_OF_DISBURSEMENT);
+            IntegrationTestObjectMother.saveFee(disbursementFee2);
+            accountFees.add(new CreateAccountFeeDto(disbursementFee2.getFeeId().intValue(), disbursementFee2.getFeeAmount().toString()));
+        }
+        
+        BigDecimal loanAmount = BigDecimal.valueOf(DEFAULT_LOAN_AMOUNT);
+        BigDecimal minAllowedLoanAmount = loanAmount;
+        BigDecimal maxAllowedLoanAmount = loanAmount;
+        Double interestRate = Double.valueOf("10.0");
+        LocalDate disbursementDate = new LocalDate(meetingDates.get(0));
+        int numberOfInstallments = noOfInstallments;
+        int minAllowedNumberOfInstallments = loanOffering.getEligibleInstallmentSameForAllLoan().getMaxNoOfInstall();
+        int maxAllowedNumberOfInstallments = loanOffering.getEligibleInstallmentSameForAllLoan().getMaxNoOfInstall();
+        int graceDuration = 0;
+        Integer sourceOfFundId = null;
+        Integer loanPurposeId = null;
+        Integer collateralTypeId = null;
+        String collateralNotes = null;
+        String externalId = null;
+        boolean repaymentScheduleIndependentOfCustomerMeeting = false;
+        RecurringSchedule recurringSchedule = null;
+
+        CreateLoanAccount createLoanAccount = new CreateLoanAccount(customer.getCustomerId(), loanOffering.getPrdOfferingId().intValue(), 
+                state.getValue().intValue(), 
+                loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount, 
+                interestRate, disbursementDate, numberOfInstallments, 
+                minAllowedNumberOfInstallments, maxAllowedNumberOfInstallments, 
+                graceDuration, sourceOfFundId, loanPurposeId, 
+                collateralTypeId, collateralNotes, externalId, 
+                repaymentScheduleIndependentOfCustomerMeeting, 
+                recurringSchedule, accountFees);
+
+        
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        
+        LoanBO loan = IntegrationTestObjectMother.createClientLoan(createLoanAccount);
+        loan.updateDetails(TestUtils.makeUser());
+
+        AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(loan, maintanenceFee, new Double("10.0"));
+        AccountTestUtils.addAccountFees(accountPeriodicFee, loan);
+        
+        if (disbursalType == 1 || disbursalType == 2) {
             accountDisbursementFee = new AccountFeesEntity(loan, disbursementFee, new Double("10.0"));
             AccountTestUtils.addAccountFees(accountDisbursementFee, loan);
 
-            disbursementFee2 = TestObjectFactory.createOneTimeAmountFee("Disbursement Fee 2", FeeCategory.LOAN, "20",
-                    FeePayment.TIME_OF_DISBURSEMENT);
             accountDisbursementFee2 = new AccountFeesEntity(loan, disbursementFee2, new Double("20.0"));
             AccountTestUtils.addAccountFees(accountDisbursementFee2, loan);
         }
+
         loan.setLoanMeeting(meeting);
 
         if (disbursalType == 2)// 2-Interest At Disbursement
@@ -383,7 +425,7 @@ public class LoanBOTestUtils {
 
     public LoanScheduleEntity[] createLoanRepaymentSchedule() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
-        AccountBO accountBO = getLoanAccountWithMiscFeeAndPenalty(AccountState.LOAN_APPROVED, startDate, 3,
+        AccountBO accountBO = getLoanAccountWithMiscFeeAndPenalty(AccountState.LOAN_APPROVED, startDate,
                 TestUtils.createMoney("20"), TestUtils.createMoney("30"));
 
         Set<AccountActionDateEntity> intallments = accountBO.getAccountActionDates();
@@ -420,9 +462,8 @@ public class LoanBOTestUtils {
         return sortedList;
     }
 
-    private AccountBO getLoanAccountWithMiscFeeAndPenalty(final AccountState state, final Date startDate, final int disbursalType,
-            final Money miscFee, final Money miscPenalty) {
-        LoanBO accountBO = getLoanAccount(state, startDate, disbursalType);
+    private AccountBO getLoanAccountWithMiscFeeAndPenalty(final AccountState state, final Date startDate, final Money miscFee, final Money miscPenalty) {
+        LoanBO accountBO = getLoanAccount(state, startDate);
         for (AccountActionDateEntity accountAction : accountBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
             if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
@@ -439,12 +480,13 @@ public class LoanBOTestUtils {
         return testObjectPersistence.getObject(LoanBO.class, accountBO.getAccountId());
     }
 
-    private LoanBO getLoanAccount(final AccountState state, final Date startDate, final int disbursalType) {
+    private LoanBO getLoanAccount(final AccountState state, final Date startDate) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         CenterBO center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
         GroupBO group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
+        final int disbursalType = 3;
         return TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group, state, startDate,
                 loanOffering, disbursalType);
     }

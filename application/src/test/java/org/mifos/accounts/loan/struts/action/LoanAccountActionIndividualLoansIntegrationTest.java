@@ -42,27 +42,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
-    public void testShouldCallCreateMethodIfNewMembersSelected() throws Exception {
-        GlimLoanUpdater glimLoanUpdaterMock = createMock(GlimLoanUpdater.class);
-        LoanAccountAction loanAccountAction = new LoanAccountAction(ApplicationContextProvider.getBean(LoanBusinessService.class),
-                new ConfigurationBusinessService(), glimLoanUpdaterMock);
-        LoanBO parentLoanMock = createMock(LoanBO.class);
-        LoanAccountActionForm loanAccountActionForm = new LoanAccountActionForm();
-        List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
-        LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300 = LoanAccountDetailsDto
-                .createInstanceForTest("3", "2", "300.0", "2");
-        clientDetails.add(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300);
-        List<LoanBO> loans = new ArrayList<LoanBO>();
-        glimLoanUpdaterMock.createIndividualLoan(loanAccountActionForm, parentLoanMock, true,
-                LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300);
-        expectLastCall().atLeastOnce();
-        replay(glimLoanUpdaterMock, parentLoanMock);
-        loanAccountAction.handleIndividualLoans(parentLoanMock, loanAccountActionForm, true, clientDetails, loans);
-        verify(glimLoanUpdaterMock, parentLoanMock);
-
-    }
-
-    @Test
     public void testShouldCallUpdateMethodIfExistingMembersChanged() throws Exception {
         GlimLoanUpdater glimLoanUpdaterMock = createMock(GlimLoanUpdater.class);
         LoanAccountAction loanAccountAction = new LoanAccountAction(ApplicationContextProvider.getBean(LoanBusinessService.class),

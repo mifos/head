@@ -857,8 +857,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             };
             LoanBO individualLoan = (LoanBO) CollectionUtils.find(individualLoans, predicate);
             if (individualLoan == null) {
-                glimLoanUpdater.createIndividualLoan(loanAccountActionForm, loanBO, isRepaymentIndepOfMeetingEnabled,
-                        loanAccountDetail);
+//                glimLoanUpdater.createIndividualLoan(loanAccountActionForm, loanBO, isRepaymentIndepOfMeetingEnabled,
+//                        loanAccountDetail);
             } else {
                 foundLoans.add(individualLoan.getAccountId());
                 glimLoanUpdater.updateIndividualLoan(loanAccountDetail, individualLoan);

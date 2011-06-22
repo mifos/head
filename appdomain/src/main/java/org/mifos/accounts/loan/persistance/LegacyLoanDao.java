@@ -22,7 +22,6 @@ package org.mifos.accounts.loan.persistance;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -43,104 +42,29 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
-import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.accounts.util.helpers.AccountExceptionConstants;
-import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.security.util.UserContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LegacyLoanDao extends LegacyGenericDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(LegacyLoanDao.class);
-
     private LegacyLoanDao() {
-    }
-
-    public LoanBO createLoan(UserContext userContext, LoanOfferingBO loanOffering, CustomerBO customer,
-            AccountState accountState, Money loanAmount, Short noOfinstallments, Date disbursementDate,
-            boolean interestDeductedAtDisbursement, Double interestRate, Short gracePeriodDuration, FundBO fund,
-            List<FeeDto> feeDtos, List<CustomFieldDto> customFields, Double maxLoanAmount, Double minLoanAmount,
-            Short maxNoOfInstall, Short minNoOfInstall, boolean isRepaymentIndepOfMeetingEnabled) throws AccountException {
-
-        if (isAnyLoanParamsNull(loanOffering, customer, loanAmount, noOfinstallments, disbursementDate, interestRate)) {
-            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
-        }
-
-        if (!customer.isActive()) {
-            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTIONCUSTOMERINACTIVE);
-        }
-
-        if (!loanOffering.isActive()) {
-            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTIONPRDINACTIVE);
-        }
-
-        if (isDisbursementDateLessThanCurrentDate(disbursementDate)) {
-            throw new AccountException(LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
-        }
-
-        if (!isDisbursementDateValid(customer, disbursementDate)) {
-            throw new AccountException(LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
-        }
-
-        if (interestDeductedAtDisbursement == true && noOfinstallments.shortValue() <= 1) {
-            throw new AccountException(LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
-        }
-
-        return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
-                disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos,
-                customFields, false, maxLoanAmount, minLoanAmount,
-                loanOffering.getMaxInterestRate(), loanOffering.getMinInterestRate(),
-                maxNoOfInstall, minNoOfInstall, isRepaymentIndepOfMeetingEnabled, null);
-    }
-
-    private boolean isAnyLoanParamsNull(Object... args) {
-        return Arrays.asList(args).contains(null);
-    }
-
-    private boolean isDisbursementDateLessThanCurrentDate(Date disbursementDate) {
-        if (DateUtils.dateFallsBeforeDate(disbursementDate, DateUtils.getCurrentDateWithoutTimeStamp())) {
-            return true;
-        }
-        return false;
-    }
-
-    private Boolean isDisbursementDateValid(CustomerBO specifiedCustomer, Date disbursementDate)
-            throws AccountException {
-        logger.debug("IsDisbursementDateValid invoked ");
-        Boolean isValid = false;
-        try {
-            isValid = specifiedCustomer.getCustomerMeeting().getMeeting().isValidMeetingDate(disbursementDate,
-                    DateUtils.getLastDayOfNextYear());
-        } catch (MeetingException e) {
-            throw new AccountException(e);
-        }
-        return isValid;
     }
 
     @SuppressWarnings("unchecked")
