@@ -25,6 +25,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -78,6 +79,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
 
     }
 
+    @Ignore
     @Test
     public void testGetTotalDueWithFees() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) groupLoan.getAccountActionDates().toArray()[0];
@@ -92,6 +94,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
 
     }
 
+    @Ignore
     @Test
     public void testGetDueAmounts() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) groupLoan.getAccountActionDates().toArray()[0];
@@ -106,6 +109,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
 
     }
 
+    @Ignore
     @Test
     public void testGetTotalDueAmounts() {
         LoanScheduleEntity accountActionDate = (LoanScheduleEntity) groupLoan.getAccountActionDates().toArray()[0];

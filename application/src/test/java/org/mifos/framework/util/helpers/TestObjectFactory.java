@@ -65,7 +65,6 @@ import org.mifos.accounts.financial.util.helpers.ChartOfAccountsCache;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanBOIntegrationTest;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
@@ -811,14 +810,6 @@ public class TestObjectFactory {
 
         LoanBO loan = LoanBOTestUtils.createLoanAccount(globalNum, customer, state, startDate, loanProduct);
 
-        IntegrationTestObjectMother.saveLoanAccount(loan);
-        return loan;
-    }
-
-    public static LoanBO createBasicLoanAccount(final CustomerBO customer, final AccountState state,
-                                                final Date startDate, final LoanOfferingBO offering) {
-        LoanBO loan = LoanBOTestUtils.createBasicLoanAccount(customer, state, startDate, offering);
-        IntegrationTestObjectMother.saveLoanAccount(loan);
         return loan;
     }
 

@@ -32,6 +32,7 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
@@ -222,6 +223,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         }
     }
 
+    @Ignore
     @Test
     public void testGetTotalAmountForGroup() throws Exception {
         CustomerPersistence customerPersistence = new CustomerPersistence();

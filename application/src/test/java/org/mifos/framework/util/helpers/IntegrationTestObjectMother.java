@@ -50,6 +50,9 @@ import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.application.servicefacade.LoanAccountServiceFacade;
+import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
+import org.mifos.clientportfolio.newloan.applicationservice.LoanAccountCashFlow;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
@@ -74,9 +77,11 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.domain.builders.OfficeBuilder;
 import org.mifos.domain.builders.SavingsProductBuilder;
 import org.mifos.dto.domain.HolidayDetails;
+import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -95,6 +100,9 @@ public class IntegrationTestObjectMother {
     public static final Short SAMPLE_BRANCH_OFFICE = 3;
     private static OfficeBO sampleBranchOffice = null;
 
+    // serviceFacades
+    private static final LoanAccountServiceFacade loanAccountServiceFacade = ApplicationContextProvider.getBean(LoanAccountServiceFacade.class);
+    
     // DAO's for fetching existing data within database
     private static final OfficePersistence officePersistence = new OfficePersistence();
     private static final OfficeDao officeDao = ApplicationContextProvider.getBean(OfficeDao.class);
@@ -562,5 +570,14 @@ public class IntegrationTestObjectMother {
     public static LoanOfferingBO findLoanProductBySystemId(String globalPrdOfferingNum) {
 
         return loanProductDao.findBySystemId(globalPrdOfferingNum);
+    }
+
+    public static LoanBO createClientLoan(CreateLoanAccount createLoanAccount) {
+        
+        List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
+        LoanAccountCashFlow loanAccountCashFlow = null;
+       
+        LoanCreationResultDto result = loanAccountServiceFacade.createLoan(createLoanAccount, questionGroups, loanAccountCashFlow);
+        return loanDao.findByGlobalAccountNum(result.getGlobalAccountNum());
     }
 }

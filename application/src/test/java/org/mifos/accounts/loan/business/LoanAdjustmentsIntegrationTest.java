@@ -28,12 +28,14 @@ import static org.junit.Assert.assertTrue;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -44,12 +46,14 @@ import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.builders.MifosUserBuilder;
+import org.mifos.clientportfolio.loan.service.RecurringSchedule;
+import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
@@ -60,16 +64,21 @@ import org.mifos.domain.builders.FeeBuilder;
 import org.mifos.domain.builders.GroupBuilder;
 import org.mifos.domain.builders.LoanProductBuilder;
 import org.mifos.domain.builders.MeetingBuilder;
+import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.security.util.UserContext;
+import org.mifos.security.MifosUser;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
 
@@ -98,6 +107,12 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
     @Before
     public void cleanDatabaseTables() throws Exception {
         databaseCleaner.clean();
+        
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 
     /**
@@ -111,7 +126,6 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         new DateTimeService().setCurrentDateTimeFixed(date(2010, 10, 13));
 
         loan = createLoan();
-        UserContext context = loan.getUserContext();
         Money initialOriginalPrincipal = loan.getLoanSummary().getOriginalPrincipal();
         Money initialOriginalInterest = loan.getLoanSummary().getOriginalInterest();
         Money initialOriginalFees = loan.getLoanSummary().getOriginalFees();
@@ -148,7 +162,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         assertFalse(sameSchedule(copySchedule, loan.getAccountActionDates()));
 
 
-        adjustLastLoanPayment(loan, context);
+        adjustLastLoanPayment(loan);
         StaticHibernateUtil.flushAndClearSession();
         loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
@@ -173,7 +187,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         makeEarlyPayment(loan);
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
-        adjustLastLoanPayment(loan, loan.getUserContext());
+        adjustLastLoanPayment(loan);
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         assertNotNull("Account Status Change History Should Not Be Null", loan.getAccountStatusChangeHistory());
@@ -210,7 +224,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         // ensure loan is in bad standing when reopened
         new DateTimeService().setCurrentDateTimeFixed(date(2010, 11, 13));
 
-        adjustLastLoanPayment(loan, loan.getUserContext());
+        adjustLastLoanPayment(loan);
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         AccountStateEntity currentStatus = loan.getAccountState();
@@ -238,7 +252,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         // Ensure that after the adjustment the loan is calculated to be in bad standing.
         new DateTimeService().setCurrentDateTimeFixed(date(2010, 11, 13));
 
-        adjustLastLoanPayment(loan, loan.getUserContext());
+        adjustLastLoanPayment(loan);
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         assertNotNull("Account Status Change History Should Not Be Null", loan.getAccountStatusChangeHistory());
@@ -281,23 +295,37 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         AmountFeeBO periodicFee = new FeeBuilder().appliesToLoans().periodic().withFeeAmount("10.0").withName(
                 "Periodic Fee").with(sampleBranchOffice()).build();
         IntegrationTestObjectMother.saveFee(periodicFee);
-
-        FeeDto feeView;
-        List<FeeDto> feeDtos = new ArrayList<FeeDto>();
-        feeView = new FeeDto(TestUtils.makeUser(), periodicFee);
-        feeDtos.add(feeView);
-
-        LoanBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, client,
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(Money.getDefaultCurrency(), "1000.0"), Short
-                        .valueOf("10"), new DateTime().toDate(), false, loanOffering.getDefInterestRate(), (short) 0,
-                null, feeDtos, null, 1000.0, 1000.0, loanOffering.getEligibleInstallmentSameForAllLoan()
-                        .getMaxNoOfInstall(), loanOffering.getEligibleInstallmentSameForAllLoan().getMinNoOfInstall(),
-                false, null);
-        loan.updateDetails(TestUtils.makeUserWithLocales());
-        loan.save();
-        StaticHibernateUtil.flushAndClearSession();
-        return loan;
-
+        
+        
+        BigDecimal loanAmount = BigDecimal.valueOf(Double.valueOf("1000.0"));
+        BigDecimal minAllowedLoanAmount = loanAmount;
+        BigDecimal maxAllowedLoanAmount = loanAmount;
+        Double interestRate = loanOffering.getDefInterestRate();
+        LocalDate disbursementDate = new LocalDate();
+        int numberOfInstallments = 10;
+        int minAllowedNumberOfInstallments = loanOffering.getEligibleInstallmentSameForAllLoan().getMaxNoOfInstall();
+        int maxAllowedNumberOfInstallments = loanOffering.getEligibleInstallmentSameForAllLoan().getMaxNoOfInstall();
+        int graceDuration = 0;
+        Integer sourceOfFundId = null;
+        Integer loanPurposeId = null;
+        Integer collateralTypeId = null;
+        String collateralNotes = null;
+        String externalId = null;
+        boolean repaymentScheduleIndependentOfCustomerMeeting = false;
+        RecurringSchedule recurringSchedule = null;
+        List<CreateAccountFeeDto> accountFees = new ArrayList<CreateAccountFeeDto>();
+        accountFees.add(new CreateAccountFeeDto(periodicFee.getFeeId().intValue(), periodicFee.getFeeAmount().toString()));
+        CreateLoanAccount createLoanAccount = new CreateLoanAccount(client.getCustomerId(), loanOffering.getPrdOfferingId().intValue(), 
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue().intValue(), 
+                loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount, 
+                interestRate, disbursementDate, numberOfInstallments, 
+                minAllowedNumberOfInstallments, maxAllowedNumberOfInstallments, 
+                graceDuration, sourceOfFundId, loanPurposeId, 
+                collateralTypeId, collateralNotes, externalId, 
+                repaymentScheduleIndependentOfCustomerMeeting, 
+                recurringSchedule, accountFees);
+        
+        return IntegrationTestObjectMother.createClientLoan(createLoanAccount);
     }
 
     private void makePayment(LoanBO loan, String amount) throws Exception {
@@ -310,7 +338,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.flushSession();
     }
 
-    private void adjustLastLoanPayment(LoanBO loan, UserContext userContext) throws AccountException, PersistenceException {
+    private void adjustLastLoanPayment(LoanBO loan) throws AccountException {
         PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
         loan.adjustLastPayment("Undo last payment", loggedInUser);
         StaticHibernateUtil.flushSession();

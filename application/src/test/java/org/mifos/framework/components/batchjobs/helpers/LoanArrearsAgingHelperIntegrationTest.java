@@ -24,6 +24,7 @@ import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_ME
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,17 +34,15 @@ import junit.framework.Assert;
 
 import org.hibernate.Query;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanArrearsAgingEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.master.util.helpers.PaymentTypes;
@@ -51,23 +50,30 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.builders.MifosUserBuilder;
+import org.mifos.clientportfolio.loan.service.RecurringSchedule;
+import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.business.Configuration;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.security.util.UserContext;
+import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestCase {
 
@@ -115,14 +121,17 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         LoanArrearsAgingTask loanArrearsAgingTask = new LoanArrearsAgingTask();
         loanArrearsAgingHelper = (LoanArrearsAgingHelper) loanArrearsAgingTask.getTaskHelper();
         dateTime = initializeToFixedDateTime();
+        
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @After
     public void tearDown() throws Exception {
         new DateTimeService().resetToCurrentSystemDateTime();
-
-
-
         loanArrearsAgingHelper = null;
         loanArrearHelper = null;
         MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, oldRoundingMode);
@@ -139,36 +148,45 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         LoanOfferingBO product = TestObjectFactory.createLoanOffering("LoanProduct", "LP", startDate, meeting);
         LoanBO loan = createBasicLoanAccount(group, accountState, product, "" + loanAmount, numInstallments,
                 interestRate);
-        IntegrationTestObjectMother.saveLoanAccount(loan);
         return loan;
     }
 
-    /*
-     * This is a method taken from TestObjectFactory and modified to make it configurable. This could be pushed back up
-     * to TestObjectFactory or better yet converted to a builder pattern.
-     */
     private LoanBO createBasicLoanAccount(final CustomerBO customer, final AccountState state,
-            final LoanOfferingBO loanOffering, String loan_amount, short numInstallments, double interestRate) {
-        LoanBO loan;
-        LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
-        UserContext userContext = TestUtils.makeUser();
-        userContext.setLocaleId(null);
-        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
+            final LoanOfferingBO loanOffering, String loanAmountAsString, short numInstallments, double interestRate) {
+        
         MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(customer.getOfficeId(), meeting, numInstallments);
 
         LoanOfferingBO loanProduct = IntegrationTestObjectMother.findLoanProductBySystemId(loanOffering.getGlobalPrdOfferingNum());
-        try {
-            loan = LoanBO.createLoan(TestUtils.makeUser(), loanProduct, customer, state, new Money(TestUtils.RUPEE,
-                    loan_amount), numInstallments, meetingDates.get(0), false, interestRate, (short) 0, null,
-                    feeViewList, null, Double.valueOf(loan_amount), Double.valueOf(loan_amount),
-                    eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange.getMinNoOfInstall(), false,
-                    null);
-        } catch (ApplicationException e) {
-            throw new RuntimeException(e);
-        }
+        
+        BigDecimal loanAmount = BigDecimal.valueOf(Double.valueOf(loanAmountAsString));
+        BigDecimal minAllowedLoanAmount = loanAmount;
+        BigDecimal maxAllowedLoanAmount = loanAmount;
+        LocalDate disbursementDate = new LocalDate(meetingDates.get(0));
+        int numberOfInstallments = numInstallments;
+        int minAllowedNumberOfInstallments = loanProduct.getEligibleInstallmentSameForAllLoan().getMaxNoOfInstall();
+        int maxAllowedNumberOfInstallments = loanProduct.getEligibleInstallmentSameForAllLoan().getMaxNoOfInstall();
+        int graceDuration = 0;
+        Integer sourceOfFundId = null;
+        Integer loanPurposeId = null;
+        Integer collateralTypeId = null;
+        String collateralNotes = null;
+        String externalId = null;
+        boolean repaymentScheduleIndependentOfCustomerMeeting = false;
+        RecurringSchedule recurringSchedule = null;
+        List<CreateAccountFeeDto> accountFees = new ArrayList<CreateAccountFeeDto>();
 
-        return loan;
+        CreateLoanAccount createLoanAccount = new CreateLoanAccount(customer.getCustomerId(), loanProduct.getPrdOfferingId().intValue(), 
+                state.getValue().intValue(), 
+                loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount, 
+                interestRate, disbursementDate, numberOfInstallments, 
+                minAllowedNumberOfInstallments, maxAllowedNumberOfInstallments, 
+                graceDuration, sourceOfFundId, loanPurposeId, 
+                collateralTypeId, collateralNotes, externalId, 
+                repaymentScheduleIndependentOfCustomerMeeting, 
+                recurringSchedule, accountFees);
+        
+        return IntegrationTestObjectMother.createClientLoan(createLoanAccount);
     }
 
     /*

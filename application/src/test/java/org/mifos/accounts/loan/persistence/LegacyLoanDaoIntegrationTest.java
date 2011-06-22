@@ -38,6 +38,7 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
@@ -272,6 +273,7 @@ public class LegacyLoanDaoIntegrationTest extends MifosIntegrationTestCase {
                 startDate, loanOffering);
     }
 
+    @Ignore
     @Test
     public void testGetLoanAccountsInActiveBadStandingShouldReturnLoanBOInActiveBadByBranchId() throws Exception {
         short branchId = 3;
@@ -279,6 +281,7 @@ public class LegacyLoanDaoIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(1, loanList.size());
     }
 
+    @Ignore
     @Test
     public void testGetLoanAccountsInActiveBadStandingShouldReturnLoanBOInActiveBadByBranchIdAndLoanOfficerId()
             throws Exception {
@@ -289,6 +292,7 @@ public class LegacyLoanDaoIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Ignore
     @Test
     public void testGetLoanAccountsInActiveBadStandingShouldReturnLoanBOInActiveBadByBranchIdLoanOfficerIdAndLoanProductId()
             throws Exception {
@@ -301,6 +305,7 @@ public class LegacyLoanDaoIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Ignore
     @Test
     public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingByBranchId() throws Exception {
         short branchId = 3;
@@ -309,6 +314,7 @@ public class LegacyLoanDaoIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(0, new BigDecimal(600).compareTo(money));
     }
 
+    @Ignore
     @Test
     public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingByBranchIdAndLoanOfficerId()
             throws Exception {

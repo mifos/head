@@ -23,6 +23,7 @@ import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_ME
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,6 +33,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -53,16 +55,26 @@ import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.builders.MifosUserBuilder;
+import org.mifos.clientportfolio.loan.service.RecurringSchedule;
+import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.persistence.TestObjectPersistence;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.security.util.UserContext;
+import org.mifos.security.MifosUser;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class LoanBOTestUtils {
 
@@ -93,22 +105,52 @@ public class LoanBOTestUtils {
         MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(customer.getOfficeId(), meeting, 6);
 
-        LoanBO loan;
         MifosCurrency currency = loanOffering.getCurrency();
-        LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
-
-        try {
-            loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(currency, "300.0"),
-                    Short.valueOf("6"), meetingDates.get(0), false, 0.0, (short) 0, null,
-                    new ArrayList<FeeDto>(), null, DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange
-                            .getMaxNoOfInstall(), eligibleInstallmentRange.getMinNoOfInstall(), false, null);
-        } catch (ApplicationException e) {
-            throw new RuntimeException(e);
-        }
-        FeeBO maintanenceFee = TestObjectFactory.createPeriodicAmountFee("Mainatnence Fee", FeeCategory.LOAN, "100",
+        AmountFeeBO maintanenceFee = (AmountFeeBO)TestObjectFactory.createPeriodicAmountFee("Mainatnence Fee", FeeCategory.LOAN, "100",
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
+        IntegrationTestObjectMother.saveFee(maintanenceFee);
+        
+        BigDecimal loanAmount = BigDecimal.valueOf(DEFAULT_LOAN_AMOUNT);
+        BigDecimal minAllowedLoanAmount = loanAmount;
+        BigDecimal maxAllowedLoanAmount = loanAmount;
+        Double interestRate = loanOffering.getDefInterestRate();
+        LocalDate disbursementDate = new LocalDate(meetingDates.get(0));
+        int numberOfInstallments = 6;
+        int minAllowedNumberOfInstallments = loanOffering.getEligibleInstallmentSameForAllLoan().getMaxNoOfInstall();
+        int maxAllowedNumberOfInstallments = loanOffering.getEligibleInstallmentSameForAllLoan().getMaxNoOfInstall();
+        int graceDuration = 0;
+        Integer sourceOfFundId = null;
+        Integer loanPurposeId = null;
+        Integer collateralTypeId = null;
+        String collateralNotes = null;
+        String externalId = null;
+        boolean repaymentScheduleIndependentOfCustomerMeeting = false;
+        RecurringSchedule recurringSchedule = null;
+        List<CreateAccountFeeDto> accountFees = new ArrayList<CreateAccountFeeDto>();
+        accountFees.add(new CreateAccountFeeDto(maintanenceFee.getFeeId().intValue(), maintanenceFee.getFeeAmount().toString()));
+        
+        CreateLoanAccount createLoanAccount = new CreateLoanAccount(customer.getCustomerId(), loanOffering.getPrdOfferingId().intValue(), 
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue().intValue(), 
+                loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount, 
+                interestRate, disbursementDate, numberOfInstallments, 
+                minAllowedNumberOfInstallments, maxAllowedNumberOfInstallments, 
+                graceDuration, sourceOfFundId, loanPurposeId, 
+                collateralTypeId, collateralNotes, externalId, 
+                repaymentScheduleIndependentOfCustomerMeeting, 
+                recurringSchedule, accountFees);
+
+        
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        
+        LoanBO loan = IntegrationTestObjectMother.createClientLoan(createLoanAccount);
+        loan.updateDetails(TestUtils.makeUser());
+      
         AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(loan, maintanenceFee,
-                ((AmountFeeBO) maintanenceFee).getFeeAmount().getAmountDoubleValue());
+                (maintanenceFee).getFeeAmount().getAmountDoubleValue());
         AccountTestUtils.addAccountFees(accountPeriodicFee, loan);
         loan.setLoanMeeting(meeting);
         short i = 0;
@@ -314,37 +356,6 @@ public class LoanBOTestUtils {
         loan.setCreatedDate(new Date(System.currentTimeMillis()));
 
         setLoanSummary(loan, currency);
-        return loan;
-    }
-
-    /**
-     * This method is an attempt to fix some of what is wrong in the
-     * createLoanAccount method below. This method has been created late in the
-     * v1.1 release cycle, so an attempt has not yet been made to try replacing
-     * some of the occurrences of createLoanAccount with this method.
-     */
-    public static LoanBO createBasicLoanAccount(final CustomerBO customer, final AccountState state, final Date startDate,
-            final LoanOfferingBO loanOffering) {
-        LoanBO loan;
-        LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
-        UserContext userContext = TestUtils.makeUser();
-        userContext.setLocaleId(null);
-        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
-        FeeBO maintanenceFee = TestObjectFactory.createPeriodicAmountFee("Mainatnence Fee", FeeCategory.LOAN, "100",
-                RecurrenceType.WEEKLY, Short.valueOf("1"));
-        feeViewList.add(new FeeDto(userContext, maintanenceFee));
-        MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
-        List<Date> meetingDates = TestObjectFactory.getMeetingDates(customer.getOfficeId(), meeting, 6);
-
-        try {
-            loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(loanOffering.getCurrency(),"300.0"),
-                    (short) 6, meetingDates.get(0), false, 0.0, (short) 0, null, feeViewList, null,
-                    DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(),
-                    eligibleInstallmentRange.getMinNoOfInstall(), false, null);
-        } catch (ApplicationException e) {
-            throw new RuntimeException(e);
-        }
-
         return loan;
     }
 

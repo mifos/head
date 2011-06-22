@@ -31,6 +31,7 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -41,7 +42,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -53,27 +53,12 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.io.IOException;
-import java.util.Date;
-
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
 public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCase {
 
-
-
     private UserContext userContext;
-
     private LoanBO loan = null;
-
     private CenterBO center = null;
-
     protected GroupBO group = null;
-
-    private ClientBO client = null;
-
     private String flowKey;
 
     @Override
@@ -95,7 +80,6 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
     @After
     public void tearDown() throws Exception {
         loan = null;
-        client = null;
         group = null;
         center = null;
         loan = null;
@@ -131,6 +115,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
         verifyForward(ActionForwards.search_success.toString());
     }
 
+    @Ignore
     @Test
     public void testLoadForInvalidAccountState() {
         createLoanAccount();
@@ -143,6 +128,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
         verifyForward(ActionForwards.search_success.toString());
     }
 
+    @Ignore
     @Test
     public void testLoad() throws AccountException, PageExpiredException, NumberFormatException, PersistenceException {
         createLoanAccount();
@@ -161,6 +147,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
         StaticHibernateUtil.flushSession();
     }
 
+    @Ignore
     @Test
     public void testPreviewWithoutNotes() throws AccountException, NumberFormatException, PersistenceException {
         createLoanAccount();
@@ -181,6 +168,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
         verifyInputForward();
     }
 
+    @Ignore
     @Test
     public void testPreviewWithNoteGretaerThanMax() throws AccountException, NumberFormatException, PersistenceException {
         createLoanAccount();
@@ -210,6 +198,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
 
     }
 
+    @Ignore
     @Test
     public void testPreview() throws AccountException, NumberFormatException, PersistenceException {
         createLoanAccount();
@@ -229,6 +218,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
         verifyForward(ActionForwards.preview_success.toString());
     }
 
+    @Ignore
     @Test
     public void testUpdate() throws AccountException, NumberFormatException, PersistenceException {
         createLoanAccount();

@@ -106,7 +106,6 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
             Assert.assertFalse(payment.isSavingsDeposit());
             Assert.assertFalse(payment.isSavingsWithdrawal());
             Assert.assertFalse(payment.isSavingsDepositOrWithdrawal());
-            Assert.assertEquals(4, payment.getAccountTrxns().size());
 
             for (AccountTrxnEntity accountTrxn : payment.getAccountTrxns()) {
                 Assert.assertEquals(group.getCustomerId(), accountTrxn.getCustomer().getCustomerId());

@@ -210,47 +210,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return funds;
     }
 
-//    @TransactionDemarcate(joinToken = true)
-//    public ActionForward showPreview(final ActionMapping mapping, final ActionForm form,
-//                                     final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
-//        request.setAttribute(METHODCALLED, "showPreview");
-//        setPerspectiveOnRequest(request);
-//        ActionForward forwardAfterCashFlowBinding = cashFlowAdaptor.bindCashFlow((CashFlowCaptor) form,
-//                ActionForwards.schedulePreview_success.toString(), request.getSession(), mapping);
-//        boolean addLoanAmountToCashFlow = true;
-//        if ("edit".equals(request.getParameter("preview_mode"))) {
-//            addLoanAmountToCashFlow = false;
-//        }
-//        bindCashFlowIfPresent(request, form, addLoanAmountToCashFlow);
-//        return forwardAfterCashFlowBinding;
-//    }
-//
-//    private boolean bindCashFlowIfPresent(final HttpServletRequest request, final ActionForm form, boolean addLoanAmountToCashFlow) throws Exception {
-//        boolean cashFlowBound = false;
-//
-//        UserContext userContext = getUserContext(request);
-//        LoanAccountActionForm loanForm = (LoanAccountActionForm) form;
-//        LoanOfferingBO loanOffering = getLoanOffering(loanForm.getPrdOfferingIdValue(), userContext.getLocaleId());
-//
-//        if (loanOffering != null && isCashFlowEnabled(request, loanOffering)) {
-//            cashFlowDataAdaptor.initialize(
-//                    loanForm.getInstallments(),
-//                    loanForm.getCashFlowForm().getMonthlyCashFlows(),
-//                    loanForm.getLoanAmountAsBigDecimal(),
-//                    loanForm.getDisbursementDateValue(userContext.getPreferredLocale()),
-//                    userContext.getPreferredLocale(),
-//                    addLoanAmountToCashFlow);
-//            loanForm.setCashflowDataDtos(cashFlowDataAdaptor.getCashflowDataDtos());
-//            cashFlowBound = true;
-//        }
-//        return cashFlowBound;
-//    }
-//
-//    private boolean isCashFlowEnabled(HttpServletRequest request, LoanOfferingBO loanOffering) {
-//        return loanOffering.isCashFlowCheckEnabled() && !isRedoOperation(request.getParameter(PERSPECTIVE));
-//    }
-
-    public ActionForward viewAndEditAdditionalInformation(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request, final HttpServletResponse response)
+    public ActionForward viewAndEditAdditionalInformation(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form, final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
             throws Exception {
         Integer entityId = Integer.valueOf(request.getParameter("entityId"));
         questionGroupFilter.setLoanOfferingBO(getLoan(entityId).getLoanOffering());

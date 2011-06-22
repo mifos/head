@@ -2520,10 +2520,6 @@ public class LoanBO extends AccountBO implements Loan {
         throw new AccountException(AccountExceptionConstants.CHANGEINLOANMEETING);
     }
 
-    private boolean isMultiple(final Short valueToBeChecked, final Short valueToBeCheckedWith) {
-        return valueToBeChecked % valueToBeCheckedWith == 0;
-    }
-
     private LoanSummaryEntity buildLoanSummary() {
         Money interest = new Money(getCurrency());
         Money fees = new Money(getCurrency());

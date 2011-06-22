@@ -34,6 +34,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.exceptions.AccountException;
@@ -151,6 +152,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
     }
 
+    @Ignore
     @Test
     public void testSuccessUpdateAccountFeesEntity() {
         Set<AccountFeesEntity> accountFeesEntitySet = groupLoan.getAccountFees();
@@ -323,6 +325,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         groupLoan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
+    @Ignore
     @Test
     public void testGetPeriodicFeeList() throws PersistenceException {
         FeeBO oneTimeFee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.LOAN, "20",

@@ -51,11 +51,11 @@ public class CreateLoanAccount implements RecurringSchedule {
     private final BigDecimal minAllowedLoanAmount;
     private final BigDecimal maxAllowedLoanAmount;
 
-    public CreateLoanAccount(Integer customerId, Integer productId, Integer accountState, BigDecimal loanAmount, BigDecimal minAllowedLoanAmount, BigDecimal maxAllowedLoanAmount, Double interestRate,
-            LocalDate disbursementDate, int numberOfInstallments, int minAllowedNumberOfInstallments, int maxAllowedNumberOfInstallments, 
-            int graceDuration, Integer sourceOfFundId,
-            Integer loanPurposeId, Integer collateralTypeId, String collateralNotes, String externalId, 
-            boolean repaymentScheduleIndependentOfCustomerMeeting, RecurringSchedule recurringSchedule, List<CreateAccountFeeDto> accountFees) {
+    public CreateLoanAccount(Integer customerId, Integer productId, Integer accountState, 
+            BigDecimal loanAmount, BigDecimal minAllowedLoanAmount, BigDecimal maxAllowedLoanAmount, 
+            Double interestRate, LocalDate disbursementDate, int numberOfInstallments, int minAllowedNumberOfInstallments, int maxAllowedNumberOfInstallments, 
+            int graceDuration, Integer sourceOfFundId, Integer loanPurposeId, Integer collateralTypeId, 
+            String collateralNotes, String externalId, boolean repaymentScheduleIndependentOfCustomerMeeting, RecurringSchedule recurringSchedule, List<CreateAccountFeeDto> accountFees) {
         this.customerId = customerId;
         this.productId = productId;
         this.accountState = accountState;
