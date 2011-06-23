@@ -808,6 +808,22 @@ public class AccountBO extends AbstractBusinessObject {
         return futureActionDateList;
     }
 
+    /*
+     * Return those unpaid AccountActionDateEntities on or after the next installment.
+     */
+    public List<AccountActionDateEntity> getApplicableIdsForFutureInstallmentsForWriteOffOrReschedule() {
+        List<AccountActionDateEntity> futureActionDateList = new ArrayList<AccountActionDateEntity>();
+        AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+        if (nextInstallment != null) {
+            for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
+                if (!accountActionDate.isPaid() && accountActionDate.getInstallmentId() >= nextInstallment.getInstallmentId()) {
+                    futureActionDateList.add(accountActionDate);
+                }
+            }
+        }
+        return futureActionDateList;
+    }
+
     protected List<AccountActionDateEntity> getApplicableIdsForNextInstallmentAndArrears() {
         List<AccountActionDateEntity> dueActionDateList = new ArrayList<AccountActionDateEntity>(getApplicableIdsForArrears());
         AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
