@@ -1298,9 +1298,12 @@ public class LoanBO extends AccountBO {
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, getEarlyClosureAmount(), null,
                     null, getPaymentTypeEntity(Short.valueOf("1")), transactionDate);
             this.addAccountPayment(accountPaymentEntity);
+            
             makeEarlyRepaymentForArrears(accountPaymentEntity, AccountConstants.LOAN_WRITTEN_OFF,
                     AccountActionTypes.WRITEOFF, currentUser);
-            makeEarlyRepaymentForFutureInstallments(accountPaymentEntity, AccountConstants.LOAN_WRITTEN_OFF,
+            //for past arrears installments writeOff and reschedule are the same as 'make early repayment'
+            //but differ in processing for future installments
+            makeWriteOffOrReschedulePaymentForFutureInstallments(accountPaymentEntity, AccountConstants.LOAN_WRITTEN_OFF,
                     AccountActionTypes.WRITEOFF, currentUser);
             addLoanActivity(buildLoanActivity(accountPaymentEntity.getAccountTrxns(), currentUser,
                     AccountConstants.LOAN_WRITTEN_OFF, transactionDate));
@@ -1325,7 +1328,9 @@ public class LoanBO extends AccountBO {
             this.addAccountPayment(accountPaymentEntity);
             makeEarlyRepaymentForArrears(accountPaymentEntity, AccountConstants.LOAN_RESCHEDULED,
                     AccountActionTypes.LOAN_RESCHEDULED, currentUser);
-            makeEarlyRepaymentForFutureInstallments(accountPaymentEntity, AccountConstants.LOAN_RESCHEDULED,
+            //for past arrears installments writeOff and reschedule are the same as 'make early repayment'
+            //but differ in processing for future installments
+            makeWriteOffOrReschedulePaymentForFutureInstallments(accountPaymentEntity, AccountConstants.LOAN_RESCHEDULED,
                     AccountActionTypes.LOAN_RESCHEDULED, currentUser);
             addLoanActivity(buildLoanActivity(accountPaymentEntity.getAccountTrxns(), currentUser,
                     AccountConstants.LOAN_RESCHEDULED, transactionDate));
@@ -2862,6 +2867,28 @@ public class LoanBO extends AccountBO {
 
     }
 
+    private void makeWriteOffOrReschedulePaymentForFutureInstallments(final AccountPaymentEntity accountPaymentEntity,
+            final String comments, final AccountActionTypes accountActionTypes, final PersonnelBO currentUser) {
+        List<AccountActionDateEntity> futureInstallmentsList = getApplicableIdsForFutureInstallmentsForWriteOffOrReschedule();
+        for (AccountActionDateEntity accountActionDateEntity : futureInstallmentsList) {
+            LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDateEntity;
+            Money principal = loanSchedule.getPrincipalDue();
+            Money interest = loanSchedule.getInterestDue();
+            Money fees = loanSchedule.getTotalFeeDueWithMiscFeeDue();
+            Money penalty = loanSchedule.getPenaltyDue();
+
+            LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes, loanSchedule
+                    .getInstallmentId(), loanSchedule.getActionDate(), currentUser, new DateTimeService()
+                    .getCurrentJavaDateTime(), principal, comments, null, principal, new Money(getCurrency()),
+                    new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
+
+            accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
+            loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST, loanSchedule.getInterestDue());
+            loanSummary.decreaseBy(null, interest, penalty, fees);
+            updatePaymentDetails(accountActionTypes, principal, null, null, null);
+        }
+
+    }
     private void addFeeTransactions(LoanTrxnDetailEntity loanTrxnDetailEntity, Set<AccountFeesActionDetailEntity> accountFeesActionDetails) {
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
             if (accountFeesActionDetailEntity.getFeeDue().isGreaterThanZero()) {
