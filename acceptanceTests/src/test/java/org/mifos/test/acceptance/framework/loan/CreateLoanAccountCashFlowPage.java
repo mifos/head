@@ -1,6 +1,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
-import com.thoughtworks.selenium.Selenium;
+import java.util.Locale;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.mifos.test.acceptance.framework.AbstractPage;
@@ -8,7 +9,7 @@ import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.testng.Assert;
 
-import java.util.Locale;
+import com.thoughtworks.selenium.Selenium;
 
 public class CreateLoanAccountCashFlowPage extends AbstractPage{
     String totalCapital = "totalCapital";
@@ -166,7 +167,7 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
     public CreateLoanAccountCashFlowPage verifyCashFlowFields() {
         Assert.assertTrue(selenium.getValue(totalCapital).equals(""));
         Assert.assertTrue(selenium.getValue(totalLiability).equals(""));
-        clickContinue();
+        submitWithErrors();
         Assert.assertTrue(selenium.isTextPresent("Please specify the total capital"));
         Assert.assertTrue(selenium.isTextPresent("Please specify the total liability"));
 //        selenium.type(totalCapital,"abc");
@@ -179,7 +180,7 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
     public CreateLoanAccountCashFlowPage verifyInvalidIndebentRate(String maxValue, String capital, String liability) {
         selenium.type(totalCapital, capital);
         selenium.type(totalLiability, liability);
-        clickContinue();
+        submitWithErrors();
         Assert.assertTrue(selenium.isTextPresent("Indebtedness rate of the client is 49.99 % which is greater than allowed value of " + maxValue + " %"));
         return this;
     }
@@ -191,7 +192,7 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
     }
 
     public CreateLoanAccountCashFlowPage clickContinueAndVerifyNegativeOrZeroCashFlowWarning(String... monthYears) {
-        clickContinue();
+    	submitWithErrors();
         for (String monthYear : monthYears) {
             Assert.assertTrue(selenium.isTextPresent("Cumulative cash flow for " + monthYear + " should be greater than zero"));
         }
