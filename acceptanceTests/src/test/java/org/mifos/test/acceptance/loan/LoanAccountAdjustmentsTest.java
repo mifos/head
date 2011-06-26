@@ -62,6 +62,7 @@ public class LoanAccountAdjustmentsTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=false)
     public void verifyAccountStatusAfterMultipleAdjustments() throws Exception {
         String client = "Stu1233266063395 Client1233266063395";
         RedoLoanDisbursalParameters redoParams = new RedoLoanDisbursalParameters();
@@ -83,6 +84,7 @@ public class LoanAccountAdjustmentsTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=false)
     public void verifyChangesInTransactionHistory() throws Exception {
         RedoLoanDisbursalParameters redoParams = new RedoLoanDisbursalParameters();
         redoParams.setDisbursalDateDD("04");
