@@ -58,6 +58,7 @@ import org.mifos.dto.screen.LoanInstallmentsDto;
 import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.dto.screen.SearchDetailsDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -98,7 +99,11 @@ public class LoanAccountController {
     }
 
     public LoanCreationProductDetailsDto retrieveLoanProducts(int customerId) {
-    	return this.loanAccountServiceFacade.retrieveGetProductDetailsForLoanAccountCreation(customerId);
+        try {
+            return this.loanAccountServiceFacade.retrieveGetProductDetailsForLoanAccountCreation(customerId);
+        } catch (BusinessRuleException e) {
+            throw e;
+        }
     }
 
     @SuppressWarnings("PMD")
@@ -481,7 +486,17 @@ public class LoanAccountController {
         }
         
         LoanCreationResultDto loanCreationResultDto = null;
-        if (formBean.isVariableInstallmentsAllowed()) {
+        if (formBean.isGlimApplicable()) {
+
+            List<GroupMemberAccountDto> memberAccounts = createGroupMemberAccounts(formBean);
+            BigDecimal totalLoanAmount = BigDecimal.valueOf(formBean.getAmount().doubleValue());
+
+            CreateGlimLoanAccount createGroupLoanAccount = new CreateGlimLoanAccount(memberAccounts, totalLoanAmount, loanAccountDetails);
+
+            loanCreationResultDto = loanAccountServiceFacade.createBackdatedGroupLoanWithIndividualMonitoring(createGroupLoanAccount, backdatedLoanPayments, 
+                    loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
+            
+        } else if (formBean.isVariableInstallmentsAllowed()) {
             List<Date> installmentDates = cashFlowSummaryFormBean.getInstallments();
             List<Number> installmentPrincipalAmounts = cashFlowSummaryFormBean.getInstallmentAmounts();
             if (installmentDates.isEmpty()) {
@@ -489,9 +504,9 @@ public class LoanAccountController {
                 installmentPrincipalAmounts = loanScheduleFormBean.getInstallmentAmounts();
             }
             // api for creating loan with premade loan schedule
-            loanCreationResultDto = loanAccountServiceFacade.createLoanWithBackdatedPayments(loanAccountDetails, backdatedLoanPayments, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, installmentDates, installmentPrincipalAmounts);
+            loanCreationResultDto = loanAccountServiceFacade.createBackdatedLoan(loanAccountDetails, backdatedLoanPayments, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, installmentDates, installmentPrincipalAmounts);
         } else {
-            loanCreationResultDto = loanAccountServiceFacade.createLoanWithBackdatedPayments(loanAccountDetails, backdatedLoanPayments, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>());
+            loanCreationResultDto = loanAccountServiceFacade.createBackdatedLoan(loanAccountDetails, backdatedLoanPayments, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
         }
 
         return loanCreationResultDto;

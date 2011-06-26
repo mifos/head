@@ -103,13 +103,31 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     String createLoan(OpeningBalanceLoanAccount openingBalanceLoan);
     
     /**
-     * create a loan and automatically approve/disburse and make payments
+     * create a backdated loan and provide loan schedule dates and amounts.
+     * Will automatically approve/disburse and make payments.
      */
     @PreAuthorize("isFullyAuthenticated()")
-    LoanCreationResultDto createLoanWithBackdatedPayments(CreateLoanAccount loanAccountDetails,
+    LoanCreationResultDto createBackdatedLoan(CreateLoanAccount loanAccountDetails,
             List<LoanPaymentDto> backdatedLoanPayments, List<QuestionGroupDetail> questionGroups,
             LoanAccountCashFlow loanAccountCashFlow, List<Date> installmentDates,
             List<Number> installmentPrincipalAmounts);
+    
+    /**
+     * create a backdated loan (loan schedule dates and amounts authomatically generated).
+     * Will automatically approve/disburse and make payments.
+     */
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanCreationResultDto createBackdatedLoan(CreateLoanAccount loanAccountDetails,
+            List<LoanPaymentDto> backdatedLoanPayments, List<QuestionGroupDetail> questionGroups,
+            LoanAccountCashFlow loanAccountCashFlow);
+    
+    /**
+     * create a backdated group loan with individual monitoring and automatically approve/disburse and make payments
+     */
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanCreationResultDto createBackdatedGroupLoanWithIndividualMonitoring(
+            CreateGlimLoanAccount glimLoanAccount, List<LoanPaymentDto> backdatedLoanPayments,
+            List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);
     
     @PreAuthorize("isFullyAuthenticated()")
     LoanCreationResultDto createLoan(CreateLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);

@@ -1046,9 +1046,36 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
     
     @Override
-    public LoanCreationResultDto createLoanWithBackdatedPayments(CreateLoanAccount loanAccountInfo, List<LoanPaymentDto> backdatedLoanPayments,
-            List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, List<Date> loanScheduleInstallmentDates,
+    public LoanCreationResultDto createBackdatedGroupLoanWithIndividualMonitoring(
+            CreateGlimLoanAccount glimLoanAccount, List<LoanPaymentDto> backdatedLoanPayments,
+            List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow) {
+        
+        CreateLoanAccount loanAccountInfo = glimLoanAccount.getGroupLoanAccountDetails();
+        
+        return createLoanWithBackdatedPayments(loanAccountInfo, backdatedLoanPayments, questionGroups, 
+                loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>(), glimLoanAccount.getMemberDetails());
+    }
+    
+    @Override
+    public LoanCreationResultDto createBackdatedLoan(CreateLoanAccount loanAccountInfo,
+            List<LoanPaymentDto> backdatedLoanPayments, List<QuestionGroupDetail> questionGroups,
+            LoanAccountCashFlow loanAccountCashFlow, List<Date> loanScheduleInstallmentDates,
             List<Number> installmentPrincipalAmounts) {
+        return createLoanWithBackdatedPayments(loanAccountInfo, backdatedLoanPayments, questionGroups, 
+                loanAccountCashFlow, loanScheduleInstallmentDates, installmentPrincipalAmounts, new ArrayList<GroupMemberAccountDto>());
+    }
+    
+    @Override
+    public LoanCreationResultDto createBackdatedLoan(CreateLoanAccount loanAccountInfo,
+            List<LoanPaymentDto> backdatedLoanPayments, List<QuestionGroupDetail> questionGroups,
+            LoanAccountCashFlow loanAccountCashFlow) {
+        return createLoanWithBackdatedPayments(loanAccountInfo, backdatedLoanPayments, questionGroups, 
+                loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>(), new ArrayList<GroupMemberAccountDto>());
+    }
+    
+    private LoanCreationResultDto createLoanWithBackdatedPayments(CreateLoanAccount loanAccountInfo, List<LoanPaymentDto> backdatedLoanPayments,
+            List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, List<Date> loanScheduleInstallmentDates,
+            List<Number> installmentPrincipalAmounts, List<GroupMemberAccountDto> memberDetails) {
         
         // 1. assemble loan details
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -1083,8 +1110,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             loanSchedule.modifyPrincipalAmounts(installmentPrincipalAmounts);
         }
 
-//        LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>());
-        
         // 2. create loan
         InstallmentRange installmentRange = new MaxMinNoOfInstall(loanAccountInfo.getMinAllowedNumberOfInstallments().shortValue(),
                 loanAccountInfo.getMaxAllowedNumberOfInstallments().shortValue(), null);
@@ -1102,7 +1127,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         if (!backdatedLoanPayments.isEmpty()) {
             loan.markAsCreatedWithBackdatedPayments();
         }
-
+        
         try {
             transactionHelper.startTransaction();
             this.loanDao.save(loan);
@@ -1114,6 +1139,40 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             }
             this.loanDao.save(loan);
             transactionHelper.flushSession();
+            
+            // for GLIM loans only
+            List<GroupMemberLoanDetail> individualMembersOfGroupLoan = new ArrayList<GroupMemberLoanDetail>();
+            for (GroupMemberAccountDto groupMemberAccount : memberDetails) {
+                ClientBO member = this.customerDao.findClientBySystemId(groupMemberAccount.getGlobalId());
+                Money loanAmount = new Money(loanAccountDetail.getLoanProduct().getCurrency(), groupMemberAccount.getLoanAmount());
+                LoanProductOverridenDetail memberOverridenDetail = new LoanProductOverridenDetail(loanAmount, new ArrayList<AccountFeesEntity>(), overridenDetail);
+
+                LoanSchedule memberSchedule = assembleLoanSchedule(member, loanAccountDetail.getLoanProduct(), memberOverridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>());
+
+                GroupMemberLoanDetail groupMemberLoanDetail = new GroupMemberLoanDetail(member, memberOverridenDetail, memberSchedule, groupMemberAccount.getLoanPurposeId());
+                individualMembersOfGroupLoan.add(groupMemberLoanDetail);
+            }
+            
+            for (GroupMemberLoanDetail groupMemberAccount : individualMembersOfGroupLoan) {
+
+                LoanBO memberLoan = LoanBO.openGroupMemberLoanAccount(loan, loanAccountDetail.getLoanProduct(), groupMemberAccount.getMember(), repaymentDayMeeting, groupMemberAccount.getMemberSchedule(), groupMemberAccount.getMemberOverridenDetail(), configuration,
+                        installmentRange, amountRange, creationDetail, createdBy);
+                if (groupMemberAccount.getLoanPurposeId() > 0) {
+                    memberLoan.setBusinessActivityId(groupMemberAccount.getLoanPurposeId());
+                }
+                if (!backdatedLoanPayments.isEmpty()) {
+                    memberLoan.markAsCreatedWithBackdatedPayments();
+                }                
+                this.loanDao.save(memberLoan);
+                transactionHelper.flushSession();
+                try {
+                    memberLoan.setGlobalAccountNum(memberLoan.generateId(userOffice.getGlobalOfficeNum()));
+                } catch (AccountException e) {
+                    throw new BusinessRuleException(e.getMessage());
+                }
+                this.loanDao.save(memberLoan);
+                transactionHelper.flushSession();
+            }
 
             // save question groups
             if (!questionGroups.isEmpty()) {
