@@ -165,7 +165,7 @@ public class CashFlowTest extends UiTestCaseBase {
     /**
      * Disabled after work on daily interest calculation for variable installments. - keithw-
      * 
-     * Verify Cash Flow Page in Loan Account creation flow
+     * Verify Cash Flow Page in Loan Account creation flow	
      * http://mifosforge.jira.com/browse/MIFOSTEST-672
      *
      * @throws Exception
@@ -173,14 +173,12 @@ public class CashFlowTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled=true)
     public void verifyCashFlowPageInLoanAccountCreationFlow() throws Exception {
-        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
-        productParams.setOfferingName("productCF1");
-        productParams.setOfferingShortName("PCF1");
+        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();	
         productParams.setDefInstallments("12");
         productParams.setDefaultLoanAmount("2000");
         CreateLoanAccountSearchParameters loanSearchParams = new CreateLoanAccountSearchParameters();
         loanSearchParams.setSearchString(clientName);
-        loanSearchParams.setLoanProduct("productCF1");
+        loanSearchParams.setLoanProduct(productParams.getOfferingName());
         DateTime disbursalDate = systemDateTime.plusDays(1);
 
         loanProductTestHelper.navigateToDefineNewLoanPageAndFillMandatoryFields(productParams).
