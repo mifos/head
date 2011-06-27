@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.reports;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.util.UiTestUtils;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -38,12 +39,15 @@ public class CollectionSheetReportParametersPage extends MifosPage {
 
     public CollectionSheetReportPage generateCollectionSheetEntryReport(SubmitFormParameters formParameters) {
         selenium.select("branchId_selection", formParameters.getBranch());
+        UiTestUtils.sleep(1000);
         selenium.select("loanOfficerId_selection", formParameters.getLoanOfficer());
+        UiTestUtils.sleep(1000);
         selenium.select("centerId_selection", formParameters.getCenter());
+        UiTestUtils.sleep(1000);
         selenium.type("meetingDate", formParameters.getTransactionDay() + "/" +
                                      formParameters.getTransactionMonth() + "/" +
                                      formParameters.getTransactionYear());
-        selenium.click("//input[@value='Generate']");
+        selenium.click("//input[@value='OK']");
         waitForPageToLoad();
         return new CollectionSheetReportPage(selenium);
     }
