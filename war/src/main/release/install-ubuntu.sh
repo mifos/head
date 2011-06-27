@@ -25,9 +25,9 @@
 # Full path of Mifos web application archive to deploy
 INSTALL_WAR=mifos.war
 
-# Root of Tomcat installation. If Mifos is already deployed under this
+# Root of Jetty installation. If Mifos is already deployed under this
 # directory, it will be deleted.
-CATALINA_HOME=$HOME/tomcat6
+JETTY_HOME=$HOME/jetty7
 
 # Directory with Mifos configuration files. If $HOME/.mifos is not used (where
 # $HOME is the user's home which Mifos runs as) the MIFOS_CONF environment
@@ -83,23 +83,22 @@ else
     echo Proceeding assuming a remote server will be used. | tee -a $logfile
 fi
 
-echo -n "Looking for Tomcat ... " | tee -a $logfile
+echo -n "Looking for Jetty ... " | tee -a $logfile
 version_result=-1
-if [ -e "$CATALINA_HOME/bin/catalina.sh" ]; then
+if [ -e "$JETTY_HOME/bin/jetty.sh" ]; then
     echo found. | tee -a $logfile
 else
-    echo ERROR: Tomcat not found. | tee -a $logfile
+    echo ERROR: Jetty not found. | tee -a $logfile
     exit 1
 fi
 
-# A convenience: make all Tomcat scripts executable. As of 6.0.20, scripts in
-# bin/ in the release zip are not executable.
-chmod +x $CATALINA_HOME/bin/*.sh 2>&1 | tee -a $logfile
+# A convenience: make all Jetty scripts executable.
+chmod +x $JETTY_HOME/bin/*.sh 2>&1 | tee -a $logfile
 
-$CATALINA_HOME/bin/version.sh >> $logfile
+head $JETTY_HOME/VERSION.txt | grep ^jetty >> $logfile
 version_result=$?
 if [ $version_result -ne 0 ]; then
-    echo ERROR: could not determine Tomcat version. | tee -a $logfile
+    echo ERROR: could not determine Jetty version. | tee -a $logfile
     exit 1
 fi
 
@@ -179,16 +178,16 @@ echo success. | tee -a $logfile
 
 echo -n "Attempting to deploy $INSTALL_WAR ... " | tee -a $logfile
 
-echo Stopping Tomcat >> $logfile
-$CATALINA_HOME/bin/shutdown.sh > /dev/null 2>&1
+echo Stopping Jetty >> $logfile
+$JETTY_HOME/bin/jetty.sh stop > /dev/null 2>&1
 
-rm_result=`rm -rf $CATALINA_HOME/webapps/mifos 2>&1`
+rm_result=`rm -rf $JETTY_HOME/webapps/mifos 2>&1`
 if [ $? -ne 0 ]; then
     echo Clearing exploded war dir failed. $rm_result | tee -a $logfile
     exit 1
 fi
 
-cp_result=`cp $INSTALL_WAR $CATALINA_HOME/webapps 2>&1`
+cp_result=`cp $INSTALL_WAR $JETTY_HOME/webapps 2>&1`
 if [ $? -eq 0 ]; then
     echo success. | tee -a $logfile
 else
@@ -233,6 +232,6 @@ echo for more information on configuring Mifos. If this Mifos instance will be u
 echo for production, DO NOT START MIFOS BEFORE READING THE CONFIGURATION GUIDE. | tee -a $logfile
 echo | tee -a $logfile
 echo Edit $MIFOS_CONF/local.properties to change database connection settings. | tee -a $logfile
-echo Run $CATALINA_HOME/bin/startup.sh to start Mifos. | tee -a $logfile
+echo Run \"$JETTY_HOME/bin/jetty.sh start\" to start Mifos. | tee -a $logfile
 echo | tee -a $logfile
 echo DONE. Details logged in $logfile
