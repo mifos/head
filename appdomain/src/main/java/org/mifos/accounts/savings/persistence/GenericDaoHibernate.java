@@ -19,8 +19,10 @@
  */
 package org.mifos.accounts.savings.persistence;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.transform.Transformers;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
@@ -141,4 +143,18 @@ public class GenericDaoHibernate implements GenericDao {
     public Session getSession() {
         return StaticHibernateUtil.getSessionTL();
     }
+    
+    // useful if casting is required to make sure we don't try to cast a proxied object.
+    @Override
+    public <T> T initializeAndUnproxy(T var) {
+        if (var == null) {
+            return null;
+        }
+
+        Hibernate.initialize(var);
+        if (var instanceof HibernateProxy) {
+            var = (T) ((HibernateProxy) var).getHibernateLazyInitializer().getImplementation();
+        }
+        return var;
+    }    
 }

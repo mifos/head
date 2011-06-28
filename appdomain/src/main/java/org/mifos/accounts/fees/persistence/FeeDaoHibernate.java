@@ -190,4 +190,9 @@ public class FeeDaoHibernate implements FeeDao {
 
         return (T) criteriaQuery.uniqueResult();
     }
+
+    @Override
+    public <T> T initializeAndUnproxy(T var) {
+        return genericDao.initializeAndUnproxy(var);
+    }
 }

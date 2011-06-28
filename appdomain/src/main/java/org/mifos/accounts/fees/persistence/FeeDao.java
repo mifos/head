@@ -67,4 +67,6 @@ public interface FeeDao {
     FeeFormulaEntity findFeeFormulaEntityByType(FeeFormula feeFormula);
 
     FeePaymentEntity findFeePaymentEntityByType(FeePayment feePaymentType);
+    
+    <T> T initializeAndUnproxy(T var);     
 }
