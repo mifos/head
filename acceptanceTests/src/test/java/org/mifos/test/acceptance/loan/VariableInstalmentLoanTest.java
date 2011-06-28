@@ -51,8 +51,11 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
     private NavigationHelper navigationHelper;
     private FeeTestHelper feeTestHelper;
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
     @AfterMethod
-    public void logOut() {
+    public void logOut() throws Exception{
+    	applicationDatabaseOperation.updateLSIM(0);
         (new MifosPage(selenium)).logout();
     }
 
@@ -68,11 +71,9 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
         loanTestHelper.setApplicationTime(systemDateTime);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
         feeTestHelper = new FeeTestHelper(dataSetup, new NavigationHelper(selenium));
+        applicationDatabaseOperation.updateLSIM(1);
     }
 
-    /**
-     * FIXME - disabled for now - keithw
-     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @Test(enabled = true)
@@ -97,10 +98,6 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
 
     }
 
-    /*
-     * FIXME - keithw - disabled - verify that variable installment loans with periodic fees or formula fees cannot be created
-     *                  but cant get test to pass
-     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @Test(enabled = true)
