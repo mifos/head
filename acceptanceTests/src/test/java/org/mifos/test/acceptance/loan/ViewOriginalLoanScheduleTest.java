@@ -109,9 +109,8 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         verifyOriginalSchedule(tableOnOriginalInstallment);
     }
 
-    @Test(enabled=false)
     // http://mifosforge.jira.com/browse/MIFOSTEST-1163
-    //blocked by http://mifosforge.jira.com/browse/MIFOS-5026
+    @Test(enabled=false) //blocked by http://mifosforge.jira.com/browse/MIFOS-5026 - ldomzalski
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForVariableInstallmentLoanEarlyDisbursal() throws Exception {
     	//Given

@@ -21,7 +21,7 @@ public class BatchJobTest extends UiTestCaseBase{
         super.setUp();
     }
 
-    @Test(enabled = false) //TODO js - investigate why this fails on master
+    @Test(enabled = true)
     //http://mifosforge.jira.com/browse/MIFOSTEST-715
     public void testRunAllBatchJobs(){
         //When

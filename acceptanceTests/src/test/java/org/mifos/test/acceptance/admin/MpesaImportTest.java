@@ -179,7 +179,7 @@ public class MpesaImportTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.SystemPrintln"})
-    @Test(enabled=false) // Disabled because of MIFOS-4853
+    @Test(enabled=false) //blocked by http://mifosforge.jira.com/browse/MIFOS-4853 - ldomzalski
     public void importMpesaTransactions() throws Exception {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ViewOrganizationSettingsPage viewOrganizationSettingsPage = adminPage.navigateToViewOrganizationSettingsPage();
@@ -202,7 +202,7 @@ public class MpesaImportTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.SystemPrintln"})
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void importTransactionsFromFileWithNoErrors() throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011,01,28,12,0,0,0);
@@ -299,7 +299,7 @@ public class MpesaImportTest extends UiTestCaseBase {
 
     //  Test the import transaction page loads with no plugins available  - regression test for MIFOS-2683
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void importTransactionPageLoad() throws Exception {
         String tempFileName = copyPluginToTemp();
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
@@ -315,7 +315,7 @@ public class MpesaImportTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled = false) // Disabled because of MIFOS-4853
+    @Test(enabled = false) //blocked by http://mifosforge.jira.com/browse/MIFOS-4853 - ldomzalski
     public void failImportTransaction() throws Exception {
         //Given
         String path = this.getClass().getResource("/mpesa/" + FILE_WITH_OVERPAYMENT_AMOUNT).toString();
@@ -350,7 +350,7 @@ public class MpesaImportTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void importTheSameFiles() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
@@ -404,7 +404,7 @@ public class MpesaImportTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void validateImport() throws Exception {
         //Given
         String path = this.getClass().getResource("/mpesa/" + DISBURSAL_IMPORT).toString();
