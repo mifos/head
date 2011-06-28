@@ -234,7 +234,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    //@Test(enabled = false)    //IGNORED BY VIVEK SINGH
     public void tryClientLoanAccountWithAdditionalFees() throws Exception {
         setDateAsToday();
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
@@ -390,10 +389,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    /*
-     * passing locally but not on hudson. 
-     */
-    //@Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //CreateClient: weekly, Stu12332659912419 Client12332659912419, monday, activate
     public void verifyAccountFromProductInstallmentsSame() throws Exception {
@@ -436,10 +431,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    /*
-     * passing locally but not on hudson. 
-     */
-    //@Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyCreatingLoanAccountsOnProductWithLoanCycles() throws Exception {
         setAppDate(new DateTime(2011, 1, 24, 15, 0, 0, 0));

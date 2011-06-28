@@ -1,5 +1,7 @@
 package org.mifos.clientportfolio.newloan.domain;
 
+import org.hibernate.Hibernate;
+import org.hibernate.proxy.HibernateProxy;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.RateFeeBO;
@@ -14,11 +16,11 @@ public class RateInstalmentFeeCalculator implements InstallmentFeeCalculator {
     public RateInstalmentFeeCalculator(FeeDao feeDao) {
         this.feeDao = feeDao;
     }
-
+    
     @Override
     public Money calculate(Double feeRate, Money loanAmount, Money loanInterest, FeeBO fee) {
-
-        RateFeeBO rateFeeBO = (RateFeeBO) this.feeDao.findById(fee.getFeeId());
+        // make sure that we are not using a proxied object when we cast
+        RateFeeBO rateFeeBO = (RateFeeBO) feeDao.initializeAndUnproxy(fee);
         FeeFormulaEntity formula = rateFeeBO.getFeeFormula();
 
         Money amountToCalculateOn = new Money(loanAmount.getCurrency(), "1.0");
