@@ -102,9 +102,9 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
     /*
      * passing locally but not on hudson. 
      */
-    @Test(enabled=false) 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-710
+    @Test(enabled=true) 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyWaiveInterestForLoanAccount() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
