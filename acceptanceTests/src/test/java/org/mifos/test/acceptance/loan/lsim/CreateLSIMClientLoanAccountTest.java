@@ -74,7 +74,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         super.setUp();
         applicationDatabaseOperation.updateLSIM(1);
         navigationHelper = new NavigationHelper(selenium);
-        loanTestHelper = new LoanTestHelper(selenium);
+        loanTestHelper = new LoanTestHelper(selenium);		
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2010, 1, 22, 10, 55, 0, 0);
