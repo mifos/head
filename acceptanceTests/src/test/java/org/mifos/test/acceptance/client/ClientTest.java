@@ -158,6 +158,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-248
+    @Test(enabled=true)
     public void verifyAcceptedPaymentTypes() throws Exception {
         // When
         String groupName = "group1";
@@ -184,7 +185,7 @@ public class ClientTest extends UiTestCaseBase {
 
     }
 
-    @Test(singleThreaded = true, groups = {"smoke", "client", "acceptance", "ui"})
+    @Test(singleThreaded = true, groups = {"smoke", "client", "acceptance", "ui"}, enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-208
     public void createClientAndChangeStatusTest() throws Exception {
@@ -198,6 +199,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-310
+    @Test(enabled=true)
     public void searchClientAndEditExistingClientDetails() throws Exception {
         HomePage homePage = navigationHelper.navigateToHomePage();
         homePage = searchForClient("client1 lastname", homePage, 1);
@@ -238,6 +240,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-236
+    @Test(enabled=true)
     public void createClientOutsideGroup() throws Exception {
         // When
         CreateClientEnterMfiDataPage clientEnterMfiDataPage = navigationHelper
@@ -275,6 +278,7 @@ public class ClientTest extends UiTestCaseBase {
 
     // implementation of test described in issue 2454
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
     public void searchForClientAndEditDetailsTest() throws Exception {
 
         ClientsAndAccountsHomepage clientsPage = navigationHelper.navigateToClientsAndAccountsPage();
@@ -301,6 +305,7 @@ public class ClientTest extends UiTestCaseBase {
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-663
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
     public void closeClientAccountWithQG() throws Exception {
         //Given
         String groupName = "group1";
@@ -508,6 +513,7 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
     public void createClientWithCorrectAgeTest() throws Exception {
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
@@ -520,6 +526,7 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
     public void createClientWithMoreThanMaximumAgeTest() throws Exception {
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
@@ -532,6 +539,7 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
     public void createClientWithLessThanMinimumAgeTest() throws Exception {
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
@@ -544,6 +552,7 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
     public void searchForClientAndAddSurveysTest() throws Exception {
 
         createQuestionGroup();
@@ -689,6 +698,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-681
+    @Test(enabled=true)
     public void createClientWithQuestionGroups() throws Exception {
         createQuestions();
 
@@ -791,12 +801,11 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-35
-    @Test(enabled = false) //blocked by MIFOS-5063
+    @Test(enabled=true)
     public void addingMemeberToGroupWithDiffrentStatuses() throws Exception {
-        String groupName = "testGroup";
         String clientName;
         CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
-        groupParams.setGroupName(groupName);
+        groupParams.setGroupName("testGroup" + StringUtil.getRandomString(5));
         EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
         editCustomerStatusParameters.setNote("change status");
 
@@ -807,38 +816,38 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
         groupTestHelper.createNewGroupPartialApplication("Default Center", groupParams);
         // Then
-        clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
+        clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupParams.getGroupName());
 
         // When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.PENDING_APPROVAL);
-        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        groupTestHelper.changeGroupStatus(groupParams.getGroupName(), editCustomerStatusParameters);
         // Then
-        clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
+        clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupParams.getGroupName());
 
         // When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.ACTIVE);
-        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        groupTestHelper.changeGroupStatus(groupParams.getGroupName(), editCustomerStatusParameters);
         // Then
-        clientTestHelper.addClientToGroup(clientName, groupName);
+        clientTestHelper.addClientToGroup(clientName, groupParams.getGroupName());
 
         // When
         clientTestHelper.deleteClientGroupMembership(clientName, "remove group membership");
         editCustomerStatusParameters.setGroupStatus(GroupStatus.ON_HOLD);
-        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        groupTestHelper.changeGroupStatus(groupParams.getGroupName(), editCustomerStatusParameters);
         // Then
-        clientTestHelper.tryAddClientToClosedOrOnHoldGroup(clientName, groupName);
+        clientTestHelper.tryAddClientToClosedOrOnHoldGroup(clientName, groupParams.getGroupName());
 
         // When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.CLOSED);
         editCustomerStatusParameters.setCloseReason(GroupCloseReason.DUPLICATE);
-        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        groupTestHelper.changeGroupStatus(groupParams.getGroupName(), editCustomerStatusParameters);
         // Then
-        clientTestHelper.tryAddClientToClosedOrOnHoldGroup(clientName, groupName);
+        clientTestHelper.tryAddClientToClosedOrOnHoldGroup(clientName, groupParams.getGroupName());
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-40
-    @Test(enabled = false) //blocked by MIFOS-4858
+    @Test(enabled=true)
     public void addingMemeberOnHoldStatusToGroupWithDiffrentStatuses() throws Exception {
         String groupName = "testGroup";
         String clientName = "test";
@@ -871,6 +880,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-51
+    @Test(enabled=true)
     public void tryRemoveClientWithLoanFromGroup() throws Exception {
         String clientName = "ClientWithLoan 20110221";
 
@@ -880,6 +890,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-50
+    @Test(enabled=true)
     public void tryRemoveClientWithLoanFromGroupWithLoan() throws Exception {
         String clientName = "client1 lastname";
 
@@ -894,6 +905,7 @@ public class ClientTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
     public void verifySequenceOfClientNamesInPropertiesFile() throws Exception {
         String groupName = "group";
         CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
@@ -932,6 +944,7 @@ public class ClientTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
     public void verifyClientCreatedWithActiveStatus() throws Exception {
         applicationDatabaseOperation.updateCustomerState("2", "0");
         propertiesHelper.setClientPendingApprovalStateEnabled("false");
@@ -949,7 +962,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-48
-    @Test(enabled = false) //blocked by MIFOS-4272
+    @Test(enabled=false)  //blocked by http://mifosforge.jira.com/browse/MIFOS-4272 - ldomzalski
     public void removeClientWithLoanFromGroup() throws Exception {
         // Given
         String clientName = "client1 lastname";
@@ -975,8 +988,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-52
-    @Test(enabled = false)
-    // TODO js - temporarily disabled broken test (blocked by MIFOS-4270)
+    @Test(enabled=false)  //blocked by http://mifosforge.jira.com/browse/MIFOS-4272 - ldomzalski
     public void removeClientWithSavingsFromGroupWithSavingsCheckGroupCalculation() throws Exception {
         String clientName = "client1 lastname";
         String groupName = navigationHelper.navigateToClientViewDetailsPage(clientName).getGroupMembership();
@@ -1011,7 +1023,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-45
-    @Test(enabled = false) //blocked by MIFOS-4272
+    @Test(enabled=false) //blocked by http://mifosforge.jira.com/browse/MIFOS-4272 - ldomzalski
     public void addClientWithSavingToGroupWithSavingsCheckGroupCalculation() throws Exception {
 
         String groupName = "group1";
@@ -1056,6 +1068,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-43
+    @Test(enabled=true)
     public void addingMemeberPendingApprovalStatusToGroupWithActiveStatus() throws Exception {
         String groupName = "group1";
 
@@ -1096,6 +1109,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-305
+    @Test(enabled=true)
     public void createClientWithSaveForLaterAndChangeStatusTest() throws Exception {
         ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer",
                 "MyOfficeDHMFT");
