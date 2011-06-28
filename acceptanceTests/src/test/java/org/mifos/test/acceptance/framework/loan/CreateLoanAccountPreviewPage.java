@@ -56,7 +56,7 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
     }
 
     public void verifyEditScheduleDisabled() {
-        Assert.assertTrue(selenium.isElementPresent(editScheduleButton));
+        Assert.assertFalse(selenium.isElementPresent(editScheduleButton));
     }
 
     public CreateLoanAccountConfirmationPage submit() {
