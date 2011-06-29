@@ -1229,6 +1229,7 @@ public class LoanBO extends AccountBO implements Loan {
         }
     }
 
+
     @Override
     public AccountPaymentEntity getLastPmntToBeAdjusted() {
         AccountPaymentEntity accntPmnt = null;
@@ -3121,4 +3122,71 @@ public class LoanBO extends AccountBO implements Loan {
     public void updateCustomer(CustomerBO customer) {
         this.customer = customer;
     }
+    
+    
+/*
+ * Mifos-4948 specific code
+ */
+    public void applyMifos4948FixPayment(Money totalMissedPayment) throws AccountException {
+
+    	String comment = "MIFOS-4948 - Loan: " + this.getGlobalAccountNum() + " - Adding payment: " + totalMissedPayment ;
+
+        try {
+            PersonnelBO currentUser = legacyPersonnelDao.getPersonnel((short) 1);
+            Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
+            AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, totalMissedPayment, null,
+                    null, getPaymentTypeEntity(Short.valueOf("1")), transactionDate);
+            addAccountPayment(accountPaymentEntity);
+            accountPaymentEntity.setComment(comment);
+            
+            AccountActionTypes accountActionTypes;
+            String accountConstants;
+            if (this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue()))            	
+            {
+            	accountActionTypes = AccountActionTypes.WRITEOFF;
+            	accountConstants = AccountConstants.LOAN_WRITTEN_OFF;
+            }
+            else            	
+            {
+            	accountActionTypes = AccountActionTypes.LOAN_RESCHEDULED;
+            	accountConstants = AccountConstants.LOAN_RESCHEDULED;
+            }
+            makeWriteOffOrReschedulePaymentForMifos4948(accountPaymentEntity, accountConstants,
+            		accountActionTypes, currentUser);
+            addLoanActivity(buildLoanActivity(accountPaymentEntity.getAccountTrxns(), currentUser,
+            		accountConstants, transactionDate));
+            buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
+        } catch (PersistenceException e) {
+            throw new AccountException(e);
+        }
+    }
+    private void makeWriteOffOrReschedulePaymentForMifos4948(final AccountPaymentEntity accountPaymentEntity,
+            final String comments, final AccountActionTypes accountActionTypes, final PersonnelBO currentUser) {
+        for (AccountActionDateEntity accountActionDateEntity : this.getAccountActionDates()) {
+            LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDateEntity;
+        	if (loanSchedule.getPaymentStatus().equals((short)0) )
+        	{
+	            Money principal = loanSchedule.getPrincipalDue();
+	            Money interest = loanSchedule.getInterestDue();
+	            Money fees = loanSchedule.getTotalFeeDueWithMiscFeeDue();
+	            Money penalty = loanSchedule.getPenaltyDue();
+	
+	            LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes, loanSchedule
+	                    .getInstallmentId(), loanSchedule.getActionDate(), currentUser, new DateTimeService()
+	                    .getCurrentJavaDateTime(), principal, comments, null, principal, new Money(getCurrency()),
+	                    new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
+	
+	            accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
+	            loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST, loanSchedule.getInterestDue());
+	            loanSummary.decreaseBy(null, interest, penalty, fees);
+	            updatePaymentDetails(accountActionTypes, principal, null, null, null);
+        	}
+        }
+
+    }
+
+    /*
+     * End Mifos-4948 code
+     */
+    
 }

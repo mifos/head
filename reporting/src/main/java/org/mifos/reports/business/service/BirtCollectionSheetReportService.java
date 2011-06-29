@@ -20,19 +20,14 @@
 
 package org.mifos.reports.business.service;
 
-import static org.mifos.framework.util.helpers.FilePaths.REPORT_PRODUCT_OFFERING_CONFIG;
-
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
-import org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.reports.business.dto.CollectionSheetReportData;
 import org.mifos.reports.util.helpers.ReportUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * FIXME - #0001 - keithw - rename to BirtCollectionSheetReportService
@@ -47,11 +42,6 @@ public class BirtCollectionSheetReportService implements ICollectionSheetReportS
         super();
         this.birtCollectionSheetService = birtCollectionSheetService;
         this.reportProductOfferingService = reportProductOfferingService;
-    }
-
-    public BirtCollectionSheetReportService() {
-        this(new BirtCollectionSheetService(), new ReportProductOfferingService(
-                new LoanPrdBusinessService(), new SavingsPrdBusinessService(), new ClassPathResource(REPORT_PRODUCT_OFFERING_CONFIG)));
     }
 
 //    FIXME - #0001 - keithw - write unit test for this

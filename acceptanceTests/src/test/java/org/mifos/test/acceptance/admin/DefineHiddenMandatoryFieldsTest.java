@@ -91,7 +91,7 @@ public class DefineHiddenMandatoryFieldsTest  extends UiTestCaseBase{
      * @throws Exception
      */
     @Test(enabled=true)
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @SuppressWarnings("PMD")
     public void verifyHiddenFields(){
         //When
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
@@ -214,7 +214,7 @@ public class DefineHiddenMandatoryFieldsTest  extends UiTestCaseBase{
      * @throws Exception
      */
     @Test(enabled=true)
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @SuppressWarnings("PMD")
     public void verifyMandatoryFields(){
         //When
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
