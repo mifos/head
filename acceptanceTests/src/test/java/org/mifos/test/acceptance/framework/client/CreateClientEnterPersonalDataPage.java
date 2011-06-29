@@ -74,9 +74,19 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
         String dateOfBirthYYYY;
         int povertyStatus;
         int gender;
+        String numberOfChildren;
+        int maritalStatus;
+        int citizenship;
+        int ethnicity;
+        int handicapped2;
+        int educationLevel;
         String handicapped;
         String spouseFirstName;
         String spouseLastName;
+        String govId;
+        String address1;
+        String phone;
+        
         private int spouseNameType;
 
         public int getSalutation() {
@@ -142,6 +152,46 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
         public void setGender(int gender) {
             this.gender = gender;
         }
+        
+        public int getEthincity() {
+            return this.ethnicity;
+        }
+        
+        public void setEthincity(int ethnicity) {
+            this.ethnicity = ethnicity;
+        }
+        
+        public int getCitizenship() {
+            return this.citizenship;
+        }
+        
+        public void setCitizenship(int citizenship) {
+            this.citizenship = citizenship;
+        }
+        
+        public int getEducationLevel() {
+            return this.educationLevel;
+        }
+        
+        public void setEducationLevel(int educationLevel) {
+            this.educationLevel = educationLevel;
+        }
+        
+        public int getMaritalStatus() {
+            return this.maritalStatus;
+        }
+        
+        public void setMaritalStatus(int maritalStatus) {
+            this.maritalStatus = maritalStatus;
+        }
+        
+        public String getNumberOfChildren() {
+            return this.numberOfChildren;
+        }
+        
+        public void setNumberOfChildren(String numberOfChildren) {
+            this.numberOfChildren = numberOfChildren;
+        }
 
         public String getHandicapped() {
             return this.handicapped;
@@ -150,7 +200,15 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
         public void setHandicapped(String handicapped) {
             this.handicapped = handicapped;
         }
-
+        
+        public int getHandicappedDropdown() {
+            return this.handicapped2;
+        }
+        
+        public void setHandicappedDropdown(int handicapped2) {
+            this.handicapped2 = handicapped2;
+        }
+        
         public int getSpouseNameType() {
             return this.spouseNameType;
         }
@@ -182,13 +240,37 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
         public void setMiddleName(String middleName) {
             this.middleName = middleName;
         }
-
+        
+        public String getGovernmentID() {
+            return this.govId;
+        }
+        
+        public void setGovernmentID(String govId) {
+            this.govId = govId;
+        }
+        
         public String getSecondLastName() {
             return this.secondLastName;
         }
 
         public void setSecondLastName(String secondLastName) {
             this.secondLastName = secondLastName;
+        }
+        
+        public String getAddress1() {
+            return this.address1;
+        }
+        
+        public void setAddress1(String address1) {
+            this.address1 = address1;
+        }
+        
+        public String getPhone() {
+            return this.phone;
+        }
+        
+        public void setPhone(String phone) {
+            this.phone = phone;
         }
     }
 
@@ -227,6 +309,32 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
          return this;
     }
 
+    public CreateClientEnterPersonalDataPage createWithMandatoryFields(SubmitFormParameters parameters) {
+        selectValueIfNotZero("clientName.salutation", parameters.getSalutation());
+        typeTextIfNotEmpty("create_ClientPersonalInfo.input.firstName", parameters.getFirstName());
+        typeTextIfNotEmpty("create_ClientPersonalInfo.input.middleName", parameters.getMiddleName());
+        typeTextIfNotEmpty("create_ClientPersonalInfo.input.lastName", parameters.getLastName());
+        typeTextIfNotEmpty("create_ClientPersonalInfo.input.secondLastName", parameters.getSecondLastName());
+        typeTextIfNotEmpty("create_ClientPersonalInfo.input.governmentId", parameters.getGovernmentID());
+        selectValueIfNotZero("clientDetailView.maritalStatus", parameters.getMaritalStatus());
+        typeTextIfNotEmpty("clientDetailView.numChildren", parameters.getNumberOfChildren());
+        selectValueIfNotZero("clientDetailView.citizenship", parameters.getCitizenship());
+        selectValueIfNotZero("clientDetailView.ethinicity", parameters.getEthincity());
+        selectValueIfNotZero("clientDetailView.educationLevel", parameters.getEducationLevel());
+        typeTextIfNotEmpty("create_ClientPersonalInfo.input.spouseSecondLastName", parameters.getSpouseLastName());
+        typeTextIfNotEmpty("dateOfBirthDD", parameters.getDateOfBirthDD());
+        typeTextIfNotEmpty("dateOfBirthMM", parameters.getDateOfBirthMM());
+        typeTextIfNotEmpty("dateOfBirthYY", parameters.getDateOfBirthYYYY());
+        selectValueIfNotZero("clientDetailView.gender", parameters.getGender());
+        selectValueIfNotZero("spouseName.nameType", parameters.getSpouseNameType());
+        selectValueIfNotZero("clientDetailView.povertyStatus", parameters.getPovertyStatus());
+        selectValueIfNotZero("clientDetailView.handicapped", parameters.getHandicappedDropdown());
+        //selectIfNotEmpty("clientDetailView.handicapped", parameters.getHandicapped());
+        typeTextIfNotEmpty("create_ClientPersonalInfo.input.address1", parameters.getAddress1());
+        typeTextIfNotEmpty("create_ClientPersonalInfo.input.telephone", parameters.getPhone());
+        return this;
+   }
+    
     public CreateClientEnterMfiDataPage submitAndGotoCreateClientEnterMfiDataPage() {
         selenium.click("create_ClientPersonalInfo.button.continue");
         waitForPageToLoad();
