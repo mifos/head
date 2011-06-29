@@ -26,10 +26,10 @@ import static org.mifos.reports.ui.SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM
 import java.util.List;
 
 import org.mifos.application.collectionsheet.persistence.BirtCollectionSheetReportDao;
-import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.reports.business.dto.CollectionSheetReportData;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * FIXME - #00001 - keithw - wire up service and dao using spring and test using new integration tests
@@ -38,12 +38,9 @@ public class BirtCollectionSheetService {
 
     private final BirtCollectionSheetReportDao collectionSheetReportPersistence;
 
+    @Autowired
     public BirtCollectionSheetService(final BirtCollectionSheetReportDao collectionSheetReportPersistence) {
         this.collectionSheetReportPersistence = collectionSheetReportPersistence;
-    }
-
-    public BirtCollectionSheetService() {
-        this(ApplicationContextProvider.getBean(BirtCollectionSheetReportDao.class));
     }
 
     // FIXME - #00001 - keithw - write mockito unit tests around this to replace easymock tests that existed in CollectionSheetServiceIntegrationTest
