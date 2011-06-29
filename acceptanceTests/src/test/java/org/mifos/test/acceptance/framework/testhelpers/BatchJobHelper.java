@@ -39,8 +39,8 @@ import com.thoughtworks.selenium.Selenium;
 
 public class BatchJobHelper {
 
-    private static final int WAITING_TIME = 5000; // 5 seconds
-    private static final int NUMBER_OF_TRIES = 60; // 60 * 5 seconds = 5 minutes
+    private static final int WAITING_TIME = 10000; // 10 seconds
+    private static final int NUMBER_OF_TRIES = 60; // 60 * 10 seconds = 10 minutes
 
     private final BatchJobsPage batchJobsPage;
     private final AdminPage adminPage;
@@ -56,11 +56,11 @@ public class BatchJobHelper {
 
     public void runAllBatchJobs() {
         List<String> jobs = new ArrayList<String>();
-        int rowCount = selenium.getXpathCount("//form/div/div/div/div/span[3]/strong").intValue();
+        int rowCount = selenium.getXpathCount("//div/span[3]/strong").intValue();
 
-        int idx = 1;
+        int idx = 2;
         for (int i = 0; i < rowCount; ++i) {
-            jobs.add(selenium.getText( "//form/div/div/div/div[" + idx + "]/span[3]/strong" ));
+            jobs.add(selenium.getText( "//div[" + idx + "]/span[3]/strong" ));
             idx += 4;
         }
 
