@@ -59,10 +59,6 @@ public class ReportServiceFactory {
         }
     }
 
-    public static ICollectionSheetReportService getCollectionSheetReportService() {
-        return new BirtCollectionSheetReportService();
-    }
-
     public static BranchReportConfigService getBranchReportConfigService() {
         return (BranchReportConfigService) applicationContext.getBean(BRANCH_REPORT_CONFIG_SERVICE_BEAN);
     }
