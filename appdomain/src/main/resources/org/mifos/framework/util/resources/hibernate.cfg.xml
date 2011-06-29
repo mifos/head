@@ -238,6 +238,8 @@
 
         <mapping resource="org/mifos/accounts/loan/business/CalculatedInterestOnPayment.hbm.xml" />
 
+        <mapping resource="org/mifos/accounts/loan/business/Mifos4948.hbm.xml" />
+
     </session-factory>
 
 </hibernate-configuration>

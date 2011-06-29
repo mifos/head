@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+
+
+    <query name="fetchMissingInstalmentsForWriteOffsAndReschedules">
+        <![CDATA[select distinct la from org.mifos.accounts.loan.business.LoanBO as la
+                inner join fetch la.accountActionDates aad
+                where la.accountState.id in (7, 8)
+                and aad.paymentStatus = 0
+                order by la.accountId
+        ]]>
+    </query>
+
+
+</hibernate-mapping>
