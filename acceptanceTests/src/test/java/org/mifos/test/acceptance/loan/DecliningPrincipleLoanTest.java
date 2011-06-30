@@ -228,7 +228,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     }
 
     private LoanAccountPage createAndDisburseLoanAccount(int noOfInstallments, DateTime disbursalDate, String loanProductName) throws UnsupportedEncodingException {
-        DisburseLoanParameters disburseLoanParameters = loanTestHelper.setDisbursalParams(disbursalDate.minusDays(1));
+        DisburseLoanParameters disburseLoanParameters = loanTestHelper.setDisbursalParams(disbursalDate);
         navigationHelper.navigateToHomePage();
         return loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(clientName, loanProductName).
