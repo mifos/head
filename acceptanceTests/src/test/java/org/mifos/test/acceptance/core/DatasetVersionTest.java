@@ -49,6 +49,7 @@ public class DatasetVersionTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=false)
     public void checkDataSetDatabaseVersion() throws Exception {
 
 

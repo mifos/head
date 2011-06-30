@@ -59,7 +59,7 @@ public class ImportTransactionsTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true)
+    @Test(enabled=false)
     public void importExcelFormatAudiBankTransactions() throws Exception {
         String importFile = this.getClass().getResource("/AudiUSD-SevenTransactions.xls").toString();
         importTransaction(importFile, EXCEL_IMPORT_TYPE);

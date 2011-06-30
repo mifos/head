@@ -266,7 +266,7 @@ public class GroupTest extends UiTestCaseBase {
         groupViewDetailsPage.navigateToGroupsCenter(newCenterName);
     }
 
-    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui"}, enabled = true)
+    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui"}, enabled = false)
     // http://mifosforge.jira.com/browse/MIFOSTEST-682
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createGroupWithQuestionGroup() throws Exception {

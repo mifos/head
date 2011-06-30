@@ -847,7 +847,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-40
-    @Test(enabled=true)
+    @Test(enabled=false)
     public void addingMemeberOnHoldStatusToGroupWithDiffrentStatuses() throws Exception {
         String groupName = "testGroup";
         String clientName = "test";

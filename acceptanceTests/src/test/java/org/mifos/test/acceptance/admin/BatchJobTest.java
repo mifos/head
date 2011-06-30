@@ -21,7 +21,7 @@ public class BatchJobTest extends UiTestCaseBase{
         super.setUp();
     }
 
-    @Test(enabled = true)
+    @Test(enabled = false)
     //http://mifosforge.jira.com/browse/MIFOSTEST-715
     public void testRunAllBatchJobs(){
         //When

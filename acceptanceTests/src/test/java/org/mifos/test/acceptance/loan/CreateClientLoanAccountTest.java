@@ -317,7 +317,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true)
+    @Test(enabled=false)
     public void createMultipleLoanAccountsWithRestrictedProductsMix() throws Exception {
         setDateAsToday();
 

@@ -199,6 +199,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-69
      * @throws Exception
      */
+    @Test(enabled=false) 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyProperCalculationsFlatProductNonDefaultProperties() throws Exception {
         customPropertiesHelper.setDigitsAfterDecimal(3);
@@ -240,6 +241,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=false)
     public void verifyProperCalculationsFixedProductNonDefaultProperties() throws Exception {
         customPropertiesHelper.setDigitsAfterDecimal(2);
         customPropertiesHelper.setCurrencyRoundingMode(CustomPropertiesHelper.ROUNDING_MODE_FLOOR);
