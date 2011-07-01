@@ -83,13 +83,13 @@ public interface SavingsServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     SavingsProductReferenceDto retrieveSavingsProductReferenceData(Integer productId);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CAN_CREATE_NEW_SAVINGS_ACCOUNT_IN_SAVE_FOR_APPROVAL_STATE', 'ROLE_CAN_CREATE_NEW_SAVINGS_ACCOUNT_IN_SAVE_FOR_LATER_STATE')")
     Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation);
     
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CAN_CREATE_NEW_SAVINGS_ACCOUNT_IN_SAVE_FOR_APPROVAL_STATE', 'ROLE_CAN_CREATE_NEW_SAVINGS_ACCOUNT_IN_SAVE_FOR_LATER_STATE')")
 	Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation, List<QuestionGroupDetail> questionGroups);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CAN_CREATE_NEW_SAVINGS_ACCOUNT_IN_SAVE_FOR_APPROVAL_STATE', 'ROLE_CAN_CREATE_NEW_SAVINGS_ACCOUNT_IN_SAVE_FOR_LATER_STATE')")
     String createSavingsAccount(OpeningBalanceSavingsAccount openingBalanceSavingsAccount);
 
     @PreAuthorize("isFullyAuthenticated()")
@@ -134,7 +134,7 @@ public interface SavingsServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     void addNote(CreateAccountNote accountNote);
     
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CAN_CREATE_NEW_SAVINGS_ACCOUNT_IN_SAVE_FOR_APPROVAL_STATE', 'ROLE_CAN_CREATE_NEW_SAVINGS_ACCOUNT_IN_SAVE_FOR_LATER_STATE')")
 	List<CustomerSearchResultDto> retrieveCustomerThatQualifyForSavings(CustomerSearchDto customerSearchDto);
 
 	@PreAuthorize("isFullyAuthenticated()")
