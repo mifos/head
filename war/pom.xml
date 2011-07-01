@@ -50,7 +50,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>mifos-${env.BUILD_TAG}</finalName>
+                    <finalName>mifos-v2.2.0</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
                         <descriptor>src/main/assembly/release.xml</descriptor>
