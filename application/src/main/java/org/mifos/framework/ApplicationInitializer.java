@@ -20,10 +20,36 @@
 
 package org.mifos.framework;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.Field;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.Timer;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.ServletRequestEvent;
+import javax.servlet.ServletRequestListener;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.application.servicefacade.CustomJDBCService;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ConfigLocale;
@@ -57,23 +83,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRequestEvent;
-import javax.servlet.ServletRequestListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.lang.reflect.Field;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-import java.util.Timer;
 
 /**
  * This class should prepare all the sub-systems that are required by the app. Cleanup should also happen here when the
@@ -186,7 +195,66 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             databaseError.logError();
         } else {
             initializeDB(applicationContext);
+
+
+            /*
+             * John W - Added in G Release and back patched to F Release.
+             * Related to jira issue MIFOS-4948
+             *
+             * Can find all code and the related query by searching for mifos4948
+             *
+            */
+            CustomJDBCService customJdbcService = applicationContext.getBean(CustomJDBCService.class);
+            boolean keyExists = customJdbcService.mifos4948IssueKeyExists();
+            if (!keyExists) {
+                try {
+                    StaticHibernateUtil.startTransaction();
+
+                    applyMifos4948Fix();
+                    customJdbcService.insertMifos4948Issuekey();
+
+                    StaticHibernateUtil.commitTransaction();
+
+                } catch (AccountException e) {
+                    StaticHibernateUtil.rollbackTransaction();
+                    e.printStackTrace();
+                } finally {
+                    StaticHibernateUtil.closeSession();
+                }
+            }
         }
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private void applyMifos4948Fix() throws AccountException {
+
+        Session session = StaticHibernateUtil.getSessionTL();
+        List<LoanBO> fixLoans;
+        Query query = session.getNamedQuery("fetchMissingInstalmentsForWriteOffsAndReschedules");
+
+        fixLoans = query.list();
+
+        if (fixLoans != null && fixLoans.size() > 0) {
+            for (LoanBO fixLoan : fixLoans) {
+
+                Set<AccountActionDateEntity> fixLoanSchedules = fixLoan.getAccountActionDates();
+                Money totalMissedPayment = new Money(fixLoan.getCurrency());
+                if (fixLoanSchedules != null && fixLoanSchedules.size() > 0) {
+                    for (AccountActionDateEntity fixLoanSchedule : fixLoanSchedules) {
+                        LoanScheduleEntity loanInstallment = (LoanScheduleEntity) fixLoanSchedule;
+                        totalMissedPayment = totalMissedPayment.add(loanInstallment.getPrincipalDue());
+                    }
+                }
+                logger.info("MIFOS-4948 - Loan: " + fixLoan.getGlobalAccountNum() + " - Adding payment: "
+                        + totalMissedPayment + " to fix instalments that should have been written-off or rescheduled.");
+
+                fixLoan.applyMifos4948FixPayment(totalMissedPayment);
+            }
+
+            logger.info(fixLoans.size() + " Account Payments created to fix data related to MIFOS-4948");
+        }
+
     }
 
     private void initializeDB(ApplicationContext applicationContext) throws ConfigurationException, PersistenceException, FinancialException {
