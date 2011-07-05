@@ -2,12 +2,10 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.mifos</groupId>
     <!-- TODO Could rename this module from mifos-webapp to mifos-application (in line with physical module folder name!),
          now that we have a mifos-war, and that this is actually not a 'webapp' (?!) anymore, for clarity? -->
     <artifactId>mifos-webapp</artifactId>
     <packaging>jar</packaging>
-    <version>1.10-SNAPSHOT</version>
     <name>Mifos - Application</name>
 
     <parent>
@@ -28,10 +26,6 @@
         <jdk.version>1.6</jdk.version>
         <test.database.properties.file>${basedir}/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</test.database.properties.file>
         <main.database.properties.file>${basedir}/src/main/resources/org/mifos/config/resources/mainDatabase.properties</main.database.properties.file>
-        <sql.resources.src.directory>${modules.root.dir}/application/src/main/resources/sql</sql.resources.src.directory>
-        <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
-        <!-- TODO test.sql.resources.src.directory application/src/test/(resources/)sql doesn't seem to be used, remove? -->
-        <test.sql.resources.src.directory>${modules.root.dir}/application/src/test/resources/sql</test.sql.resources.src.directory>
         <create.props.skip>true</create.props.skip>
         <!-- mimics ConfigurationLocator directory search behavior -->
         <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
@@ -370,25 +364,6 @@
         </dependency>
     </dependencies>
     <build>
-        <resources>
-            <resource>
-                <directory>${sql.resources.src.directory}</directory>
-                <filtering>true</filtering>
-                <targetPath>sql</targetPath>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <filtering>false</filtering>
-            </testResource>
-            <testResource>
-                <directory>${test.sql.resources.src.directory}</directory>
-                <filtering>true</filtering>
-                <targetPath>sql</targetPath>
-            </testResource>
-        </testResources>
-
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -689,5 +664,21 @@
                 </executions>
             </plugin>
         </plugins>
+        <pluginManagement>
+        	<plugins>
+        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        		<plugin>
+        			<groupId>org.eclipse.m2e</groupId>
+        			<artifactId>lifecycle-mapping</artifactId>
+        			<version>1.0.0</version>
+        			<configuration>
+        				<lifecycleMappingMetadata>
+        					<pluginExecutions>
+        					</pluginExecutions>
+        				</lifecycleMappingMetadata>
+        			</configuration>
+        		</plugin>
+        	</plugins>
+        </pluginManagement>
     </build>
 </project>

@@ -9,9 +9,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>org.mifos</groupId>
     <artifactId>mifos-war-test</artifactId>
-
     <name>Mifos - Test of packaged WAR</name>
     <description>Integration tests the packaged WAR</description>
 

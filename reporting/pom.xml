@@ -2,10 +2,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.mifos</groupId>
     <artifactId>mifos-reporting</artifactId>
-    <version>1.10-SNAPSHOT</version>
-
     <name>Mifos - Reporting</name>
     <description>BIRT Viewer - Web Module embedded in Mifos</description>
 

@@ -2,11 +2,8 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.mifos</groupId>
     <artifactId>mifos-war</artifactId>
-    <version>1.10-SNAPSHOT</version>
     <packaging>war</packaging>
-
     <name>Mifos - WAR</name>
     <description>The actual mifos.war (as the mifos-webapp/application is now a JAR)</description>
 
@@ -21,7 +18,6 @@
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-webapp</artifactId>
-            <version>1.10-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
