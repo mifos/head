@@ -83,6 +83,7 @@ public class DbUnitUtilities {
         columnsToIgnoreWhenVerifyingTables.put("LOAN_SCHEDULE", new String[] { "id", "account_id", "payment_date" });
         columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_STATUS_CHANGE_HISTORY", new String[] { "changed_date", "account_status_change_id", "account_id" });
         columnsToIgnoreWhenVerifyingTables.put("HOLIDAY", new String[] {});
+        columnsToIgnoreWhenVerifyingTables.put("APPLIED_UPGRADES", new String[] {});
         columnsToIgnoreWhenVerifyingTables.put("ACCOUNT", new String[] { "closed_date"});
         columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_FLAG_DETAIL", new String[] { "created_date", "account_flag_id" });
         columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_NOTES", new String[] { "comment_date", "account_notes_id" });

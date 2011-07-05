@@ -83,7 +83,7 @@ public class DatasetVersionTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private void verifyDatabaseVersion(String acceptanceDataSetFile) throws Exception {
-        String[] tablesToValidate = { "applied_upgrades" };
+        String[] tablesToValidate = { "APPLIED_UPGRADES" };
 
         IDataSet acceptanceDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(acceptanceDataSetFile);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
