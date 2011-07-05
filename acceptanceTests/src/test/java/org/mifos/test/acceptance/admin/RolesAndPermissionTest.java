@@ -81,7 +81,7 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true)
+    @Test(enabled=false) //TODO http://mifosforge.jira.com/browse/MIFOS-5081
     public void adjustmentOfPostDatedTransactions() throws Exception {
         navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin").disablePermission("5_1_9").
                 verifyPermissionText("5_1_9", "Can adjust back dated transactions").submitAndGotoViewRolesPage();

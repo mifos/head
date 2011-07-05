@@ -123,7 +123,7 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
      * need to fix up commonality between questionaire pages for loan and savings.
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true)
+    @Test(enabled=false) //TODO http://mifosforge.jira.com/browse/MIFOS-5081
     public void verifyCapturingResponsesDuringSavingsCreation() throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011, 2, 28, 15, 0, 0, 0);

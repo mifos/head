@@ -83,6 +83,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
      */
     // http://mifosforge.jira.com/browse/MIFOSTEST-132
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=false) //TODO http://mifosforge.jira.com/browse/MIFOS-5081
     public void checkGLIMLoanCreatedBySubmitForApproval() throws Exception {
         //Given
         applicationDatabaseOperation.updateGLIM(1);
