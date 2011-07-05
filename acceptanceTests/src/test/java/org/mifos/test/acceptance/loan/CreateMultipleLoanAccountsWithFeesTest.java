@@ -65,7 +65,7 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         String[] clientsDeselected = new String[1];
         clientsDeselected[0] = "Stu1233266319760 Client1233266319760";
         //Then
-        loanTestHelper.createMultipleLoanAccountsAndVerify(multipleAccParameters, clients, "0000-Animal Husbandry", "10.0", loanTestHelper.METHOD_SUBMIT_FOR_APPROVAL);
+        loanTestHelper.createMultipleLoanAccountsAndVerify(multipleAccParameters, clients, "0000-Animal Husbandry", loanTestHelper.METHOD_SUBMIT_FOR_APPROVAL);
         loanTestHelper.verifyLoansAreNotOnClientsLoanLists(clientsDeselected, loanProduct);
     }
 
@@ -83,7 +83,7 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         clients[1] = "ClientWithLoan 20110221";
 
         //Then
-        loanTestHelper.createMultipleLoanAccountsAndVerify(multipleAccParameters, clients, "0000-Animal Husbandry", "10.0", LoanTestHelper.METHOD_SAVE_FOR_LATER);
+        loanTestHelper.createMultipleLoanAccountsAndVerify(multipleAccParameters, clients, "0000-Animal Husbandry", LoanTestHelper.METHOD_SAVE_FOR_LATER);
     }
 }
 

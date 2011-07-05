@@ -20,7 +20,11 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
-import com.thoughtworks.selenium.Selenium;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import org.joda.time.DateTime;
 import org.joda.time.ReadableInstant;
 import org.joda.time.format.DateTimeFormat;
@@ -76,10 +80,10 @@ import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
 import org.mifos.test.acceptance.framework.loan.TransactionHistoryPage;
 import org.mifos.test.acceptance.framework.loan.ViewLoanStatusHistoryPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
-import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
-import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPage;
+import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
+import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
@@ -88,10 +92,7 @@ import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.springframework.format.number.NumberFormatter;
 import org.testng.Assert;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import com.thoughtworks.selenium.Selenium;
 
 /**
  * Holds methods common to most loan tests.
@@ -682,7 +683,7 @@ public class LoanTestHelper {
         return createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage();
     }
 
-    public void createMultipleLoanAccountsAndVerify(CreateMultipleLoanAccountSelectParameters multipleAccParameters, String[] clients, String loanPurpose, String feeAmount, Boolean saveMethod) {
+    public void createMultipleLoanAccountsAndVerify(CreateMultipleLoanAccountSelectParameters multipleAccParameters, String[] clients, String loanPurpose, Boolean saveMethod) {
 
         String [] clientsInstallments = loanProductTestHelper.getDefaultNoOfInstallmentsForClients(clients, multipleAccParameters.getLoanProduct());
         CreateLoanAccountsEntryPage createLoanAccountsEntryPage = navigationHelper.navigateToClientsAndAccountsPage()
@@ -715,7 +716,6 @@ public class LoanTestHelper {
                     loanAccountPage.verifyLoanStatus(AccountStatus.LOAN_PARTIAL.getStatusText());
                 }
                 loanAccountPage.verifyNumberOfInstallments("10");
-                Assert.assertEquals(loanAccountPage.getOriginalFeesAmount(), feeAmount, "Bulk loan creation ignores default fees");
             }
         }
     }
