@@ -1,16 +1,16 @@
 package org.mifos.application.servicefacade;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import com.mchange.v2.c3p0.DriverManagerDataSource;
 
 public class CustomJDBCServiceImpl implements CustomJDBCService {
 
     private final JdbcTemplate template;
 
     @Autowired
-    public CustomJDBCServiceImpl(final DriverManagerDataSource dataSource) {
+    public CustomJDBCServiceImpl(final DataSource dataSource) {
         template = new JdbcTemplate(dataSource);
     }
 
