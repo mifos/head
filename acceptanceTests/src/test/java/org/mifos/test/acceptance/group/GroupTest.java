@@ -293,7 +293,7 @@ public class GroupTest extends UiTestCaseBase {
     	questionGroupTestHelper.createQuestionGroup(questionGroupParams2);
         CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
         groupParams.setGroupName("GroupTest");
-        String centerName = "Default Center";
+        String centerName = "MyCenter1233171688286";
         String qG_1 = "CreateGroupQG";
         String qG_2 = "CreateGroupQG2";
         QuestionResponseParameters responseParams = getQuestionResponseParametersForGroupCreation("answer1");
