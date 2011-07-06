@@ -266,8 +266,9 @@ public class GroupTest extends UiTestCaseBase {
         groupViewDetailsPage.navigateToGroupsCenter(newCenterName);
     }
 
-    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui"}, enabled = true)
+    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui"}, enabled=false) //TODO http://mifosforge.jira.com/browse/MIFOS-5081
     // http://mifosforge.jira.com/browse/MIFOSTEST-682
+    // questions dispear from database before this test (another test must delete questions)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createGroupWithQuestionGroup() throws Exception {
         //Given
