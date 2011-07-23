@@ -48,6 +48,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hibernate.version>3.6.0.Final</hibernate.version>
+        <c3p0.version>0.9.1.2</c3p0.version>
         <spring.version>3.0.5.RELEASE</spring.version>
         <spring.sec.version>3.0.4.RELEASE</spring.sec.version>
         <spring.web.version>2.2.1.RELEASE</spring.web.version>
@@ -390,6 +391,11 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-c3p0</artifactId>
                 <version>${hibernate.version}</version>
+            </dependency>
+            <dependency>
+				<groupId>c3p0</groupId>
+  				<artifactId>c3p0</artifactId>
+  				<version>${c3p0.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
