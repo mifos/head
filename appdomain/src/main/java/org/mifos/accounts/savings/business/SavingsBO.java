@@ -508,7 +508,7 @@ public class SavingsBO extends AccountBO {
         if (isDepositScheduleBeRegenerated()) {
             if (this.recommendedAmount != null && recommendedAmount != null && !this.recommendedAmount.equals(recommendedAmount)) {
                 for (AccountActionDateEntity scheduledDeposit : this.getAccountActionDates()) {
-                    if (scheduledDeposit.isBeforeOrOn(new LocalDate())) {
+                    if (scheduledDeposit.isOnOrAfter(new LocalDate())) {
                         ((SavingsScheduleEntity) scheduledDeposit).setDeposit(recommendedAmount);
                     }
                 }
