@@ -137,10 +137,10 @@ public class QuestionGroupInstanceDaoIntegrationTest {
         assertThat(list.size(), is(7));
         assertThat((list.get(0)).getId(), is(questionGroupInstances.get(4).getId()));
         assertThat((list.get(1)).getId(), is(questionGroupInstances.get(6).getId()));
-        assertThat((list.get(2)).getId(), is(questionGroupInstances.get(3).getId()));
-        assertThat((list.get(3)).getId(), is(questionGroupInstances.get(1).getId()));
-        assertThat((list.get(4)).getId(), is(questionGroupInstances.get(2).getId()));
-        assertThat((list.get(5)).getId(), is(questionGroupInstances.get(0).getId()));
+        assertThat((list.get(2)).getId(), is(questionGroupInstances.get(1).getId()));
+        assertThat((list.get(3)).getId(), is(questionGroupInstances.get(3).getId()));
+        assertThat((list.get(4)).getId(), is(questionGroupInstances.get(0).getId()));
+        assertThat((list.get(5)).getId(), is(questionGroupInstances.get(2).getId()));
         assertThat((list.get(6)).getId(), is(questionGroupInstances.get(5).getId()));
     }
 
