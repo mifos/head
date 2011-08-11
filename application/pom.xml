@@ -2,12 +2,10 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.mifos</groupId>
     <!-- TODO Could rename this module from mifos-webapp to mifos-application (in line with physical module folder name!),
          now that we have a mifos-war, and that this is actually not a 'webapp' (?!) anymore, for clarity? -->
     <artifactId>mifos-webapp</artifactId>
     <packaging>jar</packaging>
-    <version>1.9-SNAPSHOT</version>
     <name>Mifos - Application</name>
 
     <parent>
@@ -689,5 +687,21 @@
                 </executions>
             </plugin>
         </plugins>
+        <pluginManagement>
+        	<plugins>
+        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        		<plugin>
+        			<groupId>org.eclipse.m2e</groupId>
+        			<artifactId>lifecycle-mapping</artifactId>
+        			<version>1.0.0</version>
+        			<configuration>
+        				<lifecycleMappingMetadata>
+        					<pluginExecutions>
+        					</pluginExecutions>
+        				</lifecycleMappingMetadata>
+        			</configuration>
+        		</plugin>
+        	</plugins>
+        </pluginManagement>
     </build>
 </project>

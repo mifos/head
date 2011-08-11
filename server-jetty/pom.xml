@@ -9,9 +9,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>org.mifos</groupId>
     <artifactId>mifos-server-jetty</artifactId>
-
     <name>Mifos - Base Server (Jetty)</name>
     <description>Embedded Servlet Container / Web Server.  Used in server-workspace, and war-test (and acceptanceTest), and integrated in WAR for "Executable WAR".</description>
 
