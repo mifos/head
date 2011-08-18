@@ -34,6 +34,7 @@ import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryCo
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  *
@@ -59,45 +60,45 @@ public class CollectionSheetEntryDtoPostPreviewValidator {
         }
         for (LoanAccountsProductDto accountView : parent.getLoanAccountDetails()) {
             if (accountView.isDisburseLoanAccountPresent() || accountView.getLoanAccountViews().size() > 1) {
-                Double enteredAmount = 0.0;
+                Money enteredAmount = new Money(Money.getDefaultCurrency(), 0.0);
                 if (null != accountView.getEnteredAmount() && accountView.isValidAmountEntered()) {
-                    enteredAmount = getDoubleValue(accountView.getEnteredAmount());
+                    enteredAmount = new Money(Money.getDefaultCurrency(), getDoubleValue(accountView.getEnteredAmount()));
                 }
-                Double enteredDisbursalAmount = 0.0;
+                Money enteredDisbursalAmount = new Money(Money.getDefaultCurrency(), 0.0);
                 if (null != accountView.getDisBursementAmountEntered() && accountView.isValidDisbursementAmount()) {
-                    enteredDisbursalAmount = getDoubleValue(accountView.getDisBursementAmountEntered());
+                    enteredDisbursalAmount = new Money(Money.getDefaultCurrency(), getDoubleValue(accountView.getDisBursementAmountEntered()));
                 }
-                Double totalDueAmount = accountView.getTotalAmountDue();
-                Double totalDisburtialAmount = accountView.getTotalDisburseAmount();
-                if (totalDisburtialAmount > 0.0) {
+                Money totalDueAmount = new Money(Money.getDefaultCurrency(), accountView.getTotalAmountDue());
+                Money totalDisburtialAmount = new Money(Money.getDefaultCurrency(), accountView.getTotalDisburseAmount());
+                if (totalDisburtialAmount.isGreaterThanZero()) {
                     if ((!accountView.isValidDisbursementAmount()
                             || accountView.getDisBursementAmountEntered() == null
-                            || !enteredDisbursalAmount.equals(totalDisburtialAmount))
-                            && !enteredDisbursalAmount.equals(0.0)) {
+                            || !enteredDisbursalAmount.toString().equals(totalDisburtialAmount.toString()))
+                            && !enteredDisbursalAmount.isZero()) {
                         errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
                                 CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
                                         .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
                     }
                 }
-                if (totalDueAmount > 0.0) {
+                if (totalDueAmount.isGreaterThanZero()) {
                     if ((!accountView.isValidAmountEntered()
                             || accountView.getEnteredAmount() == null
-                            || !enteredAmount.equals(totalDueAmount))
-                            && !enteredAmount.equals(0.0)) {
+                            || !enteredAmount.toString().equals(totalDueAmount.toString()))
+                            && !enteredAmount.isZero()) {
                         errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
                                 CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
                                         .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
                     }
                 }
                 boolean moreThanTwoLoanAccountsToPrepaid = isThereMoreThanTwoLoanAccountsToPrepaid(accountView.getLoanAccountViews());
-                if (totalDisburtialAmount <= 0.0 && totalDueAmount <= 0.0) {
+                if (totalDisburtialAmount.isLessThanOrEqualZero() && totalDueAmount.isLessThanOrEqualZero()) {
                     if (!accountView.isValidAmountEntered() || !accountView.isValidDisbursementAmount()
-                            || !enteredDisbursalAmount.equals(0.0)
-                            || (!moreThanTwoLoanAccountsToPrepaid && !enteredAmount.equals(0.0))) {
+                            || !enteredDisbursalAmount.isZero()
+                            || (!moreThanTwoLoanAccountsToPrepaid && !enteredAmount.isZero())) {
                         errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
                                 CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
                                         .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
-                    } else if (moreThanTwoLoanAccountsToPrepaid && !enteredAmount.equals(0.0)) {
+                    } else if (moreThanTwoLoanAccountsToPrepaid && !enteredAmount.isZero()) {
                         errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDPREPAYAMOUNT, new ActionMessage(
                                 CollectionSheetEntryConstants.BULKENTRYINVALIDPREPAYAMOUNT, accountView
                                         .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));

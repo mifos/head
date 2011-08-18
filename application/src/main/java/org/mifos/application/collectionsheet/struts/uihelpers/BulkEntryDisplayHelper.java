@@ -411,7 +411,7 @@ public class BulkEntryDisplayHelper {
             final LoanAccountsProductDto accountViewBO, final Money[] groupTotals, final Money[] centerTotals, final int size,
             final int initialAccNo, final int loanproductSize, final int savingsProductSize,
             final String method, final boolean isShowingDue) {
-        Money amountToBeShown = new Money(Money.getDefaultCurrency(), "0.0");
+        Money amountToBeShown;
         if (isShowingDue) {
             amountToBeShown = new Money(Money.getDefaultCurrency(), accountViewBO.getTotalAmountDue());
             if (amountToBeShown.isLessThanOrEqualZero() && accountViewBO.isDisburseLoanAccountPresent()) {
@@ -441,18 +441,16 @@ public class BulkEntryDisplayHelper {
             centerTotals[columns] = centerTotals[columns] == null ? actualMoneyValue : centerTotals[columns].add(actualMoneyValue);
         } else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
             Money totalAmount = new Money(Money.getDefaultCurrency(), "0.0");
-            Money enteredAmount = new Money(Money.getDefaultCurrency(), "0.0");
+            Money enteredAmount;
             if (isShowingDue) {
                 enteredAmount = new Money(Money.getDefaultCurrency(), accountViewBO.getEnteredAmount());
                 if (accountViewBO.isValidAmountEntered()) {
-                    totalAmount = new Money(Money.getDefaultCurrency(), accountViewBO.getEnteredAmount());
+                    totalAmount = enteredAmount;
                 }
             } else {
                 enteredAmount = new Money(Money.getDefaultCurrency(), accountViewBO.getDisBursementAmountEntered());
                 if (accountViewBO.isValidDisbursementAmount()) {
-                    if (StringUtils.isNotBlank(accountViewBO.getEnteredAmount())) {
-                        totalAmount = new Money(Money.getDefaultCurrency(), accountViewBO.getEnteredAmount());
-                    }
+                    totalAmount = enteredAmount;
                 }
             }
             if (amountToBeShown.subtract(totalAmount).isNonZero()) {
