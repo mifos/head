@@ -29,7 +29,7 @@
     <query name="QuestionGroupInstance.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId">
               <![CDATA[from QuestionGroupInstance as instance where instance.entityId = :ENTITY_ID and
                         instance.eventSourceId = :EVENT_SOURCE_ID
-                        order by instance.dateConducted desc, instance.questionGroup.title
+                        order by instance.dateConducted desc
               ]]>
     </query>
 

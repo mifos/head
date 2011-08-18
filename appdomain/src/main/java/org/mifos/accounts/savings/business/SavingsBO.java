@@ -523,7 +523,7 @@ public class SavingsBO extends AccountBO {
         if (isDepositScheduleBeRegenerated()) {
             if (this.recommendedAmount != null && recommendedAmount != null && !this.recommendedAmount.equals(recommendedAmount)) {
                 for (AccountActionDateEntity scheduledDeposit : this.getAccountActionDates()) {
-                    if (scheduledDeposit.isBeforeOrOn(new LocalDate())) {
+                    if (scheduledDeposit.isOnOrAfter(new LocalDate())) {
                         ((SavingsScheduleEntity) scheduledDeposit).setDeposit(recommendedAmount);
                     }
                 }
@@ -1606,6 +1606,11 @@ public class SavingsBO extends AccountBO {
             Date oldMeetingDate = depositSchedule.getStartDate();
             Short lastInstallmentId = getLastInstallmentId();
             AccountActionDateEntity lastInstallment = getAccountActionDate(lastInstallmentId);
+            if (lastInstallment == null) { // a special workaround for MIFOS-5107
+                lastInstallment = new SavingsScheduleEntity(this, this.getCustomer(), (short) 0,
+                        new java.sql.Date(new LocalDate().minusDays(1).toDateMidnight().getMillis()), PaymentStatus.UNPAID,
+                        new Money(Money.getDefaultCurrency(), 0.0));
+            }
             depositSchedule.setMeetingStartDate(lastInstallment.getActionDate());
 
             if (customerBO.getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
