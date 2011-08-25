@@ -84,13 +84,13 @@ public class AuditLogServiceImpl implements AuditLogService {
                     if (!fieldValue.equals("")) {
                         if (oldFieldValue != null && !oldFieldValue.equals("")) {
                             if (!oldFieldValue.equals(fieldValue)) {
-                                auditLogRecords.add(new AuditLogRecord(trimFieldName(questionGroupName + "/" + sectionName + "/" + fieldName),
-                                        oldFieldValue, fieldValue, auditLog));
+                                auditLogRecords.add(new AuditLogRecord(trimField(questionGroupName + "/" + sectionName + "/" + fieldName, 100),
+                                        trimField(oldFieldValue, 200), trimField(fieldValue, 200), auditLog));
                             }
                         }
                         else {
-                            auditLogRecords.add(new AuditLogRecord(trimFieldName(questionGroupName + "/" + sectionName + "/" + fieldName),
-                                    "-", fieldValue, auditLog));
+                            auditLogRecords.add(new AuditLogRecord(trimField(questionGroupName + "/" + sectionName + "/" + fieldName, 100),
+                                    "-", trimField(fieldValue, 200), auditLog));
                         }
                     }
                 }
@@ -102,8 +102,8 @@ public class AuditLogServiceImpl implements AuditLogService {
         }
     }
 
-    private String trimFieldName(String fieldName) {
-        return fieldName.length() > 100 ? fieldName.substring(0, 97) + "..." : fieldName;
+    private String trimField(String field, int length) {
+        return field.length() > length ? field.substring(0, length-3) + "..." : field;
     }
 
 }
