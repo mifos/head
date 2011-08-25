@@ -496,14 +496,12 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @Override
     public CustomerAccountSummaryDto getCustomerAccountSummaryDto(Integer customerId) {
-        CustomerBO customer = findCustomerById(customerId);
-        for (AccountBO account : customer.getAccounts()) {
-            if (account instanceof CustomerAccountBO) {
-                CustomerAccountBO customerAccount = (CustomerAccountBO)account;
-                return new CustomerAccountSummaryDto(customerAccount.getGlobalAccountNum(), customerAccount.getTotalPaymentDue().toString());
-            }
-        }
-        return null;
+        final HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("customerId", customerId);
+
+        CustomerAccountBO customerAccount = (CustomerAccountBO) genericDao.executeUniqueResultNamedQuery("customer.viewCustomerAccount", queryParameters);
+
+        return new CustomerAccountSummaryDto(customerAccount.getGlobalAccountNum(), customerAccount.getTotalPaymentDue().toString());
     }
 
     @Override
