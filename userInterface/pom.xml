@@ -2,10 +2,8 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.mifos</groupId>
     <artifactId>mifos-userInterface</artifactId>
     <packaging>jar</packaging>
-    <version>1.9-SNAPSHOT</version>
     <name>Mifos - User Interface</name>
     <url>http://www.mifos.org</url>
 

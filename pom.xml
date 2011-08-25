@@ -102,41 +102,6 @@
                 <varying.target.dir>targetEclipse</varying.target.dir>
             </properties>
         </profile>
-
-        <profile>
-            <id>m2e</id>
-            <activation>
-                <property>
-                    <name>m2e.version</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.maven.ide.eclipse</groupId>
-                        <artifactId>lifecycle-mapping</artifactId>
-                        <version>0.10.0</version>
-                        <configuration>
-                            <mappingId>customizable</mappingId>
-                            <configurators>
-                                <configurator id='org.maven.ide.eclipse.jdt.javaConfigurator' />
-                            </configurators>
-                            <!-- Actually, no thank you very much, do not copy resources for me! 
-                                (It slows down and doesn't even work well anyway...) <mojoExecutions> <mojoExecution>org.apache.maven.plugins:maven-resources-plugin::</mojoExecution> 
-                                </mojoExecutions> -->
-                        </configuration>
-                    </plugin>
-                </plugins>
-                <pluginManagement>
-                    <plugins>
-                        <!-- Actually if we don't do <mojoExecution>org.apache.maven.plugins:maven-resources-plugin::</mojoExecution> 
-                            above, then we also don't really have to fix the maven-resources-plugin version 
-                            here... <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-resources-plugin</artifactId> 
-                            <version>2.4</version> </plugin> -->
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
     </profiles>
 
 
@@ -750,7 +715,99 @@
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>2.5</version>
                 </plugin>
-            </plugins>
+            
+        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        		<plugin>
+        			<groupId>org.eclipse.m2e</groupId>
+        			<artifactId>lifecycle-mapping</artifactId>
+        			<version>1.0.0</version>
+        			<configuration>
+        				<lifecycleMappingMetadata>
+        					<pluginExecutions>
+        						<pluginExecution>
+        							<pluginExecutionFilter>
+        								<groupId>org.apache.maven.plugins</groupId>
+        								<artifactId>maven-pmd-plugin</artifactId>
+        								<versionRange>[2.4,)</versionRange>
+        								<goals>
+        									<goal>check</goal>
+        									<goal>cpd-check</goal>
+        								</goals>
+        							</pluginExecutionFilter>
+        							<action>
+        								<ignore></ignore>
+        							</action>
+        						</pluginExecution>
+        						<pluginExecution>
+        							<pluginExecutionFilter>
+        								<groupId>org.codehaus.mojo</groupId>
+        								<artifactId>properties-maven-plugin</artifactId>
+        								<versionRange>[1.0-alpha-1,)</versionRange>
+        								<goals>
+        									<goal>read-project-properties</goal>
+        								</goals>
+        							</pluginExecutionFilter>
+        							<action>
+        								<ignore></ignore>
+        							</action>
+        						</pluginExecution>
+        						<pluginExecution>
+        							<pluginExecutionFilter>
+        								<groupId>org.codehaus.groovy.maven</groupId>
+        								<artifactId>gmaven-plugin</artifactId>
+        								<versionRange>[1.0,)</versionRange>
+        								<goals>
+        									<goal>execute</goal>
+        								</goals>
+        							</pluginExecutionFilter>
+        							<action>
+        								<ignore></ignore>
+        							</action>
+        						</pluginExecution>
+        						<pluginExecution>
+        							<pluginExecutionFilter>
+        								<groupId>org.codehaus.mojo</groupId>
+        								<artifactId>native2ascii-maven-plugin</artifactId>
+        								<versionRange>[1.0-alpha-1,)</versionRange>
+        								<goals>
+        									<goal>native2ascii</goal>
+        								</goals>
+        							</pluginExecutionFilter>
+        							<action>
+        								<ignore></ignore>
+        							</action>
+        						</pluginExecution>
+        						<pluginExecution>
+        							<pluginExecutionFilter>
+        								<groupId>org.mifos.maven</groupId>
+        								<artifactId>mifos-pseudoloc-gen</artifactId>
+        								<versionRange>[1.0,)</versionRange>
+        								<goals>
+        									<goal>pseudolocalize</goal>
+        								</goals>
+        							</pluginExecutionFilter>
+        							<action>
+        								<ignore></ignore>
+        							</action>
+        						</pluginExecution>
+        						<pluginExecution>
+					                <pluginExecutionFilter>
+					                    <groupId>org.apache.maven.plugins</groupId>
+					                    <artifactId>maven-enforcer-plugin</artifactId>
+					                    <versionRange>[1.0,)</versionRange>
+					                    <goals>
+					                      <goal>enforce</goal>
+					                    </goals>
+					                </pluginExecutionFilter>
+					                <action>
+					                    <ignore></ignore>
+					                </action>
+				                </pluginExecution>
+        					</pluginExecutions>
+        				</lifecycleMappingMetadata>
+        			</configuration>
+        		</plugin>
+        	</plugins>
         </pluginManagement>
 
         <plugins>
