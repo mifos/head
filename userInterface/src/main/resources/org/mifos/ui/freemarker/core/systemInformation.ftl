@@ -29,26 +29,103 @@
         <div><span class=" orangeheading">[@spring.message "systemAdministration.viewsysteminformation.systeminformation" /]</span></div>
         <div class="fontBold">[@spring.message "systemAdministration.viewsysteminformation.welcometotheMifossysteminformationarea" /]</div>
         <div class="clear">&nbsp;</div>
+        
+        <table border="1" style="word-break: break-all">
+        
+        <tr>
+        <td style="word-wrap:break-word"><span class="width235pxfloatleft" id="sysinfo.text.operationSystem">[@spring.message "systemAdministration.viewsysteminformation.operatingSystemArch" /]</td>
+        <td style="word-wrap:break-word"><span class="">${model.systemInformationDto.osName}/${model.systemInformationDto.osArch}/${model.systemInformationDto.osVersion}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.javaVendor">[@spring.message "systemAdministration.viewsysteminformation.javaVendorVersion" /]</td>
+        <td><span class="">${model.systemInformationDto.javaVendor}/${model.systemInformationDto.javaVersion}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.databaseVendor">[@spring.message "systemAdministration.viewsysteminformation.databaseVendor" /]</span></td>
+        <td><span class="">${model.systemInformationDto.databaseVendor}/${model.systemInformationDto.databaseVersion}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.driverName">[@spring.message "systemAdministration.viewsysteminformation.databaseDriverVersion" /]</span></td>
+        <td><span class="">${model.systemInformationDto.databaseDriverName}/${model.systemInformationDto.databaseDriverVersion}</span> </td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.applicationServerInfo">[@spring.message "systemAdministration.viewsysteminformation.applicationServer" /]</span></td>
+        <td><span class="">${model.systemInformationDto.applicationServerInfo}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.releaseName">[@spring.message "systemAdministration.viewsysteminformation.releaseName" /]</span> </td>
+        <td><span class="">${model.systemInformationDto.releaseName}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.commitIdentifier">[@spring.message "systemAdministration.viewsysteminformation.commitIdentifier" /]</span></td>
+        <td><span class="">${model.systemInformationDto.commitIdentifier}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.buildDate">[@spring.message "systemAdministration.viewsysteminformation.buildDate" /]</span></td>
+        <td><span class="">${model.systemInformationDto.buildDate}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.buildNumber">[@spring.message "systemAdministration.viewsysteminformation.buildNumber" /]</span></td>
+        <td><span class="">${model.systemInformationDto.buildNumber}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.buildCustomReportsDir">[@spring.message "systemAdministration.viewsysteminformation.customReportsDirectory" /]</span></td>
+        <td><span class="">${model.systemInformationDto.customReportsDirectory}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.infoSource">[@spring.message "systemAdministration.viewsysteminformation.databaseSource" /]</span></td>
+        <td><span class="">${model.systemInformationDto.infoSource}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.datebaseServer">[@spring.message "systemAdministration.viewsysteminformation.databaseServer" /]</span></td>
+        <td><span class="">${model.systemInformationDto.databaseServer}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.databasePort">[@spring.message "systemAdministration.viewsysteminformation.databasePort" /]</span></td>
+        <td><span class="">${model.systemInformationDto.databasePort}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.datebaseName">[@spring.message "systemAdministration.viewsysteminformation.databaseName" /]</span></td>
+        <td><span class="">${model.systemInformationDto.databaseName}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.databaseUser">[@spring.message "systemAdministration.viewsysteminformation.databaseUser" /]</span></td>
+        <td><span class="">${model.systemInformationDto.databaseUser}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft">[@spring.message "systemAdministration.viewsysteminformation.dateandTime" /]</span></td>
+        <td><span id="sysinfo.text.dateTime" class="">${model.systemInformationDto.dateTimeString}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.dateTimeIso8601">[@spring.message "systemAdministration.viewsysteminformation.dateandTimeinISO8601format" /]</span></td>
+        <td><span class="">${model.systemInformationDto.dateTimeStringIso8601}</span></td>
+        </tr>
+        
+        <tr>
+        <td><span class="width235pxfloatleft" id="sysinfo.text.osUser">[@spring.message "systemAdministration.viewsysteminformation.osuser" /]</span></td>
+        <td><span class="">${model.systemInformationDto.osUser}</span></td>
+        </tr>
+        
+        </table>
+        
         <div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.operationSystem">[@spring.message "systemAdministration.viewsysteminformation.operatingSystemArch" /]</span><span class="">${model.systemInformationDto.osName}/${model.systemInformationDto.osArch}/${model.systemInformationDto.osVersion}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.javaVendor">[@spring.message "systemAdministration.viewsysteminformation.javaVendorVersion" /]</span><span class="">${model.systemInformationDto.javaVendor}/${model.systemInformationDto.javaVersion}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.databaseVendor">[@spring.message "systemAdministration.viewsysteminformation.databaseVendor" /]</span><span class="">${model.systemInformationDto.databaseVendor}/${model.systemInformationDto.databaseVersion}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.driverName">[@spring.message "systemAdministration.viewsysteminformation.databaseDriverVersion" /]</span><span class="">${model.systemInformationDto.databaseDriverName}/${model.systemInformationDto.databaseDriverVersion}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.applicationServerInfo">[@spring.message "systemAdministration.viewsysteminformation.applicationServer" /]</span><span class="">${model.systemInformationDto.applicationServerInfo}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.releaseName">[@spring.message "systemAdministration.viewsysteminformation.releaseName" /]</span><span class="">${model.systemInformationDto.releaseName}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.commitIdentifier">[@spring.message "systemAdministration.viewsysteminformation.commitIdentifier" /]</span><span class="">${model.systemInformationDto.commitIdentifier}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.buildDate">[@spring.message "systemAdministration.viewsysteminformation.buildDate" /]</span><span class="">${model.systemInformationDto.buildDate}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.buildNumber">[@spring.message "systemAdministration.viewsysteminformation.buildNumber" /]</span><span class="">${model.systemInformationDto.buildNumber}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.buildCustomReportsDir">[@spring.message "systemAdministration.viewsysteminformation.customReportsDirectory" /]</span><span class="">${model.systemInformationDto.customReportsDirectory}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.infoSource">[@spring.message "systemAdministration.viewsysteminformation.databaseSource" /]</span><span class="">${model.systemInformationDto.infoSource}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.datebaseServer">[@spring.message "systemAdministration.viewsysteminformation.databaseServer" /]</span><span class="">${model.systemInformationDto.databaseServer}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.databasePort">[@spring.message "systemAdministration.viewsysteminformation.databasePort" /]</span><span class="">${model.systemInformationDto.databasePort}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.datebaseName">[@spring.message "systemAdministration.viewsysteminformation.databaseName" /]</span><span class="">${model.systemInformationDto.databaseName}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.databaseUser">[@spring.message "systemAdministration.viewsysteminformation.databaseUser" /]</span><span class="">${model.systemInformationDto.databaseUser}</span></div>
-            <div><span class="width235pxfloatleft">[@spring.message "systemAdministration.viewsysteminformation.dateandTime" /]</span><span id="sysinfo.text.dateTime" class="">${model.systemInformationDto.dateTimeString}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.dateTimeIso8601">[@spring.message "systemAdministration.viewsysteminformation.dateandTimeinISO8601format" /]</span><span class="">${model.systemInformationDto.dateTimeStringIso8601}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.osUser">[@spring.message "systemAdministration.viewsysteminformation.osuser" /]</span><span class="">${model.systemInformationDto.osUser}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.applicationVersion"><a  href="appliedUpgrades.ftl">[@spring.message "systemAdministration.viewsysteminformation.appliedUpgrades" /]</a></span></div>
+       	<div><span class="width235pxfloatleft" id="sysinfo.text.applicationVersion"><a  href="appliedUpgrades.ftl">[@spring.message "systemAdministration.viewsysteminformation.appliedUpgrades" /]</a></span></div>
         </div>
     </div>
   </div>
