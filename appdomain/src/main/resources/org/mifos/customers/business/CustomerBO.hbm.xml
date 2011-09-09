@@ -728,6 +728,10 @@
         <![CDATA[select customer.personnel.personnelId from org.mifos.customers.business.CustomerBO as customer where customer.customerId =:CUSTOMER_ID)]]>
     </query>
 
+    <query name="customer.viewCustomerAccount">
+        <![CDATA[from org.mifos.accounts.business.AccountBO account where account.customer.customerId=:customerId and account.accountType.accountTypeId=3 ]]>
+    </query>
+
     <query name="customer.viewallclosedaccounts">
         <![CDATA[from org.mifos.accounts.business.AccountBO account where account.customer.customerId=:customerId
                     and account.accountType.accountTypeId=:accountTypeId and account.accountState.id in(6,7,8,10,15,17) ]]>
