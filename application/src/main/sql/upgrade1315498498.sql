@@ -1,0 +1,1 @@
+alter table question_group_instance add index entity_and_event_source_idx (entity_id, event_source_id);
