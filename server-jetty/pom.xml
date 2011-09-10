@@ -34,13 +34,14 @@
             <version>2.1.v20100127</version>
         </dependency>
 
-        <!-- Selenium 2.0 (WebDriver) -->
+        <!-- Selenium 2.0 (WebDriver)
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium</artifactId>
+            <artifactId>selenium-java</artifactId>
             <scope>test</scope>
         </dependency>
-
+ -->
+ 
         <!-- Mifos Application must not be listed as dependency here! -->
     </dependencies>
 
