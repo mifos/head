@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework.admin;
 
+import java.util.Locale;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -40,7 +42,7 @@ public class SystemInfoPage extends MifosPage {
     }
 
     public void verifyDateTime(DateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withOffsetParsed();
+        DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withLocale(Locale.UK);
         String actual =  formatter.print(dateTime.getMillis());
         String expected = getDateTime();
         Assert.assertEquals(expected, actual, "System date time and Mifos date time should be the same.");
