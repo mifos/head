@@ -39,6 +39,7 @@
 				<value>classpath:org/mifos/platform/questionnaire/ui/views</value>
 				<value>classpath:org/mifos/platform/cashflow/ui/views</value>
 				<value>classpath:org/mifos/platform/accounting/ui/views</value>
+                <value>classpath:org/mifos/platform/rest/ui/views</value>
 			</list>
 		</property>
 		<property name="preferFileSystemAccess" value="false" />

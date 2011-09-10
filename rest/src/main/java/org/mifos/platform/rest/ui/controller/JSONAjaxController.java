@@ -19,29 +19,36 @@
  */
 package org.mifos.platform.rest.ui.controller;
 
-import org.mifos.application.servicefacade.ClientServiceFacade;
-import org.mifos.dto.screen.ClientInformationDto;
+import javax.servlet.http.HttpServletResponse;
+
+import org.mifos.service.test.TestMode;
+import org.mifos.service.test.TestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
- * This is a dummy rest controller which is used to make sure if the rest services are available
+ * This is a dummy rest controller which is used to make sure if the rest
+ * services are available
  *
  * /mifos/status.json
  *
  */
 @Controller
-public class ClientRESTController {
+public class JSONAjaxController {
 
     @Autowired
-    private ClientServiceFacade clientServiceFacade;
+    private TestingService testingService;
 
-    @RequestMapping("client/num-{globalCustNum}")
-    public final @ResponseBody
-    ClientInformationDto getClientByNumber(@PathVariable String globalCustNum) {
-        return clientServiceFacade.getClientInformationDto(globalCustNum);
+    @RequestMapping("jsonAjax.ftl")
+    public final ModelAndView deleteCacheDir(HttpServletResponse response) {
+        ModelAndView mav = new ModelAndView("pageNotFound");
+        if (TestMode.MAIN == testingService.getTestMode()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            mav = new ModelAndView("jsonAjax");
+        }
+        return mav;
     }
 }
