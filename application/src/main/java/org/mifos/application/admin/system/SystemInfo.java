@@ -300,7 +300,7 @@ public class SystemInfo implements Serializable {
     }
 
     public String getDateTimeString() {
-        DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withOffsetParsed().withLocale(locale);
+        DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withOffsetParsed();
         return formatter.print(getDateTime().getMillis());
     }
 

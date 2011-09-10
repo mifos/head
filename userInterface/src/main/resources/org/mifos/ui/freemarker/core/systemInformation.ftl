@@ -93,7 +93,7 @@
         </tr>
         <tr>
             <td>[@spring.message "systemAdministration.viewsysteminformation.dateandTime" /]</td>
-            <td>${model.systemInformationDto.dateTimeString}</td>
+            <td id='sysinfo.text.dateTime'>${model.systemInformationDto.dateTimeString}</td>
         </tr>
         <tr>
             <td>[@spring.message "systemAdministration.viewsysteminformation.dateandTimeinISO8601format" /]</td>

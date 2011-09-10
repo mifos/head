@@ -42,10 +42,10 @@ public class SystemInfoPage extends MifosPage {
     }
 
     public void verifyDateTime(DateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withLocale(Locale.getDefault());
-        String expectedDateTime =  formatter.print(dateTime.getMillis());
-
-        Assert.assertEquals(getDateTime(), expectedDateTime, "System date time and Mifos date time should be the same.");
+        DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withOffsetParsed();
+        String actual =  formatter.print(dateTime.getMillis());
+        String expected = getDateTime();
+        Assert.assertEquals(expected, actual, "System date time and Mifos date time should be the same.");
     }
 
 }
