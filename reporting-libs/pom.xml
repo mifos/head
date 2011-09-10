@@ -65,15 +65,15 @@
                     </execution>
 
                     <execution>
-                        <id>coreapi</id>
+                        <id>coreapi_MIFOS-5119_MIFOS-5118</id>
                         <goals>
                             <goal>install-file</goal>
                         </goals>
                         <phase>install</phase>
                         <configuration>
-                            <file>${libs.dir}/coreapi.jar</file>
+                            <file>${libs.dir}/coreapi_MIFOS-5119_MIFOS-5118.jar</file>
                             <groupId>${birt.libs.groupId}</groupId>
-                            <artifactId>coreapi</artifactId>
+                            <artifactId>coreapi_MIFOS-5119_MIFOS-5118</artifactId>
                             <version>${birt.version}</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
