@@ -31,7 +31,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(singleThreaded = true, groups = { "rest", "acceptance", "no_db_unit" })
+@Test(enabled=false, singleThreaded = true, groups = { "rest", "acceptance", "no_db_unit" })
 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public class ClientRESTTest extends UiTestCaseBase {
 
