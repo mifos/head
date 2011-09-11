@@ -82,6 +82,7 @@
         <module>server-workspace</module>
         <module>war</module>
         <module>reporting-libs</module>
+        <module>rest</module>
     </modules>
 
 
@@ -209,6 +210,11 @@
                 <artifactId>mifos-reporting-libs</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.mifos</groupId>
+                <artifactId>mifos-rest</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
@@ -447,12 +453,12 @@
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-core-asl</artifactId>
-                <version>1.4.0</version>
+                <version>1.8.5</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-mapper-asl</artifactId>
-                <version>1.4.0</version>
+                <version>1.8.5</version>
             </dependency>
             <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>

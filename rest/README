@@ -1,0 +1,10 @@
+Notes to developers.
+
+TODO : Login to using regular login and then use the json
+
+e.g http://localhost:8080/mifos/client/num-0002-000000014.json
+based on acceptance_test_dump.sql
+
+Tools used to verify JSON.
+ - Google Chrome - Simple REST Client Extension from Chrome Web Store
+ - http://jsonlint.com/

@@ -39,6 +39,7 @@
 				<value>classpath:org/mifos/platform/questionnaire/ui/views</value>
 				<value>classpath:org/mifos/platform/cashflow/ui/views</value>
 				<value>classpath:org/mifos/platform/accounting/ui/views</value>
+                <value>classpath:org/mifos/platform/rest/ui/views</value>
 			</list>
 		</property>
 		<property name="preferFileSystemAccess" value="false" />
@@ -61,6 +62,26 @@
 			</props>
 		</property>
 	</bean>
+
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="ignoreAcceptHeader" value="true" />
+        <property name="mediaTypes">
+            <map>
+                <entry key="html" value="text/html" />
+                <entry key="json" value="application/json" />
+            </map>
+        </property>
+        <property name="viewResolvers">
+            <list>
+                <ref bean="freemarkerViewResolver" />
+            </list>
+        </property>
+        <property name="defaultViews">
+            <list>
+                <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
+            </list>
+        </property>
+    </bean>
 
 	<bean id="freemarkerViewResolver"
 		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
