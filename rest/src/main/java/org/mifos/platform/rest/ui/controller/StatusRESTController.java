@@ -24,33 +24,46 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * This is a dummy rest controller which is used to make sure if the rest
- * services are available
+ * This is a dummy rest controller which is used to make sure if the rest services are available
  *
  * /mifos/status.json
  *
  */
 @Controller
-public class DummyRESTController {
+public class StatusRESTController {
 
-	@RequestMapping("status")
-	public final @ResponseBody StatusJSON status() {
-		StatusJSON json = new StatusJSON();
-		json.setStatus("Running");
-		return json;
-	}
+    @RequestMapping("status")
+    public final @ResponseBody
+    StatusJSON status() {
+        StatusJSON json = new StatusJSON();
+        json.setStatus("Success");
+        return json;
+    }
+
+    @RequestMapping("accessDenied")
+    public final @ResponseBody
+    StatusJSON accessDenied() {
+        StatusJSON json = new StatusJSON();
+        json.setStatus("session expired");
+        return json;
+    }
+
+    @RequestMapping("restLogin")
+    public final String restLoginForm() {
+        return "restLogin";
+    }
 }
 
 class StatusJSON {
 
-	private String status;
+    private String status;
 
-	public String getStatus() {
-		return status;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
 }

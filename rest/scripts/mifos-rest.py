@@ -28,28 +28,31 @@ opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 urllib2.install_opener(opener)
 
 base_url = 'http://localhost:8083/mifos'
-url = base_url + '/j_spring_security_check'
-data = urllib.urlencode({'j_username' : 'mifos','j_password' : 'testmifos'})
-headers =  {'User-agent' : 'Mifos REST Client', 'Content-Type':'application/x-www-form-urlencoded'}
+username = 'mifos'
+password = 'testmifos'
 
+url = base_url + '/j_spring_security_check'
+data = urllib.urlencode({'j_username' : username, 'j_password' : password, 'spring-security-redirect' : '/status.json'})
+headers =  {'User-agent' : 'Mifos REST Client', 'Content-Type':'application/x-www-form-urlencoded'}
 req = Request(url, data, headers) 
 handle = urlopen(req)
-#print handle.info()
-#print handle.read()
+print handle.info()
+print handle.read()
+for index, cookie in enumerate(cj):
+    print index, '  :  ', cookie
 
-#for index, cookie in enumerate(cj):
-#    print index, '  :  ', cookie        
+clientGlobalNumber = '0002-000000014'
 
-base_url = 'http://localhost:8083/mifos'
-url = base_url + '/client/num-0002-000000014.json'
+url = base_url + '/client/num-'+ clientGlobalNumber +'.json'
 data = None
 headers =  {'User-agent' : 'Mifos REST Client'}
 req = Request(url, data, headers) 
 cj.add_cookie_header(req)
 handle = urlopen(req)
-#print handle.info()
+print handle.info()
 responseText = handle.read()
-#print responseText
-client = json.loads(responseText)
-print client
+print responseText
+
+#clientObject = json.loads(responseText)
+#print client
 

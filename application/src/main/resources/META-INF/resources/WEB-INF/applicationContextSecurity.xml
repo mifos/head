@@ -7,17 +7,22 @@
     http://www.springframework.org/schema/security
     http://www.springframework.org/schema/security/spring-security-3.0.xsd">
 
-    <beans:bean id="loginFormAuthentication" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+    <beans:bean id="loginFormAuthentication" class="org.mifos.security.authentication.MifosLoginUrlAuthenticationEntryPoint">
         <beans:property name="loginFormUrl" value="/login.ftl" />
     </beans:bean>
 
     <beans:bean id="authenticationSuccessHandler" class="org.mifos.security.authentication.MifosAuthenticationSuccessHandler">
         <beans:property name="defaultTargetUrl" value="/custSearchAction.do?method=getHomePage" />
-        <beans:property name="alwaysUseDefaultTargetUrl" value="true" />
+        <beans:property name="alwaysUseDefaultTargetUrl" value="false" />
     </beans:bean>
 
     <beans:bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
         <beans:property name="defaultFailureUrl" value="/login.ftl?accessDenied" />
+        <beans:property name="redirectStrategy" ref="redirectStrategy"/>
+    </beans:bean>
+
+    <beans:bean id="redirectStrategy" class="org.mifos.security.authentication.MifosRedirectStrategy">
+        <beans:property name="restAuthFailureURL" value="/accessDenied.json"/>
     </beans:bean>
 
     <global-method-security pre-post-annotations="enabled" />
@@ -37,6 +42,8 @@
         <intercept-url pattern="/**/*.js" filters="none" />
         <intercept-url pattern="/**/*.html" filters="none" />
         <intercept-url pattern="/login.ftl*" filters="none" />
+        <intercept-url pattern="/restLogin.ftl" filters="none" />
+        <intercept-url pattern="/accessDenied.json" filters="none" />
 
         <intercept-url pattern="/createQuestion.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
         <intercept-url pattern="/createQuestionGroup.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
