@@ -4405,6 +4405,7 @@ create table question_group_instance(
     primary key (id),
     foreign key (question_group_id) references question_group(id)
 ) engine=innodb character set utf8;
+create index entity_and_event_source_idx on question_group_instance (entity_id, event_source_id);
 
 create table question_group_response(
     id integer auto_increment not null,

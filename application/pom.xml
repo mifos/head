@@ -26,10 +26,6 @@
         <jdk.version>1.6</jdk.version>
         <test.database.properties.file>${basedir}/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</test.database.properties.file>
         <main.database.properties.file>${basedir}/src/main/resources/org/mifos/config/resources/mainDatabase.properties</main.database.properties.file>
-        <sql.resources.src.directory>${modules.root.dir}/application/src/main/resources/sql</sql.resources.src.directory>
-        <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
-        <!-- TODO test.sql.resources.src.directory application/src/test/(resources/)sql doesn't seem to be used, remove? -->
-        <test.sql.resources.src.directory>${modules.root.dir}/application/src/test/resources/sql</test.sql.resources.src.directory>
         <create.props.skip>true</create.props.skip>
         <!-- mimics ConfigurationLocator directory search behavior -->
         <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
@@ -373,25 +369,6 @@
         </dependency>
     </dependencies>
     <build>
-        <resources>
-            <resource>
-                <directory>${sql.resources.src.directory}</directory>
-                <filtering>true</filtering>
-                <targetPath>sql</targetPath>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <filtering>false</filtering>
-            </testResource>
-            <testResource>
-                <directory>${test.sql.resources.src.directory}</directory>
-                <filtering>true</filtering>
-                <targetPath>sql</targetPath>
-            </testResource>
-        </testResources>
-
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
