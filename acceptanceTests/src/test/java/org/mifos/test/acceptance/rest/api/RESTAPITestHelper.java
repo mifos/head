@@ -76,7 +76,8 @@ public class RESTAPITestHelper {
 
     public void assertEquals(String expectedJSON, String actualJSON) {
         if(!expectedJSON.equals(actualJSON)) {
-            Assert.fail("json different at index " +findDiff(expectedJSON,actualJSON)+"\n "+expectedJSON +"\n "+actualJSON);
+            int diffIndex = findDiff(expectedJSON,actualJSON);
+            Assert.fail("json different at index " + diffIndex +"\n "+expectedJSON.substring(diffIndex) +"\n "+actualJSON.substring(diffIndex));
         }
     }
 
