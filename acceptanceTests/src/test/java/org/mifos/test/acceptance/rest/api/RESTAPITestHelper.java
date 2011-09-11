@@ -24,6 +24,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import junit.framework.Assert;
+
+import org.apache.commons.lang.StringUtils;
 import org.aspectj.util.FileUtil;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.login.LoginPage;
@@ -71,6 +74,14 @@ public class RESTAPITestHelper {
         return FileUtil.readAsString(file);
     }
 
+    public void assertEquals(String expectedJSON, String actualJSON) {
+        if(!expectedJSON.equals(actualJSON)) {
+            Assert.fail("json different at index " +findDiff(expectedJSON,actualJSON)+"\n "+expectedJSON +"\n "+actualJSON);
+        }
+    }
 
+    private int findDiff(String expectedJSON, String actualJSON) {
+        return StringUtils.indexOfDifference(expectedJSON, actualJSON);
+    }
 
 }

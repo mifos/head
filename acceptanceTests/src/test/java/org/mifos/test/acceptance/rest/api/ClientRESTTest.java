@@ -23,8 +23,6 @@ package org.mifos.test.acceptance.rest.api;
 import static org.mifos.test.acceptance.rest.api.RESTAPITestHelper.Type;
 import static org.mifos.test.acceptance.rest.api.RESTAPITestHelper.By;
 
-import junit.framework.Assert;
-
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.springframework.test.context.ContextConfiguration;
@@ -57,6 +55,6 @@ public class ClientRESTTest extends UiTestCaseBase {
     public void clientByGlobalNumJSON() throws Exception {
         String actualJSON = helper.getJSONFromUI(Type.CLIENT, By.GLOBAL_NUMBER, "0002-000000014");
         String expectedJSON = helper.getJSONFromDataSet(Type.CLIENT, By.GLOBAL_NUMBER, "0002-000000014");
-        Assert.assertEquals(expectedJSON, actualJSON);
+        helper.assertEquals(expectedJSON, actualJSON);
     }
 }
