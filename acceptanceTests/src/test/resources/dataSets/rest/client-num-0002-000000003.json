@@ -1,0 +1,118 @@
+{
+    "address": {
+        "state": "",
+        "country": "",
+        "displayAddress": null,
+        "city": "",
+        "zip": "",
+        "phoneNumber": ""
+    },
+    "customerMeeting": {
+        "meetingSchedule": "Recur every 1 Week(s) on Monday",
+        "meetingPlace": "rest"
+    },
+    "customerFlags": [],
+    "clientPerformanceHistory": {
+        "loanCycleNumber": 0,
+        "lastLoanAmount": "0.0",
+        "noOfActiveLoans": 2,
+        "delinquentPortfolioAmount": "0.0",
+        "totalSavingsAmount": "105.0",
+        "meetingsAttended": 0,
+        "meetingsMissed": 0,
+        "loanCycleCounters": [
+            {
+                "counter": 1,
+                "offeringName": "REST Loan Product A"
+            },
+            {
+                "counter": 1,
+                "offeringName": "REST Loan Product B"
+            }
+        ]
+    },
+    "recentCustomerNotes": [
+        {
+            "comment": "Active",
+            "commentDate": "2011-09-12",
+            "personnelName": "mifos"
+        }
+    ],
+    "activeSurveys": false,
+    "customerAccountSummary": {
+        "globalAccountNum": "000100000000003",
+        "nextDueAmount": "0.0"
+    },
+    "savingsAccountsInUse": [
+        {
+            "globalAccountNum": "000100000000006",
+            "prdOfferingId": null,
+            "prdOfferingName": "Savings A",
+            "accountStateName": "Active",
+            "accountStateId": 16,
+            "savingsBalance": "10.0"
+        },
+        {
+            "globalAccountNum": "000100000000007",
+            "prdOfferingId": null,
+            "prdOfferingName": "Savings B",
+            "accountStateName": "Active",
+            "accountStateId": 16,
+            "savingsBalance": "95.0"
+        }
+    ],
+    "customerSurveys": [],
+    "loanAccountsInUse": [
+        {
+            "globalAccountNum": "000100000000004",
+            "prdOfferingName": "REST Loan Product A",
+            "outstandingBalance": "101.0",
+            "totalAmountDue": "10.0",
+            "accountStateName": "Active in Good Standing",
+            "accountStateId": 5
+        },
+        {
+            "globalAccountNum": "000100000000005",
+            "prdOfferingName": "REST Loan Product B",
+            "outstandingBalance": "1032.0",
+            "totalAmountDue": "103.0",
+            "accountStateName": "Active in Good Standing",
+            "accountStateId": 5
+        }
+    ],
+    "clientDisplay": {
+        "displayName": "Client REST API",
+        "branchId": 2,
+        "customerId": 3,
+        "loanOfficerId": 2,
+        "dateOfBirth": "1986-06-06",
+        "governmentId": "",
+        "maritalStatus": null,
+        "globalCustNum": "0002-000000003",
+        "externalId": "",
+        "customerActivationDate": "2011-09-12",
+        "customerLevelId": 1,
+        "customerStatusName": "Active",
+        "spouseFatherName": "first last",
+        "trainedDate": null,
+        "familyDetails": null,
+        "age": 25,
+        "businessActivities": null,
+        "citizenship": null,
+        "educationLevel": null,
+        "handicapped": null,
+        "numChildren": null,
+        "povertyStatus": "Very poor",
+        "customerStatusId": 3,
+        "loanOfficerName": "loan officer",
+        "parentCustomerDisplayName": "Group-REST",
+        "customerFormedByDisplayName": "loan officer",
+        "blackListed": false,
+        "branchName": "Branch Office",
+        "clientUnderGroup": true,
+        "ethnicity": null,
+        "isCustomerPicture": false,
+        "areFamilyDetailsRequired": false,
+        "spouseFatherValue": "Spouse"
+    }
+}
