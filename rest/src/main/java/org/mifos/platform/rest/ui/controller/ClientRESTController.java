@@ -25,21 +25,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
- * This is a dummy rest controller which is used to make sure if the rest services are available
- *
- * /mifos/status.json
- *
- */
 @Controller
 public class ClientRESTController {
 
     @Autowired
     private ClientServiceFacade clientServiceFacade;
 
-    @RequestMapping("client/num-{globalCustNum}")
+    @RequestMapping(value = "client/num-{globalCustNum}", method = RequestMethod.GET)
     public final @ResponseBody
     ClientInformationDto getClientByNumber(@PathVariable String globalCustNum) {
         return clientServiceFacade.getClientInformationDto(globalCustNum);

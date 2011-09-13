@@ -17,7 +17,7 @@
 # See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 # explanation of the license and how it is applied.
 
-import os.path, cookielib, urllib2, urllib, json, getpass
+import os, cookielib, urllib2, urllib, json, getpass
 from time import sleep
 
 urlopen = urllib2.urlopen
@@ -27,11 +27,20 @@ Request = urllib2.Request
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 urllib2.install_opener(opener)
 
-
-
+devMode = True
 base_url = 'http://localhost:8083/mifos'
-username = raw_input("Enter usrname : ")
-password = getpass.getpass()
+
+if devMode:
+    username = raw_input("Enter usrname : ")
+else:
+    username = 'mifos'
+
+if devMode:
+    password = getpass.getpass()
+else:
+    password = 'testmifos'
+
+os.system('clear')
 
 url = base_url + '/j_spring_security_check'
 data = urllib.urlencode({'j_username' : username, 'j_password' : password, 'spring-security-redirect' : '/status.json'})
@@ -43,16 +52,25 @@ print handle.read()
 for index, cookie in enumerate(cj):
     print index, '  :  ', cookie
 
+os.system('clear')
 
 print '''              
         [Main Menu] 
          1. Loan Repayment
          2. Savings Deposit
          '''
-         
-operation = raw_input("Select operation : ")
 
-clientGlobalNumber = raw_input("Enter Client Number (eg. 0002-000000014): ")
+if devMode:      
+    operation = raw_input("Select operation : ")
+else:
+    operation = '2'
+
+os.system('clear')
+
+if devMode:
+    clientGlobalNumber = raw_input("Enter Client Number (eg. 0002-000000003): ")
+else:
+    clientGlobalNumber = '0002-000000003'
 
 url = base_url + '/client/num-'+ clientGlobalNumber +'.json'
 data = None
@@ -63,12 +81,49 @@ handle = urlopen(req)
 #print handle.info()
 responseText = handle.read()
 #print responseText
-clientObject = json.loads(responseText)
+client = json.loads(responseText)
 #print client
 
-if(operation == '1') {
+os.system('clear')
+
+param = []
+if operation == '1':
     print ' [Loan Repayment] '
     print ' Client Number: '+clientGlobalNumber
-} else {
-}
+    print ' Client Name: '+ client['clientDisplay']['displayName']
+    print ' Outstanding Loans'
+    i = 1;
+    for l in client['loanAccountsInUse']:
+        print ' '+str(i) +'. '+ l['prdOfferingName']+': '+l['outstandingBalance']
+        i= i+1
+        param.insert(i, l['globalAccountNum'])
+    loan = raw_input('Select loan to repay: ')
+    amount = raw_input('Enter amount: ')
+    url = base_url + '/account/loan/repay/num-'+param[int(loan) - 1]+'.json'
+    print url
+    data = urllib.urlencode({'amount' : amount, 'client' : clientGlobalNumber})
+    headers =  {'User-agent' : 'Mifos REST Client'}
+    req = Request(url, data, headers) 
+    cj.add_cookie_header(req)
+    handle = urlopen(req)
+    print handle.read()
+else:
+    print ' [Savings Deposit] '
+    print ' Client Number: '+clientGlobalNumber
+    print ' Investment/Savings Accounts'
+    i = 1
+    for s in client['savingsAccountsInUse']:
+        print ' '+str(i) +'. '+ s['prdOfferingName']+': '+s['savingsBalance']
+        i = i+1
+        param.insert(i, s['globalAccountNum'])
+    savings = raw_input('Select account to credit: ')
+    amount = raw_input('Enter amount: ')
+    url = base_url + '/account/savings/deposit/num-'+param[int(savings) - 1]+'.json'
+    print url
+    data = urllib.urlencode({'amount' : amount, 'client' : clientGlobalNumber})
+    headers =  {'User-agent' : 'Mifos REST Client'}
+    req = Request(url, data, headers) 
+    cj.add_cookie_header(req)
+    handle = urlopen(req)
+    print handle.read()
 
