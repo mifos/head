@@ -75,15 +75,18 @@ public class RESTAPITestHelper {
     }
 
     public void assertEquals(String expectedJSON, String actualJSON) {
-        expectedJSON = compress(expectedJSON);
-        actualJSON = compress(actualJSON);
-        if(!expectedJSON.equals(actualJSON)) {
-            int diffIndex = findDiff(expectedJSON,actualJSON);
-            Assert.fail("json different at index " + diffIndex +"\n "+expectedJSON.substring(diffIndex) +"\n "+actualJSON.substring(diffIndex));
+        String expectedJsonCompressed = compress(expectedJSON);
+        String actualJsonCompressed = compress(actualJSON);
+        
+        if(!expectedJsonCompressed.equals(actualJsonCompressed)) {
+            int diffIndex = findDiff(expectedJsonCompressed, actualJsonCompressed);
+            Assert.fail("json different at index " + diffIndex +"\n "+expectedJsonCompressed.substring(diffIndex) +"\n "+actualJsonCompressed.substring(diffIndex));
         }
     }
 
-    private String compress(String str) {
+    @SuppressWarnings("PMD")
+    private String compress(String compress) {
+    	String str = compress;
         str = StringUtils.remove(str, ' ');
         str = StringUtils.remove(str, '\t');
         str = StringUtils.remove(str, '\n');
@@ -94,5 +97,4 @@ public class RESTAPITestHelper {
     private int findDiff(String expectedJSON, String actualJSON) {
         return StringUtils.indexOfDifference(expectedJSON, actualJSON);
     }
-
 }
