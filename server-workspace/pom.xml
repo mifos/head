@@ -29,7 +29,7 @@
         <!-- Selenium 2.0 (WebDriver) -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium</artifactId>
+            <artifactId>selenium-java</artifactId>
             <scope>test</scope>
         </dependency>
 
