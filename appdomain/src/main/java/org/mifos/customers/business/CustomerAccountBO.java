@@ -30,6 +30,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -62,6 +64,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactoryImpl;
 import org.mifos.core.MifosRuntimeException;
@@ -79,6 +82,7 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
@@ -86,6 +90,7 @@ import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDat
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.hibernate.Query;
 
 /**
  * Clients, groups, and centers are stored in the db as customer accounts.
@@ -617,6 +622,23 @@ public class CustomerAccountBO extends AccountBO {
         });
 
         return customerSchedulePayments;
+    }
+
+    @Override
+    public Money getTotalAmountInArrears() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("ACTION_DATE", DateUtils.getCurrentDateWithoutTimeStamp());
+        queryParameters.put("CUSTOMER_ID", getAccountId());
+        Query query = StaticHibernateUtil.getSessionTL().getNamedQuery(NamedQueryConstants.RETRIEVE_TOTAL_AMOUNT_IN_ARREARS);
+        query.setProperties(queryParameters);
+
+        BigDecimal total = (BigDecimal) query.uniqueResult();
+
+        if (total == null) {
+          total = new BigDecimal(0);
+        }
+
+        return new Money(getCurrency(), total);
     }
 
     @Override

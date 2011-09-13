@@ -328,6 +328,18 @@
             accountActionDates.actionDate <= date(:ACTION_DATE) and accountActionDates.paymentStatus = :PAYMENT_STATUS]]>
     </query>
 
+    <sql-query name="customers.retrieveTotalAmountInArrears">
+        <return-scalar column="total_in_arrears" type="big_decimal" />
+        <![CDATA[select sum(c.misc_fees - c.misc_fees_paid +
+                            c.misc_penalty - c.misc_penalty_paid +
+                            ifnull((select sum(ifnull(fs.amount, 0) - ifnull(fs.amount_paid, 0))
+                                    from customer_fee_schedule fs
+                                    where fs.id = c.id), 0) ) as total_in_arrears
+                 from customer_schedule c
+                 where c.action_date < date(:ACTION_DATE) and c.payment_status = 0 and c.account_id = :CUSTOMER_ID 
+            ]]>
+    </sql-query>
+
     <!-- Get the Loan accounts    that are in arrears-->
     <query name="accounts.GetLoanArrearsInGoodStanding">
         <![CDATA[select distinct(account.accountId) from org.mifos.accounts.loan.business.LoanBO account
