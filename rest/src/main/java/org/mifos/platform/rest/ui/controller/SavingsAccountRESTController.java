@@ -25,15 +25,20 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.api.AccountService;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsDao;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,9 +60,12 @@ public class SavingsAccountRESTController {
     @Autowired
     private CustomerDao customerDao;
 
+    @Autowired
+    private PersonnelDao personnelDao;
+
     @RequestMapping(value = "account/savings/deposit/num-{globalAccountNum}", method = RequestMethod.POST)
     public final @ResponseBody
-    Map<String, String> getClientByNumber(@PathVariable String globalAccountNum, HttpServletRequest request)
+    Map<String, String> deposit(@PathVariable String globalAccountNum, HttpServletRequest request)
             throws Exception {
 
         String amountString = request.getParameter("amount");
@@ -66,24 +74,42 @@ public class SavingsAccountRESTController {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserReferenceDto userDto = new UserReferenceDto((short) user.getUserId());
-        Integer accountId = savingsDao.findBySystemId(globalAccountNum).getAccountId();
+
+        SavingsBO savingsBO = savingsDao.findBySystemId(globalAccountNum);
+
+        Integer accountId = savingsBO.getAccountId();
+
         AccountReferenceDto accountDto = new AccountReferenceDto(accountId);
 
         PaymentTypeDto paymentType = accountService.getSavingsPaymentTypes().get(0);
-        LocalDate now = new LocalDate();
+        DateTime today = new DateTime();
+        LocalDate receiptDate = today.toLocalDate();
+
         // from where these parameter should come?
-        LocalDate receiptDate = now;
         String receiptId = "";
+
+
+        ClientBO clientBO = customerDao.findClientBySystemId(client);
         CustomerDto customer = new CustomerDto();
-        customer.setCustomerId(customerDao.findClientBySystemId(client).getCustomerId());
-        AccountPaymentParametersDto payment = new AccountPaymentParametersDto(userDto, accountDto, amount, now,
+        customer.setCustomerId(clientBO.getCustomerId());
+
+        AccountPaymentParametersDto payment = new AccountPaymentParametersDto(userDto, accountDto, amount, today.toLocalDate(),
                 paymentType, globalAccountNum, receiptDate, receiptId, customer);
 
+        Money balanceBeforePayment = savingsBO.getSavingsBalance();
         accountService.makePayment(payment);
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("status", "success");
-
+        map.put("clientName", clientBO.getDisplayName());
+        map.put("clientNumber", clientBO.getGlobalCustNum());
+        map.put("savingsDisplayName", savingsBO.getSavingsOffering().getPrdOfferingName());
+        map.put("paymentDate", today.toLocalDate().toString());
+        map.put("paymentTime", today.toLocalTime().toString());
+        map.put("paymentAmount", savingsBO.getLastPmnt().getAmount().toString());
+        map.put("paymentMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
+        map.put("balanceBeforePayment", balanceBeforePayment.toString());
+        map.put("balanceAfterPayment", savingsBO.getSavingsBalance().toString());
         return map;
     }
 }

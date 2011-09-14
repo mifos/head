@@ -40,6 +40,8 @@ public class RESTAPITestHelper {
 
     public static class Type {
         public static final String CLIENT = "client";
+        public static final String LOAN_REPAYMENT = "account/loan/repay";
+        public static final String SAVINGS_DEPOSIT = "account/savings/deposit";
     }
 
     public static class By {
@@ -64,7 +66,17 @@ public class RESTAPITestHelper {
         return selenium.getText("restdata");
     }
 
-    public String getJSONFromDataSet(String type, String by, String value) throws IOException {
+    public String postJSONFromUI(String type, String by, String value, String data) throws InterruptedException {
+        String url = String.format("%s/%s-%s.json", type, by, value);
+        selenium.type("resturl", url);
+        selenium.type("data", data);
+        selenium.click("postData");
+        Thread.sleep(1000);
+        return selenium.getText("restdata");
+    }
+
+    public String getJSONFromDataSet(String apiType, String by, String value) throws IOException {
+        String type = apiType.replace('/', '-');
         String path = String.format("/dataSets/rest/%s-%s-%s.json", type, by, value);
         ClassPathResource resource = new ClassPathResource(path);
         File file = resource.getFile();

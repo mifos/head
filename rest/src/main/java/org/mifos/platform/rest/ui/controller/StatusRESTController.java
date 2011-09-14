@@ -52,6 +52,7 @@ public class StatusRESTController {
     public final String restLoginForm() {
         return "restLogin";
     }
+
 }
 
 class StatusJSON {

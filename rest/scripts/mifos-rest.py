@@ -30,6 +30,8 @@ urllib2.install_opener(opener)
 devMode = True
 base_url = 'http://localhost:8083/mifos'
 
+os.system('clear')
+
 if devMode:
     username = raw_input("Enter usrname : ")
 else:
@@ -78,11 +80,8 @@ headers =  {'User-agent' : 'Mifos REST Client'}
 req = Request(url, data, headers) 
 cj.add_cookie_header(req)
 handle = urlopen(req)
-#print handle.info()
 responseText = handle.read()
-#print responseText
 client = json.loads(responseText)
-#print client
 
 os.system('clear')
 
@@ -106,7 +105,19 @@ if operation == '1':
     req = Request(url, data, headers) 
     cj.add_cookie_header(req)
     handle = urlopen(req)
-    print handle.read()
+    responseText = handle.read()
+    response = json.loads(responseText)
+    print ''
+    print '---Loan Repayment Receipt---'
+    print 'Client Name: '+ response['clientName']
+    print 'Client Number: '+ response['clientNumber']
+    print 'Loan Account: '+response['loanDisplayName']
+    print 'Loan Officer: '+response['paymentMadeBy']
+    print 'Payment Amount: '+response['paymentAmount']
+    print 'Payment Date: '+response['paymentDate']
+    print 'Payment Time: '+response['paymentTime']
+    print 'Old amount outstanding: '+response['outstandingBeforePayment']
+    print 'New amount outstanding: '+response['outstandingAfterPayment']
 else:
     print ' [Savings Deposit] '
     print ' Client Number: '+clientGlobalNumber
@@ -125,5 +136,17 @@ else:
     req = Request(url, data, headers) 
     cj.add_cookie_header(req)
     handle = urlopen(req)
-    print handle.read()
+    responseText = handle.read()
+    response = json.loads(responseText)
+    print ''
+    print '---Savings Deposit Receipt---'
+    print 'Client Name: '+ response['clientName']
+    print 'Client Number: '+ response['clientNumber']
+    print 'Loan Account: '+response['savingsDisplayName']
+    print 'Loan Officer: '+response['paymentMadeBy']
+    print 'Payment Amount: '+response['paymentAmount']
+    print 'Payment Date: '+response['paymentDate']
+    print 'Payment Time: '+response['paymentTime']
+    print 'Old account balance: '+response['balanceBeforePayment']
+    print 'New account balance: '+response['balanceAfterPayment']
 
