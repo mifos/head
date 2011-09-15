@@ -119,7 +119,7 @@
             <version>${birt.version}</version>
         </dependency>
         <dependency>
-            <artifactId>coreapi</artifactId>
+            <artifactId>coreapi_MIFOS-5119_MIFOS-5118</artifactId>
             <groupId>${birt.libs.groupId}</groupId>
             <version>${birt.version}</version>
         </dependency>
