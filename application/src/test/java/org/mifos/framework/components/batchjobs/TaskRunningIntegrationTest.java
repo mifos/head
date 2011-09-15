@@ -42,7 +42,7 @@ public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
         mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/taskRunningTestTask.xml");
         String jobName = "ApplyHolidayChangesTaskJob";
         mifosScheduler.runIndividualTask(jobName);
-        Thread.sleep(1000);
+        Thread.sleep(3000);
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
         List<String> executedJobs = explorer.getJobNames();
         Assert.assertEquals(1, executedJobs.size());
@@ -53,7 +53,7 @@ public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
     public void testRunningAllTasks() throws Exception {
         mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/taskRunningTestTask.xml");
         mifosScheduler.runAllTasks();
-        Thread.sleep(3000);
+        Thread.sleep(5000);
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
         List<String> executedJobs = explorer.getJobNames();
         Assert.assertEquals(8, executedJobs.size());
@@ -69,7 +69,7 @@ public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
         mifosScheduler = getMifosSchedulerOldConfigurationFile("org/mifos/framework/components/batchjobs/old-task.xml", "org/mifos/framework/components/batchjobs/quartz.properties");
         String jobName = "ApplyHolidayChangesTaskJob";
         mifosScheduler.runIndividualTask(jobName);
-        Thread.sleep(1000);
+        Thread.sleep(3000);
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
         List<String> executedJobs = explorer.getJobNames();
         Assert.assertEquals(1, executedJobs.size());
