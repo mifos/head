@@ -40,6 +40,8 @@ public class RESTAPITestHelper {
 
     public static class Type {
         public static final String CLIENT = "client";
+        public static final String LOAN_REPAYMENT = "account/loan/repay";
+        public static final String SAVINGS_DEPOSIT = "account/savings/deposit";
     }
 
     public static class By {
@@ -64,7 +66,17 @@ public class RESTAPITestHelper {
         return selenium.getText("restdata");
     }
 
-    public String getJSONFromDataSet(String type, String by, String value) throws IOException {
+    public String postJSONFromUI(String type, String by, String value, String data) throws InterruptedException {
+        String url = String.format("%s/%s-%s.json", type, by, value);
+        selenium.type("resturl", url);
+        selenium.type("data", data);
+        selenium.click("postData");
+        Thread.sleep(1000);
+        return selenium.getText("restdata");
+    }
+
+    public String getJSONFromDataSet(String apiType, String by, String value) throws IOException {
+        String type = apiType.replace('/', '-');
         String path = String.format("/dataSets/rest/%s-%s-%s.json", type, by, value);
         ClassPathResource resource = new ClassPathResource(path);
         File file = resource.getFile();
@@ -75,26 +87,22 @@ public class RESTAPITestHelper {
     }
 
     public void assertEquals(String expectedJSON, String actualJSON) {
-        String expectedJsonCompressed = compress(expectedJSON);
-        String actualJsonCompressed = compress(actualJSON);
-        
-        if(!expectedJsonCompressed.equals(actualJsonCompressed)) {
-            int diffIndex = findDiff(expectedJsonCompressed, actualJsonCompressed);
-            Assert.fail("json different at index " + diffIndex +"\n "+expectedJsonCompressed.substring(diffIndex) +"\n "+actualJsonCompressed.substring(diffIndex));
+        String compressedExpectedJSON = compress(expectedJSON);
+        String compressedActualJSON = compress(actualJSON);
+        if(!compressedExpectedJSON.equals(compressedActualJSON)) {
+            int diffIndex = findDiff(compressedExpectedJSON , compressedActualJSON);
+            Assert.fail("json different at index " + diffIndex +"\n "
+                          +compressedExpectedJSON.substring(diffIndex) +"\n "
+                          +compressedActualJSON.substring(diffIndex));
         }
     }
 
-    @SuppressWarnings("PMD")
-    private String compress(String compress) {
-    	String str = compress;
-        str = StringUtils.remove(str, ' ');
-        str = StringUtils.remove(str, '\t');
-        str = StringUtils.remove(str, '\n');
-        str = StringUtils.remove(str, '\r');
-        return str;
+    private String compress(String str) {
+        return str.replaceAll(" ","").replaceAll("\t", "").replaceAll("\n", "").replaceAll("\r", "");
     }
 
     private int findDiff(String expectedJSON, String actualJSON) {
         return StringUtils.indexOfDifference(expectedJSON, actualJSON);
     }
+
 }
