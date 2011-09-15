@@ -25,12 +25,22 @@
 <script type="text/javascript" src="pages/rest/js/jsonAjax.js"></script>
 <div class="content "> <!--  Main Content Begins-->
 
-<input id='resturl' type='text' placeholder='Enter REST API URL..' size='100' ></input>
+<br>
+<b>Example  :</b> Using REST API acceptance test dbunit dataset<br>
+<b>CLIENT GET :</b> client/num-0002-000000003.json<br>
+<b>Loan Repayment :</b> account/loan/repay/num-000100000000004.json<br>
+<b>Savings Deposit :</b> account/savings/deposit/num-000100000000006.json<br>
+<br>
+
+<input id='resturl' type='text' value='client/num-0002-000000003.json' placeholder='Enter REST API URL..' size='100' ></input>
 <br>
 <input type='button' id='getJSON' value='GET' onclick="loadJSON()" ></input>
 <input type='button' id='getJSONPretty' value='GET (pretty)' onclick="loadPrettyJSON()" ></input>
-<br>
-<br>
+<input type='button' id='postData' value='POST' onclick="postData()" ></input>
+<input type='button' id='postDataPetty' value='POST(pretty)' onclick="postDataPretty()" ></input>
+<br><br>
+<input type='text' id='data' name='data' size='100'></input>
+<br><br>
 <div id='restdata'></div>
 
 </div><!--Main Content Ends-->
