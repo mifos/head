@@ -241,7 +241,8 @@
 
     <servlet-mapping>
         <servlet-name>cheetah</servlet-name>
-        <url-pattern>*.ftl,*.json,*.xml</url-pattern>
+        <url-pattern>*.ftl</url-pattern>
+        <url-pattern>*.json</url-pattern>
     </servlet-mapping>
 
     <error-page>
