@@ -77,13 +77,14 @@
         <module>organization</module>
         <module>appdomain</module>
         <module>application</module>
-        <module>acceptanceTests</module>
         <module>reporting</module>
         <module>server-jetty</module>
         <module>server-workspace</module>
         <module>war</module>
         <module>reporting-libs</module>
         <module>rest</module>
+        <!-- Keep this module in last, the module which does not have interdependency will build in the order they are defined here -->
+        <module>acceptanceTests</module>
     </modules>
 
 
