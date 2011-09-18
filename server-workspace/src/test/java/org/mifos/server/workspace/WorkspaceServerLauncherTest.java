@@ -23,66 +23,66 @@ package org.mifos.server.workspace;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 /**
- * Tests launching of Mifos in the Workspace through simple embedded Servlet
- * Container Web Server. All the dependencies / web modules are simply on the
- * (Maven provided) classpath in this test.
- * 
- * @author Michael Vorburger
+ * Tests launching of Mifos in the Workspace through simple embedded Servlet Container Web Server. All the dependencies
+ * / web modules are simply on the (Maven provided) classpath in this test.
  */
 public class WorkspaceServerLauncherTest {
 
-	private static WorkspaceServerLauncher serverLauncher;
+    private static WorkspaceServerLauncher serverLauncher;
 
-	private static final String UID = "login.input.username";
-	private static final String PWD = "login.input.password";
-	private static final String BTN = "login.button.login";
+    private static final String UID = "login.input.username";
+    private static final String PWD = "login.input.password";
+    private static final String BTN = "login.button.login";
 
-	@BeforeClass
-	public static void beforeClass() throws Exception {
-		serverLauncher = new WorkspaceServerLauncher(8088, "mifos");
-		serverLauncher.startServer();
-	}
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        serverLauncher = new WorkspaceServerLauncher(8088, "mifos");
+        serverLauncher.startServer();
+    }
 
-	@AfterClass
-	public static void afterClass() throws Exception {
-		serverLauncher.stopServer();
-		serverLauncher = null;
-	}
+    @AfterClass
+    public static void afterClass() throws Exception {
+        serverLauncher.stopServer();
+        serverLauncher = null;
+    }
 
-	@Test
-	public void testStartup() throws Exception {
-		// Do nothing here... just ensure that the beforeClass
-		// did not actually fail already.
-	}
+    @Test
+    public void testStartup() throws Exception {
+        // Do nothing here... just ensure that the beforeClass
+        // did not actually fail already.
+    }
 
-	@Test
-	public void testLogin() throws Exception {
-		WebDriver wd = new FirefoxDriver();
-		wd.get(getAppURL());
+    @Test
+    @Ignore
+    public void testLogin() throws Exception {
+        WebDriver wd = new FirefoxDriver();
+        wd.get(getAppURL());
 
-		wd.findElement(By.id(UID)).sendKeys("mifos");
-		wd.findElement(By.id(PWD)).sendKeys("testmifos");
-		wd.findElement(By.id(BTN)).click();
+        wd.findElement(By.id(UID)).sendKeys("mifos");
+        wd.findElement(By.id(PWD)).sendKeys("testmifos");
+        wd.findElement(By.id(BTN)).click();
 
-		Assert.assertTrue(wd.getPageSource().contains("Mifos"));
-		Assert.assertTrue(wd.getPageSource().contains("Home"));
-		Assert.assertTrue(wd.getPageSource().contains("Search"));
-		
-		wd.quit();
-	}
+        Assert.assertTrue(wd.getPageSource().contains("Mifos"));
+        Assert.assertTrue(wd.getPageSource().contains("Home"));
+        Assert.assertTrue(wd.getPageSource().contains("Search"));
 
-	/**
-	 * Application base URL.
-	 * @return String of App's URL, including a trailing slash after the context.
-	 */
-	protected String getAppURL() {
-		return "http://localhost:" + serverLauncher.getPort() + "/" + serverLauncher.getContext() + "/";
-	}
+        wd.quit();
+    }
+
+    /**
+     * Application base URL.
+     *
+     * @return String of App's URL, including a trailing slash after the context.
+     */
+    protected String getAppURL() {
+        return "http://localhost:" + serverLauncher.getPort() + "/" + serverLauncher.getContext() + "/";
+    }
 
 }
