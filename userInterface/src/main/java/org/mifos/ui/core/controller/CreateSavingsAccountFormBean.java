@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -60,6 +61,7 @@ public class CreateSavingsAccountFormBean implements Serializable {
 
     @NotNull(groups = { MandatorySavings.class })
     @Pattern(regexp = "^[0-9]+(\\.[0-9]{1,2})?$?", groups = { MandatorySavings.class })
+    @DecimalMax(value = "99999999999999999.99", groups = { MandatorySavings.class })
     private String mandatoryDepositAmount;
 
     private SavingsProductReferenceDto product;
