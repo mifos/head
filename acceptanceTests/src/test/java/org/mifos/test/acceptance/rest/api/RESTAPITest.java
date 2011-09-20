@@ -80,7 +80,14 @@ public class RESTAPITest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void clientByGlobalNumJSON() throws Exception {
+    public void verifyRESTAPIInOrder() throws Exception {
+        clientByGlobalNum();
+        repayLoanByGlobalNum();
+        savingsDepositByGlobalNum();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    private void clientByGlobalNum() throws Exception {
         String type = Type.CLIENT;
         String by = By.GLOBAL_NUMBER;
         String value = CLIENT_GLOBAL_ID;
@@ -90,7 +97,7 @@ public class RESTAPITest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void repayLoanByGlobalNumJSON() throws Exception {
+    private void repayLoanByGlobalNum() throws Exception {
         String data = "amount=100&client="+CLIENT_GLOBAL_ID;
         String type = Type.LOAN_REPAYMENT;
         String by = By.GLOBAL_NUMBER;
@@ -109,7 +116,7 @@ public class RESTAPITest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void savingsDepositByGlobalNumJSON() throws Exception {
+    private void savingsDepositByGlobalNum() throws Exception {
         String data = "amount=100&client="+CLIENT_GLOBAL_ID;
         String type = Type.SAVINGS_DEPOSIT;
         String by = By.GLOBAL_NUMBER;

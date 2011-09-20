@@ -25,8 +25,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -137,19 +140,35 @@ public class CreateSavingsAccountFormBeanTest {
 
     @Test
     public void validateEnterAccountDetailsStepMandatoryDepositEmptyAmountShouldFail() {
-        validateEnterAccountDetailsStepMandatoryDeposit("", Pattern.class,
+        Map<String, Class> expectedViolations = new HashMap<String, Class>();
+        expectedViolations.put("Pattern", Pattern.class);
+        expectedViolations.put("DecimalMax", DecimalMax.class);
+        validateEnterAccountDetailsStepMandatoryDeposit("", expectedViolations,
                 false);
     }
 
     @Test
     public void validateEnterAccountDetailsStepMandatoryDepositNullAmountShouldFail() {
-        validateEnterAccountDetailsStepMandatoryDeposit(null, NotNull.class,
+        Map<String, Class> expectedViolations = new HashMap<String, Class>();
+        expectedViolations.put("NotNull", NotNull.class);
+        validateEnterAccountDetailsStepMandatoryDeposit(null, expectedViolations,
                 false);
     }
 
     @Test
     public void validateEnterAccountDetailsStepMandatoryDepositInvalidAmountShouldFail() {
-        validateEnterAccountDetailsStepMandatoryDeposit("xyz", Pattern.class,
+        Map<String, Class> expectedViolations = new HashMap<String, Class>();
+        expectedViolations.put("Pattern", Pattern.class);
+        expectedViolations.put("DecimalMax", DecimalMax.class);
+        validateEnterAccountDetailsStepMandatoryDeposit("xyz", expectedViolations,
+                false);
+    }
+
+    @Test
+    public void validateEnterAccountDetailsStepMandatoryDepositTooHighAmountShouldFail() {
+        Map<String, Class> expectedViolations = new HashMap<String, Class>();
+        expectedViolations.put("DecimalMax", DecimalMax.class);
+        validateEnterAccountDetailsStepMandatoryDeposit("10000000000000000000.00", expectedViolations,
                 false);
     }
 
@@ -186,7 +205,7 @@ public class CreateSavingsAccountFormBeanTest {
     }
 
     private void validateEnterAccountDetailsStepMandatoryDeposit(
-            String amount, @SuppressWarnings("rawtypes") Class expectedViolation, boolean expectingPass) {
+            String amount, @SuppressWarnings("rawtypes") Map<String, Class> expectedViolations, boolean expectingPass) {
         setDepositType(formBean, CreateSavingsAccountFormBean.MANDATORY_DEPOSIT);
         formBean.setMandatoryDepositAmount(amount);
         formBean.validateEnterAccountDetailsStep(validationContext);
@@ -198,10 +217,13 @@ public class CreateSavingsAccountFormBeanTest {
             Assert.assertEquals(0, messages.length);
             return;
         } else {
-            Assert.assertEquals(1, messages.length);
-            Message message = messages[0];
-            Assert.assertEquals("mandatoryDepositAmount", message.getSource());
-            verifyErrorMessage(expectedViolation, message);
+            Assert.assertEquals(expectedViolations.size(), messages.length);
+            for(Message message : messages) {
+                Assert.assertEquals("mandatoryDepositAmount", message.getSource());
+                String reason = message.getText().substring(0, message.getText().indexOf("."));
+                Assert.assertTrue(expectedViolations.containsKey(reason));
+                verifyErrorMessage(expectedViolations.get(reason), message);
+            }
         }
     }
 
