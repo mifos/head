@@ -20,16 +20,12 @@
 
 package org.mifos.clientportfolio.loan.ui;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.containsString;
-import static org.mockito.Mockito.*;
-
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanDisbursementDateValidationServiceFacade;
+import org.mifos.dto.domain.FeeDto;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.mifos.platform.validations.Errors;
 import org.mifos.ui.validation.StubValidationContext;
@@ -39,6 +35,14 @@ import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.containsString;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanAccountFormBeanTest {
@@ -78,6 +82,8 @@ public class LoanAccountFormBeanTest {
         loanAccountFormBean.setDigitsAfterDecimalForInterest(5);
         loanAccountFormBean.setDigitsBeforeDecimalForMonetaryAmounts(14);
         loanAccountFormBean.setDigitsAfterDecimalForMonetaryAmounts(1);
+
+        loanAccountFormBean.setAdditionalFees(createAdditionalFeesMocks());
         
         loanAccountFormBean.setDisbursementDateDD(24);
         loanAccountFormBean.setDisbursementDateMM(02);
@@ -211,5 +217,54 @@ public class LoanAccountFormBeanTest {
         Message message = messages[0];
         assertThat(message.getSource().toString(), is("loanPurposeId"));
         assertThat(message.getText().toString(), containsString("loanAccountFormBean.PurposeOfLoan.invalid"));
+    }
+
+    @Test
+    public void shouldContainValidationMessageOnAdditionalInterestFeeWhenDigitsBeforeAreOutOfRange() {
+        // setup
+        loanAccountFormBean.setSelectedFeeId(new Number[]{ 1 });
+        loanAccountFormBean.setSelectedFeeAmount(new Number [] { 10000000000L });
+
+        // exercise test
+        loanAccountFormBean.validateEnterAccountDetailsStep(context);
+
+        // verification
+        Message[] messages = context.getMessageContext().getAllMessages();
+
+        assertThat(messages.length, is(1));
+        Message message = messages[0];
+        assertThat(message.getSource().toString(), is("selectedFeeId"));
+        assertThat(message.getText().toString(), containsString("loanAccountFormBean.additionalfees.amountOrRate.digits.before.decimal.invalid"));
+    }
+
+    @Test
+    public void shouldContainValidationMessageOnAdditionalInterestFeeWhenDigitsAfterSeparatorAreOutOfRange() {
+        // setup
+        loanAccountFormBean.setSelectedFeeId(new Number[]{ 1 });
+        loanAccountFormBean.setSelectedFeeAmount(new Number [] { 10.000001 });
+
+        // exercise test
+        loanAccountFormBean.validateEnterAccountDetailsStep(context);
+
+        // verification
+        Message[] messages = context.getMessageContext().getAllMessages();
+
+        assertThat(messages.length, is(1));
+        Message message = messages[0];
+        assertThat(message.getSource().toString(), is("selectedFeeId"));
+        assertThat(message.getText().toString(), containsString("loanAccountFormBean.additionalfees.amountOrRate.digits.after.decimal.invalid"));
+    }
+
+    private List<FeeDto> createAdditionalFeesMocks() {
+        FeeDto interestFee = mock(FeeDto.class);
+        when(interestFee.getId()).thenReturn("1");
+        when(interestFee.isRateBasedFee()).thenReturn(true);
+        FeeDto monetaryFee = mock(FeeDto.class);
+        when(monetaryFee.getId()).thenReturn("2");
+        when(monetaryFee.isRateBasedFee()).thenReturn(false);
+        List<FeeDto> additionalFees = new ArrayList<FeeDto>();
+        additionalFees.add(interestFee);
+        additionalFees.add(monetaryFee);
+        return additionalFees;
     }
 }
