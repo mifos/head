@@ -481,36 +481,39 @@ public class LoanAccountFormBean implements Serializable {
                     if (amountOrRate == null) {
                         errors.rejectValue("selectedFeeId", "loanAccountFormBean.additionalfees.amountOrRate.invalid", "Please specify fee amount for additional fee " + Integer.valueOf(additionalFeeIndex+1).toString());
                     } else {
-                        FeeDto selectedFee = findAdditionalFee(feeId.intValue());
-                        if (selectedFee.isRateBasedFee()) {
-                            // maybe check based on 'interest rate' decimals?
+                        int digitsAllowedBefore, digitsAllowedAfter;
+                        if (findAdditionalFee(feeId.intValue()).isRateBasedFee()) {
+                            digitsAllowedBefore = this.digitsBeforeDecimalForInterest;
+                            digitsAllowedAfter = this.digitsAfterDecimalForInterest;
                         } else {
-                            BigDecimal feeAmountAsDecimal = new BigDecimal(amountOrRate.toString())
-                                    .stripTrailingZeros();
-                            int places = feeAmountAsDecimal.scale();
-                            if (places > this.digitsAfterDecimalForMonetaryAmounts) {
-                                errors.rejectValue(
-                                        "selectedFeeId",
-                                        "loanAccountFormBean.additionalfees.amountOrRate.digits.after.decimal.invalid",
-                                        new Object[] { Integer.valueOf(additionalFeeIndex + 1),
-                                                this.digitsAfterDecimalForMonetaryAmounts },
-                                        "Please specify fee amount for additional fee "
-                                                + Integer.valueOf(additionalFeeIndex + 1).toString());
-                            }
-
-                            int digitsBefore = feeAmountAsDecimal.toBigInteger().toString().length();
-                            if (digitsBefore > this.digitsBeforeDecimalForMonetaryAmounts) {
-                                errors.rejectValue(
-                                        "selectedFeeId",
-                                        "loanAccountFormBean.additionalfees.amountOrRate.digits.before.decimal.invalid",
-                                        new Object[] { Integer.valueOf(additionalFeeIndex + 1),
-                                                this.digitsAfterDecimalForMonetaryAmounts },
-                                        "Please specify fee amount for additional fee "
-                                                + Integer.valueOf(additionalFeeIndex + 1).toString());
-                            }
+                            digitsAllowedBefore = this.digitsBeforeDecimalForMonetaryAmounts;
+                            digitsAllowedAfter = this.digitsAfterDecimalForMonetaryAmounts;
                         }
-                    }           
-                    
+
+                        BigDecimal feeAmountAsDecimal = new BigDecimal(amountOrRate.toString())
+                                .stripTrailingZeros();
+                        int places = feeAmountAsDecimal.scale();
+                        if (places > digitsAllowedAfter) {
+                            errors.rejectValue(
+                                    "selectedFeeId",
+                                    "loanAccountFormBean.additionalfees.amountOrRate.digits.after.decimal.invalid",
+                                    new Object[] { Integer.valueOf(additionalFeeIndex + 1),
+                                            digitsAllowedAfter },
+                                    "Please specify fee amount for additional fee "
+                                            + Integer.valueOf(additionalFeeIndex + 1).toString());
+                        }
+
+                        int digitsBefore = feeAmountAsDecimal.toBigInteger().toString().length();
+                        if (digitsBefore > digitsAllowedBefore) {
+                            errors.rejectValue(
+                                    "selectedFeeId",
+                                    "loanAccountFormBean.additionalfees.amountOrRate.digits.before.decimal.invalid",
+                                    new Object[] { Integer.valueOf(additionalFeeIndex + 1),
+                                            digitsAllowedBefore },
+                                    "Please specify fee amount for additional fee "
+                                            + Integer.valueOf(additionalFeeIndex + 1).toString());
+                        }
+                    }
                 }
                 additionalFeeIndex++;
             }
