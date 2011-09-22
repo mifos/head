@@ -1,7 +1,6 @@
 package org.mifos.test.acceptance.framework.client;
 
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.util.UiTestUtils;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -14,12 +13,19 @@ public class ClientViewChangeLogPage extends MifosPage{
         this.verifyPage("ClientViewChangeLog");
     }
 
-    public void verifyLastEntryOnChangeLog(String field, String oldvalue, String newValue, String user){
-        UiTestUtils.sleep(1000);
-        Assert.assertEquals(selenium.getTable("auditLogRecords.1.1"),field);
-        Assert.assertEquals(selenium.getTable("auditLogRecords.1.2"),oldvalue);
-        Assert.assertEquals(selenium.getTable("auditLogRecords.1.3"),newValue);
-        Assert.assertEquals(selenium.getTable("auditLogRecords.1.4"),user);
+    public String getLastEntryFieldName() {
+        return selenium.getTable("auditLogRecords.1.1");
+    }
+
+    public void verifyEntryOnChangeLog(int entryNum, String field, String oldvalue, String newValue, String user) {
+        Assert.assertEquals(selenium.getTable("auditLogRecords." + entryNum + ".1"),field);
+        Assert.assertEquals(selenium.getTable("auditLogRecords." + entryNum + ".2"),oldvalue);
+        Assert.assertEquals(selenium.getTable("auditLogRecords." + entryNum + ".3"),newValue);
+        Assert.assertEquals(selenium.getTable("auditLogRecords." + entryNum + ".4"),user);
+    }
+
+    public void verifyLastEntryOnChangeLog(String field, String oldvalue, String newValue, String user) {
+        verifyEntryOnChangeLog(1, field, oldvalue, newValue, user);
     }
 
     public void verifyChangeLog(List<String> fields, List<String> oldvalues, List<String> newValues, List<String> users, int maxRows) {
