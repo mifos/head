@@ -26,6 +26,7 @@ import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.client.ClientCloseReason;
 import org.mifos.test.acceptance.framework.client.ClientStatus;
+import org.mifos.test.acceptance.framework.client.ClientViewChangeLogPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientConfirmationPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterFamilyDetailsPage;
@@ -230,8 +231,15 @@ public class ClientTestHelper {
 
         clientViewDetailsPage.verifyMeetingSchedule(oldMeetingshedule);
         clientViewDetailsPage.verifyNotes(note);
-        clientViewDetailsPage.navigateToClientViewChangeLog()
-                .verifyLastEntryOnChangeLog("Group Name", groupName, "-", "mifos");
+        ClientViewChangeLogPage changeLogPage = clientViewDetailsPage.navigateToClientViewChangeLog();
+        if ("groupFlag".equals(changeLogPage.getLastEntryFieldName())) {
+            changeLogPage.verifyLastEntryOnChangeLog("groupFlag", "1", "0", "mifos");
+            changeLogPage.verifyEntryOnChangeLog(2, "Group Name", groupName, "-", "mifos");
+        }
+        else {
+            changeLogPage.verifyLastEntryOnChangeLog("Group Name", groupName, "-", "mifos");
+            changeLogPage.verifyEntryOnChangeLog(2, "groupFlag", "1", "0", "mifos");
+        }
 
         groupViewDetailsPage = navigationHelper.navigateToGroupViewDetailsPage(groupName);
         groupViewDetailsPage.verifyNumberOfClientsInGroup(Integer.toString(activeClients - 1));
