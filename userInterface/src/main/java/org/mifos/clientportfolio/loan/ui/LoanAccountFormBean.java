@@ -154,7 +154,7 @@ public class LoanAccountFormBean implements Serializable {
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SIC_INNER_SHOULD_BE_STATIC_ANON"}, justification="")
     public void validateEnterAccountDetailsStep(ValidationContext context) {
         MessageContext messageContext = context.getMessageContext();
-        
+
         Errors errors = validator.checkConstraints(this);
         
         // handle data binding errors that may of occurred
@@ -294,19 +294,33 @@ public class LoanAccountFormBean implements Serializable {
             String defaultErrorMessage = "Please specify valid number of installments.";
             rejectNumberOfInstallmentsField(errors, defaultErrorMessage);
         }
-        
-        if (this.graceDuration.intValue() > this.maxGraceDuration.intValue()) {
-            String defaultErrorMessage = "The Grace period cannot be greater than in loan product definition.";
-            errors.rejectValue("graceDuration", "loanAccountFormBean.gracePeriodDuration.invalid", defaultErrorMessage);
+
+        String graceDurationUserInput = (String)context.getUserValue("graceDuration");
+        if (graceDurationUserInput != null && !graceDurationUserInput.trim().matches("^[0-9]*$")) {
+            this.graceDuration = null;
         }
-        
-        if (this.numberOfInstallments != null
-                && (this.graceDuration.intValue() >= this.numberOfInstallments.intValue())) {
-            String defaultErrorMessage = "Grace period for repayments must be less than number of loan installments.";
-            errors.rejectValue("graceDuration",
-                    "loanAccountFormBean.gracePeriodDurationInRelationToInstallments.invalid", defaultErrorMessage);
+
+        if (this.graceDuration == null || this.graceDuration.intValue() < 0) {
+            String defaultErrorMessage = "Please specify a valid Grace period. Only non-negative integer numbers are allowed.";
+            errors.rejectValue("graceDuration", "loanAccountFormBean.gracePeriodDuration.emptyOrIncorrect.invalid", defaultErrorMessage);
+        } else {
+            if (this.graceDuration.intValue() > this.maxGraceDuration.intValue()) {
+                String defaultErrorMessage = "The Grace period cannot be greater than in loan product definition.";
+                errors.rejectValue("graceDuration", "loanAccountFormBean.gracePeriodDuration.invalid", defaultErrorMessage);
+            }
+
+            if (this.numberOfInstallments != null
+                    && (this.graceDuration.intValue() >= this.numberOfInstallments.intValue())) {
+                String defaultErrorMessage = "Grace period for repayments must be less than number of loan installments.";
+                errors.rejectValue("graceDuration",
+                        "loanAccountFormBean.gracePeriodDurationInRelationToInstallments.invalid", defaultErrorMessage);
+            }
         }
-        
+
+        if (errors.hasFieldErrors("graceDuration")) {
+            this.graceDuration = null;
+        }
+
         if (dateValidator == null) {
             dateValidator = new DateValidator();
         }

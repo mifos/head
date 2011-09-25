@@ -171,19 +171,19 @@ public class CreateSavingsAccountFormBean implements Serializable {
     }
 
     public void validateEnterAccountDetailsStep(ValidationContext context) {
-        MessageContext messages = context.getMessageContext();
-        validator.validate(this, messages, MandatorySavings.class);
+        validateAccountDetails(context);
+    }
+
+    public void validateEditAccountDetailsStep(ValidationContext context) {
+        validateAccountDetails(context);
     }
 
     public void validateAnswerQuestionGroupStep(ValidationContext context) {
-        MessageContext messages = context.getMessageContext();
-        try {
-            questionnaireServiceFacade.validateResponses(this
-                    .getQuestionGroups());
-        } catch (ValidationException e) {
-            ValidationExceptionMessageExtractor extractor = new ValidationExceptionMessageExtractor();
-            extractor.extract(messages, e);
-        }
+        validateQuestionGroupAnswers(context);
+    }
+
+    public void validateEditQuestionGroupStep(ValidationContext context) {
+        validateQuestionGroupAnswers(context);
     }
 
     public void setProductId(Integer productId) {
@@ -234,6 +234,23 @@ public class CreateSavingsAccountFormBean implements Serializable {
     public List<QuestionGroupDetail> getQuestionGroups() {
         return questionGroups;
     }
+
+    private void validateAccountDetails(ValidationContext context) {
+        MessageContext messages = context.getMessageContext();
+        validator.validate(this, messages, MandatorySavings.class);
+    }
+
+    private void validateQuestionGroupAnswers(ValidationContext context) {
+        MessageContext messages = context.getMessageContext();
+        try {
+            questionnaireServiceFacade.validateResponses(this
+                    .getQuestionGroups());
+        } catch (ValidationException e) {
+            ValidationExceptionMessageExtractor extractor = new ValidationExceptionMessageExtractor();
+            extractor.extract(messages, e);
+        }
+    }
+
 }
 
 /**
