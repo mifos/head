@@ -369,15 +369,6 @@
         </dependency>
     </dependencies>
     <build>
-       <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <!-- these must be filtered by native2ascii, don't just copy them -->
-                <excludes>
-                    <exclude>**/localizedResources/*.properties</exclude>
-                </excludes>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -664,7 +655,7 @@
                 <executions>
                     <execution>
                         <id>native2ascii</id>
-                        <phase>process-resources</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>native2ascii</goal>
                         </goals>
