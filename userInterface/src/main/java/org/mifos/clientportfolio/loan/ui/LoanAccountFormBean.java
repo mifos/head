@@ -295,14 +295,9 @@ public class LoanAccountFormBean implements Serializable {
             rejectNumberOfInstallmentsField(errors, defaultErrorMessage);
         }
 
-        String graceDurationUserInput = (String)context.getUserValue("graceDuration");
-        if (graceDurationUserInput != null && !graceDurationUserInput.trim().matches("^[0-9]*$")) {
-            this.graceDuration = null;
-        }
-
         if (this.graceDuration == null || this.graceDuration.intValue() < 0) {
             String defaultErrorMessage = "Please specify a valid Grace period. Only non-negative integer numbers are allowed.";
-            errors.rejectValue("graceDuration", "loanAccountFormBean.gracePeriodDuration.emptyOrIncorrect.invalid", defaultErrorMessage);
+            rejectGraceDurationField(errors, defaultErrorMessage);
         } else {
             if (this.graceDuration.intValue() > this.maxGraceDuration.intValue()) {
                 String defaultErrorMessage = "The Grace period cannot be greater than in loan product definition.";
@@ -315,10 +310,6 @@ public class LoanAccountFormBean implements Serializable {
                 errors.rejectValue("graceDuration",
                         "loanAccountFormBean.gracePeriodDurationInRelationToInstallments.invalid", defaultErrorMessage);
             }
-        }
-
-        if (errors.hasFieldErrors("graceDuration")) {
-            this.graceDuration = null;
         }
 
         if (dateValidator == null) {
@@ -594,6 +585,10 @@ public class LoanAccountFormBean implements Serializable {
         errors.rejectValue("numberOfInstallments", "loanAccountFormBean.NumberOfInstallments.invalid", new Object[] {this.minNumberOfInstallments, this.maxNumberOfInstallments}, defaultErrorMessage);
     }
 
+    private void rejectGraceDurationField(Errors errors, String defaultErrorMessage) {
+        errors.rejectValue("graceDuration", "loanAccountFormBean.gracePeriodDuration.emptyOrIncorrect.invalid", defaultErrorMessage);
+    }
+
     private void rejectAmountField(Errors errors, String defaultErrorMessage) {
         errors.rejectValue("amount", "loanAccountFormBean.Amount.invalid", new Object[] {this.minAllowedAmount, this.maxAllowedAmount}, defaultErrorMessage);
     }
@@ -617,6 +612,10 @@ public class LoanAccountFormBean implements Serializable {
         
         if ("numberOfInstallments".equals(message.getSource())) {
             rejectNumberOfInstallmentsField(errors, message.getText());
+        }
+
+        if ("graceDuration".equals(message.getSource())) {
+            rejectGraceDurationField(errors, message.getText());
         }
         
         if ("disbursementDateDD".equals(message.getSource())) {
