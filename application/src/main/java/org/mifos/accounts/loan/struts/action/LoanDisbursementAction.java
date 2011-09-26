@@ -149,6 +149,9 @@ public class LoanDisbursementAction extends BaseAction {
         } catch (BusinessRuleException e) {
             throw new AccountException(e.getMessage());
         } catch (MifosRuntimeException e) {
+            if (e.getCause() != null && e.getCause() instanceof AccountException) {
+                throw new AccountException(e.getCause().getMessage());
+            }
             String msg = "errors.cannotDisburseLoan.because.disburseFailed";
             logger.error(msg, e);
             throw new AccountException(msg);
