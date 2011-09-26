@@ -37,6 +37,7 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSelectLoanProdu
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSuccessPage;
 import org.mifos.test.acceptance.framework.loan.CreateMultipleLoanAccountSelectParameters;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
@@ -473,6 +474,11 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         loanTestHelper.repayLoan(loan2ID);
         loanTestHelper.createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);
         loanAccountPage.verifyNumberOfInstallments("15", "25", "25");
+        // extension to verify MIFOS-5005
+        DisburseLoanConfirmationPage disburseLoanConfirmationPage = loanTestHelper.createAndActivateDefaultLoanAccount(searchParams)
+                .navigateToDisburseLoan()
+                .submitAndNavigateToDisburseLoanConfirmationPage(disburseParams);
+        disburseLoanConfirmationPage.submitButDisbursalFailed("This loan cannot be disbursed because the customer already has an active loan for this loan product.");
     }
 
     private String createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,

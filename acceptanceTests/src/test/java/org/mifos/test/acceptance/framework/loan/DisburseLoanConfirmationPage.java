@@ -24,6 +24,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.testng.Assert;
 
 public class DisburseLoanConfirmationPage extends MifosPage {
     public DisburseLoanConfirmationPage(Selenium selenium) {
@@ -35,6 +36,12 @@ public class DisburseLoanConfirmationPage extends MifosPage {
         selenium.click("Review_loanDisbursement.button.submit");
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
+    }
+
+    public void submitButDisbursalFailed(String msg) {
+        selenium.click("Review_loanDisbursement.button.submit");
+        waitForPageToLoad();
+        Assert.assertTrue(selenium.isElementPresent("//span[@id='Review_loanDisbursement.error.message']/li[text()='"+msg+"']"));
     }
 
     public QuestionResponsePage navigateToEditAdditionalInformation() {

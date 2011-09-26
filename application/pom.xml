@@ -656,7 +656,7 @@
                 <executions>
                     <execution>
                         <id>native2ascii</id>
-                        <phase>process-resources</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>native2ascii</goal>
                         </goals>
