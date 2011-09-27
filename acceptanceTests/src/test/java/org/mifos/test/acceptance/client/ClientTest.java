@@ -67,6 +67,7 @@ import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitPar
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
@@ -126,6 +127,7 @@ public class ClientTest extends UiTestCaseBase {
     private static final String question9 = "663q9";
     private static final String question10 = "663q10";
     private static final String question11 = "663q11";
+    private static final String officeName = "MyOfficeDHMFT";
     private String response;
     private ClientViewDetailsPage viewClientDetailsPage;
     private Map<Integer, QuestionGroup> questionGroupInstancesOfClient;
@@ -243,8 +245,11 @@ public class ClientTest extends UiTestCaseBase {
     @Test(enabled=true)
     public void createClientOutsideGroup() throws Exception {
         // When
-        CreateClientEnterMfiDataPage clientEnterMfiDataPage = navigationHelper
-                .navigateToCreateClientEnterMfiDataPage("MyOfficeDHMFT");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = navigationHelper.navigateToCreateClientEnterPersonalDataPage(officeName);
+        // we remember form parameters to verify MIFOS-5032
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = FormParametersHelper.getClientEnterPersonalDataPageFormParameters();
+        clientPersonalDataPage=clientPersonalDataPage.create(formParameters);
+        CreateClientEnterMfiDataPage clientEnterMfiDataPage = clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
 
         CreateClientEnterMfiDataPage.SubmitFormParameters parameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
         parameters.setLoanOfficerId("loan officer");
@@ -258,8 +263,17 @@ public class ClientTest extends UiTestCaseBase {
         CreateClientPreviewDataPage createClientPreviewDataPage = clientEnterMfiDataPage
                 .submitAndGotoCreateClientPreviewDataPage(parameters);
         CreateClientConfirmationPage clientConfirmationPage = createClientPreviewDataPage.submit();
+
         // Then
         clientConfirmationPage.navigateToClientViewDetailsPage();
+
+        // extension to verify MIFOS-5032
+        clientPersonalDataPage = navigationHelper.navigateToCreateClientEnterPersonalDataPage(officeName);
+        clientPersonalDataPage=clientPersonalDataPage.create(formParameters);
+        clientEnterMfiDataPage = clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
+        createClientPreviewDataPage = clientEnterMfiDataPage.submitAndGotoCreateClientPreviewDataPage(parameters);
+        createClientPreviewDataPage.submitWithOneError("The combination of the specified Date of Birth and name " +
+                formParameters.getFirstName() + " " + formParameters.getLastName() + " already exists in the application. Please specify a different name.");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

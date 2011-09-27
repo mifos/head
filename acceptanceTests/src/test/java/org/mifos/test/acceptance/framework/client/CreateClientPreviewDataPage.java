@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.client;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.testng.Assert;
 
 public class CreateClientPreviewDataPage extends MifosPage {
 
@@ -32,14 +33,13 @@ public class CreateClientPreviewDataPage extends MifosPage {
     }
 
     public CreateClientConfirmationPage submit() {
-        if(selenium.isElementPresent("preview_ClientDetails.button.submitForApproval")) {
-            selenium.click("preview_ClientDetails.button.submitForApproval");
-        }
-        else {
-            selenium.click("preview_ClientDetails.button.approve");
-        }
-        waitForPageToLoad();
+        clickSubmit();
         return new CreateClientConfirmationPage(selenium);
+    }
+
+    public void submitWithOneError(String msg) {
+        clickSubmit();
+        Assert.assertEquals(selenium.getText("//span[@id='preview_ClientDetails.error.message']/li"), msg);
     }
 
     public CreateClientConfirmationPage saveForLater() {
@@ -54,4 +54,13 @@ public class CreateClientPreviewDataPage extends MifosPage {
         return new CreateClientEnterFamilyDetailsPage(selenium);
     }
 
+    private void clickSubmit() {
+        if(selenium.isElementPresent("preview_ClientDetails.button.submitForApproval")) {
+            selenium.click("preview_ClientDetails.button.submitForApproval");
+        }
+        else {
+            selenium.click("preview_ClientDetails.button.approve");
+        }
+        waitForPageToLoad();
+    }
 }
