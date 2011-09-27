@@ -430,7 +430,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         } catch (CustomerException e) {
-            throw new BusinessRuleException(e.getKey(), e);
+            throw new BusinessRuleException(e.getKey(), e.getValues(), e);
         }
     }
 
