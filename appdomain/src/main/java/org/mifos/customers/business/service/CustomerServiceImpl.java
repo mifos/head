@@ -260,7 +260,7 @@ public class CustomerServiceImpl implements CustomerService {
             this.hibernateTransactionHelper.startTransaction();
             this.customerDao.save(customer);
             this.hibernateTransactionHelper.flushSession();
-            
+
             // generate globalids for savings accounts, as they require accouont_id the savings accounts
             // must first be saved via the customer save.
             for (AccountBO account: customer.getAccounts()) {
@@ -304,6 +304,9 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerBO center = customerDao.findCustomerById(centerUpdate.getCustomerId());
         center.validateVersion(centerUpdate.getVersionNum());
         center.setUserContext(userContext);
+        center.setDisplayName(centerUpdate.getDisplayName());
+        center.validate();
+        customerDao.validateCenterNameIsNotTakenForOffice(center.getDisplayName(), center.getOfficeId());
 
         assembleCustomerPostionsFromDto(centerUpdate.getCustomerPositions(), center);
 
@@ -1133,7 +1136,7 @@ public class CustomerServiceImpl implements CustomerService {
     private void handleChangeInMeetingSchedule(CustomerBO customer, final List<Days> workingDays, final List<Holiday> orderedUpcomingHolidays) throws AccountException {
 
         boolean lsimEnabled = this.configurationHelper.isLoanScheduleRepaymentIndependentOfCustomerMeetingEnabled();
-        
+
         Set<AccountBO> accounts = customer.getAccounts();
         for (AccountBO account : accounts) {
             if (account instanceof LoanBO && lsimEnabled) {
@@ -1204,7 +1207,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         return !activeLoanAccounts.isEmpty();
     }
-    
+
     public void setConfigurationHelper(MifosConfigurationHelper configurationHelper) {
         this.configurationHelper = configurationHelper;
     }

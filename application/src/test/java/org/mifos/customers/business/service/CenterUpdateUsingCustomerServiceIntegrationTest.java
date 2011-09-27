@@ -29,8 +29,7 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testU
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
+import org.apache.commons.lang.RandomStringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.After;
@@ -41,7 +40,6 @@ import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.config.Localization;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.office.business.OfficeBO;
@@ -59,7 +57,6 @@ import org.mifos.dto.domain.CustomerPositionDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -94,8 +91,6 @@ public class CenterUpdateUsingCustomerServiceIntegrationTest extends MifosIntegr
 
     @BeforeClass
     public static void initialiseHibernateUtil() {
-        Locale locale = Localization.getInstance().getMainLocale();
-        AuditConfiguration.init(locale);
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
@@ -156,7 +151,10 @@ public class CenterUpdateUsingCustomerServiceIntegrationTest extends MifosIntegr
         UserContext userContext = TestUtils.makeUser();
         otherLoanOfficer.setPreferredLocale(new SupportedLocalesEntity(userContext.getLocaleId()));
         IntegrationTestObjectMother.createPersonnel(otherLoanOfficer);
-        CenterUpdate centerUpdate = new CenterUpdate(center.getCustomerId(), center.getVersionNo(), otherLoanOfficer.getPersonnelId(), externalId, mfiJoiningDate, address, customFields, customerPositions);
+        String updatedDisplayName = "Center "+RandomStringUtils.randomAlphanumeric(5);
+        CenterUpdate centerUpdate = new CenterUpdate(center.getCustomerId(), updatedDisplayName, center.getVersionNo(),
+                                                    otherLoanOfficer.getPersonnelId(), externalId,
+                                                    mfiJoiningDate, address, customFields, customerPositions);
 
 
         // exercise test
@@ -184,8 +182,9 @@ public class CenterUpdateUsingCustomerServiceIntegrationTest extends MifosIntegr
         }
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         List<CustomerPositionDto> customerPositions = new ArrayList<CustomerPositionDto>();
-
-        CenterUpdate centerUpdate = new CenterUpdate(center.getCustomerId(), center.getVersionNo(), loanOfficerId, externalId, mfiJoiningDate, address, customFields, customerPositions);
+        String updatedDisplayName = "Center "+RandomStringUtils.randomAlphanumeric(5);
+        CenterUpdate centerUpdate = new CenterUpdate(center.getCustomerId(), updatedDisplayName, center.getVersionNo(),
+                                       loanOfficerId, externalId, mfiJoiningDate, address, customFields, customerPositions);
 
         UserContext userContext = TestUtils.makeUser();
 
@@ -214,7 +213,10 @@ public class CenterUpdateUsingCustomerServiceIntegrationTest extends MifosIntegr
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         List<CustomerPositionDto> customerPositions = new ArrayList<CustomerPositionDto>();
 
-        CenterUpdate centerUpdate = new CenterUpdate(center.getCustomerId(), center.getVersionNo(), loanOfficerId, externalId, mfiJoiningDate, address, customFields, customerPositions);
+        String updatedDisplayName = "Center "+RandomStringUtils.randomAlphanumeric(5);
+        CenterUpdate centerUpdate = new CenterUpdate(center.getCustomerId(), updatedDisplayName,
+                                                    center.getVersionNo(), loanOfficerId, externalId,
+                                                    mfiJoiningDate, address, customFields, customerPositions);
 
         UserContext userContext = TestUtils.makeUser();
 
@@ -242,8 +244,9 @@ public class CenterUpdateUsingCustomerServiceIntegrationTest extends MifosIntegr
         }
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         List<CustomerPositionDto> customerPositions = new ArrayList<CustomerPositionDto>();
-
-        CenterUpdate centerUpdate = new CenterUpdate(center.getCustomerId(), center.getVersionNo(), loanOfficerId, newExternalId, mfiJoiningDate, newAddress, customFields, customerPositions);
+        String updatedDisplayName = "Center "+RandomStringUtils.randomAlphanumeric(5);
+        CenterUpdate centerUpdate = new CenterUpdate(center.getCustomerId(), updatedDisplayName, center.getVersionNo(),
+                                                     loanOfficerId, newExternalId, mfiJoiningDate, newAddress, customFields, customerPositions);
 
         UserContext userContext = TestUtils.makeUser();
 
