@@ -76,8 +76,6 @@ explanation of the license and how it is applied.
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
 				   </fmt:message>                  
                   
-                  
-
               </td>
             </tr>
             <tr>
@@ -87,8 +85,6 @@ explanation of the license and how it is applied.
                     <fmt:message key="Center.EditPageCancelInstruction">
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
 				   </fmt:message>    
-                    
-                    
                     
              </td>
 
@@ -102,8 +98,13 @@ explanation of the license and how it is applied.
 
            <tr>
              <td width="100%" class="fontnormal">
-             	<span class="fontnormal"></span>
-             	<span class="fontnormal"></span>
+                <span class="fontnormalbold">
+                <mifos:mifoslabel name="Center.Name" bundle="CenterUIResources"></mifos:mifoslabel>
+                <span class="fontnormal"><c:out value="${sessionScope.centerCustActionForm.displayName}"/><br></span>
+              </td>
+           </tr>
+           <tr>
+             <td width="100%" class="fontnormal">
               	<span class="fontnormalbold">
               	<mifos:mifoslabel name="Center.LoanOfficer" bundle="CenterUIResources"></mifos:mifoslabel>
                 <span class="fontnormal">
@@ -114,8 +115,7 @@ explanation of the license and how it is applied.
 					</c:forEach>
                 </span>
               </td>
-              </tr>
-
+            </tr>
             <tr id="Center.ExternalId">
              <td width="100%" class="fontnormal">
                 <span class="fontnormalbold">

@@ -144,10 +144,10 @@ explanation of the license and how it is applied.
 
 								<tr class="fontnormal">
 									<td width="26%" align="right">
-										<mifos:mifoslabel name="Center.Name" bundle="CenterUIResources"></mifos:mifoslabel>
+										<mifos:mifoslabel name="Center.Name" mandatory="yes" bundle="CenterUIResources"></mifos:mifoslabel>
 									</td>
 									<td width="74%">
-										<c:out value="${BusinessKey.displayName}" />
+										<input type='text' name='displayName' value="<c:out value="${BusinessKey.displayName}" />" />
 									</td>
 								</tr>
 
@@ -227,13 +227,6 @@ explanation of the license and how it is applied.
 									</td>
 								</tr>
 							</table>
-
-
-
-
-
-
-
 
 							<br>
 							<!-- Address Fields -->
