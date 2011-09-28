@@ -365,6 +365,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                     .getSecondLastName(), personnel.getLastName(), personnel.getEmailId(), personnel.getGender(),
                     personnel.getMaritalStatus(), preferredLocaleId, personnelStatus, address, personnel.getTitle(),
                     personnelLevel, selectedRoles, personnel.getPassword(), newOffice);
+            userForUpdate.getPersonnelDetails().setDob(personnel.getDob().toDate());
 
             this.personnelDao.save(userForUpdate);
             transactionHelper.commitTransaction();

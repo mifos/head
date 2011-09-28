@@ -291,7 +291,7 @@
         <propertyName name="customerPositionId" parentName="customerPositions" doNotLog="yes" />
         <propertyName name="trained" displayKey="Group.trained" doNotLog="No" />
         <propertyName name="trainedDate" displayKey="Group.trainedDate"  />
-        <propertyName name="displayName" displayKey="Group.displayName"  />
+        <propertyName name="displayName" displayKey="Group.displayName" doNotLog="No"  />
         <propertyName name="externalId" displayKey="ExternalId"  />
 
         <propertyName name="customerFlagId" parentName="customerFlag" doNotLog="yes"/>

@@ -142,7 +142,7 @@ explanation of the license and how it is applied.
 	</span> <br>
 	<mifos:mifoslabel name="Personnel.DOB" bundle="PersonnelUIResources"></mifos:mifoslabel>
     <span class="fontnormal">
-		<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.personnelDetails.dob)}" />
+		<c:out value="${personActionForm.dob}" />
 	</span><br>
     <mifos:mifoslabel name="Personnel.Age" bundle="PersonnelUIResources"></mifos:mifoslabel>
      <span class="fontnormal">

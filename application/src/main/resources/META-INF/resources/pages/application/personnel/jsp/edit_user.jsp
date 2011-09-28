@@ -160,9 +160,8 @@ explanation of the license and how it is applied.
                 <td align="right">
 				<mifos:mifoslabel name="Personnel.DOB"  bundle="PersonnelUIResources"></mifos:mifoslabel>
 				</td>
-                <td> <%--<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.personnelDetails.dob)}" />--%>
-                <c:out value="${sessionScope.personActionForm.dob}" />
-                <html-el:hidden property="dob" value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.personnelDetails.dob)}"/> 
+                <td>
+                    <date:datetag renderstyle="simple" property="dob" />
                 </td>
               </tr>
               <tr class="fontnormal">
