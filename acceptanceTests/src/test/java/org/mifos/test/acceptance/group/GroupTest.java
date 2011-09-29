@@ -271,7 +271,7 @@ public class GroupTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createGroupWithQuestionGroup() throws Exception {
         //Given
-    	
+
     	CreateQuestionGroupParameters questionGroupParams = new CreateQuestionGroupParameters();
     	questionGroupParams.setTitle("CreateGroupQG");
     	questionGroupParams.setAppliesTo("Create Group");
@@ -281,7 +281,7 @@ public class GroupTest extends UiTestCaseBase {
     	questionGroupParams.addExistingQuestion("Sec 2", "FreeText");
     	questionGroupParams.addExistingQuestion("Sec 2", "SingleSelect");
     	questionGroupTestHelper.createQuestionGroup(questionGroupParams);
-    	
+
     	CreateQuestionGroupParameters questionGroupParams2 = new CreateQuestionGroupParameters();
     	questionGroupParams2.setTitle("CreateGroupQG2");
     	questionGroupParams2.setAppliesTo("Create Group");

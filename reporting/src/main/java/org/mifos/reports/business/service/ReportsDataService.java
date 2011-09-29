@@ -78,7 +78,7 @@ public class ReportsDataService {
 
     public List<LoanOfferingBO> getAllLoanProducts() throws ServiceException {
         List<LoanOfferingBO> loanOffering = new ArrayList<LoanOfferingBO>();
-        loanOffering = loanPrdBusinessService.getAllLoanOfferings(personnel.getLocaleId());
+        loanOffering = loanPrdBusinessService.getAllLoanOfferings(personnel.getPreferredLocale());
         loanOffering.add(LoanOfferingBO.ALL_LOAN_PRD);
         return loanOffering;
     }

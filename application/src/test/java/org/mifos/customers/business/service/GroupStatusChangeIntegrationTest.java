@@ -105,7 +105,7 @@ public class GroupStatusChangeIntegrationTest extends MifosIntegrationTestCase {
         databaseCleaner.clean();
 
         // For audit log interceptor
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         AuditConfiguration.init(locale);
 
         existingUser = IntegrationTestObjectMother.testUser();

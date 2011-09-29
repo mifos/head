@@ -187,7 +187,7 @@ public class MpesaImportTest extends UiTestCaseBase {
 
         propertiesHelper.setImportTransactionOrder("AL3,AL5");
 
-        String dataset = "mpesa_export.xml";
+        String dataset = "mpesa_export_dbunit.xml";
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
 
         for (String importFile : TEST_FILES) {
@@ -231,7 +231,7 @@ public class MpesaImportTest extends UiTestCaseBase {
 
         propertiesHelper.setImportTransactionOrder("AL3,AL5");
 
-        String dataset = "mpesa_export.xml";
+        String dataset = "mpesa_export_dbunit.xml";
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
 
         String path = this.getClass().getResource("/mpesa/" + FILE_WITH_NO_ERRORS).toString();
@@ -319,7 +319,7 @@ public class MpesaImportTest extends UiTestCaseBase {
     public void failImportTransaction() throws Exception {
         //Given
         String path = this.getClass().getResource("/mpesa/" + FILE_WITH_OVERPAYMENT_AMOUNT).toString();
-        String dataset = "mpesa_export.xml";
+        String dataset = "mpesa_export_dbunit.xml";
 
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
 
@@ -357,7 +357,7 @@ public class MpesaImportTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2011,01,28,12,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         String path = this.getClass().getResource("/mpesa/" + FILE_WITH_NO_ERRORS).toString();
-        String dataset = "mpesa_export.xml";
+        String dataset = "mpesa_export_dbunit.xml";
 
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
 
@@ -408,7 +408,7 @@ public class MpesaImportTest extends UiTestCaseBase {
     public void validateImport() throws Exception {
         //Given
         String path = this.getClass().getResource("/mpesa/" + DISBURSAL_IMPORT).toString();
-        String dataset = "mpesa_export.xml";
+        String dataset = "mpesa_export_dbunit.xml";
 
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
 

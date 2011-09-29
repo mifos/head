@@ -1564,14 +1564,6 @@ public class CustomerDaoHibernate implements CustomerDao {
         return doFetchListOfMasterDataFor(PersonnelLevelEntity.class);
     }
 
-    @Override
-    public List<ValueListElement> retrieveLanguages() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("entityType", MasterConstants.LANGUAGE);
-
-        return retrieveMasterData(queryParameters);
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber) {

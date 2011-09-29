@@ -92,7 +92,7 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
 
     private String status;
 
-    private String preferredLocale;
+    private Short preferredLocale;
 
     private String searchId;
 
@@ -273,11 +273,11 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
         this.personnelRoles = personnelRoles;
     }
 
-    public String getPreferredLocale() {
+    public Short getPreferredLocale() {
         return preferredLocale;
     }
 
-    public void setPreferredLocale(String preferredLocale) {
+    public void setPreferredLocale(Short preferredLocale) {
         this.preferredLocale = preferredLocale;
     }
 

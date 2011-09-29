@@ -57,7 +57,7 @@ public class ApplicationConfigurationDaoHibernateIntegrationTest extends MifosIn
 
     @BeforeClass
     public static void initialiseHibernateUtil() {
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         AuditConfiguration.init(locale);
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);

@@ -73,7 +73,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         selenium.isTextPresent(error);
         return this;
     }
-    
+
     public CreateLoanAccountReviewInstallmentPage validate(){
     	selenium.click("schedulePreview.button.validate");
     	selenium.waitForPageToLoad("3000");
@@ -90,7 +90,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
             Assert.assertTrue(selenium.isTextPresent(error));
         }
     }
-    
+
     public HomePage navigateToHomePage() {
         selenium.click("id=clientsAndAccountsHeader.link.home");
         waitForPageToLoad();
@@ -327,14 +327,14 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         }
         return this;
     }
-    
+
     public CreateLoanAccountReviewInstallmentPage verifyCashFlow(double cashFlowIncremental, double loanAmount, String[] cumulativeCashFlowTIAPM, String[] totalInstallmentAmount) {
         int rowIndex = 1;
         for(String cash : cumulativeCashFlowTIAPM) {
             Assert.assertEquals(selenium.getText(tableXpath + "//tr[" + rowIndex + "]/td[3]"), cash);
             rowIndex++;
         }
-        
+
         rowIndex = 1;
         for(String cash : totalInstallmentAmount) {
             Assert.assertEquals(selenium.getText(tableXpath + "//tr[" + rowIndex + "]/td[4]"), cash);
@@ -557,7 +557,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         waitForPageToLoad();
         return this;
     }
-    
+
     public CreateLoanAccountPreviewPage clickPreviewAndNavigateToPreviewPage() {
         selenium.click(previewButton);
         waitForPageToLoad();
@@ -589,19 +589,19 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         }
         return loanAmount;
     }
-    
+
     public ClientsAndAccountsHomepage cancel(){
         selenium.click("schedulePreview.button.cancel");
         waitForPageToLoad();
         return new ClientsAndAccountsHomepage(selenium);
     }
-    
+
     public CreateLoanAccountCashFlowPage editCashFlow() {
         selenium.click("_eventId_editCashflow");
         waitForPageToLoad();
         return new CreateLoanAccountCashFlowPage(selenium);
     }
-    
+
     public void verifyDueDate(int installement, String dueDate) {
         Assert.assertEquals(selenium.getText("//table[@id='installments']//tbody//tr[" + (installement ) + "]/td[2]"), dueDate);
     }
@@ -609,47 +609,47 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     private Integer getMonthFromCalendar(){
     	return monthsMap.get(selenium.getText("//div[@id='ui-datepicker-div']/div/div/span[1]"));
     }
-    
+
     private Integer getYearFromCalendar(){
     	return Integer.parseInt(selenium.getText("//div[@id='ui-datepicker-div']/div/div/span[2]"));
     }
-    
+
     private void clickNextMonth(){
     	selenium.click("//div[@id='ui-datepicker-div']/div/a[2]/span");
     }
-    
+
     private void clickPrevMonth(){
     	selenium.click("//div[@id='ui-datepicker-div']/div/a[1]/span");
     }
-    
+
     private void chooseDay(Integer day){
     	selenium.click("link=" + day);
     }
-    
+
     public String getDueDateForInstallment(Integer installment){
     	return selenium.getValue("installment.dueDate." + (installment-1));
     }
-    
+
     public String getTotalForInstallment(Integer installment){
     	return selenium.getValue("name=installmentAmounts[" + (installment-1) + "]");
     }
-    
+
     public void setTotalForInstallment(Integer installment, String total){
     	selenium.type("name=installmentAmounts[" + (installment-1) + "]", total);
     }
-    
+
     public void setDueDateForInstallment(Integer installment, String dueDate){
     	selenium.type("installment.dueDate." + (installment-1), dueDate);
     }
-    
+
     public String getFeesForInstallment(Integer installment){
     	return selenium.getValue("//table[@id='installments']/tbody/tr[" + installment + "]/td[5]");
     }
-    
+
     public String getInterestForInstallment(Integer installment){
     	return selenium.getValue("//table[@id='installments']/tbody/tr[" + installment + "]/td[4]");
     }
-    
+
     public void typeInstallmentDueDateByPicker(Integer installment, Calendar dueDate){
     	selenium.click("//table[@id='installments']/tbody/tr[" + installment + "]/td[2]/img");
     	Calendar calendar =Calendar.getInstance();
@@ -677,20 +677,20 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     	chooseDay(dueDate.get(Calendar.DATE));
     	Assert.assertEquals(getDueDateForInstallment(installment), format.format(dueDate.getTime()));
     }
-    
+
     public void isDueDatesEditable(Integer noOfIntallments){
     	for(int i=0;i<noOfIntallments;i++){
     		Assert.assertTrue(selenium.isEditable("installment.dueDate."+i));
     	}
     }
-    
+
     public void isTotalsEditable(Integer noOfIntallments){
     	for(int i=0;i<(noOfIntallments-1);i++){
     		Assert.assertTrue(selenium.isEditable("name=installmentAmounts["+i+"]"));
     	}
     	Assert.assertFalse(selenium.isEditable("name=installmentAmounts["+(noOfIntallments-1)+"]"));
     }
-    
+
     public List<String> getDueDatesInstallments(Integer noOfIntallments){
     	List<String> dueDates = new ArrayList<String>();
     	for(int i=1;i<=noOfIntallments;i++){
@@ -698,7 +698,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     	}
     	return dueDates;
     }
-    
+
     public List<String> getTotalsInstallments(Integer noOfIntallments){
     	List<String> totals = new ArrayList<String>();
     	for(int i=1;i<=noOfIntallments;i++){

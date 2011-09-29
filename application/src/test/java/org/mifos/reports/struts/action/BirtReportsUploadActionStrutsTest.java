@@ -159,7 +159,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         AddActivity activity = null;
         try {
             activity = new AddActivity((short) newActivityId,
-                    SecurityConstants.ORGANIZATION_MANAGEMENT, Localization.ENGLISH_LOCALE, "no name");
+                    SecurityConstants.ORGANIZATION_MANAGEMENT, Localization.ENGLISH_LOCALE_ID, "no name");
             activity.upgrade(StaticHibernateUtil.getSessionTL().connection());
 
         } catch (Exception e) {

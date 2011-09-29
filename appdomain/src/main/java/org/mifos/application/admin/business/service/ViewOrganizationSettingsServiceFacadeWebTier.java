@@ -71,7 +71,7 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
     }
 
     private Properties getLocaleInfo() {
-        ConfigLocale configLocale = new ConfigLocale();
+        LocaleSetting configLocale = new LocaleSetting();
         Properties localeInfo = new Properties();
 
         localeInfo.setProperty("localeCountryCode", configLocale.getCountryCode());

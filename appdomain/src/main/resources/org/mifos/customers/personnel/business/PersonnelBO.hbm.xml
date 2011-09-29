@@ -20,9 +20,7 @@
         <many-to-one name="office" column="office_id"
             class="org.mifos.customers.office.business.OfficeBO" unique="true"
             lazy="false" />
-        <many-to-one name="preferredLocale" column="preferred_locale"
-            class="org.mifos.application.master.business.SupportedLocalesEntity"
-            insert="true" update="true" cascade="none" />
+        <property name="preferredLocale" column="preferred_locale" type="short" not-null="true" access="field" />
         <one-to-one name="personnelDetails"
             class="org.mifos.customers.personnel.business.PersonnelDetailsEntity"
             cascade="all" lazy="false" />

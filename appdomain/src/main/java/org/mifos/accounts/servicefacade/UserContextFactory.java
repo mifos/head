@@ -33,7 +33,7 @@ public class UserContextFactory {
         Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
         Locale.setDefault(preferredLocale);
         Locale defaultLocale = Locale.getDefault();
-        Short localeId = Localization.getInstance().getLocaleId();
+        Short localeId = Localization.getInstance().getConfiguredLocaleId();
         UserContext userContext = new UserContext(preferredLocale, localeId);
         userContext.setBranchId(user.getBranchId());
         userContext.setId((short) user.getUserId());

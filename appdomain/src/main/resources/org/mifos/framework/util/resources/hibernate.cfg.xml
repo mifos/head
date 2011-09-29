@@ -137,13 +137,10 @@
 
         <!-- Mapping files for Master Data -->
         <mapping class="org.mifos.application.master.business.MifosCurrency" />
-        <mapping class="org.mifos.application.master.business.CountryEntity" />
-        <mapping class="org.mifos.application.master.business.LanguageEntity" />
         <mapping class="org.mifos.application.master.business.LookUpLabelEntity" />
         <mapping class="org.mifos.application.master.business.LookUpValueEntity" />
         <mapping class="org.mifos.application.master.business.LookUpValueLocaleEntity" />
         <mapping class="org.mifos.application.master.business.LookUpEntity" />
-        <mapping class="org.mifos.application.master.business.SupportedLocalesEntity" />
         <mapping resource="org/mifos/application/master/business/PaymentTypeEntity.hbm.xml" />
         <mapping class="org.mifos.application.master.business.SpouseFatherLookupEntity" />
         <mapping resource="org/mifos/application/master/business/CustomFieldDefinitionEntity.hbm.xml" />

@@ -21,194 +21,146 @@
 package org.mifos.config;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Set;
 
-import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.core.MifosRuntimeException;
+import org.apache.commons.lang.StringUtils;
+import org.mifos.application.master.business.BusinessActivityEntity;
+import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.ListElement;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 public class Localization {
 
-    private static Map<String, SupportedLocalesEntity> localeCache;
-    private static Locale mainLocale; // the Java locale to match with the
-    // config defined locale
-    private static Short localeId = -1;
-
-    public static final short ENGLISH_LOCALE = 1;
-    private static ConfigLocale configLocale; // class with country code and
-
-    // language defined in the config
-    // file
+    public static final short ENGLISH_LOCALE_ID = 1;
+    private final Map<Short, Locale> LOCALE_MAP = new HashMap<Short, Locale>();
+    protected final Short newLocaleId = 14;
+    private LocaleSetting localeSetting;
+    private Locale configuredLocale; // the Java locale to match with the
+    private Short configuredLocaleId;
+    private static Localization localization;
 
     private Localization() {
-        localeCache = new ConcurrentHashMap<String, SupportedLocalesEntity>();
-        configLocale = new ConfigLocale();
+        localeSetting = new LocaleSetting();
+        setLocaleMap();
+        readLoacaleSetting();
     }
 
-    // After a new configLocale is set, refresh is called to refresh
-    // supportedLocale,locale and localeId
-    public void refresh() {
-        loadMembers();
-    }
-
-    private void loadMembers() {
-        mainLocale = getLocaleFromConfig();
-    }
-
-    // this init has to be called when Mifos starts
-    public void init(List<SupportedLocalesEntity> locales) {
-        initializeLocaleCache(locales);
-        loadMembers();
-    }
-
-    public Locale getMainLocale() {
-        if (mainLocale == null) {
-            mainLocale = getLocaleFromConfig();
+    public static final Localization getInstance() {
+        if(localization == null) {
+            localization = new Localization();
         }
-        return mainLocale;
-    }
-
-    private static final Localization localization = new Localization();
-
-    public static Localization getInstance() {
         return localization;
     }
 
-    public String getCountryCode() {
-        if (mainLocale != null) {
-            return mainLocale.getCountry();
+    public String getDisplayName(Short localeId) {
+        Locale locale = LOCALE_MAP.get(localeId);
+        String country = locale.getDisplayCountry();
+        if(StringUtils.isBlank(country)) {
+            return locale.getDisplayLanguage() +" - ("+locale.getDisplayLanguage(locale) +") ["+locale+"]";
         }
-        mainLocale = getConfiguredLocale();
-        return mainLocale.getCountry();
+        return locale.getDisplayLanguage() +" - ("+locale.getDisplayLanguage(locale) +") : "+ country +" ["+locale+"]";
     }
 
-    // for the testing purpose
-    public void clearCountryCodeLanguageCodeFromConfigFile() {
-        configLocale.clearCountryCode();
-        configLocale.clearLanguageCode();
-        configLocale = null;
-    }
-
-    // for the testing purpose
-    public void setCountryCodeLanguageCodeToConfigFile(ConfigLocale locale) {
-        configLocale = locale;
-        configLocale.setCountryCodeToConfigFile();
-        configLocale.setLanguageCodeToConfigFile();
-        refresh();
-    }
-
-    public String getLanguageCode() {
-        if (mainLocale != null) {
-            return mainLocale.getLanguage();
-        }
-        mainLocale = getConfiguredLocale();
-        return mainLocale.getLanguage();
-    }
-
-    public String getLanguageName() {
-
-        if (mainLocale != null) {
-            return mainLocale.getDisplayLanguage();
-        }
-        mainLocale = getConfiguredLocale();
-        return mainLocale.getDisplayLanguage();
-    }
-
-    public String getCountryName() {
-
-        if (mainLocale != null) {
-            return mainLocale.getDisplayCountry();
-        }
-        mainLocale = getConfiguredLocale();
-        return mainLocale.getDisplayCountry();
-    }
-
-    public Short getLocaleId() {
-        if (localeId > -1) {
-            return localeId;
-        }
-        localeId = getConfiguredLocaleId();
-        return localeId;
+    public Short getConfiguredLocaleId() {
+        return configuredLocaleId;
     }
 
     public Locale getConfiguredLocale() {
-        if (mainLocale != null) {
-            return mainLocale;
-        }
-        mainLocale = getLocaleFromConfig();
-        return mainLocale;
-
+        return configuredLocale;
     }
 
-    private short getConfiguredLocaleId() {
-        short localeId = -1;
-        Object[] locales = localeCache.values().toArray();
-        if (locales.length == 0) {
-            localeId = 1; // default to English at the beginning when cache is
-        }
-        // not ready
-        for (Object locale : locales) {
-            SupportedLocalesEntity localeEntity = (SupportedLocalesEntity) locale;
-            if (localeEntity.getCountryCode().equalsIgnoreCase(configLocale.getCountryCode())
-                    && localeEntity.getLanguageCode().equalsIgnoreCase(configLocale.getLanguageCode())) {
-                localeId = localeEntity.getLocaleId();
-                break;
-            }
-        }
-        return localeId;
-
+    public List<ValueListElement> getLocaleForUI() {
+        List<ValueListElement> localeForUI = new ArrayList<ValueListElement>();
+        for(Short key: LOCALE_MAP.keySet()) {
+           String displayName = getDisplayName(key);
+           ValueListElement localeValue =  new BusinessActivityEntity(key.intValue(), displayName, displayName);
+           localeForUI.add(localeValue);
+           Collections.sort(localeForUI, new ValueListElementSortByName());
+          }
+        return localeForUI;
     }
 
-    /**
-     * from the language code and country code defined in the config return the java Locale class instantiated using the
-     * language code and country code
-     */
-    private Locale getLocaleFromConfig() {
-
-        if (configLocale == null) {
-            configLocale = new ConfigLocale();
-        }
-        // need to check if this configLocale is supported by Mifos
-        if ((localeId = getConfiguredLocaleId()) == -1) {
-            throw new MifosRuntimeException("This configured locale: language code " + configLocale.getLanguageCode()
-                    + ", country code " + configLocale.getCountryCode() + " is not supported by Mifos.");
-        }
-        Locale locale = new Locale(configLocale.getLanguageCode().toLowerCase(), configLocale.getCountryCode()
-                .toUpperCase());
-        return locale;
-
+    public List<ListElement> getLocaleList() {
+        List<ListElement> localeForUI = new ArrayList<ListElement>();
+        for(Short key: LOCALE_MAP.keySet()) {
+           String displayName = getDisplayName(key);
+           ListElement localeValue =  new ListElement(key.intValue(), displayName);
+           localeForUI.add(localeValue);
+           Collections.sort(localeForUI, new ListElementSortByName());
+          }
+        return localeForUI;
     }
 
-    public ArrayList<Short> getSupportedLocaleIds() {
-        ArrayList<Short> localeIds = new ArrayList<Short>();
-        Object[] locales = localeCache.values().toArray();
-        for (Object locale : locales) {
-            SupportedLocalesEntity entity = (SupportedLocalesEntity) locale;
-            localeIds.add(entity.getLocaleId());
-        }
-        return localeIds;
+    public Set<Short> getLocaleIdSet() {
+        return LOCALE_MAP.keySet();
     }
 
-    private void initializeLocaleCache(List<SupportedLocalesEntity> locales) {
-        localeCache.clear();
-        for (SupportedLocalesEntity locale : locales) {
-            localeCache.put(locale.getLanguage().getLanguageShortName().toLowerCase() + "_"
-                    + locale.getCountry().getCountryShortName().toUpperCase(), locale);
-        }
-
+    public void setConfigLocale(LocaleSetting localeSetting) {
+        this.localeSetting = localeSetting;
+        LOCALE_MAP.clear();
+        setLocaleMap();
+        readLoacaleSetting();
     }
 
-    public static ConfigLocale getConfigLocale() {
-        return configLocale;
+    private Short getLocaleId(Locale locale) {
+            for (Short key : LOCALE_MAP.keySet()) {
+                if (LOCALE_MAP.get(key).equals(locale)) {
+                    return key;
+                }
+            } // this might never be thrown
+            throw new IllegalArgumentException("No language configured for "+locale);
     }
 
-    public void setConfigLocale(ConfigLocale locale) {
-        if (configLocale.equals(locale) == false) {
-            Localization.configLocale = locale;
-            refresh();
+    private void readLoacaleSetting() {
+        String lang = localeSetting.getLanguageCode().toLowerCase();
+        String country = localeSetting.getCountryCode().toUpperCase();
+        Locale locale = new Locale(lang, country);
+
+        if(!LOCALE_MAP.containsValue(locale)) {
+            configuredLocaleId = newLocaleId;
+            configuredLocale = locale;
+            LOCALE_MAP.put(newLocaleId, locale);
+        } else {
+            configuredLocaleId = getLocaleId(locale);
+            configuredLocale = locale;
         }
     }
 
+    private synchronized void setLocaleMap() {
+        if (LOCALE_MAP.isEmpty()) {
+            LOCALE_MAP.put((short) 1, Locale.UK);  // These were the options in personnel language list (pre Mifos 2.2)
+            LOCALE_MAP.put((short) 2, new Locale("is", "IS"));  // Icelandic
+            LOCALE_MAP.put((short) 3, new Locale("es", "ES"));  // Spanish
+            LOCALE_MAP.put((short) 4, Locale.FRANCE);  // French
+            LOCALE_MAP.put((short) 5, Locale.SIMPLIFIED_CHINESE);  // Chinese
+            LOCALE_MAP.put((short) 6, new Locale("sw", "KE"));  // Swahili
+            LOCALE_MAP.put((short) 7, new Locale("ar", "DZ")); // Arabic
+            LOCALE_MAP.put((short) 8, new Locale("pt", "AO")); // Portuguese
+            LOCALE_MAP.put((short) 9, new Locale("km", "KH")); // Khmer
+            LOCALE_MAP.put((short) 10, new Locale("lo", "LA")); // Lola
+            LOCALE_MAP.put((short) 11, new Locale("hu", "HU")); // Hungarian
+            LOCALE_MAP.put((short) 12, new Locale("te", "IN")); // Tegulu
+            LOCALE_MAP.put((short) 13, new Locale("hi", "IN")); // Hindi
+        }
+    }
+
+    class ValueListElementSortByName implements Comparator<ValueListElement>{
+        @Override
+        public int compare(ValueListElement o1, ValueListElement o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+    }
+
+    class ListElementSortByName implements Comparator<ListElement>{
+        @Override
+        public int compare(ListElement o1, ListElement o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+    }
 }

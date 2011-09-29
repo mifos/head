@@ -97,7 +97,7 @@
 [/#macro]
 
 [#macro header pageTitle]
-<html dir="${Application.ConfigLocale.direction}">
+<html dir="${Application.LocaleSetting.direction}">
   <head>
     <title id="${pageTitle}">[@spring.message "${pageTitle}" /]</title>
     <link href="pages/css/maincss.css" rel="stylesheet" type="text/css" />

@@ -29,13 +29,9 @@ import junit.framework.Assert;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -49,13 +45,6 @@ public class RESTAPITest extends UiTestCaseBase {
     public static final String CLIENT_GLOBAL_ID = "0002-000000003";
     public static final String LOAN_ACCOUNT_GLOBAL_ID = "000100000000004";
     public static final String SAVINGS_ACCOUNT_GLOBAL_ID = "000100000000006";
-
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     private RESTAPITestHelper helper;
 

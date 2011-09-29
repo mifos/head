@@ -38,7 +38,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.center.business.CenterBO;
@@ -149,7 +148,7 @@ public class CenterUpdateUsingCustomerServiceIntegrationTest extends MifosIntegr
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         List<CustomerPositionDto> customerPositions = new ArrayList<CustomerPositionDto>();
         UserContext userContext = TestUtils.makeUser();
-        otherLoanOfficer.setPreferredLocale(new SupportedLocalesEntity(userContext.getLocaleId()));
+        otherLoanOfficer.setPreferredLocale(userContext.getLocaleId());
         IntegrationTestObjectMother.createPersonnel(otherLoanOfficer);
         String updatedDisplayName = "Center "+RandomStringUtils.randomAlphanumeric(5);
         CenterUpdate centerUpdate = new CenterUpdate(center.getCustomerId(), updatedDisplayName, center.getVersionNo(),

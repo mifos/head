@@ -130,8 +130,6 @@ public interface CustomerDao {
 
     List<ValueListElement> retrieveLivingStatus();
 
-    List<ValueListElement> retrieveLanguages();
-
     CenterDisplayDto getCenterDisplayDto(Integer centerId, UserContext userContext);
 
     CustomerAccountSummaryDto getCustomerAccountSummaryDto(Integer centerId);

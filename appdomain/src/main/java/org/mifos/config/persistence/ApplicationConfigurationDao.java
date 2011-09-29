@@ -29,7 +29,6 @@ import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 
 public interface ApplicationConfigurationDao {
@@ -45,8 +44,6 @@ public interface ApplicationConfigurationDao {
     List<LookUpEntity> findLookupEntities();
 
     List<LookUpValueEntity> findLookupValues();
-
-    List<SupportedLocalesEntity> findSupportedLocale();
 
     List<AccountStateEntity> findAllAccountStateEntities();
 

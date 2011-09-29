@@ -20,7 +20,6 @@
 
 package org.mifos.framework.util.helpers;
 
-import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 
@@ -34,7 +33,6 @@ import org.apache.struts.util.MessageResources;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.config.Localization;
 import org.mifos.config.util.helpers.ConfigurationConstants;
-import org.mifos.framework.struts.tags.MifosPropertyMessageResources;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 
@@ -103,7 +101,6 @@ public class LabelTagUtils {
         if (StringUtils.isBlank(message)) {
             message = "";
         }
-
         return MessageLookup.getInstance().replaceSubstitutions(message);
     }
 
@@ -114,7 +111,6 @@ public class LabelTagUtils {
         if (mandatoryMap == null) {
             return false;
         }
-
         return mandatoryMap.containsKey(key);
     }
 
@@ -125,7 +121,6 @@ public class LabelTagUtils {
         if (hiddenMap == null) {
             return false;
         }
-
         return hiddenMap.containsKey(key);
     }
 
@@ -136,7 +131,6 @@ public class LabelTagUtils {
         if (confidentialMap == null) {
             return false;
         }
-
         return confidentialMap.containsKey(key);
     }
 
@@ -155,7 +149,6 @@ public class LabelTagUtils {
 
         }
         return userPreferredLocale;
-
     }
 
     public static String getUserPreferredLocaleHelper(UserContext userContext) {
@@ -167,9 +160,7 @@ public class LabelTagUtils {
             }
 
         }
-
         return userPreferredLocale;
-
     }
 
     public Locale getUserPreferredLocaleObject(PageContext pageContext) {
@@ -178,9 +169,8 @@ public class LabelTagUtils {
         if (null != userContext) {
             locale = userContext.getCurrentLocale();
         } else {
-            locale = Localization.getInstance().getMainLocale();
+            locale = Localization.getInstance().getConfiguredLocale();
         }
-
         return locale;
     }
 

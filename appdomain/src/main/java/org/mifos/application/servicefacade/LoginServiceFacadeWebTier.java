@@ -66,7 +66,7 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
         }
 
         Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
-        Short localeId = Localization.getInstance().getLocaleId();
+        Short localeId = Localization.getInstance().getConfiguredLocaleId();
         UserContext userContext = new UserContext(preferredLocale, localeId);
         userContext.setId(user.getPersonnelId());
         userContext.setName(user.getDisplayName());

@@ -22,11 +22,8 @@ package org.mifos.application.master.business;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -49,14 +46,6 @@ public class LookUpValueLocaleEntity {
      */
     @Column(name = "lookup_value")
     private String lookUpValue;
-
-    /**
-     * The locale object representing the locale for which this object is
-     * defined.
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "locale_id", unique = true, insertable = false, updatable = false)
-    private SupportedLocalesEntity locale;
 
     /**
      * The id of the LookUpValueEntity that this object is associated with.
@@ -86,20 +75,12 @@ public class LookUpValueLocaleEntity {
         this.lookUpValueId = lookUpValueId;
     }
 
-    public SupportedLocalesEntity getLocale() {
-        return locale;
-    }
-
     public void setLocaleId(Short localeId) {
         this.localeId = localeId;
     }
 
     public Short getLocaleId() {
         return localeId;
-    }
-
-    public void setLocale(SupportedLocalesEntity locale) {
-        this.locale = locale;
     }
 
     public Integer getLookUpId() {
@@ -116,9 +97,5 @@ public class LookUpValueLocaleEntity {
 
     public void setLookUpValue(String lookUpValue) {
         this.lookUpValue = lookUpValue;
-    }
-
-    public String getLocaleName() {
-        return locale.getLocaleName();
     }
 }

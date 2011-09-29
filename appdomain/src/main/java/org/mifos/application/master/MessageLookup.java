@@ -117,12 +117,12 @@ public class MessageLookup implements MessageSourceAware {
     }
 
     public String lookup(String lookupKey) {
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         return lookup(lookupKey, locale);
     }
 
     public String lookup(LocalizedTextLookup namedObject, Object[] params) {
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         return customizedTextServiceFacade.replaceSubstitutions(
         		messageSource.getMessage(namedObject.getPropertiesKey(), params, namedObject.getPropertiesKey(), locale));
     }
@@ -151,7 +151,7 @@ public class MessageLookup implements MessageSourceAware {
     }
 
     public String lookupLabel(String labelKey) {
-        return lookupLabel(labelKey, Localization.getInstance().getMainLocale());
+        return lookupLabel(labelKey, Localization.getInstance().getConfiguredLocale());
     }
 
     public String lookupLabel(String labelKey, UserContext userContext) {
