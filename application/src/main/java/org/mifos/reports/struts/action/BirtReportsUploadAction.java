@@ -311,7 +311,7 @@ public class BirtReportsUploadAction extends BaseAction {
         String activityNameHead = "Can view ";
         rp.updateLookUpValue(reportBO.getActivityId(), activityNameHead + uploadForm.getReportTitle());
         legacyRolesPermissionsDao.reparentActivityUsingHibernate(reportBO.getActivityId(), category.getActivityId());
-        legacyRolesPermissionsDao.changeActivityMessage(reportBO.getActivityId(), Localization.ENGLISH_LOCALE,
+        legacyRolesPermissionsDao.changeActivityMessage(reportBO.getActivityId(), Localization.ENGLISH_LOCALE_ID,
                 "Can view " + reportBO.getReportName());
 
         FormFile formFile = uploadForm.getFile();

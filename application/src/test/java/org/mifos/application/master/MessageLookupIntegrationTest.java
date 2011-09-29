@@ -27,7 +27,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.config.ConfigLocale;
+import org.mifos.config.LocaleSetting;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.util.helpers.ConfigurationConstants;
@@ -61,10 +61,9 @@ public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals("lundi", messageLookup.lookup(WeekDay.MONDAY, new Locale("fr")));
     }
 
-    private void ChangeLocale(ConfigLocale newLocale) {
+    private void ChangeLocale(LocaleSetting newLocale) {
         Localization localization = Localization.getInstance();
         localization.setConfigLocale(newLocale);
-        localization.refresh();
         MifosConfiguration.getInstance().init();
 
     }

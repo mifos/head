@@ -58,7 +58,7 @@ public class BaseActionFormTest {
         String one = "1";
         Assert.assertEquals(one, baseActionForm.getStringValue(true));
         String strValue = "0.25";
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(strValue, baseActionForm.getStringValue(0.25));
         }
@@ -72,7 +72,7 @@ public class BaseActionFormTest {
     @Test
     public void xtestGetStringValue_is_IS() throws Exception {
         String strValue = "0.25";
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         LocalizationConverter converter = new LocalizationConverter();
         converter.setCurrentLocale(new Locale("IS", "is"));
         strValue = "0,25";
@@ -82,7 +82,7 @@ public class BaseActionFormTest {
 
     @Test
     public void testGetDoubleValue() throws Exception {
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         double dValue = 2.34;
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(dValue, baseActionForm.getDoubleValue("2.34"));
@@ -96,7 +96,7 @@ public class BaseActionFormTest {
     @Ignore
     @Test
     public void xtestGetDoubleValue_is_IS() throws Exception {
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         LocalizationConverter converter = new LocalizationConverter();
         double dValue = 2.34;
         converter.setCurrentLocale(new Locale("IS", "is"));

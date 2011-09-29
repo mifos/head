@@ -52,10 +52,6 @@ public class LookUpLabelEntity extends AbstractEntity {
     private Short localeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "locale_id", unique = true, insertable = false, updatable = false)
-    private SupportedLocalesEntity locale;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "entity_id")
     private LookUpEntity lookUpEntity;
 
@@ -86,14 +82,6 @@ public class LookUpLabelEntity extends AbstractEntity {
 
     public void setLabelName(String labelName) {
         this.labelName = labelName;
-    }
-
-    public SupportedLocalesEntity getLocale() {
-        return locale;
-    }
-
-    public void setLocale(SupportedLocalesEntity locale) {
-        this.locale = locale;
     }
 
     public void setLocaleId(Short localeId) {

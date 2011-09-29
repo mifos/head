@@ -120,7 +120,7 @@ public class ReportsDataServiceTest extends TestCase {
     public void testGetAllLoanProductsShouldDelegateToLoanPrdBusinessService() throws Exception {
         List<LoanOfferingBO> expectedLoanProducts = new ArrayList<LoanOfferingBO>();
 
-        expect(personnelMock.getLocaleId()).andReturn(localeId);
+        expect(personnelMock.getPreferredLocale()).andReturn(localeId);
         expect(loanPrdBusinessServiceMock.getAllLoanOfferings(localeId)).andReturn(expectedLoanProducts);
         replay(personnelBusinessServiceMock, personnelMock, loanPrdBusinessServiceMock);
         assertSame(expectedLoanProducts, reportsDataService.getAllLoanProducts());
@@ -128,7 +128,7 @@ public class ReportsDataServiceTest extends TestCase {
     }
 
     public void testGetAllLoanProductsShouldComplainIfLoanPrdBusinessServiceComplains() throws Exception {
-        expect(personnelMock.getLocaleId()).andReturn(localeId);
+        expect(personnelMock.getPreferredLocale()).andReturn(localeId);
         expect(loanPrdBusinessServiceMock.getAllLoanOfferings(localeId)).andThrow(expectedException);
         replay(personnelBusinessServiceMock, personnelMock, loanPrdBusinessServiceMock);
         try {

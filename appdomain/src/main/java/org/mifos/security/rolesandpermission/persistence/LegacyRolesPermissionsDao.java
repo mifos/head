@@ -330,7 +330,7 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
     private void insertLookUpValueLocale(int lookUpId, String lookUpDescription) throws PersistenceException {
         LookUpValueLocaleEntity lookUpValueLocaleEntity = new LookUpValueLocaleEntity();
         lookUpValueLocaleEntity.setLookUpId(new Integer(lookUpId));
-        lookUpValueLocaleEntity.setLocaleId(Localization.ENGLISH_LOCALE);
+        lookUpValueLocaleEntity.setLocaleId(Localization.ENGLISH_LOCALE_ID);
         lookUpValueLocaleEntity.setLookUpValue(lookUpDescription);
         createOrUpdate(lookUpValueLocaleEntity);
 

@@ -248,7 +248,7 @@ public class ReportsCategoryAction extends BaseAction {
         rPersistence.updateLookUpValue(activityId, inputCategoryName);
 
         legacyRolesPermissionsDao.changeActivityMessage(reportsCategoryBO.getActivityId(),
-                Localization.ENGLISH_LOCALE, reportsCategoryBO.getReportCategoryName());
+                Localization.ENGLISH_LOCALE_ID, reportsCategoryBO.getReportCategoryName());
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 }

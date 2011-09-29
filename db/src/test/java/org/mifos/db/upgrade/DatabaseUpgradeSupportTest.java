@@ -81,7 +81,7 @@ public class DatabaseUpgradeSupportTest {
 
     @Test
     public void testUpgrade() throws Exception {
-        databaseUpgradeSupport.upgrade();
+        databaseUpgradeSupport.expansion();
         verify(liquibase).update(EXPANSION);
     }
 

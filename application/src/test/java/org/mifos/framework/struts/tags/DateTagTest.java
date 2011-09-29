@@ -60,7 +60,7 @@ public class DateTagTest extends TestCase {
      */
     @Ignore
     public void xtestGetFormat() throws Exception {
-        Locale savedLocale = Localization.getInstance().getMainLocale();
+        Locale savedLocale = Localization.getInstance().getConfiguredLocale();
         new LocalizationConverter().setCurrentLocale(Locale.US);
         DateTag dateTag = new DateTag();
        Assert.assertEquals("M/d/yy", dateTag.getUserFormat(TestUtils.makeUser().getPreferredLocale()));

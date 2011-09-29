@@ -52,6 +52,7 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
     private DateTime systemDateTime;
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
+
     private final static String userLoginName = "test_user";
     private final static String officeName = "test_office";
     private final static String clientName = "test client";

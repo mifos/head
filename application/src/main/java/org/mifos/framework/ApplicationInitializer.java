@@ -25,7 +25,6 @@ import java.lang.management.MemoryPoolMXBean;
 import java.lang.reflect.Field;
 import java.sql.Driver;
 import java.sql.DriverManager;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -43,37 +42,27 @@ import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.CustomizedTextServiceFacade;
 import org.mifos.application.admin.system.ShutdownManager;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.servicefacade.CustomJDBCService;
-import org.mifos.application.servicefacade.SaveCollectionSheetCustomerDto;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
-import org.mifos.config.ConfigLocale;
+import org.mifos.config.LocaleSetting;
 import org.mifos.config.Localization;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.Configuration;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
-import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.config.persistence.ConfigurationPersistence;
-import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
@@ -89,7 +78,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
-import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyCompositeUserType;
 import org.mifos.security.authorization.HierarchyManager;
@@ -246,14 +234,14 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             databaseError.logError();
         } else {
             initializeDB(applicationContext);
-            
-            
+
+
             /*
-             * John W - Added in G Release and back patched to F Release.  
+             * John W - Added in G Release and back patched to F Release.
              * Related to jira issue MIFOS-4948
-             * 
+             *
              * Can find all code and the related query by searching for mifos4948
-             * 
+             *
             */
             CustomJDBCService customJdbcService = applicationContext.getBean(CustomJDBCService.class);
             boolean keyExists = customJdbcService.mifos4948IssueKeyExists();
@@ -265,7 +253,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 	                customJdbcService.insertMifos4948Issuekey();
 
 	                StaticHibernateUtil.commitTransaction();
-	                
+
 				} catch (AccountException e) {
 	                StaticHibernateUtil.rollbackTransaction();
 					e.printStackTrace();
@@ -274,22 +262,22 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 				}
             }
         }
-        
+
     }
 
 
     @SuppressWarnings("unchecked")
 	private void applyMifos4948Fix() throws AccountException {
-     
+
     	Session session = StaticHibernateUtil.getSessionTL();
     	List<LoanBO> fixLoans;
     	Query query = session.getNamedQuery("fetchMissingInstalmentsForWriteOffsAndReschedules");
-    	
+
     	fixLoans = query.list();
 
         if (fixLoans != null && fixLoans.size() > 0) {
 	        	for (LoanBO fixLoan : fixLoans) {
-	
+
 	        		Set<AccountActionDateEntity> fixLoanSchedules = fixLoan.getAccountActionDates();
 	            	Money totalMissedPayment = new Money(fixLoan.getCurrency());
 	                if (fixLoanSchedules != null && fixLoanSchedules.size() > 0) {
@@ -301,12 +289,12 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 	                logger.info("MIFOS-4948 - Loan: " + fixLoan.getGlobalAccountNum() + " - Adding payment: " + totalMissedPayment
 	        		 + " to fix instalments that should have been written-off or rescheduled.");
 
-	                fixLoan.applyMifos4948FixPayment(totalMissedPayment);	
+	                fixLoan.applyMifos4948FixPayment(totalMissedPayment);
 	        	}
 
         		logger.info(fixLoans.size() + " Account Payments created to fix data related to MIFOS-4948");
         }
-    
+
     }
 
     private void initializeDBConnectionForHibernate(DatabaseMigrator migrator) {
@@ -322,11 +310,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     }
 
     private void initializeDB(ApplicationContext applicationContext) throws ConfigurationException, PersistenceException, FinancialException {
-        // this method is called so that supported locales will be
-        // loaded
-        // from db and stored in cache for later use
-        List<SupportedLocalesEntity> supportedLocales = applicationContext.getBean(ApplicationConfigurationDao.class).findSupportedLocale();
-        Localization.getInstance().init(supportedLocales);
         // Check ClientRules configuration in db and config file(s)
         // for errors. Also caches ClientRules values.
         ClientRules.init();
@@ -339,7 +322,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         EntityMasterData.getInstance().init();
         initializeEntityMaster();
 
-        applicationContext.getBean(CustomizedTextServiceFacade.class).convertMigratedLabelKeysToLocalizedText(Localization.getInstance().getMainLocale());
+        applicationContext.getBean(CustomizedTextServiceFacade.class).convertMigratedLabelKeysToLocalizedText(Localization.getInstance().getConfiguredLocale());
 
     }
 
@@ -350,13 +333,13 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
         Configuration.getInstance();
         MifosConfiguration.getInstance().init();
-        configureAuditLogValues(Localization.getInstance().getMainLocale());
-        ConfigLocale configLocale = new ConfigLocale();
+        configureAuditLogValues(Localization.getInstance().getConfiguredLocale());
+        LocaleSetting configLocale = new LocaleSetting();
         if (servletContext != null) {
             mifosScheduler.initialize();
             servletContext.setAttribute(MifosScheduler.class.getName(), mifosScheduler);
             servletContext.setAttribute(ShutdownManager.class.getName(), shutdownManager);
-            servletContext.setAttribute(ConfigLocale.class.getSimpleName(), configLocale);
+            servletContext.setAttribute(LocaleSetting.class.getSimpleName(), configLocale);
         }
     }
 

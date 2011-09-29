@@ -30,7 +30,6 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.exceptions.PersonnelException;
 import org.mifos.customers.personnel.util.helpers.LockStatus;
@@ -87,7 +86,7 @@ public class PersonnelBO extends AbstractBusinessObject {
     private Short locked = 0;
     private Short noOfTries = 0;
     private Set<PersonnelRoleEntity> personnelRoles;
-    private SupportedLocalesEntity preferredLocale;
+    private Short preferredLocale;
     private byte[] encryptedPassword;
 
     public PersonnelBO(final PersonnelLevel level, final OfficeBO office, final Integer title, final Short preferredLocale, final String password,
@@ -100,7 +99,7 @@ public class PersonnelBO extends AbstractBusinessObject {
         this.level = new PersonnelLevelEntity(level);
         this.office = office;
         this.title = title;
-        this.preferredLocale = new SupportedLocalesEntity(preferredLocale);
+        this.preferredLocale = preferredLocale;
         this.userName = userName;
         this.emailId = emailId;
         this.personnelDetails = new PersonnelDetailsEntity(name, governmentIdNumber, dob, maritalStatus, gender,
@@ -131,7 +130,7 @@ public class PersonnelBO extends AbstractBusinessObject {
     public PersonnelBO() {
         this(null, null, null, null);
         this.personnelDetails = new PersonnelDetailsEntity();
-        this.preferredLocale = new SupportedLocalesEntity();
+        this.preferredLocale = 1; //default locale is 1 (english)
         this.customFields = new HashSet<PersonnelCustomFieldEntity>();
         this.personnelNotes = new HashSet<PersonnelNotesEntity>();
     }
@@ -215,7 +214,7 @@ public class PersonnelBO extends AbstractBusinessObject {
         return personnelId;
     }
 
-    public SupportedLocalesEntity getPreferredLocale() {
+    public Short getPreferredLocale() {
         return preferredLocale;
     }
 
@@ -319,7 +318,7 @@ public class PersonnelBO extends AbstractBusinessObject {
         this.personnelNotes = personnelNotes;
     }
 
-    public void setPreferredLocale(final SupportedLocalesEntity preferredLocale) {
+    public void setPreferredLocale(final Short preferredLocale) {
         this.preferredLocale = preferredLocale;
     }
 
@@ -389,11 +388,11 @@ public class PersonnelBO extends AbstractBusinessObject {
 
     }
 
-    public void update(final String emailId, final Name name, final Integer maritalStatus, final Integer gender, final Address address, final Short preferredLocale) {
+    public void update(final String emailId, final Name name, final Integer maritalStatus, final Integer gender, final Address address, final Short preferredLocaleId) {
 
         this.emailId = emailId;
-        if (preferredLocale != null && preferredLocale != 0) {
-            this.preferredLocale = new SupportedLocalesEntity(preferredLocale);
+        if (preferredLocaleId != null && preferredLocaleId != 0) {
+            this.preferredLocale = preferredLocaleId;
         }
         setDisplayName(name.getDisplayName());
         updatePersonnelDetails(name, maritalStatus, gender, address, null);
@@ -511,10 +510,6 @@ public class PersonnelBO extends AbstractBusinessObject {
         }
     }
 
-    public Short getLocaleId() {
-        return getPreferredLocale().getLocaleId();
-    }
-
     public Set<Short> getRoles() {
         Set<Short> roles = new HashSet<Short>();
         for (PersonnelRoleEntity personnelRole : getPersonnelRoles()) {
@@ -555,8 +550,8 @@ public class PersonnelBO extends AbstractBusinessObject {
 
     public void updateUserDetails(String firstName, String middleName, String secondLastName, String lastName,
             String email, Integer gender, Integer maritalStatus,
-            Short preferredLocale, PersonnelStatusEntity personnelStatus, 
-            Address address, Integer title, PersonnelLevelEntity personnelLevel, List<RoleBO> roles, 
+            Short preferredLocaleId, PersonnelStatusEntity personnelStatus,
+            Address address, Integer title, PersonnelLevelEntity personnelLevel, List<RoleBO> roles,
             String password, OfficeBO newOffice) {
 
         this.emailId = email;
@@ -570,12 +565,12 @@ public class PersonnelBO extends AbstractBusinessObject {
         } else {
             this.title = title;
         }
-        
+
         if (this.isOfficeDifferent(newOffice)) {
             this.office = newOffice;
         }
 
-        this.preferredLocale = new SupportedLocalesEntity(preferredLocale);
+        this.preferredLocale = preferredLocaleId;
         this.status = personnelStatus;
         this.level = personnelLevel;
 

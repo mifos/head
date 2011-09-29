@@ -79,7 +79,7 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
             ServletException {
 
-        LocaleContextHolder.setLocale(Localization.getInstance().getMainLocale());
+        LocaleContextHolder.setLocale(Localization.getInstance().getConfiguredLocale());
 
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
@@ -89,7 +89,11 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
         if (MifosBatchJob.isBatchJobRunningThatRequiresExclusiveAccess()) {
             allowAuthenticationToContinue = false;
 
-            request.getSession(false).invalidate();
+            HttpSession session = request.getSession(false);
+            if(session != null) {
+                session.invalidate();
+            }
+
             denied = new AuthenticationServiceException(messages.getMessage(LoginConstants.BATCH_JOB_RUNNING,
                     "You have been logged out of the system because batch jobs are running."));
         }
@@ -170,7 +174,7 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
             request.setAttribute("activityDto", loginActivity);
 
             Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
-            Short localeId = Localization.getInstance().getLocaleId();
+            Short localeId = Localization.getInstance().getConfiguredLocaleId();
             UserContext userContext = new UserContext(preferredLocale, localeId);
             userContext.setId(user.getPersonnelId());
             userContext.setName(user.getDisplayName());

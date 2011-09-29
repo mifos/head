@@ -87,17 +87,17 @@ public class RESTAPITestHelper {
     }
 
     public void assertEquals(String expectedJSON, String actualJSON) {
-        String compressedExpectedJSON = compress(expectedJSON);
-        String compressedActualJSON = compress(actualJSON);
-        if(!compressedExpectedJSON.equals(compressedActualJSON)) {
-            int diffIndex = findDiff(compressedExpectedJSON , compressedActualJSON);
+        String stripedExpectedJSON = strip(expectedJSON);
+        String stripedActualJSON = strip(actualJSON);
+        if(!stripedExpectedJSON.equals(stripedActualJSON)) {
+            int diffIndex = findDiff(stripedExpectedJSON , stripedActualJSON);
             Assert.fail("json different at index " + diffIndex +"\n "
-                          +compressedExpectedJSON.substring(diffIndex) +"\n "
-                          +compressedActualJSON.substring(diffIndex));
+                          +stripedExpectedJSON.substring(diffIndex) +"\n "
+                          +stripedActualJSON.substring(diffIndex));
         }
     }
 
-    private String compress(String str) {
+    private String strip(String str) {
         return str.replaceAll(" ","").replaceAll("\t", "").replaceAll("\n", "").replaceAll("\r", "");
     }
 

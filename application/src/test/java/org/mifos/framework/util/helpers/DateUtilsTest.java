@@ -142,7 +142,7 @@ public class DateUtilsTest extends TestCase {
     // java.sql.Date objects in our localization setting
     @Ignore
     public void xtestGetLocaleDate() throws Exception {
-        Locale savedLocale = Localization.getInstance().getMainLocale();
+        Locale savedLocale = Localization.getInstance().getConfiguredLocale();
         long expectedDate = new DateMidnight(2005, 03, 4).getMillis();
         new LocalizationConverter().setCurrentLocale(Locale.GERMANY);
         DateUtils.refreshInternalLocale();

@@ -101,7 +101,7 @@ public class GroupTransferServiceIntegrationTest extends MifosIntegrationTestCas
     public void cleanDatabaseTables() {
         databaseCleaner.clean();
 
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         AuditConfiguration.init(locale);
     }
 

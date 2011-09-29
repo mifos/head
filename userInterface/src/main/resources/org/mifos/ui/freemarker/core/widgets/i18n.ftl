@@ -27,5 +27,5 @@
 [#assign mlink="org.mifos.ui.ftl.MarkdownLinker"?new()]
 
 [#-- Template method for localized formatting of Java or Joda dates --]
-[#-- usage: ${mifos.date_formatter(monthlyCashFlow.dateTime, "MMMM", Application.ConfigLocale.locale)} --]
+[#-- usage: ${mifos.date_formatter(monthlyCashFlow.dateTime, "MMMM", Application.LocaleSetting.locale)} --]
 [#assign date_formatter="org.mifos.ui.ftl.DateFormatter"?new()]

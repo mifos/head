@@ -268,7 +268,7 @@ public class TableTagTest extends TestCase {
 
     public void testTableTagException() throws Exception {
         try {
-            Locale locale = Localization.getInstance().getMainLocale();
+            Locale locale = Localization.getInstance().getConfiguredLocale();
             Text.getImage(this, "name", locale);
             Assert.fail();
         } catch (TableTagException tte) {

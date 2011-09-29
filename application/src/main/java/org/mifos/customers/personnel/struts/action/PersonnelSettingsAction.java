@@ -29,6 +29,7 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.Localization;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.struts.actionforms.PersonnelSettingsActionForm;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -45,8 +46,8 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 public class PersonnelSettingsAction extends BaseAction {
 
     @TransactionDemarcate(saveToken = true)
-    public ActionForward get(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+    public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
 
         Short userId = getUserContext(request).getId();
 
@@ -89,7 +90,7 @@ public class PersonnelSettingsAction extends BaseAction {
         form1.setGovernmentIdNumber(personnel.getPersonnelDetails().getGovernmentIdNumber());
         form1.setAddress(personnel.getPersonnelDetails().getAddress());
         form1.setDob(personnel.getPersonnelDetails().getDob().toString());
-        form1.setPreferredLocale(getStringValue(personnel.getPreferredLocale().getLanguage().getLookUpValue().getLookUpId()));
+        form1.setPreferredLocale(Localization.getInstance().getDisplayName(personnel.getPreferredLocale()));
         form1.setMaritalStatus(getStringValue(personnel.getPersonnelDetails().getMaritalStatus()));
 
         return mapping.findForward(ActionForwards.manage_success.toString());
@@ -104,7 +105,9 @@ public class PersonnelSettingsAction extends BaseAction {
             prefeeredLocaleId = personnelactionForm.getPreferredLocaleValue().intValue();
         }
 
-        UserSettingsDto userSettings = this.personnelServiceFacade.retrieveUserSettings(personnelactionForm.getGenderValue(), personnelactionForm.getMaritalStatusValue(), prefeeredLocaleId);
+        UserSettingsDto userSettings = this.personnelServiceFacade.retrieveUserSettings(personnelactionForm.getGenderValue(),
+                                                                                        personnelactionForm.getMaritalStatusValue(),
+                                                                                        prefeeredLocaleId);
 
         SessionUtils.setAttribute(PersonnelConstants.GENDER, userSettings.getGender(), request);
         SessionUtils.setAttribute(PersonnelConstants.MARITALSTATUS, userSettings.getMartialStatus(), request);

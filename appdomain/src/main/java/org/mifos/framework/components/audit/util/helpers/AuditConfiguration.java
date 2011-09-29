@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
+import java.util.Set;
 
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -58,15 +59,15 @@ public class AuditConfiguration {
     private PropertyResourceBundle columnNames;
     static private Locale locale;
 
-    private List<Short> locales;
+    private Set<Short> locales;
 
     private LegacyMasterDao legacyMasterDao = ApplicationContextProvider.getBean(LegacyMasterDao.class);
 
     public static AuditConfiguration auditConfigurtion = new AuditConfiguration();
 
     private AuditConfiguration() {
-        locales = Localization.getInstance().getSupportedLocaleIds();
-        locale = Localization.getInstance().getMainLocale();
+        locales = Localization.getInstance().getLocaleIdSet();
+        locale = Localization.getInstance().getConfiguredLocale();
         columnNames = (PropertyResourceBundle) PropertyResourceBundle.getBundle(
                 FilePaths.COLUMN_MAPPING_BUNDLE_PROPERTYFILE, locale);
 

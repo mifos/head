@@ -18,7 +18,7 @@
         <property name="updatedBy" column="updated_by" type="short" />
         <property name="updatedDate" column="updated_date" type="date" />
 
-        <many-to-one name="supportedLocales" column="locale_id" class="org.mifos.application.master.business.SupportedLocalesEntity" not-null="true" />
+        <property name="supportedLocales" column="locale_id" type="short" not-null="true" />
 
         <set name="checklistDetails" table="checklist_detail" cascade="all,delete-orphan" order-by="DETAIL_ID asc" inverse="true" lazy="false">
             <key column="checklist_id" />

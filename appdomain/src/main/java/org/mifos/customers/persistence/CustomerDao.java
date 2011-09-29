@@ -20,6 +20,7 @@
 
 package org.mifos.customers.persistence;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -130,8 +131,6 @@ public interface CustomerDao {
 
     List<ValueListElement> retrieveLivingStatus();
 
-    List<ValueListElement> retrieveLanguages();
-
     CenterDisplayDto getCenterDisplayDto(Integer centerId, UserContext userContext);
 
     CustomerAccountSummaryDto getCustomerAccountSummaryDto(Integer centerId);
@@ -170,7 +169,7 @@ public interface CustomerDao {
 
     boolean validateGovernmentIdForClient(String governmentId);
 
-    void validateClientForDuplicateNameOrGovtId(ClientBO client) throws CustomerException;
+    void validateClientForDuplicateNameOrGovtId(String name, Date dob, String governmentId) throws CustomerException;
 
     void validateGroupNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException;
 

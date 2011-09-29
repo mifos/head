@@ -98,7 +98,7 @@ public class MifosImageTag extends TagSupport {
     }
 
     public String render() {
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         ResourceBundle resource = getResourceBundle(locale);
         path = resource.getString(getId());
         XmlBuilder html = new XmlBuilder();

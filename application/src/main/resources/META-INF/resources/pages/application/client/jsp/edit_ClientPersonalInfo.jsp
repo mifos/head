@@ -148,13 +148,7 @@ explanation of the license and how it is applied.
 									<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.governmentId" keyhm="Client.GovernmentId" name="clientCustActionForm"
 										property="governmentId" maxlength="50" /></td>
 								</tr>
-								<%-- Date Of  Birth  --%>
-								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel name="client.DateOfBirth"
-										mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></td>
-									<td>
-									<date:datetag renderstyle="simple" property="dateOfBirth" /></td>
-								</tr>
+
 							</c:when>
 							<c:otherwise>
 								<%-- Government Id Label--%>
@@ -164,16 +158,17 @@ explanation of the license and how it is applied.
 									<td><c:out value="${BusinessKey.governmentId}" />
 										<html-el:hidden	name="clientCustActionForm" property="governmentId"	value="${BusinessKey.governmentId}" /></td>
 								</tr>
-								<%-- Date Of  Birth Label--%>
-								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel name="client.DateOfBirth"
-										mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></td>
-									<td>
-										<c:out value="${sessionScope.clientCustActionForm.dateOfBirth}" />
-									</td>
-								</tr>
 							</c:otherwise>
 						</c:choose>
+						<%-- Date Of  Birth Label--%>
+                       <tr class="fontnormal">
+                       		<td align="right">
+                       			<mifos:mifoslabel name="client.DateOfBirth" mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel>
+                       	    </td>
+                            <td>
+                            <date:datetag renderstyle="simple" property="dateOfBirth" /></td>
+                            </td>
+                       </tr>
 						<%-- Gender --%>
 						<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel name="client.Gender"

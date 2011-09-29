@@ -138,7 +138,7 @@ explanation of the license and how it is applied.
 			<mifos:mifoslabel name="Personnel.LanguagePreferred"/>
 			<span class="fontnormal">
 				<c:if test="${!empty Personnel.preferredLocale}">
-					<c:out value ="${Personnel.preferredLocale.language.languageName}"/>
+					<c:out value ="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Language')}"/>
 				</c:if>
 			</span>
 		</td>

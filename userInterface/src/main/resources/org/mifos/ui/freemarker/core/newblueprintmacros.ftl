@@ -106,7 +106,7 @@
 [#macro header pageTitle]
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html dir="${Application.ConfigLocale.direction}">
+<html dir="${Application.LocaleSetting.direction}">
     <head>
         <title id="${pageTitle}">[@spring.message "${pageTitle}" /]</title>
         <link href="pages/css/maincss.css" rel="stylesheet" type="text/css" />
@@ -167,5 +167,5 @@
 [#assign mlink="org.mifos.ui.ftl.MarkdownLinker"?new()]
 
 [#-- Template method for localized formatting of Java or Joda dates --]
-[#-- usage: ${mifos.date_formatter(monthlyCashFlow.dateTime, "MMMM", Application.ConfigLocale.locale)} --]
+[#-- usage: ${mifos.date_formatter(monthlyCashFlow.dateTime, "MMMM", Application.LocaleSetting.locale)} --]
 [#assign date_formatter="org.mifos.ui.ftl.DateFormatter"?new()]

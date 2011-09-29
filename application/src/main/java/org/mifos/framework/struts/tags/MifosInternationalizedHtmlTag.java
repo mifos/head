@@ -28,7 +28,7 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.struts.Globals;
 import org.apache.strutsel.taglib.html.ELHtmlTag;
-import org.mifos.config.ConfigLocale;
+import org.mifos.config.LocaleSetting;
 
 /**
  * Renders an HTML <html> element with appropriate language attributes
@@ -55,7 +55,7 @@ public class MifosInternationalizedHtmlTag extends ELHtmlTag {
         String countryCode = "";
         String direction = null;
 
-        ConfigLocale configLocale = new ConfigLocale();
+        LocaleSetting configLocale = new LocaleSetting();
         countryCode = configLocale.getCountryCode();
         languageCode = configLocale.getLanguageCode();
         direction = configLocale.getDirection();
@@ -100,7 +100,7 @@ public class MifosInternationalizedHtmlTag extends ELHtmlTag {
     }
 
     private void setDirection(StringBuffer sb, String languageCode, String direction) {
-        if (!ConfigLocale.DEFAULT_DIRECTION.equals(direction)) {
+        if (!LocaleSetting.DEFAULT_DIRECTION.equals(direction)) {
             appendDirection(sb, direction);
         } else {
             autoDetectAndSetDirection(sb, languageCode);

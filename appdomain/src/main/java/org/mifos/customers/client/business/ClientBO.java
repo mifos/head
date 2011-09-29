@@ -31,7 +31,6 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
@@ -50,7 +49,6 @@ import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -362,7 +360,7 @@ public class ClientBO extends CustomerBO {
         return this.dateOfBirth;
     }
 
-    void setDateOfBirth(final Date dateOfBirth) {
+    public void setDateOfBirth(final Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -511,7 +509,7 @@ public class ClientBO extends CustomerBO {
 
         this.governmentId = personalInfo.getGovernmentId();
         try {
-            this.dateOfBirth = DateUtils.getDateAsSentFromBrowser(personalInfo.getDateOfBirth());
+            setDateOfBirth(DateUtils.getDateAsSentFromBrowser(personalInfo.getDateOfBirth()));
         } catch (InvalidDateException e) {
             throw new CustomerException(ClientConstants.INVALID_DOB_EXCEPTION);
         }
@@ -531,8 +529,8 @@ public class ClientBO extends CustomerBO {
             }
         }
         this.updateClientDetails(personalInfo.getClientDetail());
-
         setDisplayName(personalInfo.getClientDisplayName());
+
         Address address = null;
         if (personalInfo.getAddress() != null) {
             ;

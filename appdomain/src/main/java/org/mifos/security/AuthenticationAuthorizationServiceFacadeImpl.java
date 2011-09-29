@@ -53,7 +53,7 @@ public class AuthenticationAuthorizationServiceFacadeImpl implements Authenticat
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException, DataAccessException {
 
-        LocaleContextHolder.setLocale(Localization.getInstance().getMainLocale());
+        LocaleContextHolder.setLocale(Localization.getInstance().getConfiguredLocale());
 
         if (StringUtils.isBlank(username)) {
             throw new UsernameNotFoundException(LoginConstants.KEYINVALIDUSER);

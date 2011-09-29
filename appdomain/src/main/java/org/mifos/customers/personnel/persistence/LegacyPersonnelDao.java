@@ -33,7 +33,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -242,16 +241,6 @@ public class LegacyPersonnelDao extends LegacyGenericDao {
         queryParameters.put(CustomerSearchConstants.PERSONNELLEVELID, PersonnelLevel.LOAN_OFFICER.getValue());
         queryParameters.put(PersonnelConstants.LOANOFFICERACTIVE, PersonnelStatus.ACTIVE.getValue());
         return executeNamedQuery(NamedQueryConstants.GET_ACTIVE_LOAN_OFFICER_UNDER_USER, queryParameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<SupportedLocalesEntity> getSupportedLocales() throws PersistenceException {
-        return executeNamedQuery(NamedQueryConstants.SUPPORTED_LOCALE_LIST, null);
-    }
-
-    @SuppressWarnings("unchecked")
-    public List getAvailableLanguages() throws PersistenceException {
-        return executeNamedQuery(NamedQueryConstants.AVAILABLE_LANGUAGES, null);
     }
 
     @SuppressWarnings("unchecked")
