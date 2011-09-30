@@ -85,6 +85,7 @@ public class AccountingServiceTest {
         when(cacheManager.getExportDetails(any(String.class))).thenReturn(dataFromCache);
         String output = accountingService.getExportOutput(new LocalDate(2010, 8, 10), new LocalDate(2010, 8, 10));
         Assert.assertTrue("Should be receipt type", output.contains("VCHTYPE=\"Receipt\""));
+        Assert.assertTrue("Date should be set to 20101012", output.contains("<DATE>20101012</DATE>"));
     }
 
     @Test
