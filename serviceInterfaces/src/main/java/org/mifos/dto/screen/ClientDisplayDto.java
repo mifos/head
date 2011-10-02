@@ -55,7 +55,6 @@ public class ClientDisplayDto implements Serializable {
     private final String educationLevel;
     private final String povertyStatus;
     private final Short numChildren;
-    private final Boolean isCustomerPicture;
     private final Boolean areFamilyDetailsRequired;
 
     // if areFamilyDetailsRequired = false
@@ -73,7 +72,7 @@ public class ClientDisplayDto implements Serializable {
             final Boolean blackListed, final Short loanOfficerId, final String loanOfficerName,
             final String businessActivities, final String handicapped, final String maritalStatus,
             final String citizenship, final String ethnicity, final String educationLevel, final String povertyStatus,
-            final Short numChildren, final Boolean isCustomerPicture, final Boolean areFamilyDetailsRequired,
+            final Short numChildren, final Boolean areFamilyDetailsRequired,
             final String spouseFatherValue, final String spouseFatherName,
             final List<ClientFamilyDetailOtherDto> familyDetails, Integer age) {
 
@@ -105,7 +104,6 @@ public class ClientDisplayDto implements Serializable {
         this.educationLevel = educationLevel;
         this.povertyStatus = povertyStatus;
         this.numChildren = numChildren;
-        this.isCustomerPicture = isCustomerPicture;
         this.areFamilyDetailsRequired = areFamilyDetailsRequired;
 
         this.spouseFatherValue = spouseFatherValue;
@@ -224,10 +222,6 @@ public class ClientDisplayDto implements Serializable {
 
     public Short getNumChildren() {
         return this.numChildren;
-    }
-
-    public Boolean getIsCustomerPicture() {
-        return this.isCustomerPicture;
     }
 
     public Boolean getAreFamilyDetailsRequired() {

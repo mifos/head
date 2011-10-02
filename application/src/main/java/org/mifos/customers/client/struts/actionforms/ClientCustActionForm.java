@@ -46,7 +46,6 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
-import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -338,7 +337,6 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
             }
             checkForMandatoryFields(EntityType.CLIENT.getValue(), errors, request);
             validateCustomFieldsForCustomers(request, errors);
-            validatePicture(request, errors);
         }
         if (method.equals(Methods.preview.toString()) && ClientConstants.INPUT_MFI_INFO.equals(input)) {
             validateFormedByPersonnel(errors);
@@ -387,27 +385,6 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
             validateFamilyLivingStatus(errors);
         }
         return errors;
-    }
-
-    private void validatePicture(HttpServletRequest request, ActionErrors errors) throws PageExpiredException {
-        if (picture != null) {
-            String fileName = picture.getFileName();
-            if (picture.getFileSize() > ClientConstants.PICTURE_ALLOWED_SIZE) {
-                errors.add(ClientConstants.PICTURE_SIZE_EXCEPTION, new ActionMessage(
-                        ClientConstants.PICTURE_SIZE_EXCEPTION));
-            }
-            if (!ValidateMethods.isNullOrBlank(fileName)) {
-                String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-                if (!(fileExtension.equalsIgnoreCase("jpeg") || fileExtension.equalsIgnoreCase("jpg"))) {
-                    errors.add(ClientConstants.PICTURE_EXCEPTION, new ActionMessage(ClientConstants.PICTURE_EXCEPTION));
-                }
-            }
-            if (picture.getFileSize() == 0 || picture.getFileSize() < 0) {
-                SessionUtils.setAttribute("noPicture", "Yes", request);
-            } else {
-                SessionUtils.setAttribute("noPicture", "No", request);
-            }
-        }
     }
 
     private void validateGender(ActionErrors errors, ResourceBundle resources) {

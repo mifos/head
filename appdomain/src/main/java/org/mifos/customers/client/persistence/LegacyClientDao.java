@@ -20,11 +20,6 @@
 
 package org.mifos.customers.client.persistence;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Blob;
-
-import org.hibernate.Hibernate;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
@@ -36,14 +31,6 @@ import org.mifos.framework.persistence.LegacyGenericDao;
 public class LegacyClientDao extends LegacyGenericDao {
 
     private LegacyClientDao() {
-    }
-
-    public Blob createBlob(final InputStream picture) throws PersistenceException {
-        try {
-            return Hibernate.createBlob(picture);
-        } catch (IOException ioe) {
-            throw new PersistenceException(ioe);
-        }
     }
 
     public void saveClient(final ClientBO clientBO) throws CustomerException {

@@ -46,6 +46,8 @@
     <bean id="groupServiceFacade" class="org.mifos.application.servicefacade.GroupServiceFacadeWebTier" />
 
     <bean id="clientServiceFacade" class="org.mifos.application.servicefacade.ClientServiceFacadeWebTier" />
+    
+    <bean id="clientPhotoService" class="org.mifos.framework.image.service.ClientPhotoServiceFileSystem" />
 
     <bean id="meetingServiceFacade" class="org.mifos.application.servicefacade.MeetingServiceFacadeWebTier" />
 

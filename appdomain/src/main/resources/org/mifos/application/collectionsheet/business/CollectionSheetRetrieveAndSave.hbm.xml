@@ -12,7 +12,6 @@
                 left outer join fetch c.groupPerformanceHistory gph
                  left outer join fetch gph.loanCounters
                 left outer join fetch c.customerDetail
-                left outer join fetch c.customerPicture
                 left outer join fetch c.clientPerformanceHistory cph
                  left outer join fetch cph.loanCounters
                 where c.office.id = :BRANCH_ID

@@ -22,15 +22,12 @@ package org.mifos.config;
 
 import java.util.NoSuchElementException;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.apache.commons.configuration.Configuration;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.config.business.MifosConfigurationManager;
-import org.testng.annotations.Test;
 
-@Test(groups={"unit", "configTestSuite"})
-public class ConfigurationManagerTest extends TestCase {
+public class ConfigurationManagerTest {
 
     public ConfigurationManagerTest() throws Exception {
         super();
@@ -39,17 +36,13 @@ public class ConfigurationManagerTest extends TestCase {
     Configuration configuration;
     private static final String badKey = "Bad Key";
 
-    @Override
+    @Before
     public void setUp() {
         configuration = MifosConfigurationManager.getInstance().getConfiguration();
     }
 
+    @Test(expected=NoSuchElementException.class)
     public void testGetUndefinedProperty() {
-        try {
             configuration.getShort(badKey);
-            Assert.fail("Expected NoSuchElementException.");
-        } catch (NoSuchElementException e) {
-            // expected
-        }
     }
 }

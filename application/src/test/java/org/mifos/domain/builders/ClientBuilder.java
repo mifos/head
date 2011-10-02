@@ -19,7 +19,6 @@
  */
 package org.mifos.domain.builders;
 
-import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +69,6 @@ public class ClientBuilder {
     private ClientNameDetailEntity clientNameDetailEntity;
     private ClientNameDetailEntity spouseFatherNameDetailEntity;
     private ClientDetailEntity clientDetailEntity;
-    private Blob pictureAsBlob;
     private List<ClientInitialSavingsOfferingEntity> associatedOfferings = new ArrayList<ClientInitialSavingsOfferingEntity>();
 
     private CustomerBO parentCustomer;
@@ -89,7 +87,7 @@ public class ClientBuilder {
         final ClientBO client = ClientBO.createNewInGroupHierarchy(userContext, name, customerStatus, mfiJoiningDate,
                 parentCustomer, formedBy, clientNameDetailEntity, dateOfBirth, governmentId,
                 trained, trainedDate, groupFlag, clientFirstName, clientLastName, secondLastName,
-                spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings, externalId, address, new LocalDate(activationDate));
+                spouseFatherNameDetailEntity, clientDetailEntity, associatedOfferings, externalId, address, new LocalDate(activationDate));
         client.setMeeting(this.meeting);
 
         return client;
@@ -111,7 +109,7 @@ public class ClientBuilder {
                     userContext, name, customerStatus, mfiJoiningDate,
                     office, loanOfficer, meeting, formedBy, clientNameDetailEntity, dateOfBirth, governmentId,
                     trained, trainedDate, groupFlag, clientFirstName, clientLastName, secondLastName,
-                    spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings, externalId,
+                    spouseFatherNameDetailEntity, clientDetailEntity, associatedOfferings, externalId,
                     address, 10);
             client.setVersionNo(versionNumber);
             return client;
@@ -125,7 +123,7 @@ public class ClientBuilder {
         ClientBO client = ClientBO.createNewInGroupHierarchy(userContext, name, customerStatus, mfiJoiningDate,
                 parentCustomer, formedBy, clientNameDetailEntity, dateOfBirth, governmentId,
                 trained, trainedDate, groupFlag, clientFirstName, clientLastName, secondLastName,
-                spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings, externalId, address, new LocalDate(activationDate));
+                spouseFatherNameDetailEntity, clientDetailEntity, associatedOfferings, externalId, address, new LocalDate(activationDate));
         client.setVersionNo(versionNumber);
         return client;
 

@@ -397,5 +397,31 @@
             alter table personnel add foreign key(preferred_locale) references supported_locale(locale_id) on delete no action on update no action;
         </sql>
         </rollback>
-    </changeSet>        
+    </changeSet>
+        <changeSet id="MIFOS-5111_1" author="Udai Gupta" context="expansion">
+        <sql endDelimiter=";">
+            CREATE TABLE image_info (
+              image_id bigint(20) NOT NULL AUTO_INCREMENT,
+              content_type varchar(255) DEFAULT NULL,
+              length bigint(20) NOT NULL,
+              path varchar(255) NOT NULL,
+              PRIMARY KEY (image_id)
+            )engine=innodb character set utf8;
+
+            CREATE TABLE client_photo (
+              photo_id bigint(20) NOT NULL AUTO_INCREMENT,
+              client_id bigint(20) NOT NULL,
+              image_info bigint(20) NOT NULL,
+              PRIMARY KEY (photo_id),
+              UNIQUE KEY uk_photo_client_id (client_id),
+              KEY fk_image_info (image_info)
+            )engine=innodb character set utf8;
+        </sql>
+        <rollback>
+        <sql>
+            DROP TABLE IF EXISTS image_info;
+            DROP TABLE IF EXISTS client_photo;
+        </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

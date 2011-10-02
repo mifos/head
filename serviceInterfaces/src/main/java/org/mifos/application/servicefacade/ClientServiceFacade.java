@@ -38,6 +38,7 @@ import org.mifos.dto.screen.ClientFormCreationDto;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.ClientMfiInfoDto;
 import org.mifos.dto.screen.ClientPersonalInfoDto;
+import org.mifos.dto.screen.ClientPhotoDto;
 import org.mifos.dto.screen.ClientRemovalFromGroupDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -60,6 +61,9 @@ public interface ClientServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO')")
     ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    ClientPhotoDto getClientPhoto(Long clientId);
 
     @PreAuthorize("isFullyAuthenticated()")
     ClientRulesDto retrieveClientDetailsForPreviewingEditOfPersonalInfo();

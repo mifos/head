@@ -146,9 +146,6 @@
             <one-to-one name="customerDetail"
                 class="org.mifos.customers.client.business.ClientDetailEntity"
                 cascade="all" />
-            <one-to-one name="customerPicture"
-                class="org.mifos.customers.client.business.CustomerPictureEntity"
-                cascade="all" property-ref="customer" />
             <one-to-one name="clientPerformanceHistory"
                 class="org.mifos.customers.client.business.ClientPerformanceHistoryEntity"
                 cascade="all" property-ref="client" />
@@ -278,7 +275,6 @@
         <return-scalar column="educationLevelName" type="string" />
         <return-scalar column="povertyStatusName" type="string" />
         <return-scalar column="numChildren" type="short" />
-        <return-scalar column="pictureLength" type="integer" />
         <return-scalar column="branchId" type="integer" />
         <![CDATA[select c.customer_id as customerId,
                 c.global_cust_num as globalCustNum,
@@ -306,14 +302,12 @@
                 lv_educationLevel.lookup_name as educationLevelName,
                 lv_povertyStatus.lookup_name as povertyStatusName,
                 cd.num_children as numChildren,
-                length(cp.picture) as pictureLength,
                 o.office_id as branchId
                 from customer c
                 left join customer parent on parent.customer_id = c.parent_customer_id
                 join customer_detail cd on cd.customer_id = c.customer_id
                 left join personnel formedby on formedby.personnel_id = c.customer_formedby_id
                 left join personnel loanOfficer on loanOfficer.personnel_id = c.loan_officer_id
-                left join customer_picture cp on cp.customer_id = c.customer_id
                 join office o on o.office_id = c.branch_id
                 join customer_state cs on cs.status_id = c.status_id
                 join lookup_value lv on lv.lookup_id = cs.status_lookup_id

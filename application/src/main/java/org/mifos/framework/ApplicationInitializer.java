@@ -75,6 +75,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
 import org.mifos.framework.hibernate.helper.AuditInterceptorFactory;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.image.service.ImageStorageManager;
 import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
@@ -215,10 +216,10 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
         // if a database upgrade loads an instance of Money then MoneyCompositeUserType needs the default
         // currency
-        MoneyCompositeUserType.setDefaultCurrency(AccountingRules
-                .getMifosCurrency(new ConfigurationPersistence()));
+        MoneyCompositeUserType.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
         AccountingRules.init(); // load the additional currencies
         Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
+        ImageStorageManager.initStorage();
         DatabaseMigrator migrator = new DatabaseMigrator();
         initializeDBConnectionForHibernate(migrator);
 

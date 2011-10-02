@@ -25,26 +25,27 @@ import java.sql.Blob;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.business.AbstractEntity;
 
+
+/**
+ * replaced with {@link org.mifos.framework.image.service.ClientPhotoService}
+ *<br><br>
+ * This entity is not used and should be deleted as migration of Mifos 2.3
+ * @deprecated
+ */
+@Deprecated
 public class CustomerPictureEntity extends AbstractEntity {
 
-    private final Integer pictureId;
+    private static final long serialVersionUID = 1L;
+
+    private Integer pictureId;
 
     private final CustomerBO customer;
 
     private Blob picture;
 
-    public CustomerPictureEntity(CustomerBO customer, Blob picture) {
+    public CustomerPictureEntity(CustomerBO customer) {
         super();
-        this.pictureId = null;
         this.customer = customer;
-        this.picture = picture;
-    }
-
-    protected CustomerPictureEntity() {
-        super();
-        this.pictureId = null;
-        this.customer = null;
-        this.picture = null;
     }
 
     public CustomerBO getCustomer() {
