@@ -131,11 +131,22 @@ public class ApplyChargeActionForm extends BaseActionForm {
         return errors;
     }
 
-    private void validateRate(ActionErrors errors, HttpServletRequest request) {
-        //FIXME Do not use hard coded values for properties local.properties
-        if (getDoubleValue(chargeAmount) > Double.valueOf("999")) {
-            errors.add(AccountConstants.RATE, new ActionMessage(AccountConstants.RATE_ERROR));
-            request.setAttribute("selectedChargeFormula", selectedChargeFormula);
+    protected void validateRate(ActionErrors errors, HttpServletRequest request) {
+        Double chargeAmountDoubleValue = null;
+        try {
+            chargeAmountDoubleValue = getDoubleValue(chargeAmount);
+        } catch (NumberFormatException e) {
+            errors.add(AccountConstants.RATE, new ActionMessage(AccountConstants.DOUBLE_ERROR, AccountConstants.RATE_AMOUNT));
+            return;
+        }
+        if (chargeAmountDoubleValue == null) {
+            errors.add(AccountConstants.RATE, new ActionMessage(AccountConstants.ERROR_MANDATORY, AccountConstants.RATE_AMOUNT));
+        } else {
+            //FIXME Do not use hard coded values for properties local.properties
+            if (chargeAmountDoubleValue > Double.valueOf("999")) {
+                errors.add(AccountConstants.RATE, new ActionMessage(AccountConstants.RATE_ERROR));
+                request.setAttribute("selectedChargeFormula", selectedChargeFormula);
+            }
         }
     }
 
