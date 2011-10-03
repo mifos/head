@@ -1138,17 +1138,13 @@ public class CustomerDaoHibernate implements CustomerDao {
         final String educationLevelName = (String) queryResult.get(0)[23];
         final String povertyStatusName = (String) queryResult.get(0)[24];
         final Short numChildren = (Short) queryResult.get(0)[25];
-        final Integer pictureLength = (Integer) queryResult.get(0)[26];
-        final Integer branchId = (Integer) queryResult.get(0)[27];
+        final Integer branchId = (Integer) queryResult.get(0)[26];
 
         Boolean clientUnderGroup = false;
         if (groupFlag.compareTo(Short.valueOf("0")) > 0) {
             clientUnderGroup = true;
         }
-        Boolean isCustomerPicture = false;
-        if (pictureLength != null) {
-            isCustomerPicture = true;
-        }
+
         final String customerStatusName = MessageLookup.getInstance().lookup(lookupName, userContext);
         final String businessActivities = MessageLookup.getInstance().lookup(businessActivitiesName, userContext);
         final String handicapped = MessageLookup.getInstance().lookup(handicappedName, userContext);
@@ -1208,7 +1204,7 @@ public class CustomerDaoHibernate implements CustomerDao {
                 externalId, customerFormedByDisplayName, customerActivationDate, customerLevelId, customerStatusId,
                 customerStatusName, trainedDate, dateOfBirth, governmentId, clientUnderGroup, blackListed,
                 loanOfficerId, loanOfficerName, businessActivities, handicapped, maritalStatus, citizenship, ethnicity,
-                educationLevel, povertyStatus, numChildren, isCustomerPicture, areFamilyDetailsRequired,
+                educationLevel, povertyStatus, numChildren, areFamilyDetailsRequired,
                 spouseFatherValue, spouseFatherName, familyDetails, age);
     }
 

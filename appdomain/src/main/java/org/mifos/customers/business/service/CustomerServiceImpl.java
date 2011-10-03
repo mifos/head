@@ -20,8 +20,6 @@
 
 package org.mifos.customers.business.service;
 
-import java.io.InputStream;
-import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +48,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
@@ -70,7 +67,6 @@ import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
-import org.mifos.customers.client.persistence.LegacyClientDao;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
@@ -96,6 +92,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.framework.image.service.ClientPhotoService;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
@@ -122,6 +119,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private SavingsProductDao savingsProductDao;
+
+    @Autowired
+    private ClientPhotoService clientPhotoService;
+
     private MifosConfigurationHelper configurationHelper = new DefaultMifosConfigurationHelper();
 
     @Autowired
@@ -407,12 +408,8 @@ public class CustomerServiceImpl implements CustomerService {
             hibernateTransactionHelper.startTransaction();
             hibernateTransactionHelper.beginAuditLoggingFor(client);
             client.updatePersonalInfo(personalInfo);
-            InputStream pictureSteam = personalInfo.getPicture();
 
-            if (pictureSteam != null) {
-                Blob pictureAsBlob = ApplicationContextProvider.getBean(LegacyClientDao.class).createBlob(pictureSteam);
-                client.createOrUpdatePicture(pictureAsBlob);
-            }
+            clientPhotoService.update(personalInfo.getCustomerId().longValue(), personalInfo.getPicture());
 
             customerDao.save(client);
 

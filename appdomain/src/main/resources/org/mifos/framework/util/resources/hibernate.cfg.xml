@@ -237,6 +237,9 @@
 
         <mapping resource="org/mifos/accounts/loan/business/Mifos4948.hbm.xml" />
 
+        <mapping class="org.mifos.framework.image.domain.ImageInfo" />
+        <mapping class="org.mifos.framework.image.domain.ClientPhoto" />
+
     </session-factory>
 
 </hibernate-configuration>

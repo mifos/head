@@ -20,7 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +53,6 @@ import org.mifos.customers.client.business.ClientFamilyDetailEntity;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.customers.client.business.ClientNameDetailEntity;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
-import org.mifos.customers.client.persistence.LegacyClientDao;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
@@ -98,10 +96,12 @@ import org.mifos.dto.screen.ClientMfiInfoDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPerformanceHistoryDto;
 import org.mifos.dto.screen.ClientPersonalInfoDto;
+import org.mifos.dto.screen.ClientPhotoDto;
 import org.mifos.dto.screen.ClientRemovalFromGroupDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.image.domain.ClientPhoto;
+import org.mifos.framework.image.service.ClientPhotoService;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Money;
@@ -118,6 +118,9 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     private final CustomerDao customerDao;
     private final CustomerService customerService;
     private final FeeDao feeDao;
+
+    @Autowired
+    private ClientPhotoService clientPhotoService;
 
     @Autowired
     private SavingsProductDao savingsProductDao;
@@ -360,11 +363,6 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             String clientLastName = clientCreationDetail.getClientNameDetailDto().getLastName();
             String secondLastName = clientCreationDetail.getClientNameDetailDto().getSecondLastName();
 
-            Blob pictureAsBlob = null;
-            if (clientCreationDetail.getPicture() != null) {
-                pictureAsBlob = ApplicationContextProvider.getBean(LegacyClientDao.class).createBlob(clientCreationDetail.getPicture());
-            }
-
             CustomerStatus clientStatus = CustomerStatus.fromInt(clientCreationDetail.getClientStatus());
             PersonnelBO formedBy = this.personnelDao.findPersonnelById(clientCreationDetail.getFormedBy());
             Address address = null;
@@ -387,8 +385,8 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
                 client = ClientBO.createNewInGroupHierarchy(userContext, clientCreationDetail.getClientName(), clientStatus, new DateTime(
                        clientCreationDetail.getMfiJoiningDate()), group, formedBy, clientNameDetailEntity, dob,
                        clientCreationDetail.getGovernmentId(), trainedBool, trainedDateTime, clientCreationDetail.getGroupFlag(), clientFirstName, clientLastName,
-                        secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob,
-                        offeringsAssociatedInCreate, clientCreationDetail.getExternalId(), address, clientCreationDetail.getActivationDate());
+                       secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, offeringsAssociatedInCreate,
+                       clientCreationDetail.getExternalId(), address, clientCreationDetail.getActivationDate());
 
                 if (ClientRules.isFamilyDetailsRequired()) {
                     client.setFamilyAndNameDetailSets(clientCreationDetail.getFamilyNames(), clientCreationDetail.getFamilyDetails());
@@ -416,7 +414,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
                         clientCreationDetail.getMfiJoiningDate()), office, loanOfficer, clientMeeting, formedBy,
                         clientNameDetailEntity, dob, clientCreationDetail.getGovernmentId(), trainedBool, trainedDateTime, clientCreationDetail.getGroupFlag(),
                         clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity,
-                        clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate, clientCreationDetail.getExternalId(), address,
+                        clientDetailEntity, offeringsAssociatedInCreate, clientCreationDetail.getExternalId(), address,
                         lastSearchIdCustomerValue);
 
                 if (ClientRules.isFamilyDetailsRequired()) {
@@ -426,9 +424,9 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
                 this.customerService.createClient(client, clientMeeting, feesForCustomerAccount, selectedOfferings);
             }
 
+            clientPhotoService.create(client.getCustomerId().longValue(), clientCreationDetail.getPicture());
+
             return new CustomerDetailsDto(client.getCustomerId(), client.getGlobalCustNum());
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
         } catch (CustomerException e) {
             throw new BusinessRuleException(e.getKey(), e.getValues(), e);
         }
@@ -735,5 +733,17 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         this.customerService.transferClientTo(client, receivingBranch);
 
         return client.getGlobalCustNum();
+    }
+
+    @Override
+    public ClientPhotoDto getClientPhoto(Long clientId) {
+        ClientPhoto clientPhoto = clientPhotoService.read(clientId);
+        if(clientPhoto == null) {
+            return null;
+        }
+        String contentType = clientPhoto.getImageInfo().getContentType();
+        Long contentLength = clientPhoto.getImageInfo().getLength();
+        byte[] out = clientPhotoService.getData(clientPhoto.getImageInfo().getPath());
+        return new ClientPhotoDto(contentType, contentLength, out);
     }
 }

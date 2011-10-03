@@ -24,10 +24,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import junit.framework.Assert;
-
-import org.apache.commons.lang.StringUtils;
 import org.aspectj.util.FileUtil;
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.springframework.core.io.ClassPathResource;
@@ -86,23 +88,13 @@ public class RESTAPITestHelper {
         return FileUtil.readAsString(file);
     }
 
-    public void assertEquals(String expectedJSON, String actualJSON) {
-        String stripedExpectedJSON = strip(expectedJSON);
-        String stripedActualJSON = strip(actualJSON);
-        if(!stripedExpectedJSON.equals(stripedActualJSON)) {
-            int diffIndex = findDiff(stripedExpectedJSON , stripedActualJSON);
-            Assert.fail("json different at index " + diffIndex +"\n "
-                          +stripedExpectedJSON.substring(diffIndex) +"\n "
-                          +stripedActualJSON.substring(diffIndex));
-        }
-    }
-
-    private String strip(String str) {
-        return str.replaceAll(" ","").replaceAll("\t", "").replaceAll("\n", "").replaceAll("\r", "");
-    }
-
-    private int findDiff(String expectedJSON, String actualJSON) {
-        return StringUtils.indexOfDifference(expectedJSON, actualJSON);
+    public ObjectMapper getObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationConfig.Feature.SORT_PROPERTIES_ALPHABETICALLY, true);
+        mapper.configure(DeserializationConfig.Feature.USE_BIG_DECIMAL_FOR_FLOATS, true);
+        mapper.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, false);
+        mapper.configure(JsonParser.Feature.ALLOW_NUMERIC_LEADING_ZEROS, true);
+        return mapper;
     }
 
 }

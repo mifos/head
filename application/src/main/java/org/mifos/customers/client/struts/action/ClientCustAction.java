@@ -23,6 +23,7 @@ package org.mifos.customers.client.struts.action;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -49,6 +50,7 @@ import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFac
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
@@ -88,6 +90,8 @@ import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.image.domain.ClientPhoto;
+import org.mifos.framework.image.service.ClientPhotoService;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -354,13 +358,20 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward retrievePicture(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
-                                         HttpServletRequest request, HttpServletResponse response) throws Exception {
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         ClientBO clientBO = getClientFromSession(request);
-        InputStream in = clientBO.getCustomerPicture().getPicture().getBinaryStream();
-
+        ClientPhotoService cps = ApplicationContextProvider.getBean(ClientPhotoService.class);
+        ClientPhoto cp = cps.read(clientBO.getCustomerId().longValue());
+        InputStream in = null;
+        if(cp != null) {
+            in = new ByteArrayInputStream(cps.getData(cp.getImageInfo().getPath()));
+            response.setContentType(cp.getImageInfo().getContentType());
+        } else {
+            in = ClientPhotoService.class.getResourceAsStream("/org/mifos/image/nopicture.png");
+            response.setContentType("image/png");
+        }
         in.mark(0);
-        response.setContentType("image/jpeg");
         BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
         byte[] by = new byte[1024 * 4]; // 4K buffer buf, 0, buf.length
         int index = in.read(by, 0, 1024 * 4);
@@ -377,8 +388,8 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previewPersonalInfo(ActionMapping mapping, ActionForm form,
-                                             @SuppressWarnings("unused") HttpServletRequest request,
-                                             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
         return mapping.findForward(ActionForwards.previewPersonalInfo_success.toString());
@@ -666,6 +677,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         boolean isFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
+        actionForm.getPicture().getFileName();
         if (isFamilyDetailsRequired) {
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, false, request);

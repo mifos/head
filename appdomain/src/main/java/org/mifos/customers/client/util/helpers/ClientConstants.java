@@ -30,7 +30,6 @@ public interface ClientConstants {
 
     /***/
     short CLIENT_BELONGS_TO_GROUP = 1;
-    short PICTURE_ALLOWED_SIZE = 30720;
     short All_CATEGORY_ID = 1;
     short CLIENT_CATEGORY_ID = 2;
     short CLIENT_ENTITY_TYPE = 1;
@@ -177,8 +176,7 @@ public interface ClientConstants {
     String FLAG_EXCEPTION = "Client.FlagException";
     String CLIENT_HISTORICAL_DATA_PAGE = "loadHistoricalData_success";
 
-    String PICTURE_EXCEPTION = "Client.PictureExtensionException";
-    String PICTURE_SIZE_EXCEPTION = "Client.PictureSizeException";
+    String INVALID_PHOTO = "Client.InvaildPhoto";
 
     String INVALID_CLIENT_STATUS_EXCEPTION = "GroupStatusException";
     String ERRORS_GROUP_CANCELLED = "errors.Client.groupCancelled";

@@ -457,7 +457,7 @@ public class TestObjectFactory {
                     null, getPersonnel(PersonnelConstants.SYSTEM_USER),
                     new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE), parentCustomer, dateOfBirth, governmentId,
                     null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
-                    clientPersonalDetailDto, null);
+                    clientPersonalDetailDto);
             ApplicationContextProvider.getBean(LegacyClientDao.class).saveClient(client);
         } catch (CustomerException e) {
             throw new RuntimeException(e);
@@ -543,7 +543,7 @@ public class TestObjectFactory {
                 client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailDto.getDisplayName(), status,
                         null, null, null, null, getFees(), null, getPersonnel(personnel),
                         parentCustomer.getOffice(), parentCustomer, null, null, null, null, YesNoFlag.YES.getValue(),
-                        clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
+                        clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto);
             }
 
             ApplicationContextProvider.getBean(LegacyClientDao.class).saveClient(client);

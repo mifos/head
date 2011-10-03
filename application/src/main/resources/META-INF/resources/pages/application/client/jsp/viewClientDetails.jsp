@@ -108,10 +108,9 @@ explanation of the license and how it is applied.
 							<td class="fontnormalbold"><span class="fontnormal"> 
 							<c:set var="custId" value="${clientInformationDto.clientDisplay.customerId}" />
 							<c:set var="custName"	value="${clientInformationDto.clientDisplay.loanOfficerName}" /> 	
-							<c:if test="${clientInformationDto.clientDisplay.isCustomerPicture}">
-								<a id="viewClientDetails.link.seePhoto" href="javascript:photopopup(${custId} , '${custName}' ,'${requestScope.currentFlowKey}')"><mifos:mifoslabel
-								name="client.seephoto" bundle="ClientUIResources"></mifos:mifoslabel></a>
-							</c:if> </span><br>
+							<a id="viewClientDetails.link.seePhoto" href="javascript:photopopup(${custId} , '${custName}' ,'${requestScope.currentFlowKey}')">
+							<mifos:mifoslabel name="client.seephoto" bundle="ClientUIResources"></mifos:mifoslabel></a>
+							</span><br>
 							</td>
 						</tr>
 					</table>
