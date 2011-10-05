@@ -562,6 +562,12 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         interestPaid = interestPaid.add(payable);
     }
 
+    private Money reducePrincipalBy(final Money amount) {
+        Money reducedBy = min(amount, getPrincipalDue());
+        this.principal = this.principal.subtract(reducedBy);
+        return amount.subtract(reducedBy);
+    }
+    
     private Money payPrincipal(final Money amount) {
         Money payable = min(amount, getPrincipalDue());
         allocatePrincipal(payable);
@@ -736,7 +742,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     	
     	if (isNotPaid() && balance.isGreaterThanZero() && getPrincipalDue().isGreaterThanZero()) {
     		initPaymentAllocation(balance.getCurrency());
-    		balance = payPrincipal(balance);
+    		balance = reducePrincipalBy(balance);
     		updateSummaryAndPerformanceHistory(accountPaymentEntity, personnel, transactionDate);
     	}
     	
@@ -787,5 +793,6 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
 	public void updatePrincipalPaidby(Money overpayment) {
 		this.principalPaid = this.principalPaid.add(overpayment);
+		this.principal = this.principal.add(overpayment);
 	}
 }

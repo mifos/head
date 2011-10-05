@@ -693,6 +693,16 @@ public class LoanBO extends AccountBO implements Loan {
         }
         return amount;
     }
+    
+    public Money getTotalInterestToBePaid() {
+        Money amount = new Money(getCurrency());
+        List<AccountActionDateEntity> actionDateList = getAllInstallments();
+        for (AccountActionDateEntity accountActionDateEntity : actionDateList) {
+            LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
+            amount = amount.add(loanScheduleEntity.getInterest());
+        }
+        return amount;
+    }
 
     public Money getTotalInterestAmountInArrearsAndOutsideLateness() throws PersistenceException {
         Money amount = new Money(getCurrency());
@@ -1494,7 +1504,28 @@ public class LoanBO extends AccountBO implements Loan {
         }
     }
     
-	public void applyNewPaymentMechanism(LocalDate paymentDate, BigDecimal repaymentAmount) throws AccountException {
+	public void recordOverpayment(Money balance, LocalDate paymentDate) throws AccountException {
+		
+		if (balance.isGreaterThanZero()) {
+    		
+			Money overpayment = balance;
+			
+			// recalculate interest for future installments based on the 'remaining principal' in hand for client.
+			List<AccountActionDateEntity> unpaidInstallments = getDetailsOfUnpaidInstallmentsOn(paymentDate);
+			
+			if (!unpaidInstallments.isEmpty()) {
+				LoanScheduleEntity nextInstallment = (LoanScheduleEntity) unpaidInstallments.get(0);
+				nextInstallment.updatePrincipalPaidby(overpayment);
+				
+				PaymentAllocation paymentAllocation = new PaymentAllocation(overpayment.getCurrency());
+				paymentAllocation.allocateForPrincipal(overpayment);
+				
+				this.loanSummary.updatePaymentDetails(paymentAllocation);
+			}
+		}
+	}
+	
+	public Money applyNewPaymentMechanism(LocalDate paymentDate, BigDecimal repaymentAmount) throws AccountException {
 		
 		Money totalAmount = new Money(getCurrency(), repaymentAmount);
 		Date transactionDate = paymentDate.toDateMidnight().toDate();
@@ -1516,31 +1547,13 @@ public class LoanBO extends AccountBO implements Loan {
 			balance = ((LoanScheduleEntity) upcomingInstallment).applyPayment(accountPaymentEntity, balance, personnel, transactionDate);
 		}
 
-        // 3. pay of principal of next installment and recalculate interest if 'over paid'
-		if (balance.isGreaterThanZero()) {
-			
-			Money overpayment = balance;
-			
-			Money totalPrincipalDue = getTotalPrincipalDue();
-			
-			// recalculate interest for future installments based on the 'remaining principal' in hand for client.
-			
-			List<AccountActionDateEntity> unpaidInstallments = getDetailsOfUnpaidInstallmentsOn(paymentDate);
-			for (AccountActionDateEntity accountActionDate : unpaidInstallments) {
-	            balance = ((LoanScheduleEntity) accountActionDate).reducePrincipal(accountPaymentEntity, balance, personnel, transactionDate);
-	        }
-
-//			if (!unpaidInstallments.isEmpty()) {
-//				AccountActionDateEntity firstUnpaidInstallment = unpaidInstallments.get(0);
-//				((LoanScheduleEntity) firstUnpaidInstallment).updatePrincipalPaidby(overpayment);
-//			}
-		}
-		
 		LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
 		postPayment(paymentData, accountPaymentEntity, loanPaymentType);
 		
 		addAccountPayment(accountPaymentEntity);
         buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
+        
+        return balance;
 	}
 
     /*
@@ -3244,8 +3257,20 @@ public class LoanBO extends AccountBO implements Loan {
 
     }
 
-    /*
-     * End Mifos-4948 code
-     */
-
+	public void rescheduleRemainingUnpaidInstallments(LoanSchedule loanSchedule, LocalDate asOf) {
+		
+		int index = 0;
+		for (AccountActionDateEntity entity : this.getDetailsOfUnpaidInstallmentsOn(asOf)) {
+			LoanScheduleEntity installment = (LoanScheduleEntity) entity;
+			
+			LoanScheduleEntity recalculatedInstallment = loanSchedule.getRoundedLoanSchedules().get(index);
+			index++;
+			
+			installment.setInterest(recalculatedInstallment.getInterest());
+			// need to store over payments in its own field with this approach.
+			installment.setPrincipal(installment.getPrincipal().add(recalculatedInstallment.getPrincipal()));
+		}
+		
+		this.loanSummary.setOriginalInterest(getTotalInterestToBePaid());
+	}
 }

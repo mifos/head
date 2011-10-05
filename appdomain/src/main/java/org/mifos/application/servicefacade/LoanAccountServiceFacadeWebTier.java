@@ -24,6 +24,7 @@ import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
 import static org.mifos.framework.util.CollectionUtils.collect;
 
+import java.awt.GradientPaint;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
@@ -113,6 +114,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
+import org.mifos.clientportfolio.loan.service.MonthlyOnDayOfMonthSchedule;
 import org.mifos.clientportfolio.loan.service.RecurringSchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateGlimLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
@@ -1453,7 +1455,58 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             this.transactionHelper.startTransaction();
             LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNumber);
 
-            loan.applyNewPaymentMechanism(paymentDate, repaymentAmount);
+            Money outstandingOverpayment =  loan.applyNewPaymentMechanism(paymentDate, repaymentAmount);
+            
+            // 3. pay off principal of next installment and recalculate interest if 'over paid'
+    		if (outstandingOverpayment.isGreaterThanZero()) {
+
+    			Money totalPrincipalDueNow = loan.getTotalPrincipalDue().subtract(outstandingOverpayment);
+    			
+    	        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	        UserContext userContext = toUserContext(user);
+
+    	        // assemble into domain entities
+    	        LoanOfferingBO loanProduct = this.loanProductDao.findById(loan.getLoanOffering().getPrdOfferingId().intValue());
+    	        CustomerBO customer = this.customerDao.findCustomerById(loan.getCustomer().getCustomerId());
+
+    	        List<AccountFeesEntity> accountFeeEntities = new ArrayList<AccountFeesEntity>();
+
+    	        Integer unpaidInstallments = loan.getDetailsOfUnpaidInstallmentsOn(paymentDate).size();
+    	        
+    	        Integer gracePeriodDiff = loan.getNoOfInstallments().intValue() - loan.getGracePeriodDuration().intValue();
+    	        
+    	        Integer gracePeriodsRemaining = unpaidInstallments - gracePeriodDiff;
+    	        
+    	        LocalDate disbursementDate = new LocalDate(loan.getDetailsOfUpcomigInstallment().getActionDate());
+    	        
+    	        LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(totalPrincipalDueNow, disbursementDate,
+    	        		loan.getInterestRate(), unpaidInstallments, gracePeriodsRemaining, accountFeeEntities);
+
+    	        Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
+    	        boolean loanScheduleIndependentOfCustomerMeetingEnabled = false; 
+
+    	        MeetingBO loanMeeting = customer.getCustomerMeetingValue();
+    	        if (loanScheduleIndependentOfCustomerMeetingEnabled) {
+    	            RecurringSchedule createLoanSchedule = new MonthlyOnDayOfMonthSchedule(Integer.valueOf(1), Integer.valueOf(5));
+					loanMeeting = this.createNewMeetingForRepaymentDay(disbursementDate, createLoanSchedule, customer);
+
+    	            if (loanProduct.isVariableInstallmentsAllowed()) {
+    	                loanMeeting.setMeetingStartDate(disbursementDate.toDateMidnight().toDate());
+    	            }
+    	        }
+    	        
+    	        LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
+
+    	        Short userBranchOfficeId = userContext.getBranchId();
+    	        
+    	        LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, loanMeeting, overridenDetail, configuration, userBranchOfficeId, 
+    	        		accountFeeEntities, disbursementDate);
+    	        
+    	        loan.rescheduleRemainingUnpaidInstallments(loanSchedule, paymentDate);
+    	        
+    	        
+    	        loan.recordOverpayment(outstandingOverpayment, paymentDate);
+    		}
             
             this.loanDao.save(loan);
             this.transactionHelper.commitTransaction();
