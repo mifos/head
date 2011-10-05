@@ -22,7 +22,11 @@ package org.mifos.platform.rest.ui.controller;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.dto.screen.PersonnelInformationDto;
+import org.mifos.dto.domain.CenterDescriptionDto;
+import org.mifos.dto.domain.ClientDescriptionDto;
 import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.CustomerHierarchyDto;
+import org.mifos.dto.domain.GroupDescriptionDto;
 import org.mifos.security.MifosUser;
 import org.mifos.config.ClientRules;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -59,14 +63,14 @@ public class PersonnelRESTController {
 
     @RequestMapping(value = "personnel/clients/id-current", method = RequestMethod.GET)
     public final @ResponseBody
-    CustomerHierarchy getCustomersUnderPersonnel() {
+    CustomerHierarchyDto getCustomersUnderPersonnel() {
         PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(getCurrentPersonnel().getPersonnelId());
 
-        CustomerHierarchy hierarchy = new CustomerHierarchy();
+        CustomerHierarchyDto hierarchy = new CustomerHierarchyDto();
 
         if (ClientRules.getCenterHierarchyExists()) {
             for (CustomerDetailDto center : this.customerDao.findActiveCentersUnderUser(loanOfficer)) {
-                CenterDescription centerDescription = new CenterDescription();
+                CenterDescriptionDto centerDescription = new CenterDescriptionDto();
                 centerDescription.setId(center.getCustomerId());
                 centerDescription.setDisplayName(center.getDisplayName());
                 centerDescription.setGlobalCustNum(center.getGlobalCustNum());
@@ -77,14 +81,14 @@ public class PersonnelRESTController {
 
         allGroups:
         for (CustomerDetailDto group : this.customerDao.findGroupsUnderUser(loanOfficer)) {
-            GroupDescription groupDescription = new GroupDescription();
+            GroupDescriptionDto groupDescription = new GroupDescriptionDto();
             groupDescription.setId(group.getCustomerId());
             groupDescription.setDisplayName(group.getDisplayName());
             groupDescription.setGlobalCustNum(group.getGlobalCustNum());
             groupDescription.setSearchId(group.getSearchId());
 
             for (ClientBO client : this.customerDao.findActiveClientsUnderParent(group.getSearchId(), loanOfficer.getOffice().getOfficeId())) {
-                ClientDescription clientDescription = new ClientDescription();
+                ClientDescriptionDto clientDescription = new ClientDescriptionDto();
                 clientDescription.setId(client.getCustomerId());
                 clientDescription.setDisplayName(client.getDisplayName());
                 clientDescription.setGlobalCustNum(client.getGlobalCustNum());
@@ -92,7 +96,7 @@ public class PersonnelRESTController {
                 groupDescription.getClients().add(clientDescription);
             }
 
-            for (CenterDescription center : hierarchy.getCenters()) {
+            for (CenterDescriptionDto center : hierarchy.getCenters()) {
                 if (group.getSearchId().startsWith(center.getSearchId())) {
                     center.getGroups().add(groupDescription);
                     continue allGroups;
@@ -102,7 +106,7 @@ public class PersonnelRESTController {
         }
 
         for (ClientBO client : this.customerDao.findActiveClientsWithoutGroupForLoanOfficer(loanOfficer.getPersonnelId(), loanOfficer.getOffice().getOfficeId())) {
-            ClientDescription clientDescription = new ClientDescription();
+            ClientDescriptionDto clientDescription = new ClientDescriptionDto();
                 clientDescription.setId(client.getCustomerId());
                 clientDescription.setDisplayName(client.getDisplayName());
                 clientDescription.setGlobalCustNum(client.getGlobalCustNum());
@@ -112,149 +116,5 @@ public class PersonnelRESTController {
 
         return hierarchy;
     }
-
-    static class CustomerHierarchy {
-        private List<CenterDescription> centers = new ArrayList<CenterDescription>();
-        private List<GroupDescription> groups = new ArrayList<GroupDescription>();
-        private List<ClientDescription> clients = new ArrayList<ClientDescription>();
-
-        public List<CenterDescription> getCenters() {
-            return centers;
-        }
-
-        public List<GroupDescription> getGroups() {
-            return groups;
-        }
-
-        public List<ClientDescription> getClients() {
-            return clients;
-        }
-    }
-
-    static class CenterDescription {
-        private Integer id;
-        private String displayName;
-        private String globalCustNum;
-        private String searchId;
-        private List<GroupDescription> groups = new ArrayList<GroupDescription>();
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getDisplayName() {
-            return displayName;
-        }
-
-        public void setDisplayName(String displayName) {
-            this.displayName = displayName;
-        }
-
-        public String getGlobalCustNum() {
-            return globalCustNum;
-        }
-
-        public void setGlobalCustNum(String globalCustNum) {
-            this.globalCustNum = globalCustNum;
-        }
-
-        public String getSearchId() {
-            return searchId;
-        }
-
-        public void setSearchId(String searchId) {
-            this.searchId = searchId;
-        }
-
-        public List<GroupDescription> getGroups() {
-            return groups;
-        }
-    }
-
-    static class GroupDescription {
-        private Integer id;
-        private String displayName;
-        private String globalCustNum;
-        private String searchId;
-        private List<ClientDescription> clients = new ArrayList<ClientDescription>();
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getDisplayName() {
-            return displayName;
-        }
-
-        public void setDisplayName(String displayName) {
-            this.displayName = displayName;
-        }
-
-        public String getGlobalCustNum() {
-            return globalCustNum;
-        }
-
-        public void setGlobalCustNum(String globalCustNum) {
-            this.globalCustNum = globalCustNum;
-        }
-
-        public String getSearchId() {
-            return searchId;
-        }
-
-        public void setSearchId(String searchId) {
-            this.searchId = searchId;
-        }
-
-        public List<ClientDescription> getClients() {
-            return clients;
-        }
-    }
-
-    static class ClientDescription {
-        private Integer id;
-        private String displayName;
-        private String globalCustNum;
-        private String searchId;
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getDisplayName() {
-            return displayName;
-        }
-
-        public void setDisplayName(String displayName) {
-            this.displayName = displayName;
-        }
-
-        public String getGlobalCustNum() {
-            return globalCustNum;
-        }
-
-        public void setGlobalCustNum(String globalCustNum) {
-            this.globalCustNum = globalCustNum;
-        }
-
-        public String getSearchId() {
-            return searchId;
-        }
-
-        public void setSearchId(String searchId) {
-            this.searchId = searchId;
-        }
-    }
+    
 }
