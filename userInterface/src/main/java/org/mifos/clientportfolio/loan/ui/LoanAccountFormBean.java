@@ -296,8 +296,10 @@ public class LoanAccountFormBean implements Serializable {
         }
 
         if (this.graceDuration == null || this.graceDuration.intValue() < 0) {
-            String defaultErrorMessage = "Please specify a valid Grace period. Only non-negative integer numbers are allowed.";
-            rejectGraceDurationField(errors, defaultErrorMessage);
+            if (!errors.hasFieldErrors("graceDuration")) {
+                String defaultErrorMessage = "Please specify valid Grace period for repayments. Grace period should be a value less than " + (maxGraceDuration.intValue() + 1) + ".";
+                rejectGraceDurationField(errors, defaultErrorMessage);
+            }
         } else {
             if (this.graceDuration.intValue() > this.maxGraceDuration.intValue()) {
                 String defaultErrorMessage = "The Grace period cannot be greater than in loan product definition.";
@@ -586,7 +588,9 @@ public class LoanAccountFormBean implements Serializable {
     }
 
     private void rejectGraceDurationField(Errors errors, String defaultErrorMessage) {
-        errors.rejectValue("graceDuration", "loanAccountFormBean.gracePeriodDuration.emptyOrIncorrect.invalid", defaultErrorMessage);
+        String field = "Grace period";
+        Integer maxValue = this.maxGraceDuration.intValue() + 1;
+        errors.rejectValue("graceDuration", "loanAccountFormBean.gracePeriodDuration.emptyOrIncorrect.invalid", new Object[] { field, maxValue }, defaultErrorMessage);
     }
 
     private void rejectAmountField(Errors errors, String defaultErrorMessage) {
