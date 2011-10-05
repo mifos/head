@@ -20,22 +20,16 @@
 
 package org.mifos.accounts.struts.actionforms;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Locale;
-
 import org.apache.struts.action.ActionErrors;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mifos.framework.TestUtils;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
 
-@RunWith(MockitoJUnitRunner.class)
+import static org.junit.Assert.assertEquals;
+
 public class ApplyChargeActionFormTest {
 
     // for constructing the ChargeType member
@@ -53,9 +47,6 @@ public class ApplyChargeActionFormTest {
     private ApplyChargeActionForm form;
 
     private ActionErrors errors;
-
-    @Mock
-    private HttpServletRequest request;
 
     @Before
     public void setUp() {
@@ -97,22 +88,6 @@ public class ApplyChargeActionFormTest {
         form.setChargeType(constructChargeType(FEE_ID, IS_NOT_RATE_TYPE));
         form.validateAmount(errors, locale);
         assertEquals(1,errors.size());
-    }
-
-    @Test
-    public void validateEmptyRateAmountShouldHaveErrors() {
-        form.setChargeAmount("");
-        form.setChargeType(constructChargeType(FEE_ID, IS_RATE_TYPE));
-        form.validateRate(errors, request);
-        assertEquals(1, errors.size());
-    }
-
-    @Test
-    public void validateCharactersRateAmountShouldHaveErrors() {
-        form.setChargeAmount("amount");
-        form.setChargeType(constructChargeType(FEE_ID, IS_RATE_TYPE));
-        form.validateRate(errors, request);
-        assertEquals(1, errors.size());
     }
 
 }
