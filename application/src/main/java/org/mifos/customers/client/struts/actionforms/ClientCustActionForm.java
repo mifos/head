@@ -285,10 +285,11 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
 
     public void setPicture(FormFile picture) {
         this.picture = picture;
-        try {
-            customerPicture = picture.getInputStream();
-        } catch (IOException ioe) {
-
+        if (picture != null) {
+            try {
+                customerPicture = picture.getInputStream();
+            } catch (IOException ioe) {
+            }
         }
     }
 
@@ -390,7 +391,7 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
     }
 
     private void validatePicture(HttpServletRequest request, ActionErrors errors) throws PageExpiredException {
-        if (picture != null) {
+        if (picture != null && StringUtils.isNotBlank(picture.getFileName())) {
             if (picture.getFileSize() > ClientConstants.PICTURE_ALLOWED_SIZE) {
                 errors.add(ClientConstants.INVALID_PHOTO, new ActionMessage(ClientConstants.INVALID_PHOTO, "image size should be less then 300K"));
                 return;
