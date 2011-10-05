@@ -1507,21 +1507,37 @@ public class LoanBO extends AccountBO implements Loan {
 	public void recordOverpayment(Money balance, LocalDate paymentDate) throws AccountException {
 		
 		if (balance.isGreaterThanZero()) {
+			
+			Date transactionDate = paymentDate.toDateMidnight().toDate();
+			
+			PaymentData paymentData = new PaymentData(balance, personnel, PaymentTypes.CASH.getValue(), transactionDate);
+			AccountPaymentEntity accountPaymentEntity = prePayment(paymentData);
+
+			// updat
     		
 			Money overpayment = balance;
 			
-			// recalculate interest for future installments based on the 'remaining principal' in hand for client.
-			List<AccountActionDateEntity> unpaidInstallments = getDetailsOfUnpaidInstallmentsOn(paymentDate);
+			List<AccountActionDateEntity> paidInstallments = getDetailsOfPaidInstallmentsOn(paymentDate);
 			
-			if (!unpaidInstallments.isEmpty()) {
-				LoanScheduleEntity nextInstallment = (LoanScheduleEntity) unpaidInstallments.get(0);
-				nextInstallment.updatePrincipalPaidby(overpayment);
+			if (!paidInstallments.isEmpty()) {
+				LoanScheduleEntity lastFullyPaidInstallment = (LoanScheduleEntity) paidInstallments.get(paidInstallments.size()-1);
+				lastFullyPaidInstallment.updatePrincipalPaidby(accountPaymentEntity, personnel);
+				
+				LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, lastFullyPaidInstallment, personnel, transactionDate,
+		                AccountActionTypes.LOAN_REPAYMENT, AccountConstants.PAYMENT_RCVD, legacyLoanDao);
+				accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
 				
 				PaymentAllocation paymentAllocation = new PaymentAllocation(overpayment.getCurrency());
 				paymentAllocation.allocateForPrincipal(overpayment);
 				
 				this.loanSummary.updatePaymentDetails(paymentAllocation);
 			}
+			
+//			LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
+//			postPayment(paymentData, accountPaymentEntity, loanPaymentType);
+//			
+//			addAccountPayment(accountPaymentEntity);
+//	        buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 		}
 	}
 	
@@ -3267,8 +3283,7 @@ public class LoanBO extends AccountBO implements Loan {
 			index++;
 			
 			installment.setInterest(recalculatedInstallment.getInterest());
-			// need to store over payments in its own field with this approach.
-			installment.setPrincipal(installment.getPrincipal().add(recalculatedInstallment.getPrincipal()));
+			installment.setPrincipal(recalculatedInstallment.getPrincipal());
 		}
 		
 		this.loanSummary.setOriginalInterest(getTotalInterestToBePaid());

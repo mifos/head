@@ -791,8 +791,8 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return interest.add(getExtraInterest());
     }
 
-	public void updatePrincipalPaidby(Money overpayment) {
-		this.principalPaid = this.principalPaid.add(overpayment);
-		this.principal = this.principal.add(overpayment);
+	public void updatePrincipalPaidby(AccountPaymentEntity accountPayment, PersonnelBO personnel) {
+		this.principalPaid = this.principalPaid.add(accountPayment.getAmount());
+		this.principal = this.principal.add(accountPayment.getAmount());
 	}
 }

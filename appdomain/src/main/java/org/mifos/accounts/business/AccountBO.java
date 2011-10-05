@@ -935,6 +935,22 @@ public class AccountBO extends AbstractBusinessObject {
         return unpaidInstallments;
     }
     
+    public List<AccountActionDateEntity> getDetailsOfPaidInstallmentsOn(LocalDate asOf) {
+        List<AccountActionDateEntity> paidInstallments = new ArrayList<AccountActionDateEntity>();
+
+        Set<AccountActionDateEntity> accountActionDates = getAccountActionDates();
+        
+        if (accountActionDates!= null && !accountActionDates.isEmpty()) {
+            for (AccountActionDateEntity accountAction : accountActionDates) {
+                if (accountAction.isPaid()) {
+                    paidInstallments.add(accountAction);
+                }
+            }
+        }
+        return paidInstallments;
+    }
+    
+    
     public List<AccountActionDateEntity> getDetailsOfInstallmentsInArrears() {
         List<AccountActionDateEntity> installmentsInArrears = new ArrayList<AccountActionDateEntity>();
         Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
