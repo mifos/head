@@ -628,12 +628,18 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         ClientNameDetailDto clientName = personalInfo.getClientDetail().getClientName();
         clientName.setNames(ClientRules.getNameSequence());
         actionForm.setClientName(clientName);
-        ClientPhotoDto clientPhotoDto =this.clientServiceFacade.getClientPhoto(client.getCustomerId().longValue());
-        FormFile formFile = new PictureFormFile(clientPhotoDto.getContentType(), clientPhotoDto.getOut(),
-                           client.getCustomerId().toString(), clientPhotoDto.getContentLength().intValue());
-
-        actionForm.setPicture(formFile);
-
+        String photoDelete = request.getParameter("photoDelete");
+        if(photoDelete != null && photoDelete.equals("true")) {
+            ApplicationContextProvider.getBean(ClientPhotoService.class).delete(client.getCustomerId().longValue());
+        }
+        ClientPhotoDto clientPhotoDto = this.clientServiceFacade.getClientPhoto(client.getCustomerId().longValue());
+        if (clientPhotoDto != null) {
+            FormFile formFile = new PictureFormFile(clientPhotoDto.getContentType(), clientPhotoDto.getOut(), client
+                    .getCustomerId().toString(), clientPhotoDto.getContentLength().intValue());
+            actionForm.setPicture(formFile);
+        } else {
+            actionForm.setPicture(null);
+        }
         ClientNameDetailDto spouseName = personalInfo.getClientDetail().getSpouseName();
         if (spouseName != null) {
             spouseName.setNames(ClientRules.getNameSequence());

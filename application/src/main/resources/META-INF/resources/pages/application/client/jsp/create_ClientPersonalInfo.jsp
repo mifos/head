@@ -477,7 +477,7 @@ explanation of the license and how it is applied.
 
 								<%-- Photograph ADD CUSTOMER PICTURE TO ACTION FORM AND CUSTOMER VO--%>
 								<tr class="fontnormal">
-									<td align="right"><span id="create_ClientPersonalInfo.label.file"><mifos:mifoslabel keyhm="Client.Photo" name="client.Photograph"
+									<td align="right"><span id="create_ClientPersonalInfo.label.file"><mifos:mifoslabel keyhm="Client.Photo" name="client.Photo"
 										bundle="ClientUIResources"></mifos:mifoslabel></span></td>
 									<td><mifos:file styleId="create_ClientPersonalInfo.input.file" keyhm="Client.Photo" property="picture" maxlength="200"
 										onkeypress="return onKeyPressForFileComponent(this);" /></td>

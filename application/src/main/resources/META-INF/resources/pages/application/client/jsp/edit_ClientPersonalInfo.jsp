@@ -281,11 +281,18 @@ explanation of the license and how it is applied.
 						<tr class="fontnormal">
 							<td align="right">
 							<span id="edit_ClientPersonalInfo.label.file">
-							<mifos:mifoslabel keyhm="Client.Photo" name="client.Photograph"
+							<mifos:mifoslabel keyhm="Client.Photo" name="client.Photo"
 								bundle="ClientUIResources"></mifos:mifoslabel></span></td>
 							<td>
-		                      <c:if test = "${sessionScope.clientCustActionForm.picture.fileName != ''}" >
+		                      <c:if test = "${sessionScope.clientCustActionForm.picture != null 
+		                      && sessionScope.clientCustActionForm.picture.fileName != null 
+		                      && sessionScope.clientCustActionForm.picture.fileName != '' }" >
                                 <img src="/mifos/clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}"/>
+                                <br />
+                                <a id="editPersonalInformation.link.deletePhoto"
+                                href="clientCustAction.do?method=editPersonalInfo&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&photoDelete=true">
+                                Delete
+                                </a>
                                 <br />
                                 Choose another file to change the picture
                             </c:if>
