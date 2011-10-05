@@ -22,6 +22,7 @@ package org.mifos.customers.client.struts.actionforms;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -337,6 +338,7 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
             }
             checkForMandatoryFields(EntityType.CLIENT.getValue(), errors, request);
             validateCustomFieldsForCustomers(request, errors);
+            validatePicture(request, errors);
         }
         if (method.equals(Methods.preview.toString()) && ClientConstants.INPUT_MFI_INFO.equals(input)) {
             validateFormedByPersonnel(errors);
@@ -385,6 +387,30 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
             validateFamilyLivingStatus(errors);
         }
         return errors;
+    }
+
+    private void validatePicture(HttpServletRequest request, ActionErrors errors) throws PageExpiredException {
+        if (picture != null) {
+            if (picture.getFileSize() > ClientConstants.PICTURE_ALLOWED_SIZE) {
+                errors.add(ClientConstants.INVALID_PHOTO, new ActionMessage(ClientConstants.INVALID_PHOTO, "image size should be less then 300K"));
+                return;
+            }
+            try {
+                String contentType = URLConnection.guessContentTypeFromStream(picture.getInputStream());
+                if(contentType == null) {
+                    contentType = URLConnection.guessContentTypeFromName(picture.getFileName());
+                }
+
+                if(contentType == null || !(contentType.equals("image/jpeg") ||
+                                            contentType.equals("image/gif") ||
+                                            contentType.equals("image/jpg") ||
+                                            contentType.equals("image/png"))) {
+                    errors.add(ClientConstants.INVALID_PHOTO, new ActionMessage(ClientConstants.INVALID_PHOTO, "allowed only jpg/gif/png"));
+                }
+            } catch (IOException e) {
+                errors.add(ClientConstants.INVALID_PHOTO, new ActionMessage(ClientConstants.INVALID_PHOTO, e.getMessage()));
+            }
+        }
     }
 
     private void validateGender(ActionErrors errors, ResourceBundle resources) {

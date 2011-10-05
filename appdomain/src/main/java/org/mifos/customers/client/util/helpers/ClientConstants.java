@@ -30,6 +30,7 @@ public interface ClientConstants {
 
     /***/
     short CLIENT_BELONGS_TO_GROUP = 1;
+    int PICTURE_ALLOWED_SIZE = 300000;
     short All_CATEGORY_ID = 1;
     short CLIENT_CATEGORY_ID = 2;
     short CLIENT_ENTITY_TYPE = 1;

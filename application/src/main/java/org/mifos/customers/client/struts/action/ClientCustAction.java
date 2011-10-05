@@ -24,6 +24,8 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -41,6 +43,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.upload.FormFile;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
@@ -86,6 +89,7 @@ import org.mifos.dto.screen.ClientMfiInfoDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.dto.screen.ClientPersonalInfoDto;
+import org.mifos.dto.screen.ClientPhotoDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
@@ -624,6 +628,11 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         ClientNameDetailDto clientName = personalInfo.getClientDetail().getClientName();
         clientName.setNames(ClientRules.getNameSequence());
         actionForm.setClientName(clientName);
+        ClientPhotoDto clientPhotoDto =this.clientServiceFacade.getClientPhoto(client.getCustomerId().longValue());
+        FormFile formFile = new PictureFormFile(clientPhotoDto.getContentType(), clientPhotoDto.getOut(),
+                           client.getCustomerId().toString(), clientPhotoDto.getContentLength().intValue());
+
+        actionForm.setPicture(formFile);
 
         ClientNameDetailDto spouseName = personalInfo.getClientDetail().getSpouseName();
         if (spouseName != null) {
@@ -677,7 +686,6 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         boolean isFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
-        actionForm.getPicture().getFileName();
         if (isFamilyDetailsRequired) {
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, false, request);
@@ -1039,5 +1047,70 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
     public ActionForward editQuestionResponses(ActionMapping mapping, ActionForm form, HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.setAttribute(METHODCALLED, "editQuestionResponses");
         return createClientQuestionnaire.editResponses(mapping, request, (ClientCustActionForm) form);
+    }
+}
+class PictureFormFile implements FormFile {
+
+    private String contentType;
+    private byte[] data;
+    private String name;
+    private int size;
+
+
+    public PictureFormFile(String contentType, byte[] data, String name, int size) {
+        super();
+        this.contentType = contentType;
+        this.data = data;
+        this.name = name;
+        this.size = size;
+    }
+
+    @Override
+    public void destroy() {
+        contentType = null;
+        data = null;
+        name = null;
+        size = 0;
+    }
+
+    @Override
+    public String getContentType() {
+        return contentType;
+    }
+
+    @Override
+    public byte[] getFileData() throws FileNotFoundException, IOException {
+        return data;
+    }
+
+    @Override
+    public String getFileName() {
+        return name;
+    }
+
+    @Override
+    public int getFileSize() {
+        return size;
+    }
+
+    @Override
+    public InputStream getInputStream() throws FileNotFoundException, IOException {
+        return new ByteArrayInputStream(data);
+    }
+
+    @Override
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+
+    }
+
+    @Override
+    public void setFileName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void setFileSize(int size) {
+        this.size = size;
     }
 }

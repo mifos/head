@@ -279,9 +279,18 @@ explanation of the license and how it is applied.
 
 						<%-- Photograph ADD CUSTOMER PICTURE TO ACTION FORM AND CUSTOMER VO --%>
 						<tr class="fontnormal">
-							<td align="right"><span id="edit_ClientPersonalInfo.label.file"><mifos:mifoslabel keyhm="Client.Photo" name="client.Photograph"
+							<td align="right">
+							<span id="edit_ClientPersonalInfo.label.file">
+							<mifos:mifoslabel keyhm="Client.Photo" name="client.Photograph"
 								bundle="ClientUIResources"></mifos:mifoslabel></span></td>
-							<td><mifos:file styleId="edit_ClientPersonalInfo.input.file" keyhm="Client.Photo" property="picture" maxlength="200"
+							<td>
+		                      <c:if test = "${sessionScope.clientCustActionForm.picture.fileName != ''}" >
+                                <img src="/mifos/clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}"/>
+                                <br />
+                                Choose another file to change the picture
+                            </c:if>
+                            <br />
+							<mifos:file styleId="edit_ClientPersonalInfo.input.file" keyhm="Client.Photo" property="picture" maxlength="200"
 								onkeypress="return onKeyPressForFileComponent(this);" /></td>
 						</tr>
 						<%-- Spouse/Father details --%>
