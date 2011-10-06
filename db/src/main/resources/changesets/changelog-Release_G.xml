@@ -158,7 +158,7 @@
 		<rollback>
 		</rollback>
     </changeSet>
-    <changeSet id="MIFOS-2018_1" author="Udai Gupta" context="expansion">
+    <changeSet id="MIFOS-2018_1" author="Udai Gupta" context="contraction">
         <sql endDelimiter=";">
                 SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
                     where REFERENCED_TABLE_NAME="supported_locale" 
@@ -398,7 +398,7 @@
         </sql>
         </rollback>
     </changeSet>
-        <changeSet id="MIFOS-5111_1" author="Udai Gupta" context="expansion">
+    <changeSet id="MIFOS-5111_1" author="Udai Gupta" context="expansion">
         <sql endDelimiter=";">
             CREATE TABLE image_info (
               image_id bigint(20) NOT NULL AUTO_INCREMENT,
