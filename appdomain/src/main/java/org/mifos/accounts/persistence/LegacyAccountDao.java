@@ -254,7 +254,8 @@ public class LegacyAccountDao extends LegacyGenericDao {
         if (accountBO == null) {
             return null;
         }
-        if (accountBO.getType() == AccountTypes.CUSTOMER_ACCOUNT) {
+        if (accountBO.getType() == AccountTypes.CUSTOMER_ACCOUNT
+                || accountBO.getType() == AccountTypes.INDIVIDUAL_LOAN_ACCOUNT) {
             return null;
         }
         QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.LOANACCOUNTIDSEARCH);

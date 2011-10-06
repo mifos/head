@@ -148,13 +148,7 @@ explanation of the license and how it is applied.
 									<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.governmentId" keyhm="Client.GovernmentId" name="clientCustActionForm"
 										property="governmentId" maxlength="50" /></td>
 								</tr>
-								<%-- Date Of  Birth  --%>
-								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel name="client.DateOfBirth"
-										mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></td>
-									<td>
-									<date:datetag renderstyle="simple" property="dateOfBirth" /></td>
-								</tr>
+
 							</c:when>
 							<c:otherwise>
 								<%-- Government Id Label--%>
@@ -164,16 +158,17 @@ explanation of the license and how it is applied.
 									<td><c:out value="${BusinessKey.governmentId}" />
 										<html-el:hidden	name="clientCustActionForm" property="governmentId"	value="${BusinessKey.governmentId}" /></td>
 								</tr>
-								<%-- Date Of  Birth Label--%>
-								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel name="client.DateOfBirth"
-										mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></td>
-									<td>
-										<c:out value="${sessionScope.clientCustActionForm.dateOfBirth}" />
-									</td>
-								</tr>
 							</c:otherwise>
 						</c:choose>
+						<%-- Date Of  Birth Label--%>
+                       <tr class="fontnormal">
+                       		<td align="right">
+                       			<mifos:mifoslabel name="client.DateOfBirth" mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel>
+                       	    </td>
+                            <td>
+                            <date:datetag renderstyle="simple" property="dateOfBirth" /></td>
+                            </td>
+                       </tr>
 						<%-- Gender --%>
 						<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel name="client.Gender"
@@ -283,14 +278,28 @@ explanation of the license and how it is applied.
 						</tr>
 
 						<%-- Photograph ADD CUSTOMER PICTURE TO ACTION FORM AND CUSTOMER VO --%>
-						<%-- adding client pictures feature has been disabled in the UI - Issue MIFOS-2901
 						<tr class="fontnormal">
-							<td align="right"><span id="edit_ClientPersonalInfo.label.file"><mifos:mifoslabel keyhm="Client.Photo" name="client.Photograph"
+							<td align="right">
+							<span id="edit_ClientPersonalInfo.label.file">
+							<mifos:mifoslabel keyhm="Client.Photo" name="client.Photo"
 								bundle="ClientUIResources"></mifos:mifoslabel></span></td>
-							<td><mifos:file styleId="edit_ClientPersonalInfo.input.file" keyhm="Client.Photo" property="picture" maxlength="200"
+							<td>
+		                      <c:if test = "${sessionScope.clientCustActionForm.picture != null 
+		                      && sessionScope.clientCustActionForm.picture.fileName != null 
+		                      && sessionScope.clientCustActionForm.picture.fileName != '' }" >
+                                <img src="/mifos/clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}" width="150"/>
+                                <br />
+                                <a id="editPersonalInformation.link.deletePhoto"
+                                href="clientCustAction.do?method=editPersonalInfo&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&photoDelete=true">
+                                Delete
+                                </a>
+                                <br />
+                                Choose another file to change the picture
+                            </c:if>
+                            <br />
+							<mifos:file styleId="edit_ClientPersonalInfo.input.file" keyhm="Client.Photo" property="picture" maxlength="200"
 								onkeypress="return onKeyPressForFileComponent(this);" /></td>
 						</tr>
-						--%>
 						<%-- Spouse/Father details --%>
 						<c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired') &&
 								!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsHidden')}">

@@ -210,7 +210,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         try {
             client = new ClientBO(TestObjectFactory.getContext(), clientView.getDisplayName(),
                     CustomerStatus.CLIENT_PARTIAL, null, null, null, null, null, offerings, personnel, officeBo, null,
-                    null, null, null, null, YesNoFlag.NO.getValue(), clientView, spouseView, clientPersonalDetailDto, null);
+                    null, null, null, null, YesNoFlag.NO.getValue(), clientView, spouseView, clientPersonalDetailDto);
         } catch (CustomerException ce) {
             Assert.assertEquals(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED, ce.getKey());
             Assert.assertTrue(true);
@@ -239,7 +239,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         client = new ClientBO(TestObjectFactory.getContext(), clientNameDetailDto.getDisplayName(),
                 CustomerStatus.CLIENT_PARTIAL, null, null, null, null, null, offerings, personnel, officeBo, null,
                 null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
-                clientPersonalDetailDto, null);
+                clientPersonalDetailDto);
         legacyClientDao.saveClient(client);
         StaticHibernateUtil.flushSession();
 
@@ -270,7 +270,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                     .valueOf("1"), Short.valueOf("41"));
             client = new ClientBO(TestUtils.makeUser(), "", CustomerStatus.fromInt(new Short("1")), null, null, null,
                     null, null, null, personnel, officeBo, null, null, null, null, null, YesNoFlag.YES.getValue(),
-                    clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
+                    clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto);
             Assert.fail("Client Created");
         } catch (CustomerException ce) {
             Assert.assertNull(client);
@@ -292,8 +292,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                     .valueOf("1"), Short.valueOf("41"));
             client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                     .fromInt(new Short("1")), null, null, null, null, null, null, personnel, null, null, null, null,
-                    null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto,
-                    null);
+                    null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto);
             Assert.fail("Client Created");
         } catch (CustomerException ce) {
             Assert.assertNull(client);
@@ -316,8 +315,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 .valueOf("1"), povertyStatus);
         client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                 .fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeBo, null, null, null,
-                null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto,
-                null);
+                null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto);
         legacyClientDao.saveClient(client);
         StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
@@ -384,7 +382,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                 .fromInt(new Short("1")), null, null, null, null, null, null, personnel, group.getOffice(), group,
                 null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
-                clientPersonalDetailDto, null);
+                clientPersonalDetailDto);
         legacyClientDao.saveClient(client);
         StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
@@ -408,7 +406,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
             client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailDto.getDisplayName(),
                     CustomerStatus.CLIENT_PENDING, null, null, null, null, null, null, personnel, group.getOffice(),
                     group, null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto,
-                    spouseNameDetailView, clientPersonalDetailDto, null);
+                    spouseNameDetailView, clientPersonalDetailDto);
             Assert.fail();
         } catch (CustomerException e) {
             Assert.assertNull(client);
@@ -432,7 +430,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
             client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailDto.getDisplayName(),
                     CustomerStatus.CLIENT_ACTIVE, null, null, null, null, null, null, personnel, group.getOffice(),
                     group, null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto,
-                    spouseNameDetailView, clientPersonalDetailDto, null);
+                    spouseNameDetailView, clientPersonalDetailDto);
             Assert.fail();
         } catch (CustomerException e) {
             Assert.assertNull(client);

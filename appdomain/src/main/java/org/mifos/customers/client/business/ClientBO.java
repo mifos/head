@@ -20,7 +20,6 @@
 
 package org.mifos.customers.client.business;
 
-import org.hibernate.Hibernate;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -31,7 +30,6 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
@@ -50,7 +48,6 @@ import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -73,9 +70,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Blob;
 import java.util.*;
 
 /**
@@ -86,7 +81,6 @@ public class ClientBO extends CustomerBO {
     private static final Logger logger = LoggerFactory.getLogger(ClientBO.class);
 
     //business meta data
-    private CustomerPictureEntity customerPicture;
     private Date dateOfBirth;
     private String governmentId;
     private ClientDetailEntity customerDetail;
@@ -111,7 +105,7 @@ public class ClientBO extends CustomerBO {
             DateTime dateOfBirth, String governmentId, boolean trained, DateTime trainedDate, Short groupFlag,
             String clientFirstName, String clientLastName, String secondLastName,
             ClientNameDetailEntity spouseFatherNameDetailEntity, ClientDetailEntity clientDetailEntity,
-            Blob pictureAsBlob, List<ClientInitialSavingsOfferingEntity> associatedOfferings, String externalId, Address address, LocalDate activationDate) {
+            List<ClientInitialSavingsOfferingEntity> associatedOfferings, String externalId, Address address, LocalDate activationDate) {
 
         // inherit settings from parent (group)
         OfficeBO office = group.getOffice();
@@ -134,7 +128,6 @@ public class ClientBO extends CustomerBO {
         client.setExternalId(externalId);
         client.addNameDetailSet(clientNameDetailEntity);
         client.addNameDetailSet(spouseFatherNameDetailEntity);
-        client.createOrUpdatePicture(pictureAsBlob);
 
         if (clientStatus.isClientActive()) {
             CustomerHierarchyEntity hierarchy = new CustomerHierarchyEntity(client, group);
@@ -155,8 +148,7 @@ public class ClientBO extends CustomerBO {
             ClientNameDetailEntity clientNameDetailEntity, DateTime dob, String governmentId, boolean trainedBool,
             DateTime trainedDateTime, Short groupFlagValue, String clientFirstName, String clientLastName,
             String secondLastName, ClientNameDetailEntity spouseFatherNameDetailEntity,
-            ClientDetailEntity clientDetailEntity, Blob pictureAsBlob,
-            List<ClientInitialSavingsOfferingEntity> associatedOfferings, String externalId, Address address, int numberOfCustomersInOfficeAlready) {
+            ClientDetailEntity clientDetailEntity, List<ClientInitialSavingsOfferingEntity> associatedOfferings, String externalId, Address address, int numberOfCustomersInOfficeAlready) {
 
         ClientBO client = new ClientBO(userContext, clientName, clientStatus, mfiJoiningDate, office, meeting,
                 loanOfficer, formedBy, dob, governmentId, trainedBool, trainedDateTime, groupFlagValue,
@@ -169,7 +161,6 @@ public class ClientBO extends CustomerBO {
         client.setExternalId(externalId);
         client.addNameDetailSet(clientNameDetailEntity);
         client.addNameDetailSet(spouseFatherNameDetailEntity);
-        client.createOrUpdatePicture(pictureAsBlob);
 
         for (ClientInitialSavingsOfferingEntity clientInitialSavingsOfferingEntity : associatedOfferings) {
             client.addOfferingAssociatedInCreate(clientInitialSavingsOfferingEntity);
@@ -237,11 +228,10 @@ public class ClientBO extends CustomerBO {
             final List<SavingsOfferingBO> offeringsSelected, final PersonnelBO formedBy, final OfficeBO office,
             final CustomerBO parentCustomer, final Date dateOfBirth, final String governmentId, final Short trained,
             final Date trainedDate, final Short groupFlag, final ClientNameDetailDto clientNameDetailDto,
-            final ClientNameDetailDto spouseNameDetailView, final ClientPersonalDetailDto clientPersonalDetailDto,
-            final InputStream picture) throws CustomerException {
+            final ClientNameDetailDto spouseNameDetailView, final ClientPersonalDetailDto clientPersonalDetailDto) throws CustomerException {
         this(userContext, displayName, customerStatus, externalId, mfiJoiningDate, address, customFields, fees,
                 offeringsSelected, formedBy, office, parentCustomer, null, null, dateOfBirth, governmentId, trained,
-                trainedDate, groupFlag, clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, picture);
+                trainedDate, groupFlag, clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto);
     }
 
     /**
@@ -258,7 +248,7 @@ public class ClientBO extends CustomerBO {
             final ClientPersonalDetailDto clientPersonalDetailDto, final InputStream picture) throws CustomerException {
         this(userContext, displayName, customerStatus, externalId, mfiJoiningDate, address, customFields, fees,
                 offeringsSelected, formedBy, office, null, meeting, loanOfficer, dateOfBirth, governmentId, trained,
-                trainedDate, groupFlag, clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, picture);
+                trainedDate, groupFlag, clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto);
     }
 
     /**
@@ -272,8 +262,8 @@ public class ClientBO extends CustomerBO {
             final CustomerBO parentCustomer, final MeetingBO meeting, final PersonnelBO loanOfficer,
             final Date dateOfBirth, final String governmentId, final Short trained, final Date trainedDate,
             final Short groupFlag, final ClientNameDetailDto clientNameDetailDto,
-            final ClientNameDetailDto spouseNameDetailView, final ClientPersonalDetailDto clientPersonalDetailDto,
-            final InputStream picture) throws CustomerException {
+            final ClientNameDetailDto spouseNameDetailView, final ClientPersonalDetailDto clientPersonalDetailDto)
+                    throws CustomerException {
         super(userContext, displayName, CustomerLevel.CLIENT, customerStatus, externalId, mfiJoiningDate, address,
                 customFields, fees, formedBy, office, parentCustomer, meeting, loanOfficer);
         validateOffice(office);
@@ -303,7 +293,6 @@ public class ClientBO extends CustomerBO {
             this.addNameDetailSet(new ClientNameDetailEntity(this, null, spouseNameDetailView));
         }
         this.customerDetail = new ClientDetailEntity(this, clientPersonalDetailDto);
-        createPicture(picture);
         createAssociatedOfferings(offeringsSelected);
 
         if (parentCustomer != null) {
@@ -346,14 +335,6 @@ public class ClientBO extends CustomerBO {
         return this.familyDetailSet;
     }
 
-    public CustomerPictureEntity getCustomerPicture() {
-        return customerPicture;
-    }
-
-    public void setCustomerPicture(final CustomerPictureEntity customerPicture) {
-        this.customerPicture = customerPicture;
-    }
-
     public Set<ClientAttendanceBO> getClientAttendances() {
         return clientAttendances;
     }
@@ -362,7 +343,7 @@ public class ClientBO extends CustomerBO {
         return this.dateOfBirth;
     }
 
-    void setDateOfBirth(final Date dateOfBirth) {
+    public void setDateOfBirth(final Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -511,7 +492,7 @@ public class ClientBO extends CustomerBO {
 
         this.governmentId = personalInfo.getGovernmentId();
         try {
-            this.dateOfBirth = DateUtils.getDateAsSentFromBrowser(personalInfo.getDateOfBirth());
+            setDateOfBirth(DateUtils.getDateAsSentFromBrowser(personalInfo.getDateOfBirth()));
         } catch (InvalidDateException e) {
             throw new CustomerException(ClientConstants.INVALID_DOB_EXCEPTION);
         }
@@ -531,8 +512,8 @@ public class ClientBO extends CustomerBO {
             }
         }
         this.updateClientDetails(personalInfo.getClientDetail());
-
         setDisplayName(personalInfo.getClientDisplayName());
+
         Address address = null;
         if (personalInfo.getAddress() != null) {
             ;
@@ -758,17 +739,6 @@ public class ClientBO extends CustomerBO {
 
     public void updateClientDetails(final ClientPersonalDetailDto clientPersonalDetailDto) {
         customerDetail.updateClientDetails(clientPersonalDetailDto);
-    }
-
-    @Deprecated
-    private void createPicture(final InputStream picture) throws CustomerException {
-        try {
-            if (picture != null && picture.available() > 0) {
-                this.customerPicture = new CustomerPictureEntity(this, Hibernate.createBlob(picture));
-            }
-        } catch (IOException e) {
-            throw new CustomerException(e);
-        }
     }
 
     public void createAssociatedOfferings(final List<SavingsOfferingBO> offeringsSelected) {
@@ -1092,14 +1062,6 @@ public class ClientBO extends CustomerBO {
 
         return new ClientDetailDto(this.governmentId, dateOfBirthAsString, customerDetailView, clientName, spouseName,
                 groupFlagIsSet, parentGroupId, trained, trainedDate);
-    }
-
-    public void createOrUpdatePicture(Blob pictureAsBlob) {
-        if (this.customerPicture != null) {
-            this.customerPicture.setPicture(pictureAsBlob);
-        } else {
-            this.customerPicture = new CustomerPictureEntity(this, pictureAsBlob);
-        }
     }
 
     public OfficePersistence getOfficePersistence() {

@@ -75,9 +75,8 @@ public class AuditInterceptor extends EmptyInterceptor {
         if (tx != null && tx.wasCommitted() && !tx.wasRolledBack()) {
             flag = true;
         }
-        if (flag
-                && ((interceptHelper.getInitialValueMap() != null && interceptHelper.getInitialValueMap().size() > 0) || (interceptHelper
-                        .getChangeValueMap() != null && interceptHelper.getChangeValueMap().size() > 0))) {
+        if (flag && ((interceptHelper.getInitialValueMap() != null && interceptHelper.getInitialValueMap().size() > 0)
+            || (interceptHelper.getChangeValueMap() != null && interceptHelper.getChangeValueMap().size() > 0))) {
             auditLog = new AuditLog(interceptHelper.getEntityId(), EntityType.getEntityValue(interceptHelper
                     .getEntityName().toUpperCase()), userContext.getName(), new DateTimeService()
                     .getCurrentJavaSqlDate(), userContext.getId());

@@ -255,12 +255,6 @@ public class LegacyPersonnelDaoIntegrationTest extends MifosIntegrationTestCase 
     }
 
     @Test
-    public void testGetSupportedLocale() throws Exception {
-        // asserting only on not null as suppored locales can be added by user
-        Assert.assertNotNull(legacyPersonnelDao.getSupportedLocales());
-    }
-
-    @Test
     public void testGetAllPersonnel() throws Exception {
         List<PersonnelBO> personnel = legacyPersonnelDao.getAllPersonnel();
         Assert.assertNotNull(personnel);

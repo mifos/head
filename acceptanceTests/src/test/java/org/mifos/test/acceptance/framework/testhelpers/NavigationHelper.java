@@ -167,11 +167,15 @@ public class NavigationHelper {
         return chooseOfficePage.selectOffice(officeName);
     }
 
-    public CreateClientEnterMfiDataPage navigateToCreateClientEnterMfiDataPage(String officeName) {
+    public CreateClientEnterPersonalDataPage navigateToCreateClientEnterPersonalDataPage(String officeName) {
         ClientsAndAccountsHomepage clientsAccountsPage = navigateToClientsAndAccountsPage();
         GroupSearchPage groupSearchPage = clientsAccountsPage.navigateToCreateNewClientPage();
         org.mifos.test.acceptance.framework.client.ChooseOfficePage chooseOfficePage = groupSearchPage.navigateToCreateClientWithoutGroupPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage = chooseOfficePage.chooseOffice(officeName);
+        return chooseOfficePage.chooseOffice(officeName);
+    }
+
+    public CreateClientEnterMfiDataPage navigateToCreateClientEnterMfiDataPage(String officeName) {
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToCreateClientEnterPersonalDataPage(officeName);
         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = FormParametersHelper.getClientEnterPersonalDataPageFormParameters();
         clientPersonalDataPage=clientPersonalDataPage.create(formParameters);
         return clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();

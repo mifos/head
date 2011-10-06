@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CenterUpdate;
 import org.mifos.dto.domain.CustomFieldDto;
@@ -38,11 +39,12 @@ public class CenterUpdateBuilder {
         int customerId = -1;
         Short loanOfficerId = -1;
         String externalId = null;
+        String updatedDisplayName = "Center "+RandomStringUtils.random(5);
         String mfiJoiningDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
         AddressDto address = null;
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         List<CustomerPositionDto> customerPositions = new ArrayList<CustomerPositionDto>();
 
-        return new CenterUpdate(customerId, versionNum, loanOfficerId, externalId, mfiJoiningDate, address, customFields, customerPositions);
+        return new CenterUpdate(customerId, updatedDisplayName, versionNum, loanOfficerId, externalId, mfiJoiningDate, address, customFields, customerPositions);
     }
 }

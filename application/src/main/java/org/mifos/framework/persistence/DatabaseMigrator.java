@@ -63,7 +63,7 @@ public class DatabaseMigrator {
 
     public void upgrade(ApplicationContext applicationContext) throws Exception {
         DatabaseUpgradeSupport databaseUpgradeSupport = (DatabaseUpgradeSupport) applicationContext.getBean("databaseUpgradeSupport");
-        databaseUpgradeSupport.upgrade();
+        databaseUpgradeSupport.expansion();
     }
 
     public List<Integer> getAppliedUpgrades() {

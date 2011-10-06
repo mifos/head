@@ -33,7 +33,7 @@ public class PersonnelDetailsEntity extends AbstractEntity {
 
     private Name name;
     private String governmentIdNumber;
-    private final Date dob;
+    private Date dob;
     private Integer maritalStatus;
     private Integer gender;
     private Date dateOfJoiningMFI;
@@ -103,6 +103,10 @@ public class PersonnelDetailsEntity extends AbstractEntity {
 
     public Date getDob() {
         return dob;
+    }
+
+    public void  setDob(Date dob) {
+        this.dob = dob;
     }
 
     public Date getDateOfJoiningMFI() {

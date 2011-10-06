@@ -25,6 +25,7 @@ import java.util.List;
 public class CenterUpdate {
 
     private final Integer customerId;
+    private final String displayName;
     private final Integer versionNum;
     private final Short loanOfficerId;
     private final String externalId;
@@ -33,9 +34,10 @@ public class CenterUpdate {
     private final List<CustomFieldDto> customFields;
     private final List<CustomerPositionDto> customerPositions;
 
-    public CenterUpdate(Integer customerId, Integer versionNum, Short loanOfficerId, String externalId, String mfiJoiningDate, AddressDto address,
+    public CenterUpdate(Integer customerId, String displayName,Integer versionNum, Short loanOfficerId, String externalId, String mfiJoiningDate, AddressDto address,
             List<CustomFieldDto> customFields, List<CustomerPositionDto> customerPositions) {
         this.customerId = customerId;
+        this.displayName = displayName;
         this.versionNum = versionNum;
         this.loanOfficerId = loanOfficerId;
         this.externalId = externalId;
@@ -47,6 +49,10 @@ public class CenterUpdate {
 
     public Short getLoanOfficerId() {
         return this.loanOfficerId;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     public String getExternalId() {

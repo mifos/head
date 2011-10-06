@@ -34,14 +34,13 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(enabled = true, singleThreaded = true, groups = {"core","acceptance"})
+@Test(enabled = false, singleThreaded = true, groups = {"core","acceptance"})
 public class DatasetVersionTest extends UiTestCaseBase {
 
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
-
 
     @AfterMethod
     public void logOut() {

@@ -78,7 +78,7 @@ public class LocalizationConverter {
         this.digitsBeforeDecimalForInterest = digitsBeforeDecimalForInterest;
         this.digitsBeforeDecimalForCashFlowValidations = digitsBeforeDecimalForCashFlowValidations;
         this.digitsAfterDecimalForCashFlowValidations = digitsAfterDecimalForCashFlowValidations;
-        currentLocale = Localization.getInstance().getMainLocale();
+        currentLocale = Localization.getInstance().getConfiguredLocale();
         // for this 1.1. release this will be defaulted to the English locale
         // and
         // later on this will be the configured locale so these lines will be
@@ -105,7 +105,7 @@ public class LocalizationConverter {
         digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest();
         digitsBeforeDecimalForCashFlowValidations = AccountingRules.getDigitsBeforeDecimalForCashFlowValidations();
         digitsAfterDecimalForCashFlowValidations = AccountingRules.getDigitsAfterDecimalForCashFlowValidations();
-        currentLocale = Localization.getInstance().getMainLocale();
+        currentLocale = Localization.getInstance().getConfiguredLocale();
         // for this 1.1. release this will be defaulted to the English locale
         // and
         // later on this will be the configured locale so these lines will be

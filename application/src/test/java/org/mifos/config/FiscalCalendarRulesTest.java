@@ -139,7 +139,7 @@ public class FiscalCalendarRulesTest {
         // and the current date and time
         Calendar calendar = new GregorianCalendar(pdt);
         try {
-            Locale savedLocale = Localization.getInstance().getMainLocale();
+            Locale savedLocale = Localization.getInstance().getConfiguredLocale();
             new LocalizationConverter().setCurrentLocale(Locale.US);
             SimpleDateFormat df = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, Locale.US);
             // Keith: DateFormat must be set to the same timezone as the

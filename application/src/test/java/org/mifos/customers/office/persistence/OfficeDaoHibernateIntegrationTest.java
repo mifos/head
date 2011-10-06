@@ -80,7 +80,7 @@ public class OfficeDaoHibernateIntegrationTest extends MifosIntegrationTestCase 
     @BeforeClass
     public static void initialiseHibernateUtil() {
 
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         AuditConfiguration.init(locale);
 
         oldDefaultCurrency = Money.getDefaultCurrency();

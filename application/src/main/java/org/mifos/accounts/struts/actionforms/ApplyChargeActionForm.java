@@ -131,11 +131,19 @@ public class ApplyChargeActionForm extends BaseActionForm {
         return errors;
     }
 
-    private void validateRate(ActionErrors errors, HttpServletRequest request) {
-        //FIXME Do not use hard coded values for properties local.properties
-        if (getDoubleValue(chargeAmount) > Double.valueOf("999")) {
-            errors.add(AccountConstants.RATE, new ActionMessage(AccountConstants.RATE_ERROR));
-            request.setAttribute("selectedChargeFormula", selectedChargeFormula);
+    protected void validateRate(ActionErrors errors, HttpServletRequest request) {
+        Double chargeAmountDoubleValue;
+        try {
+            chargeAmountDoubleValue = getDoubleValue(chargeAmount);
+        } catch (NumberFormatException e) {
+            return;
+        }
+        if (chargeAmountDoubleValue != null) {
+            //FIXME Do not use hard coded values for properties local.properties
+            if (chargeAmountDoubleValue > Double.valueOf("999")) {
+                errors.add(AccountConstants.RATE, new ActionMessage(AccountConstants.RATE_ERROR));
+                request.setAttribute("selectedChargeFormula", selectedChargeFormula);
+            }
         }
     }
 
@@ -147,16 +155,19 @@ public class ApplyChargeActionForm extends BaseActionForm {
             return;
         }
 
-        DoubleConversionResult conversionResult;
+        DoubleConversionResult conversionResult = null;
+        String chargeAmount = getCharge();
 
-        if (isRateType()) {
-            conversionResult = validateInterest(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors, locale,
-                FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
-        } else {
-            conversionResult = validateAmount(getCharge(), getChargeCurrency(), AccountConstants.ACCOUNT_AMOUNT,
-                    errors, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE,"");
+        if (!StringUtils.isBlank(chargeAmount)) {
+            if (isRateType()) {
+                conversionResult = validateInterest(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors, locale,
+                    FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
+            } else {
+                conversionResult = validateAmount(getCharge(), getChargeCurrency(), AccountConstants.ACCOUNT_AMOUNT,
+                        errors, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE,"");
+            }
         }
-        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+        if (conversionResult != null && conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
                     lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE));
         }

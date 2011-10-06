@@ -232,7 +232,7 @@ public class TableTag extends BodyTagSupport {
     }
 
     XmlBuilder noResults(String officeName, String officeId, String searchString) {
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
         XmlBuilder html = new XmlBuilder();
         html.startTag("table", "width", "96%", "border", "0", "cellpadding", "0", "cellspacing", "0");

@@ -114,7 +114,7 @@ public class CenterStatusChangeIntegrationTest extends MifosIntegrationTestCase 
     public void cleanDatabaseTables() throws Exception {
         databaseCleaner.clean();
 
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         AuditConfiguration.init(locale);
 
         existingUser = IntegrationTestObjectMother.testUser();

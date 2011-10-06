@@ -114,7 +114,9 @@ public interface AccountConstants {
     // Errors
     String VERSIONNOMATCHINGPROBLEM = "error.versionnodonotmatch";
     String RATE_ERROR = "errors.rateException";
+    String DOUBLE_ERROR = "errors.double";
     String RATE = "Rate";
+    String RATE_AMOUNT = "Rate Amount";
     // AccountTypes
     // Short LOAN_TYPE=1;
     // Short SAVING_TYPE=2;

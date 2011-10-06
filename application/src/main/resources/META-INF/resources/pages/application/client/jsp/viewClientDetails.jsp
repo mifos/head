@@ -38,7 +38,7 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="ViewClientDetails" ></span>
 		<script language="javascript">
   function photopopup(custId , custName, currentFlow){
-	  window.open("clientCustAction.do?method=showPicture&customerId="+ custId + "&displayName=" + custName+ "&currentFlowKey=" + currentFlow,null,"height=250,width=200,status=no,scrollbars=no,toolbar=no,menubar=no,location=no");
+	  window.open("clientCustAction.do?method=showPicture&customerId="+ custId + "&displayName=" + custName+ "&currentFlowKey=" + currentFlow,null,"height=200,width=170,status=no,scrollbars=no,toolbar=no,menubar=no,location=no");
 
   }
 
@@ -108,10 +108,9 @@ explanation of the license and how it is applied.
 							<td class="fontnormalbold"><span class="fontnormal"> 
 							<c:set var="custId" value="${clientInformationDto.clientDisplay.customerId}" />
 							<c:set var="custName"	value="${clientInformationDto.clientDisplay.loanOfficerName}" /> 	
-							<c:if test="${clientInformationDto.clientDisplay.isCustomerPicture}">
-								<a id="viewClientDetails.link.seePhoto" href="javascript:photopopup(${custId} , '${custName}' ,'${requestScope.currentFlowKey}')"><mifos:mifoslabel
-								name="client.seephoto" bundle="ClientUIResources"></mifos:mifoslabel></a>
-							</c:if> </span><br>
+							<a id="viewClientDetails.link.seePhoto" href="javascript:photopopup(${custId} , '${custName}' ,'${requestScope.currentFlowKey}')">
+							<mifos:mifoslabel name="client.seephoto" bundle="ClientUIResources"></mifos:mifoslabel></a>
+							</span><br>
 							</td>
 						</tr>
 					</table>

@@ -113,6 +113,7 @@ public class CenterCustActionForm extends CustomerActionForm implements Question
             validateLO(errors);
             validateMeeting(request, errors);
         } else if (method.equals(Methods.editPreview.toString())) {
+            validateName(errors);
             CenterBO center = (CenterBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
             if (center.isActive()) {
                 validateLO(errors);

@@ -41,6 +41,7 @@ import static org.apache.commons.lang.StringUtils.EMPTY;
 public class DatabaseUpgradeSupport {
 
     public static final String EXPANSION = "expansion";
+    public static final String CONTRACTION = "contraction";
     public static final String BEAN_NAME = "databaseUpgradeSupport";
     private Liquibase liquibase;
     private Database database;
@@ -69,8 +70,12 @@ public class DatabaseUpgradeSupport {
         return new DbUpgradeValidationResult(liquibase.listUnrunChangeSets(EXPANSION));
     }
 
-    public void upgrade() throws SQLException, LiquibaseException {
+    public void expansion() throws SQLException, LiquibaseException {
         liquibase.update(EXPANSION);
+    }
+
+    public void contraction() throws SQLException, LiquibaseException {
+        liquibase.update(CONTRACTION);
     }
 
     public List<ChangeSetInfo> listRanUpgrades() {

@@ -29,13 +29,9 @@ import junit.framework.Assert;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -49,13 +45,6 @@ public class RESTAPITest extends UiTestCaseBase {
     public static final String CLIENT_GLOBAL_ID = "0002-000000003";
     public static final String LOAN_ACCOUNT_GLOBAL_ID = "000100000000004";
     public static final String SAVINGS_ACCOUNT_GLOBAL_ID = "000100000000006";
-
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     private RESTAPITestHelper helper;
 
@@ -80,24 +69,20 @@ public class RESTAPITest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void verifyRESTAPIInOrder() throws Exception {
-        clientByGlobalNum();
-        repayLoanByGlobalNum();
-        savingsDepositByGlobalNum();
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void clientByGlobalNum() throws Exception {
+    @Test(groups="readOnly")
+    public void clientByGlobalNum() throws Exception {
         String type = Type.CLIENT;
         String by = By.GLOBAL_NUMBER;
         String value = CLIENT_GLOBAL_ID;
         String actualJSON = helper.getJSONFromUI(type, by, value);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
-        helper.assertEquals(expectedJSON, actualJSON);
+        ObjectMapper mapper = helper.getObjectMapper();
+        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void repayLoanByGlobalNum() throws Exception {
+    @Test(dependsOnGroups="readOnly")
+    public void repayLoanByGlobalNum() throws Exception {
         String data = "amount=100&client="+CLIENT_GLOBAL_ID;
         String type = Type.LOAN_REPAYMENT;
         String by = By.GLOBAL_NUMBER;
@@ -116,7 +101,8 @@ public class RESTAPITest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void savingsDepositByGlobalNum() throws Exception {
+    @Test(dependsOnGroups="readOnly")
+    public void savingsDepositByGlobalNum() throws Exception {
         String data = "amount=100&client="+CLIENT_GLOBAL_ID;
         String type = Type.SAVINGS_DEPOSIT;
         String by = By.GLOBAL_NUMBER;
@@ -139,7 +125,7 @@ public class RESTAPITest extends UiTestCaseBase {
         Map<String, Object> expectedJSON;
         @SuppressWarnings("PMD.SignatureDeclareThrowsException")
         public AssertJSON(String actualJSONString, String expectedJSONString) throws Exception {
-            ObjectMapper mapper = new ObjectMapper();
+            ObjectMapper mapper = helper.getObjectMapper();
             actualJSON = mapper.readValue(actualJSONString, Map.class);
             expectedJSON = mapper.readValue(expectedJSONString, Map.class);
         }

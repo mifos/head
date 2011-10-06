@@ -70,14 +70,14 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
     private Short mandatoryFlag;
 
     // allow injection of MessageLookup for mocking in tests
-    private MessageLookup messageLookup = null;    
+    private MessageLookup messageLookup = null;
     private MessageLookup getMessageLookup() {
     	if (messageLookup == null) {
     		messageLookup = MessageLookup.getInstance();
     	}
     	return messageLookup;
     }
-    
+
     public void setMessageLookup(MessageLookup messageLookup) {
     	this.messageLookup = messageLookup;
     }
@@ -223,7 +223,7 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
         return MessageLookup.getInstance().lookup(YesNoFlag.fromInt(flag), locale);
     }
      */
-    
+
     public String getMandatoryStringValue(Locale locale) {
         return getMessageLookup().lookup(YesNoFlag.fromInt(mandatoryFlag), locale);
     }

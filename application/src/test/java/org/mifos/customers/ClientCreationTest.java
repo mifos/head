@@ -24,6 +24,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -45,6 +46,7 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -122,17 +124,24 @@ public class ClientCreationTest {
     @Test(expected = CustomerException.class)
     public void throwsCheckedExceptionWhenValidationForDuplicateNameOrGovernmentId() throws Exception {
 
+        String displayName = "Test Name";
+        Date dob = new Date();
+        String govtId = "44354323543";
         // setup
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
         List<SavingsOfferingBO> noSavings = new ArrayList<SavingsOfferingBO>();
 
         // stubbing
-        doThrow(new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION)).when(customerDao).validateClientForDuplicateNameOrGovtId(mockedClient);
+        Mockito.when(mockedClient.getDisplayName()).thenReturn(displayName);
+        Mockito.when(mockedClient.getDateOfBirth()).thenReturn(dob);
+        Mockito.when(mockedClient.getGovernmentId()).thenReturn(govtId);
+        doThrow(new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION)).when(customerDao)
+                .validateClientForDuplicateNameOrGovtId(displayName, dob, govtId);
 
         // exercise test
         customerService.createClient(mockedClient, meeting, accountFees, noSavings);
 
         // verify
-        verify(customerDao).validateClientForDuplicateNameOrGovtId(mockedClient);
+        verify(customerDao).validateClientForDuplicateNameOrGovtId(mockedClient.getDisplayName(), mockedClient.getDateOfBirth(), mockedClient.getGovernmentId());
     }
 }

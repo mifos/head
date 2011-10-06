@@ -1383,6 +1383,6 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
     @Override
     public Locale retreiveLocaleFromConfiguration() {
-        return Localization.getInstance().getMainLocale();
+        return Localization.getInstance().getConfiguredLocale();
     }
 }

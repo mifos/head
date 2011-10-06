@@ -20,7 +20,6 @@
 
 package org.mifos.customers.checklist.business;
 
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.framework.business.AbstractEntity;
 
 public class CheckListDetailEntity extends AbstractEntity {
@@ -33,7 +32,7 @@ public class CheckListDetailEntity extends AbstractEntity {
 
     private final CheckListBO checkListBO;
 
-    private SupportedLocalesEntity supportedLocales;
+    private Short supportedLocales;
 
     public CheckListDetailEntity() {
         this.detailId = null;
@@ -45,7 +44,7 @@ public class CheckListDetailEntity extends AbstractEntity {
         this.detailText = detailText;
         this.answerType = answerType;
         this.checkListBO = checkListBO;
-        this.supportedLocales = new SupportedLocalesEntity(localeId);
+        this.supportedLocales = localeId;
     }
 
     public Integer getDetailId() {
@@ -72,13 +71,13 @@ public class CheckListDetailEntity extends AbstractEntity {
         this.answerType = answerType;
     }
 
-    public SupportedLocalesEntity getSupportedLocales() {
+    public Short getSupportedLocales() {
         return this.supportedLocales;
     }
 
     @SuppressWarnings("unused")
     // see .hbm.xml file
-    private void setSupportedLocales(SupportedLocalesEntity supportedLocales) {
+    private void setSupportedLocales(Short supportedLocales) {
         this.supportedLocales = supportedLocales;
     }
 

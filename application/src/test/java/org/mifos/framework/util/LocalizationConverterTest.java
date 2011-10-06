@@ -65,7 +65,7 @@ public class LocalizationConverterTest {
 
     @Test
     public void testGetDecimalFormatSymbol() {
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         char sep = '.';
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(sep, converter.getDecimalFormatSymbol());
@@ -81,7 +81,7 @@ public class LocalizationConverterTest {
 
         String doubleValueString = "2.5";
         Double dValue = 2.5000000000;
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         String dString = converter.getDoubleStringForMoney(dValue);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(doubleValueString, dString);
@@ -98,7 +98,7 @@ public class LocalizationConverterTest {
 
         String doubleValueString = "2123.12345";
         Double dValue = 2123.12345000000;
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         String dString = converter.getDoubleStringForInterest(dValue);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(doubleValueString, dString);
@@ -115,7 +115,7 @@ public class LocalizationConverterTest {
 
         String doubleValueString = "2.59";
         Double dValue = 2.59;
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         String dString = converter.getDoubleValueString(dValue);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(doubleValueString, dString);
@@ -135,7 +135,7 @@ public class LocalizationConverterTest {
     @Test
     public void testGetDateSeparator() {
         String separator = "/";
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         String dateSeparator = converter.getDateSeparatorForCurrentLocale();
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(separator, dateSeparator);
@@ -154,7 +154,7 @@ public class LocalizationConverterTest {
         Short digitsAfterForMoneySaved = AccountingRules.getDigitsAfterDecimal();
         Short digitsAfterForMoney = 1;
         AccountingRules.setDigitsAfterDecimal(digitsAfterForMoney);
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         DoubleConversionResult result = converter.parseDoubleForMoney(doubleValueString);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(result.getDoubleValue(), dValue);
@@ -202,7 +202,7 @@ public class LocalizationConverterTest {
         Short digitsAfterForInterestSaved = AccountingRules.getDigitsAfterDecimalForInterest();
         Short digitsAfterForInterest = 5;
         AccountingRules.setDigitsAfterDecimalForInterest(digitsAfterForInterest);
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
 
 
         short digitsAfterDecimalForMoney = Short.valueOf("1");
@@ -273,7 +273,7 @@ public class LocalizationConverterTest {
     public void testGetDoubleValueForCurrentLocale() {
         String doubleValueString = "223.59";
         Double dValue = 223.59;
-        Locale locale = Localization.getInstance().getMainLocale();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
         Double dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(dNumber, dValue);

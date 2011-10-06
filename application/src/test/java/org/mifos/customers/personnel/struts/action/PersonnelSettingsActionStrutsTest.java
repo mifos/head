@@ -351,7 +351,7 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals("new last name", personnel.getPersonnelDetails().getName().getLastName());
        Assert.assertEquals("XYZ@aditi.com", personnel.getEmailId());
        Assert.assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
-       Assert.assertEquals(1, personnel.getPreferredLocale().getLocaleId().intValue());
+       Assert.assertEquals(1, personnel.getPreferredLocale().intValue());
        Assert.assertEquals(2, personnel.getPersonnelDetails().getMaritalStatus().intValue());
     }
 

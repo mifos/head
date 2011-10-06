@@ -110,12 +110,6 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
     }
 
     @Test
-    public void testGetSupportedLocale() throws Exception {
-        // asserting only on not null as suppored locales can be added by user
-        Assert.assertNotNull(personnelBusinessService.getSupportedLocales());
-    }
-
-    @Test
     public void testGetAllPersonnel() throws Exception {
         List<PersonnelBO> personnel = personnelBusinessService.getAllPersonnel();
         Assert.assertNotNull(personnel);

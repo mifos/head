@@ -97,16 +97,13 @@ explanation of the license and how it is applied.
 								name="client.PersonalInformationHeading"
 								bundle="ClientUIResources"></mifos:mifoslabel></td>
 						</tr>
-						<%-- adding client pictures feature has been disabled in the UI - Issue MIFOS-2901
 						<tr>
 							<td class="fontnormalbold">
-								<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'noPicture') eq 'No'}">
-									 	 <img src="/mifos/clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}"
-											height="100" width="150" />
-										<br>
-									</c:if> <br>
+							<c:if test = "${sessionScope.clientCustActionForm.picture.fileName != ''}" >
+								<img src="/mifos/clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}" width="150"/>
+							</c:if>
+							<br><br>
 							</td></tr>
-						--%>
 						<tr><td class="fontnormalbold">
 							<mifos:mifoslabel name="client.Name" bundle="ClientUIResources"></mifos:mifoslabel>
 							<span class="fontnormal">

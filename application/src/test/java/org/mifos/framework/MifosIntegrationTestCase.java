@@ -76,7 +76,10 @@ import java.util.Date;
  * this class.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml", "/org/mifos/config/resources/applicationContext.xml", "/org/mifos/config/resources/apponly-services.xml", "classpath*:META-INF/spring/DbUpgradeContext.xml"})
+@ContextConfiguration(locations = { "/integration-test-context.xml",
+                                    "/org/mifos/config/resources/applicationContext.xml",
+                                    "/org/mifos/config/resources/apponly-services.xml",
+                                    "classpath*:META-INF/spring/DbUpgradeContext.xml"})
 public class MifosIntegrationTestCase {
 
     private static Boolean isTestingModeSet = false;

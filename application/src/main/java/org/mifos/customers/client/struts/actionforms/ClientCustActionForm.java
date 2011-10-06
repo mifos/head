@@ -22,6 +22,7 @@ package org.mifos.customers.client.struts.actionforms;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -46,7 +47,6 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
-import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -285,10 +285,11 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
 
     public void setPicture(FormFile picture) {
         this.picture = picture;
-        try {
-            customerPicture = picture.getInputStream();
-        } catch (IOException ioe) {
-
+        if (picture != null) {
+            try {
+                customerPicture = picture.getInputStream();
+            } catch (IOException ioe) {
+            }
         }
     }
 
@@ -390,24 +391,32 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
     }
 
     private void validatePicture(HttpServletRequest request, ActionErrors errors) throws PageExpiredException {
-        if (picture != null) {
-            String fileName = picture.getFileName();
+        if (picture != null && StringUtils.isNotBlank(picture.getFileName())) {
             if (picture.getFileSize() > ClientConstants.PICTURE_ALLOWED_SIZE) {
-                errors.add(ClientConstants.PICTURE_SIZE_EXCEPTION, new ActionMessage(
-                        ClientConstants.PICTURE_SIZE_EXCEPTION));
+                addInvalidPictureError(errors, "image size should be less then 300K");
             }
-            if (!ValidateMethods.isNullOrBlank(fileName)) {
-                String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-                if (!(fileExtension.equalsIgnoreCase("jpeg") || fileExtension.equalsIgnoreCase("jpg"))) {
-                    errors.add(ClientConstants.PICTURE_EXCEPTION, new ActionMessage(ClientConstants.PICTURE_EXCEPTION));
+            try {
+                String contentType = URLConnection.guessContentTypeFromStream(picture.getInputStream());
+                if(contentType == null) {
+                    contentType = URLConnection.guessContentTypeFromName(picture.getFileName());
                 }
-            }
-            if (picture.getFileSize() == 0 || picture.getFileSize() < 0) {
-                SessionUtils.setAttribute("noPicture", "Yes", request);
-            } else {
-                SessionUtils.setAttribute("noPicture", "No", request);
+
+                if(contentType == null || !(contentType.equals("image/jpeg") ||
+                                            contentType.equals("image/gif") ||
+                                            contentType.equals("image/jpg") ||
+                                            contentType.equals("image/png"))) {
+                    addInvalidPictureError(errors, "allowed only jpg/gif/png");
+                }
+            } catch (IOException e) {
+                addInvalidPictureError(errors, e.getMessage());
             }
         }
+    }
+
+    private void addInvalidPictureError(ActionErrors errors, String message) {
+        errors.add(ClientConstants.INVALID_PHOTO, new ActionMessage(ClientConstants.INVALID_PHOTO, message));
+        this.picture = null;
+        this.customerPicture = null;
     }
 
     private void validateGender(ActionErrors errors, ResourceBundle resources) {

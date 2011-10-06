@@ -25,7 +25,7 @@
 [#macro header pageTitle]
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html dir="${Application.ConfigLocale.direction}">
+<html dir="${Application.LocaleSetting.direction}">
     <head>
         <title id="${pageTitle}">[@spring.message "${pageTitle}" /]</title>
         <link href="pages/css/maincss.css" rel="stylesheet" type="text/css" />

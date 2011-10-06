@@ -20,8 +20,6 @@
 
 package org.mifos.customers.business.service;
 
-import java.io.InputStream;
-import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +28,7 @@ import java.util.Set;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
@@ -40,6 +39,7 @@ import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.MessageLookup;
@@ -48,7 +48,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
@@ -68,7 +67,6 @@ import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
-import org.mifos.customers.client.persistence.LegacyClientDao;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
@@ -94,7 +92,9 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.framework.image.service.ClientPhotoService;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,6 +119,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private SavingsProductDao savingsProductDao;
+
+    @Autowired
+    private ClientPhotoService clientPhotoService;
+
     private MifosConfigurationHelper configurationHelper = new DefaultMifosConfigurationHelper();
 
     @Autowired
@@ -182,7 +186,7 @@ public class CustomerServiceImpl implements CustomerService {
         client.validate();
         client.validateNoDuplicateSavings(savingProducts);
 
-        customerDao.validateClientForDuplicateNameOrGovtId(client);
+        customerDao.validateClientForDuplicateNameOrGovtId(client.getDisplayName(), client.getDateOfBirth(), client.getGovernmentId());
 
         if (client.isActive()) {
             client.validateFieldsForActiveClient();
@@ -260,7 +264,7 @@ public class CustomerServiceImpl implements CustomerService {
             this.hibernateTransactionHelper.startTransaction();
             this.customerDao.save(customer);
             this.hibernateTransactionHelper.flushSession();
-            
+
             // generate globalids for savings accounts, as they require accouont_id the savings accounts
             // must first be saved via the customer save.
             for (AccountBO account: customer.getAccounts()) {
@@ -300,10 +304,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public final void updateCenter(UserContext userContext, CenterUpdate centerUpdate) throws ApplicationException {
-
         CustomerBO center = customerDao.findCustomerById(centerUpdate.getCustomerId());
         center.validateVersion(centerUpdate.getVersionNum());
         center.setUserContext(userContext);
+
+        if(!centerUpdate.getDisplayName().equals(center.getDisplayName())) {
+            customerDao.validateCenterNameIsNotTakenForOffice(centerUpdate.getDisplayName(), center.getOfficeId());
+        }
 
         assembleCustomerPostionsFromDto(centerUpdate.getCustomerPositions(), center);
 
@@ -311,6 +318,7 @@ public class CustomerServiceImpl implements CustomerService {
             hibernateTransactionHelper.startTransaction();
             hibernateTransactionHelper.beginAuditLoggingFor(center);
 
+            center.setDisplayName(centerUpdate.getDisplayName());
             updateLoanOfficerAndValidate(centerUpdate.getLoanOfficerId(), center);
 
             center.updateCenterDetails(userContext, centerUpdate);
@@ -381,19 +389,27 @@ public class CustomerServiceImpl implements CustomerService {
         ClientBO client = (ClientBO) this.customerDao.findCustomerById(personalInfo.getCustomerId());
         client.validateVersion(personalInfo.getOriginalClientVersionNumber());
         client.updateDetails(userContext);
+        LocalDate currentDOB = new LocalDate(client.getDateOfBirth());
+        LocalDate newDOB = currentDOB;
+        try {
+            // updating Date of birth
+            // doesn''t sound normal but it can be required in certain cases
+            // see http://mifosforge.jira.com/browse/MIFOS-4368
+            newDOB = new LocalDate(DateUtils.getDateAsSentFromBrowser(personalInfo.getDateOfBirth()));
+        } catch (InvalidDateException e) {
+            throw new MifosRuntimeException(e);
+        }
+
+        if(!currentDOB.isEqual(newDOB)) {
+            customerDao.validateClientForDuplicateNameOrGovtId(personalInfo.getClientDisplayName(), newDOB.toDateMidnight().toDate(), personalInfo.getGovernmentId());
+        }
 
         try {
             hibernateTransactionHelper.startTransaction();
             hibernateTransactionHelper.beginAuditLoggingFor(client);
-
             client.updatePersonalInfo(personalInfo);
 
-            InputStream pictureSteam = personalInfo.getPicture();
-
-            if (pictureSteam != null) {
-                Blob pictureAsBlob = ApplicationContextProvider.getBean(LegacyClientDao.class).createBlob(pictureSteam);
-                client.createOrUpdatePicture(pictureAsBlob);
-            }
+            clientPhotoService.update(personalInfo.getCustomerId().longValue(), personalInfo.getPicture());
 
             customerDao.save(client);
 
@@ -1133,7 +1149,7 @@ public class CustomerServiceImpl implements CustomerService {
     private void handleChangeInMeetingSchedule(CustomerBO customer, final List<Days> workingDays, final List<Holiday> orderedUpcomingHolidays) throws AccountException {
 
         boolean lsimEnabled = this.configurationHelper.isLoanScheduleRepaymentIndependentOfCustomerMeetingEnabled();
-        
+
         Set<AccountBO> accounts = customer.getAccounts();
         for (AccountBO account : accounts) {
             if (account instanceof LoanBO && lsimEnabled) {
@@ -1204,7 +1220,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         return !activeLoanAccounts.isEmpty();
     }
-    
+
     public void setConfigurationHelper(MifosConfigurationHelper configurationHelper) {
         this.configurationHelper = configurationHelper;
     }

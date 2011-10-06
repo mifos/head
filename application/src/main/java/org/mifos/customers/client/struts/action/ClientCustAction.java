@@ -23,6 +23,9 @@ package org.mifos.customers.client.struts.action;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -40,6 +43,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.upload.FormFile;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
@@ -49,6 +53,7 @@ import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFac
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
@@ -84,10 +89,13 @@ import org.mifos.dto.screen.ClientMfiInfoDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.dto.screen.ClientPersonalInfoDto;
+import org.mifos.dto.screen.ClientPhotoDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.image.domain.ClientPhoto;
+import org.mifos.framework.image.service.ClientPhotoService;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -354,13 +362,20 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward retrievePicture(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
-                                         HttpServletRequest request, HttpServletResponse response) throws Exception {
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         ClientBO clientBO = getClientFromSession(request);
-        InputStream in = clientBO.getCustomerPicture().getPicture().getBinaryStream();
-
+        ClientPhotoService cps = ApplicationContextProvider.getBean(ClientPhotoService.class);
+        ClientPhoto cp = cps.read(clientBO.getCustomerId().longValue());
+        InputStream in = null;
+        if(cp != null) {
+            in = new ByteArrayInputStream(cps.getData(cp.getImageInfo().getPath()));
+            response.setContentType(cp.getImageInfo().getContentType());
+        } else {
+            in = ClientPhotoService.class.getResourceAsStream("/org/mifos/image/nopicture.png");
+            response.setContentType("image/png");
+        }
         in.mark(0);
-        response.setContentType("image/jpeg");
         BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
         byte[] by = new byte[1024 * 4]; // 4K buffer buf, 0, buf.length
         int index = in.read(by, 0, 1024 * 4);
@@ -377,8 +392,8 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previewPersonalInfo(ActionMapping mapping, ActionForm form,
-                                             @SuppressWarnings("unused") HttpServletRequest request,
-                                             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
         return mapping.findForward(ActionForwards.previewPersonalInfo_success.toString());
@@ -613,7 +628,18 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         ClientNameDetailDto clientName = personalInfo.getClientDetail().getClientName();
         clientName.setNames(ClientRules.getNameSequence());
         actionForm.setClientName(clientName);
-
+        String photoDelete = request.getParameter("photoDelete");
+        if(photoDelete != null && photoDelete.equals("true")) {
+            ApplicationContextProvider.getBean(ClientPhotoService.class).delete(client.getCustomerId().longValue());
+        }
+        ClientPhotoDto clientPhotoDto = this.clientServiceFacade.getClientPhoto(client.getCustomerId().longValue());
+        if (clientPhotoDto != null) {
+            FormFile formFile = new PictureFormFile(clientPhotoDto.getContentType(), clientPhotoDto.getOut(), client
+                    .getCustomerId().toString(), clientPhotoDto.getContentLength().intValue());
+            actionForm.setPicture(formFile);
+        } else {
+            actionForm.setPicture(null);
+        }
         ClientNameDetailDto spouseName = personalInfo.getClientDetail().getSpouseName();
         if (spouseName != null) {
             spouseName.setNames(ClientRules.getNameSequence());
@@ -1027,5 +1053,70 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
     public ActionForward editQuestionResponses(ActionMapping mapping, ActionForm form, HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.setAttribute(METHODCALLED, "editQuestionResponses");
         return createClientQuestionnaire.editResponses(mapping, request, (ClientCustActionForm) form);
+    }
+}
+class PictureFormFile implements FormFile {
+
+    private String contentType;
+    private byte[] data;
+    private String name;
+    private int size;
+
+
+    public PictureFormFile(String contentType, byte[] data, String name, int size) {
+        super();
+        this.contentType = contentType;
+        this.data = data;
+        this.name = name;
+        this.size = size;
+    }
+
+    @Override
+    public void destroy() {
+        contentType = null;
+        data = null;
+        name = null;
+        size = 0;
+    }
+
+    @Override
+    public String getContentType() {
+        return contentType;
+    }
+
+    @Override
+    public byte[] getFileData() throws FileNotFoundException, IOException {
+        return data;
+    }
+
+    @Override
+    public String getFileName() {
+        return name;
+    }
+
+    @Override
+    public int getFileSize() {
+        return size;
+    }
+
+    @Override
+    public InputStream getInputStream() throws FileNotFoundException, IOException {
+        return new ByteArrayInputStream(data);
+    }
+
+    @Override
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+
+    }
+
+    @Override
+    public void setFileName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void setFileSize(int size) {
+        this.size = size;
     }
 }

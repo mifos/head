@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.customers.checklist.exceptions.CheckListException;
 import org.mifos.customers.checklist.persistence.CheckListPersistence;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
@@ -41,7 +40,7 @@ public abstract class CheckListBO extends AbstractBusinessObject {
     private String checklistName;
     private Short checklistStatus;
     private Set<CheckListDetailEntity> checklistDetails;
-    private SupportedLocalesEntity supportedLocales;
+    private Short supportedLocales;
 
     protected CheckListBO() {
         this.checklistId = null;
@@ -65,7 +64,7 @@ public abstract class CheckListBO extends AbstractBusinessObject {
             throw new CheckListException(CheckListConstants.CHECKLIST_CREATION_EXCEPTION);
         }
         this.checklistStatus = checkListStatus;
-        this.supportedLocales = new SupportedLocalesEntity(localeId);
+        this.supportedLocales = localeId;
     }
 
     public Short getChecklistId() {
@@ -103,13 +102,13 @@ public abstract class CheckListBO extends AbstractBusinessObject {
         this.checklistDetails = checklistDetailSet;
     }
 
-    public SupportedLocalesEntity getSupportedLocales() {
+    public Short getSupportedLocales() {
         return this.supportedLocales;
     }
 
     @SuppressWarnings("unused")
     // see .hbm.xml file
-    private void setSupportedLocales(SupportedLocalesEntity supportedLocales) {
+    private void setSupportedLocales(Short supportedLocales) {
         this.supportedLocales = supportedLocales;
     }
 
@@ -148,7 +147,7 @@ public abstract class CheckListBO extends AbstractBusinessObject {
             getChecklistDetails().add(checkListDetailEntity);
         }
         this.checklistStatus = checkListStatus;
-        this.supportedLocales = new SupportedLocalesEntity(localeId);
+        this.supportedLocales = localeId;
     }
 
     protected void validateCheckListState(Short masterTypeId, Short stateId, boolean isCustomer)

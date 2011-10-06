@@ -455,7 +455,7 @@ public class TestObjectFactory {
                     null, getPersonnel(PersonnelConstants.SYSTEM_USER),
                     new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE), parentCustomer, dateOfBirth, governmentId,
                     null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
-                    clientPersonalDetailDto, null);
+                    clientPersonalDetailDto);
             ApplicationContextProvider.getBean(LegacyClientDao.class).saveClient(client);
         } catch (CustomerException e) {
             throw new RuntimeException(e);
@@ -541,7 +541,7 @@ public class TestObjectFactory {
                 client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailDto.getDisplayName(), status,
                         null, null, null, null, getFees(), null, getPersonnel(personnel),
                         parentCustomer.getOffice(), parentCustomer, null, null, null, null, YesNoFlag.YES.getValue(),
-                        clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
+                        clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto);
             }
 
             ApplicationContextProvider.getBean(LegacyClientDao.class).saveClient(client);
@@ -1402,7 +1402,7 @@ public class TestObjectFactory {
         updateObject(user);
         user.login("mifos");
         Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
-        Short localeId = Localization.getInstance().getLocaleId();
+        Short localeId = Localization.getInstance().getConfiguredLocaleId();
         UserContext userContext = new UserContext(preferredLocale, localeId);
         userContext.setId(user.getPersonnelId());
         userContext.setName(user.getDisplayName());

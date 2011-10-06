@@ -20,7 +20,6 @@
 
 package org.mifos.security.util;
 
-import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
@@ -46,8 +45,6 @@ public class UserContext implements Serializable {
      * This would hold the id of the the user
      */
     private Short id;
-
-    private String userGlobalNo;
 
     /**
      * Set of roles id's associated with the user
@@ -180,14 +177,6 @@ public class UserContext implements Serializable {
         return preferredLocale;
     }
 
-    public String getUserGlobalNo() {
-        return userGlobalNo;
-    }
-
-    public void setUserGlobalNo(String userGlobalNo) {
-        this.userGlobalNo = userGlobalNo;
-    }
-
     public Short getMfiLocaleId() {
         return localeId;
     }
@@ -202,11 +191,6 @@ public class UserContext implements Serializable {
 
     public void setMfiLocale(Locale mfiLocale) {
         this.preferredLocale = mfiLocale;
-    }
-
-    public void dump(PrintStream out) {
-        out.print("User " + name + ", id=" + id + ", global=" + userGlobalNo + "\n");
-        out.print("Locale ID=" + localeId + ", locale=" + preferredLocale + "\n");
     }
 
     @Override

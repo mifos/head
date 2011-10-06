@@ -31,7 +31,6 @@ import org.joda.time.DateTime;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.config.Localization;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
@@ -152,13 +151,6 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             maritalStatusList.add(listElement);
         }
 
-        List<ValueListElement> languages = customerDao.retrieveLanguages();
-        List<ListElement> languageList = new ArrayList<ListElement>();
-        for (ValueListElement element : languages) {
-            ListElement listElement = new ListElement(element.getId(), element.getName());
-            languageList.add(listElement);
-        }
-
         List<RoleBO> roles = new ArrayList<RoleBO>();
         try {
             roles = rolesPermissionsPersistence.getRoles();
@@ -171,6 +163,8 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             ListElement listElement = new ListElement(new Integer(element.getId()), element.getName());
             roleList.add(listElement);
         }
+
+        List<ListElement> languageList = Localization.getInstance().getLocaleList();
 
         DefinePersonnelDto defineUserDto = new DefinePersonnelDto(officeName, titleList, personnelLevelList,
                 genderList, maritalStatusList, languageList, roleList);
@@ -210,16 +204,11 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
         String emailId = personnel.getEmailId();
 
-        SupportedLocalesEntity preferredLocale = personnel.getPreferredLocale();
-        String languageName = Localization.getInstance().getLanguageName();
-        Integer languageLookUpId = Integer.valueOf(601); // french
+        Short preferredLocale = personnel.getPreferredLocale();
+        String languageName = Localization.getInstance().getDisplayName(preferredLocale);
 
-        if (preferredLocale == null) {
-            // strange - locale for user doesn't exist in supported locales..
-//            defaultLocale = Localization.getInstance().getMainLocale();
-        } else {
-            languageName = preferredLocale.getLanguageName();
-            languageLookUpId = preferredLocale.getLanguage().getLookUpValue().getLookUpId();
+        if (preferredLocale != null) {
+            languageName = Localization.getInstance().getDisplayName(preferredLocale);
         }
         PersonnelLevelEntity level = personnel.getLevel();
         OfficeBO office = personnel.getOffice();
@@ -248,7 +237,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         }
 
         return new PersonnelInformationDto(personnel.getPersonnelId().intValue(), personnel.getGlobalPersonnelNum(), displayName, status, locked,
-                personnelDetails, emailId, languageName, languageLookUpId, level.getId(), office.getOfficeId().intValue(), office
+                personnelDetails, emailId, languageName, preferredLocale.intValue(), level.getId(), office.getOfficeId().intValue(), office
                         .getOfficeName(), title, personnelRoles, personnelId, userName, customFields, personnelNotes);
     }
 
@@ -366,15 +355,8 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             PersonnelLevelEntity personnelLevel = legacyMasterDao.getPersistentObject(
                     PersonnelLevelEntity.class, userHierarchyLevel.getValue());
 
-            Short preferredLocaleId = Localization.getInstance().getLocaleId();
-            List<SupportedLocalesEntity> allLocales = applicationConfigurationDao.findSupportedLocale();
-            for (SupportedLocalesEntity locale : allLocales) {
-                if (personnel.getPreferredLocale() != null
-                        && locale.getLanguage().getLookUpValue().getLookUpId() == personnel.getPreferredLocale()
-                                .intValue()) {
-                    preferredLocaleId = locale.getLocaleId();
-                }
-            }
+            Short preferredLocaleId = personnel.getPreferredLocale();
+
 
             transactionHelper.startTransaction();
             transactionHelper.beginAuditLoggingFor(userForUpdate);
@@ -383,6 +365,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                     .getSecondLastName(), personnel.getLastName(), personnel.getEmailId(), personnel.getGender(),
                     personnel.getMaritalStatus(), preferredLocaleId, personnelStatus, address, personnel.getTitle(),
                     personnelLevel, selectedRoles, personnel.getPassword(), newOffice);
+            userForUpdate.getPersonnelDetails().setDob(personnel.getDob().toDate());
 
             this.personnelDao.save(userForUpdate);
             transactionHelper.commitTransaction();
@@ -495,11 +478,11 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
         String gender = getNameForBusinessActivityEntity(personnel.getPersonnelDetails().getGender());
         String martialStatus = getNameForBusinessActivityEntity(personnel.getPersonnelDetails().getMaritalStatus());
-        String language = getNameForBusinessActivityEntity(personnel.getPreferredLocale().getLanguage().getLookUpValue().getLookUpId());
+        String language = Localization.getInstance().getDisplayName(personnel.getPreferredLocale());
 
         List<ValueListElement> genders = this.customerDao.retrieveGenders();
         List<ValueListElement> martialStatuses = this.customerDao.retrieveMaritalStatuses();
-        List<ValueListElement> languages = this.customerDao.retrieveLanguages();
+        List<ValueListElement> languages = Localization.getInstance().getLocaleForUI();
 
         int age = DateUtils.DateDiffInYears(((Date) personnel.getPersonnelDetails().getDob()));
         if (age < 0) {
@@ -522,11 +505,11 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     }
 
     @Override
-    public UserSettingsDto retrieveUserSettings(Integer genderId, Integer maritalStatusId, Integer languageId) {
+    public UserSettingsDto retrieveUserSettings(Integer genderId, Integer maritalStatusId, Integer localeId) {
 
         String gender = getNameForBusinessActivityEntity(genderId);
         String martialStatus = getNameForBusinessActivityEntity(maritalStatusId);
-        String language = getNameForBusinessActivityEntity(languageId);
+        String language = (localeId != null) ? Localization.getInstance().getDisplayName(localeId.shortValue()) : "";
 
         int age = 0;
         List<ValueListElement> empty = new ArrayList<ValueListElement>();
@@ -554,13 +537,8 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             this.transactionHelper.startTransaction();
             this.transactionHelper.beginAuditLoggingFor(personnel);
 
-            Short localeId = Localization.getInstance().getLocaleId();
-            if (preferredLocale != null) {
-                for (SupportedLocalesEntity locale : applicationConfigurationDao.findSupportedLocale()) {
-                    if (locale.getLanguage().getLookUpValue().getLookUpId() == preferredLocale.intValue()) {
-                        localeId = locale.getLocaleId();
-                    }
-                }
+            if (preferredLocale == null) {
+                preferredLocale = Localization.getInstance().getConfiguredLocaleId();
             }
 
             Address theAddress = null;
@@ -569,7 +547,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                         address.getState(), address.getCountry(), address.getZip(), address.getPhoneNumber());
             }
 
-            personnel.update(emailId, name, maritalStatusValue, genderValue, theAddress, localeId);
+            personnel.update(emailId, name, maritalStatusValue, genderValue, theAddress, preferredLocale);
             this.transactionHelper.commitTransaction();
         } catch (Exception e) {
             this.transactionHelper.rollbackTransaction();

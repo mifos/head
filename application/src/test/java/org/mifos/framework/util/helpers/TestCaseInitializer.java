@@ -22,7 +22,6 @@ package org.mifos.framework.util.helpers;
 
 import org.hibernate.SessionFactory;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
@@ -35,8 +34,6 @@ import org.mifos.framework.hibernate.helper.AuditInterceptorFactory;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
-
-import java.util.List;
 
 /**
  * Many tests initialize themselves via this class.
@@ -55,7 +52,7 @@ public class TestCaseInitializer {
 
     public void initialize(SessionFactory sessionFactory) throws Exception {
         if (!initialized) {
-            databaseUpgradeSupport.upgrade();
+            databaseUpgradeSupport.expansion();
             initializeDB(sessionFactory);
             initialized = true;
         }
@@ -63,8 +60,6 @@ public class TestCaseInitializer {
 
     private void initializeDB(SessionFactory sessionFactory) throws Exception{
         StaticHibernateUtil.initialize(new AuditInterceptorFactory(), sessionFactory);
-        List<SupportedLocalesEntity> supportedLocales = applicationConfigurationDao.findSupportedLocale();
-        Localization.getInstance().init(supportedLocales);
 
         Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
 
@@ -73,7 +68,7 @@ public class TestCaseInitializer {
         HierarchyManager.getInstance().init();
 
         MifosConfiguration.getInstance().init();
-        AuditConfiguration.init(Localization.getInstance().getMainLocale());
+        AuditConfiguration.init(Localization.getInstance().getConfiguredLocale());
         AccountingRules.init();
         StaticHibernateUtil.commitTransaction();
     }

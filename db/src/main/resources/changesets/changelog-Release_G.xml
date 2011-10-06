@@ -157,5 +157,271 @@
         </sql>
 		<rollback>
 		</rollback>
-    </changeSet>            
+    </changeSet>
+    <changeSet id="MIFOS-2018_1" author="Udai Gupta" context="expansion">
+        <sql endDelimiter=";">
+                SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                    where REFERENCED_TABLE_NAME="supported_locale" 
+                    and TABLE_NAME="checklist" and CONSTRAINT_SCHEMA=DATABASE());
+                SET @mifosquery = CONCAT("ALTER TABLE checklist DROP FOREIGN KEY ", @mifosfkname);
+                PREPARE stmt FROM @mifosquery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+
+                SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                                    where REFERENCED_TABLE_NAME="supported_locale" 
+                                    and TABLE_NAME="checklist_detail" and CONSTRAINT_SCHEMA=DATABASE());
+                SET @mifosquery = CONCAT("ALTER TABLE checklist_detail DROP FOREIGN KEY ", @mifosfkname);
+                PREPARE stmt FROM @mifosquery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+
+                SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                                    where REFERENCED_TABLE_NAME="supported_locale" 
+                                    and TABLE_NAME="customer_address_detail" and CONSTRAINT_SCHEMA=DATABASE());
+                SET @mifosquery = CONCAT("ALTER TABLE customer_address_detail DROP FOREIGN KEY ", @mifosfkname);
+                PREPARE stmt FROM @mifosquery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+
+                SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                                    where REFERENCED_TABLE_NAME="supported_locale" 
+                                    and TABLE_NAME="customer_name_detail" and CONSTRAINT_SCHEMA=DATABASE());
+                SET @mifosquery = CONCAT("ALTER TABLE customer_name_detail DROP FOREIGN KEY ", @mifosfkname);
+                PREPARE stmt FROM @mifosquery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+
+                SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                                    where REFERENCED_TABLE_NAME="supported_locale" 
+                                    and TABLE_NAME="lookup_label" and CONSTRAINT_SCHEMA=DATABASE());
+                SET @mifosquery = CONCAT("ALTER TABLE lookup_label DROP FOREIGN KEY ", @mifosfkname);
+                PREPARE stmt FROM @mifosquery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+
+                SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                                    where REFERENCED_TABLE_NAME="supported_locale" 
+                                    and TABLE_NAME="lookup_value_locale" and CONSTRAINT_SCHEMA=DATABASE());
+                SET @mifosquery = CONCAT("ALTER TABLE lookup_value_locale DROP FOREIGN KEY ", @mifosfkname);
+                PREPARE stmt FROM @mifosquery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+
+                SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                                    where REFERENCED_TABLE_NAME="supported_locale" 
+                                    and TABLE_NAME="personnel" and CONSTRAINT_SCHEMA=DATABASE());
+                SET @mifosquery = CONCAT("ALTER TABLE personnel DROP FOREIGN KEY ", @mifosfkname);
+                PREPARE stmt FROM @mifosquery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+
+                SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                                    where REFERENCED_TABLE_NAME="country" 
+                                    and TABLE_NAME="supported_locale" and CONSTRAINT_SCHEMA=DATABASE());
+                SET @mifosquery = CONCAT("ALTER TABLE supported_locale DROP FOREIGN KEY ", @mifosfkname);
+                PREPARE stmt FROM @mifosquery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+
+                SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                                    where REFERENCED_TABLE_NAME="language" 
+                                    and TABLE_NAME="supported_locale" and CONSTRAINT_SCHEMA=DATABASE());
+                SET @mifosquery = CONCAT("ALTER TABLE supported_locale DROP FOREIGN KEY ", @mifosfkname);
+                PREPARE stmt FROM @mifosquery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+
+                drop table if exists country;
+                drop table if exists language;
+                drop table if exists supported_locale;
+                update personnel set preferred_locale=1 where preferred_locale!=1;
+        </sql>
+        <rollback>
+        <sql>
+            create table country (
+              country_id smallint not null,
+              country_name varchar(100),
+              country_short_name varchar(10),
+              primary key(country_id)
+            )
+            engine=innodb character set utf8;
+           create table language (
+              lang_id smallint not null,
+              lang_name varchar(100),
+              lang_short_name varchar(10),
+              lookup_id integer not null,
+              primary key(lang_id),
+              foreign key(lookup_id)
+                references lookup_value(lookup_id)
+                    on delete no action
+                  on update no action
+            )
+            engine=innodb character set utf8;
+           create table supported_locale (
+              locale_id smallint not null,
+              country_id smallint,
+              lang_id smallint,
+              locale_name varchar(50),
+              default_locale smallint,
+              primary key(locale_id),
+              foreign key(country_id)
+                references country(country_id)
+                  on delete no action
+                  on update no action,
+              foreign key(lang_id)
+                references language(lang_id)
+                  on delete no action
+                  on update no action
+            )
+            engine=innodb character set utf8;
+
+            INSERT INTO country VALUES (1,'America','US');
+            INSERT INTO country VALUES (2,'India','IN');
+            INSERT INTO country VALUES (3,'Spain','ES');
+            INSERT INTO country VALUES (4,'England','ENG');
+            INSERT INTO country VALUES (5,'South Africa','SA');
+            INSERT INTO country VALUES (6,'United Kingdom','GB');
+            INSERT INTO country VALUES (7,'Iceland','IS');
+            INSERT INTO country VALUES (8,'Spain','ES');
+            INSERT INTO country VALUES (9,'France','FR');
+            INSERT INTO country VALUES (10,'China','CN');
+            INSERT INTO country VALUES (11,'Kenya','KE');
+            INSERT INTO country VALUES (12,'Tanzania','TZ');
+            INSERT INTO country VALUES (13,'Uganda','UG');
+            INSERT INTO country VALUES (14,'Algeria','DZ');
+            INSERT INTO country VALUES (15,'Bahrain','BH');
+            INSERT INTO country VALUES (16,'Comoros','KM');
+            INSERT INTO country VALUES (17,'Chad','TD');
+            INSERT INTO country VALUES (18,'Djibouti','DJ');
+            INSERT INTO country VALUES (19,'Egypt','EG');
+            INSERT INTO country VALUES (20,'Eritrea','ER');
+            INSERT INTO country VALUES (21,'Iraq','IQ');
+            INSERT INTO country VALUES (22,'Israel','IL');
+            INSERT INTO country VALUES (23,'Jordan','JO');
+            INSERT INTO country VALUES (24,'Kuwait','KW');
+            INSERT INTO country VALUES (25,'Lebanon','LB');
+            INSERT INTO country VALUES (26,'Libyan Arab Rebublic','LY');
+            INSERT INTO country VALUES (27,'Mauritania','MR');
+            INSERT INTO country VALUES (28,'Morocco','MA');
+            INSERT INTO country VALUES (29,'Oman','OM');
+            INSERT INTO country VALUES (30,'Qatar','QA');
+            INSERT INTO country VALUES (31,'Saudi Arabia','SA');
+            INSERT INTO country VALUES (32,'Somalia','SO');
+            INSERT INTO country VALUES (33,'Sudan','SD');
+            INSERT INTO country VALUES (34,'Syrian Arab Republic','SY');
+            INSERT INTO country VALUES (35,'Tunisia','TN');
+            INSERT INTO country VALUES (36,'United Arab Emirates','AE');
+            INSERT INTO country VALUES (37,'Yemen','YE');
+            INSERT INTO country VALUES (38,'Palestinian Territory, Occupied','PS');
+            INSERT INTO country VALUES (39,'Western Sahara','EH');
+            INSERT INTO country VALUES (40,'Angola','AO');
+            INSERT INTO country VALUES (41,'Brazil','BR');
+            INSERT INTO country VALUES (42,'Cape Verde','CV');
+            INSERT INTO country VALUES (43,'Guinea-Bissau','GW');
+            INSERT INTO country VALUES (44,'Equatorial Guinea','GQ');
+            INSERT INTO country VALUES (45,'Macau','MO');
+            INSERT INTO country VALUES (46,'Mozambique','MZ');
+            INSERT INTO country VALUES (47,'Portugal','PT');
+            INSERT INTO country VALUES (48,'Sao Tome and Principe','ST');
+            INSERT INTO country VALUES (49,'Cambodia','KH');
+            INSERT INTO country VALUES (50,'Laos','LA');
+            INSERT INTO country VALUES (51,'Hungary','HU');
+
+            INSERT INTO language VALUES (1,'English','EN',189);
+            INSERT INTO language VALUES (2,'Icelandic','is',599);
+            INSERT INTO language VALUES (3,'Spanish','es',600);
+            INSERT INTO language VALUES (4,'French','fr',601);
+            INSERT INTO language VALUES (5,'Chinese','zh',613);
+            INSERT INTO language VALUES (6,'Swahili','sw',614);
+            INSERT INTO language VALUES (7,'Arabic','ar',615);
+            INSERT INTO language VALUES (8,'Portuguese','pt',616);
+            INSERT INTO language VALUES (9,'Khmer','km',617);
+            INSERT INTO language VALUES (10,'Lao','lo',618);
+            INSERT INTO language VALUES (11,'Hungarian','hu',624);
+
+            INSERT INTO supported_locale VALUES (1,6,1,'EN',1);
+            INSERT INTO supported_locale VALUES (2,7,2,'Icelandic',0);
+            INSERT INTO supported_locale VALUES (3,8,3,'Spanish',0);
+            INSERT INTO supported_locale VALUES (4,9,4,'French',0);
+            INSERT INTO supported_locale VALUES (5,10,5,'Chinese-China',0);
+            INSERT INTO supported_locale VALUES (6,11,6,'Swahili-Kenya',0);
+            INSERT INTO supported_locale VALUES (7,12,6,'Swahili-Tanzania',0);
+            INSERT INTO supported_locale VALUES (8,13,6,'Swahili-Uganda',0);
+            INSERT INTO supported_locale VALUES (9,14,7,'Arabic-Algeria',0);
+            INSERT INTO supported_locale VALUES (10,15,7,'Arabic-Bahrain',0);
+            INSERT INTO supported_locale VALUES (11,16,7,'Arabic-Comoros',0);
+            INSERT INTO supported_locale VALUES (12,17,7,'Arabic-Chad',0);
+            INSERT INTO supported_locale VALUES (13,18,7,'Arabic-Djibouti',0);
+            INSERT INTO supported_locale VALUES (14,19,7,'Arabic-Egypt',0);
+            INSERT INTO supported_locale VALUES (15,20,7,'Arabic-Eritrea',0);
+            INSERT INTO supported_locale VALUES (16,21,7,'Arabic-Iraq',0);
+            INSERT INTO supported_locale VALUES (17,22,7,'Arabic-Israel',0);
+            INSERT INTO supported_locale VALUES (18,23,7,'Arabic-Jordan',0);
+            INSERT INTO supported_locale VALUES (19,24,7,'Arabic-Kuwait',0);
+            INSERT INTO supported_locale VALUES (20,25,7,'Arabic-Lebanon',0);
+            INSERT INTO supported_locale VALUES (21,26,7,'Arabic-Libyan Arab Rebublic',0);
+            INSERT INTO supported_locale VALUES (22,27,7,'Arabic-Mauritania',0);
+            INSERT INTO supported_locale VALUES (23,28,7,'Arabic-Morocco',0);
+            INSERT INTO supported_locale VALUES (24,29,7,'Arabic-Oman',0);
+            INSERT INTO supported_locale VALUES (25,30,7,'Arabic-Qatar',0);
+            INSERT INTO supported_locale VALUES (26,31,7,'Arabic-Saudi Arabia',0);
+            INSERT INTO supported_locale VALUES (27,32,7,'Arabic-Somalia',0);
+            INSERT INTO supported_locale VALUES (28,33,7,'Arabic-Sudan',0);
+            INSERT INTO supported_locale VALUES (29,34,7,'Arabic-Syrian Arab Republic',0);
+            INSERT INTO supported_locale VALUES (30,35,7,'Arabic-Tunisia',0);
+            INSERT INTO supported_locale VALUES (31,36,7,'Arabic-United Arab Emirates',0);
+            INSERT INTO supported_locale VALUES (32,37,7,'Arabic-Yemen',0);
+            INSERT INTO supported_locale VALUES (33,38,7,'Arabic-Palestinian Territory, Occupied',0);
+            INSERT INTO supported_locale VALUES (34,39,7,'Arabic-Western Sahara',0);
+            INSERT INTO supported_locale VALUES (35,40,8,'Portuguese-Angola',0);
+            INSERT INTO supported_locale VALUES (36,41,8,'Portuguese-Brazil',0);
+            INSERT INTO supported_locale VALUES (37,42,8,'Portuguese-Cape Verde',0);
+            INSERT INTO supported_locale VALUES (38,43,8,'Portuguese-Guinea-Bissau',0);
+            INSERT INTO supported_locale VALUES (39,44,8,'Portuguese-Equatorial Guinea',0);
+            INSERT INTO supported_locale VALUES (40,45,8,'Portuguese-Macau',0);
+            INSERT INTO supported_locale VALUES (41,46,8,'Portuguese-Mozambique',0);
+            INSERT INTO supported_locale VALUES (42,47,8,'Portuguese-Portugal',0);
+            INSERT INTO supported_locale VALUES (43,48,8,'Portuguese-Sao Tome and Principe',0);
+            INSERT INTO supported_locale VALUES (44,49,9,'Khmer-Cambodia',0);
+            INSERT INTO supported_locale VALUES (45,50,10,'Lao-Laos',0);
+            INSERT INTO supported_locale VALUES (46,25,1,'English-Lebanon-AlMajmoua',0);
+            INSERT INTO supported_locale VALUES (47,51,11,'Hungarian-Hungary',0);
+
+            alter table checklist add foreign key(locale_id) references supported_locale(locale_id) on delete no action on update no action;
+            alter table checklist_detail add foreign key(locale_id) references supported_locale(locale_id) on delete no action on update no action;
+            alter table customer_address_detail add foreign key(locale_id) references supported_locale(locale_id) on delete no action on update no action;
+            alter table customer_name_detail add foreign key(locale_id) references supported_locale(locale_id) on delete no action on update no action;
+            alter table lookup_label add foreign key(locale_id) references supported_locale(locale_id) on delete no action on update no action;
+            alter table lookup_value_locale add foreign key(locale_id) references supported_locale(locale_id) on delete no action on update no action;
+            alter table personnel add foreign key(preferred_locale) references supported_locale(locale_id) on delete no action on update no action;
+        </sql>
+        </rollback>
+    </changeSet>
+        <changeSet id="MIFOS-5111_1" author="Udai Gupta" context="expansion">
+        <sql endDelimiter=";">
+            CREATE TABLE image_info (
+              image_id bigint(20) NOT NULL AUTO_INCREMENT,
+              content_type varchar(255) DEFAULT NULL,
+              length bigint(20) NOT NULL,
+              path varchar(255) NOT NULL,
+              PRIMARY KEY (image_id)
+            )engine=innodb character set utf8;
+
+            CREATE TABLE client_photo (
+              photo_id bigint(20) NOT NULL AUTO_INCREMENT,
+              client_id bigint(20) NOT NULL,
+              image_info bigint(20) NOT NULL,
+              PRIMARY KEY (photo_id),
+              UNIQUE KEY uk_photo_client_id (client_id),
+              KEY fk_image_info (image_info)
+            )engine=innodb character set utf8;
+        </sql>
+        <rollback>
+        <sql>
+            DROP TABLE IF EXISTS image_info;
+            DROP TABLE IF EXISTS client_photo;
+        </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

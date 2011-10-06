@@ -243,8 +243,9 @@ public class CenterCustAction extends CustAction {
             dto = Address.toDto(actionForm.getAddress());
         }
 
-        CenterUpdate centerUpdate = new CenterUpdate(centerFromSession.getCustomerId(), centerFromSession
-                .getVersionNo(), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(), actionForm
+        CenterUpdate centerUpdate = new CenterUpdate(centerFromSession.getCustomerId(),
+                actionForm.getDisplayName(), centerFromSession.getVersionNo(),
+                actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(), actionForm
                 .getMfiJoiningDate(), dto, actionForm.getCustomFields(), actionForm.getCustomerPositions());
 
         try {

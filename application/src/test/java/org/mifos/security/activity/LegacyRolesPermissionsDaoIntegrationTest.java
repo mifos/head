@@ -58,7 +58,7 @@ public class LegacyRolesPermissionsDaoIntegrationTest extends MifosIntegrationTe
         lookUpEntity.setEntityId((short) LookUpEntity.ACTIVITY);
 
         int lookUpId = legacyRolesPermissionsDao.createActivityForReports(parentId, "abcd");
-        Assert.assertEquals("abcd",legacyMasterDao.retrieveOneLookUpValueLocaleEntity(Localization.ENGLISH_LOCALE, lookUpId).getLookUpValue());
+        Assert.assertEquals("abcd",legacyMasterDao.retrieveOneLookUpValueLocaleEntity(Localization.ENGLISH_LOCALE_ID, lookUpId).getLookUpValue());
         Assert.assertEquals(legacyRolesPermissionsDao.calculateDynamicActivityId(), (int) legacyRolesPermissionsDao.getActivityEntity(lookUpId).getId() - 1);
 
         int numberOfActivitiesAfter = session.createQuery("from ActivityEntity r where r.parent.id =" + parentId).list().size();
@@ -84,7 +84,7 @@ public class LegacyRolesPermissionsDaoIntegrationTest extends MifosIntegrationTe
         Integer lookUpId = activityEntity.getActivityNameLookupValues().getLookUpId();
         Assert.assertEquals(373, lookUpId.intValue());
 
-        short localeId = Localization.ENGLISH_LOCALE;
+        short localeId = Localization.ENGLISH_LOCALE_ID;
         LookUpValueLocaleEntity lookUpValueLocaleEntity = legacyMasterDao.retrieveOneLookUpValueLocaleEntity(localeId,
                 lookUpId.intValue());
         Assert.assertNull(lookUpValueLocaleEntity.getLookUpValue());

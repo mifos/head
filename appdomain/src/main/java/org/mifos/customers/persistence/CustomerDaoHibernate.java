@@ -788,6 +788,9 @@ public class CustomerDaoHibernate implements CustomerDao {
     @SuppressWarnings("unchecked")
     @Override
     public void validateCenterNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException {
+        if(StringUtils.isBlank(displayName)) {
+            throw new CustomerException(CustomerConstants.INVALID_NAME, new Object[] {displayName});
+        }
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(CustomerConstants.DISPLAY_NAME, displayName);
         queryParameters.put(CustomerConstants.OFFICE_ID, officeId);
@@ -1135,17 +1138,13 @@ public class CustomerDaoHibernate implements CustomerDao {
         final String educationLevelName = (String) queryResult.get(0)[23];
         final String povertyStatusName = (String) queryResult.get(0)[24];
         final Short numChildren = (Short) queryResult.get(0)[25];
-        final Integer pictureLength = (Integer) queryResult.get(0)[26];
-        final Integer branchId = (Integer) queryResult.get(0)[27];
+        final Integer branchId = (Integer) queryResult.get(0)[26];
 
         Boolean clientUnderGroup = false;
         if (groupFlag.compareTo(Short.valueOf("0")) > 0) {
             clientUnderGroup = true;
         }
-        Boolean isCustomerPicture = false;
-        if (pictureLength != null) {
-            isCustomerPicture = true;
-        }
+
         final String customerStatusName = MessageLookup.getInstance().lookup(lookupName, userContext);
         final String businessActivities = MessageLookup.getInstance().lookup(businessActivitiesName, userContext);
         final String handicapped = MessageLookup.getInstance().lookup(handicappedName, userContext);
@@ -1205,7 +1204,7 @@ public class CustomerDaoHibernate implements CustomerDao {
                 externalId, customerFormedByDisplayName, customerActivationDate, customerLevelId, customerStatusId,
                 customerStatusName, trainedDate, dateOfBirth, governmentId, clientUnderGroup, blackListed,
                 loanOfficerId, loanOfficerName, businessActivities, handicapped, maritalStatus, citizenship, ethnicity,
-                educationLevel, povertyStatus, numChildren, isCustomerPicture, areFamilyDetailsRequired,
+                educationLevel, povertyStatus, numChildren, areFamilyDetailsRequired,
                 spouseFatherValue, spouseFatherName, familyDetails, age);
     }
 
@@ -1449,17 +1448,13 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
-    public void validateClientForDuplicateNameOrGovtId(ClientBO client) throws CustomerException {
+    public void validateClientForDuplicateNameOrGovtId(String name, Date dob, String governmentId) throws CustomerException {
 
         Integer customerId = Integer.valueOf(0);
-        String name = client.getDisplayName();
-        Date dob = client.getDateOfBirth();
-        String governmentId = client.getGovernmentId();
 
         if (StringUtils.isNotBlank(governmentId)) {
             if (checkForDuplicacyOnGovtIdForNonClosedClients(governmentId, customerId) == true) {
-                String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GOVERNMENT_ID,
-                        client.getUserContext());
+                String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GOVERNMENT_ID);
                 throw new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, new Object[] { governmentId,
                         label });
             }
@@ -1490,8 +1485,8 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("DATE_OFBIRTH", dob);
         queryParameters.put("customerId", customerId);
         queryParameters.put("clientStatus", CustomerStatus.CLIENT_CLOSED.getValue());
-        List queryResult = this.genericDao.executeNamedQuery(queryName, queryParameters);
-        return ((Number) queryResult.get(0)).intValue() > 0;
+        Long count = (Long) this.genericDao.executeUniqueResultNamedQuery(queryName, queryParameters);
+        return count > 0;
     }
 
     @Override
@@ -1562,14 +1557,6 @@ public class CustomerDaoHibernate implements CustomerDao {
     @Override
     public List<PersonnelLevelEntity> retrievePersonnelLevels() {
         return doFetchListOfMasterDataFor(PersonnelLevelEntity.class);
-    }
-
-    @Override
-    public List<ValueListElement> retrieveLanguages() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("entityType", MasterConstants.LANGUAGE);
-
-        return retrieveMasterData(queryParameters);
     }
 
     @SuppressWarnings("unchecked")

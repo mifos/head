@@ -111,7 +111,6 @@
         "branchName": "Branch Office",
         "clientUnderGroup": true,
         "ethnicity": null,
-        "isCustomerPicture": false,
         "areFamilyDetailsRequired": false,
         "spouseFatherValue": "Spouse"
     }

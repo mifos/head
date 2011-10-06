@@ -48,11 +48,13 @@ import org.mifos.dto.domain.ClientMfiInfoUpdate;
 import org.mifos.dto.domain.ClientPersonalInfoUpdate;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.framework.image.service.ClientPhotoService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.UserContext;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ClientUpdateTest {
@@ -63,6 +65,9 @@ public class ClientUpdateTest {
     // collaborators (behaviour mocks)
     @Mock
     private CustomerDao customerDao;
+
+    @Mock
+    private ClientPhotoService clientPhotoService;
 
     @Mock
     private PersonnelDao personnelDao;
@@ -86,6 +91,7 @@ public class ClientUpdateTest {
     @Before
     public void setupDependencies() {
         customerService = new CustomerServiceImpl(customerDao, personnelDao, officeDao, holidayDao, hibernateTransactionHelper);
+        ReflectionTestUtils.setField(customerService, "clientPhotoService", clientPhotoService);
     }
 
     @Test(expected = CustomerException.class)

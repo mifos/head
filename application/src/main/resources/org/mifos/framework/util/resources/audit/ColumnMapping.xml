@@ -185,6 +185,7 @@
         <propertyName name="trainedDate" displayKey="Group.trainedDate"  doNotLog="No"/>
 
         <propertyName name="personnelId" parentName="personnel" doNotLog="yes" />
+        <propertyName name="preferredLocale" parentName="personnel" doNotLog="yes" />
         <propertyName name="globalPersonnelNum" parentName="personnel" doNotLog="yes" />
         <propertyName name="userName" parentName="personnel" doNotLog="yes" />
         <propertyName name="encryptedPassword" parentName="personnel" doNotLog="yes" />
@@ -290,7 +291,7 @@
         <propertyName name="customerPositionId" parentName="customerPositions" doNotLog="yes" />
         <propertyName name="trained" displayKey="Group.trained" doNotLog="No" />
         <propertyName name="trainedDate" displayKey="Group.trainedDate"  />
-        <propertyName name="displayName" displayKey="Group.displayName"  />
+        <propertyName name="displayName" displayKey="Group.displayName" doNotLog="No"  />
         <propertyName name="externalId" displayKey="ExternalId"  />
 
         <propertyName name="customerFlagId" parentName="customerFlag" doNotLog="yes"/>
@@ -319,6 +320,7 @@
         <propertyName name="personnelId" parentName="personnel" doNotLog="yes" />
         <propertyName name="globalPersonnelNum" parentName="personnel" doNotLog="yes" />
         <propertyName name="userName" parentName="personnel" doNotLog="yes" />
+        <propertyName name="preferredLocale" parentName="personnel" doNotLog="yes" />
         <propertyName name="encryptedPassword" parentName="personnel" doNotLog="yes" />
         <propertyName name="locked" parentName="personnel" doNotLog="yes" />
         <propertyName name="passwordChanged" parentName="personnel" doNotLog="yes" />
@@ -523,6 +525,7 @@
         <propertyName name="personnelId" parentName="personnel" doNotLog="yes" />
         <propertyName name="globalPersonnelNum" parentName="personnel" doNotLog="yes" />
         <propertyName name="userName" parentName="personnel" doNotLog="yes" />
+        <propertyName name="preferredLocale" parentName="personnel" doNotLog="yes" />
         <propertyName name="encryptedPassword" parentName="personnel" doNotLog="yes" />
         <propertyName name="locked" parentName="personnel" doNotLog="yes" />
         <propertyName name="passwordChanged" parentName="personnel" doNotLog="yes" />
@@ -764,8 +767,6 @@
         <propertyName name="officeId" parentName="prdCategory" doNotLog="yes" />
         <propertyName name="productCategoryDesc" parentName="prdCategory" doNotLog="yes" />
         <propertyName name="globalPrdOfferingNum" parentName="prdCategory" doNotLog="yes" />
-
-
     </entityType>
 
     <entityType name="Personnel" classPath="org.mifos.customers.personnel.business.PersonnelBO">
@@ -778,8 +779,6 @@
             <entity name="address" parentName="personnelDetails"/>
             <entity name="customFields" mergeProperties="yes"  displayKey="Personnel.customField.displayName"/>
             <entity name="office"/>
-            <entity name="preferredLocale"/>
-            <entity name="language" parentName="preferredLocale"/>
         </entitiesToLog>
         <propertyName name="level" displayKey="Personnel.userHierarchy"  doNotLog="No" lookUp="yes">
             <entityName name="PersonnelLevels">
@@ -795,6 +794,7 @@
         <propertyName name="lastName" parentName="personnelDetails"  displayKey="Personnel.lastName"/>
         <propertyName name="governmentId" parentName="personnelDetails" displayKey="Personnel.governmentId" />
         <propertyName name="emailId" displayKey="Personnel.emailId"  />
+        <propertyName name="preferredLocale" doNotLog="yes" />
         <propertyName name="passwordChanged" doNotLog="yes" />
         <propertyName name="maritalStatus" parentName="personnelDetails" displayKey="Personnel.MaritalStatus" doNotLog="No" lookUp="yes">
             <entityName name="MaritalStatus"/>
@@ -835,13 +835,6 @@
         <propertyName name="userName" displayKey="Personnel.displayName" />
         <propertyName name="encryptedPassword"  displayKey="Personnel.encryptedPassword" />
 
-        <propertyName name="localeId"  parentName="preferredLocale"  doNotLog="yes" />
-        <propertyName name="localeName"  parentName="preferredLocale"  doNotLog="yes"/>
-        <propertyName name="defaultLocale"  parentName="preferredLocale"  doNotLog="yes"/>
-        <propertyName name="preferredLocalelanguage" doNotLog="yes" />
-        <propertyName name="languageId"  parentName="language"  doNotLog="yes"/>
-        <propertyName name="languageShortName"  parentName="language"  doNotLog="yes"/>
-        <propertyName name="languageName"  parentName="language"  doNotLog="yes" displayKey="Personnel.LanguagePreferred"/>
     </entityType>
 
 

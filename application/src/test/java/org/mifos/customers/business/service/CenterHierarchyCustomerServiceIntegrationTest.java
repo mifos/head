@@ -28,8 +28,7 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testU
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
+import org.apache.commons.lang.RandomStringUtils;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -38,7 +37,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.config.Localization;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
@@ -55,7 +53,6 @@ import org.mifos.dto.domain.CustomerPositionDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -94,8 +91,6 @@ public class CenterHierarchyCustomerServiceIntegrationTest extends MifosIntegrat
 
     @BeforeClass
     public static void initialiseHibernateUtil() {
-        Locale locale = Localization.getInstance().getMainLocale();
-        AuditConfiguration.init(locale);
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
@@ -158,8 +153,10 @@ public class CenterHierarchyCustomerServiceIntegrationTest extends MifosIntegrat
         }
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         List<CustomerPositionDto> customerPositions = new ArrayList<CustomerPositionDto>();
-
-        CenterUpdate centerUpdate = new CenterUpdate(center.getCustomerId(), center.getVersionNo(), otherLoanOfficer.getPersonnelId(), externalId, mfiJoiningDate, address, customFields, customerPositions);
+        String updatedDisplayName = "Center "+RandomStringUtils.randomAlphanumeric(5);
+        CenterUpdate centerUpdate = new CenterUpdate(center.getCustomerId(), updatedDisplayName, center.getVersionNo(),
+                                                     otherLoanOfficer.getPersonnelId(), externalId, mfiJoiningDate,
+                                                     address, customFields, customerPositions);
 
         UserContext userContext = TestUtils.makeUser();
 
@@ -170,6 +167,7 @@ public class CenterHierarchyCustomerServiceIntegrationTest extends MifosIntegrat
         center = customerDao.findCenterBySystemId(center.getGlobalCustNum());
         group = customerDao.findGroupBySystemId(group.getGlobalCustNum());
         group2 = customerDao.findGroupBySystemId(group2.getGlobalCustNum());
+        assertThat(center.getDisplayName(), is(updatedDisplayName));
         assertThat(center.getPersonnel().getDisplayName(), is(otherLoanOfficer.getDisplayName()));
         assertThat(group.getPersonnel().getDisplayName(), is(otherLoanOfficer.getDisplayName()));
         assertThat(group2.getPersonnel().getDisplayName(), is(otherLoanOfficer.getDisplayName()));

@@ -28,19 +28,23 @@ import javax.servlet.ServletContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
-import org.mifos.config.ConfigLocale;
+import org.mifos.config.LocaleSetting;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.Localization;
+import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.core.MifosException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.components.mifosmenu.MenuRepository;
+import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.authorization.HierarchyManager;
+import org.mifos.security.util.ActivityMapper;
 import org.mifos.service.test.TestMode;
 import org.mifos.service.test.TestingService;
 
@@ -110,6 +114,10 @@ public class StandardTestingService implements TestingService {
         try {
             HierarchyManager.getInstance().init();
             AccountingRules.init();
+            ActivityMapper.getInstance().init();
+            ProcessFlowRules.init();
+            FinancialInitializer.initialize();
+            EntityMasterData.getInstance().init();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -118,12 +126,11 @@ public class StandardTestingService implements TestingService {
     @Override
     public void setLocale(String languageCode, String countryCode) throws MifosException {
         try {
-            ConfigLocale configLocale = new ConfigLocale();
+            LocaleSetting configLocale = new LocaleSetting();
             configLocale.setLanguageCode(languageCode);
             configLocale.setCountryCode(countryCode);
             Localization localization = Localization.getInstance();
             localization.setConfigLocale(configLocale);
-            localization.refresh();
             MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
             configMgr.setProperty("Localization.LanguageCode", languageCode);
             configMgr.setProperty("Localization.CountryCode", countryCode);

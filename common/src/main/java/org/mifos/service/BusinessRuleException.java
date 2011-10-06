@@ -45,6 +45,12 @@ public class BusinessRuleException extends RuntimeException {
         this.messageValues = null;
     }
 
+    public BusinessRuleException(String messageKey, Object[] messageValues, Throwable e) {
+        super(e);
+        this.messageKey = messageKey;
+        this.messageValues = messageValues;
+    }
+
     public String getMessageKey() {
         return this.messageKey;
     }

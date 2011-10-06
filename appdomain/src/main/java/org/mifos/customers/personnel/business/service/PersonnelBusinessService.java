@@ -23,7 +23,6 @@ package org.mifos.customers.personnel.business.service;
 import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.customers.office.business.OfficeBO;
@@ -146,15 +145,6 @@ public class PersonnelBusinessService implements BusinessService {
     public List<PersonnelBO> getActiveLoanOfficersUnderOffice(Short officeId) throws ServiceException {
         try {
             return legacyPersonnelDao.getActiveLoanOfficersUnderOffice(officeId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<SupportedLocalesEntity> getSupportedLocales() throws ServiceException {
-        try {
-            List<SupportedLocalesEntity> locales = legacyPersonnelDao.getSupportedLocales();
-            return locales;
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

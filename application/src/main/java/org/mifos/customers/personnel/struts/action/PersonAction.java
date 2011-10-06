@@ -40,7 +40,6 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -116,7 +115,7 @@ public class PersonAction extends SearchAction {
         List<ValueListElement> titles = this.customerDao.retrieveTitles();
         List<ValueListElement> genders = this.customerDao.retrieveGenders();
         List<ValueListElement> maritalStatuses = this.customerDao.retrieveMaritalStatuses();
-        List<ValueListElement> languages = this.customerDao.retrieveLanguages();
+        List<ValueListElement> languages = Localization.getInstance().getLocaleForUI();
 
         List<RoleBO> roles = legacyRolesPermissionsDao.getRoles();
         List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();
@@ -230,15 +229,8 @@ public class PersonAction extends SearchAction {
 
         Integer title = getIntegerValue(personActionForm.getTitle());
 
-        Short preferredLocale = Localization.getInstance().getLocaleId();
-
-        if (getPerefferedLocale(personActionForm, userContext) != null) {
-            for (SupportedLocalesEntity locale : applicationConfigurationDao.findSupportedLocale()) {
-                if (locale.getLanguage().getLookUpValue().getLookUpId() == getPerefferedLocale(personActionForm, userContext).intValue()) {
-                    preferredLocale = getPerefferedLocale(personActionForm, userContext);
-                }
-            }
-        }
+        Short preferredLocale = Localization.getInstance().getConfiguredLocaleId();
+        preferredLocale = getPerefferedLocale(personActionForm, userContext);
 
         Date dob = null;
         if (personActionForm.getDob() != null && !personActionForm.getDob().equals("")) {
@@ -294,8 +286,8 @@ public class PersonAction extends SearchAction {
     }
 
     private Short getPerefferedLocale(PersonActionForm personActionForm, UserContext userContext) {
-        if (StringUtils.isNotBlank(personActionForm.getPreferredLocale())) {
-            return getShortValue(personActionForm.getPreferredLocale());
+        if (personActionForm.getPreferredLocale() != null) {
+            return personActionForm.getPreferredLocale();
         }
 
         return userContext.getLocaleId();
@@ -312,7 +304,7 @@ public class PersonAction extends SearchAction {
         List<ValueListElement> titles = this.customerDao.retrieveTitles();
         List<ValueListElement> genders = this.customerDao.retrieveGenders();
         List<ValueListElement> maritalStatuses = this.customerDao.retrieveMaritalStatuses();
-        List<ValueListElement> languages = this.customerDao.retrieveLanguages();
+        List<ValueListElement> languages = Localization.getInstance().getLocaleForUI();
 
         List<RoleBO> roles = legacyRolesPermissionsDao.getRoles();
         List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();
@@ -386,7 +378,7 @@ public class PersonAction extends SearchAction {
         }
         actionform.setEmailId(personnel.getEmailId());
         if (personnel.getPreferredLocale() != null) {
-            actionform.setPreferredLocale(getStringValue(personnel.getPreferredLocale().getLanguage().getLookUpValue().getLookUpId()));
+            actionform.setPreferredLocale(personnel.getPreferredLocale());
         }
         List<RoleBO> selectList = new ArrayList<RoleBO>();
         for (PersonnelRoleEntity personnelRole : personnel.getPersonnelRoles()) {
@@ -504,7 +496,7 @@ public class PersonAction extends SearchAction {
         List<ValueListElement> titles = this.customerDao.retrieveTitles();
         List<ValueListElement> genders = this.customerDao.retrieveGenders();
         List<ValueListElement> maritalStatuses = this.customerDao.retrieveMaritalStatuses();
-        List<ValueListElement> languages = this.customerDao.retrieveLanguages();
+        List<ValueListElement> languages = Localization.getInstance().getLocaleForUI();
 
         List<RoleBO> roles = legacyRolesPermissionsDao.getRoles();
         List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();

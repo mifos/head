@@ -22,6 +22,8 @@ package org.mifos.test.acceptance.framework;
 
 import com.thoughtworks.selenium.Selenium;
 import org.dbunit.DatabaseUnitException;
+import org.mifos.framework.util.DbUnitUtilities;
+import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.framework.util.DatabaseTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -46,6 +48,12 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
 
     @Autowired
     protected DriverManagerDataSource dataSource;
+
+    @Autowired
+    protected DbUnitUtilities dbUnitUtilities;
+
+    @Autowired
+    protected InitializeApplicationRemoteTestingService initRemote;
 
     private final DatabaseTestUtils dbUtils = new DatabaseTestUtils();
 
