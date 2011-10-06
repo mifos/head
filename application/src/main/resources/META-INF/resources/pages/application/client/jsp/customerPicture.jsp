@@ -19,7 +19,7 @@ explanation of the license and how it is applied.
 --%>
 <%@taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <div align=center>
-    <img src="/mifos/clientCustAction.do?method=retrievePicture&currentFlowKey=${requestScope.currentFlowKey}"/>
+    <img src="/mifos/clientCustAction.do?method=retrievePicture&currentFlowKey=${requestScope.currentFlowKey}" width="150"/>
     <br/>
     <button onclick="javascript:window.close();"><mifos:mifoslabel name="button.close" bundle="ClientUIResources"></mifos:mifoslabel></button>
 </div>

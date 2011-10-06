@@ -213,7 +213,7 @@ explanation of the license and how it is applied.
 								<tr>
 									<td class="fontnormalbold">
 									<c:if test = "${sessionScope.clientCustActionForm.picture.fileName != ''}" >
-									 	 <img src="/mifos/clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}"/>
+									 	 <img src="/mifos/clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}" width="150"/>
 								    </c:if>
 									</td></tr>
 									<tr><td class="fontnormalbold"><mifos:mifoslabel name="client.Name"

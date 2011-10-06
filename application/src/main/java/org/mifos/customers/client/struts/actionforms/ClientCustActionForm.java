@@ -393,8 +393,7 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
     private void validatePicture(HttpServletRequest request, ActionErrors errors) throws PageExpiredException {
         if (picture != null && StringUtils.isNotBlank(picture.getFileName())) {
             if (picture.getFileSize() > ClientConstants.PICTURE_ALLOWED_SIZE) {
-                errors.add(ClientConstants.INVALID_PHOTO, new ActionMessage(ClientConstants.INVALID_PHOTO, "image size should be less then 300K"));
-                return;
+                addInvalidPictureError(errors, "image size should be less then 300K");
             }
             try {
                 String contentType = URLConnection.guessContentTypeFromStream(picture.getInputStream());
@@ -406,12 +405,18 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
                                             contentType.equals("image/gif") ||
                                             contentType.equals("image/jpg") ||
                                             contentType.equals("image/png"))) {
-                    errors.add(ClientConstants.INVALID_PHOTO, new ActionMessage(ClientConstants.INVALID_PHOTO, "allowed only jpg/gif/png"));
+                    addInvalidPictureError(errors, "allowed only jpg/gif/png");
                 }
             } catch (IOException e) {
-                errors.add(ClientConstants.INVALID_PHOTO, new ActionMessage(ClientConstants.INVALID_PHOTO, e.getMessage()));
+                addInvalidPictureError(errors, e.getMessage());
             }
         }
+    }
+
+    private void addInvalidPictureError(ActionErrors errors, String message) {
+        errors.add(ClientConstants.INVALID_PHOTO, new ActionMessage(ClientConstants.INVALID_PHOTO, message));
+        this.picture = null;
+        this.customerPicture = null;
     }
 
     private void validateGender(ActionErrors errors, ResourceBundle resources) {

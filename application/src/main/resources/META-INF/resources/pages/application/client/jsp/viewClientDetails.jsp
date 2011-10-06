@@ -38,7 +38,7 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="ViewClientDetails" ></span>
 		<script language="javascript">
   function photopopup(custId , custName, currentFlow){
-	  window.open("clientCustAction.do?method=showPicture&customerId="+ custId + "&displayName=" + custName+ "&currentFlowKey=" + currentFlow,null,"height=450,width=400,status=no,scrollbars=no,toolbar=no,menubar=no,location=no");
+	  window.open("clientCustAction.do?method=showPicture&customerId="+ custId + "&displayName=" + custName+ "&currentFlowKey=" + currentFlow,null,"height=200,width=170,status=no,scrollbars=no,toolbar=no,menubar=no,location=no");
 
   }
 
