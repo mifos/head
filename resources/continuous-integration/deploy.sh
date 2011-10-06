@@ -17,6 +17,8 @@ liquibaseScript=$WORKSPACE/db/target/release/db/bin/liquibase.sh
 chmod +x $controlScript
 chmod +x $expandScript
 chmod +x $contractScript
+chmod +x $undoExpandScript
+chmod +x $undoContractScript
 chmod +x $liquibaseScript
 
 function cUrl {
