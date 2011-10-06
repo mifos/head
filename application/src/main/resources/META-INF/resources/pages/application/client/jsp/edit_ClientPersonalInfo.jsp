@@ -287,7 +287,7 @@ explanation of the license and how it is applied.
 		                      <c:if test = "${sessionScope.clientCustActionForm.picture != null 
 		                      && sessionScope.clientCustActionForm.picture.fileName != null 
 		                      && sessionScope.clientCustActionForm.picture.fileName != '' }" >
-                                <img src="/mifos/clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}"/>
+                                <img src="/mifos/clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}" width="150"/>
                                 <br />
                                 <a id="editPersonalInformation.link.deletePhoto"
                                 href="clientCustAction.do?method=editPersonalInfo&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&photoDelete=true">

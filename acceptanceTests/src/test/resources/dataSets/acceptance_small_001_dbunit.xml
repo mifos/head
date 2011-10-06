@@ -13,6 +13,7 @@
   <DATABASECHANGELOG ID="MIFOS-4633_1" AUTHOR="Van Mittal-Henkle" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-09-17 20:04:23.0" ORDEREXECUTED="112" EXECTYPE="EXECUTED" MD5SUM="3:b47549abaeb58b3bde90195d5e8e65b8" DESCRIPTION="Create Table" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS-4633_2" AUTHOR="Van Mittal-Henkle" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-09-17 20:04:23.0" ORDEREXECUTED="113" EXECTYPE="EXECUTED" MD5SUM="3:0a7e597a8de1dba32d857ba4f29bac59" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS-4951_1" AUTHOR="Van Mittal-Henkle" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-09-17 20:04:23.0" ORDEREXECUTED="115" EXECTYPE="EXECUTED" MD5SUM="3:5582c64c65c11eeb61ce7f8edd0d42f5" DESCRIPTION="Custom SQL, Create Procedure, Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS-5111_1" AUTHOR="Udai Gupta" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-10-04 01:31:58.0" ORDEREXECUTED="33" EXECTYPE="EXECUTED" MD5SUM="3:33dd48ee85c1bda8d6af0e90b95834b7" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOSSUPPORT-44_1" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:23.0" ORDEREXECUTED="105" EXECTYPE="EXECUTED" MD5SUM="3:eb1d1711b1eea8756e15291e03873ba5" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOSSUPPORT-44_2" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:23.0" ORDEREXECUTED="106" EXECTYPE="EXECUTED" MD5SUM="3:ad14c03a6c51a27ff46e10e0a28842d2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_2852_1" AUTHOR="Piotr Bogacz" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-09-17 20:04:23.0" ORDEREXECUTED="114" EXECTYPE="EXECUTED" MD5SUM="3:0781b02231b6f43b1a820baab16cb49b" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
@@ -548,6 +549,7 @@
   <client_perf_history id="9" customer_id="15" total_active_loans="0" total_savings_amnt="0.0000" total_savings_amnt_currency_id="2" delinquint_portfolio="0.0000" delinquint_portfolio_currency_id="2"/>
   <client_perf_history id="10" customer_id="16" total_active_loans="1" total_savings_amnt="0.0000" total_savings_amnt_currency_id="2" delinquint_portfolio="0.0000" delinquint_portfolio_currency_id="2"/>
   <client_perf_history id="11" customer_id="17" total_active_loans="0" total_savings_amnt="0.0000" total_savings_amnt_currency_id="2" delinquint_portfolio="0.0000" delinquint_portfolio_currency_id="2"/>
+  <client_photo/>
   <coa coa_id="1" coa_name="ASSETS" glcode_id="1" category_type="ASSET"/>
   <coa coa_id="2" coa_name="Cash and bank balances" glcode_id="2"/>
   <coa coa_id="3" coa_name="Petty Cash Accounts" glcode_id="3"/>
@@ -1471,6 +1473,7 @@
   <group_perf_history id="2" customer_id="7" no_of_clients="0" avg_loan_size="0.0000" avg_loan_size_currency_id="2" total_outstand_loan_amnt="0.0000" total_outstand_loan_amnt_currency_id="2" portfolio_at_risk="0.0000" portfolio_at_risk_currency_id="2" total_savings_amnt="0.0000" total_savings_amnt_currency_id="2"/>
   <group_perf_history id="3" customer_id="13" no_of_clients="0" avg_loan_size="0.0000" avg_loan_size_currency_id="2" total_outstand_loan_amnt="0.0000" total_outstand_loan_amnt_currency_id="2" portfolio_at_risk="0.0000" portfolio_at_risk_currency_id="2" total_savings_amnt="0.0000" total_savings_amnt_currency_id="2"/>
   <holiday/>
+  <image_info/>
   <imported_transactions_files/>
   <inherited_meeting/>
   <insurance_offering/>
