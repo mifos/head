@@ -10,6 +10,8 @@ dbProperties=$WORKSPACE/db/target/release/db/mifos-db.properties
 dbPropertiesTemplate=$WORKSPACE/db/target/release/db/mifos-db-template.properties
 expandScript=$WORKSPACE/db/target/release/db/bin/expand_db.sh
 contractScript=$WORKSPACE/db/target/release/db/bin/contract_db.sh
+undoExpandScript=$WORKSPACE/db/target/release/db/bin/undo_expand_db.sh
+undoContractScript=$WORKSPACE/db/target/release/db/bin/undo_contract_db.sh
 liquibaseScript=$WORKSPACE/db/target/release/db/bin/liquibase.sh
 
 chmod +x $controlScript
@@ -67,9 +69,20 @@ function doContraction {
     $contractScript
 }
 
+
+function doRollbackExpansion {
+    $undoExpandScript 1970-07-07T00:00:00
+}
+
+function doRollbackContraction {
+    $undoContractScript 1970-07-07T00:00:00
+}
+
 # Test the previous version of application against new db
 stopJetty
 updateDbProperties
+doRollbackContraction
+doRollbackExpansion
 doExpansion
 startJetty
 cUrl
