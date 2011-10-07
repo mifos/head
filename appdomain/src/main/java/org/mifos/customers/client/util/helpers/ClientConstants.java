@@ -43,6 +43,7 @@ public interface ClientConstants {
     /** Request parameter names */
     String SALUTATION_ENTITY = "salutationEntity";
     String GENDER_ENTITY = "genderEntity";
+    String IS_PHOTO_FIELD_HIDDEN = "isPhotoFieldHidden";
     String LIVING_STATUS_ENTITY="livingStatusEntity";
     String MARITAL_STATUS_ENTITY = "maritalStatusEntity";
     String CITIZENSHIP_ENTITY = "citizenshipEntity";

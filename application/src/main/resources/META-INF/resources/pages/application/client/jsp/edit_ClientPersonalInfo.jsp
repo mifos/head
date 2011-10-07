@@ -278,6 +278,7 @@ explanation of the license and how it is applied.
 						</tr>
 
 						<%-- Photograph ADD CUSTOMER PICTURE TO ACTION FORM AND CUSTOMER VO --%>
+					    <c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isPhotoFieldHidden') == false}" >
 						<tr class="fontnormal">
 							<td align="right">
 							<span id="edit_ClientPersonalInfo.label.file">
@@ -300,6 +301,7 @@ explanation of the license and how it is applied.
 							<mifos:file styleId="edit_ClientPersonalInfo.input.file" keyhm="Client.Photo" property="picture" maxlength="200"
 								onkeypress="return onKeyPressForFileComponent(this);" /></td>
 						</tr>
+						</c:if>
 						<%-- Spouse/Father details --%>
 						<c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired') &&
 								!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsHidden')}">

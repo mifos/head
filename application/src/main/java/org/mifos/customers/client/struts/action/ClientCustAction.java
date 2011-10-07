@@ -528,6 +528,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         // John W - for breadcrumb or another other action downstream that exists business_key set (until refactored)
         ClientBO clientBO = (ClientBO) this.customerDao.findCustomerById(clientInformationDto.getClientDisplay().getCustomerId());
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, clientBO, request);
+        SessionUtils.setAttribute(ClientConstants.IS_PHOTO_FIELD_HIDDEN, FieldConfig.getInstance().isFieldHidden("Client.Photo"), request);
         setCurrentPageUrl(request, clientBO);
         setQuestionGroupInstances(request, clientBO);
 
@@ -632,11 +633,18 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         if(photoDelete != null && photoDelete.equals("true")) {
             ApplicationContextProvider.getBean(ClientPhotoService.class).delete(client.getCustomerId().longValue());
         }
-        ClientPhotoDto clientPhotoDto = this.clientServiceFacade.getClientPhoto(client.getCustomerId().longValue());
-        if (clientPhotoDto != null) {
-            FormFile formFile = new PictureFormFile(clientPhotoDto.getContentType(), clientPhotoDto.getOut(), client
-                    .getCustomerId().toString(), clientPhotoDto.getContentLength().intValue());
-            actionForm.setPicture(formFile);
+
+        boolean isPhotoFieldHidden = FieldConfig.getInstance().isFieldHidden("Client.Photo");
+        SessionUtils.setAttribute(ClientConstants.IS_PHOTO_FIELD_HIDDEN, isPhotoFieldHidden, request);
+        if (!isPhotoFieldHidden) {
+            ClientPhotoDto clientPhotoDto = this.clientServiceFacade.getClientPhoto(client.getCustomerId().longValue());
+            if (clientPhotoDto != null) {
+                FormFile formFile = new PictureFormFile(clientPhotoDto.getContentType(), clientPhotoDto.getOut(),
+                        client.getCustomerId().toString(), clientPhotoDto.getContentLength().intValue());
+                actionForm.setPicture(formFile);
+            } else {
+                actionForm.setPicture(null);
+            }
         } else {
             actionForm.setPicture(null);
         }
