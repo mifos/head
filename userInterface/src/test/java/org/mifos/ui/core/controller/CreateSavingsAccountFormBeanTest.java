@@ -20,24 +20,12 @@
 
 package org.mifos.ui.core.controller;
 
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-
 import junit.framework.Assert;
-
 import org.hibernate.validator.constraints.NotEmpty;
 import org.junit.Before;
 import org.junit.Test;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
+import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
 import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
@@ -50,11 +38,22 @@ import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.mockito.Mockito.*;
+
 public class CreateSavingsAccountFormBeanTest {
 
     private CreateSavingsAccountFormBean formBean;
     private ValidationContext validationContext;
     private QuestionnaireServiceFacade questionnaireServiceFacade;
+    private ConfigurationServiceFacade configurationServiceFacade;
+    private AccountingConfigurationDto configurationDto;
     private ValidationException validationException;
 
     @Before
@@ -69,6 +68,14 @@ public class CreateSavingsAccountFormBeanTest {
 
         questionnaireServiceFacade = mock(QuestionnaireServiceFacade.class);
         formBean.setQuestionnaireServiceFascade(questionnaireServiceFacade);
+
+        configurationDto = new AccountingConfigurationDto();
+        configurationDto.setDigitsBeforeDecimal((short)14);
+        configurationDto.setDigitsAfterDecimal((short)1);
+
+        configurationServiceFacade = mock(ConfigurationServiceFacade.class);
+        when(configurationServiceFacade.getAccountingConfiguration()).thenReturn(configurationDto);
+        formBean.setConfigurationServiceFacade(configurationServiceFacade);
 
         validationContext = new StubValidationContext();
 
@@ -142,7 +149,6 @@ public class CreateSavingsAccountFormBeanTest {
     public void validateEnterAccountDetailsStepMandatoryDepositEmptyAmountShouldFail() {
         Map<String, Class> expectedViolations = new HashMap<String, Class>();
         expectedViolations.put("Pattern", Pattern.class);
-        expectedViolations.put("DecimalMax", DecimalMax.class);
         validateEnterAccountDetailsStepMandatoryDeposit("", expectedViolations,
                 false);
     }
@@ -159,17 +165,30 @@ public class CreateSavingsAccountFormBeanTest {
     public void validateEnterAccountDetailsStepMandatoryDepositInvalidAmountShouldFail() {
         Map<String, Class> expectedViolations = new HashMap<String, Class>();
         expectedViolations.put("Pattern", Pattern.class);
-        expectedViolations.put("DecimalMax", DecimalMax.class);
         validateEnterAccountDetailsStepMandatoryDeposit("xyz", expectedViolations,
                 false);
     }
 
     @Test
     public void validateEnterAccountDetailsStepMandatoryDepositTooHighAmountShouldFail() {
-        Map<String, Class> expectedViolations = new HashMap<String, Class>();
-        expectedViolations.put("DecimalMax", DecimalMax.class);
-        validateEnterAccountDetailsStepMandatoryDeposit("10000000000000000000.00", expectedViolations,
-                false);
+        setDepositType(formBean, CreateSavingsAccountFormBean.MANDATORY_DEPOSIT);
+        formBean.setMandatoryDepositAmount("100000000000000.00");
+        List<String> expectedViolations = new ArrayList<String>();
+        expectedViolations.add("DigitsBefore");
+        expectedViolations.add("DigitsAfter");
+
+        formBean.validateEnterAccountDetailsStep(validationContext);
+
+        MessageContext messageContext = validationContext.getMessageContext();
+        Message[] messages = messageContext.getAllMessages();
+
+        Assert.assertEquals(messages.length, 2);
+        for (Message message : messages) {
+            String violation = message.getText().substring(0, message.getText().indexOf("."));
+            Assert.assertTrue(expectedViolations.contains(violation));
+            expectedViolations.remove(violation);
+        }
+
     }
 
     @Test
@@ -245,4 +264,5 @@ public class CreateSavingsAccountFormBeanTest {
                 + message.getSource();
         Assert.assertEquals(expected, message.getText());
     }
+
 }

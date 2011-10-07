@@ -20,15 +20,9 @@
 
 package org.mifos.ui.core.controller;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-
 import org.hibernate.validator.constraints.NotEmpty;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
+import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
@@ -38,8 +32,16 @@ import org.mifos.platform.validation.MifosBeanValidator;
 import org.mifos.platform.validations.ValidationException;
 import org.mifos.ui.core.controller.util.ValidationExceptionMessageExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * An object to hold information collected in create savings account process.
@@ -60,8 +62,7 @@ public class CreateSavingsAccountFormBean implements Serializable {
     private String searchString;
 
     @NotNull(groups = { MandatorySavings.class })
-    @Pattern(regexp = "^[0-9]+(\\.[0-9]{1,2})?$?", groups = { MandatorySavings.class })
-    @DecimalMax(value = "99999999999999999.99", groups = { MandatorySavings.class })
+    @Pattern(regexp = "^[0-9]+(\\.[0-9]+)?$?", groups = { MandatorySavings.class })
     private String mandatoryDepositAmount;
 
     private SavingsProductReferenceDto product;
@@ -87,6 +88,8 @@ public class CreateSavingsAccountFormBean implements Serializable {
     @Autowired
     private transient QuestionnaireServiceFacade questionnaireServiceFacade;
 
+    private transient ConfigurationServiceFacade configurationServiceFacade;
+
     public void setValidator(MifosBeanValidator validator) {
         this.validator = validator;
     }
@@ -94,7 +97,12 @@ public class CreateSavingsAccountFormBean implements Serializable {
     public void setQuestionnaireServiceFascade(QuestionnaireServiceFacade questionnaireServiceFacade) {
         this.questionnaireServiceFacade = questionnaireServiceFacade;
     }
-    
+
+    @Autowired
+    public void setConfigurationServiceFacade(ConfigurationServiceFacade configurationServiceFacade) {
+        this.configurationServiceFacade = configurationServiceFacade;
+    }
+
     public void setCustomer(CustomerDto customer) {
         this.customer = customer;
     }
@@ -238,6 +246,7 @@ public class CreateSavingsAccountFormBean implements Serializable {
     private void validateAccountDetails(ValidationContext context) {
         MessageContext messages = context.getMessageContext();
         validator.validate(this, messages, MandatorySavings.class);
+        validateMandatoryDepositAmountDigits(context);
     }
 
     private void validateQuestionGroupAnswers(ValidationContext context) {
@@ -248,6 +257,37 @@ public class CreateSavingsAccountFormBean implements Serializable {
         } catch (ValidationException e) {
             ValidationExceptionMessageExtractor extractor = new ValidationExceptionMessageExtractor();
             extractor.extract(messages, e);
+        }
+    }
+
+    private void validateMandatoryDepositAmountDigits(ValidationContext context) {
+        if (mandatoryDepositAmount == null) {
+            return;
+        }
+        AccountingConfigurationDto accountingConfiguration = configurationServiceFacade.getAccountingConfiguration();
+        BigDecimal decimalAmount;
+        try {
+            decimalAmount = new BigDecimal(mandatoryDepositAmount);
+        } catch (NumberFormatException e) {
+            return;
+        }
+        if ((decimalAmount.precision() - decimalAmount.scale()) > accountingConfiguration.getDigitsBeforeDecimal()) {
+            context.getMessageContext().addMessage(new MessageBuilder()
+                .error()
+                .source("mandatoryDepositAmount")
+                .code("DigitsBefore.CreateSavingsAccountFormBean.mandatoryDepositAmount")
+                .arg(accountingConfiguration.getDigitsBeforeDecimal())
+                .build()
+            );
+        }
+        if (decimalAmount.scale() > accountingConfiguration.getDigitsAfterDecimal()) {
+            context.getMessageContext().addMessage(new MessageBuilder()
+                .error()
+                .source("mandatoryDepositAmount")
+                .code("DigitsAfter.CreateSavingsAccountFormBean.mandatoryDepositAmount")
+                .arg(accountingConfiguration.getDigitsAfterDecimal())
+                .build()
+            );
         }
     }
 
