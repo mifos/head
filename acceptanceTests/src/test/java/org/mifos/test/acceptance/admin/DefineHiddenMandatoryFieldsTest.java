@@ -224,7 +224,8 @@ public class DefineHiddenMandatoryFieldsTest  extends UiTestCaseBase{
         defineHiddenMandatoryFieldsPage.checkMandatoryCitizenShip();
         defineHiddenMandatoryFieldsPage.checkMandatoryHandicapped();
         defineHiddenMandatoryFieldsPage.checkMandatoryEducationLevel();
-        defineHiddenMandatoryFieldsPage.checkMandatoryPhoto();
+        // TODO: we cannot make photo as a mandatory one, because we cannot upload images in selenium tests
+        //defineHiddenMandatoryFieldsPage.checkMandatoryPhoto();
         defineHiddenMandatoryFieldsPage.checkMandatoryAddress1();
         defineHiddenMandatoryFieldsPage.checkMandatoryMiddleName();
         defineHiddenMandatoryFieldsPage.checkMandatorySecondLastName();
@@ -303,7 +304,7 @@ public class DefineHiddenMandatoryFieldsTest  extends UiTestCaseBase{
         defineHiddenMandatoryFieldsPage.uncheckMandatoryCitizenShip();
         defineHiddenMandatoryFieldsPage.uncheckMandatoryHandicapped();
         defineHiddenMandatoryFieldsPage.uncheckMandatoryEducationLevel();
-        defineHiddenMandatoryFieldsPage.uncheckMandatoryPhoto();
+        //defineHiddenMandatoryFieldsPage.uncheckMandatoryPhoto();
         defineHiddenMandatoryFieldsPage.uncheckMandatoryAddress1();
         defineHiddenMandatoryFieldsPage.uncheckMandatoryMiddleName();
         defineHiddenMandatoryFieldsPage.uncheckMandatorySecondLastName();
