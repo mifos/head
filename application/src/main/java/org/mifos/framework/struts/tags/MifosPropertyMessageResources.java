@@ -27,7 +27,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.struts.util.MessageResourcesFactory;
 import org.apache.struts.util.PropertyMessageResources;
-import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.business.MifosConfiguration;
@@ -73,16 +72,5 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
         }
 
         return returnVal;
-    }
-
-    /**
-     * Only called from one place: MifosPropertyMessageResources.getMessage in
-     * order to get a label.
-     */
-    public CustomValueDto getEntity(final String key) {
-        CustomValueDto entity = null;
-        entity = legacyMasterDao.getLookUpEntity(key);
-        return entity;
-
     }
 }

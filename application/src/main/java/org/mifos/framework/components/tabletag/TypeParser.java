@@ -81,7 +81,7 @@ public class TypeParser {
         return file;
     }
 
-    protected FileName[] createFileName(Node file) throws TableTagTypeParserException {
+    private FileName[] createFileName(Node file) throws TableTagTypeParserException {
         NodeList fileNameNodeList = ((Element) file).getElementsByTagName(TableTagConstants.FILENAME);
         if (fileNameNodeList.getLength() == 0) {
             throw new TableTagTypeParserException(fileNameNodeList.toString());

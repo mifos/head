@@ -26,8 +26,6 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
@@ -55,7 +53,6 @@ import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -111,10 +108,6 @@ import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsD
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public abstract class BaseAction extends DispatchAction {
 
@@ -462,10 +455,6 @@ public abstract class BaseAction extends DispatchAction {
         return dNumber != null ? new LocalizationConverter().getDoubleStringForMoney(dNumber): null;
     }
 
-    protected String getDoubleStringForMoney(Double dNumber, MifosCurrency currency) {
-        return dNumber != null ? new LocalizationConverter(currency).getDoubleStringForMoney(dNumber): null;
-    }
-
     protected String getDoubleStringForInterest(Double dNumber) {
         return dNumber != null ? new LocalizationConverter().getDoubleStringForInterest(dNumber): null;
     }
@@ -533,24 +522,6 @@ public abstract class BaseAction extends DispatchAction {
         if (!oldVersionNum.equals(newVersionNum)) {
             throw new ApplicationException(Constants.ERROR_VERSION_MISMATCH);
         }
-    }
-
-    /*
-     * this method is not intended to be part of the application, but is used by
-     * tests to get a copy of the ActionMapping object used in a specific action
-     * tests just need to perform this method through the struts machinery, then
-     * call
-     * "ActionMapping mapping = request.getAttribute(Constants.ACTION_MAPPING)"
-     */
-    public ActionForward findActionMapping(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        request.setAttribute(Constants.ACTION_MAPPING, mapping);
-        // welcome is a global forward, present in all actions
-        return mapping.findForward(ActionForwards.welcome.toString());
-    }
-
-    protected String localizedMessageLookup(String key) {
-        return MessageLookup.getInstance().lookup(key);
     }
 
     protected MifosCurrency getCurrency(Short currencyId) {
