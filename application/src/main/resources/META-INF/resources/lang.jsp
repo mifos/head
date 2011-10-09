@@ -1,5 +1,5 @@
 <%--
-Copyright (c) 2005-2009 Grameen Foundation USA
+Copyright (c) 2005-2011 Grameen Foundation USA
 All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,48 +16,44 @@ permissions and limitations under the License.
 
 See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
---%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-<br />
-<br />
-<br />
-<br />
+--%><%@page import="java.util.Locale"%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="org.mifos.dto.domain.ValueListElement"%>
+<%@page import="org.apache.struts.Globals"%>
+<%@page import="org.mifos.ui.core.localisation.MifosLocaleResolver"%>
+<%@page import="org.mifos.config.Localization"%>
+<%@page import="org.mifos.framework.util.StandardTestingService"%>
+<%@page import="org.mifos.security.util.UserContext"%>
 <%
-	org.mifos.config.Localization l = org.mifos.config.Localization.getInstance();
-	String param = request.getParameter("lang");
-	if (param != null && !param.equals("")) {
-		String [] codes = param.split("_");
-		new org.mifos.framework.util.StandardTestingService().setLocale(codes[0], codes[1]);
-		session.setAttribute(org.apache.struts.Globals.LOCALE_KEY, l.getConfiguredLocale());
-         org.mifos.security.util.UserContext userContext = (org.mifos.security.util.UserContext) session.getAttribute("UserContext");
-         userContext.setPreferredLocale(l.getConfiguredLocale());
-         org.springframework.context.i18n.LocaleContextHolder.resetLocaleContext();
-         org.springframework.context.i18n.LocaleContextHolder.setLocale(l.getConfiguredLocale());
-         
-	}
-%>
+    Localization l = Localization.getInstance();
+    String param = request.getParameter("langId");
 
-Language (Country) :
-<%=l.getConfiguredLocale().getDisplayName()%>
+    if (StringUtils.isNotBlank(param)) {
+        Short id = Short.parseShort(param);
+        Locale locale = l.getLocaleById(id);
+        new StandardTestingService().setLocale(locale.getLanguage(), locale.getCountry());
+        session.setAttribute(Globals.LOCALE_KEY, l.getConfiguredLocale());
+        UserContext userContext = (UserContext) session.getAttribute("UserContext");
+        if(userContext != null) {
+            userContext.setPreferredLocale(l.getConfiguredLocale());
+        }
+        response.sendRedirect(request.getContextPath() + "/login.ftl");
+        return;
+    }
+%>
 <br />
 <br />
+Current Language : <%=l.getConfiguredLocale().getDisplayName()%>
 <br />
 <br />
-<form method="post"><select name="lang">
-	<option value="">-- SELECT --</option>
-    <option value="en_GB">English (UK)</option>
-    <option value="te_IN">Telugu</option>
-    <option value="zh_CN">Chinese</option>
-	<option value="fr_FR">French (France)</option>
-	<option value="es_ES">Spanish (Spain)</option>
-</select> <input type="submit" value="Change language" /></form>
-</body>
-</html>
+<form method="post" action="lang.jsp">
+    <select name="langId">
+    <% for(ValueListElement e : l.getLocaleForUI()) { %>
+		<option value="<%=e.getId()%>"><%=e.getName()%></option>
+	<% } %>
+	</select> 
+	<input type="submit" value="Change"/>
+</form>
+<b>NOTE:</b> Some languages are not completely translated. <a href="http://translatewiki.net/wiki/Translating:Mifos/stats" target="blank">stats</a><br/>
+<b>MORE ON </b> <a href="http://mifosforge.jira.com/wiki/display/projects/Mifos+Localization" target="blank">Mifos Localization</a>
+<br/> <a href="http://mifosforge.jira.com/wiki/display/MIFOS/i18n,+L10n" target="blank">Learn i18n/L10n</a>

@@ -34,6 +34,7 @@
         <intercept-url pattern="/initializeApplication.ftl*" filters="none" />
         <intercept-url pattern="/customPropertiesUpdate.ftl*" filters="none" />
         <intercept-url pattern="/uncaughtException.ftl" filters="none" />
+        <intercept-url pattern="/lang.jsp" filters="none" />
 
         <intercept-url pattern="/**/*.css*" filters="none" />
         <intercept-url pattern="/**/*.gif" filters="none" />

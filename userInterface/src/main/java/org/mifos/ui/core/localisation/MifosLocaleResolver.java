@@ -39,11 +39,8 @@ public class MifosLocaleResolver extends AbstractLocaleResolver {
 
     @Override
     public Locale resolveLocale(@SuppressWarnings("unused") HttpServletRequest request) {
-
-        if (super.getDefaultLocale() == null) {
-            setDefaultLocale(adminServiceFacade.retreiveLocaleFromConfiguration());
-        }
-        return getDefaultLocale();
+        setDefaultLocale(adminServiceFacade.retreiveLocaleFromConfiguration());
+        return adminServiceFacade.retreiveLocaleFromConfiguration();
     }
 
     @Override

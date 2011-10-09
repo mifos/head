@@ -65,5 +65,12 @@
 <script type="text/javascript" >
         $("input.focused").focus();
 </script>
+[#if Application.LocaleSetting.labLevel > 0]
+<div id="labMenu" style="display:none">
+<a href="#">change lanuage</a>
+<div id="langForm"></div>
+<div>
+<script type="text/javascript" src="pages/js/lab.js"></script>
+[/#if]
 <!--Container Ends-->
 [@mifos.footer /]

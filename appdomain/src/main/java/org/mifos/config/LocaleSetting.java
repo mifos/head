@@ -27,14 +27,17 @@ import org.mifos.config.business.MifosConfigurationManager;
 public class LocaleSetting {
 
     public static final String DEFAULT_DIRECTION = "auto";
+    public static final Integer DEFAULT_LAB_LEVEL = 0;
 
-    private static final String LocalizationCountryCode = "Localization.CountryCode";
-    private static final String LocalizationLanguageCode = "Localization.LanguageCode";
-    private static final String LocalizationDirection = "Localization.Direction";
+    private static final String COUNTRY_CODE = "Localization.CountryCode";
+    private static final String LANGUAGE_CODE = "Localization.LanguageCode";
+    private static final String DIRECTION = "Localization.Direction";
+    private static final String LAB_LEVEL = "Localization.Lab.Level";
 
     private String countryCode;
     private String languageCode;
     private String direction;
+    private Integer labLevel;
 
     public LocaleSetting(String languageCode, String countryCode) {
         this.countryCode = countryCode;
@@ -47,47 +50,48 @@ public class LocaleSetting {
 
     public void clearCountryCode() {
         MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
-        configMgr.clearProperty(LocalizationCountryCode);
+        configMgr.clearProperty(COUNTRY_CODE);
     }
 
     public void clearLanguageCode() {
         MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
-        configMgr.clearProperty(LocalizationLanguageCode);
+        configMgr.clearProperty(LANGUAGE_CODE);
     }
 
     public void clearDirection() {
         MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
-        configMgr.clearProperty(LocalizationDirection);
+        configMgr.clearProperty(DIRECTION);
     }
 
     public void setCountryCodeToConfigFile() {
         MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
-        configMgr.addProperty(LocalizationCountryCode, countryCode);
+        configMgr.addProperty(COUNTRY_CODE, countryCode);
     }
 
     public void setLanguageCodeToConfigFile() {
         MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
-        configMgr.addProperty(LocalizationLanguageCode, languageCode);
+        configMgr.addProperty(LANGUAGE_CODE, languageCode);
     }
 
     public void setDirectionToConfigFile() {
         MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
-        configMgr.addProperty(LocalizationDirection, direction);
+        configMgr.addProperty(DIRECTION, direction);
     }
 
     private void load() {
         MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
-        if (configMgr.containsKey(LocalizationCountryCode)) {
-            countryCode = configMgr.getString(LocalizationCountryCode);
+        if (configMgr.containsKey(COUNTRY_CODE)) {
+            countryCode = configMgr.getString(COUNTRY_CODE);
         } else {
             throw new RuntimeException("The country code is not defined in the config file.");
         }
-        if (configMgr.containsKey(LocalizationLanguageCode)) {
-            languageCode = configMgr.getString(LocalizationLanguageCode);
+        if (configMgr.containsKey(LANGUAGE_CODE)) {
+            languageCode = configMgr.getString(LANGUAGE_CODE);
         } else {
             throw new RuntimeException("The language code is not defined in the config file.");
         }
-        direction = configMgr.getString(LocalizationDirection, DEFAULT_DIRECTION);
+        direction = configMgr.getString(DIRECTION, DEFAULT_DIRECTION);
+        setLabLevel(configMgr.getInteger(LAB_LEVEL, DEFAULT_LAB_LEVEL));
     }
 
     public String getCountryCode() {
@@ -116,6 +120,14 @@ public class LocaleSetting {
 
     public String getDirection() {
         return direction;
+    }
+
+    public Integer getLabLevel() {
+        return labLevel;
+    }
+
+    public void setLabLevel(Integer labLevel) {
+        this.labLevel = labLevel;
     }
 
 }

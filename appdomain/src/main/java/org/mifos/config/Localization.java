@@ -150,6 +150,10 @@ public class Localization {
         }
     }
 
+    public Locale getLocaleById(Short id) {
+        return LOCALE_MAP.get(id);
+    }
+
     class ValueListElementSortByName implements Comparator<ValueListElement>{
         @Override
         public int compare(ValueListElement o1, ValueListElement o2) {
