@@ -73,7 +73,7 @@ public class RepaymentScheduleInstallment implements Serializable {
         setTotalAndTotalValue(this.principal.add(this.interest).add(this.fees).add(this.miscFees).add(this.miscPenalty));
         this.locale = locale;
         this.dueDateValue = dueDateValue;
-        this.dueDate = DateUtils.formatDate(dueDateValue, locale);
+        this.dueDate = DateUtils.formatDate(dueDateValue);
     }
 
     @Deprecated
@@ -210,7 +210,7 @@ public class RepaymentScheduleInstallment implements Serializable {
     public boolean isTotalAmountLessThan(Money minInstallmentAmount) {
         return minInstallmentAmount != null && (totalValue == null || totalValue.isLessThan(minInstallmentAmount));
     }
-    
+
     public boolean isTotalAmountLessThan(BigDecimal minInstallmentAmount) {
         return minInstallmentAmount != null && (totalValue == null || totalValue.getAmount().doubleValue() < minInstallmentAmount.doubleValue());
     }

@@ -99,7 +99,7 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 							<td class="fontnormalbold">
-							<c:if test = "${sessionScope.clientCustActionForm.picture.fileName != ''}" >
+							<c:if test = "${sessionScope.clientCustActionForm.picture != null && sessionScope.clientCustActionForm.picture.fileName != ''}" >
 								<img src="/mifos/clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}" width="150"/>
 							</c:if>
 							<br><br>

@@ -750,14 +750,14 @@ public class DateUtils {
         return firstCalendarDate.compareTo(secondCalendarDate) <= 0;
     }
 
-    public static Date parseDate(String dateStr, Locale locale) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(getShortDateFormat(locale), locale);
+    public static Date parseDate(String dateStr) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(getShortDateFormat(dateLocale), dateLocale);
         dateFormat.setLenient(false);
         return dateFormat.parse(dateStr);
     }
 
-    public static String formatDate(Date date, Locale locale) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(getShortDateFormat(locale), locale);
+    public static String formatDate(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(getShortDateFormat(dateLocale), dateLocale);
         dateFormat.setLenient(false);
         return dateFormat.format(date);
     }

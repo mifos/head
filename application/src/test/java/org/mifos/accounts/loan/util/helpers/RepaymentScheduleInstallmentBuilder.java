@@ -70,16 +70,15 @@ public class RepaymentScheduleInstallmentBuilder {
     }
 
     public RepaymentScheduleInstallmentBuilder withDueDateValue(String dueDate) {
-        Locale dateLocale = repaymentScheduleInstallment.getLocale();
-        Date dateValue = getDate(dueDate, dateLocale);
+        Date dateValue = getDate(dueDate);
         this.repaymentScheduleInstallment.setDueDateValue(dateValue);
         return this;
     }
 
-    private Date getDate(String dueDate, Locale dateLocale) {
+    private Date getDate(String dueDate) {
         Date date;
         try {
-            date = DateUtils.parseDate(dueDate, dateLocale);
+            date = DateUtils.parseDate(dueDate);
         } catch (ParseException e) {
             date = null;
         }

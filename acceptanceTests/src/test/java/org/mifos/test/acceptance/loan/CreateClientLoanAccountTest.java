@@ -236,7 +236,10 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void tryClientLoanAccountWithAdditionalFees() throws Exception {
-        setDateAsToday();
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011, 2, 1, 13, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Mary Monthly");
         searchParameters.setLoanProduct("EmergencyLoanWithZeroInterest");

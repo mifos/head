@@ -104,4 +104,8 @@
     <bean id="messageCustomizerServiceFacade" class="org.mifos.application.messagecustomizer.CustomizedTextServiceFacadeWebTier"/>
 
     <bean id="customJDBCService" class="org.mifos.application.servicefacade.CustomJDBCServiceImpl"/>
+
+    <bean id="accountingConfigurationService" class="org.mifos.config.service.impl.AccountingConfigurationServiceImpl"/>
+
+    <bean id="configurationServiceFacade" class="org.mifos.config.servicefacade.ConfigurationServiceFacadeWebTier"/>
 </beans>
