@@ -42,6 +42,7 @@ public class RESTAPITestHelper {
 
     public static class Type {
         public static final String CLIENT = "client";
+        public static final String PERSONNEL = "personnel";
         public static final String LOAN_REPAYMENT = "account/loan/repay";
         public static final String SAVINGS_DEPOSIT = "account/savings/deposit";
     }
@@ -61,7 +62,7 @@ public class RESTAPITestHelper {
     }
 
     public String getJSONFromUI(String type, String by, String value) throws InterruptedException {
-        String url = String.format("%s/%s-%s.json", type, by, value);
+        String url = String.format("%s/%s%s.json", type, by, extValue(value));
         selenium.type("resturl", url);
         selenium.click("getJSON");
         Thread.sleep(1000);
@@ -69,7 +70,7 @@ public class RESTAPITestHelper {
     }
 
     public String postJSONFromUI(String type, String by, String value, String data) throws InterruptedException {
-        String url = String.format("%s/%s-%s.json", type, by, value);
+        String url = String.format("%s/%s%s.json", type, by, extValue(value));
         selenium.type("resturl", url);
         selenium.type("data", data);
         selenium.click("postData");
@@ -79,7 +80,7 @@ public class RESTAPITestHelper {
 
     public String getJSONFromDataSet(String apiType, String by, String value) throws IOException {
         String type = apiType.replace('/', '-');
-        String path = String.format("/dataSets/rest/%s-%s-%s.json", type, by, value);
+        String path = String.format("/dataSets/rest/%s-%s%s.json", type, by, extValue(value));
         ClassPathResource resource = new ClassPathResource(path);
         File file = resource.getFile();
         if (file == null) {
@@ -97,4 +98,11 @@ public class RESTAPITestHelper {
         return mapper;
     }
 
+    private String extValue(String value) {
+        String extValue = "";
+        if (value != null) {
+            extValue = "-" + value;
+        }
+        return extValue;
+    }
 }
