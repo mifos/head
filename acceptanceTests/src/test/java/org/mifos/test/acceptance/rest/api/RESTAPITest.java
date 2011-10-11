@@ -43,6 +43,7 @@ import org.testng.annotations.Test;
 public class RESTAPITest extends UiTestCaseBase {
 
     public static final String CLIENT_GLOBAL_ID = "0002-000000003";
+    public static final String PERSONNEL_CURRENT_ID = "current";
     public static final String LOAN_ACCOUNT_GLOBAL_ID = "000100000000004";
     public static final String SAVINGS_ACCOUNT_GLOBAL_ID = "000100000000006";
 
@@ -78,6 +79,36 @@ public class RESTAPITest extends UiTestCaseBase {
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         ObjectMapper mapper = helper.getObjectMapper();
         Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly")
+    public void personnelByCurrentId() throws Exception {
+        String type = Type.PERSONNEL;
+        String by = By.ID;
+        String value = PERSONNEL_CURRENT_ID;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
+        jsonAssert.assertEqual("id");
+        jsonAssert.assertEqual("displayName");
+        jsonAssert.assertEqual("status");
+        jsonAssert.assertEqual("userName");
+        jsonAssert.assertEqual("title");
+        jsonAssert.assertEqual("locked");
+        jsonAssert.assertEqual("levelId");
+        jsonAssert.assertEqual("personnelId");
+        jsonAssert.assertEqual("officeId");
+        jsonAssert.assertEqual("personnelRoles");
+        jsonAssert.assertEqual("officeName");
+        jsonAssert.assertEqual("emailId");
+        jsonAssert.assertEqual("customFields");
+        jsonAssert.assertEqual("personnelNotes");
+        jsonAssert.assertEqual("globalPersonnelNum");
+        jsonAssert.assertEqual("age");
+        jsonAssert.assertEqual("recentPersonnelNotes");
+        jsonAssert.assertEqual("preferredLocaleLanguageName");
+        jsonAssert.assertEqual("preferredLanguageId");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

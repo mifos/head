@@ -196,10 +196,10 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
         Name name = personnelDetailsEntity.getName();
         PersonnelDetailsDto personnelDetails = new PersonnelDetailsDto(personnelDetailsEntity.getGovernmentIdNumber(),
-                new DateTime(personnelDetailsEntity.getDob()), personnelDetailsEntity.getMaritalStatus(),
-                personnelDetailsEntity.getGender(), new DateTime(personnelDetailsEntity.getDateOfJoiningMFI()),
-                new DateTime(personnelDetailsEntity.getDateOfJoiningBranch()), new DateTime(personnelDetailsEntity
-                        .getDateOfLeavingBranch()), addressDto, name.getFirstName(), name.getMiddleName(), name
+                new DateTime(personnelDetailsEntity.getDob()).toDateMidnight().toDateTime(), personnelDetailsEntity.getMaritalStatus(),
+                personnelDetailsEntity.getGender(), new DateTime(personnelDetailsEntity.getDateOfJoiningMFI()).toDateMidnight().toDateTime(),
+                new DateTime(personnelDetailsEntity.getDateOfJoiningBranch()).toDateMidnight().toDateTime(), new DateTime(personnelDetailsEntity
+                        .getDateOfLeavingBranch()).toDateMidnight().toDateTime(), addressDto, name.getFirstName(), name.getMiddleName(), name
                         .getSecondLastName(), name.getLastName());
 
         String emailId = personnel.getEmailId();
