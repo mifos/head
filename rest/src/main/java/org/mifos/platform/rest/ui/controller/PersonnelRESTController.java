@@ -35,7 +35,7 @@ public class PersonnelRESTController {
     @Autowired
     private PersonnelServiceFacade personnelServiceFacade;
 
-    @RequestMapping(value = "personnel/whoami", method = RequestMethod.GET)
+    @RequestMapping(value = "personnel/id-current", method = RequestMethod.GET)
     public final @ResponseBody
     PersonnelInformationDto getCurrentPersonnel() {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
