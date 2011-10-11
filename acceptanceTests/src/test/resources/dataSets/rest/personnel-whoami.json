@@ -1,0 +1,52 @@
+{
+    "id":1,
+    "displayName":"mifos",
+    "status":{
+        "name":"Active",
+        "id":1
+    },
+    "userName":"mifos",
+    "title":1,
+    "locked":false,
+    "levelId":2,
+    "personnelId":1,
+    "officeId":1,
+    "personnelRoles":[{
+            "name":"Admin",
+            "id":1
+        }
+    ],
+    "officeName":"Mifos HO ",
+    "personnelDetails":{
+        "address":{
+            "state":"Bangalore",
+            "country":"Bangalore",
+            "displayAddress":"Bangalore",
+            "city":"Bangalore",
+            "zip":"",
+            "phoneNumber":"",
+            "line1":"Bangalore",
+            "line2":"",
+            "line3":""
+        },
+        "governmentIdNumber":"123",
+        "dob":313801200000,
+        "maritalStatus":null,
+        "gender":50,
+        "dateOfJoiningMFI":1315864800000,
+        "dateOfJoiningBranch":1315864800000,
+        "dateOfLeavingBranch":1315864800000,
+        "firstName":"Mifos",
+        "middleName":null,
+        "secondLastName":null,
+        "lastName":"MFI"
+    },
+    "emailId":null,
+    "customFields":[],
+    "personnelNotes":[],
+    "globalPersonnelNum":"1",
+    "age":"31",
+    "recentPersonnelNotes":[],
+    "preferredLocaleLanguageName":"English - (English) : United Kingdom [en_GB]",
+    "preferredLanguageId":1
+}
