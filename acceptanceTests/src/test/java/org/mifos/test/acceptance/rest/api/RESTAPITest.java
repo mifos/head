@@ -83,7 +83,7 @@ public class RESTAPITest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
-    public void personnelByWhoami() throws Exception {
+    public void personnelByCurrentId() throws Exception {
         String type = Type.PERSONNEL;
         String by = By.ID;
         String value = PERSONNEL_CURRENT_ID;
