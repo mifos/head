@@ -40,6 +40,11 @@
     		<plugin>
     			<groupId>org.apache.maven.plugins</groupId>
         		<artifactId>maven-surefire-plugin</artifactId>
+        		<!-- Version fixed to 2.8.1, later versions (2.9 & 2.10) cause some JCL problem,
+        			 probably because everything is on the same CP due to below.  Upgrading JCL
+        			 version used in Mifos MIGHT help; just sticking to 2.8.1 for now is fine. 
+        		 -->
+        		<version>2.8.1</version>
         		<configuration>
         			<!-- This is needed for MIFOS-5127.  
         				 Without this the WorkspaceServerLauncherTest fails on CLI (but works in the M2E IDE),
@@ -49,6 +54,7 @@
         			 -->
           			<useSystemClassLoader>true</useSystemClassLoader>
           			<useManifestOnlyJar>false</useManifestOnlyJar>
+          			<argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
         		</configuration>
     		</plugin>
     	</plugins>
