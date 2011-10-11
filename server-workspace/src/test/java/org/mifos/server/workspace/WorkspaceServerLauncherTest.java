@@ -60,7 +60,6 @@ public class WorkspaceServerLauncherTest {
     }
 
     @Test
-    @Ignore
     public void testLogin() throws Exception {
         WebDriver wd = new FirefoxDriver();
         wd.get(getAppURL());

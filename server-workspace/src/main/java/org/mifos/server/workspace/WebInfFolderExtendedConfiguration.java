@@ -31,7 +31,7 @@ import org.eclipse.jetty.webapp.WebInfConfiguration;
  * Extended WebInfConfiguration.
  * 
  * Helps to accept e.g. web-fragment.xml from anywhere on the classpath, folders or JARs, and not only from JARs
- * neccessarily inside a WEB-INF/lib.
+ * necessarily inside a WEB-INF/lib.
  * 
  * @see WebInfConfiguration
  * 
