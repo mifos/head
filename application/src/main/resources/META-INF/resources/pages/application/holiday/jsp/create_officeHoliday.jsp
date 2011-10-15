@@ -37,7 +37,6 @@ explanation of the license and how it is applied.
             }
         </SCRIPT>
 	  <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
-	  <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 	  <script type="text/javascript" src="pages/js/jstree/jquery.jstree.js"></script>
   	  <script type="text/javascript" src="pages/application/holiday/js/createHolidays.js"></script>
 		<html-el:form method="post"

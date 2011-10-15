@@ -17,6 +17,12 @@ permissions and limitations under the License.
 See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
 --%>
+<%@page import="org.mifos.customers.personnel.business.PersonnelBO"%>
+<%@page
+	import="org.mifos.framework.hibernate.helper.StaticHibernateUtil"%>
+<%@page import="org.mifos.security.MifosUser"%>
+<%@page
+	import="org.springframework.security.core.context.SecurityContextHolder"%>
 <%@page import="java.util.Locale"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.mifos.dto.domain.ValueListElement"%>
@@ -25,28 +31,55 @@ explanation of the license and how it is applied.
 <%
     Localization l = Localization.getInstance();
     String param = request.getParameter("langId");
-
+    Short localeId = Localization.getInstance().getConfiguredLocaleId();
+    // TODO : move to PersonnelServiceFacade/FTL
     if (StringUtils.isNotBlank(param)) {
         Short id = Short.parseShort(param);
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Locale locale = l.getLocaleById(id);
-        new StandardTestingService().setLocale(locale.getLanguage(), locale.getCountry());
-        response.sendRedirect(request.getContextPath() + "/login.ftl");
+        localeId = Localization.getInstance().getLocaleId(locale);
+        user.setPreferredLocaleId(localeId);
+        StaticHibernateUtil.startTransaction();
+        PersonnelBO p = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class,
+                (short) user.getUserId());
+        p.setPreferredLocale(localeId);
+        StaticHibernateUtil.getSessionTL().update(p);
+        StaticHibernateUtil.commitTransaction();
+
         return;
     }
 %>
+
+<%
+    MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    localeId = user.getPreferredLocaleId();
+%>
+<br />
+Current Language :
+<%=l.getDisplayName(localeId)%>
 <br />
 <br />
-Current Language : <%=l.getConfiguredLocale().getDisplayName()%>
+<select id="langId">
+	<%
+	    for (ValueListElement e : l.getLocaleForUI()) {
+	%>
+	<option <%if (localeId == e.getId().shortValue()) {%> selected <%}%>
+		value="<%=e.getId()%>"><%=e.getName()%></option>
+	<%
+	    }
+	%>
+</select>
+<input id="langSubmit" type="button" value="Change" />
 <br />
 <br />
-<form method="post" action="lang.jsp">
-    <select name="langId">
-    <% for(ValueListElement e : l.getLocaleForUI()) { %>
-		<option value="<%=e.getId()%>"><%=e.getName()%></option>
-	<% } %>
-	</select> 
-	<input type="submit" value="Change"/>
-</form>
-<b>NOTE:</b> Some languages are not completely translated. <a href="http://translatewiki.net/wiki/Translating:Mifos/stats" target="blank">stats</a><br/>
-<b>MORE ON </b> <a href="http://mifosforge.jira.com/wiki/display/projects/Mifos+Localization" target="blank">Mifos Localization</a>
-<br/> <a href="http://mifosforge.jira.com/wiki/display/MIFOS/i18n,+L10n" target="blank">Learn i18n/L10n</a>
+<b>NOTE:</b>
+Some languages are not completely translated.
+<a href="http://translatewiki.net/wiki/Translating:Mifos/stats"
+	target="blank">stats</a>
+<br />
+<a
+	href="http://mifosforge.jira.com/wiki/display/projects/Mifos+Localization"
+	target="blank">Mifos Localization</a>
+<br />
+<a href="http://mifosforge.jira.com/wiki/display/MIFOS/i18n,+L10n"
+	target="blank">Learn i18n/L10n</a>

@@ -43,7 +43,6 @@ explanation of the license and how it is applied.
 					}
 		</script>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
-        <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 		<SCRIPT SRC="pages/application/loan/js/repayLoan.js"></SCRIPT>
 
 		<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>

@@ -38,7 +38,6 @@ explanation of the license and how it is applied.
         <span id="page.id" title="CreateLoanProduct"></span>
 		<script src="pages/framework/js/date.js"></script>
 		<script src="pages/framework/js/func.js"></script>
-		<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 		<script type="text/javascript" src="pages/application/loan/js/CreateLoanProduct.js"></script>
 		<html-el:form action="/loanproductaction"
 			onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
@@ -998,17 +997,6 @@ explanation of the license and how it is applied.
 
 									</table>
 									<br>
-									<script type="text/javascript">
-									    showCashFlowInputs();
-										fnIntDesbr();
-										fnGracePeriod();
-										checkRow();
-										checkType();
-										showLoanAmountType();
-										showInstallType();
-										showVariableInstallmentInputs();
-									</script>
-
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td colspan="2" class="fontnormalbold"><mifos:mifoslabel

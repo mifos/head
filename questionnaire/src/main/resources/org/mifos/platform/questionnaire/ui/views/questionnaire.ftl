@@ -20,14 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-    <STYLE TYPE="text/css"><!-- @import url(pages/css/datepicker/datepicker.css); --></STYLE>
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
-    <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.min-2.1.2.js"></script>
-    <script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
-    <script type="text/javascript" src="pages/js/jquery/jquery.validate.min.js"></script>
-    <script type="text/javascript" src="pages/js/datejs/date.js"></script>
-    <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
-    <!--[if IE]><script type="text/javascript" src="pages/js/jquery/jquery.bgiframe.js"></script><![endif]-->
     <script src="pages/questionnaire/js/questionnaire.js" type="text/javascript"></script>
     <span id="page.id" title="questionnaire"></span>
     <div class="content">

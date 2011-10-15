@@ -29,12 +29,6 @@
 <span id="page.id" title="SchedulePreview"></span>
 
 [#if loanProductReferenceData.variableInstallmentsAllowed]
-<STYLE TYPE="text/css"><!-- @import url(pages/css/jquery/jquery-ui.css); --></STYLE>
-<script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
-<script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
-<script type="text/javascript" src="pages/js/jquery/jquery.ui.datepicker.min.js"></script>
-<script type="text/javascript" src="pages/js/jquery/jquery-ui-i18n.js"></script>
-<script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
 <script>
 $(document).ready(function() {
 

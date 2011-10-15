@@ -31,12 +31,6 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="ViewOriginalSchedule"></span>
-        <STYLE TYPE="text/css"><!-- @import url(pages/css/jquery/jquery-ui.css); --></STYLE>
-        <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
-        <script type="text/javascript" src="pages/js/datejs/date.js"></script>
-        <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
-		<!--[if IE]><script type="text/javascript" src="pages/js/jquery/jquery.bgiframe.js"></script><![endif]-->
 		<script type="text/javascript" src="pages/application/loan/js/loanRepayment.js"></script>
 
 		<html-el:form method="post" action="/loanAccountAction.do">

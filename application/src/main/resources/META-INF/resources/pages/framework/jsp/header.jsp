@@ -22,11 +22,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td width="200" rowspan="2"><img src="pages/framework/images/logo.jpg" width="200" height="70"></td>
-    <td align="right" bgcolor="#FFFFFF" class="fontnormal"><a id="header.link.yoursettings" href="yourSettings.do?method=get&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel name="framework.yoursettings" bundle="FrameworkUIResources"></mifos:mifoslabel></a>
-     &nbsp;|&nbsp; <a id="logout_link" href="j_spring_security_logout"><mifos:mifoslabel name="framework.logout" bundle="FrameworkUIResources"></mifos:mifoslabel></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-  </tr>
+<%@include file="headBar.jsp" %>
   <tr>
     <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
         <tr>

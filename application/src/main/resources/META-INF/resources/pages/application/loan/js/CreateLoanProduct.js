@@ -17,6 +17,17 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+$(document).ready(function() {
+    showCashFlowInputs();
+    fnIntDesbr();
+    fnGracePeriod();
+    checkRow();
+    checkType();
+    showLoanAmountType();
+    showInstallType();
+    showVariableInstallmentInputs();
+});
+
 function showMeetingFrequency(){
     if (document.getElementsByName("freqOfInstallments")[1].checked == true){
         document.getElementById("week").style.display = "none";
