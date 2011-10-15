@@ -20,12 +20,6 @@
 
 package org.mifos.framework.util;
 
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.config.AccountingRules;
-import org.mifos.config.Localization;
-import org.mifos.framework.util.helpers.ConversionError;
-import org.mifos.framework.util.helpers.DoubleConversionResult;
-
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -36,101 +30,81 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
+import org.mifos.framework.util.helpers.ConversionError;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
+import org.mifos.framework.util.helpers.Money;
+
+
+/**
+ * Localization is UI concern, it should never be used beyond controller/action layer
+ */
 public class LocalizationConverter {
-    private DecimalFormat currentDecimalFormat;
-    private DecimalFormat currentDecimalFormatForMoney;
-    private DecimalFormat currentDecimalFormatForInterest;
-    private String dateSeparator;
-    private Locale currentLocale;
-    private char decimalFormatSymbol;
-    private short digitsAfterDecimalForMoney;
-    private short digitsBeforeDecimalForMoney;
-    private short digitsAfterDecimalForInterest;
-    private short digitsBeforeDecimalForInterest;
-    private short digitsBeforeDecimalForCashFlowValidations;
-    private short digitsAfterDecimalForCashFlowValidations;
-    // the decimalFormatLocale is introduced because the double format is not
-    // supported for
-    // 1.1 realease yet and the English format is still used no matter what the
-    // configured locale is
-    private Locale decimalFormatLocale;
-    // the dateLocale is introduced because the date format is not supported for
-    // 1.1 realease yet and the English format is still used no matter what the
-    // configured locale is
-    private Locale dateLocale;
-    private char minusSign;
 
     /**
-     * @deprecated - pull out static use of {@link AccountingRules}, use other constructor which allows for injecting in data values.
+     * Only support English number format
      */
-    @Deprecated
+    private Locale locale = Locale.UK;
+
+    private DecimalFormat decimalFormat;
+    private DecimalFormat decimalFormatForMoney;
+    private DecimalFormat decimalFormatForInterest;
+
+    private String dateSeparator;
+    private char decimalFormatSymbol;
+
+    private short digitsAfterDecimalForMoney;
+    private short digitsBeforeDecimalForMoney;
+
+    private short digitsAfterDecimalForInterest;
+    private short digitsBeforeDecimalForInterest;
+
+    private short digitsBeforeDecimalForCashFlowValidations;
+    private short digitsAfterDecimalForCashFlowValidations;
+
+    private char minusSign;
+
     public LocalizationConverter() {
-        digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal();
-        initLocalizationConverter();
+        this(Money.getDefaultCurrency());
     }
 
-    public LocalizationConverter(short digitsAfterDecimalForMoney, short digitsBeforeDecimalForMoney,
-            short digitsAfterDecimalForInterest, short digitsBeforeDecimalForInterest,
-            short digitsBeforeDecimalForCashFlowValidations, short digitsAfterDecimalForCashFlowValidations) {
+    public LocalizationConverter(MifosCurrency currency) {
+        digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal(currency);
+        digitsBeforeDecimalForMoney = AccountingRules.getDigitsBeforeDecimal();
+        digitsAfterDecimalForInterest = AccountingRules.getDigitsAfterDecimalForInterest();
+        digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest();
+        digitsBeforeDecimalForCashFlowValidations = AccountingRules.getDigitsBeforeDecimalForCashFlowValidations();
+        digitsAfterDecimalForCashFlowValidations = AccountingRules.getDigitsAfterDecimalForCashFlowValidations();
+        loadDecimalFormats();
+        dateSeparator = getDateSeparator();
+    }
+
+    /**
+     * Unit Test only
+     *
+     * @param digitsAfterDecimalForMoney
+     * @param digitsBeforeDecimalForMoney
+     * @param digitsAfterDecimalForInterest
+     * @param digitsBeforeDecimalForInterest
+     * @param digitsBeforeDecimalForCashFlowValidations
+     * @param digitsAfterDecimalForCashFlowValidations
+     */
+    protected LocalizationConverter(Short digitsAfterDecimalForMoney, Short digitsBeforeDecimalForMoney, Short digitsAfterDecimalForInterest,
+                                    Short digitsBeforeDecimalForInterest, Short digitsBeforeDecimalForCashFlowValidations, Short digitsAfterDecimalForCashFlowValidations) {
         this.digitsAfterDecimalForMoney = digitsAfterDecimalForMoney;
         this.digitsBeforeDecimalForMoney = digitsBeforeDecimalForMoney;
         this.digitsAfterDecimalForInterest = digitsAfterDecimalForInterest;
         this.digitsBeforeDecimalForInterest = digitsBeforeDecimalForInterest;
         this.digitsBeforeDecimalForCashFlowValidations = digitsBeforeDecimalForCashFlowValidations;
         this.digitsAfterDecimalForCashFlowValidations = digitsAfterDecimalForCashFlowValidations;
-        currentLocale = Localization.getInstance().getConfiguredLocale();
-        // for this 1.1. release this will be defaulted to the English locale
-        // and
-        // later on this will be the configured locale so these lines will be
-        // removed
-        decimalFormatLocale = new Locale("en", "GB");
         loadDecimalFormats();
-        dateLocale = new Locale("en", "GB");
         dateSeparator = getDateSeparator();
     }
 
-    /**
-     * @deprecated - pull out static use of {@link AccountingRules}, use other constructor which allows for injecting in data values.
-     */
-    @Deprecated
-    public LocalizationConverter(MifosCurrency currency) {
-        digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal(currency);
-        initLocalizationConverter();
-    }
-
-
-    private void initLocalizationConverter() {
-        digitsBeforeDecimalForMoney = AccountingRules.getDigitsBeforeDecimal();
-        digitsAfterDecimalForInterest = AccountingRules.getDigitsAfterDecimalForInterest();
-        digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest();
-        digitsBeforeDecimalForCashFlowValidations = AccountingRules.getDigitsBeforeDecimalForCashFlowValidations();
-        digitsAfterDecimalForCashFlowValidations = AccountingRules.getDigitsAfterDecimalForCashFlowValidations();
-        currentLocale = Localization.getInstance().getConfiguredLocale();
-        // for this 1.1. release this will be defaulted to the English locale
-        // and
-        // later on this will be the configured locale so these lines will be
-        // removed
-        decimalFormatLocale = new Locale("en", "GB");
-        loadDecimalFormats();
-        dateLocale = new Locale("en", "GB");
-        dateSeparator = getDateSeparator();
-    }
-
-    // this method will be removed when date is localized
-    public Locale getDateLocale() {
-        return dateLocale;
-    }
-
-    /**
-     * @deprecated Members are no longer static, hence, this no longer works for
-     *             unit tests. No replacement available.
-     */
-    @Deprecated
     public void setCurrentLocale(Locale locale) {
-        currentLocale = locale;
-        decimalFormatLocale = locale;
+        this.locale = locale;
         loadDecimalFormats();
-        dateLocale = locale;
         dateSeparator = getDateSeparator();
     }
 
@@ -169,23 +143,23 @@ public class LocalizationConverter {
     }
 
     private void loadDecimalFormats() {
-        if (currentLocale == null) {
+        if (locale == null) {
             throw new RuntimeException("The current locale is not set for LocalizationConverter.");
         }
         // use this English locale for decimal format for 1.1 release
-        boolean localeSupported = isLocaleSupported(NumberFormat.getAvailableLocales(), decimalFormatLocale);
+        boolean localeSupported = isLocaleSupported(NumberFormat.getAvailableLocales(), locale);
         if (!localeSupported) {
             throw new RuntimeException("NumberFormat class doesn't support this country code: "
-                    + decimalFormatLocale.getCountry() + " and language code: " + decimalFormatLocale.getLanguage());
+                    + locale.getCountry() + " and language code: " + locale.getLanguage());
         }
-        NumberFormat format = DecimalFormat.getInstance(decimalFormatLocale);
+        NumberFormat format = DecimalFormat.getInstance(locale);
         if (format instanceof DecimalFormat) {
-            currentDecimalFormat = (DecimalFormat) format;
-            currentDecimalFormatForMoney = buildDecimalFormat(digitsBeforeDecimalForMoney, digitsAfterDecimalForMoney,
-                    (DecimalFormat) currentDecimalFormat.clone(), Boolean.TRUE);
-            currentDecimalFormatForInterest = buildDecimalFormat(digitsBeforeDecimalForInterest,
-                    digitsAfterDecimalForInterest, (DecimalFormat) currentDecimalFormat.clone(), Boolean.FALSE);
-            DecimalFormatSymbols decimalFormatSymbols = currentDecimalFormat.getDecimalFormatSymbols();
+            decimalFormat = (DecimalFormat) format;
+            decimalFormatForMoney = buildDecimalFormat(digitsBeforeDecimalForMoney, digitsAfterDecimalForMoney,
+                    (DecimalFormat) decimalFormat.clone(), Boolean.TRUE);
+            decimalFormatForInterest = buildDecimalFormat(digitsBeforeDecimalForInterest,
+                    digitsAfterDecimalForInterest, (DecimalFormat) decimalFormat.clone(), Boolean.FALSE);
+            DecimalFormatSymbols decimalFormatSymbols = decimalFormat.getDecimalFormatSymbols();
             decimalFormatSymbol = decimalFormatSymbols.getDecimalSeparator();
             minusSign = decimalFormatSymbols.getMinusSign();
         }
@@ -349,16 +323,16 @@ public class LocalizationConverter {
 
     private Double getDoubleValueForPercent(String doubleValueString) {
 
-        if (currentDecimalFormatForInterest == null) {
+        if (decimalFormatForInterest == null) {
             loadDecimalFormats();
         }
         Double dNum = null;
         try {
             ParsePosition pp = new ParsePosition(0);
-            Number num = currentDecimalFormatForInterest.parse(doubleValueString, pp);
+            Number num = decimalFormatForInterest.parse(doubleValueString, pp);
             if ((doubleValueString.length() != pp.getIndex()) || (num == null)) {
                 throw new NumberFormatException("The format of the number is invalid. index " + pp.getIndex()
-                        + " locale " + currentLocale.getCountry() + " " + currentLocale.getLanguage());
+                        + " locale " + locale.getCountry() + " " + locale.getLanguage());
             }
             dNum = num.doubleValue();
         } catch (Exception e) {
@@ -371,10 +345,10 @@ public class LocalizationConverter {
         Double dNum = null;
         try {
             ParsePosition pp = new ParsePosition(0);
-            Number num = currentDecimalFormatForMoney.parse(doubleValueString, pp);
+            Number num = decimalFormatForMoney.parse(doubleValueString, pp);
             if ((doubleValueString.length() != pp.getIndex()) || (num == null)) {
                 throw new NumberFormatException("The format of the number is invalid. index " + pp.getIndex()
-                        + " locale " + currentLocale.getCountry() + " " + currentLocale.getLanguage());
+                        + " locale " + locale.getCountry() + " " + locale.getLanguage());
             }
             dNum = num.doubleValue();
         } catch (Exception e) {
@@ -384,15 +358,15 @@ public class LocalizationConverter {
     }
 
     public String getDoubleStringForMoney(Double dNumber) {
-        return currentDecimalFormatForMoney.format(dNumber);
+        return decimalFormatForMoney.format(dNumber);
     }
 
     public String getDoubleStringForInterest(Double dNumber) {
-        return currentDecimalFormatForInterest.format(dNumber);
+        return decimalFormatForInterest.format(dNumber);
     }
 
     public String getDoubleValueString(Double dNumber) {
-        return currentDecimalFormat.format(dNumber);
+        return decimalFormat.format(dNumber);
     }
 
     public String getDateSeparatorForCurrentLocale() {
@@ -400,21 +374,18 @@ public class LocalizationConverter {
     }
 
     private String getDateSeparator() {
-        Locale[] locales = DateFormat.getInstance().getAvailableLocales();
-        // decimalFormatLocale is the English locale used temporarily because
-        // 1.1 release doesn't
-        // support date/time/double localization yet
-        if (!isLocaleSupported(locales, dateLocale)) {
-            throw new RuntimeException("DateFormat class doesn't support this country code: " + dateLocale.getCountry()
-                    + " and language code: " + dateLocale.getLanguage());
+        Locale[] locales = DateFormat.getAvailableLocales();
+        if (!isLocaleSupported(locales, locale)) {
+            throw new RuntimeException("DateFormat class doesn't support this country code: " + locale.getCountry()
+                    + " and language code: " + locale.getLanguage());
         }
 
-        return getDateSeparator(dateLocale, DateFormat.SHORT);
+        return getDateSeparator(locale, DateFormat.SHORT);
     }
 
-    public String getDateSeparator(Locale dateLocale, int dateFormat) {
+    public String getDateSeparator(Locale locale, int dateFormat) {
         String separator = "";
-        DateFormat format = DateFormat.getDateInstance(dateFormat, dateLocale);
+        DateFormat format = DateFormat.getDateInstance(dateFormat, locale);
         String now = format.format(new DateTimeService().getCurrentJavaDateTime());
         char chArray[] = now.toCharArray();
         for (char element : chArray) {
@@ -427,19 +398,13 @@ public class LocalizationConverter {
     }
 
     public DateFormat getDateFormat() {
-        // dateLocale is the English locale used temporarily because 1.1 release
-        // doesn't
-        // support date/time/double localization yet
-        Locale[] locales = DateFormat.getInstance().getAvailableLocales();
-        if (!isLocaleSupported(locales, dateLocale)) {
-            throw new RuntimeException("DateFormat class doesn't support this country code: " + dateLocale.getCountry()
-                    + " and language code: " + dateLocale.getLanguage());
+        Locale[] locales = DateFormat.getAvailableLocales();
+        if (!isLocaleSupported(locales, locale)) {
+            throw new RuntimeException("DateFormat class doesn't support this country code: " + locale.getCountry()
+                    + " and language code: " + locale.getLanguage());
         }
 
-        DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, dateLocale);
-        // DateFormat simpleFormat =
-        // SimpleDateFormat.getDateInstance(DateFormat.SHORT,
-        // decimalFormatLocale);
+        DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, locale);
         return format;
 
     }
@@ -450,7 +415,7 @@ public class LocalizationConverter {
     public DateFormat getDateFormatWithFullYear() {
         DateFormat dateFormat = getDateFormat();
         if (SimpleDateFormat.class.equals(dateFormat.getClass())) {
-            return new SimpleDateFormat(((SimpleDateFormat) dateFormat).toPattern().replace("yy", "yyyy"), dateLocale);
+            return new SimpleDateFormat(((SimpleDateFormat) dateFormat).toPattern().replace("yy", "yyyy"), locale);
         }
         return dateFormat;
     }

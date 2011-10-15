@@ -20,19 +20,25 @@
 
 package org.mifos.framework.persistence;
 
+import static org.mifos.db.upgrade.DatabaseUpgradeSupport.BEAN_NAME;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
+
 import org.mifos.db.upgrade.DatabaseUpgradeSupport;
 import org.mifos.db.upgrade.DbUpgradeValidationResult;
 import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.DatabaseErrorCode;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.ServletUtils;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import static org.mifos.db.upgrade.DatabaseUpgradeSupport.BEAN_NAME;
 
 public class DatabaseInitFilter implements Filter {
 

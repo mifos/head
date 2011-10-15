@@ -20,9 +20,6 @@
 
 package org.mifos.accounts.financial.business;
 
-import org.mifos.dto.domain.GLCodeDto;
-import org.mifos.framework.business.AbstractEntity;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,6 +29,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.mifos.dto.domain.GLCodeDto;
+import org.mifos.framework.business.AbstractEntity;
 
 @NamedQueries( { @NamedQuery(name = "GLCode.findById", query = "from GLCodeEntity glCode where glCode.glcodeId = :glcodeId")})
 

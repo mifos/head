@@ -52,7 +52,6 @@ import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -79,7 +78,7 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
             ServletException {
 
-        LocaleContextHolder.setLocale(Localization.getInstance().getConfiguredLocale());
+        //LocaleContextHolder.setLocale(Localization.getInstance().getConfiguredLocale());
 
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
@@ -173,9 +172,11 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
             request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, activityContext);
             request.setAttribute("activityDto", loginActivity);
 
-            Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
-            Short localeId = Localization.getInstance().getConfiguredLocaleId();
-            UserContext userContext = new UserContext(preferredLocale, localeId);
+            Short localeId = user.getPreferredLocale();
+            Locale preferredLocale = Localization.getInstance().getLocaleById(localeId);
+            UserContext userContext = new UserContext();
+            userContext.setPreferredLocale(preferredLocale);
+            userContext.setLocaleId(localeId);
             userContext.setId(user.getPersonnelId());
             userContext.setName(user.getDisplayName());
             userContext.setLevel(user.getLevelEnum());

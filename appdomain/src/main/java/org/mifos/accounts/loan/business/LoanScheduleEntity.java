@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -462,10 +461,10 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
 
-    public RepaymentScheduleInstallment toDto(Locale userLocale) {
+    public RepaymentScheduleInstallment toDto() {
         return new RepaymentScheduleInstallment(this.installmentId,
                 this.actionDate, this.principal, this.interest,
-                this.getTotalFeesDue(), this.miscFee, this.miscPenalty, userLocale);
+                this.getTotalFeesDue(), this.miscFee, this.miscPenalty);
     }
 
     public boolean isSameAs(AccountActionDateEntity accountActionDateEntity) {

@@ -20,8 +20,17 @@
 
 package org.mifos.accounts.loan.struts.uihelpers;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.framework.struts.tags.XmlBuilder;
@@ -30,13 +39,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 import org.mifos.security.util.UserContext;
-
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTagSupport;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
 
 public class LoanActivityTag extends BodyTagSupport {
     Locale locale = null;
@@ -73,7 +75,7 @@ public class LoanActivityTag extends BodyTagSupport {
                 xmlBuilder.text(getLabel("loan.principal", locale));
                 xmlBuilder.endTag("td");
                 xmlBuilder.startTag("td", "width", "8%", "align", "right", "class", "drawtablerowbold");
-                xmlBuilder.text(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.INTEREST, userContext));
+                xmlBuilder.text(ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.INTEREST));
                 xmlBuilder.endTag("td");
                 xmlBuilder.startTag("td", "width", "8%", "align", "right", "class", "drawtablerowbold");
                 xmlBuilder.text(getLabel("loan.fees", locale));
@@ -91,7 +93,7 @@ public class LoanActivityTag extends BodyTagSupport {
                 xmlBuilder.text(getLabel("loan.principal", locale));
                 xmlBuilder.endTag("td");
                 xmlBuilder.startTag("td", "width", "8%", "align", "right", "class", "drawtablerowbold");
-                xmlBuilder.text(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.INTEREST, userContext));
+                xmlBuilder.text(ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.INTEREST));
                 xmlBuilder.endTag("td");
                 xmlBuilder.startTag("td", "width", "8%", "align", "right", "class", "drawtablerowbold");
                 xmlBuilder.text(getLabel("loan.fees", locale));

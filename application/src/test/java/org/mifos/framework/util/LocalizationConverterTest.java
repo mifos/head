@@ -144,7 +144,6 @@ public class LocalizationConverterTest {
         dateSeparator = converter.getDateSeparatorForCurrentLocale();
         Assert.assertEquals(".", dateSeparator);
         converter.setCurrentLocale(locale);
-
     }
 
     @Test

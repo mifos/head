@@ -27,10 +27,11 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.api.CustomerLevel;
 
 /**
  * This class represents customer level e.g client,center etc. Most code will want {@link CustomerLevel} (or perhaps
@@ -72,7 +73,7 @@ public class CustomerLevelEntity extends MasterDataEntity {
 
     @Override
     public String getName() {
-        String name = MessageLookup.getInstance().lookup(getLookUpValue());
+        String name = ApplicationContextProvider.getBean(MessageLookup.class).lookup(getLookUpValue());
         return name;
 
     }
@@ -121,7 +122,7 @@ public class CustomerLevelEntity extends MasterDataEntity {
     }
 
     protected void setName(String name) {
-        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+        ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValue(getLookUpValue(), name);
     }
 
 }

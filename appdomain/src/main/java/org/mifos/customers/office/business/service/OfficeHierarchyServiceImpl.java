@@ -27,7 +27,7 @@ import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.config.business.MifosConfiguration;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeLevelEntity;
@@ -116,9 +116,9 @@ public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
                 LookUpValueEntity lookupValue = entity.getLookUpValue();
                 String messageText = lookupValue.getMessageText();
                 if (StringUtils.isBlank(messageText)) {
-                    messageText = MessageLookup.getInstance().lookup(lookupValue.getPropertiesKey());
+                    messageText = ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupValue.getPropertiesKey());
                 }
-                MessageLookup.getInstance().updateLookupValueInCache(entity.getLookUpValue().getLookUpName(), messageText);
+                ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValueInCache(entity.getLookUpValue().getLookUpName(), messageText);
             }
 
             for (GracePeriodTypeEntity entity : gracePeriods) {
@@ -126,14 +126,14 @@ public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
                 LookUpValueEntity lookupValue = entity.getLookUpValue();
                 String messageText = lookupValue.getMessageText();
                 if (StringUtils.isBlank(messageText)) {
-                    messageText = MessageLookup.getInstance().lookup(lookupValue.getPropertiesKey());
+                    messageText = ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupValue.getPropertiesKey());
                 }
-                MessageLookup.getInstance().updateLookupValueInCache(entity.getLookUpValue().getLookUpName(), messageText);
+                ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValueInCache(entity.getLookUpValue().getLookUpName(), messageText);
             }
 
             for (LookUpEntity entity : lookupEntities) {
                 applicationConfigurationDao.save(entity);
-                MifosConfiguration.getInstance().updateKey(entity.getEntityType(), entity.findLabel());
+                ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValueInCache(entity.getEntityType(), entity.findLabel());
             }
 
             for (LookUpValueEntity entity : accountStatuses) {
@@ -144,7 +144,6 @@ public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
 
             if (!accountStatuses.isEmpty()) {
                 MenuRepository.getInstance().removeMenuForAllLocale();
-                MifosConfiguration.getInstance().initializeLabelCache();
             }
 
         } catch (BusinessRuleException e) {

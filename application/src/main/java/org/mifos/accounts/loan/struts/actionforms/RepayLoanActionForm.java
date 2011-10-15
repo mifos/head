@@ -20,16 +20,17 @@
 
 package org.mifos.accounts.loan.struts.actionforms;
 
+import java.sql.Date;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DateUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import java.sql.Date;
-import java.util.Locale;
 
 public class RepayLoanActionForm extends BaseActionForm {
 

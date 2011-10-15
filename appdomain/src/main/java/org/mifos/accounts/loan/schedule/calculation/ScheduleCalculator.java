@@ -19,11 +19,11 @@
  */
 package org.mifos.accounts.loan.schedule.calculation;
 
-import org.mifos.accounts.loan.business.RepaymentResultsHolder;
-import org.mifos.accounts.loan.schedule.domain.Schedule;
-
 import java.math.BigDecimal;
 import java.util.Date;
+
+import org.mifos.accounts.loan.business.RepaymentResultsHolder;
+import org.mifos.accounts.loan.schedule.domain.Schedule;
 
 public class ScheduleCalculator {
     public void applyPayment(Schedule schedule, BigDecimal amount, Date transactionDate) {

@@ -20,6 +20,8 @@
 
 package org.mifos.application.admin.servicefacade;
 
+import java.util.Locale;
+
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.UserDetailDto;
@@ -63,4 +65,6 @@ public interface PersonnelServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void unLockUserAccount(String globalAccountNum);
+
+    Locale getUserPreferredLocale();
 }

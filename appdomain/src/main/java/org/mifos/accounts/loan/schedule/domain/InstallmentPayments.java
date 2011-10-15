@@ -19,13 +19,12 @@
  */
 package org.mifos.accounts.loan.schedule.domain;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.mifos.framework.util.helpers.NumberUtils;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.mifos.framework.util.helpers.NumberUtils;
 
 public class InstallmentPayments {
     private List<InstallmentPayment> installmentPayments;

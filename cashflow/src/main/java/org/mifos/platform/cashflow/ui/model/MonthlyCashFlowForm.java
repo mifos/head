@@ -30,7 +30,6 @@ import java.util.Locale;
 public class MonthlyCashFlowForm implements Serializable {
     private static final long serialVersionUID = 6876855921528555322L;
     private MonthlyCashFlowDetail monthlyCashFlowDetail;
-    private Locale locale = Locale.ENGLISH;
 
     @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor", "PMD.UncommentedEmptyConstructor"})
     public MonthlyCashFlowForm() {
@@ -42,10 +41,6 @@ public class MonthlyCashFlowForm implements Serializable {
 
     public String getMonth() {
         return monthlyCashFlowDetail.getDateTime().monthOfYear().getAsText();
-    }
-
-    public String getMonthInLocale() {
-        return getMonthInLocale(locale);
     }
 
     public String getMonthInLocale(Locale locale) {
@@ -101,16 +96,6 @@ public class MonthlyCashFlowForm implements Serializable {
 
     public Date getDate() {
         return getDateTime().toDate();
-    }
-
-
-
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
-
-    public Locale getLocale() {
-        return locale;
     }
 
     boolean hasNoExpense() {

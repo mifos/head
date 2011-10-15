@@ -34,6 +34,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 
 @Entity
@@ -70,7 +71,7 @@ public class SpouseFatherLookupEntity extends MasterDataEntity {
 
     @Override
     public String getName() {
-        return MessageLookup.getInstance().lookup(getLookUpValue());
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(getLookUpValue());
     }
 
     @Override
@@ -95,6 +96,6 @@ public class SpouseFatherLookupEntity extends MasterDataEntity {
     }
 
     protected void setName(String name) {
-        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+        ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValue(getLookUpValue(), name);
     }
 }

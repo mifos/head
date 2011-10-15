@@ -28,6 +28,7 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.LabelTagUtils;
@@ -196,7 +197,7 @@ public class Column {
         } catch (Exception e) {
         }
         if (StringUtils.isBlank(labelText)) {
-            labelText = MessageLookup.getInstance().lookup(key);
+            labelText = ApplicationContextProvider.getBean(MessageLookup.class).lookup(key);
         }
         if (StringUtils.isBlank(labelText)) {
             try {

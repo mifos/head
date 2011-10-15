@@ -26,7 +26,6 @@ import java.util.Map.Entry;
 
 import org.mifos.application.admin.servicefacade.CustomizedTextDto;
 import org.mifos.application.admin.servicefacade.CustomizedTextServiceFacade;
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.mifosmenu.MenuRepository;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
@@ -45,7 +44,6 @@ public class CustomizedTextServiceFacadeWebTier implements CustomizedTextService
     // for testing purposes, allow these legacy objects to be injected
     private HibernateTransactionHelper transactionHelper;
     private MenuRepository menuRepository;
-    private MifosConfiguration mifosConfiguration;
 
     @Autowired
     public CustomizedTextServiceFacadeWebTier(CustomizedTextDao customizedTextDao, MessageSource messageSource) {
@@ -71,21 +69,10 @@ public class CustomizedTextServiceFacadeWebTier implements CustomizedTextService
         this.menuRepository = menuRepository;
     }
 
-    protected MifosConfiguration getMifosConfiguration() {
-        if (mifosConfiguration == null) {
-            mifosConfiguration = MifosConfiguration.getInstance();
-        }
-        return mifosConfiguration;
-    }
-
-    protected void setMifosConfiguration(MifosConfiguration mifosConfiguration) {
-        this.mifosConfiguration = mifosConfiguration;
-    }
 
     private void updateLegacyCaches() {
         // legacy menu code caches strings, so force the menus to rebuild after a change
         getMenuRepository().removeMenuForAllLocale();
-        getMifosConfiguration().initializeLabelCache();
     }
 
     @Override
@@ -132,7 +119,7 @@ public class CustomizedTextServiceFacadeWebTier implements CustomizedTextService
      * there end up being any performance issues around this method (for example, if the logic for this method needs to
      * be more complex --regular expressions, etc.) then this method is a good candidate for using the Spring @Cacheable
      * annotation mechanism
-     * 
+     *
      * @see org.mifos.application.admin.servicefacade.CustomizedTextServiceFacade#replaceSubstitutions(java.lang.String)
      */
     @Override
@@ -162,13 +149,13 @@ public class CustomizedTextServiceFacadeWebTier implements CustomizedTextService
      * mechanism. Changeset MIFOS-4633_2 copies existing custom labels to the new customized_text table with the
      * original_text field as the entity name + ".Label". This was needed since the Liquibase conversion doesn't know
      * what the configured locale is for Mifos or how to lookup properties values.
-     * 
+     *
      * An example of possible resulting migrated data would be: original_text: Client.Label custom_text: Borrower
-     * 
+     *
      * So we know that the "Client" entity label was customized. The method below will check for original_text entries
      * that have been migrated (ie. end in ".Label" and lookup the localized text that was the default label for that
      * entity. It replaces the migrated original_text with the localized text.
-     * 
+     *
      * Finally it checks to see if there are cases where original_text maps to custom_text where both are the same (this
      * would happen if in the original
      */

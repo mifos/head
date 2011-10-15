@@ -44,10 +44,9 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.customers.business.CustomerStatusEntity;
-import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
@@ -108,7 +107,7 @@ public class EditStatusAction extends BaseAction {
 
         for (AccountStateEntity customerStatusEntity : accountStatuses) {
             for (AccountStateFlagEntity flag : customerStatusEntity.getFlagSet()) {
-                String statusMessageText = MessageLookup.getInstance().lookup(flag.getLookUpValue().getPropertiesKey());
+                String statusMessageText = ApplicationContextProvider.getBean(MessageLookup.class).lookup(flag.getLookUpValue().getPropertiesKey());
                 flag.setStatusFlagMessageText(statusMessageText);
             }
         }

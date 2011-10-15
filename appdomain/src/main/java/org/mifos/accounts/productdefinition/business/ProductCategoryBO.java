@@ -21,8 +21,6 @@
 package org.mifos.accounts.productdefinition.business;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.persistence.LegacyProductCategoryDao;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
@@ -33,6 +31,8 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProductCategoryBO extends AbstractBusinessObject {
 

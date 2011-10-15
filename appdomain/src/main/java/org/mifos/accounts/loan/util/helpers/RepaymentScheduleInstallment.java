@@ -47,23 +47,23 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     private Money miscPenalty;
 
-    private Locale locale;
-
     private Money totalValue;
 
     private String total;
 
     private String dueDate;
 
-    public static RepaymentScheduleInstallment createForScheduleCopy(Integer installmentNumber, String principal, String interest, LocalDate dueDate, Locale locale, MifosCurrency currency) {
+    public static RepaymentScheduleInstallment createForScheduleCopy(Integer installmentNumber, String principal, String interest,
+                                                                     LocalDate dueDate, Locale locale, MifosCurrency currency) {
         Money feess = null;
         Money miscFeess = null;
         Money miscPenaltys = null;
-        return new RepaymentScheduleInstallment(installmentNumber, new java.sql.Date(dueDate.toDateMidnight().toDate().getTime()), new Money(currency, principal), new Money(currency, interest), feess, miscFeess, miscPenaltys, locale);
+        return new RepaymentScheduleInstallment(installmentNumber, new java.sql.Date(dueDate.toDateMidnight().toDate().getTime()),
+                                                new Money(currency, principal), new Money(currency, interest), feess, miscFeess, miscPenaltys);
     }
 
     public RepaymentScheduleInstallment(int installment, Date dueDateValue, Money principal, Money interest, Money fees,
-                                        Money miscFees, Money miscPenalty, Locale locale) {
+                                        Money miscFees, Money miscPenalty) {
         this.installment = installment;
         this.principal = principal;
         this.interest = interest;
@@ -71,14 +71,11 @@ public class RepaymentScheduleInstallment implements Serializable {
         this.miscFees = miscFees;
         this.miscPenalty = miscPenalty;
         setTotalAndTotalValue(this.principal.add(this.interest).add(this.fees).add(this.miscFees).add(this.miscPenalty));
-        this.locale = locale;
         this.dueDateValue = dueDateValue;
-        this.dueDate = DateUtils.formatDate(dueDateValue, locale);
+        this.dueDate = DateUtils.formatDate(dueDateValue);
     }
 
-    @Deprecated
-    public RepaymentScheduleInstallment(Locale locale) {
-        this.locale = locale;
+    public RepaymentScheduleInstallment() {
     }
 
     public void setInstallment(Integer installment) {
@@ -127,10 +124,6 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     public Money getTotalValue() {
         return totalValue;
-    }
-
-    public Locale getLocale() {
-        return locale;
     }
 
     public Money getMiscFees() {
@@ -210,7 +203,7 @@ public class RepaymentScheduleInstallment implements Serializable {
     public boolean isTotalAmountLessThan(Money minInstallmentAmount) {
         return minInstallmentAmount != null && (totalValue == null || totalValue.isLessThan(minInstallmentAmount));
     }
-    
+
     public boolean isTotalAmountLessThan(BigDecimal minInstallmentAmount) {
         return minInstallmentAmount != null && (totalValue == null || totalValue.getAmount().doubleValue() < minInstallmentAmount.doubleValue());
     }

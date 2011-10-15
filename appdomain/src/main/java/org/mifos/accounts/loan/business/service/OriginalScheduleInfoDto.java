@@ -20,11 +20,11 @@
 
 package org.mifos.accounts.loan.business.service;
 
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.customers.api.DataTransferObject;
-
 import java.util.Date;
 import java.util.List;
+
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.customers.api.DataTransferObject;
 
 public class OriginalScheduleInfoDto implements DataTransferObject {
     private String loanAmount;

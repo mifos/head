@@ -20,9 +20,6 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;

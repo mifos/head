@@ -1401,9 +1401,9 @@ public class TestObjectFactory {
         user.setEncryptedPassword(password);
         updateObject(user);
         user.login("mifos");
-        Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
-        Short localeId = Localization.getInstance().getConfiguredLocaleId();
-        UserContext userContext = new UserContext(preferredLocale, localeId);
+        UserContext userContext = new UserContext();
+        userContext.setPreferredLocale(Locale.UK);
+        userContext.setLocaleId(Localization.ENGLISH_LOCALE_ID);
         userContext.setId(user.getPersonnelId());
         userContext.setName(user.getDisplayName());
         userContext.setLevel(user.getLevelEnum());
@@ -1491,7 +1491,7 @@ public class TestObjectFactory {
     }
 
     public static LoanBO createLoanAccountWithDisbursement(final String globalNum, final CustomerBO customer,
-                                                           final AccountState state, final Date startDate, final LoanOfferingBO loanOfering, 
+                                                           final AccountState state, final Date startDate, final LoanOfferingBO loanOfering,
                                                            final int disbursalType) {
 
         final LoanBO loan = LoanBOTestUtils.createLoanAccountWithDisbursement(customer, state, startDate, loanOfering,

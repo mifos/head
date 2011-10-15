@@ -21,8 +21,6 @@
 package org.mifos.accounts.fees.business;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.spy;
 
 import java.util.Date;
 
@@ -30,7 +28,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
-import org.mifos.accounts.financial.business.COABO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.office.business.OfficeBO;

@@ -26,14 +26,12 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.framework.exceptions.TableTagException;
-import org.mifos.security.util.UserContext;
 
 public class TableTagExceptionTest extends TestCase {
 
     public void testTableTagException() throws Exception {
         try {
-            UserContext userContext = new UserContext(Locale.getDefault(), Short.valueOf("1"));
-            Text.getImage(this, "name", userContext.getPreferredLocale());
+            Text.getImage(this, "name", Locale.getDefault());
             Assert.fail();
         } catch (TableTagException tte) {
            Assert.assertEquals("exception.framework.TableTagException", tte.getKey());

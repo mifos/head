@@ -23,8 +23,6 @@ package org.mifos.accounts.productdefinition.persistence;
 import java.util.HashMap;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hibernate.Hibernate;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
@@ -39,6 +37,8 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("unchecked")
 public class PrdOfferingPersistence extends LegacyGenericDao {

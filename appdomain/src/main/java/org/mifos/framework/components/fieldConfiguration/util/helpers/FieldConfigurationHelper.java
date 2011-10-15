@@ -23,7 +23,8 @@ package org.mifos.framework.components.fieldConfiguration.util.helpers;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 
-import org.mifos.config.business.MifosConfiguration;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.util.UserContext;
@@ -54,7 +55,7 @@ public class FieldConfigurationHelper {
     public static String getConfiguredFieldName(String fieldName, UserContext userContext) {
         try {
             String labelName = fieldName.substring(fieldName.indexOf(".") + 1);
-            labelName = MifosConfiguration.getInstance().getLabel(labelName);
+            labelName = ApplicationContextProvider.getBean(MessageLookup.class).getLabel(labelName);
             if (labelName != null) {
                 return labelName;
             }

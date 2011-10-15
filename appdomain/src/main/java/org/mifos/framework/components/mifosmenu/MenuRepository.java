@@ -163,6 +163,6 @@ public class MenuRepository {
     }
 
     public void removeMenuForAllLocale() {
-        localeMenuMap = new HashMap();
+        localeMenuMap.clear();
     }
 }

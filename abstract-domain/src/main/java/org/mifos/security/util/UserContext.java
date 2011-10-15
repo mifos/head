@@ -71,9 +71,9 @@ public class UserContext implements Serializable {
      */
     private Short officeLevelId;
 
-    public UserContext(Locale preferredLocale, Short localeId) {
-        this.preferredLocale = preferredLocale;
-        this.localeId = localeId;
+    public UserContext() {
+        preferredLocale = Locale.getDefault();
+        localeId = Short.valueOf("1");
     }
 
     public Short getOfficeLevelId() {

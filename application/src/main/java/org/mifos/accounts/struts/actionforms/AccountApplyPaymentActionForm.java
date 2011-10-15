@@ -20,6 +20,9 @@
 
 package org.mifos.accounts.struts.actionforms;
 
+import static org.mifos.framework.util.helpers.DateUtils.dateFallsBeforeDate;
+import static org.mifos.framework.util.helpers.DateUtils.getDateAsSentFromBrowser;
+
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -48,9 +51,6 @@ import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
-
-import static org.mifos.framework.util.helpers.DateUtils.dateFallsBeforeDate;
-import static org.mifos.framework.util.helpers.DateUtils.getDateAsSentFromBrowser;
 
 public class AccountApplyPaymentActionForm extends BaseActionForm {
     private String input;

@@ -47,6 +47,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
@@ -112,12 +113,12 @@ public class FeeServiceFacadeWebTier implements FeeServiceFacade {
         for (MasterDataEntity masterDataEntity : masterDataEntityList) {
 
             if (masterDataEntity instanceof PersonnelStatusEntity) {
-                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                String name = ApplicationContextProvider.getBean(MessageLookup.class).lookup(masterDataEntity.getLookUpValue());
                 ((PersonnelStatusEntity) masterDataEntity).setName(name);
             }
 
             if (masterDataEntity instanceof PersonnelLevelEntity) {
-                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                String name = ApplicationContextProvider.getBean(MessageLookup.class).lookup(masterDataEntity.getLookUpValue());
                 ((PersonnelLevelEntity) masterDataEntity).setName(name);
             }
 

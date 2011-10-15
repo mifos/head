@@ -27,6 +27,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.AfterClass;
@@ -39,8 +40,6 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.Arrays;
 
 @SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)

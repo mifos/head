@@ -22,15 +22,12 @@ package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
-import org.mifos.config.Localization;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -76,9 +73,7 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 
                 hydratedFee.updateFeeChangeType(FeeChangeType.NOT_UPDATED);
 
-                Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
-                Short localeId = Localization.getInstance().getConfiguredLocaleId();
-                UserContext userContext = new UserContext(preferredLocale, localeId);
+                UserContext userContext = new UserContext();
                 userContext.setId(PersonnelConstants.SYSTEM_USER);
                 hydratedFee.setUserContext(userContext);
 

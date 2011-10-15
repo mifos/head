@@ -36,7 +36,8 @@ import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.config.business.MifosConfiguration;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.config.Localization;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -159,7 +160,7 @@ public class LegacyMasterDao extends LegacyGenericDao {
      */
     public String getMessageForLookupEntity(final Integer entityId) throws PersistenceException {
         LookUpValueEntity lookupValue = getPersistentObject(LookUpValueEntity.class, entityId);
-        return MessageLookup.getInstance().lookup(lookupValue);
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupValue);
     }
 
     @SuppressWarnings("unchecked")
@@ -185,7 +186,7 @@ public class LegacyMasterDao extends LegacyGenericDao {
                 if (entity.getLookUpId().equals(lookupValueEntityId)) {
                     entity.setLookUpValue(newValue);
                     createOrUpdate(entity);
-                    MessageLookup.getInstance().updateLookupValueInCache(lookupValueEntity.getLookUpName(), newValue);
+                    ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValueInCache(lookupValueEntity.getLookUpName(), newValue);
                     StaticHibernateUtil.commitTransaction();
                     break;
                 }
@@ -216,14 +217,14 @@ public class LegacyMasterDao extends LegacyGenericDao {
         createOrUpdate(lookUpValueEntity);
 
         LookUpValueLocaleEntity lookUpValueLocaleEntity = new LookUpValueLocaleEntity();
-        lookUpValueLocaleEntity.setLocaleId(MasterDataEntity.CUSTOMIZATION_LOCALE_ID);
+        lookUpValueLocaleEntity.setLocaleId(Localization.ENGLISH_LOCALE_ID);
         lookUpValueLocaleEntity.setLookUpValue(newElementText);
         lookUpValueLocaleEntity.setLookUpId(lookUpValueEntity.getLookUpId());
         createOrUpdate(lookUpValueLocaleEntity);
 
         // MifosConfiguration.getInstance().updateKey(lookUpValueEntity,
         // newElementText);
-        MessageLookup.getInstance().updateLookupValueInCache(lookUpValueEntity, newElementText);
+        ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValueInCache(lookUpValueEntity, newElementText);
 
         return lookUpValueEntity;
     }
@@ -241,7 +242,7 @@ public class LegacyMasterDao extends LegacyGenericDao {
         LookUpValueEntity lookUpValueEntity = getPersistentObject(LookUpValueEntity.class,
                 lookupValueEntityId);
         delete(lookUpValueEntity);
-        MifosConfiguration.getInstance().deleteKey(lookUpValueEntity.getLookUpName());
+        ApplicationContextProvider.getBean(MessageLookup.class).deleteKey(lookUpValueEntity.getLookUpName());
     }
 
     public void addLookUpEntity(final LookUpEntity lookUpEntity) throws PersistenceException {

@@ -26,8 +26,6 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -36,6 +34,8 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ReverseLoanDisbursalActionForm extends BaseActionForm {
     private static final Logger logger = LoggerFactory.getLogger(ReverseLoanDisbursalActionForm.class);
@@ -85,8 +85,7 @@ public class ReverseLoanDisbursalActionForm extends BaseActionForm {
 
     private void checkValidationForLoad(ActionErrors errors, UserContext userContext) {
         if (StringUtils.isBlank(getSearchString())) {
-            addError(errors, "SearchString", LoanConstants.ERROR_LOAN_ACCOUNT_ID, getLabel(ConfigurationConstants.LOAN,
-                    userContext));
+            addError(errors, "SearchString", LoanConstants.ERROR_LOAN_ACCOUNT_ID, getLabel(ConfigurationConstants.LOAN));
         }
     }
 

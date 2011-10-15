@@ -20,12 +20,12 @@
 
 package org.mifos.accounts.business;
 
+import static org.mifos.framework.util.helpers.NumberUtils.min;
+
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
-
-import static org.mifos.framework.util.helpers.NumberUtils.min;
 
 public class AccountFeesActionDetailEntity extends AbstractEntity implements Comparable<AccountFeesActionDetailEntity> {
 

@@ -22,7 +22,6 @@ package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
@@ -44,14 +43,14 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         this.loanDao = loanDao;
         this.loanBusinessService = loanBusinessService;
     }
-    
+
     @Override
-    public OriginalScheduleInfoDto retrieveOriginalLoanSchedule(Integer accountId, Locale locale) {
+    public OriginalScheduleInfoDto retrieveOriginalLoanSchedule(Integer accountId) {
         try {
             List<OriginalLoanScheduleEntity> loanScheduleEntities = loanBusinessService.retrieveOriginalLoanSchedule(accountId);
             ArrayList<RepaymentScheduleInstallment> repaymentScheduleInstallments = new ArrayList<RepaymentScheduleInstallment>();
             for (OriginalLoanScheduleEntity loanScheduleEntity : loanScheduleEntities) {
-                  repaymentScheduleInstallments.add(loanScheduleEntity.toDto(locale));
+                  repaymentScheduleInstallments.add(loanScheduleEntity.toDto());
             }
 
             LoanBO loan = this.loanDao.findById(accountId);

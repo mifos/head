@@ -27,6 +27,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 
 public class FeePaymentEntity extends MasterDataEntity {
 
@@ -78,7 +79,7 @@ public class FeePaymentEntity extends MasterDataEntity {
 
     @Override
     public String getName() {
-        String name = MessageLookup.getInstance().lookup(getLookUpValue());
+        String name = ApplicationContextProvider.getBean(MessageLookup.class).lookup(getLookUpValue());
         return name;
 
     }
@@ -89,6 +90,6 @@ public class FeePaymentEntity extends MasterDataEntity {
     }
 
     protected void setName(String name) {
-        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+        ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValue(getLookUpValue(), name);
     }
 }

@@ -33,7 +33,6 @@ import org.dom4j.DocumentException;
 import org.junit.Ignore;
 import org.mifos.config.Localization;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.util.LocalizationConverter;
 
 public class DateTagTest extends TestCase {
 
@@ -61,10 +60,8 @@ public class DateTagTest extends TestCase {
     @Ignore
     public void xtestGetFormat() throws Exception {
         Locale savedLocale = Localization.getInstance().getConfiguredLocale();
-        new LocalizationConverter().setCurrentLocale(Locale.US);
         DateTag dateTag = new DateTag();
        Assert.assertEquals("M/d/yy", dateTag.getUserFormat(TestUtils.makeUser().getPreferredLocale()));
-        new LocalizationConverter().setCurrentLocale(savedLocale);
     }
 
     public void testFromPersonnel() throws Exception {

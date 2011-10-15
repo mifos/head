@@ -33,7 +33,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.actionforms.RepayLoanActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;

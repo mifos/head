@@ -33,6 +33,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -402,7 +403,7 @@ public class ReportsPersistence extends LegacyGenericDao {
         }
         if (activityEntity != null) {
             LookUpValueEntity lookUpValueEntity = activityEntity.getDescriptionLookupValues();
-            MessageLookup.getInstance().updateLookupValue(lookUpValueEntity, inputCategoryName);
+            ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValue(lookUpValueEntity, inputCategoryName);
         }
     }
 }

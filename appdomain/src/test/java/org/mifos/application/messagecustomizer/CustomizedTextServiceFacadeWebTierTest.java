@@ -37,7 +37,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.admin.servicefacade.CustomizedTextDto;
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.components.mifosmenu.MenuRepository;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mockito.Mock;
@@ -57,14 +56,11 @@ public class CustomizedTextServiceFacadeWebTierTest {
     private HibernateTransactionHelper hibernateTransactionHelper;
     @Mock
     private MenuRepository menuRepository;
-    @Mock
-    private MifosConfiguration mifosConfiguration;
 
     @Before
     public void setup() {
         customizedTextServiceFacadeWebTier = new CustomizedTextServiceFacadeWebTier(customizedTextDao, messageSource);
         customizedTextServiceFacadeWebTier.setMenuRepository(menuRepository);
-        customizedTextServiceFacadeWebTier.setMifosConfiguration(mifosConfiguration);
         customizedTextServiceFacadeWebTier.setTransactionHelper(hibernateTransactionHelper);
     }
 

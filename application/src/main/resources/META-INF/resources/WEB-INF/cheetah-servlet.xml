@@ -14,9 +14,7 @@
 
 	<context:annotation-config />
 
-	<bean id="localeResolver" class="org.mifos.ui.core.localisation.MifosLocaleResolver">
-		<constructor-arg ref="adminServiceFacade" />
-	</bean>
+	<bean id="localeResolver" class="org.mifos.ui.core.localisation.MifosLocaleResolver" />
 
 	<bean id="webExceptionResolverHandler" class="org.mifos.framework.servlet.UncaughtExceptionHandler">
 		<property name="exceptionMappings">

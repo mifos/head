@@ -345,7 +345,7 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
         anLookUp.setLookUpName(lookupName);
         anLookUp.setLookUpEntity(lookUpEntity);
         createOrUpdate(anLookUp);
-        MessageLookup.getInstance().updateLookupValueInCache(lookupName, lookUpDescription);
+        ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValueInCache(lookupName, lookUpDescription);
         int lookUpId = anLookUp.getLookUpId().intValue();
         return lookUpId;
     }

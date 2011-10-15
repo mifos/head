@@ -28,8 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.persistence.OfficePersistence;
@@ -41,6 +39,8 @@ import org.mifos.security.util.OfficeCacheDto;
 import org.mifos.security.util.OfficeSearch;
 import org.mifos.security.util.SecurityEvent;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 public class HierarchyManager implements Observer {

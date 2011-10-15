@@ -25,8 +25,6 @@ import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
-import org.mifos.config.business.MifosConfiguration;
-import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.db.upgrade.DatabaseUpgradeSupport;
 import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
@@ -47,7 +45,7 @@ public class TestCaseInitializer {
 
     private static boolean initialized = false;
 
-    private ApplicationConfigurationDao applicationConfigurationDao = ApplicationContextProvider.getBean(ApplicationConfigurationDao.class);
+    @SuppressWarnings("deprecation")
     private DatabaseUpgradeSupport databaseUpgradeSupport = ApplicationContextProvider.getBean(DatabaseUpgradeSupport.class);
 
     public void initialize(SessionFactory sessionFactory) throws Exception {
@@ -67,7 +65,6 @@ public class TestCaseInitializer {
         ActivityMapper.getInstance().init();
         HierarchyManager.getInstance().init();
 
-        MifosConfiguration.getInstance().init();
         AuditConfiguration.init(Localization.getInstance().getConfiguredLocale());
         AccountingRules.init();
         StaticHibernateUtil.commitTransaction();

@@ -27,6 +27,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.dto.domain.FeeFormulaDto;
 
 public class FeeFormulaEntity extends MasterDataEntity {
@@ -67,7 +68,7 @@ public class FeeFormulaEntity extends MasterDataEntity {
             }
         }
 
-        return "Formula: % " + MessageLookup.getInstance().lookup(feeFormula);
+        return "Formula: % " + ApplicationContextProvider.getBean(MessageLookup.class).lookup(feeFormula);
     }
 
     public String getFormulaStringThatHasName() {
@@ -86,7 +87,7 @@ public class FeeFormulaEntity extends MasterDataEntity {
 
     @Override
     public String getName() {
-        String name = MessageLookup.getInstance().lookup(getLookUpValue());
+        String name = ApplicationContextProvider.getBean(MessageLookup.class).lookup(getLookUpValue());
         return name;
 
     }
@@ -105,7 +106,7 @@ public class FeeFormulaEntity extends MasterDataEntity {
     }
 
     protected void setName(String name) {
-        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+        ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValue(getLookUpValue(), name);
     }
 
     public FeeFormulaDto toDto() {

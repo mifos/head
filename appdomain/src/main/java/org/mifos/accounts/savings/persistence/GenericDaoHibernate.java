@@ -19,6 +19,10 @@
  */
 package org.mifos.accounts.savings.persistence;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -27,10 +31,6 @@ import org.hibernate.transform.Transformers;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  *

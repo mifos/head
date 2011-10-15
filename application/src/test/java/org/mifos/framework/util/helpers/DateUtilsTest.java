@@ -36,7 +36,6 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.Localization;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
-import org.mifos.framework.util.LocalizationConverter;
 import org.testng.annotations.Test;
 
 @Test(groups={"integration", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
@@ -144,18 +143,14 @@ public class DateUtilsTest extends TestCase {
     public void xtestGetLocaleDate() throws Exception {
         Locale savedLocale = Localization.getInstance().getConfiguredLocale();
         long expectedDate = new DateMidnight(2005, 03, 4).getMillis();
-        new LocalizationConverter().setCurrentLocale(Locale.GERMANY);
         DateUtils.refreshInternalLocale();
        Assert.assertEquals(expectedDate, DateUtils.getLocaleDate(Locale.GERMANY, "04.03.2005").getTime());
-        new LocalizationConverter().setCurrentLocale(Locale.US);
         DateUtils.refreshInternalLocale();
        Assert.assertEquals(expectedDate, DateUtils.getLocaleDate(Locale.US, "03/04/2005").getTime());
-        new LocalizationConverter().setCurrentLocale(Locale.UK);
         DateUtils.refreshInternalLocale();
        Assert.assertEquals(expectedDate, DateUtils.getLocaleDate(Locale.UK, "04/03/2005").getTime());
         checkException(Locale.US, "04.03.2005");
         DateUtils.refreshInternalLocale();
-        new LocalizationConverter().setCurrentLocale(savedLocale);
         DateUtils.refreshInternalLocale();
     }
 

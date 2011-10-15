@@ -1,13 +1,13 @@
 package org.mifos.accounts.loan.business.service.validators;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.platform.validations.ErrorEntry;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 
 public interface InstallmentRulesValidator {
     

@@ -40,6 +40,7 @@ import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.calendar.WorkingDay;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.dto.domain.HolidayDetails;
@@ -73,7 +74,7 @@ public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
             HolidayDetails holidayDetail = new HolidayDetails(holiday.getHolidayName(), holiday.getHolidayFromDate(), holiday
                     .getHolidayThruDate(), holiday.getRepaymentRuleType().getValue());
 
-            String holidayRepaymentRuleName = MessageLookup.getInstance().lookup(holiday.getRepaymentRuleType().getPropertiesKey());
+            String holidayRepaymentRuleName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(holiday.getRepaymentRuleType().getPropertiesKey());
             holidayDetail.setRepaymentRuleName(holidayRepaymentRuleName);
 
             int year = holiday.getThruDate().getYear();
@@ -103,7 +104,7 @@ public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
     @Override
     public OfficeHoliday retrieveHolidayDetailsForPreview(HolidayDetails holidayDetail, List<Short> officeIds) {
 
-        String holidayRepaymentRuleName = MessageLookup.getInstance().lookup(RepaymentRuleTypes.fromInt(holidayDetail.getRepaymentRuleType().intValue()).getPropertiesKey());
+        String holidayRepaymentRuleName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(RepaymentRuleTypes.fromInt(holidayDetail.getRepaymentRuleType().intValue()).getPropertiesKey());
         holidayDetail.setRepaymentRuleName(holidayRepaymentRuleName);
 
         List<String> officeNames = this.holidayDao.retrieveApplicableOfficeNames(officeIds);

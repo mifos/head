@@ -1,5 +1,12 @@
 package org.mifos.accounts.loan.business;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.InstallmentPayment;
@@ -7,9 +14,6 @@ import org.mifos.accounts.loan.schedule.domain.Schedule;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.helpers.Money;
-
-import java.math.BigDecimal;
-import java.util.*;
 
 public class ScheduleMapper {
 

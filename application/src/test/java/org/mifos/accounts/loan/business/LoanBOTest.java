@@ -19,11 +19,30 @@
  */
 package org.mifos.accounts.loan.business;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.mifos.framework.TestUtils.getDate;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.business.*;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountActionEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountPaymentEntityBuilder;
+import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -43,17 +62,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.annotation.ExpectedException;
-
-import java.math.BigDecimal;
-import java.util.*;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.mifos.framework.TestUtils.getDate;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanBOTest {

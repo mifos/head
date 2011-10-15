@@ -26,13 +26,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.config.Localization;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddFinancialAction extends Upgrade {
 
-    private final Short locale;
     private final String lookupValueKey;
     private final int action;
     private final String message;
@@ -49,7 +48,6 @@ public class AddFinancialAction extends Upgrade {
             throw new RuntimeException(wrongLookupValueKeyFormat);
         }
         this.action = action;
-        this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;
         this.lookupValueKey = lookupValueKey;
         this.message = null;
     }
@@ -60,7 +58,7 @@ public class AddFinancialAction extends Upgrade {
         int lookupEntity = LookUpEntity.FINANCIAL_ACTION;
 
         int lookupId = insertLookupValue(connection, lookupEntity, lookupValueKey);
-        insertMessage(connection, lookupId, locale, message);
+        insertMessage(connection, lookupId, Localization.ENGLISH_LOCALE_ID, message);
         addAction(connection, action, lookupId);
 
     }

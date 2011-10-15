@@ -26,9 +26,9 @@ import java.lang.reflect.Method;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import org.apache.struts.taglib.TagUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.struts.taglib.TagUtils;
 
 /**
  * This class renders the listbox with anchors in it on screen

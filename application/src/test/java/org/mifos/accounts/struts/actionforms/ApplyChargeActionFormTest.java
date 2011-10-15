@@ -20,15 +20,15 @@
 
 package org.mifos.accounts.struts.actionforms;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.Locale;
+
 import org.apache.struts.action.ActionErrors;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.framework.TestUtils;
-
-import java.util.Locale;
-
-import static org.junit.Assert.assertEquals;
 
 public class ApplyChargeActionFormTest {
 

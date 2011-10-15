@@ -27,6 +27,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 
 /**
  * Is the fee periodic or one-time? See {@link FeeFrequencyType}.
@@ -74,7 +75,7 @@ public class FeeFrequencyTypeEntity extends MasterDataEntity {
 
     @Override
     public String getName() {
-        return MessageLookup.getInstance().lookup(getLookUpValue());
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(getLookUpValue());
     }
 
     @Override
@@ -83,6 +84,6 @@ public class FeeFrequencyTypeEntity extends MasterDataEntity {
     }
 
     protected void setName(String name) {
-        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+        ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValue(getLookUpValue(), name);
     }
 }

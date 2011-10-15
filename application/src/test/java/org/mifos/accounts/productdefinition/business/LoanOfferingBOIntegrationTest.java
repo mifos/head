@@ -74,7 +74,6 @@ import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.springframework.orm.hibernate3.support.ScopedBeanInterceptor;
 
 public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 

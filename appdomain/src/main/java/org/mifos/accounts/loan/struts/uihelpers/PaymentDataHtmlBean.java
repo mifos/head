@@ -25,9 +25,6 @@ import static org.apache.commons.lang.StringUtils.isNotEmpty;
 import java.util.Date;
 import java.util.Locale;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.master.util.helpers.PaymentTypes;

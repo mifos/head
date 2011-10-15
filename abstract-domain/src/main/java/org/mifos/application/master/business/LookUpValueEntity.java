@@ -114,7 +114,7 @@ public class LookUpValueEntity extends AbstractEntity implements LocalizedTextLo
         Set<LookUpValueLocaleEntity> list = getLookUpValueLocales();
         if (list != null) {
             for (LookUpValueLocaleEntity lookUpValueLocale : list) {
-                if (lookUpValueLocale.getLocaleId().equals(MasterDataEntity.CUSTOMIZATION_LOCALE_ID)) {
+                if (lookUpValueLocale.getLocaleId().equals((short) 1)) {
                     messageText = lookUpValueLocale.getLookUpValue();
                 }
             }
@@ -123,7 +123,7 @@ public class LookUpValueEntity extends AbstractEntity implements LocalizedTextLo
         if (messageText != null && messageText.length() > 0) {
             return messageText;
         }
-     // MessageLookup.getInstance().lookup(entity.getPropertiesKey();)
+     // ApplicationContextProvider.getBean(MessageLookup.class).lookup(entity.getPropertiesKey();)
         return "";
     }
 

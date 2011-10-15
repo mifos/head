@@ -69,6 +69,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.util.helpers.QueryParamConstants;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -251,7 +252,7 @@ public class BranchReportPersistence extends LegacyGenericDao {
             if (messageValueOverrideForTitleName != null) {
                 titleName = messageValueOverrideForTitleName;
             } else if (messageKeyForTitleName != null) {
-                titleName = MessageLookup.getInstance().lookup(messageKeyForTitleName);
+                titleName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(messageKeyForTitleName);
             }
             totalStaff += staffCountForThisTitle;
             staffingLevelSummaries.add(new BranchReportStaffingLevelSummaryBO(IS_NOT_TOTAL,

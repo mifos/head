@@ -21,7 +21,7 @@
 package org.mifos.customers.business.service;
 
 import org.mifos.application.master.MessageLookup;
-import org.mifos.security.util.UserContext;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 
 public class DefaultMessageLookupHelper implements MessageLookupHelper {
 
@@ -33,7 +33,7 @@ public class DefaultMessageLookupHelper implements MessageLookupHelper {
     }
 
     @Override
-    public final String lookupLabel(final String labelKey, final UserContext userContext) {
-        return MessageLookup.getInstance().lookup(labelKey, userContext);
+    public final String lookupLabel(final String labelKey) {
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(labelKey);
     }
 }

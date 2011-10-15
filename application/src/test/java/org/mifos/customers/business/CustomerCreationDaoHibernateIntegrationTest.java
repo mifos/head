@@ -27,8 +27,6 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -101,7 +99,7 @@ public class CustomerCreationDaoHibernateIntegrationTest extends MifosIntegratio
         final Date mfiJoiningDate = new DateTime().minusDays(1).toDate();
         final OfficeBO existingOffice = IntegrationTestObjectMother.sampleBranchOffice();
         final PersonnelBO loanOfficer = IntegrationTestObjectMother.testUser();
-        UserContext userContext = new UserContext(Locale.getDefault(), Short.valueOf("1"));
+        UserContext userContext = new UserContext();
         userContext.setId(loanOfficer.getPersonnelId());
         userContext.setBranchId(existingOffice.getOfficeId());
         userContext.setBranchGlobalNum(existingOffice.getGlobalOfficeNum());

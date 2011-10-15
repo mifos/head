@@ -20,21 +20,21 @@
 
 package org.mifos.accounts.servicefacade;
 
+import java.util.HashSet;
+import java.util.Locale;
+
 import org.mifos.config.Localization;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 
-import java.util.HashSet;
-import java.util.Locale;
-
 public class UserContextFactory {
 
     public UserContext create(MifosUser user) {
-        Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
-        Locale.setDefault(preferredLocale);
-        Locale defaultLocale = Locale.getDefault();
-        Short localeId = Localization.getInstance().getConfiguredLocaleId();
-        UserContext userContext = new UserContext(preferredLocale, localeId);
+        Short localeId = user.getPreferredLocaleId();
+        Locale preferredLocale = Localization.getInstance().getLocaleById(localeId);
+        UserContext userContext = new UserContext();
+        userContext.setPreferredLocale(preferredLocale);
+        userContext.setLocaleId(localeId);
         userContext.setBranchId(user.getBranchId());
         userContext.setId((short) user.getUserId());
         userContext.setName(user.getUsername());

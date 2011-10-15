@@ -23,6 +23,7 @@ package org.mifos.application.master.business;
 import java.util.Set;
 
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 
 
 public class PaymentTypeEntity extends MasterDataEntity {
@@ -64,7 +65,7 @@ public class PaymentTypeEntity extends MasterDataEntity {
 
     @Override
     public String getName() {
-        String name = MessageLookup.getInstance().lookup(getLookUpValue());
+        String name = ApplicationContextProvider.getBean(MessageLookup.class).lookup(getLookUpValue());
         return name;
 
     }
@@ -84,7 +85,7 @@ public class PaymentTypeEntity extends MasterDataEntity {
 
 
     protected void setName(String name) {
-        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+        ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValue(getLookUpValue(), name);
     }
 
     @Override

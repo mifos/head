@@ -22,13 +22,13 @@ package org.mifos.customers.struts.uihelpers;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerPositionOtherDto;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class has got helper functions which could be called from jsp as part of

@@ -25,22 +25,19 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.i18n.AbstractLocaleResolver;
 
 public class MifosLocaleResolver extends AbstractLocaleResolver {
 
-    private final AdminServiceFacade adminServiceFacade;
-
-    public MifosLocaleResolver(final AdminServiceFacade adminServiceFacade) {
-        super();
-        this.adminServiceFacade = adminServiceFacade;
-    }
+    @Autowired
+    private PersonnelServiceFacade personnelServiceFacade;
 
     @Override
     public Locale resolveLocale(@SuppressWarnings("unused") HttpServletRequest request) {
-        setDefaultLocale(adminServiceFacade.retreiveLocaleFromConfiguration());
-        return adminServiceFacade.retreiveLocaleFromConfiguration();
+        setDefaultLocale(personnelServiceFacade.getUserPreferredLocale());
+        return personnelServiceFacade.getUserPreferredLocale();
     }
 
     @Override

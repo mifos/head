@@ -20,11 +20,11 @@
 
 package org.mifos.framework.components.batchjobs;
 
-import org.quartz.utils.ConnectionProvider;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.quartz.utils.ConnectionProvider;
 
 public class QuartzConnectionProvider implements ConnectionProvider {
     @Override

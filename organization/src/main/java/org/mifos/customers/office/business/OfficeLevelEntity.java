@@ -112,7 +112,7 @@ public class OfficeLevelEntity extends MasterDataEntity {
     @Override
     public String getName() {
         return this.name;
-//        return MessageLookup.getInstance().lookup(getLookUpValue());
+//        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(getLookUpValue());
     }
 
     public void setName(String name) {

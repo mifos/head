@@ -20,8 +20,6 @@
 
 package org.mifos.security;
 
-import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -36,7 +34,6 @@ import org.junit.Test;
 import org.mifos.accounts.business.AddAccountAction;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -94,11 +91,9 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
 //        Connection connection = session.connection();
 //        connection.setAutoCommit(true);
         short newId = 17032;
-        AddActivity upgrade = new AddActivity(newId, SecurityConstants.LOAN_MANAGEMENT,
-                TEST_LOCALE, "Can use the executive washroom");
+        AddActivity upgrade = new AddActivity(newId, SecurityConstants.LOAN_MANAGEMENT, "Can use the executive washroom");
         upgrade.upgrade(session.connection());
 
-        MifosConfiguration.getInstance().init();
         session = StaticHibernateUtil.getSessionTL();
         ActivityEntity fetched = (ActivityEntity) session.get(ActivityEntity.class, newId);
 
@@ -119,8 +114,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testNoParent() throws Exception {
         short newId = 17032;
-        AddActivity upgrade = new AddActivity(newId, null, TEST_LOCALE,
-                "Can use the executive washroom");
+        AddActivity upgrade = new AddActivity(newId, null, "Can use the executive washroom");
         upgrade.upgrade(session.connection());
         ActivityEntity fetched = (ActivityEntity) session.get(ActivityEntity.class, newId);
        Assert.assertEquals(null, fetched.getParent());

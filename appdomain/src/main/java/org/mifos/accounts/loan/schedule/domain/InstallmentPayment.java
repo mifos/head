@@ -19,12 +19,12 @@
  */
 package org.mifos.accounts.loan.schedule.domain;
 
+import static org.mifos.accounts.loan.schedule.utils.Utilities.isGreaterThanZero;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import static org.mifos.accounts.loan.schedule.utils.Utilities.isGreaterThanZero;
 
 public class InstallmentPayment {
     private Date paidDate;

@@ -18,6 +18,7 @@
 package org.mifos.customers.business.service;
 
 import java.util.List;
+
 import org.mifos.accounts.api.CustomerSearchService;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.dto.domain.CustomerDto;

@@ -20,14 +20,14 @@
 
 package org.mifos.accounts.productsmix.business;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productsmix.persistence.LegacyProductMixDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class encapsulate the product mix (Allowed / Not Allowed products)

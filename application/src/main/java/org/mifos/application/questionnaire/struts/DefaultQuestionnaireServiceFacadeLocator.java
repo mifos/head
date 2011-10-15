@@ -1,9 +1,9 @@
 package org.mifos.application.questionnaire.struts;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.service.MifosServiceFactory;
-
-import javax.servlet.http.HttpServletRequest;
 
 public class DefaultQuestionnaireServiceFacadeLocator implements QuestionnaireServiceFacadeLocator {
     @Override

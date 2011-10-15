@@ -20,6 +20,12 @@
 
 package org.mifos.framework.components.audit.util.helpers;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.Transaction;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -30,12 +36,6 @@ import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.persistence.LegacyAuditDao;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.security.util.UserContext;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 /*
  * For Hibernate 3.2.2 or so, we'd just extend EmptyInterceptor.

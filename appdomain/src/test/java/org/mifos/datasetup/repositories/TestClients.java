@@ -11,8 +11,6 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.factories.MeetingFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.Locale;
-
 public class TestClients extends TestEntities {
     private TestPersonnels testPersonnels;
 
@@ -22,7 +20,7 @@ public class TestClients extends TestEntities {
     }
 
     public ClientBO add(String firstName, OfficeBO office, MeetingBO meeting, PersonnelBO loanOfficer, short groupFlag) {
-        UserContext userContext = new UserContext(Locale.getDefault(), (short) 1);
+        UserContext userContext = new UserContext();
         ClientDetailEntity clientDetailEntity = new ClientDetailEntity();
         ClientBO clientBO = new ClientBO(userContext, firstName, CustomerStatus.CLIENT_ACTIVE, TestDates.RECENT, office, meeting, loanOfficer,
                 testPersonnels.any(), TestDates.OLD_ENOUGH, "123456", true, TestDates.RECENT, groupFlag, firstName, "Brown", "James", clientDetailEntity);

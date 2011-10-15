@@ -35,6 +35,7 @@ import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
@@ -151,16 +152,12 @@ public class BaseActionForm extends ValidatorActionForm {
         return (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
     }
 
-    protected String getLabel(String key, HttpServletRequest request) {
-        return MessageLookup.getInstance().lookupLabel(key, getUserContext(request));
+    protected String getLabel(String key) {
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(key);
     }
 
-    protected String getLabel(String key, UserContext userContext) {
-        return MessageLookup.getInstance().lookupLabel(key, userContext);
-    }
-
-    protected String getMessageText(String key, UserContext userContext) {
-        return MessageLookup.getInstance().lookup(key, userContext);
+    protected String getMessageText(String key) {
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(key);
     }
 
     protected void cleanUpSearch(HttpServletRequest request) throws PageExpiredException {

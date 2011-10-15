@@ -22,8 +22,6 @@ package org.mifos.accounts.productdefinition.persistence;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import junit.framework.Assert;
 
 import org.junit.After;
@@ -78,7 +76,7 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
         SavingsTestHelper helper = new SavingsTestHelper();
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("fsaf6", "ads6");
-        UserContext userContext = new UserContext(Locale.getDefault(), Short.valueOf("1"));
+        UserContext userContext = new UserContext();
         userContext.setId(PersonnelConstants.SYSTEM_USER);
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);

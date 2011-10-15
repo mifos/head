@@ -27,45 +27,53 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.config.LocaleSetting;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.builders.MifosUserBuilder;
 import org.mifos.config.Localization;
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.security.util.UserContext;
+import org.mifos.security.MifosUser;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
 
-    private static MessageLookup messageLookup;
+    private MessageLookup messageLookup;
+
 
     @Before
     public void setUp() throws Exception {
-        messageLookup = MessageLookup.getInstance();
+        messageLookup = ApplicationContextProvider.getBean(MessageLookup.class);
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Test
     public void testWeekDayLookup() {
         // default locale
-       Assert.assertEquals("Monday", messageLookup.lookup(WeekDay.MONDAY, Locale.US));
-       Assert.assertEquals("Tuesday", messageLookup.lookup(WeekDay.TUESDAY, Locale.US));
-       Assert.assertEquals("Wednesday", messageLookup.lookup(WeekDay.WEDNESDAY, Locale.US));
-       Assert.assertEquals("Thursday", messageLookup.lookup(WeekDay.THURSDAY, Locale.US));
-       Assert.assertEquals("Friday", messageLookup.lookup(WeekDay.FRIDAY, Locale.US));
-       Assert.assertEquals("Saturday", messageLookup.lookup(WeekDay.SATURDAY, Locale.US));
-       Assert.assertEquals("Sunday", messageLookup.lookup(WeekDay.SUNDAY, Locale.US));
-        // Spanish locale
-       Assert.assertEquals("Lunes", messageLookup.lookup(WeekDay.MONDAY, new Locale("es")));
+       Assert.assertEquals("Monday", messageLookup.lookup(WeekDay.MONDAY));
+       Assert.assertEquals("Tuesday", messageLookup.lookup(WeekDay.TUESDAY));
+       Assert.assertEquals("Wednesday", messageLookup.lookup(WeekDay.WEDNESDAY));
+       Assert.assertEquals("Thursday", messageLookup.lookup(WeekDay.THURSDAY));
+       Assert.assertEquals("Friday", messageLookup.lookup(WeekDay.FRIDAY));
+       Assert.assertEquals("Saturday", messageLookup.lookup(WeekDay.SATURDAY));
+       Assert.assertEquals("Sunday", messageLookup.lookup(WeekDay.SUNDAY));
+
+       // Spanish locale
+       MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       Short savedLocaleId = user.getPreferredLocaleId();
+       user.setPreferredLocaleId(Localization.getInstance().getLocaleId(Localization.SPANISH));
+       Assert.assertEquals("Lunes", messageLookup.lookup(WeekDay.MONDAY));
+       user.setPreferredLocaleId(savedLocaleId);
         // French locale
-       Assert.assertEquals("lundi", messageLookup.lookup(WeekDay.MONDAY, new Locale("fr")));
-    }
-
-    private void ChangeLocale(LocaleSetting newLocale) {
-        Localization localization = Localization.getInstance();
-        localization.setConfigLocale(newLocale);
-        MifosConfiguration.getInstance().init();
-
+       user.setPreferredLocaleId(Localization.getInstance().getLocaleId(Locale.FRANCE));
+       Assert.assertEquals("lundi", messageLookup.lookup(WeekDay.MONDAY));
     }
 
     @Test

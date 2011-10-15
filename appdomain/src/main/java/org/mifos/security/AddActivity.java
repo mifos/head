@@ -27,15 +27,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.config.Localization;
 import org.mifos.framework.persistence.Upgrade;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 
 public class AddActivity extends Upgrade {
 
     private final short newActivityId;
-    private final Short locale;
     private final String activityName;
     private final String activityNameKey;
     private final Short parentActivity;
@@ -59,11 +58,10 @@ public class AddActivity extends Upgrade {
      * This constructor is used for version 174 and lower. And it must not be
      * used afterward
      */
-    public AddActivity(short newActivityId, Short parentActivity, Short locale, String activityName) {
+    public AddActivity(short newActivityId, Short parentActivity, String activityName) {
 
         this.newActivityId = newActivityId;
         this.parentActivity = parentActivity;
-        this.locale = locale;
         this.activityName = activityName;
         this.activityNameKey = " ";
     }
@@ -81,7 +79,6 @@ public class AddActivity extends Upgrade {
         }
         this.newActivityId = newActivityId;
         this.parentActivity = parentActivity;
-        this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;
         this.activityNameKey = activityNameKey;
         this.activityName = null;
     }
@@ -93,7 +90,6 @@ public class AddActivity extends Upgrade {
         }
         this.newActivityId = newActivityId;
         this.parentActivity = parentActivity;
-        this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;
         this.activityNameKey = activityNameKey;
         this.activityName = activityName;
     }
@@ -104,7 +100,7 @@ public class AddActivity extends Upgrade {
         int lookupEntity = LookUpEntity.ACTIVITY;
 
         int lookupId = insertLookupValue(connection, lookupEntity, activityNameKey);
-        insertMessage(connection, lookupId, locale, activityName);
+        insertMessage(connection, lookupId, Localization.ENGLISH_LOCALE_ID, activityName);
         try {
             addActivityEntity(connection, lookupId);
         } catch (SQLException e) {

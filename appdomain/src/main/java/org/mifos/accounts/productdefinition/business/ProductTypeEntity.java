@@ -25,6 +25,7 @@ import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 
@@ -87,7 +88,7 @@ public class ProductTypeEntity extends AbstractEntity {
 
     public String getName() {
         String lookupKey = lookUpValue.getLookUpName();
-        return MessageLookup.getInstance().lookup(lookupKey);
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupKey);
     }
 
     /**

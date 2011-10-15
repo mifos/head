@@ -25,8 +25,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.config.Localization;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddAccountStateFlag extends Upgrade {
@@ -39,31 +39,15 @@ public class AddAccountStateFlag extends Upgrade {
 
     private final int newFlagId;
     private final String description;
-
-    private final Short locale;
     private final String message;
     private final String lookupValueKey;
     protected static final String wrongLookupValueKeyFormat = "The key format must be AccountFlags-...";
     protected static final String keyFormat = "AccountFlags-";
 
     /*
-     * This constructor is used for version 174 and lower. And it must not be
-     * used afterward
-     */
-    public AddAccountStateFlag(int higherVersion, int newFlagId, String description, Short locale, String message) {
-        super();
-        this.newFlagId = newFlagId;
-        this.description = description;
-        this.locale = locale;
-        this.message = message;
-        this.lookupValueKey = " ";
-    }
-
-    /*
      * This constructor must be used after version 174. The lookupValueKey must
      * in the format AccountFlags-...
      */
-
     public AddAccountStateFlag(int newFlagId, String description, String lookupValueKey) {
         super();
         if (!validateLookupValueKey(keyFormat, lookupValueKey)) {
@@ -71,8 +55,6 @@ public class AddAccountStateFlag extends Upgrade {
         }
         this.newFlagId = newFlagId;
         this.description = description;
-        this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;
-        ;
         this.message = null;
         this.lookupValueKey = lookupValueKey;
     }
@@ -83,7 +65,7 @@ public class AddAccountStateFlag extends Upgrade {
         int lookupEntity = LookUpEntity.ACCOUNT_STATE_FLAG;
 
         int lookupId = insertLookupValue(connection, lookupEntity, lookupValueKey);
-        insertMessage(connection, lookupId, locale, message);
+        insertMessage(connection, lookupId, Localization.ENGLISH_LOCALE_ID, message);
         addFlag(connection, newFlagId, description, lookupId);
     }
 

@@ -38,6 +38,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
@@ -105,7 +106,7 @@ public class EditCustomerStatusAction extends BaseAction {
 
         for (CustomerStatusEntity customerStatusEntity : statusList) {
             for (CustomerStatusFlagEntity flag : customerStatusEntity.getFlagSet()) {
-                String statusMessageText = MessageLookup.getInstance().lookup(flag.getLookUpValue().getPropertiesKey());
+                String statusMessageText = ApplicationContextProvider.getBean(MessageLookup.class).lookup(flag.getLookUpValue().getPropertiesKey());
                 flag.setStatusFlagMessageText(statusMessageText);
             }
         }

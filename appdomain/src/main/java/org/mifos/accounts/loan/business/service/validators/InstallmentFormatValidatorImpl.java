@@ -1,5 +1,12 @@
 package org.mifos.accounts.loan.business.service.validators;
 
+import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_TOTAL_AMOUNT_INVALID;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -8,12 +15,6 @@ import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.platform.validations.ErrorEntry;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_TOTAL_AMOUNT_INVALID;
 
 public class InstallmentFormatValidatorImpl implements InstallmentFormatValidator {
     @Override
@@ -42,7 +43,7 @@ public class InstallmentFormatValidatorImpl implements InstallmentFormatValidato
 
     private void setDueDateValue(RepaymentScheduleInstallment installment, String identifier, List<ErrorEntry> errorEntries) {
         try {
-            Date dateValue = DateUtils.parseDate(installment.getDueDate(), installment.getLocale());
+            Date dateValue = DateUtils.parseDate(installment.getDueDate());
             installment.setDueDateValue(dateValue);
         } catch (Exception e) {
             addError(errorEntries, identifier, AccountConstants.INSTALLMENT_DUEDATE_INVALID);
@@ -71,7 +72,7 @@ public class InstallmentFormatValidatorImpl implements InstallmentFormatValidato
     private void processConversionErrors(RepaymentScheduleInstallment installment, String identifier,
                                          List<ConversionError> conversionErrors, List<ErrorEntry> errorEntries) {
         for (ConversionError error : conversionErrors) {
-            String errorText = error.toLocalizedMessage(installment.getLocale(), installment.getCurrency());
+            String errorText = error.toLocalizedMessage(Locale.UK, installment.getCurrency());
             errorEntries.add(new ErrorEntry(INSTALLMENT_TOTAL_AMOUNT_INVALID, identifier, errorText));
         }
     }

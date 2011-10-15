@@ -21,6 +21,7 @@ package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
@@ -30,11 +31,11 @@ import java.util.Set;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDto;
 import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
@@ -42,8 +43,6 @@ import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.framework.util.helpers.Money;
-
-import java.util.Collections;
 
 public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTranslator {
 

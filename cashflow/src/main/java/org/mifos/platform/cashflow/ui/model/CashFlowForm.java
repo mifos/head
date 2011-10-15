@@ -24,8 +24,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
 import org.mifos.platform.cashflow.CashFlowConstants;
 import org.mifos.platform.cashflow.service.CashFlowDetail;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
@@ -40,18 +38,16 @@ public class CashFlowForm implements Serializable {
     private Double indebtednessRatio;
     private BigDecimal totalRevenues;
     private BigDecimal totalExpenses;
-    private Locale locale;
 
     @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor", "PMD.UncommentedEmptyConstructor"})
     public CashFlowForm() {
     }
 
-    public CashFlowForm(CashFlowDetail cashFlowDetail, boolean captureCapitalLiabilityInfo, BigDecimal loanAmount, Double indebtednessRatio, Locale locale) {
+    public CashFlowForm(CashFlowDetail cashFlowDetail, boolean captureCapitalLiabilityInfo, BigDecimal loanAmount, Double indebtednessRatio) {
         this.cashFlowDetail = cashFlowDetail;
         this.captureCapitalLiabilityInfo = captureCapitalLiabilityInfo;
         this.loanAmount = loanAmount;
         this.indebtednessRatio = indebtednessRatio;
-        this.locale = locale;
     }
 
     public void setTotalCapital(BigDecimal totalCapital) {
@@ -84,7 +80,6 @@ public class CashFlowForm implements Serializable {
         if (cashFlowDetail != null) {
             for (MonthlyCashFlowDetail monthlyCashFlowDetail : cashFlowDetail.getMonthlyCashFlowDetails()) {
                 MonthlyCashFlowForm monthlyCashFlowForm = new MonthlyCashFlowForm(monthlyCashFlowDetail);
-                monthlyCashFlowForm.setLocale(locale);
                 monthlyCashFlows.add(monthlyCashFlowForm);
             }
         }
@@ -107,15 +102,15 @@ public class CashFlowForm implements Serializable {
         return captureCapitalLiabilityInfo && indebtednessRatio != null && indebtednessRatio > 0 &&
                 loanAmount != null && cashFlowDetail != null && cashFlowDetail.shouldForValidateIndebtednessRate();
     }
-    
+
     /*
-     * from newer createLoanAccount.xml flow and not legacy captureCashFlow.xml flow 
+     * from newer createLoanAccount.xml flow and not legacy captureCashFlow.xml flow
      */
     public void validateCaptureCashFlowDetails(ValidationContext context) {
         CashFlowValidator validator = new CashFlowValidator();
         validator.validateCaptureCashFlow(this, context);
     }
-    
+
     public void validateEditCashflow(ValidationContext context) {
         validateCaptureCashFlowDetails(context);
     }

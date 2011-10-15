@@ -19,15 +19,15 @@
  */
 package org.mifos.accounts.loan.schedule.domain;
 
-import org.mifos.framework.util.helpers.NumberUtils;
+import static org.mifos.accounts.loan.schedule.utils.Utilities.isGreaterThanZero;
+import static org.mifos.framework.util.helpers.NumberUtils.max;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.mifos.accounts.loan.schedule.utils.Utilities.isGreaterThanZero;
-import static org.mifos.framework.util.helpers.NumberUtils.max;
+import org.mifos.framework.util.helpers.NumberUtils;
 
 public class Installment implements Comparable<Installment> {
     private Integer id;

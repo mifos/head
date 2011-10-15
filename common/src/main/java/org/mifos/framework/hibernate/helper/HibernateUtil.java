@@ -45,7 +45,6 @@ public class HibernateUtil implements FactoryBean<HibernateUtil> {
         this.sessionFactory = sessionFactory;
     }
 
-
     public void shutdown() {
         try {
             sessionFactory.close();

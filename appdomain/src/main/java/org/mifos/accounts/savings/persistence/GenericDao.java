@@ -19,12 +19,12 @@
  */
 package org.mifos.accounts.savings.persistence;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 /**
  *

@@ -26,8 +26,6 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.sql.Date;
 import java.util.List;
-import java.util.Locale;
-
 import junit.framework.Assert;
 
 import org.junit.After;
@@ -453,7 +451,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "S", currentDate,
                 RecommendedAmountUnit.COMPLETE_GROUP);
-        UserContext user = new UserContext(Locale.getDefault(), Short.valueOf("1"));
+        UserContext user = new UserContext();
         user.setId(PersonnelConstants.SYSTEM_USER);
         account = TestObjectFactory.createSavingsAccount("000100000000020", group, AccountState.SAVINGS_ACTIVE,
                 currentDate, savingsOffering, user);

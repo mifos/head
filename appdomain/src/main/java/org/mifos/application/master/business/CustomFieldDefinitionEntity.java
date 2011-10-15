@@ -20,21 +20,23 @@
 
 package org.mifos.application.master.business;
 
-import org.apache.commons.lang.StringUtils;
-import org.mifos.application.master.MessageLookup;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.framework.business.AbstractEntity;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.SearchUtils;
-import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.Localization;
+import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.framework.business.AbstractEntity;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.SearchUtils;
+import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 
 /**
  * Represents a named custom field of a given type {@link CustomFieldType}
@@ -73,7 +75,7 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
     private MessageLookup messageLookup = null;
     private MessageLookup getMessageLookup() {
     	if (messageLookup == null) {
-    		messageLookup = MessageLookup.getInstance();
+    		messageLookup = ApplicationContextProvider.getBean(MessageLookup.class);
     	}
     	return messageLookup;
     }
@@ -218,19 +220,14 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
         return false;
     }
 
-    /*
-    public static String getMandatoryStringValue(Locale locale, Short flag) {
-        return MessageLookup.getInstance().lookup(YesNoFlag.fromInt(flag), locale);
-    }
-     */
 
-    public String getMandatoryStringValue(Locale locale) {
-        return getMessageLookup().lookup(YesNoFlag.fromInt(mandatoryFlag), locale);
+    public String getMandatoryStringValue() {
+        return getMessageLookup().lookup(YesNoFlag.fromInt(mandatoryFlag)).toLowerCase();
     }
 
     public void setLabel(String label) {
         for (LookUpLabelEntity entity : lookUpEntity.getLookUpLabels()) {
-            if (entity.getLocaleId().equals(MasterDataEntity.CUSTOMIZATION_LOCALE_ID)) {
+            if (entity.getLocaleId().equals(Localization.ENGLISH_LOCALE_ID)) {
                 entity.setLabelName(label);
                 break;
             }
@@ -239,14 +236,6 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
 
     public String getLabel() {
         return lookUpEntity.findLabel();
-    }
-
-    /*
-     * This method is currently used as a property getter in various JSP pages.
-     * Access to this value will need to be updated to support localization.
-     */
-    public String getMandatoryStringValue() {
-        return getMandatoryStringValue(Locale.US).toLowerCase();
     }
 
     @Override

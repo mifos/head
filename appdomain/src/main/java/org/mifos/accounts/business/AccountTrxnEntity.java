@@ -35,7 +35,6 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 

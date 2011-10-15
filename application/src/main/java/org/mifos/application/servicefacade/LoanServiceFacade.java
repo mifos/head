@@ -20,8 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-import java.util.Locale;
-
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 
 /**
@@ -30,5 +28,5 @@ import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 @Deprecated
 public interface LoanServiceFacade {
 
-    OriginalScheduleInfoDto retrieveOriginalLoanSchedule(Integer accountId, Locale locale);
+    OriginalScheduleInfoDto retrieveOriginalLoanSchedule(Integer accountId);
 }

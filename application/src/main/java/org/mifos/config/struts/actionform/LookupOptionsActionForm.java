@@ -27,8 +27,6 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.master.business.CustomValueListElementDto;
@@ -39,6 +37,8 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LookupOptionsActionForm extends BaseActionForm {
 

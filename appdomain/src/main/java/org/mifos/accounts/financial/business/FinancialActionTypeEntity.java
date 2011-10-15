@@ -20,6 +20,8 @@
 
 package org.mifos.accounts.financial.business;
 
+import java.util.Set;
+
 import org.hibernate.Hibernate;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.ChartOfAccountsCache;
@@ -29,8 +31,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-
-import java.util.Set;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 
 public class FinancialActionTypeEntity extends MasterDataEntity {
 
@@ -73,7 +74,7 @@ public class FinancialActionTypeEntity extends MasterDataEntity {
 
     @Override
     public String getName() {
-        return MessageLookup.getInstance().lookup(getLookUpValue());
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(getLookUpValue());
     }
 
     @Override
@@ -82,6 +83,6 @@ public class FinancialActionTypeEntity extends MasterDataEntity {
     }
 
     protected void setName(String name) {
-        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+        ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValue(getLookUpValue(), name);
     }
 }

@@ -2,6 +2,7 @@ package org.mifos.framework.image.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;

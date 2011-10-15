@@ -25,6 +25,7 @@ import java.util.Set;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 
 public class InterestTypesEntity extends MasterDataEntity {
     private java.lang.String descripton;
@@ -63,7 +64,7 @@ public class InterestTypesEntity extends MasterDataEntity {
 
     @Override
     public String getName() {
-        return MessageLookup.getInstance().lookup(getLookUpValue());
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(getLookUpValue());
     }
 
     @Override
@@ -88,7 +89,7 @@ public class InterestTypesEntity extends MasterDataEntity {
     }
 
     protected void setName(String name) {
-        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+        ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValue(getLookUpValue(), name);
     }
 
     public void setProductType(ProductTypeEntity productType) {

@@ -20,12 +20,16 @@
 
 package org.mifos.application.master;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.admin.servicefacade.CustomizedTextServiceFacade;
+import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
@@ -34,141 +38,101 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.config.Localization;
 import org.mifos.config.LocalizedTextLookup;
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
+import org.mifos.config.util.helpers.LabelKey;
 import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 
 /**
- * This class looks up messages from tables like {@link LookUpValueEntity},
- * {@link LookUpValueLocaleEntity} and the like.
+ * This class looks up messages from tables like {@link LookUpValueEntity}, {@link LookUpValueLocaleEntity} and the
+ * like.
  * <p>
- * The idea is that we'll be able to come up with a simpler mechanism than the
- * rather convoluted one in {@link LegacyMasterDao}, {@link MasterDataEntity},
- * etc. Or at least we can centralize where we call the convoluted mechanism.
+ * The idea is that we'll be able to come up with a simpler mechanism than the rather convoluted one in
+ * {@link LegacyMasterDao}, {@link MasterDataEntity}, etc. Or at least we can centralize where we call the convoluted
+ * mechanism.
  * <p>
  * Also see {@link ApplicationConfigurationDao}.
  * <p>
- * The word "label" might be better than "message"; at least that's what we call
- * them in places like LabelConfigurationAction.
+ * The word "label" might be better than "message"; at least that's what we call them in places like
+ * LabelConfigurationAction.
  * <p>
- * An initial pass has been made at moving to resource bundle based
- * localization. A Spring MessageSource is injected into the single instance of
- * MessageLookup. The MessageSource is used to manage the loading and lookup
- * from external resource bundle files. See {@link FilePaths#SPRING_CONFIG_CORE}
- * for the Spring configuration.
+ * An initial pass has been made at moving to resource bundle based localization. A Spring MessageSource is injected
+ * into the single instance of MessageLookup. The MessageSource is used to manage the loading and lookup from external
+ * resource bundle files. See {@link FilePaths#SPRING_CONFIG_CORE} for the Spring configuration.
  * <p>
- * Enumerated types which implement the {@link LocalizedTextLookup} interface
- * can be passed to {@link MessageLookup} to look up a localized text string for
- * each instance of the enumerated type.
+ * Enumerated types which implement the {@link LocalizedTextLookup} interface can be passed to {@link MessageLookup} to
+ * look up a localized text string for each instance of the enumerated type.
  * <p>
  * Text strings for enumerated types can currently be found in
- * org/mifos/config/localizedResources/MessageLookupMessages.properties (and
- * associated versions for different locales).
+ * org/mifos/config/localizedResources/MessageLookupMessages.properties (and associated versions for different locales).
  */
-public class MessageLookup implements MessageSourceAware {
-    private static MessageLookup messageLookupInstance = new MessageLookup();
+public class MessageLookup implements MessageSourceAware, FactoryBean<MessageLookup> {
 
-    @Autowired(required=false)
+    @Autowired
     private ApplicationConfigurationDao applicationConfigurationDao;
 
-    @Autowired(required=false)
+    private Map<LabelKey, String> labelCache = new ConcurrentHashMap<LabelKey, String>();
+
+    @Autowired
     private GenericDao genericDao;
 
-    @Autowired(required=false)
+    @Autowired
     LegacyMasterDao legacyMasterDao;
 
-    @Autowired(required=false)
-	CustomizedTextServiceFacade customizedTextServiceFacade;
+    @Autowired
+    CustomizedTextServiceFacade customizedTextServiceFacade;
+
+    @Autowired
+    PersonnelServiceFacade personnelServiceFacade;
 
     private MessageSource messageSource;
 
-    public static final MessageLookup getInstance() {
-        return messageLookupInstance;
+    public String replaceSubstitutions(String message) {
+        return customizedTextServiceFacade.replaceSubstitutions(message);
     }
 
-    /**
-     * Use {@link #getInstance()} instead.
-     */
-    private MessageLookup() {
-    }
-
-	public String replaceSubstitutions(String message) {
-		return customizedTextServiceFacade.replaceSubstitutions(message);
-	}
-
-    public String lookup(LocalizedTextLookup namedObject, Locale locale) {
-        return customizedTextServiceFacade.replaceSubstitutions(lookup(namedObject.getPropertiesKey(), locale));
-    }
-
-    /*
-     * TODO: this will need to change in order to support per user Locale
-     * selection
-     */
     public String lookup(LocalizedTextLookup namedObject) {
-        return customizedTextServiceFacade.replaceSubstitutions(lookup(namedObject.getPropertiesKey()));
-    }
-
-    public String lookup(String lookupKey) {
-        Locale locale = Localization.getInstance().getConfiguredLocale();
-        return lookup(lookupKey, locale);
+        return replaceSubstitutions(lookup(namedObject.getPropertiesKey()));
     }
 
     public String lookup(LocalizedTextLookup namedObject, Object[] params) {
-        Locale locale = Localization.getInstance().getConfiguredLocale();
-        return customizedTextServiceFacade.replaceSubstitutions(
-        		messageSource.getMessage(namedObject.getPropertiesKey(), params, namedObject.getPropertiesKey(), locale));
+        Locale locale = personnelServiceFacade.getUserPreferredLocale();
+        return replaceSubstitutions(messageSource.getMessage(
+                namedObject.getPropertiesKey(), params, namedObject.getPropertiesKey(), locale));
     }
 
-    public String lookup(LocalizedTextLookup namedObject, UserContext user) {
-        return lookup(namedObject, user.getPreferredLocale());
-    }
-
-    public String lookup(String lookupKey, Locale locale) {
+    public String lookup(String lookupKey) {
         try {
-            String textMessage = MifosConfiguration.getInstance().getLabel(lookupKey);
+            Locale locale = personnelServiceFacade.getUserPreferredLocale();
+            String textMessage = getLabel(lookupKey);
             // if we don't find a message above, then it means that it has not
             // been customized and
             // we should return the default message from the properties file
             return StringUtils.isEmpty(textMessage) ?
-            		customizedTextServiceFacade.replaceSubstitutions(messageSource.getMessage(lookupKey, null, lookupKey, locale))
-                    : customizedTextServiceFacade.replaceSubstitutions(textMessage);
+                    replaceSubstitutions(messageSource.getMessage(lookupKey, null, lookupKey, locale))
+                    : replaceSubstitutions(textMessage);
         } catch (ConfigurationException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public String lookup(String lookupKey, UserContext userContext) {
-        Locale locale = userContext.getPreferredLocale();
-        return lookup(lookupKey, locale);
-    }
-
-    public String lookupLabel(String labelKey) {
-        return lookupLabel(labelKey, Localization.getInstance().getConfiguredLocale());
-    }
-
-    public String lookupLabel(String labelKey, UserContext userContext) {
-        return lookupLabel(labelKey, userContext.getPreferredLocale());
-    }
-
     /*
-     * Return a label for given label key. Label keys are listed in {@link
-     * ConfigurationConstants}.
+     * Return a label for given label key. Label keys are listed in {@link ConfigurationConstants}.
      */
-    protected String lookupLabel(String labelKey, Locale locale) {
+    public String lookupLabel(String labelKey) {
         try {
-            String labelText = MifosConfiguration.getInstance().getLabel(labelKey);
+            String labelText = getLabel(labelKey);
             // if we don't find a label here, then it means that it has not been
             // customized and
             // we should return the default label from the properties file
-            return StringUtils.isEmpty(labelText) ? lookup(labelKey + ".Label", locale) : labelText;
+            return StringUtils.isEmpty(labelText) ? lookup(labelKey + ".Label") : labelText;
         } catch (ConfigurationException e) {
             throw new RuntimeException(e);
         }
@@ -177,46 +141,41 @@ public class MessageLookup implements MessageSourceAware {
     /*
      * Set a custom label value that will override resource bundle values.
      *
-     * TODO: we need to add a method for getting and/or setting a label value
-     * directly rather than having to iterate. Also, we don't necessarily want
-     * to reinitialize the MifosConfiguration after each update. Ultimately, it
-     * would be cleaner to just use a key-value lookup to implement these
-     * overrides.
+     * TODO: we need to add a method for getting and/or setting a label value directly rather than having to iterate.
+     * Also, we don't necessarily want to reinitialize the MifosConfiguration after each update. Ultimately, it would be
+     * cleaner to just use a key-value lookup to implement these overrides.
      */
-    public void setCustomLabel(String labelKey, String value, UserContext userContext) throws PersistenceException {
-
+    public void setCustomLabel(String labelKey, String value) throws PersistenceException {
         // only update the value if there is a change
-        if (lookupLabel(labelKey, userContext).compareTo(value) != 0) {
-            // getLookupEntities currently closes the Hibernate session (which
-            // is bad)
+        if (lookupLabel(labelKey).compareTo(value) != 0) {
             for (LookUpEntity entity : applicationConfigurationDao.findLookupEntities()) {
                 if (entity.getEntityType().equals(labelKey)) {
                     Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
                     for (LookUpLabelEntity label : labels) {
                         label.setLabelName(value);
                         genericDao.createOrUpdate(label);
-                        // because the session is closed at the beginning of
-                        // this method, we need to make sure we commit
-                        // this is bad too, and should go away with some
-                        // refactoring
                         StaticHibernateUtil.commitTransaction();
                         updateLookupValueInCache(labelKey, value);
                     }
                 }
             }
         }
-        // if (updateCache) {
-        // MifosConfiguration.getInstance().init();
-        // }
-
     }
 
-    public void updateLookupValueInCache(LocalizedTextLookup keyContainer, String newLookupValue) {
-        MifosConfiguration.getInstance().updateKey(keyContainer, newLookupValue);
+    public void updateLookupValueInCache(LocalizedTextLookup keyContainer, String newValue) {
+        updateLookupValueInCache(keyContainer.getPropertiesKey(), newValue);
     }
 
-    public void updateLookupValueInCache(String lookupKey, String newLookupValue) {
-        MifosConfiguration.getInstance().updateKey(lookupKey, newLookupValue);
+    public void updateLookupValueInCache(String lookupKey, String newValue) {
+        synchronized (labelCache) {
+            LabelKey key = new LabelKey(lookupKey, Localization.ENGLISH_LOCALE_ID);
+            if (labelCache.containsKey(key)) {
+                labelCache.remove(key);
+                labelCache.put(key, newValue);
+            } else {
+                labelCache.put(key, newValue);
+            }
+        }
     }
 
     /**
@@ -238,20 +197,87 @@ public class MessageLookup implements MessageSourceAware {
                     } catch (Exception ex) {
                         throw new RuntimeException(ex.getMessage());
                     }
-                    MessageLookup.getInstance().updateLookupValueInCache(lookupValueEntity.getLookUpName(), newValue);
+                    updateLookupValueInCache(lookupValueEntity.getLookUpName(), newValue);
                     break;
                 }
             }
         }
     }
 
+    public void updateLabelKey(String keyString, String newLabelValue, Short localeId) {
+        synchronized (labelCache) {
+            LabelKey key = new LabelKey(keyString, localeId);
+            if (labelCache.containsKey(key)) {
+                labelCache.remove(key);
+                labelCache.put(key, newLabelValue);
+            } else {
+                labelCache.put(key, newLabelValue);
+            }
+        }
+    }
+
+    public void initializeLabelCache() {
+        labelCache.clear();
+
+        List<LookUpValueEntity> lookupValueEntities = applicationConfigurationDao.findLookupValues();
+        for (LookUpValueEntity lookupValueEntity : lookupValueEntities) {
+            String keyString = lookupValueEntity.getPropertiesKey();
+            if (keyString == null) {
+                throw new IllegalStateException("Key is empty");
+            }
+
+            String messageText = lookupValueEntity.getMessageText();
+            if (StringUtils.isBlank(messageText)) {
+                messageText = lookup(keyString);
+            }
+
+            labelCache.put(new LabelKey(keyString, Localization.ENGLISH_LOCALE_ID), messageText);
+        }
+    }
+
+    public void deleteKey(String lookupValueKey) {
+        synchronized (labelCache) {
+            LabelKey key = new LabelKey(lookupValueKey, Localization.ENGLISH_LOCALE_ID);
+            if (labelCache.containsKey(key)) {
+                labelCache.remove(key);
+            }
+        }
+    }
+
+    public Map<LabelKey, String> getLabelCache() {
+        return labelCache;
+    }
+
+    public String getLabel(String key) throws ConfigurationException {
+        // we only use localeId 1 to store labels since it is an override for
+        // all locales
+        return (key == null) ? null : labelCache.get(new LabelKey(key, Localization.ENGLISH_LOCALE_ID));
+    }
+
     /**
-     * This is a dependency injection method used by Spring to inject a
-     * MessageSource for resource bundle based message lookup.
+     * This is a dependency injection method used by Spring to inject a MessageSource for resource bundle based message
+     * lookup.
      */
     @Override
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
+    @Override
+    public MessageLookup getObject() throws Exception {
+        if(labelCache.isEmpty()) {
+            initializeLabelCache();
+        }
+        return this;
+    }
+
+    @Override
+    public Class<MessageLookup> getObjectType() {
+        return MessageLookup.class;
+    }
+
+    @Override
+    public boolean isSingleton() {
+        return true;
+    }
 }

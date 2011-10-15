@@ -20,6 +20,12 @@
 
 package org.mifos.accounts.struts.actionforms;
 
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
@@ -31,11 +37,6 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class EditStatusActionForm extends BaseActionForm implements QuestionResponseCapturer{
 

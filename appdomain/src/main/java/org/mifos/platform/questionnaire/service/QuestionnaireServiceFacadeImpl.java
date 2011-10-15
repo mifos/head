@@ -20,6 +20,9 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.AuditLogService;
 import org.mifos.platform.questionnaire.QGFlowsService;
@@ -29,9 +32,6 @@ import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Iterator;
-import java.util.List;
 
 public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacade {
 

@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.LocalDate;
-import org.mifos.application.master.util.helpers.PaymentTypes;
 
 /**
  * Holds data to save a collection sheet

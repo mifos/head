@@ -23,6 +23,7 @@ package org.mifos.application.master.business;
 import java.util.Set;
 
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 
 /**
  * This is a deprecated piece of the code which is being replaced by enums.
@@ -55,7 +56,7 @@ public class StateEntity extends MasterDataEntity {
 
     @Override
     public String getName() {
-        return MessageLookup.getInstance().lookup(getLookUpValue());
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(getLookUpValue());
     }
 
     @Override
@@ -76,6 +77,6 @@ public class StateEntity extends MasterDataEntity {
     }
 
     protected void setName(String name) {
-        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+        ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValue(getLookUpValue(), name);
     }
 }

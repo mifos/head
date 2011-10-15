@@ -224,7 +224,7 @@ public class CustomerStatusUpdateTest {
         customerService.updateCustomerStatus(userContext, customerStatusUpdate);
 
         // verification
-        verify(messageLookupHelper).lookupLabel(ConfigurationConstants.GROUP, userContext);
+        verify(messageLookupHelper).lookupLabel(ConfigurationConstants.GROUP);
     }
 
     @Test(expected = CustomerException.class)
@@ -247,7 +247,7 @@ public class CustomerStatusUpdateTest {
         customerService.updateCustomerStatus(userContext, customerStatusUpdate);
 
         // verification
-        verify(messageLookupHelper).lookupLabel(ConfigurationConstants.GROUP, userContext);
+        verify(messageLookupHelper).lookupLabel(ConfigurationConstants.GROUP);
     }
 
     @Test(expected = MifosRuntimeException.class)

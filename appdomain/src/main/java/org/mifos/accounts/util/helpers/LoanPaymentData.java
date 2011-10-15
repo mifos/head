@@ -20,12 +20,10 @@
 
 package org.mifos.accounts.util.helpers;
 
-import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.accounts.loan.business.LoanSummaryEntity;
-import org.mifos.framework.util.helpers.Money;
-
 import java.util.Map;
+
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.framework.util.helpers.Money;
 
 public class LoanPaymentData extends AccountPaymentData {
 

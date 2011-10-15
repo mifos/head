@@ -33,7 +33,6 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.persistence.CenterPersistence;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.persistence.LegacyClientDao;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.persistence.GroupPersistence;
 import org.mifos.customers.office.business.OfficeBO;

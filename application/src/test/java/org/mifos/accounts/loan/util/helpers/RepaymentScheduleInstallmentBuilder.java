@@ -1,11 +1,11 @@
 package org.mifos.accounts.loan.util.helpers;
 
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
-
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
+
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 
 public class RepaymentScheduleInstallmentBuilder {
     private RepaymentScheduleInstallment repaymentScheduleInstallment;
@@ -60,7 +60,7 @@ public class RepaymentScheduleInstallmentBuilder {
     }
 
     public RepaymentScheduleInstallmentBuilder reset(Locale locale) {
-        this.repaymentScheduleInstallment = new RepaymentScheduleInstallment(locale);
+        this.repaymentScheduleInstallment = new RepaymentScheduleInstallment();
         return this;
     }
 
@@ -70,16 +70,15 @@ public class RepaymentScheduleInstallmentBuilder {
     }
 
     public RepaymentScheduleInstallmentBuilder withDueDateValue(String dueDate) {
-        Locale dateLocale = repaymentScheduleInstallment.getLocale();
-        Date dateValue = getDate(dueDate, dateLocale);
+        Date dateValue = getDate(dueDate);
         this.repaymentScheduleInstallment.setDueDateValue(dateValue);
         return this;
     }
 
-    private Date getDate(String dueDate, Locale dateLocale) {
+    private Date getDate(String dueDate) {
         Date date;
         try {
-            date = DateUtils.parseDate(dueDate, dateLocale);
+            date = DateUtils.parseDate(dueDate);
         } catch (ParseException e) {
             date = null;
         }

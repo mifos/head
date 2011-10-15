@@ -1,5 +1,10 @@
 package org.mifos.application.questionnaire.struts;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -18,10 +23,6 @@ import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.util.CollectionUtils;
 import org.mifos.platform.validations.ValidationException;
 import org.mifos.security.util.UserContext;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
 public class QuestionnaireFlowAdapter {
 

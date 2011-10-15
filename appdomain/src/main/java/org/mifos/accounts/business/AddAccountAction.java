@@ -25,30 +25,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.config.Localization;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddAccountAction extends Upgrade {
 
-    private final Short locale;
     private final String lookupValueKey;
     private final int action;
     private final String message;
-    protected static final String wrongLookupValueKeyFormat = "The key format must be AccountAction-...";
+    protected static final String WRONG_KEY_FORMAT = "The key format must be AccountAction-...";
     protected static final String keyFormat = "AccountAction-";
-
-    /*
-     * This constructor is used for version 174 and lower. And it must not be
-     * used afterward
-     */
-    public AddAccountAction(int action, Short locale, String message) {
-        super();
-        this.action = action;
-        this.locale = locale;
-        this.message = message;
-        this.lookupValueKey = " ";
-    }
 
     /*
      * This constructor must be used after version 174. The lookupValueKey must
@@ -57,10 +44,9 @@ public class AddAccountAction extends Upgrade {
     public AddAccountAction(int action, String lookupValueKey) {
         super();
         if (!validateLookupValueKey(keyFormat, lookupValueKey)) {
-            throw new RuntimeException(wrongLookupValueKeyFormat);
+            throw new RuntimeException(WRONG_KEY_FORMAT);
         }
         this.action = action;
-        this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;
         this.lookupValueKey = lookupValueKey;
         this.message = null;
     }
@@ -71,7 +57,7 @@ public class AddAccountAction extends Upgrade {
         int lookupEntity = LookUpEntity.ACCOUNT_ACTION;
 
         int lookupId = insertLookupValue(connection, lookupEntity, lookupValueKey);
-        insertMessage(connection, lookupId, locale, message);
+        insertMessage(connection, lookupId, Localization.ENGLISH_LOCALE_ID, message);
         addAction(connection, action, lookupId);
     }
 

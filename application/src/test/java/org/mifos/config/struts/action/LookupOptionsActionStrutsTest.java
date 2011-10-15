@@ -34,7 +34,6 @@ import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.struts.actionform.LookupOptionsActionForm;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.config.util.helpers.LookupOptionData;
@@ -115,9 +114,6 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testLoad() throws Exception {
-        // Required for resetting the label cache
-        MifosConfiguration.getInstance().init();
-
         setRequestPathInfo("/lookupOptionsAction.do");
         addRequestParameter("method", "load");
         performNoErrors();

@@ -20,7 +20,8 @@
 
 package org.mifos.application.questionnaire.service;
 
-import org.mifos.platform.questionnaire.QGFlowsService;
+import java.util.List;
+
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.QuestionGroupReference;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
@@ -28,8 +29,7 @@ import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionExceptio
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-
-import java.util.List;
+import org.mifos.platform.questionnaire.QGFlowsService;
 
 public class QGFlowsServiceImpl implements QGFlowsService {
 

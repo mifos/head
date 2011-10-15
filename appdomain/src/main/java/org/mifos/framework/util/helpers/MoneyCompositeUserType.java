@@ -20,6 +20,13 @@
 
 package org.mifos.framework.util.helpers;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+
 import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionImplementor;
 import org.hibernate.type.StandardBasicTypes;
@@ -28,13 +35,6 @@ import org.hibernate.usertype.CompositeUserType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
-
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
 
 /**
  * This class denotes a composite user type that has been created for the Money

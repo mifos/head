@@ -20,11 +20,18 @@
 
 package org.mifos.customers.group.persistence;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.ClientRules;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.persistence.CenterPersistence;
 import org.mifos.customers.exceptions.CustomerException;
@@ -35,7 +42,6 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.framework.exceptions.HibernateSearchException;
@@ -46,12 +52,6 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.DateTimeService;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @deprecated - use {@link CustomerDao}

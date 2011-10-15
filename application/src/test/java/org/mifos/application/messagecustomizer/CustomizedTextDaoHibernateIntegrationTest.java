@@ -20,16 +20,14 @@
 
 package org.mifos.application.messagecustomizer;
 
-import java.util.HashMap;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.util.Map;
 
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.springframework.beans.factory.annotation.Autowired;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.hasItem;
 
 /**
  *

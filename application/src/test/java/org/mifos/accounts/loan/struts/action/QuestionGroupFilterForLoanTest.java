@@ -1,20 +1,20 @@
 package org.mifos.accounts.loan.struts.action;
 
-import org.junit.Test;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.QuestionGroupReference;
-import org.mifos.domain.builders.LoanProductBuilder;
-import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.junit.Test;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.QuestionGroupReference;
+import org.mifos.domain.builders.LoanProductBuilder;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 
 public class QuestionGroupFilterForLoanTest {
 

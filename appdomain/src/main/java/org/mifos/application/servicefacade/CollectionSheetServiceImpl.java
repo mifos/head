@@ -26,9 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.hibernate.HibernateException;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
@@ -41,10 +38,13 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.client.business.ClientAttendanceBO;
 import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * implementation of CollectionSheetService

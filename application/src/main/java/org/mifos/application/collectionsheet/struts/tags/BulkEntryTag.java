@@ -28,10 +28,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.struts.uihelpers.BulkEntryDisplayHelper;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.master.business.CustomValueListElementDto;
@@ -44,6 +42,8 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BulkEntryTag extends BodyTagSupport {
 

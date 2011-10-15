@@ -33,6 +33,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 
 /**
  * This class is mifos Select tag which renders the tag on the screen User
@@ -472,7 +473,7 @@ public class MifosSelect extends BodyTagSupport {
 
     private MessageLookup getMessageLookup() {
         if (null == messageLookup) {
-            messageLookup = MessageLookup.getInstance();
+            messageLookup = ApplicationContextProvider.getBean(MessageLookup.class);
         }
         return messageLookup;
     }

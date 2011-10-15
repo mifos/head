@@ -635,7 +635,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 LookUpValueEntity lookupValue = accountActionEntity.getLookUpValue();
                 String messageText = lookupValue.getMessageText();
                 if (StringUtils.isBlank(messageText)) {
-                    messageText = MessageLookup.getInstance().lookup(lookupValue.getPropertiesKey());
+                    messageText = ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupValue.getPropertiesKey());
                 }
                 transactionTypes.add(new ListElement(accountActionEntity.getId().intValue(), messageText));
             }
@@ -651,7 +651,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 LookUpValueEntity lookupValue = paymentTypeEntity.getLookUpValue();
                 String messageText = lookupValue.getMessageText();
                 if (StringUtils.isBlank(messageText)) {
-                    messageText = MessageLookup.getInstance().lookup(lookupValue.getPropertiesKey());
+                    messageText = ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupValue.getPropertiesKey());
                 }
 
                 withdrawalPaymentTypes.add(new ListElement(paymentTypeEntity.getId().intValue(), messageText));
@@ -680,7 +680,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 LookUpValueEntity lookupValue = paymentTypeEntity.getLookUpValue();
                 String messageText = lookupValue.getMessageText();
                 if (StringUtils.isBlank(messageText)) {
-                    messageText = MessageLookup.getInstance().lookup(lookupValue.getPropertiesKey());
+                    messageText = ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupValue.getPropertiesKey());
                 }
 
                 depositPaymentTypes.add(new ListElement(paymentTypeEntity.getId().intValue(), messageText));

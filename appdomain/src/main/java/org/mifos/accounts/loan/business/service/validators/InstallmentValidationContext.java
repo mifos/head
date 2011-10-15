@@ -1,10 +1,10 @@
 package org.mifos.accounts.loan.business.service.validators;
 
-import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
-import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
-
 import java.math.BigDecimal;
 import java.util.Date;
+
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
+import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 
 public class InstallmentValidationContext {
     

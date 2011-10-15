@@ -107,7 +107,7 @@ public class LoanAccountActionTest {
     private LoanPrdBusinessService loanPrdBusinessService;
     @Mock
     private LoanServiceFacade loanServiceFacade;
-    
+
     @Mock
     private LoanAccountServiceFacade loanAccountServiceFacade;
     @Mock
@@ -128,8 +128,8 @@ public class LoanAccountActionTest {
     @Before
     public void setUp() throws PageExpiredException {
         loanAccountAction = new LoanAccountAction(null, loanBusinessService, null, loanPrdBusinessService, null, null) {
-            
-            @SuppressWarnings("unused") 
+
+            @SuppressWarnings("unused")
             @Override
             LoanBO getLoan(Integer loanId) {
                 return loanBO;
@@ -186,14 +186,14 @@ public class LoanAccountActionTest {
         when(dto.getLoanAmount()).thenReturn(loanAmount);
         when(dto.getDisbursementDate()).thenReturn(disbursementDate);
         when(request.getParameter(LoanAccountAction.ACCOUNT_ID)).thenReturn(String.valueOf(loanId));
-        when(loanServiceFacade.retrieveOriginalLoanSchedule(loanId, Locale.US)).thenReturn(dto);
+        when(loanServiceFacade.retrieveOriginalLoanSchedule(loanId)).thenReturn(dto);
         when(mapping.findForward("viewOriginalSchedule")).thenReturn(viewOriginalScheduleForward);
 
         ActionForward forward = loanAccountAction.viewOriginalSchedule(mapping, form, request, response);
 
         assertThat(forward, is(viewOriginalScheduleForward));
         verify(request).getParameter(LoanAccountAction.ACCOUNT_ID);
-        verify(loanServiceFacade).retrieveOriginalLoanSchedule(loanId, Locale.US);
+        verify(loanServiceFacade).retrieveOriginalLoanSchedule(loanId);
         verify(dto).getOriginalLoanScheduleInstallment();
         verify(dto).getLoanAmount();
         verify(dto).getDisbursementDate();
@@ -222,7 +222,7 @@ public class LoanAccountActionTest {
     public void getLoanRepaymentScheduleShouldCalculateExtraInterest() throws Exception {
         when(loanBusinessService.computeExtraInterest(eq(loanBO), Matchers.<Date>any())).thenReturn(new Errors());
         when(request.getParameter("accountId")).thenReturn("1");
-        when(loanServiceFacade.retrieveOriginalLoanSchedule(Matchers.<Integer>any(), Matchers.<Locale>anyObject())).
+        when(loanServiceFacade.retrieveOriginalLoanSchedule(Matchers.<Integer>any())).
                 thenReturn(new OriginalScheduleInfoDto("100", new Date(), Collections.<RepaymentScheduleInstallment>emptyList()));
         loanAccountAction.getLoanRepaymentSchedule(mapping, form, request, response);
         verify(loanBusinessService, times(1)).computeExtraInterest(Matchers.<LoanBO>any(), Matchers.<Date>any());
@@ -238,7 +238,7 @@ public class LoanAccountActionTest {
         when(form.getScheduleViewDateValue(Locale.US)).thenReturn(extraInterestDate);
         when(request.getParameter("accountId")).thenReturn("1");
         when(mapping.findForward("getLoanRepaymentScheduleFailure")).thenReturn(getLoanScheduleFailure);
-        when(loanServiceFacade.retrieveOriginalLoanSchedule(Matchers.<Integer>any(), Matchers.<Locale>anyObject())).
+        when(loanServiceFacade.retrieveOriginalLoanSchedule(Matchers.<Integer>any())).
                 thenReturn(new OriginalScheduleInfoDto("100", new Date(), Collections.<RepaymentScheduleInstallment>emptyList()));
         ActionForward forward = loanAccountAction.getLoanRepaymentSchedule(mapping, form, request, response);
         assertThat(forward, is(getLoanScheduleFailure));

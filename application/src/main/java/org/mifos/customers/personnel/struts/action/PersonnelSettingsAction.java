@@ -42,6 +42,8 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.security.MifosUser;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class PersonnelSettingsAction extends BaseAction {
 
@@ -138,6 +140,9 @@ public class PersonnelSettingsAction extends BaseAction {
         this.personnelServiceFacade.updateUserSettings(personnel.getPersonnelId(), personnelSettingsActionForm.getEmailId(), personnelSettingsActionForm.getName(),
                 personnelSettingsActionForm.getMaritalStatusValue(), personnelSettingsActionForm.getGenderValue(),
                 address, personnelSettingsActionForm.getPreferredLocaleValue());
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        user.setPreferredLocaleId(personnelSettingsActionForm.getPreferredLocaleValue());
 
         return mapping.findForward(ActionForwards.updateSettings_success.toString());
     }

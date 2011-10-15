@@ -20,8 +20,8 @@
 
 package org.mifos.framework.components.taggenerator;
 
-import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.api.CustomerLevel;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;

@@ -27,6 +27,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 
 public class GracePeriodTypeEntity extends MasterDataEntity {
 
@@ -68,7 +69,7 @@ public class GracePeriodTypeEntity extends MasterDataEntity {
 
     @Override
     public String getName() {
-        return MessageLookup.getInstance().lookup(getLookUpValue());
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(getLookUpValue());
     }
 
     @Override
@@ -81,7 +82,7 @@ public class GracePeriodTypeEntity extends MasterDataEntity {
      */
     @Deprecated
     public void setName(String name) {
-        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+        ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValue(getLookUpValue(), name);
     }
 }
 

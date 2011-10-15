@@ -46,7 +46,7 @@ public class MenuBuilder {
     public static void buildMenuForLocale(PageContext pageCtx) throws SystemException, JspException {
         MenuRepository menuRepository = MenuRepository.getInstance();
         pageContext = pageCtx;
-        Locale lc = LabelTagUtils.getInstance().getUserPreferredLocaleObject(pageContext);
+        Locale lc = LabelTagUtils.getInstance().getUserPreferredLocale();
         if (!menuRepository.isMenuForLocale(lc)) {
             Menu[] crudeMenu = menuRepository.getCrudeMenu();
             if (crudeMenu == null) {
@@ -164,6 +164,6 @@ public class MenuBuilder {
 
     private static String getLabel(String key) throws JspException {
         return LabelTagUtils.getInstance().getLabel(pageContext, MenuConstants.MENU_RESOURCE_NAME,
-                LabelTagUtils.getInstance().getUserPreferredLocaleObject(pageContext), key, null);
+                LabelTagUtils.getInstance().getUserPreferredLocale(), key, null);
     }
 }

@@ -22,11 +22,11 @@ package org.mifos.framework.hibernate.helper;
 
 import java.lang.reflect.Method;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hibernate.type.Type;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.util.DateTimeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is returned on a search operation. Search would typically result in a

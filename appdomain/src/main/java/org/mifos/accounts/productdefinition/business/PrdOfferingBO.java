@@ -20,6 +20,12 @@
 
 package org.mifos.accounts.productdefinition.business;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -43,12 +49,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Set;
 
 /**
  * A product is a set of rules (interest rate, number of installments, maximum

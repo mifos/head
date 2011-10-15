@@ -20,6 +20,10 @@
 
 package org.mifos.accounts.servicefacade;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountBO;
@@ -55,10 +59,6 @@ import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Concrete implementation of service to manipulate accounts from the presentation layer.

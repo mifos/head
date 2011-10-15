@@ -38,6 +38,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.api.CustomerLevel;
@@ -73,7 +74,7 @@ public class MeetingAction extends BaseAction {
     private List<WeekDay> getLocalizedWorkingDays() {
         List<WeekDay> workingDays = new FiscalCalendarRules().getWorkingDays();
         for (WeekDay workDay : workingDays) {
-            String weekdayName = MessageLookup.getInstance().lookup(workDay.getPropertiesKey());
+            String weekdayName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(workDay.getPropertiesKey());
             workDay.setWeekdayName(weekdayName);
         }
         return workingDays;

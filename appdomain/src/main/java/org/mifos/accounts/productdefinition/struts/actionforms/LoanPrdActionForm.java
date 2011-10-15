@@ -20,6 +20,14 @@
 
 package org.mifos.accounts.productdefinition.struts.actionforms;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -44,19 +52,17 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.LocalizationConverter;
-import org.mifos.framework.util.helpers.*;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ConversionError;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
+import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class LoanPrdActionForm extends BaseActionForm {
     private static final Logger logger = LoggerFactory.getLogger(LoanPrdActionForm.class);
@@ -1868,7 +1874,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 forNumberOfLastLoanInstallmentAtRow, resources);
         if (StringUtils.isBlank(getInterestTypes())) {
             addError(errors, "interestTypes", ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
-                    ConfigurationConstants.INTEREST, request), rateType);
+                    ConfigurationConstants.INTEREST), rateType);
         }
         validateMinMaxDefInterestRates(errors, locale, request);
         vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors, request);
@@ -1934,7 +1940,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 forNumberOfLastLoanInstallmentAtRow, resources);
         if (StringUtils.isBlank(getInterestTypes())) {
             addError(errors, "interestTypes", ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
-                    ConfigurationConstants.INTEREST, request), rateType);
+                    ConfigurationConstants.INTEREST), rateType);
         }
         if (StringUtils.isBlank(getPrdStatus())) {
             addError(errors, "prdStatus", ProductDefinitionConstants.ERROR_SELECT, status);
@@ -2179,11 +2185,11 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     private void isFrequencyMatchingOfferingFrequency(FeeBO fee, ActionErrors errors) {
         logger.debug("start Loan prd Action Form isFrequencyMatchingOfferingFrequency - fee:" + fee);
-        
+
         if (getFreqOfInstallmentsValue() != null
                 && fee.isPeriodic()
                 && (!(fee.getFeeFrequency().getFeeMeetingFrequency().getMeetingDetails().getRecurrenceType()
-                        .getRecurrenceId().equals(getFreqOfInstallmentsValue())) 
+                        .getRecurrenceId().equals(getFreqOfInstallmentsValue()))
                 || !(fee.getFeeFrequency().getFeeMeetingFrequency().getMeetingDetails().getRecurAfter()
                         %getRecurAfterValue() == 0))) {
             addError(errors, "Fee", ProductDefinitionConstants.ERRORFEEFREQUENCY, fee.getFeeName());
@@ -2226,7 +2232,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                     locale);
             String glCodeFor = resources.getString("product.glCodeFor");
             addError(errors, ProductDefinitionConstants.INTERESTGLCODE, ProductDefinitionConstants.ERROR_SELECT,
-                    glCodeFor + getLabel(ConfigurationConstants.INTEREST, request));
+                    glCodeFor + getLabel(ConfigurationConstants.INTEREST));
         }
     }
 
@@ -2442,7 +2448,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         Double maxInterest = null;
         Double minInterest = null;
         Double defInterest = null;
-        String label = getLabel(ConfigurationConstants.INTEREST, request);
+        String label = getLabel(ConfigurationConstants.INTEREST);
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE,
                 locale);
         String prdrate = resources.getString("product.prdrate");

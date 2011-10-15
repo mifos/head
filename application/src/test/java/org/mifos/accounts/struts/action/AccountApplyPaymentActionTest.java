@@ -19,6 +19,14 @@
  */
 package org.mifos.accounts.struts.action;
 
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.ActionMapping;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,13 +39,6 @@ import org.mifos.security.util.UserContext;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AccountApplyPaymentActionTest {

@@ -56,10 +56,10 @@ public class CashFlowValidator {
 
     private void validateCumulativeCashFlow(MessageContext messageContext, MonthlyCashFlowForm monthlyCashFlowForm) {
         if (monthlyCashFlowForm.cumulativeCashFlowIsLessThanOrEqualToZero()) {
-            String message = format("Cumulative cash flow for {0} {1} should be greater than zero", monthlyCashFlowForm.getMonthInLocale(),
+            String message = format("Cumulative cash flow for {0} {1} should be greater than zero",
                     Integer.toString(monthlyCashFlowForm.getYear()));
             constructErrorMessage(CashFlowConstants.CUMULATIVE_CASH_FLOW_FOR_MONTH_SHOULD_BE_GREATER_THAN_ZERO, message, messageContext,
-                    monthlyCashFlowForm.getMonthInLocale(), Integer.toString(monthlyCashFlowForm.getYear()));
+                    Integer.toString(monthlyCashFlowForm.getYear()));
         }
     }
 
@@ -125,28 +125,25 @@ public class CashFlowValidator {
 
     private void validateExpense(MessageContext messageContext, MonthlyCashFlowForm monthlyCashFlowForm) {
         if (monthlyCashFlowForm.hasNoExpense()) {
-            String message = format("Please specify expense for {0} {1}.", monthlyCashFlowForm.getMonthInLocale(),
+            String message = format("Please specify expense for {0} {1}.",
                     Integer.toString(monthlyCashFlowForm.getYear()));
-            constructErrorMessage(CashFlowConstants.EMPTY_EXPENSE, message, messageContext,
-                    monthlyCashFlowForm.getMonthInLocale(), Integer.toString(monthlyCashFlowForm.getYear()));
+            constructErrorMessage(CashFlowConstants.EMPTY_EXPENSE, message, messageContext, Integer.toString(monthlyCashFlowForm.getYear()));
         }
     }
 
     private void validateRevenue(MessageContext messageContext, MonthlyCashFlowForm monthlyCashFlowForm) {
         if (monthlyCashFlowForm.hasNoRevenue()) {
-            String message = format("Please specify revenue for {0} {1}.", monthlyCashFlowForm.getMonthInLocale(),
+            String message = format("Please specify revenue for {0} {1}.",
                     Integer.toString(monthlyCashFlowForm.getYear()));
-            constructErrorMessage(CashFlowConstants.EMPTY_REVENUE, message, messageContext,
-                    monthlyCashFlowForm.getMonthInLocale(), Integer.toString(monthlyCashFlowForm.getYear()));
+            constructErrorMessage(CashFlowConstants.EMPTY_REVENUE, message, messageContext, Integer.toString(monthlyCashFlowForm.getYear()));
         }
     }
 
     private void validateNotes(MessageContext messageContext, MonthlyCashFlowForm monthlyCashFlowForm) {
         if (!StringUtils.isEmpty(monthlyCashFlowForm.getNotes()) && monthlyCashFlowForm.getNotes().length() > 300) {
-            String message = format("Notes should be less than 300 characters for {0} {1}.", monthlyCashFlowForm.getMonthInLocale(),
+            String message = format("Notes should be less than 300 characters for {0} {1}.",
                     Integer.toString(monthlyCashFlowForm.getYear()));
-            constructErrorMessage(CashFlowConstants.EMPTY_NOTES, message, messageContext,
-                    monthlyCashFlowForm.getMonthInLocale(), Integer.toString(monthlyCashFlowForm.getYear()));
+            constructErrorMessage(CashFlowConstants.EMPTY_NOTES, message, messageContext, Integer.toString(monthlyCashFlowForm.getYear()));
         }
     }
 

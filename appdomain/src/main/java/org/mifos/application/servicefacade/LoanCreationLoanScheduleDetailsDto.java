@@ -20,11 +20,11 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-
-import java.util.List;
 
 public class LoanCreationLoanScheduleDetailsDto {
 

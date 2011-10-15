@@ -21,7 +21,6 @@
 package org.mifos.framework.struts;
 
 import javax.servlet.ServletException;
-// import javax.servlet.ServletRegistration;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionServlet;

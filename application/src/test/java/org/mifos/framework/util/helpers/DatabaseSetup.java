@@ -25,10 +25,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.hibernate.cfg.Configuration;
 import org.mifos.core.MifosResourceUtil;
-import org.mifos.framework.exceptions.HibernateStartUpException;
-import org.mifos.framework.hibernate.helper.HibernateConstants;
 import org.mifos.framework.persistence.SqlExecutor;
 
 public class DatabaseSetup {

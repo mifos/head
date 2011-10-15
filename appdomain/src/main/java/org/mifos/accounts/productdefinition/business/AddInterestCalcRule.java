@@ -25,8 +25,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.config.Localization;
 import org.mifos.framework.persistence.Upgrade;
 
 /* AddInterestCalcRule adds a new type of interest calculation method
@@ -40,9 +40,8 @@ public class AddInterestCalcRule extends Upgrade {
     private final int categoryId;
     private final String lookupName;
     private final String description;
-
-    private final Short locale;
     private final String message;
+
     protected static final String wrongLookupValueKeyFormat = "The key format must be InterestTypes-...";
     protected static final String keyFormat = "InterestTypes-";
 
@@ -57,7 +56,6 @@ public class AddInterestCalcRule extends Upgrade {
         this.lookupName = lookupName;
         this.categoryId = categoryId;
         this.description = description;
-        this.locale = locale;
         this.message = message;
     }
 
@@ -71,7 +69,6 @@ public class AddInterestCalcRule extends Upgrade {
         this.lookupName = lookupName;
         this.categoryId = categoryId;
         this.description = description;
-        this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;
         this.message = null;
     }
 
@@ -81,7 +78,7 @@ public class AddInterestCalcRule extends Upgrade {
         int lookupEntity = LookUpEntity.INTEREST_TYPES;
 
         int lookupId = insertLookupValue(connection, lookupEntity, lookupName);
-        insertMessage(connection, lookupId, locale, message);
+        insertMessage(connection, lookupId, Localization.ENGLISH_LOCALE_ID, message);
         addInterestType(connection, newRuleId, description, lookupId);
     }
 

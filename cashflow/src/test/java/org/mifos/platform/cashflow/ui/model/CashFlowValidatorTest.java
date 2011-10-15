@@ -16,8 +16,6 @@ import org.springframework.binding.message.MessageResolver;
 import org.springframework.binding.validation.ValidationContext;
 
 import java.math.BigDecimal;
-import java.util.Locale;
-
 import static java.util.Arrays.asList;
 import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.Matchers.is;
@@ -48,7 +46,7 @@ public class CashFlowValidatorTest {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(EMPTY_LIST);
         cashFlowDetail.setTotalCapital(new BigDecimal(123d));
         cashFlowDetail.setTotalLiability(new BigDecimal(456d));
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, null, 0d, Locale.US);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, null, 0d);
         cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
         verify(validationContext).getMessageContext();
         verify(messageContext, never()).addMessage(Matchers.<MessageResolver>anyObject());
@@ -60,7 +58,7 @@ public class CashFlowValidatorTest {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(EMPTY_LIST);
         cashFlowDetail.setTotalCapital(null);
         cashFlowDetail.setTotalLiability(null);
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, null, 0d, Locale.US);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, null, 0d);
         cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
         verify(validationContext).getMessageContext();
         verify(messageContext, never()).addMessage(Matchers.<MessageResolver>anyObject());
@@ -72,7 +70,7 @@ public class CashFlowValidatorTest {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(EMPTY_LIST);
         cashFlowDetail.setTotalCapital(new BigDecimal(0));
         cashFlowDetail.setTotalLiability(new BigDecimal(0));
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, null, 0d, Locale.US);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, null, 0d);
         cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
         verify(validationContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher(CashFlowConstants.TOTAL_CAPITAL_SHOULD_BE_GREATER_THAN_ZERO)));
@@ -84,7 +82,7 @@ public class CashFlowValidatorTest {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(EMPTY_LIST);
         cashFlowDetail.setTotalCapital(null);
         cashFlowDetail.setTotalLiability(null);
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, null, 0d, Locale.US);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, null, 0d);
         cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
         verify(validationContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher(CashFlowConstants.TOTAL_CAPITAL_SHOULD_NOT_BE_EMPTY)));
@@ -97,7 +95,7 @@ public class CashFlowValidatorTest {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(EMPTY_LIST);
         cashFlowDetail.setTotalCapital(new BigDecimal(-23));
         cashFlowDetail.setTotalLiability(new BigDecimal(-1));
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, null, 0d, Locale.US);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, null, 0d);
         cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
         verify(validationContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher(CashFlowConstants.TOTAL_CAPITAL_SHOULD_BE_GREATER_THAN_ZERO)));
@@ -110,7 +108,7 @@ public class CashFlowValidatorTest {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(EMPTY_LIST);
         cashFlowDetail.setTotalCapital(new BigDecimal(100d));
         cashFlowDetail.setTotalLiability(new BigDecimal(5d));
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(1000d), 1000d, Locale.US);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(1000d), 1000d);
         cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
         verify(validationContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher(CashFlowConstants.INDEBTEDNESS_RATIO_MORE_THAN_ALLOWED)));
@@ -123,7 +121,7 @@ public class CashFlowValidatorTest {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(EMPTY_LIST);
         cashFlowDetail.setTotalCapital(new BigDecimal(33d));
         cashFlowDetail.setTotalLiability(new BigDecimal(5d));
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(1000d), 1000d, Locale.US);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(1000d), 1000d);
         cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
         verify(validationContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher(CashFlowConstants.INDEBTEDNESS_RATIO_MORE_THAN_ALLOWED)));
@@ -135,7 +133,7 @@ public class CashFlowValidatorTest {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(EMPTY_LIST);
         cashFlowDetail.setTotalCapital(new BigDecimal(1000d));
         cashFlowDetail.setTotalLiability(new BigDecimal(5d));
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(1000d), 1000d, Locale.US);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(1000d), 1000d);
         cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
         verify(validationContext).getMessageContext();
         verify(messageContext, never()).addMessage(Matchers.<MessageResolver>anyObject());
@@ -149,7 +147,7 @@ public class CashFlowValidatorTest {
         MonthlyCashFlowDetail cashFlowDetail2 = new MonthlyCashFlowDetail(new DateTime(), new BigDecimal(23), new BigDecimal(34), "notes");
         MonthlyCashFlowDetail cashFlowDetail3 = new MonthlyCashFlowDetail(new DateTime(), new BigDecimal(20), new BigDecimal(30), "notes");
         CashFlowDetail cashFlowDetail = new CashFlowDetail(asList(cashFlowDetail1, cashFlowDetail2, cashFlowDetail3));
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d, Locale.US);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d);
         cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
         assertThat(cashFlowForm.getTotalExpenses().doubleValue(), is(76d));
         assertThat(cashFlowForm.getTotalRevenues().doubleValue(), is(55d));
@@ -168,7 +166,7 @@ public class CashFlowValidatorTest {
         MonthlyCashFlowDetail cashFlowDetail2 = new MonthlyCashFlowDetail(june, new BigDecimal(120), new BigDecimal(12), "notes");
         MonthlyCashFlowDetail cashFlowDetail3 = new MonthlyCashFlowDetail(july, new BigDecimal(1), new BigDecimal(108), "notes");
         CashFlowDetail cashFlowDetail = new CashFlowDetail(asList(cashFlowDetail1, cashFlowDetail2, cashFlowDetail3));
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d, Locale.US);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d);
         assertEquals(new BigDecimal("-1"), cashFlowForm.getMonthlyCashFlows().get(0).getCumulativeCashFlow());
         assertEquals(new BigDecimal("107"), cashFlowForm.getMonthlyCashFlows().get(1).getCumulativeCashFlow());
         assertEquals(new BigDecimal("0"), cashFlowForm.getMonthlyCashFlows().get(2).getCumulativeCashFlow());
@@ -188,7 +186,7 @@ public class CashFlowValidatorTest {
         MonthlyCashFlowDetail cashFlowDetail1 = new MonthlyCashFlowDetail(may, new BigDecimal(12), new BigDecimal(13), "notes");
         MonthlyCashFlowDetail cashFlowDetail2 = new MonthlyCashFlowDetail(june, null, null, "notes");
         CashFlowDetail cashFlowDetail = new CashFlowDetail(asList(cashFlowDetail1, cashFlowDetail2));
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d, Locale.US);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d);
         cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
         verify(messageContext, times(2)).hasErrorMessages();
         verify(validationContext).getMessageContext();

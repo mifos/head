@@ -20,6 +20,27 @@
 
 package org.mifos.accounts.loan.business;
 
+import java.io.Serializable;
+import java.sql.Date;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
@@ -31,14 +52,6 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.sql.Date;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
 
 @NamedQueries( {
         @NamedQuery(
@@ -361,10 +374,10 @@ public class OriginalLoanScheduleEntity implements Comparable<OriginalLoanSchedu
         return versionNo;
     }
 
-    public RepaymentScheduleInstallment toDto(Locale userLocale) {
+    public RepaymentScheduleInstallment toDto() {
         return new RepaymentScheduleInstallment(this.installmentId,
                 this.actionDate, this.principal, this.interest,
-                this.getTotalFeesDue(), this.miscFee, this.miscPenalty, userLocale);
+                this.getTotalFeesDue(), this.miscFee, this.miscPenalty);
     }
 
     public Money getExtraInterest() {

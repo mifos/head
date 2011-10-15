@@ -36,6 +36,7 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.struts.actionform.LookupOptionsActionForm;
@@ -71,7 +72,7 @@ public class LookupOptionsAction extends BaseAction {
             request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.maritalstatus"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_MARITAL_STATUS);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_ETHNICITY)) {
-            String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.ETHINICITY, userContext);
+            String label = ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.ETHINICITY);
             request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, label);
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_ETHNICITY);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_EDUCATION_LEVEL)) {
@@ -79,7 +80,7 @@ public class LookupOptionsAction extends BaseAction {
                     .getString("configuration.educationlevel"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_EDUCATION_LEVEL);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_CITIZENSHIP)) {
-            String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CITIZENSHIP, userContext);
+            String label = ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.CITIZENSHIP);
             request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, label);
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_CITIZENSHIP);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY)) {
@@ -94,7 +95,7 @@ public class LookupOptionsAction extends BaseAction {
                     .getString("configuration.collateraltype"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_COLLATERAL_TYPE);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_HANDICAPPED)) {
-            String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.HANDICAPPED, userContext);
+            String label = ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.HANDICAPPED);
             request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, label);
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_HANDICAPPED);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE)) {
@@ -276,12 +277,11 @@ public class LookupOptionsAction extends BaseAction {
     }
 
     private void setSpecialLables(UserContext userContext, LookupOptionsActionForm lookupOptionsActionForm) {
-        lookupOptionsActionForm.setCitizenship(MessageLookup.getInstance().lookupLabel(
-                ConfigurationConstants.CITIZENSHIP, userContext));
-        lookupOptionsActionForm.setHandicapped(MessageLookup.getInstance().lookupLabel(
-                ConfigurationConstants.HANDICAPPED, userContext));
-        lookupOptionsActionForm.setEthnicity(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.ETHINICITY,
-                userContext));
+        lookupOptionsActionForm.setCitizenship(ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(
+                ConfigurationConstants.CITIZENSHIP));
+        lookupOptionsActionForm.setHandicapped(ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(
+                ConfigurationConstants.HANDICAPPED));
+        lookupOptionsActionForm.setEthnicity(ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.ETHINICITY));
 
     }
 

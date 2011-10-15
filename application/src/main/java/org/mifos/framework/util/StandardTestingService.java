@@ -26,13 +26,11 @@ import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
-import org.mifos.config.LocaleSetting;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.config.LocaleSetting;
 import org.mifos.config.Localization;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.MifosConfigurationManager;
@@ -47,6 +45,8 @@ import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.service.test.TestMode;
 import org.mifos.service.test.TestingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Encapsulates all logic necessary to have the application behave differently during acceptance and integration tests.

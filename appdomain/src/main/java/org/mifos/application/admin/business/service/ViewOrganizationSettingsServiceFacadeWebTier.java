@@ -20,19 +20,30 @@
 
 package org.mifos.application.admin.business.service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.api.TransactionImport;
 import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.config.*;
+import org.mifos.config.AccountingRules;
+import org.mifos.config.ClientRules;
+import org.mifos.config.FiscalCalendarRules;
+import org.mifos.config.LocaleSetting;
+import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.framework.plugin.PluginManager;
-
-import javax.servlet.http.HttpSession;
-import java.util.*;
 
 public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganizationSettingsServiceFacade {
     private static final String DELIMITER = ", ";
@@ -60,7 +71,7 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
         Short startOfWeekValue = fiscalCalendarRules.getStartOfWeek();
         WeekDay startOfWeek = WeekDay.getWeekDay(startOfWeekValue);
-        String weekdayName = MessageLookup.getInstance().lookup(startOfWeek.getPropertiesKey());
+        String weekdayName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(startOfWeek.getPropertiesKey());
         startOfWeek.setWeekdayName(weekdayName);
 
         fiscalRules.setProperty("startOfWeek", startOfWeek.getName());
@@ -173,7 +184,7 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         List<WeekDay> workDaysList = new FiscalCalendarRules().getWorkingDays();
         List<String> workDayNames = new ArrayList<String>();
         for (WeekDay workDay : workDaysList) {
-            String weekdayName = MessageLookup.getInstance().lookup(workDay.getPropertiesKey());
+            String weekdayName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(workDay.getPropertiesKey());
             workDay.setWeekdayName(weekdayName);
             workDayNames.add(workDay.getName());
         }
@@ -185,7 +196,7 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         List<String> offDayNames = new ArrayList<String>();
         for (Short offDayNum : offDaysList) {
             WeekDay weekDay = WeekDay.getWeekDay(offDayNum);
-            String weekdayName = MessageLookup.getInstance().lookup(weekDay.getPropertiesKey());
+            String weekdayName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(weekDay.getPropertiesKey());
             weekDay.setWeekdayName(weekdayName);
             offDayNames.add(weekDay.getName());
         }
@@ -193,7 +204,7 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
     }
 
     private String booleanToYesNo(boolean bool) {
-        MessageLookup m = MessageLookup.getInstance();
+        MessageLookup m = ApplicationContextProvider.getBean(MessageLookup.class);
         if (bool) {
             return m.lookup(YesNoFlag.YES);
         }

@@ -20,12 +20,8 @@
 
 package org.mifos.customers.personnel.business.service;
 
-import java.util.Locale;
-
-import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.service.PersonnelService;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
@@ -45,13 +41,11 @@ public class PersonnelServiceImpl implements PersonnelService {
     @Override
     public void changePassword(PersonnelBO user, String newPassword) {
 
-        Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
-        Short localeId = Localization.getInstance().getConfiguredLocaleId();
-        UserContext userContext = new UserContext(preferredLocale, localeId);
+        UserContext userContext = new UserContext();
         userContext.setId(user.getPersonnelId());
         userContext.setName(user.getUserName());
-
         user.updateDetails(userContext);
+
         try {
             hibernateTransactionHelper.startTransaction();
             hibernateTransactionHelper.beginAuditLoggingFor(user);

@@ -20,12 +20,22 @@
 
 package org.mifos.accounts.struts.action;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mifos.accounts.business.*;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
+import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -51,11 +61,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * This class tests methods of ApplyAdjustment action class.

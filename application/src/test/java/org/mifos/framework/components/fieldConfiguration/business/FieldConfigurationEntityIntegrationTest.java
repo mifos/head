@@ -26,7 +26,6 @@ import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.fieldConfiguration.persistence.LegacyFieldConfigurationDao;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.LegacyGenericDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class FieldConfigurationEntityIntegrationTest extends MifosIntegrationTestCase {

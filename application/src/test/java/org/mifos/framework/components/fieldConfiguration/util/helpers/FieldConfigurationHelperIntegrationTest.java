@@ -26,6 +26,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -38,12 +39,12 @@ public class FieldConfigurationHelperIntegrationTest extends MifosIntegrationTes
 
     @Before
     public void setUp() throws Exception {
-        MessageLookup.getInstance().setCustomLabel(ConfigurationConstants.ADDRESS3, "Village", userContext);
+        ApplicationContextProvider.getBean(MessageLookup.class).setCustomLabel(ConfigurationConstants.ADDRESS3, "Village");
     }
 
     @After
     public void tearDown() throws Exception {
-        MessageLookup.getInstance().setCustomLabel(ConfigurationConstants.ADDRESS3, "NULL", userContext);
+        ApplicationContextProvider.getBean(MessageLookup.class).setCustomLabel(ConfigurationConstants.ADDRESS3, "NULL");
     }
 
     @Test

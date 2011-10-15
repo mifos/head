@@ -41,6 +41,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
@@ -54,12 +55,12 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.core.CurrencyMismatchException;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
@@ -75,7 +76,6 @@ import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.Param;
@@ -1142,7 +1142,7 @@ public class CustomerPersistence extends LegacyGenericDao {
             prdOfferingName = (String) loanDetail[1];
             accountStateId = (Short) loanDetail[2];
             lookupName = (String) loanDetail[3];
-            accountStateName = MessageLookup.getInstance().lookup(lookupName, userContext);
+            accountStateName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupName);
             // TODO - use default currency or retrieved currency?
             currency = (Short) loanDetail[4];
             outstandingBalance = new Money(mifosCurrency, (BigDecimal) loanDetail[5]);
@@ -1156,7 +1156,7 @@ public class CustomerPersistence extends LegacyGenericDao {
     }
 
     protected String localizedMessageLookup(String key) {
-        return MessageLookup.getInstance().lookup(key);
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(key);
     }
 
 }

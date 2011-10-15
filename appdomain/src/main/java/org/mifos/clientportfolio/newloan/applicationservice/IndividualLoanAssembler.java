@@ -27,7 +27,6 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoan;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoanImpl;
-import org.mifos.clientportfolio.newloan.domain.IndividualLoanSchedule;
 import org.mifos.clientportfolio.newloan.domain.LoanScheduleFactory;
 import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactory;
 import org.mifos.config.AccountingRules;

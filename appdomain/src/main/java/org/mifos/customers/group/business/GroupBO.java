@@ -34,6 +34,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.util.helpers.ConfigurationConstants;
@@ -410,8 +411,8 @@ public class GroupBO extends CustomerBO {
     public void validateTransitionFromCancelledToPartialIsAllowedBasedOnCenter() throws CustomerException {
 
         if (!this.getParentCustomer().isActive()) {
-            throw new CustomerException(GroupConstants.CENTER_INACTIVE, new Object[] { MessageLookup
-                    .getInstance().lookupLabel(ConfigurationConstants.CENTER, this.getUserContext()) });
+            throw new CustomerException(GroupConstants.CENTER_INACTIVE,
+                    new Object[] { ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.CENTER) });
         }
     }
 

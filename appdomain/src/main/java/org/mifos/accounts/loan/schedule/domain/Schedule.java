@@ -19,14 +19,18 @@
  */
 package org.mifos.accounts.loan.schedule.domain;
 
-import org.mifos.accounts.loan.business.RepaymentResultsHolder;
-import org.mifos.accounts.loan.schedule.utils.Utilities;
-
-import java.math.BigDecimal;
-import java.util.*;
-
 import static org.mifos.accounts.loan.schedule.utils.Utilities.getDaysInBetween;
 import static org.mifos.framework.util.helpers.NumberUtils.max;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.mifos.accounts.loan.business.RepaymentResultsHolder;
+import org.mifos.accounts.loan.schedule.utils.Utilities;
 
 public class Schedule {
     private Map<Integer, Installment> installments;

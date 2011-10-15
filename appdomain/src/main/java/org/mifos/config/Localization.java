@@ -38,6 +38,7 @@ import edu.emory.mathcs.backport.java.util.Collections;
 public class Localization {
 
     public static final short ENGLISH_LOCALE_ID = 1;
+    public static Locale SPANISH = new Locale("es", "ES");
     private final Map<Short, Locale> LOCALE_MAP = new HashMap<Short, Locale>();
     protected final Short newLocaleId = 14;
     private LocaleSetting localeSetting;
@@ -108,7 +109,7 @@ public class Localization {
         readLoacaleSetting();
     }
 
-    private Short getLocaleId(Locale locale) {
+    public Short getLocaleId(Locale locale) {
             for (Short key : LOCALE_MAP.keySet()) {
                 if (LOCALE_MAP.get(key).equals(locale)) {
                     return key;
@@ -136,7 +137,7 @@ public class Localization {
         if (LOCALE_MAP.isEmpty()) {
             LOCALE_MAP.put((short) 1, Locale.UK);  // These were the options in personnel language list (pre Mifos 2.2)
             LOCALE_MAP.put((short) 2, new Locale("is", "IS"));  // Icelandic
-            LOCALE_MAP.put((short) 3, new Locale("es", "ES"));  // Spanish
+            LOCALE_MAP.put((short) 3, SPANISH);  // Spanish
             LOCALE_MAP.put((short) 4, Locale.FRANCE);  // French
             LOCALE_MAP.put((short) 5, Locale.SIMPLIFIED_CHINESE);  // Chinese
             LOCALE_MAP.put((short) 6, new Locale("sw", "KE"));  // Swahili

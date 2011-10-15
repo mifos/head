@@ -28,6 +28,7 @@ import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.exceptions.OfficeException;
@@ -223,13 +224,13 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
             List<OfficeDto> parents = this.officeDao.findActiveParents(officeLevel);
 
             for (OfficeDto office : parents) {
-                String levelName = MessageLookup.getInstance().lookup(office.getLookupNameKey());
+                String levelName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(office.getLookupNameKey());
                 office.setLevelName(levelName);
             }
 
             List<OfficeDetailsDto> officeLevels = new OfficePersistence().getActiveLevels();
             for (OfficeDetailsDto officeDetailsDto : officeLevels) {
-                String levelName = MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey());
+                String levelName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(officeDetailsDto.getLevelNameKey());
                 officeDetailsDto.setLevelName(levelName);
             }
 
@@ -252,8 +253,8 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
         Address address = officeBO.getAddress() != null ? officeBO.getAddress().getAddress(): null;
         AddressDto addressDto = address != null ? Address.toDto(officeBO.getAddress().getAddress()): null;
 
-        String officeLevelName = MessageLookup.getInstance().lookup(officeBO.getLevel().getLookUpValue());
-        String officeStatusName = MessageLookup.getInstance().lookup(officeBO.getStatus().getLookUpValue());
+        String officeLevelName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(officeBO.getLevel().getLookUpValue());
+        String officeStatusName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(officeBO.getStatus().getLookUpValue());
         OfficeDto officeDto = new OfficeDto(officeBO.getOfficeId(), officeBO.getOfficeName(), officeBO.getSearchId(), officeBO.getShortName(),
                 officeBO.getGlobalOfficeNum(), parentOfficeId, officeBO.getStatus().getId(), officeBO.getLevel().getId(),
                 parentOffineName, officeBO.getVersionNo(), officeStatusName, officeLevelName,
@@ -386,7 +387,7 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
         try {
             List<OfficeDetailsDto> officeParents = new OfficePersistence().getActiveParents(Level);
             for (OfficeDetailsDto officeDetailsDto : officeParents) {
-                String levelName = MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey());
+                String levelName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(officeDetailsDto.getLevelNameKey());
                 officeDetailsDto.setLevelName(levelName);
             }
             return officeParents;
@@ -406,13 +407,13 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
         try {
             List<OfficeDetailsDto> configuredOfficeLevels = new OfficePersistence().getActiveLevels();
             for (OfficeDetailsDto officeDetailsDto : configuredOfficeLevels) {
-                String levelName = MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey());
+                String levelName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(officeDetailsDto.getLevelNameKey());
                 officeDetailsDto.setLevelName(levelName);
             }
 
             List<OfficeDetailsDto> statusList = new OfficePersistence().getStatusList();
             for (OfficeDetailsDto officeDetailsDto : statusList) {
-                officeDetailsDto.setLevelName(MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey()));
+                officeDetailsDto.setLevelName(ApplicationContextProvider.getBean(MessageLookup.class).lookup(officeDetailsDto.getLevelNameKey()));
             }
 
             return new OfficeDetailsForEdit(parents, statusList, configuredOfficeLevels);

@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.productdefinition.business.service;
 
-import org.mifos.accounts.productdefinition.business.service.ProductService;
-
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;

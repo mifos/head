@@ -33,8 +33,6 @@ import org.mifos.framework.business.AbstractEntity;
  * localization (language and MFI) to MessageLookup.
  */
 public abstract class MasterDataEntity extends AbstractEntity {
-    // values which override localized values are stored with locale =1
-    public static Short CUSTOMIZATION_LOCALE_ID = (short) 1;
 
     private Short localeId;
 

@@ -112,7 +112,9 @@ public class PersonnelDaoHibernate implements PersonnelDao {
 
         List<GrantedAuthority> authorities = getGrantedActivityAuthorities(activityIds);
 
-        return new MifosUser(user.getPersonnelId(), user.getOffice().getOfficeId(), user.getLevelEnum().getValue(), new ArrayList<Short>(roleIds), username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+        return new MifosUser(user.getPersonnelId(), user.getOffice().getOfficeId(), user.getLevelEnum().getValue(),
+                            new ArrayList<Short>(roleIds), username, password, enabled, accountNonExpired,
+                            credentialsNonExpired, accountNonLocked, authorities, user.getPreferredLocale());
     }
 
     @SuppressWarnings("unchecked")

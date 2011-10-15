@@ -32,12 +32,13 @@ import org.mifos.application.admin.servicefacade.BatchjobsDto;
 import org.mifos.application.admin.servicefacade.BatchjobsSchedulerDto;
 import org.mifos.application.admin.servicefacade.BatchjobsServiceFacade;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
+import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.CronTrigger;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 
@@ -93,10 +94,10 @@ public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
     public void suspend(ServletContext context, String doSuspend) throws SchedulerException {
         MifosScheduler mifosScheduler = (MifosScheduler) context.getAttribute(MifosScheduler.class.getName());
         Scheduler scheduler = mifosScheduler.getScheduler();
-        if (doSuspend.equals(MessageLookup.getInstance().lookup("systemAdministration.batchjobs.suspend")) && !scheduler.isInStandbyMode()) {
+        if (doSuspend.equals(ApplicationContextProvider.getBean(MessageLookup.class).lookup("systemAdministration.batchjobs.suspend")) && !scheduler.isInStandbyMode()) {
             scheduler.standby();
         }
-        if (doSuspend.equals(MessageLookup.getInstance().lookup("systemAdministration.batchjobs.activate")) && scheduler.isInStandbyMode()) {
+        if (doSuspend.equals(ApplicationContextProvider.getBean(MessageLookup.class).lookup("systemAdministration.batchjobs.activate")) && scheduler.isInStandbyMode()) {
             scheduler.start();
         }
     }

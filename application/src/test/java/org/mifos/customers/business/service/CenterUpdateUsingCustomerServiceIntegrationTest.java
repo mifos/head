@@ -29,6 +29,7 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testU
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang.RandomStringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;

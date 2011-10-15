@@ -20,6 +20,11 @@
 
 package org.mifos.customers.business;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -28,11 +33,6 @@ import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 /**
  * This class encpsulate the custom field for the customer

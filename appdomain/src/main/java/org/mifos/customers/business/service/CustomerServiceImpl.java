@@ -48,6 +48,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
@@ -580,7 +581,7 @@ public class CustomerServiceImpl implements CustomerService {
                     .findGroupsThatAreNotCancelledOrClosed(center.getSearchId(), center.getOffice().getOfficeId());
 
             if (clientsThatAreNotClosedOrCanceled.size() > 0 || groupsThatAreNotClosedOrCancelled.size() > 0) {
-                final String errorMessage = messageLookupHelper.lookupLabel(ConfigurationConstants.GROUP, center.getUserContext());
+                final String errorMessage = messageLookupHelper.lookupLabel(ConfigurationConstants.GROUP);
                 throw new CustomerException(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION, new Object[] {errorMessage});
             }
 
@@ -686,8 +687,7 @@ public class CustomerServiceImpl implements CustomerService {
 
             if (clientsThatAreNotClosedOrCanceled.size() > 0) {
                 throw new CustomerException(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
-                        new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT,
-                                group.getUserContext()) });
+                        new Object[] { ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.CLIENT) });
             }
         }
 
@@ -854,8 +854,8 @@ public class CustomerServiceImpl implements CustomerService {
             if ((newStatus.isClientActive() || newStatus.isClientPending()) && client.isClientUnderGroup()) {
 
                 if (groupStatus.isGroupCancelled()) {
-                    throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED, new Object[] { MessageLookup
-                            .getInstance().lookupLabel(ConfigurationConstants.GROUP, client.getUserContext()) });
+                    throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED,
+                            new Object[] { ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.GROUP) });
                 }
 
                 if (client.isGroupStatusLower(newStatus.getValue(), groupStatus.getValue())) {

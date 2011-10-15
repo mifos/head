@@ -80,7 +80,7 @@ public class TableTagUtils {
         if ("key".equalsIgnoreCase(labelType)) {
             try {
                 labelValue = LabelTagUtils.getInstance().getLabel(pageContext, "Resources",
-                        LabelTagUtils.getInstance().getUserPreferredLocaleObject(pageContext), label, null);
+                        LabelTagUtils.getInstance().getUserPreferredLocale(), label, null);
 
             } catch (MissingResourceException mre) {
                 throw new TableTagException(mre);

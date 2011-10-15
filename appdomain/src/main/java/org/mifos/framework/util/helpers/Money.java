@@ -20,10 +20,6 @@
 
 package org.mifos.framework.util.helpers;
 
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.config.AccountingRules;
-import org.mifos.core.CurrencyMismatchException;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -31,6 +27,10 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
+
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
+import org.mifos.core.CurrencyMismatchException;
 
 /**
  * This class represents Money objects in the system, it should be used for all

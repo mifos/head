@@ -19,6 +19,15 @@
  */
 package org.mifos.application.servicefacade;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItem;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -44,13 +53,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.*;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.hasItem;
-import static org.mockito.Mockito.when;
 
 /**
  * I test {@link CollectionSheetServiceFacadeWebTier}.
@@ -97,7 +99,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
     @Before
     public void setupSUTAndInjectMocksAsDependencies() {
 
-        userContext = new UserContext(Locale.getDefault(), Short.valueOf("1"));
+        userContext = new UserContext();
         userContext.setBranchId(Short.valueOf("1"));
         userContext.setId(Short.valueOf("1"));
         userContext.setLevel(PersonnelLevel.LOAN_OFFICER);

@@ -79,7 +79,7 @@ public class CheckListServiceFacadeWebTier implements CheckListServiceFacade {
                         bo.getCustomerLevel().getId());
 
                 if(dto.getLookUpName() != null) {
-                dto.setName(MessageLookup.getInstance().lookup(dto.getLookUpName()));
+                dto.setName(ApplicationContextProvider.getBean(MessageLookup.class).lookup(dto.getLookUpName()));
                 }
                 dtoList.add(dto);
             }
@@ -102,7 +102,7 @@ public class CheckListServiceFacadeWebTier implements CheckListServiceFacade {
                         lookUpName, bo.getAccountStateEntity().getId(),
                         bo.getProductTypeEntity().getProductTypeID());
                 if(dto.getLookUpName() != null) {
-                    dto.setName(MessageLookup.getInstance().lookup(dto.getLookUpName()));
+                    dto.setName(ApplicationContextProvider.getBean(MessageLookup.class).lookup(dto.getLookUpName()));
                     }
                 dtoList.add(dto);
             }
@@ -122,10 +122,10 @@ public class CheckListServiceFacadeWebTier implements CheckListServiceFacade {
 
             for (CheckListMasterDto checkListMasterDto : masterData) {
                 if (checkListMasterDto.isCustomer()) {
-                    checkListMasterDto.setMasterTypeName(MessageLookup.getInstance().lookupLabel(
+                    checkListMasterDto.setMasterTypeName(ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(
                             checkListMasterDto.getLookupKey()));
                 } else {
-                    checkListMasterDto.setMasterTypeName(MessageLookup.getInstance().lookup(
+                    checkListMasterDto.setMasterTypeName(ApplicationContextProvider.getBean(MessageLookup.class).lookup(
                             checkListMasterDto.getLookupKey()));
                 }
             }

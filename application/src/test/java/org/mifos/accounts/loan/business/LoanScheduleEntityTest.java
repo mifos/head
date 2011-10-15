@@ -19,6 +19,19 @@
  */
 package org.mifos.accounts.loan.business;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mifos.framework.TestUtils.RUPEE;
+import static org.mifos.framework.TestUtils.getDate;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Date;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,19 +52,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.Date;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mifos.framework.TestUtils.RUPEE;
-import static org.mifos.framework.TestUtils.getDate;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanScheduleEntityTest {

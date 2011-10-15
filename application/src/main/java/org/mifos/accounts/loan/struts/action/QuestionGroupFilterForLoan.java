@@ -1,12 +1,12 @@
 package org.mifos.accounts.loan.struts.action;
 
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.QuestionGroupReference;
-import org.mifos.application.questionnaire.struts.QuestionGroupFilter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.QuestionGroupReference;
+import org.mifos.application.questionnaire.struts.QuestionGroupFilter;
 
 public class QuestionGroupFilterForLoan implements QuestionGroupFilter{
     private LoanOfferingBO loanOfferingBO;

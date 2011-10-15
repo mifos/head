@@ -16,14 +16,12 @@ permissions and limitations under the License.
 
 See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
---%><%@page import="java.util.Locale"%>
+--%>
+<%@page import="java.util.Locale"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.mifos.dto.domain.ValueListElement"%>
-<%@page import="org.apache.struts.Globals"%>
-<%@page import="org.mifos.ui.core.localisation.MifosLocaleResolver"%>
 <%@page import="org.mifos.config.Localization"%>
 <%@page import="org.mifos.framework.util.StandardTestingService"%>
-<%@page import="org.mifos.security.util.UserContext"%>
 <%
     Localization l = Localization.getInstance();
     String param = request.getParameter("langId");
@@ -32,11 +30,6 @@ explanation of the license and how it is applied.
         Short id = Short.parseShort(param);
         Locale locale = l.getLocaleById(id);
         new StandardTestingService().setLocale(locale.getLanguage(), locale.getCountry());
-        session.setAttribute(Globals.LOCALE_KEY, l.getConfiguredLocale());
-        UserContext userContext = (UserContext) session.getAttribute("UserContext");
-        if(userContext != null) {
-            userContext.setPreferredLocale(l.getConfiguredLocale());
-        }
         response.sendRedirect(request.getContextPath() + "/login.ftl");
         return;
     }

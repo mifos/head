@@ -29,11 +29,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class build the templete for the activities in the system so that user
@@ -200,7 +201,7 @@ public class RoleTempleteBuilder {
                 buff.append("bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\"  ><span class=\"fontnormal\">");
 
                 ActivityEntity entity = l.get(index);
-                String activityName = MessageLookup.getInstance().lookup(entity.getActivityNameLookupValues());
+                String activityName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(entity.getActivityNameLookupValues());
                 entity.setActivityName(activityName);
 
                 buff.append(l.get(index).getActivityName());
@@ -208,7 +209,7 @@ public class RoleTempleteBuilder {
                 buff.append("<td width=\"50%\" bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomLeftBorder\"  >"
                         + "<span class=\"fontnormal\">");
 
-                String description = MessageLookup.getInstance().lookup(entity.getActivityNameLookupValues());
+                String description = ApplicationContextProvider.getBean(MessageLookup.class).lookup(entity.getActivityNameLookupValues());
                 entity.setDescription(description);
 
                 if (StringUtils.isBlank(entity.getDescription())) {
@@ -273,7 +274,7 @@ public class RoleTempleteBuilder {
             buff.append("<span class=\"fontnormalbold\">");
 
             ActivityEntity entity = l.get(index);
-            String activityName = MessageLookup.getInstance().lookup(entity.getActivityNameLookupValues());
+            String activityName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(entity.getActivityNameLookupValues());
 
             buff.append(activityName);
             buff.append("</span></td></tr>");

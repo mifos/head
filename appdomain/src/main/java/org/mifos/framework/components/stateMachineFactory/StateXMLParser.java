@@ -20,9 +20,7 @@
 
 package org.mifos.framework.components.stateMachineFactory;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +33,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.StateEntity;
 import org.mifos.core.MifosResourceUtil;
-import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

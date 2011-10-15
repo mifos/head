@@ -28,13 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.api.StandardAccountService;
 import org.mifos.accounts.api.TransactionImport;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
@@ -43,7 +40,10 @@ import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.business.service.CustomerSearchServiceImpl;
 import org.mifos.customers.persistence.CustomerDaoHibernate;
 import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.ConfigurationLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PluginManager {
 

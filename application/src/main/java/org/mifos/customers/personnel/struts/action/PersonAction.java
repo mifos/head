@@ -42,6 +42,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.Localization;
 import org.mifos.customers.office.business.OfficeBO;
@@ -309,7 +310,7 @@ public class PersonAction extends SearchAction {
         List<RoleBO> roles = legacyRolesPermissionsDao.getRoles();
         List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();
         for (PersonnelLevelEntity personnelLevelEntity : personnelLevels) {
-            String messageTextLookup = MessageLookup.getInstance().lookup(personnelLevelEntity.getLookUpValue().getPropertiesKey());
+            String messageTextLookup = ApplicationContextProvider.getBean(MessageLookup.class).lookup(personnelLevelEntity.getLookUpValue().getPropertiesKey());
             personnelLevelEntity.setName(messageTextLookup);
         }
 
@@ -327,7 +328,7 @@ public class PersonAction extends SearchAction {
         UserContext userContext = getUserContext(request);
         List<PersonnelStatusEntity> statuses = legacyMasterDao.findMasterDataEntitiesWithLocale(PersonnelStatusEntity.class);
         for (PersonnelStatusEntity personnelStatusEntity : statuses) {
-            String messageTextLookup = MessageLookup.getInstance().lookup(personnelStatusEntity.getLookUpValue().getPropertiesKey());
+            String messageTextLookup = ApplicationContextProvider.getBean(MessageLookup.class).lookup(personnelStatusEntity.getLookUpValue().getPropertiesKey());
             personnelStatusEntity.setName(messageTextLookup);
         }
 
@@ -501,7 +502,7 @@ public class PersonAction extends SearchAction {
         List<RoleBO> roles = legacyRolesPermissionsDao.getRoles();
         List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();
         for (PersonnelLevelEntity personnelLevelEntity : personnelLevels) {
-            String messageTextLookup = MessageLookup.getInstance().lookup(personnelLevelEntity.getLookUpValue().getPropertiesKey());
+            String messageTextLookup = ApplicationContextProvider.getBean(MessageLookup.class).lookup(personnelLevelEntity.getLookUpValue().getPropertiesKey());
             personnelLevelEntity.setName(messageTextLookup);
         }
 

@@ -20,10 +20,8 @@
 
 package org.mifos.customers.business.service;
 
-import org.mifos.security.util.UserContext;
-
 public interface MessageLookupHelper {
 
-    String lookupLabel(String labelKey, UserContext userContext);
+    String lookupLabel(String labelKey);
 
 }

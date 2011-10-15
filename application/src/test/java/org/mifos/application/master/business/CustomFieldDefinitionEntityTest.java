@@ -20,12 +20,8 @@
 
 package org.mifos.application.master.business;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-
-import java.util.Locale;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -41,7 +37,7 @@ public class CustomFieldDefinitionEntityTest {
 
 	@Mock
 	MessageLookup messageLookup;
-	
+
     @Test
     public void testMandatory() {
 
@@ -55,9 +51,9 @@ public class CustomFieldDefinitionEntityTest {
                 CustomFieldType.ALPHA_NUMERIC, EntityType.CLIENT, "default value", YesNoFlag.YES);
         customFieldMandatory.setMessageLookup(messageLookup);
         customFieldNotMandatory.setMessageLookup(messageLookup);
-        when(messageLookup.lookup(eq(YesNoFlag.fromInt(0)), any(Locale.class))).thenReturn("no");
-        when(messageLookup.lookup(eq(YesNoFlag.fromInt(1)), any(Locale.class))).thenReturn("yes");
-        
+        when(messageLookup.lookup(eq(YesNoFlag.fromInt(0)))).thenReturn("no");
+        when(messageLookup.lookup(eq(YesNoFlag.fromInt(1)))).thenReturn("yes");
+
         Assert.assertFalse(customFieldNotMandatory.isMandatory());
         Assert.assertEquals(customFieldNotMandatory.getMandatoryStringValue(), "no");
 

@@ -80,7 +80,6 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.screen.SavingsRecentActivityDto;

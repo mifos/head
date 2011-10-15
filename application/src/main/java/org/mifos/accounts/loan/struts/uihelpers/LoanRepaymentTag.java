@@ -20,24 +20,30 @@
 
 package org.mifos.accounts.loan.struts.uihelpers;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.tags.XmlBuilder;
-import org.mifos.framework.util.helpers.*;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.LabelTagUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
-
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTagSupport;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 public class LoanRepaymentTag extends BodyTagSupport {
     Locale locale = null;
@@ -84,7 +90,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
                 htmlHeader1.text(getLabel("loan.principal", locale));
                 htmlHeader1.endTag("td");
                 htmlHeader1.startTag("td", "width", "14%", "align", "right", "class", "drawtablerowbold");
-                htmlHeader1.text(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.INTEREST, userContext));
+                htmlHeader1.text(ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.INTEREST));
                 htmlHeader1.endTag("td");
                 htmlHeader1.startTag("td", "width", "14%", "align", "right", "class", "drawtablerowbold");
                 htmlHeader1.text(getLabel("loan.fees", locale));
@@ -115,8 +121,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
                     htmlHeader2.text(getLabel("loan.principal", locale));
                     htmlHeader2.endTag("td");
                     htmlHeader2.startTag("td", "width", "25%", "align", "right", "class", "drawtablerowbold");
-                    htmlHeader2.text(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.INTEREST,
-                            userContext));
+                    htmlHeader2.text(ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.INTEREST));
                     htmlHeader2.endTag("td");
                     htmlHeader2.startTag("td", "width", "25%", "align", "right", "class", "drawtablerowbold");
                     htmlHeader2.text(getLabel("loan.fees", locale));

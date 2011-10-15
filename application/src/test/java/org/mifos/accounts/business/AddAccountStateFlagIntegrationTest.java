@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.business;
 
-import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -31,10 +29,8 @@ import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Upgrade;
 
 public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase {
 
@@ -47,7 +43,6 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
     public void setUp() throws SQLException {
         session = StaticHibernateUtil.getSessionTL();
         connection = session.connection();
-//        connection.setAutoCommit(true);
     }
 
     @After
@@ -56,31 +51,6 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
         connection = null;
         session = null;
 
-    }
-
-    @Test
-    public void testStartFromStandardStore() throws Exception {
-
-
-        Upgrade upgrade = new AddAccountStateFlag(72, FLAG_FEET_TOO_BIG, "Feet too big", TEST_LOCALE,
-                "Rejected because feet are too big");
-
-        upgradeAndCheck(upgrade);
-    }
-
-    private void upgradeAndCheck(Upgrade upgrade) throws Exception {
-        upgrade.upgrade(connection);
-        MifosConfiguration.getInstance().init();
-        session = StaticHibernateUtil.getSessionTL();
-        AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(AccountStateFlagEntity.class,
-                FLAG_FEET_TOO_BIG);
-
-       Assert.assertEquals((Object) FLAG_FEET_TOO_BIG, (Object) flag.getId());
-       Assert.assertEquals(10, (short) flag.getStatusId());
-       Assert.assertEquals(false, flag.isFlagRetained());
-       Assert.assertEquals("Feet too big", flag.getFlagDescription());
-
-       Assert.assertEquals("Rejected because feet are too big", flag.getName());
     }
 
     @Test
@@ -112,8 +82,6 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
         upgrade.upgrade(connection);
         AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(AccountStateFlagEntity.class, newId);
         Assert.assertEquals(goodKey, flag.getLookUpValue().getLookUpName());
-        MifosConfiguration.getInstance().init();
-
     }
 
 }

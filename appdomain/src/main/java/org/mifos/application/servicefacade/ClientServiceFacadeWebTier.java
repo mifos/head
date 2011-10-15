@@ -517,7 +517,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     }
 
     protected String localizedMessageLookup(String key) {
-        return MessageLookup.getInstance().lookup(key);
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(key);
     }
 
     @Override

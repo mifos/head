@@ -19,11 +19,11 @@
  */
 package org.mifos.accounts.loan.business;
 
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.framework.util.helpers.Money;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.framework.util.helpers.Money;
 
 public class PaymentAllocation {
     private Money principalPaid;

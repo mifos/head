@@ -19,16 +19,11 @@
  */
 package org.mifos.domain.builders;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerAccountBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -46,9 +41,8 @@ public class CenterBuilder {
     private String name = "Test Center";
     private OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("xxx-9999").withOfficeId(new Short("1")).build();
     private PersonnelBO loanOfficer;
-    private UserContext userContext = new UserContext(Locale.getDefault(), Short.valueOf("1"));
+    private UserContext userContext = new UserContext();
     private DateTime mfiJoiningDate = new DateTime();
-    private List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
     private Address address = null;
     private String externalId = null;
     private MeetingBuilder meetingBuilder = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday();
@@ -60,7 +54,6 @@ public class CenterBuilder {
      */
     private Integer versionNumber = null;
     private DateTime activationDate = new DateMidnight().toDateTime();
-    private LoanAccountBuilder loanAccountBuilder;
     private LoanBO loanAccount;
     private int numberOfCustomersInOfficeAlready;
 

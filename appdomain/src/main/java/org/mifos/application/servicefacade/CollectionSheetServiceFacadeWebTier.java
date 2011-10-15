@@ -22,8 +22,8 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataDto;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueListElementDto;
@@ -35,13 +35,13 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.PersonnelDto;
@@ -265,12 +265,12 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         for (MasterDataEntity paymentType : paymentTypesList) {
 
             if (paymentType instanceof PersonnelStatusEntity) {
-                String name = MessageLookup.getInstance().lookup(paymentType.getLookUpValue());
+                String name = ApplicationContextProvider.getBean(MessageLookup.class).lookup(paymentType.getLookUpValue());
                 ((PersonnelStatusEntity) paymentType).setName(name);
             }
 
             if (paymentType instanceof PersonnelLevelEntity) {
-                String name = MessageLookup.getInstance().lookup(paymentType.getLookUpValue());
+                String name = ApplicationContextProvider.getBean(MessageLookup.class).lookup(paymentType.getLookUpValue());
                 ((PersonnelLevelEntity) paymentType).setName(name);
             }
 

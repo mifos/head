@@ -373,7 +373,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
     }
 
     private String localizedMessageLookup(String key) {
-        return MessageLookup.getInstance().lookup(key);
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(key);
     }
 
     @Override

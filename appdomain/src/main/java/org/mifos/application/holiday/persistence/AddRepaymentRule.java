@@ -26,14 +26,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.config.Localization;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddRepaymentRule extends Upgrade {
 
     private final RepaymentRuleTypes type;
-    private final short locale;
     private final String message;
     private final String lookupKey;
     protected static final String wrongLookupValueKeyFormat = "The key format must be RepaymentRule-...";
@@ -47,9 +46,7 @@ public class AddRepaymentRule extends Upgrade {
      */
     public AddRepaymentRule(RepaymentRuleTypes type, String lookupKey) {
         super();
-
         this.type = type;
-        this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;
         this.lookupKey = lookupKey;
         message = null;
     }
@@ -60,7 +57,7 @@ public class AddRepaymentRule extends Upgrade {
         int lookupEntity = LookUpEntity.REPAYMENT_RULE;
 
         int lookupId = insertLookupValue(connection, lookupEntity, lookupKey);
-        insertMessage(connection, lookupId, locale, message);
+        insertMessage(connection, lookupId, Localization.ENGLISH_LOCALE_ID, message);
         addRepaymentRule(connection, lookupId);
     }
 

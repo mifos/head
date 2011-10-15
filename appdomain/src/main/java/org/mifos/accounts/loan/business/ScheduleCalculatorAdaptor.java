@@ -19,6 +19,10 @@
  */
 package org.mifos.accounts.loan.business;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
+
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
@@ -26,11 +30,6 @@ import org.mifos.config.AccountingRules;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.helpers.Money;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Map;
 
 public class ScheduleCalculatorAdaptor {
 

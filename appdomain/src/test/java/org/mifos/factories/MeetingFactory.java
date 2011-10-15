@@ -1,9 +1,9 @@
 package org.mifos.factories;
 
+import java.util.Date;
+
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-
-import java.util.Date;
 
 public class MeetingFactory {
     public static MeetingBO create() {

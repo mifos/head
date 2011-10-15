@@ -20,27 +20,8 @@
 
 package org.mifos.framework;
 
-import junit.framework.Assert;
-import org.dom4j.DocumentException;
-import org.dom4j.io.SAXReader;
-import org.joda.time.DateMidnight;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeConstants;
-import org.joda.time.LocalDate;
-import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerScheduleEntity;
-import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
-import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.schedule.ScheduledEvent;
-import org.mifos.schedule.ScheduledEventFactory;
-import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
-import org.mifos.security.util.UserContext;
-import org.springframework.util.ReflectionUtils;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -54,8 +35,29 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import junit.framework.Assert;
+
+import org.dom4j.DocumentException;
+import org.dom4j.io.SAXReader;
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.config.Localization;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerScheduleEntity;
+import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
+import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.ScheduledEventFactory;
+import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
+import org.mifos.security.util.UserContext;
+import org.springframework.util.ReflectionUtils;
 
 public class TestUtils {
 
@@ -96,7 +98,9 @@ public class TestUtils {
     }
 
     public static UserContext makeUser(int role, Locale locale) {
-        UserContext user = new UserContext(Locale.getDefault(), Short.valueOf("1"));
+        UserContext user = new UserContext();
+        user.setPreferredLocale(Locale.UK);
+        user.setLocaleId(Localization.ENGLISH_LOCALE_ID);
         user.setId(PersonnelConstants.SYSTEM_USER);
         user.setLocaleId(TEST_LOCALE);
         Set<Short> set = new HashSet<Short>();

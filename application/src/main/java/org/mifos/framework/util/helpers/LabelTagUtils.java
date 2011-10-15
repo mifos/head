@@ -23,17 +23,16 @@ package org.mifos.framework.util.helpers;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.util.MessageResources;
+import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.config.Localization;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.util.helpers.ConfigurationConstants;
-import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -88,7 +87,7 @@ public class LabelTagUtils {
                     ConfigurationConstants.EXTERNALID.equalsIgnoreCase(labelKey) ||
                     ConfigurationConstants.BULKENTRY.equalsIgnoreCase(labelKey) ||
                     ConfigurationConstants.CITY.equalsIgnoreCase(labelKey)) {
-                message = MessageLookup.getInstance().lookupLabel(labelKey);
+                message = ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(labelKey);
             }
         }
 
@@ -101,7 +100,7 @@ public class LabelTagUtils {
         if (StringUtils.isBlank(message)) {
             message = "";
         }
-        return MessageLookup.getInstance().replaceSubstitutions(message);
+        return ApplicationContextProvider.getBean(MessageLookup.class).replaceSubstitutions(message);
     }
 
     @SuppressWarnings("unchecked")
@@ -140,14 +139,10 @@ public class LabelTagUtils {
      */
     public String getUserPreferredLocale(PageContext pageContext) {
         String userPreferredLocale = null;
-        UserContext userContext = getUserContextFromSession(pageContext.getSession());
-        if (null != userContext) {
-            Locale locale = userContext.getCurrentLocale();
+            Locale locale = getUserPreferredLocale();
             if (null != locale) {
                 userPreferredLocale = locale.getLanguage() + "_" + locale.getCountry();
             }
-
-        }
         return userPreferredLocale;
     }
 
@@ -163,22 +158,7 @@ public class LabelTagUtils {
         return userPreferredLocale;
     }
 
-    public Locale getUserPreferredLocaleObject(PageContext pageContext) {
-        Locale locale = null;
-        UserContext userContext = getUserContextFromSession(pageContext.getSession());
-        if (null != userContext) {
-            locale = userContext.getCurrentLocale();
-        } else {
-            locale = Localization.getInstance().getConfiguredLocale();
-        }
-        return locale;
-    }
-
-    private UserContext getUserContextFromSession(HttpSession session) {
-        UserContext userContext = null;
-        if (null != session) {
-            userContext = (UserContext) session.getAttribute(LoginConstants.USERCONTEXT);
-        }
-        return userContext;
+    public Locale getUserPreferredLocale() {
+        return ApplicationContextProvider.getBean(PersonnelServiceFacade.class).getUserPreferredLocale();
     }
 }

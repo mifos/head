@@ -33,8 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -56,6 +54,8 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
     private static final Logger logger = LoggerFactory.getLogger(MultipleLoanAccountsCreationActionForm.class);
@@ -88,7 +88,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 
     public List<MultipleLoanCreationDto> getApplicableClientDetails() {
         try {
-            return (List<MultipleLoanCreationDto>) select(clientDetails,
+            return select(clientDetails,
                     new Predicate<MultipleLoanCreationDto>() {
                         @Override
 						public boolean evaluate(MultipleLoanCreationDto clientDetail) {
@@ -205,7 +205,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
         List<MultipleLoanCreationDto> applicableClientDetails = getApplicableClientDetails();
         if (CollectionUtils.isEmpty(applicableClientDetails)) {
             addError(errors, LoanConstants.APPL_RECORDS, LoanExceptionConstants.SELECT_ATLEAST_ONE_RECORD, getLabel(
-                    ConfigurationConstants.CLIENT, getUserContext(request)));
+                    ConfigurationConstants.CLIENT));
             return;
         }
         Locale locale = getUserContext(request).getPreferredLocale();
@@ -243,7 +243,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
     private void checkValidationForBranchOffice(ActionErrors errors, UserContext userContext) {
         if (StringUtils.isBlank(branchOfficeId)) {
             addError(errors, ConfigurationConstants.BRANCHOFFICE, LoanConstants.MANDATORY_SELECT, getMessageText(
-                    ConfigurationConstants.BRANCHOFFICE, userContext));
+                    ConfigurationConstants.BRANCHOFFICE));
         }
     }
 
@@ -257,15 +257,14 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
         String customerLabel = isCenterHierarchyExists == Constants.YES ? ConfigurationConstants.CENTER
                 : ConfigurationConstants.GROUP;
         if (StringUtils.isBlank(centerId)) {
-            addError(errors, ConfigurationConstants.CENTER, LoanConstants.MANDATORY_SELECT, getLabel(customerLabel,
-                    userContext));
+            addError(errors, ConfigurationConstants.CENTER, LoanConstants.MANDATORY_SELECT, getLabel(customerLabel));
         }
     }
 
     private void checkValidationForPrdOfferingId(ActionErrors errors, UserContext userContext) {
         if (StringUtils.isBlank(prdOfferingId)) {
             addError(errors, LoanConstants.PRDOFFERINGID, LoanConstants.LOANOFFERINGNOTSELECTEDERROR, getLabel(
-                    ConfigurationConstants.LOAN, userContext), LoanConstants.INSTANCENAME);
+                    ConfigurationConstants.LOAN), LoanConstants.INSTANCENAME);
         }
     }
 

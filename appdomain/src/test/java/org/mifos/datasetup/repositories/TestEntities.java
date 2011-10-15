@@ -1,8 +1,8 @@
 package org.mifos.datasetup.repositories;
 
-import org.hibernate.Session;
-
 import java.io.Serializable;
+
+import org.hibernate.Session;
 
 public abstract class TestEntities<T> {
     protected Session session;

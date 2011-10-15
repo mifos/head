@@ -22,14 +22,11 @@ package org.mifos.framework.components.customTableTag;
 
 import static junitx.framework.StringAssert.assertContains;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import junit.framework.Assert;
-
-import junitx.framework.ObjectAssert;
 
 import org.junit.Test;
 import org.mifos.dto.domain.OfficeDetailsDto;

@@ -20,6 +20,11 @@
 
 package org.mifos.accounts.loan.business;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
@@ -30,18 +35,11 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
-import org.mifos.application.master.persistence.LegacyMasterDao;
-import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /*
  * LoanTrxnDetailEntity encapsulates a financial transaction

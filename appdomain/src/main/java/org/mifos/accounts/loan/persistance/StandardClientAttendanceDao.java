@@ -20,6 +20,10 @@
 
 package org.mifos.accounts.loan.persistance;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.hibernate.Session;
 import org.joda.time.LocalDate;
 import org.mifos.application.master.persistence.LegacyMasterDao;
@@ -27,10 +31,6 @@ import org.mifos.customers.client.business.ClientAttendanceBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  *

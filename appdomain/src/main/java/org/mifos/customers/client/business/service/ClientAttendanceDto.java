@@ -23,8 +23,8 @@ package org.mifos.customers.client.business.service;
 import java.util.Date;
 
 import org.joda.time.LocalDate;
-import org.mifos.customers.client.business.AttendanceType;
 import org.mifos.customers.api.DataTransferObject;
+import org.mifos.customers.client.business.AttendanceType;
 
 /**
  *

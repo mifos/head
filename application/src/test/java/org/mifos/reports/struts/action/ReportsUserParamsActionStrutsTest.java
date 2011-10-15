@@ -22,8 +22,6 @@ package org.mifos.reports.struts.action;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

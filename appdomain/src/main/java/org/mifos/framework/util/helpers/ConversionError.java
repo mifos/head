@@ -20,11 +20,11 @@
 
 package org.mifos.framework.util.helpers;
 
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.config.AccountingRules;
-
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
 
 public enum ConversionError {
 

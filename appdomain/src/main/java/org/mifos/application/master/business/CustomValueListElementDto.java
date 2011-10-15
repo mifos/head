@@ -21,6 +21,7 @@
 package org.mifos.application.master.business;
 
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.api.DataTransferObject;
 
 /**
@@ -108,7 +109,7 @@ public class CustomValueListElementDto implements DataTransferObject {
      * Use the key for the LookUpValueEntity to resolve the value.
      */
     public java.lang.String getLookUpValue() {
-        return MessageLookup.getInstance().lookup(lookUpValueKey);
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookUpValueKey);
     }
 
     public void setLookupValue(String newValue) {

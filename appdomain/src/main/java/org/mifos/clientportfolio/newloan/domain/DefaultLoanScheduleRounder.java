@@ -1,6 +1,7 @@
 package org.mifos.clientportfolio.newloan.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -9,8 +10,6 @@ import org.mifos.accounts.loan.business.RepaymentTotals;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.framework.util.helpers.Money;
-
-import java.util.Collections;
 
 /**
  * I am responsible for applying rounding rules from AccountingRules.

@@ -20,11 +20,11 @@
 
 package org.mifos.application.meeting.util.helpers;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.mifos.application.master.MessageLookup;
-
-import java.util.Arrays;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 
 public enum RankOfDay {
 
@@ -68,7 +68,7 @@ public enum RankOfDay {
      * @return
      */
     public String getName() {
-        return MessageLookup.getInstance().lookup(getPropertiesKey());
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(getPropertiesKey());
     }
 
     public String getPropertiesKey() {

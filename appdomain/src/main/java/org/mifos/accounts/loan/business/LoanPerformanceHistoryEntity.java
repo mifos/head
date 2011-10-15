@@ -20,6 +20,10 @@
 
 package org.mifos.accounts.loan.business;
 
+import java.sql.Date;
+import java.util.List;
+import java.util.Set;
+
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
@@ -27,10 +31,6 @@ import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.DateUtils;
-
-import java.sql.Date;
-import java.util.List;
-import java.util.Set;
 
 public class LoanPerformanceHistoryEntity extends AbstractEntity {
 

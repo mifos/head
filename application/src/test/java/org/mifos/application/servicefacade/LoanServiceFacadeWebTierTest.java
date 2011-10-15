@@ -86,7 +86,7 @@ public class LoanServiceFacadeWebTierTest {
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         loanServiceFacade = new LoanServiceFacadeWebTier(loanDao, loanBusinessService);
     }
-   
+
     @Test
     public void retrieveOriginalLoanSchedule() throws PersistenceException {
         Integer accountId = new Integer(1);
@@ -95,10 +95,10 @@ public class LoanServiceFacadeWebTierTest {
         OriginalLoanScheduleEntity originalLoanScheduleEntity2 = mock(OriginalLoanScheduleEntity.class);
         loanScheduleEntities.add(originalLoanScheduleEntity1);
         loanScheduleEntities.add(originalLoanScheduleEntity2);
-        RepaymentScheduleInstallment installment1 = new RepaymentScheduleInstallment(locale);
-        RepaymentScheduleInstallment installment2 = new RepaymentScheduleInstallment(locale);
-        when(originalLoanScheduleEntity1.toDto(locale)).thenReturn(installment1);
-        when(originalLoanScheduleEntity2.toDto(locale)).thenReturn(installment2);
+        RepaymentScheduleInstallment installment1 = new RepaymentScheduleInstallment();
+        RepaymentScheduleInstallment installment2 = new RepaymentScheduleInstallment();
+        when(originalLoanScheduleEntity1.toDto()).thenReturn(installment1);
+        when(originalLoanScheduleEntity2.toDto()).thenReturn(installment2);
 
         List<RepaymentScheduleInstallment> expected = new ArrayList<RepaymentScheduleInstallment>();
         expected.add(installment1);
@@ -110,7 +110,7 @@ public class LoanServiceFacadeWebTierTest {
         when(loanBusinessService.retrieveOriginalLoanSchedule(accountId)).thenReturn(loanScheduleEntities);
         when(loanDao.findById(accountId)).thenReturn(loanBO);
         OriginalScheduleInfoDto expectedOriginalScheduleInfoDto = new OriginalScheduleInfoDto(money.toString(), date,expected);
-        OriginalScheduleInfoDto originalScheduleInfoDto = loanServiceFacade.retrieveOriginalLoanSchedule(accountId, locale);
+        OriginalScheduleInfoDto originalScheduleInfoDto = loanServiceFacade.retrieveOriginalLoanSchedule(accountId);
         assertThat(originalScheduleInfoDto, is(new OriginalScheduleInfoDtoMatcher(expectedOriginalScheduleInfoDto)));
     }
 
@@ -119,7 +119,7 @@ public class LoanServiceFacadeWebTierTest {
     public void shouldValidateForRepaymentCapacity() {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);
         BigDecimal loanAmount = new BigDecimal(1000);
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, loanAmount, 10d, Locale.US);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, loanAmount, 10d);
         cashFlowForm.setTotalExpenses(BigDecimal.valueOf(76));
         cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55).add(loanAmount));
 
@@ -146,7 +146,7 @@ public class LoanServiceFacadeWebTierTest {
         monthlyCashFlows.add(new MonthlyCashFlowDetail(dateTime.plusMonths(1),new BigDecimal(123), new BigDecimal(234),""));
         monthlyCashFlows.add(new MonthlyCashFlowDetail(dateTime.plusMonths(2),new BigDecimal(123), new BigDecimal(234),""));
         CashFlowDetail cashFlowDetail = new CashFlowDetail(monthlyCashFlows);
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d, Locale.US);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d);
         cashFlowForm.setTotalExpenses(BigDecimal.valueOf(76));
         cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55));
 

@@ -20,7 +20,21 @@
 
 package org.mifos.accounts.productdefinition.struts.actionforms;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import junit.framework.Assert;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
@@ -29,7 +43,11 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.fees.business.*;
+import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.business.FeeDto;
+import org.mifos.accounts.fees.business.FeeFormulaEntity;
+import org.mifos.accounts.fees.business.FeeFrequencyEntity;
+import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -46,18 +64,6 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
 
 @SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)

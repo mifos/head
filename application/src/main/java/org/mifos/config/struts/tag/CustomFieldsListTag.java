@@ -31,6 +31,7 @@ import org.apache.struts.taglib.TagUtils;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -90,7 +91,7 @@ public class CustomFieldsListTag extends BodyTagSupport { // SimpleTagSupport {
         html.endTag("td");
         html.newline();
         html.startTag("td", "width", "21%", "class", "drawtablerow");
-        html.text(MessageLookup.getInstance().lookup(CustomFieldType.fromInt(customField.getFieldType()), userContext));
+        html.text(ApplicationContextProvider.getBean(MessageLookup.class).lookup(CustomFieldType.fromInt(customField.getFieldType())));
         html.endTag("td");
         html.newline();
         html.startTag("td", "width", "21%", "class", "drawtablerow");
@@ -102,7 +103,7 @@ public class CustomFieldsListTag extends BodyTagSupport { // SimpleTagSupport {
         html.endTag("td");
         html.newline();
         html.startTag("td", "width", "17%", "class", "drawtablerow");
-        html.text(customField.getMandatoryStringValue(locale));
+        html.text(customField.getMandatoryStringValue());
         html.endTag("td");
         html.newline();
         html.endTag("tr");

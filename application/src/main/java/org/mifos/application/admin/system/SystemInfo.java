@@ -20,18 +20,6 @@
 
 package org.mifos.application.admin.system;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
-import org.mifos.application.master.MessageLookup;
-import org.mifos.core.MifosResourceUtil;
-import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.persistence.DatabaseMigrator;
-import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.StandardTestingService;
-
-import javax.servlet.ServletContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -44,6 +32,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
+import javax.servlet.ServletContext;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.core.MifosResourceUtil;
+import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.persistence.DatabaseMigrator;
+import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.StandardTestingService;
 
 /**
  * JDBC URL parsing code in this class is <a
@@ -81,7 +83,7 @@ public class SystemInfo implements Serializable {
             try {
                 this.infoSource = Arrays.toString(new StandardTestingService().getAllSettingsFilenames());
             } catch (IOException e) {
-                this.infoSource = MessageLookup.getInstance().lookup("admin.unableToDetermineConfigurationSource");
+                this.infoSource = ApplicationContextProvider.getBean(MessageLookup.class).lookup("admin.unableToDetermineConfigurationSource");
             }
         }
 

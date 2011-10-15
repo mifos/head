@@ -46,7 +46,6 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;

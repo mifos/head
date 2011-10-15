@@ -33,6 +33,7 @@ import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryCo
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
@@ -232,7 +233,7 @@ public class BulkEntryDisplayHelper {
         getLoanRow(builder, bulkEntryLoanAccounts, loanProducts, rowIndex, groupTotals, centerTotals,
                 groupChildSize,
                 groupInitialAccNum, savingsProducts.size(), method, true);
-        
+
         getDepositSavingsRow(builder, bulkEntrySavingsAccounts, savingsProducts, rowIndex, groupTotals, centerTotals, groupChildSize, groupInitialAccNum, loanProducts.size(), method, levelId, currency);
         BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
         BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
@@ -242,7 +243,7 @@ public class BulkEntryDisplayHelper {
         getWithdrawalSavingsRow(builder, bulkEntrySavingsAccounts, savingsProducts, rowIndex, groupTotals,
                 centerTotals, groupChildSize, groupInitialAccNum, loanProducts.size(),
                 method, levelId, currency);
-        
+
         BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
         BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
         buildCustomerAccount(collectionSheetEntryDto.getCustomerAccountDetails(), builder, method, currency, rowIndex,
@@ -295,7 +296,7 @@ public class BulkEntryDisplayHelper {
             final List<ProductDto> savingsProducts, final int rows, final Money[] groupTotals, final Money[] centerTotals,
             final int size, final int initialAccNo, final int loanProductsSize,
             final String method, final int levelId, final MifosCurrency currency) {
-        
+
         for (ProductDto prdOffering : savingsProducts) {
             boolean isIdMatched = false;
             builder.append("<td class=\"drawtablerow\">");
@@ -757,12 +758,12 @@ public class BulkEntryDisplayHelper {
 
     public StringBuilder buildTotals(final MifosCurrency currency, final Money[] totals, final int loanProductsSize, final int savingsPoductsSize, final String method,
             final UserContext userContext) {
-        
+
         Money dueColl = new Money(Money.getDefaultCurrency(), "0.0");
         Money withDrawals = new Money(Money.getDefaultCurrency(), "0.0");
         Money loanDisb = new Money(Money.getDefaultCurrency(), "0.0");
         Money otherColl = new Money(Money.getDefaultCurrency(), "0.0");
-        
+
         for (int i = 0; i < loanProductsSize + savingsPoductsSize; i++) {
             dueColl = totals[i] == null ? dueColl : totals[i].add(dueColl);
         }
@@ -871,7 +872,7 @@ public class BulkEntryDisplayHelper {
     }
 
     private String getLabel(final String key, final UserContext userContext) {
-        return MessageLookup.getInstance().lookupLabel(key, userContext);
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(key);
     }
 
     private boolean almostEqual(double x, double y) {

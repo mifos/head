@@ -20,6 +20,14 @@
 
 package org.mifos.customers.client.business;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -69,9 +77,6 @@ import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
-
-import java.io.InputStream;
-import java.util.*;
 
 /**
  * FIXME - keithw - move all usage of deprecated constructors in tests and TestObjectFactory towards newer builder + IntegrationTestObjectMother pattern
@@ -751,8 +756,8 @@ public class ClientBO extends CustomerBO {
 
     private void validateForActiveAccounts() throws CustomerException {
         if (isAnyLoanAccountOpen() || isAnySavingsAccountOpen()) {
-            throw new CustomerException(ClientConstants.ERRORS_ACTIVE_ACCOUNTS_PRESENT, new Object[] { MessageLookup
-                    .getInstance().lookupLabel(ConfigurationConstants.GROUP, userContext) });
+            throw new CustomerException(ClientConstants.ERRORS_ACTIVE_ACCOUNTS_PRESENT,
+                    new Object[] { ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.GROUP) });
         }
     }
 
@@ -859,8 +864,8 @@ public class ClientBO extends CustomerBO {
                 .equals(CustomerStatus.CLIENT_PENDING.getValue()))
                 && this.isClientUnderGroup()) {
             if (groupStatus.equals(CustomerStatus.GROUP_CANCELLED.getValue())) {
-                throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED, new Object[] { MessageLookup
-                        .getInstance().lookupLabel(ConfigurationConstants.GROUP, this.getUserContext()) });
+                throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED,
+                        new Object[] { ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.GROUP) });
             }
 
             if (isGroupStatusLower(clientStatusId, groupStatus)) {
@@ -877,8 +882,8 @@ public class ClientBO extends CustomerBO {
                 .equals(CustomerStatus.CLIENT_PENDING.getValue()))
                 && this.isClientUnderGroup()) {
             if (groupStatus.equals(CustomerStatus.GROUP_CANCELLED.getValue())) {
-                throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED, new Object[] { MessageLookup
-                        .getInstance().lookupLabel(ConfigurationConstants.GROUP, this.getUserContext()) });
+                throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED,
+                        new Object[] { ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.GROUP) });
             }
 
             if (isGroupStatusLower(clientStatusId, groupStatus)) {

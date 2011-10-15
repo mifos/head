@@ -19,6 +19,10 @@
  */
 package org.mifos.accounts.struts.actionforms;
 
+import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
@@ -26,12 +30,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.ResourceBundle;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AccountApplyPaymentActionFormTest {

@@ -20,13 +20,14 @@
 
 package org.mifos.builders;
 
-import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
-import org.mifos.security.MifosUser;
-import org.springframework.security.core.GrantedAuthority;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.mifos.config.Localization;
+import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
+import org.mifos.security.MifosUser;
+import org.springframework.security.core.GrantedAuthority;
 
 public class MifosUserBuilder {
 
@@ -43,7 +44,9 @@ public class MifosUserBuilder {
     private List<Short> roleIds = new ArrayList<Short>();
 
     public MifosUser build() {
-        return new MifosUser(userId, branchId, level.getValue(), roleIds, username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+        return new MifosUser(userId, branchId, level.getValue(), roleIds, username, password,
+                             enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
+                             authorities, Localization.ENGLISH_LOCALE_ID);
     }
 
     public MifosUserBuilder withAdminRole() {

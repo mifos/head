@@ -20,7 +20,34 @@
 
 package org.mifos.accounts.loan.struts.actionforms;
 
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_100;
+import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_AND_PURPOSE_NULL;
+import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_AND_PURPOSE_NULL2;
+import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_NULL;
+import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_ZERO;
+import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_EMPTY;
+import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_NULL;
+import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import junit.framework.Assert;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.junit.Before;
@@ -46,23 +73,12 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.math.BigDecimal;
-import java.util.*;
-
-import static java.util.Arrays.asList;
-import static org.apache.commons.lang.StringUtils.EMPTY;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.*;
-import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanAccountActionFormTest {
@@ -389,7 +405,7 @@ public class LoanAccountActionFormTest {
     public void testTransactionDateIsRequiredOnPayment() {
         Money amount = new Money(rupee, "10");
         RepaymentScheduleInstallment installment = new RepaymentScheduleInstallment(1, new Date(), amount, amount,
-                amount, amount, amount, locale);
+                amount, amount, amount);
         PaymentDataHtmlBean bean = new PaymentDataHtmlBean(null, null, installment);
         bean.setAmount("10");
         bean.setDate("");

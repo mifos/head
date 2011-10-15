@@ -27,13 +27,13 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
+import org.mifos.config.Localization;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.security.MifosUser;
 import org.mifos.service.BusinessRuleException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -82,6 +82,7 @@ public class SavingsIntPostingHelper extends TaskHelper {
         Integer userId = Integer.valueOf(1);
         Short branchId = Short.valueOf("1");
         String username = "mifos";
+        //FIXME hardcoded default user
         byte[] password = "testmifos".getBytes();
         boolean enabled  = true;
         boolean accountNonExpired = true;
@@ -90,6 +91,7 @@ public class SavingsIntPostingHelper extends TaskHelper {
         Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         List<Short> roleIds = new ArrayList<Short>();
 
-       return new MifosUser(userId, branchId, PersonnelLevel.LOAN_OFFICER.getValue(), roleIds, username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+       return new MifosUser(userId, branchId, PersonnelLevel.LOAN_OFFICER.getValue(), roleIds, username, password, enabled,
+                            accountNonExpired, credentialsNonExpired, accountNonLocked, authorities, Localization.ENGLISH_LOCALE_ID);
     }
 }

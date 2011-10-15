@@ -20,9 +20,9 @@
 
 package org.mifos.framework.util.helpers;
 
-import org.apache.commons.lang.ObjectUtils;
-
 import java.math.BigDecimal;
+
+import org.apache.commons.lang.ObjectUtils;
 
 public class NumberUtils {
 

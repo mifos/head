@@ -274,17 +274,17 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         UserContext userContext = getUserContext(request);
         LoanInformationDto loanInformationDto = this.loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
 
-        final String accountStateNameLocalised = MessageLookup.getInstance().lookup(loanInformationDto.getAccountStateName(), userContext);
+        final String accountStateNameLocalised = ApplicationContextProvider.getBean(MessageLookup.class).lookup(loanInformationDto.getAccountStateName());
         SessionUtils.removeThenSetAttribute("accountStateNameLocalised", accountStateNameLocalised, request);
 
-        final String gracePeriodTypeNameLocalised = MessageLookup.getInstance().lookup(loanInformationDto.getGracePeriodTypeName(), userContext);
+        final String gracePeriodTypeNameLocalised = ApplicationContextProvider.getBean(MessageLookup.class).lookup(loanInformationDto.getGracePeriodTypeName());
         SessionUtils.removeThenSetAttribute("gracePeriodTypeNameLocalised", gracePeriodTypeNameLocalised, request);
-        final String interestTypeNameLocalised = MessageLookup.getInstance().lookup(loanInformationDto.getInterestTypeName(), userContext);
+        final String interestTypeNameLocalised = ApplicationContextProvider.getBean(MessageLookup.class).lookup(loanInformationDto.getInterestTypeName());
         SessionUtils.removeThenSetAttribute("interestTypeNameLocalised", interestTypeNameLocalised, request);
 
         final Set<String> accountFlagStateEntityNamesLocalised = new HashSet<String>();
         for (String name : loanInformationDto.getAccountFlagNames()) {
-            accountFlagStateEntityNamesLocalised.add(MessageLookup.getInstance().lookup(name, userContext));
+            accountFlagStateEntityNamesLocalised.add(ApplicationContextProvider.getBean(MessageLookup.class).lookup(name));
         }
         SessionUtils.setCollectionAttribute("accountFlagNamesLocalised", accountFlagStateEntityNamesLocalised, request);
 
@@ -387,7 +387,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             loanAccountActionForm.resetScheduleViewDate();
         }
 
-        OriginalScheduleInfoDto originalSchedule = this.loanServiceFacade.retrieveOriginalLoanSchedule(loanId, locale);
+        OriginalScheduleInfoDto originalSchedule = this.loanServiceFacade.retrieveOriginalLoanSchedule(loanId);
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         SessionUtils.setAttribute(Constants.ORIGINAL_SCHEDULE_AVAILABLE, originalSchedule.hasOriginalInstallments(), request);
@@ -411,7 +411,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         UserContext userContext = getUserContext(request);
         Integer loanId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
 
-        OriginalScheduleInfoDto dto = loanServiceFacade.retrieveOriginalLoanSchedule(loanId, userContext.getPreferredLocale());
+        OriginalScheduleInfoDto dto = loanServiceFacade.retrieveOriginalLoanSchedule(loanId);
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, dto.getDisbursementDate(), request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, dto.getLoanAmount(), request);
         SessionUtils.setCollectionAttribute(LoanConstants.ORIGINAL_INSTALLMENTS,
@@ -1063,7 +1063,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         // see the usage of WeekDay#setName and it initializes with empty name.
         for (WeekDay weekDay : weekDays) {
             if (StringUtils.isBlank(weekDay.getName())) {
-                weekDay.setWeekdayName(MessageLookup.getInstance().lookup(weekDay.getPropertiesKey()));
+                weekDay.setWeekdayName(ApplicationContextProvider.getBean(MessageLookup.class).lookup(weekDay.getPropertiesKey()));
             }
         }
         return weekDays;

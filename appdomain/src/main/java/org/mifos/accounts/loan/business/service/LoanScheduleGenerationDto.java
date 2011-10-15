@@ -1,12 +1,12 @@
 package org.mifos.accounts.loan.business.service;
 
+import java.util.Date;
+import java.util.List;
+
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.customers.api.DataTransferObject;
 import org.mifos.framework.util.helpers.Money;
-
-import java.util.Date;
-import java.util.List;
 
 public class LoanScheduleGenerationDto implements DataTransferObject {
     private Date disbursementDate;

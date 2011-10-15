@@ -20,6 +20,27 @@
 
 package org.mifos.accounts.loan.struts.actionforms;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
+import static org.mifos.framework.util.CollectionUtils.select;
+import static org.mifos.platform.util.CollectionUtils.collect;
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
+import static org.mifos.platform.util.CollectionUtils.itemIndexOutOfAscendingOrder;
+
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -82,26 +103,6 @@ import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.util.Transformer;
 import org.mifos.security.util.UserContext;
-
-import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.HashMap;
-
-import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
-import static org.mifos.framework.util.CollectionUtils.select;
-import static org.mifos.platform.util.CollectionUtils.collect;
-import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
-import static org.mifos.platform.util.CollectionUtils.itemIndexOutOfAscendingOrder;
 
 public class LoanAccountActionForm extends BaseActionForm implements QuestionResponseCapturer, CashFlowCaptor {
     public LoanAccountActionForm() {
@@ -834,7 +835,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     private void checkValidationForGetPrdOfferings(ActionErrors errors, UserContext userContext) {
         if (StringUtils.isBlank(getCustomerId())) {
             addError(errors, LoanConstants.CUSTOMER, LoanConstants.CUSTOMERNOTSELECTEDERROR, getLabel(
-                    ConfigurationConstants.CLIENT, userContext), getLabel(ConfigurationConstants.GROUP, userContext));
+                    ConfigurationConstants.CLIENT), getLabel(ConfigurationConstants.GROUP));
         }
     }
 
@@ -846,7 +847,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
             ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, locale);
             String instanceName = resources.getString("loan.instanceName");
             addError(errors, LoanConstants.PRDOFFERINGID, LoanConstants.LOANOFFERINGNOTSELECTEDERROR, getLabel(
-                    ConfigurationConstants.LOAN, userContext), instanceName);
+                    ConfigurationConstants.LOAN), instanceName);
         }
     }
 

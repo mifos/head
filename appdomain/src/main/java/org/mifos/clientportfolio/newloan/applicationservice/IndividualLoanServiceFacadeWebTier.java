@@ -20,8 +20,6 @@
 
 package org.mifos.clientportfolio.newloan.applicationservice;
 
-import org.mifos.clientportfolio.newloan.applicationservice.IndividualLoanRequest;
-import org.mifos.clientportfolio.newloan.applicationservice.IndividualLoanServiceFacade;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoan;
 import org.mifos.clientportfolio.newloan.domain.LoanService;
 

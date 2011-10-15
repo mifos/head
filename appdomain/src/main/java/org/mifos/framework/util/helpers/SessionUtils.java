@@ -30,12 +30,12 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class has helper methods to set attributes in session and retrieve them.

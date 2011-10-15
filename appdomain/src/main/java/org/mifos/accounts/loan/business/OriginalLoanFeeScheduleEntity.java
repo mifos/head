@@ -20,15 +20,24 @@
 
 package org.mifos.accounts.loan.business;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.framework.util.helpers.Money;
-
-import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "original_loan_fee_schedule")

@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.business;
 
-import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
-
 import java.sql.Connection;
 
 import junit.framework.Assert;
@@ -57,7 +55,7 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void startFromStandardStore() throws Exception {
-        Upgrade upgrade = new AddAccountAction(SEND_TO_ORPHANS, TEST_LOCALE, "Send money to orphans");
+        Upgrade upgrade = new AddAccountAction(SEND_TO_ORPHANS, "Send money to orphans");
         upgradeAndCheck(upgrade);
     }
 
@@ -81,21 +79,12 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
     public void testConstructor() throws Exception {
         short newId = 31000;
         AddAccountAction upgrade = null;
-        try {
-                        // use deprecated constructor
-                        upgrade = new AddAccountAction(newId, TEST_LOCALE,
-                                "NewAccountAction");
-                    } catch (Exception e) {
-                       Assert.assertEquals(e.getMessage(), AddAccountAction.WRONG_CONSTRUCTOR);
-                    }
-
         String invalidKey = "NewAccountAction";
-
         try {
             // use invalid lookup key format
             upgrade = new AddAccountAction(newId, invalidKey);
         } catch (Exception e) {
-           Assert.assertEquals(e.getMessage(), AddAccountAction.wrongLookupValueKeyFormat);
+           Assert.assertEquals(e.getMessage(), AddAccountAction.WRONG_KEY_FORMAT);
         }
         String goodKey = "AccountAction-NewAccountAction";
         // use valid constructor and valid key

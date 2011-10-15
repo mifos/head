@@ -24,9 +24,7 @@ import java.sql.Timestamp;
 
 import junit.framework.Assert;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
 import org.mifos.core.MifosRuntimeException;

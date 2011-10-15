@@ -65,9 +65,11 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
             throw new UsernameNotFoundException(LoginConstants.KEYINVALIDUSER);
         }
 
-        Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
-        Short localeId = Localization.getInstance().getConfiguredLocaleId();
-        UserContext userContext = new UserContext(preferredLocale, localeId);
+        Short localeId = user.getPreferredLocale();
+        Locale preferredLocale = Localization.getInstance().getLocaleById(localeId);
+        UserContext userContext = new UserContext();
+        userContext.setPreferredLocale(preferredLocale);
+        userContext.setLocaleId(localeId);
         userContext.setId(user.getPersonnelId());
         userContext.setName(user.getDisplayName());
         userContext.setLevel(user.getLevelEnum());

@@ -20,6 +20,9 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
+import java.util.Date;
+import java.util.List;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.mifos.customers.business.service.CustomerBusinessService;
@@ -34,9 +37,6 @@ import org.mifos.reports.business.service.BranchReportConfigService;
 import org.mifos.reports.business.service.BranchReportService;
 import org.mifos.reports.business.service.IBranchReportService;
 import org.mifos.reports.business.service.ReportServiceFactory;
-
-import java.util.Date;
-import java.util.List;
 
 public class BranchReportHelper extends TaskHelper {
 

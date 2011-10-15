@@ -35,7 +35,6 @@ import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
@@ -159,7 +158,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         AddActivity activity = null;
         try {
             activity = new AddActivity((short) newActivityId,
-                    SecurityConstants.ORGANIZATION_MANAGEMENT, Localization.ENGLISH_LOCALE_ID, "no name");
+                    SecurityConstants.ORGANIZATION_MANAGEMENT, "no name");
             activity.upgrade(StaticHibernateUtil.getSessionTL().connection());
 
         } catch (Exception e) {

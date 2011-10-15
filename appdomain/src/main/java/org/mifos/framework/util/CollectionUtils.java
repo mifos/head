@@ -20,9 +20,6 @@
 
 package org.mifos.framework.util;
 
-import org.mifos.framework.util.helpers.Predicate;
-import org.mifos.framework.util.helpers.Transformer;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -32,6 +29,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.mifos.framework.util.helpers.Predicate;
+import org.mifos.framework.util.helpers.Transformer;
 
 public class CollectionUtils {
 

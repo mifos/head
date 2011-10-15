@@ -32,7 +32,6 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
 import org.mifos.reports.admindocuments.struts.action.BirtAdminDocumentUploadAction;
 import org.mifos.reports.business.ReportsJasperMap;
 import org.mifos.reports.business.ReportsParamsMap;

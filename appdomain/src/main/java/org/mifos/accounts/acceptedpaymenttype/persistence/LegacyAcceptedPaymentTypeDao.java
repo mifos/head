@@ -20,6 +20,10 @@
 
 package org.mifos.accounts.acceptedpaymenttype.persistence;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.hibernate.Session;
 import org.mifos.accounts.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.application.NamedQueryConstants;
@@ -28,10 +32,6 @@ import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.LegacyGenericDao;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class LegacyAcceptedPaymentTypeDao extends LegacyGenericDao {

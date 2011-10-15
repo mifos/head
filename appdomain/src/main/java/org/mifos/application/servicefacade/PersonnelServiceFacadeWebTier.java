@@ -24,6 +24,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -46,8 +47,8 @@ import org.mifos.customers.personnel.business.PersonnelNotesEntity;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
@@ -132,7 +133,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         List<ListElement> personnelLevelList = new ArrayList<ListElement>();
         for (PersonnelLevelEntity level : personnelLevels) {
             String name = level.getLookUpValue().getLookUpName();
-            String localisedName = MessageLookup.getInstance().lookup(name);
+            String localisedName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(name);
             ListElement listElement = new ListElement(new Integer(level.getId()), localisedName);
             personnelLevelList.add(listElement);
         }
@@ -186,7 +187,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
         String displayName = personnel.getDisplayName();
         PersonnelStatusEntity personnelStatus = personnel.getStatus();
-        String statusName = MessageLookup.getInstance().lookup(personnelStatus.getLookUpValue());
+        String statusName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(personnelStatus.getLookUpValue());
         ListElement status = new ListElement(new Integer(personnelStatus.getId()), statusName);
         boolean locked = personnel.isLocked();
         PersonnelDetailsEntity personnelDetailsEntity = personnel.getPersonnelDetails();
@@ -559,7 +560,6 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
     @Override
     public void unLockUserAccount(String globalAccountNum) {
-
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(user);
 
@@ -574,5 +574,18 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             this.transactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         }
+    }
+
+    @Override
+    public Locale getUserPreferredLocale() {
+        if(SecurityContextHolder.getContext() != null) {
+            if(SecurityContextHolder.getContext().getAuthentication() != null) {
+                if(SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null) {
+                    MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                    return Localization.getInstance().getLocaleById(user.getPreferredLocaleId());
+                }
+            }
+        }
+        return Localization.getInstance().getConfiguredLocale();
     }
 }

@@ -23,12 +23,12 @@ package org.mifos.framework.hibernate.helper;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.framework.exceptions.HibernateSearchException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the class that is returned on a search operation. Search would typically result in a set of search result

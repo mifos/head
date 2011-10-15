@@ -20,6 +20,18 @@
 
 package org.mifos.customers.group.business;
 
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
+import static org.mifos.customers.group.business.GroupLoanCounter.TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE;
+import static org.mifos.framework.util.CollectionUtils.find;
+import static org.mifos.framework.util.CollectionUtils.select;
+
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -43,18 +55,6 @@ import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
-
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
-import static org.mifos.customers.group.business.GroupLoanCounter.TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE;
-import static org.mifos.framework.util.CollectionUtils.find;
-import static org.mifos.framework.util.CollectionUtils.select;
 
 public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 

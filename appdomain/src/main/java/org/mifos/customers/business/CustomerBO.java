@@ -20,6 +20,18 @@
 
 package org.mifos.customers.business;
 
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
+import static org.mifos.framework.util.helpers.MoneyUtils.zero;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
@@ -69,12 +81,6 @@ import org.mifos.framework.util.helpers.ChapterNum;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
-
-import java.math.BigDecimal;
-import java.util.*;
-
-import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
-import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 
 /**
  * A class that represents a customer entity after being created.

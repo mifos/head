@@ -297,22 +297,22 @@ public class AuditConfiguration {
         for (MasterDataEntity masterDataEntity : masterDataList) {
 
             if (masterDataEntity instanceof PersonnelStatusEntity) {
-                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                String name = ApplicationContextProvider.getBean(MessageLookup.class).lookup(masterDataEntity.getLookUpValue());
                 ((PersonnelStatusEntity) masterDataEntity).setName(name);
             }
 
             if (masterDataEntity instanceof PersonnelLevelEntity) {
-                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                String name = ApplicationContextProvider.getBean(MessageLookup.class).lookup(masterDataEntity.getLookUpValue());
                 ((PersonnelLevelEntity) masterDataEntity).setName(name);
             }
 
             if (masterDataEntity instanceof OfficeLevelEntity) {
-                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                String name = ApplicationContextProvider.getBean(MessageLookup.class).lookup(masterDataEntity.getLookUpValue());
                 ((OfficeLevelEntity) masterDataEntity).setName(name);
             }
 
             if (masterDataEntity instanceof OfficeStatusEntity) {
-                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                String name = ApplicationContextProvider.getBean(MessageLookup.class).lookup(masterDataEntity.getLookUpValue());
                 ((OfficeStatusEntity) masterDataEntity).setName(name);
             }
 
@@ -328,7 +328,7 @@ public class AuditConfiguration {
             if (key.contains(".")) {
                 columnName = columnName + " " + columnNames.getString(key);
             } else {
-                    columnName = columnName + " " + MessageLookup.getInstance().lookupLabel(key);
+                    columnName = columnName + " " + ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(key);
             }
         }
         return columnName;

@@ -20,6 +20,12 @@
 
 package org.mifos.config.persistence;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.mifos.accounts.business.AccountStateEntity;
@@ -35,17 +41,11 @@ import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class ApplicationConfigurationDaoHibernate implements ApplicationConfigurationDao {
 

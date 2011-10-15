@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
@@ -32,7 +33,6 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.PageExpiredException;

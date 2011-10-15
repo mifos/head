@@ -20,7 +20,6 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.LocalizationConverter;
 
 public abstract class LoanAmountOption extends AmountRange {
@@ -39,43 +38,17 @@ public abstract class LoanAmountOption extends AmountRange {
     }
 
     public String getDefaultLoanAmountString() {
-
-        Short digitsBeforeDecimalForMoney = AccountingRules.getDigitsBeforeDecimal();
-        Short digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal(loanOffering.getCurrency());
-        Short digitsAfterDecimalForInterest = AccountingRules.getDigitsAfterDecimalForInterest();
-        Short digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest();
-        Short digitsBeforeDecimalForCashFlowValidations = AccountingRules.getDigitsBeforeDecimalForCashFlowValidations();
-        Short digitsAfterDecimalForCashFlowValidations = AccountingRules.getDigitsAfterDecimalForCashFlowValidations();
-
-        LocalizationConverter converter = new LocalizationConverter(digitsAfterDecimalForMoney, digitsBeforeDecimalForMoney, digitsAfterDecimalForInterest, digitsBeforeDecimalForInterest, digitsBeforeDecimalForCashFlowValidations, digitsAfterDecimalForCashFlowValidations);
-
+        LocalizationConverter converter = new LocalizationConverter(loanOffering.getCurrency());
         return converter.getDoubleStringForMoney(getDefaultLoanAmount());
     }
 
     public String getMaxLoanAmountString() {
-        Short digitsBeforeDecimalForMoney = AccountingRules.getDigitsBeforeDecimal();
-        Short digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal(loanOffering.getCurrency());
-        Short digitsAfterDecimalForInterest = AccountingRules.getDigitsAfterDecimalForInterest();
-        Short digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest();
-        Short digitsBeforeDecimalForCashFlowValidations = AccountingRules.getDigitsBeforeDecimalForCashFlowValidations();
-        Short digitsAfterDecimalForCashFlowValidations = AccountingRules.getDigitsAfterDecimalForCashFlowValidations();
-
-        LocalizationConverter converter = new LocalizationConverter(digitsAfterDecimalForMoney, digitsBeforeDecimalForMoney, digitsAfterDecimalForInterest, digitsBeforeDecimalForInterest, digitsBeforeDecimalForCashFlowValidations, digitsAfterDecimalForCashFlowValidations);
-
+        LocalizationConverter converter = new LocalizationConverter(loanOffering.getCurrency());
         return converter.getDoubleStringForMoney(getMaxLoanAmount());
     }
 
     public String getMinLoanAmountString() {
-
-        Short digitsBeforeDecimalForMoney = AccountingRules.getDigitsBeforeDecimal();
-        Short digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal(loanOffering.getCurrency());
-        Short digitsAfterDecimalForInterest = AccountingRules.getDigitsAfterDecimalForInterest();
-        Short digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest();
-        Short digitsBeforeDecimalForCashFlowValidations = AccountingRules.getDigitsBeforeDecimalForCashFlowValidations();
-        Short digitsAfterDecimalForCashFlowValidations = AccountingRules.getDigitsAfterDecimalForCashFlowValidations();
-
-        LocalizationConverter converter = new LocalizationConverter(digitsAfterDecimalForMoney, digitsBeforeDecimalForMoney, digitsAfterDecimalForInterest, digitsBeforeDecimalForInterest, digitsBeforeDecimalForCashFlowValidations, digitsAfterDecimalForCashFlowValidations);
-
+        LocalizationConverter converter = new LocalizationConverter(loanOffering.getCurrency());
         return converter.getDoubleStringForMoney(getMinLoanAmount());
     }
 

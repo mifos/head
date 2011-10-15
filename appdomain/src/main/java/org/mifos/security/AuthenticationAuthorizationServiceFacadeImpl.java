@@ -21,11 +21,9 @@
 package org.mifos.security;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.config.Localization;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -52,8 +50,6 @@ public class AuthenticationAuthorizationServiceFacadeImpl implements Authenticat
      */
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException, DataAccessException {
-
-        LocaleContextHolder.setLocale(Localization.getInstance().getConfiguredLocale());
 
         if (StringUtils.isBlank(username)) {
             throw new UsernameNotFoundException(LoginConstants.KEYINVALIDUSER);

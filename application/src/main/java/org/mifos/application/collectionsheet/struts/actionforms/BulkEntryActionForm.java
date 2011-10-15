@@ -28,8 +28,6 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -45,6 +43,8 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -260,8 +260,7 @@ public class BulkEntryActionForm extends BaseActionForm {
 
         if (officeId == null || "".equals(officeId.trim())) {
             errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(
-                    CollectionSheetEntryConstants.MANDATORYFIELDS, getMessageText(ConfigurationConstants.BRANCHOFFICE,
-                            userContext)));
+                    CollectionSheetEntryConstants.MANDATORYFIELDS, getMessageText(ConfigurationConstants.BRANCHOFFICE)));
         }
 
         if (loanOfficerId == null || "".equals(loanOfficerId.trim())) {
@@ -271,7 +270,7 @@ public class BulkEntryActionForm extends BaseActionForm {
 
         if (customerId == null || "".equals(customerId.trim())) {
             errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(
-                    CollectionSheetEntryConstants.MANDATORYFIELDS, getLabel(customerLabel, userContext)));
+                    CollectionSheetEntryConstants.MANDATORYFIELDS, getLabel(customerLabel)));
         }
 
         if (getTransactionDate() != null && !getTransactionDate().equals("")) {

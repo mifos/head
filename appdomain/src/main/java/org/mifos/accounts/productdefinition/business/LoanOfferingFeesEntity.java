@@ -20,10 +20,10 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.framework.business.AbstractEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoanOfferingFeesEntity extends AbstractEntity {
 

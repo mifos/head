@@ -1,5 +1,19 @@
 package org.mifos.accounts.loan.business.service.validators;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,18 +28,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.validations.ErrorEntry;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import static java.util.Arrays.asList;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InstallmentRulesValidatorTest {
@@ -183,7 +185,7 @@ public class InstallmentRulesValidatorTest {
         RepaymentScheduleInstallment installment4 =
                 getRepaymentScheduleInstallment("22-Sep-2010", 4, "414.1", "1.9", "1", "417.0");
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
-        
+
         List<ErrorEntry> errorEntries = installmentRulesValidator.validateForMinimumInstallmentAmount(installments, BigDecimal.valueOf(Double.valueOf("50.0")));
         assertThat(errorEntries.size(), is(3));
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_INTEREST_FEE, "1");
@@ -205,10 +207,9 @@ public class InstallmentRulesValidatorTest {
     }
 
     private Date getDate(RepaymentScheduleInstallment installment, String dateValue) {
-        Locale dateLocale = installment.getLocale();
         Date date;
         try {
-            date = DateUtils.parseDate(dateValue, dateLocale);
+            date = DateUtils.parseDate(dateValue);
         } catch (ParseException e) {
             date = null;
         }

@@ -1,7 +1,5 @@
 package org.mifos.clientportfolio.newloan.domain;
 
-import org.hibernate.Hibernate;
-import org.hibernate.proxy.HibernateProxy;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.RateFeeBO;

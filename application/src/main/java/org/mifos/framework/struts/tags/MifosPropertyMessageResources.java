@@ -20,24 +20,20 @@
 
 package org.mifos.framework.struts.tags;
 
-import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.struts.util.MessageResourcesFactory;
 import org.apache.struts.util.PropertyMessageResources;
-import org.mifos.application.master.persistence.LegacyMasterDao;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.framework.util.helpers.BundleKey;
 
 public class MifosPropertyMessageResources extends PropertyMessageResources {
 
     private final Map<BundleKey, String> dbMap_labels = new ConcurrentHashMap<BundleKey, String>();
-    private final Map<BundleKey, Collection> dbMap_Values = new ConcurrentHashMap<BundleKey, Collection>();
-    private final LegacyMasterDao legacyMasterDao = ApplicationContextProvider.getBean(LegacyMasterDao.class);
 
     public MifosPropertyMessageResources(final MessageResourcesFactory factory, final String config, final boolean returnNull) {
         super(factory, config, returnNull);
@@ -54,14 +50,12 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
      */
     @Override
     public String getMessage(final Locale locale, final String key) {
-
         String returnVal = null;
         returnVal = super.getMessage(locale, key);
         if (returnVal == null) {
             // try to get from the local hashmap
             try {
-
-                returnVal = MifosConfiguration.getInstance().getLabel(key);
+                returnVal = ApplicationContextProvider.getBean(MessageLookup.class).getLabel(key);
             } catch (ConfigurationException ce) {
                 // eat it
             }
@@ -70,7 +64,6 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
         if (returnVal == null) {
             returnVal = dbMap_labels.get(new BundleKey(locale, key));
         }
-
         return returnVal;
     }
 }

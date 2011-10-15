@@ -33,6 +33,7 @@ import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,7 @@ public class AccountStateIntegrationTest extends MifosIntegrationTestCase {
             AccountStateEntity stateInDatabase = stateListIterator.next();
            Assert.assertEquals(state.getValue(), stateInDatabase.getId());
            Assert.assertEquals(state.getPropertiesKey(), stateInDatabase.getLookUpValue().getLookUpName());
-           Assert.assertEquals(MessageLookup.getInstance().lookup(state), MessageLookup.getInstance().lookup(stateInDatabase));
+           Assert.assertEquals(ApplicationContextProvider.getBean(MessageLookup.class).lookup(state), ApplicationContextProvider.getBean(MessageLookup.class).lookup(stateInDatabase));
         }
 
     }

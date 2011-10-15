@@ -25,14 +25,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Set;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.Set;
 
+import org.hibernate.Query;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -60,17 +59,16 @@ import org.mifos.accounts.util.helpers.InstallmentDate;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactoryImpl;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
-import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -78,11 +76,11 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
@@ -90,7 +88,6 @@ import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDat
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.hibernate.Query;
 
 /**
  * Clients, groups, and centers are stored in the db as customer accounts.

@@ -20,18 +20,18 @@
 
 package org.mifos.framework.persistence;
 
-import org.mifos.db.upgrade.DatabaseUpgradeSupport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.springframework.context.ApplicationContext;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.mifos.db.upgrade.DatabaseUpgradeSupport;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 
 /**
  * This class handles automated database schema and data changes.

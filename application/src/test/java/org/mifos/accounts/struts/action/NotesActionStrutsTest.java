@@ -48,9 +48,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
-import java.io.IOException;
-import java.sql.Date;
-
 public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
 
 

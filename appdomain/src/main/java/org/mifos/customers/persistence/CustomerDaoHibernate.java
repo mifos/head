@@ -53,6 +53,7 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
@@ -488,7 +489,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         final String lookupName = (String) queryResult.get(0)[10];
         final Short loanOfficerId = (Short) queryResult.get(0)[11];
         final String loanOfficerName = (String) queryResult.get(0)[12];
-        final String customerStatusName = MessageLookup.getInstance().lookup(lookupName, userContext);
+        final String customerStatusName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupName);
 
         return new CenterDisplayDto(customerId, globalCustNum, displayName, branchId, mfiJoiningDate, createdDate,
                 versionNo, externalId, customerLevelId, customerStatusId, customerStatusName, loanOfficerId,
@@ -616,7 +617,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             lookupName = (String) customerPosition[0];
             customerId = (Integer) customerPosition[1];
             customerDisplayName = (String) customerPosition[2];
-            positionName = MessageLookup.getInstance().lookup(lookupName, userContext);
+            positionName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupName);
 
             customerPositions.add(new CustomerPositionOtherDto(positionName, customerId, customerDisplayName));
         }
@@ -652,7 +653,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             prdOfferingName = (String) savingsDetail[1];
             accountStateId = (Short) savingsDetail[2];
             lookupName = (String) savingsDetail[3];
-            accountStateName = MessageLookup.getInstance().lookup(lookupName, userContext);
+            accountStateName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupName);
             // TODO - use default currency or retrieved currency?
             currency = (Short) savingsDetail[4];
             savingsBalance = new Money(mifosCurrency, (BigDecimal) savingsDetail[5]);
@@ -756,7 +757,7 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     private String localizedMessageLookup(String key) {
-        return MessageLookup.getInstance().lookup(key);
+        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(key);
     }
 
     @SuppressWarnings("unchecked")
@@ -1061,7 +1062,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         final Boolean blackListed = (Boolean) queryResult.get(0)[13];
         final Short loanOfficerId = (Short) queryResult.get(0)[14];
         final String loanOfficerName = (String) queryResult.get(0)[15];
-        final String customerStatusName = MessageLookup.getInstance().lookup(lookupName, userContext);
+        final String customerStatusName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupName);
 
         return new GroupDisplayDto(customerId, globalCustNum, displayName, parentCustomerDisplayName, branchId,
                 externalId, customerFormedByDisplayName, customerActivationDate, customerLevelId, customerStatusId,
@@ -1145,14 +1146,14 @@ public class CustomerDaoHibernate implements CustomerDao {
             clientUnderGroup = true;
         }
 
-        final String customerStatusName = MessageLookup.getInstance().lookup(lookupName, userContext);
-        final String businessActivities = MessageLookup.getInstance().lookup(businessActivitiesName, userContext);
-        final String handicapped = MessageLookup.getInstance().lookup(handicappedName, userContext);
-        final String maritalStatus = MessageLookup.getInstance().lookup(maritalStatusName, userContext);
-        final String citizenship = MessageLookup.getInstance().lookup(citizenshipName, userContext);
-        final String ethnicity = MessageLookup.getInstance().lookup(ethnicityName, userContext);
-        final String educationLevel = MessageLookup.getInstance().lookup(educationLevelName, userContext);
-        final String povertyStatus = MessageLookup.getInstance().lookup(povertyStatusName, userContext);
+        final String customerStatusName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupName);
+        final String businessActivities = ApplicationContextProvider.getBean(MessageLookup.class).lookup(businessActivitiesName);
+        final String handicapped = ApplicationContextProvider.getBean(MessageLookup.class).lookup(handicappedName);
+        final String maritalStatus = ApplicationContextProvider.getBean(MessageLookup.class).lookup(maritalStatusName);
+        final String citizenship = ApplicationContextProvider.getBean(MessageLookup.class).lookup(citizenshipName);
+        final String ethnicity = ApplicationContextProvider.getBean(MessageLookup.class).lookup(ethnicityName);
+        final String educationLevel = ApplicationContextProvider.getBean(MessageLookup.class).lookup(educationLevelName);
+        final String povertyStatus = ApplicationContextProvider.getBean(MessageLookup.class).lookup(povertyStatusName);
 
         String spouseFatherValue = null;
         String spouseFatherName = null;
@@ -1172,9 +1173,9 @@ public class CustomerDaoHibernate implements CustomerDao {
                 final String genderLookup = (String) familyDetail[3];
                 final String livingStatusLookup = (String) familyDetail[4];
 
-                final String relationship = MessageLookup.getInstance().lookup(relationshipLookup, userContext);
-                final String gender = MessageLookup.getInstance().lookup(genderLookup, userContext);
-                final String livingStatus = MessageLookup.getInstance().lookup(livingStatusLookup, userContext);
+                final String relationship = ApplicationContextProvider.getBean(MessageLookup.class).lookup(relationshipLookup);
+                final String gender = ApplicationContextProvider.getBean(MessageLookup.class).lookup(genderLookup);
+                final String livingStatus = ApplicationContextProvider.getBean(MessageLookup.class).lookup(livingStatusLookup);
 
                 String dateOfBirthAsString = "";
                 if (familyDateOfBirth != null) {
@@ -1191,7 +1192,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             if (clientNameDetailsQueryResult.size() > 0) {
                 final String spouseFatherValueLookUp = (String) clientNameDetailsQueryResult.get(0)[0];
                 spouseFatherName = (String) clientNameDetailsQueryResult.get(0)[1];
-                spouseFatherValue = MessageLookup.getInstance().lookup(spouseFatherValueLookUp, userContext);
+                spouseFatherValue = ApplicationContextProvider.getBean(MessageLookup.class).lookup(spouseFatherValueLookUp);
             }
         }
 
@@ -1454,7 +1455,7 @@ public class CustomerDaoHibernate implements CustomerDao {
 
         if (StringUtils.isNotBlank(governmentId)) {
             if (checkForDuplicacyOnGovtIdForNonClosedClients(governmentId, customerId) == true) {
-                String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GOVERNMENT_ID);
+                String label = ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.GOVERNMENT_ID);
                 throw new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, new Object[] { governmentId,
                         label });
             }

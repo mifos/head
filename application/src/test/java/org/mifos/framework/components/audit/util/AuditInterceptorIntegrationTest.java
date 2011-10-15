@@ -20,7 +20,13 @@
 
 package org.mifos.framework.components.audit.util;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -40,11 +46,6 @@ import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 
 public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
 

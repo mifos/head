@@ -60,7 +60,6 @@ import org.mifos.config.LocaleSetting;
 import org.mifos.config.Localization;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.Configuration;
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
@@ -333,7 +332,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         final ShutdownManager shutdownManager = new ShutdownManager();
 
         Configuration.getInstance();
-        MifosConfiguration.getInstance().init();
         configureAuditLogValues(Localization.getInstance().getConfiguredLocale());
         LocaleSetting configLocale = new LocaleSetting();
         if (servletContext != null) {

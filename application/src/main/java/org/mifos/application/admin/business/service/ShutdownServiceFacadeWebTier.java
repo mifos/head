@@ -20,30 +20,31 @@
 
 package org.mifos.application.admin.business.service;
 
-import org.mifos.application.admin.servicefacade.ShutdownServiceFacade;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.mifos.application.admin.servicefacade.LoggedUserDto;
-import org.mifos.application.admin.system.ShutdownManager;
+import org.mifos.application.admin.servicefacade.ShutdownServiceFacade;
 import org.mifos.application.admin.system.PersonnelInfo;
+import org.mifos.application.admin.system.ShutdownManager;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.UserContext;
-import org.mifos.security.util.ActivityContext;
-import org.mifos.security.login.util.helpers.LoginConstants;
-import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.office.business.OfficeBO;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormat;
-
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class ShutdownServiceFacadeWebTier implements ShutdownServiceFacade {
     @Override

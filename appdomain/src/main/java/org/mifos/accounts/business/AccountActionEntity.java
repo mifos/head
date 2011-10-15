@@ -26,6 +26,7 @@ import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.business.AbstractEntity;
 
 /**
@@ -59,7 +60,7 @@ public class AccountActionEntity extends AbstractEntity {
     }
 
     public String getName() {
-        String name = MessageLookup.getInstance().lookup(getLookUpValue());
+        String name = ApplicationContextProvider.getBean(MessageLookup.class).lookup(getLookUpValue());
         return name;
 
     }
@@ -77,7 +78,7 @@ public class AccountActionEntity extends AbstractEntity {
     }
 
     protected void setName(String name) {
-        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+        ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValue(getLookUpValue(), name);
     }
 
     @Override

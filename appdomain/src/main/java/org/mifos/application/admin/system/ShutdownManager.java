@@ -23,19 +23,18 @@ package org.mifos.application.admin.system;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mifos.config.LocaleSetting;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ShutdownManager implements Serializable {
 

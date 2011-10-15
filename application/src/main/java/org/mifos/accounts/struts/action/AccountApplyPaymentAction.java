@@ -20,6 +20,12 @@
 
 package org.mifos.accounts.struts.action;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -41,15 +47,13 @@ import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.*;
+import org.mifos.framework.util.helpers.CloseSession;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 
 public class AccountApplyPaymentAction extends BaseAction {
 

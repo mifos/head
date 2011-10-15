@@ -26,10 +26,10 @@ import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.taglib.TagUtils;
 import org.mifos.application.master.business.CustomValueListElementDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class renders a listbox

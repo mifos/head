@@ -20,6 +20,13 @@
 
 package org.mifos.security.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
@@ -31,13 +38,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Singleton.

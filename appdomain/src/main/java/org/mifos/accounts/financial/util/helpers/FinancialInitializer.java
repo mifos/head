@@ -20,6 +20,9 @@
 
 package org.mifos.accounts.financial.util.helpers;
 
+import java.io.IOException;
+import java.util.List;
+
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -37,9 +40,6 @@ import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.List;
 
 public class FinancialInitializer {
     private static final Logger logger = LoggerFactory.getLogger(FinancialInitializer.class);

@@ -20,17 +20,17 @@
 
 package org.mifos.config;
 
-import org.apache.commons.lang.StringUtils;
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.config.business.MifosConfigurationManager;
-import org.mifos.config.persistence.ConfigurationPersistence;
-import org.mifos.core.MifosRuntimeException;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.business.MifosConfigurationManager;
+import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.core.MifosRuntimeException;
 
 public class AccountingRules {
 

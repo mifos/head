@@ -22,6 +22,7 @@ package org.mifos.customers.office.persistence;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +33,7 @@ import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.exceptions.CustomerException;
@@ -51,8 +53,6 @@ import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Collections;
 
 public class OfficeDaoHibernate implements OfficeDao {
 
@@ -170,7 +170,7 @@ public class OfficeDaoHibernate implements OfficeDao {
             LookUpValueEntity lookupValue = officeLevelEntity.getLookUpValue();
             String messageText = lookupValue.getMessageText();
             if (StringUtils.isBlank(messageText)) {
-                messageText = MessageLookup.getInstance().lookup(lookupValue.getPropertiesKey());
+                messageText = ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupValue.getPropertiesKey());
             }
 
             OfficeLevel level = OfficeLevel.getOfficeLevel(officeLevelEntity.getId());
@@ -262,13 +262,13 @@ public class OfficeDaoHibernate implements OfficeDao {
         OfficeBO office = findOfficeById(officeId);
 
         if (!office.isActive()) {
-            throw new CustomerException(GroupConstants.BRANCH_INACTIVE, new Object[] { MessageLookup.getInstance()
-                    .lookupLabel(ConfigurationConstants.GROUP, userContext) });
+            throw new CustomerException(GroupConstants.BRANCH_INACTIVE, new Object[] { ApplicationContextProvider.getBean(MessageLookup.class)
+                    .lookupLabel(ConfigurationConstants.GROUP) });
         }
 
         if (hasActivePeronnel(office.getOfficeId())) {
-            throw new CustomerException(GroupConstants.LOANOFFICER_INACTIVE, new Object[] { MessageLookup.getInstance()
-                    .lookup(ConfigurationConstants.BRANCHOFFICE, userContext) });
+            throw new CustomerException(GroupConstants.LOANOFFICER_INACTIVE, new Object[] { ApplicationContextProvider.getBean(MessageLookup.class)
+                    .lookup(ConfigurationConstants.BRANCHOFFICE) });
         }
     }
 

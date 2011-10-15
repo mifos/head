@@ -23,8 +23,6 @@ package org.mifos.application.collectionsheet.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDto;
 import org.mifos.accounts.loan.util.helpers.LoanAccountsProductDto;
@@ -33,12 +31,14 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.customers.api.DataTransferObject;
 import org.mifos.customers.client.business.service.ClientAttendanceDto;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
-import org.mifos.customers.api.DataTransferObject;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Money;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CollectionSheetEntryDto implements DataTransferObject {
 

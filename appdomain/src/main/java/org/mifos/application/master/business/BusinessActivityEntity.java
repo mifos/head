@@ -21,6 +21,7 @@
 package org.mifos.application.master.business;
 
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.dto.domain.ValueListElement;
 
@@ -56,7 +57,7 @@ public class BusinessActivityEntity implements ValueListElement, LocalizedTextLo
 
     @Override
 	public String getName() {
-        String lookupName = MessageLookup.getInstance().lookup(this);
+        String lookupName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(this);
 
         /*
          * Workaround for cases where the lookupValue name is null.

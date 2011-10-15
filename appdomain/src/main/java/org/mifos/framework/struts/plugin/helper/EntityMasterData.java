@@ -24,8 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -33,6 +31,8 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class EntityMasterData {
 

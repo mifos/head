@@ -48,7 +48,6 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.dto.domain.SavingsProductDto;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;

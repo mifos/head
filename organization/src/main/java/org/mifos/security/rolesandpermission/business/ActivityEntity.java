@@ -113,12 +113,12 @@ public class ActivityEntity extends AbstractEntity {
 
     public String getDescription() {
         return this.description;
-//        return MessageLookup.getInstance().lookup(getActivityNameLookupValues());
+//        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(getActivityNameLookupValues());
     }
 
     public String getActivityName() {
         return this.activityName;
-//        return MessageLookup.getInstance().lookup(getActivityNameLookupValues());
+//        return ApplicationContextProvider.getBean(MessageLookup.class).lookup(getActivityNameLookupValues());
     }
 
     public void setParent(ActivityEntity parent) {

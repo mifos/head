@@ -266,8 +266,8 @@ public class LoanBO extends AccountBO implements Loan {
     }
 
     // opening balance loan constructor
-    public LoanBO(LoanOfferingBO loanProduct, CustomerBO customer, AccountState loanState, LoanProductOverridenDetail overridenDetail, 
-            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanScheduleConfiguration configuration, 
+    public LoanBO(LoanOfferingBO loanProduct, CustomerBO customer, AccountState loanState, LoanProductOverridenDetail overridenDetail,
+            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanScheduleConfiguration configuration,
             InstallmentRange installmentRange, AmountRange loanAmountRange, CreationDetail creationDetail) {
         super(AccountTypes.LOAN_ACCOUNT, loanState, customer, loanSchedule.getRoundedLoanSchedules(), creationDetail);
         this.parentAccount = null; // used for GLIM loans and will be set in factory method for this.
@@ -294,7 +294,7 @@ public class LoanBO extends AccountBO implements Loan {
         this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
         this.rawAmountTotal = loanSchedule.getRawAmount();
         this.loanSummary = buildLoanSummary();
-        
+
         this.maxMinNoOfInstall = new MaxMinNoOfInstall(installmentRange.getMinNoOfInstall(), installmentRange.getMaxNoOfInstall(), this);
         this.maxMinLoanAmount = new MaxMinLoanAmount(loanAmountRange.getMaxLoanAmount(), loanAmountRange.getMinLoanAmount(), this);
         this.maxMinInterestRate = new MaxMinInterestRate(loanProduct.getMaxInterestRate(), loanProduct.getMinInterestRate(), this);
@@ -315,11 +315,11 @@ public class LoanBO extends AccountBO implements Loan {
     }
 
     public static LoanBO openStandardLoanAccount(LoanOfferingBO loanProduct, CustomerBO customer,
-            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, AccountState loanState, FundBO fund, 
-            LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, 
-            InstallmentRange installmentRange, AmountRange loanAmountRange, 
+            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, AccountState loanState, FundBO fund,
+            LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration,
+            InstallmentRange installmentRange, AmountRange loanAmountRange,
             CreationDetail creationDetail, PersonnelBO createdBy) {
-        
+
         LoanBO standardLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail);
 
         standardLoan.setFund(fund);
@@ -330,7 +330,7 @@ public class LoanBO extends AccountBO implements Loan {
     public static LoanBO openGroupMemberLoanAccount(LoanBO parentLoan, LoanOfferingBO loanProduct, ClientBO member,
             MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanProductOverridenDetail overridenDetail,
             LoanScheduleConfiguration configuration, InstallmentRange installmentRange, AmountRange loanAmountRange, CreationDetail creationDetail, PersonnelBO createdBy) {
-        
+
         AccountState loanState = AccountState.LOAN_PENDING_APPROVAL;
         LoanBO groupMemberLoan = new LoanBO(loanProduct, member, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail);
         groupMemberLoan.setParentAccount(parentLoan);
@@ -1185,7 +1185,7 @@ public class LoanBO extends AccountBO implements Loan {
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, getEarlyClosureAmount(), null,
                     null, getPaymentTypeEntity(Short.valueOf("1")), transactionDate);
             this.addAccountPayment(accountPaymentEntity);
-            
+
             makeEarlyRepaymentForArrears(accountPaymentEntity, AccountConstants.LOAN_WRITTEN_OFF,
                     AccountActionTypes.WRITEOFF, currentUser);
             //for past arrears installments writeOff and reschedule are the same as 'make early repayment'
@@ -2126,7 +2126,7 @@ public class LoanBO extends AccountBO implements Loan {
 
     private MeetingBO buildLoanMeeting(final MeetingBO customerMeeting, final MeetingBO loanOfferingMeeting,
             final Date disbursementDate) throws AccountException {
-        
+
         // this is called from 'proper constructor' only if LSIM is disabled
         if (customerMeeting != null
                 && loanOfferingMeeting != null
@@ -3042,7 +3042,7 @@ public class LoanBO extends AccountBO implements Loan {
 
         for (AccountActionDateEntity actionDate : this.getAccountActionDates()) {
             LoanScheduleEntity loanSchedule = (LoanScheduleEntity) actionDate;
-            installments.add(loanSchedule.toDto(userLocale));
+            installments.add(loanSchedule.toDto());
         }
 
         Collections.sort(installments, new Comparator<RepaymentScheduleInstallment>() {
@@ -3072,10 +3072,10 @@ public class LoanBO extends AccountBO implements Loan {
         AccountStateEntity approvedState = new AccountStateEntity(AccountState.LOAN_APPROVED);
         AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(this.getAccountState()
                 , approvedState, createdBy, this);
-        
-        
+
+
         AccountNotesEntity accountNotesEntity = new AccountNotesEntity(approvalDate.toDateMidnight().toDate(), comment, createdBy, this);
-        
+
         this.addAccountStatusChangeHistory(historyEntity);
         this.setAccountState(approvedState);
         this.addAccountNotes(accountNotesEntity);
@@ -3083,18 +3083,18 @@ public class LoanBO extends AccountBO implements Loan {
 
     public void disburse(PersonnelBO createdBy, AccountPaymentEntity disbursalPayment) throws AccountException {
         Date transactionDate = disbursalPayment.getPaymentDate();
-        
+
         addLoanActivity(buildLoanActivity(getLoanAmount(), createdBy, AccountConstants.LOAN_DISBURSAL, transactionDate));
-        
+
         final AccountStateEntity newState = new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
         addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(getAccountState(), newState,
                 createdBy, this));
         setAccountState(newState);
-        
+
         if (getPerformanceHistory() != null) {
             getPerformanceHistory().setLoanMaturityDate(getLastInstallmentAccountAction().getActionDate());
         }
-        
+
         // build up account payment related data
         AccountPaymentEntity accountPayment = null;
 
@@ -3103,17 +3103,17 @@ public class LoanBO extends AccountBO implements Loan {
         accountPayment = new AccountPaymentEntity(this, getLoanAmount().subtract(feeAmountAtDisbursement),
                 disbursalPayment.getReceiptNumber(), disbursalPayment.getReceiptDate(), getPaymentTypeEntity(disbursalPayment.getPaymentType().getId()), transactionDate);
         accountPayment.setCreatedByUser(createdBy);
-    
+
         if (feeAmountAtDisbursement.isGreaterThanZero()) {
             processFeesAtDisbursement(accountPayment, feeAmountAtDisbursement);
         }
-        
+
         // create trxn entry for disbursal
         final LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPayment,
                 AccountActionTypes.DISBURSAL, Short.valueOf("0"), transactionDate, createdBy, transactionDate,
                 getLoanAmount(), "-", null, getLoanAmount(), new Money(getCurrency()), new Money(getCurrency()),
                 new Money(getCurrency()), new Money(getCurrency()), null);
-        
+
         accountPayment.addAccountTrxn(loanTrxnDetailEntity);
         addAccountPayment(accountPayment);
         buildFinancialEntries(accountPayment.getAccountTrxns());
@@ -3122,8 +3122,8 @@ public class LoanBO extends AccountBO implements Loan {
     public void updateCustomer(CustomerBO customer) {
         this.customer = customer;
     }
-    
-    
+
+
 /*
  * Mifos-4948 specific code
  */
@@ -3138,15 +3138,15 @@ public class LoanBO extends AccountBO implements Loan {
                     null, getPaymentTypeEntity(Short.valueOf("1")), transactionDate);
             addAccountPayment(accountPaymentEntity);
             accountPaymentEntity.setComment(comment);
-            
+
             AccountActionTypes accountActionTypes;
             String accountConstants;
-            if (this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue()))            	
+            if (this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue()))
             {
             	accountActionTypes = AccountActionTypes.WRITEOFF;
             	accountConstants = AccountConstants.LOAN_WRITTEN_OFF;
             }
-            else            	
+            else
             {
             	accountActionTypes = AccountActionTypes.LOAN_RESCHEDULED;
             	accountConstants = AccountConstants.LOAN_RESCHEDULED;
@@ -3170,12 +3170,12 @@ public class LoanBO extends AccountBO implements Loan {
 	            Money interest = loanSchedule.getInterestDue();
 	            Money fees = loanSchedule.getTotalFeeDueWithMiscFeeDue();
 	            Money penalty = loanSchedule.getPenaltyDue();
-	
+
 	            LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes, loanSchedule
 	                    .getInstallmentId(), loanSchedule.getActionDate(), currentUser, new DateTimeService()
 	                    .getCurrentJavaDateTime(), principal, comments, null, principal, new Money(getCurrency()),
 	                    new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
-	
+
 	            accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
 	            loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST, loanSchedule.getInterestDue());
 	            loanSummary.decreaseBy(null, interest, penalty, fees);
@@ -3188,5 +3188,5 @@ public class LoanBO extends AccountBO implements Loan {
     /*
      * End Mifos-4948 code
      */
-    
+
 }

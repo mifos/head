@@ -45,10 +45,11 @@ public class MifosUser implements UserDetails {
     private final Short branchId;
     private final Short levelId;
     private final List<Short> roleIds;
+    private Short preferredLocaleId;
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="ignoring for now..")
     public MifosUser(int userId, Short branchId, Short levelId, List<Short> roleIds, String username, byte[] password, boolean enabled, boolean accountNonExpired,
-            boolean credentialsNonExpired, boolean accountNonLocked, Collection<GrantedAuthority> authorities) {
+            boolean credentialsNonExpired, boolean accountNonLocked, Collection<GrantedAuthority> authorities, Short preferredLocaleId) {
         this.levelId = levelId;
         this.roleIds = new ArrayList<Short>(roleIds);
         this.username = username;
@@ -60,6 +61,7 @@ public class MifosUser implements UserDetails {
         this.authorities = authorities;
         this.userId = userId;
         this.branchId = branchId;
+        this.preferredLocaleId = preferredLocaleId;
     }
 
     public int getUserId() {
@@ -116,5 +118,13 @@ public class MifosUser implements UserDetails {
 
     public List<Short> getRoleIds() {
         return this.roleIds;
+    }
+
+    public Short getPreferredLocaleId() {
+        return preferredLocaleId;
+    }
+
+    public void setPreferredLocaleId(Short preferredLocaleId) {
+        this.preferredLocaleId = preferredLocaleId;
     }
 }

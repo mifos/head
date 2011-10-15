@@ -74,10 +74,8 @@ public class BaseActionFormTest {
         String strValue = "0.25";
         Locale locale = Localization.getInstance().getConfiguredLocale();
         LocalizationConverter converter = new LocalizationConverter();
-        converter.setCurrentLocale(new Locale("IS", "is"));
         strValue = "0,25";
         Assert.assertEquals(strValue, baseActionForm.getStringValue(0.25));
-        converter.setCurrentLocale(locale);
     }
 
     @Test
@@ -99,15 +97,12 @@ public class BaseActionFormTest {
         Locale locale = Localization.getInstance().getConfiguredLocale();
         LocalizationConverter converter = new LocalizationConverter();
         double dValue = 2.34;
-        converter.setCurrentLocale(new Locale("IS", "is"));
         Assert.assertEquals(dValue, baseActionForm.getDoubleValue("2,34"));
-        converter.setCurrentLocale(locale);
     }
 
     @Test
     public void testParseDoubleForMoney() {
         LocalizationConverter converter = new LocalizationConverter();
-        converter.setCurrentLocale(new Locale("en", "GB"));
         String doubleStr = "222.4";
         Double value = 222.4;
         DoubleConversionResult result = baseActionForm.parseDoubleForMoney(doubleStr);
@@ -137,7 +132,6 @@ public class BaseActionFormTest {
     @Test
     public void xtestParseDoubleForMoney_is_IS() {
         LocalizationConverter converter = new LocalizationConverter();
-        converter.setCurrentLocale(new Locale("IS", "is"));
         String doubleStr = "222.12345";
         Double value = 222.12345;
         DoubleConversionResult result = baseActionForm.parseDoubleForInterest("222,12345");
@@ -170,7 +164,6 @@ public class BaseActionFormTest {
     @Test
     public void xtestParseDoubleForInterest_is_IS() {
         LocalizationConverter converter = new LocalizationConverter();
-        converter.setCurrentLocale(new Locale("IS", "is"));
         String doubleStr = "222.12345";
         Double value = 222.12345;
         DoubleConversionResult result = baseActionForm.parseDoubleForInterest("222,12345");

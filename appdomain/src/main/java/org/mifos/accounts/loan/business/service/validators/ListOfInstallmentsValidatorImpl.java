@@ -1,9 +1,7 @@
 package org.mifos.accounts.loan.business.service.validators;
 
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.platform.util.CollectionUtils;
-import org.mifos.platform.util.Transformer;
-import org.mifos.platform.validations.ErrorEntry;
+import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_DUPLICATE;
+import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_INVALID_ORDER;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,8 +10,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_DUPLICATE;
-import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_INVALID_ORDER;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.platform.util.CollectionUtils;
+import org.mifos.platform.util.Transformer;
+import org.mifos.platform.validations.ErrorEntry;
 
 public class ListOfInstallmentsValidatorImpl implements ListOfInstallmentsValidator {
     @Override

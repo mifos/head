@@ -25,39 +25,28 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mifos.config.business.MifosConfiguration;
-import org.mifos.config.util.helpers.ConfigurationConstants;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.util.helpers.LabelKey;
 import org.mifos.framework.MifosIntegrationTestCase;
 
 public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
 
-    MifosConfiguration configuration;
+    MessageLookup configuration;
 
     @Before
     public void setUp() throws Exception {
-        configuration = MifosConfiguration.getInstance();
+        configuration = ApplicationContextProvider.getBean(MessageLookup.class);
     }
 
     @Test
     public void testInitializeLabelCache() {
-
         Map<LabelKey, String> labelCache = configuration.getLabelCache();
        Assert.assertEquals(true, labelCache.size() > 10);
-
     }
 
-    /**
-     *
-     */
-    @Ignore
-    @Test
-    public void testGetLabelValueEnglish() {
-       Assert.assertEquals("Bulk entry", MifosConfiguration.getInstance().getLabelValue(ConfigurationConstants.BULKENTRY,
-                (short) 1));
-    }
+
 
     /*
      * Will be uncommented when spanish values will be entered in master data.

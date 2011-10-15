@@ -25,6 +25,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.persistence.LegacyMasterDao;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -38,7 +39,7 @@ public class PersonnelStatusEntityIntegrationTest extends MifosIntegrationTestCa
         PersonnelStatusEntity personnelStatusEntity = legacyMasterDao
                 .getPersistentObject(PersonnelStatusEntity.class, (short) 1);
 
-        String name = MessageLookup.getInstance().lookup(personnelStatusEntity.getLookUpValue());
+        String name = ApplicationContextProvider.getBean(MessageLookup.class).lookup(personnelStatusEntity.getLookUpValue());
         (personnelStatusEntity).setName(name);
 
         Assert.assertEquals(Short.valueOf("1"), personnelStatusEntity.getId());

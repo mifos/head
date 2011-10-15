@@ -29,6 +29,7 @@ import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
 
@@ -50,7 +51,7 @@ public class LegacyAuditLookupValuesDao extends LegacyGenericDao {
         try {
             List<PrdStatusEntity> productStates = executeNamedQuery(NamedQueryConstants.ALL_PRD_STATES, null);
             for (PrdStatusEntity prdStatusEntity : productStates) {
-                valueMap.put(prdStatusEntity.getOfferingStatusId().toString(), MessageLookup.getInstance().lookup(
+                valueMap.put(prdStatusEntity.getOfferingStatusId().toString(), ApplicationContextProvider.getBean(MessageLookup.class).lookup(
                         prdStatusEntity.getPrdState().getLookUpValue()));
             }
         } catch (HibernateException e) {

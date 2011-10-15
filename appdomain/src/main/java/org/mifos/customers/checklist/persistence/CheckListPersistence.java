@@ -27,7 +27,6 @@ import java.util.Map;
 
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.checklist.business.CheckListBO;
