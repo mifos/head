@@ -43,8 +43,8 @@ public class MonthlyCashFlowForm implements Serializable {
         return monthlyCashFlowDetail.getDateTime().monthOfYear().getAsText();
     }
 
-    public String getMonthInLocale(Locale locale) {
-        return monthlyCashFlowDetail.getDateTime().monthOfYear().getAsText(locale);
+    public String getMonthInLocale() {
+        return monthlyCashFlowDetail.getDateTime().monthOfYear().getAsText(Locale.ENGLISH);
     }
 
     public int getYear() {

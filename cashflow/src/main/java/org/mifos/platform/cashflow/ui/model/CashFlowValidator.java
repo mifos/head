@@ -56,10 +56,10 @@ public class CashFlowValidator {
 
     private void validateCumulativeCashFlow(MessageContext messageContext, MonthlyCashFlowForm monthlyCashFlowForm) {
         if (monthlyCashFlowForm.cumulativeCashFlowIsLessThanOrEqualToZero()) {
-            String message = format("Cumulative cash flow for {0} {1} should be greater than zero",
+            String message = format("Cumulative cash flow for {0} {1} should be greater than zero", monthlyCashFlowForm.getMonthInLocale(),
                     Integer.toString(monthlyCashFlowForm.getYear()));
             constructErrorMessage(CashFlowConstants.CUMULATIVE_CASH_FLOW_FOR_MONTH_SHOULD_BE_GREATER_THAN_ZERO, message, messageContext,
-                    Integer.toString(monthlyCashFlowForm.getYear()));
+                    monthlyCashFlowForm.getMonthInLocale(), Integer.toString(monthlyCashFlowForm.getYear()));
         }
     }
 
