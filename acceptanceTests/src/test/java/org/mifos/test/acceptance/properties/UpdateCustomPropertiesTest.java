@@ -263,7 +263,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-86
-    @Test(enabled=true)
+    @Test
     public void changeLocale() {
         // Given
         propertiesHelper.setLocale("FR", "FR");
@@ -280,7 +280,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-200
-    @Test(enabled=true)
+    @Test
     public void changeDigitsAfterDecimal() throws Exception {
 
         propertiesHelper.setDigitsAfterDecimal(3);
@@ -343,7 +343,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-204
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true)
+    @Test
     public void removeThursdayFromWorkingDays() throws Exception {
 
         String workingDays ="Monday,Tuesday,Wednesday,Thursday,Friday,Saturday";

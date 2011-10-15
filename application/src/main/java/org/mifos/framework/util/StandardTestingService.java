@@ -36,17 +36,21 @@ import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.core.MifosException;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.components.mifosmenu.MenuRepository;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.security.MifosUser;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.service.test.TestMode;
 import org.mifos.service.test.TestingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * Encapsulates all logic necessary to have the application behave differently during acceptance and integration tests.
@@ -131,6 +135,19 @@ public class StandardTestingService implements TestingService {
             configLocale.setCountryCode(countryCode);
             Localization localization = Localization.getInstance();
             localization.setConfigLocale(configLocale);
+            if(SecurityContextHolder.getContext() != null) {
+                if(SecurityContextHolder.getContext().getAuthentication() != null) {
+                    if(SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null) {
+                        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                        user.setPreferredLocaleId(Localization.getInstance().getLocaleId(Localization.getInstance().getConfiguredLocale()));
+                    }
+                }
+            }
+            StaticHibernateUtil.startTransaction();
+            PersonnelBO p = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, (short) 1);
+            p.setPreferredLocale(Localization.getInstance().getConfiguredLocaleId());
+            StaticHibernateUtil.getSessionTL().update(p);
+            StaticHibernateUtil.commitTransaction();
             MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
             configMgr.setProperty("Localization.LanguageCode", languageCode);
             configMgr.setProperty("Localization.CountryCode", countryCode);

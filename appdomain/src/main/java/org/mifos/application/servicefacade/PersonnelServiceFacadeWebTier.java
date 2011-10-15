@@ -86,7 +86,6 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     private final OfficeDao officeDao;
     private final CustomerDao customerDao;
     private final PersonnelDao personnelDao;
-    private final ApplicationConfigurationDao applicationConfigurationDao;
     private final LegacyRolesPermissionsDao rolesPermissionsPersistence;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
@@ -102,7 +101,6 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         this.officeDao = officeDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
-        this.applicationConfigurationDao = applicationConfigurationDao;
         this.rolesPermissionsPersistence = rolesPermissionsPersistence;
     }
 
