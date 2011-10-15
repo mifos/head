@@ -42,12 +42,14 @@ public class RESTAPITestHelper {
 
     public static class Type {
         public static final String CLIENT = "client";
+        public static final String PERSONNEL = "personnel";
         public static final String LOAN_REPAYMENT = "account/loan/repay";
         public static final String SAVINGS_DEPOSIT = "account/savings/deposit";
     }
 
     public static class By {
         public static final String GLOBAL_NUMBER = "num";
+        public static final String ID = "id";
     }
 
     public RESTAPITestHelper(Selenium selenium) {

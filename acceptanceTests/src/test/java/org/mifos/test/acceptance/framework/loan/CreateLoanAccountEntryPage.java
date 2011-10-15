@@ -270,9 +270,10 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     public CreateLoanAccountReviewInstallmentPage clickContinue(){
         submitAndWaitForPage();
+        verifyNoErrors();
         return new CreateLoanAccountReviewInstallmentPage(selenium);
     }
-    
+
     public CreateLoanAccountEntryPage clickContinueButExpectValidationFailure(){
         submitAndWaitForPage();
         return new CreateLoanAccountEntryPage(selenium);
@@ -466,10 +467,6 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         return selenium.getValue("loancreationdetails.input.sumLoanAmount");
     }
     
-    public void verifyError(String error) {
-        Assert.assertTrue(selenium.isElementPresent("//span[@id='loancreationdetails.error.message']/div/ul/li/span[text()='"+error+"']"));
-    }
-    
     public CreateLoanAccountReviewInstallmentPage navigateToReviewInstallmentsPage(){
         selenium.click("loancreationdetails.button.continue");
         waitForPageToLoad();
@@ -494,9 +491,19 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         typeText("numberOfInstallments",noOfInstallment);
         return this;
     }
+
+    public void verifyError(String error) {
+        Assert.assertTrue(selenium.isElementPresent("//span[@id='loancreationdetails.error.message']/div/ul/li/span[text()='"+error+"']"));
+    }
     
     public void verifyNoError(String error) {
         Assert.assertFalse(selenium.isElementPresent("//span[@id='loancreationdetails.error.message']/div/ul/li/span[text()='"+error+"']"));
+    }
+
+    private void verifyNoErrors() {
+        if (selenium.isElementPresent("//span[@id='loancreationdetails.error.message']/div/ul")) {
+            throw new AssertionError("Unexpected error text: " + selenium.getText("//span[@id='loancreationdetails.error.message']/div/ul"));
+        }
     }
     
     public void verifyDisbsursalDate(String dd, String mm, String yyyy) {

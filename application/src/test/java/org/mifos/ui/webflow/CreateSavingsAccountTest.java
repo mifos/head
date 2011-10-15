@@ -33,6 +33,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.validation.MifosBeanValidator;
@@ -63,6 +64,7 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
     private CreateSavingsAccountController controller;
     private CreateSavingsAccountFormBean formBean;
     private QuestionnaireServiceFacade questionnaireServiceFacade;
+    private ConfigurationServiceFacade configurationServiceFacade;
 
     @Override
 	@Before
@@ -70,6 +72,7 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         controller = mock(CreateSavingsAccountController.class);
         formBean = mock(CreateSavingsAccountFormBean.class);
         questionnaireServiceFacade = mock(QuestionnaireServiceFacade.class);
+        configurationServiceFacade = mock(ConfigurationServiceFacade.class);
     }
 
     @Test
@@ -380,6 +383,7 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         builderContext.registerBean("savingsAccountFormBean", formBean);
         builderContext.registerBean("questionnaireServiceFacade",
                 questionnaireServiceFacade);
+        builderContext.registerBean("configurationServiceFacade", configurationServiceFacade);
         builderContext
                 .registerBean("validator", mock(MifosBeanValidator.class));
     }

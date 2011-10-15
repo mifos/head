@@ -125,12 +125,13 @@ public class Localization {
 
         if(!LOCALE_MAP.containsValue(locale)) {
             configuredLocaleId = newLocaleId;
-            configuredLocale = locale;
             LOCALE_MAP.put(newLocaleId, locale);
         } else {
             configuredLocaleId = getLocaleId(locale);
-            configuredLocale = locale;
         }
+        configuredLocale = locale;
+        // workaround for MIFOS-5138
+        Locale.setDefault(locale);
     }
 
     private synchronized void setLocaleMap() {

@@ -290,6 +290,8 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
                 customerPicture = picture.getInputStream();
             } catch (IOException ioe) {
             }
+        } else {
+            customerPicture = null;
         }
     }
 
