@@ -56,17 +56,11 @@ explanation of the license and how it is applied.
 %>
 <br />
 Current Language :
-<%=l.getDisplayName(localeId)%>
-<br />
-<br />
 <select id="langId">
+	<% for (ValueListElement e : l.getLocaleForUI()) { %>
+	<option <%if (localeId == e.getId().shortValue()) {%> selected <%}%> value="<%=e.getId()%>"><%=e.getName()%></option>
 	<%
-	    for (ValueListElement e : l.getLocaleForUI()) {
-	%>
-	<option <%if (localeId == e.getId().shortValue()) {%> selected <%}%>
-		value="<%=e.getId()%>"><%=e.getName()%></option>
-	<%
-	    }
+	   }
 	%>
 </select>
 <input id="langSubmit" type="button" value="Change" />

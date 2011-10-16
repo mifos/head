@@ -2,8 +2,7 @@ $(document).ready(function() {
     $("#dialog").dialog({
         autoOpen : false,
         modal : true,
-        width : 600,
-        close: function() { location.reload(true); }
+        width : 600
     });
     $("#changeLanguagLink").click(function() {
         $("#dialog").dialog("open");
@@ -19,7 +18,7 @@ function languageForm() {
             var langIdValue = $("#langId").val();
             $.post("lang.jsp", { langId : langIdValue }, 
             function(data) {
-                languageForm();
+                location.reload(true);
             })
         })
     })

@@ -9,7 +9,7 @@
     <td width="200" rowspan="2"><img src="pages/framework/images/logo.jpg" width="200" height="70"></td>
     <td align="right" bgcolor="#FFFFFF" class="fontnormal">
          <a id="changeLanguagLink" href="#">Change Language</a>
-         <span id="dialog" title="Change Language">Change Language</span>
+         <span id="dialog" title="Change Language" style="display:none;">Change Language</span>
      &nbsp;|&nbsp;
          <a id="homeheader.link.yourSettings" href="yourSettings.do?method=get&randomNUm=${sessionScope.randomNUm}">
             <mifos:mifoslabel name="framework.yoursettings" bundle="FrameworkUIResources"></mifos:mifoslabel>

@@ -65,5 +65,11 @@
 <script type="text/javascript" >
         $("input.focused").focus();
 </script>
+[#if Application.LocaleSetting.labLevel > 0]
+<b>Demo User / Password</b>
+<br>mifos / testmifos
+<br>mifos1 / testmifos
+<br>mifos2 / testmifos
+[/#if]
 <!--Container Ends-->
 [@mifos.footer /]
