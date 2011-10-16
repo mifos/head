@@ -3,7 +3,6 @@
 /* Blueprint CSS customizations */
 .container 
 {
-    width: 960px;
     margin-left: auto;
     margin-right: auto;
     float: none; /* override float defined in maincss.css */

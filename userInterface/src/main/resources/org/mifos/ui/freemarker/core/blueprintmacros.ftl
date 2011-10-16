@@ -104,15 +104,20 @@
     <link href="pages/css/gazelle.css" rel="stylesheet" type="text/css" />
     <link href="pages/css/screen.css" rel="stylesheet" type="text/css" />
     <link href="pages/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="pages/css/app.css" rel="stylesheet" type="text/css" />
+    <link href="pages/css/screen-custom.css" rel="stylesheet" type="text/css" />
     <STYLE TYPE="text/css"><!-- @import url(pages/css/jquery/jquery-ui.css); --></STYLE>
     <STYLE TYPE="text/css"><!-- @import url(pages/css/datepicker/datepicker.css); --></STYLE>
     
     <link rel="shortcut icon" href="pages/framework/images/favicon.ico"/>
+    
     <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
     <script type="text/javascript" src="pages/js/jquery/jquery.ui.datepicker.min.js"></script>
     <script type="text/javascript" src="pages/js/jquery/jquery-ui-i18n.js"></script>
+    <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
+    <script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
+    <script type="text/javascript" src="pages/js/jquery/jquery.validate.min.js"></script>
     <script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
   </head>
   <body>
