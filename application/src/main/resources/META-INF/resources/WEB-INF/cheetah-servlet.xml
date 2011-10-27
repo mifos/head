@@ -6,8 +6,18 @@
     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-	<context:component-scan base-package="org.mifos.ui.core.controller" />
-	
+    <context:component-scan base-package="org.mifos.ui">
+        <context:include-filter type="regex" expression="org.mifos.ui.[^\.]*.controller" />
+    </context:component-scan>
+
+    <context:component-scan base-package="org.mifos.clientportfolio">
+        <context:include-filter type="regex" expression="org.mifos.clientportfolio.[^\.]*.ui.*" />
+    </context:component-scan>
+
+    <context:component-scan base-package="org.mifos.platform">
+        <context:include-filter type="regex" expression="org.mifos.platform.[^\.]*.ui.*" />
+    </context:component-scan>
+
 	<mvc:annotation-driven conversion-service="webflowAndMvcConversionService"/>
 
 	<import resource="classpath:org/mifos/config/resources/webflow-config.xml" />
@@ -113,15 +123,6 @@
 	</bean>
 
 	<bean name="testingService" class="org.mifos.framework.util.StandardTestingService" />
-
-	<context:component-scan base-package="org.mifos.clientportfolio">
-		<context:include-filter type="regex"
-			expression="org.mifos.clientportfolio.[^\.]*.ui.*" />
-	</context:component-scan>
-	<context:component-scan base-package="org.mifos.platform">
-		<context:include-filter type="regex"
-			expression="org.mifos.platform.[^\.]*.ui.*" />
-	</context:component-scan>
 
 	<bean name="genericController" class="org.mifos.ui.core.controller.GenericController" />
 

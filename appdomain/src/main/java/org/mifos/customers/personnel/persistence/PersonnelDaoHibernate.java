@@ -69,6 +69,11 @@ public class PersonnelDaoHibernate implements PersonnelDao {
     }
 
     @Override
+    public void update(PersonnelBO user) {
+        this.genericDao.update(user);
+    }
+
+    @Override
     public PersonnelBO findPersonnelById(Short id) {
         if (id == null) {
             return null;

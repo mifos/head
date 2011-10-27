@@ -20,12 +20,13 @@
 
 package org.mifos.application.admin.servicefacade;
 
+import java.util.List;
 import java.util.Locale;
-
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.domain.UserSearchDto;
+import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.DefinePersonnelDto;
 import org.mifos.dto.screen.PersonnelInformationDto;
 import org.mifos.dto.screen.SystemUserSearchResultsDto;
@@ -66,5 +67,10 @@ public interface PersonnelServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     void unLockUserAccount(String globalAccountNum);
 
+    @PreAuthorize("isFullyAuthenticated()")
+    Short changeUserLocale(Short id);
+
     Locale getUserPreferredLocale();
+
+    List<ValueListElement> getDisplayLocaleList();
 }

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -585,5 +586,32 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             }
         }
         return Localization.getInstance().getConfiguredLocale();
+    }
+
+    @Override
+    public Short changeUserLocale(Short id) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (id != null) {
+            Short newLocaleId = id;
+            assert Localization.getInstance().getLocaleById(newLocaleId) != null;
+            user.setPreferredLocaleId(newLocaleId);
+            try {
+                this.transactionHelper.startTransaction();
+                PersonnelBO p = this.personnelDao.findPersonnelById((short) user.getUserId());
+                p.setPreferredLocale(newLocaleId);
+                this.personnelDao.update(p);
+                this.transactionHelper.commitTransaction();
+            } catch (Exception e) {
+                this.transactionHelper.rollbackTransaction();
+                throw new MifosRuntimeException(e);
+            }
+            ApplicationContextProvider.getBean(MessageLookup.class).initializeLabelCache();
+        }
+        return user.getPreferredLocaleId();
+    }
+
+    @Override
+    public List<ValueListElement> getDisplayLocaleList() {
+        return Localization.getInstance().getLocaleForUI();
     }
 }

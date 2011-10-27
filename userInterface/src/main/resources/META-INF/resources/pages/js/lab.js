@@ -11,12 +11,12 @@ $(document).ready(function() {
 });
 
 function languageForm() {
-	$("#dialog").html("Changing language...");
-    $.get("lang.jsp", function(data) {
+	$("#dialog").html("Loading...");
+    $.get("changeLocale.ftl", function(data) {
         $("#dialog").html(data);
         $("#langSubmit").click(function() {
             var langIdValue = $("#langId").val();
-            $.post("lang.jsp", { langId : langIdValue }, 
+            $.post("changeLocale.ftl", { id : langIdValue }, 
             function(data) {
                 location.reload(true);
             })

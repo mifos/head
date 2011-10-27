@@ -133,6 +133,20 @@ public class GenericDaoHibernate implements GenericDao {
     }
 
     @Override
+    public final void update(final Object entity) {
+        try {
+            Session session = getSession();
+            session.update(entity);
+            AuditInterceptor interceptor = (AuditInterceptor) StaticHibernateUtil.getInterceptor();
+            if (interceptor.isAuditLogRequired()) {
+                interceptor.createChangeValueMap(entity);
+            }
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
     public final Query createQueryForUpdate(String hql) {
         Session session = StaticHibernateUtil.getSessionTL();
         return session.createQuery(hql);
@@ -143,7 +157,7 @@ public class GenericDaoHibernate implements GenericDao {
     public Session getSession() {
         return StaticHibernateUtil.getSessionTL();
     }
-    
+
     // useful if casting is required to make sure we don't try to cast a proxied object.
     @Override
     public <T> T initializeAndUnproxy(T var) {
@@ -156,5 +170,5 @@ public class GenericDaoHibernate implements GenericDao {
             var = (T) ((HibernateProxy) var).getHibernateLazyInitializer().getImplementation();
         }
         return var;
-    }    
+    }
 }

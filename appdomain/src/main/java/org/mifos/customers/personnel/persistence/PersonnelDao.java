@@ -33,6 +33,8 @@ public interface PersonnelDao {
 
     void save(PersonnelBO user);
 
+    void update(PersonnelBO user);
+
     PersonnelBO findPersonnelById(Short id);
 
     PersonnelBO findPersonnelByUsername(String personnelName);
