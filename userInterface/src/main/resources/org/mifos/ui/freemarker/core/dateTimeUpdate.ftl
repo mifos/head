@@ -18,8 +18,6 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "macros.ftl" as mifos]
 <html>
   <head>
     <title>[@spring.message "dateTimeUpdate"/]</title>
@@ -27,5 +25,5 @@
   <body>
       <span id="page.id" title="DateTimeUpdate"></span>
       [@spring.message "updatingToTime"/]&nbsp;: <div id="DateTimeUpdate.text.result">${model.updateResult}</div>
-  [@mifos.footer /]
+  [@layout.footer /]
 

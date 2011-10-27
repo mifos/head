@@ -29,7 +29,7 @@
 
     <span id="page.id" title="editAdministrativeDocuments"></span>
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "manageReports.viewadministrativedocuments":""}/]
-    [@mifos.crumbpairs breadcrumb /]
+    [@widget.crumbpairs breadcrumb /]
     <div class="content_panel">
         <p>
             Work in progress.

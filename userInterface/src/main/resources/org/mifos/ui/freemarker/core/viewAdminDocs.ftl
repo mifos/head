@@ -25,7 +25,7 @@
 
     <span id="page.id" title="viewAdministrativeDocuments"></span>
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "manageReports.viewadministrativedocuments":""}/]
-    [@mifos.crumbpairs breadcrumb /]
+    [@widget.crumbpairs breadcrumb /]
     <div class="content_panel">
         <h1>
             [@spring.message "manageReports.viewadministrativedocuments"/]

@@ -25,7 +25,7 @@
 <span id="page.id" title="createQuestionGroup"></span>
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.addQuestionGroup":""}/]
 <div class=" content">
-[@mifos.crumbpairs breadcrumb/]
+[@widget.crumbpairs breadcrumb/]
     <div class="content_panel">
         <p class="font15 orangeheading">
         [@spring.message "questionnaire.addQuestionGroup"/]

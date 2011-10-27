@@ -25,12 +25,12 @@
 <span id="page.id" title="createQuestion"></span>
 <div class=" content">
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.add.questions":""}/]
-[@mifos.crumbpairs breadcrumb/]
+[@widget.crumbpairs breadcrumb/]
     <div class="content_panel">
         <p class="font15 orangeheading">
         [@spring.message "questionnaire.add.questions"/]
         </p>
-        [@mifosmacros.showAllErrors "questionDefinition.*"/]
+        [@form.showAllErrors "questionDefinition.*"/]
         <form name="createquestionform" action="createQuestion.ftl?execution=${flowExecutionKey}" method="POST"
               focus="currentQuestion.text">
             <input type="submit" id="_eventId_removeQuestion" name="_eventId_removeQuestion" value=""

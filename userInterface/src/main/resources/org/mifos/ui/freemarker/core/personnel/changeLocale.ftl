@@ -18,7 +18,6 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-
 <br />
 Current Language :
 <select id="langId">
@@ -40,4 +39,3 @@ Some languages are not completely translated.
 <br />
 <a href="http://mifosforge.jira.com/wiki/display/MIFOS/i18n,+L10n"
     target="blank">Learn i18n/L10n</a>
-<!--Main Content Ends-->

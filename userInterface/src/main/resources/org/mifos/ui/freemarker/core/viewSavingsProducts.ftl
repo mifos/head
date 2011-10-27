@@ -23,7 +23,7 @@
 <!--  Main Content Begins-->
 <span id="page.id" title="View_AllSavingsProduct"></span>
 <div class=" content">
-[@mifos.crumb url="admin.viewSavingsproducts" /]
+[@widget.crumb url="admin.viewSavingsproducts" /]
     <p>&nbsp;&nbsp;</p>
 
     <p class="font15 orangeheading" style="margin-left:18px;">

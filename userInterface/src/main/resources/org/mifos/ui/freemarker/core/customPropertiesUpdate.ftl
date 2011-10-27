@@ -18,8 +18,6 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "macros.ftl" as mifos]
 <html>
   <head>
     <title>[@spring.message "customPropertiesUpdate"/]</title>
@@ -47,5 +45,5 @@
       [#if (status.errorMessages?size > 0)]
         [@spring.message "errors"/]&nbsp;: <div id="CustomProperties.error.messages">[#list status.errorMessages as errorMessage]${errorMessage}[/#list]</div>
       [/#if]
-  [@mifos.footer /]
+  [@layout.footer /]
 

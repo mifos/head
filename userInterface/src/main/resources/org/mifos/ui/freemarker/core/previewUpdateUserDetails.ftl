@@ -34,7 +34,7 @@
         <form method="post" action="user.ftl?execution=${flowExecutionKey}">
             <div class="clear">&nbsp;</div>
             <div id="allErrorsDiv" class="allErrorsDiv">
-                   [@mifosmacros.showAllErrors "userFormBean.*"/]
+                   [@form.showAllErrors "userFormBean.*"/]
             </div>
             <div class="prepend-1  span-21 last">
 

@@ -19,8 +19,6 @@
 *  explanation of the license and how it is applied.
 --]
 
-[#-- FIXME: these macros are copied from newblueprintmacros.ftl. They've been moved here for better organization. Delete from newblueprintmacros.ftl. --]
-
 [#-- 
 Creates a simple breadcrumb from a List of BreadCrumbLinks object. The list can be 
 created using the output of AdminBreadcrumbBuilder. 

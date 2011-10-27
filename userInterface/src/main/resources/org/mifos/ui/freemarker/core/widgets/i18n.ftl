@@ -19,13 +19,11 @@
 *  explanation of the license and how it is applied.
 --]
 
-[#import "/spring.ftl" as spring /]
-
 [#-- Directive for filtering text with String.format() and MarkdownJ. --]
 [#-- Useful (and very specific) for parsing i18n messages containing links. --]
-[#-- usage [@mifos.mlink dest="viewQuestions.ftl"][@spring.message "view.questions.mlink"][/@mifos.mlink] --]
+[#-- usage [@i18n.mlink dest="viewQuestions.ftl"][@spring.message "view.questions.mlink"][/@i18n.mlink] --]
 [#assign mlink="org.mifos.ui.ftl.MarkdownLinker"?new()]
 
 [#-- Template method for localized formatting of Java or Joda dates --]
-[#-- usage: ${mifos.date_formatter(monthlyCashFlow.dateTime, "MMMM", Application.LocaleSetting.locale)} --]
+[#-- usage: ${i18n.date_formatter(monthlyCashFlow.dateTime, "MMMM", Application.LocaleSetting.locale)} --]
 [#assign date_formatter="org.mifos.ui.ftl.DateFormatter"?new()]

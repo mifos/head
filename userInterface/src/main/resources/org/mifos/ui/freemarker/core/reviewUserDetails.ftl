@@ -18,9 +18,6 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-[#import "macros.ftl" as mifosmacros]
 
 [@layout.webflow currentTab="Admin"
                  currentState="user.flowState.reviewAndSubmit" 
@@ -36,7 +33,7 @@
     <form method="post" action="user.ftl?execution=${flowExecutionKey}">
         <div class="clear">&nbsp;</div>
         <div id="allErrorsDiv" class="allErrorsDiv">
-               [@mifosmacros.showAllErrors "userFormBean.*"/]
+               [@form.showAllErrors "userFormBean.*"/]
         </div>
 
         <div class="prepend-1  span-21 last">

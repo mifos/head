@@ -34,14 +34,14 @@ return editOfficeInformation.submit();
           [#-- <div class="bluedivs paddingLeft"><a href="admin.ftl" id="editoffice.link.admin">[@spring.message "admin" /]</a>&nbsp;/&nbsp;<a href="viewOffices.ftl" id="editoffice.link.viewOffices">[@spring.message "admin.viewOffices" /]</a>&nbsp;/&nbsp;<a href="" id="editoffice.link.viewOffice">[@spring.message "offices.editOfficeInformation.testAreaOffice" /]</a></div>--]
           [@spring.bind "officeFormBean.name"/]
           [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "admin.viewOffices":"viewOffices.ftl",spring.status.value?default(""):"viewOfficeDetails.ftl?id=${officeFormBean.id}"}/]
-        [@mifos.editPageBreadcrumbs breadcrumb/]
+        [@widget.editPageBreadcrumbs breadcrumb/]
         <div class="clear">&nbsp;</div>
         <div class="fontBold"><span>${spring.status.value?default("")}</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "offices.editOfficeInformation.editofficeinformation" /]</span></div>
         <div><span>[@spring.message "offices.editOfficeInformation.previewthefieldsbelow.ThenclickConfirm.ClickCanceltoreturntoOfficeDetailswithoutsubmittinginformation" /]</span></div>
         <div><span class="red"> * </span>[@spring.message "fieldsmarkedwithanasteriskarerequired." /]</div>
         <p class="error" id="editoffice.error.message">
         [#if showError == "true"]
-        [@mifos.showAllErrors "officeFormBean.*"/]
+        [@form.showAllErrors "officeFormBean.*"/]
         [/#if]
         </p>
         <p class="fontBold">[@spring.message "offices.editOfficeInformation.officedetails" /]</p>

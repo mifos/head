@@ -23,7 +23,7 @@
 <span id="page.id" title="AppliedUpgrades"></span>
 <div class=" content">
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "systemAdministration.viewsysteminformation.systeminformation":"systemInformation.ftl", "admin.viewSystemInformation.viewAppliedUpgrades":""}/]
-    [@mifos.crumbpairs breadcrumb/]
+    [@widget.crumbpairs breadcrumb/]
       <div id="content_panel" style="padding-left: 0px; margin-left: 20px; margin-top: 10px; font-size:12px">
           <div class="fontBold">[@spring.message "systemAdministration.viewsysteminformation.mifosDatabaseVersion.listOfAppliedDatabaseUpgrades"/]</div>
           <div>&nbsp;</div>

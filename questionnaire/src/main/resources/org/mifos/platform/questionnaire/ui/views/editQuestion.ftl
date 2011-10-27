@@ -26,7 +26,7 @@
 <div class=" content">
     <span id="page.id" title="editQuestion"></span>
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":"viewQuestions.ftl", "questionnaire.editquestion":""}/]
-    [@mifos.crumbpairs breadcrumb/]
+    [@widget.crumbpairs breadcrumb/]
 
     <div class="content_panel">
         <p class="font15 orangeheading margin5top10bottom"><span style="color:#000">${questionDefinition.currentQuestion.text} - </span> [@spring.message "questionnaire.editquestion"/]</p>
@@ -40,7 +40,7 @@
         </p>
 
         <div id="allErrorsDiv" class="allErrorsDiv">
-        [@mifosmacros.showAllErrors "questionDefinition.*"/]
+        [@form.showAllErrors "questionDefinition.*"/]
         </div>
         <form name="editquestionform" action="viewAndEditQuestion.ftl?execution=${flowExecutionKey}" method="POST"
               focus="currentQuestion.text">

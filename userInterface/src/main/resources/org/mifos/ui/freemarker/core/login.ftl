@@ -19,9 +19,7 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-[@mifos.header "mifos" /]
+[@layout.header "mifos" /]
 <!-- Container Begins-->
 <span id="page.id" title="Login"></span>
 <div class="container" align="center"> &nbsp;
@@ -72,4 +70,4 @@
 <br>mifos2 / testmifos
 [/#if]
 <!--Container Ends-->
-[@mifos.footer /]
+[@layout.footer /]

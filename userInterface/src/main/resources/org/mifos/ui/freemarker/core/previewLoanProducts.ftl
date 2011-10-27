@@ -18,10 +18,8 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-[@mifos.header "title" /]
-  [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+[@layout.header "title" /]
+  [@widget.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Main Content Begins-->
   <div class="content marginAuto" style="margin-left: 5em;">
     <div class="borders span-22">
@@ -33,7 +31,7 @@
         <form method="post" action="previewLoanProducts.ftl" name="previewloanproduct">
           <p class="font15"><span class="fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.addanewLoanProduct"/]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "reviewAndSubmit"/]</span></p>
           <p>[@spring.message "reviewtheinformationbelow.ClickSubmit"/]</p>
-          [@mifos.showAllErrors "loanProduct.*" /]
+          [@form.showAllErrors "loanProduct.*" /]
           <p class="fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.loanproductdetails"/] </p>
           <div class="span-21 last">
               <div class="span-20">
@@ -373,4 +371,4 @@
     </div>
   </div>
   <!--Main Content Ends-->
-  [@mifos.footer/]
+  [@layout.footer/]

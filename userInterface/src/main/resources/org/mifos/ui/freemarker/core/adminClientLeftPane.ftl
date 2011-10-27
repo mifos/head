@@ -18,8 +18,6 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "newblueprintmacros.ftl" as mifos]
 <form name="custSearchActionForm" method="post" action="custSearchAction.do?method=loadAllBranches">
     <h3>[@spring.message "admin.administrativeTasks" /]</h3>
     <p class="form_row">

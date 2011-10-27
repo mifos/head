@@ -31,7 +31,7 @@
 <div class=" content">
     <span id="page.id" title="view_question_details"></span>
         [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":"viewQuestions.ftl",question.text:""}/]
-        [@mifos.crumbpairs breadcrumb/]
+        [@widget.crumbpairs breadcrumb/]
         <div class="content_panel">
             <table>
                 <tr>

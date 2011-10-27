@@ -18,12 +18,10 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
 [#assign mifostag=JspTaglibs["/tags/mifos-html"]]
 
-[@mifos.header "title" /]
-  [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+[@layout.header "title" /]
+  [@widget.topNavigationNoSecurity currentTab="Admin" /]
     <!--  Main Content Begins-->
 <div class="content definePageMargin">
     <div class="borders margin20lefttop width90prc">
@@ -40,7 +38,7 @@
           <div>[@spring.message "manageProduct.editCategory.PreviewTheFieldsBelow.ThenClickSubmit"/]</div>
           <p class="clear">&nbsp; </p>
           <div class="fontBold margin10bottom">[@spring.message "manageProducts.editCategory.categoryDetails"/] </div>
-          [@mifos.showAllErrors "formBean.*"/]
+          [@form.showAllErrors "formBean.*"/]
           <p class="margin10bottom"">
               <span class="fontBold">[@spring.message "manageProducts.defineNewCategory.productType"/]</span><span>:&nbsp;[#switch formBean.productTypeId]
                     [#case "1"]
@@ -81,4 +79,4 @@
     </div>
   </div>
   <!--Main Content Ends-->
-  [@mifos.footer/]
+  [@layout.footer/]

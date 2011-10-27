@@ -24,7 +24,7 @@
 <div class="content">
     <form method="post" action="editCategoryInformation.ftl" name="editCategoryInformation">
         [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "admin.viewproductcategories":"viewProductCategories.ftl",formBean.productCategoryName:""}/]
-    [@mifos.crumbpairs breadcrumb/]
+    [@widget.crumbpairs breadcrumb/]
         <div class="span-24 marginLeft20px">
             <div class="clear">&nbsp;</div>
             <p class="font15">
@@ -42,7 +42,7 @@
             [@spring.message "fieldsmarkedwithanasteriskarerequired." /]
             </div>
         [@spring.bind "formBean"/]
-        [@mifos.showAllErrors "formBean.*"/]
+        [@form.showAllErrors "formBean.*"/]
             <p class="fontBold margin20topbottom">
             [@spring.message "manageProducts.editCategory.categoryDetails" /]
             </p>

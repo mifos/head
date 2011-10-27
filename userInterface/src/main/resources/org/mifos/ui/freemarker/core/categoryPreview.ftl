@@ -24,7 +24,7 @@
 <div class=" content">
     <form method="post" action="categoryPreview.ftl" name="formname">
         <div class="span-24">
-        [@mifos.crumbs breadcrumbs/]
+        [@widget.crumbs breadcrumbs/]
             <div class="margin20lefttop">
                 <p class="font15">
                     <span class="fontBold">[@spring.message "manageProducts.editCategory.categoryName"/]</span>&nbsp;-&nbsp;<span
@@ -35,7 +35,7 @@
 
                 <div class="clear">&nbsp;</div>
                 <p class="fontBold margin10bottom">[@spring.message "manageProducts.editCategory.categoryDetails"/]</p>
-                [@mifos.showAllErrors "formBean.*"/]
+                [@form.showAllErrors "formBean.*"/]
                 <p class="margin10bottom"><span class="fontBold">[@spring.message "manageProducts.editCategory.categoryName"/]:&nbsp;</span>
                     <span class="">[@spring.bind "formBean.productCategoryName"/]<input type="hidden" name="${spring.status.expression}"
                                                                  value="${spring.status.value?default("")}"/>${formBean.productCategoryName}

@@ -26,13 +26,13 @@
 <span id="page.id" title="uploadQuestionGroup"></span>
 <div class="content">
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.uploadQuestionGroup":""}/]
-[@mifos.crumbpairs breadcrumb/]
+[@widget.crumbpairs breadcrumb/]
     <div class="content_panel">
 
         <h1>
         [@spring.message "questionnaire.uploadQuestionGroup"/]
         </h1>
-        [@mifosmacros.showAllErrors "uploadQuestionGroupForm.*"/]
+        [@form.showAllErrors "uploadQuestionGroupForm.*"/]
         <div class="fontnormal">
         [@spring.message "questionnaire.uploadQuestionGroupMessage"/]
         </div>
@@ -43,7 +43,7 @@
                     <li>
                         <label for="selectedCountry"><span class="red">*</span>[@spring.message
                         "questionnaire.select.questionGroup"/]:</label>
-                    [@mifos.formSingleSelectWithPrompt "uploadQuestionGroupForm.selectedCountry", uploadQuestionGroupForm.countries,
+                    [@form.formSingleSelectWithPrompt "uploadQuestionGroupForm.selectedCountry", uploadQuestionGroupForm.countries,
                     "--selectone--" /]
                     </li>
                 </ol>

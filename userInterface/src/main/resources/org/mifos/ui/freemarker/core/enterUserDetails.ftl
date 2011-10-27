@@ -18,9 +18,6 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-[#import "macros.ftl" as mifosmacros]
 
 <script type="text/javascript">
 function addOption(root, text, value)
@@ -87,7 +84,7 @@ function selectAllOptions(outSel)
 
         <form name="enterUserDetails" method="post" action="user.ftl?execution=${flowExecutionKey}">
             <div id="allErrorsDiv" class="allErrorsDiv">
-                [@mifosmacros.showAllErrors "userFormBean.*"/]
+                [@form.showAllErrors "userFormBean.*"/]
             </div>
             [@spring.formHiddenInput "userFormBean.officeId" /]
             <div class="marginTop15"><span class="fontBold">[@spring.message "systemUsers.defineNewSystemUser.form.office" /]&nbsp;:</span><span>${userFormBean.officeName}</span></div>
@@ -153,7 +150,7 @@ function selectAllOptions(outSel)
                             <label for="selectedMaritalStatus">[@spring.message "systemUsers.preview.maritalStatus" /]&nbsp;:</label>
                         </span>
                         <span>
-                            [@mifos.formSingleSelectWithPrompt "userFormBean.selectedMaritalStatus", userFormBean.maritalStatusOptions, "--selectone--" /]
+                            [@form.formSingleSelectWithPrompt "userFormBean.selectedMaritalStatus", userFormBean.maritalStatusOptions, "--selectone--" /]
                         </span>
                     </div>
 
@@ -162,7 +159,7 @@ function selectAllOptions(outSel)
                             <label for="selectedGender"><span class="red">*</span>[@spring.message "systemUsers.preview.gender" /]:</label>
                         </span>
                         <span>
-                            [@mifos.formSingleSelectWithPrompt "userFormBean.selectedGender", userFormBean.genderOptions, "--selectone--" /]
+                            [@form.formSingleSelectWithPrompt "userFormBean.selectedGender", userFormBean.genderOptions, "--selectone--" /]
                         </span>
                     </div>
 
@@ -171,7 +168,7 @@ function selectAllOptions(outSel)
                             <label for="selectedPreferredLanguage">[@spring.message "systemUsers.preview.languagePreferred" /]:</label>
                         </span>
                         <span>
-                            [@mifos.formSingleSelectWithPrompt "userFormBean.selectedPreferredLanguage", userFormBean.preferredLanguageOptions, "--selectone--" /]
+                            [@form.formSingleSelectWithPrompt "userFormBean.selectedPreferredLanguage", userFormBean.preferredLanguageOptions, "--selectone--" /]
                         </span>
                     </div>
 
@@ -308,7 +305,7 @@ function selectAllOptions(outSel)
                                 <label for="userTitle">[@spring.message "systemUsers.preview.userTitle" /]:</label>
                             </span>
                             <span>
-                                [@mifos.formSingleSelectWithPrompt "userFormBean.selectedUserTitle", userFormBean.userTitleOptions, "--selectone--" /]
+                                [@form.formSingleSelectWithPrompt "userFormBean.selectedUserTitle", userFormBean.userTitleOptions, "--selectone--" /]
                             </span>
                           </div>
                         <div class="span-21 prepend-2 ">
@@ -316,7 +313,7 @@ function selectAllOptions(outSel)
                                 <label for="userTitle"><span class="red">*</span>[@spring.message "systemUsers.preview.userHierarchy" /]:</label>
                             </span>
                             <span>
-                                [@mifos.formSingleSelectWithPrompt "userFormBean.selectedUserHierarchy", userFormBean.userHierarchyOptions, "--selectone--" /]
+                                [@form.formSingleSelectWithPrompt "userFormBean.selectedUserHierarchy", userFormBean.userHierarchyOptions, "--selectone--" /]
                             </span>
                           </div>
                           <div class="span-21 prepend-2 ">

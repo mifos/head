@@ -29,7 +29,7 @@
             <div class="span-24">
             [@spring.bind "formBean.oldName"/]
                 [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "organizationPreferences.viewfunds":"viewFunds.ftl",spring.status.value?default(""):""}/]
-            [@mifos.crumbpairs breadcrumb/]
+            [@widget.crumbpairs breadcrumb/]
                 <div class="margin20lefttop">
                     <p class="font15">[@spring.bind "formBean.oldName"/]<span class="fontBold" name="name">
                             ${spring.status.value?default("")}[@spring.showErrors "<br />"/]</span>&nbsp;-&nbsp;<span
@@ -39,7 +39,7 @@
                     <div>[@spring.message "organizationPreferences.viewFunds.edit.previewTheFieldsBelowThenClickSubmitClickCancelToReturnToFundDetailsWithoutSubmittingInformation"/]</div>
                     <div class="clear">&nbsp;</div>
                     <div class="allErrorsDiv">
-                    [@mifos.showAllErrors "formBean.*"/]
+                    [@form.showAllErrors "formBean.*"/]
                     </div>
 
                     <div class="fontBold">[@spring.message "organizationPreferences.viewFunds.edit.funddetails"/]</div>

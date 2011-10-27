@@ -28,7 +28,7 @@
         [@spring.message error_message_code/]
     [#else]
         [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":"viewQuestionGroups.ftl",questionGroupForm.questionGroupDetail.title:""}/]
-        [@mifos.crumbpairs breadcrumb/]
+        [@widget.crumbpairs breadcrumb/]
     <div class="content_panel">
         <table>
             <tr>

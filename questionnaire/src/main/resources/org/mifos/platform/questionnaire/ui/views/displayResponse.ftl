@@ -26,7 +26,7 @@
     <div class="content">
 	    [#if Session.urlMap??]
 	        [#assign breadcrumb = Session.urlMap/]
-	        [@mifos.crumbpairs breadcrumb "false"/]
+	        [@widget.crumbpairs breadcrumb "false"/]
 	    [/#if]
 	    <div class="content_panel">
 	        <h1>

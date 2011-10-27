@@ -18,10 +18,8 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-[@mifos.header "title" /]
-  [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+[@layout.header "title" /]
+  [@widget.topNavigationNoSecurity currentTab="Admin" /]
   <script language="javascript">
   function getData(){
   if(document.getElementById("levelId").value == "1" || document.getElementById("levelId").value == "2" || document.getElementById("levelId").value == "3" || document.getElementById("levelId").value == "4" || document.getElementById("levelId").value == "5"){
@@ -50,7 +48,7 @@
             </div>
             <p class="error" id="CreateNewOffice.error.message">
             [#if showError == "true"]
-            [@mifos.showAllErrors "officeFormBean.*"/]
+            [@form.showAllErrors "officeFormBean.*"/]
             [/#if]
             </p>
             <p>&nbsp;&nbsp;</p>
@@ -185,4 +183,4 @@
 </div>
 </div>
 <!--Main Content Ends-->
-[@mifos.footer/]
+[@layout.footer/]

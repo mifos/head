@@ -19,8 +19,6 @@
 *  explanation of the license and how it is applied.
 --]
 
-[#import "/spring.ftl" as spring /]
-
 [#-- 
 Lookup savings type name given an ID. 
 Defined in org.mifos.accounts.productdefinition.util.helpers.SavingsType

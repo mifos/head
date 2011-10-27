@@ -19,10 +19,8 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-[@mifos.header "title" /]
-  [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+[@layout.header "title" /]
+  [@widget.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Left Sidebar Begins-->
   <div>
   <div class="sidebar ht600">
@@ -83,7 +81,7 @@
     </div>
   </div>
   <!--Main Content Ends-->
-[@mifos.footer/]--]
+[@layout.footer/]--]
 
 
 
@@ -150,7 +148,7 @@ function selectAllOptions(outSel)
           <p class="font15"><span class="fontBold">[@spring.message "manageProducts.defineProductmix.addanewproductmix"/]</span>&nbsp;--&nbsp;<span class="orangeheading"> [@spring.message "manageProducts.defineProductmix.enterproductmixinformation"/]</span></p>
           <div>[@spring.message "manageProducts.defineProductmix.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminwithoutsubmittinginformation"/] </div>
           <div><span class="red">* </span>[@spring.message "manageProducts.defineProductmix.fieldsmarkedwithanasteriskarerequired"/] </div>
-          [@mifos.showAllErrors "formBean.*"/]
+          [@form.showAllErrors "formBean.*"/]
           <p class="fontBold">[@spring.message "manageProducts.defineProductmix.productmixdetails"/] </p>
         <form name="productsmixform" id="productsmixform" method="post" action="editProductMix.ftl">
             <div class="prepend-3  span-21">

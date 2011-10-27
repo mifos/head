@@ -37,7 +37,7 @@
 <ul class="form_content">
     <li id="status">
       <label for="currentQuestion.active"><span class="red">*</span>[@spring.message "questionnaire.status"/]: </label>
-      [@mifosmacros.boolRadioButtons "questionDefinition.currentQuestion.active", {"true":active, "false":inActive},'','' /]
+      [@form.boolRadioButtons "questionDefinition.currentQuestion.active", {"true":active, "false":inActive},'','' /]
     </li>
     <li id="question" class="long_t_box">
       <label for="currentQuestion.text"><span class="red">*</span>[@spring.message "questionnaire.question.title"/]: </label>

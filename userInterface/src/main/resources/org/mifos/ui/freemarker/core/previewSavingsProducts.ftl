@@ -18,10 +18,8 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-[@mifos.header "title" /]
-[@mifos.topNavigationNoSecurity currentTab="Admin" /]
+[@layout.header "title" /]
+[@widget.topNavigationNoSecurity currentTab="Admin" /]
 <!--  Main Content Begins-->
 <span id="page.id" title="SavingsProductPreview"></span>
 
@@ -41,7 +39,7 @@
                         class="orangeheading">[@spring.message "manageProducts.defineSavingsProducts.previewSavingsProductInformation" /]</span></p>
 
                 <p>[@spring.message "reviewtheinformationbelow.ClickSubmit" /]</p>
-            [@mifos.showAllErrors "savingsProduct.*"/]
+            [@form.showAllErrors "savingsProduct.*"/]
                 <p class="fontBold margin10topbottom">[@spring.message "manageSavngsProducts.previewSavingsProducts.savingsproductdetails" /] </p>
 
                 <div class="span-21 last">
@@ -170,4 +168,4 @@
     </div>
 </div>
 <!--Main Content Ends-->
-[@mifos.footer/]
+[@layout.footer/]

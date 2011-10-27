@@ -26,14 +26,14 @@
     <div class="content">
 	    [#if Session.urlMap??]
 	        [#assign breadcrumb = Session.urlMap/]
-	        [@mifos.crumbpairs breadcrumb "false"/]
+	        [@widget.crumbpairs breadcrumb "false"/]
 	    [/#if]
     	<div class="content_panel">
 	        <h1>
 	            ${Session.questionnaireFor} - [@spring.message "questionnaire.enterdata"/]
 	        </h1>
 	        <div id="allErrors" class="allErrorsDiv">
-	            [@mifosmacros.showAllErrors "questionGroupDetails.*"/]
+	            [@form.showAllErrors "questionGroupDetails.*"/]
 	        </div>
 	        <form id="questionnaire" name="questionnaire" action="questionnaire.ftl?execution=${flowExecutionKey}" method="POST">
 	            [#list questionGroupDetails.details[selectedQuestionnaireIndex].sectionDetails as sectionDetail]
@@ -63,7 +63,7 @@
 	                          <fieldset class="right_section" style="width:68%">
 	                            <ol class="noPadding">
 	                              <li class="noPadding">
-	                                [@mifosmacros.formCheckboxesWithTags "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,'</li><li class="noPadding">', ''/]
+	                                [@form.formCheckboxesWithTags "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,'</li><li class="noPadding">', ''/]
 	                              </li>
 	                            </ol>
 	                          </fieldset>
@@ -75,7 +75,7 @@
 	                                </div>
 	                                <ol class="questionList" id="questionList" style="overflow:auto; width:19em; height:180px; border:1px solid #336699; padding-left:5px">
 	                                    <li style="padding-bottom: 0pt;">
-	                                        [@mifosmacros.formCheckboxesWithTags "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,'</li><li class="noPadding">', ''/]
+	                                        [@form.formCheckboxesWithTags "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,'</li><li class="noPadding">', ''/]
 	                                    </li>
 	                                </ol>
 	                          </fieldset>
@@ -85,9 +85,9 @@
 	                            <ol  class="noPadding">
 	                              <li class="noPadding">
 	                                  [#if question.answerChoices?size > 6]
-	                                  [@mifosmacros.formSingleSelectWithPrompt "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", question.answerChoices, "--selectone--", ''/]
+	                                  [@form.formSingleSelectWithPrompt "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", question.answerChoices, "--selectone--", ''/]
 	                                  [#else]
-	                                  [@mifosmacros.formRadioButtons "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", question.answerChoices,' </li><li class="noPadding">', ''/]
+	                                  [@form.formRadioButtons "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", question.answerChoices,' </li><li class="noPadding">', ''/]
 	                                  [/#if]
 	                              </li>
 	                            </ol>

@@ -78,7 +78,7 @@ function selectAllOptions(outSel)
 
    <!--  Main Content Begins-->
   <div class="content">
-  [@mifos.crumb "OrganizationPreferences.defineAcceptedPaymentTypes"/]
+  [@widget.crumb "OrganizationPreferences.defineAcceptedPaymentTypes"/]
 
       <form method="post" action="defineAcceptedPaymentTypes.ftl" name="defineAcceptedPaymentTypes">
 

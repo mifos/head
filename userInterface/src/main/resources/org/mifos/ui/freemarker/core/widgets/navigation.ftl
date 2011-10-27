@@ -19,8 +19,6 @@
 *  explanation of the license and how it is applied.
 --]
 
-[#-- FIXME: these macros are copied from newblueprintmacros.ftl. They've been moved here for better organization. Delete from newblueprintmacros.ftl. --]
-
 [#-- header macro --]
 [#-- Generate the Mifos header with tabbed navigation --]
 [#-- currentTab values: "Home","ClientsAndAccounts","Reports","Admin" --]

@@ -18,9 +18,7 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-[@mifos.header "title" /]
+[@layout.header "title" /]
 <script type="text/javascript">
       $(document).ready(function () {
           switchFrequencyMessage();
@@ -144,7 +142,7 @@ function switchLoanInstallmentType()
 </script>
 
 
-  [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+  [@widget.topNavigationNoSecurity currentTab="Admin" /]
    <!--  Main Content Begins-->
   <div class="content marginAuto" style="margin-left: 5em;">
     <div class="borders span-22">
@@ -157,7 +155,7 @@ function switchLoanInstallmentType()
           <p class="font15"><span class="fontBold" id="createLoanProduct.heading">[@spring.message "manageLoanProducts.defineLoanProduct.addanewLoanproduct" /]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "manageLoanProducts.defineLoanProduct.enterLoanproductinformation" /]</span></p>
           <div>[@spring.message "manageLoanProducts.defineLoanProduct.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturn" /]</div>
           <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired" /] </div>
-          [@mifos.showAllErrors "loanProduct.*"/]
+          [@form.showAllErrors "loanProduct.*"/]
           <p class="fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.loanproductdetails" /]</p>
           <div class="prepend-2  span-24 last">
             <div class="span-23 ">
@@ -186,7 +184,7 @@ function switchLoanInstallmentType()
             <div class="span-23">
                 <span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.productcategory" /]&nbsp;:</span>
                 <span class="span-4">
-                    [@mifos.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedCategory", loanProduct.generalDetails.categoryOptions, "--selectone--" /]
+                    [@form.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedCategory", loanProduct.generalDetails.categoryOptions, "--selectone--" /]
                   </span>
             </div>
 
@@ -211,7 +209,7 @@ function switchLoanInstallmentType()
 
             <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.applicablefor" /]&nbsp;:</span>
                 <span class="span-4">
-                [@mifos.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedApplicableFor", loanProduct.generalDetails.applicableForOptions, "--selectone--" /]
+                [@form.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedApplicableFor", loanProduct.generalDetails.applicableForOptions, "--selectone--" /]
                   </span>
             </div>
 
@@ -377,7 +375,7 @@ function switchLoanInstallmentType()
           <div class="prepend-2  span-21 last">
             <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.interestratetype" /]&nbsp;:</span>
                 <span class="span-6">
-                [@mifos.formSingleSelectWithPrompt "loanProduct.selectedInterestRateCalculationType", loanProduct.interestRateCalculationTypeOptions, "--selectone--" /]
+                [@form.formSingleSelectWithPrompt "loanProduct.selectedInterestRateCalculationType", loanProduct.interestRateCalculationTypeOptions, "--selectone--" /]
                 </span>
             </div>
             <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.maxInterestrate" /]&nbsp;:</span>
@@ -395,7 +393,7 @@ function switchLoanInstallmentType()
           <div class="prepend-3  span-23 last">
               <div class="span-23">
                   <span class="pull-3 span-8 rightAlign"><span class="red">* </span>Status&nbsp;</span>
-                  <span class="span-6">[@mifos.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedStatus", loanProduct.generalDetails.statusOptions, "--selectone--" /]</span>
+                  <span class="span-6">[@form.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedStatus", loanProduct.generalDetails.statusOptions, "--selectone--" /]</span>
             </div>
           </div>
 
@@ -599,11 +597,11 @@ function switchLoanInstallmentType()
                 <span class="span-6 ">
                     <span class="span-2">[@spring.message "manageLoanProducts.defineLoanProduct.interest" /]&nbsp;:</span>
                     <span class="span-3">
-                        [@mifos.formSingleSelectWithPrompt "loanProduct.selectedInterest", loanProduct.interestGeneralLedgerOptions, "--selectone--", "disabled=disabled" /]
+                        [@form.formSingleSelectWithPrompt "loanProduct.selectedInterest", loanProduct.interestGeneralLedgerOptions, "--selectone--", "disabled=disabled" /]
                       </span>
 
                     <span class="span-2">[@spring.message "manageLoanProducts.defineLoanProduct.principal" /]&nbsp;:</span>
-                        [@mifos.formSingleSelectWithPrompt "loanProduct.selectedPrincipal", loanProduct.principalGeneralLedgerOptions, "--selectone--", "disabled=disabled" /]
+                        [@form.formSingleSelectWithPrompt "loanProduct.selectedPrincipal", loanProduct.principalGeneralLedgerOptions, "--selectone--", "disabled=disabled" /]
                     <span class="span-3">
                       </span>
                    </span>
@@ -622,4 +620,4 @@ function switchLoanInstallmentType()
     </div>
   </div>
   <!--Main Content Ends-->
-  [@mifos.footer/]
+  [@layout.footer/]

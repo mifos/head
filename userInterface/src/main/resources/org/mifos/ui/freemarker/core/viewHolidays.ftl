@@ -24,7 +24,7 @@
 <span id="page.id" title="view_organizational_holidays"></span>
 <div class=" content">
 
-[@mifos.crumbs breadcrumbs /]
+[@widget.crumbs breadcrumbs /]
 
     <div class="span-24">
         <div class="clear">&nbsp;</div>

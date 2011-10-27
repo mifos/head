@@ -18,10 +18,9 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-[@mifos.header "title" /]
-  [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+
+[@layout.header "title" /]
+  [@widget.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Main Content Begins-->
   <div class="content definePageMargin">
     <div class="borders span-22">
@@ -81,4 +80,4 @@
     </div>
   </div>
   <!--Main Content Ends-->
-  [@mifos.footer/]
+  [@layout.footer/]

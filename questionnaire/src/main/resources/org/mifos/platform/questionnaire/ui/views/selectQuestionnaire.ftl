@@ -27,7 +27,7 @@
     [#if Session.urlMap??]
         [#assign thisSite][@spring.message "questionnaire.attach"/][/#assign]
         [#assign breadcrumb = Session.urlMap + {"${thisSite}":""} /]
-        [@mifos.crumbpairs breadcrumb /]
+        [@widget.crumbpairs breadcrumb /]
     [/#if]
     <div class="content_panel">
         <h1>

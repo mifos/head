@@ -18,8 +18,6 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
 
  <!--  Left Sidebar Begins-->
   <div class="sidebar ht750">
@@ -38,7 +36,3 @@
       <a href="#">[@spring.message "ClientLeftPane.changeaccountstatus" /]</a> </p>
   </div>
   <!--  Left Sidebar Ends-->
-
-
-
-

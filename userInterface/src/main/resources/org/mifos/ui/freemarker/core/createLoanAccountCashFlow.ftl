@@ -30,7 +30,7 @@
             <fieldset id="cashFlows" style="width:80%;">
               <legend style="font-size:1em;">[@spring.message "cashflow.heading"/]</legend>
               <div id="allErrorsDiv" class="allErrorsDiv" align="left">
-                [@mifosmacros.showAllErrors "cashFlow.*"/]
+                [@form.showAllErrors "cashFlow.*"/]
               </div>
               <div id="note" align="left" >
                    <span class="fontBold"> [@spring.message "cashFlowForm.message"/] </span>
@@ -48,7 +48,7 @@
                 <tbody>
                     [#list cashFlow.monthlyCashFlows as monthlyCashFlow]
                     <tr>
-                        <td width="25%">${mifos.date_formatter(monthlyCashFlow.dateTime, "MMMM", Application.LocaleSetting.locale)} ${monthlyCashFlow.year?c}</td>
+                        <td width="25%">${i18n.date_formatter(monthlyCashFlow.dateTime, "MMMM", Application.LocaleSetting.locale)} ${monthlyCashFlow.year?c}</td>
                         <td width="15%">[@spring.formInput "cashFlow.monthlyCashFlows[${monthlyCashFlow_index}].expense", 'maxlength="30" style="width:100%;" class="amount"' /]</td>
                         <td width="15%">[@spring.formInput "cashFlow.monthlyCashFlows[${monthlyCashFlow_index}].revenue", 'maxlength="30" style="width:100%;" class="amount"' /]</td>
                         <td width="45%">[@spring.formInput "cashFlow.monthlyCashFlows[${monthlyCashFlow_index}].notes", 'maxlength="300" style="width:100%;"' /]</td>

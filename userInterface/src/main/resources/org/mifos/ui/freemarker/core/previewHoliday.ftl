@@ -23,7 +23,7 @@
 <span id="page.id" title="Review_holidayCreation"></span>
 <div class="content">
     <div class="span-24">
-    [@mifos.crumbs breadcrumbs /]
+    [@widget.crumbs breadcrumbs /]
         <div class="margin20lefttop">
             <p class="font15 margin15bottom"><span
                     class="orangeheading">[@spring.message "organizationPreferences.previewHoliday" /]</span></p>

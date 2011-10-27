@@ -26,11 +26,9 @@
 [#assign failed][@spring.message "systemAdministration.batchjobs.failed"/][/#assign]
 [#assign abandoned][@spring.message "systemAdministration.batchjobs.abandoned"/][/#assign]
 [#assign neverExecutedYet][@spring.message "systemAdministration.batchjobs.neverExecutedYet"/][/#assign]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
 
 [#include "layout.ftl"]
-	
+
 <script type="text/javascript">
 
 	function selectAll(x) {
@@ -48,7 +46,7 @@
 <!--  Main Content Begins-->
 <div class=" content">
     <form method="post" name="batchjobs" action="batchjobs.ftl">
-        [@mifos.crumbs breadcrumbs /]
+        [@widget.crumbs breadcrumbs /]
         [@spring.showErrors "<br>" /]
         <div class="marginLeft30">
             <div class="span-21">

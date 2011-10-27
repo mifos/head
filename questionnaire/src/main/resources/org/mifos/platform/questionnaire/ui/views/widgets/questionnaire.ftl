@@ -18,7 +18,6 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "/spring.ftl" as spring /]
 
 [#-- 
 A widget to render the UI for collecting questionnaire responses. 

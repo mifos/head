@@ -23,7 +23,7 @@
 <span id="page.id" title="SysInfo"></span>
 <div class=" content">
 
-[@mifos.crumbs breadcrumbs /]
+[@widget.crumbs breadcrumbs /]
 
     <div class="span-24 margin10lefttop">
         <div><span class=" orangeheading">[@spring.message "systemAdministration.viewsysteminformation.systeminformation" /]</span></div>

@@ -30,11 +30,11 @@
         }
     </style>
     <form method="post" name="latenessanddormancy" action="editLatenessDormancy.ftl">
-    [@mifos.crumbs breadcrumbs /]
+    [@widget.crumbs breadcrumbs /]
     [@spring.bind "formBean" /]
         <div class="marginLeft30">
             <div class="span-24">
-            [@mifos.showAllErrors "formBean.*"/]
+            [@form.showAllErrors "formBean.*"/]
                 <div class="span-23 borderbtm width95prc">
                     <p class="font15 margin10topbottom">
                         <span class="orangeheading">

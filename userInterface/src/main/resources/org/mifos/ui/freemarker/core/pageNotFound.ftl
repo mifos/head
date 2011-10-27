@@ -18,11 +18,8 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "macros.ftl" as mifos]
-
-[@mifos.header "pageNotFoundTitle" /]
+[@layout.header "pageNotFoundTitle" /]
     <h1 id="pageNotFoundHeading">[@spring.message "pageNotFoundHeading" /]</h1>
     <p id="pageNotFoundMessage">[@spring.message "pageNotFoundMessage" /]</p>
-[@mifos.footer /]
+[@layout.footer /]
 

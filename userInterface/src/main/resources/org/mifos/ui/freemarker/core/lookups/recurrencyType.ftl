@@ -19,8 +19,6 @@
 *  explanation of the license and how it is applied.
 --]
 
-[#import "/spring.ftl" as spring /]
-
 [#-- 
 Lookup recurrence name given an ID. 
 Defined in org.mifos.application.meeting.util.helpers.RecurrencyType

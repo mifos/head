@@ -18,8 +18,6 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "newblueprintmacros.ftl" as mifos]
 [#-- <div class="left-pane">
       <div class="left-pane-header">[@spring.message "administrativeTasks" /]</div>
       <div class="left-pane-content">

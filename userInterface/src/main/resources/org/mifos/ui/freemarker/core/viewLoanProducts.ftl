@@ -22,7 +22,7 @@
 [@adminLeftPaneLayout]
     <!--  Main Content Begins-->
   <div class="content">
-  [@mifos.crumbs breadcrumbs/]
+  [@widget.crumbs breadcrumbs/]
   <p>&nbsp;&nbsp;</p>
         <p class="marginLeft30 font15 orangeheading">[@spring.message "admin.viewLoanProducts"/]</p>
         <p class="marginLeft30">[@spring.message "manageLoanProducts.viewLoanProducts.clickonaLoanproductbelowtoviewdetailsandmakechangesor"/] <a href="defineLoanProducts.ftl">[@spring.message "admin.definenewLoanproduct"/]</a></p>

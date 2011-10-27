@@ -27,7 +27,7 @@
     <span id="page.id" title="editQuestionGroup"></span>
     <div class="content">
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":"viewQuestionGroups.ftl", "questionnaire.editQuestionGroup":""}/]
-    [@mifos.crumbpairs breadcrumb/]
+    [@widget.crumbpairs breadcrumb/]
         <div class="content_panel">
             <h1>
                 [@spring.message "questionnaire.editQuestionGroup"/]

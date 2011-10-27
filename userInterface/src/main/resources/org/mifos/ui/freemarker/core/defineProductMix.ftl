@@ -18,11 +18,8 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-[#import "macros.ftl" as mifosmacros]
-[@mifos.header "title" /]
-[@mifos.topNavigationNoSecurity currentTab="Admin" /]
+[@layout.header "title" /]
+[@widget.topNavigationNoSecurity currentTab="Admin" /]
 
  <script type="text/javascript">
  function addOption(root, text, value)
@@ -92,7 +89,7 @@ function selectAllOptions(outSel)
           <p class="font11pt"><span class="fontBold">[@spring.message "manageProducts.defineProductmix.addanewproductmix"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "manageProducts.defineProductmix.enterproductmixinformation"/]</span></p>
           <div class="font9pt">[@spring.message "manageProducts.defineProductmix.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminwithoutsubmittinginformation"/] </div>
           <div class="font9pt"><span class="red">* </span>[@spring.message "manageProducts.defineProductmix.fieldsmarkedwithanasteriskarerequired"/] </div>
-          [@mifos.showAllErrors "formBean.*"/]
+          [@form.showAllErrors "formBean.*"/]
           <p class="fontBold margin20topbottom">[@spring.message "manageProducts.defineProductmix.productmixdetails"/] </p>
         <form name="productsmixform" id="productsmixform" method="post" action="defineProductMix.ftl">
             <div class="prepend-3  span-21 last width90prc">
@@ -196,4 +193,4 @@ function selectAllOptions(outSel)
   <div class="footer">&nbsp;</div>
 </div>
 <!--Container Ends-->
-[@mifos.footer/]
+[@layout.footer/]

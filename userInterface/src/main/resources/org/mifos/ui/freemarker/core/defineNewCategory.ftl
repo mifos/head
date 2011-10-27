@@ -18,11 +18,9 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
 [#assign mifostag=JspTaglibs["/tags/mifos-html"]]
-[@mifos.header "title" /]
-  [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+[@layout.header "title" /]
+  [@widget.topNavigationNoSecurity currentTab="Admin" /]
    <!--  Main Content Begins-->
 <div class="content definePageMargin">
     <div class="borders margin20lefttop width90prc">
@@ -42,7 +40,7 @@
         <div>[@spring.message "manageProducts.defineNewCategory.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminwithoutsubmittinginformation" /]</div>
         <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired." /] </div>
         <p>&nbsp;&nbsp;</p>
-        [@mifos.showAllErrors "formBean.*"/]
+        [@form.showAllErrors "formBean.*"/]
         <p class="fontBold margin10bottom">[@spring.message "manageProducts.defineNewCategory.categoryDetails" /]</p>
         <div class="prepend-3  span-21 last">
             <div class="span-20 ">
@@ -105,4 +103,4 @@
     </div>
   </div>
   <!--Main Content Ends-->
-  [@mifos.footer/]
+  [@layout.footer/]

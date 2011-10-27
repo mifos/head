@@ -24,7 +24,7 @@
         <span id="page.id" title="confirm_clear_exports"></span>
 
 <div class="content "> <!--  Main Content Begins-->
-   [@mifos.crumbs breadcrumbs /]
+   [@widget.crumbs breadcrumbs /]
  <div class="margin10lefttop">
         <p class="font15 margin5topbottom"><b>[@spring.message "accounting.viewaccountingexports"/]</b> - <span class='font15 orangeheading'>[@spring.message "accounting.clearexports"/]</span></p>
     <br />

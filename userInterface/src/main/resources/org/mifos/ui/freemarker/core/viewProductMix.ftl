@@ -23,7 +23,7 @@
   <!--  Main Content Begins-->
   <div class=" content">
       <span id="page.id" title="viewProductsMix"></span>
-          [@mifos.crumbs breadcrumbs/]
+          [@widget.crumbs breadcrumbs/]
         <div class="margin20lefttop">
             <form method="" action="" name="formname">
                 <p class="font15 orangeheading">[@spring.message "admin.viewproductsmix"/]</p>

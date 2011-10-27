@@ -25,15 +25,12 @@
 * namespace, they've been moved here. 
 --]
 
-[#import "/spring.ftl" as spring]
-[#import "/newblueprintmacros.ftl" as mifos]
-[#import "/macros.ftl" as mifosmacros]
 [#assign security=JspTaglibs["http://www.springframework.org/security/tags"]]
 [#assign mifostag=JspTaglibs["/tags/mifos-html"]]
 
 [#macro adminLeftPaneLayout]
-    [@mifos.header "title" /]
-    [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+    [@layout.header "title" /]
+    [@widget.topNavigationNoSecurity currentTab="Admin" /]
     <div class="colmask leftmenu">
         <div class="colleft">
             <div class="col1wrap">
@@ -50,12 +47,12 @@
             </div>
         </div>
     </div>
-    [@mifos.footer/]
+    [@layout.footer/]
 [/#macro]
 
 [#macro clientLeftPane]
-    [@mifos.header "title" /]
-    [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+    [@layout.header "title" /]
+    [@widget.topNavigationNoSecurity currentTab="Admin" /]
     <div class="colmask leftmenu">
         <div class="colleft">
             <div class="col1wrap">
@@ -72,11 +69,11 @@
             </div>
         </div>
     </div>
-    [@mifos.footer/]
+    [@layout.footer/]
 [/#macro]
 [#macro adminClientLeftPane]
-    [@mifos.header "title" /]
-    [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+    [@layout.header "title" /]
+    [@widget.topNavigationNoSecurity currentTab="Admin" /]
     <div class="colmask leftmenu">
         <div class="colleft">
             <div class="col1wrap">
@@ -93,11 +90,11 @@
             </div>
         </div>
     </div>
-    [@mifos.footer/]
+    [@layout.footer/]
 [/#macro]
 [#macro headerOnlyLayout]
-    [@mifos.header "title" /]
-    [@mifos.topNavigationNoSecurity currentTab="ClientsAndAccounts" /]
+    [@layout.header "title" /]
+    [@widget.topNavigationNoSecurity currentTab="ClientsAndAccounts" /]
     <div class="colmask leftmenu">
         <div class="leftmenu noleftcol">
             <div class="col1wrap">
@@ -109,5 +106,5 @@
             </div>
         </div>
     </div>
-    [@mifos.footer/]
+    [@layout.footer/]
 [/#macro]

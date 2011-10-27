@@ -23,7 +23,7 @@
 <span id="page.id" title="create_officeHoliday"></span>
 <div class="content">
     <div class="span-24">
-    [@mifos.crumbs breadcrumbs /]
+    [@widget.crumbs breadcrumbs /]
         <div class="margin20lefttop">
             <p class="font15 margin10topbottom"><span
                     class="orangeheading">[@spring.message "organizationPreferences.definenewholiday.addHoliday" /]</span>
@@ -34,7 +34,7 @@
 
             <form method="post" action="defineNewHoliday.ftl" name="formname">
             [@spring.bind "formBean" /]
-            [@mifos.showAllErrors "formBean.*"/]
+            [@form.showAllErrors "formBean.*"/]
                 <div style="margin-left:100px;margin-top:25px">
                     <div class="prepend-3 span-22 last margin5bottom">
                     <span class="span-4 rightAlign" style="margin-top:6px;" ><span

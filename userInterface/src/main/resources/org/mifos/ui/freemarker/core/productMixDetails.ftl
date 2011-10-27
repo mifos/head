@@ -25,7 +25,7 @@
 <div class="content">
     <form method="" action="" name="formname">
         [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "admin.viewproductsmix":"viewProductMix.ftl","${mixDetails.prdOfferingName}":""}/]
-    [@mifos.crumbpairs breadcrumb/]
+    [@widget.crumbpairs breadcrumb/]
         <div class="width95prc margin20lefttop">
             <div class="">
                 <span class="orangeheading">${mixDetails.prdOfferingName}</span>

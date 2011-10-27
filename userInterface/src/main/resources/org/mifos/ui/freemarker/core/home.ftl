@@ -18,11 +18,9 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "macros.ftl" as mifos]
 [#assign form=JspTaglibs["/WEB-INF/tld/spring-form.tld"]]
 
-[@mifos.header "title" /]
+[@layout.header "title" /]
   [@mifos.topNavigation currentTab="Home" /]
   [#include "homeLeftPane.ftl" ]
 
@@ -43,4 +41,4 @@
     </div>
   </div>
 
-[@mifos.footer /]
+[@layout.footer /]

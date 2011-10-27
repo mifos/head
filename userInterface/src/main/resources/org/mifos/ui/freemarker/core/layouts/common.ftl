@@ -19,9 +19,9 @@
 *  explanation of the license and how it is applied.
 --]
 
-[#-- This Freemarker template defines common macros use by all layout templates. --]
+[#assign security=JspTaglibs["http://www.springframework.org/security/tags"]]
 
-[#-- Renders the page header. --]
+[#-- header macro --]
 [#macro header pageTitle]
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -51,8 +51,7 @@
     <body>
 [/#macro]
 
-[#-- Renders the page footer. --]
 [#macro footer]
     </body>
-    </html>
+</html>
 [/#macro]

@@ -18,11 +18,11 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#include "layout.ftl"]
+
 [@adminLeftPaneLayout]
   <div class=" content">
     <div class="width100prc">
-          [@mifos.crumbs breadcrumbs/]
+          [@widget.crumbs breadcrumbs/]
         <div class="width95prc margin20lefttop">
             <div class="">
                 <span class="orangeheading">${detailsDto.productCategoryName}</span><br />

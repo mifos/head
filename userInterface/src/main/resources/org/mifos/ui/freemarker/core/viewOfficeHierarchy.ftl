@@ -24,7 +24,7 @@
 [@adminLeftPaneLayout]
 <span id="page.id" title="view_office_hierarchy"></span>
 <div class="content">
-[@mifos.crumbs breadcrumbs/]
+[@widget.crumbs breadcrumbs/]
         <form method="post" name="viewofficehierarchy" action="viewOfficeHierarchy.ftl">
             <div class="margin20lefttop">
                 <div class="fontBold"><span class="orangeheading">[@spring.message "admin.viewofficehierarchy"/]</span>

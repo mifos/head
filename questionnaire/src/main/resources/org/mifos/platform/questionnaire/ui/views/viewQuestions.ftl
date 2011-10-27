@@ -23,7 +23,7 @@
 <span id="page.id" title="view_questions"></span>
 <div class=" content">
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":""}/]
-[@mifos.crumbpairs breadcrumb/]
+[@widget.crumbpairs breadcrumb/]
     <div class="content_panel">
         <p class="font15 orangeheading margin5top10bottom">
         [@spring.message "questionnaire.view.questions"/]
@@ -31,7 +31,7 @@
 
         <p>
         [@spring.message "questionnaire.create.question.prompt"/]&nbsp;
-        [@mifos.mlink dest="createQuestion.ftl"][@spring.message "questionnaire.create.question.link"/][/@mifos.mlink]
+        [@i18n.mlink dest="createQuestion.ftl"][@spring.message "questionnaire.create.question.link"/][/@i18n.mlink]
         </p>
         <ul class="questions">
             [#list questions as question]

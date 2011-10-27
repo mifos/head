@@ -18,10 +18,8 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
 
-[@mifos.header "login" /]
+[@layout.header "login" /]
 <span id="page.id" title="changePassword"></span>
 <div class="container">&nbsp;
     <!--Header-->
@@ -80,4 +78,4 @@
         <!-- page-content -->
     </div>
 </div>
-[@mifos.footer /]
+[@layout.footer /]

@@ -45,7 +45,7 @@ function addExportListLink(listStartDay, totalNumberOfExports) {
 </script>
 
 <div class="content "> <!--  Main Content Begins-->
-   [@mifos.crumbs breadcrumbs /]
+   [@widget.crumbs breadcrumbs /]
  <div class="margin10lefttop">
 
         <p class="font15 orangeheading margin5topbottom">[@spring.message "accounting.viewaccountingexports"/]</p>

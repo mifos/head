@@ -23,7 +23,7 @@
    <!--  Main Content Begins-->
   <div class=" content">
   <span id="page.id" title="customizeTextEdit"></span>
-    [@mifos.flowCrumbs breadcrumbs/]
+    [@widget.flowCrumbs breadcrumbs/]
     
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 	<div class="fontBold"><span class="orangeheading">[@spring.message "customizeTextEdit.title"/]</span></div>

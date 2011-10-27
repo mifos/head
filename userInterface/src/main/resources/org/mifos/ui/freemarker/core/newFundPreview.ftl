@@ -18,10 +18,8 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-[@mifos.header "title" /]
-[@mifos.topNavigationNoSecurity currentTab="Admin" /]
+[@layout.header "title" /]
+[@widget.topNavigationNoSecurity currentTab="Admin" /]
 <!--  Container Begins-->
 <span id="page.id" title="newFundPreview"></span>
 <div class="content definePageMargin">
@@ -42,7 +40,7 @@
 
                     <div>[@spring.message "reviewtheinformationbelow.ClickSubmitifyouaresatisfiedorclickEdittomakechanges.ClickCanceltoreturntoAdminpagewithoutsubmittinginformation"/]</div>
                 [@spring.bind "formBean"/]
-                [@mifos.showAllErrors "formBean.*"/]
+                [@form.showAllErrors "formBean.*"/]
                     <div class="marginLeft30">
                         <ul class="error">
                         [#if error?exists]
@@ -92,4 +90,4 @@
 <!--Main Content Ends-->
 </div>
 <!--Container Ends-->
-[@mifos.footer/]
+[@layout.footer/]

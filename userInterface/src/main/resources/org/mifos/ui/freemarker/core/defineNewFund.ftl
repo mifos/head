@@ -18,11 +18,8 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-[#import "macros.ftl" as mifosMacros]
-[@mifos.header "title" /]
-[@mifos.topNavigationNoSecurity currentTab="Admin" /]
+[@layout.header "title" /]
+[@widget.topNavigationNoSecurity currentTab="Admin" /]
 <!--  Main Content Begins-->
 <span id="page.id" title="newFund"></span>
 <div class="content definePageMargin">
@@ -43,7 +40,7 @@
                     <div class="font9pt">[@spring.message "organizationPreferences.definenewfund.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminpagewithoutsubmittinginformation"/]</div>
                     <div class="font9pt"><span
                             class="red">*</span>[@spring.message "fieldsmarkedwithanasteriskarerequired"/] </div>
-                [@mifos.showAllErrors "formBean.*"/]
+                [@form.showAllErrors "formBean.*"/]
                     <br/>
 
                     <p class="fontBold margin10topbottom">[@spring.message "organizationPreferences.definenewfund.funddetails"/] </p>
@@ -60,7 +57,7 @@
                         <div class="span-20 "><span class="span-3 rightAlign"><span
                                 class="red">* </span>[@spring.message "organizationPreferences.definenewfund.fundCode"/]:</span><span
                                 class="span-5">&nbsp;
-                        [@mifos.formSingleSelectWithPrompt "formBean.codeId", code,"--selectone--" /]
+                        [@form.formSingleSelectWithPrompt "formBean.codeId", code,"--selectone--" /]
                     </span>
                         </div>
                     </div>
@@ -77,4 +74,4 @@
     </div>
 </div>
 <!--Main Content Ends-->
-[@mifos.footer/]
+[@layout.footer/]

@@ -23,7 +23,7 @@
 <!--  Main Content Begins-->
 <div class="customized-text content">
 	<span id="page.id" title="customizeTextView"></span>
-	[@mifos.flowCrumbs breadcrumbs/]
+	[@widget.flowCrumbs breadcrumbs/]
 	        
 	<form action="${flowExecutionUrl}" method="post" class="two-column">
 		<div class="fontBold"><span class="orangeheading">[@spring.message "customizeTextView.customizedTextList"/]</span></div>

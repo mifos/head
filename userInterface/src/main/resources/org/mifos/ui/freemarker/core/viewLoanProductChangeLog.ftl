@@ -24,7 +24,7 @@
     <span id="page.id" title="viewLoanPrdChangeLog"></span>
       <div class=" content">
       [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "admin.viewLoanProducts":"viewLoanProducts.ftl",auditLog.name:"viewEditLoanProduct.ftl?productId=${auditLog.id}"}/]
-        [@mifos.editPageBreadcrumbs breadcrumb/]
+        [@widget.editPageBreadcrumbs breadcrumb/]
           <p class="font15 fontBold marginTop15"><span class="">${auditLog.name}</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "changeLog"/]</span></p>
           <div class="marginTop15">
               <span>[@spring.message "recordCreationDate"/]&nbsp;:</span><span>${auditLog.createdDate}</span>

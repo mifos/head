@@ -18,10 +18,7 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
 [#include "layout.ftl"]
-
 [@adminLeftPaneLayout]
 <span id="page.id" title="admin"></span>
 <div class="content_panel">
@@ -31,5 +28,5 @@
     </div>
 </div>
 
-[@mifos.footer /]
+[@layout.footer /]
 [/@adminLeftPaneLayout]

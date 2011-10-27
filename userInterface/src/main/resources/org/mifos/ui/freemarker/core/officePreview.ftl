@@ -24,7 +24,7 @@
       <form method="POST" action="officePreview.ftl" name="updateOfficePreview">
     <div class="span-24">
         [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "admin.viewOffices":"viewOffices.ftl","${officeFormBean.name}":"viewOfficeDetails.ftl?id=${officeFormBean.id}"}/]
-        [@mifos.editPageBreadcrumbs breadcrumb/]
+        [@widget.editPageBreadcrumbs breadcrumb/]
         <div class="clear">&nbsp;</div>
         <div class="fontBold"><span>${officeFormBean.name}</span>&nbsp;-&nbsp;<span class="orangeheading"> [@spring.message "offices.previewOffice.previewOfficeInformation"/]</span></div>
         <p><span>[@spring.message "offices.editOfficeInformation.previewthefieldsbelow.ThenclickConfirm.ClickCanceltoreturntoOfficeDetailswithoutsubmittinginformation"/]</span></p>

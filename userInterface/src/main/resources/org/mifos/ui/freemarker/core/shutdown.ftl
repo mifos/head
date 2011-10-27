@@ -24,7 +24,7 @@
 <!--  Main Content Begins-->
 <div class="content">
     <form method="post" name="shutdown" action="shutdown.ftl">
-        [@mifos.crumbs breadcrumbs /]
+        [@widget.crumbs breadcrumbs /]
         [@spring.bind "shutdownFormBean" /]
         <div class="marginLeft30">
             <div class="span-24">
@@ -34,7 +34,7 @@
                     <div class="span-23">
                         <span class="span-11">[@spring.message "systemAdministration.shutdown.welcometotheMifosshutdownmanagementArea" /].</span>
                     </div>
-                    [@mifos.showAllErrors "shutdownFormBean.*"/]
+                    [@form.showAllErrors "shutdownFormBean.*"/]
                     <div class="clear">&nbsp;</div>
                     <div class="span-23">
                         <span class="span-7">[@spring.message "systemAdministration.shutdown.shutdownStatus" /]</span>

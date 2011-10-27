@@ -18,8 +18,6 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
 
 <form method="POST" action="j_spring_security_check" id="login.form">
     <input type="text" name="j_username" placeholder="username"/>

@@ -23,7 +23,7 @@
 <!--  Main Content Begins-->
 <span id="page.id" title="viewProductCategories"></span>
 <div class="content">
-[@mifos.crumbs breadcrumbs/]
+[@widget.crumbs breadcrumbs/]
     <div style="margin-left:15px; margin-top:15px;">
         <p class="font15 orangeheading margin5topbottom">[@spring.message "manageProducts.viewProductCategories.viewproductcategories" /]</p>
 

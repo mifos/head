@@ -24,7 +24,7 @@
 [#assign inActive][@spring.message "questionnaire.inactive"/][/#assign]
 <div class="content">
 <div class="allErrorsDiv">
-    [@mifosmacros.showAllErrors "questionGroupForm.*"/]
+    [@form.showAllErrors "questionGroupForm.*"/]
 </div>
 <form name="createquestiongroupform"
       action="createQuestionGroup.ftl?execution=${flowExecutionKey}" method="POST">
@@ -32,7 +32,7 @@
      <ul class="form_content">
             <li id="questionGroupStatus" style="display: none;">
               <label for="active"><span class="red">*</span>[@spring.message "questionnaire.status"/]: </label>
-              [@mifosmacros.boolRadioButtons "questionGroupForm.active", {"true":active, "false":inActive},'','' /]
+              [@form.boolRadioButtons "questionGroupForm.active", {"true":active, "false":inActive},'','' /]
             </li>
             <li class="long_t_box">
                 <label for="title"><span class="red">*</span>[@spring.message
@@ -52,15 +52,15 @@
             <li>
                 <label for="eventSourceId"><span class="red">*</span>[@spring.message
                     "questionnaire.questionGroupAppliesTo"/]:</label>
-                [@mifosmacros.formMultiSelect "questionGroupForm.eventSourceIds", EventSources, '' /]
+                [@form.formMultiSelect "questionGroupForm.eventSourceIds", EventSources, '' /]
             </li>
             <li id="applyToAllLoansDiv">
                 <label for="applyToAllLoanProducts">[@spring.message "questionnaire.applyToAllLoanProducts"/]:</label>
-                [@mifosmacros.formCheckbox "questionGroupForm.applyToAllLoanProducts", ""/]
+                [@form.formCheckbox "questionGroupForm.applyToAllLoanProducts", ""/]
             </li>
             <li>
                 <label for="editable">[@spring.message "questionnaire.editable"/]:</label>
-                [@mifosmacros.formCheckbox "questionGroupForm.editable", ""/]
+                [@form.formCheckbox "questionGroupForm.editable", ""/]
             </li>
             <li class="long_t_box">
                 <label for="sectionName">[@spring.message "questionnaire.currentSectionTitle"/]:</label>
@@ -71,7 +71,7 @@
             </li>
             <li>
               <label for="addQuestionFlag">&nbsp;</label>
-              [@mifosmacros.boolRadioButtons "questionGroupForm.addQuestionFlag", {"false":selectQuestions, "true":addNewQuestion},'','' /]
+              [@form.boolRadioButtons "questionGroupForm.addQuestionFlag", {"false":selectQuestions, "true":addNewQuestion},'','' /]
             </li>
     </ul>
 
@@ -133,7 +133,7 @@
             <tr>
                 <td class="name">${sectionQuestion.text}</td>
                 <td align="center" valign="center" class="mandatory orderCenter">
-                    [@mifosmacros.formCheckbox "questionGroupForm.sections[${section_index}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
+                    [@form.formCheckbox "questionGroupForm.sections[${section_index}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
                 </td>
                 <td class="remove orderCenter">
                 [#if sectionQuestion_index gte section.initialCountOfQuestions]

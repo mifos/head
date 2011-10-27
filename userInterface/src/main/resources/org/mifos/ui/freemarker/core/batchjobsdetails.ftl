@@ -18,17 +18,15 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
 
-[@mifos.header "title" /]
-[@mifos.topNavigationNoSecurity currentTab="Admin" /]
+[@layout.header "title" /]
+[@widget.topNavigationNoSecurity currentTab="Admin" /]
 <div class="sidebar htTotal">
     [#include "adminLeftPane.ftl" /]
 </div>
 <!--  Main Content Begins-->
 <div class=" content leftMargin180">
-    [@mifos.crumbs breadcrumbs /]
+    [@widget.crumbs breadcrumbs /]
     [@spring.showErrors "<br>" /]
     <div class="marginLeft30">
         <div class="span-21 borderbtm">
@@ -45,4 +43,4 @@
     </div>
 </div>
 <!--Main Content Ends-->
-[@mifos.footer/]
+[@layout.footer/]

@@ -18,11 +18,8 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#import "spring.ftl" as spring]
-[#import "blueprintmacros.ftl" as mifos]
-[#import "macros.ftl" as mifosmacros]
-[@mifos.header "title" /]
-[@mifos.topNavigationNoSecurity currentTab="Admin" /]
+[@layout.header "title" /]
+[@widget.topNavigationNoSecurity currentTab="Admin" /]
   <div class="container">&nbsp;
   <!--  Main Content Begins-->
   <span id="page.id" title="previewProductsMix"></span>
@@ -83,4 +80,4 @@
   <!--Main Content Ends-->
 </div>
 <!--Container Ends-->
-[@mifos.footer/]
+[@layout.footer/]

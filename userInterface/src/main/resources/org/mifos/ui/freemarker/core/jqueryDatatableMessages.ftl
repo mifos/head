@@ -21,7 +21,6 @@
 
 [#-- See http://www.datatables.net/examples/advanced_init/language_file.html --]
 
-[#import "spring.ftl" as spring /]
 {
     "sProcessing":   "[@spring.message "jquery.datatables.processing" /]",
     "sLengthMenu":   "[@spring.message "jquery.datatables.hitsPerPageSelector" /]",

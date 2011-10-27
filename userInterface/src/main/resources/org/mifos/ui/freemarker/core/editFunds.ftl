@@ -26,7 +26,7 @@
         <div class="span-24">
         [@spring.bind "formBean.oldName"/]
             [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "organizationPreferences.viewfunds":"viewFunds.ftl",spring.status.value?default(""):""}/]
-        [@mifos.crumbpairs breadcrumb/]
+        [@widget.crumbpairs breadcrumb/]
             <div class="margin20lefttop">
 
                 <p class="font15 margin10bottom"><span name="name"
@@ -36,7 +36,7 @@
 
                 <div>[@spring.message "organizationPreferences.viewFunds.edit.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoViewfundspagewithoutsubmittinginformation."/]</div>
                 <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired"/] </div>
-            [@mifos.showAllErrors "formBean.*"/]
+            [@form.showAllErrors "formBean.*"/]
                 <p>&nbsp;</p>
 
                 <p class="fontBold">[@spring.message "organizationPreferences.viewFunds.edit.funddetails"/]</p>

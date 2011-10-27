@@ -24,7 +24,7 @@
    <div>
   <div class=" content">
   [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "organizationPreferences.viewfunds":"viewFunds.ftl"}/]
-    [@mifos.crumbpairs breadcrumb/]
+    [@widget.crumbpairs breadcrumb/]
           <p class="fontBold">[@spring.message "manageProducts.defineProductmix.productmixdetails"/] </p>
           <form name="productsmixform" id="productsmixform" method="post" action="previewProductMix.ftl">
             <div class="span-21">
