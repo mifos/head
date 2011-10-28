@@ -47,6 +47,7 @@
     <script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
     <script type="text/javascript" src="pages/js/jquery/jquery.validate.min.js"></script>
     <script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
+    <script type="text/javascript" src="pages/js/lab.js"></script>
     </head>
     <body>
 [/#macro]
