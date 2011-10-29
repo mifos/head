@@ -59,7 +59,7 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
-                            <finalName>mifos-exec</finalName>
+                            <finalName>mifos</finalName>
                             <appendAssemblyId>false</appendAssemblyId>
                             <descriptors>
                                 <descriptor>src/main/assembly/execwar.xml</descriptor>
