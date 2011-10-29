@@ -175,7 +175,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         for(String key : envMap.keySet()) {
             env += key + " : " +envMap.get(key) +"\n";
         }
-        logger.info(env);
+        logger.info("Dump of all OS/System Environment Variables: " + env);
     }
 
     public void init(ServletContextEvent servletContextEvent) {

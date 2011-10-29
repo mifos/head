@@ -22,6 +22,7 @@ package org.mifos.framework.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,7 +43,6 @@ import org.springframework.core.io.Resource;
  */
 public class ConfigurationLocator {
     public static final String LOCATOR_ENVIRONMENT_PROPERTY_NAME = "MIFOS_CONF";
-    private static final String CURRENT_WORKING_DIRECTORY_PATH = "";
     private static final String LOCATOR_SYSTEM_PROPERTY_NAME = "mifos.conf";
     private static final String HOME_PROPERTY_NAME = "user.home";
     private static final String MIFOS_USER_CONFIG_DIRECTORY_NAME = ".mifos";
@@ -70,7 +70,7 @@ public class ConfigurationLocator {
     // TODO It may be clearer if this returned an URI or URL instead of a String?
     public String getCustomFilePath(String filename) throws IOException {
         String returnValue = filename;
-        LOGGER.info("Checking existance of : " + filename);
+        LOGGER.debug("Checking existance of : " + filename);
         Resource configFile = getResource(filename);
         if(configFile != null && configFile.exists()) {
             returnValue = configFile.getURL().toExternalForm();
@@ -99,13 +99,17 @@ public class ConfigurationLocator {
 
     @SuppressWarnings({"PMD.OnlyOneReturn"})
     public String getConfigurationDirectory() {
-        for (String directoryPath : getDirectoriesToSearch()) {
+        String[] directoriesToSearch = getDirectoriesToSearch();
+		for (String directoryPath : directoriesToSearch) {
             if (directoryExists(directoryPath)) {
                 LOGGER.info("ConfigurationLocator found configuration directory: " + directoryPath);
                 return directoryPath;
             }
         }
-        return CURRENT_WORKING_DIRECTORY_PATH;
+        LOGGER.warn("ConfigurationLocator could not find configuration directory (tried: " 
+        		+ Arrays.asList(directoriesToSearch).toString() 
+        		+ "), going to return current working dir, but you really should set one...");
+        return new File(".").getAbsolutePath();
     }
 
     @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "PMD.OnlyOneReturn"})
@@ -148,7 +152,12 @@ public class ConfigurationLocator {
      */
     public Resource getResource(String configurationName) throws IOException {
         Resource res = getConfigurationResource(configurationName);
-        LOGGER.info("ConfigurationLocator found configuration in resource: " + res.getDescription());
+        // Spring always returns a Resource, even if it doesn't exist; it's clearer to only log if:
+        if (res.exists()) {
+            LOGGER.info("ConfigurationLocator found configuration in resource: " + res.getDescription());
+        } else {
+            LOGGER.debug("ConfigurationLocator looked for, but did not find, a configuration in resource: " + res.getDescription());
+        }
         return res;
     }
 
