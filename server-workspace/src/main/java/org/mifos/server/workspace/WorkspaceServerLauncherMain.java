@@ -23,9 +23,9 @@ package org.mifos.server.workspace;
 /**
  * Main class.
  * 
- * This is simple, and useful e.g. within Eclipse.
+ * This is a simple Server Starter, and useful e.g. within Eclipse.
  * 
- * @see ch.vorburger.modudemo.server.launcher.Launcher
+ * It expects Jetty and the Application to be on classpath (not packaged in a WAR).
  * 
  * @author Michael Vorburger
  */

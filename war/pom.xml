@@ -15,45 +15,77 @@
     </parent>
 
     <dependencies>
+        <!-- mifos-webapp has everything needed for the "normal" (non-executable) 
+            WAR. -->
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-webapp</artifactId>
         </dependency>
+
+        <!-- mifos-server-jetty has the parts that will need to be 'overlaid' 
+            to the normal WAR to build the executable WAR. Note how the <scope>provided</scope> 
+            means it won't be added into WEB-INF/lib of the "normal" (non-executable) 
+            WAR. -->
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-server-jetty</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
-        <finalName>mifos</finalName>
+        <finalName>mifos-TEMP-nonexec</finalName>
         <defaultGoal>war:war</defaultGoal>
 
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-3</version>
                 <executions>
                     <execution>
-                        <phase>install</phase>
+                        <id>execwar</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <configuration>
+                            <finalName>mifos-exec</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>src/main/assembly/execwar.xml</descriptor>
+                            </descriptors>
+                            <archive>
+                                <manifest>
+                                    <mainClass>org.mifos.server.ExecutableWARServerLauncherMain</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>release</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>mifos-${env.BUILD_TAG}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>src/main/assembly/release.xml</descriptor>
+                            </descriptors>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <finalName>mifos-${env.BUILD_TAG}</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <descriptors>
-                        <descriptor>src/main/assembly/release.xml</descriptor>
-                    </descriptors>
-                    <outputDirectory>target</outputDirectory>
-                    <workDirectory>target/assembly/work</workDirectory>
-                </configuration>
             </plugin>
         </plugins>
     </build>

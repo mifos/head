@@ -28,7 +28,8 @@ import org.eclipse.jetty.webapp.WebAppContext;
 /**
  * WAR-based Jetty-based web application starter.
  * 
- * Web Application is not on the classpath here, File-based WAR must be given.
+ * Jetty is on the Classpath here.
+ * Web Application is not on the classpath here, File-based WAR must be given as argument.
  * 
  * @author Michael Vorburger
  */

@@ -16,4 +16,5 @@ docs/
 !.gitignore
 out/*
 *.sql
-war/targetEclipse/
+targetEclipse
+.metadata/

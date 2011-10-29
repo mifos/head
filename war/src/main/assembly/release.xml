@@ -30,7 +30,7 @@
             <destName>local.properties</destName>
         </file>
         <file>
-            <source>target/mifos.war</source>
+            <source>target/mifos-exec.war</source>
             <outputDirectory/>
             <destName>mifos.war</destName>
         </file>

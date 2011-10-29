@@ -9,45 +9,26 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>mifos-war-test</artifactId>
-    <name>Mifos - Test of packaged WAR</name>
-    <description>Integration tests the packaged WAR</description>
+    <artifactId>mifos-war-test-exec</artifactId>
+
+    <name>Mifos - Test of packaged Executable WAR</name>
+    <description>Integration tests the packaged Executable WAR</description>
 
     <dependencies>
+
         <!-- Mifos Application must not be listed as dependency here! -->
 
-        <!-- Jetty Server -->
-        <dependency>
-            <groupId>org.mifos</groupId>
-            <artifactId>mifos-server-jetty</artifactId>
-        </dependency>
-
+        <!-- Jetty Server must not be listed as dependency here! -->
+        
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-
- 		<!-- Selenium 2.0 (WebDriver) -->
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <scope>test</scope>
-        </dependency>
-        
-        <!-- Mifos Application must not be listed as dependency here! -->
     </dependencies>
-
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
-				</configuration>
-			</plugin>
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
