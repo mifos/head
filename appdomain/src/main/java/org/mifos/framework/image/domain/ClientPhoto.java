@@ -11,7 +11,6 @@ import org.mifos.framework.business.AbstractEntity;
 
 @Entity
 public class ClientPhoto extends AbstractEntity {
-
     private static final long serialVersionUID = 1L;
 
     @Id
