@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.testhelpers;
 
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductConfirmationPage;
+import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPage;
 import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
 
 import com.thoughtworks.selenium.Selenium;
@@ -42,6 +43,12 @@ public class SavingsProductHelper {
             .submitAndNavigateToDefineNewSavingsProductConfirmationPage();
 
         return confirmationPage;
+    }
+    
+    public DefineNewSavingsProductPage getDefineSavingsProductPageWithValidationErrors(SavingsProductParameters productParameters){
+        return navigationHelper
+            .navigateToAdminPage()
+            .navigateToDefineSavingsProduct().submitWithValidationErrors(productParameters);       
     }
 
     /**
@@ -106,6 +113,16 @@ public class SavingsProductHelper {
         params.setStartDateDD("15");
         params.setStartDateMM("2");
         params.setStartDateYYYY("2011");
+        return params;
+    }
+    
+    public SavingsProductParameters getInvalidSavingsProductParameters(int typeOfDeposits, int applicableFor){
+        SavingsProductParameters params = this.getGenericSavingsProductParameters(typeOfDeposits, applicableFor);
+        params.setNumberOfDaysOrMonthsForInterestCalculation("0");
+        params.setFrequencyOfInterestPostings("0");
+        params.setAmountAppliesTo(0);
+        params.setMandatoryAmount("0.0");
+        params.setInterestRate("120");
         return params;
     }
 }
