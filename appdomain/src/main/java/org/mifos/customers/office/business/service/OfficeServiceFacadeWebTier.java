@@ -20,6 +20,8 @@
 package org.mifos.customers.office.business.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -158,10 +160,18 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
                 branchOffices.add(officeDto);
             }
         }
+        
+        // sort branch offices by parent due to UI dependency on this.
+        Collections.sort(branchOffices, new Comparator<OfficeDto>() {
+            @Override
+			public int compare(OfficeDto first, OfficeDto next) {
+                return first.getParentId().compareTo(next.getParentId());
+            }
+        });
 
         return branchOffices;
     }
-
+    
     private List<OfficeDto> areaOffices(List<OfficeDto> allOffices) {
         List<OfficeDto> areaOffices = new ArrayList<OfficeDto>();
 
@@ -170,6 +180,14 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
                 areaOffices.add(officeDto);
             }
         }
+        
+        // sort branch offices by parent due to UI dependency on this.
+        Collections.sort(areaOffices, new Comparator<OfficeDto>() {
+            @Override
+			public int compare(OfficeDto first, OfficeDto next) {
+                return first.getParentId().compareTo(next.getParentId());
+            }
+        });
 
         return areaOffices;
     }
@@ -182,6 +200,14 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
                 divisionalOffices.add(officeDto);
             }
         }
+        
+        // sort branch offices by parent due to UI dependency on this.
+        Collections.sort(divisionalOffices, new Comparator<OfficeDto>() {
+            @Override
+			public int compare(OfficeDto first, OfficeDto next) {
+                return first.getParentId().compareTo(next.getParentId());
+            }
+        });
 
         return divisionalOffices;
     }
@@ -194,6 +220,14 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
                 regionalOffices.add(officeDto);
             }
         }
+        
+        // sort branch offices by parent due to UI dependency on this.
+        Collections.sort(regionalOffices, new Comparator<OfficeDto>() {
+            @Override
+			public int compare(OfficeDto first, OfficeDto next) {
+                return first.getParentId().compareTo(next.getParentId());
+            }
+        });
 
         return regionalOffices;
     }

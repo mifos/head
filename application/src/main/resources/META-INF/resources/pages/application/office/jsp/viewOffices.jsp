@@ -294,6 +294,7 @@ explanation of the license and how it is applied.
 									<c:forEach var="branchOffice" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'branchOfficeList')}" varStatus="counter">
 										<c:if test="${ !empty parentOffice  && parentOffice != branchOffice.parentOfficeName}">
 											<br>
+											<c:set var="parentOffice" value="${branchOffice.parentOfficeName}" />
 											<span class="fontnormal"><c:out value="${branchOffice.parentOfficeName}" /></span>
 										</c:if>
 										<c:if test="${empty parentOffice}">
