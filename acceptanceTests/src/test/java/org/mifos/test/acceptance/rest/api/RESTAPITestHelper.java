@@ -43,6 +43,7 @@ public class RESTAPITestHelper {
     public static class Type {
         public static final String CLIENT = "client";
         public static final String PERSONNEL = "personnel";
+        public static final String SYSTEM = "admin/system";
         public static final String LOAN_REPAYMENT = "account/loan/repay";
         public static final String SAVINGS_DEPOSIT = "account/savings/deposit";
     }
