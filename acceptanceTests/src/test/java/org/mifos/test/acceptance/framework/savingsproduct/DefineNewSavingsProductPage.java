@@ -20,7 +20,11 @@
 
 package org.mifos.test.acceptance.framework.savingsproduct;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -172,7 +176,7 @@ public class DefineNewSavingsProductPage extends MifosPage {
 
 
     }
-    public DefineNewSavingsProductPreviewPage submitAndNavigateToDefineNewSavingsProductPreviewPage(SavingsProductParameters productParameters) {
+    public void fillForm(SavingsProductParameters productParameters){
         selenium.type("CreateSavingsProduct.input.prdOfferingName", productParameters.getProductInstanceName());
         selenium.type("CreateSavingsProduct.input.prdOfferingShortName", productParameters.getShortName());
         selenium.type("startDateDD", productParameters.getStartDateDD());
@@ -195,11 +199,33 @@ public class DefineNewSavingsProductPage extends MifosPage {
         selenium.type("interestPostingMonthlyFrequency", productParameters.getFrequencyOfInterestPostings());
 
         selectIfNotEmpty("selectedPrincipalGlCode", productParameters.getGlCodeForDeposit());
-        selectIfNotEmpty("selectedInterestGlCode", productParameters.getGlCodeForInterest());
+        selectIfNotEmpty("selectedInterestGlCode", productParameters.getGlCodeForInterest()); 
+    }
+    public DefineNewSavingsProductPreviewPage submitAndNavigateToDefineNewSavingsProductPreviewPage(SavingsProductParameters productParameters) {
+        fillForm(productParameters);
 
         selenium.click("CreateSavingsProduct.button.preview");
         waitForPageToLoad();
 
         return new DefineNewSavingsProductPreviewPage(selenium);
+    }
+    public DefineNewSavingsProductPage submitWithValidationErrors(SavingsProductParameters productParameters){
+        fillForm(productParameters);
+
+        selenium.click("CreateSavingsProduct.button.preview");
+        waitForPageToLoad();
+        
+        return new DefineNewSavingsProductPage(selenium);
+    }
+    
+    public void verifyValidationErrors(String... expectedErrorMessages){
+        List<String> resultErrorMessages = new ArrayList<String>();
+        for (int i = 1; i <= selenium.getXpathCount("//ul[@class='error']/li").intValue(); i ++ ){
+            resultErrorMessages.add(selenium.getText("xpath=//ul[@class='error']/li["+i+"]/b"));
+        }
+
+        for ( String error : expectedErrorMessages ){
+            Assert.assertTrue(resultErrorMessages.contains(error));
+        }
     }
 }
