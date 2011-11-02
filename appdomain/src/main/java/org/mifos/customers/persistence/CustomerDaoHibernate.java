@@ -1627,6 +1627,22 @@ public class CustomerDaoHibernate implements CustomerDao {
         return activeClients;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<ClientBO> findActiveClientsWithoutGroupForLoanOfficer(Short loanOfficerId, Short officeId) {
+
+        List<ClientBO> activeClients = new ArrayList<ClientBO>();
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("PERSONNEL_ID", loanOfficerId);
+        queryParameters.put("OFFICE_ID", officeId);
+        List<ClientBO> queryResult = (List<ClientBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.ACTIVE_CLIENTS_WITHOUT_GROUP_FOR_LOAN_OFFICER, queryParameters);
+        if (queryResult != null) {
+            activeClients.addAll(queryResult);
+        }
+        return activeClients;
+    }
+
     @Override
     public void save(CustomerCheckListBO customerChecklist) {
         this.genericDao.createOrUpdate(customerChecklist);
