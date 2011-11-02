@@ -44,6 +44,7 @@ public class RESTAPITest extends UiTestCaseBase {
 
     public static final String CLIENT_GLOBAL_ID = "0002-000000003";
     public static final String PERSONNEL_CURRENT_ID = "current";
+    public static final String SYSTEM_INFORMATION_ID = "information";
     public static final String LOAN_ACCOUNT_GLOBAL_ID = "000100000000004";
     public static final String SAVINGS_ACCOUNT_GLOBAL_ID = "000100000000006";
 
@@ -109,6 +110,19 @@ public class RESTAPITest extends UiTestCaseBase {
         jsonAssert.assertEqual("recentPersonnelNotes");
         jsonAssert.assertEqual("preferredLocaleLanguageName");
         jsonAssert.assertEqual("preferredLanguageId");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly")
+    public void systemByInformationId() throws Exception {
+        String type = Type.SYSTEM;
+        String by = By.ID;
+        String value = SYSTEM_INFORMATION_ID;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
+        jsonAssert.assertEqual("applicationVersion");
+        jsonAssert.assertEqual("databaseVendor");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
