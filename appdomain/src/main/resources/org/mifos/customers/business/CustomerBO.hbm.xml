@@ -1433,6 +1433,12 @@
     <query name="numberOfMeetingsMissed">
                        <![CDATA[select count(*) from org.mifos.customers.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > date(:DATEONEYEARBEFORE) and customerAttendance.attendance in (2,3) and customerAttendance.customer.customerId=:CUSTOMERID )]]>
     </query>
+    <query name="Customer.getActiveClientsWithoutGroupForLoanOfficer">
+        <![CDATA[from org.mifos.customers.client.business.ClientBO as client
+                 where client.parentCustomer is null and client.office.officeId = :OFFICE_ID and
+                 client.personnel.personnelId = :PERSONNEL_ID
+                 and client.customerStatus.id in (3) order by client.customerActivationDate]]>
+    </query>
     <query name="Customer.getActiveClientsUnderParent">
         <![CDATA[from org.mifos.customers.client.business.ClientBO as client
                  where client.searchId like :SEARCH_STRING and client.office.officeId = :OFFICE_ID
