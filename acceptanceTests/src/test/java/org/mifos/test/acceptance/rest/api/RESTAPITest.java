@@ -114,6 +114,20 @@ public class RESTAPITest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
+    public void personnelClientsByCurrentId() throws Exception {
+        String type = Type.PERSONNEL_CLIENTS;
+        String by = By.ID;
+        String value = PERSONNEL_CURRENT_ID;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
+        jsonAssert.assertEqual("centers");
+        jsonAssert.assertEqual("groups");
+        jsonAssert.assertEqual("clients");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly")
     public void systemByInformationId() throws Exception {
         String type = Type.SYSTEM;
         String by = By.ID;
