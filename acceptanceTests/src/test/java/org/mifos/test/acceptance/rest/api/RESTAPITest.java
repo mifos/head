@@ -147,8 +147,48 @@ public class RESTAPITest extends UiTestCaseBase {
         String value = LOAN_ACCOUNT_GLOBAL_ID;
         String actualJSON = helper.getJSONFromUI(type, by, value);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
-        ObjectMapper mapper = helper.getObjectMapper();
-        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
+        AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
+        jsonAssert.assertEqual("accountFees");
+        jsonAssert.assertEqual("accountFlagNames");
+        jsonAssert.assertEqual("accountId");
+        jsonAssert.assertEqual("accountStateId");
+        jsonAssert.assertEqual("accountStateName");
+        jsonAssert.assertEqual("accountSurveys");
+        jsonAssert.assertEqual("accountTypeId");
+        jsonAssert.assertEqual("activeSurveys");
+        jsonAssert.assertEqual("businessActivityId");
+        jsonAssert.assertEqual("collateralNote");
+        jsonAssert.assertEqual("collateralTypeId");
+        jsonAssert.assertEqual("customerId");
+        jsonAssert.assertEqual("customerName");
+        jsonAssert.assertEqual("disbursed");
+        jsonAssert.assertEqual("externalId");
+        jsonAssert.assertEqual("fundName");
+        jsonAssert.assertEqual("globalAccountNum");
+        jsonAssert.assertEqual("globalCustNum");
+        jsonAssert.assertEqual("gracePeriodDuration");
+        jsonAssert.assertEqual("gracePeriodTypeName");
+        jsonAssert.assertEqual("group");
+        jsonAssert.assertEqual("interestDeductedAtDisbursement");
+        jsonAssert.assertEqual("interestRate");
+        jsonAssert.assertEqual("interestTypeName");
+        jsonAssert.assertEqual("loanActivityDetails");
+        jsonAssert.assertEqual("loanSummary");
+        jsonAssert.assertEqual("maxNoOfInstall");
+        jsonAssert.assertEqual("minNoOfInstall");
+        jsonAssert.assertEqual("nextMeetingDate");
+        jsonAssert.assertEqual("noOfInstallments");
+        jsonAssert.assertEqual("officeId");
+        jsonAssert.assertEqual("officeName");
+        jsonAssert.assertEqual("performanceHistory");
+        jsonAssert.assertEqual("personnelId");
+        jsonAssert.assertEqual("prdOfferingName");
+        jsonAssert.assertEqual("prinDueLastInst");
+        jsonAssert.assertEqual("recurAfter");
+        jsonAssert.assertEqual("recurrenceId");
+        jsonAssert.assertEqual("redone");
+        jsonAssert.assertEqual("totalAmountDue");
+        jsonAssert.assertEqual("totalAmountInArrears");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -159,8 +199,26 @@ public class RESTAPITest extends UiTestCaseBase {
         String value = SAVINGS_ACCOUNT_GLOBAL_ID;
         String actualJSON = helper.getJSONFromUI(type, by, value);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
-        ObjectMapper mapper = helper.getObjectMapper();
-        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
+        AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
+        jsonAssert.assertEqual("globalAccountNum");
+        jsonAssert.assertEqual("amountForDeposit");
+        jsonAssert.assertEqual("depositGlCode");
+        jsonAssert.assertEqual("depositGlCodeValue");
+        jsonAssert.assertEqual("depositType");
+        jsonAssert.assertEqual("groupMandatorySavingsAccount");
+        jsonAssert.assertEqual("groupMandatorySavingsType");
+        jsonAssert.assertEqual("interestCalculationFrequency");
+        jsonAssert.assertEqual("interestCalculationFrequencyPeriod");
+        jsonAssert.assertEqual("interestCalculationType");
+        jsonAssert.assertEqual("interestGlCode");
+        jsonAssert.assertEqual("interestGlCodeValue");
+        jsonAssert.assertEqual("interestPostingMonthlyFrequency");
+        jsonAssert.assertEqual("interestRate");
+        jsonAssert.assertEqual("maxWithdrawal");
+        jsonAssert.assertEqual("minBalanceForInterestCalculation");
+        jsonAssert.assertEqual("openSavingsAccountsExist");
+        jsonAssert.assertEqual("recentNoteDtos");
+        jsonAssert.assertEqual("recommendedOrMandatoryAmount");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
