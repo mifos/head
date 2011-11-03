@@ -30,6 +30,7 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
@@ -38,6 +39,8 @@ import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
+import org.mifos.dto.screen.LoanAccountInfoDto;
+import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +56,9 @@ public class LoanAccountRESTController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private LoanAccountServiceFacade loanAccountServiceFacade;
 
     @Autowired
     private LoanDao loanDao;
@@ -108,5 +114,11 @@ public class LoanAccountRESTController {
         map.put("outstandingBeforePayment", outstandingBeforePayment.toString());
         map.put("outstandingAfterPayment", loan.getLoanSummary().getOutstandingBalance().toString());
         return map;
+    }
+
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}", method = RequestMethod.GET)
+    public final @ResponseBody
+    LoanInformationDto getLoanByNumber(@PathVariable String globalAccountNum) throws Exception {
+        return loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
     }
 }
