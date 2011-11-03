@@ -120,24 +120,12 @@ public class PersonnelRESTController {
             return centers;
         }
 
-        public void setCenters(List<CenterDescription> centers) {
-            this.centers = centers;
-        }
-
         public List<GroupDescription> getGroups() {
             return groups;
         }
 
-        public void setGroups(List<GroupDescription> groups) {
-            this.groups = groups;
-        }
-
         public List<ClientDescription> getClients() {
             return clients;
-        }
-
-        public void setClients(List<ClientDescription> clients) {
-            this.clients = clients;
         }
     }
 
@@ -174,10 +162,6 @@ public class PersonnelRESTController {
         public List<GroupDescription> getGroups() {
             return groups;
         }
-
-        public void setGroups(List<GroupDescription> groups) {
-            this.groups = groups;
-        }
     }
 
     static class GroupDescription {
@@ -212,10 +196,6 @@ public class PersonnelRESTController {
 
         public List<ClientDescription> getClients() {
             return clients;
-        }
-
-        public void setClients(List<ClientDescription> clients) {
-            this.clients = clients;
         }
     }
 
