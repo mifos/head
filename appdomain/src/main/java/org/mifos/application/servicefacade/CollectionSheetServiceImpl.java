@@ -343,7 +343,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
         }
 
-        return new CollectionSheetDto(populatedCollectionSheetCustomer);
+        return new CollectionSheetDto(populatedCollectionSheetCustomer, transactionDate);
     }
 
     /*

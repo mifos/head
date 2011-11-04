@@ -30,6 +30,7 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsDao;
+import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
@@ -37,9 +38,13 @@ import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PaymentTypeDto;
+import org.mifos.dto.domain.SavingsAccountDetailDto;
 import org.mifos.dto.domain.UserReferenceDto;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.MifosUser;
+import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -53,6 +58,9 @@ public class SavingsAccountRESTController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private SavingsServiceFacade savingsServiceFacade;
 
     @Autowired
     private SavingsDao savingsDao;
@@ -111,5 +119,13 @@ public class SavingsAccountRESTController {
         map.put("balanceBeforePayment", balanceBeforePayment.toString());
         map.put("balanceAfterPayment", savingsBO.getSavingsBalance().toString());
         return map;
+    }
+
+    @RequestMapping(value = "/account/savings/num-{globalAccountNum}", method = RequestMethod.GET)
+    public final @ResponseBody
+    SavingsAccountDetailDto getSavingsByNumber(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
+        SavingsBO savings = this.savingsDao.findBySystemId(globalAccountNum);
+        savings.setUserContext((UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession()));
+        return savingsServiceFacade.retrieveSavingsAccountDetails(savings.getAccountId().longValue());
     }
 }

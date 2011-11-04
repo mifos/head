@@ -387,6 +387,7 @@ public interface NamedQueryConstants {
 
     String ACTIVE_CLIENTS_UNDER_PARENT = "Customer.getActiveClientsUnderParent";
     String ACTIVE_CLIENTS_UNDER_GROUP = "Customer.getActiveClientsUnderGroup";
+    String ACTIVE_CLIENTS_WITHOUT_GROUP_FOR_LOAN_OFFICER = "Customer.getActiveClientsWithoutGroupForLoanOfficer";
 
     // holiday handling
     String GET_OFFICE_HOLIDAYS = "holiday.getOfficeHolidays";

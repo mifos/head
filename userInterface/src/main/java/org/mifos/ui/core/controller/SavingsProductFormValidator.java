@@ -134,7 +134,7 @@ public class SavingsProductFormValidator implements Validator {
             errors.reject("NotEmpty.savingsProduct.selectedInterestCalculation");
         }
 
-        if (null == formBean.getInterestCalculationFrequency() ||
+        if (null == formBean.getInterestCalculationFrequency() || formBean.getInterestCalculationFrequency() < 1 ||
                 errorProcessor.getRejectedValue("interestCalculationFrequency") != null) {
             if (errorProcessor.getTarget() == null) {
                 errors.reject("NotNull.savingsProduct.interestCalculationFrequency");

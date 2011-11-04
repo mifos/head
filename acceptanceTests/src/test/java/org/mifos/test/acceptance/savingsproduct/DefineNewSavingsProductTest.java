@@ -26,6 +26,7 @@ import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchPar
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductConfirmationPage;
+import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPage;
 import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsProductHelper;
@@ -62,6 +63,17 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    public void validateDefineSavingsProductForm() throws Exception {
+        SavingsProductParameters params = savingsProductHelper.getInvalidSavingsProductParameters(SavingsProductParameters.MANDATORY, SavingsProductParameters.GROUPS);
+        params.setShortName("V140");
+        DefineNewSavingsProductPage newSavingsProductPage = savingsProductHelper.getDefineSavingsProductPageWithValidationErrors(params);
+        
+        newSavingsProductPage.verifyValidationErrors("Please specify the Time period for Interest calculation.", 
+                "Please specify the Frequency of Interest posting to accounts.", "Please specify the Interest rate. Interest must be in range (0-100).",
+                "Please specify a value greater than zero for Mandatory amount for deposit.", "Please select the Amount Applies to."
+                );
+    }
+    
     // http://mifosforge.jira.com/browse/MIFOSTEST-139
     public void createVoluntarySavingsProductForCenters() throws Exception {
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CENTERS);

@@ -86,7 +86,7 @@
         </property>
         <property name="defaultViews">
             <list>
-                <bean class="org.mifos.platform.rest.view.MifosMappingJacksonJsonView" />
+                <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
             </list>
         </property>
     </bean>
