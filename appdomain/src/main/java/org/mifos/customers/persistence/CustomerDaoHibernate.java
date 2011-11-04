@@ -102,10 +102,12 @@ import org.mifos.dto.screen.GroupDisplayDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.HibernateSearchException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.ChapterNum;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
@@ -207,6 +209,17 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put(FeeCategory.ALLCUSTOMERS.toString(), FeeCategory.ALLCUSTOMERS.getValue());
         queryParameters.put("CUSTOMER_CATEGAORY", FeeCategory.CENTER.getValue());
         return retrieveFeesApplicableTo(queryParameters);
+    }
+    
+    @Override
+    public Date getLastMeetingDateForCustomer(final Integer customerId) {
+        Date meetingDate = null;
+        Date actionDate = new DateTimeService().getCurrentJavaSqlDate();
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CUSTOMER_ID", customerId);
+        queryParameters.put("ACTION_DATE", actionDate);
+        meetingDate = (Date) genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_LAST_MEETINGDATE_FOR_CUSTOMER, queryParameters);
+        return meetingDate;
     }
 
     @Override

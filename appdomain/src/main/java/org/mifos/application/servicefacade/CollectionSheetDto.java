@@ -21,22 +21,31 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
+
 /**
  *
  */
 public class CollectionSheetDto {
 
     private final List<CollectionSheetCustomerDto> collectionSheetCustomer;
+    
+    private final LocalDate date;
 
-    public CollectionSheetDto(final List<CollectionSheetCustomerDto> collectionSheetCustomer) {
+    public CollectionSheetDto(final List<CollectionSheetCustomerDto> collectionSheetCustomer, LocalDate transactionDate) {
         this.collectionSheetCustomer = collectionSheetCustomer;
+        this.date = transactionDate;
     }
 
     public List<CollectionSheetCustomerDto> getCollectionSheetCustomer() {
         return this.collectionSheetCustomer;
     }
 
-    public void print() {
+    public LocalDate getDate() {
+		return date;
+	}
+
+	public void print() {
 
         doLog("");
         doLog("");

@@ -39,7 +39,6 @@ import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
-import org.mifos.dto.screen.LoanAccountInfoDto;
 import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
