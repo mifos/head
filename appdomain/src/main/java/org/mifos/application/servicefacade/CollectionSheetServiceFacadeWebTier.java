@@ -22,6 +22,7 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataDto;
@@ -204,7 +205,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 	public CollectionSheetEntryGridDto generateCollectionSheetEntryGridView(
             final CollectionSheetFormEnteredDataDto formEnteredDataDto, final MifosCurrency currency) {
 
-        final CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(formEnteredDataDto
+        final CollectionSheetDto collectionSheet = getCollectionSheet(formEnteredDataDto
                 .getCustomer().getCustomerId(), DateUtils.getLocalDateFromDate(formEnteredDataDto.getMeetingDate()));
 
         try {
@@ -219,6 +220,11 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+    
+    @Override
+    public CollectionSheetDto getCollectionSheet(Integer customerId, LocalDate meetingDate) {
+    	return collectionSheetService.retrieveCollectionSheet(customerId, meetingDate);
     }
 
     @Override
@@ -247,8 +253,14 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 	public CollectionSheetErrorsDto saveCollectionSheet(
             final CollectionSheetEntryGridDto previousCollectionSheetEntryDto, final Short userId) {
 
-        final SaveCollectionSheetDto saveCollectionSheet = new SaveCollectionSheetFromLegacyAssembler()
+        final SaveCollectionSheetDto saveCollectionSheetDto = new SaveCollectionSheetFromLegacyAssembler()
                 .fromWebTierLegacyStructuretoSaveCollectionSheetDto(previousCollectionSheetEntryDto, userId);
+
+        return saveCollectionSheet(saveCollectionSheetDto);
+    }
+    
+    @Override
+	public CollectionSheetErrorsDto saveCollectionSheet(final SaveCollectionSheetDto saveCollectionSheet) {
 
         CollectionSheetErrorsDto collectionSheetErrorsDto = null;
         try {

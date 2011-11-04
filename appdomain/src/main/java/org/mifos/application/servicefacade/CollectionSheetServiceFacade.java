@@ -19,6 +19,7 @@
  */
 package org.mifos.application.servicefacade;
 
+import org.joda.time.LocalDate;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataDto;
 import org.mifos.application.master.business.MifosCurrency;
@@ -47,5 +48,9 @@ public interface CollectionSheetServiceFacade {
             CollectionSheetDataDto dataView);
 
     CollectionSheetErrorsDto saveCollectionSheet(CollectionSheetEntryGridDto previousCollectionSheetEntryDto, Short userId);
+
+	CollectionSheetErrorsDto saveCollectionSheet(SaveCollectionSheetDto saveCollectionSheet);
+
+	CollectionSheetDto getCollectionSheet(Integer customerId, LocalDate meetingDate);
 
 }

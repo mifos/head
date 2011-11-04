@@ -233,4 +233,6 @@ public interface CustomerDao {
     List<ClientBO> findActiveClientsWithoutGroupForLoanOfficer(Short loanOfficerId, Short officeId);
 
     ClientBO findClientById(Integer integer);
+
+	Date getLastMeetingDateForCustomer(Integer customerId);
 }
