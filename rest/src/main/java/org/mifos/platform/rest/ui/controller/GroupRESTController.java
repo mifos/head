@@ -19,9 +19,7 @@
  */
 package org.mifos.platform.rest.ui.controller;
 
-import org.mifos.application.servicefacade.ClientServiceFacade;
 import org.mifos.application.servicefacade.GroupServiceFacade;
-import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.GroupInformationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
