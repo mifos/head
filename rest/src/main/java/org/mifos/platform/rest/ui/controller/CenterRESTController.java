@@ -19,8 +19,8 @@
  */
 package org.mifos.platform.rest.ui.controller;
 
-import org.mifos.application.servicefacade.GroupServiceFacade;
-import org.mifos.dto.screen.GroupInformationDto;
+import org.mifos.application.servicefacade.CenterServiceFacade;
+import org.mifos.dto.domain.CenterInformationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,14 +29,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class GroupRESTController {
+public class CenterRESTController {
 
     @Autowired
-    private GroupServiceFacade groupServiceFacade;
+    private CenterServiceFacade centerServiceFacade;
 
-    @RequestMapping(value = "group/num-{globalCustNum}", method = RequestMethod.GET)
+    @RequestMapping(value = "center/num-{globalCustNum}", method = RequestMethod.GET)
     public final @ResponseBody
-    GroupInformationDto getGroupByNumber(@PathVariable String globalCustNum) {
-        return groupServiceFacade.getGroupInformationDto(globalCustNum);
+    CenterInformationDto getCenterByNumber(@PathVariable String globalCustNum) {
+        return centerServiceFacade.getCenterInformationDto(globalCustNum);
     }
 }
