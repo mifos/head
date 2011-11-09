@@ -30,7 +30,7 @@ public class LoanDecliningInterestAnnualPeriodCalculatorForMonthlyRecurrence imp
          * FIXME - keithw - The use of monthly interest here does not distinguish between the 360 (with equal 30 day months) and the 365
          * day year cases. Should it?
          */
-        Integer period = recurEvery * 12;
+        Integer period = 12 / recurEvery;
         return period.doubleValue();
     }
 
