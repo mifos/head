@@ -1,0 +1,81 @@
+{
+   "address":{
+      "state":"",
+      "country":"",
+      "displayAddress":null,
+      "city":"",
+      "zip":"",
+      "phoneNumber":""
+   },
+   "customFields":[
+
+   ],
+   "customerMeeting":{
+      "meetingSchedule":"Recur every 1 Week(s) on Monday",
+      "meetingPlace":"rest"
+   },
+   "customerPositions":null,
+   "groupPerformanceHistory":{
+      "lastGroupLoanAmount":"0.0",
+      "portfolioAtRisk":"0.0",
+      "totalSavingsAmount":"105.0",
+      "avgLoanAmountForMember":"550.0",
+      "activeClientCount":"1",
+      "totalOutStandingLoanAmount":"1100.0",
+      "loanCycleCounters":[
+
+      ]
+   },
+   "customerFlags":[
+
+   ],
+   "recentCustomerNotes":[
+      {
+         "comment":"Active",
+         "commentDate":"2011-09-12",
+         "personnelName":"mifos"
+      }
+   ],
+   "activeSurveys":false,
+   "customerAccountSummary":{
+      "globalAccountNum":"000100000000002",
+      "nextDueAmount":"0.0"
+   },
+   "savingsAccountsInUse":null,
+   "customerSurveys":[
+
+   ],
+   "groupDisplay":{
+      "displayName":"Group-REST",
+      "branchId":2,
+      "customerId":2,
+      "loanOfficerId":2,
+      "globalCustNum":"0002-000000002",
+      "externalId":"",
+      "customerActivationDate":"2011-09-12",
+      "customerLevelId":2,
+      "customerStatusName":"Active",
+      "trainedDate":null,
+      "customerStatusId":9,
+      "loanOfficerName":"loan officer",
+      "parentCustomerDisplayName":"Client-REST",
+      "customerFormedByDisplayName":"loan officer",
+      "trained":false,
+      "blackListed":false
+   },
+   "clientsOtherThanClosedAndCancelled":[
+      {
+         "address":null,
+         "displayName":"Client REST API",
+         "customerId":3,
+         "searchId":"1.1.1.1",
+         "loanOfficerId":null,
+         "globalCustNum":"0002-000000003",
+         "externalId":null,
+         "loanOfficerIdAsString":null
+      }
+   ],
+   "loanAccountsInUse":[
+
+   ]
+}

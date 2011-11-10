@@ -69,6 +69,7 @@ public class PersonnelRESTController {
                 CenterDescription centerDescription = new CenterDescription();
                 centerDescription.setId(center.getCustomerId());
                 centerDescription.setDisplayName(center.getDisplayName());
+                centerDescription.setGlobalCustNum(center.getGlobalCustNum());
                 centerDescription.setSearchId(center.getSearchId());
                 hierarchy.getCenters().add(centerDescription);
             }
@@ -79,6 +80,7 @@ public class PersonnelRESTController {
             GroupDescription groupDescription = new GroupDescription();
             groupDescription.setId(group.getCustomerId());
             groupDescription.setDisplayName(group.getDisplayName());
+            groupDescription.setGlobalCustNum(group.getGlobalCustNum());
             groupDescription.setSearchId(group.getSearchId());
 
             for (ClientBO client : this.customerDao.findActiveClientsUnderParent(group.getSearchId(), loanOfficer.getOffice().getOfficeId())) {
@@ -132,6 +134,7 @@ public class PersonnelRESTController {
     static class CenterDescription {
         private Integer id;
         private String displayName;
+        private String globalCustNum;
         private String searchId;
         private List<GroupDescription> groups = new ArrayList<GroupDescription>();
 
@@ -151,6 +154,14 @@ public class PersonnelRESTController {
             this.displayName = displayName;
         }
 
+        public String getGlobalCustNum() {
+            return globalCustNum;
+        }
+
+        public void setGlobalCustNum(String globalCustNum) {
+            this.globalCustNum = globalCustNum;
+        }
+
         public String getSearchId() {
             return searchId;
         }
@@ -167,6 +178,7 @@ public class PersonnelRESTController {
     static class GroupDescription {
         private Integer id;
         private String displayName;
+        private String globalCustNum;
         private String searchId;
         private List<ClientDescription> clients = new ArrayList<ClientDescription>();
 
@@ -184,6 +196,14 @@ public class PersonnelRESTController {
 
         public void setDisplayName(String displayName) {
             this.displayName = displayName;
+        }
+
+        public String getGlobalCustNum() {
+            return globalCustNum;
+        }
+
+        public void setGlobalCustNum(String globalCustNum) {
+            this.globalCustNum = globalCustNum;
         }
 
         public String getSearchId() {
