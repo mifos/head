@@ -37,6 +37,7 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.dto.screen.LoanInformationDto;
@@ -119,5 +120,12 @@ public class LoanAccountRESTController {
     public final @ResponseBody
     LoanInformationDto getLoanByNumber(@PathVariable String globalAccountNum) throws Exception {
         return loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
+    }
+
+    @RequestMapping(value = "/account/loan/installment/num-{globalAccountNum}", method = RequestMethod.GET)
+    public final @ResponseBody
+    LoanInstallmentDetailsDto getLoanInstallmentByNumber(@PathVariable String globalAccountNum) throws Exception {
+        LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
+        return loanAccountServiceFacade.retrieveInstallmentDetails(loan.getAccountId());
     }
 }

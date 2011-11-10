@@ -1,0 +1,15 @@
+{ "nextMeetingDate" : "2011-09-19",
+  "overDueInstallmentDetails" : { "fees" : "0.0",
+      "interest" : "0.0",
+      "penalty" : "0.0",
+      "principal" : "0.0",
+      "subTotal" : "0.0"
+    },
+  "totalAmountDue" : "10.0",
+  "upcomingInstallmentDetails" : { "fees" : "0.0",
+      "interest" : "0.0",
+      "penalty" : "0.0",
+      "principal" : "10.0",
+      "subTotal" : "10.0"
+    }
+}
