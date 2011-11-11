@@ -48,7 +48,8 @@ public class RESTAPITest extends UiTestCaseBase {
     public static final String PERSONNEL_CURRENT_ID = "current";
     public static final String SYSTEM_INFORMATION_ID = "information";
     public static final String LOAN_ACCOUNT_GLOBAL_ID = "000100000000004";
-    public static final String SAVINGS_ACCOUNT_GLOBAL_ID = "000100000000006";
+    public static final String SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID = "000100000000006";
+    public static final String SAVINGS_MANDATORY_ACCOUNT_GLOBAL_ID = "000100000000007";
 
     private RESTAPITestHelper helper;
 
@@ -234,7 +235,7 @@ public class RESTAPITest extends UiTestCaseBase {
     public void savingsByGlobalNum() throws Exception {
         String type = Type.SAVINGS;
         String by = By.GLOBAL_NUMBER;
-        String value = SAVINGS_ACCOUNT_GLOBAL_ID;
+        String value = SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID;
         String actualJSON = helper.getJSONFromUI(type, by, value);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
@@ -257,6 +258,18 @@ public class RESTAPITest extends UiTestCaseBase {
         jsonAssert.assertEqual("openSavingsAccountsExist");
         jsonAssert.assertEqual("recentNoteDtos");
         jsonAssert.assertEqual("recommendedOrMandatoryAmount");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly")
+    public void savingsDueByGlobalNum() throws Exception {
+        String type = Type.SAVINGS_DUE;
+        String by = By.GLOBAL_NUMBER;
+        String value = SAVINGS_MANDATORY_ACCOUNT_GLOBAL_ID;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        ObjectMapper mapper = helper.getObjectMapper();
+        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -285,7 +298,7 @@ public class RESTAPITest extends UiTestCaseBase {
         String data = "amount=100&client="+CLIENT_GLOBAL_ID;
         String type = Type.SAVINGS_DEPOSIT;
         String by = By.GLOBAL_NUMBER;
-        String value = SAVINGS_ACCOUNT_GLOBAL_ID;
+        String value = SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID;
         String actualJSON = helper.postJSONFromUI(type, by, value, data);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);

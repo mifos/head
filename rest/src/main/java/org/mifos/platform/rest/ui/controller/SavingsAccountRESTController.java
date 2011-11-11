@@ -40,6 +40,7 @@ import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.SavingsAccountDetailDto;
 import org.mifos.dto.domain.UserReferenceDto;
+import org.mifos.dto.screen.SavingsAccountDepositDueDto;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -127,5 +128,11 @@ public class SavingsAccountRESTController {
         SavingsBO savings = this.savingsDao.findBySystemId(globalAccountNum);
         savings.setUserContext((UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession()));
         return savingsServiceFacade.retrieveSavingsAccountDetails(savings.getAccountId().longValue());
+    }
+
+    @RequestMapping(value = "/account/savings/due/num-{globalAccountNum}", method = RequestMethod.GET)
+    public final @ResponseBody
+    SavingsAccountDepositDueDto getSavingsDepositDueDetailsByNumber(@PathVariable String globalAccountNum) throws Exception {
+        return savingsServiceFacade.retrieveDepositDueDetails(globalAccountNum);
     }
 }
