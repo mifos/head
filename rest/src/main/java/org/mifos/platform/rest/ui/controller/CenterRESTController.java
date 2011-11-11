@@ -21,12 +21,15 @@ package org.mifos.platform.rest.ui.controller;
 
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.dto.domain.CenterInformationDto;
+import org.mifos.dto.screen.TransactionHistoryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 @Controller
 public class CenterRESTController {
@@ -38,5 +41,11 @@ public class CenterRESTController {
     public final @ResponseBody
     CenterInformationDto getCenterByNumber(@PathVariable String globalCustNum) {
         return centerServiceFacade.getCenterInformationDto(globalCustNum);
+    }
+
+    @RequestMapping(value = "/account/trxnhistory/num-{globalAccountNum}", method = RequestMethod.GET)
+    public final @ResponseBody
+    List<TransactionHistoryDto> getAccountTransactionHistoryByNumber(@PathVariable String globalAccountNum) throws Exception {
+        return centerServiceFacade.retrieveAccountTransactionHistory(globalAccountNum);
     }
 }

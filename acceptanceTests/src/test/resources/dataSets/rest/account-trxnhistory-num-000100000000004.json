@@ -1,0 +1,36 @@
+[
+   {
+      "type":"Loan Disbursement",
+      "locale":null,
+      "transactionDate":1315778400000,
+      "glcode":"11201",
+      "notes":"-",
+      "clientName":"Client REST API",
+      "paymentId":1,
+      "accountTrxnId":2,
+      "balance":"100.0",
+      "postedDate":1315778400000,
+      "userPrefferedTransactionDate":"12/09/2011",
+      "postedBy":"mifos",
+      "credit":"100.0",
+      "debit":"-",
+      "userPrefferedPostedDate":"12/09/2011"
+   },
+   {
+      "type":"Loan Disbursement",
+      "locale":null,
+      "transactionDate":1315778400000,
+      "glcode":"1503",
+      "notes":"-",
+      "clientName":"Client REST API",
+      "paymentId":1,
+      "accountTrxnId":1,
+      "balance":"100.0",
+      "postedDate":1315778400000,
+      "userPrefferedTransactionDate":"12/09/2011",
+      "postedBy":"mifos",
+      "credit":"-",
+      "debit":"100.0",
+      "userPrefferedPostedDate":"12/09/2011"
+   }
+]
