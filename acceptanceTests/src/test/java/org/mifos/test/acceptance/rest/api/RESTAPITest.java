@@ -24,6 +24,7 @@ import static org.mifos.test.acceptance.rest.api.RESTAPITestHelper.Type;
 import static org.mifos.test.acceptance.rest.api.RESTAPITestHelper.By;
 
 import java.util.Map;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -174,8 +175,20 @@ public class RESTAPITest extends UiTestCaseBase {
         String value = LOAN_ACCOUNT_GLOBAL_ID;
         String actualJSON = helper.getJSONFromUI(type, by, value);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
-        ObjectMapper mapper = helper.getObjectMapper();
-        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
+        AssertJSONList jsonAssert = new AssertJSONList(actualJSON, expectedJSON);
+        jsonAssert.assertEqual("type");
+        jsonAssert.assertEqual("locale");
+        jsonAssert.assertEqual("glcode");
+        jsonAssert.assertEqual("notes");
+        jsonAssert.assertEqual("clientName");
+        jsonAssert.assertEqual("paymentId");
+        jsonAssert.assertEqual("accountTrxnId");
+        jsonAssert.assertEqual("balance");
+        jsonAssert.assertEqual("userPrefferedTransactionDate");
+        jsonAssert.assertEqual("postedBy");
+        jsonAssert.assertEqual("credit");
+        jsonAssert.assertEqual("debit");
+        jsonAssert.assertEqual("userPrefferedPostedDate");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -339,5 +352,21 @@ public class RESTAPITest extends UiTestCaseBase {
         }
     }
 
+    class AssertJSONList {
+        List<Object> actualJSON;
+        List<Object> expectedJSON;
+        @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+        public AssertJSONList(String actualJSONString, String expectedJSONString) throws Exception {
+            ObjectMapper mapper = helper.getObjectMapper();
+            actualJSON = mapper.readValue(actualJSONString, List.class);
+            expectedJSON = mapper.readValue(expectedJSONString, List.class);
+            Assert.assertEquals(expectedJSON.size(), actualJSON.size());
+        }
 
+        public void assertEqual(String property) {
+            for (int i = 0; i < expectedJSON.size(); i++) {
+                Assert.assertEquals(expectedJSON.get(i), actualJSON.get(i));
+            }
+        }
+    }
 }
