@@ -353,8 +353,8 @@ public class RESTAPITest extends UiTestCaseBase {
     }
 
     class AssertJSONList {
-        List<Object> actualJSON;
-        List<Object> expectedJSON;
+        List<Map> actualJSON;
+        List<Map> expectedJSON;
         @SuppressWarnings("PMD.SignatureDeclareThrowsException")
         public AssertJSONList(String actualJSONString, String expectedJSONString) throws Exception {
             ObjectMapper mapper = helper.getObjectMapper();
@@ -365,7 +365,7 @@ public class RESTAPITest extends UiTestCaseBase {
 
         public void assertEqual(String property) {
             for (int i = 0; i < expectedJSON.size(); i++) {
-                Assert.assertEquals(expectedJSON.get(i), actualJSON.get(i));
+                Assert.assertEquals(expectedJSON.get(i).get(property), actualJSON.get(i).get(property));
             }
         }
     }
