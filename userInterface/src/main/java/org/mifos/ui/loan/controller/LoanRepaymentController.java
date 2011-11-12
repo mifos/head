@@ -31,7 +31,7 @@ import org.springframework.stereotype.Controller;
 @Controller(value="loanRepaymentController")
 public class LoanRepaymentController {
 
-	private LoanAccountServiceFacade loanAccountServiceFacade;
+	private final LoanAccountServiceFacade loanAccountServiceFacade;
 
 	@Autowired
     public LoanRepaymentController(LoanAccountServiceFacade loanAccountServiceFacade) {

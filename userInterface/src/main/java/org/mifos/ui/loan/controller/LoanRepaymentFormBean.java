@@ -22,30 +22,12 @@ package org.mifos.ui.loan.controller;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.screen.PersonnelNoteDto;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
-import org.springframework.format.annotation.NumberFormat;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="required for spring web flow storage at a minimum - should disable at filter level and also for pmd")
