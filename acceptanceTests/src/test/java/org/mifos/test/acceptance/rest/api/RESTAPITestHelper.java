@@ -47,9 +47,12 @@ public class RESTAPITestHelper {
         public static final String PERSONNEL = "personnel";
         public static final String PERSONNEL_CLIENTS = "personnel/clients";
         public static final String SYSTEM = "admin/system";
+        public static final String ACCOUNT_TRXNHISTORY = "account/trxnhistory";
         public static final String LOAN = "account/loan";
+        public static final String LOAN_INSTALLMENT = "account/loan/installment";
         public static final String LOAN_REPAYMENT = "account/loan/repay";
         public static final String SAVINGS = "account/savings";
+        public static final String SAVINGS_DUE = "account/savings/due";
         public static final String SAVINGS_DEPOSIT = "account/savings/deposit";
     }
 
