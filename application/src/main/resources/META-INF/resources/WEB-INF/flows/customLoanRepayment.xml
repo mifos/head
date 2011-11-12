@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <var name="loanRepaymentFormBean" class="org.mifos.ui.loan.controller.LoanRepaymentFormBean"/>
+    
+	<action-state id="handleSelectedCustomer">
+        <set name="flowScope.loanAccountNumber" value="requestParameters.globalAccountNum" type="string" />
+        <transition to="enterLoanRepaymentDetails"/>
+    </action-state>
+    
+    <view-state id="enterLoanRepaymentDetails" view="enterLoanRepaymentDetails" model="loanRepaymentFormBean">
+        <on-entry>
+            <evaluate expression="loanRepaymentController.retrieveExpectedPayment(flowScope.loanAccountNumber, loanRepaymentFormBean)" />
+        </on-entry>
+        <transition on="detailsEntered" to="submitPayment" bind="true" />
+        <transition on="cancel" to="cancel" />
+    </view-state>
+
+    <action-state id="submitPayment">
+        <evaluate expression="loanRepaymentController.applyPayment(flowScope.loanAccountNumber, loanRepaymentFormBean)" />
+        <transition to="success" />
+    </action-state>
+
+<!-- 
+    <end-state id="success" view="externalRedirect:contextRelative:/loanAccountAction.do?method=get&globalAccountNum=#{loanAccountNumber}&randomNUm=-2"/>
+    <end-state id="success" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
+-->
+     
+    <view-state id="success" view="externalRedirect:contextRelative:/loanAccountAction.do?globalAccountNum=#{loanAccountNumber}" />
+    <end-state id="cancel" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
+
+</flow>

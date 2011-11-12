@@ -904,6 +904,37 @@ public class AccountBO extends AbstractBusinessObject {
         return new java.sql.Date(DateUtils.getCurrentDateWithoutTimeStamp().getTime());
     }
 
+    public List<AccountActionDateEntity> getDetailsOfInstallmentsInArrearsOn(LocalDate asOf) {
+        List<AccountActionDateEntity> installmentsInArrears = new ArrayList<AccountActionDateEntity>();
+
+        Set<AccountActionDateEntity> accountActionDates = getAccountActionDates();
+        
+        if (accountActionDates!= null && !accountActionDates.isEmpty()) {
+            for (AccountActionDateEntity accountAction : accountActionDates) {
+            	LocalDate installmentDate = new LocalDate(accountAction.getActionDate());
+                if (asOf.isAfter(installmentDate) && !accountAction.isPaid()) {
+                    installmentsInArrears.add(accountAction);
+                }
+            }
+        }
+        return installmentsInArrears;
+    }
+
+    public List<AccountActionDateEntity> getDetailsOfUnpaidInstallmentsOn(LocalDate asOf) {
+        List<AccountActionDateEntity> unpaidInstallments = new ArrayList<AccountActionDateEntity>();
+
+        Set<AccountActionDateEntity> accountActionDates = getAccountActionDates();
+        
+        if (accountActionDates!= null && !accountActionDates.isEmpty()) {
+            for (AccountActionDateEntity accountAction : accountActionDates) {
+                if (!accountAction.isPaid()) {
+                    unpaidInstallments.add(accountAction);
+                }
+            }
+        }
+        return unpaidInstallments;
+    }
+    
     public List<AccountActionDateEntity> getDetailsOfInstallmentsInArrears() {
         List<AccountActionDateEntity> installmentsInArrears = new ArrayList<AccountActionDateEntity>();
         Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
@@ -923,6 +954,22 @@ public class AccountBO extends AbstractBusinessObject {
     public AccountActionDateEntity getDetailsOfNextInstallment() {
         AccountActionDateEntity nextAccountAction = null;
         Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
+        if (getAccountActionDates() != null && getAccountActionDates().size() > 0) {
+            for (AccountActionDateEntity accountAction : getAccountActionDates()) {
+                if (accountAction.getActionDate().compareTo(currentDate) >= 0) {
+                    if (null == nextAccountAction
+                            || nextAccountAction.getInstallmentId() > accountAction.getInstallmentId()) {
+                        nextAccountAction = accountAction;
+                    }
+                }
+            }
+        }
+        return nextAccountAction;
+    }
+    
+    public AccountActionDateEntity getDetailsOfNextInstallmentOn(LocalDate asOf) {
+        AccountActionDateEntity nextAccountAction = null;
+        Date currentDate = asOf.toDateMidnight().toDate();
         if (getAccountActionDates() != null && getAccountActionDates().size() > 0) {
             for (AccountActionDateEntity accountAction : getAccountActionDates()) {
                 if (accountAction.getActionDate().compareTo(currentDate) >= 0) {
@@ -964,8 +1011,37 @@ public class AccountBO extends AbstractBusinessObject {
     public MifosCurrency getCurrency() {
         return Money.getDefaultCurrency();
     }
+    
+    public Money getTotalAmountDueOn(LocalDate paymentDueAsOf) {
+    	
+    	Money amountInArrearsOn = getTotalAmountInArrearsOn(paymentDueAsOf);
+    	
+    	Money amountDue = getUpcomingInstallmentAmountDueOn(paymentDueAsOf);
+    	
+		return amountInArrearsOn.add(amountDue);
+	}
 
-    public Money getTotalAmountInArrears() {
+    private Money getUpcomingInstallmentAmountDueOn(LocalDate asOf) {
+    	
+    	Money upcomingAmount = Money.zero(getCurrency());
+    	
+    	AccountActionDateEntity nextInstallment = getDetailsOfNextInstallmentOn(asOf);
+    	if (nextInstallment != null) {
+    		upcomingAmount = upcomingAmount.add(getDueAmount(nextInstallment));
+    	}
+		return upcomingAmount;
+	}
+
+	private Money getTotalAmountInArrearsOn(LocalDate asOf) {
+    	List<AccountActionDateEntity> installmentsInArrears = getDetailsOfInstallmentsInArrearsOn(asOf);
+        Money totalAmount = Money.zero(getCurrency());
+        for (AccountActionDateEntity accountAction : installmentsInArrears) {
+            totalAmount = totalAmount.add(getDueAmount(accountAction));
+        }
+        return totalAmount;
+	}
+
+	public Money getTotalAmountInArrears() {
         List<AccountActionDateEntity> installmentsInArrears = getDetailsOfInstallmentsInArrears();
         Money totalAmount = new Money(getCurrency());
         if (installmentsInArrears != null && installmentsInArrears.size() > 0) {

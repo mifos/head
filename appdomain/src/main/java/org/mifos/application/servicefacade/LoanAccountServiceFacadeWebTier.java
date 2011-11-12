@@ -182,6 +182,7 @@ import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.AccountFeesDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
+import org.mifos.dto.screen.ExpectedPaymentDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.dto.screen.LoanCreationGlimDto;
@@ -1434,6 +1435,38 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         Money waivedRepaymentAmount = repaymentAmount.subtract(waiverAmount);
         return new RepayLoanDto(repaymentAmount.toString(), waivedRepaymentAmount.toString(), loan.isInterestWaived());
     }
+    
+    @Override
+	public ExpectedPaymentDto retrieveExpectedPayment(String globalAccountNumber, LocalDate paymentDueAsOf) {
+    	LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNumber);
+    	
+    	Money amountDue = loan.getTotalAmountDueOn(paymentDueAsOf);
+    	
+		return new ExpectedPaymentDto(globalAccountNumber, amountDue.getAmount());
+	}
+    
+	@Override
+	public void applyLoanRepayment(String globalAccountNumber,
+			LocalDate paymentDate, BigDecimal repaymentAmount) {
+		
+		try {
+            this.transactionHelper.startTransaction();
+            LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNumber);
+
+            loan.applyNewPaymentMechanism(paymentDate, repaymentAmount);
+            
+            this.loanDao.save(loan);
+            this.transactionHelper.commitTransaction();
+        } catch (BusinessRuleException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getMessageKey(), e);
+        } catch (AccountException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
+	}
 
     @Override
     public List<LoanAccountDetailsDto> retrieveLoanAccountDetails(LoanInformationDto loanInformationDto) {

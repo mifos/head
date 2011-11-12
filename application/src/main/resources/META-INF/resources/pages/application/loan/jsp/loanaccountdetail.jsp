@@ -582,19 +582,24 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								name="loan.trxn" /></span></td>
 						</tr>
 						<tr>
-							<td class="paddingL10"><c:choose>
+							<td class="paddingL10">
+							<c:choose>
 								<c:when
 									test="${loanInformationDto.accountStateId=='5' ||loanInformationDto.accountStateId=='6' || loanInformationDto.accountStateId=='7' || loanInformationDto.accountStateId=='8' || loanInformationDto.accountStateId=='9'}">
 									<span class="fontnormal8pt"> <c:if
 										test="${(loanInformationDto.accountStateId=='5' || loanInformationDto.accountStateId=='9')}">
+										
 										<html-el:link styleId="loanaccountdetail.link.applyPayment"
 											href="applyPaymentAction.do?method=load&input=loan&prdOfferingName=${loanInformationDto.prdOfferingName}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&accountType=${loanInformationDto.accountTypeId}
 																	&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="loan.apply_payment" />
 										</html-el:link>
-										<br>
-									</c:if> <c:if
-										test="${loanInformationDto.accountStateId!='6' && loanInformationDto.accountStateId!='7'}">
+										
+										<br/>
+										<a href="customLoanRepayment.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}">Apply Custom Payment For Demo</a>
+										<br/>
+									</c:if> 
+									<c:if test="${loanInformationDto.accountStateId!='6' && loanInformationDto.accountStateId!='7'}">
 										<html-el:link styleId="loanaccountdetail.link.applyCharges"
 											href="applyChargeAction.do?method=load&accountId=${loanInformationDto.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="loan.apply_charges" />

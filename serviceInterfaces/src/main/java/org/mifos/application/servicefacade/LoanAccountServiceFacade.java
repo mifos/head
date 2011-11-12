@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateGlimLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
@@ -49,6 +50,7 @@ import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
+import org.mifos.dto.screen.ExpectedPaymentDto;
 import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationPreviewDto;
@@ -149,6 +151,13 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
 
     @PreAuthorize("isFullyAuthenticated()")
     RepayLoanDto retrieveLoanRepaymentDetails(String globalAccountNum);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+	ExpectedPaymentDto retrieveExpectedPayment(String loanGlobalAccountNumber, LocalDate paymentDueAsOf);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+	void applyLoanRepayment(String loanGlobalAccountNumber,
+			LocalDate paymentDate, BigDecimal repaymentAmount);
 
     @PreAuthorize("isFullyAuthenticated()")
     List<LoanAccountDetailsDto> retrieveLoanAccountDetails(LoanInformationDto loanInformationDto);

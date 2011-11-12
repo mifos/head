@@ -99,6 +99,7 @@ import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
+import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -644,6 +645,15 @@ public class LoanBO extends AccountBO implements Loan {
         List<AccountActionDateEntity> installments = getAllInstallments();
         for (AccountActionDateEntity accountActionDateEntity : installments) {
             amount = amount.add(((LoanScheduleEntity) accountActionDateEntity).getPrincipal());
+        }
+        return amount;
+    }
+    
+    public Money getTotalPrincipalDue() {
+        Money amount = new Money(getCurrency());
+        List<AccountActionDateEntity> installments = getAllInstallments();
+        for (AccountActionDateEntity accountActionDateEntity : installments) {
+            amount = amount.add(((LoanScheduleEntity) accountActionDateEntity).getPrincipalDue());
         }
         return amount;
     }
@@ -1483,6 +1493,55 @@ public class LoanBO extends AccountBO implements Loan {
             getPerformanceHistory().setNoOfPayments(getPerformanceHistory().getNoOfPayments() - numberOfTransactions);
         }
     }
+    
+	public void applyNewPaymentMechanism(LocalDate paymentDate, BigDecimal repaymentAmount) throws AccountException {
+		
+		Money totalAmount = new Money(getCurrency(), repaymentAmount);
+		Date transactionDate = paymentDate.toDateMidnight().toDate();
+		
+		PaymentData paymentData = new PaymentData(totalAmount, personnel, PaymentTypes.CASH.getValue(), transactionDate);
+		AccountPaymentEntity accountPaymentEntity = prePayment(paymentData);
+
+		Money balance = totalAmount;
+		
+        // 1. pay off installments in arrears
+		List<AccountActionDateEntity> inArrears = getDetailsOfInstallmentsInArrearsOn(paymentDate);
+		for (AccountActionDateEntity accountActionDate : inArrears) {
+            balance = ((LoanScheduleEntity) accountActionDate).applyPayment(accountPaymentEntity, balance, personnel, transactionDate);
+        }
+
+        // 2. pay off due installment (normal way)
+		if (balance.isGreaterThanZero()) {
+			AccountActionDateEntity upcomingInstallment = getDetailsOfNextInstallmentOn(paymentDate);
+			balance = ((LoanScheduleEntity) upcomingInstallment).applyPayment(accountPaymentEntity, balance, personnel, transactionDate);
+		}
+
+        // 3. pay of principal of next installment and recalculate interest if 'over paid'
+		if (balance.isGreaterThanZero()) {
+			
+			Money overpayment = balance;
+			
+			Money totalPrincipalDue = getTotalPrincipalDue();
+			
+			// recalculate interest for future installments based on the 'remaining principal' in hand for client.
+			
+			List<AccountActionDateEntity> unpaidInstallments = getDetailsOfUnpaidInstallmentsOn(paymentDate);
+			for (AccountActionDateEntity accountActionDate : unpaidInstallments) {
+	            balance = ((LoanScheduleEntity) accountActionDate).reducePrincipal(accountPaymentEntity, balance, personnel, transactionDate);
+	        }
+
+//			if (!unpaidInstallments.isEmpty()) {
+//				AccountActionDateEntity firstUnpaidInstallment = unpaidInstallments.get(0);
+//				((LoanScheduleEntity) firstUnpaidInstallment).updatePrincipalPaidby(overpayment);
+//			}
+		}
+		
+		LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
+		postPayment(paymentData, accountPaymentEntity, loanPaymentType);
+		
+		addAccountPayment(accountPaymentEntity);
+        buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
+	}
 
     /*
      * PaymentData is the payment information entered in the UI An AccountPaymentEntity is created from the PaymentData

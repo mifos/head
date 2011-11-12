@@ -730,6 +730,44 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         }
         return balance;
     }
+    
+    public Money reducePrincipal(AccountPaymentEntity accountPaymentEntity,
+			Money balance, PersonnelBO personnel, Date transactionDate) {
+    	
+    	if (isNotPaid() && balance.isGreaterThanZero() && getPrincipalDue().isGreaterThanZero()) {
+    		initPaymentAllocation(balance.getCurrency());
+    		balance = payPrincipal(balance);
+    		updateSummaryAndPerformanceHistory(accountPaymentEntity, personnel, transactionDate);
+    	}
+    	
+		return balance;
+	}
+    
+    public Money applyOverPayment(AccountPaymentEntity accountPaymentEntity, Money balance, PersonnelBO personnel, Date transactionDate) {
+        if (isNotPaid() && balance.isGreaterThanZero()) {
+            balance = payComponentsNewMechanism(balance, transactionDate);
+            updateSummaryAndPerformanceHistory(accountPaymentEntity, personnel, transactionDate);
+        }
+        return balance;
+    }
+    
+    public Money payComponentsNewMechanism(Money paymentAmount, Date paymentDate) {
+        initPaymentAllocation(paymentAmount.getCurrency());
+        Money balanceAmount = paymentAmount;
+        
+        balanceAmount = payPrincipal(balanceAmount);
+        if (isPrincipalZero()) {
+        	// the entire principal was paid in advance so no interest due on this installment.
+        }
+        
+        balanceAmount = payMiscPenalty(balanceAmount);
+        balanceAmount = payPenalty(balanceAmount);
+        balanceAmount = payMiscFees(balanceAmount);
+        balanceAmount = payFees(balanceAmount);
+        balanceAmount = payInterest(balanceAmount);
+        recordPayment(paymentDate);
+        return balanceAmount;
+    }
 
     boolean hasFees() {
         return CollectionUtils.isNotEmpty(accountFeesActionDetails);
@@ -746,4 +784,8 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     public Money getEffectiveInterest() {
         return interest.add(getExtraInterest());
     }
+
+	public void updatePrincipalPaidby(Money overpayment) {
+		this.principalPaid = this.principalPaid.add(overpayment);
+	}
 }
