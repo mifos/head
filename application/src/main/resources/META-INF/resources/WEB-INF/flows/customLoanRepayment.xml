@@ -19,16 +19,12 @@
     </view-state>
 
     <action-state id="submitPayment">
-        <evaluate expression="loanRepaymentController.applyPayment(flowScope.loanAccountNumber, loanRepaymentFormBean)" />
-        <transition to="success" />
+        <evaluate expression="loanRepaymentController.applyPayment(flowScope.loanAccountNumber, loanRepaymentFormBean, messageContext)" />
+        <transition on="success" to="success" />
+        <transition on="error" to="enterLoanRepaymentDetails" />
     </action-state>
 
-<!-- 
-    <end-state id="success" view="externalRedirect:contextRelative:/loanAccountAction.do?method=get&globalAccountNum=#{loanAccountNumber}&randomNUm=-2"/>
-    <end-state id="success" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
--->
-     
-    <view-state id="success" view="externalRedirect:contextRelative:/loanAccountAction.do?globalAccountNum=#{loanAccountNumber}" />
+    <view-state id="success" view="externalRedirect:contextRelative:/loanAccountAction.do?globalAccountNum=${flowScope.loanAccountNumber}&amp;randomNUm=-2&amp;method=get" />
     <end-state id="cancel" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
 
 </flow>

@@ -21,11 +21,15 @@
 package org.mifos.ui.loan.controller;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 import org.joda.time.LocalDate;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.dto.screen.ExpectedPaymentDto;
+import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.binding.message.MessageBuilder;
+import org.springframework.binding.message.MessageContext;
 import org.springframework.stereotype.Controller;
 
 @Controller(value="loanRepaymentController")
@@ -55,10 +59,24 @@ public class LoanRepaymentController {
 	}
 	
 	// called by spring webflow
-	public void applyPayment(final String loanGlobalAccountNumber, LoanRepaymentFormBean loanRepaymentFormBean) {
+	public String applyPayment(final String loanGlobalAccountNumber, LoanRepaymentFormBean loanRepaymentFormBean, MessageContext messageContext) {
 		
-		BigDecimal repaymentAmount = BigDecimal.valueOf(loanRepaymentFormBean.getPaymentAmount().doubleValue());
-		
-		this.loanAccountServiceFacade.applyLoanRepayment(loanGlobalAccountNumber, loanRepaymentFormBean.getPaymentDate(), repaymentAmount);
+		try {
+			BigDecimal repaymentAmount = BigDecimal.valueOf(loanRepaymentFormBean.getPaymentAmount().doubleValue());
+			
+			this.loanAccountServiceFacade.applyLoanRepayment(loanGlobalAccountNumber, loanRepaymentFormBean.getPaymentDate(), repaymentAmount);
+			return "success";
+		} catch (BusinessRuleException e) {
+			MessageBuilder builder = new MessageBuilder()
+					.error()
+					.source("paymentAmount")
+					.codes(Arrays.asList(e.getMessageKey()).toArray(
+							new String[1])).defaultText(e.getMessage())
+					.args(e.getMessageValues());
+
+			messageContext.addMessage(builder.build());
+			
+			return "error";
+		}
 	}
 }

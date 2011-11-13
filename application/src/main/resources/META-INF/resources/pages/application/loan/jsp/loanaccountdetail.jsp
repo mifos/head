@@ -596,7 +596,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 										</html-el:link>
 										
 										<br/>
-										<a href="customLoanRepayment.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}">Apply Custom Payment For Demo</a>
+										<a href="customLoanRepayment.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}">Apply Principal Pre-payment</a>
 										<br/>
 									</c:if> 
 									<c:if test="${loanInformationDto.accountStateId!='6' && loanInformationDto.accountStateId!='7'}">
