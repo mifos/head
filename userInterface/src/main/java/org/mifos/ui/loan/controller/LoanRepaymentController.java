@@ -61,11 +61,12 @@ public class LoanRepaymentController {
 	// called by spring webflow
 	public String applyPayment(final String loanGlobalAccountNumber, LoanRepaymentFormBean loanRepaymentFormBean, MessageContext messageContext) {
 		
+		String returnCode = "";
 		try {
 			BigDecimal repaymentAmount = BigDecimal.valueOf(loanRepaymentFormBean.getPaymentAmount().doubleValue());
 			
 			this.loanAccountServiceFacade.applyLoanRepayment(loanGlobalAccountNumber, loanRepaymentFormBean.getPaymentDate(), repaymentAmount);
-			return "success";
+			returnCode = "success";
 		} catch (BusinessRuleException e) {
 			MessageBuilder builder = new MessageBuilder()
 					.error()
@@ -76,7 +77,9 @@ public class LoanRepaymentController {
 
 			messageContext.addMessage(builder.build());
 			
-			return "error";
-		}
+			returnCode = "error";
+		} 
+		
+		return returnCode;
 	}
 }
