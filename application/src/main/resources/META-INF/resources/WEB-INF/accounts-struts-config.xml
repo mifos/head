@@ -145,6 +145,7 @@
             <forward name="close_success" path="/savingsAction.do?method=get"/>
             <forward name="close_failure" path="/pages/application/savings/jsp/reviewclosesavings.jsp"/>
             <forward name="preview_faliure" path="/pages/application/savings/jsp/closesavingsaccount.jsp"/>
+            <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
         </action>
         <!-- Savings Apply Adjustment  action -->
         <action path="/savingsApplyAdjustmentAction"

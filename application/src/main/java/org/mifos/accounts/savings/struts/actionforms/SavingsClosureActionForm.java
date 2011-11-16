@@ -21,6 +21,7 @@
 package org.mifos.accounts.savings.struts.actionforms;
 
 import java.util.ResourceBundle;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,13 +33,15 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
+import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.util.UserContext;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 
-public class SavingsClosureActionForm extends ValidatorActionForm {
+public class SavingsClosureActionForm extends ValidatorActionForm implements QuestionResponseCapturer {
 
     private String receiptId;
     private String receiptDate;
@@ -47,6 +50,7 @@ public class SavingsClosureActionForm extends ValidatorActionForm {
     private String trxnDate;
     private String notes;
     private String amount;
+    private List<QuestionGroupDetail> questionGroups;
 
     public SavingsClosureActionForm() {
     }
@@ -97,6 +101,16 @@ public class SavingsClosureActionForm extends ValidatorActionForm {
 
     public void setTrxnDate(String trxnDate) {
         this.trxnDate = trxnDate;
+    }
+
+    @Override
+    public void setQuestionGroups(List<QuestionGroupDetail> questionGroups) {
+        this.questionGroups = questionGroups;
+    }
+
+    @Override
+    public List<QuestionGroupDetail> getQuestionGroups() {
+        return this.questionGroups;
     }
 
     @Override
@@ -186,5 +200,6 @@ public class SavingsClosureActionForm extends ValidatorActionForm {
         setReceiptId(null);
         setPaymentTypeId(null);
         setCustomerId(null);
+        setQuestionGroups(null);
     }
 }

@@ -41,13 +41,12 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.EditStatusActionForm;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.customers.business.CustomerStatusEntity;
-import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
@@ -60,7 +59,7 @@ import org.mifos.security.util.UserContext;
 
 public class EditStatusAction extends BaseAction {
 
-    private QuestionnaireFlowAdapter approveLoanQuestionnaire;
+    private QuestionnaireFlowAdapter loanQuestionnaire;
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -132,20 +131,32 @@ public class EditStatusAction extends BaseAction {
 
         String newStatusId = editStatusActionForm.getNewStatusId();
 
-        initializeLoanQuestionnaire(accountBO.getGlobalAccountNum());
-        if (loanApproved(newStatusId)) {
-            return approveLoanQuestionnaire.fetchAppliedQuestions(mapping,(EditStatusActionForm) form, request, ActionForwards.preview_success);
+        initializeLoanQuestionnaire(accountBO.getGlobalAccountNum(), newStatusId);
+        if (loanApproved(newStatusId) || loanClosed(newStatusId)) {
+            return loanQuestionnaire.fetchAppliedQuestions(mapping, editStatusActionForm, request, ActionForwards.preview_success);
         }
+
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
-    private void initializeLoanQuestionnaire(String globalAccountNum) {
-        approveLoanQuestionnaire = new QuestionnaireFlowAdapter("Approve", "Loan", ActionForwards.preview_success,
-                "loanAccountAction.do?method=get&globalAccountNum=" + globalAccountNum, new DefaultQuestionnaireServiceFacadeLocator());
+    private void initializeLoanQuestionnaire(String globalAccountNum, String newStatusId) {
+        if (loanClosed(newStatusId)) {
+            loanQuestionnaire = new QuestionnaireFlowAdapter("Close", "Loan", ActionForwards.preview_success,
+                    "loanAccountAction.do?method=get&globalAccountNum=" + globalAccountNum, new DefaultQuestionnaireServiceFacadeLocator());
+        }
+        else {
+            loanQuestionnaire = new QuestionnaireFlowAdapter("Approve", "Loan", ActionForwards.preview_success,
+                    "loanAccountAction.do?method=get&globalAccountNum=" + globalAccountNum, new DefaultQuestionnaireServiceFacadeLocator());
+        }
     }
 
     private boolean loanApproved(String newStatusId) {
-        return "3".equals(newStatusId);
+        return AccountState.LOAN_APPROVED.getValue().toString().equals(newStatusId);
+    }
+
+    private boolean loanClosed(String newStatusId) {
+        return AccountState.LOAN_CLOSED_RESCHEDULED.getValue().toString().equals(newStatusId) ||
+                AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue().toString().equals(newStatusId);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -182,8 +193,8 @@ public class EditStatusAction extends BaseAction {
         checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
 
         if (accountBO.isLoanAccount()) {
-            initializeLoanQuestionnaire(accountBO.getGlobalAccountNum());
-            approveLoanQuestionnaire.saveResponses(request, editStatusActionForm, accountId);
+            initializeLoanQuestionnaire(accountBO.getGlobalAccountNum(), newStatusId != null ? newStatusId.toString() : null);
+            loanQuestionnaire.saveResponses(request, editStatusActionForm, accountId);
 
             AccountUpdateStatus updateStatus = new AccountUpdateStatus(accountId.longValue(), newStatusId, flagId, updateComment);
             this.loanAccountServiceFacade.updateLoanAccountStatus(updateStatus);
@@ -221,12 +232,12 @@ public class EditStatusAction extends BaseAction {
             final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
             @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         request.setAttribute(METHODCALLED, "captureQuestionResponses");
-        ActionErrors errors = approveLoanQuestionnaire.validateResponses(request, (EditStatusActionForm) form);
+        ActionErrors errors = loanQuestionnaire.validateResponses(request, (EditStatusActionForm) form);
         if (errors != null && !errors.isEmpty()) {
             addErrors(request, errors);
             return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
         }
-        return approveLoanQuestionnaire.rejoinFlow(mapping);
+        return loanQuestionnaire.rejoinFlow(mapping);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -234,7 +245,7 @@ public class EditStatusAction extends BaseAction {
             final ActionMapping mapping, final ActionForm form,
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         request.setAttribute(METHODCALLED, "editQuestionResponses");
-        return approveLoanQuestionnaire.editResponses(mapping, request, (EditStatusActionForm) form);
+        return loanQuestionnaire.editResponses(mapping, request, (EditStatusActionForm) form);
     }
 
     private String getDetailAccountPage(ActionForm form) {

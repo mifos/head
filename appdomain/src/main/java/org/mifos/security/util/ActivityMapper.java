@@ -744,6 +744,8 @@ public class ActivityMapper {
         security.allow("preview", SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
         security.allow("previous", SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
         security.allow("close", SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
         return security;
     }
 
