@@ -72,6 +72,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 			<c:set
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountFlagNamesLocalised')}"
 				var="accountFlagNamesLocalised" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'containsQGForCloseLoan')}"
+			   var="containsQGForCloseLoan" />
 
 
 			<html-el:hidden property="currentFlowKey"
@@ -555,6 +557,11 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							    			<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
 										</a>
 							            <br/>
+                                        <c:if test="${containsQGForCloseLoan}">
+                                            <a id="loanaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${loanInformationDto.accountId}&event=Close&source=Loan&backPageUrl=loanAccountAction.do?method%3Dget%26globalAccountNum%3D${loanInformationDto.globalAccountNum}">
+                                            <mifos:mifoslabel name="loan.ViewQuestionGroupForClosedLoanResponsesLink" />
+                                            </a> <br>
+                                        </c:if>
 									    <html-el:link styleId="loanaccountdetail.link.viewStatusHistory"
 								          href="loanAccountAction.do?method=viewStatusHistory&globalAccountNum=${loanInformationDto.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								          <mifos:mifoslabel name="loan.view_status_history" />
