@@ -1536,8 +1536,8 @@ public class LoanBO extends AccountBO implements Loan {
 //			LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
 //			postPayment(paymentData, accountPaymentEntity, loanPaymentType);
 //			
-//			addAccountPayment(accountPaymentEntity);
-//	        buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
+			addAccountPayment(accountPaymentEntity);
+	        buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 		}
 	}
 	

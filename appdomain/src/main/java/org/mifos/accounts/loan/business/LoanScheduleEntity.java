@@ -792,7 +792,9 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
 	public void updatePrincipalPaidby(AccountPaymentEntity accountPayment, PersonnelBO personnel) {
+		initPaymentAllocation(getCurrency());
 		this.principalPaid = this.principalPaid.add(accountPayment.getAmount());
 		this.principal = this.principal.add(accountPayment.getAmount());
+		this.getPaymentAllocation().allocateForPrincipal(accountPayment.getAmount());
 	}
 }
