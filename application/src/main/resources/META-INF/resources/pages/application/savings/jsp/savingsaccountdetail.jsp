@@ -40,6 +40,8 @@ explanation of the license and how it is applied.
 				</tr>
 			</table>
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'containsQGForCloseSavings')}"
+			   var="containsQGForCloseSavings" />
 			<c:set var="questionnaireFor" scope="session" value="${BusinessKey.savingsOffering.prdOfferingName}" />
             <c:remove var="urlMap" />
             <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
@@ -260,11 +262,12 @@ explanation of the license and how it is applied.
 								<td class="fontnormal">
                             		<a id="savingsaccountdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${BusinessKey.accountId}&event=Create&source=Savings&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
                                 		<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
-                            		</a>
-                            		
-                            		<br/>
-								
-								
+                            		</a> <br/>
+								    <c:if test="${containsQGForCloseSavings}">
+                                        <a id="savingsaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${BusinessKey.accountId}&event=Close&source=Savings&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+                                        <mifos:mifoslabel name="Savings.ViewQuestionGroupForClosedSavingsResponsesLink" />
+                                        </a> <br>
+                                    </c:if>
 									<html-el:link styleId="savingsaccountdetail.link.viewTransactionHistory" 
 										href="savingsAction.do?method=getTransactionHistory&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 										<mifos:mifoslabel name="Savings.viewTransactionHistory" />

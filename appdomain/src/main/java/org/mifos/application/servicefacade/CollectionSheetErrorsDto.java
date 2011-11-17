@@ -116,6 +116,51 @@ public class CollectionSheetErrorsDto implements DataTransferObject {
             }
     }
 
+    public String getErrorText() {
+        StringBuilder sb = new StringBuilder();
+
+        if (this.isDatabaseError()){
+            println(sb, "Database Error: " + this.getDatabaseError().getMessage());
+        }
+
+        if (this.getSavingsDepNames() != null && this.getSavingsDepNames().size() > 0) {
+            println(sb, "Failed Deposits - Account Ids:");
+            for (String accountId : this.getSavingsDepNames()) {
+                println(sb, accountId);
+            }
+        }
+        if (this.getSavingsWithNames() != null && this.getSavingsWithNames().size() > 0) {
+            println(sb, "Failed Withdrawals - Account Ids:");
+            for (String accountId : this.getSavingsWithNames()) {
+                println(sb, accountId);
+            }
+        }
+        if (this.getLoanDisbursementAccountNumbers() != null && this.getLoanDisbursementAccountNumbers().size() > 0) {
+            println(sb, "Failed Loan Disbursements - Account Ids:");
+            for (String accountId : this.getLoanDisbursementAccountNumbers()) {
+                println(sb, accountId);
+            }
+        }
+        if (this.getLoanRepaymentAccountNumbers() != null && this.getLoanRepaymentAccountNumbers().size() > 0) {
+            println(sb, "Failed Loan Repayments - Account Ids:");
+            for (String accountId : this.getLoanRepaymentAccountNumbers()) {
+                println(sb, accountId);
+            }
+        }
+        if (this.getCustomerAccountNumbers() != null && this.getCustomerAccountNumbers().size() > 0) {
+            println(sb, "Failed Customer Account Payments - Account Ids:");
+            for (String accountId : this.getCustomerAccountNumbers()) {
+                println(sb, accountId);
+            }
+        }
+        return sb.toString();
+    }
+
+    private void println(StringBuilder sb, String s) {
+        sb.append(s).append("\n");
+    }
+
+
     private void doLog(String str) {
         System.out.println(str);
     }

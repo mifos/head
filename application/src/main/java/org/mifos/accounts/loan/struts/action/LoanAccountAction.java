@@ -343,10 +343,15 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private void setQuestionGroupInstances(HttpServletRequest request, LoanBO loanBO) throws PageExpiredException {
         QuestionnaireServiceFacade questionnaireServiceFacade = questionnaireServiceFacadeLocator.getService(request);
-        if (questionnaireServiceFacade == null) {
-            return;
+        boolean containsQGForCloseLoan = false;
+        if (questionnaireServiceFacade != null) {
+            setQuestionGroupInstances(questionnaireServiceFacade, request, loanBO.getAccountId());
+            if (loanBO.getAccountState().getId().equals(AccountState.LOAN_CLOSED_RESCHEDULED.getValue()) ||
+                    loanBO.getAccountState().getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())) {
+                containsQGForCloseLoan = questionnaireServiceFacade.getQuestionGroupInstances(loanBO.getAccountId(), "Close", "Loan").size() > 0;
+            }
         }
-        setQuestionGroupInstances(questionnaireServiceFacade, request, loanBO.getAccountId());
+        SessionUtils.removeThenSetAttribute("containsQGForCloseLoan", containsQGForCloseLoan, request);
     }
 
     // Intentionally made public to aid testing !

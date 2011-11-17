@@ -136,6 +136,15 @@ explanation of the license and how it is applied.
 									bundle="accountsUIResources"></mifos:mifoslabel>
 							</html-el:button></td>
 						</tr>
+                        <tr>
+                           <td>
+                                <c:set var="questionsHostForm" value="${editStatusActionForm}" scope="request" />
+                                <c:import url="/pages/application/surveys/jsp/viewQuestionResponses.jsp">
+                                   <c:param name="editResponseURL" value="editStatusAction.do?method=editQuestionResponses&currentFlowKey=${requestScope.currentFlowKey}"/>
+                                   <c:param name="responseDivStyleClass" value="viewQuestionResponseDiv"/>
+                                </c:import>
+                           </td>
+                        </tr>
 						<tr>
 							<td align="center" class="blueline">&nbsp;</td>
 						</tr>

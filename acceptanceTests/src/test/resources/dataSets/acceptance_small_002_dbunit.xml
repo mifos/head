@@ -39,6 +39,7 @@
   <DATABASECHANGELOG ID="MIFOS_4945_4" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:48.0" ORDEREXECUTED="189" EXECTYPE="EXECUTED" MD5SUM="3:dc531e6628121c5db1378b2c854f85c0" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_5" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:48.0" ORDEREXECUTED="190" EXECTYPE="EXECUTED" MD5SUM="3:ed2015dd4bd8e0e49f39b9d15e1d4374" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_6" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:48.0" ORDEREXECUTED="191" EXECTYPE="EXECUTED" MD5SUM="3:3295a26a4f5f90255601a36a002029da" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_5161_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-17 07:15:54.0" ORDEREXECUTED="120" EXECTYPE="EXECUTED" MD5SUM="3:82dd99432572ba02fe1c174c26096266" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
   <QRTZ_CALENDARS/>
@@ -1252,6 +1253,8 @@
   <event_sources id="13" entity_type_id="21" event_id="2" description="View Savings"/>
   <event_sources id="14" entity_type_id="15" event_id="1" description="Create Office"/>
   <event_sources id="15" entity_type_id="17" event_id="1" description="Create Personnel"/>
+  <event_sources id="16" entity_type_id="22" event_id="4" description="Close Loan"/>
+  <event_sources id="17" entity_type_id="21" event_id="4" description="Close Savings"/>
   <events id="1" name="Create"/>
   <events id="2" name="View"/>
   <events id="3" name="Approve"/>

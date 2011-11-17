@@ -21,29 +21,35 @@
 package org.mifos.platform.rest.ui.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.LocalDate;
 import org.mifos.application.servicefacade.CollectionSheetDto;
 import org.mifos.application.servicefacade.CollectionSheetErrorsDto;
 import org.mifos.application.servicefacade.CollectionSheetServiceFacade;
+import org.mifos.application.servicefacade.InvalidSaveCollectionSheetReason;
 import org.mifos.application.servicefacade.SaveCollectionSheetCustomerAccountDto;
 import org.mifos.application.servicefacade.SaveCollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.SaveCollectionSheetCustomerLoanDto;
 import org.mifos.application.servicefacade.SaveCollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.SaveCollectionSheetDto;
 import org.mifos.application.servicefacade.SaveCollectionSheetException;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.persistence.CustomerDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.codehaus.jackson.JsonParser;
 
@@ -65,7 +71,34 @@ public class CollectionSheetRESTController {
 
     @RequestMapping(value = "/collectionsheet/save", method = RequestMethod.POST)
     public @ResponseBody
-    CollectionSheetErrorsDto saveCollectionSheet(@RequestParam String json) throws Exception {
+    Map<String, Object> saveCollectionSheet(@RequestBody JSONSaveCollectionsheet request) throws Throwable {
+        Map<String, Object> map = new HashMap<String, Object>();
+        ObjectMapper om = createObjectMapper();
+        List<InvalidSaveCollectionSheetReason> reasons = new ArrayList<InvalidSaveCollectionSheetReason>();
+        CollectionSheetErrorsDto errors = null;
+        SaveCollectionSheetDto saveCollectionSheetDto = null;
+        try {
+            saveCollectionSheetDto = om.readValue(request.getJson(), SaveCollectionSheetDto.class);
+        } catch (JsonMappingException e) {
+            if (e.getCause() instanceof SaveCollectionSheetException) {
+                reasons.addAll(((SaveCollectionSheetException) e.getCause()).getInvalidSaveCollectionSheetReasons());
+            } else {
+                throw e.getCause();
+            }
+        }
+        if (saveCollectionSheetDto != null) {
+            try {
+                errors = collectionSheetServiceFacade.saveCollectionSheet(saveCollectionSheetDto);
+                map.put("errors", errors != null ? errors.getErrorText() : null);
+            } catch (MifosRuntimeException e) {
+                map.put("errors", e.getMessage());
+            }
+        }
+        map.put("invalidCollectionSheet", reasons);
+        return map;
+    }
+
+    private ObjectMapper createObjectMapper() {
         ObjectMapper om = new ObjectMapper();
         om.getDeserializationConfig().addMixInAnnotations(SaveCollectionSheetDto.class, SaveCollectionSheetDtoMixIn.class);
         om.getDeserializationConfig().addMixInAnnotations(SaveCollectionSheetCustomerDto.class, SaveCollectionSheetCustomerDtoMixIn.class);
@@ -74,8 +107,7 @@ public class CollectionSheetRESTController {
         om.getDeserializationConfig().addMixInAnnotations(SaveCollectionSheetCustomerSavingDto.class, SaveCollectionSheetCustomerSavingDtoMixIn.class);
         om.getDeserializationConfig().set(DeserializationConfig.Feature.USE_BIG_DECIMAL_FOR_FLOATS, true);
         om.getJsonFactory().configure(JsonParser.Feature.ALLOW_NUMERIC_LEADING_ZEROS, true);
-        SaveCollectionSheetDto saveCollectionSheetDto = om.readValue(json, SaveCollectionSheetDto.class);
-        return collectionSheetServiceFacade.saveCollectionSheet(saveCollectionSheetDto);
+        return om;
     }
 
     public static abstract class SaveCollectionSheetDtoMixIn {
@@ -134,5 +166,18 @@ public class CollectionSheetRESTController {
                 @JsonProperty("currencyId") Short currencyId,
                 @JsonProperty("totalDeposit") BigDecimal totalDeposit,
                 @JsonProperty("totalWithdrawal") BigDecimal totalWithdrawal) throws SaveCollectionSheetException {}
+    }
+
+    public static class JSONSaveCollectionsheet {
+
+        private String json;
+
+        public String getJson() {
+            return json;
+        }
+
+        public void setJson(String json) {
+            this.json = json;
+        }
     }
 }

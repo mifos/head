@@ -158,6 +158,15 @@ explanation of the license and how it is applied.
                 </td>
               </tr>
               <tr>
+                <td>
+                  <c:set var="questionsHostForm" value="${savingsClosureForm}" scope="request" />
+                  <c:import url="/pages/application/surveys/jsp/viewQuestionResponses.jsp">
+                    <c:param name="editResponseURL" value="savingsClosureAction.do?method=editQuestionResponses&currentFlowKey=${requestScope.currentFlowKey}"/>
+                    <c:param name="responseDivStyleClass" value="viewQuestionResponseDiv"/>
+                  </c:import>
+                </td>
+              </tr>
+              <tr>
                 <td height="3" colspan="2" align="center" class="blueline">&nbsp;</td>
               </tr>
               <tr>

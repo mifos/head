@@ -454,7 +454,9 @@ public class QuestionnaireServiceIntegrationTest {
                         new EventSourceDto("Create", "Savings", "Create Savings"),
                         new EventSourceDto("View", "Savings", "View Savings"),
                         new EventSourceDto("Create", "Office", "Create Office"),
-                        new EventSourceDto("Create", "Personnel", "Create Personnel")
+                        new EventSourceDto("Create", "Personnel", "Create Personnel"),
+                        new EventSourceDto("Close", "Loan", "Close Loan"),
+                        new EventSourceDto("Close", "Savings", "Close Savings")
                         )));
     }
 
