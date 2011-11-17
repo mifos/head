@@ -691,6 +691,7 @@
         <return-scalar column="customerId" type="integer" />
         <return-scalar column="accountId" type="integer" />
         <return-scalar column="productId" type="short" />
+        <return-scalar column="currencyId" type="short" />
         <return-scalar column="productShortName" type="string" />
         <return-scalar column="depositDue" type="big_decimal" />
         <return-scalar column="depositPaid" type="big_decimal" />
@@ -698,6 +699,7 @@
             select a.account_id as accountId,
              sse.customer_id as customerId,
              po.prd_offering_id as productId,
+             sse.deposit_currency_id as currencyId,
             po.prd_offering_short_name as productShortName,
              sum(sse.deposit) as depositDue,
              sum(sse.deposit_paid) as depositPaid
@@ -723,12 +725,14 @@
         <return-scalar column="customerId" type="integer" />
         <return-scalar column="accountId" type="integer" />
         <return-scalar column="productId" type="short" />
+        <return-scalar column="currencyId" type="short" />
         <return-scalar column="productShortName" type="string" />
         <return-scalar column="depositDue" type="big_decimal" />
         <return-scalar column="depositPaid" type="big_decimal" />
         <![CDATA[
             select a.account_id as accountId,
              sse.customer_id as customerId,
+             sse.deposit_currency_id as currencyId,
              po.prd_offering_id as productId,
             po.prd_offering_short_name as productShortName,
              sum(sse.deposit) as depositDue,
@@ -756,12 +760,14 @@
         <return-scalar column="customerId" type="integer" />
         <return-scalar column="accountId" type="integer" />
         <return-scalar column="productId" type="short" />
+        <return-scalar column="currencyId" type="short" />
         <return-scalar column="productShortName" type="string" />
         <return-scalar column="depositDue" type="big_decimal" />
         <return-scalar column="depositPaid" type="big_decimal" />
         <![CDATA[
             select a.account_id as accountId,
              sse.customer_id as customerId,
+             sse.deposit_currency_id as currencyId,
              po.prd_offering_id as productId,
                po.prd_offering_short_name as productShortName,
             s.recommended_amount as depositDue,
@@ -788,12 +794,14 @@
         <return-scalar column="customerId" type="integer" />
         <return-scalar column="accountId" type="integer" />
         <return-scalar column="productId" type="short" />
+        <return-scalar column="currencyId" type="short" />
         <return-scalar column="productShortName" type="string" />
         <return-scalar column="depositDue" type="big_decimal" />
         <return-scalar column="depositPaid" type="big_decimal" />
         <![CDATA[
             select a.account_id as accountId,
              sse.customer_id as customerId,
+             sse.deposit_currency_id as currencyId,
              po.prd_offering_id as productId,
             po.prd_offering_short_name as productShortName,
              s.recommended_amount as depositDue,
