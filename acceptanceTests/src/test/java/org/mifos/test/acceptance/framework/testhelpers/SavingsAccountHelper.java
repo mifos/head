@@ -32,6 +32,7 @@ import org.mifos.test.acceptance.framework.loan.EditAccountStatusConfirmationPag
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
+import org.mifos.test.acceptance.framework.questionnaire.CaptureQuestionResponse;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountEntryPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountPreviewPage;
@@ -167,6 +168,22 @@ public class SavingsAccountHelper {
         questionnairePage.populateAnswers(responseParams);
         return questionnairePage.navigateToNextPageSavingsAccountCreation();
     }
+
+    public SavingsAccountDetailPage fillQuestionGroupsDuringClosingSavingsAccount(String savingsId, QuestionResponseParameters questionResponseParameters, String[] questionsExist) {
+        NavigationHelper helper = new NavigationHelper(selenium);
+        SavingsAccountDetailPage savingsAccountDetailPage = helper.navigateToSavingsAccountDetailPage(savingsId);
+        savingsAccountDetailPage.verifyPage();
+        SavingsCloseAccountPage savingsCloseAccountPage = savingsAccountDetailPage.navigateToCloseAccount();
+        savingsCloseAccountPage.verifyPage();
+        CaptureQuestionResponse captureQuestionResponse = savingsCloseAccountPage.submitAndNavigateToQuestionnairePage("Closing Savings with QG");
+        captureQuestionResponse.verifyQuestionsExists(questionsExist);
+        captureQuestionResponse.populateAnswers(questionResponseParameters);
+        captureQuestionResponse.navigateToNextPageSavingsAccountClosing();
+        savingsAccountDetailPage = savingsCloseAccountPage.clickCloseButton();
+        savingsAccountDetailPage.verifyPage();
+        return savingsAccountDetailPage;
+    }
+
     public SavingsAccountDetailPage editAdditionalInformationDurringCreationSavingsAccount(QuestionResponseParameters responseParams) {
         CreateSavingsAccountPreviewPage createSavingsAccountPreviewPage = new CreateSavingsAccountPreviewPage(selenium);
         QuestionnairePage questionnairePage = createSavingsAccountPreviewPage.editAdditionalInformationQuestionnairePage();
