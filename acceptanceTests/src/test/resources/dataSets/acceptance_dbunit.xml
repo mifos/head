@@ -4529,6 +4529,10 @@
   <question_choices choice_id="40" question_id="9" choice_text="two" choice_order="1" ppi="N"/>
   <question_choices choice_id="41" question_id="9" choice_text="three" choice_order="2" ppi="N"/>
   <question_choices choice_id="42" question_id="9" choice_text="four" choice_order="3" ppi="N"/>
+  <question_choices choice_id="43" question_id="9" choice_text="one" choice_order="0" ppi="N"/>
+  <question_choices choice_id="44" question_id="9" choice_text="two" choice_order="1" ppi="N"/>
+  <question_choices choice_id="45" question_id="9" choice_text="three" choice_order="2" ppi="N"/>
+  <question_choices choice_id="46" question_id="9" choice_text="four" choice_order="3" ppi="N"/>
   <question_group id="1" title="QGForCreateSavingsAccount" date_of_creation="2011-02-24" state="0" is_editable="0" is_ppi="0"/>
   <question_group id="2" title="QGForLoanApproval" date_of_creation="2011-03-04" state="0" is_editable="0" is_ppi="0"/>
   <question_group id="3" title="QGForViewClientCentreGroupLoan" date_of_creation="2011-03-07" state="0" is_editable="0" is_ppi="0"/>
@@ -4542,6 +4546,8 @@
   <question_group id="11" title="QGForViewSavings" date_of_creation="2011-03-08" state="0" is_editable="1" is_ppi="0"/>
   <question_group id="12" title="CreateOffice" date_of_creation="2011-03-09" state="0" is_editable="1" is_ppi="0"/>
   <question_group id="13" title="CreateClientQG-1" date_of_creation="2011-03-09" state="0" is_editable="1" is_ppi="0"/>
+  <question_group id="14" title="QGForCloseLoan" date_of_creation="2011-11-17" state="0" is_editable="1" is_ppi="0"/>
+  <question_group id="15" title="QGForCloseSavings" date_of_creation="2011-11-17" state="0" is_editable="1" is_ppi="0"/>
   <question_group_event_sources id="1" question_group_id="1" event_source_id="12"/>
   <question_group_event_sources id="3" question_group_id="2" event_source_id="5"/>
   <question_group_event_sources id="8" question_group_id="3" event_source_id="3"/>
@@ -4558,6 +4564,8 @@
   <question_group_event_sources id="28" question_group_id="11" event_source_id="13"/>
   <question_group_event_sources id="30" question_group_id="12" event_source_id="6"/>
   <question_group_event_sources id="33" question_group_id="13" event_source_id="1"/>
+  <question_group_event_sources id="35" question_group_id="14" event_source_id="16"/>
+  <question_group_event_sources id="36" question_group_id="15" event_source_id="17"/>
   <question_group_instance id="1" question_group_id="13" entity_id="31" date_conducted="2011-03-09" completed_status="1" created_by="1" version_id="0" event_source_id="1"/>
   <question_group_response/>
   <questions question_id="1" answer_type="2" question_state="1" question_text="Question1" nickname="e5c1d1ea399a2e46aca161ed737cfee3"/>
@@ -5029,6 +5037,8 @@
   <sections id="19" question_group_id="12" name="Default" sequence_number="0"/>
   <sections id="20" question_group_id="12" name="Misc" sequence_number="1"/>
   <sections id="21" question_group_id="13" name="Misc" sequence_number="0"/>
+  <sections id="22" question_group_id="14" name="Sec1" sequence_number="0"/>
+  <sections id="23" question_group_id="15" name="Sec1" sequence_number="0"/>
   <sections_questions id="1" section_id="1" question_id="1" is_required="0" sequence_number="0"/>
   <sections_questions id="2" section_id="2" question_id="1" is_required="0" sequence_number="0"/>
   <sections_questions id="3" section_id="3" question_id="1" is_required="0" sequence_number="0"/>
@@ -5072,6 +5082,10 @@
   <sections_questions id="41" section_id="20" question_id="11" is_required="1" sequence_number="1"/>
   <sections_questions id="42" section_id="20" question_id="9" is_required="0" sequence_number="2"/>
   <sections_questions id="43" section_id="21" question_id="11" is_required="0" sequence_number="0"/>
+  <sections_questions id="44" section_id="22" question_id="2" is_required="0" sequence_number="0"/>
+  <sections_questions id="45" section_id="22" question_id="11" is_required="0" sequence_number="1"/>
+  <sections_questions id="46" section_id="23" question_id="9" is_required="0" sequence_number="0"/>
+  <sections_questions id="47" section_id="23" question_id="6" is_required="0" sequence_number="1"/>
   <spouse_father_lookup spouse_father_id="1" lookup_id="128"/>
   <spouse_father_lookup spouse_father_id="2" lookup_id="129"/>
   <spouse_father_lookup spouse_father_id="4" lookup_id="622"/>

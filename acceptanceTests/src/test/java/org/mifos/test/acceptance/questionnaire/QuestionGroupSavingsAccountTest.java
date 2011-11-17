@@ -25,6 +25,8 @@ import static java.util.Arrays.asList;
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
+import org.mifos.test.acceptance.framework.account.AccountStatus;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.questionnaire.AttachQuestionGroupParameters;
@@ -130,7 +132,7 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         setQuestionGroup();
-        createClient();
+        createClient("669");
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         searchParameters.setSearchString("Joe669 Doe669");
@@ -203,12 +205,56 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
         questionGroupTestHelper.markQuestionAsActive("question 1");
     }
 
-    private void createClient() {
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
+    public void verifyCapturingResponsesDuringSavingsClosing() throws Exception {
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011, 2, 28, 15, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        questionGroupTestHelper.markQuestionGroupAsActive("QGForCloseSavings");
+        try {
+            createClient("670");
+
+            CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+            searchParameters.setSearchString("Joe670 Doe670");
+            searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
+
+            CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+            submitAccountParameters.setAmount("248.0");
+
+            QuestionResponseParameters questionResponseParameters = new QuestionResponseParameters();
+
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[0].valuesAsArray", "three");
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "20");
+
+            String savingsId = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters).getAccountId();
+
+            EditAccountStatusParameters editAccountStatusParameters = new EditAccountStatusParameters();
+            editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
+            editAccountStatusParameters.setNote("test");
+            savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+
+            String[] questionsExist = {"MultiSelect", "Number"};
+            savingsAccountHelper.fillQuestionGroupsDuringClosingSavingsAccount(savingsId, questionResponseParameters, questionsExist);
+
+            Map<String, String> questionsAndAnswers = new HashMap<String, String>();
+            questionsAndAnswers.put("MultiSelect", "three");
+            questionsAndAnswers.put("Number", "20");
+
+            verifyQuestionResponsesExistInDatabase(savingsId, "Close Savings", questionsAndAnswers);
+
+        } finally {
+            questionGroupTestHelper.markQuestionGroupAsInactive("QGForCloseSavings");
+        }
+    }
+
+    private void createClient(String postfix) {
         String groupName = "group1";
         CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
         clientParams.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
-        clientParams.setFirstName("Joe669");
-        clientParams.setLastName("Doe669");
+        clientParams.setFirstName("Joe" + postfix);
+        clientParams.setLastName("Doe" + postfix);
         clientParams.setDateOfBirthDD("17");
         clientParams.setDateOfBirthMM("11");
         clientParams.setDateOfBirthYYYY("1977");
@@ -218,7 +264,7 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
         clientParams.setSpouseFirstName("fatherName");
         clientParams.setSpouseLastName("fatherLastName");
         clientTestHelper.createNewClient(groupName, clientParams);
-        clientTestHelper.activateClient("Joe669 Doe669");
+        clientTestHelper.activateClient("Joe" + postfix + " Doe" + postfix);
     }
 
     private void verifyQuestionResponsesExistInDatabase(String savingsID, String event, Map<String, String> questions) throws SQLException {

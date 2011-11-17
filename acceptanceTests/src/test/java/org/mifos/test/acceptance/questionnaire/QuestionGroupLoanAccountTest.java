@@ -37,11 +37,14 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameter
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
+import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +55,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups = {"client", "acceptance", "ui", "no_db_unit", "smoke"})
+@Test(singleThreaded = true, groups = {"client", "acceptance", "ui", "no_db_unit"})
 public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
 
     @Autowired
@@ -60,6 +63,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
 
     private QuestionGroupTestHelper questionGroupTestHelper;
     private LoanTestHelper loanTestHelper;
+    private LoanProductTestHelper loanProductTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -68,6 +72,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         super.setUp();
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
+        loanProductTestHelper = new LoanProductTestHelper(selenium);
 
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011, 2, 24, 15, 0, 0, 0);
@@ -336,7 +341,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
             loanAccountPage = loanTestHelper.createDefaultLoanAccount(createLoanAccountSearchParameters);
             String loanID2 = loanAccountPage.getAccountId();
 
-            QuestionResponsePage questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanApproval(loanID1, editAccountStatusParameters);
+            QuestionResponsePage questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanStatusChange(loanID1, editAccountStatusParameters);
             questionResponsePage.populateAnswers(questionResponseParameters);
             questionResponsePage = questionResponsePage
                     .continueAndNavigateToEditAccountStatusConfirmationPage()
@@ -352,7 +357,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
             questionGroupTestHelper.markQuestionGroupAsInactive("QGForApproveLoan2");
             questionGroupTestHelper.addNewQuestionsToQuestionGroup("QGForApproveLoan1", newQuestionList);
 
-            questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanApproval(loanID2, editAccountStatusParameters);
+            questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanStatusChange(loanID2, editAccountStatusParameters);
             questionResponsePage.verifyQuestionsExists(questionsExist);
             questionResponsePage.verifyQuestionsDoesnotappear(questionsInactive);
 
@@ -361,6 +366,55 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
             questionGroupTestHelper.markQuestionAsActive("ToBeDisabled");
             questionGroupTestHelper.markQuestionGroupAsInactive("QGForApproveLoan1");
             questionGroupTestHelper.markQuestionGroupAsInactive("QGForApproveLoan2");
+        }
+    }
+
+    @Test(enabled=true)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyResponsesDuringLoanAccountClosing() throws Exception {
+        questionGroupTestHelper.markQuestionGroupAsActive("QGForCloseLoan");
+        try {
+
+            DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
+            CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
+            searchParams.setSearchString("Stu12332659912419 Client12332659912419");
+            searchParams.setLoanProduct(productParams.getOfferingName());
+            DisburseLoanParameters disburseParams = new DisburseLoanParameters();
+            disburseParams.setPaymentType(DisburseLoanParameters.CASH);
+            disburseParams.setDisbursalDateDD("24");
+            disburseParams.setDisbursalDateMM("02");
+            disburseParams.setDisbursalDateYYYY("2011");
+
+            loanProductTestHelper.defineNewLoanProduct(productParams);
+
+            LoanAccountPage loanAccountPage = loanTestHelper.createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);
+
+            String loanID1 = loanAccountPage.getAccountId();
+
+            QuestionResponseParameters questionResponseParameters = new QuestionResponseParameters();
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "04/02/2011");
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "free text");
+
+            String[] questionsExist = {"Date", "FreeText"};
+            Map<String, String> questionsAndAnswers = new HashMap<String, String>();
+
+            questionsAndAnswers.put("Date", "04/02/2011");
+            questionsAndAnswers.put("FreeText", "free text");
+
+            EditAccountStatusParameters editAccountStatusParameters = new EditAccountStatusParameters();
+            editAccountStatusParameters.setAccountStatus(AccountStatus.LOAN_CLOSED_WRITTENOFF);
+            editAccountStatusParameters.setNote("note note");
+
+            QuestionResponsePage questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanStatusChange(loanID1, editAccountStatusParameters);
+            questionResponsePage.verifyQuestionsExists(questionsExist);
+            questionResponsePage.populateAnswers(questionResponseParameters);
+            questionResponsePage
+                    .continueAndNavigateToEditAccountStatusConfirmationPage()
+                    .submitAndNavigateToLoanAccountPage();
+
+            verifyQuestionResponsesExistInDatabase(loanID1, "Close Loan", questionsAndAnswers);
+        } finally {
+            questionGroupTestHelper.markQuestionGroupAsInactive("QGForCloseLoan");
         }
     }
 
