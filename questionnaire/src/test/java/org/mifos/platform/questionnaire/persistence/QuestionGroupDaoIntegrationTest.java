@@ -84,13 +84,24 @@ public class QuestionGroupDaoIntegrationTest {
     public void shouldRetrieveEventSourcesInOrder() {
         List<EventSourceDto> eventSources = questionnaireService.getAllEventSources();
         assertThat(eventSources, is(notNullValue()));
-        assertThat(eventSources.size(), is(15));
+        assertThat(eventSources.size(), is(17));
         assertThat(eventSources.get(0).getDescription(), is("Create Client"));
         assertThat(eventSources.get(1).getDescription(), is("View Client"));
         assertThat(eventSources.get(2).getDescription(), is("Close Client"));
         assertThat(eventSources.get(3).getDescription(), is("Create Group"));
         assertThat(eventSources.get(4).getDescription(), is("View Group"));
         assertThat(eventSources.get(5).getDescription(), is("Create Office"));
+        assertThat(eventSources.get(6).getDescription(), is("Create Personnel"));
+        assertThat(eventSources.get(7).getDescription(), is("Create Center"));
+        assertThat(eventSources.get(8).getDescription(), is("View Center"));
+        assertThat(eventSources.get(9).getDescription(), is("Create Savings"));
+        assertThat(eventSources.get(10).getDescription(), is("View Savings"));
+        assertThat(eventSources.get(11).getDescription(), is("Close Savings"));
+        assertThat(eventSources.get(12).getDescription(), is("Create Loan"));
+        assertThat(eventSources.get(13).getDescription(), is("View Loan"));
+        assertThat(eventSources.get(14).getDescription(), is("Approve Loan"));
+        assertThat(eventSources.get(15).getDescription(), is("Close Loan"));
+        assertThat(eventSources.get(16).getDescription(), is("Disburse Loan"));
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws SystemException {

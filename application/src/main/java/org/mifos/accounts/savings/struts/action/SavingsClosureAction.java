@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionErrors;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountPaymentEntity;
@@ -37,9 +38,13 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.struts.actionforms.SavingsClosureActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.framework.struts.action.BaseAction;
@@ -51,6 +56,8 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.UserContext;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.service.MifosServiceFactory;
 
 /**
  * @deprecated - this struts action should be replaced by ftl/spring web flow or spring mvc implementation.
@@ -58,6 +65,18 @@ import org.mifos.security.util.UserContext;
  */
 @Deprecated
 public class SavingsClosureAction extends BaseAction {
+
+    private QuestionnaireFlowAdapter closeSavingsQuestionnaire =
+            new QuestionnaireFlowAdapter("Close", "Savings",
+                    ActionForwards.preview_success,
+                    "savingsAction.do?method=get",
+                    new QuestionnaireServiceFacadeLocator() {
+                        @Override
+                        public QuestionnaireServiceFacade getService(HttpServletRequest request) {
+                            return MifosServiceFactory.getQuestionnaireServiceFacade(request);
+                        }
+                    }
+            );
 
     public SavingsClosureAction() {
     }
@@ -131,7 +150,8 @@ public class SavingsClosureAction extends BaseAction {
             }
         }
         SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, accountPaymentEntity, request);
-        return mapping.findForward("preview_success");
+        
+        return closeSavingsQuestionnaire.fetchAppliedQuestions(mapping, actionForm, request, ActionForwards.preview_success);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -177,6 +197,8 @@ public class SavingsClosureAction extends BaseAction {
 
         SessionUtils.removeAttribute(SavingsConstants.ACCOUNT_PAYMENT, request);
 
+        closeSavingsQuestionnaire.saveResponses(request, actionForm, savingsInSession.getAccountId());
+
         return mapping.findForward("close_success");
     }
 
@@ -195,5 +217,26 @@ public class SavingsClosureAction extends BaseAction {
             forward = "preview_faliure";
         }
         return mapping.findForward(forward);
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward captureQuestionResponses(
+            final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "captureQuestionResponses");
+        ActionErrors errors = closeSavingsQuestionnaire.validateResponses(request, (SavingsClosureActionForm) form);
+        if (errors != null && !errors.isEmpty()) {
+            addErrors(request, errors);
+            return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
+        }
+        return closeSavingsQuestionnaire.rejoinFlow(mapping);
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward editQuestionResponses(
+            final ActionMapping mapping, final ActionForm form,
+            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        request.setAttribute(METHODCALLED, "editQuestionResponses");
+        return closeSavingsQuestionnaire.editResponses(mapping, request, (SavingsClosureActionForm) form);
     }
 }

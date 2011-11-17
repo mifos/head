@@ -48,6 +48,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.struts.actionforms.SavingsActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
@@ -282,9 +283,14 @@ public class SavingsAction extends BaseAction {
 
     private void setQuestionGroupInstances(HttpServletRequest request, SavingsBO savingsBO) throws PageExpiredException {
         QuestionnaireServiceFacade questionnaireServiceFacade = questionnaireServiceFacadeLocator.getService(request);
+        boolean containsQGForCloseSavings = false;
         if (questionnaireServiceFacade != null) {
             setQuestionGroupInstances(questionnaireServiceFacade, request, savingsBO.getAccountId());
+            if (savingsBO.getAccountState().getId().equals(AccountState.SAVINGS_CLOSED.getValue())) {
+                containsQGForCloseSavings = questionnaireServiceFacade.getQuestionGroupInstances(savingsBO.getAccountId(), "Close", "Savings").size() > 0;
+            }
         }
+        SessionUtils.removeThenSetAttribute("containsQGForCloseSavings", containsQGForCloseSavings, request);
     }
 
     // Intentionally made public to aid testing !
