@@ -20,6 +20,10 @@
 
 package org.mifos.customers.struts.action;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,10 +36,15 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
+import org.joda.time.Days;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.ClientRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.util.helpers.CenterConstants;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -45,7 +54,11 @@ import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.struts.actionforms.CustSearchActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
+import org.mifos.dto.domain.CenterDescriptionDto;
+import org.mifos.dto.domain.ClientDescriptionDto;
 import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.CustomerHierarchyDto;
+import org.mifos.dto.domain.GroupDescriptionDto;
 import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.struts.action.SearchAction;
@@ -138,8 +151,12 @@ public class CustSearchAction extends SearchAction {
 
         cleanUpSearch(request);
         UserContext userContext = getUserContext(request);
+        UserDetailDto userDetails = this.centerServiceFacade.retrieveUsersDetails(userContext.getId());     
         SessionUtils.setAttribute("isCenterHierarchyExists", ClientRules.getCenterHierarchyExists(), request);
         loadMasterData(userContext.getId(), request, actionForm);
+        if (userDetails.isLoanOfficer()) {
+            loadLoanOfficerCustomersHierarchyForSelectedDay(userContext.getId(), request, actionForm);
+        }
         return mapping.findForward(CustomerConstants.GETHOMEPAGE_SUCCESS);
     }
 
@@ -220,8 +237,10 @@ public class CustSearchAction extends SearchAction {
         PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userId);
         SessionUtils.setAttribute(CustomerSearchConstants.OFFICE, userDetails.getOfficeName(), request);
         if (userDetails.isLoanOfficer()) {
+            SessionUtils.setAttribute("isLoanOfficer", true, request);
             return loadLoanOfficer(personnel, request);
         }
+        SessionUtils.setAttribute("isLoanOfficer", false, request);
         return loadNonLoanOfficer(personnel, request, form);
 
     }
@@ -235,7 +254,7 @@ public class CustSearchAction extends SearchAction {
 
         // see centerServiceFacade.retrieveCustomersUnderUser(loanOfficerId) for replacing below code.
         List<CustomerBO> customerList = null;
-
+        
         boolean isCenterHierarchyExist = ClientRules.getCenterHierarchyExists();
 
         if (isCenterHierarchyExist) {
@@ -243,6 +262,7 @@ public class CustSearchAction extends SearchAction {
         } else {
             customerList = new CustomerPersistence().getGroupsUnderUser(personnel);
         }
+        
         SessionUtils.setCollectionAttribute(CustomerSearchConstants.CUSTOMERLIST, customerList, request);
         SessionUtils.setAttribute("GrpHierExists", isCenterHierarchyExist, request);
         SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD, CustomerSearchConstants.LOADFORWARDLOANOFFICER, request);
@@ -250,6 +270,83 @@ public class CustSearchAction extends SearchAction {
         return CustomerSearchConstants.LOADFORWARDLOANOFFICER_SUCCESS;
     }
 
+    /**
+     * Retrieve meetings for loan officer for selected day.
+     * @param personnel
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    private String loadLoanOfficerCustomersHierarchyForSelectedDay(Short userId, HttpServletRequest request, CustSearchActionForm form) throws Exception {
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userId);
+        
+        CustomerHierarchyDto hierarchy = new CustomerHierarchyDto();
+        List<String> nearestDates = new ArrayList<String>();
+        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        // Yesterday as current date because upcoming meetings should include current day
+        Date currentDate = new DateTime().minusDays(1).toDate();
+        Date selectedDate;
+        
+        DateTime nextDate = new DateTime();
+        for (int i = 0; i < 7; i++){
+            nearestDates.add(formatter.format(nextDate.toDate()));
+            nextDate = nextDate.plusDays(1);
+        }
+        
+        if ( form.getSelectedDateOption() != null ){
+           selectedDate = formatter.parse(form.getSelectedDateOption());
+        } else {
+           selectedDate = new Date();
+        }
+
+        if (ClientRules.getCenterHierarchyExists()) {
+            for (CustomerBO customer : new CustomerPersistence().getActiveCentersUnderUser(personnel)){
+                DateTime nextMeeting = new DateTime(customer.getCustomerMeetingValue().getNextScheduleDateAfterRecurrenceWithoutAdjustment(currentDate));
+                if ( Days.daysBetween(new DateTime(selectedDate), nextMeeting).getDays() == 0 ){
+                    CenterDescriptionDto centerDescription = new CenterDescriptionDto();
+                    centerDescription.setId(customer.getCustomerId());
+                    centerDescription.setDisplayName(customer.getDisplayName());
+                    centerDescription.setGlobalCustNum(customer.getGlobalCustNum());
+                    centerDescription.setSearchId(customer.getSearchId());
+                    hierarchy.getCenters().add(centerDescription);
+                }
+            }
+        }
+        
+        allGroups:
+        for (CustomerBO group : new CustomerPersistence().getGroupsUnderUser(personnel)){       
+            DateTime nextMeeting = new DateTime(group.getCustomerMeetingValue().getNextScheduleDateAfterRecurrenceWithoutAdjustment(currentDate));
+            if ( Days.daysBetween(new DateTime(selectedDate), nextMeeting).getDays() == 0 ){     
+                GroupDescriptionDto groupDescription = new GroupDescriptionDto();
+                groupDescription.setId(group.getCustomerId());
+                groupDescription.setDisplayName(group.getDisplayName());
+                groupDescription.setGlobalCustNum(group.getGlobalCustNum());
+                groupDescription.setSearchId(group.getSearchId());
+
+                for (ClientBO client : this.customerDao.findActiveClientsUnderParent(group.getSearchId(), personnel.getOffice().getOfficeId())) {
+                    ClientDescriptionDto clientDescription = new ClientDescriptionDto();
+                    clientDescription.setId(client.getCustomerId());
+                    clientDescription.setDisplayName(client.getDisplayName());
+                    clientDescription.setGlobalCustNum(client.getGlobalCustNum());
+                    clientDescription.setSearchId(client.getSearchId());
+                    groupDescription.getClients().add(clientDescription);
+                }
+
+                for (CenterDescriptionDto center : hierarchy.getCenters()) {
+                    if (group.getSearchId().startsWith(center.getSearchId())) {
+                        center.getGroups().add(groupDescription);
+                        continue allGroups;
+                    }
+                }
+                hierarchy.getGroups().add(groupDescription);
+            }
+        }
+        
+        SessionUtils.setCollectionAttribute("nearestDates", nearestDates, request);
+        SessionUtils.setAttribute("hierarchy", hierarchy, request);
+        return CustomerSearchConstants.LOADFORWARDLOANOFFICER_SUCCESS;
+    }
+    
     private String loadNonLoanOfficer(PersonnelBO personnel, HttpServletRequest request, CustSearchActionForm form)
             throws Exception {
         if (personnel.getOffice().getOfficeLevel().equals(OfficeLevel.BRANCHOFFICE)) {

@@ -20,6 +20,8 @@
 
 package org.mifos.customers.struts.actionforms;
 
+import java.util.Date;
+
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 public class CustSearchActionForm extends BaseActionForm {
@@ -35,6 +37,8 @@ public class CustSearchActionForm extends BaseActionForm {
     private String officeName;
 
     private String perspective;
+    
+    private String selectedDateOption;
 
     public String getInput() {
         return input;
@@ -83,4 +87,13 @@ public class CustSearchActionForm extends BaseActionForm {
     public void setPerspective(String perspective) {
         this.perspective = perspective;
     }
+
+    public String getSelectedDateOption() {
+        return selectedDateOption;
+    }
+
+    public void setSelectedDateOption(String selectedDateOption) {
+        this.selectedDateOption = selectedDateOption;
+    }
+ 
 }
