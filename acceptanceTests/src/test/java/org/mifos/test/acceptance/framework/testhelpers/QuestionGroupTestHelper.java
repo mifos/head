@@ -425,7 +425,7 @@ public class QuestionGroupTestHelper {
         .submitAndNavigateToQuestionResponsePage();
     }
 
-    public QuestionResponsePage navigateToQuestionResponsePageDuringLoanApproval(String loanID, EditAccountStatusParameters editAccountStatusParameters) {
+    public QuestionResponsePage navigateToQuestionResponsePageDuringLoanStatusChange(String loanID, EditAccountStatusParameters editAccountStatusParameters) {
         return navigationHelper
         .navigateToLoanAccountPage(loanID)
         .navigateToEditAccountStatus()

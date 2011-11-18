@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.savings;
 
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.questionnaire.CaptureQuestionResponse;
 
 public class SavingsCloseAccountPage extends MifosPage {
 
@@ -38,9 +39,22 @@ public class SavingsCloseAccountPage extends MifosPage {
         selenium.type("closesavingsaccount.input.notes", notes);
         selenium.click("closesavingsaccount.button.submit");
         waitForPageToLoad();
+        return clickCloseButton();
+    }
+
+    public SavingsAccountDetailPage clickCloseButton() {
         selenium.click("closeButton");
         waitForPageToLoad();
 
         return new SavingsAccountDetailPage(selenium);
+    }
+
+    public CaptureQuestionResponse submitAndNavigateToQuestionnairePage(String notes) {
+        selenium.select("paymentTypeId", "label=Cash");
+        selenium.type("closesavingsaccount.input.notes", notes);
+        selenium.click("closesavingsaccount.button.submit");
+        waitForPageToLoad();
+
+        return new CaptureQuestionResponse(selenium);
     }
 }
