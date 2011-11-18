@@ -230,7 +230,9 @@ public interface CustomerDao {
 
     List<ClientBO> findActiveClientsUnderParent(String searchId, Short branchId);
 
-    List<ClientBO> findActiveClientsWithoutGroupForLoanOfficer(Short loanOfficerId, Short officeId);
+    List<ClientBO> findAllExceptClosedAndCancelledClientsUnderParent(String searchId, Short officeId);
+
+    List<ClientBO> findAllExceptClosedAndCancelledClientsWithoutGroupForLoanOfficer(Short loanOfficerId, Short officeId);
 
     ClientBO findClientById(Integer integer);
 
