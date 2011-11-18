@@ -102,7 +102,6 @@ import org.mifos.dto.screen.GroupDisplayDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.HibernateSearchException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -1642,18 +1641,32 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<ClientBO> findActiveClientsWithoutGroupForLoanOfficer(Short loanOfficerId, Short officeId) {
+    public List<ClientBO> findAllExceptClosedAndCancelledClientsWithoutGroupForLoanOfficer(Short loanOfficerId, Short officeId) {
 
-        List<ClientBO> activeClients = new ArrayList<ClientBO>();
+        List<ClientBO> clients = new ArrayList<ClientBO>();
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("PERSONNEL_ID", loanOfficerId);
         queryParameters.put("OFFICE_ID", officeId);
-        List<ClientBO> queryResult = (List<ClientBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.ACTIVE_CLIENTS_WITHOUT_GROUP_FOR_LOAN_OFFICER, queryParameters);
+        List<ClientBO> queryResult = (List<ClientBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.ALL_EXCEPT_CANCELLED_CLOSED_CLIENTS_WITHOUT_GROUP_FOR_LOAN_OFFICER, queryParameters);
         if (queryResult != null) {
-            activeClients.addAll(queryResult);
+            clients.addAll(queryResult);
         }
-        return activeClients;
+        return clients;
+    }
+
+    @Override
+    public List<ClientBO> findAllExceptClosedAndCancelledClientsUnderParent(String searchId, Short officeId) {
+        List<ClientBO> clients = new ArrayList<ClientBO>();
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_STRING", searchId + ".%");
+        queryParameters.put("OFFICE_ID", officeId);
+        List<ClientBO> queryResult = (List<ClientBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.ALL_EXCEPT_CANCELLED_CLOSED_CLIENTS_UNDER_PARENT, queryParameters);
+        if (queryResult != null) {
+            clients.addAll(queryResult);
+        }
+        return clients;
     }
 
     @Override

@@ -386,8 +386,9 @@ public interface NamedQueryConstants {
     String FETCH_ALL_RECURRENCE_TYPES = "meeting.fetchAllReccurenceTypes";
 
     String ACTIVE_CLIENTS_UNDER_PARENT = "Customer.getActiveClientsUnderParent";
+    String ALL_EXCEPT_CANCELLED_CLOSED_CLIENTS_UNDER_PARENT = "Customer.getAllExceptClosedAndCancelledClientsUnderParent";
     String ACTIVE_CLIENTS_UNDER_GROUP = "Customer.getActiveClientsUnderGroup";
-    String ACTIVE_CLIENTS_WITHOUT_GROUP_FOR_LOAN_OFFICER = "Customer.getActiveClientsWithoutGroupForLoanOfficer";
+    String ALL_EXCEPT_CANCELLED_CLOSED_CLIENTS_WITHOUT_GROUP_FOR_LOAN_OFFICER = "Customer.getAllExceptClosedAndCancelledClientsWithoutGroupForLoanOfficer";
 
     // holiday handling
     String GET_OFFICE_HOLIDAYS = "holiday.getOfficeHolidays";

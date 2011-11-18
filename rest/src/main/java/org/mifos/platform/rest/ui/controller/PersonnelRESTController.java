@@ -39,9 +39,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Controller
 public class PersonnelRESTController {
 
@@ -87,7 +84,7 @@ public class PersonnelRESTController {
             groupDescription.setGlobalCustNum(group.getGlobalCustNum());
             groupDescription.setSearchId(group.getSearchId());
 
-            for (ClientBO client : this.customerDao.findActiveClientsUnderParent(group.getSearchId(), loanOfficer.getOffice().getOfficeId())) {
+            for (ClientBO client : this.customerDao.findAllExceptClosedAndCancelledClientsUnderParent(group.getSearchId(), loanOfficer.getOffice().getOfficeId())) {
                 ClientDescriptionDto clientDescription = new ClientDescriptionDto();
                 clientDescription.setId(client.getCustomerId());
                 clientDescription.setDisplayName(client.getDisplayName());
@@ -105,7 +102,7 @@ public class PersonnelRESTController {
             hierarchy.getGroups().add(groupDescription);
         }
 
-        for (ClientBO client : this.customerDao.findActiveClientsWithoutGroupForLoanOfficer(loanOfficer.getPersonnelId(), loanOfficer.getOffice().getOfficeId())) {
+        for (ClientBO client : this.customerDao.findAllExceptClosedAndCancelledClientsWithoutGroupForLoanOfficer(loanOfficer.getPersonnelId(), loanOfficer.getOffice().getOfficeId())) {
             ClientDescriptionDto clientDescription = new ClientDescriptionDto();
                 clientDescription.setId(client.getCustomerId());
                 clientDescription.setDisplayName(client.getDisplayName());
