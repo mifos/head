@@ -144,6 +144,7 @@
                 <span>[@spring.message "manageSavngsProducts.editsavingsproduct.interestrate" /]</span>
                 <span>${savingsProductDetails.interestRate}</span>
             </div>
+            [#if savingsProductDetails.interestRate != 0]
             <div>
                 <span>[@spring.message "manageSavngsProducts.editsavingsproduct.alanceusedforInterestcalculation" /]</span>
                 [#switch savingsProductDetails.interestCalculationType]
@@ -175,6 +176,7 @@
                 <span>${savingsProductDetails.minBalanceForInterestCalculation}</span>
             </div>
             </p>
+            [/#if]
             <p class="span-24 ">
 
             <div class="fontBold black-subheading">[@spring.message "manageSavngsProducts.editsavingsproduct.accounting" /]</div>
