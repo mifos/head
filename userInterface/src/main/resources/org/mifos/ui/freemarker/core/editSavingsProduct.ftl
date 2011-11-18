@@ -190,7 +190,7 @@
           	<div class="span-20">
                   <span class="  span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.interestRate" /]:</span>
                   <span class="span-6">[@spring.formInput "savingsProduct.interestRate" /]&nbsp;
-                	(0 - 100)%, Interest rate = 0: [@spring.formCheckbox "savingsProduct.interestRateZero"/]  
+                	(0 - 100)%, [@spring.message "manageProducts.defineSavingsProducts.interestRate"/] = 0: [@spring.formCheckbox "savingsProduct.interestRateZero"/]
         		  </span>
             </div>
             <div id="interestRateDetails" >
