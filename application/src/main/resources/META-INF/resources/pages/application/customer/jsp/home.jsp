@@ -20,6 +20,7 @@ explanation of the license and how it is applied.
 
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
@@ -135,11 +136,100 @@ explanation of the license and how it is applied.
 					</tr>
 				</table>
 				<html-el:hidden property="officeId" value="0"/>
-		
-		<html-el:hidden property="method" value="mainSearch" />	
-		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-				
-				
+				<html-el:hidden property="method" value="mainSearch" />	
+				<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />				
 		</html-el:form>
+		<!-- task-list MIFOS-5177 -->
+		<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isLoanOfficer')}">
+			<html-el:form action="custSearchAction.do?method=getHomePage">
+			<table width="95%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="70%" height="24" align="left" valign="top" class="paddingL10">		
+						Upcoming meetings:
+						<html-el:select property="selectedDateOption" onchange="this.form.submit();">
+							<c:forEach var="date"
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'nearestDates')}">
+								<html-el:option value="${date}">
+									${date}
+								</html-el:option>
+							</c:forEach>
+						</html-el:select>
+					</td>
+				</tr>
+				<tr>
+					<c:set var="hierarchy" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'hierarchy')}" />
+					<c:choose>
+	             		<c:when test="${isCenterHierarchyExists=='true'}">
+			             	<td width="70%" height="24" align="left" valign="top" class="paddingL10">	 
+			             	 	<c:forEach var="center" items="${hierarchy.centers}">
+								<table width="90%" border="0" cellspacing="0" cellpadding="0">
+									<tr class="fontnormal">
+										<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+										<td width="99%">
+											<a href="centerCustAction.do?method=get&globalCustNum=<c:out value="${center.globalCustNum}"/>">
+												<c:out value="${center.displayName}" />
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td></td>
+										<td>
+											<ul>
+												<c:forEach var="group" items="${center.groups}">
+													<li class="fontnormal">
+														<a href="groupCustAction.do?method=get&globalCustNum=<c:out value="${group.globalCustNum}"/>">
+															<c:out value="${group.displayName}" />
+														</a>
+													</li>
+													<ul>
+														<c:forEach var="client" items="${group.clients}">
+															<li class="fontnormal">
+																<a href="clientCustAction.do?method=get&globalCustNum=<c:out value="${client.globalCustNum}"/>">
+																	<c:out value="${client.displayName}" />
+																</a>
+															</li>
+														</c:forEach>	
+													</ul>
+												</c:forEach>
+											</ul>	
+										<td>
+									</tr>
+								</table>
+			              		</c:forEach>
+		              		</td>
+              		 	</c:when>
+	              		<c:otherwise>
+							<c:forEach var="group" items="${hierarchy.groups}">
+								<table width="90%" border="0" cellspacing="0" cellpadding="0">
+									<tr class="fontnormal">
+										<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+										<td width="99%">
+											<a href="groupCustAction.do?method=get&globalCustNum=<c:out value="${group.globalCustNum}"/>">
+												<c:out value="${group.displayName}" />
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td></td>
+										<td>
+											<ul>
+												<c:forEach var="client" items="${group.clients}">
+													<li class="fontnormal">
+														<a href="clientCustAction.do?method=get&globalCustNum=<c:out value="${client.globalCustNum}"/>">
+															<c:out value="${client.displayName}" />
+														</a>
+													</li>
+												</c:forEach>
+											</ul>	
+										<td>
+									</tr>
+								</table>
+			              		</c:forEach>
+			   			</c:otherwise>
+					</c:choose>
+				</tr>
+			</table>
+			</html-el:form>
+		</c:if>
 	</tiles:put>
 </tiles:insert>
