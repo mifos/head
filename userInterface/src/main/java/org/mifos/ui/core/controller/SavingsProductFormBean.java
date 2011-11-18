@@ -49,6 +49,7 @@ public class SavingsProductFormBean {
     private Double maxWithdrawalAmount;
 
     // Interest rate details
+    private boolean interestRateZero;
     @Min(value=0)
     @Max(value=100)
     @NotNull
@@ -79,6 +80,27 @@ public class SavingsProductFormBean {
 
     private boolean notUpdateable = false;
 
+    public void setDefaultInterestRateDetails(){
+        if (this.getInterestRate() == null || this.getInterestRate().intValue() != 0){
+            this.setInterestRate(BigDecimal.ZERO);
+        }
+        if (this.getSelectedInterestCalculation() == null || this.getSelectedInterestCalculation().isEmpty() ){
+            this.setSelectedInterestCalculation("1"); //minimum balance
+        }
+        
+        if (this.getSelectedFequencyPeriod() == null || this.getSelectedFequencyPeriod().isEmpty()){
+            this.setSelectedFequencyPeriod("3");  //days
+        }
+        
+        if (this.getInterestCalculationFrequency() == null || this.getInterestCalculationFrequency() == 0){
+            this.setInterestCalculationFrequency(1);
+        }
+        
+        if (this.getInterestPostingMonthlyFrequency() == null || this.getInterestPostingMonthlyFrequency() == 0){
+            this.setInterestPostingMonthlyFrequency(1);
+        }
+    }
+    
     public boolean isGroupSavingAccount() {
         return ("2").equals(this.generalDetails.getSelectedApplicableFor());
     }
@@ -245,5 +267,13 @@ public class SavingsProductFormBean {
 
     public void setNotUpdateable(boolean notUpdateable) {
         this.notUpdateable = notUpdateable;
+    }
+
+    public boolean isInterestRateZero() {
+        return interestRateZero;
+    }
+
+    public void setInterestRateZero(boolean interestRateZero) {
+        this.interestRateZero = interestRateZero;
     }
 }

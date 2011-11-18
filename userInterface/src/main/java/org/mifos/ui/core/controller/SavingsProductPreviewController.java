@@ -102,6 +102,10 @@ public class SavingsProductPreviewController {
             savingsProduct.setMaxWithdrawalAmount(zero);
         }
 
+        if (savingsProduct.isInterestRateZero() ){
+            savingsProduct.setDefaultInterestRateDetails();
+        }
+        
         if (savingsProduct.getMinBalanceRequiredForInterestCalculation() == null) {
             savingsProduct.setMinBalanceRequiredForInterestCalculation(zero.toString());
         }
@@ -127,7 +131,6 @@ public class SavingsProductPreviewController {
             modelAndView.addObject("editFormview", editFormview);
             populateModelAndViewForPreview(savingsProduct, modelAndView);
         } else {
-
             PrdOfferingDto product;
             SavingsProductDto savingsProductRequest = new SavingsProductFormBeanAssembler().assembleSavingsProductRequest(savingsProduct);
             if (editFormview.equalsIgnoreCase("defineSavingsProduct")) {

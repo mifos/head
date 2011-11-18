@@ -108,34 +108,43 @@
                 </div>
                 <div class="clear">&nbsp;</div>
                 <p class="fontBold margin10topbottom">[@spring.message "manageSavngsProducts.previewSavingsProducts.interestrate" /] </p>
-
-                <div class="span-21 last">
-                    <div class="span-20">
-                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.interestrate" /]
-                                        :&nbsp;</span>
-                        <span class="span-4">${savingsProduct.interestRate}</span>
-                    </div>
-                    <div class="span-20 ">
-                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.balanceusedforInterestcalculation" /]
-                                        :&nbsp;</span>
-                        <span class="span-4">${interestCalculationUsed}</span>
-                    </div>
-                    <div class="span-20 ">
-                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.timeperiodforInterestcalculation" /]
-                                        :&nbsp;</span>
-                        <span class="span-4">${savingsProduct.interestCalculationFrequency} ${interestCalculationTimePeriod}</span>
-                    </div>
-                    <div class="span-20 ">
-                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.frequencyofInterestpostingtoaccounts" /]
-                                        :&nbsp;</span>
-                        <span class="span-4">${savingsProduct.interestPostingMonthlyFrequency} [@spring.message "manageProducts.defineSavingsProducts.month(s)" /]</span>
-                    </div>
-                    <div class="span-20 ">
-                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.minimumbalancerequiredforInterestcalculation" /]
-                                        :&nbsp;</span>
-                        <span class="span-4">${savingsProduct.minBalanceRequiredForInterestCalculation}</span>
-                    </div>
-                </div>
+				[#if !savingsProduct.interestRateZero]
+	                <div class="span-21 last">
+	                    <div class="span-20">
+	                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.interestrate" /]
+	                                        :&nbsp;</span>
+	                        <span class="span-4">${savingsProduct.interestRate}</span>
+	                    </div>
+	                    <div class="span-20 ">
+	                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.balanceusedforInterestcalculation" /]
+	                                        :&nbsp;</span>
+	                        <span class="span-4">${interestCalculationUsed}</span>
+	                    </div>
+	                    <div class="span-20 ">
+	                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.timeperiodforInterestcalculation" /]
+	                                        :&nbsp;</span>
+	                        <span class="span-4">${savingsProduct.interestCalculationFrequency} ${interestCalculationTimePeriod}</span>
+	                    </div>
+	                    <div class="span-20 ">
+	                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.frequencyofInterestpostingtoaccounts" /]
+	                                        :&nbsp;</span>
+	                        <span class="span-4">${savingsProduct.interestPostingMonthlyFrequency} [@spring.message "manageProducts.defineSavingsProducts.month(s)" /]</span>
+	                    </div>
+	                    <div class="span-20 ">
+	                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.minimumbalancerequiredforInterestcalculation" /]
+	                                        :&nbsp;</span>
+	                        <span class="span-4">${savingsProduct.minBalanceRequiredForInterestCalculation}</span>
+	                    </div>
+	                </div>
+                [#else]
+	                <div class="span-21 last">
+	                    <div class="span-20">
+	                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.interestrate" /]
+	                                        :&nbsp;</span>
+	                        <span class="span-4">0</span>
+	                    </div>
+	                </div>
+                [/#if]
                 <div class="clear">&nbsp;</div>
                 <p class="fontBold margin10topbottom">[@spring.message "manageSavngsProducts.previewSavingsProducts.accounting" /] </p>
 
