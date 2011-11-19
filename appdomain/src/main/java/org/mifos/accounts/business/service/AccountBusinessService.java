@@ -83,6 +83,14 @@ public class AccountBusinessService implements BusinessService {
         }
     }
 
+    public AccountTypes getTypeBySystemId(String accountGlobalNum) throws ServiceException {
+        AccountBO accountBO = findBySystemId(accountGlobalNum);
+        if (accountBO != null) {
+            return accountBO.getType();
+        }
+        return null;
+    }
+
     public AccountBO getAccount(Integer accountId) throws ServiceException {
         try {
             return getlegacyAccountDao().getAccount(accountId);

@@ -20,7 +20,11 @@
 package org.mifos.platform.rest.ui.controller;
 
 import org.mifos.application.servicefacade.CenterServiceFacade;
-import org.mifos.dto.domain.CenterInformationDto;
+import org.mifos.application.servicefacade.SavingsServiceFacade;
+import org.mifos.dto.screen.TransactionHistoryDto;
+import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.core.MifosRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,15 +32,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+import java.util.ArrayList;
+
 @Controller
-public class CenterRESTController {
+public class AccountRESTController {
 
     @Autowired
     private CenterServiceFacade centerServiceFacade;
 
-    @RequestMapping(value = "center/num-{globalCustNum}", method = RequestMethod.GET)
+    @Autowired
+    private SavingsServiceFacade savingsServiceFacade;
+
+    @Autowired
+    private AccountBusinessService accountBusinessService;
+
+    @RequestMapping(value = "/account/trxnhistory/num-{globalAccountNum}", method = RequestMethod.GET)
     public final @ResponseBody
-    CenterInformationDto getCenterByNumber(@PathVariable String globalCustNum) {
-        return centerServiceFacade.getCenterInformationDto(globalCustNum);
+    List<TransactionHistoryDto> getAccountTransactionHistoryByNumber(@PathVariable String globalAccountNum) throws Exception {
+        AccountTypes type = accountBusinessService.getTypeBySystemId(globalAccountNum);
+        if (AccountTypes.LOAN_ACCOUNT.equals(type)) {
+            return centerServiceFacade.retrieveAccountTransactionHistory(globalAccountNum);
+        }
+        if (AccountTypes.SAVINGS_ACCOUNT.equals(type)) {
+            return new ArrayList<TransactionHistoryDto>(savingsServiceFacade.retrieveTransactionHistory(globalAccountNum));
+        }
+        throw new MifosRuntimeException("Unsupported account type.");
     }
 }
