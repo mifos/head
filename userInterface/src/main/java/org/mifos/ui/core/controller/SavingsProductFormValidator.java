@@ -114,52 +114,54 @@ public class SavingsProductFormValidator implements Validator {
         if (formBean.isGroupSavingAccount() && formBean.getSelectedGroupSavingsApproach().trim().isEmpty()) {
             errors.reject("NotEmpty.savingsProduct.selectedGroupSavingsApproach");
         }
-
-        if (null == formBean.getInterestRate() ||
-                formBean.getInterestRate().intValue() < 0 ||
-                formBean.getInterestRate().intValue() > 100 ||
-                errorProcessor.getRejectedValue("interestRate") != null) {
-            if (errorProcessor.getTarget() == null) {
-                errors.reject("NotNull.savingsProduct.interestRate");
+        
+        if (!formBean.isInterestRateZero()){
+            if (null == formBean.getInterestRate() ||
+                    formBean.getInterestRate().intValue() < 1 ||
+                    formBean.getInterestRate().intValue() > 100 ||
+                    errorProcessor.getRejectedValue("interestRate") != null) {
+                if (errorProcessor.getTarget() == null) {
+                    errors.reject("NotNull.savingsProduct.interestRate");
+                }
+                else {
+                    BindException bindException = new BindException(errorProcessor.getTarget(), errorProcessor.getObjectName());
+                    bindException.addError(new FieldError(errorProcessor.getObjectName(), "interestRate", errorProcessor.getRejectedValue("interestRate"),
+                            true, new String[] {"NotNull.savingsProduct.interestRate"}, null, null));
+                    errors.addAllErrors(bindException);
+                }
             }
-            else {
-                BindException bindException = new BindException(errorProcessor.getTarget(), errorProcessor.getObjectName());
-                bindException.addError(new FieldError(errorProcessor.getObjectName(), "interestRate", errorProcessor.getRejectedValue("interestRate"),
-                        true, new String[] {"NotNull.savingsProduct.interestRate"}, null, null));
-                errors.addAllErrors(bindException);
+        
+            if (formBean.getSelectedInterestCalculation().trim().isEmpty()) {
+                errors.reject("NotEmpty.savingsProduct.selectedInterestCalculation");
             }
-        }
-
-        if (formBean.getSelectedInterestCalculation().trim().isEmpty()) {
-            errors.reject("NotEmpty.savingsProduct.selectedInterestCalculation");
-        }
-
-        if (null == formBean.getInterestCalculationFrequency() || formBean.getInterestCalculationFrequency() < 1 ||
-                errorProcessor.getRejectedValue("interestCalculationFrequency") != null) {
-            if (errorProcessor.getTarget() == null) {
-                errors.reject("NotNull.savingsProduct.interestCalculationFrequency");
+        
+            if (null == formBean.getInterestCalculationFrequency() || formBean.getInterestCalculationFrequency() < 1 ||
+                    errorProcessor.getRejectedValue("interestCalculationFrequency") != null) {
+                if (errorProcessor.getTarget() == null) {
+                    errors.reject("NotNull.savingsProduct.interestCalculationFrequency");
+                }
+                else {
+                    BindException bindException = new BindException(errorProcessor.getTarget(), errorProcessor.getObjectName());
+                    bindException.addError(new FieldError(errorProcessor.getObjectName(), "interestCalculationFrequency", errorProcessor.getRejectedValue("interestCalculationFrequency"),
+                            true, new String[] {"NotNull.savingsProduct.interestCalculationFrequency"}, null, null));
+                    errors.addAllErrors(bindException);
+                }
             }
-            else {
-                BindException bindException = new BindException(errorProcessor.getTarget(), errorProcessor.getObjectName());
-                bindException.addError(new FieldError(errorProcessor.getObjectName(), "interestCalculationFrequency", errorProcessor.getRejectedValue("interestCalculationFrequency"),
-                        true, new String[] {"NotNull.savingsProduct.interestCalculationFrequency"}, null, null));
-                errors.addAllErrors(bindException);
+        
+            if (null == formBean.getInterestPostingMonthlyFrequency() || formBean.getInterestPostingMonthlyFrequency() < 1 ||
+                    errorProcessor.getRejectedValue("interestPostingMonthlyFrequency") != null) {
+                if (errorProcessor.getTarget() == null) {
+                    errors.reject("Min.savingsProduct.interestPostingMonthlyFrequency");
+                }
+                else {
+                    BindException bindException = new BindException(errorProcessor.getTarget(), errorProcessor.getObjectName());
+                    bindException.addError(new FieldError(errorProcessor.getObjectName(), "interestPostingMonthlyFrequency", errorProcessor.getRejectedValue("interestPostingMonthlyFrequency"),
+                            true, new String[] {"Min.savingsProduct.interestPostingMonthlyFrequency"}, null, null));
+                    errors.addAllErrors(bindException);
+                }
             }
-        }
-
-        if (null == formBean.getInterestPostingMonthlyFrequency() || formBean.getInterestPostingMonthlyFrequency() < 1 ||
-                errorProcessor.getRejectedValue("interestPostingMonthlyFrequency") != null) {
-            if (errorProcessor.getTarget() == null) {
-                errors.reject("Min.savingsProduct.interestPostingMonthlyFrequency");
-            }
-            else {
-                BindException bindException = new BindException(errorProcessor.getTarget(), errorProcessor.getObjectName());
-                bindException.addError(new FieldError(errorProcessor.getObjectName(), "interestPostingMonthlyFrequency", errorProcessor.getRejectedValue("interestPostingMonthlyFrequency"),
-                        true, new String[] {"Min.savingsProduct.interestPostingMonthlyFrequency"}, null, null));
-                errors.addAllErrors(bindException);
-            }
-        }
-
+        } 
+        
         BigDecimal minBalanceForInterestCalculation;
         try {
             minBalanceForInterestCalculation = BigDecimal.valueOf(Double.valueOf(formBean.getMinBalanceRequiredForInterestCalculation()));
@@ -170,15 +172,14 @@ public class SavingsProductFormValidator implements Validator {
         if (minBalanceForInterestCalculation.compareTo(BigDecimal.ZERO) < 0) {
             errors.reject("Min.savingsProduct.balanceRequiredForInterestCalculation");
         }
-
+    
         if (formBean.getSelectedPrincipalGlCode().trim().isEmpty()) {
             errors.reject("NotEmpty.savingsProduct.selectedPrincipalGlCode");
         }
-
+    
         if (formBean.getSelectedInterestGlCode().trim().isEmpty()) {
             errors.reject("NotEmpty.savingsProduct.selectedInterestGlCode");
         }
-
     }
 
 }

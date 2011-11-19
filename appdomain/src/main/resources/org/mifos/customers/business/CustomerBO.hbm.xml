@@ -1433,16 +1433,21 @@
     <query name="numberOfMeetingsMissed">
                        <![CDATA[select count(*) from org.mifos.customers.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > date(:DATEONEYEARBEFORE) and customerAttendance.attendance in (2,3) and customerAttendance.customer.customerId=:CUSTOMERID )]]>
     </query>
-    <query name="Customer.getActiveClientsWithoutGroupForLoanOfficer">
+    <query name="Customer.getAllExceptClosedAndCancelledClientsWithoutGroupForLoanOfficer">
         <![CDATA[from org.mifos.customers.client.business.ClientBO as client
                  where client.parentCustomer is null and client.office.officeId = :OFFICE_ID and
                  client.personnel.personnelId = :PERSONNEL_ID
-                 and client.customerStatus.id in (3) order by client.customerActivationDate]]>
+                 and client.customerStatus.id not in (5, 6) order by client.customerActivationDate]]>
     </query>
     <query name="Customer.getActiveClientsUnderParent">
         <![CDATA[from org.mifos.customers.client.business.ClientBO as client
                  where client.searchId like :SEARCH_STRING and client.office.officeId = :OFFICE_ID
                  and client.customerStatus.id in (3) order by client.customerActivationDate]]>
+    </query>
+    <query name="Customer.getAllExceptClosedAndCancelledClientsUnderParent">
+        <![CDATA[from org.mifos.customers.client.business.ClientBO as client
+                 where client.searchId like :SEARCH_STRING and client.office.officeId = :OFFICE_ID
+                 and client.customerStatus.id not in (5, 6) order by client.customerActivationDate]]>
     </query>
     <query name="Customer.getActiveClientsUnderGroup">
         <![CDATA[from org.mifos.customers.client.business.ClientBO as client
