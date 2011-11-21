@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.testhelpers;
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductConfirmationPage;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPage;
+import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPreviewPage;
 import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
 
 import com.thoughtworks.selenium.Selenium;
@@ -49,6 +50,12 @@ public class SavingsProductHelper {
         return navigationHelper
             .navigateToAdminPage()
             .navigateToDefineSavingsProduct().submitWithValidationErrors(productParameters);       
+    }
+    
+    public DefineNewSavingsProductPreviewPage getDefineSavingsProductPreviewPageWithoutInterestRateDetails(SavingsProductParameters productParameters){
+       return navigationHelper
+            .navigateToAdminPage()
+            .navigateToDefineSavingsProduct().submitAndNavigateToDefineNewSavingsProductPreviewPageWithoutInterestRateDetails(productParameters);
     }
 
     /**

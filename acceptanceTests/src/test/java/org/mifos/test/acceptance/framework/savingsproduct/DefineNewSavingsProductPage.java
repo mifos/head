@@ -176,7 +176,8 @@ public class DefineNewSavingsProductPage extends MifosPage {
 
 
     }
-    public void fillForm(SavingsProductParameters productParameters){
+    
+    public void fillFormSavingsProductDetails(SavingsProductParameters productParameters){
         selenium.type("CreateSavingsProduct.input.prdOfferingName", productParameters.getProductInstanceName());
         selenium.type("CreateSavingsProduct.input.prdOfferingShortName", productParameters.getShortName());
         selenium.type("startDateDD", productParameters.getStartDateDD());
@@ -186,9 +187,15 @@ public class DefineNewSavingsProductPage extends MifosPage {
         selectValueIfNotZero("generalDetails.selectedCategory", productParameters.getProductCategory());
 
         selectValueIfNotZero("generalDetails.selectedApplicableFor", productParameters.getApplicableFor());
+    }
+   
+   public void fillFormDepositsAndWithdrawalRestrictions(SavingsProductParameters productParameters){
         selectValueIfNotZero("selectedDepositType", productParameters.getTypeOfDeposits());
         typeTextIfNotEmpty("amountForDeposit", productParameters.getMandatoryAmount());
         selectValueIfNotZero("selectedGroupSavingsApproach", productParameters.getAmountAppliesTo());
+   }
+   
+   public void fillFormInterestRate(SavingsProductParameters productParameters){            
         selenium.type("interestRate", productParameters.getInterestRate());
 
         selectValueIfNotZero("selectedInterestCalculation", productParameters.getBalanceUsedForInterestCalculation());
@@ -198,34 +205,62 @@ public class DefineNewSavingsProductPage extends MifosPage {
 
         selenium.type("interestPostingMonthlyFrequency", productParameters.getFrequencyOfInterestPostings());
 
+   }
+   
+   public void fillFormAccounting(SavingsProductParameters productParameters){
         selectIfNotEmpty("selectedPrincipalGlCode", productParameters.getGlCodeForDeposit());
-        selectIfNotEmpty("selectedInterestGlCode", productParameters.getGlCodeForInterest()); 
-    }
-    public DefineNewSavingsProductPreviewPage submitAndNavigateToDefineNewSavingsProductPreviewPage(SavingsProductParameters productParameters) {
-        fillForm(productParameters);
-
-        selenium.click("CreateSavingsProduct.button.preview");
-        waitForPageToLoad();
-
-        return new DefineNewSavingsProductPreviewPage(selenium);
-    }
-    public DefineNewSavingsProductPage submitWithValidationErrors(SavingsProductParameters productParameters){
-        fillForm(productParameters);
-
-        selenium.click("CreateSavingsProduct.button.preview");
-        waitForPageToLoad();
-        
-        return new DefineNewSavingsProductPage(selenium);
-    }
+        selectIfNotEmpty("selectedInterestGlCode", productParameters.getGlCodeForInterest());
+   }
     
-    public void verifyValidationErrors(String... expectedErrorMessages){
-        List<String> resultErrorMessages = new ArrayList<String>();
-        for (int i = 1; i <= selenium.getXpathCount("//ul[@class='error']/li").intValue(); i ++ ){
-            resultErrorMessages.add(selenium.getText("xpath=//ul[@class='error']/li["+i+"]/b"));
-        }
-
-        for ( String error : expectedErrorMessages ){
-            Assert.assertTrue(resultErrorMessages.contains(error));
-        }
-    }
+   public void fillForm(SavingsProductParameters productParameters){
+       fillFormSavingsProductDetails(productParameters);
+       fillFormDepositsAndWithdrawalRestrictions(productParameters);
+       fillFormInterestRate(productParameters);
+       fillFormAccounting(productParameters);
+   }
+   
+   public DefineNewSavingsProductPreviewPage submitAndNavigateToDefineNewSavingsProductPreviewPage(SavingsProductParameters productParameters) {
+       fillForm(productParameters);
+    
+       selenium.click("CreateSavingsProduct.button.preview");
+       waitForPageToLoad();
+    
+       return new DefineNewSavingsProductPreviewPage(selenium);
+   }
+    
+   public DefineNewSavingsProductPage submitWithValidationErrors(SavingsProductParameters productParameters){
+       fillForm(productParameters);
+        
+       selenium.click("CreateSavingsProduct.button.preview");
+       waitForPageToLoad();
+        
+       return new DefineNewSavingsProductPage(selenium);
+   }
+    
+   public DefineNewSavingsProductPreviewPage submitAndNavigateToDefineNewSavingsProductPreviewPageWithoutInterestRateDetails(SavingsProductParameters productParameters){
+       fillFormSavingsProductDetails(productParameters);
+       fillFormDepositsAndWithdrawalRestrictions(productParameters);
+        
+       selenium.check("interestRateZero");
+       selenium.fireEvent("interestRateZero", "click");
+        
+       fillFormAccounting(productParameters);
+        
+       selenium.click("CreateSavingsProduct.button.preview");
+       waitForPageToLoad();
+    
+       return new DefineNewSavingsProductPreviewPage(selenium);
+   }
+    
+    
+   public void verifyValidationErrors(String... expectedErrorMessages){
+       List<String> resultErrorMessages = new ArrayList<String>();
+       for (int i = 1; i <= selenium.getXpathCount("//ul[@class='error']/li").intValue(); i ++ ){
+           resultErrorMessages.add(selenium.getText("xpath=//ul[@class='error']/li["+i+"]/b"));
+       }
+    
+       for ( String error : expectedErrorMessages ){
+           Assert.assertTrue(resultErrorMessages.contains(error));
+       }
+   }
 }

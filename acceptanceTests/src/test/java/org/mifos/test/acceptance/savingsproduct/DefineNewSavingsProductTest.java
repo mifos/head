@@ -27,10 +27,12 @@ import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitPar
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductConfirmationPage;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPage;
+import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPreviewPage;
 import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsProductHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -69,9 +71,20 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         DefineNewSavingsProductPage newSavingsProductPage = savingsProductHelper.getDefineSavingsProductPageWithValidationErrors(params);
         
         newSavingsProductPage.verifyValidationErrors("Please specify the Time period for Interest calculation.", 
-                "Please specify the Frequency of Interest posting to accounts.", "Please specify the Interest rate. Interest must be in range (0-100).",
-                "Please specify a value greater than zero for Mandatory amount for deposit.", "Please select the Amount Applies to."
-                );
+            "Please specify the Frequency of Interest posting to accounts.", "Please specify the Interest rate. Interest must be in range (0-100).",
+            "Please specify a value greater than zero for Mandatory amount for deposit.", "Please select the Amount Applies to."
+            );
+    }
+    
+    public void createSavingsProductWithoutInterestRateDetails() throws Exception {
+        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CENTERS);
+        
+        params.setShortName(StringUtil.getRandomString(3));
+        DefineNewSavingsProductPreviewPage savingsProductPreviewPage = savingsProductHelper.getDefineSavingsProductPreviewPageWithoutInterestRateDetails(params);
+        savingsProductPreviewPage.verifyAllElementsAreNotPresent("id=interestRateDetails");
+        savingsProductPreviewPage.submitAndNavigateToDefineNewSavingsProductConfirmationPage()
+            .navigateToSavingsProductDetails()
+            .verifyAllElementsAreNotPresent("id=interestRateDetails");
     }
     
     // http://mifosforge.jira.com/browse/MIFOSTEST-139
