@@ -733,7 +733,10 @@ public class AccountBO extends AbstractBusinessObject {
             mostRecentPayment = recentAccountPayments.get(0);
             for (AccountPaymentEntity accountPaymentEntity : recentAccountPayments) {
                 LocalDate paymentDate = new LocalDate(accountPaymentEntity.getPaymentDate());
-                if (paymentDate.isAfter(new LocalDate(mostRecentPayment.getPaymentDate())) && paymentDate.isBefore(new LocalDate().plusDays(1))) {
+                if ((paymentDate.isAfter(new LocalDate(mostRecentPayment.getPaymentDate())) && paymentDate.isBefore(new LocalDate().plusDays(1))) ||
+                        (paymentDate.isEqual(new LocalDate(mostRecentPayment.getPaymentDate())) &&
+                                accountPaymentEntity.getPaymentId() != null && mostRecentPayment.getPaymentId() != null &&
+                                accountPaymentEntity.getPaymentId() > mostRecentPayment.getPaymentId())) {
                     mostRecentPayment = accountPaymentEntity;
                 }
             }
