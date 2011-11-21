@@ -142,13 +142,16 @@ def loanRepayment():
     print 'Old amount outstanding: '+response['outstandingBeforePayment']
     print 'New amount outstanding: '+response['outstandingAfterPayment']
 
-def savingsPayment():
+def savingsPayment(depositTrxn):
 
     # get client details
     clientGlobalNumber, client = getClientDetails()
 
     # print client information
-    print ' [Savings Deposit] '
+    if depositTrxn:
+        print ' [Savings Deposit] '
+    else:
+        print ' [Savings Withdrawal] '
     print ' Client Number: '+clientGlobalNumber
     print ' Client Name: ' + client['clientDisplay']['displayName']
     print ' Investment/Savings Accounts'
@@ -164,11 +167,14 @@ def savingsPayment():
     # read savings number from the user
     savings = raw_input('Select account to credit: ')
 
-    # read deposit amount from the user
+    # read transaction amount from the user
     amount = raw_input('Enter amount: ')
 
     # encode savings global number in the request
-    url = base_url + '/account/savings/deposit/num-'+param[int(savings) - 1]+'.json'
+    if depositTrxn:
+        url = base_url + '/account/savings/deposit/num-'+param[int(savings) - 1]+'.json'
+    else:
+        url = base_url + '/account/savings/withdraw/num-'+param[int(savings) - 1]+'.json'
     data = urllib.urlencode({'amount' : amount, 'client' : clientGlobalNumber})
     req = Request(url, data, headers) 
 
@@ -180,7 +186,10 @@ def savingsPayment():
     responseText = handle.read()
     response = json.loads(responseText)
     print ''
-    print '---Savings Deposit Receipt---'
+    if depositTrxn:
+        print '---Savings Deposit Receipt---'
+    else:
+        print '---Savings Withdrawal Receipt---'
     print 'Client Name: '+ response['clientName']
     print 'Client Number: '+ response['clientNumber']
     print 'Loan Account: '+response['savingsDisplayName']
@@ -201,6 +210,7 @@ def printMenuAndSelectOperation():
             [Main Menu] 
              1. Loan Repayment
              2. Savings Deposit
+             3. Savings Withdrawal
              '''
     return raw_input("Select operation: ")
 
@@ -215,6 +225,8 @@ operation = printMenuAndSelectOperation()
 if operation == '1':
     loanRepayment()
 elif operation == '2':
-    savingsPayment()
+    savingsPayment(True)
+elif operation == '3':
+    savingsPayment(False)
 else:
     raise Exception('Unsupported operation')

@@ -319,11 +319,22 @@ public class RESTAPITest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(dependsOnGroups="readOnly")
-    public void savingsDepositByGlobalNum() throws Exception {
+    public void savingsDepositWithdrawByGlobalNum() throws Exception {
         String data = "amount=100&client="+CLIENT_GLOBAL_ID;
-        String type = Type.SAVINGS_DEPOSIT;
         String by = By.GLOBAL_NUMBER;
         String value = SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID;
+
+        // deposit
+        String type = Type.SAVINGS_DEPOSIT;
+        verifySavingsTrxn(data, type, by, value);
+
+        // withdraw
+        data = "amount=69&client="+CLIENT_GLOBAL_ID;
+        type = Type.SAVINGS_WITHDRAW;
+        verifySavingsTrxn(data, type, by, value);
+    }
+
+    private void verifySavingsTrxn(String data, String type, String by, String value) throws Exception {
         String actualJSON = helper.postJSONFromUI(type, by, value, data);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
