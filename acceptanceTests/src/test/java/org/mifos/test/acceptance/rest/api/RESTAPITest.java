@@ -283,6 +283,15 @@ public class RESTAPITest extends UiTestCaseBase {
         jsonAssert.assertEqual("openSavingsAccountsExist");
         jsonAssert.assertEqual("recentNoteDtos");
         jsonAssert.assertEqual("recommendedOrMandatoryAmount");
+        jsonAssert.assertEqual("accountBalance");
+        jsonAssert.assertEqual("accountStateName");
+        jsonAssert.assertEqual("depositTypeName");
+        jsonAssert.assertEqual("dueDate");
+        jsonAssert.assertEqual("missedDeposits");
+        jsonAssert.assertEqual("totalDeposits");
+        jsonAssert.assertEqual("totalInterestEarned");
+        jsonAssert.assertEqual("totalWithdrawals");
+        jsonAssert.assertEqual("totalAmountDue");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

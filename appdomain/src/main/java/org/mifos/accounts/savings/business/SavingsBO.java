@@ -89,6 +89,7 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.SavingsAccountDetailDto;
+import org.mifos.dto.domain.SavingsPerformanceHistoryDto;
 import org.mifos.dto.screen.SavingsRecentActivityDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
@@ -1806,7 +1807,16 @@ public class SavingsBO extends AccountBO {
             recentNoteDtos.add(new CustomerNoteDto(accountNotesEntity.getCommentDate(), accountNotesEntity.getComment(), accountNotesEntity.getPersonnelName()));
         }
 
-        return new SavingsAccountDetailDto(this.savingsOffering.toFullDto(), recentActivity, recentNoteDtos, this.recommendedAmount.toString(), this.globalAccountNum);
+        SavingsPerformanceHistoryDto savingsPerformanceHistoryDto = new SavingsPerformanceHistoryDto(getActivationDate(),
+                savingsPerformance.getTotalDeposits().toString(), savingsPerformance.getTotalWithdrawals().toString(),
+                savingsPerformance.getTotalInterestEarned().toString(),
+                savingsPerformance.getMissedDeposits() != null ? savingsPerformance.getMissedDeposits().toString() : "0");
+        AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+
+        return new SavingsAccountDetailDto(this.savingsOffering.toFullDto(), recentActivity, recentNoteDtos,
+                this.recommendedAmount.toString(), this.globalAccountNum, getState().name(), getSavingsBalance().toString(),
+                nextInstallment != null ? nextInstallment.getActionDate() : null, getTotalAmountDue().toString(), savingsPerformanceHistoryDto,
+                this.savingsOffering.getSavingsTypeAsEnum().name());
     }
 
     public void setSavingsTransactionActivityHelper(SavingsTransactionActivityHelper savingsTransactionActivityHelper) {
