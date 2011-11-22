@@ -200,6 +200,30 @@ def savingsPayment(depositTrxn):
     print 'Old account balance: '+response['balanceBeforePayment']
     print 'New account balance: '+response['balanceAfterPayment']
 
+def clientStatement():
+
+    # get client details
+    clientGlobalNumber, client = getClientDetails()
+
+    # print client statement
+    print ' [Client Statement] '
+    print ''
+    print ' Client Number: ' + clientGlobalNumber
+    print ' Client Name: ' + client['clientDisplay']['displayName']
+    print ' Address:', client['address']['displayAddress'] or ''
+    print ' City: ' + client['address']['city']
+    print ''
+    print ' --- Loans ---'
+    i = 1
+    for l in client['loanAccountsInUse']:
+        print ' '+str(i) +'. '+ l['prdOfferingName']+': '+l['outstandingBalance']
+        i = i+1
+    print ''
+    print ' --- Savings ---'
+    i = 1
+    for s in client['savingsAccountsInUse']:
+        print ' '+str(i) +'. '+ s['prdOfferingName']+': '+s['savingsBalance']
+        i = i+1
 
 # #######################################
 # ### methods related to local client ###
@@ -211,6 +235,7 @@ def printMenuAndSelectOperation():
              1. Loan Repayment
              2. Savings Deposit
              3. Savings Withdrawal
+             4. Client Statement
              '''
     return raw_input("Select operation: ")
 
@@ -228,5 +253,7 @@ elif operation == '2':
     savingsPayment(True)
 elif operation == '3':
     savingsPayment(False)
+elif operation == '4':
+    clientStatement()
 else:
     raise Exception('Unsupported operation')
