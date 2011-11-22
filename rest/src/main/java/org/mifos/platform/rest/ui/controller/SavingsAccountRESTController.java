@@ -31,15 +31,15 @@ import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
+import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.dto.domain.AccountPaymentParametersDto;
-import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.SavingsAccountDetailDto;
-import org.mifos.dto.domain.UserReferenceDto;
+import org.mifos.dto.domain.SavingsDepositDto;
+import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.screen.SavingsAccountDepositDueDto;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
@@ -74,52 +74,14 @@ public class SavingsAccountRESTController {
 
     @RequestMapping(value = "account/savings/deposit/num-{globalAccountNum}", method = RequestMethod.POST)
     public final @ResponseBody
-    Map<String, String> deposit(@PathVariable String globalAccountNum, HttpServletRequest request)
-            throws Exception {
+    Map<String, String> deposit(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
+        return doSavingsTrxn(globalAccountNum, request, TrxnTypes.savings_deposit);
+    }
 
-        String amountString = request.getParameter("amount");
-        String client = request.getParameter("client");
-        BigDecimal amount = new BigDecimal(amountString);
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserReferenceDto userDto = new UserReferenceDto((short) user.getUserId());
-
-        SavingsBO savingsBO = savingsDao.findBySystemId(globalAccountNum);
-
-        Integer accountId = savingsBO.getAccountId();
-
-        AccountReferenceDto accountDto = new AccountReferenceDto(accountId);
-
-        PaymentTypeDto paymentType = accountService.getSavingsPaymentTypes().get(0);
-        DateTime today = new DateTime();
-        LocalDate receiptDate = today.toLocalDate();
-
-        // from where these parameter should come?
-        String receiptId = "";
-
-
-        ClientBO clientBO = customerDao.findClientBySystemId(client);
-        CustomerDto customer = new CustomerDto();
-        customer.setCustomerId(clientBO.getCustomerId());
-
-        AccountPaymentParametersDto payment = new AccountPaymentParametersDto(userDto, accountDto, amount, today.toLocalDate(),
-                paymentType, globalAccountNum, receiptDate, receiptId, customer);
-
-        Money balanceBeforePayment = savingsBO.getSavingsBalance();
-        accountService.makePayment(payment);
-
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("status", "success");
-        map.put("clientName", clientBO.getDisplayName());
-        map.put("clientNumber", clientBO.getGlobalCustNum());
-        map.put("savingsDisplayName", savingsBO.getSavingsOffering().getPrdOfferingName());
-        map.put("paymentDate", today.toLocalDate().toString());
-        map.put("paymentTime", today.toLocalTime().toString());
-        map.put("paymentAmount", savingsBO.getLastPmnt().getAmount().toString());
-        map.put("paymentMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
-        map.put("balanceBeforePayment", balanceBeforePayment.toString());
-        map.put("balanceAfterPayment", savingsBO.getSavingsBalance().toString());
-        return map;
+    @RequestMapping(value = "account/savings/withdraw/num-{globalAccountNum}", method = RequestMethod.POST)
+    public final @ResponseBody
+    Map<String, String> withdraw(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
+        return doSavingsTrxn(globalAccountNum, request, TrxnTypes.savings_withdrawal);
     }
 
     @RequestMapping(value = "/account/savings/num-{globalAccountNum}", method = RequestMethod.GET)
@@ -134,5 +96,57 @@ public class SavingsAccountRESTController {
     public final @ResponseBody
     SavingsAccountDepositDueDto getSavingsDepositDueDetailsByNumber(@PathVariable String globalAccountNum) throws Exception {
         return savingsServiceFacade.retrieveDepositDueDetails(globalAccountNum);
+    }
+
+    private Map<String, String> doSavingsTrxn(String globalAccountNum, HttpServletRequest request, TrxnTypes trxnType) throws Exception {
+        String amountString = request.getParameter("amount");
+        String client = request.getParameter("client");
+        BigDecimal amount = new BigDecimal(amountString);
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        SavingsBO savingsBO = savingsDao.findBySystemId(globalAccountNum);
+
+        Integer accountId = savingsBO.getAccountId();
+
+        PaymentTypeDto paymentType = trxnType.equals(TrxnTypes.savings_deposit) ?
+                accountService.getSavingsPaymentTypes().get(0) :
+                accountService.getSavingsWithdrawalTypes().get(0);
+        DateTime today = new DateTime();
+        LocalDate receiptDate = today.toLocalDate();
+
+        // from where these parameter should come?
+        String receiptId = "";
+
+        ClientBO clientBO = customerDao.findClientBySystemId(client);
+        CustomerDto customer = new CustomerDto();
+        customer.setCustomerId(clientBO.getCustomerId());
+
+        Money balanceBeforePayment = savingsBO.getSavingsBalance();
+        if (trxnType.equals(TrxnTypes.savings_deposit)) {
+            SavingsDepositDto savingsDeposit = new SavingsDepositDto(accountId.longValue(), savingsBO.getCustomer().getCustomerId().longValue(),
+                    today.toLocalDate(), amount.doubleValue(), paymentType.getValue().intValue(), receiptId, receiptDate,
+                    request.getLocale());
+            this.savingsServiceFacade.deposit(savingsDeposit);
+        }
+        else {
+            SavingsWithdrawalDto savingsWithdrawal = new SavingsWithdrawalDto(accountId.longValue(), savingsBO.getCustomer().getCustomerId().longValue(),
+                    today.toLocalDate(), amount.doubleValue(), paymentType.getValue().intValue(), receiptId, receiptDate,
+                    request.getLocale());
+            this.savingsServiceFacade.withdraw(savingsWithdrawal);
+        }
+
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("status", "success");
+        map.put("clientName", clientBO.getDisplayName());
+        map.put("clientNumber", clientBO.getGlobalCustNum());
+        map.put("savingsDisplayName", savingsBO.getSavingsOffering().getPrdOfferingName());
+        map.put("paymentDate", today.toLocalDate().toString());
+        map.put("paymentTime", today.toLocalTime().toString());
+        map.put("paymentAmount", savingsBO.getLastPmnt().getAmount().toString());
+        map.put("paymentMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
+        map.put("balanceBeforePayment", balanceBeforePayment.toString());
+        map.put("balanceAfterPayment", savingsBO.getSavingsBalance().toString());
+        return map;
     }
 }

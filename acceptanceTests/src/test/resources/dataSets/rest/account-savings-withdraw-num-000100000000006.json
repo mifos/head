@@ -1,0 +1,12 @@
+{
+    "savingsDisplayName": "Savings A",
+    "balanceBeforePayment": "110.0",
+    "paymentAmount": "69.0",
+    "paymentDate": "2011-09-13",
+    "balanceAfterPayment": "41.0",
+    "status": "success",
+    "paymentTime": "23:27:25.064",
+    "clientName": "Client REST API",
+    "paymentMadeBy": "mifos",
+    "clientNumber": "0002-000000003"
+}

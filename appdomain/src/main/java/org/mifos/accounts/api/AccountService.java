@@ -176,11 +176,18 @@ public interface AccountService {
     List<PaymentTypeDto> getLoanPaymentTypes() throws Exception;
 
     /**
-     * Gets the payment types that are valid for savings.
+     * Gets the payment types that are valid for savings deposits.
      *
      * @return a list of payment types
      */
-    public List<PaymentTypeDto> getSavingsPaymentTypes() throws Exception;
+    List<PaymentTypeDto> getSavingsPaymentTypes() throws Exception;
+
+    /**
+     * Gets the payment types that are valid for savings withdrawals.
+     *
+     * @return a list of payment types
+     */
+    List<PaymentTypeDto> getSavingsWithdrawalTypes() throws Exception;
 
     List<PaymentTypeDto> getLoanDisbursementTypes() throws Exception;
 
