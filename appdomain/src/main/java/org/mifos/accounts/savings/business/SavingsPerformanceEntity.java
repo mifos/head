@@ -58,6 +58,9 @@ public class SavingsPerformanceEntity extends AbstractEntity {
     }
 
     public Integer getMissedDeposits() {
+        if (this.missedDeposits == null) {
+            this.missedDeposits = 0;
+        }
         return missedDeposits;
     }
 
@@ -159,7 +162,7 @@ public class SavingsPerformanceEntity extends AbstractEntity {
 
     void addMissedDeposits(int missedDeposits) {
         if (this.missedDeposits == null) {
-            this.missedDeposits = Integer.valueOf(0);
+            this.missedDeposits = 0;
         }
         this.missedDeposits = this.missedDeposits + missedDeposits;
     }

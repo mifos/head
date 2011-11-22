@@ -21,6 +21,7 @@
 package org.mifos.dto.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.mifos.dto.screen.SavingsRecentActivityDto;
@@ -34,13 +35,25 @@ public class SavingsAccountDetailDto implements Serializable {
     private final List<CustomerNoteDto> recentNoteDtos;
     private final String recommendedOrMandatoryAmount;
     private final String globalAccountNum;
+    private final String accountStateName;
+    private final String accountBalance;
+    private final Date dueDate;
+    private final String totalAmountDue;
+    private final SavingsPerformanceHistoryDto performanceHistory;
+    private final String depositTypeName;
 
-    public SavingsAccountDetailDto(SavingsProductDto productDetails, List<SavingsRecentActivityDto> recentActivity, List<CustomerNoteDto> recentNoteDtos, String recommendedOrMandatoryAmount, String globalAccountNum) {
+    public SavingsAccountDetailDto(SavingsProductDto productDetails, List<SavingsRecentActivityDto> recentActivity, List<CustomerNoteDto> recentNoteDtos, String recommendedOrMandatoryAmount, String globalAccountNum, String accountStateName, String accountBalance, Date dueDate, String totalAmountDue, SavingsPerformanceHistoryDto performanceHistory, String depositTypeName) {
         this.productDetails = productDetails;
         this.recentActivity = recentActivity;
         this.recentNoteDtos = recentNoteDtos;
         this.recommendedOrMandatoryAmount = recommendedOrMandatoryAmount;
         this.globalAccountNum = globalAccountNum;
+        this.accountStateName = accountStateName;
+        this.accountBalance = accountBalance;
+        this.dueDate = dueDate;
+        this.totalAmountDue = totalAmountDue;
+        this.performanceHistory = performanceHistory;
+        this.depositTypeName = depositTypeName;
     }
 
     public SavingsProductDto getProductDetails() {
@@ -61,5 +74,29 @@ public class SavingsAccountDetailDto implements Serializable {
 
     public String getGlobalAccountNum() {
         return this.globalAccountNum;
+    }
+
+    public String getAccountStateName() {
+        return accountStateName;
+    }
+
+    public String getAccountBalance() {
+        return accountBalance;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public String getTotalAmountDue() {
+        return totalAmountDue;
+    }
+
+    public SavingsPerformanceHistoryDto getPerformanceHistory() {
+        return performanceHistory;
+    }
+
+    public String getDepositTypeName() {
+        return depositTypeName;
     }
 }

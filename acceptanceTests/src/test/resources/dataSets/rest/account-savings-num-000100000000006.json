@@ -1,5 +1,15 @@
-{ "globalAccountNum" : "000100000000006",
-  "productDetails" : { "amountForDeposit" : 100,
+{ "accountBalance" : "10.0",
+  "accountStateName" : "SAVINGS_ACTIVE",
+  "depositTypeName" : "VOLUNTARY",
+  "dueDate" : "2011-09-19",
+  "globalAccountNum" : "000100000000006",
+  "performanceHistory" : { "missedDeposits" : "0",
+      "openedDate" : 1315778400000,
+      "totalDeposits" : "10.0",
+      "totalInterestEarned" : "0.0",
+      "totalWithdrawals" : "0.0"
+    },
+  "productDetails" : { "amountForDeposit" : 100.0,
       "depositGlCode" : 36,
       "depositGlCodeValue" : "24101",
       "depositType" : 2,
@@ -11,9 +21,9 @@
       "interestGlCode" : 56,
       "interestGlCodeValue" : "41102",
       "interestPostingMonthlyFrequency" : 3,
-      "interestRate" : 5,
-      "maxWithdrawal" : 1000,
-      "minBalanceForInterestCalculation" : 0,
+      "interestRate" : 5.0,
+      "maxWithdrawal" : 1000.0,
+      "minBalanceForInterestCalculation" : 0.0,
       "openSavingsAccountsExist" : true,
       "productDetails" : { "applicableFor" : 1,
           "category" : 2,
@@ -44,5 +54,6 @@
         "commentDate" : "2011-09-12",
         "personnelName" : "mifos"
       } ],
-  "recommendedOrMandatoryAmount" : "100.0"
+  "recommendedOrMandatoryAmount" : "100.0",
+  "totalAmountDue" : "100.0"
 }
