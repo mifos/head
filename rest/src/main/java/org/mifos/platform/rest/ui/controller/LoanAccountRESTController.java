@@ -21,6 +21,7 @@ package org.mifos.platform.rest.ui.controller;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +40,7 @@ import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
+import org.mifos.dto.domain.LoanRepaymentScheduleItemDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.dto.screen.LoanInformationDto;
@@ -132,5 +134,11 @@ public class LoanAccountRESTController {
     LoanInstallmentDetailsDto getLoanInstallmentByNumber(@PathVariable String globalAccountNum) throws Exception {
         LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
         return loanAccountServiceFacade.retrieveInstallmentDetails(loan.getAccountId());
+    }
+
+    @RequestMapping(value = "/account/loan/schedule/num-{globalAccountNum}", method = RequestMethod.GET)
+    public final @ResponseBody
+    List<LoanRepaymentScheduleItemDto> getLoanRepaymentScheduleByNumber(@PathVariable String globalAccountNum) throws Exception {
+        return loanAccountServiceFacade.retrieveLoanRepaymentSchedule(globalAccountNum);
     }
 }
