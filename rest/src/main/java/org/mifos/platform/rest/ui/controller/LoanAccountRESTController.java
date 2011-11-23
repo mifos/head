@@ -31,6 +31,7 @@ import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
@@ -76,6 +77,10 @@ public class LoanAccountRESTController {
         String amountString = request.getParameter("amount");
         String client = request.getParameter("client");
         BigDecimal amount = new BigDecimal(amountString);
+
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new MifosRuntimeException("Amount must be greater than 0");
+        }
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserReferenceDto userDto = new UserReferenceDto((short) user.getUserId());
