@@ -23,6 +23,7 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.mifos.dto.domain.ClientChargesDetailsDto;
 import org.mifos.dto.domain.ClientCreationDetail;
 import org.mifos.dto.domain.ClientFamilyDetailsDto;
 import org.mifos.dto.domain.ClientFamilyInfoUpdate;
@@ -49,6 +50,9 @@ public interface ClientServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     ClientFamilyDetailsDto retrieveClientFamilyDetails();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    ClientChargesDetailsDto retrieveChargesDetails(Integer customerId);
 
     @PreAuthorize("isFullyAuthenticated()")
     ProcessRulesDto previewClient(String governmentId, DateTime dateOfBirth, String clientName, boolean defaultFeesRemoval, Short officeId, Short loanOfficerId);
