@@ -24,14 +24,14 @@ import java.io.Serializable;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
-public class CustomerFeeScheduleDto implements Serializable {
+public class AccountFeeScheduleDto implements Serializable {
 
     private final String feeName;
     private final String feeAmount;
     private final String feeAmountPaid;
     private final String feeAllocated;
 
-    public CustomerFeeScheduleDto(String feeName, String feeAmount, String feeAmountPaid, String feeAllocated) {
+    public AccountFeeScheduleDto(String feeName, String feeAmount, String feeAmountPaid, String feeAllocated) {
         this.feeName = feeName;
         this.feeAmount = feeAmount;
         this.feeAmountPaid = feeAmountPaid;
