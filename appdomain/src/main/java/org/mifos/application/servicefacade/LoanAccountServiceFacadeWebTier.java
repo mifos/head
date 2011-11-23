@@ -42,6 +42,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountNotesEntity;
@@ -152,6 +153,7 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
+import org.mifos.dto.domain.AccountFeeScheduleDto;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
@@ -171,6 +173,7 @@ import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
+import org.mifos.dto.domain.LoanRepaymentScheduleItemDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
@@ -1161,6 +1164,39 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         return new LoanInstallmentDetailsDto(viewUpcomingInstallmentDetails, viewOverDueInstallmentDetails,
                 totalAmountDue.toString(), loanBO.getNextMeetingDate());
+    }
+
+    @Override
+    public List<LoanRepaymentScheduleItemDto> retrieveLoanRepaymentSchedule(String globalAccountNum) {
+        LoanBO loanBO = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+
+        List<LoanRepaymentScheduleItemDto> loanSchedule = new ArrayList<LoanRepaymentScheduleItemDto>();
+
+        for (AccountActionDateEntity accountAction : loanBO.getAccountActionDates()) {
+            LoanScheduleEntity loanAccountAction = (LoanScheduleEntity) accountAction;
+            Set<AccountFeesActionDetailEntity> feeEntities =  loanAccountAction.getAccountFeesActionDetails();
+
+            List<AccountFeeScheduleDto> feeDtos = new ArrayList<AccountFeeScheduleDto>();
+            for (AccountFeesActionDetailEntity feeEntity : feeEntities) {
+                feeDtos.add(convertToDto(feeEntity));
+            }
+
+            loanSchedule.add(new LoanRepaymentScheduleItemDto(loanAccountAction.getInstallmentId(), loanAccountAction.getActionDate(),
+                    loanAccountAction.getPaymentStatus(), loanAccountAction.getPaymentDate(), loanAccountAction.getPrincipal().toString(),
+                    loanAccountAction.getPrincipalPaid().toString(), loanAccountAction.getInterest().toString(),
+                    loanAccountAction.getInterestPaid().toString(), loanAccountAction.getPenalty().toString(),
+                    loanAccountAction.getPenaltyPaid().toString(), loanAccountAction.getExtraInterest().toString(),
+                    loanAccountAction.getExtraInterestPaid().toString(), loanAccountAction.getMiscFee().toString(),
+                    loanAccountAction.getMiscFeePaid().toString(), loanAccountAction.getMiscPenalty().toString(),
+                    loanAccountAction.getMiscPenaltyPaid().toString(), feeDtos));
+        }
+
+        return loanSchedule;
+    }
+
+    private AccountFeeScheduleDto convertToDto(AccountFeesActionDetailEntity feeEntity) {
+        return new AccountFeeScheduleDto(feeEntity.getFee().getFeeName(), feeEntity.getFeeAmount().toString(),
+                feeEntity.getFeeAmountPaid().toString(), feeEntity.getFeeAllocated().toString());
     }
 
     private InstallmentDetailsDto getUpcomingInstallmentDetails(

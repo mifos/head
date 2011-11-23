@@ -79,7 +79,7 @@ import org.mifos.dto.domain.CustomerAccountSummaryDto;
 import org.mifos.dto.domain.CustomerAddressDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
-import org.mifos.dto.domain.CustomerFeeScheduleDto;
+import org.mifos.dto.domain.AccountFeeScheduleDto;
 import org.mifos.dto.domain.CustomerFlagDto;
 import org.mifos.dto.domain.CustomerMeetingDto;
 import org.mifos.dto.domain.CustomerNoteDto;
@@ -300,7 +300,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         if (scheduleEntity != null) {
             Set<AccountFeesActionDetailEntity> feeEntities =  scheduleEntity.getAccountFeesActionDetails();
 
-            List<CustomerFeeScheduleDto> feeDtos = new ArrayList<CustomerFeeScheduleDto>();
+            List<AccountFeeScheduleDto> feeDtos = new ArrayList<AccountFeeScheduleDto>();
             for (AccountFeesActionDetailEntity feeEntity : feeEntities) {
                 feeDtos.add(convertToDto(feeEntity));
             }
@@ -318,8 +318,8 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
                 accountFeesDtos);
     }
 
-    private CustomerFeeScheduleDto convertToDto(AccountFeesActionDetailEntity feeEntity) {
-        return new CustomerFeeScheduleDto(feeEntity.getFee().getFeeName(), feeEntity.getFeeAmount().toString(),
+    private AccountFeeScheduleDto convertToDto(AccountFeesActionDetailEntity feeEntity) {
+        return new AccountFeeScheduleDto(feeEntity.getFee().getFeeName(), feeEntity.getFeeAmount().toString(),
                 feeEntity.getFeeAmountPaid().toString(), feeEntity.getFeeAllocated().toString());
     }
 

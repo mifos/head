@@ -31,9 +31,9 @@ public class CustomerScheduleDto implements Serializable {
     private final String miscFeePaid;
     private final String miscPenalty;
     private final String miscPenaltyPaid;
-    private List<CustomerFeeScheduleDto> feesActionDetails;
+    private List<AccountFeeScheduleDto> feesActionDetails;
 
-    public CustomerScheduleDto(String miscFee, String miscFeePaid, String miscPenalty, String miscPenaltyPaid, List<CustomerFeeScheduleDto> feesActionDetails) {
+    public CustomerScheduleDto(String miscFee, String miscFeePaid, String miscPenalty, String miscPenaltyPaid, List<AccountFeeScheduleDto> feesActionDetails) {
         this.miscFee = miscFee;
         this.miscFeePaid = miscFeePaid;
         this.miscPenalty = miscPenalty;
@@ -57,7 +57,7 @@ public class CustomerScheduleDto implements Serializable {
         return miscPenaltyPaid;
     }
 
-    public List<CustomerFeeScheduleDto> getFeesActionDetails() {
+    public List<AccountFeeScheduleDto> getFeesActionDetails() {
         return feesActionDetails;
     }
 }

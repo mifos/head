@@ -269,6 +269,18 @@ public class RESTAPITest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
+    public void loanRepaymentScheduleByGlobalNum() throws Exception {
+        String type = Type.LOAN_SCHEDULE;
+        String by = By.GLOBAL_NUMBER;
+        String value = LOAN_ACCOUNT_GLOBAL_ID;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        ObjectMapper mapper = helper.getObjectMapper();
+        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly")
     public void savingsByGlobalNum() throws Exception {
         String type = Type.SAVINGS;
         String by = By.GLOBAL_NUMBER;
