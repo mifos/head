@@ -77,7 +77,7 @@ public class AccountFeesActionDetailEntity extends AbstractEntity implements Com
     }
 
     public Money getFeeAmount() {
-        return feeAmount;
+        return feeAmount == null ? new Money(accountFee.getAccount().getCurrency()) : feeAmount;
     }
 
     protected void setFeeAmount(Money feeAmount) {
@@ -146,7 +146,7 @@ public class AccountFeesActionDetailEntity extends AbstractEntity implements Com
     }
 
     public Money getFeeAllocated() {
-        return feeAllocated;
+        return feeAllocated == null ? new Money(accountFee.getAccount().getCurrency()) : feeAllocated;
     }
 
     public void setAccountFeesActionDetailId(Integer accountFeesActionDetailId) {

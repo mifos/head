@@ -32,6 +32,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
@@ -102,6 +103,10 @@ public class SavingsAccountRESTController {
         String amountString = request.getParameter("amount");
         String client = request.getParameter("client");
         BigDecimal amount = new BigDecimal(amountString);
+
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new MifosRuntimeException("Amount must be greater than 0");
+        }
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

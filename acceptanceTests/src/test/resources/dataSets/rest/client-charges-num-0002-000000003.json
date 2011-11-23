@@ -1,0 +1,13 @@
+{ "accountFees" : [  ],
+  "nextDueAmount" : "0.0",
+  "recentActivities" : [  ],
+  "totalAmountDue" : "0.0",
+  "totalAmountInArrears" : "0.0",
+  "upcomingChargesDate" : "2011-09-19",
+  "upcomingInstallment" : { "feesActionDetails" : [  ],
+      "miscFee" : "0.0",
+      "miscFeePaid" : "0.0",
+      "miscPenalty" : "0.0",
+      "miscPenaltyPaid" : "0.0"
+    }
+}
