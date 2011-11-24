@@ -333,7 +333,7 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(dependsOnGroups="readOnly")
     public void repayLoanByGlobalNum() throws Exception {
-        String data = "amount=100&client="+CLIENT_GLOBAL_ID;
+        String data = "amount=100";
         String type = Type.LOAN_REPAYMENT;
         String by = By.GLOBAL_NUMBER;
         String value = LOAN_ACCOUNT_GLOBAL_ID;
@@ -353,7 +353,7 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(dependsOnGroups="readOnly")
     public void savingsDepositWithdrawByGlobalNum() throws Exception {
-        String data = "amount=100&client="+CLIENT_GLOBAL_ID;
+        String data = "amount=100";
         String by = By.GLOBAL_NUMBER;
         String value = SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID;
 
@@ -362,7 +362,7 @@ public class RESTAPITest extends UiTestCaseBase {
         verifySavingsTrxn(data, type, by, value);
 
         // withdraw
-        data = "amount=69&client="+CLIENT_GLOBAL_ID;
+        data = "amount=69";
         type = Type.SAVINGS_WITHDRAW;
         verifySavingsTrxn(data, type, by, value);
     }

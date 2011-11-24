@@ -33,8 +33,7 @@ import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PaymentTypeDto;
@@ -68,9 +67,6 @@ public class SavingsAccountRESTController {
     private SavingsDao savingsDao;
 
     @Autowired
-    private CustomerDao customerDao;
-
-    @Autowired
     private PersonnelDao personnelDao;
 
     @RequestMapping(value = "account/savings/deposit/num-{globalAccountNum}", method = RequestMethod.POST)
@@ -101,7 +97,6 @@ public class SavingsAccountRESTController {
 
     private Map<String, String> doSavingsTrxn(String globalAccountNum, HttpServletRequest request, TrxnTypes trxnType) throws Exception {
         String amountString = request.getParameter("amount");
-        String client = request.getParameter("client");
         BigDecimal amount = new BigDecimal(amountString);
 
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
@@ -123,9 +118,9 @@ public class SavingsAccountRESTController {
         // from where these parameter should come?
         String receiptId = "";
 
-        ClientBO clientBO = customerDao.findClientBySystemId(client);
+        CustomerBO client = savingsBO.getCustomer();
         CustomerDto customer = new CustomerDto();
-        customer.setCustomerId(clientBO.getCustomerId());
+        customer.setCustomerId(client.getCustomerId());
 
         Money balanceBeforePayment = savingsBO.getSavingsBalance();
         if (trxnType.equals(TrxnTypes.savings_deposit)) {
@@ -143,8 +138,8 @@ public class SavingsAccountRESTController {
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("status", "success");
-        map.put("clientName", clientBO.getDisplayName());
-        map.put("clientNumber", clientBO.getGlobalCustNum());
+        map.put("clientName", client.getDisplayName());
+        map.put("clientNumber", client.getGlobalCustNum());
         map.put("savingsDisplayName", savingsBO.getSavingsOffering().getPrdOfferingName());
         map.put("paymentDate", today.toLocalDate().toString());
         map.put("paymentTime", today.toLocalTime().toString());

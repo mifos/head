@@ -40,6 +40,7 @@
   <DATABASECHANGELOG ID="MIFOS_4945_5" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:56.0" ORDEREXECUTED="219" EXECTYPE="EXECUTED" MD5SUM="3:ed2015dd4bd8e0e49f39b9d15e1d4374" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_6" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:56.0" ORDEREXECUTED="220" EXECTYPE="EXECUTED" MD5SUM="3:3295a26a4f5f90255601a36a002029da" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5161_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-17 07:16:24.0" ORDEREXECUTED="121" EXECTYPE="EXECUTED" MD5SUM="3:82dd99432572ba02fe1c174c26096266" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_5186_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-24 15:28:39.0" ORDEREXECUTED="176" EXECTYPE="EXECUTED" MD5SUM="3:257c6dbd69a28ceb9a8a866a405e23f2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
   <QRTZ_CALENDARS/>
@@ -1379,7 +1380,6 @@
   <activity activity_id="221" parent_id="141" activity_name_lookup_id="595" description_lookup_id="595"/>
   <activity activity_id="222" parent_id="141" activity_name_lookup_id="596" description_lookup_id="596"/>
   <activity activity_id="223" parent_id="141" activity_name_lookup_id="597" description_lookup_id="597"/>
-  <activity activity_id="224" parent_id="203" activity_name_lookup_id="598" description_lookup_id="598"/>
   <activity activity_id="225" parent_id="141" activity_name_lookup_id="602" description_lookup_id="602"/>
   <activity activity_id="226" parent_id="141" activity_name_lookup_id="603" description_lookup_id="603"/>
   <activity activity_id="227" activity_name_lookup_id="605" description_lookup_id="605"/>
@@ -7037,7 +7037,7 @@
   <lookup_value lookup_id="572" entity_id="69" lookup_name="AccountAction-LoanReversal"/>
   <lookup_value lookup_id="573" entity_id="69" lookup_name="AccountAction-DisrbursalAmountReversal"/>
   <lookup_value lookup_id="574" entity_id="87" lookup_name="Permissions-ConfigurationManagement"/>
-  <lookup_value lookup_id="575" entity_id="87" lookup_name="Permissions-CanDefineLabels"/>
+  <lookup_value lookup_id="575" entity_id="87" lookup_name="Permissions-CanDefineCustomizedText"/>
   <lookup_value lookup_id="576" entity_id="91" lookup_name="RepaymentRule-SameDay"/>
   <lookup_value lookup_id="577" entity_id="91" lookup_name="RepaymentRule-NextMeetingRepayment"/>
   <lookup_value lookup_id="578" entity_id="91" lookup_name="RepaymentRule-NextWorkingDay"/>
@@ -8844,7 +8844,6 @@
   <roles_activity activity_id="221" role_id="1"/>
   <roles_activity activity_id="222" role_id="1"/>
   <roles_activity activity_id="223" role_id="1"/>
-  <roles_activity activity_id="224" role_id="1"/>
   <roles_activity activity_id="225" role_id="1"/>
   <roles_activity activity_id="226" role_id="1"/>
   <roles_activity activity_id="227" role_id="1"/>

@@ -33,8 +33,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
@@ -67,9 +66,6 @@ public class LoanAccountRESTController {
     private LoanDao loanDao;
 
     @Autowired
-    private CustomerDao customerDao;
-
-    @Autowired
     private PersonnelDao personnelDao;
 
     @RequestMapping(value = "/account/loan/repay/num-{globalAccountNum}", method = RequestMethod.POST)
@@ -77,7 +73,6 @@ public class LoanAccountRESTController {
     Map<String, String> repay(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
 
         String amountString = request.getParameter("amount");
-        String client = request.getParameter("client");
         BigDecimal amount = new BigDecimal(amountString);
 
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
@@ -100,9 +95,9 @@ public class LoanAccountRESTController {
         // from where these parameter should come?
         String receiptId = "";
 
-        ClientBO clientBO = customerDao.findClientBySystemId(client);
+        CustomerBO client = loan.getCustomer();
         CustomerDto customer = new CustomerDto();
-        customer.setCustomerId(clientBO.getCustomerId());
+        customer.setCustomerId(client.getCustomerId());
         AccountPaymentParametersDto payment = new AccountPaymentParametersDto(userDto, accountDto, amount, receiptDate,
                 paymentType, globalAccountNum, receiptDate, receiptId, customer);
 
@@ -111,8 +106,8 @@ public class LoanAccountRESTController {
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("status", "success");
-        map.put("clientName", clientBO.getDisplayName());
-        map.put("clientNumber", clientBO.getGlobalCustNum());
+        map.put("clientName", client.getDisplayName());
+        map.put("clientNumber", client.getGlobalCustNum());
         map.put("loanDisplayName", loan.getLoanOffering().getPrdOfferingName());
         map.put("paymentDate", today.toLocalDate().toString());
         map.put("paymentTime", today.toLocalTime().toString());
