@@ -437,4 +437,21 @@
             </sql>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_5186_1" author="Jakub Slawinski" context="contraction">
+        <sql endDelimiter=";">
+            delete from roles_activity where activity_id = 224;
+            delete from activity where activity_id = 224;
+            update lookup_value set lookup_name = 'Permissions-CanDefineCustomizedText' where lookup_name = 'Permissions-CanDefineLabels';
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)values
+                       (224,203,
+                       (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanDefineCustomFields'),
+                       (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanDefineCustomFields'));
+                insert into roles_activity values (224,1);
+                update lookup_value set lookup_name = 'Permissions-CanDefineLabels' where lookup_name = 'Permissions-CanDefineCustomizedText';
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

@@ -189,4 +189,10 @@ public class MifosPage extends AbstractPage {
             selenium.isElementPresent(locator);
         }
     }
+    
+    public void verifyAllElementsAreNotPresent(String... locators){
+        for (String locator : locators) {
+            Assert.assertFalse(selenium.isElementPresent(locator));
+        }
+    } 
 }
