@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.SurveyDto;
 
@@ -73,6 +74,7 @@ public class LoanInformationDto implements Serializable {
     private final LoanPerformanceHistoryDto performanceHistory;
     private final boolean group;
     private final List<LoanActivityDto> recentAccountActivities;
+    private final List<CustomerNoteDto> recentNoteDtos;
 
     private final Boolean activeSurveys;
     private final List<SurveyDto> accountSurveys;
@@ -81,15 +83,15 @@ public class LoanInformationDto implements Serializable {
 
     public LoanInformationDto(String prdOfferingName, String globalAccountNum, Short accountStateId, String accountStateName, boolean disbursed,
                               Set<String> accountFlagNames, Date disbursementDate, boolean redone, Integer businessActivityId,
-                              Integer accountId,String gracePeriodTypeName, String interestTypeName,
+                              Integer accountId, String gracePeriodTypeName, String interestTypeName,
                               Integer customerId, Short accountTypeId, Short officeId, Short personnelId, Date nextMeetingDate, String totalAmountDue,
                               String totalAmountInArrears, LoanSummaryDto loanSummary, boolean loanActivityDetails, Double interestRate,
-                              boolean interestDeductedAtDisbursement,Short recurAfter, Short recurrenceId, boolean prinDueLastInst,
+                              boolean interestDeductedAtDisbursement, Short recurAfter, Short recurrenceId, boolean prinDueLastInst,
                               Short noOfInstallments, Short minNoOfInstall, Short maxNoOfInstall, Short gracePeriodDuration, String fundName,
-                              Integer collateralTypeId,String collateralNote, String externalId,
+                              Integer collateralTypeId, String collateralNote, String externalId,
                               Set<AccountFeesDto> accountFees, Date createdDate, LoanPerformanceHistoryDto performanceHistory, boolean group,
                               List<LoanActivityDto> recentAccountActivities, final Boolean activeSurveys, final List<SurveyDto> accountSurveys,
-                              String customerName, String globalCustNum, String officeName) {
+                              String customerName, String globalCustNum, String officeName, List<CustomerNoteDto> recentNoteDtos) {
 
         this.prdOfferingName = prdOfferingName;
         this.globalAccountNum = globalAccountNum;
@@ -137,6 +139,7 @@ public class LoanInformationDto implements Serializable {
         this.customerName = customerName;
         this.globalCustNum = globalCustNum;
         this.officeName = officeName;
+        this.recentNoteDtos = recentNoteDtos;
     }
 
     public String getPrdOfferingName() {
@@ -289,6 +292,10 @@ public class LoanInformationDto implements Serializable {
 
     public List<LoanActivityDto> getRecentAccountActivity() {
         return this.recentAccountActivities;
+    }
+
+    public List<CustomerNoteDto> getRecentNoteDtos() {
+        return recentNoteDtos;
     }
 
     public Boolean getActiveSurveys() {

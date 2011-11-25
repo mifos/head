@@ -72,6 +72,10 @@
         "total" : "100.0",
         "totalValue" : 100
       } ],
+  "recentNoteDtos" : [ { "comment" : "Approved",
+        "commentDate" : "2011-09-12",
+        "personnelName" : "mifos"
+      } ],
   "recurAfter" : 1,
   "recurrenceId" : 1,
   "redone" : false,

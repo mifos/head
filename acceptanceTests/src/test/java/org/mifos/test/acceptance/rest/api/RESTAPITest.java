@@ -251,6 +251,7 @@ public class RESTAPITest extends UiTestCaseBase {
         jsonAssert.assertEqual("personnelId");
         jsonAssert.assertEqual("prdOfferingName");
         jsonAssert.assertEqual("prinDueLastInst");
+        jsonAssert.assertEqual("recentNoteDtos");
         jsonAssert.assertEqual("recurAfter");
         jsonAssert.assertEqual("recurrenceId");
         jsonAssert.assertEqual("redone");
