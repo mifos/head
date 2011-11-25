@@ -92,7 +92,9 @@ public class EditSavingsProductsFormController {
         savingsProductBean.setInterestCalculationFrequency(savingsProductDto.getInterestCalculationFrequency());
         savingsProductBean.setSelectedFequencyPeriod(savingsProductDto.getInterestCalculationFrequencyPeriod().toString());
         savingsProductBean.setInterestPostingMonthlyFrequency(savingsProductDto.getInterestPostingMonthlyFrequency());
-        savingsProductBean.setMinBalanceRequiredForInterestCalculation(savingsProductDto.getMinBalanceForInterestCalculation().toString());
+        
+        String minBalanceRequiredForInterestCalculation = new Long(savingsProductDto.getMinBalanceForInterestCalculation().longValue()).toString();
+        savingsProductBean.setMinBalanceRequiredForInterestCalculation(minBalanceRequiredForInterestCalculation);
 
         savingsProductBean.setSelectedPrincipalGlCode(savingsProductDto.getDepositGlCode().toString());
         savingsProductBean.setSelectedInterestGlCode(savingsProductDto.getInterestGlCode().toString());
