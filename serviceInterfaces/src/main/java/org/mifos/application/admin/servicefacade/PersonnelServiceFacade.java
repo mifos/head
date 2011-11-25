@@ -20,8 +20,10 @@
 
 package org.mifos.application.admin.servicefacade;
 
+import org.joda.time.DateTime;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
+import org.mifos.dto.domain.CustomerHierarchyDto;
 import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.domain.UserSearchDto;
 import org.mifos.dto.screen.DefinePersonnelDto;
@@ -63,4 +65,7 @@ public interface PersonnelServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void unLockUserAccount(String globalAccountNum);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    CustomerHierarchyDto getLoanOfficerCustomersHierarchyForDay(Short loanOfficerId, DateTime day);
 }

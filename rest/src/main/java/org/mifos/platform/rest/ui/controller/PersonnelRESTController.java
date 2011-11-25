@@ -19,6 +19,9 @@
  */
 package org.mifos.platform.rest.ui.controller;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.dto.screen.PersonnelInformationDto;
@@ -35,6 +38,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -114,4 +118,11 @@ public class PersonnelRESTController {
         return hierarchy;
     }
     
+    @RequestMapping(value = "personnel/id-current/meetings-{day}", method = RequestMethod.GET)
+    public final @ResponseBody
+    CustomerHierarchyDto getCustomersUnderPersonnelForSpecifiedDay(@PathVariable String day) {
+        DateTime specifiedDay = DateTimeFormat.forPattern("dd-MM-yyyy").parseDateTime(day);
+        
+        return personnelServiceFacade.getLoanOfficerCustomersHierarchyForDay(getCurrentPersonnel().getPersonnelId(), specifiedDay);
+    }
 }

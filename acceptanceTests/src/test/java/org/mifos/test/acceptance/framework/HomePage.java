@@ -95,4 +95,9 @@ public class HomePage extends MifosPage {
         return new YourSettingsPage(selenium);
     }
 
+    public HomePage selectTaskListDateOption(String dateOption){
+    	selenium.select("name=selectedDateOption", dateOption);
+    	waitForPageToLoad();
+    	return new HomePage(selenium);
+    }
 }

@@ -69,7 +69,8 @@ public class AuditConfiguration {
         locales = Localization.getInstance().getLocaleIdSet();
         locale = Localization.getInstance().getConfiguredLocale();
         columnNames = (PropertyResourceBundle) PropertyResourceBundle.getBundle(
-                FilePaths.COLUMN_MAPPING_BUNDLE_PROPERTYFILE, locale);
+                FilePaths.COLUMN_MAPPING_BUNDLE_PROPERTYFILE, locale, 
+                this.getClass().getClassLoader(), new UTF8Control());
 
     }
 
