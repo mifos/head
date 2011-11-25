@@ -1,0 +1,110 @@
+{
+    "date": [
+        2011,
+        10,
+        10
+    ],
+    "collectionSheetCustomer": [
+        {
+            "name": "Client-REST",
+            "levelId": 3,
+            "branchId": 2,
+            "customerId": 1,
+            "searchId": "1.1",
+            "parentCustomerId": null,
+            "attendanceId": null,
+            "collectionSheetCustomerSaving": [],
+            "collectionSheetCustomerLoan": [],
+            "collectionSheetCustomerAccount": {
+                "accountId": 1,
+                "currencyId": 2,
+                "totalCustomerAccountCollectionFee": 0
+            },
+            "individualSavingAccounts": []
+        },
+        {
+            "name": "Group-REST",
+            "levelId": 2,
+            "branchId": 2,
+            "customerId": 2,
+            "searchId": "1.1.1",
+            "parentCustomerId": 1,
+            "attendanceId": null,
+            "collectionSheetCustomerSaving": [],
+            "collectionSheetCustomerLoan": [],
+            "collectionSheetCustomerAccount": {
+                "accountId": 2,
+                "currencyId": 2,
+                "totalCustomerAccountCollectionFee": 0
+            },
+            "individualSavingAccounts": []
+        },
+        {
+            "name": "Client REST API",
+            "levelId": 1,
+            "branchId": 2,
+            "customerId": 3,
+            "searchId": "1.1.1.1",
+            "parentCustomerId": 2,
+            "attendanceId": null,
+            "collectionSheetCustomerSaving": [
+                {
+                    "customerId": 3,
+                    "accountId": 7,
+                    "currencyId": 2,
+                    "productId": 4,
+                    "productShortName": "SB",
+                    "recommendedAmountUnitId": 2,
+                    "totalDepositAmount": 405,
+                    "depositDue": 500,
+                    "depositPaid": 95
+                },
+                {
+                    "customerId": 3,
+                    "accountId": 6,
+                    "currencyId": 2,
+                    "productId": 3,
+                    "productShortName": "SA",
+                    "recommendedAmountUnitId": 2,
+                    "totalDepositAmount": 100,
+                    "depositDue": 100,
+                    "depositPaid": 0
+                }
+            ],
+            "collectionSheetCustomerLoan": [
+                {
+                    "customerId": 3,
+                    "accountId": 4,
+                    "payInterestAtDisbursement": 0,
+                    "currencyId": 2,
+                    "productId": 1,
+                    "accountStateId": 5,
+                    "productShortName": "RLPA",
+                    "totalDisbursement": 0,
+                    "totalRepaymentDue": 40,
+                    "amountDueAtDisbursement": 0,
+                    "disbursalAccount": false
+                },
+                {
+                    "customerId": 3,
+                    "accountId": 5,
+                    "payInterestAtDisbursement": 0,
+                    "currencyId": 2,
+                    "productId": 2,
+                    "accountStateId": 5,
+                    "productShortName": "RLPB",
+                    "totalDisbursement": 0,
+                    "totalRepaymentDue": 412,
+                    "amountDueAtDisbursement": 0,
+                    "disbursalAccount": false
+                }
+            ],
+            "collectionSheetCustomerAccount": {
+                "accountId": 3,
+                "currencyId": 2,
+                "totalCustomerAccountCollectionFee": 0
+            },
+            "individualSavingAccounts": []
+        }
+    ]
+}

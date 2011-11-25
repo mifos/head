@@ -144,16 +144,22 @@ explanation of the license and how it is applied.
 			<html-el:form action="custSearchAction.do?method=getHomePage">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td width="70%" height="24" align="left" valign="top" class="paddingL10">		
-						Upcoming meetings:
-						<html-el:select property="selectedDateOption" onchange="this.form.submit();">
-							<c:forEach var="date"
-								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'nearestDates')}">
-								<html-el:option value="${date}">
-									${date}
-								</html-el:option>
-							</c:forEach>
-						</html-el:select>
+					<td width="70%" height="24" align="left" valign="middle" class="paddingL10">
+						<table width="96%" border="0" cellpadding="3" cellspacing="0">
+							<tr>
+								<td class="fontnormalbold">		
+									<mifos:mifoslabel name="CustomerSearch.upcomingMeetings"/>:
+									<html-el:select property="selectedDateOption" onchange="this.form.submit();">
+										<c:forEach var="date"
+											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'nearestDates')}">
+											<html-el:option value="${date}">
+												${date}
+											</html-el:option>
+										</c:forEach>
+									</html-el:select>
+								</td>
+							<tr>
+						</table>
 					</td>
 				</tr>
 				<tr>
@@ -162,7 +168,7 @@ explanation of the license and how it is applied.
 	             		<c:when test="${isCenterHierarchyExists=='true'}">
 			             	<td width="70%" height="24" align="left" valign="top" class="paddingL10">	 
 			             	 	<c:forEach var="center" items="${hierarchy.centers}">
-								<table width="90%" border="0" cellspacing="0" cellpadding="0">
+								<table width="90%" border="0" cellspacing="3" cellpadding="0" class="paddingL10">
 									<tr class="fontnormal">
 										<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 										<td width="99%">
@@ -176,14 +182,14 @@ explanation of the license and how it is applied.
 										<td>
 											<ul>
 												<c:forEach var="group" items="${center.groups}">
-													<li class="fontnormal">
+													<li class="fontnormal" style="margin-bottom:3px;">
 														<a href="groupCustAction.do?method=get&globalCustNum=<c:out value="${group.globalCustNum}"/>">
 															<c:out value="${group.displayName}" />
 														</a>
 													</li>
 													<ul>
 														<c:forEach var="client" items="${group.clients}">
-															<li class="fontnormal">
+															<li class="fontnormal" style="margin-bottom:3px;">
 																<a href="clientCustAction.do?method=get&globalCustNum=<c:out value="${client.globalCustNum}"/>">
 																	<c:out value="${client.displayName}" />
 																</a>
@@ -199,8 +205,9 @@ explanation of the license and how it is applied.
 		              		</td>
               		 	</c:when>
 	              		<c:otherwise>
+	              			<td width="70%" height="24" align="left" valign="top" class="paddingL10">
 							<c:forEach var="group" items="${hierarchy.groups}">
-								<table width="90%" border="0" cellspacing="0" cellpadding="0">
+								<table width="90%" border="0" cellspacing="3" cellpadding="0" class="paddingL10">
 									<tr class="fontnormal">
 										<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 										<td width="99%">
@@ -214,7 +221,7 @@ explanation of the license and how it is applied.
 										<td>
 											<ul>
 												<c:forEach var="client" items="${group.clients}">
-													<li class="fontnormal">
+													<li class="fontnormal" style="margin-bottom:3px;">
 														<a href="clientCustAction.do?method=get&globalCustNum=<c:out value="${client.globalCustNum}"/>">
 															<c:out value="${client.displayName}" />
 														</a>
@@ -224,7 +231,8 @@ explanation of the license and how it is applied.
 										<td>
 									</tr>
 								</table>
-			              		</c:forEach>
+		              		</c:forEach>
+		              		</td>
 			   			</c:otherwise>
 					</c:choose>
 				</tr>

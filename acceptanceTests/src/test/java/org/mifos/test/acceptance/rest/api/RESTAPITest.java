@@ -46,6 +46,7 @@ public class RESTAPITest extends UiTestCaseBase {
     public static final String CLIENT_GLOBAL_ID = "0002-000000003";
     public static final String GROUP_GLOBAL_ID = "0002-000000002";
     public static final String CENTER_GLOBAL_ID = "0002-000000001";
+    public static final String CENTER_ID = "1";
     public static final String PERSONNEL_CURRENT_ID = "current";
     public static final String SYSTEM_INFORMATION_ID = "information";
     public static final String LOAN_ACCOUNT_GLOBAL_ID = "000100000000004";
@@ -54,13 +55,15 @@ public class RESTAPITest extends UiTestCaseBase {
 
     private RESTAPITestHelper helper;
 
+    private DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService;
+
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @BeforeClass
     public void setUp() throws Exception {
         super.setUp();
         //Given
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011, 9, 13, 13, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "REST_API_20110912_dbunit.xml", dataSource, selenium);
@@ -348,6 +351,25 @@ public class RESTAPITest extends UiTestCaseBase {
         jsonAssert.assertEqual("paymentMadeBy");
         jsonAssert.assertEqual("outstandingBeforePayment");
         jsonAssert.assertEqual("outstandingAfterPayment");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(dependsOnGroups="readOnly")
+    public void verifyCollectionSheet() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "REST_API_20110912_dbunit.xml", dataSource, selenium);
+        dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2011, 10, 10, 13, 0, 0, 0));
+
+        helper.navigateToJsonAjaxPage();
+        String type = Type.CENTER_COLLECTIONSHEET;
+        String by = By.ID;
+        String value = CENTER_ID;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        ObjectMapper mapper = helper.getObjectMapper();
+        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
+
+        dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2011, 9, 13, 13, 0, 0, 0));
+
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
