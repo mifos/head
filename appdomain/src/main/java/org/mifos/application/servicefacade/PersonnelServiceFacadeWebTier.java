@@ -28,16 +28,22 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.persistence.LegacyMasterDao;
+import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.config.ClientRules;
 import org.mifos.config.Localization;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.customers.personnel.business.PersonnelDetailsEntity;
@@ -52,8 +58,13 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.dto.domain.AddressDto;
+import org.mifos.dto.domain.CenterDescriptionDto;
+import org.mifos.dto.domain.ClientDescriptionDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.CustomerHierarchyDto;
+import org.mifos.dto.domain.GroupDescriptionDto;
 import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.domain.UserSearchDto;
 import org.mifos.dto.domain.ValueListElement;
@@ -575,4 +586,64 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             throw new MifosRuntimeException(e);
         }
     }
+
+    @Override
+    public CustomerHierarchyDto getLoanOfficerCustomersHierarchyForDay(Short loanOfficerId, DateTime day) {
+        PersonnelBO personnel = personnelDao.findPersonnelById(loanOfficerId);
+        CustomerHierarchyDto hierarchy = new CustomerHierarchyDto();
+        // Yesterday as current date because upcoming meetings should include current day
+        DateTime currentDate = new DateTime().minusDays(1);
+        
+        try {
+            if (ClientRules.getCenterHierarchyExists()) {
+                for (CustomerDetailDto center : this.customerDao.findActiveCentersUnderUser(personnel)){
+                    CustomerBO centerBO = this.customerDao.findCustomerById(center.getCustomerId());
+                    DateTime nextMeeting = new DateTime(centerBO.getCustomerMeetingValue().getNextScheduleDateAfterRecurrenceWithoutAdjustment(currentDate.toDate()));
+                    if ( Days.daysBetween(day, nextMeeting).getDays() == 0 ){
+                        CenterDescriptionDto centerDescription = new CenterDescriptionDto();
+                        centerDescription.setId(center.getCustomerId());
+                        centerDescription.setDisplayName(center.getDisplayName());
+                        centerDescription.setGlobalCustNum(center.getGlobalCustNum());
+                        centerDescription.setSearchId(center.getSearchId());
+                        hierarchy.getCenters().add(centerDescription);
+                    }
+                }
+            }
+            
+            allGroups:
+            for (CustomerDetailDto group : this.customerDao.findGroupsUnderUser(personnel)){       
+                CustomerBO groupBO = this.customerDao.findCustomerById(group.getCustomerId());
+                DateTime nextMeeting = new DateTime(groupBO.getCustomerMeetingValue().getNextScheduleDateAfterRecurrenceWithoutAdjustment(currentDate.toDate()));
+                if ( Days.daysBetween(day, nextMeeting).getDays() == 0 ){     
+                    GroupDescriptionDto groupDescription = new GroupDescriptionDto();
+                    groupDescription.setId(group.getCustomerId());
+                    groupDescription.setDisplayName(group.getDisplayName());
+                    groupDescription.setGlobalCustNum(group.getGlobalCustNum());
+                    groupDescription.setSearchId(group.getSearchId());
+    
+                    for (ClientBO client : this.customerDao.findActiveClientsUnderParent(group.getSearchId(), personnel.getOffice().getOfficeId())) {
+                        ClientDescriptionDto clientDescription = new ClientDescriptionDto();
+                        clientDescription.setId(client.getCustomerId());
+                        clientDescription.setDisplayName(client.getDisplayName());
+                        clientDescription.setGlobalCustNum(client.getGlobalCustNum());
+                        clientDescription.setSearchId(client.getSearchId());
+                        groupDescription.getClients().add(clientDescription);
+                    }
+    
+                    for (CenterDescriptionDto center : hierarchy.getCenters()) {
+                        if (group.getSearchId().startsWith(center.getSearchId())) {
+                            center.getGroups().add(groupDescription);
+                            continue allGroups;
+                        }
+                    }
+                    hierarchy.getGroups().add(groupDescription);
+                }
+            }
+        } catch (MeetingException e) {
+            e.printStackTrace();
+        }
+        
+        return hierarchy;
+    }
+        
 }
