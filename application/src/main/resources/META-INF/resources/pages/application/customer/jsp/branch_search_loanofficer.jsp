@@ -271,7 +271,7 @@ explanation of the license and how it is applied.
 											<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/>
 											</c:otherwise>
 										</c:choose>
-										<mifos:mifoslabel name="CustomerSearch.noEntityAvailablePrefix"/>
+										<mifos:mifoslabel name="CustomerSearch.noEntityAvailableSuffix"/>
 									<br>
 									</c:otherwise>
 									</c:choose>

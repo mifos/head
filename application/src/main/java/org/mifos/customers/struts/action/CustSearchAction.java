@@ -278,13 +278,9 @@ public class CustSearchAction extends SearchAction {
      * @throws Exception
      */
     private String loadLoanOfficerCustomersHierarchyForSelectedDay(Short userId, HttpServletRequest request, CustSearchActionForm form) throws Exception {
-        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userId);
-        
-        CustomerHierarchyDto hierarchy = new CustomerHierarchyDto();
+        CustomerHierarchyDto hierarchy;
         List<String> nearestDates = new ArrayList<String>();
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        // Yesterday as current date because upcoming meetings should include current day
-        Date currentDate = new DateTime().minusDays(1).toDate();
         Date selectedDate;
         
         DateTime nextDate = new DateTime();
@@ -299,48 +295,7 @@ public class CustSearchAction extends SearchAction {
            selectedDate = new Date();
         }
 
-        if (ClientRules.getCenterHierarchyExists()) {
-            for (CustomerBO customer : new CustomerPersistence().getActiveCentersUnderUser(personnel)){
-                DateTime nextMeeting = new DateTime(customer.getCustomerMeetingValue().getNextScheduleDateAfterRecurrenceWithoutAdjustment(currentDate));
-                if ( Days.daysBetween(new DateTime(selectedDate), nextMeeting).getDays() == 0 ){
-                    CenterDescriptionDto centerDescription = new CenterDescriptionDto();
-                    centerDescription.setId(customer.getCustomerId());
-                    centerDescription.setDisplayName(customer.getDisplayName());
-                    centerDescription.setGlobalCustNum(customer.getGlobalCustNum());
-                    centerDescription.setSearchId(customer.getSearchId());
-                    hierarchy.getCenters().add(centerDescription);
-                }
-            }
-        }
-        
-        allGroups:
-        for (CustomerBO group : new CustomerPersistence().getGroupsUnderUser(personnel)){       
-            DateTime nextMeeting = new DateTime(group.getCustomerMeetingValue().getNextScheduleDateAfterRecurrenceWithoutAdjustment(currentDate));
-            if ( Days.daysBetween(new DateTime(selectedDate), nextMeeting).getDays() == 0 ){     
-                GroupDescriptionDto groupDescription = new GroupDescriptionDto();
-                groupDescription.setId(group.getCustomerId());
-                groupDescription.setDisplayName(group.getDisplayName());
-                groupDescription.setGlobalCustNum(group.getGlobalCustNum());
-                groupDescription.setSearchId(group.getSearchId());
-
-                for (ClientBO client : this.customerDao.findActiveClientsUnderParent(group.getSearchId(), personnel.getOffice().getOfficeId())) {
-                    ClientDescriptionDto clientDescription = new ClientDescriptionDto();
-                    clientDescription.setId(client.getCustomerId());
-                    clientDescription.setDisplayName(client.getDisplayName());
-                    clientDescription.setGlobalCustNum(client.getGlobalCustNum());
-                    clientDescription.setSearchId(client.getSearchId());
-                    groupDescription.getClients().add(clientDescription);
-                }
-
-                for (CenterDescriptionDto center : hierarchy.getCenters()) {
-                    if (group.getSearchId().startsWith(center.getSearchId())) {
-                        center.getGroups().add(groupDescription);
-                        continue allGroups;
-                    }
-                }
-                hierarchy.getGroups().add(groupDescription);
-            }
-        }
+        hierarchy = personnelServiceFacade.getLoanOfficerCustomersHierarchyForDay(userId, new DateTime(selectedDate));
         
         SessionUtils.setCollectionAttribute("nearestDates", nearestDates, request);
         SessionUtils.setAttribute("hierarchy", hierarchy, request);

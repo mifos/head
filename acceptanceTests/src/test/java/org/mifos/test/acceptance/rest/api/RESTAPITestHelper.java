@@ -45,6 +45,7 @@ public class RESTAPITestHelper {
         public static final String CLIENT_CHARGES = "client/charges";
         public static final String GROUP = "group";
         public static final String CENTER = "center";
+        public static final String CENTER_COLLECTIONSHEET = "collectionsheet/customer";
         public static final String PERSONNEL = "personnel";
         public static final String PERSONNEL_CLIENTS = "personnel/clients";
         public static final String SYSTEM = "admin/system";
@@ -84,6 +85,14 @@ public class RESTAPITestHelper {
 
     public String postJSONFromUI(String type, String by, String value, String data) throws InterruptedException {
         String url = String.format("%s/%s-%s.json", type, by, value);
+        if(data.startsWith("?")) {
+            // query string
+            return postJSONFromUI(url + data, "");
+        }
+        return postJSONFromUI(url, data);
+    }
+
+    public String postJSONFromUI(String url, String data) throws InterruptedException {
         selenium.type("resturl", url);
         selenium.type("data", data);
         selenium.click("postData");

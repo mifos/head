@@ -165,6 +165,7 @@ import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CreateLoanRequest;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.InstallmentDetailsDto;
@@ -1331,6 +1332,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         boolean disbursed = AccountState.isDisbursed(accountStateId);
         String gracePeriodTypeName = getGracePeriodTypeName(loan.getGracePeriodType().getId());
         String interestTypeName = getInterestTypeName(loan.getInterestType().getId());
+        List<CustomerNoteDto> recentNoteDtos = new ArrayList<CustomerNoteDto>();
+        List<AccountNotesEntity> recentNotes = loan.getRecentAccountNotes();
+        for (AccountNotesEntity accountNotesEntity : recentNotes) {
+            recentNoteDtos.add(new CustomerNoteDto(accountNotesEntity.getCommentDate(), accountNotesEntity.getComment(), accountNotesEntity.getPersonnelName()));
+        }
 
         return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, accountStateId,
                                      accountStateName, disbursed, accountFlagNames, loan.getDisbursementDate(), loan.isRedone(),
@@ -1347,7 +1353,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                                      loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), loan.getCollateralNote(),loan.getExternalId(),
                                      accountFeesDtos, loan.getCreatedDate(), loanPerformanceHistory,
                                      loan.getCustomer().isGroup(), getRecentActivityView(globalAccountNum), activeSurveys, accountSurveys,
-                                     loan.getCustomer().getDisplayName(), loan.getCustomer().getGlobalCustNum(), loan.getOffice().getOfficeName());
+                                     loan.getCustomer().getDisplayName(), loan.getCustomer().getGlobalCustNum(), loan.getOffice().getOfficeName(), recentNoteDtos);
     }
 
     private String getMeetingRecurrence(MeetingBO meeting, UserContext userContext) {

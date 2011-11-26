@@ -20,11 +20,8 @@
 
 package org.mifos.test.acceptance.rest.api;
 
-import static org.mifos.test.acceptance.rest.api.RESTAPITestHelper.Type;
-import static org.mifos.test.acceptance.rest.api.RESTAPITestHelper.By;
-
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -33,6 +30,8 @@ import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.rest.api.RESTAPITestHelper.By;
+import org.mifos.test.acceptance.rest.api.RESTAPITestHelper.Type;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -46,6 +45,7 @@ public class RESTAPITest extends UiTestCaseBase {
     public static final String CLIENT_GLOBAL_ID = "0002-000000003";
     public static final String GROUP_GLOBAL_ID = "0002-000000002";
     public static final String CENTER_GLOBAL_ID = "0002-000000001";
+    public static final String CENTER_ID = "1";
     public static final String PERSONNEL_CURRENT_ID = "current";
     public static final String SYSTEM_INFORMATION_ID = "information";
     public static final String LOAN_ACCOUNT_GLOBAL_ID = "000100000000004";
@@ -54,13 +54,15 @@ public class RESTAPITest extends UiTestCaseBase {
 
     private RESTAPITestHelper helper;
 
+    private DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService;
+
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @BeforeClass
     public void setUp() throws Exception {
         super.setUp();
         //Given
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011, 9, 13, 13, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "REST_API_20110912_dbunit.xml", dataSource, selenium);
@@ -248,6 +250,7 @@ public class RESTAPITest extends UiTestCaseBase {
         jsonAssert.assertEqual("personnelId");
         jsonAssert.assertEqual("prdOfferingName");
         jsonAssert.assertEqual("prinDueLastInst");
+        jsonAssert.assertEqual("recentNoteDtos");
         jsonAssert.assertEqual("recurAfter");
         jsonAssert.assertEqual("recurrenceId");
         jsonAssert.assertEqual("redone");
@@ -333,7 +336,7 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(dependsOnGroups="readOnly")
     public void repayLoanByGlobalNum() throws Exception {
-        String data = "amount=100";
+        String data = "?amount=100";
         String type = Type.LOAN_REPAYMENT;
         String by = By.GLOBAL_NUMBER;
         String value = LOAN_ACCOUNT_GLOBAL_ID;
@@ -353,7 +356,7 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(dependsOnGroups="readOnly")
     public void savingsDepositWithdrawByGlobalNum() throws Exception {
-        String data = "amount=100";
+        String data = "?amount=100";
         String by = By.GLOBAL_NUMBER;
         String value = SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID;
 
@@ -362,7 +365,7 @@ public class RESTAPITest extends UiTestCaseBase {
         verifySavingsTrxn(data, type, by, value);
 
         // withdraw
-        data = "amount=69";
+        data = "?amount=69";
         type = Type.SAVINGS_WITHDRAW;
         verifySavingsTrxn(data, type, by, value);
     }
