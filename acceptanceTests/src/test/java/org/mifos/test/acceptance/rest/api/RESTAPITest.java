@@ -54,15 +54,13 @@ public class RESTAPITest extends UiTestCaseBase {
 
     private RESTAPITestHelper helper;
 
-    private DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService;
-
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @BeforeClass
     public void setUp() throws Exception {
         super.setUp();
         //Given
-        dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011, 9, 13, 13, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "REST_API_20110912_dbunit.xml", dataSource, selenium);

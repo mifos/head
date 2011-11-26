@@ -210,7 +210,7 @@
 	                    	[@spring.formInput "savingsProduct.interestCalculationFrequency" /]
 	                    [/#if]
 	                    </span>
-	                    <span class="span-4">
+	                    <span>
 	                    [#if savingsProduct.notUpdateable && savingsProduct.interestRate > 0]
 	                       [@spring.formSingleSelect "savingsProduct.selectedFequencyPeriod", savingsProduct.frequencyPeriodOptions, "disabled=disabled" /]
                        	[#else]
