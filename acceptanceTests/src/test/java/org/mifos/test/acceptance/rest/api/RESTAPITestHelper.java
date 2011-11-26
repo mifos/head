@@ -84,7 +84,17 @@ public class RESTAPITestHelper {
     }
 
     public String postJSONFromUI(String type, String by, String value, String data) throws InterruptedException {
+        String result;
         String url = String.format("%s/%s-%s.json", type, by, value);
+        if(data.charAt(0) == '?') {
+            // query string
+            result = postJSONFromUI(url + data, "");
+        }
+        result = postJSONFromUI(url, data);
+        return result;
+    }
+
+    public String postJSONFromUI(String url, String data) throws InterruptedException {
         selenium.type("resturl", url);
         selenium.type("data", data);
         selenium.click("postData");

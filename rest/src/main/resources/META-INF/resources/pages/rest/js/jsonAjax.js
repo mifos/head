@@ -32,6 +32,7 @@ function postData() {
     $.ajax({
           url: resturl,
           type: 'POST',
+          contentType : "application/json",
           dataType: 'json',
           data: $('#data').val(),
           success: function(data) {
@@ -46,6 +47,7 @@ function postDataPretty() {
     $.ajax({
           url: resturl,
           type: 'POST',
+          contentType : "application/json",
           dataType: 'json',
           data: $('#data').val(),
           success: function(data) {
