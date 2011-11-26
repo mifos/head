@@ -23,9 +23,6 @@ package org.mifos.test.acceptance.rest.api;
 import static org.mifos.test.acceptance.rest.api.RESTAPITestHelper.Type;
 import static org.mifos.test.acceptance.rest.api.RESTAPITestHelper.By;
 
-import java.util.Map;
-import java.util.List;
-
 import junit.framework.Assert;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -146,38 +143,5 @@ public class CollectionsheetRESTAPITest extends UiTestCaseBase {
                 "\"accountStateId\":5,\"productShortName\":\"RLPB\",\"totalDisbursement\":0,\"totalRepaymentDue\":0," +
                 "\"amountDueAtDisbursement\":0,\"disbursalAccount\":false}],\"collectionSheetCustomerAccount\":{\"accountId" +
                 "\":3,\"currencyId\":2,\"totalCustomerAccountCollectionFee\":0},\"individualSavingAccounts\":[]}]}";
-    }
-
-    class AssertJSON {
-        Map<String, Object> actualJSON;
-        Map<String, Object> expectedJSON;
-        @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-        public AssertJSON(String actualJSONString, String expectedJSONString) throws Exception {
-            ObjectMapper mapper = helper.getObjectMapper();
-            actualJSON = mapper.readValue(actualJSONString, Map.class);
-            expectedJSON = mapper.readValue(expectedJSONString, Map.class);
-        }
-
-        public void assertEqual(String property) {
-            Assert.assertEquals(expectedJSON.get(property), actualJSON.get(property));
-        }
-    }
-
-    class AssertJSONList {
-        List<Map> actualJSON;
-        List<Map> expectedJSON;
-        @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-        public AssertJSONList(String actualJSONString, String expectedJSONString) throws Exception {
-            ObjectMapper mapper = helper.getObjectMapper();
-            actualJSON = mapper.readValue(actualJSONString, List.class);
-            expectedJSON = mapper.readValue(expectedJSONString, List.class);
-            Assert.assertEquals(expectedJSON.size(), actualJSON.size());
-        }
-
-        public void assertEqual(String property) {
-            for (int i = 0; i < expectedJSON.size(); i++) {
-                Assert.assertEquals(expectedJSON.get(i).get(property), actualJSON.get(i).get(property));
-            }
-        }
     }
 }
