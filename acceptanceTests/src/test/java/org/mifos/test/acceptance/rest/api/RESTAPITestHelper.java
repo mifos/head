@@ -89,8 +89,9 @@ public class RESTAPITestHelper {
         if(data.charAt(0) == '?') {
             // query string
             result = postJSONFromUI(url + data, "");
+        } else {
+            result = postJSONFromUI(url, data);
         }
-        result = postJSONFromUI(url, data);
         return result;
     }
 
