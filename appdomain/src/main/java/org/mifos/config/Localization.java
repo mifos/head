@@ -148,6 +148,7 @@ public class Localization {
             LOCALE_MAP.put((short) 11, new Locale("hu", "HU")); // Hungarian
             LOCALE_MAP.put((short) 12, new Locale("te", "IN")); // Tegulu
             LOCALE_MAP.put((short) 13, new Locale("hi", "IN")); // Hindi
+            LOCALE_MAP.put((short) 14, Locale.GERMAN);
         }
     }
 
