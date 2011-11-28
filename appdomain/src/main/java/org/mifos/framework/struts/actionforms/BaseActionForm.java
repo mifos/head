@@ -185,7 +185,7 @@ public class BaseActionForm extends ValidatorActionForm {
         DoubleConversionResult conversionResult = parseDoubleForMoney(amountString, currency);
         for (ConversionError error : conversionResult.getErrors()) {
             String errorText = error.toLocalizedMessage(locale, currency);
-            addError(errors, fieldPropertyKey, "errors.generic", fieldName, installmentNo,errorText);
+            addError(errors, fieldPropertyKey, "errors.generic", fieldName, errorText);
         }
         return conversionResult;
     }
