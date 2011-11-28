@@ -40,6 +40,7 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_RANGE_IS_NO
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.NEXTMEETING_DATE;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.PROPOSED_DISBURSAL_DATE;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECENTACCOUNTACTIVITIES;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECURRENCEID;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECURRENCENAME;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.STATUS_HISTORY;
@@ -1325,6 +1326,12 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 MasterConstants.COLLATERAL_TYPES).getCustomValueListElements(), request);
         SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION, loanBusinessService.getLastPaymentAction(loanInformationDto.getAccountId()), request);
         SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
+        // inject preferred date
+        List<LoanActivityDto> activities = loanInformationDto.getRecentAccountActivity();
+        for (LoanActivityDto activity : activities) {
+            activity.setUserPrefferedDate(DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), activity.getActionDate().toString()));
+        }
+        SessionUtils.setCollectionAttribute(RECENTACCOUNTACTIVITIES, activities, request);
 
         request.setAttribute(CustomerConstants.SURVEY_KEY, loanInformationDto.getAccountSurveys());
         request.setAttribute(CustomerConstants.SURVEY_COUNT, loanInformationDto.getActiveSurveys());

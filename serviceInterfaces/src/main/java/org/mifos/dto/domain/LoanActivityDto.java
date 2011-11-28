@@ -44,7 +44,7 @@ public class LoanActivityDto implements Serializable {
     private java.sql.Timestamp timeStamp;
     private String runningBalancePrincipleWithInterestAndFees;
     private double totalValue;
-//    private String userPrefferedDate;
+    private String userPrefferedDate;
 
     public LoanActivityDto() {
     }
@@ -161,14 +161,13 @@ public class LoanActivityDto implements Serializable {
         this.runningBalancePenalty = runningBalancePenalty;
     }
 
-//    public String getUserPrefferedDate() {
-//        return userPrefferedDate;
-//        return DateUtils.getUserLocaleDate(getLocale(), getActionDate().toString());
-//    }
+    public String getUserPrefferedDate() {
+        return userPrefferedDate;
+    }
 
-//    public void setUserPrefferedDate(String userPrefferedDate) {
-//        this.userPrefferedDate = userPrefferedDate;
-//    }
+    public void setUserPrefferedDate(String userPrefferedDate) {
+        this.userPrefferedDate = userPrefferedDate;
+    }
 
     public String getRunningBalancePrincipleWithInterestAndFees() {
         return runningBalancePrincipleWithInterestAndFees;
