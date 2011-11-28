@@ -582,7 +582,7 @@ explanation of the license and how it is applied.
 									var="phoneNumber"
 									value="${clientInformationDto.address.phoneNumber}" />
 								<c:if test="${!empty phoneNumber}">
-			ViewClientDetails						<br>
+									<br>
 									<mifos:mifoslabel name="client.Telephone"
 										bundle="ClientUIResources" keyhm="Client.PhoneNumber"
 										isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
