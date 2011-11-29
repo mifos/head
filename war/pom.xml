@@ -47,7 +47,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>mifos-v2.2.1</finalName>
+                    <finalName>mifos-v2.2.2</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
                         <descriptor>src/main/assembly/release.xml</descriptor>
