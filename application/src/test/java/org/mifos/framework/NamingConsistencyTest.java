@@ -22,15 +22,9 @@ package org.mifos.framework;
 
 import static org.junit.Assert.fail;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.junit.Test;
+import org.mifos.platform.util.ClassUtils;
 
 public class NamingConsistencyTest {
 
@@ -42,47 +36,20 @@ public class NamingConsistencyTest {
      */
     @Test
     public void integrationTestsNameCheck() throws ClassNotFoundException, IOException {
-        for (Class<?> clazz : getClasses("org.mifos", "Test")) {
-            String clazzName = clazz.getName();
-            if (!clazzName.endsWith("IntegrationTest") && !clazzName.endsWith("StrutsTest")) {
-                if (clazz.getSuperclass().equals(MifosIntegrationTestCase.class)
-                        || clazz.getSuperclass().equals(MifosMockStrutsTestCase.class)) {
-                    fail(clazz + " Integration test naming convension voilation");
-                }
+        for (Class<?> clazz : ClassUtils.getClasses("org.mifos", "Test")) {
+            final String clazzName = clazz.getName();
+            if (isNotMatchingConvension(clazzName) && isMifosTestCase(clazz)) {
+                 fail(clazz + " Integration test naming convension voilation");
             }
         }
     }
 
-    private static Iterable<Class<?>> getClasses(String packageName, String endsWith) throws ClassNotFoundException, IOException {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        assert classLoader != null;
-        String path = packageName.replace('.', '/');
-        Enumeration<URL> resources = classLoader.getResources(path);
-        List<File> dirs = new ArrayList<File>();
-        while (resources.hasMoreElements()) {
-            URL resource = resources.nextElement();
-            dirs.add(new File(resource.getFile()));
-        }
-        List<Class<?>> classes = new LinkedList<Class<?>>();
-        for (File directory : dirs) {
-            findClasses(directory, packageName, endsWith, classes);
-        }
-        return classes;
+    private boolean isNotMatchingConvension(final String clazzName) {
+        return !clazzName.endsWith("IntegrationTest") && !clazzName.endsWith("StrutsTest");
     }
 
-    private static void findClasses(File directory, String packageName, String endsWith, List<Class<?>> classes) throws ClassNotFoundException {
-        if (!directory.exists()) {
-            return;
-        }
-        File[] files = directory.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                assert !file.getName().contains(".");
-                findClasses(file, packageName + "." + file.getName(), endsWith, classes);
-            } else if (file.getName().endsWith(endsWith + ".class")) {
-                String className = packageName + '.' + file.getName().substring(0, file.getName().length() - 6);
-                classes.add(Class.forName(className));
-            }
-        }
+    private boolean isMifosTestCase(final Class<?> clazz) {
+        return clazz.getSuperclass().equals(MifosIntegrationTestCase.class)
+                || clazz.getSuperclass().equals(MifosMockStrutsTestCase.class);
     }
 }

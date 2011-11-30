@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.rest.ui.controller;
+package org.mifos.platform.rest.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

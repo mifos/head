@@ -17,26 +17,54 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.rest.ui.controller;
+package org.mifos.platform.rest.controller;
 
-import org.mifos.application.servicefacade.GroupServiceFacade;
-import org.mifos.dto.screen.GroupInformationDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * This is a dummy rest controller which is used to make sure if the rest services are available
+ *
+ * /mifos/status.json
+ *
+ */
 @Controller
-public class GroupRESTController {
+public class StatusRESTController {
 
-    @Autowired
-    private GroupServiceFacade groupServiceFacade;
-
-    @RequestMapping(value = "group/num-{globalCustNum}", method = RequestMethod.GET)
-    public final @ResponseBody
-    GroupInformationDto getGroupByNumber(@PathVariable String globalCustNum) {
-        return groupServiceFacade.getGroupInformationDto(globalCustNum);
+    @RequestMapping("status")
+    public @ResponseBody
+    StatusJSON status() {
+        StatusJSON json = new StatusJSON();
+        json.setStatus("Success");
+        return json;
     }
+
+    @RequestMapping("accessDenied")
+    public @ResponseBody
+    StatusJSON accessDenied() {
+        StatusJSON json = new StatusJSON();
+        json.setStatus("session expired");
+        return json;
+    }
+
+    @RequestMapping("restLogin")
+    public String restLoginForm() {
+        return "restLogin";
+    }
+
+}
+
+class StatusJSON {
+
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
 }

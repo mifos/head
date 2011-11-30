@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.rest.ui.controller;
+package org.mifos.platform.rest.controller;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -70,19 +70,19 @@ public class SavingsAccountRESTController {
     private PersonnelDao personnelDao;
 
     @RequestMapping(value = "account/savings/deposit/num-{globalAccountNum}", method = RequestMethod.POST)
-    public final @ResponseBody
+    public @ResponseBody
     Map<String, String> deposit(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
         return doSavingsTrxn(globalAccountNum, request, TrxnTypes.savings_deposit);
     }
 
     @RequestMapping(value = "account/savings/withdraw/num-{globalAccountNum}", method = RequestMethod.POST)
-    public final @ResponseBody
+    public @ResponseBody
     Map<String, String> withdraw(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
         return doSavingsTrxn(globalAccountNum, request, TrxnTypes.savings_withdrawal);
     }
 
     @RequestMapping(value = "/account/savings/num-{globalAccountNum}", method = RequestMethod.GET)
-    public final @ResponseBody
+    public @ResponseBody
     SavingsAccountDetailDto getSavingsByNumber(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
         SavingsBO savings = this.savingsDao.findBySystemId(globalAccountNum);
         savings.setUserContext((UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession()));
@@ -90,7 +90,7 @@ public class SavingsAccountRESTController {
     }
 
     @RequestMapping(value = "/account/savings/due/num-{globalAccountNum}", method = RequestMethod.GET)
-    public final @ResponseBody
+    public @ResponseBody
     SavingsAccountDepositDueDto getSavingsDepositDueDetailsByNumber(@PathVariable String globalAccountNum) throws Exception {
         return savingsServiceFacade.retrieveDepositDueDetails(globalAccountNum);
     }

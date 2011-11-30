@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.rest.ui.controller;
+package org.mifos.platform.rest.controller;
 
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
@@ -48,7 +48,7 @@ public class AccountRESTController {
     private AccountBusinessService accountBusinessService;
 
     @RequestMapping(value = "/account/trxnhistory/num-{globalAccountNum}", method = RequestMethod.GET)
-    public final @ResponseBody
+    public @ResponseBody
     List<TransactionHistoryDto> getAccountTransactionHistoryByNumber(@PathVariable String globalAccountNum) throws Exception {
         AccountTypes type = accountBusinessService.getTypeBySystemId(globalAccountNum);
         if (AccountTypes.LOAN_ACCOUNT.equals(type)) {
