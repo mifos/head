@@ -20,6 +20,7 @@
 package org.mifos.platform.rest.controller;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,8 @@ import org.mifos.dto.domain.LoanRepaymentScheduleItemDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.dto.screen.LoanInformationDto;
+import org.mifos.dto.screen.RepayLoanDto;
+import org.mifos.dto.screen.RepayLoanInfoDto;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,6 +121,54 @@ public class LoanAccountRESTController {
         return map;
     }
 
+    @RequestMapping(value = "/account/loan/fullrepay/num-{globalAccountNum}", method = RequestMethod.POST)
+    public @ResponseBody
+    Map<String, String> fullRepay(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
+    	
+    	boolean waiverInterest = Boolean.parseBoolean(request.getParameter("waiverInterest"));
+    	
+    	MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	
+        RepayLoanDto repayLoanDto = this.loanAccountServiceFacade.retrieveLoanRepaymentDetails(globalAccountNum);
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        
+    	DateTime today = new DateTime();
+        Date receiptDate = new Date(today.toDate().getTime());
+
+        // from where these parameter should come?
+        String receiptId = "";
+        
+        BigDecimal totalRepaymentAmount = ( new Money(loan.getCurrency(), repayLoanDto.getEarlyRepaymentMoney()) ).getAmount();
+        BigDecimal waivedAmount = ( new Money(loan.getCurrency(), repayLoanDto.getWaivedRepaymentMoney()) ).getAmount();
+        
+        String paymentTypeId = "1";
+        
+        RepayLoanInfoDto repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
+        		Long.toString(totalRepaymentAmount.longValue()), receiptId,
+                receiptDate, paymentTypeId, (short) user.getUserId(),
+                waiverInterest,
+                receiptDate,totalRepaymentAmount,waivedAmount);
+        
+        this.loanAccountServiceFacade.makeEarlyRepaymentWithCommit(repayLoanInfoDto);
+        
+        CustomerBO client = loan.getCustomer();
+        Money outstandingBeforePayment = loan.getLoanSummary().getOutstandingBalance();
+        
+    	Map<String, String> map = new HashMap<String, String>();
+    	map.put("status", "success");
+        map.put("clientName", client.getDisplayName());
+        map.put("clientNumber", client.getGlobalCustNum());
+        map.put("loanDisplayName", loan.getLoanOffering().getPrdOfferingName());
+        map.put("paymentDate", today.toLocalDate().toString());
+        map.put("paymentTime", today.toLocalTime().toString());
+        map.put("paymentAmount", loan.getLastPmnt().getAmount().toString());
+        map.put("paymentMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
+        map.put("outstandingBeforePayment", outstandingBeforePayment.toString());
+        map.put("outstandingAfterPayment", loan.getLoanSummary().getOutstandingBalance().toString());
+    	
+    	return map;
+    }
+    
     @RequestMapping(value = "/account/loan/num-{globalAccountNum}", method = RequestMethod.GET)
     public @ResponseBody
     LoanInformationDto getLoanByNumber(@PathVariable String globalAccountNum) throws Exception {
