@@ -1,0 +1,28 @@
+{
+	"centers": [
+		{
+			"id": 1,
+			"displayName": "Client-REST",
+			"searchId": "1.1",
+			"globalCustNum": "0002-000000001",
+			"groups": [
+				{
+					"id": 2,
+					"displayName": "Group-REST",
+					"searchId": "1.1.1",
+					"globalCustNum": "0002-000000002",
+					"clients": [
+						{
+							"id": 3,
+							"displayName": "Client REST API",
+							"searchId": "1.1.1.1",
+							"globalCustNum": "0002-000000003"
+						}		
+					]
+				}
+			]
+		}
+	],
+	"clients": [],
+	"groups": []
+}

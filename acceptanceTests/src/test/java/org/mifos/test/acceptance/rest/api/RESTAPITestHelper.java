@@ -40,6 +40,9 @@ public class RESTAPITestHelper {
 
     private final Selenium selenium;
 
+	private static final String LOANOFFICER_PASSWORD = "testmifos";
+    private static final String LOANOFFICER_USERNAME = "loanofficer"; 
+    
     public static class Type {
         public static final String CLIENT = "client";
         public static final String CLIENT_CHARGES = "client/charges";
@@ -63,6 +66,7 @@ public class RESTAPITestHelper {
     public static class By {
         public static final String GLOBAL_NUMBER = "num";
         public static final String ID = "id";
+        public static final String MEETINGS = "meetings";
     }
 
     public RESTAPITestHelper(Selenium selenium) {
@@ -73,6 +77,12 @@ public class RESTAPITestHelper {
         LoginPage loginPage = new AppLauncher(selenium).launchMifos();
         loginPage.loginSuccessfullyUsingDefaultCredentials();
         selenium.open("jsonAjax.ftl");
+    }
+    
+    public void navigateToJsonAjaxPageAsLoanOfficer() {
+        LoginPage loginPage = new AppLauncher(selenium).launchMifos();
+        loginPage.loginSuccessfulAs(LOANOFFICER_USERNAME, LOANOFFICER_PASSWORD);
+        selenium.open("jsonAjax.ftl"); 
     }
 
     public String getJSONFromUI(String type, String by, String value) throws InterruptedException {
