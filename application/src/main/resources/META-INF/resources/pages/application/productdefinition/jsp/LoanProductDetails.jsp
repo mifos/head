@@ -230,13 +230,13 @@ explanation of the license and how it is applied.
 												<fmt:message key="product.rateType">
 												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
 												</fmt:message>: <c:out value="${loanPrd.interestTypes.name}" /> <br>
-												<fmt:message key="product.maxRate">
-												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
-												</fmt:message>: <c:out value="${userfn:getDoubleValue(loanPrd.maxInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> 
 												<fmt:message key="product.minRate">
 												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param> 
 												</fmt:message>: <c:out value="${userfn:getDoubleValue(loanPrd.minInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> 
-												<fmt:message key="product.defaultRate">
+												<fmt:message key="product.maxRate">
+                                                <fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+                                                </fmt:message>: <c:out value="${userfn:getDoubleValue(loanPrd.maxInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> 
+                                                <fmt:message key="product.defaultRate">
 												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
 												</fmt:message>: <c:out value="${userfn:getDoubleValue(loanPrd.defInterestRate)}" /> <mifos:mifoslabel name="product.perc"
 													bundle="ProductDefUIResources" /><br> </span>

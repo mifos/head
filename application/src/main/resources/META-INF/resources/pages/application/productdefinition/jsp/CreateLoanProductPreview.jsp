@@ -489,15 +489,6 @@ explanation of the license and how it is applied.
 											<c:out value="${InterestTypes.name}" />
 										</c:if>
 									</c:forEach> </span> <br>
-									<fmt:message key="product.maxRate">
-										<fmt:param><mifos:mifoslabel
-										name="${ConfigurationConstants.SERVICE_CHARGE}"
-										bundle="ProductDefUIResources" /></fmt:param>
-										</fmt:message>: <span
-										class="fontnormal"><c:out
-										value="${sessionScope.loanproductactionform.maxInterestRate}" />
-									<mifos:mifoslabel name="product.perc"
-										bundle="ProductDefUIResources" /></span> <br>
 									<fmt:message key="product.minRate">
 										<fmt:param><mifos:mifoslabel
 										name="${ConfigurationConstants.SERVICE_CHARGE}"
@@ -507,6 +498,15 @@ explanation of the license and how it is applied.
 										value="${sessionScope.loanproductactionform.minInterestRate}" />
 									<mifos:mifoslabel name="product.perc"
 										bundle="ProductDefUIResources" /></span> <br>
+                                    <fmt:message key="product.maxRate">
+                                        <fmt:param><mifos:mifoslabel
+                                        name="${ConfigurationConstants.SERVICE_CHARGE}"
+                                        bundle="ProductDefUIResources" /></fmt:param>
+                                        </fmt:message>: <span
+                                        class="fontnormal"><c:out
+                                        value="${sessionScope.loanproductactionform.maxInterestRate}" />
+                                    <mifos:mifoslabel name="product.perc"
+                                        bundle="ProductDefUIResources" /></span> <br>
 									<fmt:message key="product.defaultRate">
 										<fmt:param><mifos:mifoslabel
 										name="${ConfigurationConstants.SERVICE_CHARGE}"

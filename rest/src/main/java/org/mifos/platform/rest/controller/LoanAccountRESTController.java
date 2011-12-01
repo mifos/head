@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.rest.ui.controller;
+package org.mifos.platform.rest.controller;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -69,7 +69,7 @@ public class LoanAccountRESTController {
     private PersonnelDao personnelDao;
 
     @RequestMapping(value = "/account/loan/repay/num-{globalAccountNum}", method = RequestMethod.POST)
-    public final @ResponseBody
+    public @ResponseBody
     Map<String, String> repay(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
 
         String amountString = request.getParameter("amount");
@@ -119,20 +119,20 @@ public class LoanAccountRESTController {
     }
 
     @RequestMapping(value = "/account/loan/num-{globalAccountNum}", method = RequestMethod.GET)
-    public final @ResponseBody
+    public @ResponseBody
     LoanInformationDto getLoanByNumber(@PathVariable String globalAccountNum) throws Exception {
         return loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
     }
 
     @RequestMapping(value = "/account/loan/installment/num-{globalAccountNum}", method = RequestMethod.GET)
-    public final @ResponseBody
+    public @ResponseBody
     LoanInstallmentDetailsDto getLoanInstallmentByNumber(@PathVariable String globalAccountNum) throws Exception {
         LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
         return loanAccountServiceFacade.retrieveInstallmentDetails(loan.getAccountId());
     }
 
     @RequestMapping(value = "/account/loan/schedule/num-{globalAccountNum}", method = RequestMethod.GET)
-    public final @ResponseBody
+    public @ResponseBody
     List<LoanRepaymentScheduleItemDto> getLoanRepaymentScheduleByNumber(@PathVariable String globalAccountNum) throws Exception {
         return loanAccountServiceFacade.retrieveLoanRepaymentSchedule(globalAccountNum);
     }

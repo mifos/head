@@ -17,11 +17,10 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.rest.ui.controller;
+package org.mifos.platform.rest.controller;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.dto.screen.PersonnelInformationDto;
@@ -56,14 +55,14 @@ public class PersonnelRESTController {
     private PersonnelDao personnelDao;
 
     @RequestMapping(value = "personnel/id-current", method = RequestMethod.GET)
-    public final @ResponseBody
+    public @ResponseBody
     PersonnelInformationDto getCurrentPersonnel() {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return personnelServiceFacade.getPersonnelInformationDto((long)user.getUserId(), "");
     }
 
     @RequestMapping(value = "personnel/clients/id-current", method = RequestMethod.GET)
-    public final @ResponseBody
+    public @ResponseBody
     CustomerHierarchyDto getCustomersUnderPersonnel() {
         PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(getCurrentPersonnel().getPersonnelId());
 
@@ -117,12 +116,12 @@ public class PersonnelRESTController {
 
         return hierarchy;
     }
-    
+
     @RequestMapping(value = "personnel/id-current/meetings-{day}", method = RequestMethod.GET)
-    public final @ResponseBody
+    public @ResponseBody
     CustomerHierarchyDto getCustomersUnderPersonnelForSpecifiedDay(@PathVariable String day) {
         DateTime specifiedDay = DateTimeFormat.forPattern("dd-MM-yyyy").parseDateTime(day);
-        
+
         return personnelServiceFacade.getLoanOfficerCustomersHierarchyForDay(getCurrentPersonnel().getPersonnelId(), specifiedDay);
     }
 }

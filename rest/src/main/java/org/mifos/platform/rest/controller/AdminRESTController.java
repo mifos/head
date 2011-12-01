@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.rest.ui.controller;
+package org.mifos.platform.rest.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class AdminRESTController {
     private SystemInformationServiceFacade systemInformationServiceFacade;
 
     @RequestMapping(value = "admin/system/id-information", method = RequestMethod.GET)
-    public final @ResponseBody
+    public @ResponseBody
     SystemInformationDto getSystemInformation(HttpServletRequest request) {
       return systemInformationServiceFacade.getSystemInformation(request.getSession().getServletContext(), request.getLocale());
     }
