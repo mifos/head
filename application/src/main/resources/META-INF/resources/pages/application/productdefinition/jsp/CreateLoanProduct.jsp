@@ -521,19 +521,6 @@ explanation of the license and how it is applied.
 									</tr>
 									<tr class="fontnormal">
 										<td align="right"><span class="mandatorytext"> <font
-											color="#FF0000">*</font></span> <fmt:message key="product.maxRate">
-											<fmt:param>
-												<mifos:mifoslabel
-													name="${ConfigurationConstants.SERVICE_CHARGE}"
-													bundle="ProductDefUIResources" />
-											</fmt:param>
-										</fmt:message>:</td>
-										<td valign="top"><mifos:decimalinput
-											styleId= "createLoanProduct.input.maxInterestRate" property="maxInterestRate" /> <mifos:mifoslabel
-											name="product.rate" bundle="ProductDefUIResources" /></td>
-									</tr>
-									<tr class="fontnormal">
-										<td align="right"><span class="mandatorytext"> <font
 											color="#FF0000">*</font></span> <fmt:message key="product.minRate">
 											<fmt:param>
 												<mifos:mifoslabel
@@ -545,6 +532,19 @@ explanation of the license and how it is applied.
 											styleId= "createLoanProduct.input.minInterestRate" property="minInterestRate" /> <mifos:mifoslabel
 												name="product.rate" bundle="ProductDefUIResources" /></td>
 									</tr>
+                                    <tr class="fontnormal">
+                                        <td align="right"><span class="mandatorytext"> <font
+                                            color="#FF0000">*</font></span> <fmt:message key="product.maxRate">
+                                            <fmt:param>
+                                                <mifos:mifoslabel
+                                                    name="${ConfigurationConstants.SERVICE_CHARGE}"
+                                                    bundle="ProductDefUIResources" />
+                                            </fmt:param>
+                                        </fmt:message>:</td>
+                                        <td valign="top"><mifos:decimalinput
+                                            styleId= "createLoanProduct.input.maxInterestRate" property="maxInterestRate" /> <mifos:mifoslabel
+                                            name="product.rate" bundle="ProductDefUIResources" /></td>
+                                    </tr>
 									<tr class="fontnormal">
 										<td align="right"><span class="mandatorytext"> <font
 											color="#FF0000">*</font></span> <fmt:message
