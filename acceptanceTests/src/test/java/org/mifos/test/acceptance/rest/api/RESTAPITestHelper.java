@@ -57,6 +57,7 @@ public class RESTAPITestHelper {
         public static final String LOAN_INSTALLMENT = "account/loan/installment";
         public static final String LOAN_SCHEDULE = "account/loan/schedule";
         public static final String LOAN_REPAYMENT = "account/loan/repay";
+        public static final String LOAN_FULL_REPAYMENT = "account/loan/fullrepay";
         public static final String SAVINGS = "account/savings";
         public static final String SAVINGS_DUE = "account/savings/due";
         public static final String SAVINGS_DEPOSIT = "account/savings/deposit";
