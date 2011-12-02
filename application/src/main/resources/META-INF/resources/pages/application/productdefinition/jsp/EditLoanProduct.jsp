@@ -289,41 +289,31 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="product.byloancycle"
 									bundle="ProductDefUIResources" /></span> &nbsp;&nbsp;&nbsp;</td>
 							</tr>
-						</table>
-					<div id="option0" style="display:block;">
-						<table width="93%" border="0" cellpadding="3" cellspacing="0">
-							<tr class="fontnormal">
-								<td width="30%" align="right">&nbsp;</td>
-								<td width="70%" valign="top">
-								<table width="100%" border="0" cellpadding="3" cellspacing="0">
-									<tr>
-										<td width="33%" class="drawtablehd"><mifos:mifoslabel
-											name="product.minloanamt" bundle="ProductDefUIResources" /></td>
-										<td width="34%" class="drawtablehd"><mifos:mifoslabel
-											name="product.maxloanamt" bundle="ProductDefUIResources" /></td>
-										<td width="33%" class="drawtablehd"><mifos:mifoslabel
-											name="product.defamt" bundle="ProductDefUIResources" /></td>
-									</tr>
-									<tr>
-										<td class="drawtablerow"><mifos:decimalinput
-											size="10" property="minLoanAmount" /></td>
-										<td class="drawtablerow"><mifos:decimalinput
-											size="10" property="maxLoanAmount" /></td>
-										<td class="drawtablerow"><mifos:decimalinput
-											size="10" property="defaultLoanAmount" /></td>
-									</tr>
-
-								</table>
-								</td>
-							</tr>
-						</table>
-						</div>
-						<div id="option1" style="display:none;">
-								<table width="93%" border="0" cellpadding="3" cellspacing="0">
-									<tr class="fontnormal">
-										<td width="30%" align="right">&nbsp;</td>
-										<td width="70%" valign="top">
-										<table width="100%" border="0" cellpadding="3" cellspacing="0">
+                            <tr class="fontnormal">
+                                <td width="30%" align="right"></td>
+                                <td width="70%" valign="top">
+					               <div id="option0" style="display:block;">
+						              <table width="60%" border="0" cellpadding="3" cellspacing="0">
+									   <tr>
+										  <td width="33%" class="drawtablehd"><mifos:mifoslabel
+											 name="product.minloanamt" bundle="ProductDefUIResources" /></td>
+										  <td width="34%" class="drawtablehd"><mifos:mifoslabel
+											 name="product.maxloanamt" bundle="ProductDefUIResources" /></td>
+										  <td width="33%" class="drawtablehd"><mifos:mifoslabel
+											 name="product.defamt" bundle="ProductDefUIResources" /></td>
+									   </tr>
+									   <tr>
+										  <td class="drawtablerow"><mifos:decimalinput
+											 size="10" property="minLoanAmount" /></td>
+										  <td class="drawtablerow"><mifos:decimalinput
+											 size="10" property="maxLoanAmount" /></td>
+										  <td class="drawtablerow"><mifos:decimalinput
+											 size="10" property="defaultLoanAmount" /></td>
+									   </tr>
+								    </table>
+						          </div>
+						          <div id="option1" style="display:none;">
+								    <table width="60%" border="0" cellpadding="3" cellspacing="0">
 											<tr>
 												<td width="25%" class="drawtablehd"><mifos:mifoslabel
 													name="product.lastloanamount"
@@ -335,7 +325,6 @@ explanation of the license and how it is applied.
 												<td width="25%" class="drawtablehd"><mifos:mifoslabel
 													name="product.defamt" bundle="ProductDefUIResources" /></td>
 											</tr>
-
 											<tr>
 												<td class="drawtablerow"><mifos:mifosnumbertext
 													styleId="EditLoanProduct.input.startRangeLoanAmount1"
@@ -440,88 +429,79 @@ explanation of the license and how it is applied.
 													size="10" property="lastLoanDefaultLoanAmt6" /></td>
 											</tr>
 										</table>
-										</td>
-									</tr>
-								</table>
-								</div>
-						<div id="option2" style="display:none;">
-						<table width="93%" border="0" cellpadding="3" cellspacing="0">
-							<tr class="fontnormal">
-								<td width="30%" align="right">&nbsp;</td>
-								<td width="70%" valign="top">
-								<table width="100%" border="0" cellspacing="0" cellpadding="3">
-									<tr>
-										<td width="25%" class="drawtablehd"><mifos:mifoslabel
-											name="product.loancycleno" bundle="ProductDefUIResources" />
-										</td>
-										<td width="25%" class="drawtablehd"><mifos:mifoslabel
-											name="product.minloanamt" bundle="ProductDefUIResources" /></td>
-										<td width="25%" class="drawtablehd"><mifos:mifoslabel
-											name="product.maxloanamt" bundle="ProductDefUIResources" /></td>
-										<td width="25%" class="drawtablehd"><mifos:mifoslabel
-											name="product.defamt" bundle="ProductDefUIResources" /></td>
-									</tr>
-									<tr>
-										<td class="drawtablerow">0</td>
-										<td class="drawtablerow"><mifos:decimalinput
-											size="10" property="cycleLoanMinLoanAmt1" /></td>
-										<td class="drawtablerow"><mifos:decimalinput
-											size="10" property="cycleLoanMaxLoanAmt1" /></td>
-										<td class="drawtablerow"><mifos:decimalinput
-											size="10" property="cycleLoanDefaultLoanAmt1" /></td>
-									</tr>
-									<tr>
-										<td class="drawtablerow">1</td>
-										<td class="drawtablerow"><mifos:decimalinput
-											size="10" property="cycleLoanMinLoanAmt2" /></td>
-										<td class="drawtablerow"><mifos:decimalinput
-											size="10" property="cycleLoanMaxLoanAmt2" /></td>
-										<td class="drawtablerow"><mifos:decimalinput
-											size="10" property="cycleLoanDefaultLoanAmt2" /></td>
-									</tr>
-									<tr>
-										<td class="drawtablerow">2</td>
-										<td class="drawtablerow"><mifos:decimalinput
+								    </div>
+						            <div id="option2" style="display:none;">
+						              <table width="60%" border="0" cellspacing="0" cellpadding="3">
+									   <tr>
+										  <td width="25%" class="drawtablehd"><mifos:mifoslabel
+											 name="product.loancycleno" bundle="ProductDefUIResources" />
+										  </td>
+										  <td width="25%" class="drawtablehd"><mifos:mifoslabel
+											 name="product.minloanamt" bundle="ProductDefUIResources" /></td>
+										  <td width="25%" class="drawtablehd"><mifos:mifoslabel
+											 name="product.maxloanamt" bundle="ProductDefUIResources" /></td>
+										  <td width="25%" class="drawtablehd"><mifos:mifoslabel
+											 name="product.defamt" bundle="ProductDefUIResources" /></td>
+									   </tr>
+									   <tr>
+										  <td class="drawtablerow">0</td>
+										  <td class="drawtablerow"><mifos:decimalinput
+											 size="10" property="cycleLoanMinLoanAmt1" /></td>
+										  <td class="drawtablerow"><mifos:decimalinput
+											 size="10" property="cycleLoanMaxLoanAmt1" /></td>
+										  <td class="drawtablerow"><mifos:decimalinput
+											 size="10" property="cycleLoanDefaultLoanAmt1" /></td>
+									   </tr>
+									   <tr>
+										  <td class="drawtablerow">1</td>
+										  <td class="drawtablerow"><mifos:decimalinput
+											 size="10" property="cycleLoanMinLoanAmt2" /></td>
+										  <td class="drawtablerow"><mifos:decimalinput
+											 size="10" property="cycleLoanMaxLoanAmt2" /></td>
+										  <td class="drawtablerow"><mifos:decimalinput
+											 size="10" property="cycleLoanDefaultLoanAmt2" /></td>
+									   </tr>
+									   <tr>
+										  <td class="drawtablerow">2</td>
+										  <td class="drawtablerow"><mifos:decimalinput
 											size="10" property="cycleLoanMinLoanAmt3" /></td>
-										<td class="drawtablerow"><mifos:decimalinput
+										  <td class="drawtablerow"><mifos:decimalinput
 											size="10" property="cycleLoanMaxLoanAmt3" /></td>
-										<td class="drawtablerow"><mifos:decimalinput
+										  <td class="drawtablerow"><mifos:decimalinput
 											size="10" property="cycleLoanDefaultLoanAmt3" /></td>
-									</tr>
-									<tr>
-										<td class="drawtablerow">3</td>
-										<td class="drawtablerow"><mifos:decimalinput
+									   </tr>
+									   <tr>
+										  <td class="drawtablerow">3</td>
+										  <td class="drawtablerow"><mifos:decimalinput
 											size="10" property="cycleLoanMinLoanAmt4" /></td>
-										<td class="drawtablerow"><mifos:decimalinput
+										  <td class="drawtablerow"><mifos:decimalinput
 											size="10" property="cycleLoanMaxLoanAmt4" /></td>
-										<td class="drawtablerow"><mifos:decimalinput
+										  <td class="drawtablerow"><mifos:decimalinput
 											size="10" property="cycleLoanDefaultLoanAmt4" /></td>
-									</tr>
-									<tr>
-										<td class="drawtablerow">4</td>
-										<td class="drawtablerow"><mifos:decimalinput
+									   </tr>
+									   <tr>
+										  <td class="drawtablerow">4</td>
+										  <td class="drawtablerow"><mifos:decimalinput
 											size="10" property="cycleLoanMinLoanAmt5" /></td>
-										<td class="drawtablerow"><mifos:decimalinput
+										  <td class="drawtablerow"><mifos:decimalinput
 											size="10" property="cycleLoanMaxLoanAmt5" /></td>
-										<td class="drawtablerow"><mifos:decimalinput
+										  <td class="drawtablerow"><mifos:decimalinput
 											size="10" property="cycleLoanDefaultLoanAmt5" /></td>
-									</tr>
-									<tr>
-										<td class="drawtablerow">>4</td>
-										<td class="drawtablerow"><mifos:decimalinput
+									   </tr>
+									   <tr>
+										  <td class="drawtablerow">>4</td>
+										  <td class="drawtablerow"><mifos:decimalinput
 											size="10" property="cycleLoanMinLoanAmt6" /></td>
-										<td class="drawtablerow"><mifos:decimalinput
+										  <td class="drawtablerow"><mifos:decimalinput
 											size="10" property="cycleLoanMaxLoanAmt6" /></td>
-										<td class="drawtablerow"><mifos:decimalinput
+										  <td class="drawtablerow"><mifos:decimalinput
 											size="10" property="cycleLoanDefaultLoanAmt6" /></td>
-									</tr>
+									   </tr>
 								</table>
-
-								</td>
-							</tr>
-						</table>
-						</div>
-					
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
 					<br>
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
@@ -722,7 +702,7 @@ explanation of the license and how it is applied.
 							<td width="30%" align="right" valign="top"><mifos:mifoslabel
 								name="product.freqofinst" bundle="ProductDefUIResources" isColonRequired="yes"/></td>
 							<td width="70%" valign="top">
-							<table width="90%" border="0" cellpadding="3" cellspacing="0">
+							<table width="60%" border="0" cellpadding="3" cellspacing="0">
 								<tr class="fontnormal">
 									<td align="left" valign="top"
 										style="border-top: 1px solid #CECECE; border-left: 1px solid #CECECE; border-right: 1px solid #CECECE;">
@@ -819,212 +799,187 @@ explanation of the license and how it is applied.
 										bundle="ProductDefUIResources" /></span> &nbsp;&nbsp;&nbsp;</td>
 								</tr>
 								<tr>
-									<td colspan="2">
+									<td>&nbsp;</td><td>
 									<div id="install0" style="display:block;">
-									<table width="93%" border="0" cellpadding="3" cellspacing="0">
-										<tr class="fontnormal">
-											<td width="30%" align="right">&nbsp;</td>
-											<td width="70%" valign="top">
-											<table width="100%" border="0" cellpadding="3"
-												cellspacing="0">
-												<tr>
-													<td width="33%" class="drawtablehd"><mifos:mifoslabel
-														name="product.mininst" bundle="ProductDefUIResources" /></td>
-													<td width="34%" class="drawtablehd"><mifos:mifoslabel
-														name="product.maxinst" bundle="ProductDefUIResources" /></td>
-													<td width="33%" class="drawtablehd"><mifos:mifoslabel
-														name="product.definst" bundle="ProductDefUIResources" /></td>
-												</tr>
-
-												<tr>
-													<td class="drawtablerow"><mifos:mifosnumbertext
-														styleId="EditLoanProduct.input.minInstallments"
-														size="10" property="minNoInstallments" /></td>
-													<td class="drawtablerow"><mifos:mifosnumbertext
-														styleId="EditLoanProduct.input.maxInstallments"
-														size="10" property="maxNoInstallments" /></td>
-													<td class="drawtablerow"><mifos:mifosnumbertext
-														styleId="EditLoanProduct.input.defaultInstallments"
-														size="10" property="defNoInstallments" /></td>
-
-												</tr>
-											</table>
-											</td>
-										</tr>
-									</table>
+										<table width="60%" border="0" cellpadding="3" cellspacing="0">
+											<tr>
+												<td width="33%" class="drawtablehd"><mifos:mifoslabel
+													name="product.mininst" bundle="ProductDefUIResources" /></td>
+												<td width="34%" class="drawtablehd"><mifos:mifoslabel
+													name="product.maxinst" bundle="ProductDefUIResources" /></td>
+												<td width="33%" class="drawtablehd"><mifos:mifoslabel
+													name="product.definst" bundle="ProductDefUIResources" /></td>
+											</tr>
+											<tr>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.minInstallments"
+													size="10" property="minNoInstallments" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.maxInstallments"
+													size="10" property="maxNoInstallments" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.defaultInstallments"
+													size="10" property="defNoInstallments" /></td>
+											</tr>
+										</table>
 									</div>
 									<div id="install1" style="display:none;">
-											<table width="93%" border="0" cellpadding="3" cellspacing="0">
-												<tr class="fontnormal">
-													<td width="30%" align="right">&nbsp;</td>
-													<td width="70%" valign="top">
-													<table width="100%" border="0" cellpadding="3"
-														cellspacing="0">
-														<tr>
-															<td width="25%" class="drawtablehd"><mifos:mifoslabel
-																name="product.lastloanamount"
-																bundle="ProductDefUIResources" /></td>
-															<td width="25%" class="drawtablehd"><mifos:mifoslabel
-																name="product.mininst" bundle="ProductDefUIResources" /></td>
-															<td width="25%" class="drawtablehd"><mifos:mifoslabel
-																name="product.maxinst" bundle="ProductDefUIResources" /></td>
-															<td width="25%" class="drawtablehd"><mifos:mifoslabel
-																name="product.definst" bundle="ProductDefUIResources" /></td>
-														</tr>
-														<tr>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.startRangeInstallments1"
-																size="10" property="startInstallmentRange1"
-																style="border:0" readonly="true" value ="0"/> - <mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.endRangeInstallments1"
-																size="10" property="endInstallmentRange1"
-																onblur="changeInstallmentValue(event, this,this.value,1)" /></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.minInstallments1"
-																size="10" property="minLoanInstallment1" /></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.maxInstallments1"
-																size="10" property="maxLoanInstallment1" /></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.defaultInstallments1"
-																size="10" property="defLoanInstallment1" /></td>
-														</tr>
-														<tr>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.startRangeInstallments2"
-																size="10" property="startInstallmentRange2"
-																style="border:0" readonly="true" /> - <mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.endRangeInstallments2"	
-																size="10" property="endInstallmentRange2"
-																onblur="changeInstallmentValue(event, this,this.value,2)"/></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.minInstallments2"
-																size="10" property="minLoanInstallment2" /></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.maxInstallments2"
-																size="10" property="maxLoanInstallment2" /></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.defaultInstallments2"
-																size="10" property="defLoanInstallment2" /></td>
-														</tr>
-														<tr>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.startRangeInstallments1"
-																size="10" property="startInstallmentRange3"
-																style="border:0" readonly="true" /> - <mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.endRangeInstallments3"
-																size="10" property="endInstallmentRange3"
-																onblur="changeInstallmentValue(event, this,this.value,3)"/></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.minInstallments3"
-																size="10" property="minLoanInstallment3" /></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.maxInstallments3"
-																size="10" property="maxLoanInstallment3" /></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.defaultInstallments3"
-																size="10" property="defLoanInstallment3" /></td>
-														</tr>
-														<tr>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.startRangeInstallments4"
-																size="10" property="startInstallmentRange4"
-																style="border:0" readonly="true" /> - <mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.endRangeInstallments4"
-																size="10" property="endInstallmentRange4"
-																onblur="changeInstallmentValue(event, this,this.value,4)" /></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.minInstallments4"
-																size="10" property="minLoanInstallment4" /></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.maxInstallments4"
-																size="10" property="maxLoanInstallment4" /></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.defaultInstallments4"
-																size="10" property="defLoanInstallment4" /></td>
-														</tr>
-														<tr>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.startRangeInstallments5"
-																size="10" property="startInstallmentRange5"
-																style="border:0" readonly="true" /> - <mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.endRangeInstallments5"	
-																size="10" property="endInstallmentRange5"
-																onblur="changeInstallmentValue(event, this,this.value,5)"/></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.minInstallments5"
-																size="10" property="minLoanInstallment5" /></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.maxInstallments5"
-																size="10" property="maxLoanInstallment5" /></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.defaultInstallments5"
-																size="10" property="defLoanInstallment5" /></td>
-														</tr>
-														<tr>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.startRangeInstallments6"
-																size="10" property="startInstallmentRange6"
-																style="border:0" readonly="true" /> - <mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.endRangeInstallments6"	
-																size="10" property="endInstallmentRange6"
-																/></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.minInstallments6"
-																size="10" property="minLoanInstallment6" /></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.maxInstallments6"
-																size="10" property="maxLoanInstallment6" /></td>
-															<td class="drawtablerow"><mifos:mifosnumbertext
-																styleId="EditLoanProduct.input.defaultInstallments6"
-																size="10" property="defLoanInstallment6" /></td>
-														</tr>
-													</table>
-													</td>
-												</tr>
-											</table>
-											<br>
-											</div>
+										<table width="60%" border="0" cellpadding="3" cellspacing="0">
+											<tr>
+												<td width="25%" class="drawtablehd"><mifos:mifoslabel
+													name="product.lastloanamount"
+													bundle="ProductDefUIResources" /></td>
+												<td width="25%" class="drawtablehd"><mifos:mifoslabel
+													name="product.mininst" bundle="ProductDefUIResources" /></td>
+												<td width="25%" class="drawtablehd"><mifos:mifoslabel
+													name="product.maxinst" bundle="ProductDefUIResources" /></td>
+												<td width="25%" class="drawtablehd"><mifos:mifoslabel
+													name="product.definst" bundle="ProductDefUIResources" /></td>
+											</tr>
+											<tr>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.startRangeInstallments1"
+													size="10" property="startInstallmentRange1"
+													style="border:0" readonly="true" value ="0"/> - <mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.endRangeInstallments1"
+													size="10" property="endInstallmentRange1"
+													onblur="changeInstallmentValue(event, this,this.value,1)" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.minInstallments1"
+													size="10" property="minLoanInstallment1" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.maxInstallments1"
+													size="10" property="maxLoanInstallment1" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.defaultInstallments1"
+													size="10" property="defLoanInstallment1" /></td>
+											</tr>
+											<tr>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.startRangeInstallments2"
+													size="10" property="startInstallmentRange2"
+													style="border:0" readonly="true" /> - <mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.endRangeInstallments2"	
+													size="10" property="endInstallmentRange2"
+													onblur="changeInstallmentValue(event, this,this.value,2)"/></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.minInstallments2"
+													size="10" property="minLoanInstallment2" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.maxInstallments2"
+													size="10" property="maxLoanInstallment2" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.defaultInstallments2"
+													size="10" property="defLoanInstallment2" /></td>
+											</tr>
+											<tr>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.startRangeInstallments1"
+													size="10" property="startInstallmentRange3"
+													style="border:0" readonly="true" /> - <mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.endRangeInstallments3"
+													size="10" property="endInstallmentRange3"
+													onblur="changeInstallmentValue(event, this,this.value,3)"/></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.minInstallments3"
+													size="10" property="minLoanInstallment3" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.maxInstallments3"
+													size="10" property="maxLoanInstallment3" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.defaultInstallments3"
+													size="10" property="defLoanInstallment3" /></td>
+											</tr>
+											<tr>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.startRangeInstallments4"
+													size="10" property="startInstallmentRange4"
+													style="border:0" readonly="true" /> - <mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.endRangeInstallments4"
+													size="10" property="endInstallmentRange4"
+													onblur="changeInstallmentValue(event, this,this.value,4)" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.minInstallments4"
+													size="10" property="minLoanInstallment4" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.maxInstallments4"
+													size="10" property="maxLoanInstallment4" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.defaultInstallments4"
+													size="10" property="defLoanInstallment4" /></td>
+											</tr>
+											<tr>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.startRangeInstallments5"
+													size="10" property="startInstallmentRange5"
+													style="border:0" readonly="true" /> - <mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.endRangeInstallments5"	
+													size="10" property="endInstallmentRange5"
+													onblur="changeInstallmentValue(event, this,this.value,5)"/></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.minInstallments5"
+													size="10" property="minLoanInstallment5" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.maxInstallments5"
+													size="10" property="maxLoanInstallment5" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.defaultInstallments5"
+													size="10" property="defLoanInstallment5" /></td>
+											</tr>
+											<tr>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.startRangeInstallments6"
+													size="10" property="startInstallmentRange6"
+													style="border:0" readonly="true" /> - <mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.endRangeInstallments6"	
+													size="10" property="endInstallmentRange6"/></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.minInstallments6"
+													size="10" property="minLoanInstallment6" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.maxInstallments6"
+													size="10" property="maxLoanInstallment6" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.defaultInstallments6"
+													size="10" property="defLoanInstallment6" /></td>
+											</tr>
+										</table>
+									</div>
 									<div id="install2" style="display:none;">
-									<table width="93%" border="0" cellpadding="3" cellspacing="0">
-										<tr class="fontnormal">
-											<td width="30%" align="right">&nbsp;</td>
-											<td width="70%" valign="top">
-											<table width="100%" border="0" cellspacing="0"
-												cellpadding="3">
-												<tr>
-													<td width="25%" class="drawtablehd"><mifos:mifoslabel
-														name="product.loancycleno" bundle="ProductDefUIResources" /></td>
-													<td width="25%" class="drawtablehd"><mifos:mifoslabel
-														name="product.mininst" bundle="ProductDefUIResources" /></td>
-													<td width="25%" class="drawtablehd"><mifos:mifoslabel
-														name="product.maxinst" bundle="ProductDefUIResources" /></td>
-													<td width="25%" class="drawtablehd"><mifos:mifoslabel
-														name="product.definst" bundle="ProductDefUIResources" /></td>
-												</tr>
-												<tr>
-													<td class="drawtablerow">0</td>
-													<td class="drawtablerow"><mifos:mifosnumbertext
-														styleId="EditLoanProduct.input.minCycleInstallments1"
-														size="10" property="minCycleInstallment1" /></td>
-													<td class="drawtablerow"><mifos:mifosnumbertext
-														styleId="EditLoanProduct.input.maxCycleInstallments1"
-														size="10" property="maxCycleInstallment1" /></td>
-													<td class="drawtablerow"><mifos:mifosnumbertext
-														styleId="EditLoanProduct.input.defaultCycleInstallments1"
-														size="10" property="defCycleInstallment1" /></td>
-												</tr>
-												<tr>
-													<td class="drawtablerow">1</td>
-													<td class="drawtablerow"><mifos:mifosnumbertext
-														styleId="EditLoanProduct.input.minCycleInstallments2"
-														size="10" property="minCycleInstallment2" /></td>
-													<td class="drawtablerow"><mifos:mifosnumbertext
-														styleId="EditLoanProduct.input.maxCycleInstallments2"
-														size="10" property="maxCycleInstallment2" /></td>
-													<td class="drawtablerow"><mifos:mifosnumbertext
-														styleId="EditLoanProduct.input.defaultCycleInstallments2"
-														size="10" property="defCycleInstallment2" /></td>
+										<table width="60%" border="0" cellspacing="0" cellpadding="3">
+											<tr>
+												<td width="25%" class="drawtablehd"><mifos:mifoslabel
+													name="product.loancycleno" bundle="ProductDefUIResources" /></td>
+												<td width="25%" class="drawtablehd"><mifos:mifoslabel
+												    name="product.mininst" bundle="ProductDefUIResources" /></td>
+												<td width="25%" class="drawtablehd"><mifos:mifoslabel
+													name="product.maxinst" bundle="ProductDefUIResources" /></td>
+												<td width="25%" class="drawtablehd"><mifos:mifoslabel
+													name="product.definst" bundle="ProductDefUIResources" /></td>
+											</tr>
+											<tr>
+												<td class="drawtablerow">0</td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.minCycleInstallments1"
+													size="10" property="minCycleInstallment1" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.maxCycleInstallments1"
+													size="10" property="maxCycleInstallment1" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.defaultCycleInstallments1"
+													size="10" property="defCycleInstallment1" /></td>
+											</tr>
+											<tr>
+												<td class="drawtablerow">1</td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.minCycleInstallments2"
+													size="10" property="minCycleInstallment2" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.maxCycleInstallments2"
+													size="10" property="maxCycleInstallment2" /></td>
+												<td class="drawtablerow"><mifos:mifosnumbertext
+													styleId="EditLoanProduct.input.defaultCycleInstallments2"
+													size="10" property="defCycleInstallment2" /></td>
 												</tr>
 												<tr>
 													<td class="drawtablerow">2</td>
@@ -1056,14 +1011,14 @@ explanation of the license and how it is applied.
 														styleId="EditLoanProduct.input.minCycleInstallments5"
 														size="10" property="minCycleInstallment5" /></td>
 													<td class="drawtablerow"><mifos:mifosnumbertext
-														styleId="EditLoanProduct.input.maxCycleInstallments5"
+													    styleId="EditLoanProduct.input.maxCycleInstallments5"
 														size="10" property="maxCycleInstallment5" /></td>
 													<td class="drawtablerow"><mifos:mifosnumbertext
 														styleId="EditLoanProduct.input.defaultCycleInstallments5"
 														size="10" property="defCycleInstallment5" /></td>
 												</tr>
 												<tr>
-													<td class="drawtablerow">>4</td>
+													<td class="drawtablerow">&gt;4</td>
 													<td class="drawtablerow"><mifos:mifosnumbertext
 														styleId="EditLoanProduct.input.minCycleInstallments6"
 														size="10" property="minCycleInstallment6" /></td>
@@ -1072,14 +1027,12 @@ explanation of the license and how it is applied.
 														size="10" property="maxCycleInstallment6" /></td>
 													<td class="drawtablerow"><mifos:mifosnumbertext
 														styleId="EditLoanProduct.input.defaultCycleInstallments6"
-														size="10" property="defCycleInstallment6" /></td>
+													    size="10" property="defCycleInstallment6" /></td>
 												</tr>
 											</table>
-
-											</td>
-										</tr>
-									</table>
 									</div>
+                            </td>
+                        </tr>
 						<tr class="fontnormal">
 							<!-- 
 							<td align="right"> 
