@@ -125,7 +125,7 @@ public class LoanAccountRESTController {
     public @ResponseBody
     Map<String, String> fullRepay(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
     	
-    	boolean waiverInterest = Boolean.parseBoolean(request.getParameter("waiverInterest"));
+    	boolean waiverInterest = Boolean.parseBoolean(request.getParameter("waiveInterest"));
     	
     	MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	

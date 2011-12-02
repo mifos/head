@@ -1,0 +1,12 @@
+{
+	"outstandingAfterPayment": "0.0",
+	"paymentAmount": "1005.0",
+	"paymentDate": "2011-09-13",
+	"status": "success",
+	"paymentTime": "13:10:45.876",
+	"clientName": "Client REST API",
+	"paymentMadeBy": "mifos",
+	"outstandingBeforePayment": "0.0",
+	"loanDisplayName": "REST Loan Product B",
+	"clientNumber": "0002-000000003"
+}
