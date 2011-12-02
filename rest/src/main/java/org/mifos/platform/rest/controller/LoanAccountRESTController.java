@@ -32,6 +32,7 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
@@ -165,6 +166,37 @@ public class LoanAccountRESTController {
         map.put("paymentMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
         map.put("outstandingBeforePayment", outstandingBeforePayment.toString());
         map.put("outstandingAfterPayment", loan.getLoanSummary().getOutstandingBalance().toString());
+    	
+    	return map;
+    }
+    
+    @RequestMapping(value = "/account/loan/disburse/num-{globalAccountNum}", method = RequestMethod.POST)
+    public @ResponseBody
+    Map<String, String> disburseLoan(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
+    	
+    	MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
+    	
+    	DateTime today = new DateTime();
+    	PaymentTypeDto paymentType = accountService.getLoanPaymentTypes().get(0);
+    	String comment = "";
+    	Short paymentTypeId = PaymentTypes.CASH.getValue();
+    	
+    	AccountPaymentParametersDto loanDisbursement = new AccountPaymentParametersDto(new UserReferenceDto((short)user.getUserId()), 
+    			new AccountReferenceDto(loan.getAccountId()), loan.getLoanAmount().getAmount(), today.toLocalDate(), paymentType, comment);
+    	this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
+    	
+    	CustomerBO client = loan.getCustomer();
+    	
+    	Map<String, String> map = new HashMap<String, String>();
+    	map.put("status", "success");
+    	map.put("clientName", client.getDisplayName());
+        map.put("clientNumber", client.getGlobalCustNum());
+        map.put("loanDisplayName", loan.getLoanOffering().getPrdOfferingName());
+        map.put("disbursementDate", today.toLocalDate().toString());
+        map.put("disbursementTime", today.toLocalTime().toString());
+        map.put("disbursementAmount", loan.getLastPmnt().getAmount().toString());
+        map.put("disbursementMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
     	
     	return map;
     }
