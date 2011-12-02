@@ -1585,6 +1585,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
     }
 
+    @Override
+    public void makeEarlyRepaymentWithCommit(RepayLoanInfoDto repayLoanInfoDto) {
+        transactionHelper.startTransaction();
+    	makeEarlyRepayment(repayLoanInfoDto);
+        transactionHelper.commitTransaction();
+    }
+    
     BigDecimal interestDueForNextInstallment(BigDecimal totalRepaymentAmount, BigDecimal waivedAmount,
                                              LoanBO loan, boolean waiveInterest) {
         BigDecimal result = BigDecimal.ZERO;
