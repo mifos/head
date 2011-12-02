@@ -316,14 +316,19 @@
                 <version>${spring.sec.version}</version>
             </dependency>
             <dependency>
+	            <groupId>org.springframework</groupId>
+	            <artifactId>spring-aspects</artifactId>
+	            <version>${spring.version}</version>
+	        </dependency>
+            <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjrt</artifactId>
-                <version>1.6.12</version>
+                <version>1.6.11</version>
             </dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjweaver</artifactId>
-                <version>1.6.12</version>
+                <version>1.6.11</version>
             </dependency>
             <dependency>
                 <groupId>org.dbunit</groupId>
