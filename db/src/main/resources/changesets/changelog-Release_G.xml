@@ -454,4 +454,24 @@
             </sql>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_5164_1" author="Udai Gupta" context="expansion">
+        <sql endDelimiter=";">
+            CREATE TABLE rest_approval (
+				  id bigint(20) NOT NULL AUTO_INCREMENT,
+				  method_content LONGTEXT,
+				  approved_by SMALLINT(6) DEFAULT NULL,
+				  approved_on TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+				  created_by SMALLINT(6) DEFAULT NULL,
+				  created_on TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+				  state VARCHAR(15) DEFAULT NULL,
+				  version INT(11) DEFAULT NULL,
+				  PRIMARY KEY (id)
+				) ENGINE=InnoDB  character set utf8;
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                DROP TABLE IF EXISTS rest_approval;
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>
