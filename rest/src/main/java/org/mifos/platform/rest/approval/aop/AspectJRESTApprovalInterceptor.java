@@ -20,12 +20,23 @@
 package org.mifos.platform.rest.approval.aop;
 
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.mifos.platform.rest.approval.domain.ApprovalMethod;
+import org.mifos.platform.rest.approval.domain.MethodArgHolder;
+import org.mifos.platform.rest.approval.service.ApprovalService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Aspect
 public class AspectJRESTApprovalInterceptor {
+
+    @Autowired
+    ApprovalService approvalService;
 
     @Pointcut("execution(public * org.mifos.platform.rest.controller.*RESTController.*(..))")
     public void restMethods() {
@@ -37,17 +48,30 @@ public class AspectJRESTApprovalInterceptor {
 
     @Around("restMethods() && requestMapping()")
     public Object profile(ProceedingJoinPoint pjp) throws Throwable {
-        long start = System.currentTimeMillis();
-        System.out.println("Method: " + pjp.toString() +" Started");
-        try {
-            Object result = pjp.proceed();
-            return result;
+        Signature signature = pjp.getStaticPart().getSignature();
+        if(signature instanceof MethodSignature){
+
+            MethodSignature ms = (MethodSignature) signature;
+            Class<?>[] types = ms.getParameterTypes();
+            RequestMapping mapping = ms.getMethod().getAnnotation(RequestMapping.class);
+
+            if(mapping.method().length == 1 && mapping.method()[0] == RequestMethod.GET) {
+                return pjp.proceed();
+            }
+
+            Object[] values = pjp.getArgs();
+            MethodArgHolder argsHolder = new MethodArgHolder();
+            argsHolder.setTypes(types);
+            argsHolder.setValues(values);
+
+            ApprovalMethod method = new ApprovalMethod();
+            method.setArgsHolder(argsHolder);
+            method.setName(ms.getMethod().getName());
+            method.setType(ms.getDeclaringType());
+
+            approvalService.create(method);
         }
-        finally {
-            long end = System.currentTimeMillis();
-            long timeMs = end - start;
-            System.out.println("Method: " + pjp.toString() + " took: " + timeMs +"ms.");
-        }
+        return null;
     }
 
 }
