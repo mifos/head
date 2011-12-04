@@ -147,9 +147,9 @@ explanation of the license and how it is applied.
 														</tr>	
 														<c:forEach items="${loanPrd.loanAmountSameForAllLoan}" var="loanAmountSameForAllLoan">	
 														<tr>							
-															<td class="fontnormal" width="20%"><c:out value="${loanAmountSameForAllLoan.minLoanAmountString}"/></td>
-															<td class="fontnormal" width="20%" align="right"><c:out value="${loanAmountSameForAllLoan.maxLoanAmountString}" /></td>
-															<td class="fontnormal" width="20%" align="right"><c:out value="${loanAmountSameForAllLoan.defaultLoanAmountString}" /></td>																													
+															<td class="fontnormal" width="20%"><fmt:formatNumber value="${loanAmountSameForAllLoan.minLoanAmountString}"type="currency"/></td>
+															<td class="fontnormal" width="20%" align="right"><fmt:formatNumber value="${loanAmountSameForAllLoan.maxLoanAmountString}" type="currency"/></td>
+															<td class="fontnormal" width="20%" align="right"><fmt:formatNumber value="${loanAmountSameForAllLoan.defaultLoanAmountString}" type="currency"/></td>																													
 														</tr>
 													</c:forEach>
 													</table>
@@ -168,11 +168,11 @@ explanation of the license and how it is applied.
 													<c:forEach items="${loanPrd.loanAmountFromLastLoan}" var="loanAmountFromLastLoan">
 													<tr>				
 														<td class="fontnormal"> 
-															<c:out value="${loanAmountFromLastLoan.startRange}" />												
-														  -	<c:out value="${loanAmountFromLastLoan.endRange}" /></td>
-															<td class="fontnormal" align="right"> <c:out value="${loanAmountFromLastLoan.minLoanAmountString}" /></td>
-															<td class="fontnormal" align="right"> <c:out value="${loanAmountFromLastLoan.maxLoanAmountString}" /> </td>
-															<td class="fontnormal" align="right"> <c:out value="${loanAmountFromLastLoan.defaultLoanAmountString}" /></td>
+															<fmt:formatNumber value="${loanAmountFromLastLoan.startRange}" type="currency"/>												
+														  -	<fmt:formatNumber value="${loanAmountFromLastLoan.endRange}" type="currency"/></td>
+															<td class="fontnormal" align="right"> <fmt:formatNumber value="${loanAmountFromLastLoan.minLoanAmountString}" type="currency"/></td>
+															<td class="fontnormal" align="right"> <fmt:formatNumber value="${loanAmountFromLastLoan.maxLoanAmountString}" type="currency"/> </td>
+															<td class="fontnormal" align="right"> <fmt:formatNumber value="${loanAmountFromLastLoan.defaultLoanAmountString}" type="currency"/></td>
 														</tr>	
 													</c:forEach>
 													</table>
@@ -191,10 +191,10 @@ explanation of the license and how it is applied.
 														</tr>
 														<c:forEach items="${loanPrd.loanAmountFromLoanCycle}" var="loanAmountFromLoanCycle">
 														<tr>	
-															<td class="fontnormal" width="10%"><c:out value="${loanAmountFromLoanCycle.rangeIndex}"/></td>
-															<td class="fontnormal" width="30%" align="right"><c:out value="${loanAmountFromLoanCycle.minLoanAmountString}"/></td>
-															<td class="fontnormal" width="30%" align="right"><c:out value="${loanAmountFromLoanCycle.maxLoanAmountString}" /></td>
-															<td class="fontnormal" width="30%" align="right"><c:out value="${loanAmountFromLoanCycle.defaultLoanAmountString}" /></td>																													
+															<td class="fontnormal" width="10%"><fmt:formatNumber value="${loanAmountFromLoanCycle.rangeIndex}"type="number"/></td>
+															<td class="fontnormal" width="30%" align="right"><fmt:formatNumber value="${loanAmountFromLoanCycle.minLoanAmountString}"type="currency"/></td>
+															<td class="fontnormal" width="30%" align="right"><fmt:formatNumber value="${loanAmountFromLoanCycle.maxLoanAmountString}" type="currency"/></td>
+															<td class="fontnormal" width="30%" align="right"><fmt:formatNumber value="${loanAmountFromLoanCycle.defaultLoanAmountString}" type="currency"/></td>																													
 														</tr>
 														</c:forEach>
 													</table>
@@ -300,7 +300,7 @@ explanation of the license and how it is applied.
 		                                                    <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
 		                                                </c:when>
 		                                                <c:otherwise>
-		                                                    <c:out value="${loanPrd.variableInstallmentDetails.minInstallmentAmount}" />
+		                                                    <fmt:formatNumber value="${loanPrd.variableInstallmentDetails.minInstallmentAmount}" type="currency"/>
 		                                                </c:otherwise>
 		                                            </c:choose>
                                                 </span>
@@ -390,9 +390,9 @@ explanation of the license and how it is applied.
 																</tr>	
 																	<c:forEach items="${loanPrd.noOfInstallSameForAllLoan}" var="noOfInstallSameForAllLoan">					
 																<tr>																														
-																	<td class="fontnormal" width="20%"> <c:out value="${noOfInstallSameForAllLoan.minNoOfInstall}" /></td>
-																	<td class="fontnormal" width="20%"> <c:out value="${noOfInstallSameForAllLoan.maxNoOfInstall}" /></td>
-																	<td class="fontnormal" width="20%"> <c:out value="${noOfInstallSameForAllLoan.defaultNoOfInstall}" /></td>																															
+																	<td class="fontnormal" width="20%"> <fmt:formatNumber value="${noOfInstallSameForAllLoan.minNoOfInstall}" type="number"/></td>
+																	<td class="fontnormal" width="20%"> <fmt:formatNumber value="${noOfInstallSameForAllLoan.maxNoOfInstall}" type="number"/></td>
+																	<td class="fontnormal" width="20%"> <fmt:formatNumber value="${noOfInstallSameForAllLoan.defaultNoOfInstall}" type="number"/></td>																															
 																</tr>																
 																	</c:forEach>														
 																</table>
@@ -411,11 +411,11 @@ explanation of the license and how it is applied.
 													<c:forEach items="${loanPrd.noOfInstallFromLastLoan}" var="noOfInstallFromLastLoan">
 													<tr>				
 													<td class="fontnormal"> 
-																<c:out value="${noOfInstallFromLastLoan.startRange}" />												
-														-	    <c:out value="${noOfInstallFromLastLoan.endRange}" /></td>
-																<td class="fontnormal" > <c:out value="${noOfInstallFromLastLoan.minNoOfInstall}" /></td>
-																<td class="fontnormal" > <c:out value="${noOfInstallFromLastLoan.maxNoOfInstall}" /> </td>
-																<td class="fontnormal" > <c:out value="${noOfInstallFromLastLoan.defaultNoOfInstall}" /></td>
+																<fmt:formatNumber value="${noOfInstallFromLastLoan.startRange}" type="number"/>												
+														-	    <fmt:formatNumber value="${noOfInstallFromLastLoan.endRange}" type="number"/></td>
+																<td class="fontnormal" > <fmt:formatNumber value="${noOfInstallFromLastLoan.minNoOfInstall}" type="number"/></td>
+																<td class="fontnormal" > <fmt:formatNumber value="${noOfInstallFromLastLoan.maxNoOfInstall}" type="number"/> </td>
+																<td class="fontnormal" > <fmt:formatNumber value="${noOfInstallFromLastLoan.defaultNoOfInstall}" type="number"/></td>
 															</tr>		
 													</c:forEach>
 																</table>
@@ -432,10 +432,10 @@ explanation of the license and how it is applied.
 																</tr>
 																<c:forEach items="${loanPrd.noOfInstallFromLoanCycle}" var="noOfInstallFromLoanCycle">
 																<tr>	
-																	<td class="fontnormal" width="10%"><c:out value="${noOfInstallFromLoanCycle.rangeIndex}"/></td>
-																	<td class="fontnormal" width="30%" ><c:out value="${noOfInstallFromLoanCycle.minNoOfInstall}"/></td>
-																	<td class="fontnormal" width="30%" ><c:out value="${noOfInstallFromLoanCycle.maxNoOfInstall}" /></td>
-																	<td class="fontnormal" width="30%" ><c:out value="${noOfInstallFromLoanCycle.defaultNoOfInstall}" /></td>																													
+																	<td class="fontnormal" width="10%"><fmt:formatNumber value="${noOfInstallFromLoanCycle.rangeIndex}"type="number"/></td>
+																	<td class="fontnormal" width="30%" ><fmt:formatNumber value="${noOfInstallFromLoanCycle.minNoOfInstall}"type="number"/></td>
+																	<td class="fontnormal" width="30%" ><fmt:formatNumber value="${noOfInstallFromLoanCycle.maxNoOfInstall}" type="number"/></td>
+																	<td class="fontnormal" width="30%" ><fmt:formatNumber value="${noOfInstallFromLoanCycle.defaultNoOfInstall}" type="number"/></td>																													
 																</tr>
 																</c:forEach>
 																</table>

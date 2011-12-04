@@ -203,7 +203,7 @@ explanation of the license and how it is applied.
 									: <span class="fontnormal"><c:out value="${sessionScope.loanproductactionform.defaultLoanAmount}" /> </span>
 								--> <c:if
 								test="${sessionScope.loanproductactionform.loanAmtCalcType=='2'}">
-								<table width="60%" border="0" cellpadding="3" cellspacing="0">
+								<table width="100%" border="0" cellpadding="3" cellspacing="0">
 									<br>
 									<mifos:mifoslabel name="product.calcloanamount"
 										bundle="ProductDefUIResources" />
@@ -222,82 +222,80 @@ explanation of the license and how it is applied.
 											name="product.defamt" bundle="ProductDefUIResources" /></td>
 									</tr>
 									<tr>
-										<td class="fontnormal"><c:out
-											value="${sessionScope.loanproductactionform.startRangeLoanAmt1}" />
-										- <c:out
-											value="${sessionScope.loanproductactionform.endRangeLoanAmt1}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt1}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt1}" />
+										<td class="fontnormal"><fmt:formatNumber value="${sessionScope.loanproductactionform.startRangeLoanAmt1}" type="number"/>
+										- <fmt:formatNumber value="${sessionScope.loanproductactionform.endRangeLoanAmt1}" type="number"/></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt1}" type="number"/></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt1}" type="number"/>
 										</td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt1}" /></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt1}" type="number"/></td>
 									</tr>
 									<tr>
-										<td class="fontnormal"><c:out
-											value="${sessionScope.loanproductactionform.startRangeLoanAmt2}" />
-										- <c:out
-											value="${sessionScope.loanproductactionform.endRangeLoanAmt2}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt2}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt2}" />
+										<td class="fontnormal"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.startRangeLoanAmt2}" type="number"/>
+										- <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.endRangeLoanAmt2}" type="number"/></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt2}" type="number"/></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt2}" type="number"/>
 										</td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt2}" /></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt2}" type="number"/></td>
 									</tr>
 									<tr>
-										<td class="fontnormal"><c:out
-											value="${sessionScope.loanproductactionform.startRangeLoanAmt3}" />
-										- <c:out
-											value="${sessionScope.loanproductactionform.endRangeLoanAmt3}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt3}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt3}" />
+										<td class="fontnormal"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.startRangeLoanAmt3}" type="number"/>
+										- <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.endRangeLoanAmt3}" type="number"/></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt3}" type="number"/></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt3}" type="number"/>
 										</td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt3}" /></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt3}" type="number"/></td>
 									</tr>
 									<tr>
-										<td class="fontnormal"><c:out
-											value="${sessionScope.loanproductactionform.startRangeLoanAmt4}" />
-										- <c:out
-											value="${sessionScope.loanproductactionform.endRangeLoanAmt4}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt4}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt4}" />
+										<td class="fontnormal"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.startRangeLoanAmt4}" type="number"/>
+										- <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.endRangeLoanAmt4}" type="number"/></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt4}" type="number"/></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt4}" type="number"/>
 										</td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt4}" /></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt4}" type="number"/></td>
 									</tr>
 									<tr>
-										<td class="fontnormal"><c:out
-											value="${sessionScope.loanproductactionform.startRangeLoanAmt5}" />
-										-<c:out
-											value="${sessionScope.loanproductactionform.endRangeLoanAmt5}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt5}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt5}" />
+										<td class="fontnormal"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.startRangeLoanAmt5}" type="number"/>
+										- <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.endRangeLoanAmt5}" type="number"/></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt5}" type="number"/></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt5}" type="number"/>
 										</td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt5}" /></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt5}" type="number"/></td>
 									</tr>
 									<tr>
-										<td class="fontnormal"><c:out
-											value="${sessionScope.loanproductactionform.startRangeLoanAmt6}" />
-										- <c:out
-											value="${sessionScope.loanproductactionform.endRangeLoanAmt6}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt6}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt6}" />
+										<td class="fontnormal"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.startRangeLoanAmt6}" type="number"/>
+										- <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.endRangeLoanAmt6}" type="number"/></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt6}" type="number"/></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt6}" type="number"/>
 										</td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt6}" /></td>
+										<td class="fontnormal" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt6}" type="number"/></td>
 									</tr>
 								</table>
 							</c:if> <%-- by loan cycle --%> <c:if
@@ -309,9 +307,9 @@ explanation of the license and how it is applied.
 									bundle="ProductDefUIResources" /></span>
 								<br />
 
-								<table width="60%" border="0" cellspacing="0" cellpadding="3">
+								<table width="90%" border="0" cellspacing="0" cellpadding="3">
 									<tr>
-										<td width="10%" class="drawtablehd"><mifos:mifoslabel
+										<td width="15%" class="drawtablehd"><mifos:mifoslabel
 											name="product.loancycleno" bundle="ProductDefUIResources" />
 										</td>
 										<td width="30%" class="drawtablehd" align="right"><mifos:mifoslabel
@@ -324,62 +322,62 @@ explanation of the license and how it is applied.
 
 									<tr>
 										<td class="fontnormal" width="10%"><c:out value="0" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt1}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt1}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt1}" /></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt1}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt1}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt1}" type="number"/></td>
 									</tr>
 
 									<tr>
 										<td class="fontnormal" width="10%"><c:out value="1" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt2}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt2}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt2}" /></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt2}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt2}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt2}" type="number"/></td>
 									</tr>
 
 									<tr>
 										<td class="fontnormal" width="10%"><c:out value="2" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt3}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt3}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt3}" /></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt3}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt3}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt3}" type="number"/></td>
 									</tr>
 
 									<tr>
 										<td class="fontnormal" width="10%"><c:out value="3" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt4}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt4}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt4}" /></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt4}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt4}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt4}" type="number"/></td>
 									</tr>
 
 									<tr>
 										<td class="fontnormal" width="10%"><c:out value="4" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt5}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt5}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt5}" /></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt5}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt5}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt5}" type="number"/></td>
 									</tr>
 
 									<tr>
 										<td class="fontnormal" width="10%"><c:out value=">4" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt6}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt6}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt6}" /></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt6}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt6}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt6}" type="number"/></td>
 									</tr>
 								</table>
 							</c:if> <c:if
@@ -392,23 +390,23 @@ explanation of the license and how it is applied.
 
 								<table width="60%" border="0" cellspacing="0" cellpadding="3">
 									<tr>
-										<td width="33%" class="drawtablehd"><mifos:mifoslabel
+										<td width="20%" class="drawtablehd"><mifos:mifoslabel
 											name="product.min" bundle="ProductDefUIResources" /> <mifos:mifoslabel
 											name="product.amount" bundle="ProductDefUIResources" /></td>
-										<td width="34%" class="drawtablehd" align="right"><mifos:mifoslabel
+										<td width="20%" class="drawtablehd" align="right"><mifos:mifoslabel
 											name="product.max" bundle="ProductDefUIResources" /> <mifos:mifoslabel
 											name="product.amount" bundle="ProductDefUIResources" /></td>
-										<td width="33%" class="drawtablehd" align="right"><mifos:mifoslabel
+										<td width="20%" class="drawtablehd" align="right"><mifos:mifoslabel
 											name="product.default" bundle="ProductDefUIResources" /> <mifos:mifoslabel
 											name="product.amount" bundle="ProductDefUIResources" /></td>
 									</tr>
 									<tr>
-										<td class="fontnormal"><c:out
-											value="${sessionScope.loanproductactionform.minLoanAmount}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.maxLoanAmount}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.defaultLoanAmount}" /></td>
+										<td class="fontnormal" width="20%"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.minLoanAmount}" type="number"/></td>
+										<td class="fontnormal" width="20%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.maxLoanAmount}" type="number"/></td>
+										<td class="fontnormal" width="20%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.defaultLoanAmount}" type="number"/></td>
 									</tr>
 								</table>
 							</c:if></td>
@@ -658,7 +656,7 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="product.installbylastloanamount"
 									bundle="ProductDefUIResources" /></span>
 								<br>
-								<table width="60%" border="0" cellpadding="3" cellspacing="0">
+								<table width="100%" border="0" cellpadding="3" cellspacing="0">
 									<tr>
 										<td width="25%" class="drawtablehd"><mifos:mifoslabel
 											name="product.lastloanamount" bundle="ProductDefUIResources" />
@@ -757,9 +755,9 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="product.installbyloancycle"
 									bundle="ProductDefUIResources" /></span>
 								<br>
-								<table width="60%" border="0" cellspacing="0" cellpadding="3">
+								<table width="90%" border="0" cellspacing="0" cellpadding="3">
 									<tr>
-										<td width="10%" class="drawtablehd"><mifos:mifoslabel
+										<td width="15%" class="drawtablehd"><mifos:mifoslabel
 											name="product.loancycleno" bundle="ProductDefUIResources" />
 										</td>
 										<td width="30%" class="drawtablehd" align="right"><mifos:mifoslabel
@@ -772,62 +770,62 @@ explanation of the license and how it is applied.
 
 									<tr>
 										<td class="fontnormal" width="10%"><c:out value="0" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.minCycleInstallment1}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.maxCycleInstallment1}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.defCycleInstallment1}" /></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.minCycleInstallment1}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.maxCycleInstallment1}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.defCycleInstallment1}" type="number"/></td>
 									</tr>
 
 									<tr>
-										<td class="fontnormal" width="10%"><c:out value="1" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.minCycleInstallment2}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.maxCycleInstallment2}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.defCycleInstallment2}" /></td>
+										<td class="fontnormal" width="10%"> <c:out value="1" /></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.minCycleInstallment2}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.maxCycleInstallment2}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.defCycleInstallment2}" type="number"/></td>
 									</tr>
 
 									<tr>
 										<td class="fontnormal" width="10%"><c:out value="2" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.minCycleInstallment3}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.maxCycleInstallment3}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.defCycleInstallment3}" /></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.minCycleInstallment3}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.maxCycleInstallment3}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.defCycleInstallment3}" type="number"/></td>
 									</tr>
 
 									<tr>
 										<td class="fontnormal" width="10%"><c:out value="3" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.minCycleInstallment4}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.maxCycleInstallment4}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.defCycleInstallment4}" /></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.minCycleInstallment4}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.maxCycleInstallment4}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.defCycleInstallment4}" type="number"/></td>
 									</tr>
 
 									<tr>
 										<td class="fontnormal" width="10%"><c:out value="4" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.minCycleInstallment5}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.maxCycleInstallment5}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.defCycleInstallment5}" /></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.minCycleInstallment5}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.maxCycleInstallment5}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.defCycleInstallment5}" type="number"/></td>
 									</tr>
 
 									<tr>
 										<td class="fontnormal" width="10%"><c:out value=">4" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.minCycleInstallment6}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.maxCycleInstallment6}" /></td>
-										<td class="fontnormal" width="30%" align="right"><c:out
-											value="${sessionScope.loanproductactionform.defCycleInstallment6}" /></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.minCycleInstallment6}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.maxCycleInstallment6}" type="number"/></td>
+										<td class="fontnormal" width="30%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.defCycleInstallment6}" type="number"/></td>
 									</tr>
 								</table>
 							</c:if> <c:if
@@ -837,23 +835,23 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="product.sameforallinstallment"
 									bundle="ProductDefUIResources" /></span>
 								<br>
-								<table width="60%" border="0" cellspacing="0" cellpadding="3">
+								<table width="80%" border="0" cellspacing="0" cellpadding="3">
 									<tr>
-										<td width="33%" class="drawtablehd"><mifos:mifoslabel
+										<td width="20%" class="drawtablehd"><mifos:mifoslabel
 											name="product.mininst" bundle="ProductDefUIResources" /></td>
-										<td width="34%" class="drawtablehd" align="right"><mifos:mifoslabel
+										<td width="20%" class="drawtablehd" align="right"><mifos:mifoslabel
 											name="product.maxinst" bundle="ProductDefUIResources" /></td>
-										<td width="33%" class="drawtablehd" align="right"><mifos:mifoslabel
+										<td width="20%" class="drawtablehd" align="right"><mifos:mifoslabel
 											name="product.definst" bundle="ProductDefUIResources" /></td>
 									</tr>
 
 									<tr>
-										<td class="fontnormal"><c:out
-											value="${sessionScope.loanproductactionform.minNoInstallments}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.maxNoInstallments}" /></td>
-										<td class="fontnormal" align="right"><c:out
-											value="${sessionScope.loanproductactionform.defNoInstallments}" /></td>
+										<td class="fontnormal" width="20%"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.minNoInstallments}" type="number"/></td>
+										<td class="fontnormal" width="20%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.maxNoInstallments}" type="number"/></td>
+										<td class="fontnormal" width="20%" align="right"> <fmt:formatNumber
+											value="${sessionScope.loanproductactionform.defNoInstallments}" type="number"/></td>
 									</tr>
 
 								</table>
