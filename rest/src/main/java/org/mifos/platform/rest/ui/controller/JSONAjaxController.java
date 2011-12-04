@@ -42,7 +42,7 @@ public class JSONAjaxController {
     private TestingService testingService;
 
     @RequestMapping("jsonAjax.ftl")
-    public final ModelAndView deleteCacheDir(HttpServletResponse response) {
+    public ModelAndView deleteCacheDir(HttpServletResponse response) {
         ModelAndView mav = new ModelAndView("pageNotFound");
         if (TestMode.MAIN == testingService.getTestMode()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);

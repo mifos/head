@@ -111,43 +111,46 @@ explanation of the license and how it is applied.
 												class="heading"> <mifos:mifoslabel
 												name="CustomerSearch.selectLoanOfficer" /></span></td>
 										</tr>
+                                        <tr>
+                                            <td>
+                                                <c:choose>
+									               <c:when test="${custSearchActionForm.officeId != null && custSearchActionForm.officeId > 0}">
+									                   <html-el:hidden property="officeId"
+												        value="${custSearchActionForm.officeId}" />
+									               </c:when>
+										          <c:when test='${sessionScope.UserContext.officeLevelId==5 && custSearchActionForm.officeId == null}'>
+											         <html-el:hidden property="officeId"
+												        value="${sessionScope.UserContext.branchId}" />
+										          </c:when>
+										          <c:otherwise>
+											         <html-el:hidden property="officeId" value="0" />
+										          </c:otherwise>
+									           </c:choose>
+                                            </td>
+                                        </tr>
+                                        <tr class="fontnormal">
+                                            <td style="border: 1px solid #CECECE; height:100px; width:100%; padding:6px; margin-top:5px;">
+                                                <span class="fontnormal">
+                                                    <c:choose>
+										              <c:when test="${ not empty LoanOfficerslist }">
+											             <c:forEach items='${LoanOfficerslist}' var="loanOfficer">
+											                 <html-el:link styleId="branch_search.link.selectLoanOfficer"
+											                         action="custSearchAction.do?method=get&officeId=${custSearchActionForm.officeId}&loanOfficerId=${loanOfficer.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
+											                     <c:out value="${loanOfficer.displayName}" />
+											                 </html-el:link>
+											                 <br>
+											             </c:forEach>
+									                  </c:when>
+									                  <c:otherwise>
+											             <mifos:mifoslabel name="CustomerSearch.noEntityAvailablePrefix"/>
+											             <mifos:mifoslabel name="CustomerSearch.loanOfficers"/>
+											             <mifos:mifoslabel name="CustomerSearch.noEntityAvailableSuffix"/>
+									                  </c:otherwise>
+									                </c:choose>
+                                                </span>
+                                            </td>
+                                        </tr>
 									</table>
-
-									<c:choose>
-									     <c:when test="${custSearchActionForm.officeId != null && custSearchActionForm.officeId > 0}">
-									     <html-el:hidden property="officeId"
-												value="${custSearchActionForm.officeId}" />
-									     </c:when>
-										<c:when test='${sessionScope.UserContext.officeLevelId==5 && custSearchActionForm.officeId == null}'>
-											<html-el:hidden property="officeId"
-												value="${sessionScope.UserContext.branchId}" />
-										</c:when>
-										<c:otherwise>
-											<html-el:hidden property="officeId" value="0" />
-										</c:otherwise>
-									</c:choose>
-									<div id="Layer2"
-										style="border: 1px solid #CECECE; height:100px; width:100%; overflow: auto; padding:6px; margin-top:5px;">
-
-									<c:choose>
-										<c:when test="${ not empty LoanOfficerslist }">
-
-											<c:forEach items='${LoanOfficerslist}' var="loanOfficer">
-											<html-el:link styleId="branch_search.link.selectLoanOfficer"
-											action="custSearchAction.do?method=get&officeId=${custSearchActionForm.officeId}&loanOfficerId=${loanOfficer.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
-											<c:out value="${loanOfficer.displayName}" />
-											</html-el:link>
-											<br>
-											</c:forEach>
-									  </c:when>
-									<c:otherwise>
-											<mifos:mifoslabel name="CustomerSearch.noEntityAvailablePrefix"/>
-											<mifos:mifoslabel name="CustomerSearch.loanOfficers"/>
-											<mifos:mifoslabel name="CustomerSearch.noEntityAvailableSuffix"/>
-									</c:otherwise>
-									</c:choose>
-
-									</div>
 									</td>
 								</tr>
 							</table>

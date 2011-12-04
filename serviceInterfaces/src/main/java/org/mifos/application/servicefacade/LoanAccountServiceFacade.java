@@ -224,4 +224,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     
     @PreAuthorize("isFullyAuthenticated()")
     Errors validateInstallmentSchedule(List<LoanCreationInstallmentDto> installments, BigDecimal minInstallmentAmount);
+
+    @PreAuthorize("isFullyAuthenticated()")
+	void makeEarlyRepaymentWithCommit(RepayLoanInfoDto repayLoanInfoDto);
 }

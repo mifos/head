@@ -2188,7 +2188,7 @@
   <payment_type payment_type_id="3" payment_type_lookup_id="180"/>
   <penalty/>
   <personnel personnel_id="1" level_id="2" global_personnel_num="1" office_id="1" title="1" personnel_status="1" preferred_locale="1" max_child_count="1" password="ImSMpCMwpWGWTb4y9U5qBKSdA/IDymSyUVM42Q==" login_name="mifos" password_changed="1" display_name="mifos" created_by="1" updated_by="1" updated_date="2011-09-12" last_login="2011-09-12" locked="0" no_of_tries="0" version_no="1"/>
-  <personnel personnel_id="2" level_id="1" global_personnel_num="0002-00002" office_id="2" personnel_status="1" preferred_locale="1" password="pbI/d1G+ihInQl8wVzDlUqkFFPh6NfkOlCgOAQ==" login_name="loanofficer" email_id="" password_changed="0" display_name="loan officer" created_by="1" created_date="2011-09-12" locked="0" no_of_tries="0" version_no="1"/>
+  <personnel personnel_id="2" level_id="1" global_personnel_num="0002-00002" office_id="2" personnel_status="1" preferred_locale="1" password="ImSMpCMwpWGWTb4y9U5qBKSdA/IDymSyUVM42Q==" login_name="loanofficer" email_id="" password_changed="1" display_name="loan officer" created_by="1" created_date="2011-09-12" locked="0" no_of_tries="0" version_no="1"/>
   <personnel_custom_field/>
   <personnel_details personnel_id="1" first_name="Mifos" last_name="MFI" government_id_number="123" dob="1979-12-12" gender="50" address_1="Bangalore" city="Bangalore" state="Bangalore" country="Bangalore"/>
   <personnel_details personnel_id="2" first_name="loan" middle_name="" second_last_name="" last_name="officer" government_id_number="" dob="1986-06-06" gender="49" date_of_joining_mfi="2011-09-12" date_of_joining_branch="2011-09-12" address_1="" address_2="" address_3="" city="" state="" country="" postal_code="" telephone=""/>

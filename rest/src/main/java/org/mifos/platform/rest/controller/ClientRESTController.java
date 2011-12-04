@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.rest.ui.controller;
+package org.mifos.platform.rest.controller;
 
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.ClientServiceFacade;
@@ -45,13 +45,13 @@ public class ClientRESTController {
     private CustomerDao customerDao;
 
     @RequestMapping(value = "client/num-{globalCustNum}", method = RequestMethod.GET)
-    public final @ResponseBody
+    public @ResponseBody
     ClientInformationDto getClientByNumber(@PathVariable String globalCustNum) {
         return clientServiceFacade.getClientInformationDto(globalCustNum);
     }
 
     @RequestMapping(value = "client/charges/num-{globalCustNum}", method = RequestMethod.GET)
-    public final @ResponseBody
+    public @ResponseBody
     ClientChargesDetailsDto getClientChargesByNumber(@PathVariable String globalCustNum) {
         ClientBO clientBO = customerDao.findClientBySystemId(globalCustNum);
 

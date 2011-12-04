@@ -234,7 +234,7 @@ explanation of the license and how it is applied.
 											--> 
                                         <c:if test="${sessionScope.loanproductactionform.loanAmtCalcType=='2'}">
 										<br>
-										<table width="100%" border="0" cellpadding="3" cellspacing="0">
+										<table width="60%" border="0" cellpadding="3" cellspacing="0">
 											<tr>
                                                 <td>
                                                 <span class="fontnormalbold">
@@ -345,9 +345,9 @@ explanation of the license and how it is applied.
 											bundle="ProductDefUIResources" /></span>
 										<br />
 
-										<table width="90%" border="0" cellspacing="0" cellpadding="3">
+										<table width="60%" border="0" cellspacing="0" cellpadding="3">
 											<tr>
-												<td width="15%" class="drawtablehd"><mifos:mifoslabel
+												<td width="10%" class="drawtablehd"><mifos:mifoslabel
 													name="product.loancycleno" bundle="ProductDefUIResources" />
 												</td>
 												<td width="30%" class="drawtablehd" align="right"><mifos:mifoslabel
@@ -430,22 +430,22 @@ explanation of the license and how it is applied.
 
 										<table width="60%" border="0" cellspacing="0" cellpadding="3">
 											<tr>
-												<td width="20%" class="drawtablehd"><mifos:mifoslabel
+												<td width="33%" class="drawtablehd"><mifos:mifoslabel
 													name="product.min" bundle="ProductDefUIResources" /> <mifos:mifoslabel
 													name="product.amount" bundle="ProductDefUIResources" /></td>
-												<td width="20%" class="drawtablehd" align="right"><mifos:mifoslabel
+												<td width="34%" class="drawtablehd" align="right"><mifos:mifoslabel
 													name="product.max" bundle="ProductDefUIResources" /> <mifos:mifoslabel
 													name="product.amount" bundle="ProductDefUIResources" /></td>
-												<td width="20%" class="drawtablehd" align="right"><mifos:mifoslabel
+												<td width="33%" class="drawtablehd" align="right"><mifos:mifoslabel
 													name="product.default" bundle="ProductDefUIResources" /> <mifos:mifoslabel
 													name="product.amount" bundle="ProductDefUIResources" /></td>
 											</tr>
 											<tr>
-												<td class="fontnormal" width="20%"><c:out
+												<td class="fontnormal"><c:out
 													value="${sessionScope.loanproductactionform.minLoanAmount}" /></td>
-												<td class="fontnormal" width="20%" align="right"><c:out
+												<td class="fontnormal" align="right"><c:out
 													value="${sessionScope.loanproductactionform.maxLoanAmount}" /></td>
-												<td class="fontnormal" width="20%" align="right"><c:out
+												<td class="fontnormal" align="right"><c:out
 													value="${sessionScope.loanproductactionform.defaultLoanAmount}" /></td>
 											</tr>
 										</table>
@@ -489,15 +489,6 @@ explanation of the license and how it is applied.
 											<c:out value="${InterestTypes.name}" />
 										</c:if>
 									</c:forEach> </span> <br>
-									<fmt:message key="product.maxRate">
-										<fmt:param><mifos:mifoslabel
-										name="${ConfigurationConstants.SERVICE_CHARGE}"
-										bundle="ProductDefUIResources" /></fmt:param>
-										</fmt:message>: <span
-										class="fontnormal"><c:out
-										value="${sessionScope.loanproductactionform.maxInterestRate}" />
-									<mifos:mifoslabel name="product.perc"
-										bundle="ProductDefUIResources" /></span> <br>
 									<fmt:message key="product.minRate">
 										<fmt:param><mifos:mifoslabel
 										name="${ConfigurationConstants.SERVICE_CHARGE}"
@@ -507,6 +498,15 @@ explanation of the license and how it is applied.
 										value="${sessionScope.loanproductactionform.minInterestRate}" />
 									<mifos:mifoslabel name="product.perc"
 										bundle="ProductDefUIResources" /></span> <br>
+                                    <fmt:message key="product.maxRate">
+                                        <fmt:param><mifos:mifoslabel
+                                        name="${ConfigurationConstants.SERVICE_CHARGE}"
+                                        bundle="ProductDefUIResources" /></fmt:param>
+                                        </fmt:message>: <span
+                                        class="fontnormal"><c:out
+                                        value="${sessionScope.loanproductactionform.maxInterestRate}" />
+                                    <mifos:mifoslabel name="product.perc"
+                                        bundle="ProductDefUIResources" /></span> <br>
 									<fmt:message key="product.defaultRate">
 										<fmt:param><mifos:mifoslabel
 										name="${ConfigurationConstants.SERVICE_CHARGE}"
@@ -670,7 +670,7 @@ explanation of the license and how it is applied.
 										<br>
 
 
-										<table width="100%" border="0" cellpadding="3" cellspacing="0">
+										<table width="60%" border="0" cellpadding="3" cellspacing="0">
 											<tr>
 												<td width="25%" class="drawtablehd"><mifos:mifoslabel
 													name="product.lastloanamount"
@@ -769,9 +769,9 @@ explanation of the license and how it is applied.
 											name="product.installbyloancycle"
 											bundle="ProductDefUIResources" /></span>
 										<br>
-										<table width="90%" border="0" cellspacing="0" cellpadding="3">
+										<table width="60%" border="0" cellspacing="0" cellpadding="3">
 											<tr>
-												<td width="15%" class="drawtablehd"><mifos:mifoslabel
+												<td width="10%" class="drawtablehd"><mifos:mifoslabel
 													name="product.loancycleno" bundle="ProductDefUIResources" />
 												</td>
 												<td width="30%" class="drawtablehd" align="right"><mifos:mifoslabel
@@ -849,22 +849,22 @@ explanation of the license and how it is applied.
 											name="product.sameforallinstallment"
 											bundle="ProductDefUIResources" /></span>
 										<br>
-										<table width="80%" border="0" cellspacing="0" cellpadding="3">
+										<table width="60%" border="0" cellspacing="0" cellpadding="3">
 											<tr>
-												<td width="20%" class="drawtablehd"><mifos:mifoslabel
+												<td width="33%" class="drawtablehd"><mifos:mifoslabel
 													name="product.mininst" bundle="ProductDefUIResources" /></td>
-												<td width="20%" class="drawtablehd" align="right"><mifos:mifoslabel
+												<td width="34%" class="drawtablehd" align="right"><mifos:mifoslabel
 													name="product.maxinst" bundle="ProductDefUIResources" /></td>
-												<td width="20%" class="drawtablehd" align="right"><mifos:mifoslabel
+												<td width="33%" class="drawtablehd" align="right"><mifos:mifoslabel
 													name="product.definst" bundle="ProductDefUIResources" /></td>
 											</tr>
 
 											<tr>
-												<td class="fontnormal" width="20%"><c:out
+												<td class="fontnormal"><c:out
 													value="${sessionScope.loanproductactionform.minNoInstallments}" /></td>
-												<td class="fontnormal" width="20%" align="right"><c:out
+												<td class="fontnormal" align="right"><c:out
 													value="${sessionScope.loanproductactionform.maxNoInstallments}" /></td>
-												<td class="fontnormal" width="20%" align="right"><c:out
+												<td class="fontnormal" align="right"><c:out
 													value="${sessionScope.loanproductactionform.defNoInstallments}" /></td>
 											</tr>
 

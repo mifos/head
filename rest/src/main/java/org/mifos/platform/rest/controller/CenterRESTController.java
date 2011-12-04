@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.rest.ui.controller;
+package org.mifos.platform.rest.controller;
 
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.dto.domain.CenterInformationDto;
@@ -35,7 +35,7 @@ public class CenterRESTController {
     private CenterServiceFacade centerServiceFacade;
 
     @RequestMapping(value = "center/num-{globalCustNum}", method = RequestMethod.GET)
-    public final @ResponseBody
+    public @ResponseBody
     CenterInformationDto getCenterByNumber(@PathVariable String globalCustNum) {
         return centerServiceFacade.getCenterInformationDto(globalCustNum);
     }
