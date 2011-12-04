@@ -48,11 +48,6 @@ public class StubRESTController {
         return arg;
     }
 
-    @RequestMapping(value = "all")
-    public @ResponseBody String allMethodCall(@PathVariable String arg) throws Exception {
-        return arg;
-    }
-
     private String dummyCall(String arg) {
         return arg;
     }

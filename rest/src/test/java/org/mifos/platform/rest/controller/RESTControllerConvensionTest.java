@@ -33,7 +33,7 @@ public class RESTControllerConvensionTest {
 
     @Test
     public void testConvension() throws Exception {
-        for(Class<?> clazz : ClassUtils.getClasses("org.mifos.platform.rest.ui.controller", "RESTController")) {
+        for(Class<?> clazz : ClassUtils.getClasses("org.mifos.platform.rest.controller", "RESTController")) {
             verifyMethods(clazz);
         }
     }
@@ -41,9 +41,12 @@ public class RESTControllerConvensionTest {
     private void verifyMethods(Class<?> clazz) {
         for(Method method : clazz.getMethods()) {
             if(method.isAnnotationPresent(RequestMapping.class)) {
+                String name = clazz.getName() +"."+ method.getName();
                 Assert.assertFalse("Method should not be final, cglib Spring AOP can not intercept "
-                                  + clazz.getName() +"."+ method.getName(),
-                                  Modifier.isFinal(method.getModifiers()));
+                                  + name, Modifier.isFinal(method.getModifiers()));
+                RequestMapping mapping = method.getAnnotation(RequestMapping.class);
+                Assert.assertTrue("Exactly one request mapping method should be used in "+name,
+                                  mapping.method().length == 1);
             }
         }
     }
