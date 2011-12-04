@@ -21,6 +21,5 @@
 
     <context:component-scan base-package="org.mifos.platform.rest.controller" />
     
-    <bean class="org.mifos.platform.rest.approval.aop.AspectJRESTApprovalInterceptor"/>
-
+    <context:component-scan base-package="org.mifos.platform.rest.approval" />
 </beans>
