@@ -19,6 +19,8 @@
  */
 
 package org.mifos.test.acceptance.framework.loanproduct;
+import java.math.BigDecimal;
+
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.testng.Assert;
 
@@ -107,9 +109,21 @@ public class LoanProductDetailsPage  extends MifosPage {
     }
 
     public void verifyLoanAmountTableTypeSame(String min, String max, String def) {
-        Assert.assertEquals(selenium.getTable(lOAN_AMOUNT_SAME_TABLE+".1.0"), min);
-        Assert.assertEquals(selenium.getTable(lOAN_AMOUNT_SAME_TABLE+".1.1"), max);
-        Assert.assertEquals(selenium.getTable(lOAN_AMOUNT_SAME_TABLE+".1.2"), def);
+    	
+    	BigDecimal minAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(lOAN_AMOUNT_SAME_TABLE+".1.0").replaceAll(",", "")));
+    	BigDecimal maxAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(lOAN_AMOUNT_SAME_TABLE+".1.1").replaceAll(",", "")));
+    	BigDecimal defaultAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(lOAN_AMOUNT_SAME_TABLE+".1.2").replaceAll(",", "")));
+    	
+    	BigDecimal expectedMinAmount = BigDecimal.valueOf(Double.valueOf(min));
+    	BigDecimal expectedMaxAmount = BigDecimal.valueOf(Double.valueOf(max));
+    	BigDecimal expectedDefaultAmount = BigDecimal.valueOf(Double.valueOf(def));
+    	
+    	Assert.assertEquals(minAmount, expectedMinAmount);
+    	Assert.assertEquals(maxAmount, expectedMaxAmount);
+    	Assert.assertEquals(defaultAmount, expectedDefaultAmount);
+//        Assert.assertEquals(selenium.getTable(lOAN_AMOUNT_SAME_TABLE+".1.0"), min);
+//        Assert.assertEquals(selenium.getTable(lOAN_AMOUNT_SAME_TABLE+".1.1"), max);
+//        Assert.assertEquals(selenium.getTable(lOAN_AMOUNT_SAME_TABLE+".1.2"), def);
     }
 
     public void verifyInstallmentsTableTypeFromCycle(String[][] installCycles) {
@@ -122,9 +136,19 @@ public class LoanProductDetailsPage  extends MifosPage {
 
     public void verifyLoanAmountTableTypeFromCycle(String[][] loanAmountCycles) {
         for(int i = 1; i <= loanAmountCycles.length; i++) {
-            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".1"), loanAmountCycles[i-1][0]);
-            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".2"), loanAmountCycles[i-1][1]);
-            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".3"), loanAmountCycles[i-1][2]);
+        	
+        	
+        	BigDecimal minAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".1").replaceAll(",", "")));
+        	BigDecimal maxAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".2").replaceAll(",", "")));
+        	BigDecimal defaultAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".3").replaceAll(",", "")));
+        	
+        	BigDecimal expectedMinAmount = BigDecimal.valueOf(Double.valueOf(loanAmountCycles[i-1][0]));
+        	BigDecimal expectedMaxAmount = BigDecimal.valueOf(Double.valueOf(loanAmountCycles[i-1][1]));
+        	BigDecimal expectedDefaultAmount = BigDecimal.valueOf(Double.valueOf(loanAmountCycles[i-1][2]));
+        	
+        	Assert.assertEquals(minAmount, expectedMinAmount);
+        	Assert.assertEquals(maxAmount, expectedMaxAmount);
+        	Assert.assertEquals(defaultAmount, expectedDefaultAmount);
         }
     }
 
@@ -141,10 +165,24 @@ public class LoanProductDetailsPage  extends MifosPage {
             else {
                 last.append("0.0 - ").append(installmentsByLastAmount[0][0]).append(".0");
             }
-            Assert.assertEquals(selenium.getTable(INSTALLMENTS_FROM_LAST_AMOUNT_TABLE+"."+i+".0"), last.toString());
-            Assert.assertEquals(selenium.getTable(INSTALLMENTS_FROM_LAST_AMOUNT_TABLE+"."+i+".1"), installmentsByLastAmount[i-1][1]);
-            Assert.assertEquals(selenium.getTable(INSTALLMENTS_FROM_LAST_AMOUNT_TABLE+"."+i+".2"), installmentsByLastAmount[i-1][2]);
-            Assert.assertEquals(selenium.getTable(INSTALLMENTS_FROM_LAST_AMOUNT_TABLE+"."+i+".3"), installmentsByLastAmount[i-1][3]);
+//            Assert.assertEquals(selenium.getTable(INSTALLMENTS_FROM_LAST_AMOUNT_TABLE+"."+i+".0"), last.toString());
+            
+            
+            BigDecimal minAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(INSTALLMENTS_FROM_LAST_AMOUNT_TABLE+"."+i+".1").replaceAll(",", "")));
+        	BigDecimal maxAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(INSTALLMENTS_FROM_LAST_AMOUNT_TABLE+"."+i+".2").replaceAll(",", "")));
+        	BigDecimal defaultAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(INSTALLMENTS_FROM_LAST_AMOUNT_TABLE+"."+i+".3").replaceAll(",", "")));
+        	
+        	BigDecimal expectedMinAmount = BigDecimal.valueOf(Double.valueOf(installmentsByLastAmount[i-1][1]));
+        	BigDecimal expectedMaxAmount = BigDecimal.valueOf(Double.valueOf(installmentsByLastAmount[i-1][2]));
+        	BigDecimal expectedDefaultAmount = BigDecimal.valueOf(Double.valueOf(installmentsByLastAmount[i-1][3]));
+        	
+        	Assert.assertEquals(minAmount, expectedMinAmount);
+        	Assert.assertEquals(maxAmount, expectedMaxAmount);
+        	Assert.assertEquals(defaultAmount, expectedDefaultAmount);
+            
+//            Assert.assertEquals(selenium.getTable(INSTALLMENTS_FROM_LAST_AMOUNT_TABLE+"."+i+".1"), installmentsByLastAmount[i-1][1]);
+//            Assert.assertEquals(selenium.getTable(INSTALLMENTS_FROM_LAST_AMOUNT_TABLE+"."+i+".2"), installmentsByLastAmount[i-1][2]);
+//            Assert.assertEquals(selenium.getTable(INSTALLMENTS_FROM_LAST_AMOUNT_TABLE+"."+i+".3"), installmentsByLastAmount[i-1][3]);
         }
     }
 
@@ -161,10 +199,23 @@ public class LoanProductDetailsPage  extends MifosPage {
             else {
                 last.append("0.0 - ").append(amountsByLastAmount[0][0]).append(".0");
             }
-            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_LAST_AMOUNT_TABLE+"."+i+".0"), last.toString());
-            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_LAST_AMOUNT_TABLE+"."+i+".1"), amountsByLastAmount[i-1][1]);
-            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_LAST_AMOUNT_TABLE+"."+i+".2"), amountsByLastAmount[i-1][2]);
-            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_LAST_AMOUNT_TABLE+"."+i+".3"), amountsByLastAmount[i-1][3]);
+            
+        	BigDecimal minAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(LOAN_AMOUNT_FROM_LAST_AMOUNT_TABLE+"."+i+".1").replaceAll(",", "")));
+        	BigDecimal maxAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(LOAN_AMOUNT_FROM_LAST_AMOUNT_TABLE+"."+i+".2").replaceAll(",", "")));
+        	BigDecimal defaultAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(LOAN_AMOUNT_FROM_LAST_AMOUNT_TABLE+"."+i+".3").replaceAll(",", "")));
+        	
+        	BigDecimal expectedMinAmount = BigDecimal.valueOf(Double.valueOf(amountsByLastAmount[i-1][1]));
+        	BigDecimal expectedMaxAmount = BigDecimal.valueOf(Double.valueOf(amountsByLastAmount[i-1][2]));
+        	BigDecimal expectedDefaultAmount = BigDecimal.valueOf(Double.valueOf(amountsByLastAmount[i-1][3]));
+        	
+        	Assert.assertEquals(minAmount, expectedMinAmount);
+        	Assert.assertEquals(maxAmount, expectedMaxAmount);
+        	Assert.assertEquals(defaultAmount, expectedDefaultAmount);
+            
+//            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_LAST_AMOUNT_TABLE+"."+i+".0"), last.toString());
+//            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_LAST_AMOUNT_TABLE+"."+i+".1"), amountsByLastAmount[i-1][1]);
+//            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_LAST_AMOUNT_TABLE+"."+i+".2"), amountsByLastAmount[i-1][2]);
+//            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_LAST_AMOUNT_TABLE+"."+i+".3"), amountsByLastAmount[i-1][3]);
         }
     }
 

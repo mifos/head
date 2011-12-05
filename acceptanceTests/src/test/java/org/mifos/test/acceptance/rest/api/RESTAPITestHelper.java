@@ -47,7 +47,9 @@ public class RESTAPITestHelper {
         public static final String CLIENT = "client";
         public static final String CLIENT_CHARGES = "client/charges";
         public static final String GROUP = "group";
+        public static final String GROUP_CHARGES = "group/charges";
         public static final String CENTER = "center";
+        public static final String CENTER_CHARGES = "center/charges";
         public static final String CENTER_COLLECTIONSHEET = "collectionsheet/customer";
         public static final String PERSONNEL = "personnel";
         public static final String PERSONNEL_CLIENTS = "personnel/clients";
@@ -58,6 +60,8 @@ public class RESTAPITestHelper {
         public static final String LOAN_SCHEDULE = "account/loan/schedule";
         public static final String LOAN_REPAYMENT = "account/loan/repay";
         public static final String LOAN_FULL_REPAYMENT = "account/loan/fullrepay";
+        public static final String LOAN_DISBURSEMENT = "account/loan/disburse";
+        public static final String LOAN_ADJUSTMENT = "account/loan/adjustment";
         public static final String SAVINGS = "account/savings";
         public static final String SAVINGS_DUE = "account/savings/due";
         public static final String SAVINGS_DEPOSIT = "account/savings/deposit";
