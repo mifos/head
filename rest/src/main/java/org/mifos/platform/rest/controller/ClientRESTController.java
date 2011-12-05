@@ -23,7 +23,7 @@ import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.ClientServiceFacade;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.dto.domain.ClientChargesDetailsDto;
+import org.mifos.dto.domain.CustomerChargesDetailsDto;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,10 +52,10 @@ public class ClientRESTController {
 
     @RequestMapping(value = "client/charges/num-{globalCustNum}", method = RequestMethod.GET)
     public @ResponseBody
-    ClientChargesDetailsDto getClientChargesByNumber(@PathVariable String globalCustNum) {
+    CustomerChargesDetailsDto getClientChargesByNumber(@PathVariable String globalCustNum) {
         ClientBO clientBO = customerDao.findClientBySystemId(globalCustNum);
 
-        ClientChargesDetailsDto clientCharges = clientServiceFacade.retrieveChargesDetails(clientBO.getCustomerId());
+        CustomerChargesDetailsDto clientCharges = centerServiceFacade.retrieveChargesDetails(clientBO.getCustomerId());
         clientCharges.addActivities(centerServiceFacade.retrieveRecentActivities(clientBO.getCustomerId(), 3));
 
         return clientCharges;

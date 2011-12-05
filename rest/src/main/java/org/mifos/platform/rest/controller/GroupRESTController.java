@@ -19,7 +19,11 @@
  */
 package org.mifos.platform.rest.controller;
 
+import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.GroupServiceFacade;
+import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.dto.domain.CustomerChargesDetailsDto;
 import org.mifos.dto.screen.GroupInformationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,9 +38,26 @@ public class GroupRESTController {
     @Autowired
     private GroupServiceFacade groupServiceFacade;
 
+    @Autowired
+    private CenterServiceFacade centerServiceFacade;
+
+    @Autowired
+    private CustomerDao customerDao;
+
     @RequestMapping(value = "group/num-{globalCustNum}", method = RequestMethod.GET)
     public @ResponseBody
     GroupInformationDto getGroupByNumber(@PathVariable String globalCustNum) {
         return groupServiceFacade.getGroupInformationDto(globalCustNum);
+    }
+
+    @RequestMapping(value = "group/charges/num-{globalCustNum}", method = RequestMethod.GET)
+    public @ResponseBody
+    CustomerChargesDetailsDto getGroupChargesByNumber(@PathVariable String globalCustNum) {
+        GroupBO groupBO = customerDao.findGroupBySystemId(globalCustNum);
+
+        CustomerChargesDetailsDto groupCharges = centerServiceFacade.retrieveChargesDetails(groupBO.getCustomerId());
+        groupCharges.addActivities(centerServiceFacade.retrieveRecentActivities(groupBO.getCustomerId(), 3));
+
+        return groupCharges;
     }
 }

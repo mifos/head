@@ -23,12 +23,14 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -44,6 +46,7 @@ import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingFactory;
+import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
@@ -53,6 +56,7 @@ import org.mifos.customers.business.CustomerActivityEntity;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
+import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerService;
@@ -68,6 +72,7 @@ import org.mifos.customers.personnel.business.PersonnelNotesEntity;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
+import org.mifos.dto.domain.AccountFeeScheduleDto;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.AuditLogDto;
@@ -82,6 +87,7 @@ import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerAccountSummaryDto;
 import org.mifos.dto.domain.CustomerAddressDto;
+import org.mifos.dto.domain.CustomerChargesDetailsDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.CustomerDto;
@@ -89,11 +95,13 @@ import org.mifos.dto.domain.CustomerMeetingDto;
 import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.CustomerPositionDto;
 import org.mifos.dto.domain.CustomerPositionOtherDto;
+import org.mifos.dto.domain.CustomerScheduleDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.UserDetailDto;
+import org.mifos.dto.screen.AccountFeesDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
 import org.mifos.dto.screen.ClosedAccountDto;
 import org.mifos.dto.screen.CustomerNoteFormDto;
@@ -490,6 +498,51 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     }
 
     @Override
+    public CustomerChargesDetailsDto retrieveChargesDetails(Integer customerId) {
+
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+
+        CustomerBO customerBO = this.customerDao.findCustomerById(customerId);
+        CustomerAccountBO customerAccount = customerBO.getCustomerAccount();
+
+        List<AccountFeesDto> accountFeesDtos = new ArrayList<AccountFeesDto>();
+        if(!customerAccount.getAccountFees().isEmpty()) {
+            for (AccountFeesEntity accountFeesEntity: customerAccount.getAccountFees()) {
+                AccountFeesDto accountFeesDto = new AccountFeesDto(accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId(),
+                        accountFeesEntity.getFeeStatus(), accountFeesEntity.getFees().getFeeName(),
+                        accountFeesEntity.getAccountFeeAmount().toString(),
+                        getMeetingRecurrence(accountFeesEntity.getFees().getFeeFrequency().getFeeMeetingFrequency(),
+                                userContext),
+                        accountFeesEntity.getFees().getFeeId());
+                accountFeesDtos.add(accountFeesDto);
+            }
+        }
+
+        CustomerScheduleDto customerSchedule = null;
+        CustomerScheduleEntity scheduleEntity = (CustomerScheduleEntity) customerAccount.getUpcomingInstallment();
+        if (scheduleEntity != null) {
+            Set<AccountFeesActionDetailEntity> feeEntities =  scheduleEntity.getAccountFeesActionDetails();
+
+            List<AccountFeeScheduleDto> feeDtos = new ArrayList<AccountFeeScheduleDto>();
+            for (AccountFeesActionDetailEntity feeEntity : feeEntities) {
+                feeDtos.add(convertToDto(feeEntity));
+            }
+
+            customerSchedule = new CustomerScheduleDto(scheduleEntity.getMiscFee().toString(),
+                    scheduleEntity.getMiscFeePaid().toString(), scheduleEntity.getMiscPenalty().toString(),
+                    scheduleEntity.getMiscPenaltyPaid().toString(), feeDtos);
+        }
+
+        return new CustomerChargesDetailsDto(customerAccount.getNextDueAmount().toString(),
+                customerAccount.getTotalAmountInArrears().toString(),
+                customerAccount.getTotalAmountDue().toString(),
+                customerAccount.getUpcomingChargesDate(),
+                customerSchedule,
+                accountFeesDtos);
+    }
+
+    @Override
     public List<CustomerRecentActivityDto> retrieveRecentActivities(Integer customerId, Integer countOfActivities) {
         CustomerBO customerBO = this.customerDao.findCustomerById(customerId);
         List<CustomerActivityEntity> customerActivityDetails = customerBO.getCustomerAccount().getCustomerActivitDetails();
@@ -880,5 +933,14 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     private boolean isPermissionAllowed(UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
         return ActivityMapper.getInstance().isAddingNotesPermittedForPersonnel(userContext, recordOfficeId,
                 recordLoanOfficerId);
+    }
+
+    private AccountFeeScheduleDto convertToDto(AccountFeesActionDetailEntity feeEntity) {
+        return new AccountFeeScheduleDto(feeEntity.getFee().getFeeName(), feeEntity.getFeeAmount().toString(),
+                feeEntity.getFeeAmountPaid().toString(), feeEntity.getFeeAllocated().toString());
+    }
+
+    private String getMeetingRecurrence(MeetingBO meeting, UserContext userContext) {
+        return meeting != null ? new MeetingHelper().getMessageWithFrequency(meeting, userContext) : null;
     }
 }
