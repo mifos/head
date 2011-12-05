@@ -465,7 +465,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         disburseParams.setDisbursalDateYYYY("2011");
 
         LoanProductDetailsPage loanProductDetailsPage = loanProductTestHelper.defineNewLoanProduct(productParams);
-        loanProductDetailsPage.verifyLoanAmountTableTypeSame("1000.0", "10000.0", "5000.0");
+        loanProductDetailsPage.verifyLoanAmountTableTypeSame("1,000", "10,000", "5,000");
         loanProductDetailsPage.verifyInstallmentsTableTypeFromCycle(cycleInstallments);
         LoanAccountPage loanAccountPage = loanTestHelper.createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);
         loanAccountPage.verifyNumberOfInstallments("26", "52", "52");
