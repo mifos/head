@@ -973,7 +973,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
             List<GLCodeEntity> depositGlCodeList = new ArrayList<GLCodeEntity>();
             depositGlCodeList.addAll(new FinancialBusinessService().getGLCodes(FinancialActionConstants.MANDATORYDEPOSIT, FinancialConstants.CREDIT));
-            depositGlCodeList.addAll(new FinancialBusinessService().getGLCodes(FinancialActionConstants.VOLUNTORYDEPOSIT, FinancialConstants.CREDIT));
+            depositGlCodeList.addAll(new FinancialBusinessService().getGLCodes(FinancialActionConstants.VOLUNTARYDEPOSIT, FinancialConstants.CREDIT));
 
             List<ListElement> depositGlCodeOptions = new ArrayList<ListElement>();
             for (GLCodeEntity glCode : depositGlCodeList) {
