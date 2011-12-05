@@ -27,7 +27,6 @@ import junit.framework.Assert;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
-import org.junit.After;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
@@ -35,13 +34,12 @@ import org.mifos.test.acceptance.rest.api.RESTAPITestHelper.By;
 import org.mifos.test.acceptance.rest.api.RESTAPITestHelper.Type;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 @Test(singleThreaded = true, groups = { "rest", "acceptance"})
-@SuppressWarnings("PMD.SignatureDeclareThrowsException")
+@SuppressWarnings("PMD")
 public class RESTAPITest extends UiTestCaseBase {
 
     public static final String CLIENT_GLOBAL_ID = "0002-000000003";
