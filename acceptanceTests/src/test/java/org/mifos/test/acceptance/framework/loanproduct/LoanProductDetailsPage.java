@@ -126,9 +126,9 @@ public class LoanProductDetailsPage  extends MifosPage {
         for(int i = 1; i <= loanAmountCycles.length; i++) {
         	
         	
-        	BigDecimal minAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".1")));
-        	BigDecimal maxAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".2")));
-        	BigDecimal defaultAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".3")));
+        	BigDecimal minAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".1").replaceAll(",", "")));
+        	BigDecimal maxAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".2").replaceAll(",", "")));
+        	BigDecimal defaultAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".3").replaceAll(",", "")));
         	
         	BigDecimal expectedMinAmount = BigDecimal.valueOf(Double.valueOf(loanAmountCycles[i-1][0]));
         	BigDecimal expectedMaxAmount = BigDecimal.valueOf(Double.valueOf(loanAmountCycles[i-1][1]));
