@@ -27,6 +27,7 @@ import junit.framework.Assert;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
@@ -34,6 +35,7 @@ import org.mifos.test.acceptance.rest.api.RESTAPITestHelper.By;
 import org.mifos.test.acceptance.rest.api.RESTAPITestHelper.Type;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -387,6 +389,26 @@ public class RESTAPITest extends UiTestCaseBase {
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
         jsonAssert.assertLoanRepaymentResponse();
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(dependsOnGroups="readOnly", dependsOnMethods = "repayLoanByGlobalNum")
+    public void applyAdjustmentByGlobalNum() throws Exception {
+        String data = "?note=Adjustment applied";
+        String type = Type.LOAN_ADJUSTMENT;
+        String by = By.GLOBAL_NUMBER;
+        String value = LOAN_ACCOUNT_GLOBAL_ID;
+        String actualJSON = helper.postJSONFromUI(type, by, value, data);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
+        jsonAssert.assertEqual("clientName");
+        jsonAssert.assertEqual("clientNumber");
+        jsonAssert.assertEqual("savingsDisplayName");
+        jsonAssert.assertEqual("adjustmentDate");
+        jsonAssert.assertEqual("adjustmentAmount");
+        jsonAssert.assertEqual("adjustmentMadeBy");
+        jsonAssert.assertEqual("outstandingAfterDisbursement");
+        jsonAssert.assertEqual("outstandingBeforeAdjustment");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

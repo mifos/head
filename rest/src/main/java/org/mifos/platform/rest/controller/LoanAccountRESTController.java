@@ -24,6 +24,7 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,6 +33,7 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.core.MifosRuntimeException;
@@ -59,12 +61,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class LoanAccountRESTController {
-
+	private static final ResourceBundle accountsUIResource = ResourceBundle.getBundle("org.mifos.config.localizedResources.accountsUIResources");
+	
     @Autowired
     private AccountService accountService;
 
     @Autowired
     private LoanAccountServiceFacade loanAccountServiceFacade;
+    
+    @Autowired
+    private AccountServiceFacade accountServiceFacade;
 
     @Autowired
     private LoanDao loanDao;
@@ -187,6 +193,7 @@ public class LoanAccountRESTController {
     	this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
     	
     	CustomerBO client = loan.getCustomer();
+    	Money outstandingBeforeDisbursement = loan.getLoanSummary().getOutstandingBalance();
     	
     	Map<String, String> map = new HashMap<String, String>();
     	map.put("status", "success");
@@ -197,8 +204,51 @@ public class LoanAccountRESTController {
         map.put("disbursementTime", today.toLocalTime().toString());
         map.put("disbursementAmount", loan.getLastPmnt().getAmount().toString());
         map.put("disbursementMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
-        map.put("outstandingBeforeDisbursement", loan.getLoanSummary().getOutstandingBalance().toString());
+        map.put("outstandingBeforeDisbursement", outstandingBeforeDisbursement.toString());
         map.put("outstandingAfterDisbursement", loan.getLoanSummary().getOutstandingBalance().toString());
+    	
+    	return map;
+    }
+    
+    @RequestMapping(value = "/account/loan/adjustment/num-{globalAccountNum}", method = RequestMethod.POST)
+    public @ResponseBody
+    Map<String, String> applyAdjustment(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
+    	String note = request.getParameter("note");
+    	
+    	Map<String, String> map = new HashMap<String, String>();
+
+    	if ( note != null && !note.isEmpty() ){
+    		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        	LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
+        	CustomerBO client = loan.getCustomer();
+        	
+    		String adjustmentAmount = loan.getLastPmnt().getAmount().toString();
+    		String outstandingBeforeAdjustment = loan.getLoanSummary().getOutstandingBalance().toString();
+    		try{
+    			accountServiceFacade.applyAdjustment(globalAccountNum, note, (short)user.getUserId());
+    	    	
+    			DateTime today = new DateTime();
+    			
+	    		map.put("status", "success");
+	    		map.put("clientName", client.getDisplayName());
+	            map.put("clientNumber", client.getGlobalCustNum());
+	            map.put("loanDisplayName", loan.getLoanOffering().getPrdOfferingName());
+	            map.put("adjustmentDate", today.toLocalDate().toString());
+	            map.put("adjustmentTime", today.toLocalTime().toString());
+	            map.put("adjustmentAmount", adjustmentAmount);
+	            map.put("adjustmentMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
+	            map.put("outstandingBeforeAdjustment", outstandingBeforeAdjustment);
+	            map.put("outstandingAfterAdjustment", loan.getLoanSummary().getOutstandingBalance().toString());
+	            map.put("note", note);
+    		} catch (MifosRuntimeException e){
+            	String error = accountsUIResource.getString(e.getCause().getLocalizedMessage());
+            	map.put("status","unsuccess");
+            	map.put("error", error);
+    		}
+    	} else {
+        	map.put("status","unsuccess");
+        	map.put("error", "Note is not specified.");
+    	}
     	
     	return map;
     }
