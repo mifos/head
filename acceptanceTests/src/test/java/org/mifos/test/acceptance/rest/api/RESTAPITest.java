@@ -50,6 +50,7 @@ public class RESTAPITest extends UiTestCaseBase {
     public static final String SYSTEM_INFORMATION_ID = "information";
     public static final String LOAN_ACCOUNT_GLOBAL_ID = "000100000000004";
     public static final String LOAN_ACCOUNT_2_GLOBAL_ID = "000100000000005";
+    public static final String LOAN_ACCOUNT_3_GLOBAL_ID = "000100000000008";
     public static final String SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID = "000100000000006";
     public static final String SAVINGS_MANDATORY_ACCOUNT_GLOBAL_ID = "000100000000007";
     public static final String MEETINGS_DAY = "19-09-2011";
@@ -375,6 +376,26 @@ public class RESTAPITest extends UiTestCaseBase {
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
         jsonAssert.assertLoanRepaymentResponse();
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(dependsOnGroups="readOnly")
+    public void disburseLoanByGlobalNum() throws Exception {
+    	String data = " ";
+    	String type = Type.LOAN_DISBURSEMENT;
+    	String by = By.GLOBAL_NUMBER;
+    	String value = LOAN_ACCOUNT_3_GLOBAL_ID;
+    	String actualJSON = helper.postJSONFromUI(type, by, value, data);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
+        jsonAssert.assertEqual("clientName");
+        jsonAssert.assertEqual("clientNumber");
+        jsonAssert.assertEqual("savingsDisplayName");
+        jsonAssert.assertEqual("disbursementDate");
+        jsonAssert.assertEqual("disbursementAmount");
+        jsonAssert.assertEqual("disbursementMadeBy");
+        jsonAssert.assertEqual("balanceBeforeDisbursement");
+        jsonAssert.assertEqual("balanceAfterDisbursement");
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

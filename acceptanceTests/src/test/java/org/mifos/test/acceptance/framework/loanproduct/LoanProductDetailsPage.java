@@ -19,6 +19,8 @@
  */
 
 package org.mifos.test.acceptance.framework.loanproduct;
+import java.math.BigDecimal;
+
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.testng.Assert;
 
@@ -122,9 +124,23 @@ public class LoanProductDetailsPage  extends MifosPage {
 
     public void verifyLoanAmountTableTypeFromCycle(String[][] loanAmountCycles) {
         for(int i = 1; i <= loanAmountCycles.length; i++) {
-            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".1"), loanAmountCycles[i-1][0]);
-            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".2"), loanAmountCycles[i-1][1]);
-            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".3"), loanAmountCycles[i-1][2]);
+        	
+        	
+        	BigDecimal minAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".1")));
+        	BigDecimal maxAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".2")));
+        	BigDecimal defaultAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".3")));
+        	
+        	BigDecimal expectedMinAmount = BigDecimal.valueOf(Double.valueOf(loanAmountCycles[i-1][0]));
+        	BigDecimal expectedMaxAmount = BigDecimal.valueOf(Double.valueOf(loanAmountCycles[i-1][1]));
+        	BigDecimal expectedDefaultAmount = BigDecimal.valueOf(Double.valueOf(loanAmountCycles[i-1][2]));
+        	
+        	Assert.assertEquals(minAmount, expectedMinAmount);
+        	Assert.assertEquals(maxAmount, expectedMaxAmount);
+        	Assert.assertEquals(defaultAmount, expectedDefaultAmount);
+        	
+//            Assert.assertEquals(, loanAmountCycles[i-1][0]);
+//            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".2"), loanAmountCycles[i-1][1]);
+//            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".3"), loanAmountCycles[i-1][2]);
         }
     }
 

@@ -197,6 +197,8 @@ public class LoanAccountRESTController {
         map.put("disbursementTime", today.toLocalTime().toString());
         map.put("disbursementAmount", loan.getLastPmnt().getAmount().toString());
         map.put("disbursementMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
+        map.put("outstandingBeforeDisbursement", loan.getLoanSummary().getOutstandingBalance().toString());
+        map.put("outstandingAfterDisbursement", loan.getLoanSummary().getOutstandingBalance().toString());
     	
     	return map;
     }

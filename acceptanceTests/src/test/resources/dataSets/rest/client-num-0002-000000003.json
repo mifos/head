@@ -78,7 +78,15 @@
             "totalAmountDue": "103.0",
             "accountStateName": "Active in Good Standing",
             "accountStateId": 5
-        }
+        },
+        {
+			"globalAccountNum": "000100000000008",
+			"prdOfferingName": "REST Loan Product A",
+			"outstandingBalance": "101.0",
+			"totalAmountDue": "10.0",
+			"accountStateName": "Application Approved",
+			"accountStateId": 3
+		}
     ],
     "clientDisplay": {
         "displayName": "Client REST API",
