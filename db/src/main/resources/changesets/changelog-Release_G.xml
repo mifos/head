@@ -456,7 +456,8 @@
     </changeSet>
     <changeSet id="MIFOS_5164_1" author="Udai Gupta" context="expansion">
         <sql endDelimiter=";">
-            CREATE TABLE rest_approval (
+                DROP TABLE IF EXISTS rest_approval;
+                CREATE TABLE rest_approval (
 				  id bigint(20) NOT NULL AUTO_INCREMENT,
 				  method_content LONGTEXT,
 				  approved_by SMALLINT(6) DEFAULT NULL,

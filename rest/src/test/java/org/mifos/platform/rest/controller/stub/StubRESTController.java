@@ -28,27 +28,27 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class StubRESTController {
 
-    @RequestMapping(value = "create", method = RequestMethod.POST)
-    public @ResponseBody String createCall(@PathVariable String arg) throws Exception {
+    @RequestMapping(value = "read", method = RequestMethod.GET)
+    public @ResponseBody String readCall(@PathVariable String arg) throws Exception {
         return dummyCall(arg);
     }
 
-    @RequestMapping(value = "read", method = RequestMethod.GET)
-    public @ResponseBody String readCall(@PathVariable String arg) throws Exception {
-        return arg;
-    }
-
-    @RequestMapping(value = "update", method = RequestMethod.PUT)
+    @RequestMapping(value = "update", method = RequestMethod.POST)
     public @ResponseBody String updateCall(@PathVariable String arg) throws Exception {
-        return arg;
+        return dummyCall(arg);
     }
 
+    @RequestMapping(value = "create", method = RequestMethod.PUT)
+    public @ResponseBody String createCall(@PathVariable String arg) throws Exception {
+        return dummyCall(arg);
+    }
+    
     @RequestMapping(value = "delete", method = RequestMethod.DELETE)
     public @ResponseBody String deleteCall(@PathVariable String arg) throws Exception {
-        return arg;
+        return dummyCall(arg);
     }
 
     private String dummyCall(String arg) {
-        return arg;
+        return dummyCall(arg);
     }
 }

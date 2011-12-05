@@ -420,6 +420,12 @@
                 <version>1.0.0.GA</version>
             </dependency>
             <!-- #### #### Hibernate Validator #### #### -->
+	        <dependency>
+				<groupId>org.hsqldb</groupId>
+				<artifactId>hsqldb</artifactId>
+				<version>2.2.6</version>
+				<scope>test</scope>
+			</dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>

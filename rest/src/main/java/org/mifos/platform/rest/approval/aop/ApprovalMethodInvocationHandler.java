@@ -19,23 +19,41 @@
  */
 package org.mifos.platform.rest.approval.aop;
 
+import java.lang.reflect.Method;
+
 import org.aopalliance.intercept.MethodInvocation;
+import org.mifos.platform.rest.approval.domain.ApprovalMethod;
+import org.mifos.platform.rest.approval.service.ApprovalService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 public class ApprovalMethodInvocationHandler implements MethodInvocationHandler {
-
+    
+	@Autowired
+    ApprovalService approvalService;
+	
     @Override
     public Object process(MethodInvocation invocation) throws Throwable {
-        long start = System.currentTimeMillis();
-        System.out.println("Method: " + invocation.toString() +" Started");
-        try {
-            Object result = invocation.proceed();
-            return result;
+    	Method m = invocation.getMethod();
+        RequestMapping mapping = m.getAnnotation(RequestMapping.class);
+
+        if(isReadOnly(mapping)) {
+            return invocation.proceed();
         }
-        finally {
-            long end = System.currentTimeMillis();
-            long timeMs = end - start;
-            System.out.println("Method: " + invocation.toString() + " took: " + timeMs +"ms.");
-        }
+
+        Object[] argValues = invocation.getArguments();
+        Class<?>[] argTypes = m.getParameterTypes();
+        String methodName = m.getName();
+        Class<?> methodClassType = m.getDeclaringClass();
+        
+        ApprovalMethod method = new ApprovalMethod(methodName, methodClassType, argTypes, argValues);
+        approvalService.create(method);
+        return invocation.proceed();
     }
+
+	private boolean isReadOnly(RequestMapping mapping) {
+		return mapping.method().length == 1 && mapping.method()[0] == RequestMethod.GET;
+	}
 
 }

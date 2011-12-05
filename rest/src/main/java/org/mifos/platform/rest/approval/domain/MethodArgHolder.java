@@ -6,7 +6,12 @@ public class MethodArgHolder {
 
     private Object[] values;
 
-    public void setTypes(Class<?>[] types) {
+    public MethodArgHolder(Class<?>[] types, Object[] values) {
+		this.types = types;
+		this.values = values;
+	}
+
+	public void setTypes(Class<?>[] types) {
         this.types = types;
     }
 

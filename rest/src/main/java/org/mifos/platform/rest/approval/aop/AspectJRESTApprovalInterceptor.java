@@ -19,6 +19,8 @@
  */
 package org.mifos.platform.rest.approval.aop;
 
+import java.lang.reflect.Method;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -26,7 +28,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.mifos.platform.rest.approval.domain.ApprovalMethod;
-import org.mifos.platform.rest.approval.domain.MethodArgHolder;
 import org.mifos.platform.rest.approval.service.ApprovalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,30 +49,34 @@ public class AspectJRESTApprovalInterceptor {
 
     @Around("restMethods() && requestMapping()")
     public Object profile(ProceedingJoinPoint pjp) throws Throwable {
-        Signature signature = pjp.getStaticPart().getSignature();
-        if(signature instanceof MethodSignature){
+        try {
+            Signature signature = pjp.getStaticPart().getSignature();
+            if (signature instanceof MethodSignature) {
+                MethodSignature ms = (MethodSignature) signature;
+                Method m = ms.getMethod();
+                RequestMapping mapping = m.getAnnotation(RequestMapping.class);
 
-            MethodSignature ms = (MethodSignature) signature;
-            Class<?>[] types = ms.getParameterTypes();
-            RequestMapping mapping = ms.getMethod().getAnnotation(RequestMapping.class);
+                if (isReadOnly(mapping)) {
+                    return pjp.proceed();
+                }
 
-            if(mapping.method().length == 1 && mapping.method()[0] == RequestMethod.GET) {
-                return pjp.proceed();
+                Object[] argValues = pjp.getArgs();
+
+                Class<?>[] argTypes = m.getParameterTypes();
+                String methodName = m.getName();
+                Class<?> methodClassType = m.getDeclaringClass();
+
+                ApprovalMethod method = new ApprovalMethod(methodName, methodClassType, argTypes, argValues);
+                approvalService.create(method);
             }
-
-            Object[] values = pjp.getArgs();
-            MethodArgHolder argsHolder = new MethodArgHolder();
-            argsHolder.setTypes(types);
-            argsHolder.setValues(values);
-
-            ApprovalMethod method = new ApprovalMethod();
-            method.setArgsHolder(argsHolder);
-            method.setName(ms.getMethod().getName());
-            method.setType(ms.getDeclaringType());
-
-            approvalService.create(method);
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
         }
-        return null;
+        return pjp.proceed();
     }
+
+	private boolean isReadOnly(RequestMapping mapping) {
+		return mapping.method().length == 1 && mapping.method()[0] == RequestMethod.GET;
+	}
 
 }

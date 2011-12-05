@@ -8,7 +8,14 @@ public class ApprovalMethod {
 
     MethodArgHolder argsHolder;
 
-    public String getName() {
+	public ApprovalMethod(String methodName, Class<?> objectType,
+			Class<?>[] types, Object[] values) {
+		name = methodName;
+		type = objectType;
+		this.argsHolder = new MethodArgHolder(types, values);
+	}
+
+	public String getName() {
         return name;
     }
 

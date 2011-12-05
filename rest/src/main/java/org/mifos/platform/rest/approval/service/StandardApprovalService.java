@@ -13,6 +13,7 @@ import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StandardApprovalService implements ApprovalService {
@@ -22,6 +23,19 @@ public class StandardApprovalService implements ApprovalService {
 
     private boolean skipCreate;
 
+    @Transactional(readOnly=true)
+    @Override
+    public RESTApprovalEntity getDetails(Long id) {
+        return approvalDao.getDetails(id);
+    }
+
+    @Transactional(readOnly=true)
+    @Override
+    public List<RESTApprovalEntity> getWaitingForApproval() {
+        return approvalDao.getDetailsAll();
+    }
+
+    @Transactional
     @Override
     public void create(ApprovalMethod method) throws Exception {
         if(!skipCreate) {
@@ -32,10 +46,11 @@ public class StandardApprovalService implements ApprovalService {
             entity.setCreatedBy((short) user.getUserId());
             entity.setCreatedOn(new DateTime());
             approvalDao.create(entity);
-            // Throw exception here
+            throw new RESTCallInterruptException();
         }
     }
 
+    @Transactional
     @Override
     public void approve(Long id) throws Exception {
         RESTApprovalEntity entity = approvalDao.getDetails(id);
@@ -49,16 +64,12 @@ public class StandardApprovalService implements ApprovalService {
         approvalDao.update(entity);
     }
 
+    @Transactional
     @Override
     public void reject(Long id) {
         RESTApprovalEntity entity = approvalDao.getDetails(id);
         entity.setState(ApprovalState.REJECTED);
         approvalDao.update(entity);
-    }
-
-    @Override
-    public List<RESTApprovalEntity> getWaitingForApproval() {
-        return approvalDao.getDetailsAll();
     }
 
 }
