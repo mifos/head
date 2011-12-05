@@ -28,6 +28,7 @@ import org.mifos.dto.domain.CenterCreationDetail;
 import org.mifos.dto.domain.CenterDto;
 import org.mifos.dto.domain.CenterInformationDto;
 import org.mifos.dto.domain.CenterUpdate;
+import org.mifos.dto.domain.CustomerChargesDetailsDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
@@ -66,6 +67,9 @@ public interface CenterServiceFacade {
     // General
     @PreAuthorize("isFullyAuthenticated()")
     CustomerStatusDetailDto retrieveCustomerStatusDetails(Short newStatusId, Short flagIdValue, Short value);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    CustomerChargesDetailsDto retrieveChargesDetails(Integer customerId);
 
     @PreAuthorize("isFullyAuthenticated()")
     List<CustomerRecentActivityDto> retrieveRecentActivities(Integer customerId, Integer countOfActivities);

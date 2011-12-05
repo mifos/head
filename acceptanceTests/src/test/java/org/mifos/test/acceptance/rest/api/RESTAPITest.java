@@ -115,8 +115,32 @@ public class RESTAPITest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
+    public void groupChargesByGlobalNum() throws Exception {
+        String type = Type.GROUP_CHARGES;
+        String by = By.GLOBAL_NUMBER;
+        String value = GROUP_GLOBAL_ID;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        ObjectMapper mapper = helper.getObjectMapper();
+        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly")
     public void centerByGlobalNum() throws Exception {
         String type = Type.CENTER;
+        String by = By.GLOBAL_NUMBER;
+        String value = CENTER_GLOBAL_ID;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        ObjectMapper mapper = helper.getObjectMapper();
+        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly")
+    public void centerChargesByGlobalNum() throws Exception {
+        String type = Type.CENTER_CHARGES;
         String by = By.GLOBAL_NUMBER;
         String value = CENTER_GLOBAL_ID;
         String actualJSON = helper.getJSONFromUI(type, by, value);

@@ -24,12 +24,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
@@ -40,17 +38,14 @@ import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingFactory;
-import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
-import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerNoteEntity;
-import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientDetailEntity;
@@ -68,7 +63,6 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CenterCreation;
-import org.mifos.dto.domain.ClientChargesDetailsDto;
 import org.mifos.dto.domain.ClientCreationDetail;
 import org.mifos.dto.domain.ClientFamilyDetailsDto;
 import org.mifos.dto.domain.ClientFamilyInfoUpdate;
@@ -79,11 +73,9 @@ import org.mifos.dto.domain.CustomerAccountSummaryDto;
 import org.mifos.dto.domain.CustomerAddressDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
-import org.mifos.dto.domain.AccountFeeScheduleDto;
 import org.mifos.dto.domain.CustomerFlagDto;
 import org.mifos.dto.domain.CustomerMeetingDto;
 import org.mifos.dto.domain.CustomerNoteDto;
-import org.mifos.dto.domain.CustomerScheduleDto;
 import org.mifos.dto.domain.FamilyDetailDto;
 import org.mifos.dto.domain.LoanDetailDto;
 import org.mifos.dto.domain.MeetingDto;
@@ -93,7 +85,6 @@ import org.mifos.dto.domain.ProcessRulesDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
-import org.mifos.dto.screen.AccountFeesDto;
 import org.mifos.dto.screen.ClientDetailDto;
 import org.mifos.dto.screen.ClientDisplayDto;
 import org.mifos.dto.screen.ClientDropdownsDto;
@@ -271,56 +262,6 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         }
 
         return new ClientFamilyDetailsDto(familyDetailsRequired, familyDetails, genders, livingStatus);
-    }
-
-    @Override
-    public ClientChargesDetailsDto retrieveChargesDetails(Integer customerId) {
-
-        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = new UserContextFactory().create(mifosUser);
-
-        CustomerBO customerBO = this.customerDao.findCustomerById(customerId);
-        CustomerAccountBO customerAccount = customerBO.getCustomerAccount();
-
-        List<AccountFeesDto> accountFeesDtos = new ArrayList<AccountFeesDto>();
-        if(!customerAccount.getAccountFees().isEmpty()) {
-            for (AccountFeesEntity accountFeesEntity: customerAccount.getAccountFees()) {
-                AccountFeesDto accountFeesDto = new AccountFeesDto(accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId(),
-                                                                  accountFeesEntity.getFeeStatus(), accountFeesEntity.getFees().getFeeName(),
-                                                                  accountFeesEntity.getAccountFeeAmount().toString(),
-                                                                  getMeetingRecurrence(accountFeesEntity.getFees().getFeeFrequency()
-                                                                          .getFeeMeetingFrequency(), userContext),
-                                                                  accountFeesEntity.getFees().getFeeId());
-                accountFeesDtos.add(accountFeesDto);
-            }
-        }
-
-        CustomerScheduleDto customerSchedule = null;
-        CustomerScheduleEntity scheduleEntity = (CustomerScheduleEntity) customerAccount.getUpcomingInstallment();
-        if (scheduleEntity != null) {
-            Set<AccountFeesActionDetailEntity> feeEntities =  scheduleEntity.getAccountFeesActionDetails();
-
-            List<AccountFeeScheduleDto> feeDtos = new ArrayList<AccountFeeScheduleDto>();
-            for (AccountFeesActionDetailEntity feeEntity : feeEntities) {
-                feeDtos.add(convertToDto(feeEntity));
-            }
-
-            customerSchedule = new CustomerScheduleDto(scheduleEntity.getMiscFee().toString(),
-                    scheduleEntity.getMiscFeePaid().toString(), scheduleEntity.getMiscPenalty().toString(),
-                    scheduleEntity.getMiscPenaltyPaid().toString(), feeDtos);
-        }
-
-        return new ClientChargesDetailsDto(customerAccount.getNextDueAmount().toString(),
-                customerAccount.getTotalAmountInArrears().toString(),
-                customerAccount.getTotalAmountDue().toString(),
-                customerAccount.getUpcomingChargesDate(),
-                customerSchedule,
-                accountFeesDtos);
-    }
-
-    private AccountFeeScheduleDto convertToDto(AccountFeesActionDetailEntity feeEntity) {
-        return new AccountFeeScheduleDto(feeEntity.getFee().getFeeName(), feeEntity.getFeeAmount().toString(),
-                feeEntity.getFeeAmountPaid().toString(), feeEntity.getFeeAllocated().toString());
     }
 
     @Override
@@ -804,9 +745,5 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         Long contentLength = clientPhoto.getImageInfo().getLength();
         byte[] out = clientPhotoService.getData(clientPhoto.getImageInfo().getPath());
         return new ClientPhotoDto(contentType, contentLength, out);
-    }
-
-    private String getMeetingRecurrence(MeetingBO meeting, UserContext userContext) {
-        return meeting != null ? new MeetingHelper().getMessageWithFrequency(meeting, userContext) : null;
     }
 }
