@@ -25,13 +25,13 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 @ContextConfiguration("/test-context.xml")
 @TransactionConfiguration
 public class AspectJApprovalInterceptorTest {
-	
+
     @Autowired
     StubRESTController stubRestController;
-	
+
     @Autowired
     ApprovalService approvalService;
-    
+
     @BeforeClass
     public static void init() {
         SecurityContext securityContext = new SecurityContextImpl();
@@ -40,7 +40,7 @@ public class AspectJApprovalInterceptorTest {
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);
     }
-    
+
 	@Test
 	@Transactional
 	public void testRESTCallExecution() throws Exception {
