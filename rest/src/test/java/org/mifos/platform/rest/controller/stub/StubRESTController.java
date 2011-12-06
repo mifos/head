@@ -49,6 +49,6 @@ public class StubRESTController {
     }
 
     private String dummyCall(String arg) {
-        return dummyCall(arg);
+        return arg;
     }
 }

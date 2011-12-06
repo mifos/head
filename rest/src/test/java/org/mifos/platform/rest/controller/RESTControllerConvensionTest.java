@@ -21,6 +21,10 @@ package org.mifos.platform.rest.controller;
 
 import java.lang.reflect.Method;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpSession;
+
 import javassist.Modifier;
 
 import junit.framework.Assert;
@@ -28,6 +32,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.mifos.platform.util.ClassUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 public class RESTControllerConvensionTest {
 
@@ -47,6 +52,14 @@ public class RESTControllerConvensionTest {
                 RequestMapping mapping = method.getAnnotation(RequestMapping.class);
                 Assert.assertTrue("Exactly one request mapping method should be used in "+name,
                                   mapping.method().length == 1);
+                if(mapping.method()[0] != RequestMethod.GET) {
+                	for(Class<?> type : method.getParameterTypes()) {
+                	    // Having these as argument will be a problem for serializing method
+                		Assert.assertFalse("request arg is not allowed " + name, type.isInstance(ServletRequest.class));
+                		Assert.assertFalse("response arg is not allowed " + name, type.isInstance(ServletResponse.class));
+                		Assert.assertFalse("session arg is not allowed " + name, type.isInstance(HttpSession.class));
+                	}
+                }
             }
         }
     }

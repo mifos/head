@@ -51,6 +51,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -70,9 +71,8 @@ public class LoanAccountRESTController {
 
     @RequestMapping(value = "/account/loan/repay/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
-    Map<String, String> repay(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
+    Map<String, String> repay(@PathVariable String globalAccountNum, @RequestParam(value="amount") String amountString) throws Exception {
 
-        String amountString = request.getParameter("amount");
         BigDecimal amount = new BigDecimal(amountString);
 
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
