@@ -37,6 +37,9 @@ public class RESTApprovalEntity {
     @Type(type="org.joda.time.contrib.hibernate.PersistentDateTime")
     private DateTime approvedOn;
 
+    @Transient
+    private ApprovalMethod approvalMethod;
+
     public Long getId() {
         return id;
     }
@@ -85,18 +88,6 @@ public class RESTApprovalEntity {
         this.approvedOn = approvedOn;
     }
 
-    @Transient
-    public ApprovalMethod getApprovalMethod() throws Exception {
-        ObjectMapper om = new ObjectMapper();
-        return om.readValue(methodContent, ApprovalMethod.class);
-    }
-
-    @Transient
-    public void setApprovalMethod(ApprovalMethod method) throws Exception {
-        ObjectMapper om = new ObjectMapper();
-        this.methodContent = om.writeValueAsString(method);
-    }
-
     public ApprovalState getState() {
         return state;
     }
@@ -104,4 +95,32 @@ public class RESTApprovalEntity {
     public void setState(ApprovalState state) {
         this.state = state;
     }
+
+
+    @Transient
+    public ApprovalMethod getApprovalMethod() throws Exception {
+        if (approvalMethod == null) {
+            ObjectMapper om = new ObjectMapper();
+            approvalMethod = om.readValue(methodContent, ApprovalMethod.class);
+        }
+        return approvalMethod;
+    }
+
+    @Transient
+    public void setApprovalMethod(ApprovalMethod method) throws Exception {
+        approvalMethod = method;
+        ObjectMapper om = new ObjectMapper();
+        this.methodContent = om.writeValueAsString(method);
+    }
+
+    @Transient
+    public String getType() throws Exception {
+        return getApprovalMethod().getType().getSimpleName().replace("RESTController", "");
+    }
+
+    @Transient
+    public String getOperation() throws Exception {
+        return getApprovalMethod().getName();
+    }
+
 }

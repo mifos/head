@@ -30,6 +30,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.rest.approval.domain.ApprovalMethod;
+import org.mifos.rest.approval.domain.MethodArgHolder;
 import org.mifos.rest.approval.service.ApprovalService;
 import org.mifos.rest.config.RESTConfigKey;
 import org.slf4j.Logger;
@@ -107,7 +108,8 @@ public class AspectJRESTApprovalInterceptor {
 			Class<?>[] argTypes = m.getParameterTypes();
 			String methodName = m.getName();
 
-			ApprovalMethod method = new ApprovalMethod(methodName, methodClassType, argTypes, argValues);
+	        MethodArgHolder args = new MethodArgHolder(argTypes, argValues);
+			ApprovalMethod method = new ApprovalMethod(methodName, methodClassType, args);
 			approvalService.create(method);
 		}
         return pjp.proceed();

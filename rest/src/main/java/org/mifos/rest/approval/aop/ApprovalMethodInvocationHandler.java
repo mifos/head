@@ -23,16 +23,17 @@ import java.lang.reflect.Method;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.mifos.rest.approval.domain.ApprovalMethod;
+import org.mifos.rest.approval.domain.MethodArgHolder;
 import org.mifos.rest.approval.service.ApprovalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 public class ApprovalMethodInvocationHandler implements MethodInvocationHandler {
-    
+
 	@Autowired
     ApprovalService approvalService;
-	
+
     @Override
     public Object process(MethodInvocation invocation) throws Throwable {
     	Method m = invocation.getMethod();
@@ -46,8 +47,9 @@ public class ApprovalMethodInvocationHandler implements MethodInvocationHandler 
         Class<?>[] argTypes = m.getParameterTypes();
         String methodName = m.getName();
         Class<?> methodClassType = m.getDeclaringClass();
-        
-        ApprovalMethod method = new ApprovalMethod(methodName, methodClassType, argTypes, argValues);
+
+        MethodArgHolder args = new MethodArgHolder(argTypes, argValues);
+        ApprovalMethod method = new ApprovalMethod(methodName, methodClassType, args);
         approvalService.create(method);
         return invocation.proceed();
     }

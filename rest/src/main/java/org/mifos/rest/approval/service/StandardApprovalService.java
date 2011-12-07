@@ -42,8 +42,7 @@ public class StandardApprovalService implements ApprovalService {
             RESTApprovalEntity entity = new RESTApprovalEntity();
             entity.setApprovalMethod(method);
             entity.setState(ApprovalState.WAITING);
-            MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            entity.setCreatedBy((short) user.getUserId());
+            entity.setCreatedBy(getCurrentUserId());
             entity.setCreatedOn(new DateTime());
             approvalDao.create(entity);
             throw new RESTCallInterruptException();
@@ -56,10 +55,14 @@ public class StandardApprovalService implements ApprovalService {
         RESTApprovalEntity entity = approvalDao.getDetails(id);
         ApprovalMethod am = entity.getApprovalMethod();
         entity.setState(ApprovalState.APPROVED);
+
         Method m = am.getType().getMethod(am.getName(), am.getArgsHolder().getTypes());
         skipCreate = true;
         // FIXME: What should be done with the returned object ?
         Object object = m.invoke(ApplicationContextProvider.getBean(am.getType()), am.getArgsHolder().getValues());
+
+        entity.setApprovedBy(getCurrentUserId());
+        entity.setApprovedOn(new DateTime());
         skipCreate = false;
         approvalDao.update(entity);
     }
@@ -68,8 +71,15 @@ public class StandardApprovalService implements ApprovalService {
     @Override
     public void reject(Long id) {
         RESTApprovalEntity entity = approvalDao.getDetails(id);
+        entity.setApprovedBy(getCurrentUserId());
+        entity.setApprovedOn(new DateTime());
         entity.setState(ApprovalState.REJECTED);
         approvalDao.update(entity);
+    }
+
+    private Short getCurrentUserId() {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return (short) user.getUserId();
     }
 
 }
