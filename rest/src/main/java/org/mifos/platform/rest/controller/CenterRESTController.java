@@ -20,7 +20,10 @@
 package org.mifos.platform.rest.controller;
 
 import org.mifos.application.servicefacade.CenterServiceFacade;
+import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.dto.domain.CenterInformationDto;
+import org.mifos.dto.domain.CustomerChargesDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,9 +37,23 @@ public class CenterRESTController {
     @Autowired
     private CenterServiceFacade centerServiceFacade;
 
+    @Autowired
+    private CustomerDao customerDao;
+
     @RequestMapping(value = "center/num-{globalCustNum}", method = RequestMethod.GET)
     public @ResponseBody
     CenterInformationDto getCenterByNumber(@PathVariable String globalCustNum) {
         return centerServiceFacade.getCenterInformationDto(globalCustNum);
+    }
+
+    @RequestMapping(value = "center/charges/num-{globalCustNum}", method = RequestMethod.GET)
+    public @ResponseBody
+    CustomerChargesDetailsDto getCenterChargesByNumber(@PathVariable String globalCustNum) {
+        CenterBO centerBO = customerDao.findCenterBySystemId(globalCustNum);
+
+        CustomerChargesDetailsDto centerCharges = centerServiceFacade.retrieveChargesDetails(centerBO.getCustomerId());
+        centerCharges.addActivities(centerServiceFacade.retrieveRecentActivities(centerBO.getCustomerId(), 3));
+
+        return centerCharges;
     }
 }

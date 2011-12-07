@@ -1,27 +1,15 @@
 {
    "nextDueDetail":{
-      "dueDate":[
-         2011,
-         9,
-         19
-      ],
+      "dueDate":"2011-09-19",
       "dueAmount":"105.0"
    },
    "previousDueDetails":[
       {
-         "dueDate":[
-            2011,
-            9,
-            12
-         ],
+         "dueDate":"2011-09-12",
          "dueAmount":"5.0"
       },
       {
-         "dueDate":[
-            2011,
-            9,
-            19
-         ],
+         "dueDate":"2011-09-19",
          "dueAmount":"100.0"
       }
    ],

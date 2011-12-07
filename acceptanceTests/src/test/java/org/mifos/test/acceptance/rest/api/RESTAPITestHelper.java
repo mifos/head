@@ -40,11 +40,16 @@ public class RESTAPITestHelper {
 
     private final Selenium selenium;
 
+	private static final String LOANOFFICER_PASSWORD = "testmifos";
+    private static final String LOANOFFICER_USERNAME = "loanofficer"; 
+    
     public static class Type {
         public static final String CLIENT = "client";
         public static final String CLIENT_CHARGES = "client/charges";
         public static final String GROUP = "group";
+        public static final String GROUP_CHARGES = "group/charges";
         public static final String CENTER = "center";
+        public static final String CENTER_CHARGES = "center/charges";
         public static final String CENTER_COLLECTIONSHEET = "collectionsheet/customer";
         public static final String PERSONNEL = "personnel";
         public static final String PERSONNEL_CLIENTS = "personnel/clients";
@@ -54,6 +59,9 @@ public class RESTAPITestHelper {
         public static final String LOAN_INSTALLMENT = "account/loan/installment";
         public static final String LOAN_SCHEDULE = "account/loan/schedule";
         public static final String LOAN_REPAYMENT = "account/loan/repay";
+        public static final String LOAN_FULL_REPAYMENT = "account/loan/fullrepay";
+        public static final String LOAN_DISBURSEMENT = "account/loan/disburse";
+        public static final String LOAN_ADJUSTMENT = "account/loan/adjustment";
         public static final String SAVINGS = "account/savings";
         public static final String SAVINGS_DUE = "account/savings/due";
         public static final String SAVINGS_DEPOSIT = "account/savings/deposit";
@@ -63,6 +71,7 @@ public class RESTAPITestHelper {
     public static class By {
         public static final String GLOBAL_NUMBER = "num";
         public static final String ID = "id";
+        public static final String MEETINGS = "meetings";
     }
 
     public RESTAPITestHelper(Selenium selenium) {
@@ -73,6 +82,12 @@ public class RESTAPITestHelper {
         LoginPage loginPage = new AppLauncher(selenium).launchMifos();
         loginPage.loginSuccessfullyUsingDefaultCredentials();
         selenium.open("jsonAjax.ftl");
+    }
+    
+    public void navigateToJsonAjaxPageAsLoanOfficer() {
+        LoginPage loginPage = new AppLauncher(selenium).launchMifos();
+        loginPage.loginSuccessfulAs(LOANOFFICER_USERNAME, LOANOFFICER_PASSWORD);
+        selenium.open("jsonAjax.ftl"); 
     }
 
     public String getJSONFromUI(String type, String by, String value) throws InterruptedException {

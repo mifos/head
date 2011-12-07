@@ -112,35 +112,29 @@ explanation of the license and how it is applied.
 										name="CustomerSearch.select" />&nbsp;<mifos:mifoslabel
 										name="${ConfigurationConstants.BRANCHOFFICE}" /> </span></td>
 								</tr>
-							</table>
-							<div id="Layer2"
-								style="border: 1px solid #CECECE; height:100px; width:100%; overflow: auto; padding:6px; margin-top:5px;">
-							<span class="fontnormal">
-							
-									<c:choose>
-										<c:when test="${ not empty OfficesList }">
-										
-							
-							
-							 <c:forEach
-								items="${OfficesList}" var="office">
-								<html-el:link styleId="client_accounts.link.selectBranchOffice" action="custSearchAction.do?method=preview&officeId=${office.officeId}&currentFlowKey=${requestScope.currentFlowKey}"
-									>
-									<c:out value="${office.officeName}" />
-								</html-el:link>
-								<br>
-							</c:forEach> 
-									  </c:when>
-									<c:otherwise>
-											<mifos:mifoslabel name="CustomerSearch.noEntityAvailablePrefix"/>
-											<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"/>
-											<mifos:mifoslabel name="CustomerSearch.noEntityAvailableSuffix"/>
-									</c:otherwise>
-									</c:choose>
-							
-							
-							
-							</span></div>
+                                <tr class="fontnormal">
+                                    <td style="border: 1px solid #CECECE; height:100px; width:100%; padding:6px; margin-top:5px;">
+							         <span class="fontnormal">
+									   <c:choose>
+										  <c:when test="${ not empty OfficesList }">
+							                 <c:forEach items="${OfficesList}" var="office">
+								                <html-el:link styleId="client_accounts.link.selectBranchOffice"
+                                                    action="custSearchAction.do?method=preview&officeId=${office.officeId}&currentFlowKey=${requestScope.currentFlowKey}">
+									               <c:out value="${office.officeName}" />
+								                </html-el:link>
+								                <br>
+							                 </c:forEach> 
+									      </c:when>
+									      <c:otherwise>
+										      <mifos:mifoslabel name="CustomerSearch.noEntityAvailablePrefix"/>
+										      <mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"/>
+									          <mifos:mifoslabel name="CustomerSearch.noEntityAvailableSuffix"/>
+									      </c:otherwise>
+									  </c:choose>
+							         </span>
+                                    </td>
+                                </tr>
+                             </table>
 							</td>
 						</tr>
 					</table>

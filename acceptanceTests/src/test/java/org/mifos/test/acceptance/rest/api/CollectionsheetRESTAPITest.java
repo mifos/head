@@ -61,7 +61,7 @@ public class CollectionsheetRESTAPITest extends UiTestCaseBase {
         super.setUp();
         //Given
         dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "REST_API_20110912_dbunit.xml", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "REST_API_20110912_cs_dbunit.xml", dataSource, selenium);
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2011, 10, 10, 13, 0, 0, 0));
         helper = new RESTAPITestHelper(selenium);
         helper.navigateToJsonAjaxPage();
