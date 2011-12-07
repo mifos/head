@@ -1,4 +1,4 @@
-package org.mifos.platform.rest.approval.aop;
+package org.mifos.rest.approval.aop;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;

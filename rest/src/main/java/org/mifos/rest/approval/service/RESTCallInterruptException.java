@@ -1,4 +1,4 @@
-package org.mifos.platform.rest.approval.service;
+package org.mifos.rest.approval.service;
 
 public class RESTCallInterruptException extends Exception {
 

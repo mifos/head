@@ -1,4 +1,4 @@
-package org.mifos.platform.rest.approval.service;
+package org.mifos.rest.approval.service;
 
 import static org.junit.Assert.*;
 
@@ -9,8 +9,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.builders.MifosUserBuilder;
-import org.mifos.platform.rest.approval.domain.ApprovalMethod;
 import org.mifos.platform.rest.controller.stub.StubRESTController;
+import org.mifos.rest.approval.domain.ApprovalMethod;
+import org.mifos.rest.approval.service.ApprovalService;
+import org.mifos.rest.approval.service.RESTCallInterruptException;
 import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.TestingAuthenticationToken;

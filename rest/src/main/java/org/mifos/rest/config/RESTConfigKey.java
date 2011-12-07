@@ -1,4 +1,4 @@
-package org.mifos.platform.rest.config;
+package org.mifos.rest.config;
 
 import org.apache.commons.lang.StringUtils;
 

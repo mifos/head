@@ -1,14 +1,14 @@
-package org.mifos.platform.rest.approval.service;
+package org.mifos.rest.approval.service;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
-import org.mifos.platform.rest.approval.dao.ApprovalDao;
-import org.mifos.platform.rest.approval.domain.ApprovalMethod;
-import org.mifos.platform.rest.approval.domain.ApprovalState;
-import org.mifos.platform.rest.approval.domain.RESTApprovalEntity;
+import org.mifos.rest.approval.dao.ApprovalDao;
+import org.mifos.rest.approval.domain.ApprovalMethod;
+import org.mifos.rest.approval.domain.ApprovalState;
+import org.mifos.rest.approval.domain.RESTApprovalEntity;
 import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;

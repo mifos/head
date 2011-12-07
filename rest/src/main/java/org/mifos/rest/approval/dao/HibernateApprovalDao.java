@@ -1,10 +1,10 @@
-package org.mifos.platform.rest.approval.dao;
+package org.mifos.rest.approval.dao;
 
 import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
-import org.mifos.platform.rest.approval.domain.RESTApprovalEntity;
+import org.mifos.rest.approval.domain.RESTApprovalEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.rest.approval.aop;
+package org.mifos.rest.approval.aop;
 
 import java.lang.reflect.Method;
 
@@ -29,9 +29,9 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
-import org.mifos.platform.rest.approval.domain.ApprovalMethod;
-import org.mifos.platform.rest.approval.service.ApprovalService;
-import org.mifos.platform.rest.config.RESTConfigKey;
+import org.mifos.rest.approval.domain.ApprovalMethod;
+import org.mifos.rest.approval.service.ApprovalService;
+import org.mifos.rest.config.RESTConfigKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

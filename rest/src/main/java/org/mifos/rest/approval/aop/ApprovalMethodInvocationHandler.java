@@ -17,13 +17,13 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.rest.approval.aop;
+package org.mifos.rest.approval.aop;
 
 import java.lang.reflect.Method;
 
 import org.aopalliance.intercept.MethodInvocation;
-import org.mifos.platform.rest.approval.domain.ApprovalMethod;
-import org.mifos.platform.rest.approval.service.ApprovalService;
+import org.mifos.rest.approval.domain.ApprovalMethod;
+import org.mifos.rest.approval.service.ApprovalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

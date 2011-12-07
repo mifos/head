@@ -1,9 +1,9 @@
-package org.mifos.platform.rest.approval.service;
+package org.mifos.rest.approval.service;
 
 import java.util.List;
 
-import org.mifos.platform.rest.approval.domain.ApprovalMethod;
-import org.mifos.platform.rest.approval.domain.RESTApprovalEntity;
+import org.mifos.rest.approval.domain.ApprovalMethod;
+import org.mifos.rest.approval.domain.RESTApprovalEntity;
 
 public interface ApprovalService {
 

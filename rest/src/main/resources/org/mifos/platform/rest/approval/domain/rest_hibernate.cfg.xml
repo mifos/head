@@ -4,6 +4,6 @@
     "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <mapping class="org.mifos.platform.rest.approval.domain.RESTApprovalEntity" />
+        <mapping class="org.mifos.rest.approval.domain.RESTApprovalEntity" />
     </session-factory>
 </hibernate-configuration>

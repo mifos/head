@@ -1,8 +1,8 @@
-package org.mifos.platform.rest.approval.dao;
+package org.mifos.rest.approval.dao;
 
 import java.util.List;
 
-import org.mifos.platform.rest.approval.domain.RESTApprovalEntity;
+import org.mifos.rest.approval.domain.RESTApprovalEntity;
 
 public interface ApprovalDao {
 

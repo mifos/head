@@ -1,4 +1,4 @@
-package org.mifos.platform.rest.approval.domain;
+package org.mifos.rest.approval.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -34,6 +34,7 @@ public class RESTApprovalEntity {
 
     private Short approvedBy;
 
+    @Type(type="org.joda.time.contrib.hibernate.PersistentDateTime")
     private DateTime approvedOn;
 
     public Long getId() {

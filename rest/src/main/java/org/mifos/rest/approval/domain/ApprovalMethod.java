@@ -1,4 +1,4 @@
-package org.mifos.platform.rest.approval.domain;
+package org.mifos.rest.approval.domain;
 
 public class ApprovalMethod {
 

@@ -1,4 +1,4 @@
-package org.mifos.platform.rest.approval.aop;
+package org.mifos.rest.approval.aop;
 
 import junit.framework.Assert;
 
@@ -7,9 +7,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.builders.MifosUserBuilder;
 import org.mifos.framework.hibernate.helper.Transactional;
-import org.mifos.platform.rest.approval.service.ApprovalService;
-import org.mifos.platform.rest.approval.service.RESTCallInterruptException;
 import org.mifos.platform.rest.controller.stub.StubRESTController;
+import org.mifos.rest.approval.service.ApprovalService;
+import org.mifos.rest.approval.service.RESTCallInterruptException;
 import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.TestingAuthenticationToken;

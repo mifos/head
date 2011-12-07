@@ -1,8 +1,8 @@
-package org.mifos.platform.rest.approval.stub;
+package org.mifos.rest.approval.stub;
 
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
-import org.mifos.platform.rest.config.RESTConfigKey;
+import org.mifos.rest.config.RESTConfigKey;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -27,7 +27,7 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mifos.platform.rest.approval.service.RESTCallInterruptException;
+import org.mifos.rest.approval.service.RESTCallInterruptException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
@@ -48,7 +48,7 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
             modelAndView.addObject("cause", "The call has been interrupt for approval");
     		return modelAndView;
         }
-        
+
         if (modelAndView == null) {
             modelAndView = super.doResolveException(request, response, handler, ex);
         }
