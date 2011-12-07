@@ -20,19 +20,19 @@
 
 package org.mifos.dto.domain;
 
-import org.joda.time.LocalDate;
+import java.util.Date;
 
 public class DueOnDateDto {
 
-    private final LocalDate dueDate;
+    private final Date dueDate;
     private final String dueAmount;
 
-    public DueOnDateDto(LocalDate dueDate, String dueAmount) {
+    public DueOnDateDto(Date dueDate, String dueAmount) {
         this.dueDate = dueDate;
         this.dueAmount = dueAmount;
     }
 
-    public LocalDate getDueDate() {
+    public Date getDueDate() {
         return this.dueDate;
     }
 
