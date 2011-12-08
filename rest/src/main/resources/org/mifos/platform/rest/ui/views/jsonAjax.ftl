@@ -21,8 +21,8 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
 <span id="page.id" title="json.ajax"></span>
-<script type="text/javascript" src="pages/rest/js/prettyprint.js"></script>
-<script type="text/javascript" src="pages/rest/js/jsonAjax.js"></script>
+<script type="text/javascript" src="js/prettyprint.js"></script>
+<script type="text/javascript" src="js/jsonAjax.js"></script>
 <div class="content "> <!--  Main Content Begins-->
 
 <br>

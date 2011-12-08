@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(rollbackFor=Exception.class)
 public class StandardApprovalService implements ApprovalService {
 
     @Autowired
@@ -31,11 +32,29 @@ public class StandardApprovalService implements ApprovalService {
 
     @Transactional(readOnly=true)
     @Override
-    public List<RESTApprovalEntity> getWaitingForApproval() {
+    public List<RESTApprovalEntity> getAllApprovals() {
         return approvalDao.getDetailsAll();
     }
 
-    @Transactional
+    @Transactional(readOnly=true)
+    @Override
+    public List<RESTApprovalEntity> getWaitingForApproval() {
+        return approvalDao.findByState(ApprovalState.WAITING);
+    }
+
+    @Transactional(readOnly=true)
+    @Override
+    public List<RESTApprovalEntity> getApproved() {
+        return approvalDao.findByState(ApprovalState.APPROVED);
+    }
+
+    @Transactional(readOnly=true)
+    @Override
+    public List<RESTApprovalEntity> getRejected() {
+        return approvalDao.findByState(ApprovalState.REJECTED);
+    }
+
+    @Transactional(noRollbackFor=RESTCallInterruptException.class)
     @Override
     public void create(ApprovalMethod method) throws Exception {
         if(!skipCreate) {
@@ -45,26 +64,27 @@ public class StandardApprovalService implements ApprovalService {
             entity.setCreatedBy(getCurrentUserId());
             entity.setCreatedOn(new DateTime());
             approvalDao.create(entity);
-            throw new RESTCallInterruptException();
+            throw new RESTCallInterruptException(entity.getId());
         }
     }
 
     @Transactional
     @Override
-    public void approve(Long id) throws Exception {
+    public Object approve(Long id) throws Exception {
         RESTApprovalEntity entity = approvalDao.getDetails(id);
         ApprovalMethod am = entity.getApprovalMethod();
         entity.setState(ApprovalState.APPROVED);
 
         Method m = am.getType().getMethod(am.getName(), am.getArgsHolder().getTypes());
         skipCreate = true;
-        // FIXME: What should be done with the returned object ?
-        Object object = m.invoke(ApplicationContextProvider.getBean(am.getType()), am.getArgsHolder().getValues());
+        Object result = m.invoke(ApplicationContextProvider.getBean(am.getType()), am.getArgsHolder().getValues());
 
         entity.setApprovedBy(getCurrentUserId());
         entity.setApprovedOn(new DateTime());
         skipCreate = false;
         approvalDao.update(entity);
+
+        return result;
     }
 
     @Transactional

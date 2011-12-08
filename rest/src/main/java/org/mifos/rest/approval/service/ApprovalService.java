@@ -7,14 +7,20 @@ import org.mifos.rest.approval.domain.RESTApprovalEntity;
 
 public interface ApprovalService {
 
+    List<RESTApprovalEntity> getAllApprovals();
+
     List<RESTApprovalEntity> getWaitingForApproval();
 
     RESTApprovalEntity getDetails(Long id);
 
     void create(ApprovalMethod method) throws Exception;
 
-    void approve(Long id) throws Exception;
+    Object approve(Long id) throws Exception;
 
     void reject(Long id);
+
+    List<RESTApprovalEntity> getApproved();
+
+    List<RESTApprovalEntity> getRejected();
 
 }

@@ -39,15 +39,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+/**
+ * Spring AspectJ Around advice intercept any REST call which is not GET (read-only) <br><br>
+ * (Wanted to use Spring AOP {@link MethodInvocationInterceptor}) but it’s not working for 
+ * some reason though we have {@link ApprovalInterceptor} and its tests and it shows pointcut 
+ * in Springsource STS, but at runtime it’s not working). The downside of using AspectJ based intercepter is 
+ * the dependency on AJDT tooling and m2e aspectj-maven support would be required for 
+ * REST module which makes development environment a little heavier. 
+ * 
+ * @author ugupta
+ */
 @Aspect
 public class AspectJRESTApprovalInterceptor {
 
-	public static final String REST_METHOD = "execution(public * org.mifos.platform.rest.controller.*RESTController.*(..))";
-
-    public static final String REST_TEST_METHOD = "execution(public * org.mifos.platform.rest.controller.stub.*RESTController.*(..))";
-
+	public static final String REST_METHOD = "execution(public * org.mifos.platform.rest.controller..*RESTController.*(..))";
 
 	public static final String REQUEST_MAPPING = "@annotation(org.springframework.web.bind.annotation.RequestMapping)";
+	
+	public static final String EXCLUDE_APPROVAL_API = "!execution(public * org.mifos.platform.rest.controller.ApprovalRESTController.*(..))";
 
 	public static final Logger LOG = LoggerFactory.getLogger(AspectJRESTApprovalInterceptor.class);
 
@@ -58,20 +67,15 @@ public class AspectJRESTApprovalInterceptor {
 	ConfigurationServiceFacade configurationServiceFacade;
 
     @Pointcut(REST_METHOD)
-    public void restMethods() {
-    }
-
-    @Pointcut(REST_TEST_METHOD)
-    public void restTestMethods() {
-    }
+    public void restMethods() {}
+    
+    @Pointcut(EXCLUDE_APPROVAL_API)
+    public void excludeAPI() {}
 
     @Pointcut(REQUEST_MAPPING)
-    public void requestMapping() {
-    }
+    public void requestMapping() {}
 
-    // FIXME : Spring STS has bug which does not allow commented way
-    //@Around(REST_METHOD + " && " + REQUEST_MAPPING)
-    @Around("(restMethods() || restTestMethods()) && requestMapping()")
+    @Around("restMethods() && requestMapping() && excludeAPI()")
     public Object profile(ProceedingJoinPoint pjp) throws Throwable {
         Signature signature = pjp.getStaticPart().getSignature();
         LOG.debug(this.getClass().getSimpleName() + " staring");

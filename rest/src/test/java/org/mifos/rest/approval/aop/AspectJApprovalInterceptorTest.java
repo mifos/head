@@ -44,12 +44,12 @@ public class AspectJApprovalInterceptorTest {
 	@Test
 	@Transactional
 	public void testRESTCallExecution() throws Exception {
-		Assert.assertEquals(0, approvalService.getWaitingForApproval().size());
+		Assert.assertEquals(0, approvalService.getAllApprovals().size());
 		try {
 			stubRestController.createCall("HELLO");
 			Assert.fail("should throw interrupt exception");
 		} catch (RESTCallInterruptException e) {}
-		Assert.assertEquals(1, approvalService.getWaitingForApproval().size());
+		Assert.assertEquals(1, approvalService.getAllApprovals().size());
 	}
 
 }

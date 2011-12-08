@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
+import org.hibernate.criterion.Restrictions;
+import org.mifos.rest.approval.domain.ApprovalState;
 import org.mifos.rest.approval.domain.RESTApprovalEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -33,6 +35,12 @@ public class HibernateApprovalDao implements ApprovalDao {
     @Override
     public List<RESTApprovalEntity> getDetailsAll() {
         return getSession().createCriteria(RESTApprovalEntity.class).list();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<RESTApprovalEntity> findByState(ApprovalState state) {
+        return getSession().createCriteria(RESTApprovalEntity.class).add(Restrictions.eq("state", state)).list();
     }
 
     private Session getSession() {

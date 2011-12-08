@@ -45,6 +45,7 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
         if (modelAndView == null && ex instanceof RESTCallInterruptException) {
             modelAndView = new ModelAndView();
             modelAndView.addObject("status", "interrupt");
+            modelAndView.addObject("approvalId", ((RESTCallInterruptException) ex).getApprovalId());
             modelAndView.addObject("cause", "The call has been interrupt for approval");
     		return modelAndView;
         }
