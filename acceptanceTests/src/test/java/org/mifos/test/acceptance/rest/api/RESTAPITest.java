@@ -391,7 +391,7 @@ public class RESTAPITest extends UiTestCaseBase {
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(dependsOnGroups="readOnly", dependsOnMethods = "repayLoanByGlobalNum")
-    public void applyAdjustmentByGlobalNum() throws Exception {
+    public void applyLoanAdjustmentByGlobalNum() throws Exception {
         String data = "?note=Adjustment applied";
         String type = Type.LOAN_ADJUSTMENT;
         String by = By.GLOBAL_NUMBER;
@@ -401,12 +401,13 @@ public class RESTAPITest extends UiTestCaseBase {
         AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
         jsonAssert.assertEqual("clientName");
         jsonAssert.assertEqual("clientNumber");
-        jsonAssert.assertEqual("savingsDisplayName");
+        jsonAssert.assertEqual("loanDisplayName");
         jsonAssert.assertEqual("adjustmentDate");
         jsonAssert.assertEqual("adjustmentAmount");
         jsonAssert.assertEqual("adjustmentMadeBy");
-        jsonAssert.assertEqual("outstandingAfterDisbursement");
+        jsonAssert.assertEqual("outstandingAfterAdjustment");
         jsonAssert.assertEqual("outstandingBeforeAdjustment");
+        jsonAssert.assertEqual("note");
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
