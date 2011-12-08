@@ -125,7 +125,8 @@ public class SavingsAccountRESTController {
         map.put("adjustmentMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
         map.put("balanceBeforeAdjustment", balanceBeforePayment.toString());
         map.put("balanceAfterAdjustment", savingsBO.getSavingsBalance().toString());
-    	
+        map.put("note", note);
+        
     	return map;
     }
     
