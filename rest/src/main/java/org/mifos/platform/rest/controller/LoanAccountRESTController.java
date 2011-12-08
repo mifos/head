@@ -215,41 +215,40 @@ public class LoanAccountRESTController {
     Map<String, String> applyAdjustment(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
     	String note = request.getParameter("note");
     	
-    	Map<String, String> map = new HashMap<String, String>();
-
-    	if ( note != null && !note.isEmpty() ){
-    		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        	LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
-        	CustomerBO client = loan.getCustomer();
-        	
-    		String adjustmentAmount = loan.getLastPmnt().getAmount().toString();
-    		String outstandingBeforeAdjustment = loan.getLoanSummary().getOutstandingBalance().toString();
-    		try{
-    			accountServiceFacade.applyAdjustment(globalAccountNum, note, (short)user.getUserId());
-    	    	
-    			DateTime today = new DateTime();
-    			
-	    		map.put("status", "success");
-	    		map.put("clientName", client.getDisplayName());
-	            map.put("clientNumber", client.getGlobalCustNum());
-	            map.put("loanDisplayName", loan.getLoanOffering().getPrdOfferingName());
-	            map.put("adjustmentDate", today.toLocalDate().toString());
-	            map.put("adjustmentTime", today.toLocalTime().toString());
-	            map.put("adjustmentAmount", adjustmentAmount);
-	            map.put("adjustmentMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
-	            map.put("outstandingBeforeAdjustment", outstandingBeforeAdjustment);
-	            map.put("outstandingAfterAdjustment", loan.getLoanSummary().getOutstandingBalance().toString());
-	            map.put("note", note);
-    		} catch (MifosRuntimeException e){
-            	String error = accountsUIResource.getString(e.getCause().getLocalizedMessage());
-            	map.put("status","unsuccess");
-            	map.put("error", error);
-    		}
-    	} else {
-        	map.put("status","unsuccess");
-        	map.put("error", "Note is not specified.");
-    	}
+        if (note == null || note.isEmpty()){
+        	throw new MifosRuntimeException("Note is not specified");
+        }
     	
+		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
+    	CustomerBO client = loan.getCustomer();
+    	
+		String adjustmentAmount = loan.getLastPmnt().getAmount().toString();
+		String outstandingBeforeAdjustment = loan.getLoanSummary().getOutstandingBalance().toString();
+		
+		try{
+			accountServiceFacade.applyAdjustment(globalAccountNum, note, (short)user.getUserId());
+		} catch (MifosRuntimeException e){
+        	String error = accountsUIResource.getString(e.getCause().getLocalizedMessage());
+        	throw new MifosRuntimeException(error);
+		}
+		
+		DateTime today = new DateTime();
+		
+		Map<String, String> map = new HashMap<String, String>();
+    	
+		map.put("status", "success");
+		map.put("clientName", client.getDisplayName());
+        map.put("clientNumber", client.getGlobalCustNum());
+        map.put("loanDisplayName", loan.getLoanOffering().getPrdOfferingName());
+        map.put("adjustmentDate", today.toLocalDate().toString());
+        map.put("adjustmentTime", today.toLocalTime().toString());
+        map.put("adjustmentAmount", adjustmentAmount);
+        map.put("adjustmentMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
+        map.put("outstandingBeforeAdjustment", outstandingBeforeAdjustment);
+        map.put("outstandingAfterAdjustment", loan.getLoanSummary().getOutstandingBalance().toString());
+        map.put("note", note);
+		
     	return map;
     }
     

@@ -66,6 +66,7 @@ public class RESTAPITestHelper {
         public static final String SAVINGS_DUE = "account/savings/due";
         public static final String SAVINGS_DEPOSIT = "account/savings/deposit";
         public static final String SAVINGS_WITHDRAW = "account/savings/withdraw";
+        public static final String SAVINGS_ADJUSTMENT = "account/savings/adjustment";
     }
 
     public static class By {

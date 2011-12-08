@@ -408,6 +408,27 @@ public class RESTAPITest extends UiTestCaseBase {
         jsonAssert.assertEqual("outstandingAfterDisbursement");
         jsonAssert.assertEqual("outstandingBeforeAdjustment");
     }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(dependsOnGroups="readOnly", dependsOnMethods="savingsDepositWithdrawByGlobalNum")
+    public void applySavingsAdjustmentByGlobalNum() throws Exception {
+        String data = "?amount=60&note=Adjustment applied";
+        String type = Type.SAVINGS_ADJUSTMENT;
+        String by = By.GLOBAL_NUMBER;
+        String value = SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID;
+        String actualJSON = helper.postJSONFromUI(type, by, value, data);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
+        jsonAssert.assertEqual("clientName");
+        jsonAssert.assertEqual("clientNumber");
+        jsonAssert.assertEqual("savingsDisplayName");
+        jsonAssert.assertEqual("adjustmentDate");
+        jsonAssert.assertEqual("adjustmentAmount");
+        jsonAssert.assertEqual("adjustmentMadeBy");
+        jsonAssert.assertEqual("outstandingAfterAdjustment");
+        jsonAssert.assertEqual("outstandingBeforeAdjustment");
+        jsonAssert.assertEqual("note");
+    }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(dependsOnGroups="readOnly")
