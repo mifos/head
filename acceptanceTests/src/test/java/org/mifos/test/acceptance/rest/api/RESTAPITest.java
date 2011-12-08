@@ -148,6 +148,25 @@ public class RESTAPITest extends UiTestCaseBase {
         ObjectMapper mapper = helper.getObjectMapper();
         Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
     }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly", dependsOnMethods={"centerByGlobalNum", "centerByGlobalNum"})
+    public void applyCustomerChargeByGlobalNum() throws Exception {
+    	String data = "?amount=5&feeId=-1";
+        String type = Type.CUSTOMER_CHARGE;
+        String by = By.GLOBAL_NUMBER;
+        String value = CENTER_GLOBAL_ID;
+        String actualJSON = helper.postJSONFromUI(type, by, value, data);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
+        jsonAssert.assertEqual("clientName");
+        jsonAssert.assertEqual("clientNumber");
+        jsonAssert.assertEqual("chargeDate");
+        jsonAssert.assertEqual("chargeAmount");
+        jsonAssert.assertEqual("chargeMadeBy");
+        jsonAssert.assertEqual("totalDueBeforeCharge");
+        jsonAssert.assertEqual("totalDueAfterCharge");
+    }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
@@ -408,6 +427,26 @@ public class RESTAPITest extends UiTestCaseBase {
         jsonAssert.assertEqual("outstandingAfterAdjustment");
         jsonAssert.assertEqual("outstandingBeforeAdjustment");
         jsonAssert.assertEqual("note");
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(dependsOnGroups="readOnly", dependsOnMethods = "disburseLoanByGlobalNum")
+    public void applyLoanChargeByGlobalNum() throws Exception {
+        String data = "?amount=5&feeId=-1";
+        String type = Type.LOAN_CHARGE;
+        String by = By.GLOBAL_NUMBER;
+        String value = LOAN_ACCOUNT_3_GLOBAL_ID;
+        String actualJSON = helper.postJSONFromUI(type, by, value, data);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
+        jsonAssert.assertEqual("clientName");
+        jsonAssert.assertEqual("clientNumber");
+        jsonAssert.assertEqual("loanDisplayName");
+        jsonAssert.assertEqual("chargeDate");
+        jsonAssert.assertEqual("chargeAmount");
+        jsonAssert.assertEqual("chargeMadeBy");
+        jsonAssert.assertEqual("outstandingAfterCharge");
+        jsonAssert.assertEqual("outstandingBeforeCharge");
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
