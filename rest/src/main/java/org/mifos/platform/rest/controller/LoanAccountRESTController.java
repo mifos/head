@@ -252,6 +252,46 @@ public class LoanAccountRESTController {
     	return map;
     }
     
+    @RequestMapping(value = "/account/loan/charge/num-{globalAccountNum}", method = RequestMethod.POST)
+    public @ResponseBody
+    Map<String, String> applyCharge(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
+    	String amountString = request.getParameter("amount");
+    	String feeIdString = request.getParameter("feeId");
+    	
+    	Double chargeAmount = Double.parseDouble(amountString);
+    	Short feeId = Short.parseShort(feeIdString);
+    	
+		if ( chargeAmount <= 0 ){
+    		throw new MifosRuntimeException("Amount must be greater than 0");
+    	}
+    	
+		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
+		Integer accountId = loan.getAccountId();
+		CustomerBO client = loan.getCustomer();
+		
+		String outstandingBeforeCharge = loan.getLoanSummary().getOutstandingBalance().toString();
+		
+    	this.accountServiceFacade.applyCharge(accountId, feeId, chargeAmount);
+    	
+    	DateTime today = new DateTime();
+    	
+    	Map<String, String> map = new HashMap<String, String>();
+    	
+		map.put("status", "success");
+		map.put("clientName", client.getDisplayName());
+        map.put("clientNumber", client.getGlobalCustNum());
+        map.put("loanDisplayName", loan.getLoanOffering().getPrdOfferingName());
+        map.put("chargeDate", today.toLocalDate().toString());
+        map.put("chargeTime", today.toLocalTime().toString());
+        map.put("chargeAmount", Double.toString(chargeAmount));
+        map.put("chargeMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
+        map.put("outstandingBeforeCharge", outstandingBeforeCharge);
+        map.put("outstandingAfterCharge", loan.getLoanSummary().getOutstandingBalance().toString());
+    	
+    	return map;
+    }
+    
     @RequestMapping(value = "/account/loan/num-{globalAccountNum}", method = RequestMethod.GET)
     public @ResponseBody
     LoanInformationDto getLoanByNumber(@PathVariable String globalAccountNum) throws Exception {

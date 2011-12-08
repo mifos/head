@@ -1,0 +1,11 @@
+{
+	"chargeAmount": "5.0",
+	"chargeTime": "13:06:54.436",
+	"status": "success",
+	"clientName": "Client-REST",
+	"chargeMadeBy": "mifos",
+	"totalDueBeforeCharge": "0.0",
+	"chargeDate": "2011-09-13",
+	"clientNumber": "0002-000000001",
+	"totalDueAfterCharge": "5.0"
+}
