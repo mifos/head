@@ -454,6 +454,22 @@
             </sql>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_5218_1" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+            update lookup_value set lookup_name="FinancialAction-VoluntaryDeposit" where lookup_name="FinancialAction-VoluntoryDeposit";
+            update lookup_value set lookup_name="FinancialAction-VoluntaryWithdrawal" where lookup_name="FinancialAction-VoluntoryWithdrawal";
+            update lookup_value set lookup_name="FinancialAction-VoluntaryDepositAdjustment" where lookup_name="FinancialAction-VoluntoryDepositAdjustment";
+            update lookup_value set lookup_name="FinancialAction-VoluntaryWithdrawalAdjustment" where lookup_name="FinancialAction-VoluntoryWithdrawalAdjustment";
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                update lookup_value set lookup_name="FinancialAction-VoluntoryDeposit" where lookup_name="FinancialAction-VoluntaryDeposit";
+                update lookup_value set lookup_name="FinancialAction-VoluntoryWithdrawal" where lookup_name="FinancialAction-VoluntaryWithdrawal";
+                update lookup_value set lookup_name="FinancialAction-VoluntoryDepositAdjustment" where lookup_name="FinancialAction-VoluntaryDepositAdjustment";
+                update lookup_value set lookup_name="FinancialAction-VoluntoryWithdrawalAdjustment" where lookup_name="FinancialAction-VoluntaryWithdrawalAdjustment";
+            </sql>
+        </rollback>
+    </changeSet>
     <changeSet id="MIFOS_5164_1" author="Udai Gupta" context="expansion">
         <sql endDelimiter=";">
                 DROP TABLE IF EXISTS rest_approval;

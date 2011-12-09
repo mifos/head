@@ -41,6 +41,7 @@
   <DATABASECHANGELOG ID="MIFOS_4945_6" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:01.0" ORDEREXECUTED="17" EXECTYPE="EXECUTED" MD5SUM="3:3295a26a4f5f90255601a36a002029da" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5161_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-17 07:18:56.0" ORDEREXECUTED="126" EXECTYPE="EXECUTED" MD5SUM="3:82dd99432572ba02fe1c174c26096266" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5186_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-24 15:28:47.0" ORDEREXECUTED="177" EXECTYPE="EXECUTED" MD5SUM="3:257c6dbd69a28ceb9a8a866a405e23f2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_5218_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-09 11:58:25.0" ORDEREXECUTED="189" EXECTYPE="EXECUTED" MD5SUM="3:a55cb7c0cd264ab9133926be13e0c714" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
   <QRTZ_CALENDARS/>
@@ -6973,9 +6974,9 @@
   <lookup_value lookup_id="201" entity_id="76" lookup_name="FinancialAction-Penalty"/>
   <lookup_value lookup_id="202" entity_id="76" lookup_name="FinancialAction-RoundingAdjustments"/>
   <lookup_value lookup_id="203" entity_id="76" lookup_name="FinancialAction-MandatoryDeposit"/>
-  <lookup_value lookup_id="204" entity_id="76" lookup_name="FinancialAction-VoluntoryDeposit"/>
+  <lookup_value lookup_id="204" entity_id="76" lookup_name="FinancialAction-VoluntaryDeposit"/>
   <lookup_value lookup_id="205" entity_id="76" lookup_name="FinancialAction-MandatoryWithdrawal"/>
-  <lookup_value lookup_id="206" entity_id="76" lookup_name="FinancialAction-VoluntoryWithdrawal"/>
+  <lookup_value lookup_id="206" entity_id="76" lookup_name="FinancialAction-VoluntaryWithdrawal"/>
   <lookup_value lookup_id="207" entity_id="76" lookup_name="FinancialAction-ReversalAdjustment"/>
   <lookup_value lookup_id="208" entity_id="76" lookup_name="FinancialAction-SavingsInterestPosting"/>
   <lookup_value lookup_id="209" entity_id="76" lookup_name="FinancialAction-Interest_posting"/>
@@ -7137,9 +7138,9 @@
   <lookup_value lookup_id="365" entity_id="76" lookup_name="FinancialAction-CustomerAdjustment"/>
   <lookup_value lookup_id="366" entity_id="69" lookup_name="AccountAction-SavingsAdjustment"/>
   <lookup_value lookup_id="367" entity_id="76" lookup_name="FinancialAction-MandatoryDepositAdjustment"/>
-  <lookup_value lookup_id="368" entity_id="76" lookup_name="FinancialAction-VoluntoryDepositAdjustment"/>
+  <lookup_value lookup_id="368" entity_id="76" lookup_name="FinancialAction-VoluntaryDepositAdjustment"/>
   <lookup_value lookup_id="369" entity_id="76" lookup_name="FinancialAction-MandatoryWithdrawalAdjustment"/>
-  <lookup_value lookup_id="370" entity_id="76" lookup_name="FinancialAction-VoluntoryWithdrawalAdjustment"/>
+  <lookup_value lookup_id="370" entity_id="76" lookup_name="FinancialAction-VoluntaryWithdrawalAdjustment"/>
   <lookup_value lookup_id="371" entity_id="87" lookup_name="Permissions-OrganizationManagement"/>
   <lookup_value lookup_id="372" entity_id="87" lookup_name="Permissions-Funds"/>
   <lookup_value lookup_id="373" entity_id="87" lookup_name="Permissions-CanCreateFunds"/>

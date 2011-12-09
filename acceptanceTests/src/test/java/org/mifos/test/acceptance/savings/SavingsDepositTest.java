@@ -31,6 +31,8 @@ import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.savings.DepositWithdrawalSavingsParameters;
+import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
+import org.mifos.test.acceptance.framework.savings.TransactionHistoryPage;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
@@ -94,7 +96,7 @@ public class SavingsDepositTest extends UiTestCaseBase {
         params.setReceiptDateMM("09");
         params.setReceiptDateYYYY("2009");
 
-        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000036", params);
+        SavingsAccountDetailPage accountDetailPage = savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000036", params);
 
         String[] tablesToRetrieve = { "SAVINGS_ACTIVITY_DETAILS", "SAVINGS_ACCOUNT", "SAVINGS_PERFORMANCE", "SAVINGS_TRXN_DETAIL" };
         String[] tablesToValidate = { "SAVINGS_ACTIVITY_DETAILS", "SAVINGS_ACCOUNT", "SAVINGS_PERFORMANCE" };
@@ -107,7 +109,9 @@ public class SavingsDepositTest extends UiTestCaseBase {
         String[] orderSavingsTrxnByColumns =  new String[]{"deposit_amount"};
         dbUnitUtilities.verifyTableWithSort(orderSavingsTrxnByColumns,SavingsDepositTest.SAVINGS_TRXN_DETAIL, expectedDataSet, databaseDataSet );
 
-
+        // verify transaction history table
+        TransactionHistoryPage historyPage = accountDetailPage.navigateToTransactionHistoryPage();
+        historyPage.verifyTableTypeAfterDeposit(2);
     }
 
 

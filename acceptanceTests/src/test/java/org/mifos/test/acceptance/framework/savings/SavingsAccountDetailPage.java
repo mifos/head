@@ -125,4 +125,11 @@ public class SavingsAccountDetailPage extends AbstractPage {
         waitForPageToLoad();
         return new ViewQuestionResponseDetailPage(selenium);
     }
+    
+    public TransactionHistoryPage navigateToTransactionHistoryPage() {
+        selenium.click("savingsaccountdetail.link.viewTransactionHistory");
+        waitForPageToLoad();
+        
+        return new TransactionHistoryPage(selenium);
+    }
 }

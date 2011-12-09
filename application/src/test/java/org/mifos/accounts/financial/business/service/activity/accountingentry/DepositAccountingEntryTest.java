@@ -234,7 +234,7 @@ public class DepositAccountingEntryTest extends BaseAccountingEntryTestCase {
         SavingsType savingsType = SavingsType.VOLUNTARY;
         GLCategoryType bankCategoryType = GLCategoryType.ASSET;
         GLCategoryType savingsCategoryType = GLCategoryType.LIABILITY;
-        FinancialActionConstants financialActionConstant = FinancialActionConstants.VOLUNTORYDEPOSIT;
+        FinancialActionConstants financialActionConstant = FinancialActionConstants.VOLUNTARYDEPOSIT;
 
         setupVoluntaryForOneTest(savingsType, bankCategoryType, savingsCategoryType, financialActionConstant);
 

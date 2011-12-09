@@ -1,0 +1,12 @@
+{
+	"chargeAmount": "5.0",
+	"chargeTime": "13:06:22.395",
+	"outstandingBeforeCharge": "101.0",
+	"status": "success",
+	"clientName": "Client REST API",
+	"outstandingAfterCharge": "106.0",
+	"chargeMadeBy": "mifos",
+	"chargeDate": "2011-09-13",
+	"loanDisplayName": "REST Loan Product A",
+	"clientNumber": "0002-000000003"
+}

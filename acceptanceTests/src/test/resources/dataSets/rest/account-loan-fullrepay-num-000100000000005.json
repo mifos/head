@@ -6,7 +6,7 @@
 	"paymentTime": "13:10:45.876",
 	"clientName": "Client REST API",
 	"paymentMadeBy": "mifos",
-	"outstandingBeforePayment": "0.0",
+	"outstandingBeforePayment": "1032.0",
 	"loanDisplayName": "REST Loan Product B",
 	"clientNumber": "0002-000000003"
 }

@@ -79,7 +79,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsHelper;
  *                                         (see <code>BaseAccountingEntry.getAmountToPost()</code></td></tr>
  *            <tr><td>financialAction      </td><td> the FinancialActionBO corresponding to one of<br/>
  *                                            FinancialActionConstants.MANDATORYWITHDRAWAL_ADJUSTMENT
- *                                            <br/>or FinancialActionConstants.VOLUNTORYWITHDRAWAL_ADJUSTMENT
+ *                                            <br/>or FinancialActionConstants.VOLUNTARYWITHDRAWAL_ADJUSTMENT
  *                                         <br/>depending on the type of savings account.</td></tr>
  *            <tr><td>glCode               </td><td> savings.getSavingsOffering().getDepositGLCode()</td></tr>
  *            <tr><td>postedAmount         </td><td> SavingsTrxnDetailEntity.withdrawalAmount</td></tr>
@@ -94,7 +94,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsHelper;
  *                                         (see <code>BaseAccountingEntry.getAmountToPost()</code></td></tr>
  *            <tr><td>  financialAction      </td><td> the FinancialActionBO corresponding to one o <br/>
  *                                            FinancialActionConstants.MANDATORYWITHDRAWAL_ADJUSTMENT <br/>
- *                                            or FinancialActionConstants.VOLUNTORYWITHDRAWAL_ADJUSTMENT <br/>
+ *                                            or FinancialActionConstants.VOLUNTARYWITHDRAWAL_ADJUSTMENT <br/>
  *                                         depending on the type of savings account.</td><tr>
  *            <tr><td>  glCode               </td><td> **the GLCodeEntity of the GL account to debit for the above financial action</td><tr>
  *            <tr><td>  postedAmount         </td><td> SavingsTrxnDetailEntity.withdrawalAmount</td><tr>
@@ -113,7 +113,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsHelper;
  *                                         (see <code>BaseAccountingEntry.getAmountToPost()</code> </td><tr>
  *            <tr><td>  financialAction      </td><td> the FinancialActionBO corresponding to one o <br/>
  *                                            FinancialActionConstants.MANDATORYDEPOSIT_ADJUSTMENT <br/>
- *                                            or FinancialActionConstants.VOLUNTORYDEPOSIT_ADJUSTMENT <br/>
+ *                                            or FinancialActionConstants.VOLUNTARYDEPOSIT_ADJUSTMENT <br/>
  *                                         depending on the type of savings account.</td><tr>
  *            <tr><td>  glCode               </td><td> savings.getSavingsOffering().getDepositGLCode()</td><tr>
  *            <tr><td>  debitCreditFlag      </td><td> FinancialConstants.DEBIT</td><tr>
@@ -126,7 +126,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsHelper;
  *                                         (see <code>BaseAccountingEntry.getAmountToPost()</code></td><tr>
  *            <tr><td>  financialAction      </td><td> the FinancialActionBO corresponding to one <br/>
  *                                            FinancialActionConstants.MANDATORYDEPOSIT_ADJUSTMENT<br/>
- *                                            or FinancialActionConstants.VOLUNTORYDEPOSIT_ADJUSTMENT<br/>
+ *                                            or FinancialActionConstants.VOLUNTARYDEPOSIT_ADJUSTMENT<br/>
  *                                         depending on the type of savings account.</td><tr>
  *            <tr><td>  glCode               </td><td> **the GLCodeEntity of the GL account to credit for the above financial action</td><tr>
  *            <tr><td>  debitCreditFlag      </td><td> FinancialConstants.CREDIT</td><tr>
@@ -187,7 +187,7 @@ public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
         if (savings.isMandatory()) {
             finActionWithrawal = getFinancialAction(FinancialActionConstants.MANDATORYWITHDRAWAL_ADJUSTMENT);
         } else if (savings.isVoluntary()) {
-            finActionWithrawal = getFinancialAction(FinancialActionConstants.VOLUNTORYWITHDRAWAL_ADJUSTMENT);
+            finActionWithrawal = getFinancialAction(FinancialActionConstants.VOLUNTARYWITHDRAWAL_ADJUSTMENT);
         }
         addAccountEntryDetails(savingsTrxn.getWithdrawlAmount(), finActionWithrawal, savings
                 .getSavingsOffering().getDepositGLCode(), FinancialConstants.CREDIT);
@@ -200,7 +200,7 @@ public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
         if (savings.isMandatory()) {
             finActionDeposit = getFinancialAction(FinancialActionConstants.MANDATORYDEPOSIT_ADJUSTMENT);
         } else if (savings.isVoluntary()) {
-            finActionDeposit = getFinancialAction(FinancialActionConstants.VOLUNTORYDEPOSIT_ADJUSTMENT);
+            finActionDeposit = getFinancialAction(FinancialActionConstants.VOLUNTARYDEPOSIT_ADJUSTMENT);
         }
         addAccountEntryDetails(savingsTrxn.getDepositAmount(), finActionDeposit, getGLcode(finActionDeposit
                 .getApplicableCreditCharts()), FinancialConstants.CREDIT);

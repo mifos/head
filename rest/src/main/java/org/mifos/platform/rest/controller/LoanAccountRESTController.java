@@ -156,10 +156,11 @@ public class LoanAccountRESTController {
                 waiverInterest,
                 receiptDate,totalRepaymentAmount,waivedAmount);
         
+        Money outstandingBeforePayment = loan.getLoanSummary().getOutstandingBalance();
+        
         this.loanAccountServiceFacade.makeEarlyRepaymentWithCommit(repayLoanInfoDto);
         
         CustomerBO client = loan.getCustomer();
-        Money outstandingBeforePayment = loan.getLoanSummary().getOutstandingBalance();
         
     	Map<String, String> map = new HashMap<String, String>();
     	map.put("status", "success");
@@ -188,12 +189,13 @@ public class LoanAccountRESTController {
     	String comment = "";
     	Short paymentTypeId = PaymentTypes.CASH.getValue();
     	
+       	Money outstandingBeforeDisbursement = loan.getLoanSummary().getOutstandingBalance();
+    	
     	AccountPaymentParametersDto loanDisbursement = new AccountPaymentParametersDto(new UserReferenceDto((short)user.getUserId()), 
     			new AccountReferenceDto(loan.getAccountId()), loan.getLoanAmount().getAmount(), today.toLocalDate(), paymentType, comment);
     	this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
     	
     	CustomerBO client = loan.getCustomer();
-    	Money outstandingBeforeDisbursement = loan.getLoanSummary().getOutstandingBalance();
     	
     	Map<String, String> map = new HashMap<String, String>();
     	map.put("status", "success");
@@ -215,40 +217,79 @@ public class LoanAccountRESTController {
     Map<String, String> applyAdjustment(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
     	String note = request.getParameter("note");
     	
-    	Map<String, String> map = new HashMap<String, String>();
-
-    	if ( note != null && !note.isEmpty() ){
-    		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        	LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
-        	CustomerBO client = loan.getCustomer();
-        	
-    		String adjustmentAmount = loan.getLastPmnt().getAmount().toString();
-    		String outstandingBeforeAdjustment = loan.getLoanSummary().getOutstandingBalance().toString();
-    		try{
-    			accountServiceFacade.applyAdjustment(globalAccountNum, note, (short)user.getUserId());
-    	    	
-    			DateTime today = new DateTime();
-    			
-	    		map.put("status", "success");
-	    		map.put("clientName", client.getDisplayName());
-	            map.put("clientNumber", client.getGlobalCustNum());
-	            map.put("loanDisplayName", loan.getLoanOffering().getPrdOfferingName());
-	            map.put("adjustmentDate", today.toLocalDate().toString());
-	            map.put("adjustmentTime", today.toLocalTime().toString());
-	            map.put("adjustmentAmount", adjustmentAmount);
-	            map.put("adjustmentMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
-	            map.put("outstandingBeforeAdjustment", outstandingBeforeAdjustment);
-	            map.put("outstandingAfterAdjustment", loan.getLoanSummary().getOutstandingBalance().toString());
-	            map.put("note", note);
-    		} catch (MifosRuntimeException e){
-            	String error = accountsUIResource.getString(e.getCause().getLocalizedMessage());
-            	map.put("status","unsuccess");
-            	map.put("error", error);
-    		}
-    	} else {
-        	map.put("status","unsuccess");
-        	map.put("error", "Note is not specified.");
+        if (note == null || note.isEmpty()){
+        	throw new MifosRuntimeException("Note is not specified");
+        }
+    	
+		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
+    	CustomerBO client = loan.getCustomer();
+    	
+		String adjustmentAmount = loan.getLastPmnt().getAmount().toString();
+		String outstandingBeforeAdjustment = loan.getLoanSummary().getOutstandingBalance().toString();
+		
+		try{
+			accountServiceFacade.applyAdjustment(globalAccountNum, note, (short)user.getUserId());
+		} catch (MifosRuntimeException e){
+        	String error = accountsUIResource.getString(e.getCause().getLocalizedMessage());
+        	throw new MifosRuntimeException(error);
+		}
+		
+		DateTime today = new DateTime();
+		
+		Map<String, String> map = new HashMap<String, String>();
+    	
+		map.put("status", "success");
+		map.put("clientName", client.getDisplayName());
+        map.put("clientNumber", client.getGlobalCustNum());
+        map.put("loanDisplayName", loan.getLoanOffering().getPrdOfferingName());
+        map.put("adjustmentDate", today.toLocalDate().toString());
+        map.put("adjustmentTime", today.toLocalTime().toString());
+        map.put("adjustmentAmount", adjustmentAmount);
+        map.put("adjustmentMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
+        map.put("outstandingBeforeAdjustment", outstandingBeforeAdjustment);
+        map.put("outstandingAfterAdjustment", loan.getLoanSummary().getOutstandingBalance().toString());
+        map.put("note", note);
+		
+    	return map;
+    }
+    
+    @RequestMapping(value = "/account/loan/charge/num-{globalAccountNum}", method = RequestMethod.POST)
+    public @ResponseBody
+    Map<String, String> applyCharge(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
+    	String amountString = request.getParameter("amount");
+    	String feeIdString = request.getParameter("feeId");
+    	
+    	Double chargeAmount = Double.parseDouble(amountString);
+    	Short feeId = Short.parseShort(feeIdString);
+    	
+		if ( chargeAmount <= 0 ){
+    		throw new MifosRuntimeException("Amount must be greater than 0");
     	}
+    	
+		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
+		Integer accountId = loan.getAccountId();
+		CustomerBO client = loan.getCustomer();
+		
+		String outstandingBeforeCharge = loan.getLoanSummary().getOutstandingBalance().toString();
+		
+    	this.accountServiceFacade.applyCharge(accountId, feeId, chargeAmount);
+    	
+    	DateTime today = new DateTime();
+    	
+    	Map<String, String> map = new HashMap<String, String>();
+    	
+		map.put("status", "success");
+		map.put("clientName", client.getDisplayName());
+        map.put("clientNumber", client.getGlobalCustNum());
+        map.put("loanDisplayName", loan.getLoanOffering().getPrdOfferingName());
+        map.put("chargeDate", today.toLocalDate().toString());
+        map.put("chargeTime", today.toLocalTime().toString());
+        map.put("chargeAmount", Double.toString(chargeAmount));
+        map.put("chargeMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
+        map.put("outstandingBeforeCharge", outstandingBeforeCharge);
+        map.put("outstandingAfterCharge", loan.getLoanSummary().getOutstandingBalance().toString());
     	
     	return map;
     }

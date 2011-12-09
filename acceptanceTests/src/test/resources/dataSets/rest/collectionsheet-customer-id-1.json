@@ -97,7 +97,20 @@
                     "totalRepaymentDue": 412,
                     "amountDueAtDisbursement": 0,
                     "disbursalAccount": false
-                }
+                },
+                {
+					"customerId": 3,
+					"accountId": 8,
+					"payInterestAtDisbursement": 0,
+					"currencyId": 2,
+					"productId": 1,
+					"accountStateId": 3,
+					"productShortName": "RLPA",
+					"totalDisbursement": 100,
+					"totalRepaymentDue": 0,
+					"amountDueAtDisbursement": 0,
+					"disbursalAccount": true
+				}
             ],
             "collectionSheetCustomerAccount": {
                 "accountId": 3,
