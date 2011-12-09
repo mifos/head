@@ -300,7 +300,7 @@ explanation of the license and how it is applied.
 		                                                    <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
 		                                                </c:when>
 		                                                <c:otherwise>
-		                                                    <fmt:formatNumber value="${loanPrd.variableInstallmentDetails.minInstallmentAmount}" type="number"/>
+		                                                    <fmt:formatNumber value="${loanPrd.variableInstallmentDetails.minInstallmentAmount.amountDoubleValue}" type="number"/>
 		                                                </c:otherwise>
 		                                            </c:choose>
                                                 </span>
