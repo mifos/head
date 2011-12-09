@@ -156,10 +156,11 @@ public class LoanAccountRESTController {
                 waiverInterest,
                 receiptDate,totalRepaymentAmount,waivedAmount);
         
+        Money outstandingBeforePayment = loan.getLoanSummary().getOutstandingBalance();
+        
         this.loanAccountServiceFacade.makeEarlyRepaymentWithCommit(repayLoanInfoDto);
         
         CustomerBO client = loan.getCustomer();
-        Money outstandingBeforePayment = loan.getLoanSummary().getOutstandingBalance();
         
     	Map<String, String> map = new HashMap<String, String>();
     	map.put("status", "success");
@@ -188,12 +189,13 @@ public class LoanAccountRESTController {
     	String comment = "";
     	Short paymentTypeId = PaymentTypes.CASH.getValue();
     	
+       	Money outstandingBeforeDisbursement = loan.getLoanSummary().getOutstandingBalance();
+    	
     	AccountPaymentParametersDto loanDisbursement = new AccountPaymentParametersDto(new UserReferenceDto((short)user.getUserId()), 
     			new AccountReferenceDto(loan.getAccountId()), loan.getLoanAmount().getAmount(), today.toLocalDate(), paymentType, comment);
     	this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
     	
     	CustomerBO client = loan.getCustomer();
-    	Money outstandingBeforeDisbursement = loan.getLoanSummary().getOutstandingBalance();
     	
     	Map<String, String> map = new HashMap<String, String>();
     	map.put("status", "success");

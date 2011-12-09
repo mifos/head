@@ -150,7 +150,7 @@ public class RESTAPITest extends UiTestCaseBase {
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(groups="readOnly", dependsOnMethods={"centerByGlobalNum", "centerByGlobalNum"})
+    @Test(groups="readOnly", dependsOnMethods={"centerByGlobalNum", "centerChargesByGlobalNum"})
     public void applyCustomerChargeByGlobalNum() throws Exception {
     	String data = "?amount=5&feeId=-1";
         String type = Type.CUSTOMER_CHARGE;
@@ -499,8 +499,8 @@ public class RESTAPITest extends UiTestCaseBase {
         jsonAssert.assertEqual("disbursementDate");
         jsonAssert.assertEqual("disbursementAmount");
         jsonAssert.assertEqual("disbursementMadeBy");
-        jsonAssert.assertEqual("balanceBeforeDisbursement");
-        jsonAssert.assertEqual("balanceAfterDisbursement");
+        jsonAssert.assertEqual("outstandingBeforeDisbursement");
+        jsonAssert.assertEqual("outstandingAfterDisbursement");
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -555,8 +555,8 @@ public class RESTAPITest extends UiTestCaseBase {
             this.assertEqual("paymentDate");
             this.assertEqual("paymentAmount");
             this.assertEqual("paymentMadeBy");
-            this.assertEqual("balanceBeforePayment");
-            this.assertEqual("balanceAfterPayment");
+            this.assertEqual("outstandingBeforePayment");
+            this.assertEqual("outstandingAfterPayment");
         }
     }
 
