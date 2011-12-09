@@ -4,23 +4,29 @@ import java.util.List;
 
 import org.mifos.rest.approval.domain.ApprovalMethod;
 import org.mifos.rest.approval.domain.RESTApprovalEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ApprovalService {
 
-    List<RESTApprovalEntity> getAllApprovals();
-
-    List<RESTApprovalEntity> getWaitingForApproval();
-
+    @PreAuthorize("isFullyAuthenticated()")
     RESTApprovalEntity getDetails(Long id);
 
+    @PreAuthorize("isFullyAuthenticated()")
     void create(ApprovalMethod method) throws Exception;
 
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('CAN_APPROVE_REST_API')")
+    List<RESTApprovalEntity> getAllWaiting();
+
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('CAN_APPROVE_REST_API')")
+    List<RESTApprovalEntity> getAllApproved();
+
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('CAN_APPROVE_REST_API')")
+    List<RESTApprovalEntity> getAllRejected();
+
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('CAN_APPROVE_REST_API')")
     Object approve(Long id) throws Exception;
 
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('CAN_APPROVE_REST_API')")
     void reject(Long id);
-
-    List<RESTApprovalEntity> getApproved();
-
-    List<RESTApprovalEntity> getRejected();
 
 }

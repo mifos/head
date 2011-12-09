@@ -32,25 +32,19 @@ public class StandardApprovalService implements ApprovalService {
 
     @Transactional(readOnly=true)
     @Override
-    public List<RESTApprovalEntity> getAllApprovals() {
-        return approvalDao.getDetailsAll();
-    }
-
-    @Transactional(readOnly=true)
-    @Override
-    public List<RESTApprovalEntity> getWaitingForApproval() {
+    public List<RESTApprovalEntity> getAllWaiting() {
         return approvalDao.findByState(ApprovalState.WAITING);
     }
 
     @Transactional(readOnly=true)
     @Override
-    public List<RESTApprovalEntity> getApproved() {
+    public List<RESTApprovalEntity> getAllApproved() {
         return approvalDao.findByState(ApprovalState.APPROVED);
     }
 
     @Transactional(readOnly=true)
     @Override
-    public List<RESTApprovalEntity> getRejected() {
+    public List<RESTApprovalEntity> getAllRejected() {
         return approvalDao.findByState(ApprovalState.REJECTED);
     }
 

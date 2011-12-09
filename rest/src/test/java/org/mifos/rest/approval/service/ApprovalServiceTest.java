@@ -63,18 +63,18 @@ public class ApprovalServiceTest {
     @Test
     public void testApproveState() throws Exception {
         createApprovalMethod();
-        RESTApprovalEntity rae = approvalService.getAllApprovals().get(0);
+        RESTApprovalEntity rae = approvalService.getAllWaiting().get(0);
         assertNotNull(rae);
         assertEquals(ApprovalState.WAITING, rae.getState());
 
         approvalService.reject(rae.getId());
-        rae = approvalService.getAllApprovals().get(0);
+        rae = approvalService.getAllRejected().get(0);
         assertEquals(ApprovalState.REJECTED, rae.getState());
         assertNotNull(rae.getApprovedOn());
         assertEquals(getCurrentUserId(), rae.getApprovedBy());
 
         approvalService.approve(rae.getId());
-        rae = approvalService.getAllApprovals().get(0);
+        rae = approvalService.getAllApproved().get(0);
         assertEquals(ApprovalState.APPROVED, rae.getState());
     }
 

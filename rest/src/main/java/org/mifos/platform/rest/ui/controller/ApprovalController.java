@@ -22,9 +22,9 @@ public class ApprovalController {
         ModelAndView mav = new ModelAndView("approval/list");
         List<BreadCrumbsLinks> breadcrumbs = new AdminBreadcrumbBuilder().withLink("View REST Approval List", "").build();
         mav.addObject("breadcrumbs", breadcrumbs);
-        mav.addObject("waitingForApprovalList", approvalService.getWaitingForApproval());
-        List<RESTApprovalEntity> approvedOrRejected = approvalService.getApproved();
-        approvedOrRejected.addAll(approvalService.getRejected());
+        mav.addObject("waitingForApprovalList", approvalService.getAllWaiting());
+        List<RESTApprovalEntity> approvedOrRejected = approvalService.getAllApproved();
+        approvedOrRejected.addAll(approvalService.getAllRejected());
         mav.addObject("approvedList", approvedOrRejected);
         return mav;
     }
