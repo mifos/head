@@ -15,10 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Special controller for approval of REST API
- * 
+ *
  * This should never be intercept by {@link AspectJRESTApprovalInterceptor}
  */
 @Controller
@@ -40,7 +41,7 @@ public class ApprovalRESTController {
         model.addAttribute("result", result);
         return model;
     }
-    
+
     @RequestMapping(value="id-{id}/reject", method=RequestMethod.POST)
     public ModelMap reject(@PathVariable(value="id") Long id) throws Exception {
         ModelMap model = new ModelMap();
@@ -48,22 +49,17 @@ public class ApprovalRESTController {
         model.addAttribute("status", "success");
         return model;
     }
-    
-    @RequestMapping(value="id-{id}/methodData", method=RequestMethod.GET)
-    public ModelMap getMethodData(@PathVariable(value="id") Long id) throws Exception {
-        ModelMap model = new ModelMap();
-        RESTApprovalEntity rae = approvalService.getDetails(id);
-        model.addAttribute("status", "success");
-        model.addAttribute("content", rae.getApprovalMethod());
-        return model;
+
+    @RequestMapping(value="id-{id}/details", method=RequestMethod.GET)
+    public @ResponseBody RESTApprovalEntity getDetails(@PathVariable(value="id") Long id) throws Exception {
+        return approvalService.getDetails(id);
     }
-    
+
     @RequestMapping(value="id-{id}/methodData", method=RequestMethod.POST)
-    public ModelMap updateMethodData(@PathVariable(value="id") Long id, 
+    public ModelMap updateMethodData(@PathVariable(value="id") Long id,
     		                         @RequestBody ApprovalMethod content) throws Exception {
         ModelMap model = new ModelMap();
-        RESTApprovalEntity rae = approvalService.getDetails(id);
-        rae.setApprovalMethod(content);
+        approvalService.updateMethodContent(id, content);
         model.addAttribute("status", "success");
         return model;
     }

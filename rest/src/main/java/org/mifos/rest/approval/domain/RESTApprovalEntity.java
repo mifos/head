@@ -17,6 +17,8 @@ import org.joda.time.DateTime;
 @Table(name="rest_approval")
 public class RESTApprovalEntity {
 
+    public static final String FORMAT = "MMM dd, yyyy hh:mm:ss z";
+
     @Id
     @GeneratedValue
     private Long id;
@@ -96,12 +98,21 @@ public class RESTApprovalEntity {
         this.state = state;
     }
 
+    @Transient
+    public String getPrintableCreatedOnDate() {
+        return (getApprovedOn() == null) ? null : getCreatedOn().toString(FORMAT);
+    }
+
+    @Transient
+    public String getPrintableApprovedOnDate() {
+        return (getApprovedOn() == null) ? null : getApprovedOn().toString(FORMAT);
+    }
 
     @Transient
     public ApprovalMethod getApprovalMethod() throws Exception {
         if (approvalMethod == null) {
             ObjectMapper om = new ObjectMapper();
-            approvalMethod = om.readValue(methodContent, ApprovalMethod.class);
+            approvalMethod = om.readValue(getMethodContent(), ApprovalMethod.class);
         }
         return approvalMethod;
     }
@@ -110,7 +121,8 @@ public class RESTApprovalEntity {
     public void setApprovalMethod(ApprovalMethod method) throws Exception {
         approvalMethod = method;
         ObjectMapper om = new ObjectMapper();
-        this.methodContent = om.writeValueAsString(method);
+        String content = om.writeValueAsString(method);
+        setMethodContent(content);
     }
 
     @Transient

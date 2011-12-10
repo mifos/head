@@ -69,16 +69,21 @@ public class StandardApprovalService implements ApprovalService {
         ApprovalMethod am = entity.getApprovalMethod();
         entity.setState(ApprovalState.APPROVED);
 
-        Method m = am.getType().getMethod(am.getName(), am.getArgsHolder().getTypes());
-        skipCreate = true;
-        Object result = m.invoke(ApplicationContextProvider.getBean(am.getType()), am.getArgsHolder().getValues());
+        Object result = excuteMethod(am);
 
         entity.setApprovedBy(getCurrentUserId());
         entity.setApprovedOn(new DateTime());
-        skipCreate = false;
         approvalDao.update(entity);
 
         return result;
+    }
+
+    @Transactional
+    @Override
+    public void updateMethodContent(Long id, ApprovalMethod approvalMethod) throws Exception {
+        RESTApprovalEntity entity = approvalDao.getDetails(id);
+        entity.setApprovalMethod(approvalMethod);
+        approvalDao.update(entity);
     }
 
     @Transactional
@@ -89,6 +94,14 @@ public class StandardApprovalService implements ApprovalService {
         entity.setApprovedOn(new DateTime());
         entity.setState(ApprovalState.REJECTED);
         approvalDao.update(entity);
+    }
+
+    private Object excuteMethod(ApprovalMethod am) throws Exception {
+        Method m = am.getType().getMethod(am.getName(), am.getArgsHolder().getTypes());
+        skipCreate = true;
+        Object result = m.invoke(ApplicationContextProvider.getBean(am.getType()), am.getArgsHolder().getValues());
+        skipCreate = false;
+        return result;
     }
 
     private Short getCurrentUserId() {

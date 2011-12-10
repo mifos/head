@@ -29,4 +29,7 @@ public interface ApprovalService {
     @PreAuthorize("isFullyAuthenticated() and hasAnyRole('CAN_APPROVE_REST_API')")
     void reject(Long id);
 
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('CAN_APPROVE_REST_API')")
+    void updateMethodContent(Long id, ApprovalMethod approvalMethod) throws Exception;
+
 }
