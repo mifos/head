@@ -1506,6 +1506,10 @@ public class ActivityMapper {
         return activityId;
     }
 
+    public boolean isAccessAllowed(UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
+        return legacyRolesPermissionsDao.isAccessAllowed(userContext, recordOfficeId, recordLoanOfficerId);
+    }
+
     public boolean isRemoveFeesPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
         return legacyRolesPermissionsDao.isActivityAllowed(
