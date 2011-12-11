@@ -34,7 +34,7 @@ public class ApprovalInterceptor implements MethodInterceptor {
     public Object invoke(MethodInvocation invocation) throws Throwable {
         if(invocation.getMethod().isAnnotationPresent(RequestMapping.class)) {
             RequestMapping requestMapping = (RequestMapping) invocation.getMethod().getAnnotations()[0];
-            if(requestMapping.method()[0] == RequestMethod.POST) {
+            if(requestMapping.method()[0] != RequestMethod.GET) {
                 return invocationHandler.process(invocation);
             }
         }

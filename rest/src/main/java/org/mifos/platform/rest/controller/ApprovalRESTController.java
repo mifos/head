@@ -2,7 +2,6 @@ package org.mifos.platform.rest.controller;
 
 import java.util.List;
 
-import org.mifos.rest.approval.aop.AspectJRESTApprovalInterceptor;
 import org.mifos.rest.approval.domain.ApprovalMethod;
 import org.mifos.rest.approval.domain.RESTApprovalEntity;
 import org.mifos.rest.approval.service.ApprovalService;

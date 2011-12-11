@@ -13,18 +13,19 @@
     <aop:aspectj-autoproxy/>
     <tx:annotation-driven/>
    
-   <!--  
+   <!-- 
     <aop:config>
         <aop:pointcut id="restOperation"
         expression="execution(public * org.mifos.platform.rest.controller.stub.*RESTController.*(..))"/>
         <aop:advisor advice-ref="approvalInterceptor" pointcut-ref="restOperation"/>
     </aop:config>
 
-    <bean id="approvalInterceptor" class="org.mifos.platform.rest.approval.aop.ApprovalInterceptor"/>
+    <bean id="approvalInterceptor" class="org.mifos.rest.approval.aop.ApprovalInterceptor"/>
 
-    <bean id="invocationHandler" class="org.mifos.platform.rest.approval.aop.StubMethodInvocationHandler"/>
-
-    -->
+    <bean id="invocationHandler" class="org.mifos.rest.approval.aop.ApprovalMethodInvocationHandler"/>
+    
+     -->
+    
     <context:component-scan base-package="org.mifos.platform.rest.controller.stub" />
     
     <context:component-scan base-package="org.mifos.rest.approval" />
