@@ -17,19 +17,12 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+package org.mifos.rest.approval.aop;
 
-package org.mifos.security.rolesandpermission;
+import org.aopalliance.intercept.MethodInvocation;
 
-public class RoleTestUtil {
-    /**
-     * The total number of activities for the built in Admin role. Whenever a
-     * new activity is added to the role this number must be increased by one.
-     */
-    public static final int EXPECTED_ACTIVITIES_FOR_ROLE = 170;
-    /**
-     * The total number of activities. Whenever a new activity is added to the
-     * role this number must be increased by one.
-     */
-    public static final int EXPECTED_ACTIVITY_COUNT = 191;
+public interface MethodInvocationHandler {
+
+    Object process(MethodInvocation invocation) throws Throwable;
 
 }

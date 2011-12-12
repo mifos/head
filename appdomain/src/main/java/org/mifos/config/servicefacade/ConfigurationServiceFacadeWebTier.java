@@ -1,5 +1,6 @@
 package org.mifos.config.servicefacade;
 
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.service.AccountingConfigurationService;
 import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,11 @@ public class ConfigurationServiceFacadeWebTier implements ConfigurationServiceFa
         dto.setDigitsBeforeDecimal(accountingConfigurationService.getDigitsBeforeDecimal());
         dto.setDigitsAfterDecimal(accountingConfigurationService.getDigitsAfterDecimal());
         return dto;
+    }
+
+    @Override
+    public String getConfig(String key) {
+        return MifosConfigurationManager.getInstance().getString(key);
     }
 
     @Autowired
