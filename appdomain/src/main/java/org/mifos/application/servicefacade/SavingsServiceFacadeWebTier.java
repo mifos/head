@@ -1116,16 +1116,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
     @Override
     public SavingsAccountDetailDto retrieveSavingsAccountDetails(Long savingsId) {
-        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = new UserContextFactory().create(mifosUser);
-
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
-        try {
-            personnelDao.checkAccessPermission(userContext, savingsAccount.getOfficeId(), savingsAccount.getCustomer().getLoanOfficerId());
-        } catch (AccountException e) {
-            throw new MifosRuntimeException("Access denied!", e);
-        }
-
         return savingsAccount.toDto();
     }
 

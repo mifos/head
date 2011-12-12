@@ -188,7 +188,6 @@
                      path="/pages/application/loan/jsp/nextPayment_loanAccount.jsp"/>
             <forward name="waiveLoanAccountCharges_Success" path="/loanAccountAction.do?method=getInstallmentDetails"/>
             <forward name="get_success" path="/pages/application/loan/jsp/loanaccountdetail.jsp"/>
-            <forward name="get_failure" path="/pages/application/customer/jsp/empty.jsp"/>
             <forward name="getLoanRepaymentSchedule" path="/pages/application/loan/jsp/loanRepayment.jsp"/>
             <forward name="getLoanRepaymentScheduleFailure" path="/pages/application/loan/jsp/loanRepayment.jsp"/>
             <forward name="viewOriginalSchedule" path="/pages/application/loan/jsp/viewOriginalSchedule.jsp"/>
