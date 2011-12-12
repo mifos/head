@@ -1284,8 +1284,16 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         loanAccountActionForm.clearDetailsForLoan();
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
         UserContext userContext = getUserContext(request);
-        LoanInformationDto loanInformationDto = this.loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
-
+        LoanInformationDto loanInformationDto;
+        try {
+            loanInformationDto = this.loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
+        }
+        catch (MifosRuntimeException e) {
+            if (e.getCause() instanceof ApplicationException) {
+                throw (ApplicationException) e.getCause();
+            }
+            throw e;
+        }
         final String accountStateNameLocalised = MessageLookup.getInstance().lookup(loanInformationDto.getAccountStateName(), userContext);
         SessionUtils.removeThenSetAttribute("accountStateNameLocalised", accountStateNameLocalised, request);
 

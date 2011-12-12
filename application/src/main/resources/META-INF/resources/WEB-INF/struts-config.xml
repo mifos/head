@@ -262,6 +262,7 @@
             <forward name="previous_success" path="/pages/application/savings/jsp/continuecreatesavingsaccount.jsp"/>
             <forward name="create_success" path="/pages/application/savings/jsp/createsavingsaccountconfirmation.jsp"/>
             <forward name="get_success" path="/pages/application/savings/jsp/savingsaccountdetail.jsp"/>
+            <forward name="get_failure" path="/pages/application/customer/jsp/empty.jsp"/>
             <forward name="edit_success" path="/pages/application/savings/jsp/editsavingsaccount.jsp"/>
             <forward name="editPreview_success" path="/pages/application/savings/jsp/previewsavingsaccount.jsp"/>
             <forward name="editPrevious_success" path="/pages/application/savings/jsp/editsavingsaccount.jsp"/>
