@@ -114,9 +114,9 @@ public class LoanProductDetailsPage  extends MifosPage {
     	BigDecimal maxAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(lOAN_AMOUNT_SAME_TABLE+".1.1").replaceAll(",", "")));
     	BigDecimal defaultAmount = BigDecimal.valueOf(Double.valueOf(selenium.getTable(lOAN_AMOUNT_SAME_TABLE+".1.2").replaceAll(",", "")));
     	
-    	BigDecimal expectedMinAmount = BigDecimal.valueOf(Double.valueOf(min));
-    	BigDecimal expectedMaxAmount = BigDecimal.valueOf(Double.valueOf(max));
-    	BigDecimal expectedDefaultAmount = BigDecimal.valueOf(Double.valueOf(def));
+    	BigDecimal expectedMinAmount = BigDecimal.valueOf(Double.valueOf(min.replaceAll(",", "")));
+    	BigDecimal expectedMaxAmount = BigDecimal.valueOf(Double.valueOf(max.replaceAll(",", "")));
+    	BigDecimal expectedDefaultAmount = BigDecimal.valueOf(Double.valueOf(def.replaceAll(",", "")));
     	
     	Assert.assertEquals(minAmount, expectedMinAmount);
     	Assert.assertEquals(maxAmount, expectedMaxAmount);

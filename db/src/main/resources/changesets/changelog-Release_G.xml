@@ -454,4 +454,73 @@
             </sql>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_5218_1" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+            update lookup_value set lookup_name="FinancialAction-VoluntaryDeposit" where lookup_name="FinancialAction-VoluntoryDeposit";
+            update lookup_value set lookup_name="FinancialAction-VoluntaryWithdrawal" where lookup_name="FinancialAction-VoluntoryWithdrawal";
+            update lookup_value set lookup_name="FinancialAction-VoluntaryDepositAdjustment" where lookup_name="FinancialAction-VoluntoryDepositAdjustment";
+            update lookup_value set lookup_name="FinancialAction-VoluntaryWithdrawalAdjustment" where lookup_name="FinancialAction-VoluntoryWithdrawalAdjustment";
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                update lookup_value set lookup_name="FinancialAction-VoluntoryDeposit" where lookup_name="FinancialAction-VoluntaryDeposit";
+                update lookup_value set lookup_name="FinancialAction-VoluntoryWithdrawal" where lookup_name="FinancialAction-VoluntaryWithdrawal";
+                update lookup_value set lookup_name="FinancialAction-VoluntoryDepositAdjustment" where lookup_name="FinancialAction-VoluntaryDepositAdjustment";
+                update lookup_value set lookup_name="FinancialAction-VoluntoryWithdrawalAdjustment" where lookup_name="FinancialAction-VoluntaryWithdrawalAdjustment";
+            </sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="MIFOS_5164_1" author="Udai Gupta" context="expansion">
+        <sql endDelimiter=";">
+                DROP TABLE IF EXISTS rest_approval;
+                CREATE TABLE rest_approval (
+                  id bigint(20) NOT NULL AUTO_INCREMENT,
+                  method_content LONGTEXT,
+                  approved_by SMALLINT(6) DEFAULT NULL,
+                  approved_on TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+                  created_by SMALLINT(6) DEFAULT NULL,
+                  created_on TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+                  state VARCHAR(15) DEFAULT NULL,
+                  version INT(11) DEFAULT NULL,
+                  PRIMARY KEY (id)
+                ) ENGINE=InnoDB  character set utf8;
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                DROP TABLE IF EXISTS rest_approval;
+            </sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="MIFOS_5164_2" author="Udai Gupta" context="expansion">
+        <sql endDelimiter=";">
+                insert into lookup_value(lookup_id,entity_id,lookup_name)
+                    values((select max(lv.lookup_id)+1 from lookup_value lv),87,'Permissions-CanApproveRESTAPI');
+
+                insert into lookup_value_locale(locale_id, lookup_id, lookup_value)
+                    values(1,
+                    (select lookup_id from lookup_value where entity_id =87 and 
+                    lookup_name='Permissions-CanApproveRESTAPI'), null);
+
+                insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values
+                    (247,196,
+                    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanApproveRESTAPI'),
+                    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanApproveRESTAPI'));
+
+                insert into roles_activity values (247,1);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                delete from roles_activity where activity_id = 247;
+
+                delete from activity where activity_id = 247;
+
+                delete from lookup_value_locale where lookup_id =
+                 (select lookup_id from lookup_value
+                  where lookup_name='Permissions-CanApproveRESTAPI');
+
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                'Permissions-CanApproveRESTAPI';
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

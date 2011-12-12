@@ -22,12 +22,14 @@ package org.mifos.customers.personnel.persistence;
 
 import java.util.List;
 
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.UserSearchDto;
 import org.mifos.dto.screen.SystemUserSearchResultsDto;
 import org.mifos.security.MifosUser;
+import org.mifos.security.util.UserContext;
 
 public interface PersonnelDao {
 
@@ -46,4 +48,6 @@ public interface PersonnelDao {
     List<PersonnelDto> findActiveLoanOfficersForOffice(CenterCreation centerCreationDto);
 
     SystemUserSearchResultsDto search(UserSearchDto searchDto, MifosUser user);
+
+    void checkAccessPermission(UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) throws AccountException;
 }

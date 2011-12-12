@@ -37,7 +37,7 @@ public class DepositAccountingEntry extends BaseAccountingEntry {
         if (savings.isMandatory()) {
             finActionDeposit = getFinancialAction(FinancialActionConstants.MANDATORYDEPOSIT);
         } else if (savings.isVoluntary()) {
-            finActionDeposit = getFinancialAction(FinancialActionConstants.VOLUNTORYDEPOSIT);
+            finActionDeposit = getFinancialAction(FinancialActionConstants.VOLUNTARYDEPOSIT);
         }
 
         addAccountEntryDetails(savingsTrxn.getDepositAmount(), finActionDeposit, getGLcode(finActionDeposit

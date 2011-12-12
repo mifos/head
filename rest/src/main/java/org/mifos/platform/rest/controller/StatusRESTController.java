@@ -21,6 +21,7 @@ package org.mifos.platform.rest.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -32,7 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class StatusRESTController {
 
-    @RequestMapping("status")
+    @RequestMapping(value="status", method = RequestMethod.GET)
     public @ResponseBody
     StatusJSON status() {
         StatusJSON json = new StatusJSON();
@@ -40,7 +41,7 @@ public class StatusRESTController {
         return json;
     }
 
-    @RequestMapping("accessDenied")
+    @RequestMapping(value="accessDenied", method = RequestMethod.GET)
     public @ResponseBody
     StatusJSON accessDenied() {
         StatusJSON json = new StatusJSON();
@@ -48,7 +49,7 @@ public class StatusRESTController {
         return json;
     }
 
-    @RequestMapping("restLogin")
+    @RequestMapping(value="restLogin", method = RequestMethod.GET)
     public String restLoginForm() {
         return "restLogin";
     }

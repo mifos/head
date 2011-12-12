@@ -595,24 +595,24 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.select("prdApplicableMaster", "value=" + parameters.getApplicableFor());
         selenium.click("name=loanAmtCalcType value=" + parameters.getCalculateLoanAmount());
         if(parameters.getCalculateLoanAmount() == SubmitFormParameters.SAME_FOR_ALL_LOANS) {
-            selenium.type("minLoanAmount", parameters.getMinLoanAmount());
-            selenium.type("maxLoanAmount", parameters.getMaxLoanAmount());
-            selenium.type("defaultLoanAmount", parameters.getDefaultLoanAmount());
+            selenium.type("minLoanAmount", parameters.getMinLoanAmount().replaceAll(",", ""));
+            selenium.type("maxLoanAmount", parameters.getMaxLoanAmount().replaceAll(",", ""));
+            selenium.type("defaultLoanAmount", parameters.getDefaultLoanAmount().replaceAll(",", ""));
         }
         else if(parameters.getCalculateLoanAmount() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
             for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
-                selenium.typeKeys("endRangeLoanAmt"+i, parameters.getLastAmountByLastLoanAmount(i-1));
+                selenium.typeKeys("endRangeLoanAmt"+i, parameters.getLastAmountByLastLoanAmount(i-1).replaceAll(",", ""));
                 selenium.fireEvent("endRangeLoanAmt"+i, "blur");
-                selenium.type("lastLoanMinLoanAmt"+i, parameters.getMinAmountByLastLoanAmount(i-1));
-                selenium.type("lastLoanMaxLoanAmt"+i, parameters.getMaxAmountByLastLoanAmount(i-1));
-                selenium.type("lastLoanDefaultLoanAmt"+i, parameters.getDefAmountByLastLoanAmount(i-1));
+                selenium.type("lastLoanMinLoanAmt"+i, parameters.getMinAmountByLastLoanAmount(i-1).replaceAll(",", ""));
+                selenium.type("lastLoanMaxLoanAmt"+i, parameters.getMaxAmountByLastLoanAmount(i-1).replaceAll(",", ""));
+                selenium.type("lastLoanDefaultLoanAmt"+i, parameters.getDefAmountByLastLoanAmount(i-1).replaceAll(",", ""));
             }
         }
         else {
             for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
-                selenium.type("cycleLoanMinLoanAmt"+i, parameters.getMinCycleLoanAmount(i-1));
-                selenium.type("cycleLoanMaxLoanAmt"+i, parameters.getMaxCycleLoanAmount(i-1));
-                selenium.type("cycleLoanDefaultLoanAmt"+i, parameters.getDefCycleLoanAmount(i-1));
+                selenium.type("cycleLoanMinLoanAmt"+i, parameters.getMinCycleLoanAmount(i-1).replaceAll(",", ""));
+                selenium.type("cycleLoanMaxLoanAmt"+i, parameters.getMaxCycleLoanAmount(i-1).replaceAll(",", ""));
+                selenium.type("cycleLoanDefaultLoanAmt"+i, parameters.getDefCycleLoanAmount(i-1).replaceAll(",", ""));
             }
         }
         selectWaiverInterest(parameters);
@@ -629,11 +629,11 @@ public class DefineNewLoanProductPage extends AbstractPage {
         }
         else if(parameters.getCalculateInstallments() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
             for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
-                selenium.typeKeys("endInstallmentRange"+i, parameters.getLastInstallmentByLastLoanAmount(i-1));
+                selenium.typeKeys("endInstallmentRange"+i, parameters.getLastInstallmentByLastLoanAmount(i-1).replaceAll(",", ""));
                 selenium.fireEvent("endInstallmentRange"+i, "blur");
-                selenium.type("minLoanInstallment"+i, parameters.getMinInstallmentByLastLoanAmount(i-1));
-                selenium.type("maxLoanInstallment"+i, parameters.getMaxInstallmentByLastLoanAmount(i-1));
-                selenium.type("defLoanInstallment"+i, parameters.getDefInstallmentByLastLoanAmount(i-1));
+                selenium.type("minLoanInstallment"+i, parameters.getMinInstallmentByLastLoanAmount(i-1).replaceAll(",", ""));
+                selenium.type("maxLoanInstallment"+i, parameters.getMaxInstallmentByLastLoanAmount(i-1).replaceAll(",", ""));
+                selenium.type("defLoanInstallment"+i, parameters.getDefInstallmentByLastLoanAmount(i-1).replaceAll(",", ""));
             }
         }
         else {

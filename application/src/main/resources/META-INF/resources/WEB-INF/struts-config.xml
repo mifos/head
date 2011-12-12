@@ -213,6 +213,7 @@
             <forward name="prevEditMfiInfo_success" path="/pages/application/client/jsp/edit_ClientMfiInfo.jsp"/>
             <!-- Previous Page Forwards End -->
             <forward name="get_success" path="/pages/application/client/jsp/viewClientDetails.jsp"/>
+            <forward name="get_failure" path="/pages/application/customer/jsp/empty.jsp"/>
             <forward name="create_success" path="/pages/application/client/jsp/client_creationConfirmation.jsp"/>
             <forward name="create_failure" path="/pages/application/client/jsp/preview_ClientDetails.jsp"/>
             <forward name="editPersonalInfo_success" path="/pages/application/client/jsp/edit_ClientPersonalInfo.jsp"/>

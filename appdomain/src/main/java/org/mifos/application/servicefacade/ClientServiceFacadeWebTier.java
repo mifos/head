@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeeDao;
@@ -454,6 +455,12 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         ClientBO client = customerDao.findClientBySystemId(globalCustNum);
         if (client == null) {
             throw new MifosRuntimeException("Client not found for globalCustNum, levelId: " + globalCustNum);
+        }
+
+        try {
+            personnelDao.checkAccessPermission(userContext, client.getOfficeId(), client.getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
         }
 
         ClientDisplayDto clientDisplay = this.customerDao.getClientDisplayDto(client.getCustomerId(), userContext);

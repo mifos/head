@@ -42,7 +42,7 @@ public class WithdrawalAccountingEntry extends BaseAccountingEntry {
             finActionWithrawal = getFinancialAction(FinancialActionConstants.MANDATORYWITHDRAWAL);
         }
         if (savings.isVoluntary()) {
-            finActionWithrawal = getFinancialAction(FinancialActionConstants.VOLUNTORYWITHDRAWAL);
+            finActionWithrawal = getFinancialAction(FinancialActionConstants.VOLUNTARYWITHDRAWAL);
         }
 
         if (savings.getState() == AccountState.SAVINGS_CLOSED) {

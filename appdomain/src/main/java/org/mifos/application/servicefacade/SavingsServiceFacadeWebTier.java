@@ -945,12 +945,13 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             if (!scheduledDeposit.isPaid() && scheduledDeposit.isBeforeOrOn(nextDueDate)) {
                 SavingsScheduleEntity savingsScheduledDeposit = (SavingsScheduleEntity) scheduledDeposit;
                 totalDue = totalDue.add(savingsScheduledDeposit.getTotalDepositDue());
-                previousDueDates.add(new DueOnDateDto(new LocalDate(scheduledDeposit.getActionDate()),
+                previousDueDates.add(new DueOnDateDto(scheduledDeposit.getActionDate(),
                         savingsScheduledDeposit.getTotalDepositDue().toString()));
             }
         }
 
-        DueOnDateDto nextdueDate = new DueOnDateDto(nextDueDate, MoneyUtils.currencyRound(totalDue).toString());
+        DueOnDateDto nextdueDate = new DueOnDateDto(new java.sql.Date(nextDueDate.toDateMidnight().toDate().getTime()),
+                MoneyUtils.currencyRound(totalDue).toString());
 
         AccountStateEntity accountStateEntity = savingsAccount.getAccountState();
 

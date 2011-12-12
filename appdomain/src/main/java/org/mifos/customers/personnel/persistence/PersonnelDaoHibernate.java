@@ -34,6 +34,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -48,6 +49,9 @@ import org.mifos.dto.screen.SystemUserSearchResultsDto;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
+import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
@@ -240,5 +244,12 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         SystemUserSearchResultsDto resultsDto = new SystemUserSearchResultsDto(searchResultsCount.intValue(), firstResult, searchDto.getPage(), searchDto.getPageSize(), pagedUserDetails);
 
         return resultsDto;
+    }
+
+    @Override
+    public void checkAccessPermission(UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) throws AccountException {
+        if (!ActivityMapper.getInstance().isAccessAllowed(userContext, recordOfficeId, recordLoanOfficerId)) {
+            throw new AccountException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 }

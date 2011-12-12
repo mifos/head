@@ -255,7 +255,7 @@ public class SavingsAdjustmentAccountingEntryTest extends BaseAccountingEntryTes
 //    public void testBuildAccountEntryAdjustSavingsWithdrawalForVoluntarySavings() throws FinancialException {
 //
 //        runOneTest(SavingsType.VOLUNTARY, AccountActionTypes.SAVINGS_WITHDRAWAL, GLCategoryType.ASSET,
-//                GLCategoryType.LIABILITY, FinancialActionConstants.VOLUNTORYWITHDRAWAL_ADJUSTMENT,
+//                GLCategoryType.LIABILITY, FinancialActionConstants.VOLUNTARYWITHDRAWAL_ADJUSTMENT,
 //                FinancialConstants.DEBIT, FinancialConstants.CREDIT, withdrawalAmount);
 //    }
 
@@ -271,7 +271,7 @@ public class SavingsAdjustmentAccountingEntryTest extends BaseAccountingEntryTes
     public void testBuildAccountEntryAdjustSavingsDepositForVoluntarySavings() throws FinancialException {
 
         runOneTest(SavingsType.VOLUNTARY, AccountActionTypes.SAVINGS_DEPOSIT, GLCategoryType.ASSET,
-                GLCategoryType.LIABILITY, FinancialActionConstants.VOLUNTORYDEPOSIT_ADJUSTMENT,
+                GLCategoryType.LIABILITY, FinancialActionConstants.VOLUNTARYDEPOSIT_ADJUSTMENT,
                 FinancialConstants.CREDIT, FinancialConstants.DEBIT, depositAmount);
     }
 
@@ -288,7 +288,7 @@ public class SavingsAdjustmentAccountingEntryTest extends BaseAccountingEntryTes
 //
 //        runOneTestMockFinancialBusinessServiceThrowsException(SavingsType.VOLUNTARY,
 //                AccountActionTypes.SAVINGS_WITHDRAWAL, GLCategoryType.ASSET, GLCategoryType.LIABILITY,
-//                FinancialActionConstants.VOLUNTORYWITHDRAWAL_ADJUSTMENT, FinancialConstants.DEBIT);
+//                FinancialActionConstants.VOLUNTARYWITHDRAWAL_ADJUSTMENT, FinancialConstants.DEBIT);
 //    }
 
     @Test(expected = FinancialException.class)
@@ -308,7 +308,7 @@ public class SavingsAdjustmentAccountingEntryTest extends BaseAccountingEntryTes
 
         runOneTestMockFinancialBusinessServiceThrowsException(SavingsType.VOLUNTARY,
                 AccountActionTypes.SAVINGS_DEPOSIT, GLCategoryType.ASSET, GLCategoryType.LIABILITY,
-                FinancialActionConstants.VOLUNTORYDEPOSIT_ADJUSTMENT, FinancialConstants.CREDIT);
+                FinancialActionConstants.VOLUNTARYDEPOSIT_ADJUSTMENT, FinancialConstants.CREDIT);
     }
 
     private void runOneTest(SavingsType savingsType, AccountActionTypes accountActionType,

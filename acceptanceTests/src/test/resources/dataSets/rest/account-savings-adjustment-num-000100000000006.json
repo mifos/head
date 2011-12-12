@@ -1,0 +1,13 @@
+{
+	"savingsDisplayName": "Savings A",
+	"balanceAfterAdjustment": "50.0",
+	"status": "success",
+	"clientName": "Client REST API",
+	"adjustmentMadeBy": "mifos",
+	"adjustmentDate": "2011-09-13",
+	"clientNumber": "0002-000000003",
+	"adjustmentAmount": "60.0",
+	"note": "Adjustment applied",
+	"adjustmentTime": "14:03:53.797",
+	"balanceBeforeAdjustment": "41.0"
+}

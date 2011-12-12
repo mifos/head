@@ -117,7 +117,8 @@ public class CollectionsheetRESTAPITest extends UiTestCaseBase {
                 "\\\"totalDeposit\\\":\\\"100\\\",\\\"totalWithdrawal\\\":\\\"0\\\"}]," +
                 "\\\"saveCollectionSheetCustomerIndividualSavings\\\":[],\\\"saveCollectionSheetCustomerLoans\\\"" +
                 ":[{\\\"accountId\\\":4,\\\"currencyId\\\":2,\\\"totalDisbursement\\\":0,\\\"totalLoanPayment\\\":\\\"40\\\"}," +
-                "{\\\"accountId\\\":5,\\\"currencyId\\\":2,\\\"totalDisbursement\\\":0,\\\"totalLoanPayment\\\":\\\"412\\\"}]," +
+                "{\\\"accountId\\\":5,\\\"currencyId\\\":2,\\\"totalDisbursement\\\":0,\\\"totalLoanPayment\\\":\\\"412\\\"}," +
+                "{\\\"accountId\\\":8,\\\"currencyId\\\":2,\\\"totalDisbursement\\\":\\\"100\\\",\\\"totalLoanPayment\\\":0}]," +
                 "\\\"saveCollectionSheetCustomerAccount\\\":{\\\"accountId\\\":3,\\\"currencyId\\\":2," +
                 "\\\"totalCustomerAccountCollectionFee\\\":\\\"0\\\"}}]}\"}";
     }
@@ -141,6 +142,8 @@ public class CollectionsheetRESTAPITest extends UiTestCaseBase {
                 "\"RLPA\",\"totalDisbursement\":0,\"totalRepaymentDue\":0,\"amountDueAtDisbursement\":0,\"disbursalAccount" +
                 "\":false},{\"customerId\":3,\"accountId\":5,\"payInterestAtDisbursement\":0,\"currencyId\":2,\"productId\":2," +
                 "\"accountStateId\":5,\"productShortName\":\"RLPB\",\"totalDisbursement\":0,\"totalRepaymentDue\":0," +
+                "\"amountDueAtDisbursement\":0,\"disbursalAccount\":false},{\"customerId\":3,\"accountId\":8,\"payInterestAtDisbursement\":0,\"currencyId\":2,\"productId\":1," +
+                "\"accountStateId\":5,\"productShortName\":\"RLPA\",\"totalDisbursement\":0,\"totalRepaymentDue\":0," +
                 "\"amountDueAtDisbursement\":0,\"disbursalAccount\":false}],\"collectionSheetCustomerAccount\":{\"accountId" +
                 "\":3,\"currencyId\":2,\"totalCustomerAccountCollectionFee\":0},\"individualSavingAccounts\":[]}]}";
     }
