@@ -17,55 +17,38 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.platform.rest.controller;
+package org.mifos.platform.rest.controller.stub;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
- * This is a dummy rest controller which is used to make sure if the rest services are available
- *
- * /mifos/status.json
- *
- */
 @Controller
-public class StatusRESTController {
+public class StubRESTController {
 
-    @RequestMapping(value="status", method = RequestMethod.GET)
-    public @ResponseBody
-    StatusJSON status() {
-        StatusJSON json = new StatusJSON();
-        json.setStatus("Success");
-        return json;
+    @RequestMapping(value = "read", method = RequestMethod.GET)
+    public @ResponseBody String readCall(@PathVariable String arg) throws Exception {
+        return dummyCall(arg);
     }
 
-    @RequestMapping(value="accessDenied", method = RequestMethod.GET)
-    public @ResponseBody
-    StatusJSON accessDenied() {
-        StatusJSON json = new StatusJSON();
-        json.setStatus("session expired");
-        return json;
+    @RequestMapping(value = "update", method = RequestMethod.POST)
+    public @ResponseBody String updateCall(@PathVariable String arg) throws Exception {
+        return dummyCall(arg);
     }
 
-    @RequestMapping(value="restLogin", method = RequestMethod.GET)
-    public String restLoginForm() {
-        return "restLogin";
+    @RequestMapping(value = "create", method = RequestMethod.PUT)
+    public @ResponseBody String createCall(@PathVariable String arg) throws Exception {
+        return dummyCall(arg);
+    }
+    
+    @RequestMapping(value = "delete", method = RequestMethod.DELETE)
+    public @ResponseBody String deleteCall(@PathVariable String arg) throws Exception {
+        return dummyCall(arg);
     }
 
-}
-
-class StatusJSON {
-
-    private String status;
-
-    public String getStatus() {
-        return status;
+    private String dummyCall(String arg) {
+        return arg;
     }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
 }

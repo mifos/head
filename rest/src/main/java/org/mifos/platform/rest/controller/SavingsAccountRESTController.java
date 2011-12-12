@@ -21,6 +21,7 @@ package org.mifos.platform.rest.controller;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,6 +55,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -73,14 +75,16 @@ public class SavingsAccountRESTController {
 
     @RequestMapping(value = "account/savings/deposit/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
-    Map<String, String> deposit(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
-        return doSavingsTrxn(globalAccountNum, request, TrxnTypes.savings_deposit);
+    Map<String, String> deposit(@PathVariable String globalAccountNum, 
+    		                    @RequestParam(value="amount") String amountString) throws Exception {
+        return doSavingsTrxn(globalAccountNum, amountString, TrxnTypes.savings_deposit);
     }
 
     @RequestMapping(value = "account/savings/withdraw/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
-    Map<String, String> withdraw(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
-        return doSavingsTrxn(globalAccountNum, request, TrxnTypes.savings_withdrawal);
+    Map<String, String> withdraw(@PathVariable String globalAccountNum, 
+    		                     @RequestParam(value="amount") String amountString) throws Exception {
+        return doSavingsTrxn(globalAccountNum, amountString, TrxnTypes.savings_withdrawal);
     }
 
     @RequestMapping(value = "account/savings/adjustment/num-{globalAccountNum}", method = RequestMethod.POST)
@@ -144,8 +148,7 @@ public class SavingsAccountRESTController {
         return savingsServiceFacade.retrieveDepositDueDetails(globalAccountNum);
     }
 
-    private Map<String, String> doSavingsTrxn(String globalAccountNum, HttpServletRequest request, TrxnTypes trxnType) throws Exception {
-        String amountString = request.getParameter("amount");
+    private Map<String, String> doSavingsTrxn(String globalAccountNum, String amountString, TrxnTypes trxnType) throws Exception {
         BigDecimal amount = new BigDecimal(amountString);
 
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
@@ -175,13 +178,13 @@ public class SavingsAccountRESTController {
         if (trxnType.equals(TrxnTypes.savings_deposit)) {
             SavingsDepositDto savingsDeposit = new SavingsDepositDto(accountId.longValue(), savingsBO.getCustomer().getCustomerId().longValue(),
                     today.toLocalDate(), amount.doubleValue(), paymentType.getValue().intValue(), receiptId, receiptDate,
-                    request.getLocale());
+                    Locale.UK);
             this.savingsServiceFacade.deposit(savingsDeposit);
         }
         else {
             SavingsWithdrawalDto savingsWithdrawal = new SavingsWithdrawalDto(accountId.longValue(), savingsBO.getCustomer().getCustomerId().longValue(),
                     today.toLocalDate(), amount.doubleValue(), paymentType.getValue().intValue(), receiptId, receiptDate,
-                    request.getLocale());
+                    Locale.UK);
             this.savingsServiceFacade.withdraw(savingsWithdrawal);
         }
 

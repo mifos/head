@@ -6,4 +6,6 @@ public interface ConfigurationServiceFacade {
 
     AccountingConfigurationDto getAccountingConfiguration();
 
+    String getConfig(String key);
+
 }

@@ -27,6 +27,7 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.mifos.rest.approval.service.RESTCallInterruptException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
@@ -40,6 +41,14 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
     @Override
     protected ModelAndView doResolveException(HttpServletRequest request,  HttpServletResponse response, Object handler, Exception ex) {
         ModelAndView modelAndView = checkForAccessDenied(ex, request);
+
+        if (modelAndView == null && ex instanceof RESTCallInterruptException) {
+            modelAndView = new ModelAndView();
+            modelAndView.addObject("status", "interrupt");
+            modelAndView.addObject("approvalId", ((RESTCallInterruptException) ex).getApprovalId());
+            modelAndView.addObject("cause", "The call has been interrupt for approval");
+    		return modelAndView;
+        }
 
         if (modelAndView == null) {
             modelAndView = super.doResolveException(request, response, handler, ex);

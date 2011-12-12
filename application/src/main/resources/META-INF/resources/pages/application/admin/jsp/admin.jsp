@@ -190,6 +190,13 @@ explanation of the license and how it is applied.
 										<mifos:mifoslabel name="admin.importexport.viewaccountingexports" bundle="adminUIResources" /></a>
                                         </td>
 								</tr>
+								<tr class="fontnormal">
+									<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+									<td width="97%">
+										<a id="admin.link.viewaccountingexports" href="restApprovalList.ftl">
+										REST API Aprroval</a>
+                                        </td>
+								</tr>
 							</table>
                             <br>
 						</td>

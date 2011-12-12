@@ -21,8 +21,8 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
 <span id="page.id" title="json.ajax"></span>
-<script type="text/javascript" src="pages/rest/js/prettyprint.js"></script>
-<script type="text/javascript" src="pages/rest/js/jsonAjax.js"></script>
+<script type="text/javascript" src="js/prettyprint.js"></script>
+<script type="text/javascript" src="js/jsonAjax.js"></script>
 <div class="content "> <!--  Main Content Begins-->
 
 <br>
@@ -32,7 +32,7 @@
 <b>Savings Deposit :</b> account/savings/deposit/num-000100000000006.json<br>
 <br>
 
-<input id='resturl' type='text' value='client/num-0002-000000003.json' placeholder='Enter REST API URL..' size='100' ></input>
+<input id='resturl' type='text' value='account/savings/deposit/num-000100000000006.json?amount=10' placeholder='Enter REST API URL..' size='100' ></input>
 <br>
 <input type='button' id='getJSON' value='GET' onclick="loadJSON()" ></input>
 <input type='button' id='getJSONPretty' value='GET (pretty)' onclick="loadPrettyJSON()" ></input>

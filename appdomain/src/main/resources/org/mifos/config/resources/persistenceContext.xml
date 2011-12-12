@@ -23,6 +23,7 @@
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean" destroy-method="destroy">
         <property name="configLocations">
           <list>
+              <value>classpath:org/mifos/platform/rest/approval/domain/rest_hibernate.cfg.xml</value>
               <value>classpath:org/mifos/platform/questionnaire/domain/questionnaire_hibernate.cfg.xml</value>
               <value>classpath:org/mifos/platform/cashflow/domain/cashflow_hibernate.cfg.xml</value>
               <value>classpath:org/mifos/framework/util/resources/hibernate.cfg.xml</value>
