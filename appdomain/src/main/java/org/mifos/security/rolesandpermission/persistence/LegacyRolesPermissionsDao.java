@@ -198,26 +198,33 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
             }
 
             HierarchyManager.BranchLocation where = HierarchyManager.getInstance().compareOfficeInHierarchy(userContext, activityContext.getRecordOfficeId());
-            PersonnelLevel personnelLevel = userContext.getLevel();
-            short userId = userContext.getId().shortValue();
-            if (where == SAME) {
-                // 1 check if record belog to him if so let him do
-                if (userId == activityContext.getRecordLoanOfficer()) {
-                    return true;
-                } else if (PersonnelLevel.LOAN_OFFICER == personnelLevel) {
-                    return false;
-                }
-
-                return true;
-
-            } else if (where == BELOW && PersonnelLevel.LOAN_OFFICER != personnelLevel) {
-                return true;
-            }
-
-            return false;
+            return checkAccessByHierarchy(activityContext.getRecordLoanOfficer(), where, userContext.getLevel(), userContext.getId());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean isAccessAllowed(UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
+        HierarchyManager.BranchLocation where = HierarchyManager.getInstance().compareOfficeInHierarchy(userContext, recordOfficeId);
+        return checkAccessByHierarchy(recordLoanOfficerId, where, userContext.getLevel(), userContext.getId());
+    }
+
+    private boolean checkAccessByHierarchy(short recordLoanOfficer, HierarchyManager.BranchLocation where, PersonnelLevel personnelLevel, short userId) {
+        if (where == SAME) {
+            // 1 check if record belongs to him if so let him do
+            if (userId == recordLoanOfficer) {
+                return true;
+            } else if (PersonnelLevel.LOAN_OFFICER == personnelLevel) {
+                return false;
+            }
+
+            return true;
+
+        } else if (where == BELOW && PersonnelLevel.LOAN_OFFICER != personnelLevel) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

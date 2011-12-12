@@ -46,6 +46,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -93,6 +94,7 @@ import org.mifos.dto.screen.ClientPhotoDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.image.domain.ClientPhoto;
 import org.mifos.framework.image.service.ClientPhotoService;
@@ -106,6 +108,7 @@ import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.core.MifosRuntimeException;
 
 public class ClientCustAction extends CustAction implements QuestionnaireAction {
 
@@ -522,7 +525,16 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
                              @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         String clientSystemId = ((ClientCustActionForm) form).getGlobalCustNum();
-        ClientInformationDto clientInformationDto = clientServiceFacade.getClientInformationDto(clientSystemId);
+        ClientInformationDto clientInformationDto;
+        try {
+            clientInformationDto = clientServiceFacade.getClientInformationDto(clientSystemId);
+        }
+        catch (MifosRuntimeException e) {
+            if (e.getCause() instanceof ApplicationException) {
+                throw (ApplicationException) e.getCause();
+            }
+            throw e;
+        }
         SessionUtils.removeThenSetAttribute("clientInformationDto", clientInformationDto, request);
 
         // John W - for breadcrumb or another other action downstream that exists business_key set (until refactored)
