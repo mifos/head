@@ -293,6 +293,8 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testSearch() throws Exception {
+        setMifosUserFromContext();
+
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
         setRequestPathInfo("/customerNotesAction.do");

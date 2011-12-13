@@ -44,6 +44,7 @@ import org.mifos.application.servicefacade.CustomerSearch;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.calendar.CalendarUtils;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.struts.action.CustAction;
@@ -284,8 +285,16 @@ public class CenterCustAction extends CustAction {
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        // John W - UserContext passed because some status' need to be looked up for internationalisation
-        CenterInformationDto centerInformationDto = this.centerServiceFacade.getCenterInformationDto(((CenterCustActionForm) form).getGlobalCustNum());
+        CenterInformationDto centerInformationDto;
+        try {
+            centerInformationDto = this.centerServiceFacade.getCenterInformationDto(((CenterCustActionForm) form).getGlobalCustNum());
+        }
+        catch (MifosRuntimeException e) {
+            if (e.getCause() instanceof ApplicationException) {
+                throw (ApplicationException) e.getCause();
+            }
+            throw e;
+        }
         SessionUtils.removeThenSetAttribute("centerInformationDto", centerInformationDto, request);
 
         // John W - 'BusinessKey' attribute used by breadcrumb but is not in associated jsp

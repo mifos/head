@@ -362,6 +362,12 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
             throw new MifosRuntimeException("Center not found for globalCustNum" + globalCustNum);
         }
 
+        try {
+            personnelDao.checkAccessPermission(userContext, center.getOfficeId(), center.getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
+        }
+
         CenterDisplayDto centerDisplay = customerDao.getCenterDisplayDto(center.getCustomerId(),
                 userContext);
 

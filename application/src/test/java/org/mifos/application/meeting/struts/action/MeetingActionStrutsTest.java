@@ -20,6 +20,7 @@
 
 package org.mifos.application.meeting.struts.action;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import junit.framework.Assert;
@@ -46,10 +47,18 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
 
+    private UserContext userContext;
 
     private String flowKey;
     private CenterBO center;
@@ -59,7 +68,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Before
     public void setUp() throws Exception {
-        UserContext userContext = TestObjectFactory.getContext();
+        userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
         addRequestParameter("recordOfficeId", "1");
@@ -540,6 +549,8 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testEditForCenter() throws Exception {
+        setMifosUserFromContext();
+
         MeetingBO meeting = createWeeklyMeeting(WeekDay.WEDNESDAY, Short.valueOf("5"), new Date());
         center = createCenter(meeting);
 
@@ -566,6 +577,8 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testSuccessfulEditCancel() throws Exception {
+        setMifosUserFromContext();
+
         MeetingBO meeting = createWeeklyMeeting(WeekDay.WEDNESDAY, Short.valueOf("5"), new Date());
         center = createCenter(meeting);
         StaticHibernateUtil.flushSession();
@@ -620,5 +633,15 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
     private MeetingBO createMonthlyMeetingOnWeekDay(WeekDay weekDay, RankOfDay rank, Short recurAfer, Date startDate)
             throws MeetingException {
         return new MeetingBO(weekDay, rank, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
+    }
+
+    private void setMifosUserFromContext() {
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUser(userContext.getId(), userContext.getBranchId(), userContext.getLevelId(),
+                new ArrayList<Short>(userContext.getRoles()), userContext.getName(), "".getBytes(),
+                true, true, true, true, new ArrayList<GrantedAuthority>());
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 }

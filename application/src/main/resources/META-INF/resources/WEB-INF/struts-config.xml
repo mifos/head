@@ -96,6 +96,7 @@
             <forward name="cancel_success" path="/custSearchAction.do?method=loadMainSearch&amp;input=mainpage"/>
             <forward name="editcancel_success" path="/centerCustAction.do?method=get"/>
             <forward name="get_success" path="/pages/application/center/jsp/viewCenterDetails.jsp"/>
+            <forward name="get_failure" path="/pages/application/customer/jsp/empty.jsp"/>
             <forward name="search_success" path="/pages/application/center/jsp/center_search_results.jsp"/>
             <forward name="search_failure" path="/pages/application/center/jsp/center_search.jsp"/>
             <forward name="loadSearch_success" path="/pages/application/center/jsp/center_search.jsp"/>
