@@ -28,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeeDao;
@@ -301,6 +302,12 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
         GroupBO group = this.customerDao.findGroupBySystemId(globalCustNum);
         if (group == null) {
             throw new MifosRuntimeException("Group not found for globalCustNum: " + globalCustNum);
+        }
+
+        try {
+            personnelDao.checkAccessPermission(userContext, group.getOfficeId(), group.getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
         }
 
         GroupDisplayDto groupDisplay = this.customerDao.getGroupDisplayDto(group.getCustomerId(), userContext);

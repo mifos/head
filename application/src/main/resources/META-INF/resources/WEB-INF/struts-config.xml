@@ -128,6 +128,7 @@
             <forward name="create_failure" path="/pages/application/group/jsp/previewgroup.jsp"/>
 
             <forward name="get_success" path="/pages/application/group/jsp/viewgroupdetails.jsp"/>
+            <forward name="get_failure" path="/pages/application/customer/jsp/empty.jsp"/>
             <forward name="manage_success" path="/pages/application/group/jsp/edit_groupdetails.jsp"/>
             <forward name="previewManage_success" path="/pages/application/group/jsp/preview_editgroupdetails.jsp"/>
             <forward name="previewManage_failure" path="/pages/application/group/jsp/edit_groupdetails.jsp"/>
