@@ -43,6 +43,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.exceptions.CustomerException;
@@ -247,7 +248,16 @@ public class GroupCustAction extends CustAction {
         // on UserContext info
 
         String groupSystemId = ((GroupCustActionForm) form).getGlobalCustNum();
-        GroupInformationDto groupInformationDto = this.groupServiceFacade.getGroupInformationDto(groupSystemId);
+        GroupInformationDto groupInformationDto;
+        try {
+            groupInformationDto = this.groupServiceFacade.getGroupInformationDto(groupSystemId);
+        }
+        catch (MifosRuntimeException e) {
+            if (e.getCause() instanceof ApplicationException) {
+                throw (ApplicationException) e.getCause();
+            }
+            throw e;
+        }
         SessionUtils.removeThenSetAttribute("groupInformationDto", groupInformationDto, request);
 
         // John W - - not sure whether to leave these rules as is or do something else like bake the logic into the main

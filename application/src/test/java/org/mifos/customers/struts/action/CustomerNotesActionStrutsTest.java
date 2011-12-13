@@ -21,6 +21,7 @@
 package org.mifos.customers.struts.action;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import junit.framework.Assert;
 
@@ -41,7 +42,14 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -439,6 +447,8 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testSearchForGroup() throws Exception {
+        setMifosUserFromContext();
+
         createInitialObjects();
         setRequestPathInfo("/customerNotesAction.do");
         addRequestParameter("method", "load");
@@ -518,4 +528,13 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
     }
 
+    private void setMifosUserFromContext() {
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUser(userContext.getId(), userContext.getBranchId(), userContext.getLevelId(),
+                new ArrayList<Short>(userContext.getRoles()), userContext.getName(), "".getBytes(),
+                true, true, true, true, new ArrayList<GrantedAuthority>());
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+    }
 }
