@@ -71,6 +71,7 @@ import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -298,6 +299,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testSuccessfulGetBySystemId() throws Exception {
+        setMifosUserFromContext();
 
         createAndAddObjects(AccountState.SAVINGS_PARTIAL_APPLICATION);
         addRequestParameter("globalAccountNum", savings.getGlobalAccountNum());
@@ -319,6 +321,8 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testSuccessfulEdit() throws Exception {
+        setMifosUserFromContext();
+
         createAndAddObjects(AccountState.SAVINGS_PARTIAL_APPLICATION);
         savingsOffering = null;
         setRequestPathInfo("/savingsAction.do");
@@ -544,4 +548,13 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         }
     }
 
+    private void setMifosUserFromContext() {
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUser(userContext.getId(), userContext.getBranchId(), userContext.getLevelId(),
+                new ArrayList<Short>(userContext.getRoles()), userContext.getName(), "".getBytes(),
+                true, true, true, true, new ArrayList<GrantedAuthority>());
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+    }
 }

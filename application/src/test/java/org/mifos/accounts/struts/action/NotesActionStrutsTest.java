@@ -198,6 +198,8 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testSearch_Savings() throws Exception {
+        setMifosUserFromContext();
+
         savingsBO = getSavingsAccount("fsaf6", "ads6");
 
         setRequestPathInfo("/notesAction.do");
