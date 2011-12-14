@@ -254,6 +254,7 @@ public class SavingsAction extends BaseAction {
         logger.debug(" Retrieving for globalAccountNum: " + globalAccountNum);
 
         SavingsBO savings = this.savingsDao.findBySystemId(globalAccountNum);
+        savings.setUserContext(uc);
         SavingsAccountDetailDto savingsAccountDto;
         try {
             savingsAccountDto = this.savingsServiceFacade.retrieveSavingsAccountDetails(savings.getAccountId().longValue());
@@ -264,7 +265,6 @@ public class SavingsAction extends BaseAction {
             }
             throw e;
         }
-        savings.setUserContext(uc);
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, legacyMasterDao.findMasterDataEntitiesWithLocale(SavingsTypeEntity.class), request);
