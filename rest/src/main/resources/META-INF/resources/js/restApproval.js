@@ -52,6 +52,6 @@ function updateArgs(id) {
 		  data: JSON.stringify(content),
 		  dataType: 'json', 
           contentType: "application/json; charset=utf-8",
-		  success: function() { alert("Update successful!"); dialog.dialog("close"); }
+		  success: function() { alert("Update successful!"); }
 		});
 }
