@@ -2,6 +2,9 @@ package org.mifos.rest.approval.service;
 
 import static org.junit.Assert.*;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +37,9 @@ public class ApprovalServiceTest {
     @Autowired
     private ApprovalService approvalService;
 
+    @Autowired
+    private SessionFactory sessionFactory;
+
     @BeforeClass
     public static void init() {
         SecurityContext securityContext = new SecurityContextImpl();
@@ -41,6 +47,15 @@ public class ApprovalServiceTest {
         Authentication authentication = new TestingAuthenticationToken(principal, principal);
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);
+    }
+
+    @After
+    public void tearDown() {
+        // force cleanup
+        Session session = sessionFactory.getCurrentSession();
+        for(Object e : session.createCriteria(RESTApprovalEntity.class).list()) {
+            session.delete(e);
+        }
     }
 
     @Test
