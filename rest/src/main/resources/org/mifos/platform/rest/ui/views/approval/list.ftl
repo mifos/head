@@ -79,6 +79,9 @@
 #separateHR {
     width:100%;
 }
+.datatable {
+    float: left;
+}
 .datatables_wrapper {
     min-height: 30px;
 }
