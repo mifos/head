@@ -74,28 +74,28 @@ public class SavingsAccountRESTController {
 
     @RequestMapping(value = "account/savings/deposit/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
-    Map<String, String> deposit(@PathVariable String globalAccountNum, 
+    Map<String, String> deposit(@PathVariable String globalAccountNum,
     		                    @RequestParam(value="amount") String amountString) throws Exception {
         return doSavingsTrxn(globalAccountNum, amountString, TrxnTypes.savings_deposit);
     }
 
     @RequestMapping(value = "account/savings/withdraw/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
-    Map<String, String> withdraw(@PathVariable String globalAccountNum, 
+    Map<String, String> withdraw(@PathVariable String globalAccountNum,
     		                     @RequestParam(value="amount") String amountString) throws Exception {
         return doSavingsTrxn(globalAccountNum, amountString, TrxnTypes.savings_withdrawal);
     }
 
     @RequestMapping(value = "account/savings/adjustment/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
-    Map<String, String> applyAdjustment(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
-    	String amountString = request.getParameter("amount");
-    	String note = request.getParameter("note");
-    	
+    Map<String, String> applyAdjustment(@PathVariable String globalAccountNum,
+                                        @RequestParam(value="amount", required=false) String amountString,
+                                        @RequestParam(value="note", required=false) String note ) throws Exception {
+
     	Map<String, String> map = new HashMap<String, String>();
     	BigDecimal amount = null;
     	boolean validationPassed = true;
-    	
+
     	// validation
     	try {
     		amount = new BigDecimal(amountString);
@@ -110,27 +110,27 @@ public class SavingsAccountRESTController {
         if (note == null || note.isEmpty()){
         	map.put("note", "is not specified");
         	validationPassed = false;
-        }	
+        }
         if (!validationPassed){
         	map.put("status", "error");
         	return map;
         }
-    	
+
     	SavingsBO savingsBO = savingsDao.findBySystemId(globalAccountNum);
     	new SavingsPersistence().initialize(savingsBO);
     	Integer accountId = savingsBO.getAccountId();
     	Long savingsId = Long.valueOf(accountId.toString());
-    	
+
     	SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, amount.doubleValue(), note);
     	Money balanceBeforePayment = savingsBO.getSavingsBalance();
-    	
+
     	this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
-    	
+
     	MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	
+
     	DateTime today = new DateTime();
     	CustomerBO client = savingsBO.getCustomer();
-    	
+
         map.put("status", "success");
         map.put("clientName", client.getDisplayName());
         map.put("clientNumber", client.getGlobalCustNum());
@@ -142,10 +142,10 @@ public class SavingsAccountRESTController {
         map.put("balanceBeforeAdjustment", balanceBeforePayment.toString());
         map.put("balanceAfterAdjustment", savingsBO.getSavingsBalance().toString());
         map.put("note", note);
-        
+
     	return map;
     }
-    
+
     @RequestMapping(value = "/account/savings/num-{globalAccountNum}", method = RequestMethod.GET)
     public @ResponseBody
     SavingsAccountDetailDto getSavingsByNumber(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
@@ -164,7 +164,7 @@ public class SavingsAccountRESTController {
     	Map<String, String> map = new HashMap<String, String>();
         BigDecimal amount = null;
     	boolean validationPassed = true;
-    	
+
     	// validation
     	try {
     		amount = new BigDecimal(amountString);
