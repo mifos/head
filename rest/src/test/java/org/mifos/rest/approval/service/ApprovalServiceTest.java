@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.builders.MifosUserBuilder;
@@ -91,6 +92,7 @@ public class ApprovalServiceTest {
     }
 
     @Test
+    @Ignore
     public void testApproveFailure() throws Exception {
         createFailureApprovalMethod();
         RESTApprovalEntity rae = approvalService.getAllWaiting().get(0);
