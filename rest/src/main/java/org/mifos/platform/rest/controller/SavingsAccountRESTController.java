@@ -34,7 +34,6 @@ import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.application.util.helpers.TrxnTypes;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.CustomerDto;
@@ -92,15 +91,30 @@ public class SavingsAccountRESTController {
     Map<String, String> applyAdjustment(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
     	String amountString = request.getParameter("amount");
     	String note = request.getParameter("note");
-        BigDecimal amount = new BigDecimal(amountString);
-
-        if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new MifosRuntimeException("Amount must be greater or equal than 0");
+    	
+    	Map<String, String> map = new HashMap<String, String>();
+    	BigDecimal amount = null;
+    	boolean validationPassed = true;
+    	
+    	// validation
+    	try {
+    		amount = new BigDecimal(amountString);
+    	} catch (Exception e) {
+    		map.put("amount", "please specify correct");
+    		validationPassed = false;
+    	}
+        if (amount != null && amount.compareTo(BigDecimal.ZERO) < 0) {
+            map.put("amount", "must be grater or equal than 0");
+        	validationPassed = false;
         }
         if (note == null || note.isEmpty()){
-        	throw new MifosRuntimeException("Note is not specified");
+        	map.put("note", "is not specified");
+        	validationPassed = false;
+        }	
+        if (!validationPassed){
+        	map.put("status", "error");
+        	return map;
         }
-    	
     	
     	SavingsBO savingsBO = savingsDao.findBySystemId(globalAccountNum);
     	new SavingsPersistence().initialize(savingsBO);
@@ -116,8 +130,6 @@ public class SavingsAccountRESTController {
     	
     	DateTime today = new DateTime();
     	CustomerBO client = savingsBO.getCustomer();
-    	
-    	Map<String, String> map = new HashMap<String, String>();
     	
         map.put("status", "success");
         map.put("clientName", client.getDisplayName());
@@ -149,10 +161,24 @@ public class SavingsAccountRESTController {
     }
 
     private Map<String, String> doSavingsTrxn(String globalAccountNum, String amountString, TrxnTypes trxnType) throws Exception {
-        BigDecimal amount = new BigDecimal(amountString);
-
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new MifosRuntimeException("Amount must be greater than 0");
+    	Map<String, String> map = new HashMap<String, String>();
+        BigDecimal amount = null;
+    	boolean validationPassed = true;
+    	
+    	// validation
+    	try {
+    		amount = new BigDecimal(amountString);
+    	} catch (Exception e) {
+    		map.put("amount", "please specify correct");
+    		validationPassed = false;
+    	}
+        if (amount != null && amount.compareTo(BigDecimal.ZERO) <= 0) {
+        	map.put("amount", "must be grater than 0");
+        	validationPassed = false;
+        }
+        if (!validationPassed){
+        	map.put("status", "error");
+        	return map;
         }
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -188,7 +214,6 @@ public class SavingsAccountRESTController {
             this.savingsServiceFacade.withdraw(savingsWithdrawal);
         }
 
-        Map<String, String> map = new HashMap<String, String>();
         map.put("status", "success");
         map.put("clientName", client.getDisplayName());
         map.put("clientNumber", client.getGlobalCustNum());
