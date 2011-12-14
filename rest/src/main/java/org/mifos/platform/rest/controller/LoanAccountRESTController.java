@@ -83,10 +83,24 @@ public class LoanAccountRESTController {
     public @ResponseBody
     Map<String, String> repay(@PathVariable String globalAccountNum, @RequestParam(value="amount") String amountString) throws Exception {
 
-        BigDecimal amount = new BigDecimal(amountString);
-
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new MifosRuntimeException("Amount must be greater than 0");
+    	Map<String, String> map = new HashMap<String, String>();
+        BigDecimal amount = null;
+        boolean validationPassed = true;
+        
+        //validation
+        try {
+        	amount = new BigDecimal(amountString);
+        } catch (Exception e){
+        	map.put("amount","please specify correct");
+        	validationPassed = false;
+        }
+        if (amount != null && amount.compareTo(BigDecimal.ZERO) <= 0) {
+        	map.put("amount","must be greater than 0");
+            validationPassed = false;
+        }
+        if (!validationPassed) {
+        	map.put("status", "error");
+        	return map;
         }
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -113,8 +127,6 @@ public class LoanAccountRESTController {
 
         accountService.makePayment(payment);
 
-
-        Map<String, String> map = new HashMap<String, String>();
         map.put("status", "success");
         map.put("clientName", client.getDisplayName());
         map.put("clientNumber", client.getGlobalCustNum());
@@ -131,8 +143,24 @@ public class LoanAccountRESTController {
     @RequestMapping(value = "/account/loan/fullrepay/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> fullRepay(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
-
-    	boolean waiverInterest = Boolean.parseBoolean(request.getParameter("waiveInterest"));
+    	
+    	String waiverInterestString = request.getParameter("waiveInterest");
+    	      
+    	Map<String, String> map = new HashMap<String, String>();
+    	
+    	boolean validationPassed = true;
+	
+    	// validation
+    	if ( waiverInterestString == null ) {
+    		map.put("waiverInterest","please specify correct");
+    		validationPassed = false;
+    	}
+        if (!validationPassed) {
+        	map.put("status", "error");
+        	return map;
+        }
+        
+        boolean waiverInterest = Boolean.parseBoolean(waiverInterestString);
 
     	MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -162,7 +190,6 @@ public class LoanAccountRESTController {
 
         CustomerBO client = loan.getCustomer();
 
-    	Map<String, String> map = new HashMap<String, String>();
     	map.put("status", "success");
         map.put("clientName", client.getDisplayName());
         map.put("clientNumber", client.getGlobalCustNum());
@@ -216,9 +243,18 @@ public class LoanAccountRESTController {
     public @ResponseBody
     Map<String, String> applyAdjustment(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
     	String note = request.getParameter("note");
-
+    	
+		Map<String, String> map = new HashMap<String, String>();
+    	boolean validationPassed = true;
+    	
+    	// validation
         if (note == null || note.isEmpty()){
-        	throw new MifosRuntimeException("Note is not specified");
+        	map.put("note", "is not specified");
+        	validationPassed = false;
+        }
+        if (!validationPassed){
+        	map.put("status", "error");
+        	return map;
         }
 
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -236,8 +272,6 @@ public class LoanAccountRESTController {
 		}
 
 		DateTime today = new DateTime();
-
-		Map<String, String> map = new HashMap<String, String>();
 
 		map.put("status", "success");
 		map.put("clientName", client.getDisplayName());
@@ -259,13 +293,33 @@ public class LoanAccountRESTController {
     Map<String, String> applyCharge(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
     	String amountString = request.getParameter("amount");
     	String feeIdString = request.getParameter("feeId");
-
-    	Double chargeAmount = Double.parseDouble(amountString);
-    	Short feeId = Short.parseShort(feeIdString);
-
-		if ( chargeAmount <= 0 ){
-    		throw new MifosRuntimeException("Amount must be greater than 0");
+    	
+    	Map<String, String> map = new HashMap<String, String>();
+    	Double chargeAmount = null;
+    	Short feeId = null;
+    	boolean validationPassed = true;
+    	
+    	//validation
+    	try {
+    		chargeAmount = Double.parseDouble(amountString);
+    	} catch (Exception e){
+    		map.put("amount", "please specify correct");
+    		validationPassed = false;
     	}
+    	try {
+    		feeId = Short.parseShort(feeIdString);
+    	} catch (Exception e){
+    		map.put("feeId", "please specify correct");
+    		validationPassed = false;
+    	}
+		if ( chargeAmount != null && chargeAmount <= 0 ){
+    		map.put("amount", "must be greater than 0");
+    		validationPassed = false;
+    	}
+        if (!validationPassed){
+        	map.put("status", "error");
+        	return map;
+        }
 
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
@@ -277,8 +331,6 @@ public class LoanAccountRESTController {
     	this.accountServiceFacade.applyCharge(accountId, feeId, chargeAmount);
 
     	DateTime today = new DateTime();
-
-    	Map<String, String> map = new HashMap<String, String>();
 
 		map.put("status", "success");
 		map.put("clientName", client.getDisplayName());

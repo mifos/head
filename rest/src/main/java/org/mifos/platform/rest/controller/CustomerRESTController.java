@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.servicefacade.AccountServiceFacade;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
@@ -39,12 +38,32 @@ public class CustomerRESTController {
     	String amountString = request.getParameter("amount");
     	String feeIdString = request.getParameter("feeId");
     	
-    	Double chargeAmount = Double.parseDouble(amountString);
-    	Short feeId = Short.parseShort(feeIdString);
+    	Map<String, String> map = new HashMap<String, String>();
+    	Double chargeAmount = null;
+    	Short feeId = null;
+    	boolean validationPassed = true;
     	
-		if ( chargeAmount <= 0 ){
-    		throw new MifosRuntimeException("Amount must be greater than 0");
+    	//validation
+    	try {
+    		chargeAmount = Double.parseDouble(amountString);
+    	} catch (Exception e){
+    		map.put("amount", "please specify correct");
+    		validationPassed = false;
     	}
+    	try {
+    		feeId = Short.parseShort(feeIdString);
+    	} catch (Exception e){
+    		map.put("feeId", "please specify correct");
+    		validationPassed = false;
+    	}
+		if ( chargeAmount != null && chargeAmount <= 0 ){
+    		map.put("amount", "must be greater than 0");
+    		validationPassed = false;
+    	}
+        if (!validationPassed){
+        	map.put("status", "error");
+        	return map;
+        }
     	
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
@@ -55,8 +74,6 @@ public class CustomerRESTController {
     	this.accountServiceFacade.applyCharge(accountId, feeId, chargeAmount);
     	
     	DateTime today = new DateTime();
-    	
-    	Map<String, String> map = new HashMap<String, String>();
     	
 		map.put("status", "success");
 		map.put("clientName", customerBO.getDisplayName());
