@@ -49,7 +49,7 @@
 			<th>Operation</th>
 			<th>State</th>
 			<th>Created Date</th>
-			<th>Aprroval Date</th>
+			<th>Aporoval Date</th>
 			<th>-</th>
 		</tr>
 	</thead>
