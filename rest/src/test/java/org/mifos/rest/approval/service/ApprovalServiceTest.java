@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/test-context.xml")
-@TransactionConfiguration
+@TransactionConfiguration(defaultRollback=true)
 @Transactional
 public class ApprovalServiceTest {
 
