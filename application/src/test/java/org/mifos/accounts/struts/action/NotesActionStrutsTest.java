@@ -22,6 +22,7 @@ package org.mifos.accounts.struts.action;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 
 import junit.framework.Assert;
 
@@ -45,8 +46,16 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+
 
 public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -187,6 +196,8 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testSearch_Savings() throws Exception {
+        setMifosUserFromContext();
+
         savingsBO = getSavingsAccount("fsaf6", "ads6");
 
         setRequestPathInfo("/notesAction.do");
@@ -321,6 +332,8 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testSearch_Loan() throws Exception {
+        setMifosUserFromContext();
+
         loanBO = getLoanAccount();
 
         setRequestPathInfo("/notesAction.do");
@@ -386,5 +399,15 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         return TestObjectFactory.createLoanAccount("42423142341", client, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
+    }
+
+    private void setMifosUserFromContext() {
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUser(userContext.getId(), userContext.getBranchId(), userContext.getLevelId(),
+                new ArrayList<Short>(userContext.getRoles()), userContext.getName(), "".getBytes(),
+                true, true, true, true, new ArrayList<GrantedAuthority>(), userContext.getLocaleId());
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 }

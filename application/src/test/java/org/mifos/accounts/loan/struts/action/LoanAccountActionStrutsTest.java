@@ -90,8 +90,15 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
@@ -183,6 +190,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     @Test
     public void testGetForCancelledLoanAccount() throws Exception {
+        setMifosUserFromContext();
+
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
@@ -303,6 +312,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     @Test
     public void testGet() throws Exception {
+        setMifosUserFromContext();
+
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
         LoanBO loan = (LoanBO) accountBO;
@@ -324,6 +335,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     @Test
     public void testGetWithPayment() throws Exception {
+        setMifosUserFromContext();
+
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
         disburseLoan(startDate);
@@ -665,5 +678,15 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 .asList(clientMock1, clientMock2), Arrays.asList(loanMock), new ArrayList<ValueListElement>());
         Assert.assertEquals(Arrays.asList(clientDetails1, clientDetails2), clientDetails);
         verify(clientMock1, clientMock2, loanMock);
+    }
+
+    private void setMifosUserFromContext() {
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUser(userContext.getId(), userContext.getBranchId(), userContext.getLevelId(),
+                new ArrayList<Short>(userContext.getRoles()), userContext.getName(), "".getBytes(),
+                true, true, true, true, new ArrayList<GrantedAuthority>(), userContext.getLocaleId());
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 }

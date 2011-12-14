@@ -49,7 +49,7 @@
 			<th>Operation</th>
 			<th>State</th>
 			<th>Created Date</th>
-			<th>Aprroval Date</th>
+			<th>Approval Date</th>
 			<th>-</th>
 		</tr>
 	</thead>
@@ -78,6 +78,9 @@
 }
 #separateHR {
     width:100%;
+}
+.datatable {
+    float: left;
 }
 .datatables_wrapper {
     min-height: 30px;

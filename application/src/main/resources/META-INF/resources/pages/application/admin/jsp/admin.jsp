@@ -194,7 +194,7 @@ explanation of the license and how it is applied.
 									<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 									<td width="97%">
 										<a id="admin.link.viewaccountingexports" href="restApprovalList.ftl">
-										REST API Aprroval</a>
+										REST API Approval</a>
                                         </td>
 								</tr>
 							</table>

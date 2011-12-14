@@ -110,6 +110,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
@@ -121,6 +122,7 @@ import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -274,7 +276,17 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         loanAccountActionForm.clearDetailsForLoan();
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
         UserContext userContext = getUserContext(request);
-        LoanInformationDto loanInformationDto = this.loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
+
+        LoanInformationDto loanInformationDto;
+        try {
+            loanInformationDto = this.loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
+        }
+        catch (MifosRuntimeException e) {
+            if (e.getCause() instanceof ApplicationException) {
+                throw (ApplicationException) e.getCause();
+            }
+            throw e;
+        }
 
         final String accountStateNameLocalised = ApplicationContextProvider.getBean(MessageLookup.class).lookup(loanInformationDto.getAccountStateName());
         SessionUtils.removeThenSetAttribute("accountStateNameLocalised", accountStateNameLocalised, request);

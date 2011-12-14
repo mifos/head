@@ -1296,6 +1296,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         UserContext userContext = new UserContextFactory().create(mifosUser);
 
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+
+        try {
+            personnelDao.checkAccessPermission(userContext, loan.getOfficeId(), loan.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
+        }
+
         String fundName = null;
         if (loan.getFund() != null) {
             fundName = loan.getFund().getFundName();
