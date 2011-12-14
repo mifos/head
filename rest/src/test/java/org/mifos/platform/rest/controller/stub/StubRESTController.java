@@ -38,11 +38,16 @@ public class StubRESTController {
         return dummyCall(arg);
     }
 
+    @RequestMapping(value = "fail", method = RequestMethod.POST)
+    public @ResponseBody String failCall(@PathVariable String arg) throws Exception {
+        throw new IllegalArgumentException();
+    }
+
     @RequestMapping(value = "create", method = RequestMethod.PUT)
     public @ResponseBody String createCall(@PathVariable String arg) throws Exception {
         return dummyCall(arg);
     }
-    
+
     @RequestMapping(value = "delete", method = RequestMethod.DELETE)
     public @ResponseBody String deleteCall(@PathVariable String arg) throws Exception {
         return dummyCall(arg);

@@ -35,8 +35,11 @@ public class ApprovalRESTController {
         model.addAttribute("breadcrumbs", breadcrumbs);
 
         Object result = approvalService.approve(id);
-
-        model.addAttribute("status", "success");
+        if(result.toString().startsWith("Error")) {
+            model.addAttribute("status", "error");
+        } else {
+            model.addAttribute("status", "success");
+        }
         model.addAttribute("result", result);
         return model;
     }

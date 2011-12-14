@@ -11,10 +11,15 @@ function reject(id) {
 }
 
 function operation(id, type) {
+	updateArgs(id, false)
 	var answer = confirm("Are you sure you want to "+type+"?")
 	if(answer) {
 		var url = baseURL +"id-"+ id +"/"+type+".json";
 		$.post(url,function(data) {
+			        if(data.status == 'error') {
+		        		alert(data.result);
+		        		return;
+			        }
 	                location.reload(true);
 	            })
 	}
@@ -40,7 +45,7 @@ function editArgs(id) {
             })
 }
 
-function updateArgs(id) {
+function updateArgs(id, alert) {
 	for(var i=0; i< content.argsHolder.values.length; i++) {
 		content.argsHolder.values[i] = $("#value_"+i).val();
 	}
@@ -52,6 +57,6 @@ function updateArgs(id) {
 		  data: JSON.stringify(content),
 		  dataType: 'json', 
           contentType: "application/json; charset=utf-8",
-		  success: function() { alert("Update successful!"); }
+		  success: function() {if (alert !== undefined) { alert("Update successful!");} }
 		});
 }

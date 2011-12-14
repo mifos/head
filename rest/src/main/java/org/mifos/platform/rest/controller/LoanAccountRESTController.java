@@ -63,13 +63,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class LoanAccountRESTController {
 	private static final ResourceBundle accountsUIResource = ResourceBundle.getBundle("org.mifos.config.localizedResources.accountsUIResources");
-	
+
     @Autowired
     private AccountService accountService;
 
     @Autowired
     private LoanAccountServiceFacade loanAccountServiceFacade;
-    
+
     @Autowired
     private AccountServiceFacade accountServiceFacade;
 
@@ -131,37 +131,37 @@ public class LoanAccountRESTController {
     @RequestMapping(value = "/account/loan/fullrepay/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> fullRepay(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
-    	
+
     	boolean waiverInterest = Boolean.parseBoolean(request.getParameter("waiveInterest"));
-    	
+
     	MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	
+
         RepayLoanDto repayLoanDto = this.loanAccountServiceFacade.retrieveLoanRepaymentDetails(globalAccountNum);
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
-        
+
     	DateTime today = new DateTime();
         Date receiptDate = new Date(today.toDate().getTime());
 
         // from where these parameter should come?
         String receiptId = "";
-        
+
         BigDecimal totalRepaymentAmount = ( new Money(loan.getCurrency(), repayLoanDto.getEarlyRepaymentMoney()) ).getAmount();
         BigDecimal waivedAmount = ( new Money(loan.getCurrency(), repayLoanDto.getWaivedRepaymentMoney()) ).getAmount();
-        
+
         String paymentTypeId = "1";
-        
+
         RepayLoanInfoDto repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
         		Long.toString(totalRepaymentAmount.longValue()), receiptId,
                 receiptDate, paymentTypeId, (short) user.getUserId(),
                 waiverInterest,
                 receiptDate,totalRepaymentAmount,waivedAmount);
-        
+
         Money outstandingBeforePayment = loan.getLoanSummary().getOutstandingBalance();
-        
+
         this.loanAccountServiceFacade.makeEarlyRepaymentWithCommit(repayLoanInfoDto);
-        
+
         CustomerBO client = loan.getCustomer();
-        
+
     	Map<String, String> map = new HashMap<String, String>();
     	map.put("status", "success");
         map.put("clientName", client.getDisplayName());
@@ -173,30 +173,30 @@ public class LoanAccountRESTController {
         map.put("paymentMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
         map.put("outstandingBeforePayment", outstandingBeforePayment.toString());
         map.put("outstandingAfterPayment", loan.getLoanSummary().getOutstandingBalance().toString());
-    	
+
     	return map;
     }
-    
+
     @RequestMapping(value = "/account/loan/disburse/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> disburseLoan(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
-    	
+
     	MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
-    	
+
     	DateTime today = new DateTime();
     	PaymentTypeDto paymentType = accountService.getLoanPaymentTypes().get(0);
     	String comment = "";
     	Short paymentTypeId = PaymentTypes.CASH.getValue();
-    	
+
        	Money outstandingBeforeDisbursement = loan.getLoanSummary().getOutstandingBalance();
-    	
-    	AccountPaymentParametersDto loanDisbursement = new AccountPaymentParametersDto(new UserReferenceDto((short)user.getUserId()), 
+
+    	AccountPaymentParametersDto loanDisbursement = new AccountPaymentParametersDto(new UserReferenceDto((short)user.getUserId()),
     			new AccountReferenceDto(loan.getAccountId()), loan.getLoanAmount().getAmount(), today.toLocalDate(), paymentType, comment);
     	this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
-    	
+
     	CustomerBO client = loan.getCustomer();
-    	
+
     	Map<String, String> map = new HashMap<String, String>();
     	map.put("status", "success");
     	map.put("clientName", client.getDisplayName());
@@ -208,37 +208,37 @@ public class LoanAccountRESTController {
         map.put("disbursementMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
         map.put("outstandingBeforeDisbursement", outstandingBeforeDisbursement.toString());
         map.put("outstandingAfterDisbursement", loan.getLoanSummary().getOutstandingBalance().toString());
-    	
+
     	return map;
     }
-    
+
     @RequestMapping(value = "/account/loan/adjustment/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> applyAdjustment(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
     	String note = request.getParameter("note");
-    	
+
         if (note == null || note.isEmpty()){
         	throw new MifosRuntimeException("Note is not specified");
         }
-    	
+
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
     	CustomerBO client = loan.getCustomer();
-    	
+
 		String adjustmentAmount = loan.getLastPmnt().getAmount().toString();
 		String outstandingBeforeAdjustment = loan.getLoanSummary().getOutstandingBalance().toString();
-		
+
 		try{
 			accountServiceFacade.applyAdjustment(globalAccountNum, note, (short)user.getUserId());
 		} catch (MifosRuntimeException e){
         	String error = accountsUIResource.getString(e.getCause().getLocalizedMessage());
         	throw new MifosRuntimeException(error);
 		}
-		
+
 		DateTime today = new DateTime();
-		
+
 		Map<String, String> map = new HashMap<String, String>();
-    	
+
 		map.put("status", "success");
 		map.put("clientName", client.getDisplayName());
         map.put("clientNumber", client.getGlobalCustNum());
@@ -250,36 +250,36 @@ public class LoanAccountRESTController {
         map.put("outstandingBeforeAdjustment", outstandingBeforeAdjustment);
         map.put("outstandingAfterAdjustment", loan.getLoanSummary().getOutstandingBalance().toString());
         map.put("note", note);
-		
+
     	return map;
     }
-    
+
     @RequestMapping(value = "/account/loan/charge/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> applyCharge(@PathVariable String globalAccountNum, HttpServletRequest request) throws Exception {
     	String amountString = request.getParameter("amount");
     	String feeIdString = request.getParameter("feeId");
-    	
+
     	Double chargeAmount = Double.parseDouble(amountString);
     	Short feeId = Short.parseShort(feeIdString);
-    	
+
 		if ( chargeAmount <= 0 ){
     		throw new MifosRuntimeException("Amount must be greater than 0");
     	}
-    	
+
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
 		Integer accountId = loan.getAccountId();
 		CustomerBO client = loan.getCustomer();
-		
+
 		String outstandingBeforeCharge = loan.getLoanSummary().getOutstandingBalance().toString();
-		
+
     	this.accountServiceFacade.applyCharge(accountId, feeId, chargeAmount);
-    	
+
     	DateTime today = new DateTime();
-    	
+
     	Map<String, String> map = new HashMap<String, String>();
-    	
+
 		map.put("status", "success");
 		map.put("clientName", client.getDisplayName());
         map.put("clientNumber", client.getGlobalCustNum());
@@ -290,10 +290,10 @@ public class LoanAccountRESTController {
         map.put("chargeMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
         map.put("outstandingBeforeCharge", outstandingBeforeCharge);
         map.put("outstandingAfterCharge", loan.getLoanSummary().getOutstandingBalance().toString());
-    	
+
     	return map;
     }
-    
+
     @RequestMapping(value = "/account/loan/num-{globalAccountNum}", method = RequestMethod.GET)
     public @ResponseBody
     LoanInformationDto getLoanByNumber(@PathVariable String globalAccountNum) throws Exception {

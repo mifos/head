@@ -28,9 +28,7 @@
                <td>${approval.operation}</td>
                <td>${approval.printableCreatedOnDate}</td>
                <td>${approval.state}</td>
-               <td> <a href="#" onclick='approve(${approval.id})'>Approve</a> &nbsp;|&nbsp;
-                    <a href="#" onclick='editArgs(${approval.id})'>Details</a>&nbsp;|&nbsp;
-                    <a href="#" onclick='reject(${approval.id})'>Reject</a> </td>
+               <td><a href="#" onclick='editArgs(${approval.id})'>Details (Approve/Reject)</a></td>
             </tr>
         [/#list]
     </tbody>
@@ -49,7 +47,7 @@
 			<th>Operation</th>
 			<th>State</th>
 			<th>Created Date</th>
-			<th>Aprroval Date</th>
+			<th>Approval Date</th>
 			<th>-</th>
 		</tr>
 	</thead>
@@ -78,6 +76,9 @@
 }
 #separateHR {
     width:100%;
+}
+.datatable {
+    float: left;
 }
 .datatables_wrapper {
     min-height: 30px;
