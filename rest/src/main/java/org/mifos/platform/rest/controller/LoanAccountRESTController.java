@@ -86,6 +86,7 @@ public class LoanAccountRESTController {
     	Map<String, String> map = new HashMap<String, String>();
         BigDecimal amount = null;
         boolean validationPassed = true;
+        LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
         
         //validation
         try {
@@ -98,6 +99,10 @@ public class LoanAccountRESTController {
         	map.put("amount","must be greater than 0");
             validationPassed = false;
         }
+        if ( !loan.getState().isActiveLoanAccountState() ){
+        	map.put("errorCause","Loan account is not in active state.");
+        	validationPassed = false;
+        }
         if (!validationPassed) {
         	map.put("status", "error");
         	return map;
@@ -105,8 +110,7 @@ public class LoanAccountRESTController {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserReferenceDto userDto = new UserReferenceDto((short) user.getUserId());
-        LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
-
+ 
         Money outstandingBeforePayment = loan.getLoanSummary().getOutstandingBalance();
 
         AccountReferenceDto accountDto = new AccountReferenceDto(loan.getAccountId());
@@ -149,12 +153,17 @@ public class LoanAccountRESTController {
     	Map<String, String> map = new HashMap<String, String>();
     	
     	boolean validationPassed = true;
-	
+    	LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+    	
     	// validation
     	if ( waiverInterestString == null ) {
-    		map.put("waiverInterest","please specify correct");
+    		map.put("waiveInterest","please specify correct");
     		validationPassed = false;
     	}
+        if ( !loan.getState().isActiveLoanAccountState() ){
+        	map.put("errorCause","Loan account is not in active state.");
+        	validationPassed = false;
+        }
         if (!validationPassed) {
         	map.put("status", "error");
         	return map;
@@ -165,8 +174,7 @@ public class LoanAccountRESTController {
     	MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         RepayLoanDto repayLoanDto = this.loanAccountServiceFacade.retrieveLoanRepaymentDetails(globalAccountNum);
-        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
-
+        
     	DateTime today = new DateTime();
         Date receiptDate = new Date(today.toDate().getTime());
 
