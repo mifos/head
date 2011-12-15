@@ -105,7 +105,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * A savings account is ...
  */
 public class SavingsBO extends AccountBO {
 
