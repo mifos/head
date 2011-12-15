@@ -6,7 +6,7 @@
 <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
 <span id="page.id" title="approval.list"></span>
 <div class="content "> <!--  Main Content Begins-->
-[@mifos.crumbs breadcrumbs /]
+[@widget.crumbs breadcrumbs /]
 <br /><br />
 <span id="dialog" title="Operation Details" style="display:none;">Details</span>
 <table id="waitingForApprovalList" class="datatable">
