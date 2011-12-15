@@ -165,6 +165,8 @@ public class SavingsAccountRESTController {
         BigDecimal amount = null;
     	boolean validationPassed = true;
 
+        SavingsBO savingsBO = savingsDao.findBySystemId(globalAccountNum);
+    	
     	// validation
     	try {
     		amount = new BigDecimal(amountString);
@@ -176,14 +178,16 @@ public class SavingsAccountRESTController {
         	map.put("amount", "must be grater than 0");
         	validationPassed = false;
         }
+        if ( !savingsBO.getState().isActiveSavingsAccountState() ){
+        	map.put("errorCause","Savings account is not in active state.");
+        	validationPassed = false;
+        }
         if (!validationPassed){
         	map.put("status", "error");
         	return map;
         }
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        SavingsBO savingsBO = savingsDao.findBySystemId(globalAccountNum);
 
         Integer accountId = savingsBO.getAccountId();
 
