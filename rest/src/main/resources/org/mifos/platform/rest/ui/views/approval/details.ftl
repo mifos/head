@@ -13,17 +13,14 @@
 <div><span><b>Operation Arguments :</b></span><span>
 [#assign i = 0]
 [#list approval.approvalMethod.argsHolder.values as value]
-    [#if !approvedBy??]
-   	    <input id='value_${i}' type=text value=${value} />
-    [#else]
-        ${value}&nbsp;
-    [/#if]
-       [#assign i=i+1]
+    <input id='value_${i}' type=text value=${value} [#if approvedBy??]readonly=readonly[/#if]/>
+    [#assign i=i+1]
 [/#list]
 </span></div>
 
 [#if !approvedBy??]
-    <div><input onclick='updateArgs(${approval.id})' type=button value=Update /></div>
+    <div><input onclick='updateArgs(${approval.id})' type=button value=Update />&nbsp;|&nbsp;
+    <input type=button onclick='approve(${approval.id})' value="Approve" />&nbsp;|&nbsp; <input type=button onclick='reject(${approval.id})' value="Reject"/></div>
 [/#if]
 
 [#if approvedBy??]

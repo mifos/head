@@ -10,6 +10,8 @@ import org.mifos.rest.approval.domain.ApprovalMethod;
 import org.mifos.rest.approval.domain.ApprovalState;
 import org.mifos.rest.approval.domain.RESTApprovalEntity;
 import org.mifos.security.MifosUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(rollbackFor=Exception.class)
 public class StandardApprovalService implements ApprovalService {
+
+    public static final Logger LOG = LoggerFactory.getLogger(StandardApprovalService.class);
 
     @Autowired
     ApprovalDao approvalDao;
@@ -67,9 +71,16 @@ public class StandardApprovalService implements ApprovalService {
     public Object approve(Long id) throws Exception {
         RESTApprovalEntity entity = approvalDao.getDetails(id);
         ApprovalMethod am = entity.getApprovalMethod();
-        entity.setState(ApprovalState.APPROVED);
 
-        Object result = excuteMethod(am);
+        Object result = null;
+        try {
+            result = excuteMethod(am);
+            entity.setState(ApprovalState.APPROVED);
+        } catch (Exception e) {
+            skipCreate = false;
+            result =  "Error : check parameters"+ ((e.getCause() != null) ? " : " +e.getCause().getMessage() : "");
+            LOG.warn("Invalid call", e);
+        }
 
         entity.setApprovedBy(getCurrentUserId());
         entity.setApprovedOn(new DateTime());
