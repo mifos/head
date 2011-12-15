@@ -34,7 +34,7 @@ public class CustomerRESTController {
 	@RequestMapping(value = "/customer/charge/num-{globalCustNum}", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> applyCharge(@PathVariable String globalCustNum,
-                                    @RequestParam(value="amoung", required = false) String amountString,
+                                    @RequestParam(value="amount", required = false) String amountString,
                                     @RequestParam(value="feeId", required = false) String feeIdString) throws Exception {
 
     	Map<String, String> map = new HashMap<String, String>();
