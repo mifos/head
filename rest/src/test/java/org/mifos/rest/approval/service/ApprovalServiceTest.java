@@ -108,7 +108,7 @@ public class ApprovalServiceTest {
     private void createApprovalMethod() throws Exception {
         Class[] c = new Class[1];
         c[0] = String.class;
-        MethodArgHolder args = new MethodArgHolder(c, new Object[1]);
+        MethodArgHolder args = new MethodArgHolder(c, new Object[1], new String[1]);
         ApprovalMethod am = new ApprovalMethod("updateCall", StubRESTController.class, args);
         try {
             approvalService.create(am);
@@ -119,7 +119,7 @@ public class ApprovalServiceTest {
     private void createFailureApprovalMethod() throws Exception {
         Class[] c = new Class[1];
         c[0] = String.class;
-        MethodArgHolder args = new MethodArgHolder(c, new Object[1]);
+        MethodArgHolder args = new MethodArgHolder(c, new Object[1], new String[1]);
         ApprovalMethod am = new ApprovalMethod("failCall", StubRESTController.class, args);
         try {
             approvalService.create(am);
