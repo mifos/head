@@ -78,7 +78,7 @@ public class StandardApprovalService implements ApprovalService {
             entity.setState(ApprovalState.APPROVED);
         } catch (Exception e) {
             skipCreate = false;
-            result =  "Error : check parameters"+ ((e.getMessage() != null) ? " : " +e.getMessage() : "");
+            result =  "Error : check parameters"+ ((e.getCause() != null) ? " : " +e.getCause().getMessage() : "");
             LOG.warn("Invalid call", e);
         }
 
