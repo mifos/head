@@ -77,8 +77,8 @@
         <propertyName name="salutation" displayKey="Client.customerNameDetailSet.salutation"  parentName="nameDetailSet" doNotLog="No" lookUp="yes">
             <entityName name="Salutation"/>
         </propertyName>
-        <propertyName name="ethinicity" displayKey="Client.ethnicity"  parentName="customerDetail" doNotLog="No" lookUp="yes">
-            <entityName name="Ethinicity"/>
+        <propertyName name="ethnicity" displayKey="Client.ethnicity"  parentName="customerDetail" doNotLog="No" lookUp="yes">
+            <entityName name="Ethnicity"/>
         </propertyName>
         <propertyName name="citizenship" displayKey="Client.citizenship"  parentName="customerDetail" doNotLog="No" lookUp="yes">
             <entityName name="Citizenship"/>

@@ -43,7 +43,7 @@ public interface ConfigurationConstants {
     String ID = "ID";
     String HANDICAPPED = "Handicapped";
     String CITIZENSHIP = "Citizenship";
-    String ETHINICITY = "Ethinicity";
+    String ETHNICITY = "Ethnicity";
     String EXTERNALID = "ExternalId";
     String SAVINGS = "Savings";
     String INTEREST = "Interest";

@@ -153,11 +153,11 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
             this.gender = gender;
         }
         
-        public int getEthincity() {
+        public int getEthnicity() {
             return this.ethnicity;
         }
         
-        public void setEthincity(int ethnicity) {
+        public void setEthnicity(int ethnicity) {
             this.ethnicity = ethnicity;
         }
         
@@ -319,7 +319,7 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
         selectValueIfNotZero("clientDetailView.maritalStatus", parameters.getMaritalStatus());
         typeTextIfNotEmpty("clientDetailView.numChildren", parameters.getNumberOfChildren());
         selectValueIfNotZero("clientDetailView.citizenship", parameters.getCitizenship());
-        selectValueIfNotZero("clientDetailView.ethinicity", parameters.getEthincity());
+        selectValueIfNotZero("clientDetailView.ethnicity", parameters.getEthnicity());
         selectValueIfNotZero("clientDetailView.educationLevel", parameters.getEducationLevel());
         typeTextIfNotEmpty("create_ClientPersonalInfo.input.spouseSecondLastName", parameters.getSpouseLastName());
         typeTextIfNotEmpty("dateOfBirthDD", parameters.getDateOfBirthDD());
@@ -372,7 +372,7 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
             verifySelectHasOption("clientDetailView.citizenship", lookupOptionParams.getName());
             break;
         case DefineLookupOptionParameters.TYPE_ETHNICITY:
-            verifySelectHasOption("clientDetailView.ethinicity", lookupOptionParams.getName());
+            verifySelectHasOption("clientDetailView.ethnicity", lookupOptionParams.getName());
             break;
         case DefineLookupOptionParameters.TYPE_EDUCATION_LEVEL:
             verifySelectHasOption("clientDetailView.educationLevel", lookupOptionParams.getName());
@@ -383,6 +383,26 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
         default:
             break;
         }
+    }
+
+    public String[] getMandatoryBlankFieldsNames() {
+        dontLoadNext();
+        String xpath = "//span[@id=\"create_ClientPersonalInfo.error.message\"]/li";
+        int errorCount = selenium.getXpathCount(xpath).intValue();
+        String[] errors = new String[errorCount];
+
+        for (int i = 1; i <= errorCount; ++i) {
+            String error = selenium.getText(String.format("%s[%d]", xpath, i));
+            error = error.replace("Please specify ", "");
+
+            if (error.startsWith("value for ")) {
+                error = error.replace("value for ", "");
+            }
+
+            errors[i - 1] = error.replace(".", "");
+        }
+
+        return errors;
     }
 
 

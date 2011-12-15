@@ -288,13 +288,13 @@ explanation of the license and how it is applied.
 												<c:out value="${citizenship.name}"/>
 											</c:if>
 										</c:forEach><br>
-									</span> <%-- Ethinicity --%></td></tr>
-									<tr id="Client.Ethinicity"><td class="fontnormalbold"><mifos:mifoslabel
-										name="${ConfigurationConstants.ETHINICITY}" keyhm="Client.Ethinicity" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/> <span
+									</span> <%-- Ethnicity --%></td></tr>
+									<tr id="Client.Ethnicity"><td class="fontnormalbold"><mifos:mifoslabel
+										name="${ConfigurationConstants.ETHNICITY}" keyhm="Client.Ethnicity" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/> <span
 										class="fontnormal">
-										<c:forEach var="ethinicity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ethinicityEntity')}">
-											<c:if test = "${ethinicity.id == sessionScope.clientCustActionForm.clientDetailView.ethinicity}">
-												<c:out value="${ethinicity.name}"/>
+										<c:forEach var="ethnicity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ethnicityEntity')}">
+											<c:if test = "${ethnicity.id == sessionScope.clientCustActionForm.clientDetailView.ethnicity}">
+												<c:out value="${ethnicity.name}"/>
 											</c:if>
 										</c:forEach><br>
 									</span></td></tr>

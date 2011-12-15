@@ -125,7 +125,7 @@ public interface CustomerDao {
 
     List<ValueListElement> retrieveHandicapped();
 
-    List<ValueListElement> retrieveEthinicity();
+    List<ValueListElement> retrieveEthnicity();
 
     List<ValueListElement> retrievePoverty();
 

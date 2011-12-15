@@ -71,7 +71,7 @@ public class LookupOptionsAction extends BaseAction {
             request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.maritalstatus"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_MARITAL_STATUS);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_ETHNICITY)) {
-            String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.ETHINICITY, userContext);
+            String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.ETHNICITY, userContext);
             request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, label);
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_ETHNICITY);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_EDUCATION_LEVEL)) {
@@ -216,7 +216,7 @@ public class LookupOptionsAction extends BaseAction {
             lookupOptionsActionForm.setUserTitles(valueList.getCustomValueListElements());
         } else if (configurationEntity.equals(MasterConstants.MARITAL_STATUS)) {
             lookupOptionsActionForm.setMaritalStatuses(valueList.getCustomValueListElements());
-        } else if (configurationEntity.equals(MasterConstants.ETHINICITY)) {
+        } else if (configurationEntity.equals(MasterConstants.ETHNICITY)) {
             lookupOptionsActionForm.setEthnicities(valueList.getCustomValueListElements());
         } else if (configurationEntity.equals(MasterConstants.EDUCATION_LEVEL)) {
             lookupOptionsActionForm.setEducationLevels(valueList.getCustomValueListElements());
@@ -280,7 +280,7 @@ public class LookupOptionsAction extends BaseAction {
                 ConfigurationConstants.CITIZENSHIP, userContext));
         lookupOptionsActionForm.setHandicapped(MessageLookup.getInstance().lookupLabel(
                 ConfigurationConstants.HANDICAPPED, userContext));
-        lookupOptionsActionForm.setEthnicity(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.ETHINICITY,
+        lookupOptionsActionForm.setEthnicity(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.ETHNICITY,
                 userContext));
 
     }
@@ -301,7 +301,7 @@ public class LookupOptionsAction extends BaseAction {
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_PERSONNEL_TITLE);
         populateConfigurationListBox(MasterConstants.MARITAL_STATUS, legacyMasterDao, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_MARITAL_STATUS);
-        populateConfigurationListBox(MasterConstants.ETHINICITY, legacyMasterDao, localeId, request,
+        populateConfigurationListBox(MasterConstants.ETHNICITY, legacyMasterDao, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_ETHNICITY);
         populateConfigurationListBox(MasterConstants.EDUCATION_LEVEL, legacyMasterDao, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_EDUCATION_LEVEL);

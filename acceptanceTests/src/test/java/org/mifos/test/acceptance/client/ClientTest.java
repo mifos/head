@@ -30,6 +30,7 @@ import org.mifos.test.acceptance.framework.account.AccountStatus;
 import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.DefineAcceptedPaymentTypesPage;
+import org.mifos.test.acceptance.framework.admin.DefineHiddenMandatoryFieldsPage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPage;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIParameters;
@@ -185,6 +186,39 @@ public class ClientTest extends UiTestCaseBase {
         // Then
         applyPaymentPage.verifyModeOfPayments();
 
+    }
+    
+    @Test(singleThreaded = true, groups = {"smoke", "client", "acceptance", "ui"}, enabled=true)
+    public void verifyErrorsMessages() {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        DefineHiddenMandatoryFieldsPage mandatoryFieldsPage = adminPage.navigateToDefineHiddenMandatoryFields();
+
+        mandatoryFieldsPage.checkMandatoryCitizenShip();
+        mandatoryFieldsPage.checkMandatoryEthnicity();
+        mandatoryFieldsPage.checkMandatoryMaritalStatus();
+        
+        mandatoryFieldsPage.submit();
+        
+        CreateClientEnterPersonalDataPage personalDataPage = navigationHelper.navigateToCreateClientEnterPersonalDataPage("MyOffice1232993831593");
+        
+        String[] errors = personalDataPage.getMandatoryBlankFieldsNames();
+        String[] fields = new String[] { "Salutation", "First Name", "Last Name", "Date of birth", "Gender",
+                "Ethnicity", "Citizenship", "Poverty status", "Marital Status" };
+        
+        for(int i = 0; i < fields.length; ++i) {
+            Assert.assertEquals(fields[i], errors[i]);
+        }
+        
+        adminPage = navigationHelper.navigateToAdminPage();
+        
+        adminPage.navigateToDefineHiddenMandatoryFields();
+        
+        mandatoryFieldsPage.uncheckMandatoryCitizenShip();
+        mandatoryFieldsPage.uncheckMandatoryEthnicity();
+        mandatoryFieldsPage.uncheckMandatoryMaritalStatus();
+        
+        mandatoryFieldsPage.submit();
+        adminPage.logout();
     }
 
     @Test(singleThreaded = true, groups = {"smoke", "client", "acceptance", "ui"}, enabled=true)
