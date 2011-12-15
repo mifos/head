@@ -66,7 +66,7 @@ public class CustomerRESTController {
 
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
-		Integer accountId = customerBO.getCustomerId();
+		Integer accountId = customerBO.getCustomerAccount().getAccountId();
 
 		Money totalDueBeforeCharge = customerBO.getCustomerAccount().getTotalAmountDue();
 
