@@ -22,16 +22,14 @@ explanation of the license and how it is applied.
 <td width="174" height="350" align="left" valign="top" class="bgorangeleft">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 		
-		<tr>
-          <td class="leftpanehead">
-          <tiles:getAsString name="menutitle"/>
-          </td>
-        </tr>
-       
-       
-       
-        <tr> 
-		<menu:leftmenu topMenuTab="Home"/>
-        </tr>
+	<tr>
+		<td class="leftpanehead">
+		<tiles:getAsString name="menutitle"/>
+		</td>
+	</tr>
+	
+	<tr> 
+	<menu:leftmenu topMenuTab="Home"/>
+	</tr>
 </table>
 </td>      
