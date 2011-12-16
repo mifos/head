@@ -52,7 +52,7 @@ public class HibernateApprovalDao implements ApprovalDao {
     public List<RESTApprovalEntity> findByExcludingState(ApprovalState state) {
         return getSession().createCriteria(RESTApprovalEntity.class)
                            .add(Restrictions.ne("state", state))
-                           .addOrder(Order.desc("createdOn"))
+                           .addOrder(Order.desc("approvedOn"))
                            .list();
     }
 
