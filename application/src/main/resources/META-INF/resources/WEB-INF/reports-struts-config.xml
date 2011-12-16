@@ -3,6 +3,8 @@
         "http://struts.apache.org/dtds/struts-config_1_2.dtd">
 <struts-config>
     <form-beans>
+    	<form-bean name="pentahoReportsActionForm" type="org.mifos.reports.struts.actionforms.ReportsActionForm"/>
+    	
         <!-- Reports action form  -->
         <form-bean name="reportsActionForm" type="org.mifos.reports.struts.actionforms.ReportsActionForm"/>
         <!-- Birt Reports action form  -->
@@ -29,6 +31,12 @@
     </form-beans>
 
     <action-mappings>
+    	<action path="/pentahoReportsAction" type="org.mifos.reports.struts.action.PentahoReportsAction"
+                name="pentahoReportsActionForm" parameter="method" scope="session" input="/pentahoReportsAction.do?method=validate"
+                validate="false">
+            <forward name="load_success" path="/pages/application/reports/jsp/pentahoReports.jsp"/>
+        </action>
+    
         <!--  Reports Action -->
         <action path="/reportsAction" type="org.mifos.reports.struts.action.ReportsAction"
                 name="reportsActionForm" parameter="method" scope="session" input="/reportsAction.do?method=validate"
