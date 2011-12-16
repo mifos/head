@@ -16,4 +16,6 @@ public interface ApprovalDao {
     List<RESTApprovalEntity> getDetailsAll();
 
     List<RESTApprovalEntity> findByState(ApprovalState state);
+
+    List<RESTApprovalEntity> findByExcludingState(ApprovalState state);
 }
