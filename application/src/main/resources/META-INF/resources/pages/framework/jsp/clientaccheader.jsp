@@ -34,6 +34,7 @@ explanation of the license and how it is applied.
 								name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
                   <td class="tablightorange"><a id="clientsAndAccountsHeader.link.reports" href="reportsAction.do?method=load"><mifos:mifoslabel
 								name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
+				  <td class="tablightorange"><a id="homeheader.link.pentahoreports" href="pentahoReportsAction.do?method=load"><mifos:mifoslabel name="framework.pentahoreports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>								
                   <td class="taborange"><a id="clientsAndAccountsHeader.link.admin" href="AdminAction.do?method=load" class="tabfontwhite"><mifos:mifoslabel
 								name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
               </c:when>
@@ -42,8 +43,10 @@ explanation of the license and how it is applied.
 								name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
                   <td class="tablightorange"><a id="clientsAndAccountsHeader.link.reports" href="reportsAction.do?method=load"><mifos:mifoslabel
 								name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
+				  <td class="tablightorange"><a id="homeheader.link.pentahoreports" href="pentahoReportsAction.do?method=load"><mifos:mifoslabel name="framework.pentahoreports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
+				  							
                   <td class="tablightorange"><a id="clientsAndAccountsHeader.link.admin" href="AdminAction.do?method=load"><mifos:mifoslabel
-								name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
+								name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>				  								
               </c:otherwise>
           </c:choose>
         </tr>
