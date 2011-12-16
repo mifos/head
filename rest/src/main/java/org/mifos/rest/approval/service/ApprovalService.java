@@ -18,10 +18,7 @@ public interface ApprovalService {
     List<RESTApprovalEntity> getAllWaiting();
 
     @PreAuthorize("isFullyAuthenticated() and hasAnyRole('CAN_APPROVE_REST_API')")
-    List<RESTApprovalEntity> getAllApproved();
-
-    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('CAN_APPROVE_REST_API')")
-    List<RESTApprovalEntity> getAllRejected();
+    List<RESTApprovalEntity> getAllNotWaiting();
 
     @PreAuthorize("isFullyAuthenticated() and hasAnyRole('CAN_APPROVE_REST_API')")
     Object approve(Long id) throws Exception;
