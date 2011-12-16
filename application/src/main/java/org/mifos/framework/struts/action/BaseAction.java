@@ -21,7 +21,9 @@
 package org.mifos.framework.struts.action;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -83,6 +85,7 @@ import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
+import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.components.fieldConfiguration.persistence.LegacyFieldConfigurationDao;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -515,8 +518,23 @@ public abstract class BaseAction extends DispatchAction {
         // FIXME - keithw - when replacing BaseActions loadChangeLog functionality for given entity when doing spring/ftl
         // see CenterServiceFacade.retrieveChangeLogs for example.
         AuditBusinessService auditBusinessService = new AuditBusinessService();
-        request.getSession().setAttribute(AuditConstants.AUDITLOGRECORDS,
-                auditBusinessService.getAuditLogRecords(entityType, entityId));
+        List<AuditLogView> auditLogViewList = auditBusinessService.getAuditLogRecords(entityType, entityId);
+        
+        // FIXME - mdudzinski - MIFOS-5303 simple fix. Filtering client change log from unnecessary field.
+        // If this kind of situation will be repeated, more elegant solution will be needed. 
+        if ( entityType == EntityType.CLIENT.getValue() ){
+        	List<AuditLogView> newAuditLogViewList = new ArrayList<AuditLogView>();
+        	
+        	for (AuditLogView auditLogView : auditLogViewList){
+        		if ( !auditLogView.getField().equals("phoneNumberStripped")){
+        			newAuditLogViewList.add(auditLogView);
+        		}
+        	}
+        	
+        	auditLogViewList = newAuditLogViewList;
+        }
+        
+        request.getSession().setAttribute(AuditConstants.AUDITLOGRECORDS, auditLogViewList);
 
         return mapping.findForward(AuditConstants.VIEW + request.getParameter(AuditConstants.ENTITY_TYPE)
                 + AuditConstants.CHANGE_LOG);
