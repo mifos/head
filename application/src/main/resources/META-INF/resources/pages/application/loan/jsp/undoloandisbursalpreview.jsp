@@ -49,7 +49,7 @@ explanation of the license and how it is applied.
 						<table width="90%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="left" valign="top">
-									<span class="headingorange"><mifos:mifoslabel name="loan.reverse" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.disbursal" /> - <mifos:mifoslabel name="loan.preview" /></span>
+									<span class="heading"><mifos:mifoslabel name="loan.reverse" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.disbursal" /> - </span><span class="headingorange"> <mifos:mifoslabel name="loan.preview" /></span>
 								</td>
 							</tr>
 						</table>
@@ -57,7 +57,7 @@ explanation of the license and how it is applied.
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td valign="top" class="fontnormal">
-									<font color="#FF0000"> <mifos:mifoslabel name="loan.areyousure" /><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.alreadyDisbursed" />. <mifos:mifoslabel
+									<font color="#FF0000"> <mifos:mifoslabel name="loan.areyousure" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.alreadyDisbursed" />? <mifos:mifoslabel
 											name="loan.ifyouclicksubmit" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.accountStatuschanged" /> <mifos:mifoslabel name="loan.clickcanceladmin" /></font>
 								</td>
 							</tr>
