@@ -71,6 +71,15 @@
 #dialog span {
    margin-left: 5px;
 }
+.args {
+    text-align: right;
+    width: 500px;
+    clear: both;
+}
+.args input {
+    margin-left: 10px;
+    float: right;
+}
 .sorting {
     background-color: #C3D9FF;
 }

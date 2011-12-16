@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mifos.builders.MifosUserBuilder;
 import org.mifos.framework.hibernate.helper.Transactional;
 import org.mifos.platform.rest.controller.stub.StubRESTController;
+import org.mifos.rest.approval.domain.RESTApprovalEntity;
 import org.mifos.rest.approval.service.ApprovalService;
 import org.mifos.rest.approval.service.RESTCallInterruptException;
 import org.mifos.security.MifosUser;
@@ -50,6 +51,8 @@ public class AspectJApprovalInterceptorTest {
 			Assert.fail("should throw interrupt exception");
 		} catch (RESTCallInterruptException e) {}
 		Assert.assertEquals(1, approvalService.getAllWaiting().size());
+		RESTApprovalEntity entity = approvalService.getAllWaiting().get(0);
+		Assert.assertEquals("arg", entity.getApprovalMethod().getArgsHolder().getNames()[0]);
 	}
 
 }

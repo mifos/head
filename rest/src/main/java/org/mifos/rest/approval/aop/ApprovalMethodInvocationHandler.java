@@ -32,12 +32,16 @@ import org.mifos.rest.config.RESTConfigKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 public class ApprovalMethodInvocationHandler implements MethodInvocationHandler {
 
     public static final Logger LOG = LoggerFactory.getLogger(ApprovalMethodInvocationHandler.class);
+
+    @Autowired
+    private ParameterNameDiscoverer parameterNameDiscoverer;
 
     @Autowired
     ApprovalService approvalService;
@@ -83,8 +87,9 @@ public class ApprovalMethodInvocationHandler implements MethodInvocationHandler 
 
             Class<?>[] argTypes = m.getParameterTypes();
             String methodName = m.getName();
+            String[] names = parameterNameDiscoverer.getParameterNames(m);
 
-            MethodArgHolder args = new MethodArgHolder(argTypes, argValues);
+            MethodArgHolder args = new MethodArgHolder(argTypes, argValues, names);
             ApprovalMethod method = new ApprovalMethod(methodName, methodClassType, args);
             approvalService.create(method);
 

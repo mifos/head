@@ -36,17 +36,18 @@ import org.mifos.rest.config.RESTConfigKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Spring AspectJ Around advice intercept any REST call which is not GET (read-only) <br><br>
- * (Wanted to use Spring AOP {@link MethodInvocationInterceptor}) but it’s not working for 
- * some reason though we have {@link ApprovalInterceptor} and its tests and it shows pointcut 
- * in Springsource STS, but at runtime it’s not working). The downside of using AspectJ based intercepter is 
- * the dependency on AJDT tooling and m2e aspectj-maven support would be required for 
- * REST module which makes development environment a little heavier. 
- * 
+ * (Wanted to use Spring AOP {@link MethodInvocationInterceptor}) but it’s not working for
+ * some reason though we have {@link ApprovalInterceptor} and its tests and it shows pointcut
+ * in Springsource STS, but at runtime it’s not working). The downside of using AspectJ based intercepter is
+ * the dependency on AJDT tooling and m2e aspectj-maven support would be required for
+ * REST module which makes development environment a little heavier.
+ *
  * @author ugupta
  */
 @Aspect
@@ -55,10 +56,13 @@ public class AspectJRESTApprovalInterceptor {
 	public static final String REST_METHOD = "execution(public * org.mifos.platform.rest.controller..*RESTController.*(..))";
 
 	public static final String REQUEST_MAPPING = "@annotation(org.springframework.web.bind.annotation.RequestMapping)";
-	
+
 	public static final String EXCLUDE_APPROVAL_API = "!execution(public * org.mifos.platform.rest.controller.ApprovalRESTController.*(..))";
 
 	public static final Logger LOG = LoggerFactory.getLogger(AspectJRESTApprovalInterceptor.class);
+
+	@Autowired
+	private ParameterNameDiscoverer parameterNameDiscoverer;
 
 	@Autowired
     ApprovalService approvalService;
@@ -68,7 +72,7 @@ public class AspectJRESTApprovalInterceptor {
 
     @Pointcut(REST_METHOD)
     public void restMethods() {}
-    
+
     @Pointcut(EXCLUDE_APPROVAL_API)
     public void excludeAPI() {}
 
@@ -83,6 +87,7 @@ public class AspectJRESTApprovalInterceptor {
         // FIXME : somehow autowiring is not working
         if (approvalService == null) {approvalService = ApplicationContextProvider.getBean(ApprovalService.class);}
         if (configurationServiceFacade == null) {configurationServiceFacade = ApplicationContextProvider.getBean(ConfigurationServiceFacade.class);}
+        if (parameterNameDiscoverer == null) {parameterNameDiscoverer = ApplicationContextProvider.getBean(ParameterNameDiscoverer.class);}
 
         String approvalConfigValue = configurationServiceFacade.getConfig(RESTConfigKey.REST_APPROVAL_REQUIRED);
         if(!RESTConfigKey.isApprovalRequired(approvalConfigValue)) {
@@ -111,8 +116,9 @@ public class AspectJRESTApprovalInterceptor {
 
 			Class<?>[] argTypes = m.getParameterTypes();
 			String methodName = m.getName();
+			String[] names = parameterNameDiscoverer.getParameterNames(m);
 
-	        MethodArgHolder args = new MethodArgHolder(argTypes, argValues);
+	        MethodArgHolder args = new MethodArgHolder(argTypes, argValues, names);
 			ApprovalMethod method = new ApprovalMethod(methodName, methodClassType, args);
 			approvalService.create(method);
 		}
