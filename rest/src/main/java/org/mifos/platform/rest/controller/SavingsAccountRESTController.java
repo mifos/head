@@ -46,6 +46,8 @@ import org.mifos.dto.screen.SavingsAccountDepositDueDto;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.platform.rest.controller.RESTAPIHelper.ErrorMessage;
+import org.mifos.platform.rest.controller.validation.ParamValidationException;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,46 +77,26 @@ public class SavingsAccountRESTController {
     @RequestMapping(value = "account/savings/deposit/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> deposit(@PathVariable String globalAccountNum,
-    		                    @RequestParam(value="amount") String amountString) throws Exception {
-        return doSavingsTrxn(globalAccountNum, amountString, TrxnTypes.savings_deposit);
+    		                    @RequestParam BigDecimal amount) throws Exception {
+        return doSavingsTrxn(globalAccountNum, amount, TrxnTypes.savings_deposit);
     }
 
     @RequestMapping(value = "account/savings/withdraw/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> withdraw(@PathVariable String globalAccountNum,
-    		                     @RequestParam(value="amount") String amountString) throws Exception {
-        return doSavingsTrxn(globalAccountNum, amountString, TrxnTypes.savings_withdrawal);
+    		                     @RequestParam BigDecimal amount) throws Exception {
+        return doSavingsTrxn(globalAccountNum, amount, TrxnTypes.savings_withdrawal);
     }
 
     @RequestMapping(value = "account/savings/adjustment/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> applyAdjustment(@PathVariable String globalAccountNum,
-                                        @RequestParam(value="amount", required=false) String amountString,
-                                        @RequestParam(value="note", required=false) String note ) throws Exception {
+                                        @RequestParam BigDecimal amount,
+                                        @RequestParam String note ) throws Exception {
 
-    	Map<String, String> map = new HashMap<String, String>();
-    	BigDecimal amount = null;
-    	boolean validationPassed = true;
+    	validateAmount(amount);
 
-    	// validation
-    	try {
-    		amount = new BigDecimal(amountString);
-    	} catch (Exception e) {
-    		map.put("amount", "please specify correct");
-    		validationPassed = false;
-    	}
-        if (amount != null && amount.compareTo(BigDecimal.ZERO) < 0) {
-            map.put("amount", "must be grater or equal than 0");
-        	validationPassed = false;
-        }
-        if (note == null || note.isEmpty()){
-        	map.put("note", "is not specified");
-        	validationPassed = false;
-        }
-        if (!validationPassed){
-        	map.put("status", "error");
-        	return map;
-        }
+        validateNote(note);
 
     	SavingsBO savingsBO = savingsDao.findBySystemId(globalAccountNum);
     	new SavingsPersistence().initialize(savingsBO);
@@ -131,6 +113,7 @@ public class SavingsAccountRESTController {
     	DateTime today = new DateTime();
     	CustomerBO client = savingsBO.getCustomer();
 
+        Map<String, String> map = new HashMap<String, String>();
         map.put("status", "success");
         map.put("clientName", client.getDisplayName());
         map.put("clientNumber", client.getGlobalCustNum());
@@ -160,32 +143,13 @@ public class SavingsAccountRESTController {
         return savingsServiceFacade.retrieveDepositDueDetails(globalAccountNum);
     }
 
-    private Map<String, String> doSavingsTrxn(String globalAccountNum, String amountString, TrxnTypes trxnType) throws Exception {
-    	Map<String, String> map = new HashMap<String, String>();
-        BigDecimal amount = null;
-    	boolean validationPassed = true;
+    private Map<String, String> doSavingsTrxn(String globalAccountNum, BigDecimal amount, TrxnTypes trxnType) throws Exception {
+
+    	validateAmount(amount);
 
         SavingsBO savingsBO = savingsDao.findBySystemId(globalAccountNum);
-    	
-    	// validation
-    	try {
-    		amount = new BigDecimal(amountString);
-    	} catch (Exception e) {
-    		map.put("amount", "please specify correct");
-    		validationPassed = false;
-    	}
-        if (amount != null && amount.compareTo(BigDecimal.ZERO) <= 0) {
-        	map.put("amount", "must be grater than 0");
-        	validationPassed = false;
-        }
-        if ( !savingsBO.getState().isActiveSavingsAccountState() ){
-        	map.put("errorCause","Savings account is not in active state.");
-        	validationPassed = false;
-        }
-        if (!validationPassed){
-        	map.put("status", "error");
-        	return map;
-        }
+
+        validateAccountState(savingsBO);
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -218,6 +182,7 @@ public class SavingsAccountRESTController {
             this.savingsServiceFacade.withdraw(savingsWithdrawal);
         }
 
+        Map<String, String> map = new HashMap<String, String>();
         map.put("status", "success");
         map.put("clientName", client.getDisplayName());
         map.put("clientNumber", client.getGlobalCustNum());
@@ -230,4 +195,23 @@ public class SavingsAccountRESTController {
         map.put("balanceAfterPayment", savingsBO.getSavingsBalance().toString());
         return map;
     }
+
+    private void validateAmount(BigDecimal amount) throws ParamValidationException {
+        if (amount != null && amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ParamValidationException(ErrorMessage.NON_NEGATIVE_AMOUNT);
+        }
+    }
+
+    private void validateNote(String note) throws ParamValidationException {
+        if (note == null || note.isEmpty()){
+            throw new ParamValidationException(ErrorMessage.INVALID_NOTE);
+        }
+    }
+
+    public void validateAccountState(SavingsBO savingsBO) throws ParamValidationException {
+        if (!savingsBO.getState().isActiveSavingsAccountState() ){
+            throw new ParamValidationException(ErrorMessage.NOT_ACTIVE_ACCOUNT);
+        }
+    }
+
 }
