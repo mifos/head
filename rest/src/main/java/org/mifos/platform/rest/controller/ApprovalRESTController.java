@@ -1,12 +1,8 @@
 package org.mifos.platform.rest.controller;
 
-import java.util.List;
-
 import org.mifos.rest.approval.domain.ApprovalMethod;
 import org.mifos.rest.approval.domain.RESTApprovalEntity;
 import org.mifos.rest.approval.service.ApprovalService;
-import org.mifos.ui.core.controller.AdminBreadcrumbBuilder;
-import org.mifos.ui.core.controller.BreadCrumbsLinks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -31,9 +27,6 @@ public class ApprovalRESTController {
     @RequestMapping(value="id-{id}/approve", method=RequestMethod.POST)
     public ModelMap approve(@PathVariable(value="id") Long id) throws Exception {
         ModelMap model = new ModelMap();
-        List<BreadCrumbsLinks> breadcrumbs = new AdminBreadcrumbBuilder().build();
-        model.addAttribute("breadcrumbs", breadcrumbs);
-
         Object result = approvalService.approve(id);
         if(result.toString().startsWith("Error")) {
             model.addAttribute("status", "error");

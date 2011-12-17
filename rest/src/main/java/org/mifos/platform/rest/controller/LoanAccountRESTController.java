@@ -47,6 +47,8 @@ import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.platform.rest.controller.RESTAPIHelper.ErrorMessage;
+import org.mifos.platform.rest.controller.validation.ParamValidationException;
 import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -77,32 +79,13 @@ public class LoanAccountRESTController {
 
     @RequestMapping(value = "/account/loan/repay/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
-    Map<String, String> repay(@PathVariable String globalAccountNum, @RequestParam(value="amount") String amountString) throws Exception {
+    Map<String, String> repay(@PathVariable String globalAccountNum, @RequestParam BigDecimal amount) throws Exception {
 
-    	Map<String, String> map = new HashMap<String, String>();
-        BigDecimal amount = null;
-        boolean validationPassed = true;
+        validateAmount(amount);
+
         LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
 
-        //validation
-        try {
-        	amount = new BigDecimal(amountString);
-        } catch (Exception e){
-        	map.put("amount","please specify correct");
-        	validationPassed = false;
-        }
-        if (amount != null && amount.compareTo(BigDecimal.ZERO) <= 0) {
-        	map.put("amount","must be greater than 0");
-            validationPassed = false;
-        }
-        if ( !loan.getState().isActiveLoanAccountState() ){
-        	map.put("errorCause","Loan account is not in active state.");
-        	validationPassed = false;
-        }
-        if (!validationPassed) {
-        	map.put("status", "error");
-        	return map;
-        }
+        validateLoanAccountState(loan);
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserReferenceDto userDto = new UserReferenceDto((short) user.getUserId());
@@ -127,6 +110,7 @@ public class LoanAccountRESTController {
 
         accountService.makePayment(payment);
 
+        Map<String, String> map = new HashMap<String, String>();
         map.put("status", "success");
         map.put("clientName", client.getDisplayName());
         map.put("clientNumber", client.getGlobalCustNum());
@@ -143,29 +127,11 @@ public class LoanAccountRESTController {
     @RequestMapping(value = "/account/loan/fullrepay/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> fullRepay(@PathVariable String globalAccountNum,
-                                  @RequestParam(value="waiveInterest", required=false) String waiverInterestString) throws Exception {
+                                  @RequestParam Boolean waiveInterest) throws Exception {
 
 
-    	Map<String, String> map = new HashMap<String, String>();
-
-    	boolean validationPassed = true;
     	LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
-
-    	// validation
-    	if ( waiverInterestString == null ) {
-    		map.put("waiveInterest","please specify correct");
-    		validationPassed = false;
-    	}
-        if ( !loan.getState().isActiveLoanAccountState() ){
-        	map.put("errorCause","Loan account is not in active state.");
-        	validationPassed = false;
-        }
-        if (!validationPassed) {
-        	map.put("status", "error");
-        	return map;
-        }
-
-        boolean waiverInterest = Boolean.parseBoolean(waiverInterestString);
+    	validateLoanAccountState(loan);
 
     	MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -185,7 +151,7 @@ public class LoanAccountRESTController {
         RepayLoanInfoDto repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
         		Long.toString(totalRepaymentAmount.longValue()), receiptId,
                 receiptDate, paymentTypeId, (short) user.getUserId(),
-                waiverInterest,
+                waiveInterest,
                 receiptDate,totalRepaymentAmount,waivedAmount);
 
         Money outstandingBeforePayment = loan.getLoanSummary().getOutstandingBalance();
@@ -194,6 +160,7 @@ public class LoanAccountRESTController {
 
         CustomerBO client = loan.getCustomer();
 
+        Map<String, String> map = new HashMap<String, String>();
     	map.put("status", "success");
         map.put("clientName", client.getDisplayName());
         map.put("clientNumber", client.getGlobalCustNum());
@@ -246,20 +213,9 @@ public class LoanAccountRESTController {
     @RequestMapping(value = "/account/loan/adjustment/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> applyAdjustment(@PathVariable String globalAccountNum,
-                        @RequestParam(value="note", required=false) String note) throws Exception {
+                                        @RequestParam String note) throws Exception {
 
-		Map<String, String> map = new HashMap<String, String>();
-    	boolean validationPassed = true;
-
-    	// validation
-        if (note == null || note.isEmpty()){
-        	map.put("note", "is not specified");
-        	validationPassed = false;
-        }
-        if (!validationPassed){
-        	map.put("status", "error");
-        	return map;
-        }
+        validateNote(note);
 
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
@@ -277,6 +233,7 @@ public class LoanAccountRESTController {
 
 		DateTime today = new DateTime();
 
+        Map<String, String> map = new HashMap<String, String>();
 		map.put("status", "success");
 		map.put("clientName", client.getDisplayName());
         map.put("clientNumber", client.getGlobalCustNum());
@@ -295,36 +252,12 @@ public class LoanAccountRESTController {
     @RequestMapping(value = "/account/loan/charge/num-{globalAccountNum}", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> applyCharge(@PathVariable String globalAccountNum,
-                                    @RequestParam(value="amount", required=false) String amountString,
-                                    @RequestParam(value="feeId", required=false) String feeIdString) throws Exception {
+                                    @RequestParam BigDecimal amount,
+                                    @RequestParam Short feeId) throws Exception {
 
-    	Map<String, String> map = new HashMap<String, String>();
-    	Double chargeAmount = null;
-    	Short feeId = null;
-    	boolean validationPassed = true;
+        validateAmount(amount);
 
-    	//validation
-    	try {
-    		chargeAmount = Double.parseDouble(amountString);
-    	} catch (Exception e){
-    		map.put("amount", "please specify correct");
-    		validationPassed = false;
-    	}
-    	try {
-    		feeId = Short.parseShort(feeIdString);
-    	} catch (Exception e){
-    		map.put("feeId", "please specify correct");
-    		validationPassed = false;
-    	}
-		if ( chargeAmount != null && chargeAmount <= 0 ){
-    		map.put("amount", "must be greater than 0");
-    		validationPassed = false;
-    	}
-        if (!validationPassed){
-        	map.put("status", "error");
-        	return map;
-        }
-
+        Map<String, String> map = new HashMap<String, String>();
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
 		Integer accountId = loan.getAccountId();
@@ -332,7 +265,7 @@ public class LoanAccountRESTController {
 
 		String outstandingBeforeCharge = loan.getLoanSummary().getOutstandingBalance().toString();
 
-    	this.accountServiceFacade.applyCharge(accountId, feeId, chargeAmount);
+    	this.accountServiceFacade.applyCharge(accountId, feeId, amount.doubleValue());
 
     	DateTime today = new DateTime();
 
@@ -342,7 +275,7 @@ public class LoanAccountRESTController {
         map.put("loanDisplayName", loan.getLoanOffering().getPrdOfferingName());
         map.put("chargeDate", today.toLocalDate().toString());
         map.put("chargeTime", today.toLocalTime().toString());
-        map.put("chargeAmount", Double.toString(chargeAmount));
+        map.put("chargeAmount", Double.valueOf(amount.doubleValue()).toString());
         map.put("chargeMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
         map.put("outstandingBeforeCharge", outstandingBeforeCharge);
         map.put("outstandingAfterCharge", loan.getLoanSummary().getOutstandingBalance().toString());
@@ -384,4 +317,23 @@ public class LoanAccountRESTController {
     List<LoanRepaymentScheduleItemDto> getLoanRepaymentScheduleByNumber(@PathVariable String globalAccountNum) throws Exception {
         return loanAccountServiceFacade.retrieveLoanRepaymentSchedule(globalAccountNum);
     }
+
+    private void validateAmount(BigDecimal amount) throws ParamValidationException {
+        if (amount != null && amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ParamValidationException(ErrorMessage.NON_NEGATIVE_AMOUNT);
+        }
+    }
+
+    private void validateNote(String note) throws ParamValidationException {
+        if (note == null || note.isEmpty()){
+            throw new ParamValidationException(ErrorMessage.INVALID_NOTE);
+        }
+    }
+
+    public void validateLoanAccountState(LoanBO loan) throws ParamValidationException {
+        if (!loan.getState().isActiveLoanAccountState()){
+            throw new ParamValidationException(ErrorMessage.NOT_ACTIVE_ACCOUNT);
+        }
+    }
+
 }

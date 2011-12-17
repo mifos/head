@@ -27,6 +27,7 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.mifos.platform.rest.controller.validation.ParamValidationException;
 import org.mifos.rest.approval.service.RESTCallInterruptException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,12 +43,34 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
     protected ModelAndView doResolveException(HttpServletRequest request,  HttpServletResponse response, Object handler, Exception ex) {
         ModelAndView modelAndView = checkForAccessDenied(ex, request);
 
-        if (modelAndView == null && ex instanceof RESTCallInterruptException) {
-            modelAndView = new ModelAndView();
-            modelAndView.addObject("status", "interrupt");
-            modelAndView.addObject("approvalId", ((RESTCallInterruptException) ex).getApprovalId());
-            modelAndView.addObject("cause", "The call has been interrupt for approval");
-    		return modelAndView;
+        if (request.getRequestURI().endsWith("json")) {
+            if (modelAndView == null && ex instanceof RESTCallInterruptException) {
+                // should move to explicit @ExceptionHandler(RESTCallInterruptException) controller method
+                modelAndView = new ModelAndView();
+                modelAndView.addObject("status", "interrupt");
+                modelAndView.addObject("approvalId", ((RESTCallInterruptException) ex).getApprovalId());
+                modelAndView.addObject("cause", "The call has been interrupt for approval");
+                return modelAndView;
+            }
+
+            if (modelAndView == null && ex instanceof ParamValidationException) {
+                // should move to explicit @ExceptionHandler(ParamValidationException) controller method
+                modelAndView = new ModelAndView();
+                modelAndView.addObject("status", "error");
+                modelAndView.addObject("cause", ex.getMessage());
+                return modelAndView;
+            }
+
+            if (modelAndView == null) {
+                // should move to explicit @ExceptionHandler(Exception) controller method
+                modelAndView = new ModelAndView();
+                modelAndView.addObject("status", "error");
+                modelAndView.addObject("cause", ex.getMessage());
+                StringWriter sw = new StringWriter();
+                ex.printStackTrace(new PrintWriter(sw));
+                modelAndView.addObject("stack", sw.toString());
+                return modelAndView;
+            }
         }
 
         if (modelAndView == null) {
