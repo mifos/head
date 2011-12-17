@@ -28,7 +28,7 @@
                <td>${approval.operation}</td>
                <td>${approval.printableCreatedOnDate}</td>
                <td>${approval.state}</td>
-               <td><a href="#" onclick='editArgs(${approval.id})'>Details (Approve/Reject)</a></td>
+               <td><a href="#" onclick='openDialog(${approval.id})'>Details (Approve/Reject)</a></td>
             </tr>
         [/#list]
     </tbody>

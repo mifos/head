@@ -1,6 +1,8 @@
 package org.mifos.platform.rest.controller;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
@@ -8,7 +10,10 @@ import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.platform.rest.controller.RESTAPIHelper.ErrorMessage;
+import org.mifos.platform.rest.controller.validation.ParamValidationException;
 import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,35 +39,12 @@ public class CustomerRESTController {
 	@RequestMapping(value = "/customer/charge/num-{globalCustNum}", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> applyCharge(@PathVariable String globalCustNum,
-                                    @RequestParam(value="amount", required = false) String amountString,
-                                    @RequestParam(value="feeId", required = false) String feeIdString) throws Exception {
+                                    @RequestParam BigDecimal amount,
+                                    @RequestParam Short feeId) throws Exception {
 
-    	Map<String, String> map = new HashMap<String, String>();
-    	Double chargeAmount = null;
-    	Short feeId = null;
-    	boolean validationPassed = true;
+	    validateAmount(amount);
 
-    	//validation
-    	try {
-    		chargeAmount = Double.parseDouble(amountString);
-    	} catch (Exception e){
-    		map.put("amount", "please specify correct");
-    		validationPassed = false;
-    	}
-    	try {
-    		feeId = Short.parseShort(feeIdString);
-    	} catch (Exception e){
-    		map.put("feeId", "please specify correct");
-    		validationPassed = false;
-    	}
-		if ( chargeAmount != null && chargeAmount <= 0 ){
-    		map.put("amount", "must be greater than 0");
-    		validationPassed = false;
-    	}
-        if (!validationPassed){
-        	map.put("status", "error");
-        	return map;
-        }
+	    Map<String, String> map = new HashMap<String, String>();
 
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
@@ -70,7 +52,7 @@ public class CustomerRESTController {
 
 		Money totalDueBeforeCharge = customerBO.getCustomerAccount().getTotalAmountDue();
 
-    	this.accountServiceFacade.applyCharge(accountId, feeId, chargeAmount);
+    	this.accountServiceFacade.applyCharge(accountId, feeId, amount.doubleValue());
 
     	DateTime today = new DateTime();
 
@@ -79,11 +61,33 @@ public class CustomerRESTController {
         map.put("clientNumber", customerBO.getGlobalCustNum());
         map.put("chargeDate", today.toLocalDate().toString());
         map.put("chargeTime", today.toLocalTime().toString());
-        map.put("chargeAmount", Double.toString(chargeAmount));
+        map.put("chargeAmount", Double.valueOf(amount.doubleValue()).toString());
         map.put("chargeMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
         map.put("totalDueBeforeCharge", totalDueBeforeCharge.toString());
         map.put("totalDueAfterCharge", customerBO.getCustomerAccount().getTotalAmountDue().toString());
 
     	return map;
+    }
+
+    @RequestMapping(value = "/customer/fees/num-{globalCustNum}", method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, String> getApplicableFees(@PathVariable String globalCustNum) throws Exception {
+    	CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
+		Integer accountId = customerBO.getCustomerAccount().getAccountId();
+		List<ApplicableCharge> applicableCharges = this.accountServiceFacade.getApplicableFees(accountId);
+
+    	Map<String, String> map = new HashMap<String, String>();
+
+    	for (ApplicableCharge applicableCharge : applicableCharges ){
+    		map.put(applicableCharge.getFeeName(), applicableCharge.getFeeId());
+    	}
+
+    	return map;
+    }
+
+    private void validateAmount(BigDecimal amount) throws ParamValidationException {
+        if (amount != null && amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ParamValidationException(ErrorMessage.NON_NEGATIVE_AMOUNT);
+        }
     }
 }
