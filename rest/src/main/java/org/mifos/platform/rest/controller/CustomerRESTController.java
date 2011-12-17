@@ -2,6 +2,7 @@ package org.mifos.platform.rest.controller;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
@@ -9,6 +10,7 @@ import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.rest.controller.RESTAPIHelper.ErrorMessage;
 import org.mifos.platform.rest.controller.validation.ParamValidationException;
@@ -63,6 +65,22 @@ public class CustomerRESTController {
         map.put("chargeMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
         map.put("totalDueBeforeCharge", totalDueBeforeCharge.toString());
         map.put("totalDueAfterCharge", customerBO.getCustomerAccount().getTotalAmountDue().toString());
+
+    	return map;
+    }
+
+    @RequestMapping(value = "/customer/fees/num-{globalCustNum}", method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, String> getApplicableFees(@PathVariable String globalCustNum) throws Exception {
+    	CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
+		Integer accountId = customerBO.getCustomerAccount().getAccountId();
+		List<ApplicableCharge> applicableCharges = this.accountServiceFacade.getApplicableFees(accountId);
+
+    	Map<String, String> map = new HashMap<String, String>();
+
+    	for (ApplicableCharge applicableCharge : applicableCharges ){
+    		map.put(applicableCharge.getFeeName(), applicableCharge.getFeeId());
+    	}
 
     	return map;
     }

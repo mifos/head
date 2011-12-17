@@ -37,6 +37,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
+import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanRepaymentScheduleItemDto;
@@ -282,6 +283,22 @@ public class LoanAccountRESTController {
     	return map;
     }
 
+    @RequestMapping(value = "/account/loan/fees/num-{globalAccountNum}", method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, String> getApplicableFees(@PathVariable String globalAccountNum) throws Exception {
+		LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
+		Integer accountId = loan.getAccountId();
+		List<ApplicableCharge> applicableCharges = this.accountServiceFacade.getApplicableFees(accountId);
+		
+    	Map<String, String> map = new HashMap<String, String>();
+    	
+    	for (ApplicableCharge applicableCharge : applicableCharges ){
+    		map.put(applicableCharge.getFeeName(), applicableCharge.getFeeId());
+    	}
+  
+    	return map;
+    }
+    
     @RequestMapping(value = "/account/loan/num-{globalAccountNum}", method = RequestMethod.GET)
     public @ResponseBody
     LoanInformationDto getLoanByNumber(@PathVariable String globalAccountNum) throws Exception {
