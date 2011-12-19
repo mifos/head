@@ -60,7 +60,7 @@
                <td>${approval.state}</td>
                <td>${approval.printableCreatedOnDate}</td>
                <td>${approval.printableApprovedOnDate}</td>
-               <td><a href="#" onclick='editArgs(${approval.id})'>Details</a></td>
+               <td><a href="#" onclick='openDialog(${approval.id})'>Details</a></td>
             </tr>
         [/#list]
     </tbody>
