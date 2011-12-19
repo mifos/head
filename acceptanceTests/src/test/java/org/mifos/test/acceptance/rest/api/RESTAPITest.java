@@ -343,7 +343,31 @@ public class RESTAPITest extends UiTestCaseBase {
         ObjectMapper mapper = helper.getObjectMapper();
         Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
     }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly")
+    public void applicableFeesForLoanByGlobalNum() throws Exception {
+        String type = Type.LOAN_APPLICABLE_FEES;
+        String by = By.GLOBAL_NUMBER;
+        String value = LOAN_ACCOUNT_GLOBAL_ID;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        ObjectMapper mapper = helper.getObjectMapper();
+        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
+    }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly")
+    public void applicableFeesForClientByGlobalNum() throws Exception {
+        String type = Type.CUSTOMER_APPLICABLE_FEES;
+        String by = By.GLOBAL_NUMBER;
+        String value = CLIENT_GLOBAL_ID;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        ObjectMapper mapper = helper.getObjectMapper();
+        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
+    }
+    
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
     public void savingsByGlobalNum() throws Exception {
