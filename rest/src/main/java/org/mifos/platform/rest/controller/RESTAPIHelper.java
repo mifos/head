@@ -7,6 +7,7 @@ public class RESTAPIHelper {
         public static final String NON_NEGATIVE_AMOUNT = "amount must be grater than 0";
         public static final String NOT_ACTIVE_ACCOUNT = "account is not in active state.";
         public static final String INVALID_NOTE = "note is not specified";
+        public static final String INVALID_FEE_ID = "invalid fee Id";
     }
 
 }

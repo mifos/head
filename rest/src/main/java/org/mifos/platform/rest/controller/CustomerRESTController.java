@@ -1,6 +1,7 @@
 package org.mifos.platform.rest.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,10 @@ public class CustomerRESTController {
                                     @RequestParam Short feeId) throws Exception {
 
 	    validateAmount(amount);
-
+	    
+        List<String> applicableFees = new ArrayList<String>(this.getApplicableFees(globalCustNum).values());
+        validateFeeId(feeId, applicableFees);
+        
 	    Map<String, String> map = new HashMap<String, String>();
 
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -90,4 +94,10 @@ public class CustomerRESTController {
             throw new ParamValidationException(ErrorMessage.NON_NEGATIVE_AMOUNT);
         }
     }
+    
+    public static void validateFeeId(Short feeId, List<String> applicableFees) throws ParamValidationException{
+        if (!applicableFees.contains(Short.toString(feeId))){
+                throw new ParamValidationException(ErrorMessage.INVALID_FEE_ID);
+        }
+     }
 }
