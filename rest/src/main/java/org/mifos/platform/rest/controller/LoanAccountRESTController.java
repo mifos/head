@@ -21,6 +21,7 @@ package org.mifos.platform.rest.controller;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -257,6 +258,9 @@ public class LoanAccountRESTController {
 
         validateAmount(amount);
 
+        List<String> applicableFees = new ArrayList<String>(this.getApplicableFees(globalAccountNum).values());
+        validateFeeId(feeId, applicableFees);
+        
         Map<String, String> map = new HashMap<String, String>();
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
@@ -349,5 +353,10 @@ public class LoanAccountRESTController {
             throw new ParamValidationException(ErrorMessage.NOT_ACTIVE_ACCOUNT);
         }
     }
-
+    
+    public static void validateFeeId(Short feeId, List<String> applicableFees) throws ParamValidationException{
+       if (!applicableFees.contains(Short.toString(feeId))){
+               throw new ParamValidationException(ErrorMessage.INVALID_FEE_ID);
+       }
+    }
 }
