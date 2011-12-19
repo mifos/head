@@ -51,6 +51,7 @@ public class RESTAPITestHelper {
         public static final String CENTER = "center";
         public static final String CENTER_CHARGES = "center/charges";
         public static final String CENTER_COLLECTIONSHEET = "collectionsheet/customer";
+        public static final String OFFICE = "office";
         public static final String CUSTOMER_CHARGE = "customer/charge";
         public static final String CUSTOMER_APPLICABLE_FEES = "customer/fees";
         public static final String PERSONNEL = "personnel";
