@@ -485,9 +485,9 @@ explanation of the license and how it is applied.
 							</td>
 						</tr>
 						</c:if>
-						<tr id="Client.Ethinicity">
+						<tr id="Client.Ethnicity">
 							<td class="fontnormal">
-							<mifos:mifoslabel name="${ConfigurationConstants.ETHINICITY}" keyhm="Client.Ethinicity" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
+							<mifos:mifoslabel name="${ConfigurationConstants.ETHNICITY}" keyhm="Client.Ethnicity" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
 							<c:if test="${!empty clientInformationDto.clientDisplay.ethnicity}">
 								<c:out value="${clientInformationDto.clientDisplay.ethnicity}" />
 							</c:if>

@@ -1,7 +1,5 @@
 package org.mifos.rest.approval.service;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -81,7 +79,6 @@ public class StandardApprovalService implements ApprovalService {
         } catch (Exception e) {
             skipCreate = false;
             result = "Error : " + interceptError(e);
-            LOG.warn("Invalid call", e);
         }
 
         entity.setApprovedBy(getCurrentUserId());
@@ -92,26 +89,26 @@ public class StandardApprovalService implements ApprovalService {
     }
 
     private String interceptError(Exception e) {
-        String result;
+        LOG.error("Approval call failed ", e);
         if(e instanceof InvocationTargetException) {
             if(e.getCause() != null) {
                 if(e.getCause().getMessage() != null) {
                     return e.getCause().getMessage();
                 }
+                return "Check parameters";
             }
         }
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        result = sw.toString();
-        return result;
+        return "System failed";
     }
 
     @Transactional
     @Override
     public void updateMethodContent(Long id, ApprovalMethod approvalMethod) throws Exception {
         RESTApprovalEntity entity = approvalDao.getDetails(id);
-        entity.setApprovalMethod(approvalMethod);
-        approvalDao.update(entity);
+        if(entity.getState().equals(ApprovalState.WAITING)) {
+            entity.setApprovalMethod(approvalMethod);
+            approvalDao.update(entity);
+        }
     }
 
     @Transactional

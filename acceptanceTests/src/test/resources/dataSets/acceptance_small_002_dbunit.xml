@@ -33,6 +33,7 @@
   <DATABASECHANGELOG ID="MIFOS_4700_3" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:48.0" ORDEREXECUTED="183" EXECTYPE="EXECUTED" MD5SUM="3:5262fde3d8a25cc4e609a5161cfcbc95" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4700_4" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:48.0" ORDEREXECUTED="184" EXECTYPE="EXECUTED" MD5SUM="3:fdd7dad428a877741587468045c15b87" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4700_5" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:48.0" ORDEREXECUTED="185" EXECTYPE="EXECUTED" MD5SUM="3:d8b39a618ff308d67e12528ad3735359" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_4827_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-12 15:53:55.0" ORDEREXECUTED="192" EXECTYPE="EXECUTED" MD5SUM="3:807c2239c2429b48809f2d8a3dfc8f65" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_1" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:48.0" ORDEREXECUTED="186" EXECTYPE="EXECUTED" MD5SUM="3:d1bc7187b3d916e75540705797af4f2e" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_2" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:48.0" ORDEREXECUTED="187" EXECTYPE="EXECUTED" MD5SUM="3:169dcdb02684d9b21f5eac6e857ad394" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_3" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:48.0" ORDEREXECUTED="188" EXECTYPE="EXECUTED" MD5SUM="3:3b9ed5b39f2534b6a7a812471d72bda6" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
@@ -1294,7 +1295,7 @@
   <field_configuration field_config_id="7" field_name="ExternalId" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
   <field_configuration field_config_id="8" field_name="ExternalId" entity_id="12" mandatory_flag="0" hidden_flag="0"/>
   <field_configuration field_config_id="9" field_name="ExternalId" entity_id="20" mandatory_flag="0" hidden_flag="0"/>
-  <field_configuration field_config_id="10" field_name="Ethinicity" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
+  <field_configuration field_config_id="10" field_name="Ethnicity" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
   <field_configuration field_config_id="11" field_name="Citizenship" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
   <field_configuration field_config_id="12" field_name="Handicapped" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
   <field_configuration field_config_id="13" field_name="BusinessActivities" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
@@ -1952,7 +1953,7 @@
   <lookup_entity entity_id="16" entity_name="Gender" description="Male/Female"/>
   <lookup_entity entity_id="17" entity_name="MaritalStatus" description="Married/UnMarried"/>
   <lookup_entity entity_id="18" entity_name="Citizenship" description="Citizenship"/>
-  <lookup_entity entity_id="19" entity_name="Ethinicity" description="Ethnicity"/>
+  <lookup_entity entity_id="19" entity_name="Ethnicity" description="Ethnicity"/>
   <lookup_entity entity_id="20" entity_name="EducationLevel" description="EducationLevel"/>
   <lookup_entity entity_id="21" entity_name="BusinessActivities" description="BusinessActivities"/>
   <lookup_entity entity_id="22" entity_name="Handicapped" description="Handicaped"/>

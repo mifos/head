@@ -412,15 +412,15 @@ explanation of the license and how it is applied.
 									</mifos:select></td>
 
 								</tr>
-								<%-- Ethinicity --%>
+								<%-- Ethnicity --%>
 								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel keyhm="Client.Ethinicity" isColonRequired="yes"
-										name="${ConfigurationConstants.ETHINICITY}" bundle="ClientUIResources"></mifos:mifoslabel></td>
-									<td><mifos:select keyhm="Client.Ethinicity"
+									<td align="right"><mifos:mifoslabel keyhm="Client.Ethnicity" isColonRequired="yes"
+										name="${ConfigurationConstants.ETHNICITY}" bundle="ClientUIResources"></mifos:mifoslabel></td>
+									<td><mifos:select keyhm="Client.Ethnicity"
 										name="clientCustActionForm"
-										property="clientDetailView.ethinicity" size="1">
-										<c:forEach var="ethinicityEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ethinicityEntity')}" >
-											<html-el:option value="${ethinicityEntityList.id}">${ethinicityEntityList.name}</html-el:option>
+										property="clientDetailView.ethnicity" size="1">
+										<c:forEach var="ethnicityEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ethnicityEntity')}" >
+											<html-el:option value="${ethnicityEntityList.id}">${ethnicityEntityList.name}</html-el:option>
 										</c:forEach>
 									</mifos:select></td>
 

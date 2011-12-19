@@ -20,7 +20,14 @@
         [#list approval.approvalMethod.argsHolder.values as value]
             <div class="args">
                 [#assign name = approval.approvalMethod.argsHolder.names[i]]
-                ${name} : <input id='value_${i}' type=text value=${value?string} [#if approvedBy??]readonly=readonly[/#if]/>
+                ${name} : <input id='value_${i}' type=text 
+                            [#if value??]
+                                value=${value?string} 
+                            [/#if]
+                            [#if approvedBy??]
+                                readonly=readonly
+                            [/#if]
+                           ></input>
                 [#assign i=i+1]
             </div>
         [/#list]

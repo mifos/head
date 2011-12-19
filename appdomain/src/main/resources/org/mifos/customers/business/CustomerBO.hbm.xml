@@ -315,7 +315,7 @@
                 left join lookup_value lv_handicapped on lv_handicapped.lookup_id = cd.handicapped
                 left join lookup_value lv_maritalStatus on lv_maritalStatus.lookup_id = cd.marital_status
                 left join lookup_value lv_citizenship on lv_citizenship.lookup_id = cd.citizenship
-                left join lookup_value lv_ethnicity on lv_ethnicity.lookup_id = cd.ethinicity
+                left join lookup_value lv_ethnicity on lv_ethnicity.lookup_id = cd.ethnicity
                 left join lookup_value lv_educationLevel on lv_educationLevel.lookup_id = cd.education_level
                 left join lookup_value lv_povertyStatus on lv_povertyStatus.lookup_id = cd.poverty_status
                 where c.customer_id = :CLIENT_ID]]>

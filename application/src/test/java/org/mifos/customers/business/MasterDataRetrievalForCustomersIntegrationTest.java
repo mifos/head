@@ -108,12 +108,12 @@ public class MasterDataRetrievalForCustomersIntegrationTest extends MifosIntegra
     }
 
     @Test
-    public void shouldRetrieveEthinicity() {
+    public void shouldRetrieveEthnicity() {
 
-        List<ValueListElement> ethinicity = customerDao.retrieveEthinicity();
+        List<ValueListElement> ethnicity = customerDao.retrieveEthnicity();
 
-        assertThat(ethinicity, is(notNullValue()));
-        assertThat(ethinicity.size(), is(5));
+        assertThat(ethnicity, is(notNullValue()));
+        assertThat(ethnicity.size(), is(5));
     }
 
     @Test

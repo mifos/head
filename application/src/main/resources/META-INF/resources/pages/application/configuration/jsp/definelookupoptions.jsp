@@ -201,7 +201,7 @@ explanation of the license and how it is applied.
 							<tr class="fontnormal">
 								<td align="right" valign="top" width="18%">
 									<span class="mandatorytext"></span>
-									<mifos:mifoslabel name="${ConfigurationConstants.ETHINICITY}"
+									<mifos:mifoslabel name="${ConfigurationConstants.ETHNICITY}"
 										isColonRequired="Yes" />
 								</td>
 								<td valign="top">

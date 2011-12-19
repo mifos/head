@@ -52,7 +52,7 @@ public interface HiddenMandatoryFieldNamesConstants {
 
     String TRAINED = "Trained";
 
-    String ETHINICITY = "Ethinicity";
+    String ETHNICITY = "Ethnicity";
 
     String CITIZENSHIP = "Citizenship";
 
