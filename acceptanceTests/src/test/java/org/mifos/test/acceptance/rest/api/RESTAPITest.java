@@ -49,6 +49,7 @@ public class RESTAPITest extends UiTestCaseBase {
     public static final String OFFICE_ID = "1";
     public static final String PERSONNEL_CURRENT_ID = "current";
     public static final String SYSTEM_INFORMATION_ID = "information";
+    public static final String PAYMENT_TYPES_ACCEPTED = "accepted";
     public static final String LOAN_ACCOUNT_GLOBAL_ID = "000100000000004";
     public static final String LOAN_ACCOUNT_2_GLOBAL_ID = "000100000000005";
     public static final String LOAN_ACCOUNT_3_GLOBAL_ID = "000100000000008";
@@ -254,6 +255,18 @@ public class RESTAPITest extends UiTestCaseBase {
         AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
         jsonAssert.assertEqual("applicationVersion");
         jsonAssert.assertEqual("databaseVendor");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly")
+    public void paymentTypesByAcceptedState() throws Exception {
+        String type = Type.PAYMENT_TYPES;
+        String by = By.STATE;
+        String value = PAYMENT_TYPES_ACCEPTED;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        ObjectMapper mapper = helper.getObjectMapper();
+        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
