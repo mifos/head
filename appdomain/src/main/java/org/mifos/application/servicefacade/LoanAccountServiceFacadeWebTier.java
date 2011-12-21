@@ -1651,11 +1651,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         if(!loan.getAccountFees().isEmpty()) {
             for (AccountFeesEntity accountFeesEntity: loan.getAccountFees()) {
                 AccountFeesDto accountFeesDto = new AccountFeesDto(accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId(),
-                                                                  accountFeesEntity.getFeeStatus(), accountFeesEntity.getFees().getFeeName(),
-                                                                  accountFeesEntity.getAccountFeeAmount().toString(),
-                                                                  getMeetingRecurrence(accountFeesEntity.getFees().getFeeFrequency()
-                                                                          .getFeeMeetingFrequency(), userContext),
-                                                                  accountFeesEntity.getFees().getFeeId());
+                        (accountFeesEntity.getFees().getFeeFrequency().getFeePayment() != null ?
+                                accountFeesEntity.getFees().getFeeFrequency().getFeePayment().getId() : null),
+                        accountFeesEntity.getFeeStatus(), accountFeesEntity.getFees().getFeeName(),
+                        accountFeesEntity.getAccountFeeAmount().toString(),
+                        getMeetingRecurrence(accountFeesEntity.getFees().getFeeFrequency()
+                                .getFeeMeetingFrequency(), userContext),
+                        accountFeesEntity.getFees().getFeeId());
                 accountFeesDtos.add(accountFeesDto);
             }
         }

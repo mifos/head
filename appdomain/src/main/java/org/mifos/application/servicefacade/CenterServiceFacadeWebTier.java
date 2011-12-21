@@ -516,6 +516,8 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         if(!customerAccount.getAccountFees().isEmpty()) {
             for (AccountFeesEntity accountFeesEntity: customerAccount.getAccountFees()) {
                 AccountFeesDto accountFeesDto = new AccountFeesDto(accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId(),
+                        (accountFeesEntity.getFees().getFeeFrequency().getFeePayment() != null ?
+                                accountFeesEntity.getFees().getFeeFrequency().getFeePayment().getId() : null),
                         accountFeesEntity.getFeeStatus(), accountFeesEntity.getFees().getFeeName(),
                         accountFeesEntity.getAccountFeeAmount().toString(),
                         getMeetingRecurrence(accountFeesEntity.getFees().getFeeFrequency().getFeeMeetingFrequency(),
