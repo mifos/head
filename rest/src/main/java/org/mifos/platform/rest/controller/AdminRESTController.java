@@ -19,6 +19,8 @@
  */
 package org.mifos.platform.rest.controller;
 
+import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.dto.domain.AcceptedPaymentTypeDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,9 +37,18 @@ public class AdminRESTController {
     @Autowired
     private SystemInformationServiceFacade systemInformationServiceFacade;
 
+    @Autowired
+    private AdminServiceFacade adminServiceFacade;
+
     @RequestMapping(value = "admin/system/id-information", method = RequestMethod.GET)
     public @ResponseBody
     SystemInformationDto getSystemInformation(HttpServletRequest request) {
       return systemInformationServiceFacade.getSystemInformation(request.getSession().getServletContext(), request.getLocale());
+    }
+
+    @RequestMapping(value = "admin/payment-types/state-accepted", method = RequestMethod.GET)
+    public @ResponseBody
+    AcceptedPaymentTypeDto getAcceptedPaymentTypes(HttpServletRequest request) {
+      return adminServiceFacade.retrieveAcceptedPaymentTypes();
     }
 }
