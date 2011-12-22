@@ -139,7 +139,8 @@
         <propertyName name="country" parentName="address" displayKey="Client.country" />
         <propertyName name="zip" parentName="address" displayKey="PostalCode" />
         <propertyName name="phoneNumber" parentName="address" displayKey="Client.PhoneNumber" />
-
+		<propertyName name="phoneNumberStripped" parentName="address" displayKey="Client.phoneNumberStripped" />
+		
         <propertyName name="mfiJoiningDate" displayKey="Client.mfiJoiningDate" />
 
         <!-- <propertyName name="personnelId" displayKey="Client.personnelId" doNotLog="Yes"/>-->
@@ -308,6 +309,7 @@
         <propertyName name="city" parentName="address" displayKey="City" />
         <propertyName name="country" parentName="address" displayKey="Group.country" />
         <propertyName name="phoneNumber" parentName="address" displayKey="Group.phoneNumber"  />
+        <propertyName name="phoneNumberStripped" parentName="address" displayKey="Group.phoneNumberStripped"  />
         <propertyName name="state" parentName="address"  displayKey="State"  />
 
 
@@ -446,6 +448,7 @@
         <propertyName name="city" parentName="address" displayKey="City" />
         <propertyName name="country" parentName="address" displayKey="Group.country" />
         <propertyName name="phoneNumber" parentName="address" displayKey="Group.phoneNumber"  />
+        <propertyName name="phoneNumberStripped" parentName="address" displayKey="Group.phoneNumberStripped"  />
         <propertyName name="state" parentName="address"  displayKey="State"  />
 
 
@@ -833,6 +836,8 @@
         <propertyName name="name"  parentName="role"   displayKey="Personnel.role"/>
         <propertyName name="displayName" displayKey="Personnel.displayName" />
         <propertyName name="userName" displayKey="Personnel.displayName" />
+        <propertyName name="noOfTries" displayKey="Personnel.noOfTries" />
+        <propertyName name="lastLogin" displayKey="Personnel.lastLogin" />
         <propertyName name="encryptedPassword"  displayKey="Personnel.encryptedPassword" />
 
     </entityType>

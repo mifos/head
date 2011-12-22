@@ -163,7 +163,7 @@ public class SavingsAccountRESTController {
     	DateTime trnxDate = validateDateString(trxnDate, format);
     	validateSavingsDate(trnxDate);
     	DateTime receiptDateTime = null;
-    	if (receiptDate != null){
+    	if (receiptDate != null && !receiptDate.isEmpty()){
     	 	receiptDateTime = validateDateString(receiptDate, format);
     	 	validateSavingsDate(receiptDateTime);
     	} else {

@@ -191,7 +191,7 @@ public class LoanAccountRESTController {
     	DateTime trnxDate = validateDateString(disbursalDate, format);
     	validateDisbursementDate(trnxDate);
     	DateTime receiptDateTime = null;
-    	if (receiptDate != null){
+    	if (receiptDate != null && !receiptDate.isEmpty()){
     	 	receiptDateTime = validateDateString(receiptDate, format);
     	 	validateDisbursementDate(receiptDateTime);
     	}
@@ -208,7 +208,7 @@ public class LoanAccountRESTController {
        	CustomerDto customerDto = null;
        	PaymentTypeDto paymentType = null;
        	AccountPaymentParametersDto loanDisbursement;
-       	if (receiptId == null || receiptDateTime == null ){
+       	if (receiptId == null || receiptDateTime == null){
         	loanDisbursement = new AccountPaymentParametersDto(new UserReferenceDto((short)user.getUserId()),
         			new AccountReferenceDto(loan.getAccountId()), loan.getLoanAmount().getAmount(), trnxDate.toLocalDate(), paymentType, comment);
        	} else {
