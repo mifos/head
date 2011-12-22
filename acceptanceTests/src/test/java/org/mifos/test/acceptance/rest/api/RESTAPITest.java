@@ -557,7 +557,7 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(dependsOnGroups="readOnly")
     public void savingsDepositWithdrawByGlobalNum() throws Exception {
-        String data = "?amount=100";
+        String data = "?amount=100&trxnDate="+TODAY+"&paymentTypeId=1&receiptId=12&receiptDate="+TODAY;
         String by = By.GLOBAL_NUMBER;
         String value = SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID;
 
@@ -566,7 +566,7 @@ public class RESTAPITest extends UiTestCaseBase {
         verifySavingsTrxn(data, type, by, value);
 
         // withdraw
-        data = "?amount=69";
+        data = "?amount=69&trxnDate="+TODAY+"&paymentTypeId=1";
         type = Type.SAVINGS_WITHDRAW;
         verifySavingsTrxn(data, type, by, value);
     }
