@@ -56,6 +56,7 @@ public class RESTAPITest extends UiTestCaseBase {
     public static final String SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID = "000100000000006";
     public static final String SAVINGS_MANDATORY_ACCOUNT_GLOBAL_ID = "000100000000007";
     public static final String MEETINGS_DAY = "19-09-2011";
+    public static final String TODAY = "13-09-2011";
     
     private RESTAPITestHelper helper;
 
@@ -536,7 +537,7 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(dependsOnGroups="readOnly")
     public void disburseLoanByGlobalNum() throws Exception {
-    	String data = " ";
+    	String data = "?disbursalDate="+TODAY+"&disbursePaymentTypeId=1";
     	String type = Type.LOAN_DISBURSEMENT;
     	String by = By.GLOBAL_NUMBER;
     	String value = LOAN_ACCOUNT_3_GLOBAL_ID;
