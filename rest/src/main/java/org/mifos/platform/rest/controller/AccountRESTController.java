@@ -47,7 +47,7 @@ public class AccountRESTController {
     @Autowired
     private AccountBusinessService accountBusinessService;
 
-    @RequestMapping(value = "/account/trxnhistory/num-{globalAccountNum}", method = RequestMethod.GET)
+    @RequestMapping(value = "/account/num-{globalAccountNum}/trxnhistory", method = RequestMethod.GET)
     public @ResponseBody
     List<TransactionHistoryDto> getAccountTransactionHistoryByNumber(@PathVariable String globalAccountNum) throws Exception {
         AccountTypes type = accountBusinessService.getTypeBySystemId(globalAccountNum);
