@@ -61,7 +61,7 @@ public class PersonnelRESTController {
         return personnelServiceFacade.getPersonnelInformationDto((long)user.getUserId(), "");
     }
 
-    @RequestMapping(value = "personnel/clients/id-current", method = RequestMethod.GET)
+    @RequestMapping(value = "personnel/id-current/clients", method = RequestMethod.GET)
     public @ResponseBody
     CustomerHierarchyDto getCustomersUnderPersonnel() {
         PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(getCurrentPersonnel().getPersonnelId());

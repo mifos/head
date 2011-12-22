@@ -50,7 +50,7 @@ public class ClientRESTController {
         return clientServiceFacade.getClientInformationDto(globalCustNum);
     }
 
-    @RequestMapping(value = "client/charges/num-{globalCustNum}", method = RequestMethod.GET)
+    @RequestMapping(value = "client/num-{globalCustNum}/charges", method = RequestMethod.GET)
     public @ResponseBody
     CustomerChargesDetailsDto getClientChargesByNumber(@PathVariable String globalCustNum) {
         ClientBO clientBO = customerDao.findClientBySystemId(globalCustNum);

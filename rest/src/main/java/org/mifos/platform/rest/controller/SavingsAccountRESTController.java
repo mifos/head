@@ -77,7 +77,7 @@ public class SavingsAccountRESTController {
     @Autowired
     private PersonnelDao personnelDao;
 
-    @RequestMapping(value = "account/savings/deposit/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "account/savings/num-{globalAccountNum}/deposit", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> deposit(@PathVariable String globalAccountNum,
     		                    @RequestParam BigDecimal amount,
@@ -88,7 +88,7 @@ public class SavingsAccountRESTController {
         return doSavingsTrxn(globalAccountNum, amount, trxnDate, receiptId, receiptDate, paymentTypeId, TrxnTypes.savings_deposit);
     }
 
-    @RequestMapping(value = "account/savings/withdraw/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "account/savings/num-{globalAccountNum}/withdraw", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> withdraw(@PathVariable String globalAccountNum,
     		                     @RequestParam BigDecimal amount,
@@ -99,7 +99,7 @@ public class SavingsAccountRESTController {
         return doSavingsTrxn(globalAccountNum, amount, trxnDate, receiptId, receiptDate, paymentTypeId, TrxnTypes.savings_withdrawal);
     }
 
-    @RequestMapping(value = "account/savings/adjustment/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "account/savings/num-{globalAccountNum}/adjustment", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> applyAdjustment(@PathVariable String globalAccountNum,
                                         @RequestParam BigDecimal amount,
@@ -148,7 +148,7 @@ public class SavingsAccountRESTController {
         return savingsServiceFacade.retrieveSavingsAccountDetails(savings.getAccountId().longValue());
     }
 
-    @RequestMapping(value = "/account/savings/due/num-{globalAccountNum}", method = RequestMethod.GET)
+    @RequestMapping(value = "/account/savings/num-{globalAccountNum}/due", method = RequestMethod.GET)
     public @ResponseBody
     SavingsAccountDepositDueDto getSavingsDepositDueDetailsByNumber(@PathVariable String globalAccountNum) throws Exception {
         return savingsServiceFacade.retrieveDepositDueDetails(globalAccountNum);

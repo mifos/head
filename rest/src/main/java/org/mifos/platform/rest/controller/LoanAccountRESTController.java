@@ -81,7 +81,7 @@ public class LoanAccountRESTController {
     @Autowired
     private PersonnelDao personnelDao;
 
-    @RequestMapping(value = "/account/loan/repay/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/repay", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> repay(@PathVariable String globalAccountNum, @RequestParam BigDecimal amount) throws Exception {
 
@@ -128,7 +128,7 @@ public class LoanAccountRESTController {
         return map;
     }
 
-    @RequestMapping(value = "/account/loan/fullrepay/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/fullrepay", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> fullRepay(@PathVariable String globalAccountNum,
                                   @RequestParam Boolean waiveInterest) throws Exception {
@@ -179,7 +179,7 @@ public class LoanAccountRESTController {
     	return map;
     }
 
-    @RequestMapping(value = "/account/loan/disburse/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/disburse", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> disburseLoan(@PathVariable String globalAccountNum, 
     								 @RequestParam String disbursalDate,
@@ -236,7 +236,7 @@ public class LoanAccountRESTController {
     	return map;
     }
 
-    @RequestMapping(value = "/account/loan/adjustment/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/adjustment", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> applyAdjustment(@PathVariable String globalAccountNum,
                                         @RequestParam String note) throws Exception {
@@ -275,7 +275,7 @@ public class LoanAccountRESTController {
     	return map;
     }
 
-    @RequestMapping(value = "/account/loan/charge/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/charge", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> applyCharge(@PathVariable String globalAccountNum,
                                     @RequestParam BigDecimal amount,
@@ -312,7 +312,7 @@ public class LoanAccountRESTController {
     	return map;
     }
 
-    @RequestMapping(value = "/account/loan/fees/num-{globalAccountNum}", method = RequestMethod.GET)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/fees", method = RequestMethod.GET)
     public @ResponseBody
     Map<String, String> getApplicableFees(@PathVariable String globalAccountNum) throws Exception {
 		LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
@@ -348,14 +348,14 @@ public class LoanAccountRESTController {
         return loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
     }
 
-    @RequestMapping(value = "/account/loan/installment/num-{globalAccountNum}", method = RequestMethod.GET)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/installment", method = RequestMethod.GET)
     public @ResponseBody
     LoanInstallmentDetailsDto getLoanInstallmentByNumber(@PathVariable String globalAccountNum) throws Exception {
         LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
         return loanAccountServiceFacade.retrieveInstallmentDetails(loan.getAccountId());
     }
 
-    @RequestMapping(value = "/account/loan/schedule/num-{globalAccountNum}", method = RequestMethod.GET)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/schedule", method = RequestMethod.GET)
     public @ResponseBody
     List<LoanRepaymentScheduleItemDto> getLoanRepaymentScheduleByNumber(@PathVariable String globalAccountNum) throws Exception {
         return loanAccountServiceFacade.retrieveLoanRepaymentSchedule(globalAccountNum);

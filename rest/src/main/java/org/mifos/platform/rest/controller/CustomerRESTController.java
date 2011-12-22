@@ -37,7 +37,7 @@ public class CustomerRESTController {
     @Autowired
     private PersonnelDao personnelDao;
 
-	@RequestMapping(value = "/customer/charge/num-{globalCustNum}", method = RequestMethod.POST)
+	@RequestMapping(value = "/customer/num-{globalCustNum}/charge", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> applyCharge(@PathVariable String globalCustNum,
                                     @RequestParam BigDecimal amount,
@@ -73,7 +73,7 @@ public class CustomerRESTController {
     	return map;
     }
 
-    @RequestMapping(value = "/customer/fees/num-{globalCustNum}", method = RequestMethod.GET)
+    @RequestMapping(value = "/customer/num-{globalCustNum}/fees", method = RequestMethod.GET)
     public @ResponseBody
     Map<String, String> getApplicableFees(@PathVariable String globalCustNum) throws Exception {
     	CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
