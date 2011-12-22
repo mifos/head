@@ -103,7 +103,7 @@ explanation of the license and how it is applied.
 						</tr>
 					</table>
 		
-					<table width="95%" border="0" cellpadding="0" cellspacing="0">
+					<table width="100%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td bgcolor="#F0D4A5" style="padding-left:10px; padding-bottom:3px;">
 								<span class="fontnormalbold">

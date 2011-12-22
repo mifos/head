@@ -57,6 +57,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
             Money totalPrincipal = new Money(loanBO.getCurrency(), "0");
             Money totalInterest = new Money(loanBO.getCurrency(), "0");
             Money totalFees = new Money(loanBO.getCurrency(), "0");
+            Money totalPenalties = new Money(loanBO.getCurrency(), "0");
 
             /*
              * LoanBO loanBO = (LoanBO) pageContext.getRequest().getAttribute( Constants.BUSINESS_KEY);
@@ -80,16 +81,19 @@ public class LoanRepaymentTag extends BodyTagSupport {
                 htmlHeader1.startTag("td", "width", "18%", "class", "drawtablerowbold");
                 htmlHeader1.text(getLabel("loan.date_paid", locale));
                 htmlHeader1.endTag("td");
-                htmlHeader1.startTag("td", "width", "15%", "align", "right", "class", "drawtablerowbold");
+                htmlHeader1.startTag("td", "width", "12%", "align", "right", "class", "drawtablerowbold");
                 htmlHeader1.text(getLabel("loan.principal", locale));
                 htmlHeader1.endTag("td");
-                htmlHeader1.startTag("td", "width", "14%", "align", "right", "class", "drawtablerowbold");
+                htmlHeader1.startTag("td", "width", "12%", "align", "right", "class", "drawtablerowbold");
                 htmlHeader1.text(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.INTEREST, userContext));
                 htmlHeader1.endTag("td");
-                htmlHeader1.startTag("td", "width", "14%", "align", "right", "class", "drawtablerowbold");
+                htmlHeader1.startTag("td", "width", "10%", "align", "right", "class", "drawtablerowbold");
                 htmlHeader1.text(getLabel("loan.fees", locale));
                 htmlHeader1.endTag("td");
-                htmlHeader1.startTag("td", "width", "15%", "align", "right", "class", "drawtablerowbold");
+                htmlHeader1.startTag("td", "width", "12%", "align", "right", "class", "drawtablerowbold");
+                htmlHeader1.text(getLabel("loan.penalty", locale));
+                htmlHeader1.endTag("td");
+                htmlHeader1.startTag("td", "width", "12%", "align", "right", "class", "drawtablerowbold");
                 htmlHeader1.text(getLabel("loan.total", locale));
                 htmlHeader1.endTag("td");
                 htmlHeader1.endTag("tr");
@@ -99,6 +103,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
                     totalPrincipal = totalPrincipal.add(loanScheduleEntity.getPrincipal());
                     totalInterest = totalInterest.add(loanScheduleEntity.getEffectiveInterest());
                     totalFees = totalFees.add(loanScheduleEntity.getTotalScheduledFeeAmountWithMiscFee());
+                    totalPenalties = totalPenalties.add(loanScheduleEntity.getTotalPenalty());
                 }
 
                 // check if at least the first installment is paid
@@ -111,17 +116,20 @@ public class LoanRepaymentTag extends BodyTagSupport {
                     // installments paid and running balance table is
                     // required
                     htmlHeader2.startTag("tr");
-                    htmlHeader2.startTag("td", "width", "25%", "align", "right", "class", "drawtablerowbold");
+                    htmlHeader2.startTag("td", "width", "20%", "align", "right", "class", "drawtablerowbold");
                     htmlHeader2.text(getLabel("loan.principal", locale));
                     htmlHeader2.endTag("td");
-                    htmlHeader2.startTag("td", "width", "25%", "align", "right", "class", "drawtablerowbold");
+                    htmlHeader2.startTag("td", "width", "20%", "align", "right", "class", "drawtablerowbold");
                     htmlHeader2.text(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.INTEREST,
                             userContext));
                     htmlHeader2.endTag("td");
-                    htmlHeader2.startTag("td", "width", "25%", "align", "right", "class", "drawtablerowbold");
+                    htmlHeader2.startTag("td", "width", "20%", "align", "right", "class", "drawtablerowbold");
                     htmlHeader2.text(getLabel("loan.fees", locale));
                     htmlHeader2.endTag("td");
-                    htmlHeader2.startTag("td", "width", "25%", "align", "right", "class", "drawtablerowbold");
+                    htmlHeader2.startTag("td", "width", "20%", "align", "right", "class", "drawtablerowbold");
+                    htmlHeader2.text(getLabel("loan.penalty", locale));
+                    htmlHeader2.endTag("td");
+                    htmlHeader2.startTag("td", "width", "20%", "align", "right", "class", "drawtablerowbold");
                     htmlHeader2.text(getLabel("loan.total", locale));
                     htmlHeader2.endTag("td");
                     htmlHeader2.endTag("tr");
@@ -129,12 +137,12 @@ public class LoanRepaymentTag extends BodyTagSupport {
                 }
 
                 html1.startTag("tr");
-                html1.startTag("td", "colspan", "7", "class", "drawtablerowbold");
+                html1.startTag("td", "colspan", "8", "class", "drawtablerowbold");
                 html1.nonBreakingSpace();
                 html1.endTag("td");
                 html1.endTag("tr");
                 html2.startTag("tr");
-                html2.startTag("td", "colspan", "4", "class", "drawtablerowbold");
+                html2.startTag("td", "colspan", "5", "class", "drawtablerowbold");
                 html2.text(getLabel("loan.running_bal", locale));
                 html2.endTag("td");
                 html2.endTag("tr");
@@ -144,12 +152,12 @@ public class LoanRepaymentTag extends BodyTagSupport {
 
                 if (twoTables) {
                     html1.startTag("tr");
-                    html1.startTag("td", "colspan", "7", "class", "drawtablerowbold");
+                    html1.startTag("td", "colspan", "8", "class", "drawtablerowbold");
                     html1.text(getLabel("loan.instt_paid", locale));
                     html1.endTag("td");
                     html1.endTag("tr");
                     html2.startTag("tr");
-                    html2.startTag("td", "colspan", "4", "class", "drawtablerowbold");
+                    html2.startTag("td", "colspan", "5", "class", "drawtablerowbold");
                     html2.nonBreakingSpace();
                     html2.endTag("td");
                     html2.endTag("tr");
@@ -162,10 +170,11 @@ public class LoanRepaymentTag extends BodyTagSupport {
                         && !installment.getTotalDueWithFees().equals(installment.getTotalScheduleAmountWithFees())) {
 
                     html1.append(createInstallmentRow(installment, true));
-                    html2.append(createRunningBalanceRow(installment, totalPrincipal, totalInterest, totalFees));
+                    html2.append(createRunningBalanceRow(installment, totalPrincipal, totalInterest, totalFees, totalPenalties));
                     totalPrincipal = totalPrincipal.subtract(installment.getPrincipalPaid());
                     totalInterest = totalInterest.subtract(installment.getEffectiveInterestPaid());
                     totalFees = totalFees.subtract(installment.getTotalFeeAmountPaidWithMiscFee());
+                    totalPenalties = totalPenalties.subtract(installment.getMiscPenaltyPaid());
                     if (index != list.size() - 1 && installment.isPaid()) {
                         index++;
                         installment = (LoanScheduleEntity) list.get(index);
@@ -183,7 +192,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 
                 if (dueInstallments) {
                     html1.startTag("tr");
-                    html1.startTag("td", "colspan", "7", "class", "drawtablerowbold");
+                    html1.startTag("td", "colspan", "8", "class", "drawtablerowbold");
                     html1.text(getLabel("loan.instt_due", locale));
                     html1.endTag("td");
                     html1.endTag("tr");
@@ -203,7 +212,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
                 }
                 if (futureInstallments) {
                     html1.startTag("tr");
-                    html1.startTag("td", "colspan", "7", "class", "drawtablerowbold");
+                    html1.startTag("td", "colspan", "8", "class", "drawtablerowbold");
                     html1.text(getLabel("loan.future_install", locale));
                     html1.endTag("td");
                     html1.endTag("tr");
@@ -266,33 +275,39 @@ public class LoanRepaymentTag extends BodyTagSupport {
         html.text(installment.getInstallmentId().toString());
         html.endTag("td");
 
-        html.startTag("td", "width", "15%", "class", "drawtablerow");
+        html.startTag("td", "width", "18%", "class", "drawtablerow");
         html.text(DateUtils.getDBtoUserFormatString(installment.getActionDate(), locale).toString());
         html.endTag("td");
 
-        html.startTag("td", "width", "15%", "class", "drawtablerow");
+        html.startTag("td", "width", "18%", "class", "drawtablerow");
         html.text((isPaymentMade && installment.getPaymentDate() != null ? DateUtils.getDBtoUserFormatString(
                 installment.getPaymentDate(), locale) : "-").toString());
         html.endTag("td");
 
-        html.startTag("td", "width", "16%", "align", "right", "class", "drawtablerow");
+        html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
         html.text((isPaymentMade ? installment.getPrincipalPaid() : installment.getPrincipalDue()).toString());
         html.endTag("td");
 
-        html.startTag("td", "width", "15%", "align", "right", "class", "drawtablerow");
+        html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
         html.text((isPaymentMade ? installment.getEffectiveInterestPaid() :
                 installment.getEffectiveInterestDue()).toString());
         html.endTag("td");
 
-        html.startTag("td", "width", "15%", "align", "right", "class", "drawtablerow");
+        html.startTag("td", "width", "10%", "align", "right", "class", "drawtablerow");
         html.text((isPaymentMade ? installment.getTotalFeeAmountPaidWithMiscFee() : installment
                 .getTotalFeeDueWithMiscFeeDue()).toString());
         html.endTag("td");
+        
+        html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
+        html.text((isPaymentMade ? installment.getMiscPenaltyPaid() :
+                installment.getPenaltyDue()).toString());
+        html.endTag("td");
 
-        html.startTag("td", "width", "18%", "align", "right", "class", "drawtablerow");
+        html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
         html.text((isPaymentMade ? installment.getPrincipalPaid().add(installment.getEffectiveInterestPaid()).add(
-                installment.getTotalFeeAmountPaidWithMiscFee()) : installment.getPrincipalDue().add(
-                installment.getEffectiveInterestDue()).add(installment.getTotalFeeDueWithMiscFeeDue())).toString());
+                installment.getTotalFeeAmountPaidWithMiscFee()).add(installment.getMiscPenaltyPaid()) : installment.getPrincipalDue().add(
+                installment.getEffectiveInterestDue()).add(installment.getTotalFeeDueWithMiscFeeDue()).add(
+                installment.getPenaltyDue())).toString());
         html.endTag("td");
 
         html.endTag("tr");
@@ -300,21 +315,27 @@ public class LoanRepaymentTag extends BodyTagSupport {
     }
 
     XmlBuilder createRunningBalanceRow(LoanScheduleEntity installment, Money totalPrincipal, Money totalInterest,
-            Money totalFees) {
+            Money totalFees, Money totalPenalties) {
         XmlBuilder html = new XmlBuilder();
         html.startTag("tr");
-        html.startTag("td", "width", "25%", "align", "right", "class", "drawtablerow");
+        html.startTag("td", "width", "20%", "align", "right", "class", "drawtablerow");
         html.text(totalPrincipal.subtract(installment.getPrincipalPaid()).toString());
         html.endTag("td");
-        html.startTag("td", "width", "25%", "align", "right", "class", "drawtablerow");
+        html.startTag("td", "width", "20%", "align", "right", "class", "drawtablerow");
         html.text(totalInterest.subtract(installment.getEffectiveInterestPaid()).toString());
         html.endTag("td");
-        html.startTag("td", "width", "25%", "align", "right", "class", "drawtablerow");
+        html.startTag("td", "width", "20%", "align", "right", "class", "drawtablerow");
         html.text(totalFees.subtract(installment.getTotalFeeAmountPaidWithMiscFee()).toString());
         html.endTag("td");
-        html.startTag("td", "width", "25%", "align", "right", "class", "drawtablerow");
-        html.text(totalPrincipal.add(totalInterest).add(totalFees).subtract(installment.getPrincipalPaid()).subtract(
-                installment.getEffectiveInterestPaid()).subtract(installment.getTotalFeeAmountPaidWithMiscFee()).toString());
+        html.startTag("td", "width", "20%", "align", "right", "class", "drawtablerow");
+        html.text(totalPenalties.subtract(installment.getMiscPenaltyPaid()).toString());
+        html.endTag("td");
+        html.startTag("td", "width", "20%", "align", "right", "class", "drawtablerow");
+        
+        html.text((totalPrincipal.add(totalInterest).add(totalFees).add(totalPenalties).subtract(
+                installment.getPrincipalPaid()).subtract(installment.getEffectiveInterestPaid()).subtract(
+                installment.getTotalFeeAmountPaidWithMiscFee()).subtract(
+                installment.getMiscPenaltyPaid())).toString());
         html.endTag("td");
         html.endTag("tr");
         return html;
