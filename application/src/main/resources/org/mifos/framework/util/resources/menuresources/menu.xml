@@ -132,7 +132,7 @@
                 </displayname>
                 <menuitem>
                     <displayname>
-                        <namefragment>label.changeAccountStatus</namefragment>
+                        <namefragment>label.approveMultipleLoans</namefragment>
                     </displayname>
                     <linkvalue>ChangeAccountStatus.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
                 </menuitem>

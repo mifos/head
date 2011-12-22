@@ -35,7 +35,7 @@
       <a href="#">[@spring.message "ClientLeftPane.createLoanaccount" /]</a><br />
       <a href="#">[@spring.message "ClientLeftPane.createmultipleLoanaccounts" /]</a> </p>
     <p class="paddingLeft"><span class="fontBold">[@spring.message "ClientLeftPane.manageaccountstatus" /]</span><br />
-      <a href="#">[@spring.message "ClientLeftPane.changeaccountstatus" /]</a> </p>
+      <a href="#">[@spring.message "ClientLeftPane.approveMultipleLoans" /]</a> </p>
   </div>
   <!--  Left Sidebar Ends-->
 
