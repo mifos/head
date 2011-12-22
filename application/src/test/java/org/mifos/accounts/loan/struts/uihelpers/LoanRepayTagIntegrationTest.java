@@ -94,7 +94,7 @@ public class LoanRepayTagIntegrationTest extends MifosIntegrationTestCase {
         loanRepaymentTag.locale = userContext.getPreferredLocale();
         assertContains("90.0", loanRepaymentTag.createRunningBalanceRow(
                 (LoanScheduleEntity) accountBO.getAccountActionDate(Short.valueOf("1")), new Money(getCurrency(), "50"),
-                new Money(getCurrency(), "20"), new Money(getCurrency(), "20")).toString());
+                new Money(getCurrency(), "20"), new Money(getCurrency(), "20"), new Money(getCurrency(), "20")).toString());
     }
 
     private LoanBO getLoanAccount(AccountState state, Date startDate, int disbursalType) {

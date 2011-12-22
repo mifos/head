@@ -113,7 +113,7 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
     }
     
     public String getClientsAndAccountsChangeAccountStatusLink() {
-        return selenium.getText("menu.link.label.changeaccountstatus");
+        return selenium.getText("menu.link.label.approveMultipleLoans");
     }
     
     public String getClientsAndAccountsCreateMultipleLoansLink() {

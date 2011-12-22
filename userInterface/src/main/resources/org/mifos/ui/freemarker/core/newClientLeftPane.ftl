@@ -58,6 +58,6 @@
                 [@spring.message "ClientLeftPane.manageaccountstatus" /]
         </li>
         <li>
-            <a href="ChangeAccountStatus.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0">[@spring.message "ClientLeftPane.changeaccountstatus" /]</a>
+            <a href="ChangeAccountStatus.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0">[@spring.message "ClientLeftPane.approveMultipleLoans" /]</a>
         </li>
     </ul>
