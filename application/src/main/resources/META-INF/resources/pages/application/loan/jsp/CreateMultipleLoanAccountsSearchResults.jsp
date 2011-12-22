@@ -143,7 +143,7 @@ explanation of the license and how it is applied.
 										</tr>
 										<tr>
 											<td class="fontnormalbold">
-												<span class="fontnormal"><mifos:mifoslabel name="loan.enterDetailsSearch" /> <mifos:mifoslabel name="loan.clickCancelReturn" /> <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel name="loan.s" /> &amp; <mifos:mifoslabel
+												<span class="fontnormal"><mifos:mifoslabel name="loan.enterDetailsSubmit" /> <mifos:mifoslabel name="loan.clickCancelReturn" /> <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel name="loan.s" /> &amp; <mifos:mifoslabel
 														name="loan.accwithoutsub" /></span>
 												<br>
 												<br>
