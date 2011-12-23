@@ -20,7 +20,10 @@
 package org.mifos.platform.rest.controller;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -74,21 +77,29 @@ public class SavingsAccountRESTController {
     @Autowired
     private PersonnelDao personnelDao;
 
-    @RequestMapping(value = "account/savings/deposit/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "account/savings/num-{globalAccountNum}/deposit", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> deposit(@PathVariable String globalAccountNum,
-    		                    @RequestParam BigDecimal amount) throws Exception {
-        return doSavingsTrxn(globalAccountNum, amount, TrxnTypes.savings_deposit);
+    		                    @RequestParam BigDecimal amount,
+								@RequestParam String trxnDate,
+								@RequestParam(required=false) Short receiptId,
+								@RequestParam(required=false) String receiptDate,
+								@RequestParam Short paymentTypeId) throws Exception {
+        return doSavingsTrxn(globalAccountNum, amount, trxnDate, receiptId, receiptDate, paymentTypeId, TrxnTypes.savings_deposit);
     }
 
-    @RequestMapping(value = "account/savings/withdraw/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "account/savings/num-{globalAccountNum}/withdraw", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> withdraw(@PathVariable String globalAccountNum,
-    		                     @RequestParam BigDecimal amount) throws Exception {
-        return doSavingsTrxn(globalAccountNum, amount, TrxnTypes.savings_withdrawal);
+    		                     @RequestParam BigDecimal amount,
+								 @RequestParam String trxnDate,
+ 								 @RequestParam(required=false) Short receiptId,
+ 								 @RequestParam(required=false) String receiptDate,
+ 								 @RequestParam Short paymentTypeId) throws Exception {
+        return doSavingsTrxn(globalAccountNum, amount, trxnDate, receiptId, receiptDate, paymentTypeId, TrxnTypes.savings_withdrawal);
     }
 
-    @RequestMapping(value = "account/savings/adjustment/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "account/savings/num-{globalAccountNum}/adjustment", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> applyAdjustment(@PathVariable String globalAccountNum,
                                         @RequestParam BigDecimal amount,
@@ -137,16 +148,28 @@ public class SavingsAccountRESTController {
         return savingsServiceFacade.retrieveSavingsAccountDetails(savings.getAccountId().longValue());
     }
 
-    @RequestMapping(value = "/account/savings/due/num-{globalAccountNum}", method = RequestMethod.GET)
+    @RequestMapping(value = "/account/savings/num-{globalAccountNum}/due", method = RequestMethod.GET)
     public @ResponseBody
     SavingsAccountDepositDueDto getSavingsDepositDueDetailsByNumber(@PathVariable String globalAccountNum) throws Exception {
         return savingsServiceFacade.retrieveDepositDueDetails(globalAccountNum);
     }
 
-    private Map<String, String> doSavingsTrxn(String globalAccountNum, BigDecimal amount, TrxnTypes trxnType) throws Exception {
+    private Map<String, String> doSavingsTrxn(String globalAccountNum, BigDecimal amount, 
+    		String trxnDate, Short receiptId, String receiptDate, Short paymentTypeId, TrxnTypes trxnType) throws Exception {
 
     	validateAmount(amount);
-
+    	
+    	String format = "dd-MM-yyyy";   	
+    	DateTime trnxDate = validateDateString(trxnDate, format);
+    	validateSavingsDate(trnxDate);
+    	DateTime receiptDateTime = null;
+    	if (receiptDate != null && !receiptDate.isEmpty()){
+    	 	receiptDateTime = validateDateString(receiptDate, format);
+    	 	validateSavingsDate(receiptDateTime);
+    	} else {
+    		receiptDateTime = new DateTime(trnxDate);
+    	}
+    	
         SavingsBO savingsBO = savingsDao.findBySystemId(globalAccountNum);
 
         validateAccountState(savingsBO);
@@ -154,15 +177,14 @@ public class SavingsAccountRESTController {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Integer accountId = savingsBO.getAccountId();
-
-        PaymentTypeDto paymentType = trxnType.equals(TrxnTypes.savings_deposit) ?
-                accountService.getSavingsPaymentTypes().get(0) :
-                accountService.getSavingsWithdrawalTypes().get(0);
+        
         DateTime today = new DateTime();
-        LocalDate receiptDate = today.toLocalDate();
-
-        // from where these parameter should come?
-        String receiptId = "";
+        String receiptIdString;
+        if ( receiptId == null ){
+        	receiptIdString = "";
+        } else {
+        	receiptIdString = receiptId.toString();
+        }
 
         CustomerBO client = savingsBO.getCustomer();
         CustomerDto customer = new CustomerDto();
@@ -170,14 +192,16 @@ public class SavingsAccountRESTController {
 
         Money balanceBeforePayment = savingsBO.getSavingsBalance();
         if (trxnType.equals(TrxnTypes.savings_deposit)) {
+        	validateSavingsPaymentTypeId(paymentTypeId, accountService.getSavingsPaymentTypes());
             SavingsDepositDto savingsDeposit = new SavingsDepositDto(accountId.longValue(), savingsBO.getCustomer().getCustomerId().longValue(),
-                    today.toLocalDate(), amount.doubleValue(), paymentType.getValue().intValue(), receiptId, receiptDate,
+                    trnxDate.toLocalDate(), amount.doubleValue(), paymentTypeId.intValue(), receiptIdString, receiptDateTime.toLocalDate(),
                     Locale.UK);
             this.savingsServiceFacade.deposit(savingsDeposit);
         }
         else {
+        	validateSavingsPaymentTypeId(paymentTypeId, accountService.getSavingsWithdrawalTypes());
             SavingsWithdrawalDto savingsWithdrawal = new SavingsWithdrawalDto(accountId.longValue(), savingsBO.getCustomer().getCustomerId().longValue(),
-                    today.toLocalDate(), amount.doubleValue(), paymentType.getValue().intValue(), receiptId, receiptDate,
+                    trnxDate.toLocalDate(), amount.doubleValue(), paymentTypeId.intValue(), receiptIdString, receiptDateTime.toLocalDate(),
                     Locale.UK);
             this.savingsServiceFacade.withdraw(savingsWithdrawal);
         }
@@ -212,6 +236,34 @@ public class SavingsAccountRESTController {
         if (!savingsBO.getState().isActiveSavingsAccountState() ){
             throw new ParamValidationException(ErrorMessage.NOT_ACTIVE_ACCOUNT);
         }
+    }
+    
+    public void validateSavingsPaymentTypeId(Short paymentTypeId, List<PaymentTypeDto> savingsPaymentTypes) throws ParamValidationException{
+    	boolean valid = false;
+    	for ( PaymentTypeDto paymentType : savingsPaymentTypes){
+    		if ( paymentType.getValue().equals(paymentTypeId) ){
+    			valid = true;
+    		}
+    	}
+    	if ( !valid) {
+    		throw new ParamValidationException(ErrorMessage.INVALID_PAYMENT_TYPE_ID);
+    	}
+    }
+    
+    public DateTime validateDateString(String dateString, String format) throws ParamValidationException {
+    	SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+    	try {
+    		return new DateTime(dateFormat.parse(dateString));
+    	} catch (ParseException e){
+    		throw new ParamValidationException(ErrorMessage.INVALID_DATE_STRING + "in format " + format);
+    	}
+    }
+    
+    public void validateSavingsDate(DateTime date) throws ParamValidationException {
+    	DateTime today = new DateTime();
+    	if (date.isAfter(today)){
+    		throw new ParamValidationException(ErrorMessage.FUTURE_DATE);
+    	}
     }
 
 }

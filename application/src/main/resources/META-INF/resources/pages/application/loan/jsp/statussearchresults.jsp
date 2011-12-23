@@ -71,7 +71,7 @@ explanation of the license and how it is applied.
 			<table width="95%" border="0" cellpadding="0" cellspacing="0" class="paddingleftmain">
 				<tr>
 					<td>
-						<span class="headingorange"><mifos:mifoslabel name="accountStatus.changeaccountstatus" /> <br> <br>
+						<span class="headingorange"><mifos:mifoslabel name="accountStatus.approveMultipleLoans" /> <br> <br>
 					</td>
 				</tr>
 				<tr>

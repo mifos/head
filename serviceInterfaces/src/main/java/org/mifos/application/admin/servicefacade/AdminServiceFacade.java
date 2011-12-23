@@ -89,7 +89,7 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')")
     void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto);
 
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_ACCEPTED_PAYMENT_TYPES')")
+    @PreAuthorize("isFullyAuthenticated()")
     AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes();
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_ACCEPTED_PAYMENT_TYPES')")

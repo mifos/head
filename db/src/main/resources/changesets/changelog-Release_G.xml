@@ -523,4 +523,42 @@
             </sql>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_4827_1" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+                update field_configuration set field_name="Ethnicity" where field_name="Ethinicity";
+                
+                update lookup_entity set entity_name="Ethnicity" where entity_name="Ethinicity";
+                
+                update lookup_value set lookup_name="Ethnicity-Sc" where lookup_name="Ethinicity-Sc";
+                update lookup_value set lookup_name="Ethnicity-Bc" where lookup_name="Ethinicity-Bc";
+                update lookup_value set lookup_name="Ethnicity-St" where lookup_name="Ethinicity-St";
+                update lookup_value set lookup_name="Ethnicity-Obc" where lookup_name="Ethinicity-Obc";
+                update lookup_value set lookup_name="Ethnicity-Fc" where lookup_name="Ethinicity-Fc";
+                
+                alter table customer_detail drop foreign key customer_detail_ibfk_4;
+                alter table customer_detail drop index ethinicity;
+                alter table customer_detail change column ethinicity ethnicity int(11);
+                alter table customer_detail add constraint customer_detail_ibfk_4 foreign key(ethnicity) references lookup_value(lookup_id) on delete no action on update no action;
+                alter table customer_detail add index ethnicity (ethnicity asc);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                update field_configuration set field_name="Ethinicity" where field_name="Ethnicity";
+                
+                update lookup_entity set entity_name="Ethinicity" where entity_name="Ethnicity";
+                
+                update lookup_value set lookup_name="Ethinicity-Sc" where lookup_name="Ethnicity-Sc";
+                update lookup_value set lookup_name="Ethinicity-Bc" where lookup_name="Ethnicity-Bc";
+                update lookup_value set lookup_name="Ethinicity-St" where lookup_name="Ethnicity-St";
+                update lookup_value set lookup_name="Ethinicity-Obc" where lookup_name="Ethnicity-Obc";
+                update lookup_value set lookup_name="Ethinicity-Fc" where lookup_name="Ethnicity-Fc";
+                
+                alter table customer_detail drop foreign key customer_detail_ibfk_4;
+                alter table customer_detail drop index ethnicity;
+                alter table customer_detail change column ethnicity ethinicity int(11);
+                alter table customer_detail add constraint customer_detail_ibfk_4 foreign key(ethinicity) references lookup_value(lookup_id) on delete no action on update no action;
+                alter table customer_detail add index ethinicity (ethinicity asc);
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

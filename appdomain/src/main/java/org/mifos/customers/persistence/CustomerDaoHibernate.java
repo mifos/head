@@ -426,9 +426,9 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
-    public List<ValueListElement> retrieveEthinicity() {
+    public List<ValueListElement> retrieveEthnicity() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("entityType", MasterConstants.ETHINICITY);
+        queryParameters.put("entityType", MasterConstants.ETHNICITY);
 
         return retrieveMasterData(queryParameters);
     }

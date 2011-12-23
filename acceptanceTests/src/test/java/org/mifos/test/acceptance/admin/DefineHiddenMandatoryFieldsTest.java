@@ -132,7 +132,7 @@ public class DefineHiddenMandatoryFieldsTest  extends UiTestCaseBase{
         Assert.assertFalse(selenium.isElementPresent("create_ClientPersonalInfo.input.secondLastName"));
         Assert.assertFalse(selenium.isElementPresent("create_ClientPersonalInfo.input.governmentId"));
         Assert.assertFalse(selenium.isElementPresent("clientDetailView.citizenship"));
-        Assert.assertFalse(selenium.isElementPresent("clientDetailView.ethinicity"));
+        Assert.assertFalse(selenium.isElementPresent("clientDetailView.ethnicity"));
         Assert.assertFalse(selenium.isElementPresent("clientDetailView.educationLevel"));
         Assert.assertFalse(selenium.isElementPresent("clientDetailView.businessActivities"));
         Assert.assertFalse(selenium.isElementPresent("clientDetailView.povertyStatus"));
@@ -264,7 +264,7 @@ public class DefineHiddenMandatoryFieldsTest  extends UiTestCaseBase{
         params3.setGovernmentID("12345");
         params3.setMaritalStatus(67);
         params3.setCitizenship(131);
-        params3.setEthincity(133);
+        params3.setEthnicity(133);
         params3.setHandicappedDropdown(139);
         params3.setPovertyStatus(42);
         params3.setEducationLevel(135);

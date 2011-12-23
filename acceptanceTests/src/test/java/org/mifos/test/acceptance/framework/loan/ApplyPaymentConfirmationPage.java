@@ -30,6 +30,13 @@ public class ApplyPaymentConfirmationPage extends AbstractPage {
         super(selenium);
         this.verifyPage("ReviewApplyPayment");
     }
+    
+    /* It to should fail to load next page due to an induced error*/
+    public ApplyPaymentConfirmationPage dontLoadNext() {
+        selenium.click("reviewapplypayment.button.submit");
+        waitForPageToLoad();
+        return new ApplyPaymentConfirmationPage(selenium);
+    }
 
     public LoanAccountPage submitAndNavigateToLoanAccountDetailsPage() {
         selenium.click("reviewapplypayment.button.submit");

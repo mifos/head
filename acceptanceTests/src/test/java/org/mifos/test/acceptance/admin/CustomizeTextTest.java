@@ -163,7 +163,7 @@ public class CustomizeTextTest  extends UiTestCaseBase {
         originalCustomText.put("details", "有");
         originalCustomText.put("Create new Center", "Define center");
         originalCustomText.put("Create multiple Loan Accounts", "下面的搜索工具");
-        originalCustomText.put("Change account status", "أبجدية‎");
+        originalCustomText.put("Approve multiple loans", "أبجدية‎");
         originalCustomText.put("Client", "Person");
         originalCustomText.put("Home", "Main");
         originalCustomText.put("Clients & Accounts", "òèßñ 有 عربية");
@@ -201,7 +201,7 @@ public class CustomizeTextTest  extends UiTestCaseBase {
         ClientsAndAccountsHomepage clientsAndAccountsHomepage = navigationHelper.navigateToClientsAndAccountsPage();
         verifyClientsAndAccountsCreateCenterLink(originalCustomText.get("Create new Center"), clientsAndAccountsHomepage);
         verifyClientsAndAccountsCreateMultipleLoansLink(originalCustomText.get("Create multiple Loan Accounts"), clientsAndAccountsHomepage);
-        verifyClientsAndAccountsChangeAccountStatusLink(originalCustomText.get("Change account status"), clientsAndAccountsHomepage);
+        verifyClientsAndAccountsApproveMultipleLoansLink(originalCustomText.get("Approve multiple loans"), clientsAndAccountsHomepage);
         verifyClientsAndAccountsCreateClientLink(originalCustomText.get("Client"), clientsAndAccountsHomepage);
         verifyClientsAndAccountsCreateNewClientsText(originalCustomText.get("Client"));
         verifyClientsAndAccountsCreateGroupLink(originalCustomText.get("create New group"), clientsAndAccountsHomepage);
@@ -247,7 +247,7 @@ public class CustomizeTextTest  extends UiTestCaseBase {
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
         verifyClientsAndAccountsCreateCenterLink("Create new Center", clientsAndAccountsPage);
         verifyClientsAndAccountsCreateMultipleLoansLink("Create multiple Loan Accounts", clientsAndAccountsPage);
-        verifyClientsAndAccountsChangeAccountStatusLink("Change account status", clientsAndAccountsPage);
+        verifyClientsAndAccountsApproveMultipleLoansLink("Approve multiple loans", clientsAndAccountsPage);
         verifyClientsAndAccountsCreateClientLink("Client", clientsAndAccountsPage);
         verifyClientsAndAccountsCreateNewClientsText("Client");
         verifyClientsAndAccountsCreateGroupLink(originalCustomText.get("create New group"), clientsAndAccountsPage);
@@ -342,8 +342,8 @@ public class CustomizeTextTest  extends UiTestCaseBase {
         ClientsAndAccountsHomepage clientsAndAccountsHomepage) {
         Assert.assertEquals(customizedText, clientsAndAccountsHomepage.getClientsAndAccountsCreateMultipleLoansLink());     
     }
-    private void verifyClientsAndAccountsChangeAccountStatusLink(String customizedText, 
-        ClientsAndAccountsHomepage clientsAndAccountsHomepage) {
+    private void verifyClientsAndAccountsApproveMultipleLoansLink(String customizedText,
+                                                                  ClientsAndAccountsHomepage clientsAndAccountsHomepage) {
         Assert.assertEquals(customizedText, clientsAndAccountsHomepage.getClientsAndAccountsChangeAccountStatusLink());     
     }
     private void verifyClientsAndAccountsCreateClientLink(String customizedText, 

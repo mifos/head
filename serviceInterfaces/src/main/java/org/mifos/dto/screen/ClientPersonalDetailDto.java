@@ -26,7 +26,7 @@ import java.io.Serializable;
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
 public class ClientPersonalDetailDto implements Serializable {
 
-    private Integer ethinicity;
+    private Integer ethnicity;
     private Integer citizenship;
     private Integer handicapped;
     private Integer businessActivities;
@@ -42,9 +42,9 @@ public class ClientPersonalDetailDto implements Serializable {
         super();
     }
 
-    public ClientPersonalDetailDto(Integer ethinicity, Integer citizenship, Integer handicapped, Integer businessActivities,
+    public ClientPersonalDetailDto(Integer ethnicity, Integer citizenship, Integer handicapped, Integer businessActivities,
             Integer maritalStatus, Integer educationLevel, Short numChildren, Short gender, Short povertyStatus) {
-        this.ethinicity = ethinicity;
+        this.ethnicity = ethnicity;
         this.citizenship = citizenship;
         this.handicapped = handicapped;
         this.businessActivities = businessActivities;
@@ -79,12 +79,12 @@ public class ClientPersonalDetailDto implements Serializable {
         this.educationLevel = educationLevel;
     }
 
-    public Integer getEthinicity() {
-        return ethinicity;
+    public Integer getEthnicity() {
+        return ethnicity;
     }
 
-    public void setEthinicity(Integer ethinicity) {
-        this.ethinicity = ethinicity;
+    public void setEthnicity(Integer ethnicity) {
+        this.ethnicity = ethnicity;
     }
 
     public Short getGender() {

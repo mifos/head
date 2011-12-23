@@ -21,6 +21,9 @@ package org.mifos.platform.rest.controller;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +33,6 @@ import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.servicefacade.AccountServiceFacade;
-import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
@@ -51,6 +53,8 @@ import org.mifos.platform.rest.controller.RESTAPIHelper.ErrorMessage;
 import org.mifos.platform.rest.controller.validation.ParamValidationException;
 import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.format.datetime.joda.DateTimeParser;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,7 +81,7 @@ public class LoanAccountRESTController {
     @Autowired
     private PersonnelDao personnelDao;
 
-    @RequestMapping(value = "/account/loan/repay/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/repay", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> repay(@PathVariable String globalAccountNum, @RequestParam BigDecimal amount) throws Exception {
 
@@ -124,7 +128,7 @@ public class LoanAccountRESTController {
         return map;
     }
 
-    @RequestMapping(value = "/account/loan/fullrepay/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/fullrepay", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> fullRepay(@PathVariable String globalAccountNum,
                                   @RequestParam Boolean waiveInterest) throws Exception {
@@ -175,22 +179,44 @@ public class LoanAccountRESTController {
     	return map;
     }
 
-    @RequestMapping(value = "/account/loan/disburse/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/disburse", method = RequestMethod.POST)
     public @ResponseBody
-    Map<String, String> disburseLoan(@PathVariable String globalAccountNum) throws Exception {
-
+    Map<String, String> disburseLoan(@PathVariable String globalAccountNum, 
+    								 @RequestParam String disbursalDate,
+    								 @RequestParam(required=false) Short receiptId,
+    								 @RequestParam(required=false) String receiptDate,
+    								 @RequestParam Short disbursePaymentTypeId,
+    								 @RequestParam(required=false) Short paymentModeOfPayment) throws Exception {
+    	String format = "dd-MM-yyyy";   	
+    	DateTime trnxDate = validateDateString(disbursalDate, format);
+    	validateDisbursementDate(trnxDate);
+    	DateTime receiptDateTime = null;
+    	if (receiptDate != null && !receiptDate.isEmpty()){
+    	 	receiptDateTime = validateDateString(receiptDate, format);
+    	 	validateDisbursementDate(receiptDateTime);
+    	}
+    	validateDisbursementPaymentTypeId(disbursePaymentTypeId, accountService.getLoanDisbursementTypes());
+    	
     	MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
-
-    	DateTime today = new DateTime();
-    	PaymentTypeDto paymentType = accountService.getLoanPaymentTypes().get(0);
+	
     	String comment = "";
-    	Short paymentTypeId = PaymentTypes.CASH.getValue();
+    	Short paymentTypeId = Short.valueOf(disbursePaymentTypeId);
 
        	Money outstandingBeforeDisbursement = loan.getLoanSummary().getOutstandingBalance();
+       	
+       	CustomerDto customerDto = null;
+       	PaymentTypeDto paymentType = null;
+       	AccountPaymentParametersDto loanDisbursement;
+       	if (receiptId == null || receiptDateTime == null){
+        	loanDisbursement = new AccountPaymentParametersDto(new UserReferenceDto((short)user.getUserId()),
+        			new AccountReferenceDto(loan.getAccountId()), loan.getLoanAmount().getAmount(), trnxDate.toLocalDate(), paymentType, comment);
+       	} else {
+        	loanDisbursement = new AccountPaymentParametersDto(new UserReferenceDto((short)user.getUserId()),
+        			new AccountReferenceDto(loan.getAccountId()), loan.getLoanAmount().getAmount(), trnxDate.toLocalDate(), paymentType, comment,
+        			receiptDateTime.toLocalDate(), receiptId.toString(), customerDto);	
+       	}
 
-    	AccountPaymentParametersDto loanDisbursement = new AccountPaymentParametersDto(new UserReferenceDto((short)user.getUserId()),
-    			new AccountReferenceDto(loan.getAccountId()), loan.getLoanAmount().getAmount(), today.toLocalDate(), paymentType, comment);
     	this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
 
     	CustomerBO client = loan.getCustomer();
@@ -200,8 +226,8 @@ public class LoanAccountRESTController {
     	map.put("clientName", client.getDisplayName());
         map.put("clientNumber", client.getGlobalCustNum());
         map.put("loanDisplayName", loan.getLoanOffering().getPrdOfferingName());
-        map.put("disbursementDate", today.toLocalDate().toString());
-        map.put("disbursementTime", today.toLocalTime().toString());
+        map.put("disbursementDate", trnxDate.toLocalDate().toString());
+        map.put("disbursementTime", new DateTime().toLocalTime().toString());
         map.put("disbursementAmount", loan.getLastPmnt().getAmount().toString());
         map.put("disbursementMadeBy", personnelDao.findPersonnelById((short) user.getUserId()).getDisplayName());
         map.put("outstandingBeforeDisbursement", outstandingBeforeDisbursement.toString());
@@ -210,7 +236,7 @@ public class LoanAccountRESTController {
     	return map;
     }
 
-    @RequestMapping(value = "/account/loan/adjustment/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/adjustment", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> applyAdjustment(@PathVariable String globalAccountNum,
                                         @RequestParam String note) throws Exception {
@@ -249,7 +275,7 @@ public class LoanAccountRESTController {
     	return map;
     }
 
-    @RequestMapping(value = "/account/loan/charge/num-{globalAccountNum}", method = RequestMethod.POST)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/charge", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> applyCharge(@PathVariable String globalAccountNum,
                                     @RequestParam BigDecimal amount,
@@ -257,6 +283,9 @@ public class LoanAccountRESTController {
 
         validateAmount(amount);
 
+        List<String> applicableFees = new ArrayList<String>(this.getApplicableFees(globalAccountNum).values());
+        validateFeeId(feeId, applicableFees);
+        
         Map<String, String> map = new HashMap<String, String>();
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
@@ -283,7 +312,7 @@ public class LoanAccountRESTController {
     	return map;
     }
 
-    @RequestMapping(value = "/account/loan/fees/num-{globalAccountNum}", method = RequestMethod.GET)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/fees", method = RequestMethod.GET)
     public @ResponseBody
     Map<String, String> getApplicableFees(@PathVariable String globalAccountNum) throws Exception {
 		LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
@@ -299,20 +328,34 @@ public class LoanAccountRESTController {
     	return map;
     }
     
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/interestWaivable", method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, String> isLoanInterestWaivable(@PathVariable String globalAccountNum) throws Exception {
+		LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
+		boolean interestWaivable = loan.getLoanOffering().isInterestWaived();
+    	
+		Map<String, String> map = new HashMap<String, String>();
+		
+		map.put("isInterestWaivable", Boolean.toString(interestWaivable));
+		map.put("defaultValue", "false");
+		
+    	return map;
+    }
+    
     @RequestMapping(value = "/account/loan/num-{globalAccountNum}", method = RequestMethod.GET)
     public @ResponseBody
     LoanInformationDto getLoanByNumber(@PathVariable String globalAccountNum) throws Exception {
         return loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
     }
 
-    @RequestMapping(value = "/account/loan/installment/num-{globalAccountNum}", method = RequestMethod.GET)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/installment", method = RequestMethod.GET)
     public @ResponseBody
     LoanInstallmentDetailsDto getLoanInstallmentByNumber(@PathVariable String globalAccountNum) throws Exception {
         LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
         return loanAccountServiceFacade.retrieveInstallmentDetails(loan.getAccountId());
     }
 
-    @RequestMapping(value = "/account/loan/schedule/num-{globalAccountNum}", method = RequestMethod.GET)
+    @RequestMapping(value = "/account/loan/num-{globalAccountNum}/schedule", method = RequestMethod.GET)
     public @ResponseBody
     List<LoanRepaymentScheduleItemDto> getLoanRepaymentScheduleByNumber(@PathVariable String globalAccountNum) throws Exception {
         return loanAccountServiceFacade.retrieveLoanRepaymentSchedule(globalAccountNum);
@@ -335,5 +378,38 @@ public class LoanAccountRESTController {
             throw new ParamValidationException(ErrorMessage.NOT_ACTIVE_ACCOUNT);
         }
     }
-
+    
+    public static void validateFeeId(Short feeId, List<String> applicableFees) throws ParamValidationException{
+       if (!applicableFees.contains(Short.toString(feeId))){
+               throw new ParamValidationException(ErrorMessage.INVALID_FEE_ID);
+       }
+    }
+    
+    public void validateDisbursementPaymentTypeId(Short paymentTypeId, List<PaymentTypeDto> disbursementPaymentTypes) throws ParamValidationException{
+    	boolean valid = false;
+    	for ( PaymentTypeDto paymentType : disbursementPaymentTypes){
+    		if ( paymentType.getValue().equals(paymentTypeId) ){
+    			valid = true;
+    		}
+    	}
+    	if ( !valid) {
+    		throw new ParamValidationException(ErrorMessage.INVALID_PAYMENT_TYPE_ID);
+    	}
+    }
+    
+    public DateTime validateDateString(String dateString, String format) throws ParamValidationException {
+    	SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+    	try {
+    		return new DateTime(dateFormat.parse(dateString));
+    	} catch (ParseException e){
+    		throw new ParamValidationException(ErrorMessage.INVALID_DATE_STRING + "in format " + format);
+    	}
+    }
+    
+    public void validateDisbursementDate(DateTime date) throws ParamValidationException {
+    	DateTime today = new DateTime();
+    	if (date.isAfter(today)){
+    		throw new ParamValidationException(ErrorMessage.FUTURE_DATE);
+    	}
+    }
 }

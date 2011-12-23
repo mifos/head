@@ -203,7 +203,7 @@ explanation of the license and how it is applied.
 									: <span class="fontnormal"><c:out value="${sessionScope.loanproductactionform.defaultLoanAmount}" /> </span>
 								--> <c:if
 								test="${sessionScope.loanproductactionform.loanAmtCalcType=='2'}">
-								<table width="100%" border="0" cellpadding="3" cellspacing="0">
+								<table width="60%" border="0" cellpadding="3" cellspacing="0">
 									<br>
 									<mifos:mifoslabel name="product.calcloanamount"
 										bundle="ProductDefUIResources" />
@@ -307,7 +307,7 @@ explanation of the license and how it is applied.
 									bundle="ProductDefUIResources" /></span>
 								<br />
 
-								<table width="90%" border="0" cellspacing="0" cellpadding="3">
+								<table width="60%" border="0" cellspacing="0" cellpadding="3">
 									<tr>
 										<td width="15%" class="drawtablehd"><mifos:mifoslabel
 											name="product.loancycleno" bundle="ProductDefUIResources" />
@@ -656,7 +656,7 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="product.installbylastloanamount"
 									bundle="ProductDefUIResources" /></span>
 								<br>
-								<table width="100%" border="0" cellpadding="3" cellspacing="0">
+								<table width="60%" border="0" cellpadding="3" cellspacing="0">
 									<tr>
 										<td width="25%" class="drawtablehd"><mifos:mifoslabel
 											name="product.lastloanamount" bundle="ProductDefUIResources" />
@@ -755,7 +755,7 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="product.installbyloancycle"
 									bundle="ProductDefUIResources" /></span>
 								<br>
-								<table width="90%" border="0" cellspacing="0" cellpadding="3">
+								<table width="60%" border="0" cellspacing="0" cellpadding="3">
 									<tr>
 										<td width="15%" class="drawtablehd"><mifos:mifoslabel
 											name="product.loancycleno" bundle="ProductDefUIResources" />
@@ -835,7 +835,7 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="product.sameforallinstallment"
 									bundle="ProductDefUIResources" /></span>
 								<br>
-								<table width="80%" border="0" cellspacing="0" cellpadding="3">
+								<table width="60%" border="0" cellspacing="0" cellpadding="3">
 									<tr>
 										<td width="20%" class="drawtablehd"><mifos:mifoslabel
 											name="product.mininst" bundle="ProductDefUIResources" /></td>

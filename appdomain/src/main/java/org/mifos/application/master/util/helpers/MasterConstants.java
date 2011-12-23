@@ -25,7 +25,7 @@ public interface MasterConstants {
     String MARITAL_STATUS = "MaritalStatus";
     String PERSONNEL_STATUS = "PersonnelStatus";
     String CITIZENSHIP = "CitizenShip";
-    String ETHINICITY = "Ethinicity";
+    String ETHNICITY = "Ethnicity";
     String POVERTY_STATUS = "PovertyStatus";
     String EDUCATION_LEVEL = "EducationLevel";
     String BUSINESS_ACTIVITIES = "BusinessActivities";

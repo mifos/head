@@ -50,7 +50,7 @@ public class GroupRESTController {
         return groupServiceFacade.getGroupInformationDto(globalCustNum);
     }
 
-    @RequestMapping(value = "group/charges/num-{globalCustNum}", method = RequestMethod.GET)
+    @RequestMapping(value = "group/num-{globalCustNum}/charges", method = RequestMethod.GET)
     public @ResponseBody
     CustomerChargesDetailsDto getGroupChargesByNumber(@PathVariable String globalCustNum) {
         GroupBO groupBO = customerDao.findGroupBySystemId(globalCustNum);

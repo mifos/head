@@ -27,7 +27,6 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mifos.platform.rest.controller.validation.ParamValidationException;
 import org.mifos.rest.approval.service.RESTCallInterruptException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,22 +52,12 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
                 return modelAndView;
             }
 
-            if (modelAndView == null && ex instanceof ParamValidationException) {
-                // should move to explicit @ExceptionHandler(ParamValidationException) controller method
-                modelAndView = new ModelAndView();
-                modelAndView.addObject("status", "error");
-                modelAndView.addObject("cause", ex.getMessage());
-                return modelAndView;
-            }
-
             if (modelAndView == null) {
                 // should move to explicit @ExceptionHandler(Exception) controller method
                 modelAndView = new ModelAndView();
                 modelAndView.addObject("status", "error");
                 modelAndView.addObject("cause", ex.getMessage());
-                StringWriter sw = new StringWriter();
-                ex.printStackTrace(new PrintWriter(sw));
-                modelAndView.addObject("stack", sw.toString());
+                logger.error("REST API exception : URI '" + request.getRequestURI() + "'", ex);
                 return modelAndView;
             }
         }

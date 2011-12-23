@@ -171,9 +171,9 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
 
         ViewRepaymentSchedulePage repaymentSchedulePage = loanAccountPage.navigateToRepaymentSchedulePage();
         repaymentSchedulePage.verifyRepaymentScheduleTableRow(51, 0, "Installments due");
-        repaymentSchedulePage.verifyRepaymentScheduleTableRow(52, 6, "63.0");
-        repaymentSchedulePage.verifyRepaymentScheduleTableRow(53, 6, "63.0");
-        repaymentSchedulePage.verifyRepaymentScheduleTableRow(54, 6, "63.0");
+        repaymentSchedulePage.verifyRepaymentScheduleTableRow(52, 7, "63.0");
+        repaymentSchedulePage.verifyRepaymentScheduleTableRow(53, 7, "63.0");
+        repaymentSchedulePage.verifyRepaymentScheduleTableRow(54, 7, "63.0");
         repaymentSchedulePage.verifyRepaymentScheduleTableRow(55, 0, "Future Installments");
         repaymentSchedulePage.navigateBack();
 

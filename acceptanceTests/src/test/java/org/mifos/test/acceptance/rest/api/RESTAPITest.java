@@ -32,6 +32,7 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.rest.api.RESTAPITestHelper.By;
 import org.mifos.test.acceptance.rest.api.RESTAPITestHelper.Type;
+import org.mifos.test.acceptance.rest.api.RESTAPITestHelper.Op;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -46,14 +47,17 @@ public class RESTAPITest extends UiTestCaseBase {
     public static final String GROUP_GLOBAL_ID = "0002-000000002";
     public static final String CENTER_GLOBAL_ID = "0002-000000001";
     public static final String CENTER_ID = "1";
+    public static final String OFFICE_ID = "1";
     public static final String PERSONNEL_CURRENT_ID = "current";
     public static final String SYSTEM_INFORMATION_ID = "information";
+    public static final String PAYMENT_TYPES_ACCEPTED = "accepted";
     public static final String LOAN_ACCOUNT_GLOBAL_ID = "000100000000004";
     public static final String LOAN_ACCOUNT_2_GLOBAL_ID = "000100000000005";
     public static final String LOAN_ACCOUNT_3_GLOBAL_ID = "000100000000008";
     public static final String SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID = "000100000000006";
     public static final String SAVINGS_MANDATORY_ACCOUNT_GLOBAL_ID = "000100000000007";
     public static final String MEETINGS_DAY = "19-09-2011";
+    public static final String TODAY = "13-09-2011";
     
     private RESTAPITestHelper helper;
 
@@ -92,9 +96,9 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
     public void clientChargesByGlobalNum() throws Exception {
-        String type = Type.CLIENT_CHARGES;
+        String type = Type.CLIENT;
         String by = By.GLOBAL_NUMBER;
-        String value = CLIENT_GLOBAL_ID;
+        String value = CLIENT_GLOBAL_ID + Op.CHARGES;
         String actualJSON = helper.getJSONFromUI(type, by, value);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         ObjectMapper mapper = helper.getObjectMapper();
@@ -116,9 +120,9 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
     public void groupChargesByGlobalNum() throws Exception {
-        String type = Type.GROUP_CHARGES;
+        String type = Type.GROUP;
         String by = By.GLOBAL_NUMBER;
-        String value = GROUP_GLOBAL_ID;
+        String value = GROUP_GLOBAL_ID + Op.CHARGES;
         String actualJSON = helper.getJSONFromUI(type, by, value);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         ObjectMapper mapper = helper.getObjectMapper();
@@ -140,9 +144,21 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
     public void centerChargesByGlobalNum() throws Exception {
-        String type = Type.CENTER_CHARGES;
+        String type = Type.CENTER;
         String by = By.GLOBAL_NUMBER;
-        String value = CENTER_GLOBAL_ID;
+        String value = CENTER_GLOBAL_ID + Op.CHARGES;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        ObjectMapper mapper = helper.getObjectMapper();
+        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly")
+    public void officeById() throws Exception {
+        String type = Type.OFFICE;
+        String by = By.ID;
+        String value = OFFICE_ID;
         String actualJSON = helper.getJSONFromUI(type, by, value);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         ObjectMapper mapper = helper.getObjectMapper();
@@ -153,9 +169,9 @@ public class RESTAPITest extends UiTestCaseBase {
     @Test(groups="readOnly", dependsOnMethods={"centerByGlobalNum", "centerChargesByGlobalNum"})
     public void applyCustomerChargeByGlobalNum() throws Exception {
     	String data = "?amount=5&feeId=-1";
-        String type = Type.CUSTOMER_CHARGE;
+        String type = Type.CUSTOMER;
         String by = By.GLOBAL_NUMBER;
-        String value = CENTER_GLOBAL_ID;
+        String value = CENTER_GLOBAL_ID + Op.CHARGE;
         String actualJSON = helper.postJSONFromUI(type, by, value, data);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
@@ -201,9 +217,9 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
     public void personnelClientsByCurrentId() throws Exception {
-        String type = Type.PERSONNEL_CLIENTS;
+        String type = Type.PERSONNEL;
         String by = By.ID;
-        String value = PERSONNEL_CURRENT_ID;
+        String value = PERSONNEL_CURRENT_ID + Op.CLIENTS;
         String actualJSON = helper.getJSONFromUI(type, by, value);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
@@ -245,10 +261,22 @@ public class RESTAPITest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
+    public void paymentTypesByAcceptedState() throws Exception {
+        String type = Type.PAYMENT_TYPES;
+        String by = By.STATE;
+        String value = PAYMENT_TYPES_ACCEPTED;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        ObjectMapper mapper = helper.getObjectMapper();
+        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly")
     public void accountTransactionHistoryByGlobalNum() throws Exception {
-        String type = Type.ACCOUNT_TRXNHISTORY;
+        String type = Type.ACCOUNT;
         String by = By.GLOBAL_NUMBER;
-        String value = LOAN_ACCOUNT_GLOBAL_ID;
+        String value = LOAN_ACCOUNT_GLOBAL_ID + Op.TRXNHISTORY;
         String actualJSON = helper.getJSONFromUI(type, by, value);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         AssertJSONList jsonAssert = new AssertJSONList(actualJSON, expectedJSON);
@@ -323,9 +351,9 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
     public void loanInstallmentByGlobalNum() throws Exception {
-        String type = Type.LOAN_INSTALLMENT;
+        String type = Type.LOAN;
         String by = By.GLOBAL_NUMBER;
-        String value = LOAN_ACCOUNT_GLOBAL_ID;
+        String value = LOAN_ACCOUNT_GLOBAL_ID + Op.INSTALLMENT;
         String actualJSON = helper.getJSONFromUI(type, by, value);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         ObjectMapper mapper = helper.getObjectMapper();
@@ -335,15 +363,39 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
     public void loanRepaymentScheduleByGlobalNum() throws Exception {
-        String type = Type.LOAN_SCHEDULE;
+        String type = Type.LOAN;
         String by = By.GLOBAL_NUMBER;
-        String value = LOAN_ACCOUNT_GLOBAL_ID;
+        String value = LOAN_ACCOUNT_GLOBAL_ID + Op.SCHEDULE;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        ObjectMapper mapper = helper.getObjectMapper();
+        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly")
+    public void applicableFeesForLoanByGlobalNum() throws Exception {
+        String type = Type.LOAN;
+        String by = By.GLOBAL_NUMBER;
+        String value = LOAN_ACCOUNT_GLOBAL_ID + Op.APPLICABLE_FEES;
         String actualJSON = helper.getJSONFromUI(type, by, value);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         ObjectMapper mapper = helper.getObjectMapper();
         Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups="readOnly")
+    public void applicableFeesForClientByGlobalNum() throws Exception {
+        String type = Type.CUSTOMER;
+        String by = By.GLOBAL_NUMBER;
+        String value = CLIENT_GLOBAL_ID + Op.APPLICABLE_FEES;
+        String actualJSON = helper.getJSONFromUI(type, by, value);
+        String expectedJSON = helper.getJSONFromDataSet(type, by, value);
+        ObjectMapper mapper = helper.getObjectMapper();
+        Assert.assertEquals(mapper.readTree(expectedJSON), mapper.readTree(actualJSON));
+    }
+    
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
     public void savingsByGlobalNum() throws Exception {
@@ -386,9 +438,9 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(groups="readOnly")
     public void savingsDueByGlobalNum() throws Exception {
-        String type = Type.SAVINGS_DUE;
+        String type = Type.SAVINGS;
         String by = By.GLOBAL_NUMBER;
-        String value = SAVINGS_MANDATORY_ACCOUNT_GLOBAL_ID;
+        String value = SAVINGS_MANDATORY_ACCOUNT_GLOBAL_ID + Op.DUE;
         String actualJSON = helper.getJSONFromUI(type, by, value);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         ObjectMapper mapper = helper.getObjectMapper();
@@ -399,9 +451,9 @@ public class RESTAPITest extends UiTestCaseBase {
     @Test(dependsOnGroups="readOnly")
     public void repayLoanByGlobalNum() throws Exception {
         String data = "?amount=100";
-        String type = Type.LOAN_REPAYMENT;
+        String type = Type.LOAN;
         String by = By.GLOBAL_NUMBER;
-        String value = LOAN_ACCOUNT_GLOBAL_ID;
+        String value = LOAN_ACCOUNT_GLOBAL_ID + Op.REPAY;
         String actualJSON = helper.postJSONFromUI(type, by, value, data);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
@@ -412,9 +464,9 @@ public class RESTAPITest extends UiTestCaseBase {
     @Test(dependsOnGroups="readOnly", dependsOnMethods = "repayLoanByGlobalNum")
     public void applyLoanAdjustmentByGlobalNum() throws Exception {
         String data = "?note=Adjustment applied";
-        String type = Type.LOAN_ADJUSTMENT;
+        String type = Type.LOAN;
         String by = By.GLOBAL_NUMBER;
-        String value = LOAN_ACCOUNT_GLOBAL_ID;
+        String value = LOAN_ACCOUNT_GLOBAL_ID + Op.ADJUSTMENT;
         String actualJSON = helper.postJSONFromUI(type, by, value, data);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
@@ -433,9 +485,9 @@ public class RESTAPITest extends UiTestCaseBase {
     @Test(dependsOnGroups="readOnly", dependsOnMethods = "disburseLoanByGlobalNum")
     public void applyLoanChargeByGlobalNum() throws Exception {
         String data = "?amount=5&feeId=-1";
-        String type = Type.LOAN_CHARGE;
+        String type = Type.LOAN;
         String by = By.GLOBAL_NUMBER;
-        String value = LOAN_ACCOUNT_3_GLOBAL_ID;
+        String value = LOAN_ACCOUNT_3_GLOBAL_ID + Op.CHARGE;
         String actualJSON = helper.postJSONFromUI(type, by, value, data);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
@@ -453,9 +505,9 @@ public class RESTAPITest extends UiTestCaseBase {
     @Test(dependsOnGroups="readOnly", dependsOnMethods="savingsDepositWithdrawByGlobalNum")
     public void applySavingsAdjustmentByGlobalNum() throws Exception {
         String data = "?amount=60&note=Adjustment applied";
-        String type = Type.SAVINGS_ADJUSTMENT;
+        String type = Type.SAVINGS;
         String by = By.GLOBAL_NUMBER;
-        String value = SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID;
+        String value = SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID + Op.ADJUSTMENT;
         String actualJSON = helper.postJSONFromUI(type, by, value, data);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
@@ -474,9 +526,9 @@ public class RESTAPITest extends UiTestCaseBase {
     @Test(dependsOnGroups="readOnly")
     public void fullRepayLoanByGlobalNum() throws Exception {
     	String data = "?waiveInterest=false";
-    	String type = Type.LOAN_FULL_REPAYMENT;
+    	String type = Type.LOAN;
     	String by = By.GLOBAL_NUMBER;
-    	String value = LOAN_ACCOUNT_2_GLOBAL_ID;
+    	String value = LOAN_ACCOUNT_2_GLOBAL_ID + Op.FULLREPAY;
     	String actualJSON = helper.postJSONFromUI(type, by, value, data);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
@@ -486,10 +538,10 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(dependsOnGroups="readOnly")
     public void disburseLoanByGlobalNum() throws Exception {
-    	String data = " ";
-    	String type = Type.LOAN_DISBURSEMENT;
+    	String data = "?disbursalDate="+TODAY+"&disbursePaymentTypeId=1";
+    	String type = Type.LOAN;
     	String by = By.GLOBAL_NUMBER;
-    	String value = LOAN_ACCOUNT_3_GLOBAL_ID;
+    	String value = LOAN_ACCOUNT_3_GLOBAL_ID + Op.DISBURSE;
     	String actualJSON = helper.postJSONFromUI(type, by, value, data);
         String expectedJSON = helper.getJSONFromDataSet(type, by, value);
         AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
@@ -506,17 +558,17 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(dependsOnGroups="readOnly")
     public void savingsDepositWithdrawByGlobalNum() throws Exception {
-        String data = "?amount=100";
+        String data = "?amount=100&trxnDate="+TODAY+"&paymentTypeId=1&receiptId=12&receiptDate="+TODAY;
+        String type = Type.SAVINGS;
         String by = By.GLOBAL_NUMBER;
-        String value = SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID;
 
         // deposit
-        String type = Type.SAVINGS_DEPOSIT;
+        String value = SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID + Op.DEPOSIT;
         verifySavingsTrxn(data, type, by, value);
 
         // withdraw
-        data = "?amount=69";
-        type = Type.SAVINGS_WITHDRAW;
+        data = "?amount=69&trxnDate="+TODAY+"&paymentTypeId=1";
+        value = SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID + Op.WITHDRAW;
         verifySavingsTrxn(data, type, by, value);
     }
 

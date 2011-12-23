@@ -77,7 +77,7 @@ public class LabelTagUtils {
                     ConfigurationConstants.INTEREST.equalsIgnoreCase(labelKey) ||
                     ConfigurationConstants.STATE.equalsIgnoreCase(labelKey) ||
                     ConfigurationConstants.POSTAL_CODE.equalsIgnoreCase(labelKey) ||
-                    ConfigurationConstants.ETHINICITY.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.ETHNICITY.equalsIgnoreCase(labelKey) ||
                     ConfigurationConstants.CITIZENSHIP.equalsIgnoreCase(labelKey) ||
                     ConfigurationConstants.HANDICAPPED.equalsIgnoreCase(labelKey) ||
                     ConfigurationConstants.GOVERNMENT_ID.equalsIgnoreCase(labelKey) ||

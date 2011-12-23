@@ -224,7 +224,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         List<ValueListElement> genders = this.customerDao.retrieveGenders();
         List<ValueListElement> maritalStatuses = this.customerDao.retrieveMaritalStatuses();
         List<ValueListElement> citizenship = this.customerDao.retrieveCitizenship();
-        List<ValueListElement> ethinicity = this.customerDao.retrieveEthinicity();
+        List<ValueListElement> ethnicity = this.customerDao.retrieveEthnicity();
         List<ValueListElement> educationLevels = this.customerDao.retrieveEducationLevels();
         List<ValueListElement> businessActivity = this.customerDao.retrieveBusinessActivities();
         List<ValueListElement> poverty = this.customerDao.retrievePoverty();
@@ -232,7 +232,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         List<ValueListElement> livingStatus = this.customerDao.retrieveLivingStatus();
 
         ClientDropdownsDto clientDropdowns = new ClientDropdownsDto(salutations, genders, maritalStatuses, citizenship,
-                ethinicity, educationLevels, businessActivity, poverty, handicapped, livingStatus);
+                ethnicity, educationLevels, businessActivity, poverty, handicapped, livingStatus);
         return clientDropdowns;
     }
 

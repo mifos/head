@@ -51,6 +51,10 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
     public void verifyRepaymentScheduleTableRow(int row, int column, String value) {
         Assert.assertEquals(selenium.getTable("repaymentScheduleTable." + row + "." + column), value);
     }
+    
+    public void verifyRunningBalanceTableRow(int row, int column, String value) {
+        Assert.assertEquals(selenium.getTable("runningBalanceTable." + row + "." + column), value);
+    }
 
     private String getCellOfScheduleTable(int row, int column) {
         return selenium.getTable("installments." + row + "." + column);
@@ -195,6 +199,13 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         waitForPageToLoad();
         return new ViewOriginalSchedulePage(selenium);
     }
+    
+    public ApplyPaymentPage navigateToApplyPaymentPage() {
+        selenium.click("loanRepayment.link.applyPayment");
+        waitForPageToLoad();
+        
+        return new ApplyPaymentPage(selenium);
+    }
 
     public ApplyAdjustmentPage navigateToApplyAdjustment() {
         selenium.click("loanRepayment.link.applyAdjustment");
@@ -253,6 +264,10 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
     }
        
     public void verifyRepaymentScheduleTableFees(int row, int column, String value) {
+        Assert.assertEquals(selenium.getTable("installments." + row + "." + column), value);
+    }
+    
+    public void verifyRepaymentScheduleTablePenalties(int row, int column, String value) {
         Assert.assertEquals(selenium.getTable("installments." + row + "." + column), value);
     }
 }

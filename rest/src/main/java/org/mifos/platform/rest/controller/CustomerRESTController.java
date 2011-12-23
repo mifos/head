@@ -1,6 +1,7 @@
 package org.mifos.platform.rest.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,14 +37,17 @@ public class CustomerRESTController {
     @Autowired
     private PersonnelDao personnelDao;
 
-	@RequestMapping(value = "/customer/charge/num-{globalCustNum}", method = RequestMethod.POST)
+	@RequestMapping(value = "/customer/num-{globalCustNum}/charge", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> applyCharge(@PathVariable String globalCustNum,
                                     @RequestParam BigDecimal amount,
                                     @RequestParam Short feeId) throws Exception {
 
 	    validateAmount(amount);
-
+	    
+        List<String> applicableFees = new ArrayList<String>(this.getApplicableFees(globalCustNum).values());
+        validateFeeId(feeId, applicableFees);
+        
 	    Map<String, String> map = new HashMap<String, String>();
 
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -69,7 +73,7 @@ public class CustomerRESTController {
     	return map;
     }
 
-    @RequestMapping(value = "/customer/fees/num-{globalCustNum}", method = RequestMethod.GET)
+    @RequestMapping(value = "/customer/num-{globalCustNum}/fees", method = RequestMethod.GET)
     public @ResponseBody
     Map<String, String> getApplicableFees(@PathVariable String globalCustNum) throws Exception {
     	CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
@@ -90,4 +94,10 @@ public class CustomerRESTController {
             throw new ParamValidationException(ErrorMessage.NON_NEGATIVE_AMOUNT);
         }
     }
+    
+    public static void validateFeeId(Short feeId, List<String> applicableFees) throws ParamValidationException{
+        if (!applicableFees.contains(Short.toString(feeId))){
+                throw new ParamValidationException(ErrorMessage.INVALID_FEE_ID);
+        }
+     }
 }

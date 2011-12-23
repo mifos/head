@@ -21,6 +21,9 @@
 package org.mifos.test.acceptance.loan;
 
 
+import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
+
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -38,9 +41,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(singleThreaded = true, groups = {"loanproduct", "acceptance", "ui", "no_db_unit"})

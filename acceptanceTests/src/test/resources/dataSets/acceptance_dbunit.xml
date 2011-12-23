@@ -77,6 +77,7 @@
   <DATABASECHANGELOG ID="MIFOS_4700_3" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-25 16:33:46.0" ORDEREXECUTED="11" EXECTYPE="EXECUTED" MD5SUM="3:5262fde3d8a25cc4e609a5161cfcbc95" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4700_4" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-25 16:33:46.0" ORDEREXECUTED="12" EXECTYPE="EXECUTED" MD5SUM="3:fdd7dad428a877741587468045c15b87" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4700_5" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-25 16:33:46.0" ORDEREXECUTED="13" EXECTYPE="EXECUTED" MD5SUM="3:d8b39a618ff308d67e12528ad3735359" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_4827_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-12 15:53:49.0" ORDEREXECUTED="191" EXECTYPE="EXECUTED" MD5SUM="3:807c2239c2429b48809f2d8a3dfc8f65" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_1" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-25 16:33:46.0" ORDEREXECUTED="14" EXECTYPE="EXECUTED" MD5SUM="3:d1bc7187b3d916e75540705797af4f2e" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_2" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-25 16:33:46.0" ORDEREXECUTED="15" EXECTYPE="EXECUTED" MD5SUM="3:169dcdb02684d9b21f5eac6e857ad394" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_3" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-25 16:33:46.0" ORDEREXECUTED="16" EXECTYPE="EXECUTED" MD5SUM="3:3b9ed5b39f2534b6a7a812471d72bda6" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
@@ -2130,7 +2131,7 @@
   <field_configuration field_config_id="7" field_name="ExternalId" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
   <field_configuration field_config_id="8" field_name="ExternalId" entity_id="12" mandatory_flag="0" hidden_flag="0"/>
   <field_configuration field_config_id="9" field_name="ExternalId" entity_id="20" mandatory_flag="0" hidden_flag="0"/>
-  <field_configuration field_config_id="10" field_name="Ethinicity" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
+  <field_configuration field_config_id="10" field_name="Ethnicity" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
   <field_configuration field_config_id="11" field_name="Citizenship" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
   <field_configuration field_config_id="12" field_name="Handicapped" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
   <field_configuration field_config_id="13" field_name="BusinessActivities" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
@@ -2810,7 +2811,7 @@
   <lookup_entity entity_id="16" entity_name="Gender" description="Male/Female"/>
   <lookup_entity entity_id="17" entity_name="MaritalStatus" description="Married/UnMarried"/>
   <lookup_entity entity_id="18" entity_name="Citizenship" description="Citizenship"/>
-  <lookup_entity entity_id="19" entity_name="Ethinicity" description="Ethnicity"/>
+  <lookup_entity entity_id="19" entity_name="Ethnicity" description="Ethnicity"/>
   <lookup_entity entity_id="20" entity_name="EducationLevel" description="EducationLevel"/>
   <lookup_entity entity_id="21" entity_name="BusinessActivities" description="BusinessActivities"/>
   <lookup_entity entity_id="22" entity_name="Handicapped" description="Handicaped"/>
@@ -3048,8 +3049,8 @@
   <lookup_value lookup_id="129" entity_id="52" lookup_name="SpouseFather-Father"/>
   <lookup_value lookup_id="130" entity_id="18" lookup_name="Citizenship-Hindu"/>
   <lookup_value lookup_id="131" entity_id="18" lookup_name="Citizenship-Muslim"/>
-  <lookup_value lookup_id="132" entity_id="19" lookup_name="Ethinicity-Sc"/>
-  <lookup_value lookup_id="133" entity_id="19" lookup_name="Ethinicity-Bc"/>
+  <lookup_value lookup_id="132" entity_id="19" lookup_name="Ethnicity-Sc"/>
+  <lookup_value lookup_id="133" entity_id="19" lookup_name="Ethnicity-Bc"/>
   <lookup_value lookup_id="134" entity_id="20" lookup_name="EducationLevel-OnlyClient"/>
   <lookup_value lookup_id="135" entity_id="20" lookup_name="EducationLevel-OnlyHusband"/>
   <lookup_value lookup_id="136" entity_id="21" lookup_name="BusinessActivities-DailyLabour"/>
@@ -3121,9 +3122,9 @@
   <lookup_value lookup_id="214" entity_id="69" lookup_name="AccountAction-Interest_posting"/>
   <lookup_value lookup_id="215" entity_id="76" lookup_name="FinancialAction-LoanDisbursement"/>
   <lookup_value lookup_id="216" entity_id="73" lookup_name="Position-GroupSecretary"/>
-  <lookup_value lookup_id="217" entity_id="19" lookup_name="Ethinicity-St"/>
-  <lookup_value lookup_id="218" entity_id="19" lookup_name="Ethinicity-Obc"/>
-  <lookup_value lookup_id="219" entity_id="19" lookup_name="Ethinicity-Fc"/>
+  <lookup_value lookup_id="217" entity_id="19" lookup_name="Ethnicity-St"/>
+  <lookup_value lookup_id="218" entity_id="19" lookup_name="Ethnicity-Obc"/>
+  <lookup_value lookup_id="219" entity_id="19" lookup_name="Ethnicity-Fc"/>
   <lookup_value lookup_id="220" entity_id="17" lookup_name="MaritalStatus-Widowed"/>
   <lookup_value lookup_id="221" entity_id="18" lookup_name="Citizenship-Christian"/>
   <lookup_value lookup_id="222" entity_id="21" lookup_name="BusinessActivities-Production"/>
