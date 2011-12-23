@@ -283,7 +283,10 @@ public class LoanAccountRESTController {
 
         validateAmount(amount);
 
-        List<String> applicableFees = new ArrayList<String>(this.getApplicableFees(globalAccountNum).values());
+        List<String> applicableFees = new ArrayList<String>();
+        for (Map<String, String> feeMap : this.getApplicableFees(globalAccountNum).values()) {
+            applicableFees.add(feeMap.get("feeId"));
+        }
         validateFeeId(feeId, applicableFees);
         
         Map<String, String> map = new HashMap<String, String>();
@@ -314,15 +317,22 @@ public class LoanAccountRESTController {
 
     @RequestMapping(value = "/account/loan/num-{globalAccountNum}/fees", method = RequestMethod.GET)
     public @ResponseBody
-    Map<String, String> getApplicableFees(@PathVariable String globalAccountNum) throws Exception {
+    Map<String, Map<String, String>> getApplicableFees(@PathVariable String globalAccountNum) throws Exception {
 		LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
 		Integer accountId = loan.getAccountId();
 		List<ApplicableCharge> applicableCharges = this.accountServiceFacade.getApplicableFees(accountId);
 		
-    	Map<String, String> map = new HashMap<String, String>();
+    	Map<String, Map<String, String>> map = new HashMap<String, Map<String, String>>();
     	
     	for (ApplicableCharge applicableCharge : applicableCharges ){
-    		map.put(applicableCharge.getFeeName(), applicableCharge.getFeeId());
+    		Map<String, String> feeMap = new HashMap<String, String>();
+            feeMap.put("feeId", applicableCharge.getFeeId());
+            feeMap.put("amountOrRate", applicableCharge.getAmountOrRate());
+            feeMap.put("formula", applicableCharge.getFormula());
+            feeMap.put("periodicity", applicableCharge.getPeriodicity());
+            feeMap.put("paymentType", applicableCharge.getPaymentType());
+            feeMap.put("isRateType", applicableCharge.getIsRateType());
+    		map.put(applicableCharge.getFeeName(), feeMap);
     	}
   
     	return map;
