@@ -57,8 +57,7 @@ public class ApprovalMethodInvocationHandler implements MethodInvocationHandler 
         if (approvalService == null) {approvalService = ApplicationContextProvider.getBean(ApprovalService.class);}
         if (configurationServiceFacade == null) {configurationServiceFacade = ApplicationContextProvider.getBean(ConfigurationServiceFacade.class);}
 
-        String approvalConfigValue = configurationServiceFacade.getConfig(RESTConfigKey.REST_APPROVAL_REQUIRED);
-        if(!RESTConfigKey.isApprovalRequired(approvalConfigValue)) {
+        if(!RESTConfigKey.isApprovalRequired(configurationServiceFacade)) {
             LOG.debug(invocation + " skip approval");
             return invocation.proceed();
         }

@@ -89,8 +89,7 @@ public class AspectJRESTApprovalInterceptor {
         if (configurationServiceFacade == null) {configurationServiceFacade = ApplicationContextProvider.getBean(ConfigurationServiceFacade.class);}
         if (parameterNameDiscoverer == null) {parameterNameDiscoverer = ApplicationContextProvider.getBean(ParameterNameDiscoverer.class);}
 
-        String approvalConfigValue = configurationServiceFacade.getConfig(RESTConfigKey.REST_APPROVAL_REQUIRED);
-        if(!RESTConfigKey.isApprovalRequired(approvalConfigValue)) {
+        if(!RESTConfigKey.isApprovalRequired(configurationServiceFacade)) {
             LOG.debug(pjp.getSignature() + " skip approval");
             return pjp.proceed();
         }
