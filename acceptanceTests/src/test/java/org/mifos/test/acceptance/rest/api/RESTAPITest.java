@@ -450,7 +450,7 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(dependsOnGroups="readOnly")
     public void repayLoanByGlobalNum() throws Exception {
-        String data = "?amount=100";
+        String data = "?amount=100&paymentDate="+TODAY+"&paymentModeId=1&receiptId=12&receiptDate="+TODAY;
         String type = Type.LOAN;
         String by = By.GLOBAL_NUMBER;
         String value = LOAN_ACCOUNT_GLOBAL_ID + Op.REPAY;
@@ -525,7 +525,7 @@ public class RESTAPITest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(dependsOnGroups="readOnly")
     public void fullRepayLoanByGlobalNum() throws Exception {
-    	String data = "?waiveInterest=false";
+        String data = "?waiveInterest=false&paymentDate="+TODAY+"&paymentModeId=1&receiptId=12&receiptDate="+TODAY;
     	String type = Type.LOAN;
     	String by = By.GLOBAL_NUMBER;
     	String value = LOAN_ACCOUNT_2_GLOBAL_ID + Op.FULLREPAY;
