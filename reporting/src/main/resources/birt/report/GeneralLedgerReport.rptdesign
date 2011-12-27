@@ -12,6 +12,27 @@
             <property name="name">queryTimeOut</property>
             <property name="id">317</property>
         </structure>
+        <structure>
+            <property name="name">odaURL</property>
+            <property name="id">4</property>
+            <expression name="value">
+    			reportContext.getHttpServletRequest().getAttribute("odaURL");
+ 			</expression>
+		</structure>
+        <structure>
+            <property name="name">odaUser</property>
+            <property name="id">4</property>
+            <expression name="value">
+     			reportContext.getHttpServletRequest().getAttribute("odaUser");
+ 			</expression>
+		</structure>
+        <structure>
+            <property name="name">odaPassword</property>
+            <property name="id">4</property>
+            <expression name="value">
+				reportContext.getHttpServletRequest().getAttribute("odaPassword");
+ 			</expression>
+		</structure>
     </list-property>
     <property name="layoutPreference">auto layout</property>
     <parameters>
