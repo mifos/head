@@ -410,7 +410,7 @@ public class LoanAccountRESTController {
     @RequestMapping(value = "/account/loan/num-{globalAccountNum}/schedule", method = RequestMethod.GET)
     public @ResponseBody
     List<LoanRepaymentScheduleItemDto> getLoanRepaymentScheduleByNumber(@PathVariable String globalAccountNum) throws Exception {
-        return loanAccountServiceFacade.retrieveLoanRepaymentSchedule(globalAccountNum);
+        return loanAccountServiceFacade.retrieveLoanRepaymentSchedule(globalAccountNum, new DateTime().toDate());
     }
 
     private void validateAmount(BigDecimal amount) throws ParamValidationException {

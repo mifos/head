@@ -157,7 +157,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     LoanInstallmentDetailsDto retrieveInstallmentDetails(Integer accountId);
 
     @PreAuthorize("isFullyAuthenticated()")
-    List<LoanRepaymentScheduleItemDto> retrieveLoanRepaymentSchedule(String globalAccountNum);
+    List<LoanRepaymentScheduleItemDto> retrieveLoanRepaymentSchedule(String globalAccountNum, Date viewDate);
 
     @PreAuthorize("isFullyAuthenticated()")
     boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate);
