@@ -195,9 +195,9 @@ public class LoanAccountRESTController {
         BigDecimal waivedAmount = (new Money(loan.getCurrency(), repayLoanDto.getWaivedRepaymentMoney())).getAmount();
 
         RepayLoanInfoDto repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
-                Long.toString(totalRepaymentAmount.longValue()), receiptIdString,
+                Double.toString(totalRepaymentAmount.doubleValue()), receiptIdString,
                 receiptDateTime, paymentTypeId, (short) user.getUserId(),
-                waiveInterest,
+                waiveInterest.booleanValue(),
                 paymentDateTime, totalRepaymentAmount, waivedAmount);
 
         Money outstandingBeforePayment = loan.getLoanSummary().getOutstandingBalance();
