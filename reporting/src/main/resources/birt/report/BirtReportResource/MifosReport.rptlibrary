@@ -7,6 +7,29 @@
     </simple-property-list>
     <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
     <property name="theme">defaultTheme</property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">odaURL</property>
+            <property name="id">39</property>
+            <expression name="value">
+    			reportContext.getHttpServletRequest().getAttribute("odaURL");
+ 			</expression>
+		</structure>
+        <structure>
+            <property name="name">odaUser</property>
+            <property name="id">39</property>
+            <expression name="value">
+     			reportContext.getHttpServletRequest().getAttribute("odaUser");
+ 			</expression>
+		</structure>
+        <structure>
+            <property name="name">odaPassword</property>
+            <property name="id">39</property>
+            <expression name="value">
+				reportContext.getHttpServletRequest().getAttribute("odaPassword");
+ 			</expression>
+		</structure>
+    </list-property>
     <parameters>
         <cascading-parameter-group name="branch_loanofficer_center" id="25">
             <property name="dataSetMode">multiple</property>
