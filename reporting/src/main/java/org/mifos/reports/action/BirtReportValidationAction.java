@@ -21,12 +21,15 @@
 package org.mifos.reports.action;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.impl.SessionFactoryImpl;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.servlet.ModifiableParameterServletRequest;
 import org.mifos.platform.validations.Errors;
 import org.mifos.reports.business.ReportParameterForm;
@@ -52,6 +55,7 @@ public class BirtReportValidationAction extends HttpServlet {
             throws ServletException, IOException {
         ReportParameterValidator<ReportParameterForm> validator = new ReportParameterValidatorFactory()
                 .getValidator(request.getParameter("__report"));
+        addDatabaseInformationsToRequestAttributes(request);
         if (validator == null || validator.isAFreshRequest(request)) {
             // go to report parameter page
             request.getRequestDispatcher("/preview").forward(request, response);
@@ -67,5 +71,13 @@ public class BirtReportValidationAction extends HttpServlet {
             validator.removeRequestParameters(modifiedRequest, form, errors);
         }
         request.getRequestDispatcher("/preview").forward(modifiedRequest, response);
+    }
+    
+    private void addDatabaseInformationsToRequestAttributes(HttpServletRequest request){
+        SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl)StaticHibernateUtil.getSessionFactory();
+        Properties properties = sessionFactoryImpl.getProperties();
+        request.setAttribute("odaURL", properties.get("hibernate.connection.url"));
+        request.setAttribute("odaUser", properties.get("hibernate.connection.username"));
+        request.setAttribute("odaPassword", properties.get("hibernate.connection.password"));	
     }
 }
