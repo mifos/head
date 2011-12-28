@@ -128,12 +128,24 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
         this.account = account;
     }
 
+    public boolean isOn(LocalDate date) {
+        return new LocalDate(this.actionDate).isEqual(date);
+    }
+
+    public boolean isBefore(LocalDate date) {
+        return new LocalDate(this.actionDate).isBefore(date);
+    }
+
     public boolean isBeforeOrOn(LocalDate date) {
-        return new LocalDate(this.actionDate).isBefore(date) || new LocalDate(this.actionDate).isEqual(date);
+        return isBefore(date) || isOn(date);
+    }
+
+    public boolean isAfter(LocalDate date) {
+        return new LocalDate(this.actionDate).isAfter(date);
     }
 
     public boolean isOnOrAfter(LocalDate date) {
-        return new LocalDate(this.actionDate).isEqual(date) || new LocalDate(this.actionDate).isAfter(date);
+        return isOn(date) || isAfter(date);
     }
 
     public boolean isNotPaid() {

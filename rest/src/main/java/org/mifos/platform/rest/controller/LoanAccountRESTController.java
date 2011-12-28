@@ -53,8 +53,6 @@ import org.mifos.platform.rest.controller.RESTAPIHelper.ErrorMessage;
 import org.mifos.platform.rest.controller.validation.ParamValidationException;
 import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.format.datetime.joda.DateTimeParser;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,6 +63,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class LoanAccountRESTController {
+
+    private static String format = "dd-MM-yyyy";
 
     @Autowired
     private AccountService accountService;
@@ -83,7 +83,12 @@ public class LoanAccountRESTController {
 
     @RequestMapping(value = "/account/loan/num-{globalAccountNum}/repay", method = RequestMethod.POST)
     public @ResponseBody
-    Map<String, String> repay(@PathVariable String globalAccountNum, @RequestParam BigDecimal amount) throws Exception {
+    Map<String, String> repay(@PathVariable String globalAccountNum,
+                              @RequestParam BigDecimal amount,
+                              @RequestParam(required=false) String paymentDate,
+                              @RequestParam(required=false) Short receiptId,
+                              @RequestParam(required=false) String receiptDate,
+                              @RequestParam(required=false) Short paymentModeId) throws Exception {
 
         validateAmount(amount);
 
@@ -98,19 +103,38 @@ public class LoanAccountRESTController {
 
         AccountReferenceDto accountDto = new AccountReferenceDto(loan.getAccountId());
 
-        PaymentTypeDto paymentType = accountService.getLoanPaymentTypes().get(0);
-
         DateTime today = new DateTime();
-        LocalDate receiptDate = today.toLocalDate();
 
-        // from where these parameter should come?
-        String receiptId = "";
+        DateTime paymentDateTime = today;
+        if (paymentDate != null && !paymentDate.isEmpty()) {
+            paymentDateTime = validateDateString(paymentDate, format);
+        }
+
+        String receiptIdString = null;
+        if (receiptId != null) {
+            receiptIdString = receiptId.toString();
+        }
+
+        LocalDate receiptLocalDate = null;
+        if (receiptDate != null && !receiptDate.isEmpty()) {
+            receiptLocalDate = validateDateString(receiptDate, format).toLocalDate();
+        }
+
+        PaymentTypeDto paymentType = accountService.getLoanPaymentTypes().get(0);
+        if (paymentModeId != null) {
+            for (PaymentTypeDto loanPaymentType : accountService.getLoanPaymentTypes()) {
+                if (loanPaymentType.getValue().equals(paymentModeId)) {
+                    paymentType = loanPaymentType;
+                    break;
+                }
+            }
+        }
 
         CustomerBO client = loan.getCustomer();
         CustomerDto customer = new CustomerDto();
         customer.setCustomerId(client.getCustomerId());
-        AccountPaymentParametersDto payment = new AccountPaymentParametersDto(userDto, accountDto, amount, receiptDate,
-                paymentType, globalAccountNum, receiptDate, receiptId, customer);
+        AccountPaymentParametersDto payment = new AccountPaymentParametersDto(userDto, accountDto, amount, paymentDateTime.toLocalDate(),
+                paymentType, globalAccountNum, receiptLocalDate, receiptIdString, customer);
 
         accountService.makePayment(payment);
 
@@ -131,6 +155,10 @@ public class LoanAccountRESTController {
     @RequestMapping(value = "/account/loan/num-{globalAccountNum}/fullrepay", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> fullRepay(@PathVariable String globalAccountNum,
+                                  @RequestParam(required = false) String paymentDate,
+                                  @RequestParam(required = false) Short receiptId,
+                                  @RequestParam(required = false) String receiptDate,
+                                  @RequestParam(required = false) Short paymentModeId,
                                   @RequestParam Boolean waiveInterest) throws Exception {
 
 
@@ -141,22 +169,36 @@ public class LoanAccountRESTController {
 
         RepayLoanDto repayLoanDto = this.loanAccountServiceFacade.retrieveLoanRepaymentDetails(globalAccountNum);
 
-    	DateTime today = new DateTime();
-        Date receiptDate = new Date(today.toDate().getTime());
+        DateTime today = new DateTime();
 
-        // from where these parameter should come?
-        String receiptId = "";
+        Date paymentDateTime = new Date(today.toDate().getTime());
+        if (paymentDate != null && !paymentDate.isEmpty()) {
+            paymentDateTime = new Date(validateDateString(paymentDate, format).toDate().getTime());
+        }
 
-        BigDecimal totalRepaymentAmount = ( new Money(loan.getCurrency(), repayLoanDto.getEarlyRepaymentMoney()) ).getAmount();
-        BigDecimal waivedAmount = ( new Money(loan.getCurrency(), repayLoanDto.getWaivedRepaymentMoney()) ).getAmount();
+        String receiptIdString = null;
+        if (receiptId != null) {
+            receiptIdString = receiptId.toString();
+        }
+
+        Date receiptDateTime = null;
+        if (receiptDate != null && !receiptDate.isEmpty()) {
+            receiptDateTime = new Date(validateDateString(receiptDate, format).toDate().getTime());
+        }
 
         String paymentTypeId = "1";
+        if (paymentModeId != null) {
+            paymentTypeId = paymentModeId.toString();
+        }
+
+        BigDecimal totalRepaymentAmount = (new Money(loan.getCurrency(), repayLoanDto.getEarlyRepaymentMoney())).getAmount();
+        BigDecimal waivedAmount = (new Money(loan.getCurrency(), repayLoanDto.getWaivedRepaymentMoney())).getAmount();
 
         RepayLoanInfoDto repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
-        		Long.toString(totalRepaymentAmount.longValue()), receiptId,
-                receiptDate, paymentTypeId, (short) user.getUserId(),
-                waiveInterest,
-                receiptDate,totalRepaymentAmount,waivedAmount);
+                Double.toString(totalRepaymentAmount.doubleValue()), receiptIdString,
+                receiptDateTime, paymentTypeId, (short) user.getUserId(),
+                waiveInterest.booleanValue(),
+                paymentDateTime, totalRepaymentAmount, waivedAmount);
 
         Money outstandingBeforePayment = loan.getLoanSummary().getOutstandingBalance();
 
@@ -283,7 +325,10 @@ public class LoanAccountRESTController {
 
         validateAmount(amount);
 
-        List<String> applicableFees = new ArrayList<String>(this.getApplicableFees(globalAccountNum).values());
+        List<String> applicableFees = new ArrayList<String>();
+        for (Map<String, String> feeMap : this.getApplicableFees(globalAccountNum).values()) {
+            applicableFees.add(feeMap.get("feeId"));
+        }
         validateFeeId(feeId, applicableFees);
         
         Map<String, String> map = new HashMap<String, String>();
@@ -314,15 +359,22 @@ public class LoanAccountRESTController {
 
     @RequestMapping(value = "/account/loan/num-{globalAccountNum}/fees", method = RequestMethod.GET)
     public @ResponseBody
-    Map<String, String> getApplicableFees(@PathVariable String globalAccountNum) throws Exception {
+    Map<String, Map<String, String>> getApplicableFees(@PathVariable String globalAccountNum) throws Exception {
 		LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
 		Integer accountId = loan.getAccountId();
 		List<ApplicableCharge> applicableCharges = this.accountServiceFacade.getApplicableFees(accountId);
 		
-    	Map<String, String> map = new HashMap<String, String>();
+    	Map<String, Map<String, String>> map = new HashMap<String, Map<String, String>>();
     	
     	for (ApplicableCharge applicableCharge : applicableCharges ){
-    		map.put(applicableCharge.getFeeName(), applicableCharge.getFeeId());
+    		Map<String, String> feeMap = new HashMap<String, String>();
+            feeMap.put("feeId", applicableCharge.getFeeId());
+            feeMap.put("amountOrRate", applicableCharge.getAmountOrRate());
+            feeMap.put("formula", applicableCharge.getFormula());
+            feeMap.put("periodicity", applicableCharge.getPeriodicity());
+            feeMap.put("paymentType", applicableCharge.getPaymentType());
+            feeMap.put("isRateType", applicableCharge.getIsRateType());
+    		map.put(applicableCharge.getFeeName(), feeMap);
     	}
   
     	return map;
@@ -358,7 +410,7 @@ public class LoanAccountRESTController {
     @RequestMapping(value = "/account/loan/num-{globalAccountNum}/schedule", method = RequestMethod.GET)
     public @ResponseBody
     List<LoanRepaymentScheduleItemDto> getLoanRepaymentScheduleByNumber(@PathVariable String globalAccountNum) throws Exception {
-        return loanAccountServiceFacade.retrieveLoanRepaymentSchedule(globalAccountNum);
+        return loanAccountServiceFacade.retrieveLoanRepaymentSchedule(globalAccountNum, new DateTime().toDate());
     }
 
     private void validateAmount(BigDecimal amount) throws ParamValidationException {

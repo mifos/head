@@ -1168,8 +1168,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     @Override
-    public List<LoanRepaymentScheduleItemDto> retrieveLoanRepaymentSchedule(String globalAccountNum) {
+    public List<LoanRepaymentScheduleItemDto> retrieveLoanRepaymentSchedule(String globalAccountNum, Date viewDate) {
         LoanBO loanBO = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+
+        Errors errors = loanBusinessService.computeExtraInterest(loanBO, viewDate);
+        if (errors.hasErrors()) {
+            throw new MifosRuntimeException(errors.getErrorEntries().get(0).getDefaultMessage());
+        }
 
         List<LoanRepaymentScheduleItemDto> loanSchedule = new ArrayList<LoanRepaymentScheduleItemDto>();
 

@@ -7,6 +7,9 @@
 <span id="page.id" title="approval.list"></span>
 <div class="content "> <!--  Main Content Begins-->
 [@widget.crumbs breadcrumbs /]
+[#if !isApprovalRequired]
+    <p class="margin5top10bottom"><font color="red">REST API Approval feature is turned off</font></p>
+[/#if]
 <br /><br />
 <span id="dialog" title="Operation Details" style="display:none;">Details</span>
 <table id="waitingForApprovalList" class="datatable">

@@ -933,29 +933,29 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         List<DueOnDateDto> previousDueDates = new ArrayList<DueOnDateDto>();
 
-        AccountActionDateEntity nextInstallment = savingsAccount.getDetailsOfNextInstallment();
+        SavingsScheduleEntity nextInstallment = (SavingsScheduleEntity) savingsAccount.getDetailsOfNextInstallment();
+        Money totalDepositDue = Money.zero(savingsAccount.getCurrency());
         LocalDate nextDueDate = new LocalDate();
         if (nextInstallment != null) {
             nextDueDate = new LocalDate(nextInstallment.getActionDate());
+            totalDepositDue = nextInstallment.getTotalDepositDue();
         }
 
-        Money totalDue = Money.zero(savingsAccount.getCurrency());
         List<AccountActionDateEntity> scheduledDeposits = savingsAccount.getAccountActionDatesSortedByInstallmentId();
         for (AccountActionDateEntity scheduledDeposit : scheduledDeposits) {
-            if (!scheduledDeposit.isPaid() && scheduledDeposit.isBeforeOrOn(nextDueDate)) {
+            if (!scheduledDeposit.isPaid() && scheduledDeposit.isBefore(nextDueDate)) {
                 SavingsScheduleEntity savingsScheduledDeposit = (SavingsScheduleEntity) scheduledDeposit;
-                totalDue = totalDue.add(savingsScheduledDeposit.getTotalDepositDue());
                 previousDueDates.add(new DueOnDateDto(scheduledDeposit.getActionDate(),
-                        savingsScheduledDeposit.getTotalDepositDue().toString()));
+                        MoneyUtils.currencyRound(savingsScheduledDeposit.getTotalDepositDue()).toString()));
             }
         }
 
-        DueOnDateDto nextdueDate = new DueOnDateDto(new java.sql.Date(nextDueDate.toDateMidnight().toDate().getTime()),
-                MoneyUtils.currencyRound(totalDue).toString());
+        DueOnDateDto nextDueDetail = new DueOnDateDto(new java.sql.Date(nextDueDate.toDateMidnight().toDate().getTime()),
+                MoneyUtils.currencyRound(totalDepositDue).toString());
 
         AccountStateEntity accountStateEntity = savingsAccount.getAccountState();
 
-        return new SavingsAccountDepositDueDto(nextdueDate, previousDueDates, accountStateEntity.getId(),
+        return new SavingsAccountDepositDueDto(nextDueDetail, previousDueDates, accountStateEntity.getId(),
                 accountStateEntity.getName());
     }
 
