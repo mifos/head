@@ -181,6 +181,13 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsDeposit.getSavingsId());
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, savingsAccount.getOfficeId(), savingsAccount.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
         savingsAccount.updateDetails(userContext);
 
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(Short.valueOf((short) user.getUserId()));
@@ -227,6 +234,13 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsWithdrawal.getSavingsId());
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, savingsAccount.getOfficeId(), savingsAccount.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
         savingsAccount.updateDetails(userContext);
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(Short.valueOf((short) user.getUserId()));
 
@@ -273,8 +287,15 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
 
-        PersonnelBO updatedBy = this.personnelDao.findPersonnelById(userContext.getId());
         SavingsBO savingsAccount = this.savingsDao.findById(savingsAdjustment.getSavingsId());
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, savingsAccount.getOfficeId(), savingsAccount.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
+        PersonnelBO updatedBy = this.personnelDao.findPersonnelById(userContext.getId());
         savingsAccount.updateDetails(userContext);
 
         Money amountAdjustedTo = new Money(savingsAccount.getCurrency(), BigDecimal.valueOf(savingsAdjustment
@@ -931,6 +952,12 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         SavingsBO savingsAccount = this.savingsDao.findBySystemId(globalAccountNum);
 
+        try {
+            personnelDao.checkAccessPermission(userContext, savingsAccount.getOfficeId(), savingsAccount.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
         List<DueOnDateDto> previousDueDates = new ArrayList<DueOnDateDto>();
 
         SavingsScheduleEntity nextInstallment = (SavingsScheduleEntity) savingsAccount.getDetailsOfNextInstallment();
