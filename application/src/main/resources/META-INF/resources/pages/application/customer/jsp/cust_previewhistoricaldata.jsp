@@ -25,6 +25,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
@@ -89,16 +90,16 @@ explanation of the license and how it is applied.
 								bundle="CustomerUIResources" /><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
 								name="label.colon" bundle="CustomerUIResources" /> <span
-								class="fontnormal"> <c:out
+								class="fontnormal"> <fmt:formatNumber
 								value="${sessionScope.custHistoricalDataActionForm.loanAmount}" /><br>
 							</span> <mifos:mifoslabel name="label.totalamountpaid"
 								bundle="CustomerUIResources"></mifos:mifoslabel> <span
-								class="fontnormal"><c:out
+								class="fontnormal"><fmt:formatNumber
 								value="${sessionScope.custHistoricalDataActionForm.totalAmountPaid}" /><br>
 							</span> <mifos:mifoslabel
 								name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
 								name="label.interestpaid" bundle="CustomerUIResources"></mifos:mifoslabel>
-							<span class="fontnormal"> <c:out
+							<span class="fontnormal"> <fmt:formatNumber
 								value="${sessionScope.custHistoricalDataActionForm.interestPaid}" /><br>
 							</span> <mifos:mifoslabel name="label.numberofmissedpayments"
 								bundle="CustomerUIResources"></mifos:mifoslabel> <span

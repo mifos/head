@@ -210,7 +210,7 @@ explanation of the license and how it is applied.
 														value="${savings.accountStateName}" /> </span></td>
 												</tr>
 											</table>
-											<span class="fontnormal"><mifos:mifoslabel name="Center.balance" bundle="CenterUIResources"/> <c:out
+											<span class="fontnormal"><mifos:mifoslabel name="Center.balance" bundle="CenterUIResources"/> <fmt:formatNumber
 												value="${savings.savingsBalance}" /> </span></td>
 										</tr>
 										<tr>
@@ -255,7 +255,7 @@ explanation of the license and how it is applied.
 										</tr>
 									</table>
 									<span class="fontnormal"><mifos:mifoslabel name="Center.AmountDueColon" bundle="CenterUIResources" />
-										<span id="viewCenterDetails.text.amountDue"><c:out value='${centerInformationDto.customerAccountSummary.nextDueAmount}' /></span>
+										<span id="viewCenterDetails.text.amountDue"><fmt:formatNumber value='${centerInformationDto.customerAccountSummary.nextDueAmount}' /></span>
 									</span></td>
 								</tr>
 								<tr>
@@ -509,28 +509,28 @@ explanation of the license and how it is applied.
 								<fmt:message key="Center.hashof">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
 								</fmt:message>:
-							<c:out value="${centerInformationDto.centerPerformanceHistory.numberOfClients}" /></span></td>
+							<fmt:formatNumber value="${centerInformationDto.centerPerformanceHistory.numberOfClients}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> 
 								<fmt:message key="Center.hashof">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 								</fmt:message>:
-							<c:out value="${centerInformationDto.centerPerformanceHistory.numberOfGroups}" /></span></td>
+							<fmt:formatNumber value="${centerInformationDto.centerPerformanceHistory.numberOfGroups}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="Center.Total" bundle="CenterUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
 								name="Center.portfolio" bundle="CenterUIResources"
-								isColonRequired="yes" /> <c:out
+								isColonRequired="yes" /> <fmt:formatNumber
 								value="${centerInformationDto.centerPerformanceHistory.totalOutstandingPortfolio}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="Center.Total" bundle="CenterUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes" />
-							<c:out value="${centerInformationDto.centerPerformanceHistory.totalSavings}" /></span></td>
+							<fmt:formatNumber value="${centerInformationDto.centerPerformanceHistory.totalSavings}" /></span></td>
 						</tr>
 
 					</table>
