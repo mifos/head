@@ -220,17 +220,17 @@ explanation of the license and how it is applied.
 									<!--<mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" />
-                                                : <span class="fontnormal"> <c:out value="${sessionScope.loanproductactionform.maxLoanAmount}" /></span>
+                                                : <span class="fontnormal"> <fmt:formatNumber value="${sessionScope.loanproductactionform.maxLoanAmount}" /></span>
 												<br>
 												<mifos:mifoslabel name="product.min" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" />
-												: <span class="fontnormal"> <c:out value="${sessionScope.loanproductactionform.minLoanAmount}" /></span>
+												: <span class="fontnormal"> <fmt:formatNumber value="${sessionScope.loanproductactionform.minLoanAmount}" /></span>
 												<br>
 												<mifos:mifoslabel name="product.default" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" />
-												: <span class="fontnormal"> <c:out value="${sessionScope.loanproductactionform.defaultLoanAmount}" /></span>
+												: <span class="fontnormal"> <fmt:formatNumber value="${sessionScope.loanproductactionform.defaultLoanAmount}" /></span>
 											--> 
                                         <c:if test="${sessionScope.loanproductactionform.loanAmtCalcType=='2'}">
 										<br>
@@ -640,13 +640,13 @@ explanation of the license and how it is applied.
 									</c:if> </span> <br>
 									<!--
 									        <mifos:mifoslabel name="product.maxinst" bundle="ProductDefUIResources" />
-												: <span class="fontnormal"><c:out value="${sessionScope.loanproductactionform.maxNoInstallments}" /></span>
+												: <span class="fontnormal"><fmt:formatNumber value="${sessionScope.loanproductactionform.maxNoInstallments}" /></span>
 												<br>
 												<mifos:mifoslabel name="product.mininst" bundle="ProductDefUIResources" />
-												: <span class="fontnormal"><c:out value="${sessionScope.loanproductactionform.minNoInstallments}" /></span>
+												: <span class="fontnormal"><fmt:formatNumber value="${sessionScope.loanproductactionform.minNoInstallments}" /></span>
 												<br>
 												<mifos:mifoslabel name="product.definst" bundle="ProductDefUIResources" />
-												: <span class="fontnormal"><c:out value="${sessionScope.loanproductactionform.defNoInstallments}" /></span>
+												: <span class="fontnormal"><fmt:formatNumber value="${sessionScope.loanproductactionform.defNoInstallments}" /></span>
 												 <br>
 								     -->
 
@@ -842,7 +842,7 @@ explanation of the license and how it is applied.
 											</tr>
 
 											<tr>
-												<td class="fontnormal" width="20%"><c:out
+												<td class="fontnormal" width="20%"><fmt:formatNumber
 													value="${sessionScope.loanproductactionform.minNoInstallments}" /></td>
 												<td class="fontnormal" width="20%" align="right">
                                                     <fmt:formatNumber value="${sessionScope.loanproductactionform.maxNoInstallments}" type="number" /> </td>
