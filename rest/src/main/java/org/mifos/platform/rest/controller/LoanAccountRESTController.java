@@ -383,13 +383,11 @@ public class LoanAccountRESTController {
     @RequestMapping(value = "/account/loan/num-{globalAccountNum}/interestWaivable", method = RequestMethod.GET)
     public @ResponseBody
     Map<String, String> isLoanInterestWaivable(@PathVariable String globalAccountNum) throws Exception {
-		LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
-		boolean interestWaivable = loan.getLoanOffering().isInterestWaived();
-    	
+		RepayLoanDto repayLoanDto = this.loanAccountServiceFacade.retrieveLoanRepaymentDetails(globalAccountNum);
 		Map<String, String> map = new HashMap<String, String>();
 		
-		map.put("isInterestWaivable", Boolean.toString(interestWaivable));
-		map.put("defaultValue", "false");
+		map.put("isInterestWaivable", Boolean.toString(repayLoanDto.shouldWaiverInterest()));
+		map.put("defaultValue", Boolean.toString(repayLoanDto.shouldWaiverInterest()));
 		
     	return map;
     }
