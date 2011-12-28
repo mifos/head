@@ -34,6 +34,7 @@
   <DATABASECHANGELOG ID="MIFOS_4700_4" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="242" EXECTYPE="EXECUTED" MD5SUM="3:fdd7dad428a877741587468045c15b87" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4700_5" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="243" EXECTYPE="EXECUTED" MD5SUM="3:d8b39a618ff308d67e12528ad3735359" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4827_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-12 15:53:11.0" ORDEREXECUTED="186" EXECTYPE="EXECUTED" MD5SUM="3:807c2239c2429b48809f2d8a3dfc8f65" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_4827_2" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-28 18:06:57.0" ORDEREXECUTED="211" EXECTYPE="EXECUTED" MD5SUM="3:43fe14f5d277cff6bb8b1adef2b0305e" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_1" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="244" EXECTYPE="EXECUTED" MD5SUM="3:d1bc7187b3d916e75540705797af4f2e" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_2" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="245" EXECTYPE="EXECUTED" MD5SUM="3:169dcdb02684d9b21f5eac6e857ad394" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_3" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="246" EXECTYPE="EXECUTED" MD5SUM="3:3b9ed5b39f2534b6a7a812471d72bda6" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
@@ -41,6 +42,8 @@
   <DATABASECHANGELOG ID="MIFOS_4945_5" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="248" EXECTYPE="EXECUTED" MD5SUM="3:ed2015dd4bd8e0e49f39b9d15e1d4374" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_6" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="249" EXECTYPE="EXECUTED" MD5SUM="3:3295a26a4f5f90255601a36a002029da" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5161_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-17 07:17:25.0" ORDEREXECUTED="123" EXECTYPE="EXECUTED" MD5SUM="3:82dd99432572ba02fe1c174c26096266" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_5164_1" AUTHOR="Udai Gupta" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-28 18:06:57.0" ORDEREXECUTED="209" EXECTYPE="EXECUTED" MD5SUM="3:ba7cceda2200329d1f21496cd2832067" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_5164_2" AUTHOR="Udai Gupta" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-28 18:06:57.0" ORDEREXECUTED="210" EXECTYPE="EXECUTED" MD5SUM="3:7050ad7056dd89097b10de0cad2f2e5f" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5186_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-24 15:29:30.0" ORDEREXECUTED="183" EXECTYPE="EXECUTED" MD5SUM="3:257c6dbd69a28ceb9a8a866a405e23f2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5218_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-09 11:57:53.0" ORDEREXECUTED="185" EXECTYPE="EXECUTED" MD5SUM="3:a55cb7c0cd264ab9133926be13e0c714" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
@@ -1450,6 +1453,7 @@
   <activity activity_id="244" parent_id="113" activity_name_lookup_id="637" description_lookup_id="637"/>
   <activity activity_id="245" parent_id="34" activity_name_lookup_id="638" description_lookup_id="638"/>
   <activity activity_id="246" parent_id="196" activity_name_lookup_id="639" description_lookup_id="639"/>
+  <activity activity_id="247" parent_id="196" activity_name_lookup_id="640" description_lookup_id="640"/>
   <admin_document admin_document_id="1" admin_document_name="test2" admin_document_identifier="test2.rptdesign" admin_document_active="1" version_no="0"/>
   <admin_document_acc_state_mix admin_doc_acc_state_mix_id="1" account_state_id="1" admin_document_id="1" version_no="0"/>
   <admin_document_acc_state_mix admin_doc_acc_state_mix_id="2" account_state_id="2" admin_document_id="1" version_no="0"/>
@@ -7285,6 +7289,7 @@
   <lookup_value lookup_id="637" entity_id="87" lookup_name="Permissions-CanAdjustBackDatedTransactions"/>
   <lookup_value lookup_id="638" entity_id="87" lookup_name="Permissions-Clients-CanEditPhoneNumber"/>
   <lookup_value lookup_id="639" entity_id="87" lookup_name="Permissions-CanUseAccountingIntegration"/>
+  <lookup_value lookup_id="640" entity_id="87" lookup_name="Permissions-CanApproveRESTAPI"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -7834,6 +7839,7 @@
   <lookup_value_locale lookup_value_id="968" locale_id="1" lookup_id="637"/>
   <lookup_value_locale lookup_value_id="969" locale_id="1" lookup_id="638"/>
   <lookup_value_locale lookup_value_id="970" locale_id="1" lookup_id="639"/>
+  <lookup_value_locale lookup_value_id="971" locale_id="1" lookup_id="640"/>
   <max_min_interest_rate account_id="4" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="5" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="9" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
@@ -8879,6 +8885,7 @@
   <report_jasper_map report_id="5" report_category_id="6" report_name="General Ledger Report" report_identifier="general_ledger_report" report_jasper="GeneralLedgerReport.rptdesign"/>
   <report_parameter/>
   <report_parameter_map/>
+  <rest_approval/>
   <role role_id="1" role_name="Admin" version_no="1"/>
   <roles_activity activity_id="3" role_id="1"/>
   <roles_activity activity_id="4" role_id="1"/>
@@ -9049,6 +9056,7 @@
   <roles_activity activity_id="244" role_id="1"/>
   <roles_activity activity_id="245" role_id="1"/>
   <roles_activity activity_id="246" role_id="1"/>
+  <roles_activity activity_id="247" role_id="1"/>
   <saving_schedule id="1" account_id="15" customer_id="9" action_date="2009-01-29" deposit="0.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="1" version_no="0"/>
   <saving_schedule id="2" account_id="15" customer_id="9" action_date="2009-02-05" deposit="0.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="2" version_no="0"/>
   <saving_schedule id="3" account_id="15" customer_id="9" action_date="2009-02-12" deposit="0.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="3" version_no="0"/>
