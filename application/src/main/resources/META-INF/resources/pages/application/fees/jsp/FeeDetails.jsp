@@ -137,7 +137,7 @@ explanation of the license and how it is applied.
 										</c:when>
 										<c:otherwise>
 											<mifos:mifoslabel name="Fees.amount" bundle="FeesUIResources"></mifos:mifoslabel>
-											<c:out value="${feeModel.amount}" />
+											<fmt:formatNumber value="${feeModel.amount}" />
 										</c:otherwise>
 									</c:choose>
 									<br>

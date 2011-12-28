@@ -561,4 +561,20 @@
             </sql>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_4827_2" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+            update lookup_label set entity_name="Ethnicity" where entity_name="Ethinicity";
+            
+            update customized_text set original_text="Ethnicity.Label" where original_text="Ethinicity.Label";
+            update customized_text set custom_text="Ethnicity" where custom_text="Ethinicity";
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                update lookup_label set entity_name="Ethinicity" where entity_name="Ethnicity";
+                
+                update customized_text set original_text="Ethinicity.Label" where original_text="Ethnicity.Label";
+                update customized_text set custom_text="Ethinicity" where custom_text="Ethnicity";
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

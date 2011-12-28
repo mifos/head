@@ -248,7 +248,7 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper.changeCustomerStatus(clientDetailsPage);
     }
 
-    @Test(singleThreaded = true, groups = {"smoke", "client", "acceptance", "ui"}, enabled=true)
+    @Test(enabled=true)
     // http://mifosforge.jira.com/browse/MIFOS-4776
     public void createClientAddTwoFeesTryPayMoreThanAmountVerifyErrorMessage() {
         String oneTimeFeeName = "One Time Fee";

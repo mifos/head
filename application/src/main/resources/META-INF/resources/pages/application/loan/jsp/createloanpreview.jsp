@@ -278,7 +278,7 @@ explanation of the license and how it is applied.
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.amount" />
-												:&nbsp; <span class="fontnormal"> <span id="createloanpreview.text.loanamount"><c:out value="${loanAmount}" /></span> <mifos:mifoslabel name="loan.allowed_amount"></mifos:mifoslabel>&nbsp; <c:out value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
+												:&nbsp; <span class="fontnormal"> <span id="createloanpreview.text.loanamount"><fmt:formatNumber value="${loanAmount}" /></span> <mifos:mifoslabel name="loan.allowed_amount"></mifos:mifoslabel>&nbsp; <fmt:formatNumber value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <fmt:formatNumber
 														value="${loanAccountActionForm.maxLoanAmount}" />) </span>
 											</td>
 										</tr>
@@ -293,8 +293,8 @@ explanation of the license and how it is applied.
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.no_of_inst" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${noOfInstallments}" /> <mifos:mifoslabel name="loan.allowed_no_of_inst"></mifos:mifoslabel>&nbsp; <c:out value="${loanAccountActionForm.minNoInstallments}" />&nbsp;
-													- &nbsp; <c:out value="${loanAccountActionForm.maxNoInstallments}" />) </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${noOfInstallments}" /> <mifos:mifoslabel name="loan.allowed_no_of_inst"></mifos:mifoslabel>&nbsp; <fmt:formatNumber value="${loanAccountActionForm.minNoInstallments}" />&nbsp;
+													- &nbsp; <fmt:formatNumber value="${loanAccountActionForm.maxNoInstallments}" />) </span>
 											</td>
 										</tr>
 										<tr>
@@ -404,7 +404,7 @@ explanation of the license and how it is applied.
 																	:&nbsp;
 																</td>
 																<td class="fontnormal" align="left">
-																	<c:out value="${feesSet.amount}" />
+																	<fmt:formatNumber value="${feesSet.amount}" />
 																	&nbsp;&nbsp;
 																</td>
 																<td class="fontnormal" align="left">
