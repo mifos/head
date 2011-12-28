@@ -52,7 +52,7 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
                 return modelAndView;
             }
 
-            if (modelAndView == null) {
+            if (modelAndView == null || ex instanceof AccessDeniedException ) {
                 // should move to explicit @ExceptionHandler(Exception) controller method
                 modelAndView = new ModelAndView();
                 modelAndView.addObject("status", "error");

@@ -1473,9 +1473,17 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Override
     public LoanInstallmentDetailsDto retrieveInstallmentDetails(Integer accountId) {
-
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+        
         LoanBO loanBO = this.loanDao.findById(accountId);
 
+        try {
+            personnelDao.checkAccessPermission(userContext, loanBO.getOfficeId(), loanBO.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
         InstallmentDetailsDto viewUpcomingInstallmentDetails = getUpcomingInstallmentDetails(loanBO.getDetailsOfNextInstallment(), loanBO.getCurrency());
         InstallmentDetailsDto viewOverDueInstallmentDetails = getOverDueInstallmentDetails(loanBO.getDetailsOfInstallmentsInArrears(), loanBO.getCurrency());
 
@@ -1489,8 +1497,17 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Override
     public List<LoanRepaymentScheduleItemDto> retrieveLoanRepaymentSchedule(String globalAccountNum, Date viewDate) {
-        LoanBO loanBO = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+    	
+    	LoanBO loanBO = this.loanDao.findByGlobalAccountNum(globalAccountNum);
 
+        try {
+            personnelDao.checkAccessPermission(userContext, loanBO.getOfficeId(), loanBO.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+    	
         Errors errors = loanBusinessService.computeExtraInterest(loanBO, viewDate);
         if (errors.hasErrors()) {
             throw new MifosRuntimeException(errors.getErrorEntries().get(0).getDefaultMessage());
@@ -1571,9 +1588,19 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Override
     public void makeEarlyRepayment(RepayLoanInfoDto repayLoanInfoDto) {
-
+    	
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+        
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(repayLoanInfoDto.getGlobalAccountNum());
+        
         try {
-            LoanBO loan = this.loanDao.findByGlobalAccountNum(repayLoanInfoDto.getGlobalAccountNum());
+            personnelDao.checkAccessPermission(userContext, loan.getOfficeId(), loan.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
+        try {
             if (repayLoanInfoDto.isWaiveInterest() && !loan.isInterestWaived()) {
                 throw new BusinessRuleException(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED);
             }
@@ -1805,7 +1832,17 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Override
     public RepayLoanDto retrieveLoanRepaymentDetails(String globalAccountNumber) {
-        LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNumber);
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+        
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNumber);
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, loan.getOfficeId(), loan.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
         Money repaymentAmount;
         Money waiverAmount;
         if (loan.isDecliningBalanceInterestRecalculation()) {
@@ -1858,6 +1895,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(mifosUser);
 
+        LoanBO loan = this.loanDao.findById(loanDisbursement.getAccountId());
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, loan.getOfficeId(), loan.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
         PaymentTypeDto paymentType = null;
         try {
             for (org.mifos.dto.domain.PaymentTypeDto paymentTypeDto : accountService.getLoanDisbursementTypes()) {
@@ -2209,6 +2254,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         if (!isPermissionAllowed(newState, userContext, officeId, loanOfficerId)) {
             throw new BusinessRuleException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
         }
+    }
+    
+    private void checkPermission(UserContext userContext, Short officeId, Short loanOfficerId){
+    	
     }
 
     private boolean isPermissionAllowed(final Short newSate, final UserContext userContext, final Short officeId,

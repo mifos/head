@@ -49,6 +49,7 @@ import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
+import org.mifos.security.AuthenticationAuthorizationServiceFacade;
 import org.mifos.security.MifosUser;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +76,9 @@ public class SavingsAccountAdjustmentAndInterestCalculationServiceFacadeIntegrat
     @Autowired
     private SavingsServiceFacade savingsServiceFacade;
 
+    @Autowired 
+    private AuthenticationAuthorizationServiceFacade authenticationAuthorizationService;
+    
     @After
     public void cleanDatabaseTablesAfterTest() {
         // NOTE: - only added to stop older integration tests failing due to brittleness
@@ -87,12 +91,7 @@ public class SavingsAccountAdjustmentAndInterestCalculationServiceFacadeIntegrat
 
         aWeeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).withStartDate(mondayTwoWeeksAgo()).build();
         IntegrationTestObjectMother.saveMeeting(aWeeklyMeeting);
-
-        SecurityContext securityContext = new SecurityContextImpl();
-        MifosUser principal = new MifosUserBuilder().build();
-        Authentication authentication = new TestingAuthenticationToken(principal, principal);
-        securityContext.setAuthentication(authentication);
-        SecurityContextHolder.setContext(securityContext);
+        authenticationAuthorizationService.reloadUserDetailsForSecurityContext("mifos");
     }
 
     private void createCenterGroupClientHierarchy(MeetingBO aWeeklyMeeting) throws CustomerException {

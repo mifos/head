@@ -53,12 +53,16 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.AuthenticationAuthorizationServiceFacade;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class StandardAccountServiceIntegrationTest extends AccountIntegrationTestCase {
 
     private AccountService standardAccountService;
     private PaymentTypeDto defaultPaymentType;
 
+    @Autowired private AuthenticationAuthorizationServiceFacade authenticationAuthorizationService;
+    
     @Override
     @Before
     public void setUp() throws Exception {
@@ -66,6 +70,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         StaticHibernateUtil.startTransaction();
         standardAccountService = ApplicationContextProvider.getBean(AccountService.class);
         defaultPaymentType = standardAccountService.getLoanPaymentTypes().get(0);
+        authenticationAuthorizationService.reloadUserDetailsForSecurityContext("mifos");
     }
 
 
