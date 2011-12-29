@@ -156,7 +156,7 @@ explanation of the license and how it is applied.
 													<mifos:mifoslabel name="product.recamtdep" bundle="ProductDefUIResources" isColonRequired="yes"/>
 												</c:otherwise>
 											</c:choose>
-									<span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.recommendedAmount}" /> </span>
+									<span class="fontnormal"> <fmt:formatNumber value="${sessionScope.savingsproductactionform.recommendedAmount}" /> </span>
 									<br>
 									<mifos:mifoslabel name="product.recamtappl" bundle="ProductDefUIResources" isColonRequired="yes"/>
 									<span class="fontnormal"> 
@@ -167,7 +167,7 @@ explanation of the license and how it is applied.
 										</c:forEach> </span>
 									<br>
 									<mifos:mifoslabel name="product.maxamtwid" bundle="ProductDefUIResources" isColonRequired="yes"/>
-									<span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.maxAmntWithdrawl}" /></span>
+									<span class="fontnormal"> <fmt:formatNumber value="${sessionScope.savingsproductactionform.maxAmntWithdrawl}" /></span>
 								</td>
 							</tr>
 						</table>
@@ -202,7 +202,7 @@ explanation of the license and how it is applied.
 									<fmt:message key="product.productRate">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>:
-									<span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.interestRate}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /> </span>
+									<span class="fontnormal"> <fmt:formatNumber value="${sessionScope.savingsproductactionform.interestRate}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /> </span>
 									<br>
 									<fmt:message key="product.balUsedForCalc">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
@@ -232,7 +232,7 @@ explanation of the license and how it is applied.
 									<fmt:message key="product.minBalForCalc">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>:
-									<span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.minAmntForInt}" /> </span>
+									<span class="fontnormal"> <fmt:formatNumber value="${sessionScope.savingsproductactionform.minAmntForInt}" /> </span>
 									<br>
 								</td>
 							</tr>

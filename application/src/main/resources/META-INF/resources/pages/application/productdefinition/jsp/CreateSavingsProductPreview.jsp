@@ -164,12 +164,12 @@ explanation of the license and how it is applied.
 												<c:otherwise>
 													<mifos:mifoslabel name="product.recamtdep" bundle="ProductDefUIResources" isColonRequired="yes"/>
 												</c:otherwise>
-											</c:choose><span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.recommendedAmount}" /></span><br> <mifos:mifoslabel name="product.recamtappl" bundle="ProductDefUIResources" isColonRequired="yes"/><span class="fontnormal"> <c:forEach
+											</c:choose><span class="fontnormal"> <fmt:formatNumber value="${sessionScope.savingsproductactionform.recommendedAmount}" /></span><br> <mifos:mifoslabel name="product.recamtappl" bundle="ProductDefUIResources" isColonRequired="yes"/><span class="fontnormal"> <c:forEach
 													items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecAmntUnitList')}" var="RecAmnt">
 													<c:if test="${RecAmnt.id eq sessionScope.savingsproductactionform.recommendedAmntUnit}">
 														<c:out value="${RecAmnt.name}" />
 													</c:if>
-												</c:forEach> </span><br> <mifos:mifoslabel name="product.maxamtwid" bundle="ProductDefUIResources" /> :<span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.maxAmntWithdrawl}" /></span>
+												</c:forEach> </span><br> <mifos:mifoslabel name="product.maxamtwid" bundle="ProductDefUIResources" /> :<span class="fontnormal"> <fmt:formatNumber value="${sessionScope.savingsproductactionform.maxAmntWithdrawl}" /></span>
 								</td>
 							</tr>
 						</table>
@@ -186,7 +186,7 @@ explanation of the license and how it is applied.
 									<fmt:message key="product.productRate">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>:
-									<span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.interestRate}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /> </span>
+									<span class="fontnormal"> <fmt:formatNumber value="${sessionScope.savingsproductactionform.interestRate}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /> </span>
 									<br>
 									<fmt:message key="product.balUsedForCalc">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
@@ -200,7 +200,7 @@ explanation of the license and how it is applied.
 									<fmt:message key="product.timePerCalc">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>:
-									<span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.timeForInterestCacl}" /> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsRecurrenceTypeList')}"
+									<span class="fontnormal"> <fmt:formatNumber value="${sessionScope.savingsproductactionform.timeForInterestCacl}" /> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsRecurrenceTypeList')}"
 											var="recType">
 											<c:if test="${recType.recurrenceId eq sessionScope.savingsproductactionform.recurTypeFortimeForInterestCacl}">
 												<c:out value="${recType.recurrenceName}" />
@@ -210,12 +210,12 @@ explanation of the license and how it is applied.
 									<fmt:message key="product.freqPostAcc">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>:
-									<span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.freqOfInterest}" /> <mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" /> </span>
+									<span class="fontnormal"> <fmt:formatNumber value="${sessionScope.savingsproductactionform.freqOfInterest}" /> <mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" /> </span>
 									<br>
 									<fmt:message key="product.minBalForCalc">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>:
-									<span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.minAmntForInt}" /> </span>
+									<span class="fontnormal"> <fmt:formatNumber value="${sessionScope.savingsproductactionform.minAmntForInt}" /> </span>
 									<br>
 								</td>
 							</tr>
