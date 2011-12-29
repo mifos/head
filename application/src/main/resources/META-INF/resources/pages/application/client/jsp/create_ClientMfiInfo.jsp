@@ -289,7 +289,7 @@ explanation of the license and how it is applied.
 													<tr class="fontnormal">
 														<c:choose>
 															<c:when test="${adminFees.periodic == true}">
-																<td width="20%"><c:out value="${adminFees.amount}" /></td>
+																<td width="20%"><fmt:formatNumber value="${adminFees.amount}" /></td>
 															</c:when>
 															<c:otherwise>
 																<c:choose>

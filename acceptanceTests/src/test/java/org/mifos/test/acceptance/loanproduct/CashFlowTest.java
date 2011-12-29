@@ -112,7 +112,7 @@ public class CashFlowTest extends UiTestCaseBase {
     public void verifyCashFlowForNonVariableInstallmentLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(0);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
-        String minRc = "999.0";
+        String minRc = "999";
         String warningThreshold = "89.99";
         createAndValidateLoanProductWithCashFlow(warningThreshold, formParameters, "49.99", minRc, false);
         validateCashFlowForLoanAccount(formParameters, minRc, "998.1");

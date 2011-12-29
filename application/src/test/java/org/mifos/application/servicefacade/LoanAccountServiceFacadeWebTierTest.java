@@ -72,10 +72,18 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.validations.Errors;
+import org.mifos.security.MifosUser;
+import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanAccountServiceFacadeWebTierTest {
@@ -125,20 +133,27 @@ public class LoanAccountServiceFacadeWebTierTest {
     private OfficeDao officeDao;
     private MifosCurrency rupee;
 
+    private UserContext userContext;
+    
     @Before
     public void setupAndInjectDependencies() {
         loanAccountServiceFacade = new LoanAccountServiceFacadeWebTier(officeDao, loanProductDao, customerDao, personnelDao,
                 fundDao, loanDao, accountService, scheduleCalculatorAdaptor, loanBusinessService, loanScheduleService, installmentsValidator, holidayServiceFacade);
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+        userContext = TestUtils.makeUser();
     }
 
     @Test
     public void testMakeEarlyRepayment() throws AccountException {
+    	setMifosUserFromContext();
         when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
         java.sql.Date date = new java.sql.Date(new Date().getTime());
         when(loanBO.getCurrency()).thenReturn(rupee);
         boolean waiveInterest = true;
         when(loanBO.isInterestWaived()).thenReturn(waiveInterest);
+        when(loanBO.getOfficeId()).thenReturn((short)1);
+        when(loanBO.getCustomer()).thenReturn(customer);
+        when(customer.getLoanOfficerId()).thenReturn((short)1);
         String paymentMethod = "Cash";
         String receiptNumber = "001";
 
@@ -152,9 +167,13 @@ public class LoanAccountServiceFacadeWebTierTest {
 
     @Test
     public void testMakeEarlyRepaymentForNotWaiverInterestLoanProduct() throws AccountException {
+    	setMifosUserFromContext();
         when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
         boolean waiveInterest = false;
         when(loanBO.getCurrency()).thenReturn(rupee);
+        when(loanBO.getOfficeId()).thenReturn((short)1);
+        when(loanBO.getCustomer()).thenReturn(customer);
+        when(customer.getLoanOfficerId()).thenReturn((short)1);
         LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity() {};
         loanScheduleEntity.setInterest(new Money(rupee, 100d));
         when(loanBO.getDetailsOfNextInstallment()).thenReturn(loanScheduleEntity);
@@ -172,10 +191,14 @@ public class LoanAccountServiceFacadeWebTierTest {
 
     @Test
     public void testValidateMakeEarlyRepayment() throws AccountException {
+    	setMifosUserFromContext();
         when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
         boolean actualWaiveInterestValue = false;
         java.sql.Date date = mock(java.sql.Date.class);
         when(loanBO.isInterestWaived()).thenReturn(actualWaiveInterestValue);
+        when(loanBO.getOfficeId()).thenReturn((short)1);
+        when(loanBO.getCustomer()).thenReturn(customer);
+        when(customer.getLoanOfficerId()).thenReturn((short)1);
         try {
             loanAccountServiceFacade.makeEarlyRepayment(new RepayLoanInfoDto("1", "100", "001", mock(java.sql.Date.class),
                     "Cash", (short) 1, true, date,BigDecimal.ZERO,BigDecimal.ZERO));
@@ -189,7 +212,7 @@ public class LoanAccountServiceFacadeWebTierTest {
 
     @Test
     public void shouldReturnRepayLoanDtoWithAllDataPopulated() {
-
+    	setMifosUserFromContext();
         String accountNumber = "1234";
         LoanBO loanBO = mock(LoanBO.class);
         Money repaymentAmount = TestUtils.createMoney("1234");
@@ -199,7 +222,10 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanBO.getEarlyRepayAmount()).thenReturn(repaymentAmount);
         when(loanBO.waiverAmount()).thenReturn(interest);
         when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(false);
-
+        when(loanBO.getOfficeId()).thenReturn((short)1);
+        when(loanBO.getCustomer()).thenReturn(customer);
+        when(customer.getLoanOfficerId()).thenReturn((short)1);
+        
         Money waivedAmount = repaymentAmount.subtract(interest);
 
         RepayLoanDto repayLoanDto = this.loanAccountServiceFacade.retrieveLoanRepaymentDetails(accountNumber);
@@ -215,7 +241,7 @@ public class LoanAccountServiceFacadeWebTierTest {
 
     @Test
     public void shouldReturnRepayLoanDtoWithAllDataPopulatedForDecliningBalanceInterestRecalculation() {
-
+    	setMifosUserFromContext();
         String accountNumber = "1234";
         LoanBO loanBO = mock(LoanBO.class);
         Money repaymentAmount = TestUtils.createMoney("1234");
@@ -231,7 +257,9 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(scheduleCalculatorAdaptor.computeRepaymentAmount(loanBO, currentDate.toDate())).thenReturn(repaymentResultsHolder);
         when(loanBO.getCurrency()).thenReturn(repaymentAmount.getCurrency());
         when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
-
+        when(loanBO.getOfficeId()).thenReturn((short)1);
+        when(loanBO.getCustomer()).thenReturn(customer);
+        when(customer.getLoanOfficerId()).thenReturn((short)1);
 
         RepayLoanDto repayLoanDto = this.loanAccountServiceFacade.retrieveLoanRepaymentDetails(accountNumber);
 
@@ -338,5 +366,15 @@ public class LoanAccountServiceFacadeWebTierTest {
         Errors errors = loanAccountServiceFacade.validateInstallmentSchedule(new ArrayList<LoanCreationInstallmentDto>(), minInstallmentAmount);
         assertThat(errors, is(expectedErrors));
         verify(installmentsValidator).validateInstallmentSchedule(installments, minInstallmentAmount);
+    }
+    
+    private void setMifosUserFromContext() {
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUser(userContext.getId(), userContext.getBranchId(), userContext.getLevelId(),
+                new ArrayList<Short>(userContext.getRoles()), userContext.getName(), "".getBytes(),
+                true, true, true, true, new ArrayList<GrantedAuthority>());
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 }

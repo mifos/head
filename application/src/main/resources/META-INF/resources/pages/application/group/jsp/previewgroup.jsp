@@ -386,7 +386,7 @@ explanation of the license and how it is applied.
 								<c:if test="${adminFee.removed == false}">
 							  		 <c:out value="${adminFee.feeName}"/>:
 							   		<span class="fontnormal">
-							   			<c:out value="${adminFee.amount}"/> 
+							   			<fmt:formatNumber value="${adminFee.amount}"/>
 							   			<mifos:mifoslabel name="Group.periodicity" bundle="GroupUIResources"/>
 								   		<c:choose>
 											<c:when test="${adminFee.periodic}">
@@ -411,7 +411,7 @@ explanation of the license and how it is applied.
 							<c:if test="${fee.feeId == selectedFee.feeId}">
 			           	  		<c:out value="${fee.feeName}"/>:
 								<span class="fontnormal"><span class="fontnormal">
-								<c:out value="${selectedFee.amount}"/> 
+								<fmt:formatNumber value="${selectedFee.amount}"/>
 								<mifos:mifoslabel name="Group.periodicity" bundle="GroupUIResources"/>
 								<c:choose>
 									<c:when test="${fee.periodic == true}">

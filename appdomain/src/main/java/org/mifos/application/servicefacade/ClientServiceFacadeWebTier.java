@@ -33,9 +33,12 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeeDao;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.servicefacade.UserContextFactory;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingFactory;
@@ -58,6 +61,7 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -484,13 +488,32 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
         CustomerMeetingDto customerMeeting = customerDao.getCustomerMeetingDto(client.getCustomerMeeting(), userContext);
 
+        List<AccountBO> allClosedLoanAndSavingsAccounts = customerDao.retrieveAllClosedLoanAndSavingsAccounts(clientId);
+        List<LoanDetailDto> closedLoanAccounts = new ArrayList<LoanDetailDto>();
+        List<SavingsDetailDto> closedSavingsAccounts = new ArrayList<SavingsDetailDto>();
+        for (AccountBO closedAccount : allClosedLoanAndSavingsAccounts){
+        	if ( closedAccount.getAccountType().getAccountTypeId() == AccountTypes.LOAN_ACCOUNT.getValue().intValue()){      		
+        		closedLoanAccounts.add(new LoanDetailDto(closedAccount.getGlobalAccountNum(), 
+        				((LoanBO)closedAccount).getLoanOffering().getPrdOfferingName(), closedAccount.getAccountState().getId(), 
+        				closedAccount.getAccountState().getName(), ((LoanBO)closedAccount).getLoanSummary().getOutstandingBalance().toString(), 
+        				closedAccount.getTotalAmountDue().toString()));
+        		
+        	} else {
+        		closedSavingsAccounts.add(new SavingsDetailDto(closedAccount.getGlobalAccountNum(), 
+        				((SavingsBO)closedAccount).getSavingsOffering().getPrdOfferingName(), 
+        				closedAccount.getAccountState().getId(), closedAccount.getAccountState().getName(), 
+                        ((SavingsBO)closedAccount).getSavingsBalance().toString()));
+        	}
+        }
+        
         Boolean activeSurveys = Boolean.FALSE;
 //        Boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.CLIENT);
 
         List<SurveyDto> customerSurveys = new ArrayList<SurveyDto>();
 
         return new ClientInformationDto(clientDisplay, customerAccountSummary, clientPerformanceHistory, clientAddress,
-                recentCustomerNotes, customerFlags, loanDetail, savingsDetail, customerMeeting, activeSurveys, customerSurveys);
+                recentCustomerNotes, customerFlags, loanDetail, savingsDetail, customerMeeting, activeSurveys, customerSurveys,
+                closedLoanAccounts, closedSavingsAccounts);
     }
 
     private ClientPerformanceHistoryDto assembleClientPerformanceHistoryDto(

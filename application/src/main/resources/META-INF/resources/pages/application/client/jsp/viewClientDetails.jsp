@@ -174,9 +174,9 @@ explanation of the license and how it is applied.
 											<c:if
 												test="${loan.accountStateId==5 || loan.accountStateId==9}">
 												<span class="fontnormal"> <mifos:mifoslabel
-													name="loan.outstandingbalance" isColonRequired="yes"/> <c:out
+													name="loan.outstandingbalance" isColonRequired="yes"/> <fmt:formatNumber
 													value="${loan.outstandingBalance}" /><br>
-												<mifos:mifoslabel name="loan.amount_due" isColonRequired="yes"/> <c:out
+												<mifos:mifoslabel name="loan.amount_due" isColonRequired="yes"/> <fmt:formatNumber
 													value="${loan.totalAmountDue}" /> </span>
 											</c:if></td>
 										</tr>
@@ -231,7 +231,7 @@ explanation of the license and how it is applied.
 														value="${savings.accountStateName}" /> </span></td>
 												</tr>
 											</table>
-											<span class="fontnormal"><mifos:mifoslabel	name="Client.balance" /> <c:out
+											<span class="fontnormal"><mifos:mifoslabel	name="Client.balance" /> <fmt:formatNumber
 												value="${savings.savingsBalance}" /> </span></td>
 										</tr>
 										<tr>
@@ -273,7 +273,7 @@ explanation of the license and how it is applied.
 									<span class="fontnormal"><mifos:mifoslabel name="client.amtdue"
 										bundle="ClientUIResources" isColonRequired="yes"/>
 										<span id="viewClientDetails.text.amountDue">
-											<c:out value="${clientInformationDto.customerAccountSummary.nextDueAmount}" />
+											<fmt:formatNumber value="${clientInformationDto.customerAccountSummary.nextDueAmount}" />
 										</span>
 									</span></td>
 								</tr>
@@ -705,7 +705,7 @@ explanation of the license and how it is applied.
 							<td class="paddingL10"><span class="fontnormal8pt"> <fmt:message
 								key="client.LastLoanAmount"> <fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}"/></fmt:param></fmt:message>:
-							<span id="viewClientDetails.text.lastloanamount"><c:out
+							<span id="viewClientDetails.text.lastloanamount"><fmt:formatNumber
 								value="${clientInformationDto.clientPerformanceHistory.lastLoanAmount}" /></span></span></td>
 						</tr>
 						<tr>
@@ -725,7 +725,7 @@ explanation of the license and how it is applied.
 							<td class="paddingL10"><span class="fontnormal8pt"> <fmt:message
 								key="client.Total"> <fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.SAVINGS}"/></fmt:param></fmt:message>
-							<c:out
+							<fmt:formatNumber
 								value="${clientInformationDto.clientPerformanceHistory.totalSavingsAmount}" /></span></td>
 						</tr>
 						<tr>

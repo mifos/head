@@ -111,11 +111,15 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
             loanTestHelper.disburseLoan(accountid, disburseParameters);
             performanceHistoryAtributes.incrementNoOfActiveLoan();
         }
-
+        
         //Then
         for (String amount : amounts) {
             loanTestHelper.repayLoan(loanIds.get(amount));
-            performanceHistoryAtributes.setAmountOfLastLoan(amount);
+            
+            String lastLoan = amount.substring(0, amount.length() - 2);
+            lastLoan = lastLoan.substring(0, 1) + "," + lastLoan.substring(1);
+            
+            performanceHistoryAtributes.setAmountOfLastLoan(lastLoan);
             performanceHistoryAtributes.decrementNoOfActiveLoan();
             loanTestHelper.verifyPerformenceHistory(searchParameters.getSearchString(), performanceHistoryAtributes);
         }

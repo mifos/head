@@ -283,7 +283,7 @@ function goToEditPage(){
 							<c:if test="${adminFee.removed == false}">
 						  		 <c:out value="${adminFee.feeName}"/>:
 						   		<span class="fontnormal">
-						   			<c:out value="${adminFee.amount}"/>
+						   			<fmt:formatNumber value="${adminFee.amount}"/>
 						   			<mifos:mifoslabel name="Center.Periodicity" bundle="CenterUIResources"/>
 							   		<c:choose>
 										<c:when test="${adminFee.periodic}">
@@ -314,7 +314,7 @@ function goToEditPage(){
 							<c:if test="${fee.feeId == selectedFee.feeId}">
 			           	  		<c:out value="${fee.feeName}"/>:
 								<span class="fontnormal"><span class="fontnormal">
-								<c:out value="${selectedFee.amount}"/>
+								<fmt:formatNumber value="${selectedFee.amount}"/>
 								<mifos:mifoslabel name="Center.Periodicity" bundle="CenterUIResources"/>
 								<c:choose>
 									<c:when test="${fee.periodic == true}">

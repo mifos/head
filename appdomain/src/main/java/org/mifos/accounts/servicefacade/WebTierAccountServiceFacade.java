@@ -42,6 +42,7 @@ import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.dto.domain.UserReferenceDto;
@@ -72,6 +73,9 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     private LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence;
     private LegacyPersonnelDao personnelPersistence;
     private LegacyAccountDao legacyAccountDao;
+    
+    @Autowired
+    private PersonnelDao personnelDao;
 
     @Autowired
     public WebTierAccountServiceFacade(AccountService accountService, HibernateTransactionHelper transactionHelper,
@@ -190,6 +194,14 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             UserContext userContext = toUserContext(user);
 
+            AccountBO account = this.accountBusinessService.getAccount(accountId);
+            
+            try {
+                personnelDao.checkAccessPermission(userContext, account.getOfficeId(), account.getCustomer().getLoanOfficerId());
+            } catch (AccountException e) {
+                throw new MifosRuntimeException(e.getMessage(), e);
+            }
+            
             return new AccountBusinessService().getAppllicableFees(accountId, userContext);
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);

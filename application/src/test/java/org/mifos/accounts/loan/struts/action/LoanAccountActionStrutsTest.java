@@ -126,6 +126,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     @Before
     public void setUp() throws Exception {
+    	userContext = TestObjectFactory.getContext();
         enableCustomWorkingDays();
         prdOfferingPageParams = new HashMap<String, String>();
         initPageParams();
@@ -279,6 +280,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     @Test
     public void testGetInstallmentDetails() throws Exception {
+    	setMifosUserFromContext();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);

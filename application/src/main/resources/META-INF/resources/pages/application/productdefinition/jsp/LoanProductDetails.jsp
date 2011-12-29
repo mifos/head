@@ -232,13 +232,13 @@ explanation of the license and how it is applied.
 												</fmt:message>: <c:out value="${loanPrd.interestTypes.name}" /> <br>
 												<fmt:message key="product.minRate">
 												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param> 
-												</fmt:message>: <c:out value="${userfn:getDoubleValue(loanPrd.minInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> 
+												</fmt:message>: <fmt:formatNumber value="${userfn:getDoubleValue(loanPrd.minInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> 
 												<fmt:message key="product.maxRate">
                                                 <fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
-                                                </fmt:message>: <c:out value="${userfn:getDoubleValue(loanPrd.maxInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> 
+                                                </fmt:message>: <fmt:formatNumber value="${userfn:getDoubleValue(loanPrd.maxInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> 
                                                 <fmt:message key="product.defaultRate">
 												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
-												</fmt:message>: <c:out value="${userfn:getDoubleValue(loanPrd.defInterestRate)}" /> <mifos:mifoslabel name="product.perc"
+												</fmt:message>: <fmt:formatNumber value="${userfn:getDoubleValue(loanPrd.defInterestRate)}" /> <mifos:mifoslabel name="product.perc"
 													bundle="ProductDefUIResources" /><br> </span>
 										</td>
 									</tr>
@@ -274,7 +274,7 @@ explanation of the license and how it is applied.
 		                                                    <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
 		                                                </c:when>
 		                                                <c:otherwise>
-	                                                    <c:out value="${loanPrd.variableInstallmentDetails.minGapInDays}" />
+	                                                    <fmt:formatNumber value="${loanPrd.variableInstallmentDetails.minGapInDays}" />
 		                                                	 <span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span>
 		                                                </c:otherwise>
 		                                            </c:choose>
@@ -287,7 +287,7 @@ explanation of the license and how it is applied.
 		                                                    <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
 		                                                </c:when>
 		                                                <c:otherwise>
-		                                                     <c:out value="${loanPrd.variableInstallmentDetails.maxGapInDays}" />
+		                                                     <fmt:formatNumber value="${loanPrd.variableInstallmentDetails.maxGapInDays}" />
 		                                                	 <span id="days"> <mifos:mifoslabel name="product.days" bundle="ProductDefUIResources" /> </span>
 		                                                </c:otherwise>
 		                                            </c:choose>
@@ -333,7 +333,7 @@ explanation of the license and how it is applied.
 		                                                    <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
 		                                                </c:when>
 		                                                <c:otherwise>
-	                                                  		<c:out value="${loanPrd.cashFlowDetail.cashFlowThreshold}" />
+	                                                  		<fmt:formatNumber value="${loanPrd.cashFlowDetail.cashFlowThreshold}" />
 		                                              		<mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" />
 		                                                </c:otherwise>
 		                                            </c:choose>
@@ -346,7 +346,7 @@ explanation of the license and how it is applied.
 		                                                    <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
 		                                                </c:when>
 		                                                <c:otherwise>
-	                                                  		<c:out value="${loanPrd.cashFlowDetail.indebtednessRatio}" />
+	                                                  		<fmt:formatNumber value="${loanPrd.cashFlowDetail.indebtednessRatio}" />
 		                                              		<mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" />
 		                                                </c:otherwise>
 		                                            </c:choose>
@@ -441,7 +441,7 @@ explanation of the license and how it is applied.
 																</table>
 													</c:if>
 													
-													<br> <mifos:mifoslabel name="product.gracepertype" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.gracePeriodType.name}" /> <br> <mifos:mifoslabel name="product.graceperdur" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.gracePeriodDuration}" /> <mifos:mifoslabel
+													<br> <mifos:mifoslabel name="product.gracepertype" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.gracePeriodType.name}" /> <br> <mifos:mifoslabel name="product.graceperdur" bundle="ProductDefUIResources" isColonRequired="yes"/> <fmt:formatNumber value="${loanPrd.gracePeriodDuration}" /> <mifos:mifoslabel
 													name="product.installments" bundle="ProductDefUIResources" /><br>
 													<!--  
 													<mifos:mifoslabel name="product.prinlastinst" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:choose>

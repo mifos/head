@@ -45,7 +45,21 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 
 public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -85,6 +99,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testLoadRepayment() throws Exception {
+    	setMifosUserFromContext();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/repayLoanAction");
         addRequestParameter("method", "loadRepayment");
@@ -117,6 +132,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testMakeRepaymentForCurrentDateSameAsInstallmentDate() throws Exception {
+    	setMifosUserFromContext();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
         Money amount = ((LoanBO) accountBO).getEarlyRepayAmount();
@@ -146,6 +162,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testMakeRepaymentForCurrentDateSameAsInstallmentDateWithInterestWaiver() throws Exception {
+    	setMifosUserFromContext();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
         Money amount = ((LoanBO) accountBO).getEarlyRepayAmount();
@@ -176,6 +193,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testMakeRepaymentForCurrentDateLiesBetweenInstallmentDates() throws Exception {
+    	setMifosUserFromContext();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         accountBO.changeFirstInstallmentDateBy(-1);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
@@ -208,6 +226,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testMakeRepaymentForCurrentDateLiesBetweenInstallmentDatesWithInterestWaiver() throws Exception {
+    	setMifosUserFromContext();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         accountBO.changeFirstInstallmentDateBy(-1);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
@@ -248,4 +267,13 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
                 startDate, loanOffering);
     }
 
+    private void setMifosUserFromContext() {
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUser(userContext.getId(), userContext.getBranchId(), userContext.getLevelId(),
+                new ArrayList<Short>(userContext.getRoles()), userContext.getName(), "".getBytes(),
+                true, true, true, true, new ArrayList<GrantedAuthority>());
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+    }
 }
