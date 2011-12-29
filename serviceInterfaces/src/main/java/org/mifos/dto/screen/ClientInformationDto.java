@@ -21,6 +21,7 @@
 package org.mifos.dto.screen;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 import org.mifos.dto.domain.CustomerAccountSummaryDto;
@@ -52,6 +53,9 @@ public class ClientInformationDto implements Serializable {
     private final CustomerMeetingDto customerMeeting;
     private final Boolean activeSurveys;
     private final List<SurveyDto> customerSurveys;
+    
+    private final List<LoanDetailDto> closedLoanAccounts;
+    private final List<SavingsDetailDto> closedSavingsAccounts;
 
     public ClientInformationDto(final ClientDisplayDto clientDisplay,
             final CustomerAccountSummaryDto customerAccountSummary,
@@ -71,9 +75,38 @@ public class ClientInformationDto implements Serializable {
         this.customerMeeting = customerMeeting;
         this.activeSurveys = activeSurveys;
         this.customerSurveys = customerSurveys;
+        this.closedLoanAccounts = Collections.emptyList();
+        this.closedSavingsAccounts = Collections.emptyList();
     }
 
-    public ClientDisplayDto getClientDisplay() {
+    public ClientInformationDto(final ClientDisplayDto clientDisplay,
+    		final CustomerAccountSummaryDto customerAccountSummary,
+    		final ClientPerformanceHistoryDto clientPerformanceHistory,
+    		final CustomerAddressDto address,
+    		final List<CustomerNoteDto> recentCustomerNotes,
+    		final List<CustomerFlagDto> customerFlags,
+    		final List<LoanDetailDto> loanAccountsInUse,
+    		final List<SavingsDetailDto> savingsAccountsInUse,
+    		final CustomerMeetingDto customerMeeting, Boolean activeSurveys,
+    		final List<SurveyDto> customerSurveys,
+    		final List<LoanDetailDto> closedLoanAccounts,
+    		final List<SavingsDetailDto> closedSavingsAccounts) {
+		this.clientDisplay = clientDisplay;
+		this.customerAccountSummary = customerAccountSummary;
+		this.clientPerformanceHistory = clientPerformanceHistory;
+		this.address = address;
+		this.recentCustomerNotes = recentCustomerNotes;
+		this.customerFlags = customerFlags;
+		this.loanAccountsInUse = loanAccountsInUse;
+		this.savingsAccountsInUse = savingsAccountsInUse;
+		this.customerMeeting = customerMeeting;
+		this.activeSurveys = activeSurveys;
+		this.customerSurveys = customerSurveys;
+		this.closedLoanAccounts = closedLoanAccounts;
+		this.closedSavingsAccounts = closedSavingsAccounts;
+	}
+
+	public ClientDisplayDto getClientDisplay() {
         return this.clientDisplay;
     }
 
@@ -116,4 +149,12 @@ public class ClientInformationDto implements Serializable {
     public List<SurveyDto> getCustomerSurveys() {
         return this.customerSurveys;
     }
+
+	public List<LoanDetailDto> getClosedLoanAccounts() {
+		return closedLoanAccounts;
+	}
+
+	public List<SavingsDetailDto> getClosedSavingsAccounts() {
+		return closedSavingsAccounts;
+	}
 }
