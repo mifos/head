@@ -121,5 +121,7 @@
         "ethnicity": null,
         "areFamilyDetailsRequired": false,
         "spouseFatherValue": "Spouse"
-    }
+    },
+    "closedLoanAccounts":[],
+    "closedSavingsAccounts":[]
 }
