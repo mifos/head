@@ -27,6 +27,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="review_transaction_savings"></span>
@@ -143,7 +144,7 @@ explanation of the license and how it is applied.
 	                <mifos:mifoslabel name="Savings.amount" isColonRequired="Yes"/>
                 </td>
                 <td width="78%" class="fontnormal">
-	                <c:out value="${sessionScope.savingsDepositWithdrawalForm.amount}"/>
+	                <fmt:formatNumber value="${sessionScope.savingsDepositWithdrawalForm.amount}"/>
                 </td>
               </tr>
               

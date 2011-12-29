@@ -26,6 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="previewsavingsaccount"></span>
@@ -92,7 +93,7 @@ explanation of the license and how it is applied.
 	                </c:choose>
                 </span> 
                 
-                <c:out value="${savingsActionForm.recommendedAmount}"/>
+                <fmt:formatNumber value="${savingsActionForm.recommendedAmount}"/>
                     <c:choose>
 	                    <c:when test="${sessionScope.BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
 	                    (<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}" 

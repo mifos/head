@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="continuecreatesavingsaccount"></span>
@@ -160,7 +160,7 @@ explanation of the license and how it is applied.
                 <tr class="fontnormal">
                   <td width="35%" align="right"><mifos:mifoslabel name="Savings.maxAmountPerWithdrawl" isColonRequired="yes"/><br></td>
                   <td width="65%" valign="top">
-	                  <c:out value="${savingsOffering.maxAmntWithdrawl}" />
+	                  <fmt:formatNumber value="${savingsOffering.maxAmntWithdrawl}" />
                   </td>
                 </tr>
                 <tr class="fontnormal">
@@ -215,7 +215,7 @@ explanation of the license and how it is applied.
                   <mifos:mifoslabel name="Savings.rateCalculation" isColonRequired="yes"/>
                   </td>
                   <td valign="top">
-	                  <c:out value="${savingsOffering.minAmntForInt}" />
+	                  <fmt:formatNumber value="${savingsOffering.minAmntForInt}" />
                   </td>
                 </tr>
                 <tr class="fontnormal">
@@ -224,7 +224,7 @@ explanation of the license and how it is applied.
                   <mifos:mifoslabel name="Savings.rate" isColonRequired="yes"/>
                   </td>
                   <td valign="top">
-                  	<c:out value="${savingsOffering.interestRate}" /> <mifos:mifoslabel name="Savings.perc"/>
+                  	<fmt:formatNumber value="${savingsOffering.interestRate}" /> <mifos:mifoslabel name="Savings.perc"/>
                   </td>
                 </tr>
               </table>

@@ -26,6 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
     <span id="page.id" title="applyadjustmentpreview"></span>
@@ -84,7 +85,7 @@ explanation of the license and how it is applied.
                 <mifos:mifoslabel name="Savings.amount" isColonRequired="yes"/><br>
                 </td>
                 <td width="81%" class="fontnormal">
-                <c:out value="${sessionScope.savingsApplyAdjustmentActionForm.lastPaymentAmount}"/>
+                <fmt:formatNumber value="${sessionScope.savingsApplyAdjustmentActionForm.lastPaymentAmount}"/>
                 <c:if test="${isLastPaymentValid == 1}">
                 &nbsp;  <c:if test="${(!empty clientName) or (BusinessKey.customer.customerLevel.id!=1)}"> <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/> 
                   	<mifos:mifoslabel name="Savings.clientName"/>:</c:if>

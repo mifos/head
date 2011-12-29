@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="createsavingsaccountpreview"></span>
@@ -142,7 +142,7 @@ explanation of the license and how it is applied.
                       </span><br>
                       <span class="fontnormalbold">
                         <mifos:mifoslabel name="Savings.maxAmountPerWithdrawl" isColonRequired="yes"/>
-                      </span><c:out value="${savingsOffering.maxAmntWithdrawl}"/><br>                        
+                      </span><fmt:formatNumber value="${savingsOffering.maxAmntWithdrawl}"/><br>                        
                       <span class="fontnormalbold">
                         <mifos:mifoslabel name="Savings.balanceUsedFor"/>
 		                <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
@@ -181,13 +181,13 @@ explanation of the license and how it is applied.
                         <mifos:mifoslabel name="Savings.minBalanceRequired"/>
                   		<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
                  		<mifos:mifoslabel name="Savings.rateCalculation" isColonRequired="yes"/>
-                      </span><c:out value="${savingsOffering.minAmntForInt}" /><br>
+                      </span><fmt:formatNumber value="${savingsOffering.minAmntForInt}" /><br>
                       <span class="fontnormalbold">
                         <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
                   		<mifos:mifoslabel name="Savings.rate" isColonRequired="yes"/>
                       </span>
                       <span class="fontnormal">
-	                        <c:out value="${savingsOffering.interestRate}" /> <mifos:mifoslabel name="Savings.perc"/>
+	                        <fmt:formatNumber value="${savingsOffering.interestRate}" /> <mifos:mifoslabel name="Savings.perc"/>
                       </span><br><br>
                    
                     <span class="fontnormalbold">
@@ -200,7 +200,7 @@ explanation of the license and how it is applied.
 	                  </c:otherwise>
 	                </c:choose>
                     </span>
-                    <span class="fontnormal"> <c:out value="${savingsActionForm.recommendedAmount}"/>                    
+                    <span class="fontnormal"> <fmt:formatNumber value="${savingsActionForm.recommendedAmount}"/>                    
                     
                     <c:choose>
 	                    <c:when test="${client.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">

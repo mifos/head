@@ -28,6 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@taglib uri="/mifos/savingsoverdue" prefix="savingsoverdue"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="savingsaccountdepositduedetails"></span>
@@ -90,7 +91,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="Savings.nextdeposit" />
 								</td>
 								<td align="right" class="drawtablerow">
-									<c:out value="${BusinessKey.totalAmountDueForNextInstallment}" />
+									<fmt:formatNumber value="${BusinessKey.totalAmountDueForNextInstallment}" />
 								</td>
 								<td align="right" class="drawtablerow">
 									<c:choose>
@@ -122,7 +123,7 @@ explanation of the license and how it is applied.
 									<em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <mifos:mifoslabel name="Savings.subtotal" /> </em>
 								</td>
 								<td align="right" class="drawtablerow">
-									<c:out value="${BusinessKey.totalAmountInArrears}" />
+									<fmt:formatNumber value="${BusinessKey.totalAmountInArrears}" />
 								</td>
 								<td align="right" class="drawtablerow">
 									<c:choose>
@@ -146,7 +147,7 @@ explanation of the license and how it is applied.
 									</c:if>
 								</td>
 								<td align="right" class="drawtablerow">
-									<c:out value="${BusinessKey.totalAmountDue}" />
+									<fmt:formatNumber value="${BusinessKey.totalAmountDue}" />
 								</td>
 								<td align="right" class="drawtablerow">
 									&nbsp;
