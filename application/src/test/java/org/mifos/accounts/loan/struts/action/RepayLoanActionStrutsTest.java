@@ -271,7 +271,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         SecurityContext securityContext = new SecurityContextImpl();
         MifosUser principal = new MifosUser(userContext.getId(), userContext.getBranchId(), userContext.getLevelId(),
                 new ArrayList<Short>(userContext.getRoles()), userContext.getName(), "".getBytes(),
-                true, true, true, true, new ArrayList<GrantedAuthority>());
+                true, true, true, true, new ArrayList<GrantedAuthority>(), userContext.getLocaleId());
         Authentication authentication = new TestingAuthenticationToken(principal, principal);
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);

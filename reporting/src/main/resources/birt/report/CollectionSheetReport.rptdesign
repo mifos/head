@@ -72,11 +72,6 @@
             </structure>
         </scalar-parameter>
         <scalar-parameter name="meetingDate" id="1460">
-        	<method name="validate"><![CDATA[
-        		inputDate = new Date(params["meetingDate"].value); 
-        		centerBO = (new Packages.org.mifos.customers.persistence.CustomerDaoHibernate()).findCustomerById(params["centerId"].value);
-        		centerBO.getCustomerMeetingValue().isValidMeetingDate(inputDate, 1);
-        	]]></method>
             <property name="valueType">static</property>
             <property name="dataType">string</property>
             <text-property name="promptText">Enter Date (DD/MM/YYYY)</text-property>
