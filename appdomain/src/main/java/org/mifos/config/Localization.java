@@ -150,6 +150,8 @@ public class Localization {
             LOCALE_MAP.put((short) 12, new Locale("te", "IN")); // Tegulu
             LOCALE_MAP.put((short) 13, new Locale("hi", "IN")); // Hindi
             LOCALE_MAP.put((short) 14, Locale.GERMAN);
+            LOCALE_MAP.put((short) 15, new Locale("ru")); // Georgian
+            LOCALE_MAP.put((short) 16, new Locale("ka")); // Russian
         }
     }
 
