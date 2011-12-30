@@ -176,11 +176,11 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         //Then
         loanAccountPage.verifyStatus("Closed- Obligation met");
         String[][] accountSummaryTable = {{"", "Original Loan", "Amount paid", "Loan balance"},
-                {"Principal", "2500.0", "2500.0", "0.0"},
-                {"Interest", "9.1", "9.1", "0.0"},
-                {"Fees", "0.0", "0.0", "0.0"},
-                {"Penalty", "0.0", "0.0", "0.0"},
-                {"Total", "2509.1", "2509.1", "0.0"}};
+                {"Principal", "2,500", "2,500", "0"},
+                {"Interest", "9.1", "9.1", "0"},
+                {"Fees", "0", "0", "0"},
+                {"Penalty", "0", "0", "0"},
+                {"Total", "2,509.1", "2,509.1", "0"}};
         loanAccountPage.verifyAccountSummary(accountSummaryTable);
         loanAccountPage.navigateToAccountActivityPage();
         Assert.assertEquals("Loan Repayment", selenium.getTable("accountActivityTable.2.1").trim());
