@@ -151,8 +151,8 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
             .navigateToOnlyLoanAccount();
 
         // Then
-        loanAccountPage.verifyPrincipalOriginal("2000.0");
-        loanAccountPage.verifyPrincipalBalance("2000.0");
+        loanAccountPage.verifyPrincipalOriginal("2,000");
+        loanAccountPage.verifyPrincipalBalance("2,000");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception

@@ -242,10 +242,10 @@ public class MpesaImportTest extends UiTestCaseBase {
 
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage("000100000000013");
         loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE);
-        loanAccountPage.verifyExactLoanAmount("2000.0");
+        loanAccountPage.verifyExactLoanAmount("2,000");
 
         SavingsAccountDetailPage savingsAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage("000100000000015");
-        savingsAccountDetailPage.verifySavingsAmount("0.0");
+        savingsAccountDetailPage.verifySavingsAmount("0");
 
         adminPage = navigationHelper.navigateToAdminPage();
         importTransactionsPage = adminPage.navigateToImportTransactionsPage();
