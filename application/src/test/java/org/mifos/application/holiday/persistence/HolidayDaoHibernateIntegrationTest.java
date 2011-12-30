@@ -106,6 +106,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
     }
 
     @Test
+    @Ignore
     public void sameDayHolidayIsNotFutureRepaymentHoliday() {
         DateTime secondLastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight().toDateTime();
         Holiday sameDayRepaymentHoliday = new HolidayBuilder().from(secondLastDayOfYear).to(secondLastDayOfYear).withSameDayAsRule().build();
@@ -114,6 +115,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
     }
 
     @Test
+    @Ignore
     public void nextDayRepaymentIsFutureRepaymentHoliday() {
         DateTime secondLastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight().toDateTime();
         Holiday nextDayRepaymentHoliday = new HolidayBuilder().from(secondLastDayOfYear).to(secondLastDayOfYear).withNextMeetingRule().build();
