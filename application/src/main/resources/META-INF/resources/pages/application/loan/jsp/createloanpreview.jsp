@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="CreateLoanPreview"></span>
@@ -287,7 +287,7 @@ explanation of the license and how it is applied.
 												<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
 												<mifos:mifoslabel name="loan.interest_rate" />
 												:&nbsp; <span class="fontnormal"> <c:out value="${interestRate}" /> <mifos:mifoslabel name="loan.allowed_interest1" /> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
-														name="loan.allowed_interest2" /> :&nbsp; <c:out value="${LoanOffering.minInterestRate}" />&nbsp; - &nbsp; <c:out value="${LoanOffering.maxInterestRate}" />) </span>
+														name="loan.allowed_interest2" /> :&nbsp; <fmt:formatNumber value="${LoanOffering.minInterestRate}" />&nbsp; - &nbsp; <formatNumber value="${LoanOffering.maxInterestRate}" />) </span>
 											</td>
 										</tr>
 										<tr>

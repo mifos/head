@@ -29,6 +29,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <tiles:insert definition=".withoutmenu">
@@ -204,7 +205,7 @@ explanation of the license and how it is applied.
 											<td width="100%" height="23" class="fontnormalbold">
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 												<mifos:mifoslabel name="loan.amt" /> :&nbsp;
-												<span class="fontnormal"> <span id="schedulepreview.text.loanamount"><c:out value="${loanAmount}" /></span> <br> </span>
+												<span class="fontnormal"> <span id="schedulepreview.text.loanamount"><fmt:formatNumber value="${loanAmount}" /></span> <br> </span>
 												<mifos:mifoslabel name="loan.proposed_date" /> :&nbsp;
 												<span class="fontnormal">
 												    <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,disbursementDate)}" /> <br>
@@ -220,7 +221,7 @@ explanation of the license and how it is applied.
                                                                 :&nbsp;
                                                             </td>
                                                             <td class="fontnormal" align="left">
-                                                                <c:out value="${accountFee.amount}" />
+                                                                <fmt:formatNumber value="${accountFee.amount}" />
                                                                 &nbsp;&nbsp;
                                                             </td>
                                                         </tr>
@@ -257,7 +258,7 @@ explanation of the license and how it is applied.
                                                                 bundle="ProductDefUIResources" />
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <c:out value="${loanAccountActionForm.minimumGapInDays}" />
+                                                            <fmt:formatNumber value="${loanAccountActionForm.minimumGapInDays}" />
                                                             <span id="days"> <mifos:mifoslabel
                                                                 name="product.days" bundle="ProductDefUIResources" /> </span>
                                                         </c:otherwise>
@@ -273,7 +274,7 @@ explanation of the license and how it is applied.
                                                                 bundle="ProductDefUIResources" />
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <c:out value="${loanAccountActionForm.maximumGapInDays}" />
+                                                            <fmt:formatNumber value="${loanAccountActionForm.maximumGapInDays}" />
                                                             <span id="days"> <mifos:mifoslabel
                                                                 name="product.days" bundle="ProductDefUIResources" /> </span>
                                                         </c:otherwise>
@@ -289,7 +290,7 @@ explanation of the license and how it is applied.
                                                                 bundle="ProductDefUIResources" />
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <c:out value="${loanAccountActionForm.minInstallmentAmount}" />
+                                                            <fmt:formatNumber value="${loanAccountActionForm.minInstallmentAmount}" />
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </span><br><br>
@@ -340,24 +341,24 @@ explanation of the license and how it is applied.
                                                                     <c:forEach var="installments" items="${loanAccountActionForm.installments}" varStatus="loopStatus">
                                                                     <tr>
                                                                         <td class="drawtablerow" align="center">
-                                                                            <c:out value="${installments.installment}" />
+                                                                            <fmt:formatNumber value="${installments.installment}" />
                                                                         </td>
                                                                         <td class="drawtablerow" align="center">
                                                                             <html-el:text styleId="installment.dueDate.${loopStatus.index}" styleClass="date-pick" indexed="true" name="installments" property="dueDate" size="10" />
                                                                         </td>
                                                                         <td class="drawtablerow" align="center">
-                                                                            <c:out value="${installments.principal}" />
+                                                                            <fmt:formatNumber value="${installments.principal}" />
                                                                         </td>
                                                                         <td class="drawtablerow" align="center">
-                                                                            <c:out value="${installments.interest}" />
+                                                                            <fmt:formatNumber value="${installments.interest}" />
                                                                         </td>
                                                                         <td class="drawtablerow" align="center">
-                                                                            <c:out value="${installments.fees}" />
+                                                                            <fmt:formatNumber value="${installments.fees}" />
                                                                         </td>
                                                                         <td class="drawtablerow" align="center">
                                                                             <c:choose>
                                                                                 <c:when test="${loopStatus.index == (fn:length(loanAccountActionForm.installments) - 1)}">
-                                                                                    <c:out value="${installments.total}" />
+                                                                                    <fmt:formatNumber value="${installments.total}" />
                                                                                 </c:when>
                                                                                 <c:otherwise>
                                                                                     <html-el:text styleId="installments.total" name="installments" indexed="true" property="total" size="10" />
@@ -405,7 +406,7 @@ explanation of the license and how it is applied.
                                                         <c:forEach var="paymentDataBeans" items="${loanAccountActionForm.paymentDataBeans}" varStatus="loopStatus">
                                                         <tr>
                                                             <td class="drawtablerow" align="center">
-                                                                <c:out value="${paymentDataBeans.installment.installment}" />
+                                                                <fmt:formatNumber value="${paymentDataBeans.installment.installment}" />
                                                             </td>
                                                             <td class="drawtablerow" align="center">
                                                                 <c:choose>
@@ -426,18 +427,18 @@ explanation of the license and how it is applied.
                                                             </td>
                                                             <td> &nbsp; </td>
                                                             <td class="drawtablerow" align="center">
-                                                                <c:out value="${paymentDataBeans.installment.principal}" />
+                                                                <fmt:formatNumber value="${paymentDataBeans.installment.principal}" />
                                                             </td>
                                                             <td class="drawtablerow" align="center">
-                                                                <c:out value="${paymentDataBeans.installment.interest}" />
+                                                                <fmt:formatNumber value="${paymentDataBeans.installment.interest}" />
                                                             </td>
                                                             <td class="drawtablerow" align="center">
-                                                                <c:out value="${paymentDataBeans.installment.fees}" />
+                                                                <fmt:formatNumber value="${paymentDataBeans.installment.fees}" />
                                                             </td>
                                                             <td class="drawtablerow" align="center">
                                                                 <c:choose>
                                                                     <c:when test="${loanAccountActionForm.variableInstallmentsAllowed == false || loopStatus.index == (fn:length(loanAccountActionForm.paymentDataBeans) - 1)}">
-                                                                        <c:out value="${paymentDataBeans.total}" />
+                                                                        <fmt:formatNumber value="${paymentDataBeans.total}" />
                                                                     </c:when>
                                                                     <c:otherwise>
                                                                         <html-el:text styleId="paymentDataBeans.total"
@@ -496,13 +497,13 @@ explanation of the license and how it is applied.
                                                                         <c:out value="${cashflowDataDto.year}" />
                                                                     </td>
                                                                     <td class="drawtablerow" align="center">
-                                                                        <c:out value="${cashflowDataDto.cumulativeCashFlow}" />
+                                                                        <fmt:formatNumber value="${cashflowDataDto.cumulativeCashFlow}" />
                                                                     </td>
                                                                     <td class="drawtablerow" align="center">
-																		<c:out value="${cashflowDataDto.diffCumulativeCashflowAndInstallment}" />
+																		<fmt:formatNumber value="${cashflowDataDto.diffCumulativeCashflowAndInstallment}" />
                                                                     </td>
                                                                     <td class="drawtablerow" align="center">
-                                                                        <c:out value="${cashflowDataDto.diffCumulativeCashflowAndInstallmentPercent}" />
+                                                                        <fmt:formatNumber value="${cashflowDataDto.diffCumulativeCashflowAndInstallmentPercent}" />
                                                                     </td>
                                                                     <td class="drawtablerow" align="left">
                                                                         <c:out value="${cashflowDataDto.notes}" />

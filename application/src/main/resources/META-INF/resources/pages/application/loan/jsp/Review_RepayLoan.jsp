@@ -29,6 +29,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="ReviewRepayLoan"></span>
@@ -119,7 +120,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="loan.amount"  />:&nbsp;
 								</td>
 								<td class="fontnormal">
-								<c:out value="${sessionScope.repayLoanActionForm.amount}" />
+								<fmt:formatNumber value="${sessionScope.repayLoanActionForm.amount}" />
 								</td>
 							</tr>
 							<tr>

@@ -133,7 +133,7 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
 
         navigationHelper.navigateToLoanAccountPage(loanAccountId);
         //veryfy "USDfee"(10) and "USDfeeAdditional"(20)
-        Assert.assertEquals(selenium.getTable("loanSummaryTable.3.1"),"30.00");
+        Assert.assertEquals(selenium.getTable("loanSummaryTable.3.1"),"30");
         //restore parameters
         propertiesHelper.setDigitsAfterDecimal(1);
     }

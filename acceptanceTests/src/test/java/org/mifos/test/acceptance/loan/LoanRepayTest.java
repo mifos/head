@@ -108,21 +108,21 @@ public class LoanRepayTest extends UiTestCaseBase {
     private void verifyLoanStateAndAccountSummary() {
         LoanAccountPage accountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         Assert.assertTrue(selenium.isTextPresent("Closed- Obligation met"));
-        Assert.assertEquals(accountPage.getOriginalLoanAmount(), "1000.0");
-        Assert.assertEquals(accountPage.getPrinciplePaid(), "1000.0");
-        Assert.assertEquals(accountPage.getPrincipleBalance(), "0.0");
+        Assert.assertEquals(accountPage.getOriginalLoanAmount(), "1,000");
+        Assert.assertEquals(accountPage.getPrinciplePaid(), "1,000");
+        Assert.assertEquals(accountPage.getPrincipleBalance(), "0");
         Assert.assertEquals(accountPage.getOriginalInterestAmount(), "4.6");
         Assert.assertEquals(accountPage.getInterestPaid(), "4.6");
-        Assert.assertEquals(accountPage.getInterestBalance(), "0.0");
-        Assert.assertEquals(accountPage.getOriginalFeesAmount(), "10.0");
-        Assert.assertEquals(accountPage.getFeesPaid(), "10.0");
-        Assert.assertEquals(accountPage.getFeesBalance(), "0.0");
-        Assert.assertEquals(accountPage.getOriginalPenaltyAmount(), "5.0");
-        Assert.assertEquals(accountPage.getPenaltyPaid(), "5.0");
-        Assert.assertEquals(accountPage.getPenaltyBalance(), "0.0");
-        Assert.assertEquals(accountPage.getOriginalTotalAmount(), "1019.6");
-        Assert.assertEquals(accountPage.getTotalPaid(), "1019.6");
-        Assert.assertEquals(accountPage.getTotalBalance(), "0.0");
+        Assert.assertEquals(accountPage.getInterestBalance(), "0");
+        Assert.assertEquals(accountPage.getOriginalFeesAmount(), "10");
+        Assert.assertEquals(accountPage.getFeesPaid(), "10");
+        Assert.assertEquals(accountPage.getFeesBalance(), "0");
+        Assert.assertEquals(accountPage.getOriginalPenaltyAmount(), "5");
+        Assert.assertEquals(accountPage.getPenaltyPaid(), "5");
+        Assert.assertEquals(accountPage.getPenaltyBalance(), "0");
+        Assert.assertEquals(accountPage.getOriginalTotalAmount(), "1,019.6");
+        Assert.assertEquals(accountPage.getTotalPaid(), "1,019.6");
+        Assert.assertEquals(accountPage.getTotalBalance(), "0");
     }
 
     private void testRepayLoanPageWhenProductHasInterestWaiver() {

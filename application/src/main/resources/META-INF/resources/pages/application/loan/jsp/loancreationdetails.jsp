@@ -320,7 +320,7 @@ explanation of the license and how it is applied.
 													bundle="ProductDefUIResources" />
 											</c:when>
 											<c:otherwise>
-												<c:out
+												<fmt:formatNumber
 													value="${loanAccountActionForm.minimumGapInDays}" />
 												<span id="days"> <mifos:mifoslabel
 													name="product.days" bundle="ProductDefUIResources" /> </span>
@@ -339,7 +339,7 @@ explanation of the license and how it is applied.
 													bundle="ProductDefUIResources" />
 											</c:when>
 											<c:otherwise>
-												<c:out
+												<fmt:formatNumber
 													value="${loanAccountActionForm.maximumGapInDays}" />
 												<span id="days"> <mifos:mifoslabel
 													name="product.days" bundle="ProductDefUIResources" /> </span>
@@ -357,7 +357,7 @@ explanation of the license and how it is applied.
 													bundle="ProductDefUIResources" />
 											</c:when>
 											<c:otherwise>
-												<c:out
+												<fmt:formatNumber
 													value="${loanAccountActionForm.minInstallmentAmount}" />
 											</c:otherwise>
 										</c:choose></td>
@@ -378,8 +378,8 @@ explanation of the license and how it is applied.
 												name="loan.amount" mandatory="yes"   /></span>:</td>
 											<td valign="top"><html-el:text
 												property="loanAmount" readonly="false" styleId="loancreationdetails.input.sumLoanAmount"/> <mifos:mifoslabel
-												name="loan.allowed_amount" /> &nbsp; <c:out
-												value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
+												name="loan.allowed_amount" /> &nbsp; <fmt:formatNumber
+												value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <fmt:formatNumber
 												value="${loanAccountActionForm.maxLoanAmount}" /> )</td>
 									</tr>
 								</c:if>
@@ -397,8 +397,8 @@ explanation of the license and how it is applied.
 										<fmt:message key="loan.allowedInterest">
 											<fmt:param><mifos:mifoslabel
 												name="${ConfigurationConstants.INTEREST}" /></fmt:param>
-										</fmt:message> &nbsp; <c:out
-										value="${LoanOffering.minInterestRate}" /> &nbsp; - &nbsp; <c:out
+										</fmt:message> &nbsp; <fmt:formatNumber
+										value="${LoanOffering.minInterestRate}" /> &nbsp; - &nbsp; <fmt:formatNumber
 										value="${LoanOffering.maxInterestRate}" /> %)</td>
 								</tr>
 								<tr class="fontnormal">
@@ -407,9 +407,9 @@ explanation of the license and how it is applied.
 										name="loan.no_of_inst" mandatory="yes" /></span>:</td>
 									<td valign="top"><mifos:mifosnumbertext styleId="loancreationdetails.input.numberOfInstallments"
 										property="noOfInstallments" /> <mifos:mifoslabel
-										name="loan.allowed_no_of_inst" /> &nbsp; <c:out
+										name="loan.allowed_no_of_inst" /> &nbsp; <fmt:formatNumber
 										value="${loanAccountActionForm.minNoInstallments}" /> &nbsp; - &nbsp;
-									<c:out value="${loanAccountActionForm.maxNoInstallments}" /> )</td>
+									<fmt:formatNumber value="${loanAccountActionForm.maxNoInstallments}" /> )</td>
 								</tr>
 								<tr class="fontnormal">
 
@@ -668,7 +668,7 @@ explanation of the license and how it is applied.
 											<tr class="fontnormal">
 												<td width="20%"><c:choose>
 													<c:when test="${adminFees.periodic == true}">
-														<c:out value="${adminFees.amount}" />
+														<fmt:formatNumber value="${adminFees.amount}" />
 													</c:when>
 													<c:otherwise>
 														<html-el:text

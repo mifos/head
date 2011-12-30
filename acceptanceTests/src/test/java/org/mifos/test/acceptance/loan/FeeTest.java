@@ -83,9 +83,9 @@ public class FeeTest extends UiTestCaseBase {
         params.setType(ChargeParameters.MISC_FEES);
         params.setAmount("10");
 
-        loanTestHelper.verifyOriginalValues(searchParams, "10000.0", "461.0", "0.0", "0.0", "10461.0");
+        loanTestHelper.verifyOriginalValues(searchParams, "10,000", "461", "0", "0", "10,461");
         loanTestHelper.applyCharge(accountId, params);
-        loanTestHelper.verifyOriginalValues(searchParams, "10000.0", "461.0", "10.0", "0.0", "10471.0");
+        loanTestHelper.verifyOriginalValues(searchParams, "10,000", "461", "10", "0", "10,471");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -98,11 +98,11 @@ public class FeeTest extends UiTestCaseBase {
         feeParameters.setAmount("15");
         feeParameters.setType(ChargeParameters.MISC_FEES);
 
-        loanTestHelper.verifyOriginalValues(searchParams, "10000.0", "461.0", "0.0", "0.0", "10461.0");
+        loanTestHelper.verifyOriginalValues(searchParams, "10,000", "461", "0", "0", "10,461");
         loanTestHelper.applyCharge(accountId, feeParameters);
-        loanTestHelper.verifyOriginalValues(searchParams, "10000.0", "461.0", "15.0", "0.0", "10476.0");
+        loanTestHelper.verifyOriginalValues(searchParams, "10,000", "461", "15", "0", "10,476");
         loanTestHelper.waiveFee(accountId);
-        loanTestHelper.verifyOriginalValues(searchParams, "10000.0", "461.0", "0.0", "0.0", "10461.0");
+        loanTestHelper.verifyOriginalValues(searchParams, "10,000", "461", "0", "0", "10,461");
     }
 
 

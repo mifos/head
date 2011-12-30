@@ -113,10 +113,10 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyLoanIsPendingApproval();
         loanAccountPage.verifyNumberOfInstallments("4");
         loanAccountPage.verifyDisbursalDate("25/02/2011");
-        loanAccountPage.verifyPrincipalOriginal("3000.0");
-        loanAccountPage.verifyLoanTotalBalance("3466.0");
-        loanAccountPage.verifyFeesOriginal("410.0");
-        loanAccountPage.verifyInterestOriginal("56.0");
+        loanAccountPage.verifyPrincipalOriginal("3,000");
+        loanAccountPage.verifyLoanTotalBalance("3,466");
+        loanAccountPage.verifyFeesOriginal("410");
+        loanAccountPage.verifyInterestOriginal("56");
         verifyFees();
         ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
         viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, 1, "04-Mar-2011");
@@ -167,8 +167,8 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     }
             
     private void verifyFees() {
-        Assert.assertTrue(selenium.isTextPresent("loanWeeklyFee: 100.0 ( Recur every 1 week(s))"));
-        Assert.assertTrue(selenium.isTextPresent("oneTimeFee: 10.0"));
+        Assert.assertTrue(selenium.isTextPresent("loanWeeklyFee: 100 ( Recur every 1 week(s))"));
+        Assert.assertTrue(selenium.isTextPresent("oneTimeFee: 10"));
     }
     
     /**
@@ -205,8 +205,8 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyLoanIsPendingApproval();
         loanAccountPage.verifyNumberOfInstallments("10");
         loanAccountPage.verifyDisbursalDate("29/04/2011");
-        loanAccountPage.verifyPrincipalOriginal("1500.0");
-        loanAccountPage.verifyLoanTotalBalance("1500.0");
+        loanAccountPage.verifyPrincipalOriginal("1,500");
+        loanAccountPage.verifyLoanTotalBalance("1,500");
         ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
         viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, 1, "06-May-2011");
         viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(4, 1, "13-May-2011");
