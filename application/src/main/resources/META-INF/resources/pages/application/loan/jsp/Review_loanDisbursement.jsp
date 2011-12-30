@@ -121,7 +121,7 @@ explanation of the license and how it is applied.
 							<td width="28%" align="right" class="fontnormalbold"><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" /><mifos:mifoslabel
 								name="loan.amt" />:&nbsp;</td>
-							<td width="72%" class="fontnormal"><c:out
+							<td width="72%" class="fontnormal"><fmt:formatNumber
 								value="${loanDisbursementActionForm.loanAmount}" /></td>
 						</tr>
 						<tr>
@@ -147,7 +147,7 @@ explanation of the license and how it is applied.
 						<tr>
 							<td width="28%" align="right" class="fontnormalbold"><mifos:mifoslabel
 								name="loan.amount" />:&nbsp;</td>
-							<td width="72%" class="fontnormal"><c:out
+							<td width="72%" class="fontnormal"><fmt:formatNumber
 								value="${loanDisbursementActionForm.amount}" /></td>
 						</tr>
 						<tr>

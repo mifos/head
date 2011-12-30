@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
@@ -204,7 +204,7 @@ explanation of the license and how it is applied.
 												<span id="CreateMultipleLoanAccountsSearchResults.maxLoanAmount.${loopStatus.index}"><c:out value="${clientDetail.maxLoanAmount}" /></span>
 											</td>
 											<td width="15%" valign="top" class="drawtablerow">
-												<span id="CreateMultipleLoanAccountsSearchResults.NoOfInstall.${loopStatus.index}"><c:out value="${clientDetail.defaultNoOfInstall}" /></span> 
+												<span id="CreateMultipleLoanAccountsSearchResults.NoOfInstall.${loopStatus.index}"><fmt:formatNumber value="${clientDetail.defaultNoOfInstall}" /></span> 
 											</td>
 											<td width="20%" valign="top" class="drawtablerow">
 												<mifos:select property="clientDetails[${loopStatus.index}].businessActivity" style="width:136px;">

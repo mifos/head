@@ -70,7 +70,7 @@ public class PenaltyTest extends UiTestCaseBase {
         params.setType(ChargeParameters.MISC_PENALTY);
         params.setAmount("10");
         LoanAccountPage loanAccountPage = loanTestHelper.applyCharge("000100000000038", params);
-        verifySummaryAndActivity(loanAccountPage, "10.0", "10.0", "Misc penalty applied", 2);
+        verifySummaryAndActivity(loanAccountPage, "10.0", "10", "Misc penalty applied", 2);
         
         loanAccountPage.navigateBack();
         verifyRepaymentSchelude(loanAccountPage, "10.0", "7.0", "3.0");
@@ -82,7 +82,7 @@ public class PenaltyTest extends UiTestCaseBase {
                     penalty, String
                     penaltyBalance, String
                     activity, int row) {
-        Assert.assertEquals(loanAccountPage.getPenaltyPaid(), "0.0");
+        Assert.assertEquals(loanAccountPage.getPenaltyPaid(), "0");
         Assert.assertEquals(loanAccountPage.getPenaltyBalance(), penaltyBalance);
         AccountActivityPage accountActivityPage = loanAccountPage.navigateToAccountActivityPage();
         Assert.assertEquals(accountActivityPage.getLastPenalty(row), penalty);
@@ -97,10 +97,10 @@ public class PenaltyTest extends UiTestCaseBase {
         feeParameters.setAmount("15");
         feeParameters.setType(ChargeParameters.MISC_PENALTY);
         LoanAccountPage loanAccountPage = loanTestHelper.applyCharge(accountId, feeParameters);
-        verifySummaryAndActivity(loanAccountPage, "15.0", "15.0", "Misc penalty applied", 2);
+        verifySummaryAndActivity(loanAccountPage, "15.0", "15", "Misc penalty applied", 2);
         loanTestHelper.waivePenalty(accountId);
         loanAccountPage = new NavigationHelper(selenium).navigateToLoanAccountPage(accountId);
-        verifySummaryAndActivity(loanAccountPage, "15.0", "0.0", "Penalty waived", 2);
+        verifySummaryAndActivity(loanAccountPage, "15.0", "0", "Penalty waived", 2);
 
     }
     
