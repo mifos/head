@@ -28,6 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -106,7 +107,7 @@ explanation of the license and how it is applied.
 								<c:choose>
 									<c:when test="${requestScope.method=='loadAdjustment'}">
 										<mifos:mifoslabel name="accounts.last_pmnt"/>:
-										<c:out value="${BusinessKey.lastPmntAmntToBeAdjusted}"/>
+										<fmt:formatNumber value="${BusinessKey.lastPmntAmntToBeAdjusted}"/>
 										<br><br>
 									</c:when>
 									<c:otherwise>
@@ -114,7 +115,7 @@ explanation of the license and how it is applied.
 											<mifos:mifoslabel name="accounts.amnt_tobe_adjusted" />:<br>
 										</td>
 										<td width="75%" class="fontnormal">	
-											<c:out value="${BusinessKey.lastPmntAmntToBeAdjusted}"/>
+											<fmt:formatNumber value="${BusinessKey.lastPmntAmntToBeAdjusted}"/>
 										</td>
 									</tr>	
 									</c:otherwise>
