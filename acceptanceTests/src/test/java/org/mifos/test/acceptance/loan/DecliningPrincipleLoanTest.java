@@ -128,16 +128,16 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     }
 
     private void verifyPayment(String accountId) throws UnsupportedEncodingException {
-        verifyRepaymentAndAdjustment(systemDateTime.plusDays(0), systemDateTime.plusDays(5), "1100.0", RepaymentScheduleData.ACCOUNT_SUMMARY_REPAYMENT_ONE, RepaymentScheduleData.ACCOUNT_SUMMARY_ADJUSTMENT_ONE, LOAN_ACTIVE_GOOD);
+        verifyRepaymentAndAdjustment(systemDateTime.plusDays(0), systemDateTime.plusDays(5), "1,100", RepaymentScheduleData.ACCOUNT_SUMMARY_REPAYMENT_ONE, RepaymentScheduleData.ACCOUNT_SUMMARY_ADJUSTMENT_ONE, LOAN_ACTIVE_GOOD);
         makePaymentAndVerifyPayment(accountId, systemDateTime.plusDays(24), "403", RepaymentScheduleData.MULTIPLE_DUE_FIRST_PAYMENT);//verify first the due fee is knocked
-        verifyRepaymentAndAdjustment(systemDateTime.plusDays(24), systemDateTime.plusDays(25), "1012.8", RepaymentScheduleData.ACCOUNT_SUMMARY_REPAYMENT_TWO, RepaymentScheduleData.ACCOUNT_SUMMARY_ADJUSTMENT_TWO, LOAN_ACTIVE_BAD);
+        verifyRepaymentAndAdjustment(systemDateTime.plusDays(24), systemDateTime.plusDays(25), "1,012.8", RepaymentScheduleData.ACCOUNT_SUMMARY_REPAYMENT_TWO, RepaymentScheduleData.ACCOUNT_SUMMARY_ADJUSTMENT_TWO, LOAN_ACTIVE_BAD);
         makePaymentAndVerifyPayment(accountId, systemDateTime.plusDays(26), "305.1", RepaymentScheduleData.MULTIPLE_DUE_SECOND_PAYMENT);//verify first the due fee is knocked
         makePaymentAndVerifyPayment(accountId, systemDateTime.plusDays(29), "104.4", RepaymentScheduleData.MULTIPLE_DUE_THIRD_PAYMENT);//verify first the due fee is knocked
         makePaymentAndVerifyPayment(accountId, systemDateTime.plusDays(29), "200", RepaymentScheduleData.MULTIPLE_DUE_FORTH_PAYMENT);//verify first the due fee is knocked
         makePaymentAndVerifyPayment(accountId, systemDateTime.plusDays(29), "102.8", RepaymentScheduleData.MULTIPLE_DUE_FIFTH_PAYMENT);//same date, less payment
         makePaymentAndVerifyPayment(accountId, systemDateTime.plusDays(35), "112.3", RepaymentScheduleData.MULTIPLE_DUE_SIXTH_PAYMENT);//verify first the due fee is knocked
         makePaymentAndVerifyPayment(accountId, systemDateTime.plusDays(38), "291.9", RepaymentScheduleData.MULTIPLE_DUE_SEVENTH_PAYMENT);//verify first the due fee is knocked
-        verifyRepaymentAndAdjustment(systemDateTime.plusDays(38), systemDateTime.plusDays(38), "", null, null, LOAN_ACTIVE_BAD);
+        verifyRepaymentAndAdjustment(systemDateTime.plusDays(38), systemDateTime.plusDays(38), "0.2", null, null, LOAN_ACTIVE_BAD);
     }
 
     private void verifyAdjustment() throws UnsupportedEncodingException {

@@ -63,7 +63,7 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public void verifyLoanAmount(String amount) {
-        Assert.assertEquals(Double.parseDouble(getOriginalLoanAmount()), Double.parseDouble(amount));
+        Assert.assertEquals(getOriginalLoanAmount(), formatNumber(amount));
     }
 
     public void verifyExactLoanAmount(String amount) {
@@ -156,7 +156,7 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public void verifyInterestRate(String interestRate) {
-        Assert.assertEquals(selenium.getText("loanaccountdetail.text.interestRate"), interestRate);
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.interestRate"), formatNumber(interestRate));
     }
 
     public void verifyPurposeOfLoan(String purpose) {
@@ -520,6 +520,22 @@ public class LoanAccountPage extends MifosPage {
     
     public void verifyDisbursalDate(String disbursalDate) {
         Assert.assertEquals(selenium.getText("loanaccountdetail.details.disbursaldate"), disbursalDate);
+    }
+    
+    private String formatNumber(final String number) {
+        StringBuilder format = new StringBuilder(number);
+        
+        if(number.endsWith(".0")) {
+            format = format.delete(format.length() - 2, format.length());
+        }
+        
+        if(format.length() > 3) {
+            for(int i = format.length() / 3; i < format.length(); i += 4) {
+                format = format.insert(i, ',');
+            }
+        }
+        
+        return format.toString();
     }
 }
 

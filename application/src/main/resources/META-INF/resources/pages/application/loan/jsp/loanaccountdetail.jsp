@@ -168,7 +168,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								<td width="58%" class="fontnormal"><mifos:mifoslabel
 									name="loan.totalAmtDue" /> <c:out
 									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,loanInformationDto.nextMeetingDate)}" />:
-								<c:out value="${loanInformationDto.totalAmountDue}" /></td>
+								<fmt:formatNumber value="${loanInformationDto.totalAmountDue}" /></td>
 								<%--<span
 										class="fontnormal"><a id="loanaccountdetail.link.viewInstDetails"  href="nextPayment_loanAccount.htm"><mifos:mifoslabel name="loan.view_inst_details" /></a></span><a href="#"><span
 										class="fontnormalbold"> </span></a>--%>
@@ -186,7 +186,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</tr>
 							<tr>
 								<td colspan="2" class="fontnormal"><mifos:mifoslabel
-									name="loan.arrear" />: <c:out
+									name="loan.arrear" />: <fmt:formatNumber
 									value="${loanInformationDto.totalAmountInArrears}" /></td>
 							</tr>
 						</table>
@@ -221,49 +221,49 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						<tr>
 							<td class="drawtablerow"><mifos:mifoslabel
 								name="loan.principal" /></td>
-							<td align="right" class="drawtablerow"><c:out
+							<td align="right" class="drawtablerow"><fmt:formatNumber
 								value="${loanInformationDto.loanSummary.originalPrincipal}" /></td>
-							<td align="right" class="drawtablerow"><c:out
+							<td align="right" class="drawtablerow"><fmt:formatNumber
 								value="${loanInformationDto.loanSummary.principalPaid}" /></td>
-							<td align="right" class="drawtablerow"><c:out
+							<td align="right" class="drawtablerow"><fmt:formatNumber
 								value="${loanInformationDto.loanSummary.principalDue}" /></td>
 						</tr>
 						<tr>
 							<td class="drawtablerow"><mifos:mifoslabel
 								name="${ConfigurationConstants.INTEREST}" /></td>
-							<td align="right" class="drawtablerow"><c:out
+							<td align="right" class="drawtablerow"><fmt:formatNumber
 								value="${loanInformationDto.loanSummary.originalInterest}" /></td>
-							<td align="right" class="drawtablerow"><c:out
+							<td align="right" class="drawtablerow"><fmt:formatNumber
 								value="${loanInformationDto.loanSummary.interestPaid}" /></td>
-							<td align="right" class="drawtablerow"><c:out
+							<td align="right" class="drawtablerow"><fmt:formatNumber
 								value="${loanInformationDto.loanSummary.interestDue}" /></td>
 						</tr>
 						<tr>
 							<td class="drawtablerow"><mifos:mifoslabel name="loan.fees" /></td>
-							<td align="right" class="drawtablerow" id="LoanAccountDetail.text.loanFees"><c:out
+							<td align="right" class="drawtablerow" id="LoanAccountDetail.text.loanFees"><fmt:formatNumber
 								value="${loanInformationDto.loanSummary.originalFees}" /></td>
-							<td align="right" class="drawtablerow"><c:out
+							<td align="right" class="drawtablerow"><fmt:formatNumber
 								value="${loanInformationDto.loanSummary.feesPaid}" /></td>
-							<td align="right" class="drawtablerow"><c:out
+							<td align="right" class="drawtablerow"><fmt:formatNumber
 								value="${loanInformationDto.loanSummary.feesDue}" /></td>
 						</tr>
 						<tr>
 							<td class="drawtablerow"><mifos:mifoslabel
 								name="loan.penalty" /></td>
-							<td align="right" class="drawtablerow"><c:out
+							<td align="right" class="drawtablerow"><fmt:formatNumber
 								value="${loanInformationDto.loanSummary.originalPenalty}" /></td>
-							<td align="right" class="drawtablerow"><c:out
+							<td align="right" class="drawtablerow"><fmt:formatNumber
 								value="${loanInformationDto.loanSummary.penaltyPaid}" /></td>
-							<td align="right" class="drawtablerow"><c:out
+							<td align="right" class="drawtablerow"><fmt:formatNumber
 								value="${loanInformationDto.loanSummary.penaltyDue}" /></td>
 						</tr>
 						<tr>
 							<td class="drawtablerow"><mifos:mifoslabel name="loan.total" /></td>
-							<td align="right" class="drawtablerow"><c:out
+							<td align="right" class="drawtablerow"><fmt:formatNumber
 								value="${loanInformationDto.loanSummary.totalLoanAmnt}" /></td>
-							<td align="right" class="drawtablerow"><c:out
+							<td align="right" class="drawtablerow"><fmt:formatNumber
 								value="${loanInformationDto.loanSummary.totalAmntPaid}" /></td>
-							<td align="right" class="drawtablerow"><c:out
+							<td align="right" class="drawtablerow"><fmt:formatNumber
 								value="${loanInformationDto.loanSummary.totalAmntDue}" /></td>
 						</tr>
 						<tr>
@@ -323,7 +323,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								value="${interestTypeNameLocalised}" /> <br>
 							<fmt:message key="loan.interestRate">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
-							</fmt:message>:&nbsp;<span class="fontnormal"><span id="loanaccountdetail.text.interestRate"><c:out
+							</fmt:message>:&nbsp;<span class="fontnormal"><span id="loanaccountdetail.text.interestRate"><fmt:formatNumber
 								value="${loanInformationDto.interestRate}" /></span>%&nbsp;<mifos:mifoslabel
 								name="loan.apr" /> </span><br>
 							</span> <fmt:message key="loan.interestDisbursement">
@@ -361,14 +361,14 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</c:choose> <br>
 							<mifos:mifoslabel name="loan.grace_period_type" />:&nbsp; <c:out
 								value="${gracePeriodTypeNameLocalised}" /><br>
-							<mifos:mifoslabel name="loan.no_of_inst" />:&nbsp;<span id="loanaccountdetail.text.noOfInst"><c:out
+							<mifos:mifoslabel name="loan.no_of_inst" />:&nbsp;<span id="loanaccountdetail.text.noOfInst"><fmt:formatNumber
 								value="${loanInformationDto.noOfInstallments}" /></span> <mifos:mifoslabel
-								name="loan.allowed_no_of_inst" />&nbsp;<c:out
+								name="loan.allowed_no_of_inst" />&nbsp;<fmt:formatNumber
 								value="${loanInformationDto.minNoOfInstall}" />
-							-&nbsp;<c:out
+							-&nbsp;<fmt:formatNumber
 								value="${loanInformationDto.maxNoOfInstall}" />)
 							<br>
-							<mifos:mifoslabel name="loan.grace_period" />:&nbsp;<c:out
+							<mifos:mifoslabel name="loan.grace_period" />:&nbsp;<fmt:formatNumber
 								value="${loanInformationDto.gracePeriodDuration}" />&nbsp;<mifos:mifoslabel
 								name="loan.inst" /><br>
 							<mifos:mifoslabel name="loan.source_fund" />:&nbsp; <c:out
@@ -502,7 +502,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								<c:if
 									test="${feesSet.feeFrequencyTypeId == '1' && feesSet.feeStatus != '2'}">
 									<c:out value="${feesSet.feeName}" />:
-										<span class="fontnormal"> <c:out
+										<span class="fontnormal"> <fmt:formatNumber
 										value="${feesSet.accountFeeAmount}" />&nbsp;( <mifos:mifoslabel
 										name="loan.periodicityTypeRate" /> <c:out
 										value="${feesSet.meetingRecurrence}" />)
@@ -517,9 +517,9 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</span> <c:forEach items="${loanInformationDto.accountFees}" var="feesSet" varStatus="status">
 								<c:if
 	 								test="${feesSet.feeFrequencyTypeId == '2' && feesSet.feeStatus != '2'}">
-									<span id="loanAccountDetail.text.oneTimeFeeName_<c:out value="${status.count}"/>">
+									<span id="loanAccountDetail.text.oneTimeFeeName_<fmt:formatNumber value="${status.count}"/>">
 										<c:out value="${feesSet.feeName}"/></span>:
-										<span class="fontnormal"> <c:out
+										<span class="fontnormal"> <fmt:formatNumber
 										value="${feesSet.accountFeeAmount}" />&nbsp;
 										<!-- if account state is LOAN_PARTIAL_APPLICATION or LOAN_PENDING_APPROVAL then enable removal -->
 									<c:if test="${loanInformationDto.accountStateId == '1' || loanInformationDto.accountStateId == '2'}">					
@@ -690,17 +690,17 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
-								name="loan.of_payments" /> <c:out
+								name="loan.of_payments" /> <fmt:formatNumber
 								value="${loanInformationDto.performanceHistory.noOfPayments}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
-								name="loan.missed_payments" /> <c:out
+								name="loan.missed_payments" /> <fmt:formatNumber
 								value="${loanInformationDto.performanceHistory.totalNoOfMissedPayments}" /></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
-								name="loan.days_arrears" /><c:out
+								name="loan.days_arrears" /><fmt:formatNumber
 								value="${loanInformationDto.performanceHistory.daysInArrears}" /> </span></td>
 						</tr>
 						<tr>

@@ -286,22 +286,22 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         propertiesHelper.setDigitsAfterDecimal(3);
 
         LoanAccountPage loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000015");
-        loanAccountPage.verifyExactLoanAmount("1000.000");
+        loanAccountPage.verifyExactLoanAmount("1,000");
 
         propertiesHelper.setDigitsAfterDecimal(2);
 
         loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000015");
-        loanAccountPage.verifyExactLoanAmount("1000.00");
+        loanAccountPage.verifyExactLoanAmount("1,000");
 
         propertiesHelper.setDigitsAfterDecimal(0);
 
         loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000015");
-        loanAccountPage.verifyExactLoanAmount("1000");
+        loanAccountPage.verifyExactLoanAmount("1,000");
 
         propertiesHelper.setDigitsAfterDecimal(1);
 
         loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000015");
-        loanAccountPage.verifyExactLoanAmount("1000.0");
+        loanAccountPage.verifyExactLoanAmount("1,000");
 
     }
 

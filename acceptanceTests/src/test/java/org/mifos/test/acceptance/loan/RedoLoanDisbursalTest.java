@@ -95,7 +95,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         paramsPastDate.addClient(2, "3000.0", "0001-Cow Purchase");
         LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursalWithGLIMandLSIM("Default Group", "GroupEmergencyLoan", paramsPastDate);
         loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE);
-        loanAccountPage.verifyPrincipalOriginal("6000.0");
+        loanAccountPage.verifyPrincipalOriginal("6,000");
     }
 
     /*
@@ -116,9 +116,9 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
 
     private void verifyRedoLoanDisbursalWithPastDate(LoanAccountPage loanAccountPage) {
         loanAccountPage.verifyStatus("Closed- Obligation met");
-        loanAccountPage.verifyTotalOriginalLoan("1029.0");
-        loanAccountPage.verifyTotalAmountPaid("1029.0");
-        loanAccountPage.verifyLoanTotalBalance("0.0");
+        loanAccountPage.verifyTotalOriginalLoan("1,029");
+        loanAccountPage.verifyTotalAmountPaid("1,029");
+        loanAccountPage.verifyLoanTotalBalance("0");
         TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
         transactionHistoryPage.verifyTransactionHistory(1028.6, 4, 22);
     }
@@ -177,7 +177,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         repaymentSchedulePage.verifyRepaymentScheduleTableRow(55, 0, "Future Installments");
         repaymentSchedulePage.navigateBack();
 
-        loanAccountPage.verifyLoanTotalBalance(loanBalance + ".0");
+        loanAccountPage.verifyLoanTotalBalance(Integer.toString(loanBalance));
         loanAccountPage.verifyPerformanceHistory("48", "3");
         loanAccountPage.verifyStatus("Active in Good Standing");
     }

@@ -422,7 +422,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage = loanTestHelper.createProductAndThenAccount(productParams, searchParams, disburseParams);
 
         loanAccountPage.verifyNumberOfInstallments("10", "100", "50");
-        loanAccountPage.verifyPrincipalBalance("5000.0");
+        loanAccountPage.verifyPrincipalBalance("5,000");
         loanTestHelper.applyOneChargeOnLoanAccount(chargeParameters);
         loanAccountPage.navigateToViewInstallmentDetails()
                 .verifyInstallmentAmount(4, 1, "599.0");
@@ -579,8 +579,8 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyLoanIsInPartialApplication();
         loanAccountPage.verifyNumberOfInstallments("10");
         loanAccountPage.verifyDisbursalDate("02/05/2011");
-        loanAccountPage.verifyPrincipalOriginal("1000.0");
-        loanAccountPage.verifyLoanTotalBalance("1000.0");
+        loanAccountPage.verifyPrincipalOriginal("1,000");
+        loanAccountPage.verifyLoanTotalBalance("1,000");
         ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
         viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, 1, "09-May-2011");
         viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(4, 1, "16-May-2011");

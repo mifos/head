@@ -278,13 +278,13 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
             loanAccountPage.verifyDisbursalDate("25/03/2011");
             
             String[][] accountSummaryTable = {{"", "Original Loan", "Amount paid", "Loan balance"},
-                    {"Principal", "2000.0", "0.0", "2000.0"},
-                    {"Interest", "0.0", "0.0", "0.0"},
-                    {"Fees", "1010.0", "0.0", "1010.0"},
-                    {"Penalty", "0.0", "0.0", "0.0"},
-                    {"Total", "3010.0", "0.0", "3010.0"}};
+                    {"Principal", "2,000", "0", "2,000"},
+                    {"Interest", "0", "0", "0"},
+                    {"Fees", "1,010", "0", "1,010"},
+                    {"Penalty", "0", "0", "0"},
+                    {"Total", "3,010", "0", "3,010"}};
             loanAccountPage.verifyAccountSummary(accountSummaryTable);
-            loanAccountPage.verifyInterestRate("0.0");
+            loanAccountPage.verifyInterestRate("0");
             
             ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToRepaymentSchedulePage();
             

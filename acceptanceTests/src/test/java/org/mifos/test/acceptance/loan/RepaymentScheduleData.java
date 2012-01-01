@@ -176,27 +176,27 @@ public class RepaymentScheduleData {
             {"4", "09-Nov-2010", "-", "201.1", "4.0", "100.0", "0.0", "305.1"},
             {"5", "16-Nov-2010", "-", "201.7", "2.8", "100.0", "0.0", "304.5"}};
     public static final String[][] ACCOUNT_SUMMARY_REPAYMENT_ONE = {{"", "Original Loan", "Amount paid", "Loan balance"},
-            {"Principal", "1000.0", "1000.0", "0.0"},
-            {"Interest", "-0.5", "0.0", "-0.5"}, //0.0
-            {"Fees", "100.0", "100.0", "0.0"},
-            {"Penalty", "0.0", "0.0", "0.0"},
-            {"Total", "1099.5", "1100.0", "-0.5"}}; //0.0
+            {"Principal", "1,000", "1,000", "0"},
+            {"Interest", "-0.5", "0", "-0.5"}, //0.0
+            {"Fees", "100", "100", "0"},
+            {"Penalty", "0", "0", "0"},
+            {"Total", "1,099.5", "1,100", "-0.5"}}; //0.0
     public static final String[][] ACCOUNT_SUMMARY_ADJUSTMENT_ONE = {{"", "Original Loan", "Amount paid", "Loan balance"},
-            {"Principal", "1000.0","0.0", "1000.0"},
-            {"Interest",  "14.5",  "0.0", "14.5"}, //0.0
-            {"Fees",     "500.0",  "0.0", "500.0"},
-            {"Penalty",    "0.0",  "0.0", "0.0"},
-            {"Total",  "1514.5",   "0.0", "1514.5"}};
+            {"Principal", "1,000","0", "1,000"},
+            {"Interest",  "14.5",  "0", "14.5"}, //0.0
+            {"Fees",     "500",  "0", "500"},
+            {"Penalty",    "0",  "0", "0"},
+            {"Total",  "1,514.5",   "0", "1,514.5"}};
     public static final String[][] ACCOUNT_SUMMARY_REPAYMENT_TWO = {{"", "Original Loan", "Amount paid", "Loan balance"},
-            {"Principal", "1000.0", "1000.0", "0.0"},
-            {"Interest", "11.8", "15.8", "-4.0"}, //14.5
-            {"Fees", "400.0", "400.0", "0.0"},
-            {"Penalty", "0.0", "0.0", "0.0"},
-            {"Total", "1411.8", "1415.8", "-4.0"}}; //14.5
+            {"Principal", "1,000", "1,000", "0"},
+            {"Interest", "11.8", "15.8", "-4"}, //14.5
+            {"Fees", "400", "400", "0"},
+            {"Penalty", "0", "0", "0"},
+            {"Total", "1,411.8", "1,415.8", "-4"}}; //14.5
     public static final String[][] ACCOUNT_SUMMARY_ADJUSTMENT_TWO = {{"", "Original Loan", "Amount paid", "Loan balance"},
-            {"Principal", "1000.0", "197.7", "802.3"},
-            {"Interest", "11.0", "5.3", "5.7"}, //14.5
-            {"Fees", "500.0", "200.0", "300.0"},
-            {"Penalty", "0.0", "0.0", "0.0"},
-            {"Total", "1511.0", "403.0", "1108.0"}}; //less total balance
+            {"Principal", "1,000", "197.7", "802.3"},
+            {"Interest", "11", "5.3", "5.7"}, //14.5
+            {"Fees", "500", "200", "300"},
+            {"Penalty", "0", "0", "0"},
+            {"Total", "1,511", "403", "1,108"}}; //less total balance
 }
