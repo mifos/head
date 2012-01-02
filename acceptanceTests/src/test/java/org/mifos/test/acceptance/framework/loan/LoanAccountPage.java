@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import java.text.DecimalFormat;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -523,19 +525,8 @@ public class LoanAccountPage extends MifosPage {
     }
     
     private String formatNumber(final String number) {
-        StringBuilder format = new StringBuilder(number);
-        
-        if(number.endsWith(".0")) {
-            format = format.delete(format.length() - 2, format.length());
-        }
-        
-        if(format.length() > 3) {
-            for(int i = format.length() / 3; i < format.length(); i += 4) {
-                format = format.insert(i, ',');
-            }
-        }
-        
-        return format.toString();
+        DecimalFormat df = new DecimalFormat("###,###,###.###");
+        return df.format(Double.parseDouble(number));
     }
 }
 
