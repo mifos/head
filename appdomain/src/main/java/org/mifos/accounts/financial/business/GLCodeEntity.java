@@ -39,6 +39,8 @@ import org.mifos.framework.business.AbstractEntity;
 @Entity
 @Table(name = "gl_code")
 public class GLCodeEntity extends AbstractEntity {
+	
+	public static final String GLCODE_AND_NAME_SEPARATOR = ": ";
 
     @Id
     @GeneratedValue
@@ -69,6 +71,19 @@ public class GLCodeEntity extends AbstractEntity {
         return glcode;
     }
 
+    public String getGlCodeAndAccountName() {
+    	String codeAndName = getGlcode();
+    	String accountName = "";
+    	COABO account = getAssociatedCOA();
+    	if (account != null) {
+    		accountName = account.getAccountName();
+    	}
+    	if (!accountName.isEmpty()) {
+    		codeAndName = codeAndName + GLCODE_AND_NAME_SEPARATOR + accountName;
+    	}
+    	return codeAndName;
+    }
+    
     public COABO getAssociatedCOA() {
         return associatedCOA;
     }
