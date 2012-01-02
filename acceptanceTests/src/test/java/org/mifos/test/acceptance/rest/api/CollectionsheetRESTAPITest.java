@@ -102,7 +102,7 @@ public class CollectionsheetRESTAPITest extends UiTestCaseBase {
     }
     private String getTestSaveCollectionsheetJSON() {
         return "{\"json\":" +
-                "\"{\\\"userId\\\":1,\\\"transactionDate\\\":[2011,10,10],\\\"paymentType\\\":1," +
+                "\"{\\\"userId\\\":1,\\\"transactionDate\\\":\\\"2011-10-10\\\",\\\"paymentType\\\":1," +
                 "\\\"receiptId\\\":\\\"\\\",\\\"receiptDate\\\":null,\\\"saveCollectionSheetCustomers\\\":[{\\\"customerId\\\":1," +
                 "\\\"parentCustomerId\\\":null,\\\"attendanceId\\\":null,\\\"saveCollectionSheetCustomerSavings\\\":[]," +
                 "\\\"saveCollectionSheetCustomerIndividualSavings\\\":[],\\\"saveCollectionSheetCustomerLoans\\\":[]," +
@@ -124,7 +124,7 @@ public class CollectionsheetRESTAPITest extends UiTestCaseBase {
     }
 
     private String getEmptyCollectionsheet() {
-        return "{\"date\":[2011,10,10],\"collectionSheetCustomer\":[{\"name\":\"Client-REST\"," +
+        return "{\"date\":\"2011-10-10\",\"collectionSheetCustomer\":[{\"name\":\"Client-REST\"," +
                 "\"levelId\":3,\"branchId\":2,\"customerId\":1,\"searchId\":\"1.1\",\"parentCustomerId\":null," +
                 "\"attendanceId\":null,\"collectionSheetCustomerSaving\":[],\"collectionSheetCustomerLoan\":[]," +
                 "\"collectionSheetCustomerAccount\":{\"accountId\":1,\"currencyId\":2,\"totalCustomerAccountCollectionFee" +

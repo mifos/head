@@ -21,10 +21,8 @@ package org.mifos.application.servicefacade;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
-import org.joda.time.LocalDate;
-import org.mifos.application.master.util.helpers.PaymentTypes;
 
 /**
  * Holds data to save a collection sheet
@@ -39,13 +37,13 @@ public class SaveCollectionSheetDto {
      */
     private List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers;
     private Short paymentType;
-    private LocalDate transactionDate;
+    private Date transactionDate;
     private String receiptId;
-    private LocalDate receiptDate;
+    private Date receiptDate;
     private Short userId;
 
     public SaveCollectionSheetDto(List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers, Short paymentType,
-            LocalDate transactionDate, String receiptId, LocalDate receiptDate, Short userId)
+            Date transactionDate, String receiptId, Date receiptDate, Short userId)
             throws SaveCollectionSheetException {
 
         validateInput(saveCollectionSheetCustomers, paymentType, transactionDate, userId);
@@ -71,7 +69,7 @@ public class SaveCollectionSheetDto {
         return this.paymentType;
     }
 
-    public LocalDate getTransactionDate() {
+    public Date getTransactionDate() {
         return this.transactionDate;
     }
 
@@ -79,7 +77,7 @@ public class SaveCollectionSheetDto {
         return this.receiptId;
     }
 
-    public LocalDate getReceiptDate() {
+    public Date getReceiptDate() {
         return this.receiptDate;
     }
 
@@ -153,7 +151,7 @@ public class SaveCollectionSheetDto {
     }
 
     private void validateInput(List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers, Short paymentType,
-            LocalDate transactionDate, Short userId) {
+            Date transactionDate, Short userId) {
 
         if (saveCollectionSheetCustomers == null || saveCollectionSheetCustomers.size() < 1) {
             validationErrors.add(InvalidSaveCollectionSheetReason.NO_TOP_CUSTOMER_PROVIDED);

@@ -139,7 +139,7 @@ public class SaveCollectionSheetStructureValidator {
         }
 
         LocalDate validMeetingDate = getValidMeetingDateForTopCustomer(topCustomer.getCustomerId());
-        if (saveCollectionSheet.getTransactionDate().compareTo(validMeetingDate) != 0) {
+        if (new LocalDate(saveCollectionSheet.getTransactionDate()).compareTo(validMeetingDate) != 0) {
             addValidationError(InvalidSaveCollectionSheetReason.INVALID_DATE, "Transaction Date: "
                     + saveCollectionSheet.getTransactionDate());
             throw new SaveCollectionSheetException(validationErrors, validationErrorsExtended);

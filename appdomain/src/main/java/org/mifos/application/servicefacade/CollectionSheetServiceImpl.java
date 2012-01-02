@@ -20,6 +20,7 @@
 package org.mifos.application.servicefacade;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -144,7 +145,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
         final List<ClientAttendanceBO> clientAttendances = saveCollectionSheetAssembler
                 .clientAttendanceAssemblerfromDto(saveCollectionSheet.getSaveCollectionSheetCustomers(),
-                        saveCollectionSheet.getTransactionDate(), branchId, searchId);
+                        new LocalDate(saveCollectionSheet.getTransactionDate()), branchId, searchId);
 
         final AccountPaymentEntity payment = saveCollectionSheetAssembler.accountPaymentAssemblerFromDto(
                 saveCollectionSheet.getTransactionDate(), saveCollectionSheet.getPaymentType(), saveCollectionSheet
@@ -343,7 +344,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
         }
 
-        return new CollectionSheetDto(populatedCollectionSheetCustomer, transactionDate);
+        return new CollectionSheetDto(populatedCollectionSheetCustomer, new Date(transactionDate.toDateMidnight().toDate().getTime()));
     }
 
     /*

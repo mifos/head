@@ -286,13 +286,12 @@ public class SaveCollectionSheetAssembler {
         return paymentData;
     }
 
-    public AccountPaymentEntity accountPaymentAssemblerFromDto(final LocalDate transactionDate,
-            final Short paymentType, final String receiptId, final LocalDate receiptDate, final Short userId) {
+    public AccountPaymentEntity accountPaymentAssemblerFromDto(final Date transactionDate,
+            final Short paymentType, final String receiptId, final Date receiptDate, final Short userId) {
 
         final PersonnelBO user = legacyPersonnelDao.findPersonnelById(userId);
         final AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Money.getDefaultCurrency()),
-                receiptId, DateUtils.getDateFromLocalDate(receiptDate), new PaymentTypeEntity(paymentType), DateUtils
-                        .getDateFromLocalDate(transactionDate));
+                receiptId, receiptDate, new PaymentTypeEntity(paymentType), transactionDate);
         payment.setCreatedByUser(user);
 
         return payment;
