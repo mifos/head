@@ -22,6 +22,15 @@
 
 	<import resource="classpath:org/mifos/config/resources/webflow-config.xml" />
 
+    <bean class="org.springframework.mobile.device.DeviceWebArgumentResolver" />
+
+    <bean class="org.springframework.mobile.device.site.SitePreferenceWebArgumentResolver" />
+
+    <mvc:interceptors>
+       <bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" />
+       <bean class="org.springframework.mobile.device.site.SitePreferenceHandlerInterceptor" />
+    </mvc:interceptors>
+
 	<context:annotation-config />
 
 	<bean id="localeResolver" class="org.mifos.ui.core.localisation.MifosLocaleResolver" />

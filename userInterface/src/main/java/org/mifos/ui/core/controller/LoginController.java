@@ -20,9 +20,15 @@
 
 package org.mifos.ui.core.controller;
 
+import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.DeviceUtils;
+import org.springframework.mobile.device.site.SitePreference;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/login")
@@ -34,11 +40,19 @@ public class LoginController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public void showForm() {
+    public ModelAndView showForm(HttpServletRequest request, SitePreference sitePreference) {
+        Device currentDevice = DeviceUtils.getCurrentDevice(request);
+
+        ModelAndView modelAndView = new ModelAndView("login");
+        if (currentDevice.isMobile()) {
+            modelAndView = new ModelAndView("m_login");
+        }
+
+        return modelAndView;
     }
 
     @RequestMapping(method = RequestMethod.HEAD)
-    public void showFormHead() {
-        showForm();
+    public ModelAndView showFormHead(HttpServletRequest request, SitePreference sitePreference) {
+        return showForm(request, sitePreference);
     }
 }
