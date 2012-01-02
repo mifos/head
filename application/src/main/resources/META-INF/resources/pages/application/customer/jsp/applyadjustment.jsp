@@ -29,7 +29,6 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="ApplyAdjustment"></span>
@@ -103,7 +102,7 @@ explanation of the license and how it is applied.
 						</c:choose>
 						<c:choose>
 							<c:when test="${requestScope.method=='loadAdjustment'}">
-								<mifos:mifoslabel name="Customer.last_pmnt" />: <c:out
+								<mifos:mifoslabel name="Customer.last_pmnt" />: <c:out:formatNumber
 									value="${BusinessKey.customerAccount.lastPmntAmntToBeAdjusted}" />
 								<br>
 								<br>

@@ -28,6 +28,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="NextPaymentLoanAccount"></span>
@@ -113,7 +114,7 @@ explanation of the license and how it is applied.
 							</td>
 							<td align="right" class="drawtablerow">
 							<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'viewUpcomingInstallmentDetails')}" var="viewUpcomingInstallmentDetail" />
-							<c:out value='${viewUpcomingInstallmentDetail.principal}'/>
+							<fmt:formatNumber value='${viewUpcomingInstallmentDetail.principal}'/>
 							</td>
 							<td align="right" class="drawtablerow">&nbsp;</td>
 						</tr>
@@ -122,13 +123,13 @@ explanation of the license and how it is applied.
 							<td class="drawtablerow">
 							<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
 							</td>
-							<td align="right" class="drawtablerow"><c:out value='${viewUpcomingInstallmentDetail.interest}'/></td>
+							<td align="right" class="drawtablerow"><fmt:formatNumber value='${viewUpcomingInstallmentDetail.interest}'/></td>
 							<td align="right" class="drawtablerow">&nbsp;</td>
 						</tr>
 						<tr>
 							<td class="drawtablerow"><mifos:mifoslabel name="loan.fees"	bundle="loanUIResources" /></td>
 							<td align="right" class="drawtablerow">
-							<c:out value='${viewUpcomingInstallmentDetail.fees}'/></td>
+							<fmt:formatNumber value='${viewUpcomingInstallmentDetail.fees}'/></td>
 							<td align="right" class="drawtablerow">	&nbsp;
 							<c:if test='${viewUpcomingInstallmentDetail.fees != 0.0 }'>						 
 							<html-el:link styleId="nextPayment_loanAccount.link.waiveFeeDue" href="loanAccountAction.do?method=waiveChargeDue&prdOfferingName=${param.prdOfferingName}&accountId=${param.accountId}&WaiveType=fees&type=LoanAccount&input=LoanAccount&globalAccountNum=${param.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
@@ -139,7 +140,7 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 							<td class="drawtablerow"><mifos:mifoslabel name="loan.penalty" bundle="loanUIResources" /></td>
-							<td align="right" class="drawtablerow"><c:out value='${viewUpcomingInstallmentDetail.penalty}'/></td>
+							<td align="right" class="drawtablerow"><fmt:formatNumber value='${viewUpcomingInstallmentDetail.penalty}'/></td>
 							<td align="right" class="drawtablerow">&nbsp;
 							<c:if test='${viewUpcomingInstallmentDetail.penalty != 0.0 }'>						 
 							<html-el:link styleId="nextPayment_loanAccount.link.waivePenaltyDue" href="loanAccountAction.do?method=waiveChargeDue&accountId=${param.accountId}&WaiveType=penalty&type=LoanAccount&input=LoanAccount&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
@@ -155,7 +156,7 @@ explanation of the license and how it is applied.
 							</em>
 							</td>
 							<td align="right" class="drawtablerow">
-							<c:out value='${viewUpcomingInstallmentDetail.subTotal}'/>
+							<fmt:formatNumber value='${viewUpcomingInstallmentDetail.subTotal}'/>
 							</td>
 							<td align="right" class="drawtablerow">&nbsp;</td>
 						</tr>						
@@ -174,18 +175,18 @@ explanation of the license and how it is applied.
 							<mifos:mifoslabel name="loan.principal"	bundle="loanUIResources" /></td>
 							<td align="right" class="drawtablerow">
 							<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'viewOverDueInstallmentDetails')}" var="viewOverDueInstallmentDetail" />
-							<c:out value='${viewOverDueInstallmentDetail.principal}'/></td>
+							<fmt:formatNumber value='${viewOverDueInstallmentDetail.principal}'/></td>
 							<td align="right" class="drawtablerow">&nbsp;</td>
 						</tr>
 						<tr>
 							<td class="drawtablerow"><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></td>
-							<td align="right" class="drawtablerow"><c:out value='${viewOverDueInstallmentDetail.interest}'/></td>
+							<td align="right" class="drawtablerow"><fmt:formatNumber value='${viewOverDueInstallmentDetail.interest}'/></td>
 							<td align="right" class="drawtablerow">&nbsp;</td>
 						</tr>
 						<tr>
 							<td class="drawtablerow">
 							<mifos:mifoslabel name="loan.fees" bundle="loanUIResources" /></td>
-							<td align="right" class="drawtablerow"><c:out value='${viewOverDueInstallmentDetail.fees}'/></td>
+							<td align="right" class="drawtablerow"><fmt:formatNumber value='${viewOverDueInstallmentDetail.fees}'/></td>
 							<td align="right" class="drawtablerow">&nbsp;
 							<c:if test='${viewOverDueInstallmentDetail.fees != 0.0 }'>	
 							<html-el:link styleId="nextPayment_loanAccount.link.waiveFeeOverDue" href="loanAccountAction.do?method=waiveChargeOverDue&accountId=${param.accountId}&WaiveType=fees&type=LoanAccount&input=LoanAccount&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
@@ -197,7 +198,7 @@ explanation of the license and how it is applied.
 						<tr>
 							<td class="drawtablerow">
 							<mifos:mifoslabel name="loan.penalty" bundle="loanUIResources" /></td>
-							<td align="right" class="drawtablerow"><c:out value='${viewOverDueInstallmentDetail.penalty}'/></td>
+							<td align="right" class="drawtablerow"><fmt:formatNumber value='${viewOverDueInstallmentDetail.penalty}'/></td>
 							<td align="right" class="drawtablerow">&nbsp;
 							<c:if test='${viewOverDueInstallmentDetail.penalty != 0.0 }'>
 							<html-el:link styleId="nextPayment_loanAccount.link.waivePenaltyOverDue" href="loanAccountAction.do?method=waiveChargeOverDue&accountId=${param.accountId}&WaiveType=penalty&type=LoanAccount&input=LoanAccount&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
@@ -214,7 +215,7 @@ explanation of the license and how it is applied.
 							</em>
 							</td>
 							<td align="right" class="drawtablerow">
-							<c:out value='${viewOverDueInstallmentDetail.subTotal}'/>
+							<fmt:formatNumber value='${viewOverDueInstallmentDetail.subTotal}'/>
 							</td>
 							<td align="right" class="drawtablerow">&nbsp;</td>
 						</tr>	
@@ -227,7 +228,6 @@ explanation of the license and how it is applied.
 								</td>
 							<td align="right" class="drawtablerow">&nbsp;
 							<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'totalAmountOverDue')}" var="totalAmountOverdue" />
-							<c:out value='${totalAmountOverdue}'/>
 							</td>
 							
 							<td align="right" class="drawtablerow">&nbsp;</td>

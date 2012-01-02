@@ -425,7 +425,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyPrincipalBalance("5,000");
         loanTestHelper.applyOneChargeOnLoanAccount(chargeParameters);
         loanAccountPage.navigateToViewInstallmentDetails()
-                .verifyInstallmentAmount(4, 1, "599.0");
+                .verifyInstallmentAmount(4, 1, "599"); 
     }
 
     /**
