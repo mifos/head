@@ -165,8 +165,8 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         transactionHistoryPage.navigateBack();
 
         ViewNextInstallmentDetailsPage installmentPage = loanAccountPage.navigateToViewNextInstallmentDetails();
-        installmentPage.verifyInstallmentAmount(6, 2, "0.0");
-        installmentPage.verifyInstallmentAmount(12, 2, "0.0");
+        installmentPage.verifyInstallmentAmount(6, 2, "0");
+        installmentPage.verifyInstallmentAmount(12, 2, "0");
         installmentPage.navigateBack();
 
         ViewRepaymentSchedulePage repaymentSchedulePage = loanAccountPage.navigateToRepaymentSchedulePage();
