@@ -642,7 +642,7 @@ explanation of the license and how it is applied.
 								<fmt:message key="Group.hashof">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
 					</fmt:message> 
-								<span id="viewgroupdetails.text.numberOfClientsInGroup"><c:out
+								<span id="viewgroupdetails.text.numberOfClientsInGroup"><fmt:formatNumber
 								value="${groupInformationDto.groupPerformanceHistory.activeClientCount}" /></span>
 							</span></td>
 						</tr>
@@ -683,7 +683,7 @@ explanation of the license and how it is applied.
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="Group.Total" bundle="GroupUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes" />
-							<c:out
+							<fmt:formatNumber
 								value="${groupInformationDto.groupPerformanceHistory.totalSavingsAmount}" /></span></td>
 						</tr>
 						<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoanAllowed') == true}">
