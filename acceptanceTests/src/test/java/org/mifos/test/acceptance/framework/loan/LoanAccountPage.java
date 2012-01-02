@@ -97,7 +97,7 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public void verifyTotalOriginalLoan(String amount) {
-        Assert.assertEquals(getOriginalTotalAmount(), amount);
+        Assert.assertEquals(getOriginalTotalAmount(), formatNumber(amount));
     }
 
     public void verifyTotalAmountPaid(String amount) {

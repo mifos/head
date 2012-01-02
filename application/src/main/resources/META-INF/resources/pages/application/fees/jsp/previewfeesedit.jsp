@@ -85,7 +85,7 @@ explanation of the license and how it is applied.
 										</c:choose> </span>
 									<c:choose>
 										<c:when test="${feeModel.rateBasedFee}">
-											<c:out value="${sessionScope.feeactionform.rate}" />
+											<fmt:formatNumber value="${sessionScope.feeactionform.rate}" />
 											<mifos:mifoslabel name="Fees.ofa" />
 											<c:out value="${feeModel.feeFormula.name}" />
 										</c:when>

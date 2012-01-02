@@ -131,7 +131,7 @@ explanation of the license and how it is applied.
 										<c:when test="${feeModel.rateBasedFee}">
 											<fmt:message key="Fees.amountCalcComplete">
 												<%-- FIXME: use a rate decimal formatter --%>
-												<fmt:param><c:out value="${feeModel.rate}" /></fmt:param>
+												<fmt:param><fmt:formatNumber value="${feeModel.rate}" /></fmt:param>
 												<fmt:param><c:out value="${feeModel.feeFormula.name}" /></fmt:param>
 											</fmt:message>
 										</c:when>
