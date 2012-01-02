@@ -19,6 +19,7 @@
  */
 package org.mifos.application.servicefacade;
 
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -30,9 +31,9 @@ public class CollectionSheetDto {
 
     private final List<CollectionSheetCustomerDto> collectionSheetCustomer;
     
-    private final LocalDate date;
+    private final Date date;
 
-    public CollectionSheetDto(final List<CollectionSheetCustomerDto> collectionSheetCustomer, LocalDate transactionDate) {
+    public CollectionSheetDto(final List<CollectionSheetCustomerDto> collectionSheetCustomer, Date transactionDate) {
         this.collectionSheetCustomer = collectionSheetCustomer;
         this.date = transactionDate;
     }
@@ -41,7 +42,7 @@ public class CollectionSheetDto {
         return this.collectionSheetCustomer;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
 		return date;
 	}
 

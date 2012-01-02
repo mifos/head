@@ -95,7 +95,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
     @Test
     public void testShouldGetINVALID_TOP_CUSTOMERIfTopCustomerNotFound() throws Exception {
 
-        LocalDate validDate = new LocalDate();
+        Date validDate = new java.sql.Date(new LocalDate().toDateMidnight().toDate().getTime());
         Short validPaymentType = PaymentTypes.CHEQUE.getValue();
         Short validUserId = Short.valueOf("1");
         Integer invalidCustomerId = 500000;

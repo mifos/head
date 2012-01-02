@@ -31,7 +31,6 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.api.CustomerLevel;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class SaveCollectionSheetFromLegacyAssembler {
@@ -46,10 +45,8 @@ public class SaveCollectionSheetFromLegacyAssembler {
 
         try {
             saveCollectionSheet = new SaveCollectionSheetDto(assembleCustomers(collectionSheetEntryDtos),
-                    previousCollectionSheetEntryDto.getPaymentTypeId(), DateUtils
-                            .getLocalDateFromDate(previousCollectionSheetEntryDto.getTransactionDate()),
-                    previousCollectionSheetEntryDto.getReceiptId(), DateUtils
-                            .getLocalDateFromDate(previousCollectionSheetEntryDto.getReceiptDate()), userId);
+                    previousCollectionSheetEntryDto.getPaymentTypeId(), previousCollectionSheetEntryDto.getTransactionDate(),
+                    previousCollectionSheetEntryDto.getReceiptId(), previousCollectionSheetEntryDto.getReceiptDate(), userId);
         } catch (SaveCollectionSheetException e) {
             throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
         }
