@@ -142,6 +142,21 @@ public final class Money implements Serializable, Comparable<Money> {
         return new Money(money.getCurrency(), amount.subtract(money.getAmount()));
     }
 
+ // Madhukar HugoTechnologies
+    public Money multiply(Double factor,int days,int duration){
+    	return multiply(new BigDecimal(factor),new BigDecimal(days),new BigDecimal(duration));
+    }
+    
+    public Money multiply(BigDecimal factor,BigDecimal days,BigDecimal duration){
+    	
+    	BigDecimal total=(factor.multiply(days));
+    	factor=total.divide(duration,internalPrecision, internalRoundingMode);
+    	
+    	return new Money(currency,amount.multiply(factor).setScale(internalPrecision, internalRoundingMode));
+    }//end Madhu HugoTech..
+    
+    
+    
     public Money multiply(Double factor) {
         return multiply(new BigDecimal(factor));
     }

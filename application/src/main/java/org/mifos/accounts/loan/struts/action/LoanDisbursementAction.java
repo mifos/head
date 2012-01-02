@@ -82,16 +82,23 @@ public class LoanDisbursementAction extends BaseAction {
         LoanDisbursalDto loanDisbursalDto = loanAccountServiceFacade.retrieveLoanDisbursalDetails(loanAccountId);
 
         UserContext uc = getUserContext(request);
+        Short repaymentIndependentOfMeetingScheduleValue = loanDisbursalDto.isRepaymentIndependentOfMeetingSchedule() ? Short.valueOf("1") : Short.valueOf("0");
+        //if part code -> Madhukar:Hugo Technologies 
+        if (repaymentIndependentOfMeetingScheduleValue==1) {
+        	Date proposedDisbursalDate=new Date();
+        	SessionUtils.setAttribute(LoanConstants.PROPOSED_DISBURSAL_DATE, proposedDisbursalDate, request);
+            loanDisbursementActionForm.setTransactionDate(getUserLocaleDate(uc.getPreferredLocale(), proposedDisbursalDate));
+		} 
+        else {
         SessionUtils.setAttribute(LoanConstants.PROPOSED_DISBURSAL_DATE, loanDisbursalDto.getProposedDate(), request);
         loanDisbursementActionForm.setTransactionDate(getUserLocaleDate(uc.getPreferredLocale(), loanDisbursalDto.getProposedDate()));
-
+		}
         loanDisbursementActionForm.setAmount(loanDisbursalDto.getAmountPaidAtDisbursement());
         loanDisbursementActionForm.setLoanAmount(loanDisbursalDto.getLoanAmount());
         if (loanDisbursalDto.isMultiCurrencyEnabled()) {
             loanDisbursementActionForm.setCurrencyId(loanDisbursalDto.getCurrencyId());
         }
 
-        Short repaymentIndependentOfMeetingScheduleValue = loanDisbursalDto.isRepaymentIndependentOfMeetingSchedule() ? Short.valueOf("1") : Short.valueOf("0");
         SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED, repaymentIndependentOfMeetingScheduleValue, request);
         SessionUtils.setAttribute(AccountingRulesConstants.BACKDATED_TRANSACTIONS_ALLOWED, loanDisbursalDto.isBackDatedTransactionsAllowed(), request);
 
