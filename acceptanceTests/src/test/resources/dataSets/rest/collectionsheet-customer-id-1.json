@@ -1,5 +1,9 @@
 {
-    "date": "2011-10-10",
+    "date": [
+        2011,
+        10,
+        10
+    ],
     "collectionSheetCustomer": [
         {
             "name": "Client-REST",

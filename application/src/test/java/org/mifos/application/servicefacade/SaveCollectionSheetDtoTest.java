@@ -26,7 +26,6 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -44,7 +43,7 @@ public class SaveCollectionSheetDtoTest {
 
     private Short validUserId = Short.valueOf("1");
     private Integer validCustomerId = 0;
-    private Date validDate = new java.sql.Date(new LocalDate().toDateMidnight().toDate().getTime());
+    private LocalDate validDate = new LocalDate();
     private Short validPaymentType = PaymentTypes.CHEQUE.getValue();
     private Short invalidPaymentType = Short.valueOf("-1");
     private Short customPaymentType = Short.valueOf("4");
@@ -300,9 +299,9 @@ public class SaveCollectionSheetDtoTest {
         saveCollectionSheetCustomers.add(group2Client2);
 
         Short paymentType = PaymentTypes.CHEQUE.getValue();
-        Date transactionDate = new java.sql.Date(new LocalDate().toDateMidnight().toDate().getTime());
+        LocalDate transactionDate = new LocalDate();
         String receiptId = "Receipt 100";
-        Date receiptDate = new java.sql.Date(new LocalDate().toDateMidnight().toDate().getTime());
+        LocalDate receiptDate = new LocalDate();
         Short userId = Short.valueOf("1");
 
         SaveCollectionSheetDto saveCollectionSheet = new SaveCollectionSheetDto(saveCollectionSheetCustomers,

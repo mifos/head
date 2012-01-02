@@ -22,7 +22,6 @@ package org.mifos.platform.rest.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,9 +116,9 @@ public class CollectionSheetRESTController {
         public SaveCollectionSheetDtoMixIn(
                 @JsonProperty("saveCollectionSheetCustomers") List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers,
                 @JsonProperty("paymentType") Short paymentType,
-                @JsonProperty("transactionDate") Date transactionDate,
+                @JsonProperty("transactionDate") LocalDate transactionDate,
                 @JsonProperty("receiptId") String receiptId,
-                @JsonProperty("receiptDate") Date receiptDate,
+                @JsonProperty("receiptDate") LocalDate receiptDate,
                 @JsonProperty("userId") Short userId)
                 throws SaveCollectionSheetException {}
 

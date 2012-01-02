@@ -285,16 +285,15 @@ public class TestSaveCollectionSheetUtils {
     public SaveCollectionSheetDto assembleSaveCollectionSheetDto(CollectionSheetDto collectionSheet,
             LocalDate transactionDate) {
 
-        Date usedTransactionDate = new java.sql.Date(transactionDate.toDateMidnight().toDate().getTime());
+        LocalDate usedTransactionDate = transactionDate;
         if (invalidTransactionDate) {
-            usedTransactionDate = new java.sql.Date(transactionDate.plusDays(2).toDateMidnight().toDate().getTime());
+            usedTransactionDate = transactionDate.plusDays(2);
         }
         SaveCollectionSheetDto saveCollectionSheet = null;
         try {
             saveCollectionSheet = new SaveCollectionSheetDto(assembleSCSCustomers(collectionSheet
                     .getCollectionSheetCustomer()), PaymentTypes.VOUCHER.getValue(), usedTransactionDate,
-                    "my new receipt", new java.sql.Date(transactionDate.toDateMidnight().toDate().getTime()),
-                    testUser().getPersonnelId());
+                    "my new receipt", transactionDate, testUser().getPersonnelId());
         } catch (NumberFormatException e) {
             e.printStackTrace();
         } catch (SaveCollectionSheetException e) {
