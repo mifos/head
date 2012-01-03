@@ -4,7 +4,10 @@
     
     <bean id="birtCollectionSheetService" class="org.mifos.reports.business.service.BirtCollectionSheetService" />
     <bean id="officeBusinessService" class="org.mifos.customers.office.business.service.OfficeBusinessService" />
-    <bean id="personnelBusinessService" class="org.mifos.customers.personnel.business.service.PersonnelBusinessService" />
+    <bean id="personnelBusinessService" class="org.mifos.customers.personnel.business.service.PersonnelBusinessService" >
+        <constructor-arg ref="legacyPersonnelDao" />
+        <constructor-arg ref="legacyRolesPermissions" />
+    </bean>
 
     <bean id="customerBusinessService" class="org.mifos.customers.business.service.CustomerBusinessService" />
     <bean id="accountBusinessService" class="org.mifos.accounts.business.service.AccountBusinessService" />
