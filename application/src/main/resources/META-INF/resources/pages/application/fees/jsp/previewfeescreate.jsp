@@ -178,7 +178,7 @@ explanation of the license and how it is applied.
 												<c:choose>
 													<c:when test="${sessionScope.feeactionform.categoryType==FeeCategory.LOAN.value && sessionScope.feeactionform.rateFee==true}">
 														<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.amountcalculatedas" /> </span>
-														<c:out value="${sessionScope.feeactionform.rate}" />
+														<fmt:formatNumber value="${sessionScope.feeactionform.rate}" />
 													</c:when>
 													<c:otherwise>
 														<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.amount" /> </span>

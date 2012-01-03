@@ -116,7 +116,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
 
     private void verifyRedoLoanDisbursalWithPastDate(LoanAccountPage loanAccountPage) {
         loanAccountPage.verifyStatus("Closed- Obligation met");
-        loanAccountPage.verifyTotalOriginalLoan("1,029");
+        loanAccountPage.verifyTotalOriginalLoan("1029");
         loanAccountPage.verifyTotalAmountPaid("1,029");
         loanAccountPage.verifyLoanTotalBalance("0");
         TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
@@ -149,7 +149,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         loanAccountPage.verifyStatus("Active in Good Standing");
         loanAccountPage.verifyPerformanceHistory("51", "0");
         // Testing multiple reverse payments
-        String payAmount = "63.0";
+        String payAmount = "63";
         String reverseNote = "Reversed ";
         int loanBalance = (int) (Float.parseFloat(loanAccountPage.getTotalBalance()) + 63 * 3);
         for (int i = 0; i < 3; i++) {
@@ -165,8 +165,8 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         transactionHistoryPage.navigateBack();
 
         ViewNextInstallmentDetailsPage installmentPage = loanAccountPage.navigateToViewNextInstallmentDetails();
-        installmentPage.verifyInstallmentAmount(6, 2, "0.0");
-        installmentPage.verifyInstallmentAmount(12, 2, "0.0");
+        installmentPage.verifyInstallmentAmount(6, 2, "0");
+        installmentPage.verifyInstallmentAmount(12, 2, "0");
         installmentPage.navigateBack();
 
         ViewRepaymentSchedulePage repaymentSchedulePage = loanAccountPage.navigateToRepaymentSchedulePage();
