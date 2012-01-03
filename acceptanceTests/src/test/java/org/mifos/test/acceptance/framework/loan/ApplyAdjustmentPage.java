@@ -80,13 +80,7 @@ public class ApplyAdjustmentPage extends AbstractPage {
         return new LoanAccountPage(selenium);
     }
     public LoanAccountPage verifyRepayAdjustment(String loanAmount) {
-        String correctLoanAmount = loanAmount;
-        
-        if(loanAmount.indexOf('.') < 0) {
-            correctLoanAmount = loanAmount + ".0";
-        }
-        
-        Assert.assertTrue(selenium.isTextPresent(correctLoanAmount.replace(",", "")));
+        Assert.assertTrue(selenium.isTextPresent(loanAmount));
         selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
         return new LoanAccountPage(selenium);

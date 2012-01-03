@@ -102,7 +102,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         loanAccountPage.verifyInterestOriginal("190");
         loanAccountPage.verifyFeesOriginal("0");
         loanAccountPage.verifyPenaltyOriginal("0");
-        loanAccountPage.verifyTotalOriginalLoan("2,690");
+        loanAccountPage.verifyTotalOriginalLoan("2690.0");
     }
 
     /**
@@ -132,7 +132,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         loanAccountPage.verifyInterestOriginal("7,596");
         loanAccountPage.verifyFeesOriginal("0");
         loanAccountPage.verifyPenaltyOriginal("0");
-        loanAccountPage.verifyTotalOriginalLoan("24,827");
+        loanAccountPage.verifyTotalOriginalLoan("24827.0");
     }
 
     /**
@@ -163,7 +163,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         loanAccountPage.verifyInterestOriginal("276");
         loanAccountPage.verifyFeesOriginal("0");
         loanAccountPage.verifyPenaltyOriginal("0");
-        loanAccountPage.verifyTotalOriginalLoan("13,609");
+        loanAccountPage.verifyTotalOriginalLoan("13609.0");
     }
 
     /**
@@ -194,7 +194,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         loanAccountPage.verifyInterestOriginal("15,652");
         loanAccountPage.verifyFeesOriginal("0");
         loanAccountPage.verifyPenaltyOriginal("0");
-        loanAccountPage.verifyTotalOriginalLoan("72,851");
+        loanAccountPage.verifyTotalOriginalLoan("72851.0");
     }
 
     /**
@@ -234,7 +234,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         loanAccountPage.verifyInterestOriginal("5,617.559");
         loanAccountPage.verifyFeesOriginal("0");
         loanAccountPage.verifyPenaltyOriginal("0");
-        loanAccountPage.verifyTotalOriginalLoan("15,617.75");
+        loanAccountPage.verifyTotalOriginalLoan("15617.75");
     }
 
     /**
@@ -274,7 +274,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         loanAccountPage.verifyInterestOriginal("1,457.5");
         loanAccountPage.verifyFeesOriginal("0");
         loanAccountPage.verifyPenaltyOriginal("0");
-        loanAccountPage.verifyTotalOriginalLoan("21,457.4");
+        loanAccountPage.verifyTotalOriginalLoan("21457.4");
     }
 
     /**
@@ -293,6 +293,6 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         loanAccountPage.verifyInterestOriginal("461");
         loanAccountPage.verifyFeesOriginal("0");
         loanAccountPage.verifyPenaltyOriginal("0");
-        loanAccountPage.verifyTotalOriginalLoan("10,461");
+        loanAccountPage.verifyTotalOriginalLoan("10461.0");
     }
 }

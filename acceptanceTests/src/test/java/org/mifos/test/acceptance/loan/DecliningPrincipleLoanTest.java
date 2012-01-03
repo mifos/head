@@ -144,10 +144,10 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         verifyAdjustmentFromLoanAccountPage("291.9", RepaymentScheduleData.MULTIPLE_DUE_FIRST_ADJUSTMENT);
         verifyAdjustmentFromRepaymentSchedule("112.3", RepaymentScheduleData.MULTIPLE_DUE_SECOND_ADJUSTMENT);
         verifyAdjustmentFromInstallmentsDetails("102.8", RepaymentScheduleData.MULTIPLE_DUE_THIRD_ADJUSTMENT);
-        verifyAdjustmentFromLoanAccountPage("200.0", RepaymentScheduleData.MULTIPLE_DUE_FORTH_ADJUSTMENT);
+        verifyAdjustmentFromLoanAccountPage("200", RepaymentScheduleData.MULTIPLE_DUE_FORTH_ADJUSTMENT);
         verifyAdjustmentFromRepaymentSchedule("104.4", RepaymentScheduleData.MULTIPLE_DUE_FIFTH_ADJUSTMENT);
         verifyAdjustmentFromInstallmentsDetails("305.1", RepaymentScheduleData.MULTIPLE_DUE_SIXTH_ADJUSTMENT);
-        verifyAdjustmentFromRepaymentSchedule("403.0", RepaymentScheduleData.MULTIPLE_DUE_SEVENTH_ADJUSTMENT);
+        verifyAdjustmentFromRepaymentSchedule("403", RepaymentScheduleData.MULTIPLE_DUE_SEVENTH_ADJUSTMENT);
     }
 
     private void verifyRepaymentAndAdjustment(DateTime repaymentDate, DateTime adjustmentDate, String loanAmount, String[][] repaymentAccountSummery, String[][] adjustedAccountSummery, String loanStatus) throws UnsupportedEncodingException {

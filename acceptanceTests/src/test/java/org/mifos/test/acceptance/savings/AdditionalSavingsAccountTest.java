@@ -507,7 +507,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
     public void savingsAccountsWithAdjustments() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011,1,1,13,0,0,0);
+        DateTime targetTime = new DateTime(2012,1,1,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         //When
@@ -530,7 +530,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
 
         depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.WITHDRAWAL, "250.0");
 
-        targetTime = new DateTime(2011,2,1,13,0,0,0);
+        targetTime = new DateTime(2012,2,1,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         navigationHelper.navigateToAdminPage();
