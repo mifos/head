@@ -156,6 +156,7 @@ public interface NamedQueryConstants {
     /** Account */
     String GET_CUSTOMER_STATE_CHECKLIST = "customer.checklist";
     String GET_LAST_MEETINGDATE_FOR_CUSTOMER = "accounts.getLastMeetingDateforCustomer";
+    String GET_ACTIVE_GROUPS_FOR_CENTER = "Customer.getGroupsListForCenter";//By Prudhvi : Hugo Technologies
 
     String RETRIEVE_SAVINGS_ACCCOUNT = "accounts.retrieveSavingsAccounts";
     String RETRIEVE_SAVINGS_ACCCOUNT_FOR_CUSTOMER = "accounts.retrieveSavingsAccountsForCustomer";

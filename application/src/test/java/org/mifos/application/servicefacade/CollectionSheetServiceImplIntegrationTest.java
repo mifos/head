@@ -78,7 +78,8 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
 
         Boolean illegalArgumentExceptionThrown = false;
         try {
-            collectionSheetService.retrieveCollectionSheet(null, new LocalDate());
+        	Integer i=null;//By Prudhvi : Hugo Technologies
+            collectionSheetService.retrieveCollectionSheet(i, new LocalDate());
         } catch (IllegalArgumentException e) {
             illegalArgumentExceptionThrown = true;
         }

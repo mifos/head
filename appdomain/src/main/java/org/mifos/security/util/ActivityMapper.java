@@ -190,8 +190,16 @@ public class ActivityMapper {
         parseActionSecurity(getReportsCategorySecurity());
         parseActionSecurity(getBirtAdminDocumentUploadSecurity());
         parseActionSecurity(getImportTransactionsSecurity());
-
+        //By Prudhvi : Hugo technologies
+        parseActionSecurity(getCollectionSheetMemberEntrySecurity());
         parseActionSecurity(getMigrateSecurity());
+    }
+  //By Prudhvi: Hugo technologies
+    private ActionSecurity getCollectionSheetMemberEntrySecurity() {
+        ActionSecurity security = new ActionSecurity("collectionsheetmemberaction");   
+        security.allow("loadMembers", SecurityConstants.VIEW);        
+        
+        return security;
     }
 
     private ActionSecurity getMigrateSecurity() {

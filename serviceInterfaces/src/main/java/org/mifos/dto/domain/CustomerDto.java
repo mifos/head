@@ -49,6 +49,16 @@ public class CustomerDto implements Serializable {
         this.customerLevelId = levelId;
 
     }
+  //By prudhvi 
+    public CustomerDto(java.lang.Integer customerId, java.lang.String displayName, Short levelId,
+            String customerSearchId,String globalCustNum) {
+        this.customerId = customerId;
+        this.displayName = displayName;
+        this.customerSearchId = customerSearchId;
+        this.customerLevelId = levelId;
+        this.globalCustNum=globalCustNum;
+
+    }
 
     public CustomerDto(java.lang.Integer customerId, java.lang.String displayName, Short levelId,
             String customerSearchId) {

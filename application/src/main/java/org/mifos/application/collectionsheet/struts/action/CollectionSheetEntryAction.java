@@ -162,20 +162,29 @@ public class CollectionSheetEntryAction extends BaseAction {
     public ActionForward getLastMeetingDateForCustomer(final ActionMapping mapping, final ActionForm form,
             final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 
-        final BulkEntryActionForm actionForm = (BulkEntryActionForm) form;
 
-        final Integer customerId = Integer.valueOf(actionForm.getCustomerId());
-        final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = retrieveFromRequestCollectionSheetEntryFormDto(request);
+		final BulkEntryActionForm actionForm = (BulkEntryActionForm) form;
 
-        final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto = collectionSheetServiceFacade
-                .loadMeetingDateForCustomer(customerId, previousCollectionSheetEntryFormDto);
+		final Integer customerId = Integer.valueOf(actionForm.getCustomerId());
+		final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = retrieveFromRequestCollectionSheetEntryFormDto(request);
 
-        actionForm.setTransactionDate(latestCollectionSheetEntryFormDto.getMeetingDate());
 
-        storeOnRequestCollectionSheetEntryFormDto(request, latestCollectionSheetEntryFormDto);
+		//commented By Prudhvi:HugoTechnologies
+		//final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto = collectionSheetServiceFacade.loadMeetingDateForCustomer(customerId, previousCollectionSheetEntryFormDto);
+		//actionForm.setTransactionDate(latestCollectionSheetEntryFormDto.getMeetingDate());
+		//storeOnRequestCollectionSheetEntryFormDto(request, latestCollectionSheetEntryFormDto);
 
-        return mapping.findForward(CollectionSheetEntryConstants.LOADSUCCESS);
+		//By Prudhvi:HugoTechnologies        
+		final CollectionSheetEntryFormDto groupsCollectionFormDto = collectionSheetServiceFacade.loadGroupsForCustomer(customerId,previousCollectionSheetEntryFormDto);
+		actionForm.setTransactionDate(groupsCollectionFormDto.getMeetingDate());
+		storeOnRequestCollectionSheetEntryFormDto(request, groupsCollectionFormDto);
+		
+		request.getSession().setAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO, groupsCollectionFormDto);
+		//end
+		
+		return mapping.findForward(CollectionSheetEntryConstants.LOADSUCCESS);
     }
+
 
     /**
      * This method is called once the search criteria have been entered by the user to generate the bulk entry details
@@ -185,27 +194,29 @@ public class CollectionSheetEntryAction extends BaseAction {
      */
     @TransactionDemarcate(joinToken = true)
     public ActionForward get(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+			final HttpServletResponse response) throws Exception {
 
-        logTrackingInfo("get", request, form);
+		logTrackingInfo("get", request, form);
 
-        final BulkEntryActionForm collectionSheetEntryActionForm = (BulkEntryActionForm) form;
-        final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = retrieveFromRequestCollectionSheetEntryFormDto(request);
+		final BulkEntryActionForm collectionSheetEntryActionForm = (BulkEntryActionForm) form;
+		//commented by Prudhvi
+//		final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = retrieveFromRequestCollectionSheetEntryFormDto(request);
+		final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto =(CollectionSheetEntryFormDto)request.getSession().getAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO);//By Prudhvi
+		
+		final CollectionSheetEntryFormDtoDecorator dtoDecorator = new CollectionSheetEntryFormDtoDecorator( previousCollectionSheetEntryFormDto);
 
-        final CollectionSheetEntryFormDtoDecorator dtoDecorator = new CollectionSheetEntryFormDtoDecorator(
-                previousCollectionSheetEntryFormDto);
-        final CollectionSheetFormEnteredDataDto formEnteredDataDto = new FormEnteredDataAssembler(
-                collectionSheetEntryActionForm, dtoDecorator).toDto();
+		final CollectionSheetFormEnteredDataDto formEnteredDataDto = new FormEnteredDataAssembler(collectionSheetEntryActionForm, dtoDecorator).toDto();
+		
 
-        final MifosCurrency currency = Configuration.getInstance().getSystemConfig().getCurrency();
+		final MifosCurrency currency = Configuration.getInstance().getSystemConfig().getCurrency();
 
-        final CollectionSheetEntryGridDto collectionSheetEntry = collectionSheetServiceFacade
-                .generateCollectionSheetEntryGridView(formEnteredDataDto, currency);
+		final CollectionSheetEntryGridDto collectionSheetEntry = collectionSheetServiceFacade
+		.generateCollectionSheetEntryGridView(formEnteredDataDto, currency);
 
-        storeOnRequestCollectionSheetEntryDto(request, collectionSheetEntry);
+		storeOnRequestCollectionSheetEntryDto(request, collectionSheetEntry);
 
-        return mapping.findForward(CollectionSheetEntryConstants.GETSUCCESS);
-    }
+		return mapping.findForward(CollectionSheetEntryConstants.GETSUCCESS);
+	}
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
@@ -464,6 +475,11 @@ public class CollectionSheetEntryAction extends BaseAction {
         SessionUtils.setAttribute(CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED,
                 latestCollectionSheetEntryFormDto.getBackDatedTransactionAllowed(), request);
         SessionUtils.setAttribute("LastMeetingDate", latestCollectionSheetEntryFormDto.getMeetingDate(), request);
+      //by Prudhvi Hugo Technologies
+      		SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.GROUPSLIST,
+      				latestCollectionSheetEntryFormDto.getGroupsList(), request);		
+      		SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.MEMBERSLIST,
+      				latestCollectionSheetEntryFormDto.getMembersList(), request);
     }
 
     private CollectionSheetEntryGridDto retrieveFromRequestCollectionSheetEntryDto(final HttpServletRequest request)

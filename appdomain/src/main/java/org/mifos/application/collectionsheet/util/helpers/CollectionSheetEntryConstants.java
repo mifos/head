@@ -38,10 +38,15 @@ public interface CollectionSheetEntryConstants {
     String CREATE_FAILURE = "create_failure";
     String PREVIOUSSUCCESS = "previous_success";
     String GET_FAILURE = "get_failure";
+    String LOAD_MEMBER_SUCCESS="load_member_success";//BY Prudhvi:Hugo Technologies
+    
 
     String BRANCHOFFICESLIST = "BranchOfficesList";
     String LOANOFFICERSLIST = "LoanOfficersList";
     String CUSTOMERSLIST = "CustomersList";
+    String GROUPSLIST="CenterGroupList";//By Prudhvi : Hugo Technologies
+    String MEMBERSLIST="GroupMemberList";//By Prudhvi : Hugo Technologies
+
 
     String MEETINGDATE = "MeetingDate";
     String PRODUCTSLIST = "ProductsList";

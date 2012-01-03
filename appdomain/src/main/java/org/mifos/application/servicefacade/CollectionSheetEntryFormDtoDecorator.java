@@ -64,6 +64,29 @@ public class CollectionSheetEntryFormDtoDecorator {
         }
         return null;
     }
+    //By Prudhvi : HugoTechnologies
+    public CustomerDto findSelectedGroupById(final Integer selectedGroupId) {
+
+        for (CustomerDto customer : collectionSheetEntryFormDto.getGroupsList()) {
+            if (selectedGroupId.intValue() == customer.getCustomerId().intValue()) {
+                return customer;
+            }
+        }
+        return null;
+    }
+    //By Prudhvi : Hugo Technologies
+    public CustomerDto findSelectedMemberById(final Integer selectedMemberId) {
+    	if(collectionSheetEntryFormDto.getMembersList()!=null){
+
+        for (CustomerDto customer : collectionSheetEntryFormDto.getMembersList()) {
+            if (selectedMemberId.intValue() == customer.getCustomerId().intValue()) {
+                return customer;
+            }
+        }
+    	}
+        return null;
+    }
+
 
     public ListItem<Short> findSelectedPaymentTypeById(final Short paymentId) {
 
