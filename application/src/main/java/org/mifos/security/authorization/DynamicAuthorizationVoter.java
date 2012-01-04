@@ -43,17 +43,17 @@ public class DynamicAuthorizationVoter implements AccessDecisionVoter {
     }
 
     @Override
-    public boolean supports(Class<?> clazz) {
+    public boolean supports(Class clazz) {
         return true;
     }
 
     @Override
-    public int vote(Authentication authentication, Object object, Collection<ConfigAttribute> attributes) {
+    public int vote(Authentication authentication, Object object, Collection attributes) {
 
         Object principal = authentication.getPrincipal();
 
-        for (ConfigAttribute configAttribute : attributes) {
-            if (supports(configAttribute)) {
+        for (Object configAttribute : attributes) {
+            if (supports((ConfigAttribute) configAttribute)) {
 
             }
         }

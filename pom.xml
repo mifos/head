@@ -50,7 +50,7 @@
         <hibernate.version>3.6.0.Final</hibernate.version>
         <c3p0.version>0.9.1.2</c3p0.version>
         <spring.version>3.1.0.RELEASE</spring.version>
-        <spring.sec.version>3.0.4.RELEASE</spring.sec.version>
+        <spring.sec.version>3.1.0.RELEASE</spring.sec.version>
         <spring.web.version>2.2.1.RELEASE</spring.web.version>
         <slf4j.version>1.6.1</slf4j.version>
         <powermock.version>1.4.7</powermock.version>
@@ -250,6 +250,11 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-expression</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
