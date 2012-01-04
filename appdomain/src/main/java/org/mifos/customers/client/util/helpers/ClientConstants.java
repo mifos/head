@@ -47,7 +47,7 @@ public interface ClientConstants {
     String LIVING_STATUS_ENTITY="livingStatusEntity";
     String MARITAL_STATUS_ENTITY = "maritalStatusEntity";
     String CITIZENSHIP_ENTITY = "citizenshipEntity";
-    String ETHINICITY_ENTITY = "ethinicityEntity";
+    String ETHNICITY_ENTITY = "ethnicityEntity";
     String POVERTY_STATUS = "povertyStatus";
     String EDUCATION_LEVEL_ENTITY = "educationLevelEntity";
     String BUSINESS_ACTIVITIES_ENTITY = "businessActivitiesEntity";
@@ -64,7 +64,7 @@ public interface ClientConstants {
     String HANDICAPPED_ENTITY_NAME = "handicappedEntityName";
     String MARITAL_STATUS_ENTITY_NAME = "maritalStatusEntityName";
     String CITIZENSHIP_ENTITY_NAME = "citizenshipEntityName";
-    String ETHINICITY_ENTITY_NAME = "ethinicityEntityName";
+    String ETHNICITY_ENTITY_NAME = "ethnicityEntityName";
     String EDUCATION_LEVEL_ENTITY_NAME = "educationLevelEntityName";
 
     /** Request parameter names for the dropdown values */
@@ -74,7 +74,7 @@ public interface ClientConstants {
 
     String MARITAL_STATUS_VALUE = "maritalStatusValue";
     String CITIZENSHIP_VALUE = "citizenshipValue";
-    String ETHINICITY_VALUE = "ethinicityValue";
+    String ETHNICITY_VALUE = "ethnicityValue";
 
     String EDUCATION_LEVEL_VALUE = "educationLevelValue";
     String BUSINESS_ACTIVITIES_VALUE = "businessActivitiesValue";

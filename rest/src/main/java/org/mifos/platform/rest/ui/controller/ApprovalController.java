@@ -3,10 +3,12 @@ package org.mifos.platform.rest.ui.controller;
 import java.util.List;
 
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.dto.screen.PersonnelInformationDto;
 import org.mifos.rest.approval.domain.ApprovalState;
 import org.mifos.rest.approval.domain.RESTApprovalEntity;
 import org.mifos.rest.approval.service.ApprovalService;
+import org.mifos.rest.config.RESTConfigKey;
 import org.mifos.ui.core.controller.AdminBreadcrumbBuilder;
 import org.mifos.ui.core.controller.BreadCrumbsLinks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +26,17 @@ public class ApprovalController {
     @Autowired
     PersonnelServiceFacade personnelServiceFacade;
 
+    @Autowired
+    ConfigurationServiceFacade configurationServiceFacade;
+
     @RequestMapping("restApprovalList.ftl")
     public ModelAndView list() {
         ModelAndView mav = new ModelAndView("approval/list");
         List<BreadCrumbsLinks> breadcrumbs = new AdminBreadcrumbBuilder().withLink("View REST Approval List", "").build();
+        mav.addObject("isApprovalRequired", RESTConfigKey.isApprovalRequired(configurationServiceFacade));
         mav.addObject("breadcrumbs", breadcrumbs);
         mav.addObject("waitingForApprovalList", approvalService.getAllWaiting());
-        List<RESTApprovalEntity> approvedOrRejected = approvalService.getAllApproved();
-        approvedOrRejected.addAll(approvalService.getAllRejected());
-        mav.addObject("approvedList", approvedOrRejected);
+        mav.addObject("approvedList", approvalService.getAllNotWaiting());
         return mav;
     }
 

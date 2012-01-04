@@ -1,0 +1,22 @@
+{
+   "address":null,
+   "name":"Mifos HO",
+   "id":1,
+   "displayName":"Head Office(Mifos HO )",
+   "text":"Mifos HO",
+   "levelId":1,
+   "searchId":"1.1.",
+   "officeId":1,
+   "customFields":[
+
+   ],
+   "globalNum":"0001",
+   "lookupNameKey":"",
+   "parentId":null,
+   "officeShortName":"MIF1",
+   "versionNum":1,
+   "statusId":1,
+   "parentOfficeName":null,
+   "officeStatusName":"Active",
+   "officeLevelName":"Head Office"
+}

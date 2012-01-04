@@ -6,7 +6,10 @@
 <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
 <span id="page.id" title="approval.list"></span>
 <div class="content "> <!--  Main Content Begins-->
-[@mifos.crumbs breadcrumbs /]
+[@widget.crumbs breadcrumbs /]
+[#if !isApprovalRequired]
+    <p class="margin5top10bottom"><font color="red">REST API Approval feature is turned off</font></p>
+[/#if]
 <br /><br />
 <span id="dialog" title="Operation Details" style="display:none;">Details</span>
 <table id="waitingForApprovalList" class="datatable">
@@ -28,9 +31,7 @@
                <td>${approval.operation}</td>
                <td>${approval.printableCreatedOnDate}</td>
                <td>${approval.state}</td>
-               <td> <a href="#" onclick='approve(${approval.id})'>Approve</a> &nbsp;|&nbsp;
-                    <a href="#" onclick='editArgs(${approval.id})'>Details</a>&nbsp;|&nbsp;
-                    <a href="#" onclick='reject(${approval.id})'>Reject</a> </td>
+               <td><a href="#" onclick='openDialog(${approval.id})'>Details (Approve/Reject)</a></td>
             </tr>
         [/#list]
     </tbody>
@@ -49,7 +50,7 @@
 			<th>Operation</th>
 			<th>State</th>
 			<th>Created Date</th>
-			<th>Aprroval Date</th>
+			<th>Approval Date</th>
 			<th>-</th>
 		</tr>
 	</thead>
@@ -62,7 +63,7 @@
                <td>${approval.state}</td>
                <td>${approval.printableCreatedOnDate}</td>
                <td>${approval.printableApprovedOnDate}</td>
-               <td><a href="#" onclick='editArgs(${approval.id})'>Details</a></td>
+               <td><a href="#" onclick='openDialog(${approval.id})'>Details</a></td>
             </tr>
         [/#list]
     </tbody>
@@ -73,11 +74,23 @@
 #dialog span {
    margin-left: 5px;
 }
+.args {
+    text-align: right;
+    width: 500px;
+    clear: both;
+}
+.args input {
+    margin-left: 10px;
+    float: right;
+}
 .sorting {
     background-color: #C3D9FF;
 }
 #separateHR {
     width:100%;
+}
+.datatable {
+    float: left;
 }
 .datatables_wrapper {
     min-height: 30px;

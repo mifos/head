@@ -132,7 +132,7 @@ public class MandatoryHiddenFieldServiceImpl implements MandatoryHiddenFieldServ
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.EXTERNAL_ID)) {
             fieldConfiguration.update(getShortValue(dto.isMandatorySystemExternalId()), getShortValue(dto
                     .isHideSystemExternalId()));
-        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ETHINICITY)) {
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ETHNICITY)) {
             fieldConfiguration.update(getShortValue(dto.isMandatorySystemEthnicity()), getShortValue(dto
                     .isHideSystemEthnicity()));
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.CITIZENSHIP)) {
@@ -207,7 +207,7 @@ public class MandatoryHiddenFieldServiceImpl implements MandatoryHiddenFieldServ
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.EXTERNAL_ID)) {
             fieldConfiguration.update(getShortValue(dto.isMandatorySystemExternalId()), getShortValue(dto
                     .isHideSystemExternalId()));
-        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ETHINICITY)) {
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ETHNICITY)) {
             fieldConfiguration.update(getShortValue(dto.isMandatorySystemEthnicity()), getShortValue(dto
                     .isHideSystemEthnicity()));
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.CITIZENSHIP)) {

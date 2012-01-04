@@ -29,7 +29,10 @@
     <context:component-scan base-package="org.mifos.platform.rest.controller.stub" />
     
     <context:component-scan base-package="org.mifos.rest.approval" />
-    
+
+    <bean class="org.springframework.core.LocalVariableTableParameterNameDiscoverer"/>
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean"/>
+
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     	<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
      	<property name="url" value="jdbc:hsqldb:mem:restMifos" />

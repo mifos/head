@@ -228,6 +228,9 @@ import org.mifos.platform.validations.ErrorEntry;
 import org.mifos.platform.validations.Errors;
 import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
+import org.mifos.security.util.ActivityContext;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1153,9 +1156,17 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Override
     public LoanInstallmentDetailsDto retrieveInstallmentDetails(Integer accountId) {
-
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+        
         LoanBO loanBO = this.loanDao.findById(accountId);
 
+        try {
+            personnelDao.checkAccessPermission(userContext, loanBO.getOfficeId(), loanBO.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
         InstallmentDetailsDto viewUpcomingInstallmentDetails = getUpcomingInstallmentDetails(loanBO.getDetailsOfNextInstallment(), loanBO.getCurrency());
         InstallmentDetailsDto viewOverDueInstallmentDetails = getOverDueInstallmentDetails(loanBO.getDetailsOfInstallmentsInArrears(), loanBO.getCurrency());
 
@@ -1168,8 +1179,22 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     @Override
-    public List<LoanRepaymentScheduleItemDto> retrieveLoanRepaymentSchedule(String globalAccountNum) {
-        LoanBO loanBO = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+    public List<LoanRepaymentScheduleItemDto> retrieveLoanRepaymentSchedule(String globalAccountNum, Date viewDate) {
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+    	
+    	LoanBO loanBO = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+
+        try {
+            personnelDao.checkAccessPermission(userContext, loanBO.getOfficeId(), loanBO.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+    	
+        Errors errors = loanBusinessService.computeExtraInterest(loanBO, viewDate);
+        if (errors.hasErrors()) {
+            throw new MifosRuntimeException(errors.getErrorEntries().get(0).getDefaultMessage());
+        }
 
         List<LoanRepaymentScheduleItemDto> loanSchedule = new ArrayList<LoanRepaymentScheduleItemDto>();
 
@@ -1246,9 +1271,19 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Override
     public void makeEarlyRepayment(RepayLoanInfoDto repayLoanInfoDto) {
-
+    	
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+        
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(repayLoanInfoDto.getGlobalAccountNum());
+        
         try {
-            LoanBO loan = this.loanDao.findByGlobalAccountNum(repayLoanInfoDto.getGlobalAccountNum());
+            personnelDao.checkAccessPermission(userContext, loan.getOfficeId(), loan.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
+        try {
             if (repayLoanInfoDto.isWaiveInterest() && !loan.isInterestWaived()) {
                 throw new BusinessRuleException(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED);
             }
@@ -1296,6 +1331,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         UserContext userContext = new UserContextFactory().create(mifosUser);
 
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+
+        try {
+            personnelDao.checkAccessPermission(userContext, loan.getOfficeId(), loan.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
+        }
+
         String fundName = null;
         if (loan.getFund() != null) {
             fundName = loan.getFund().getFundName();
@@ -1324,11 +1366,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         if(!loan.getAccountFees().isEmpty()) {
             for (AccountFeesEntity accountFeesEntity: loan.getAccountFees()) {
                 AccountFeesDto accountFeesDto = new AccountFeesDto(accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId(),
-                                                                  accountFeesEntity.getFeeStatus(), accountFeesEntity.getFees().getFeeName(),
-                                                                  accountFeesEntity.getAccountFeeAmount().toString(),
-                                                                  getMeetingRecurrence(accountFeesEntity.getFees().getFeeFrequency()
-                                                                          .getFeeMeetingFrequency(), userContext),
-                                                                  accountFeesEntity.getFees().getFeeId());
+                        (accountFeesEntity.getFees().getFeeFrequency().getFeePayment() != null ?
+                                accountFeesEntity.getFees().getFeeFrequency().getFeePayment().getId() : null),
+                        accountFeesEntity.getFeeStatus(), accountFeesEntity.getFees().getFeeName(),
+                        accountFeesEntity.getAccountFeeAmount().toString(),
+                        getMeetingRecurrence(accountFeesEntity.getFees().getFeeFrequency()
+                                .getFeeMeetingFrequency(), userContext),
+                        accountFeesEntity.getFees().getFeeId());
                 accountFeesDtos.add(accountFeesDto);
             }
         }
@@ -1471,7 +1515,17 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Override
     public RepayLoanDto retrieveLoanRepaymentDetails(String globalAccountNumber) {
-        LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNumber);
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+        
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNumber);
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, loan.getOfficeId(), loan.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
         Money repaymentAmount;
         Money waiverAmount;
         if (loan.isDecliningBalanceInterestRecalculation()) {
@@ -1607,6 +1661,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(mifosUser);
 
+        LoanBO loan = this.loanDao.findById(loanDisbursement.getAccountId());
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, loan.getOfficeId(), loan.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
         PaymentTypeDto paymentType = null;
         try {
             for (org.mifos.dto.domain.PaymentTypeDto paymentTypeDto : accountService.getLoanDisbursementTypes()) {
@@ -1982,6 +2044,23 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
 
         return createdLoanAccountNumbers;
+    }
+
+    private void checkPermissionForCreate(Short newState, UserContext userContext, Short officeId, Short loanOfficerId) {
+        if (!isPermissionAllowed(newState, userContext, officeId, loanOfficerId)) {
+            throw new BusinessRuleException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+    }
+    
+    private void checkPermission(UserContext userContext, Short officeId, Short loanOfficerId){
+    	
+    }
+
+    private boolean isPermissionAllowed(final Short newSate, final UserContext userContext, final Short officeId,
+            final Short loanOfficerId) {
+        return legacyRolesPermissionsDao.isActivityAllowed(
+                userContext,
+                new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newSate), officeId, loanOfficerId));
     }
 
     @Override

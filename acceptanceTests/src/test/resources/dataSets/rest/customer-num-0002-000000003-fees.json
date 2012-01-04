@@ -1,0 +1,18 @@
+{
+   "Misc Fees":{
+      "feeId":"-1",
+      "paymentType":null,
+      "periodicity":null,
+      "amountOrRate":null,
+      "isRateType":"0",
+      "formula":null
+   },
+   "Misc Penalty":{
+      "feeId":"-2",
+      "paymentType":null,
+      "periodicity":null,
+      "amountOrRate":null,
+      "isRateType":"0",
+      "formula":null
+   }
+}

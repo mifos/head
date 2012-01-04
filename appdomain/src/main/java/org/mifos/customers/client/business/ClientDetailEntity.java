@@ -30,7 +30,7 @@ public class ClientDetailEntity extends AbstractEntity {
 
     private final Integer customerId;
     private ClientBO client;
-    private Integer ethinicity;
+    private Integer ethnicity;
     private Integer citizenship;
     private Integer handicapped;
     private Integer businessActivities;
@@ -52,7 +52,7 @@ public class ClientDetailEntity extends AbstractEntity {
         super();
         this.customerId = null;
         this.client = client;
-        this.ethinicity = view.getEthinicity();
+        this.ethnicity = view.getEthnicity();
         this.citizenship = view.getCitizenship();
         this.handicapped = view.getHandicapped();
         this.businessActivities = view.getBusinessActivities();
@@ -70,7 +70,7 @@ public class ClientDetailEntity extends AbstractEntity {
         super();
         this.customerId = null;
         this.client = null;
-        this.ethinicity = null;
+        this.ethnicity = null;
         this.citizenship = null;
         this.handicapped = null;
         this.businessActivities = null;
@@ -83,12 +83,12 @@ public class ClientDetailEntity extends AbstractEntity {
         this.povertyLikelihoodPercent = null;
     }
 
-    public Integer getEthinicity() {
-        return this.ethinicity;
+    public Integer getEthnicity() {
+        return this.ethnicity;
     }
 
-    public void setEthinicity(Integer ethinicity) {
-        this.ethinicity = ethinicity;
+    public void setEthnicity(Integer ethnicity) {
+        this.ethnicity = ethnicity;
     }
 
     public Integer getCitizenship() {
@@ -192,7 +192,7 @@ public class ClientDetailEntity extends AbstractEntity {
     }
 
     public void updateClientDetails(ClientPersonalDetailDto view) {
-        this.ethinicity = view.getEthinicity();
+        this.ethnicity = view.getEthnicity();
         this.citizenship = view.getCitizenship();
         this.handicapped = view.getHandicapped();
         this.businessActivities = view.getBusinessActivities();
@@ -206,7 +206,7 @@ public class ClientDetailEntity extends AbstractEntity {
     }
 
     public ClientPersonalDetailDto toDto() {
-        return new ClientPersonalDetailDto(this.ethinicity, this.citizenship, this.handicapped, this.businessActivities,
+        return new ClientPersonalDetailDto(this.ethnicity, this.citizenship, this.handicapped, this.businessActivities,
                 this.maritalStatus, this.educationLevel, this.numChildren, this.gender, this.povertyStatus);
     }
 }

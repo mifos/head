@@ -20,16 +20,32 @@
 
 package org.mifos.test.acceptance.client;
 
+import static java.util.Arrays.asList;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
+import org.joda.time.DateTime;
 import org.junit.Assert;
+import org.mifos.test.acceptance.admin.FeeTestHelper;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
 import org.mifos.test.acceptance.framework.account.AccountStatus;
 import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.DefineAcceptedPaymentTypesPage;
+import org.mifos.test.acceptance.framework.admin.DefineHiddenMandatoryFieldsPage;
+import org.mifos.test.acceptance.framework.admin.FeesCreatePage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPage;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIParameters;
@@ -50,7 +66,10 @@ import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGrou
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.group.GroupCloseReason;
 import org.mifos.test.acceptance.framework.group.GroupStatus;
+import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
+import org.mifos.test.acceptance.framework.loan.ChargeParameters;
+import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
@@ -64,6 +83,7 @@ import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
@@ -73,27 +93,15 @@ import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsProductHelper;
+import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.StringUtil;
+import org.mifos.test.acceptance.util.TestDataSetup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
-import static java.util.Arrays.asList;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @SuppressWarnings({"PMD.TooManyFields","PMD.ExcessiveClassLength"})
@@ -107,6 +115,7 @@ public class ClientTest extends UiTestCaseBase {
     private GroupTestHelper groupTestHelper;
     private SavingsAccountHelper savingsAccountHelper;
     private SavingsProductHelper savingsProductHelper;
+    private FeeTestHelper feeTestHelper;
 
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
@@ -145,6 +154,13 @@ public class ClientTest extends UiTestCaseBase {
         groupTestHelper = new GroupTestHelper(selenium);
         savingsAccountHelper = new SavingsAccountHelper(selenium);
         savingsProductHelper = new SavingsProductHelper(selenium);
+        
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2009, 7, 11, 12, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
+        
+        feeTestHelper = new FeeTestHelper(dataSetup, navigationHelper);
     }
 
     @AfterMethod(alwaysRun = true)
@@ -186,6 +202,39 @@ public class ClientTest extends UiTestCaseBase {
         applyPaymentPage.verifyModeOfPayments();
 
     }
+    
+    @Test(singleThreaded = true, groups = {"smoke", "client", "acceptance", "ui"}, enabled=true)
+    public void verifyErrorsMessages() {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        DefineHiddenMandatoryFieldsPage mandatoryFieldsPage = adminPage.navigateToDefineHiddenMandatoryFields();
+
+        mandatoryFieldsPage.checkMandatoryCitizenShip();
+        mandatoryFieldsPage.checkMandatoryEthnicity();
+        mandatoryFieldsPage.checkMandatoryMaritalStatus();
+        
+        mandatoryFieldsPage.submit();
+        
+        CreateClientEnterPersonalDataPage personalDataPage = navigationHelper.navigateToCreateClientEnterPersonalDataPage(officeName);
+        
+        String[] errors = personalDataPage.getMandatoryBlankFieldsNames();
+        String[] fields = new String[] { "Salutation", "First Name", "Last Name", "Date of birth", "Gender",
+                "Ethnicity", "Citizenship", "Poverty status", "Marital Status" };
+        
+        for(int i = 0; i < fields.length; ++i) {
+            Assert.assertEquals(fields[i], errors[i]);
+        }
+        
+        adminPage = navigationHelper.navigateToAdminPage();
+        
+        adminPage.navigateToDefineHiddenMandatoryFields();
+        
+        mandatoryFieldsPage.uncheckMandatoryCitizenShip();
+        mandatoryFieldsPage.uncheckMandatoryEthnicity();
+        mandatoryFieldsPage.uncheckMandatoryMaritalStatus();
+        
+        mandatoryFieldsPage.submit();
+        adminPage.logout();
+    }
 
     @Test(singleThreaded = true, groups = {"smoke", "client", "acceptance", "ui"}, enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -197,6 +246,70 @@ public class ClientTest extends UiTestCaseBase {
 
         // When / Then
         clientTestHelper.changeCustomerStatus(clientDetailsPage);
+    }
+
+    @Test(enabled=true)
+    // http://mifosforge.jira.com/browse/MIFOS-4776
+    public void createClientAddTwoFeesTryPayMoreThanAmountVerifyErrorMessage() {
+        String oneTimeFeeName = "One Time Fee";
+        String periodicTimeFee = "Periodic Time Fee";
+        
+        defineNewFree(oneTimeFeeName, SubmitFormParameters.ONETIME_FEE_FREQUENCY, 10.0);
+        defineNewFree(periodicTimeFee, SubmitFormParameters.PERIODIC_FEE_FREQUENCY, 37.0);
+        
+        String clientName = "Stu1233266299995 Client1233266299995";
+
+        ChargeParameters chargeParameters = new ChargeParameters();
+        chargeParameters.setAmount("10");
+        chargeParameters.setType(oneTimeFeeName);
+        clientTestHelper.applyCharge(clientName, chargeParameters);
+        
+        chargeParameters.setAmount("37");
+        chargeParameters.setType(periodicTimeFee);
+        clientTestHelper.applyCharge(clientName, chargeParameters);
+        
+        PaymentParameters params = new PaymentParameters();
+        params.setTransactionDateDD("11");
+        params.setTransactionDateMM("02");
+        params.setTransactionDateYYYY("2009");
+        params.setAmount("48");
+        params.setPaymentType(PaymentParameters.CASH);
+        params.setReceiptId("");
+        params.setReceiptDateDD("");
+        params.setReceiptDateMM("");
+        params.setReceiptDateYYYY("");
+        
+        ApplyPaymentConfirmationPage applyPaymentConfirmationPage = clientTestHelper
+                .navigateToClientViewDetailsPage(clientName)
+                .navigateToViewClientChargesDetail().navigateToApplyPayments()
+                .submitAndNavigateToApplyPaymentConfirmationPage(params);
+        
+        applyPaymentConfirmationPage.dontLoadNext();
+        
+        String actual = applyPaymentConfirmationPage.getSelenium()
+                .getText("//span[@id='reviewapplypayment.error.message']");
+        
+        String expected = "Payment cannot be more than Amount due.";
+        
+        Assert.assertEquals(expected, actual);
+    }
+
+    private void defineNewFree(String name, int feeFrequencyType, double amount) {
+        SubmitFormParameters params = new SubmitFormParameters();
+        params.setFeeName(name);
+        params.setCategoryType(SubmitFormParameters.ALL_CUSTOMERS);
+        params.setFeeFrequencyType(feeFrequencyType);
+        
+        if(feeFrequencyType == SubmitFormParameters.ONETIME_FEE_FREQUENCY) {
+            params.setCustomerCharge(SubmitFormParameters.UPFRONT);
+        } else {
+            params.setFeeRecurrenceType(SubmitFormParameters.WEEKLY_FEE_RECURRENCE);
+            params.setWeekRecurAfter(1);
+        }
+        params.setAmount(amount);
+        params.setGlCode(31301);
+        
+        feeTestHelper.defineFees(params);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

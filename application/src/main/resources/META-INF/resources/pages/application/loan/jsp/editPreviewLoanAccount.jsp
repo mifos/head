@@ -28,6 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<span id="page.id" title="EditPreviewLoanAccount"></span>	
@@ -111,20 +112,20 @@ explanation of the license and how it is applied.
 								
 							<span class="fontnormal"> <mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" /><mifos:mifoslabel
-								name="loan.amt" />:&nbsp; <span class="fontnormal"> <c:out
+								name="loan.amt" />:&nbsp; <span class="fontnormal"> <fmt:formatNumber
 								value="${sessionScope.loanAccountActionForm.loanAmount}" /> </span><br>
 							<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
-								name="loan.int_rate" />:&nbsp; <span class="fontnormal"> <c:out
+								name="loan.int_rate" />:&nbsp; <span class="fontnormal"> <fmt:formatNumber
 								value="${sessionScope.loanAccountActionForm.interestRate}" /> </span><br>
 							<mifos:mifoslabel name="loan.definst" />:&nbsp; <span
-								class="fontnormal"> <c:out
+								class="fontnormal"> <fmt:formatNumber
 								value="${sessionScope.loanAccountActionForm.noOfInstallments}" />
 							</span><br>
 							<mifos:mifoslabel name="loan.proposed_date" />: <span
 								class="fontnormal"> <c:out value="${sessionScope.loanAccountActionForm.disbursementDate}" />
 							<br>
 							</span> <mifos:mifoslabel name="loan.grace_period" />:&nbsp; <span
-								class="fontnormal"> <c:out
+								class="fontnormal"> <fmt:formatNumber
 								value="${sessionScope.loanAccountActionForm.gracePeriodDuration}" />&nbsp;
 							<mifos:mifoslabel name="loan.inst" /><br>
 							</span> <mifos:mifoslabel

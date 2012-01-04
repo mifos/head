@@ -95,7 +95,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         paramsPastDate.addClient(2, "3000.0", "0001-Cow Purchase");
         LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursalWithGLIMandLSIM("Default Group", "GroupEmergencyLoan", paramsPastDate);
         loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE);
-        loanAccountPage.verifyPrincipalOriginal("6000.0");
+        loanAccountPage.verifyPrincipalOriginal("6,000");
     }
 
     /*
@@ -116,9 +116,9 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
 
     private void verifyRedoLoanDisbursalWithPastDate(LoanAccountPage loanAccountPage) {
         loanAccountPage.verifyStatus("Closed- Obligation met");
-        loanAccountPage.verifyTotalOriginalLoan("1029.0");
-        loanAccountPage.verifyTotalAmountPaid("1029.0");
-        loanAccountPage.verifyLoanTotalBalance("0.0");
+        loanAccountPage.verifyTotalOriginalLoan("1029");
+        loanAccountPage.verifyTotalAmountPaid("1,029");
+        loanAccountPage.verifyLoanTotalBalance("0");
         TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
         transactionHistoryPage.verifyTransactionHistory(1028.6, 4, 22);
     }
@@ -149,7 +149,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         loanAccountPage.verifyStatus("Active in Good Standing");
         loanAccountPage.verifyPerformanceHistory("51", "0");
         // Testing multiple reverse payments
-        String payAmount = "63.0";
+        String payAmount = "63";
         String reverseNote = "Reversed ";
         int loanBalance = (int) (Float.parseFloat(loanAccountPage.getTotalBalance()) + 63 * 3);
         for (int i = 0; i < 3; i++) {
@@ -165,19 +165,19 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         transactionHistoryPage.navigateBack();
 
         ViewNextInstallmentDetailsPage installmentPage = loanAccountPage.navigateToViewNextInstallmentDetails();
-        installmentPage.verifyInstallmentAmount(6, 2, "0.0");
-        installmentPage.verifyInstallmentAmount(12, 2, "0.0");
+        installmentPage.verifyInstallmentAmount(6, 2, "0");
+        installmentPage.verifyInstallmentAmount(12, 2, "0");
         installmentPage.navigateBack();
 
         ViewRepaymentSchedulePage repaymentSchedulePage = loanAccountPage.navigateToRepaymentSchedulePage();
         repaymentSchedulePage.verifyRepaymentScheduleTableRow(51, 0, "Installments due");
-        repaymentSchedulePage.verifyRepaymentScheduleTableRow(52, 6, "63.0");
-        repaymentSchedulePage.verifyRepaymentScheduleTableRow(53, 6, "63.0");
-        repaymentSchedulePage.verifyRepaymentScheduleTableRow(54, 6, "63.0");
+        repaymentSchedulePage.verifyRepaymentScheduleTableRow(52, 7, "63.0");
+        repaymentSchedulePage.verifyRepaymentScheduleTableRow(53, 7, "63.0");
+        repaymentSchedulePage.verifyRepaymentScheduleTableRow(54, 7, "63.0");
         repaymentSchedulePage.verifyRepaymentScheduleTableRow(55, 0, "Future Installments");
         repaymentSchedulePage.navigateBack();
 
-        loanAccountPage.verifyLoanTotalBalance(loanBalance + ".0");
+        loanAccountPage.verifyLoanTotalBalance(Integer.toString(loanBalance));
         loanAccountPage.verifyPerformanceHistory("48", "3");
         loanAccountPage.verifyStatus("Active in Good Standing");
     }

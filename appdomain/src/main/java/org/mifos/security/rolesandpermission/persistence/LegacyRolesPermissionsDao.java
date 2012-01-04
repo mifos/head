@@ -205,6 +205,10 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
     }
 
     public boolean isAccessAllowed(UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
+        if (recordLoanOfficerId == null) {
+            // TODO: everyone may access entities without owner?
+            return true;
+        }
         HierarchyManager.BranchLocation where = HierarchyManager.getInstance().compareOfficeInHierarchy(userContext, recordOfficeId);
         return checkAccessByHierarchy(recordLoanOfficerId, where, userContext.getLevel(), userContext.getId());
     }

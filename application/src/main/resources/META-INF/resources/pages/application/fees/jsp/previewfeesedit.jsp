@@ -24,6 +24,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -84,12 +85,12 @@ explanation of the license and how it is applied.
 										</c:choose> </span>
 									<c:choose>
 										<c:when test="${feeModel.rateBasedFee}">
-											<c:out value="${sessionScope.feeactionform.rate}" />
+											<fmt:formatNumber value="${sessionScope.feeactionform.rate}" />
 											<mifos:mifoslabel name="Fees.ofa" />
 											<c:out value="${feeModel.feeFormula.name}" />
 										</c:when>
 										<c:otherwise>
-											<c:out value="${sessionScope.feeactionform.amount}" />
+											<fmt:formatNumber value="${sessionScope.feeactionform.amount}" />
 										</c:otherwise>
 									</c:choose>
 									<br>

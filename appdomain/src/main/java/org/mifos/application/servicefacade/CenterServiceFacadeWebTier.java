@@ -362,6 +362,12 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
             throw new MifosRuntimeException("Center not found for globalCustNum" + globalCustNum);
         }
 
+        try {
+            personnelDao.checkAccessPermission(userContext, center.getOfficeId(), center.getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
+        }
+
         CenterDisplayDto centerDisplay = customerDao.getCenterDisplayDto(center.getCustomerId(),
                 userContext);
 
@@ -385,6 +391,19 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
         CustomerMeetingDto customerMeeting = customerDao.getCustomerMeetingDto(center.getCustomerMeeting(), userContext);
 
+        List<AccountBO> allClosedLoanAndSavingsAccounts = customerDao.retrieveAllClosedLoanAndSavingsAccounts(centerId);
+        List<SavingsDetailDto> closedSavingsAccounts = new ArrayList<SavingsDetailDto>();
+        for (AccountBO closedAccount : allClosedLoanAndSavingsAccounts){
+        	if ( closedAccount.getAccountType().getAccountTypeId() == AccountTypes.SAVINGS_ACCOUNT.getValue().intValue()){
+        		
+        		closedSavingsAccounts.add(new SavingsDetailDto(closedAccount.getGlobalAccountNum(), 
+        				((SavingsBO)closedAccount).getSavingsOffering().getPrdOfferingName(), 
+        				closedAccount.getAccountState().getId(), closedAccount.getAccountState().getName(), 
+                        ((SavingsBO)closedAccount).getSavingsBalance().toString()));
+        	
+        	}
+        }
+        
         Boolean activeSurveys = Boolean.FALSE;//new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.CENTER);
 
         List<SurveyDto> customerSurveys = new ArrayList<SurveyDto>();
@@ -393,7 +412,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
         return new CenterInformationDto(centerDisplay, customerAccountSummary, centerPerformanceHistory, centerAddress,
                 groups, recentCustomerNotes, customerPositions, savingsDetail, customerMeeting, activeSurveys,
-                customerSurveys, customFields);
+                customerSurveys, customFields, closedSavingsAccounts);
     }
 
     @Override
@@ -510,6 +529,8 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         if(!customerAccount.getAccountFees().isEmpty()) {
             for (AccountFeesEntity accountFeesEntity: customerAccount.getAccountFees()) {
                 AccountFeesDto accountFeesDto = new AccountFeesDto(accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId(),
+                        (accountFeesEntity.getFees().getFeeFrequency().getFeePayment() != null ?
+                                accountFeesEntity.getFees().getFeeFrequency().getFeePayment().getId() : null),
                         accountFeesEntity.getFeeStatus(), accountFeesEntity.getFees().getFeeName(),
                         accountFeesEntity.getAccountFeeAmount().toString(),
                         getMeetingRecurrence(accountFeesEntity.getFees().getFeeFrequency().getFeeMeetingFrequency(),

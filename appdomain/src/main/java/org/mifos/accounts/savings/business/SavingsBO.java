@@ -104,6 +104,9 @@ import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A savings account is ...
+ */
 public class SavingsBO extends AccountBO {
 
     private static final Logger logger = LoggerFactory.getLogger(SavingsBO.class);

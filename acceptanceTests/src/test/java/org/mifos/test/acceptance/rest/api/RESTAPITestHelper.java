@@ -45,36 +45,41 @@ public class RESTAPITestHelper {
     
     public static class Type {
         public static final String CLIENT = "client";
-        public static final String CLIENT_CHARGES = "client/charges";
         public static final String GROUP = "group";
-        public static final String GROUP_CHARGES = "group/charges";
         public static final String CENTER = "center";
-        public static final String CENTER_CHARGES = "center/charges";
         public static final String CENTER_COLLECTIONSHEET = "collectionsheet/customer";
-        public static final String CUSTOMER_CHARGE = "customer/charge";
+        public static final String OFFICE = "office";
+        public static final String CUSTOMER = "customer";
         public static final String PERSONNEL = "personnel";
-        public static final String PERSONNEL_CLIENTS = "personnel/clients";
         public static final String SYSTEM = "admin/system";
-        public static final String ACCOUNT_TRXNHISTORY = "account/trxnhistory";
+        public static final String PAYMENT_TYPES = "admin/payment-types";
+        public static final String ACCOUNT = "account";
         public static final String LOAN = "account/loan";
-        public static final String LOAN_INSTALLMENT = "account/loan/installment";
-        public static final String LOAN_SCHEDULE = "account/loan/schedule";
-        public static final String LOAN_REPAYMENT = "account/loan/repay";
-        public static final String LOAN_FULL_REPAYMENT = "account/loan/fullrepay";
-        public static final String LOAN_DISBURSEMENT = "account/loan/disburse";
-        public static final String LOAN_ADJUSTMENT = "account/loan/adjustment";
-        public static final String LOAN_CHARGE = "account/loan/charge";
         public static final String SAVINGS = "account/savings";
-        public static final String SAVINGS_DUE = "account/savings/due";
-        public static final String SAVINGS_DEPOSIT = "account/savings/deposit";
-        public static final String SAVINGS_WITHDRAW = "account/savings/withdraw";
-        public static final String SAVINGS_ADJUSTMENT = "account/savings/adjustment";
     }
 
     public static class By {
         public static final String GLOBAL_NUMBER = "num";
         public static final String ID = "id";
         public static final String MEETINGS = "meetings";
+        public static final String STATE = "state";
+    }
+
+    public static class Op {
+        public static final String TRXNHISTORY = "/trxnhistory";
+        public static final String CHARGE = "/charge";
+        public static final String CHARGES = "/charges";
+        public static final String APPLICABLE_FEES = "/fees";
+        public static final String REPAY = "/repay";
+        public static final String SCHEDULE = "/schedule";
+        public static final String INSTALLMENT = "/installment";
+        public static final String FULLREPAY = "/fullrepay";
+        public static final String DISBURSE = "/disburse";
+        public static final String ADJUSTMENT = "/adjustment";
+        public static final String CLIENTS = "/clients";
+        public static final String DUE = "/due";
+        public static final String DEPOSIT = "/deposit";
+        public static final String WITHDRAW = "/withdraw";
     }
 
     public RESTAPITestHelper(Selenium selenium) {
@@ -121,8 +126,9 @@ public class RESTAPITestHelper {
         return selenium.getText("restdata");
     }
 
-    public String getJSONFromDataSet(String apiType, String by, String value) throws IOException {
+    public String getJSONFromDataSet(String apiType, String by, String apiValue) throws IOException {
         String type = apiType.replace('/', '-');
+        String value = apiValue.replace('/', '-');
         String path = String.format("/dataSets/rest/%s-%s-%s.json", type, by, value);
         ClassPathResource resource = new ClassPathResource(path);
         File file = resource.getFile();

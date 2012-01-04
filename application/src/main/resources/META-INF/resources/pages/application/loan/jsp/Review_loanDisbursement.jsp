@@ -27,6 +27,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 	<tiles:put name="body" type="string">
@@ -121,7 +122,7 @@ explanation of the license and how it is applied.
 							<td width="28%" align="right" class="fontnormalbold"><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" /><mifos:mifoslabel
 								name="loan.amt" />:&nbsp;</td>
-							<td width="72%" class="fontnormal"><c:out
+							<td width="72%" class="fontnormal"><fmt:formatNumber
 								value="${loanDisbursementActionForm.loanAmount}" /></td>
 						</tr>
 						<tr>
@@ -147,7 +148,7 @@ explanation of the license and how it is applied.
 						<tr>
 							<td width="28%" align="right" class="fontnormalbold"><mifos:mifoslabel
 								name="loan.amount" />:&nbsp;</td>
-							<td width="72%" class="fontnormal"><c:out
+							<td width="72%" class="fontnormal"><fmt:formatNumber
 								value="${loanDisbursementActionForm.amount}" /></td>
 						</tr>
 						<tr>

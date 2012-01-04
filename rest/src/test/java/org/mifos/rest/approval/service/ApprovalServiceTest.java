@@ -2,10 +2,11 @@ package org.mifos.rest.approval.service;
 
 import static org.junit.Assert.*;
 
-import java.lang.reflect.Method;
-
-import org.codehaus.jackson.map.ObjectMapper;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.junit.After;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.builders.MifosUserBuilder;
@@ -30,12 +31,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/test-context.xml")
-@TransactionConfiguration
+@TransactionConfiguration(defaultRollback=true)
 @Transactional
 public class ApprovalServiceTest {
 
     @Autowired
     private ApprovalService approvalService;
+
+    @Autowired
+    private SessionFactory sessionFactory;
 
     @BeforeClass
     public static void init() {
@@ -44,6 +48,15 @@ public class ApprovalServiceTest {
         Authentication authentication = new TestingAuthenticationToken(principal, principal);
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);
+    }
+
+    @After
+    public void tearDown() {
+        // force cleanup
+        Session session = sessionFactory.getCurrentSession();
+        for(Object e : session.createCriteria(RESTApprovalEntity.class).list()) {
+            session.delete(e);
+        }
     }
 
     @Test
@@ -68,34 +81,46 @@ public class ApprovalServiceTest {
         assertEquals(ApprovalState.WAITING, rae.getState());
 
         approvalService.reject(rae.getId());
-        rae = approvalService.getAllRejected().get(0);
+        rae = approvalService.getAllNotWaiting().get(0);
         assertEquals(ApprovalState.REJECTED, rae.getState());
         assertNotNull(rae.getApprovedOn());
         assertEquals(getCurrentUserId(), rae.getApprovedBy());
 
         approvalService.approve(rae.getId());
-        rae = approvalService.getAllApproved().get(0);
+        rae = approvalService.getAllNotWaiting().get(0);
         assertEquals(ApprovalState.APPROVED, rae.getState());
     }
 
     @Test
-    public void testContentPersistence() throws Exception {
-        ApprovalMethod method = getTestContent();
+    @Ignore
+    public void testApproveFailure() throws Exception {
+        createFailureApprovalMethod();
+        RESTApprovalEntity rae = approvalService.getAllWaiting().get(0);
+        assertNotNull(rae);
+        assertEquals(ApprovalState.WAITING, rae.getState());
 
-    }
+        Object result = approvalService.approve(rae.getId());
 
-    private ApprovalMethod getTestContent() throws Exception {
-        String content = "{\"name\":\"deposit\",\"type\":\"org.mifos.platform.rest.controller.SavingsAccountRESTController\"," +
-        		"\"argsHolder\":{\"values\":[\"000100000000006\",\"10\"],\"types\":[\"java.lang.String\",\"java.lang.String\"]}}";
-        ObjectMapper om = new ObjectMapper();
-        return om.readValue(content, ApprovalMethod.class);
-
+        assertEquals("Error : check parameters", result);
+        assertEquals(ApprovalState.WAITING, rae.getState());
     }
 
     private void createApprovalMethod() throws Exception {
-        Method m = StubRESTController.class.getMethods()[0];
-        MethodArgHolder args = new MethodArgHolder(m.getParameterTypes(), new Object[1]);
-        ApprovalMethod am = new ApprovalMethod(m.getName(), StubRESTController.class, args);
+        Class[] c = new Class[1];
+        c[0] = String.class;
+        MethodArgHolder args = new MethodArgHolder(c, new Object[1], new String[1]);
+        ApprovalMethod am = new ApprovalMethod("updateCall", StubRESTController.class, args);
+        try {
+            approvalService.create(am);
+            fail("should have thrown interrupt exception");
+        } catch (RESTCallInterruptException e) {}
+    }
+
+    private void createFailureApprovalMethod() throws Exception {
+        Class[] c = new Class[1];
+        c[0] = String.class;
+        MethodArgHolder args = new MethodArgHolder(c, new Object[1], new String[1]);
+        ApprovalMethod am = new ApprovalMethod("failCall", StubRESTController.class, args);
         try {
             approvalService.create(am);
             fail("should have thrown interrupt exception");

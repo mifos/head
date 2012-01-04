@@ -95,7 +95,7 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
         String resultClickLink = "WeeklyClient Monday: ID 0002-000000024";
         ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) loanTestHelper.reverseLoanDisbursal(clientLoanID, clientID, false, resultClickLink);
         clientViewDetailsPage.verifyLoanDoesntExist("Acct #" + clientLoanID);
-        loanTestHelper.verifyHistoryAndSummaryReversedLoan(clientViewDetailsPage.navigateToClosedAccountsPage(), clientLoanID, "104613.0", "0.0", "104613.0", 1);
+        loanTestHelper.verifyHistoryAndSummaryReversedLoan(clientViewDetailsPage.navigateToClosedAccountsPage(), clientLoanID, "104613.0", "0", "104,613", 1);
     }
 
     /**

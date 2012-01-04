@@ -30,6 +30,7 @@ public class FeesCreatePage extends AbstractPage {
         public static final int INR = 2;
         public static final int EUR = 3;
         public static final String ALL_CUSTOMERS = "All Customers";
+        public static final String UPFRONT = "Upfront";
         private String feeName;
         private String categoryType;
         private boolean defaultFees;

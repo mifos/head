@@ -27,16 +27,18 @@ import java.io.Serializable;
 public class AccountFeesDto implements Serializable {
 
     private final Short feeFrequencyTypeId;
+    private final Short feePaymentTypeId;
     private final Short feeStatus;
     private final String feeName;
     private final String accountFeeAmount;
     private final String meetingRecurrence;
     private final Short feeId;
 
-    public AccountFeesDto(Short feeFrequencyTypeId, Short feeStatus, String feeName, String accountFeeAmount,
+    public AccountFeesDto(Short feeFrequencyTypeId, Short feePaymentTypeId, Short feeStatus, String feeName, String accountFeeAmount,
             String meetingRecurrence, Short feeId) {
         super();
         this.feeFrequencyTypeId = feeFrequencyTypeId;
+        this.feePaymentTypeId = feePaymentTypeId;
         this.feeStatus = feeStatus;
         this.feeName = feeName;
         this.accountFeeAmount = accountFeeAmount;
@@ -46,6 +48,10 @@ public class AccountFeesDto implements Serializable {
 
     public Short getFeeFrequencyTypeId() {
         return this.feeFrequencyTypeId;
+    }
+
+    public Short getFeePaymentTypeId() {
+        return feePaymentTypeId;
     }
 
     public Short getFeeStatus() {

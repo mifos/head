@@ -450,7 +450,7 @@ explanation of the license and how it is applied.
 																<td width="148">
 																	<c:choose>
 																		<c:when test="${adminFees.periodic == true}">
-																			<c:out value="${adminFees.amount}" />
+																			<fmt:formatNumber value="${adminFees.amount}" />
 																		</c:when>
 																		<c:otherwise>
 																			<html-el:text styleId="createnewcenter.input.defaultAmount" property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" />

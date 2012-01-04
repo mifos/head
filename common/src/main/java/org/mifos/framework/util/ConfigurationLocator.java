@@ -42,7 +42,6 @@ import org.springframework.core.io.Resource;
  */
 public class ConfigurationLocator {
     public static final String LOCATOR_ENVIRONMENT_PROPERTY_NAME = "MIFOS_CONF";
-    private static final String CURRENT_WORKING_DIRECTORY_PATH = "";
     private static final String LOCATOR_SYSTEM_PROPERTY_NAME = "mifos.conf";
     private static final String HOME_PROPERTY_NAME = "user.home";
     private static final String MIFOS_USER_CONFIG_DIRECTORY_NAME = ".mifos";
@@ -105,7 +104,18 @@ public class ConfigurationLocator {
                 return directoryPath;
             }
         }
-        return CURRENT_WORKING_DIRECTORY_PATH;
+
+        return forceConfDirectoryCreation();
+    }
+
+    private String forceConfDirectoryCreation() {
+        String homeDirectory = getHomeProperty();
+        String userConfigDirectory = homeDirectory + '/' + MIFOS_USER_CONFIG_DIRECTORY_NAME;
+        File mifosConf = new File(userConfigDirectory);
+        if(!mifosConf.mkdir()) {
+            throw new SecurityException("unable to create .mifos under user.home");
+        }
+        return userConfigDirectory;
     }
 
     @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "PMD.OnlyOneReturn"})

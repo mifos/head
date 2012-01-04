@@ -42,12 +42,24 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
     protected ModelAndView doResolveException(HttpServletRequest request,  HttpServletResponse response, Object handler, Exception ex) {
         ModelAndView modelAndView = checkForAccessDenied(ex, request);
 
-        if (modelAndView == null && ex instanceof RESTCallInterruptException) {
-            modelAndView = new ModelAndView();
-            modelAndView.addObject("status", "interrupt");
-            modelAndView.addObject("approvalId", ((RESTCallInterruptException) ex).getApprovalId());
-            modelAndView.addObject("cause", "The call has been interrupt for approval");
-    		return modelAndView;
+        if (request.getRequestURI().endsWith("json")) {
+            if (modelAndView == null && ex instanceof RESTCallInterruptException) {
+                // should move to explicit @ExceptionHandler(RESTCallInterruptException) controller method
+                modelAndView = new ModelAndView();
+                modelAndView.addObject("status", "interrupt");
+                modelAndView.addObject("approvalId", ((RESTCallInterruptException) ex).getApprovalId());
+                modelAndView.addObject("cause", "The call has been interrupt for approval");
+                return modelAndView;
+            }
+
+            if (modelAndView == null || ex instanceof AccessDeniedException ) {
+                // should move to explicit @ExceptionHandler(Exception) controller method
+                modelAndView = new ModelAndView();
+                modelAndView.addObject("status", "error");
+                modelAndView.addObject("cause", ex.getMessage());
+                logger.error("REST API exception : URI '" + request.getRequestURI() + "'", ex);
+                return modelAndView;
+            }
         }
 
         if (modelAndView == null) {

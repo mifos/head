@@ -267,8 +267,8 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
     }
             
     private void verifyFees() {
-        Assert.assertEquals(selenium.getText("xpath=//table[@id='loanSummaryTable']//tr[4]//td[2]"), "1010.0");
-        Assert.assertEquals(selenium.getText("xpath=//table[@id='loanSummaryTable']//tr[4]//td[4]"), "1010.0");
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='loanSummaryTable']//tr[4]//td[2]"), "1,010");
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='loanSummaryTable']//tr[4]//td[4]"), "1,010");
     }
     
     private void verifyCreateLoanAccountPreviewPage() {

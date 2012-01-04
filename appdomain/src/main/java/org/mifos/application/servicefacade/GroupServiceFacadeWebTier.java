@@ -28,10 +28,14 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeeDao;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.servicefacade.UserContextFactory;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.persistence.LegacyMasterDao;
@@ -303,6 +307,12 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
             throw new MifosRuntimeException("Group not found for globalCustNum: " + globalCustNum);
         }
 
+        try {
+            personnelDao.checkAccessPermission(userContext, group.getOfficeId(), group.getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
+        }
+
         GroupDisplayDto groupDisplay = this.customerDao.getGroupDisplayDto(group.getCustomerId(), userContext);
 
         Integer groupId = group.getCustomerId();
@@ -325,6 +335,24 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
         CustomerMeetingDto customerMeeting = this.customerDao.getCustomerMeetingDto(group.getCustomerMeeting(), userContext);
 
+        List<AccountBO> allClosedLoanAndSavingsAccounts = customerDao.retrieveAllClosedLoanAndSavingsAccounts(groupId);
+        List<LoanDetailDto> closedLoanAccounts = new ArrayList<LoanDetailDto>();
+        List<SavingsDetailDto> closedSavingsAccounts = new ArrayList<SavingsDetailDto>();
+        for (AccountBO closedAccount : allClosedLoanAndSavingsAccounts){
+        	if ( closedAccount.getAccountType().getAccountTypeId() == AccountTypes.LOAN_ACCOUNT.getValue().intValue()){      		
+        		closedLoanAccounts.add(new LoanDetailDto(closedAccount.getGlobalAccountNum(), 
+        				((LoanBO)closedAccount).getLoanOffering().getPrdOfferingName(), closedAccount.getAccountState().getId(), 
+        				closedAccount.getAccountState().getName(), ((LoanBO)closedAccount).getLoanSummary().getOutstandingBalance().toString(), 
+        				closedAccount.getTotalAmountDue().toString()));
+        		
+        	} else {
+        		closedSavingsAccounts.add(new SavingsDetailDto(closedAccount.getGlobalAccountNum(), 
+        				((SavingsBO)closedAccount).getSavingsOffering().getPrdOfferingName(), 
+        				closedAccount.getAccountState().getId(), closedAccount.getAccountState().getName(), 
+                        ((SavingsBO)closedAccount).getSavingsBalance().toString()));
+        	}
+        }
+        
         boolean activeSurveys = false;
 //        boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.GROUP);
 
@@ -333,7 +361,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
         return new GroupInformationDto(groupDisplay, customerAccountSummary, groupPerformanceHistory, groupAddress,
                 clients, recentCustomerNotes, customerPositions, customerFlags, loanDetail, savingsDetail,
-                customerMeeting, activeSurveys, customerSurveys, customFields);
+                customerMeeting, activeSurveys, customerSurveys, customFields, closedLoanAccounts, closedSavingsAccounts);
     }
 
     private GroupPerformanceHistoryDto assembleGroupPerformanceHistoryDto(

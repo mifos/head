@@ -24,8 +24,13 @@ import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.AccountActivityPage;
+import org.mifos.test.acceptance.framework.loan.ApplyAdjustmentPage;
+import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.PaymentParameters;
+import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
@@ -65,7 +70,10 @@ public class PenaltyTest extends UiTestCaseBase {
         params.setType(ChargeParameters.MISC_PENALTY);
         params.setAmount("10");
         LoanAccountPage loanAccountPage = loanTestHelper.applyCharge("000100000000038", params);
-        verifySummaryAndActivity(loanAccountPage, "10.0", "10.0", "Misc penalty applied", 2);
+        verifySummaryAndActivity(loanAccountPage, "10.0", "10", "Misc penalty applied", 2);
+        
+        loanAccountPage.navigateBack();
+        verifyRepaymentSchelude(loanAccountPage, "10.0", "7.0", "3.0");
     }
 
     private void verifySummaryAndActivity
@@ -74,7 +82,7 @@ public class PenaltyTest extends UiTestCaseBase {
                     penalty, String
                     penaltyBalance, String
                     activity, int row) {
-        Assert.assertEquals(loanAccountPage.getPenaltyPaid(), "0.0");
+        Assert.assertEquals(loanAccountPage.getPenaltyPaid(), "0");
         Assert.assertEquals(loanAccountPage.getPenaltyBalance(), penaltyBalance);
         AccountActivityPage accountActivityPage = loanAccountPage.navigateToAccountActivityPage();
         Assert.assertEquals(accountActivityPage.getLastPenalty(row), penalty);
@@ -89,10 +97,47 @@ public class PenaltyTest extends UiTestCaseBase {
         feeParameters.setAmount("15");
         feeParameters.setType(ChargeParameters.MISC_PENALTY);
         LoanAccountPage loanAccountPage = loanTestHelper.applyCharge(accountId, feeParameters);
-        verifySummaryAndActivity(loanAccountPage, "15.0", "15.0", "Misc penalty applied", 2);
+        verifySummaryAndActivity(loanAccountPage, "15.0", "15", "Misc penalty applied", 2);
         loanTestHelper.waivePenalty(accountId);
         loanAccountPage = new NavigationHelper(selenium).navigateToLoanAccountPage(accountId);
-        verifySummaryAndActivity(loanAccountPage, "15.0", "0.0", "Penalty waived", 2);
+        verifySummaryAndActivity(loanAccountPage, "15.0", "0", "Penalty waived", 2);
 
+    }
+    
+    private void verifyRepaymentSchelude(LoanAccountPage loanAccountPage, String penalty, String payment, String diff) {
+        DisburseLoanParameters disburseLoanParameters = new DisburseLoanParameters();
+        disburseLoanParameters.setPaymentType(DisburseLoanParameters.CASH);
+        
+        loanAccountPage.navigateToDisburseLoan()
+            .submitAndNavigateToDisburseLoanConfirmationPage(disburseLoanParameters)
+            .submitAndNavigateToLoanAccountPage();
+        
+        ViewRepaymentSchedulePage repaymentSchedulePage = loanAccountPage.navigateToRepaymentSchedulePage();
+        
+        repaymentSchedulePage.verifyRepaymentScheduleTablePenalties(3, 6, penalty);
+        
+        ApplyPaymentPage paymentPage = repaymentSchedulePage.navigateToApplyPaymentPage();
+        
+        PaymentParameters paymentParameters = new PaymentParameters();
+        paymentParameters.setTransactionDateDD("28");
+        paymentParameters.setTransactionDateMM("02");
+        paymentParameters.setTransactionDateYYYY("2011");
+        paymentParameters.setAmount(payment);
+        paymentParameters.setPaymentType(PaymentParameters.CASH);
+        
+        paymentPage.submitAndNavigateToApplyPaymentConfirmationPage(paymentParameters)
+            .submitAndNavigateToLoanAccountDetailsPage().navigateToRepaymentSchedulePage();
+        
+        repaymentSchedulePage.verifyRepaymentScheduleTableRow(3, 6, payment);
+        repaymentSchedulePage.verifyRepaymentScheduleTableRow(3, 7, payment);
+        repaymentSchedulePage.verifyRepaymentScheduleTableRow(5, 6, diff);
+        
+        repaymentSchedulePage.verifyRunningBalanceTableRow(3, 3, diff);
+        
+        ApplyAdjustmentPage adjustmentPage = repaymentSchedulePage.navigateToApplyAdjustment();
+        
+        adjustmentPage.fillAdjustmentFieldsAndSubmit(payment).navigateToRepaymentSchedulePage();
+        
+        repaymentSchedulePage.verifyRepaymentScheduleTablePenalties(3, 6, penalty);
     }
 }

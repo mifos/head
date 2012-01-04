@@ -181,7 +181,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.GENDER_ENTITY, request));
         Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, request));
         Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.HANDICAPPED_ENTITY, request));
-        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHINICITY_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHNICITY_ENTITY, request));
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, request));
 
@@ -223,7 +223,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.GENDER_ENTITY, request));
         Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, request));
         Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.HANDICAPPED_ENTITY, request));
-        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHINICITY_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHNICITY_ENTITY, request));
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, request));
         List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
@@ -1077,7 +1077,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.GENDER_ENTITY, request));
         Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, request));
         Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.HANDICAPPED_ENTITY, request));
-        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHINICITY_ENTITY, request));
+        Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHNICITY_ENTITY, request));
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
         List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                 ClientConstants.POVERTY_STATUS, request);
@@ -1160,7 +1160,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "previewEditPersonalInfo");
-        addRequestParameter("clientDetailView.ethinicity", "1");
+        addRequestParameter("clientDetailView.ethnicity", "1");
         int i = 0;
         for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
@@ -1179,7 +1179,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyForward(ActionForwards.updatePersonalInfo_success.toString());
-        Assert.assertEquals(1, client.getCustomerDetail().getEthinicity().shortValue());
+        Assert.assertEquals(1, client.getCustomerDetail().getEthnicity().shortValue());
         client = TestObjectFactory.getClient(client.getCustomerId());
 
     }
@@ -1213,10 +1213,10 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         createAndSetClientInSession();
         SessionUtils.setAttribute(Constants.USERCONTEXT, createUser(), request.getSession());
         client.getCustomerAddressDetail().getAddress().setPhoneNumber("123");
-        modifyClientPersonalInfo("clientDetailView.ethinicity", "1");
+        modifyClientPersonalInfo("clientDetailView.ethnicity", "1");
         verifyForward(ActionForwards.updatePersonalInfo_success.toString());
         Assert.assertEquals("123", client.getCustomerAddressDetail().getAddress().getPhoneNumber());
-        Assert.assertEquals(1, client.getCustomerDetail().getEthinicity().shortValue());
+        Assert.assertEquals(1, client.getCustomerDetail().getEthnicity().shortValue());
     }
 
     private void modifyClientPersonalInfo(String key, String value) throws Exception {
@@ -1273,7 +1273,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("clientDetailView.povertyStatus", povertyStatusList.get(1).getId().toString());
         addRequestParameter("clientDetailView.gender", Integer.valueOf("50").toString());
         addRequestParameter("clientDetailView.citizenship", Integer.valueOf("131").toString());
-        addRequestParameter("clientDetailView.ethinicity", Integer.valueOf("219").toString());
+        addRequestParameter("clientDetailView.ethnicity", Integer.valueOf("219").toString());
         addRequestParameter("clientDetailView.handicapped", Integer.valueOf("139").toString());
         addRequestParameter("clientDetailView.businessActivities", "");
         addRequestParameter("clientDetailView.maritalStatus", Integer.valueOf("67").toString());
@@ -1299,7 +1299,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward(ActionForwards.updatePersonalInfo_success.toString());
         client = TestObjectFactory.getClient(client.getCustomerId());
-        Assert.assertEquals(219, client.getCustomerDetail().getEthinicity().shortValue(), DELTA);
+        Assert.assertEquals(219, client.getCustomerDetail().getEthnicity().shortValue(), DELTA);
         StaticHibernateUtil.getInterceptor().afterTransactionCompletion(new AuditTransactionForTests());
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.CLIENT, client.getCustomerId());
         Assert.assertEquals(1, auditLogList.size());
@@ -1337,7 +1337,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         PersonnelBO personnel = legacyPersonnelDao.getPersonnel(PersonnelConstants.TEST_USER);
         meeting = getMeeting();
         Integer salutation = 47;
-        Integer ethincity = 218;
+        Integer ethnicity = 218;
         Integer citizenship = 130;
         Integer handicapped = 138;
         Integer businessActivities = 225;
@@ -1352,7 +1352,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE.getValue(), TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
         spouseNameDetailView.setNames(ClientRules.getNameSequence());
 
-        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(ethincity, citizenship, handicapped,
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(ethnicity, citizenship, handicapped,
                 businessActivities, ClientPersonalDetailDto.MARRIED, educationLevel, numChildren, gender, povertyStatus);
 
         client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus

@@ -213,16 +213,16 @@ explanation of the license and how it is applied.
 								</mifos:select></td>
 
 						</tr>
-						<%-- Ethinicity --%>
+						<%-- Ethnicity --%>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.Ethinicity"
-								name="${ConfigurationConstants.ETHINICITY}" isColonRequired="yes"
+							<td align="right"><mifos:mifoslabel keyhm="Client.Ethnicity"
+								name="${ConfigurationConstants.ETHNICITY}" isColonRequired="yes"
 								bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td><mifos:select keyhm="Client.Ethinicity"
+							<td><mifos:select keyhm="Client.Ethnicity"
 										name="clientCustActionForm"
-										property="clientDetailView.ethinicity" size="1">
-										<c:forEach var="ethinicityEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ethinicityEntity')}" >
-											<html-el:option value="${ethinicityEntityList.id}">${ethinicityEntityList.name}</html-el:option>
+										property="clientDetailView.ethnicity" size="1">
+										<c:forEach var="ethnicityEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ethnicityEntity')}" >
+											<html-el:option value="${ethnicityEntityList.id}">${ethnicityEntityList.name}</html-el:option>
 										</c:forEach>
 								</mifos:select></td>
 
@@ -288,7 +288,7 @@ explanation of the license and how it is applied.
 		                      <c:if test = "${sessionScope.clientCustActionForm.picture != null 
 		                      && sessionScope.clientCustActionForm.picture.fileName != null 
 		                      && sessionScope.clientCustActionForm.picture.fileName != '' }" >
-                                <img src="/mifos/clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}" width="150"/>
+                                <img src="clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}" width="150"/>
                                 <br />
                                 <a id="editPersonalInformation.link.deletePhoto"
                                 href="clientCustAction.do?method=editPersonalInfo&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&photoDelete=true">

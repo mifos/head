@@ -112,7 +112,7 @@ public class CashFlowTest extends UiTestCaseBase {
     public void verifyCashFlowForNonVariableInstallmentLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(0);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
-        String minRc = "999.0";
+        String minRc = "999";
         String warningThreshold = "89.99";
         createAndValidateLoanProductWithCashFlow(warningThreshold, formParameters, "49.99", minRc, false);
         validateCashFlowForLoanAccount(formParameters, minRc, "998.1");
@@ -227,18 +227,18 @@ public class CashFlowTest extends UiTestCaseBase {
 		ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
 		
 		String[][] tableAfterLastInstallment = { { "Future Installments", "", "", "", "", "" },
-		        { "1", "19-Oct-2010", "-", "163.7", "7.3", "0.0", "171.0" },
-		        { "2", "26-Oct-2010", "-", "164.3", "6.7", "0.0", "171.0" },
-		        { "3", "02-Nov-2010", "-", "165.0", "6.0", "0.0", "171.0" },
-		        { "4", "09-Nov-2010", "-", "165.6", "5.4", "0.0", "171.0" },
-		        { "5", "16-Nov-2010", "-", "166.2", "4.8", "0.0", "171.0" },
-		        { "6", "23-Nov-2010", "-", "166.8", "4.2", "0.0", "171.0" },
-		        { "7", "30-Nov-2010", "-", "167.5", "3.5", "0.0", "171.0" },
-		        { "8", "07-Dec-2010", "-", "168.1", "2.9", "0.0", "171.0" },
-		        { "9", "14-Dec-2010", "-", "168.7", "2.3", "0.0", "171.0" },
-		        { "10", "21-Dec-2010", "-", "169.3", "1.7", "0.0", "171.0" },
-		        { "11", "28-Dec-2010", "-", "169.9", "1.1", "0.0", "171.0" },
-		        { "12", "04-Jan-2011", "-", "164.9", "0.4", "0.0", "165.3" } };
+		        { "1", "19-Oct-2010", "-", "163.7", "7.3", "0.0", "0.0", "171.0" },
+		        { "2", "26-Oct-2010", "-", "164.3", "6.7", "0.0", "0.0", "171.0" },
+		        { "3", "02-Nov-2010", "-", "165.0", "6.0", "0.0", "0.0", "171.0" },
+		        { "4", "09-Nov-2010", "-", "165.6", "5.4", "0.0", "0.0", "171.0" },
+		        { "5", "16-Nov-2010", "-", "166.2", "4.8", "0.0", "0.0", "171.0" },
+		        { "6", "23-Nov-2010", "-", "166.8", "4.2", "0.0", "0.0", "171.0" },
+		        { "7", "30-Nov-2010", "-", "167.5", "3.5", "0.0", "0.0", "171.0" },
+		        { "8", "07-Dec-2010", "-", "168.1", "2.9", "0.0", "0.0", "171.0" },
+		        { "9", "14-Dec-2010", "-", "168.7", "2.3", "0.0", "0.0", "171.0" },
+		        { "10", "21-Dec-2010", "-", "169.3", "1.7", "0.0", "0.0", "171.0" },
+		        { "11", "28-Dec-2010", "-", "169.9", "1.1", "0.0", "0.0", "171.0" },
+		        { "12", "04-Jan-2011", "-", "164.9", "0.4", "0.0", "0.0", "165.3" } };
 		
 		viewRepaymentSchedulePage.verifyScheduleTable(tableAfterLastInstallment);
 		

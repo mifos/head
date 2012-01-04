@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import java.text.DecimalFormat;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -63,7 +65,7 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public void verifyLoanAmount(String amount) {
-        Assert.assertEquals(Double.parseDouble(getOriginalLoanAmount()), Double.parseDouble(amount));
+        Assert.assertEquals(getOriginalLoanAmount(), formatNumber(amount));
     }
 
     public void verifyExactLoanAmount(String amount) {
@@ -97,7 +99,7 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public void verifyTotalOriginalLoan(String amount) {
-        Assert.assertEquals(getOriginalTotalAmount(), amount);
+        Assert.assertEquals(getOriginalTotalAmount(), formatNumber(amount));
     }
 
     public void verifyTotalAmountPaid(String amount) {
@@ -156,7 +158,7 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public void verifyInterestRate(String interestRate) {
-        Assert.assertEquals(selenium.getText("loanaccountdetail.text.interestRate"), interestRate);
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.interestRate"), formatNumber(interestRate));
     }
 
     public void verifyPurposeOfLoan(String purpose) {
@@ -520,6 +522,11 @@ public class LoanAccountPage extends MifosPage {
     
     public void verifyDisbursalDate(String disbursalDate) {
         Assert.assertEquals(selenium.getText("loanaccountdetail.details.disbursaldate"), disbursalDate);
+    }
+    
+    private String formatNumber(final String number) {
+        DecimalFormat df = new DecimalFormat("###,###,###.###");
+        return df.format(Double.parseDouble(number));
     }
 }
 

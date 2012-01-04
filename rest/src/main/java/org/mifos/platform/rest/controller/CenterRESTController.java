@@ -46,7 +46,7 @@ public class CenterRESTController {
         return centerServiceFacade.getCenterInformationDto(globalCustNum);
     }
 
-    @RequestMapping(value = "center/charges/num-{globalCustNum}", method = RequestMethod.GET)
+    @RequestMapping(value = "center/num-{globalCustNum}/charges", method = RequestMethod.GET)
     public @ResponseBody
     CustomerChargesDetailsDto getCenterChargesByNumber(@PathVariable String globalCustNum) {
         CenterBO centerBO = customerDao.findCenterBySystemId(globalCustNum);

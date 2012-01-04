@@ -39,12 +39,16 @@ public class CreateLoanAccountsSearchPage extends AbstractPage {
     }
 
     public CreateLoanAccountsEntryPage searchAndNavigateToCreateMultipleLoanAccountsEntryPage(CreateMultipleLoanAccountSelectParameters formParameters) {
+        verifyInformationMessage("Enter details and click Search.");
+        
         selectBranch(formParameters.getBranch());
         selectOfficer(formParameters.getLoanOfficer());
         selectCenter(formParameters.getCenter());
         selenium.select("id=createMultipleLoanAccounts.select.loanProduct", "label="+ formParameters.getLoanProduct());
         selenium.click ("id=createMultipleLoanAccounts.button.submit");
         waitForPageToLoad();
+        
+        verifyInformationMessage("Enter details and click Submit.");
 
         return new CreateLoanAccountsEntryPage(selenium);
     }
@@ -92,6 +96,13 @@ public class CreateLoanAccountsSearchPage extends AbstractPage {
 //        selectOfficer(officer);
         String[] centers = selenium.getSelectOptions("id=createMultipleLoanAccounts.select.center");
         Assert.assertTrue(checkNotInOptions(centers, center));
+    }
+    
+    private void verifyInformationMessage(String startsWith) {
+        boolean expected = true;
+        boolean actual = selenium.getText("//span[@class=\"fontnormal\"][1]").startsWith(startsWith);
+        
+        Assert.assertEquals(expected, actual);
     }
 
     private boolean checkNotInOptions(String[] options, String value) {

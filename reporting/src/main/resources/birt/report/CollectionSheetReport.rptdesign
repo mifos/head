@@ -2123,5 +2123,24 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                 </row>
             </footer>
         </table>
+		<text id="1677">
+            <list-property name="visibility">
+                <structure>
+                    <property name="format">all</property>
+                    <expression name="valueExpr" type="javascript">
+                   		if ( reportContext.getPersistentGlobalVariable("pageNum") > 0 ){
+                   			false;
+                   		} else {
+                   			true;
+                   		}
+                   	</expression>
+                </structure>
+            </list-property>
+            <property name="contentType">html</property>
+            <text-property name="content" key="collection.sheet.parameter.invalid.meeting.date"></text-property>         
+        	<property name="wordSpacing">4px</property>
+        	<property name="fontSize">large</property>
+        	<property name="color">red</property>
+        </text>
     </body>
 </report>

@@ -30,7 +30,7 @@ public class ClientDropdownsDto {
     private final List<ValueListElement> genders;
     private final List<ValueListElement> maritalStatuses;
     private final List<ValueListElement> citizenship;
-    private final List<ValueListElement> ethinicity;
+    private final List<ValueListElement> ethnicity;
     private final List<ValueListElement> educationLevels;
     private final List<ValueListElement> businessActivity;
     private final List<ValueListElement> poverty;
@@ -40,7 +40,7 @@ public class ClientDropdownsDto {
     @SuppressWarnings("PMD")
     public ClientDropdownsDto(List<ValueListElement> salutations, List<ValueListElement> genders,
             List<ValueListElement> maritalStatuses, List<ValueListElement> citizenship,
-            List<ValueListElement> ethinicity, List<ValueListElement> educationLevels,
+            List<ValueListElement> ethnicity, List<ValueListElement> educationLevels,
             List<ValueListElement> businessActivity, List<ValueListElement> poverty,
             List<ValueListElement> handicapped, List<ValueListElement> livingStatus) {
 
@@ -48,7 +48,7 @@ public class ClientDropdownsDto {
         this.genders = genders;
         this.maritalStatuses = maritalStatuses;
         this.citizenship = citizenship;
-        this.ethinicity = ethinicity;
+        this.ethnicity = ethnicity;
         this.educationLevels = educationLevels;
         this.businessActivity = businessActivity;
         this.poverty = poverty;
@@ -72,8 +72,8 @@ public class ClientDropdownsDto {
         return this.citizenship;
     }
 
-    public List<ValueListElement> getEthinicity() {
-        return this.ethinicity;
+    public List<ValueListElement> getEthnicity() {
+        return this.ethnicity;
     }
 
     public List<ValueListElement> getEducationLevels() {

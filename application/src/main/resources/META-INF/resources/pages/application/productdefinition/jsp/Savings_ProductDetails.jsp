@@ -160,7 +160,7 @@ explanation of the license and how it is applied.
 															<mifos:mifoslabel name="product.recamtdep" bundle="ProductDefUIResources" isColonRequired="yes"/>
 														</c:otherwise>
 														</c:choose>
-														<c:out value="${BusinessKey.recommendedAmount}" />
+														<fmt:formatNumber value="${BusinessKey.recommendedAmount}" />
 														<br> 
 														<mifos:mifoslabel name="product.recamtappl" bundle="ProductDefUIResources" isColonRequired="yes"/>
 															
@@ -172,7 +172,7 @@ explanation of the license and how it is applied.
 															</c:forEach>
 														<br> 
 														<mifos:mifoslabel name="product.maxamtwid" bundle="ProductDefUIResources" isColonRequired="yes"/>
-														<c:out value="${BusinessKey.maxAmntWithdrawl}" /> </span>
+														<fmt:formatNumber value="${BusinessKey.maxAmntWithdrawl}" /> </span>
 												</td>
 											</tr>
 										</table>
@@ -189,7 +189,7 @@ explanation of the license and how it is applied.
 												<fmt:message key="product.productRate">
 												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
 												</fmt:message>:
-												<c:out value="${BusinessKey.interestRate}" />
+												<fmt:formatNumber value="${BusinessKey.interestRate}" />
 												<mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" />
 												<br>
 												<fmt:message key="product.balUsedForCalc">
@@ -221,7 +221,7 @@ explanation of the license and how it is applied.
 												<fmt:message key="product.minBalForCalc">
 												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
 												</fmt:message>:
-												<c:out value="${BusinessKey.minAmntForInt}" />
+												<fmt:formatNumber value="${BusinessKey.minAmntForInt}" />
 												<br>
 											</td>
 										</tr>

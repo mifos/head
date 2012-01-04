@@ -181,6 +181,13 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsDeposit.getSavingsId());
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, savingsAccount.getOfficeId(), savingsAccount.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
         savingsAccount.updateDetails(userContext);
 
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(Short.valueOf((short) user.getUserId()));
@@ -227,6 +234,13 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsWithdrawal.getSavingsId());
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, savingsAccount.getOfficeId(), savingsAccount.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
         savingsAccount.updateDetails(userContext);
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(Short.valueOf((short) user.getUserId()));
 
@@ -273,8 +287,15 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
 
-        PersonnelBO updatedBy = this.personnelDao.findPersonnelById(userContext.getId());
         SavingsBO savingsAccount = this.savingsDao.findById(savingsAdjustment.getSavingsId());
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, savingsAccount.getOfficeId(), savingsAccount.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
+        PersonnelBO updatedBy = this.personnelDao.findPersonnelById(userContext.getId());
         savingsAccount.updateDetails(userContext);
 
         Money amountAdjustedTo = new Money(savingsAccount.getCurrency(), BigDecimal.valueOf(savingsAdjustment
@@ -931,31 +952,37 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         SavingsBO savingsAccount = this.savingsDao.findBySystemId(globalAccountNum);
 
+        try {
+            personnelDao.checkAccessPermission(userContext, savingsAccount.getOfficeId(), savingsAccount.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        
         List<DueOnDateDto> previousDueDates = new ArrayList<DueOnDateDto>();
 
-        AccountActionDateEntity nextInstallment = savingsAccount.getDetailsOfNextInstallment();
+        SavingsScheduleEntity nextInstallment = (SavingsScheduleEntity) savingsAccount.getDetailsOfNextInstallment();
+        Money totalDepositDue = Money.zero(savingsAccount.getCurrency());
         LocalDate nextDueDate = new LocalDate();
         if (nextInstallment != null) {
             nextDueDate = new LocalDate(nextInstallment.getActionDate());
+            totalDepositDue = nextInstallment.getTotalDepositDue();
         }
 
-        Money totalDue = Money.zero(savingsAccount.getCurrency());
         List<AccountActionDateEntity> scheduledDeposits = savingsAccount.getAccountActionDatesSortedByInstallmentId();
         for (AccountActionDateEntity scheduledDeposit : scheduledDeposits) {
-            if (!scheduledDeposit.isPaid() && scheduledDeposit.isBeforeOrOn(nextDueDate)) {
+            if (!scheduledDeposit.isPaid() && scheduledDeposit.isBefore(nextDueDate)) {
                 SavingsScheduleEntity savingsScheduledDeposit = (SavingsScheduleEntity) scheduledDeposit;
-                totalDue = totalDue.add(savingsScheduledDeposit.getTotalDepositDue());
                 previousDueDates.add(new DueOnDateDto(scheduledDeposit.getActionDate(),
-                        savingsScheduledDeposit.getTotalDepositDue().toString()));
+                        MoneyUtils.currencyRound(savingsScheduledDeposit.getTotalDepositDue()).toString()));
             }
         }
 
-        DueOnDateDto nextdueDate = new DueOnDateDto(new java.sql.Date(nextDueDate.toDateMidnight().toDate().getTime()),
-                MoneyUtils.currencyRound(totalDue).toString());
+        DueOnDateDto nextDueDetail = new DueOnDateDto(new java.sql.Date(nextDueDate.toDateMidnight().toDate().getTime()),
+                MoneyUtils.currencyRound(totalDepositDue).toString());
 
         AccountStateEntity accountStateEntity = savingsAccount.getAccountState();
 
-        return new SavingsAccountDepositDueDto(nextdueDate, previousDueDates, accountStateEntity.getId(),
+        return new SavingsAccountDepositDueDto(nextDueDetail, previousDueDates, accountStateEntity.getId(),
                 accountStateEntity.getName());
     }
 
@@ -1116,7 +1143,16 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
     @Override
     public SavingsAccountDetailDto retrieveSavingsAccountDetails(Long savingsId) {
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
+        try {
+            personnelDao.checkAccessPermission(userContext, savingsAccount.getOfficeId(), savingsAccount.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
+        }
+
         return savingsAccount.toDto();
     }
 

@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.mifos.config.Localization;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.security.MifosUser;
 import org.springframework.security.core.GrantedAuthority;
@@ -46,7 +45,7 @@ public class MifosUserBuilder {
     public MifosUser build() {
         return new MifosUser(userId, branchId, level.getValue(), roleIds, username, password,
                              enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
-                             authorities, Localization.ENGLISH_LOCALE_ID);
+                             authorities, (short) 1);
     }
 
     public MifosUserBuilder withAdminRole() {

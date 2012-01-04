@@ -25,6 +25,8 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
@@ -176,11 +178,11 @@ explanation of the license and how it is applied.
 												<c:choose>
 													<c:when test="${sessionScope.feeactionform.categoryType==FeeCategory.LOAN.value && sessionScope.feeactionform.rateFee==true}">
 														<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.amountcalculatedas" /> </span>
-														<c:out value="${sessionScope.feeactionform.rate}" />
+														<fmt:formatNumber value="${sessionScope.feeactionform.rate}" />
 													</c:when>
 													<c:otherwise>
 														<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.amount" /> </span>
-														<c:out value="${sessionScope.feeactionform.amount}" />
+														<fmt:formatNumber value="${sessionScope.feeactionform.amount}" />
 													</c:otherwise>
 												</c:choose>
 												<c:if test="${sessionScope.feeactionform.rateFee==true}">

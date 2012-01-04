@@ -41,6 +41,7 @@ import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -65,8 +66,12 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.security.MifosUser;
+import org.mifos.security.util.SecurityConstants;
+import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * A service class implementation to expose basic functions on loans. As an external API, this class should not expose
@@ -131,10 +136,19 @@ public class StandardAccountService implements AccountService {
 
     public void makePaymentNoCommit(AccountPaymentParametersDto accountPaymentParametersDto)
             throws PersistenceException, AccountException {
-
-        PersonnelBO loggedInUser = ApplicationContextProvider.getBean(LegacyPersonnelDao.class).findPersonnelById(accountPaymentParametersDto.getUserMakingPayment().getUserId());
+    	
         final int accountId = accountPaymentParametersDto.getAccountId();
         final AccountBO account = this.legacyAccountDao.getAccount(accountId);
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, account.getOfficeId(), account.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED, e);
+        }
+        
+        PersonnelBO loggedInUser = ApplicationContextProvider.getBean(LegacyPersonnelDao.class).findPersonnelById(accountPaymentParametersDto.getUserMakingPayment().getUserId());
         List<InvalidPaymentReason> validationErrors = validatePayment(accountPaymentParametersDto);
         if (!(account instanceof CustomerAccountBO) && validationErrors.contains(InvalidPaymentReason.INVALID_DATE)) {
             throw new AccountException("errors.invalidTxndate");

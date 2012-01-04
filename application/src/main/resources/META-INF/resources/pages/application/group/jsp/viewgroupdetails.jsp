@@ -218,9 +218,9 @@ explanation of the license and how it is applied.
 											<c:if
 												test="${loan.accountStateId==5 || loan.accountStateId==9}">
 												<span class="fontnormal"> <mifos:mifoslabel
-													name="loan.outstandingbalance" />: <c:out
+													name="loan.outstandingbalance" />: <fmt:formatNumber
 													value="${loan.outstandingBalance}" /><br>
-												<mifos:mifoslabel name="loan.amount_due" />: <c:out
+												<mifos:mifoslabel name="loan.amount_due" />: <fmt:formatNumber
 													value="${loan.totalAmountDue}" /> </span>
 											</c:if></td>
 										</tr>
@@ -273,7 +273,7 @@ explanation of the license and how it is applied.
 												</tr>
 											</table>
 											<span class="fontnormal"><mifos:mifoslabel
-												name="Group.balance" /> <c:out
+												name="Group.balance" /> <fmt:formatNumber
 												value="${savings.savingsBalance}" /> </span></td>
 										</tr>
 										<tr>
@@ -316,7 +316,7 @@ explanation of the license and how it is applied.
 											<td><span class="fontnormal"><mifos:mifoslabel
 												name="Group.amountdue" bundle="GroupUIResources" />
 												<span id="viewgroupdetails.text.amountDue">
-													<c:out value="${groupInformationDto.customerAccountSummary.nextDueAmount}" />
+													<fmt:formatNumber value="${groupInformationDto.customerAccountSummary.nextDueAmount}" />
 												</span> 
 											</span></td>
 										</tr>
@@ -639,7 +639,7 @@ explanation of the license and how it is applied.
 								<fmt:message key="Group.hashof">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
 					</fmt:message> 
-								<span id="viewgroupdetails.text.numberOfClientsInGroup"><c:out
+								<span id="viewgroupdetails.text.numberOfClientsInGroup"><fmt:formatNumber
 								value="${groupInformationDto.groupPerformanceHistory.activeClientCount}" /></span>
 							</span></td>
 						</tr>
@@ -650,7 +650,7 @@ explanation of the license and how it is applied.
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 					</fmt:message>:  
 								
-							<c:out
+							<fmt:formatNumber
 								value="${groupInformationDto.groupPerformanceHistory.lastGroupLoanAmount}" /></span></td>
 						</tr>
 						<tr>
@@ -659,7 +659,7 @@ explanation of the license and how it is applied.
 								<fmt:message key="Group.Avgindividual">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 					</fmt:message>   
-								<span id="viewgroupdetails.text.avgIndyvidualLoanSize"><c:out
+								<span id="viewgroupdetails.text.avgIndyvidualLoanSize"><fmt:formatNumber
 								value="${groupInformationDto.groupPerformanceHistory.avgLoanAmountForMember}" /></span></span></td>
 						</tr>
 						<tr>
@@ -668,7 +668,7 @@ explanation of the license and how it is applied.
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 					</fmt:message>    
 								
-								<span id="viewgroupdetails.text.totalLoanPortfolio"><c:out
+								<span id="viewgroupdetails.text.totalLoanPortfolio"><fmt:formatNumber
 								value="${groupInformationDto.groupPerformanceHistory.totalOutStandingLoanAmount}" /></span></span></td>
 						</tr>
 						<tr>
@@ -680,7 +680,7 @@ explanation of the license and how it is applied.
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="Group.Total" bundle="GroupUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes" />
-							<c:out
+							<fmt:formatNumber
 								value="${groupInformationDto.groupPerformanceHistory.totalSavingsAmount}" /></span></td>
 						</tr>
 						<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoanAllowed') == true}">

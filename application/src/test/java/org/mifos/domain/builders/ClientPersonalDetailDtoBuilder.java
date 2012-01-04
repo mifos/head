@@ -24,7 +24,7 @@ import org.mifos.dto.screen.ClientPersonalDetailDto;
 
 public class ClientPersonalDetailDtoBuilder {
 
-    private Integer ethinicity;
+    private Integer ethnicity;
     private Integer citizenship;
     private Integer handicapped;
     private Integer businessActivities;
@@ -35,6 +35,6 @@ public class ClientPersonalDetailDtoBuilder {
     private Short povertyStatus;
 
     public ClientPersonalDetailDto build() {
-        return new ClientPersonalDetailDto(ethinicity, citizenship, handicapped, businessActivities, maritalStatus, educationLevel, numChildren, gender, povertyStatus);
+        return new ClientPersonalDetailDto(ethnicity, citizenship, handicapped, businessActivities, maritalStatus, educationLevel, numChildren, gender, povertyStatus);
     }
 }

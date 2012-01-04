@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.mifos.rest.approval.domain.ApprovalState;
 import org.mifos.rest.approval.domain.RESTApprovalEntity;
@@ -40,7 +41,19 @@ public class HibernateApprovalDao implements ApprovalDao {
     @SuppressWarnings("unchecked")
     @Override
     public List<RESTApprovalEntity> findByState(ApprovalState state) {
-        return getSession().createCriteria(RESTApprovalEntity.class).add(Restrictions.eq("state", state)).list();
+        return getSession().createCriteria(RESTApprovalEntity.class)
+                           .add(Restrictions.eq("state", state))
+                           .addOrder(Order.desc("createdOn"))
+                           .list();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<RESTApprovalEntity> findByExcludingState(ApprovalState state) {
+        return getSession().createCriteria(RESTApprovalEntity.class)
+                           .add(Restrictions.ne("state", state))
+                           .addOrder(Order.desc("approvedOn"))
+                           .list();
     }
 
     private Session getSession() {

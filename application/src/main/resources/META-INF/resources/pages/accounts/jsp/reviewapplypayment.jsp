@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 
@@ -107,7 +107,7 @@ explanation of the license and how it is applied.
 				<tr>
 					<td width="22%" align="right" class="fontnormalbold"><mifos:mifoslabel
 						name="accounts.amount" isColonRequired="Yes" /></td>
-					<td width="78%" class="fontnormal"><c:out
+					<td width="78%" class="fontnormal"><fmt:formatNumber
 						value="${applyPaymentActionForm.amount}" /></td>
 				</tr>
 				<tr>

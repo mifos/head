@@ -33,6 +33,8 @@
   <DATABASECHANGELOG ID="MIFOS_4700_3" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:18.0" ORDEREXECUTED="67" EXECTYPE="EXECUTED" MD5SUM="3:5262fde3d8a25cc4e609a5161cfcbc95" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4700_4" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:18.0" ORDEREXECUTED="68" EXECTYPE="EXECUTED" MD5SUM="3:fdd7dad428a877741587468045c15b87" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4700_5" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:18.0" ORDEREXECUTED="69" EXECTYPE="EXECUTED" MD5SUM="3:d8b39a618ff308d67e12528ad3735359" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_4827_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-12 15:52:57.0" ORDEREXECUTED="184" EXECTYPE="EXECUTED" MD5SUM="3:807c2239c2429b48809f2d8a3dfc8f65" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_4827_2" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-28 18:07:18.0" ORDEREXECUTED="217" EXECTYPE="EXECUTED" MD5SUM="3:43fe14f5d277cff6bb8b1adef2b0305e" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_1" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:18.0" ORDEREXECUTED="70" EXECTYPE="EXECUTED" MD5SUM="3:d1bc7187b3d916e75540705797af4f2e" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_2" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:18.0" ORDEREXECUTED="71" EXECTYPE="EXECUTED" MD5SUM="3:169dcdb02684d9b21f5eac6e857ad394" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_3" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:18.0" ORDEREXECUTED="72" EXECTYPE="EXECUTED" MD5SUM="3:3b9ed5b39f2534b6a7a812471d72bda6" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
@@ -40,6 +42,8 @@
   <DATABASECHANGELOG ID="MIFOS_4945_5" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:18.0" ORDEREXECUTED="74" EXECTYPE="EXECUTED" MD5SUM="3:ed2015dd4bd8e0e49f39b9d15e1d4374" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4945_6" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:18.0" ORDEREXECUTED="75" EXECTYPE="EXECUTED" MD5SUM="3:3295a26a4f5f90255601a36a002029da" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5161_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-17 07:17:54.0" ORDEREXECUTED="124" EXECTYPE="EXECUTED" MD5SUM="3:82dd99432572ba02fe1c174c26096266" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_5164_1" AUTHOR="Udai Gupta" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-28 18:07:18.0" ORDEREXECUTED="215" EXECTYPE="EXECUTED" MD5SUM="3:ba7cceda2200329d1f21496cd2832067" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_5164_2" AUTHOR="Udai Gupta" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-28 18:07:18.0" ORDEREXECUTED="216" EXECTYPE="EXECUTED" MD5SUM="3:7050ad7056dd89097b10de0cad2f2e5f" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5186_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-24 15:29:22.0" ORDEREXECUTED="182" EXECTYPE="EXECUTED" MD5SUM="3:257c6dbd69a28ceb9a8a866a405e23f2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5218_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-09 11:57:39.0" ORDEREXECUTED="183" EXECTYPE="EXECUTED" MD5SUM="3:a55cb7c0cd264ab9133926be13e0c714" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
@@ -320,6 +324,7 @@
   <activity activity_id="244" parent_id="113" activity_name_lookup_id="715" description_lookup_id="715"/>
   <activity activity_id="245" parent_id="34" activity_name_lookup_id="716" description_lookup_id="716"/>
   <activity activity_id="246" parent_id="196" activity_name_lookup_id="717" description_lookup_id="717"/>
+  <activity activity_id="247" parent_id="196" activity_name_lookup_id="718" description_lookup_id="718"/>
   <admin_document/>
   <admin_document_acc_state_mix/>
   <applied_upgrades upgrade_id="1277565300"/>
@@ -1040,7 +1045,7 @@
   <field_configuration field_config_id="7" field_name="ExternalId" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
   <field_configuration field_config_id="8" field_name="ExternalId" entity_id="12" mandatory_flag="0" hidden_flag="0"/>
   <field_configuration field_config_id="9" field_name="ExternalId" entity_id="20" mandatory_flag="0" hidden_flag="0"/>
-  <field_configuration field_config_id="10" field_name="Ethinicity" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
+  <field_configuration field_config_id="10" field_name="Ethnicity" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
   <field_configuration field_config_id="11" field_name="Citizenship" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
   <field_configuration field_config_id="12" field_name="Handicapped" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
   <field_configuration field_config_id="13" field_name="BusinessActivities" entity_id="1" mandatory_flag="0" hidden_flag="0"/>
@@ -1262,7 +1267,7 @@
   <lookup_entity entity_id="16" entity_name="Gender" description="Male/Female"/>
   <lookup_entity entity_id="17" entity_name="MaritalStatus" description="Married/UnMarried"/>
   <lookup_entity entity_id="18" entity_name="Citizenship" description="Citizenship"/>
-  <lookup_entity entity_id="19" entity_name="Ethinicity" description="Ethnicity"/>
+  <lookup_entity entity_id="19" entity_name="Ethnicity" description="Ethnicity"/>
   <lookup_entity entity_id="20" entity_name="EducationLevel" description="EducationLevel"/>
   <lookup_entity entity_id="21" entity_name="BusinessActivities" description="BusinessActivities"/>
   <lookup_entity entity_id="22" entity_name="Handicapped" description="Handicaped"/>
@@ -1500,8 +1505,8 @@
   <lookup_value lookup_id="129" entity_id="52" lookup_name="SpouseFather-Father"/>
   <lookup_value lookup_id="130" entity_id="18" lookup_name="Citizenship-Hindu"/>
   <lookup_value lookup_id="131" entity_id="18" lookup_name="Citizenship-Muslim"/>
-  <lookup_value lookup_id="132" entity_id="19" lookup_name="Ethinicity-Sc"/>
-  <lookup_value lookup_id="133" entity_id="19" lookup_name="Ethinicity-Bc"/>
+  <lookup_value lookup_id="132" entity_id="19" lookup_name="Ethnicity-Sc"/>
+  <lookup_value lookup_id="133" entity_id="19" lookup_name="Ethnicity-Bc"/>
   <lookup_value lookup_id="134" entity_id="20" lookup_name="EducationLevel-OnlyClient"/>
   <lookup_value lookup_id="135" entity_id="20" lookup_name="EducationLevel-OnlyHusband"/>
   <lookup_value lookup_id="136" entity_id="21" lookup_name="BusinessActivities-DailyLabour"/>
@@ -1573,9 +1578,9 @@
   <lookup_value lookup_id="214" entity_id="69" lookup_name="AccountAction-Interest_posting"/>
   <lookup_value lookup_id="215" entity_id="76" lookup_name="FinancialAction-LoanDisbursement"/>
   <lookup_value lookup_id="216" entity_id="73" lookup_name="Position-GroupSecretary"/>
-  <lookup_value lookup_id="217" entity_id="19" lookup_name="Ethinicity-St"/>
-  <lookup_value lookup_id="218" entity_id="19" lookup_name="Ethinicity-Obc"/>
-  <lookup_value lookup_id="219" entity_id="19" lookup_name="Ethinicity-Fc"/>
+  <lookup_value lookup_id="217" entity_id="19" lookup_name="Ethnicity-St"/>
+  <lookup_value lookup_id="218" entity_id="19" lookup_name="Ethnicity-Obc"/>
+  <lookup_value lookup_id="219" entity_id="19" lookup_name="Ethnicity-Fc"/>
   <lookup_value lookup_id="220" entity_id="17" lookup_name="MaritalStatus-Widowed"/>
   <lookup_value lookup_id="221" entity_id="18" lookup_name="Citizenship-Christian"/>
   <lookup_value lookup_id="222" entity_id="21" lookup_name="BusinessActivities-Production"/>
@@ -1963,6 +1968,7 @@
   <lookup_value lookup_id="715" entity_id="87" lookup_name="Permissions-CanAdjustBackDatedTransactions"/>
   <lookup_value lookup_id="716" entity_id="87" lookup_name="Permissions-Clients-CanEditPhoneNumber"/>
   <lookup_value lookup_id="717" entity_id="87" lookup_name="Permissions-CanUseAccountingIntegration"/>
+  <lookup_value lookup_id="718" entity_id="87" lookup_name="Permissions-CanApproveRESTAPI"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -2510,6 +2516,7 @@
   <lookup_value_locale lookup_value_id="966" locale_id="1" lookup_id="715"/>
   <lookup_value_locale lookup_value_id="967" locale_id="1" lookup_id="716"/>
   <lookup_value_locale lookup_value_id="968" locale_id="1" lookup_id="717"/>
+  <lookup_value_locale lookup_value_id="970" locale_id="1" lookup_id="718"/>
   <max_min_interest_rate/>
   <max_min_loan_amount/>
   <max_min_no_of_install/>
@@ -2642,6 +2649,7 @@
   <report_jasper_map report_id="5" report_category_id="6" report_name="General Ledger Report" report_identifier="general_ledger_report" report_jasper="GeneralLedgerReport.rptdesign"/>
   <report_parameter/>
   <report_parameter_map/>
+  <rest_approval/>
   <role role_id="1" role_name="Admin" version_no="1"/>
   <roles_activity activity_id="3" role_id="1"/>
   <roles_activity activity_id="4" role_id="1"/>
@@ -2812,6 +2820,7 @@
   <roles_activity activity_id="244" role_id="1"/>
   <roles_activity activity_id="245" role_id="1"/>
   <roles_activity activity_id="246" role_id="1"/>
+  <roles_activity activity_id="247" role_id="1"/>
   <saving_schedule/>
   <savings_account/>
   <savings_activity_details/>

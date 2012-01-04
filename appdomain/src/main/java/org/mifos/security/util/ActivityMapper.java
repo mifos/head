@@ -173,6 +173,7 @@ public class ActivityMapper {
         parseActionSecurity(getMultipleLoanAccountsCreationSecurity());
         parseActionSecurity(getReverseLoanDisbursalSecurity());
         parseActionSecurity(getReportsSecurity());
+        parseActionSecurity(getPentahoReportsSecurity());
         parseActionSecurity(getReportsDataSourceSecurity());
         parseActionSecurity(getReportsParamsSecurity());
         parseActionSecurity(getReportsParamsMapSecurity());
@@ -423,6 +424,12 @@ public class ActivityMapper {
         return security;
     }
 
+    private ActionSecurity getPentahoReportsSecurity() {
+        ActionSecurity security = new ActionSecurity("pentahoReportsAction");
+        security.allow("load", SecurityConstants.VIEW);
+        return security;
+    }
+    
     private ActionSecurity getReportsSecurity() {
         ActionSecurity security = new ActionSecurity("reportsAction");
         security.allow("load", SecurityConstants.VIEW);

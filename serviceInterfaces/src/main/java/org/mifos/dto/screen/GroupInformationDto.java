@@ -21,6 +21,7 @@
 package org.mifos.dto.screen;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 import org.mifos.dto.domain.CustomFieldDto;
@@ -60,6 +61,9 @@ public class GroupInformationDto implements Serializable {
     private final Boolean activeSurveys;
     private final List<SurveyDto> customerSurveys;
     private final List<CustomFieldDto> customFields;
+    
+    private final List<LoanDetailDto> closedLoanAccounts;
+    private final List<SavingsDetailDto> closedSavingsAccounts;
 
     public GroupInformationDto(final GroupDisplayDto groupDisplay,
             final CustomerAccountSummaryDto customerAccountSummary, GroupPerformanceHistoryDto groupPerformanceHistory,
@@ -84,6 +88,36 @@ public class GroupInformationDto implements Serializable {
         this.activeSurveys = activeSurveys;
         this.customerSurveys = customerSurveys;
         this.customFields = customFields;
+        this.closedLoanAccounts = Collections.emptyList();
+        this.closedSavingsAccounts = Collections.emptyList();
+    }
+    
+    public GroupInformationDto(final GroupDisplayDto groupDisplay,
+            final CustomerAccountSummaryDto customerAccountSummary, GroupPerformanceHistoryDto groupPerformanceHistory,
+            final CustomerAddressDto address, final List<CustomerDetailDto> clientsOtherThanClosedAndCancelled,
+            final List<CustomerNoteDto> recentCustomerNotes, final List<CustomerPositionOtherDto> customerPositions,
+            final List<CustomerFlagDto> customerFlags, final List<LoanDetailDto> loanAccountsInUse,
+            final List<SavingsDetailDto> savingsAccountsInUse, final CustomerMeetingDto customerMeeting,
+            final Boolean activeSurveys, final List<SurveyDto> customerSurveys,
+            final List<CustomFieldDto> customFields, final List<LoanDetailDto> closedLoanAccounts,
+            final List<SavingsDetailDto> closedSavingsAccounts) {
+
+        this.groupDisplay = groupDisplay;
+        this.customerAccountSummary = customerAccountSummary;
+        this.groupPerformanceHistory = groupPerformanceHistory;
+        this.address = address;
+        this.clientsOtherThanClosedAndCancelled = clientsOtherThanClosedAndCancelled;
+        this.recentCustomerNotes = recentCustomerNotes;
+        this.customerPositions = customerPositions;
+        this.customerFlags = customerFlags;
+        this.loanAccountsInUse = loanAccountsInUse;
+        this.savingsAccountsInUse = savingsAccountsInUse;
+        this.customerMeeting = customerMeeting;
+        this.activeSurveys = activeSurveys;
+        this.customerSurveys = customerSurveys;
+        this.customFields = customFields;
+		this.closedLoanAccounts = closedLoanAccounts;
+		this.closedSavingsAccounts = closedSavingsAccounts;
     }
 
     public GroupDisplayDto getGroupDisplay() {
@@ -142,4 +176,13 @@ public class GroupInformationDto implements Serializable {
     public List<CustomFieldDto> getCustomFields() {
         return this.customFields;
     }
+
+	public List<LoanDetailDto> getClosedLoanAccounts() {
+		return closedLoanAccounts;
+	}
+
+	public List<SavingsDetailDto> getClosedSavingsAccounts() {
+		return closedSavingsAccounts;
+	}
+
 }

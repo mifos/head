@@ -28,6 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@taglib uri="/mifos/savingsoverdue" prefix="savingsoverdue"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="savingsaccountdepositduedetails"></span>

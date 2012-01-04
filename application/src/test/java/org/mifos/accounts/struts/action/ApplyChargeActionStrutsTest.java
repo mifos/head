@@ -22,6 +22,7 @@ package org.mifos.accounts.struts.action;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -49,6 +50,7 @@ import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -101,6 +103,7 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testLoad() throws Exception {
+    	setMifosUserFromContext();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
         accountBO = getLoanAccount(client, meeting);
@@ -222,5 +225,15 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
         return TestObjectFactory.createLoanAccount("42423142341", customer, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
 
+    }
+    
+    private void setMifosUserFromContext() {
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUser(userContext.getId(), userContext.getBranchId(), userContext.getLevelId(),
+                new ArrayList<Short>(userContext.getRoles()), userContext.getName(), "".getBytes(),
+                true, true, true, true, new ArrayList<GrantedAuthority>(), userContext.getLocaleId());
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 }

@@ -57,6 +57,7 @@ import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLoca
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ProcessFlowRules;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -254,6 +255,16 @@ public class SavingsAction extends BaseAction {
 
         SavingsBO savings = this.savingsDao.findBySystemId(globalAccountNum);
         savings.setUserContext(uc);
+        SavingsAccountDetailDto savingsAccountDto;
+        try {
+            savingsAccountDto = this.savingsServiceFacade.retrieveSavingsAccountDetails(savings.getAccountId().longValue());
+        }
+        catch (MifosRuntimeException e) {
+            if (e.getCause() instanceof ApplicationException) {
+                throw (ApplicationException) e.getCause();
+            }
+            throw e;
+        }
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, legacyMasterDao.findMasterDataEntitiesWithLocale(SavingsTypeEntity.class), request);
@@ -263,9 +274,6 @@ public class SavingsAction extends BaseAction {
         SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, customFieldDefinitions, request);
 
         SessionUtils.setAttribute(SavingsConstants.PRDOFFERING, savings.getSavingsOffering(), request);
-
-        Long savingsId = savings.getAccountId().longValue();
-        SavingsAccountDetailDto savingsAccountDto = this.savingsServiceFacade.retrieveSavingsAccountDetails(savingsId);
 
         actionForm.setRecommendedAmount(savingsAccountDto.getRecommendedOrMandatoryAmount());
 

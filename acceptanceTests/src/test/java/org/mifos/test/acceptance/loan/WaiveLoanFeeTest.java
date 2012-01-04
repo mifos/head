@@ -65,9 +65,9 @@ public class WaiveLoanFeeTest extends UiTestCaseBase {
         searchResultsPage.verifyPage();
         LoanAccountPage loanAccountPage = searchResultsPage.navigateToLoanAccountDetailPage("000100000000012");
         ViewNextInstallmentDetailsPage viewInstallmentDetailsPage = loanAccountPage.navigateToViewNextInstallmentDetails();
-        viewInstallmentDetailsPage.verifyInstallmentAmount(11, 2, "10.0");
+        viewInstallmentDetailsPage.verifyInstallmentAmount(11, 2, "10");
         viewInstallmentDetailsPage.waiveOverdueInstallmentFee();
-        viewInstallmentDetailsPage.verifyInstallmentAmount(11, 2, "0.0");
+        viewInstallmentDetailsPage.verifyInstallmentAmount(11, 2, "0");
     }
 
 

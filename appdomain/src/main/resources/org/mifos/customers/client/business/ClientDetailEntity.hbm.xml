@@ -12,7 +12,7 @@
             </generator>
         </id>
 
-        <property name="ethinicity" column="ethinicity" type="integer"   />
+        <property name="ethnicity" column="ethnicity" type="integer"   />
         <property name="citizenship" column="citizenship" type="integer"  />
         <property name="handicapped" column="handicapped" type="integer"   />
         <property name="businessActivities" column="business_activities" type="integer"   />

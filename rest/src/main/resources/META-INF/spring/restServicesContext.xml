@@ -19,6 +19,10 @@
 
     <bean id="invocationHandler" class="org.mifos.rest.approval.aop.ApprovalMethodInvocationHandler"/>
      -->
+
+    <bean class="org.springframework.core.LocalVariableTableParameterNameDiscoverer"/>
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean"/>
+
     <context:component-scan base-package="org.mifos.platform.rest.controller" />
     
     <context:component-scan base-package="org.mifos.rest.approval" />
