@@ -33,7 +33,7 @@ import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.ListElement;
 
-import edu.emory.mathcs.backport.java.util.Collections;
+import java.util.Collections;
 
 public class Localization {
 

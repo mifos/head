@@ -238,7 +238,7 @@
                     <dependency>
                         <groupId>mysql</groupId>
                         <artifactId>mysql-connector-java</artifactId>
-                        <version>5.1.13</version>
+                        <version>${mysql.connector.version}</version>
                     </dependency>
                 </dependencies>
                 <configuration>
@@ -343,7 +343,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.7.1</version>
                 <configuration>
                     <redirectTestOutputToFile>false</redirectTestOutputToFile>
                     <runOrder>reversealphabetical</runOrder>

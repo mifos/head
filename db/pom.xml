@@ -29,7 +29,6 @@
         <liquibase.rollbackCount>1000</liquibase.rollbackCount>
         <liquibase.jar.path>${settings.localRepository}/org/liquibase/liquibase-core/${liquibase.version}</liquibase.jar.path>
         <mysql.connector.jar.path>${settings.localRepository}/mysql/mysql-connector-java/${mysql.connector.version}</mysql.connector.jar.path>
-        <maven.surefire.memory>-Xmx1024m</maven.surefire.memory>
     </properties>
 
     <dependencies>
@@ -233,7 +232,7 @@
                     <dependency>
                         <groupId>mysql</groupId>
                         <artifactId>mysql-connector-java</artifactId>
-                        <version>5.1.13</version>
+                        <version>${mysql.connector.version}</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -277,7 +276,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.4.3</version>
                 <configuration>
                     <printSummary>true</printSummary>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
