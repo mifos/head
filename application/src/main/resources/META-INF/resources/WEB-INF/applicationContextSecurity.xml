@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-    xmlns:beans="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-    http://www.springframework.org/schema/security
-    http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+    xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
     <beans:bean id="loginFormAuthentication" class="org.mifos.security.authentication.MifosLoginUrlAuthenticationEntryPoint">
         <beans:property name="loginFormUrl" value="/login.ftl" />
     </beans:bean>
 
-    <beans:bean id="authenticationSuccessHandler" class="org.mifos.security.authentication.MifosAuthenticationSuccessHandler">
-        <beans:property name="defaultTargetUrl" value="/custSearchAction.do?method=getHomePage" />
-        <beans:property name="alwaysUseDefaultTargetUrl" value="false" />
-    </beans:bean>
+    <beans:bean id="authenticationSuccessHandler" class="org.mifos.security.authentication.MifosAuthenticationSuccessHandler" 
+                p:defaultTargetUrl="/custSearchAction.do?method=getHomePage" 
+                p:targetUrlParameter="spring-security-redirect" />
 
     <beans:bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
         <beans:property name="defaultFailureUrl" value="/login.ftl?accessDenied" />
