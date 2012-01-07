@@ -20,10 +20,11 @@
 
 package org.mifos.reports.persistence;
 
+import java.sql.Connection;
+
 import junit.framework.Assert;
 
 import org.hibernate.Session;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,17 +44,16 @@ public class AddReportIntegrationTest extends MifosIntegrationTestCase {
         session = StaticHibernateUtil.getSessionTL();
     }
 
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
     @Test
     public void testStartFromStandardStore() throws Exception {
         short newId = 17032;
         AddReport upgrade = new AddReport(ReportsCategoryBO.ANALYSIS, "Detailed Aging of Portfolio at Risk",
                 "DetailedAgingPortfolioAtRisk.rptdesign");
-        upgrade.upgrade(session.connection());
+
+        Connection connection = dataSource.getConnection();
+        upgrade.upgrade(connection);
+        connection.close();
+
         ReportsBO fetched = (ReportsBO) session.get(ReportsBO.class, newId);
         Assert.assertEquals(newId, (int) fetched.getReportId());
         Assert.assertEquals(ReportsBO.ACTIVE, fetched.getIsActive());

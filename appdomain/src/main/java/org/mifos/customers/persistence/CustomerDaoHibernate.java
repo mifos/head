@@ -21,10 +21,6 @@
 package org.mifos.customers.persistence;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -210,7 +206,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("CUSTOMER_CATEGAORY", FeeCategory.CENTER.getValue());
         return retrieveFeesApplicableTo(queryParameters);
     }
-    
+
     @Override
     public Date getLastMeetingDateForCustomer(final Integer customerId) {
         Date meetingDate = null;
@@ -1398,50 +1394,35 @@ public class CustomerDaoHibernate implements CustomerDao {
             return;
         }
 
-        ResultSet customerIds = null;
-        Statement statement = null;
         String childrenSearchId = parentSearchId + ".%";
 
         try {
-            Connection connection = StaticHibernateUtil.getSessionTL()
-                    .connection();
-            statement = connection.createStatement();
-            String sql = " select customer_id from customer where " + " customer.search_id like '" + childrenSearchId
+            Session session = StaticHibernateUtil.getSessionTL();
+            StaticHibernateUtil.startTransaction();
+            String sql = "select customer_id from customer where " + " customer.search_id like '" + childrenSearchId
                     + "' and customer.branch_id = " + parentOfficeId.shortValue();
-            customerIds = statement.executeQuery(sql);
+            Query query = session.createSQLQuery(sql);
+            List<Integer> customerIds = query.list();
             if (customerIds != null) {
-                while (customerIds.next()) {
-                    int customerId = customerIds.getInt("customer_id");
-                    updateAccountsForOneCustomer(customerId, parentLO, connection);
+                for (int customerId : customerIds) {
+                    updateAccountsForOneCustomer(customerId, parentLO);
                 }
             }
-        } catch (SQLException e) {
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (customerIds != null) {
-                    customerIds.close();
-                }
-            } catch (SQLException e) {
-                // ignore as can't rethrow from finally
-            }
         }
-
     }
 
-    private void updateAccountsForOneCustomer(final Integer customerId, final Short parentLO,
-            final Connection connection) {
-
+    private void updateAccountsForOneCustomer(final Integer customerId, final Short parentLO) {
         try {
-            Statement statement = connection.createStatement();
+            Session session = StaticHibernateUtil.getSessionTL();
             String sql = "update account " + " set personnel_id = " + parentLO.shortValue()
                     + " where account.customer_id = " + customerId.intValue();
-            statement.executeUpdate(sql);
-            statement.close();
-        } catch (SQLException e) {
+            Query query = session.createSQLQuery(sql);
+            query.executeUpdate();
+        } catch (Exception e) {
             throw new MifosRuntimeException(e);
         }
     }

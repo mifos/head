@@ -20,6 +20,8 @@
 
 package org.mifos.framework.components.fieldConfiguration.business;
 
+import java.sql.Connection;
+
 import junit.framework.Assert;
 
 import org.hibernate.Session;
@@ -48,7 +50,9 @@ public class AddFieldIntegrationTest extends MifosIntegrationTestCase {
         int newId = 203;
         AddField upgrade = new AddField(newId, "AssignClients",
                 EntityType.CLIENT, false, false);
-        upgrade.upgrade(session.connection());
+        Connection connection = dataSource.getConnection();
+        upgrade.upgrade(connection);
+        connection.close();
         FieldConfigurationEntity fetched = (FieldConfigurationEntity) session.get(FieldConfigurationEntity.class, newId);
        Assert.assertEquals(newId, (int) fetched.getFieldConfigId());
         Assert.assertFalse(fetched.isHidden());

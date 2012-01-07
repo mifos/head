@@ -5,7 +5,6 @@ import java.sql.Connection;
 
 import org.hibernate.CacheMode;
 import org.hibernate.Criteria;
-import org.hibernate.EntityMode;
 import org.hibernate.Filter;
 import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
@@ -17,27 +16,20 @@ import org.hibernate.ReplicationMode;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.SharedSessionBuilder;
 import org.hibernate.Transaction;
 import org.hibernate.TypeHelper;
 import org.hibernate.UnknownProfileException;
+import org.hibernate.jdbc.ReturningWork;
 import org.hibernate.jdbc.Work;
 import org.hibernate.stat.SessionStatistics;
 
 public class DataSetupSession implements Session {
+
     private Session session;
 
     public DataSetupSession(Session session) {
         this.session = session;
-    }
-
-    @Override
-    public EntityMode getEntityMode() {
-        return session.getEntityMode();
-    }
-
-    @Override
-    public Session getSession(EntityMode entityMode) {
-        return session.getSession(entityMode);
     }
 
     @Override
@@ -68,11 +60,6 @@ public class DataSetupSession implements Session {
     @Override
     public SessionFactory getSessionFactory() {
         return session.getSessionFactory();
-    }
-
-    @Override
-    public Connection connection() throws HibernateException {
-        return session.connection();
     }
 
     @Override
@@ -398,11 +385,6 @@ public class DataSetupSession implements Session {
     }
 
     @Override
-    public void reconnect() throws HibernateException {
-        session.reconnect();
-    }
-
-    @Override
     public void reconnect(Connection connection) throws HibernateException {
         session.reconnect(connection);
     }
@@ -430,5 +412,30 @@ public class DataSetupSession implements Session {
     @Override
     public LobHelper getLobHelper() {
         return session.getLobHelper();
+    }
+
+    @Override
+    public String getTenantIdentifier() {
+        return session.getTenantIdentifier();
+    }
+
+    @Override
+    public SharedSessionBuilder sessionWithOptions() {
+        return session.sessionWithOptions();
+    }
+
+    @Override
+    public void refresh(String entityName, Object object) throws HibernateException {
+        session.refresh(entityName, object);
+    }
+
+    @Override
+    public void refresh(String entityName, Object object, LockOptions lockOptions) throws HibernateException {
+        session.refresh(entityName, object, lockOptions);
+    }
+
+    @Override
+    public <T> T doReturningWork(ReturningWork<T> work) throws HibernateException {
+        return session.doReturningWork(work);
     }
 }

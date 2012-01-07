@@ -33,20 +33,11 @@
         </property>
     </bean>
 
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-        <property name="driverClass" value="${integration.database.driver}"/>
-        <property name="jdbcUrl"
-                  value="jdbc:mysql://${integration.database.host}:${integration.database.port}/${integration.database}"/>
-        <property name="user" value="${integration.database.user}"/>
-        <property name="password" value="${integration.database.password}"/>
-        <property name="initialPoolSize" value="5"></property>
-        <property name="minPoolSize" value="${integration.database.hibernate.c3p0.min_size}"/>
-        <property name="maxPoolSize" value="${integration.database.hibernate.c3p0.max_size}"/>
-        <property name="checkoutTimeout" value="${integration.database.hibernate.c3p0.timeout}"/>
-        <property name="maxStatements" value="${integration.database.hibernate.c3p0.max_statements}"></property>
-        <property name="testConnectionOnCheckout" value="false"/>
-        <property name="idleConnectionTestPeriod"
-                  value="${integration.database.hibernate.c3p0.idle_test_period}"></property>
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+        <property name="driverClass" value="${integration.database.driver}" />
+        <property name="url" value="jdbc:mysql://${integration.database.host}:${integration.database.port}/${integration.database}?${integration.database.params}" />
+        <property name="username" value="${integration.database.user}" />
+        <property name="password" value="${integration.database.password}" />
     </bean>
 
     <bean id="dbSpecificHibernateProperties"
@@ -58,15 +49,10 @@
                 <prop key="hibernate.generate_statistics">false</prop>
                 <prop key="hibernate.format_sql">false</prop>
                 <prop key="hibernate.use_sql_comments">false</prop>
-                <prop key="hibernate.cache.use_query_cache">
-                    ${integration.database.hibernate.cache.use_query_cache}
-                </prop>
-                <prop key="hibernate.cache.use_second_level_cache">
-                    ${integration.database.hibernate.cache.use_second_level_cache}
-                </prop>
-                <prop key="hibernate.connection.provider_class">
-                    ${integration.database.hibernate.connection.provider_class}
-                </prop>
+                <prop key="hibernate.cache.use_query_cache">${integration.database.hibernate.cache.use_query_cache}</prop>
+                <prop key="hibernate.cache.use_second_level_cache">${integration.database.hibernate.cache.use_second_level_cache}</prop>
+                <prop key="hibernate.connection.provider_class">${integration.database.hibernate.connection.provider_class}</prop>
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
             </props>
         </property>
     </bean>

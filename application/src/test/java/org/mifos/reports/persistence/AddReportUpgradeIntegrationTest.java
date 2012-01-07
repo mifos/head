@@ -24,25 +24,12 @@ import java.sql.Connection;
 
 import junit.framework.Assert;
 
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.junit.Before;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.business.ReportsCategoryBO;
 
 public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
-
-    private Transaction transaction;
-    private Connection connection;
-
-    @Before
-    public void setUp() throws Exception {
-        Session session = StaticHibernateUtil.getSessionTL();
-        connection = session.connection();
-    }
 
     private AddReport createReport() {
         return new AddReport(ReportsCategoryBO.ANALYSIS, "TestReportForUpgrade", "XYZ.rptdesign");
@@ -51,7 +38,9 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testShouldUpgrade() throws Exception {
         AddReport addReport = createReport();
+        Connection connection = dataSource.getConnection();
         addReport.upgrade(connection);
+        connection.close();
         ReportsBO report = new ReportsPersistence().getReport(ReportsCategoryBO.ANALYSIS);
         Assert.assertNotNull(report.getActivityId());
         Assert.assertTrue(report.getIsActive() == (short)1);

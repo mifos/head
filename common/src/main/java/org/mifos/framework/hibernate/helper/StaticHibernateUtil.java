@@ -25,8 +25,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 
-import java.sql.Connection;
-
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="DC", justification="Legacy code to be removed")
 public class StaticHibernateUtil {
@@ -96,10 +94,6 @@ public class StaticHibernateUtil {
         if (null != hibernateUtil) {
             hibernateUtil.shutdown();
         }
-    }
-
-    public static Connection getConnection() {
-        return hibernateUtil.getConnection();
     }
 
     public static void clearSession() {

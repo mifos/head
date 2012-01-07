@@ -27,8 +27,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.db.upgrade.DatabaseUpgradeSupport;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -53,8 +55,8 @@ public class DatabaseMigrator {
     private static final String APPLIED_UPGRADES = "applied_upgrades";
 
     public DatabaseMigrator() {
-        this.connection = StaticHibernateUtil.getSessionTL().connection();
         try {
+            connection = ApplicationContextProvider.getBean(DataSource.class).getConnection();
             connection.setAutoCommit(false);
         } catch (SQLException e) {
             logger.error("couldn't change autocommit", e);

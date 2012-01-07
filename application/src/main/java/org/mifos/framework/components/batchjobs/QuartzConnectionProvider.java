@@ -23,13 +23,15 @@ package org.mifos.framework.components.batchjobs;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import javax.sql.DataSource;
+
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.quartz.utils.ConnectionProvider;
 
 public class QuartzConnectionProvider implements ConnectionProvider {
     @Override
     public Connection getConnection() throws SQLException {
-        return StaticHibernateUtil.getSessionTL().connection();
+        return ApplicationContextProvider.getBean(DataSource.class).getConnection();
     }
 
     @Override

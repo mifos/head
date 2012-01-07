@@ -20,31 +20,39 @@
 
 package org.mifos.application.admin.servicefacade;
 
+import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
+import javax.sql.DataSource;
 
 import org.hibernate.HibernateException;
 import org.mifos.application.admin.system.SystemInfo;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.reports.struts.action.BirtReportsUploadAction;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  */
 public class SystemInformationServiceFacadeWebTier implements SystemInformationServiceFacade {
 
+    @Autowired
+    private DataSource dataSource;
+
     @Override
     public SystemInformationDto getSystemInformation(ServletContext context, Locale locale) {
 
         try {
-            DatabaseMetaData metaData = StaticHibernateUtil.getSessionTL().connection().getMetaData();
+            Connection connection = dataSource.getConnection();
+            DatabaseMetaData metaData = connection.getMetaData();
 
             final SystemInfo systemInfo = new SystemInfo(metaData, context, locale, true);
             systemInfo.setCustomReportsDir(BirtReportsUploadAction.getCustomReportStorageDirectory());
+
+            connection.close();
 
             return new SystemInformationDto(
                     systemInfo.getApplicationServerInfo(),

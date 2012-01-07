@@ -3,7 +3,7 @@ package org.mifos.rest.approval.dao;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.mifos.rest.approval.domain.ApprovalState;

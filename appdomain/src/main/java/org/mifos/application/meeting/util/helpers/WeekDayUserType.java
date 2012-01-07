@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.usertype.UserType;
 
 /**
@@ -60,7 +61,7 @@ public class WeekDayUserType implements UserType {
     }
 
     @Override
-	public Object nullSafeGet(ResultSet rs, String[] names, @SuppressWarnings("unused") Object owner) throws HibernateException, SQLException {
+	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
         Object object = rs.getObject(names[0]);
         if (rs.wasNull()) {
             return null;
@@ -77,7 +78,7 @@ public class WeekDayUserType implements UserType {
     }
 
     @Override
-	public void nullSafeSet(PreparedStatement st, Object obj, int index) throws HibernateException, SQLException {
+	public void nullSafeSet(PreparedStatement st, Object obj, int index, SessionImplementor session) throws HibernateException, SQLException {
         if (obj == null) {
             st.setNull(index, sqlType);
         } else {

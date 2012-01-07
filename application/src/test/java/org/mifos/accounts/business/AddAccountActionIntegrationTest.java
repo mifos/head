@@ -43,15 +43,13 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
     @Before
     public void setUp() throws Exception {
         session = StaticHibernateUtil.getSessionTL();
-        connection = session.connection();
-//        connection.setAutoCommit(true);
+        connection = dataSource.getConnection();
     }
 
     @After
     public void tearDown() throws Exception {
         StaticHibernateUtil.flushSession();
-        connection = null;
-        session = null;
+        connection.close();
     }
 
     public void startFromStandardStore() throws Exception {

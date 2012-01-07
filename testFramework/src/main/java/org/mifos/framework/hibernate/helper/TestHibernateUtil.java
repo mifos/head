@@ -4,7 +4,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import java.sql.Connection;
 import java.util.Properties;
 
 @SuppressWarnings("PMD")
@@ -94,11 +93,5 @@ public class TestHibernateUtil extends HibernateUtil {
     @Override
     public void clearSession() {
         hibernateUtil.clearSession();
-    }
-
-    @Override
-    public Connection getConnection() {
-        Connection connection = super.getConnection();
-        return new TestDbConnection(connection);
     }
 }

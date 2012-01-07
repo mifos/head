@@ -39,8 +39,11 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
     @Before
     public void setUp() throws Exception {
         session = StaticHibernateUtil.getSessionTL();
-        connection = session.connection();
-//        connection.setAutoCommit(true);
+        connection = dataSource.getConnection();
+    }
+
+    public void tearDown() throws Exception {
+        connection.close();
     }
 
     public void testValidateLookupValueKeyTest() throws Exception {

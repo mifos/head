@@ -21,6 +21,7 @@
 package org.mifos.reports.struts.action;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,11 +160,11 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         try {
             activity = new AddActivity((short) newActivityId,
                     SecurityConstants.ORGANIZATION_MANAGEMENT, "no name");
-            activity.upgrade(StaticHibernateUtil.getSessionTL().connection());
-
+            Connection connection = dataSource.getConnection();
+            activity.upgrade(connection);
+            connection.close();
         } catch (Exception e) {
             legacyRolesPermissionsDao.delete(request.getAttribute("report"));
-            StaticHibernateUtil.flushSession();
             throw e;
         }
 

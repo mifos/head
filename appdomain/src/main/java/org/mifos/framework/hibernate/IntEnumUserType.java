@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.usertype.UserType;
 
 /**
@@ -77,7 +78,7 @@ public class IntEnumUserType<E extends Enum<E>> implements UserType {
      * enum.values() in order to find the correct "int".
      */
     @Override
-	public Object nullSafeGet(ResultSet resultSet, String[] names, Object owner) throws HibernateException,
+	public Object nullSafeGet(ResultSet resultSet, String[] names, SessionImplementor session, Object owner) throws HibernateException,
             SQLException {
         final int val = resultSet.getShort(names[0]);
         E result = null;
@@ -102,7 +103,7 @@ public class IntEnumUserType<E extends Enum<E>> implements UserType {
      * could change.
      */
     @Override
-	public void nullSafeSet(PreparedStatement preparedStatement, Object value, int index) throws HibernateException,
+	public void nullSafeSet(PreparedStatement preparedStatement, Object value, int index, SessionImplementor session) throws HibernateException,
             SQLException {
         if (null == value) {
             preparedStatement.setNull(index, Types.SMALLINT);

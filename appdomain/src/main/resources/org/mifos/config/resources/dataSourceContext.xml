@@ -25,6 +25,7 @@
 				<prop key="hibernate.generate_statistics">false</prop>
 				<prop key="hibernate.format_sql">false</prop>
 				<prop key="hibernate.use_sql_comments">false</prop>
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
 				<prop key="hibernate.cache.use_query_cache">${${mifos.mode}.database.hibernate.cache.use_query_cache}</prop>
 				<prop key="hibernate.cache.use_second_level_cache">${${mifos.mode}.database.hibernate.cache.use_second_level_cache}</prop>
 				<prop key="hibernate.connection.provider_class">${${mifos.mode}.database.hibernate.connection.provider_class}</prop>

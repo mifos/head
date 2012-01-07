@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire.service;
 
 import org.hamcrest.Matchers;
+import org.hibernate.SessionFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,8 +61,6 @@ import org.mifos.platform.questionnaire.service.dtos.QuestionGroupResponseDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.orm.hibernate3.SessionFactoryUtils;
-import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -100,7 +99,7 @@ public class QuestionnaireServiceIntegrationTest {
     private QuestionGroupInstanceDao questionGroupInstanceDao;
 
     @Autowired
-    private AnnotationSessionFactoryBean sessionFactory;
+    private SessionFactory sessionFactory;
 
     public static final String TITLE = "Title";
 
@@ -138,7 +137,7 @@ public class QuestionnaireServiceIntegrationTest {
         Assert.assertThat(questionDao.retrieveCountOfQuestionsWithText(questionTitle).get(0).intValue(), is(1));
 
         // See http://forum.springsource.org/showthread.php?t=18951, integration test practice recommended by Rod Johnson
-        SessionFactoryUtils.getSession(sessionFactory.getObject(), false).clear();
+        sessionFactory.getCurrentSession().flush();
 
         questionnaireService.defineQuestion(questionDetail);
         Assert.assertThat(questionDao.retrieveCountOfQuestionsWithText(questionTitle).get(0).intValue(), is(0));

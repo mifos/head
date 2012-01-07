@@ -27,7 +27,6 @@ import java.sql.SQLException;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -61,11 +60,6 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
     @Ignore
     @Test
     public void testStartFromStandardStore() throws Exception {
@@ -92,7 +86,9 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
 //        connection.setAutoCommit(true);
         short newId = 17032;
         AddActivity upgrade = new AddActivity(newId, SecurityConstants.LOAN_MANAGEMENT, "Can use the executive washroom");
-        upgrade.upgrade(session.connection());
+        Connection connection = dataSource.getConnection();
+        upgrade.upgrade(connection);
+        connection.close();
 
         session = StaticHibernateUtil.getSessionTL();
         ActivityEntity fetched = (ActivityEntity) session.get(ActivityEntity.class, newId);
@@ -115,7 +111,9 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
     public void testNoParent() throws Exception {
         short newId = 17032;
         AddActivity upgrade = new AddActivity(newId, null, "Can use the executive washroom");
-        upgrade.upgrade(session.connection());
+        Connection connection = dataSource.getConnection();
+        upgrade.upgrade(connection);
+        connection.close();
         ActivityEntity fetched = (ActivityEntity) session.get(ActivityEntity.class, newId);
        Assert.assertEquals(null, fetched.getParent());
     }
@@ -132,8 +130,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
     @Ignore
     @Test
     public void testConstructorTest() throws Exception {
-        Connection conn =session.connection();
-//        conn.setAutoCommit(true);
+        Connection conn = dataSource.getConnection();
         short newId = 30000;
         AddActivity upgrade = null;
         String invalidKey = "NewActivity";
@@ -148,6 +145,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
         // use valid constructor and valid key
         upgrade = new AddActivity(goodKey, newId, null);
         upgrade.upgrade(conn);
+        conn.close();
         ActivityEntity fetched = (ActivityEntity) session.get(ActivityEntity.class, newId);
        Assert.assertEquals(null, fetched.getParent());
        Assert.assertEquals(goodKey, fetched.getActivityName());

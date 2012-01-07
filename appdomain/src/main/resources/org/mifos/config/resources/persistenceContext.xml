@@ -20,7 +20,7 @@
 
     <import resource="queryInterceptorContext.xml" />
 
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean" destroy-method="destroy">
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean" destroy-method="destroy">
         <property name="configLocations">
           <list>
               <value>classpath:org/mifos/platform/rest/approval/domain/rest_hibernate.cfg.xml</value>
@@ -46,7 +46,7 @@
 
     <bean id="namingStrategy" class="org.hibernate.cfg.ImprovedNamingStrategy"/>
 
-    <bean id="platformTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    <bean id="platformTransactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
 

@@ -7,6 +7,7 @@ import static org.easymock.classextension.EasyMock.replay;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -18,7 +19,6 @@ import org.junit.Test;
 import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.test.context.ContextConfiguration;
@@ -90,18 +90,17 @@ public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void cleanuUpBatchTables() throws SQLException {
-        getStatement().executeUpdate("truncate table BATCH_STEP_EXECUTION_CONTEXT");
-        getStatement().executeUpdate("truncate table BATCH_STEP_EXECUTION");
-        getStatement().executeUpdate("truncate table BATCH_STEP_EXECUTION_SEQ");
-        getStatement().executeUpdate("truncate table BATCH_JOB_EXECUTION_CONTEXT");
-        getStatement().executeUpdate("truncate table BATCH_JOB_EXECUTION");
-        getStatement().executeUpdate("truncate table BATCH_JOB_PARAMS");
-        getStatement().executeUpdate("truncate table BATCH_JOB_INSTANCE");
-        getStatement().executeUpdate("truncate table BATCH_JOB_SEQ");
-        StaticHibernateUtil.getConnection().commit();
+        Connection connection = dataSource.getConnection();
+        Statement st = connection.createStatement();
+        st.executeUpdate("truncate table BATCH_STEP_EXECUTION_CONTEXT");
+        st.executeUpdate("truncate table BATCH_STEP_EXECUTION");
+        st.executeUpdate("truncate table BATCH_STEP_EXECUTION_SEQ");
+        st.executeUpdate("truncate table BATCH_JOB_EXECUTION_CONTEXT");
+        st.executeUpdate("truncate table BATCH_JOB_EXECUTION");
+        st.executeUpdate("truncate table BATCH_JOB_PARAMS");
+        st.executeUpdate("truncate table BATCH_JOB_INSTANCE");
+        st.executeUpdate("truncate table BATCH_JOB_SEQ");
+        connection.close();
     }
 
-    private Statement getStatement() throws SQLException {
-        return StaticHibernateUtil.getConnection().createStatement();
-    }
 }

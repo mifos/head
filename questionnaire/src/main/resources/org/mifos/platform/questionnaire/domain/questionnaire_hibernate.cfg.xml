@@ -4,7 +4,6 @@
     "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
         <mapping class="org.mifos.platform.questionnaire.domain.EventEntity" />
         <mapping class="org.mifos.platform.questionnaire.domain.EventSourceEntity"/>
 

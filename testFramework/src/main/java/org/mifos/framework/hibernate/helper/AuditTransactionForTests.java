@@ -21,6 +21,7 @@ package org.mifos.framework.hibernate.helper;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Transaction;
+import org.hibernate.engine.transaction.spi.LocalStatus;
 
 import javax.transaction.Synchronization;
 
@@ -59,5 +60,25 @@ public class AuditTransactionForTests implements Transaction {
 
     @Override
 	public void setTimeout(int i) {
+    }
+
+    @Override
+    public boolean isInitiator() {
+        return false;
+    }
+
+    @Override
+    public LocalStatus getLocalStatus() {
+        return null;
+    }
+
+    @Override
+    public boolean isParticipating() {
+        return false;
+    }
+
+    @Override
+    public int getTimeout() {
+        return 0;
     }
 }

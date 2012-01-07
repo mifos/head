@@ -26,9 +26,8 @@ import org.hibernate.Transaction;
 import org.hibernate.Interceptor;
 import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 
-import java.sql.Connection;
 import java.util.Properties;
 
 @SuppressWarnings("PMD")
@@ -57,7 +56,7 @@ public class HibernateUtil implements FactoryBean<HibernateUtil> {
     }
 
     public Properties getHibernateProperties() {
-        return ((AnnotationSessionFactoryBean) sessionFactory).getHibernateProperties();
+        return ((LocalSessionFactoryBean) sessionFactory).getHibernateProperties();
     }
 
     /**
@@ -137,7 +136,7 @@ public class HibernateUtil implements FactoryBean<HibernateUtil> {
     private Session getOrCreateSession() throws HibernateException {
         if (sessionTL.get() == null) {
             interceptorTL.set(interceptorFactory.create());
-            Session session = sessionFactory.openSession((Interceptor) interceptorTL.get());
+            Session session = sessionFactory.withOptions().interceptor((Interceptor) interceptorTL.get()).openSession();
             sessionTL.set(session);
         }
         return sessionTL.get();
@@ -172,9 +171,5 @@ public class HibernateUtil implements FactoryBean<HibernateUtil> {
 
     public void clearSession() {
         getSessionTL().clear();
-    }
-
-    public Connection getConnection() {
-        return getSessionTL().connection();
     }
 }

@@ -29,6 +29,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.sql.DataSource;
+
 import junit.framework.ComparisonFailure;
 
 import org.dbunit.Assertion;
@@ -92,6 +94,9 @@ public class MifosIntegrationTestCase {
 
     @Autowired
     protected SessionFactory sessionFactory;
+
+    @Autowired
+    protected DataSource dataSource;
 
     /**
      * This is a switch to enable verification of database (cleanup) at the end of an integration tests. i.e. if a test
@@ -225,7 +230,7 @@ public class MifosIntegrationTestCase {
         if (verifyDatabaseState) {
             excludeTables.excludeTable("BATCH_JOB_EXECUTION");
 
-            Connection connection = StaticHibernateUtil.getSessionTL().connection();
+            Connection connection = dataSource.getConnection();
             connection.setAutoCommit(false);
             DatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
             latestDataDump = new FilteredDataSet(excludeTables, dbUnitConnection.createDataSet());
@@ -239,7 +244,7 @@ public class MifosIntegrationTestCase {
     private void dbVerificationTearDown() throws Exception,
             FileNotFoundException, MalformedURLException {
         if (verifyDatabaseState) {
-            Connection connection = StaticHibernateUtil.getSessionTL().connection();
+            Connection connection = dataSource.getConnection();
             connection.setAutoCommit(false);
             DatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
             IDataSet upgradeDataDump = new FilteredDataSet(excludeTables, dbUnitConnection.createDataSet());

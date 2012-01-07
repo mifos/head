@@ -127,7 +127,7 @@ public class ReportsPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
         String sql = "insert into report_parameter(name, type, classname)"
                 + "values('my_report', 'my_type', 'my_class')";
-        session.connection().createStatement().execute(sql);
+        session.createSQLQuery(sql).executeUpdate();
 
         List<ReportsParams> moreParameters = reportsPersistence.getAllReportParams(session);
        Assert.assertEquals(1, moreParameters.size());

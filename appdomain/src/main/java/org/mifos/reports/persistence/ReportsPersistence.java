@@ -27,6 +27,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -55,7 +57,6 @@ import org.mifos.security.rolesandpermission.business.ActivityEntity;
 public class ReportsPersistence extends LegacyGenericDao {
 
     public ReportsPersistence() {
-
     }
 
     /**
@@ -367,18 +368,10 @@ public class ReportsPersistence extends LegacyGenericDao {
      * Certainly looks ugly, not sure whether it is buggy too...).
      */
     public Connection getJasperConnection() throws ApplicationException, SystemException {
-        Session session = null;
         try {
-            session = StaticHibernateUtil.getSessionTL();
-            return session.connection();
-        } catch (HibernateProcessException e) {
-            throw new ApplicationException(e);
-        } catch (HibernateException e) {
-            throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
+            return ApplicationContextProvider.getBean(DataSource.class).getConnection();
         } catch (Exception e) {
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 

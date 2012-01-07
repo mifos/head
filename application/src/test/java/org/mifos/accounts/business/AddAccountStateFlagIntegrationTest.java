@@ -34,23 +34,19 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase {
 
-    private static final short FLAG_FEET_TOO_BIG = 12;
-
     private Session session;
     private Connection connection;
 
     @Before
     public void setUp() throws SQLException {
         session = StaticHibernateUtil.getSessionTL();
-        connection = session.connection();
+        connection = dataSource.getConnection();
     }
 
     @After
     public void tearDown() throws Exception {
         StaticHibernateUtil.flushSession();
-        connection = null;
-        session = null;
-
+        connection.close();
     }
 
     @Test

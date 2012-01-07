@@ -110,7 +110,7 @@ public class InterceptHelper {
     public Map hibernateMeta(Object object, String state) {
         logger.debug("object : " + object);
         ClassMetadata customMeta = StaticHibernateUtil.getSessionFactory().getClassMetadata(object.getClass());
-        Object[] propertyValues = customMeta.getPropertyValues(object, EntityMode.POJO);
+        Object[] propertyValues = customMeta.getPropertyValues(object);
         String[] propertyNames = customMeta.getPropertyNames();
         Type[] propertyTypes = customMeta.getPropertyTypes();
 
@@ -121,7 +121,7 @@ public class InterceptHelper {
             localeId = ((AbstractBusinessObject) object).getUserContext().getLocaleId();
             logger.debug("initial path class: " + AuditConfiguration.getEntityToClassPath(object.getClass().getName()));
             entityName = AuditConfiguration.getEntityToClassPath(object.getClass().getName());
-            entityId = Integer.valueOf(customMeta.getIdentifier(object, EntityMode.POJO).toString());
+            entityId = Integer.valueOf(customMeta.getIdentifier(object).toString());
         }
 
         setPrimaryKeyValues(customMeta, object, customMeta.getIdentifierPropertyName(), state);
@@ -276,7 +276,7 @@ public class InterceptHelper {
     private void readFurtherMeta(Object obj, String firstName, String state) {
         Class clazz = getClazz(obj);
         ClassMetadata customMeta = StaticHibernateUtil.getSessionFactory().getClassMetadata(clazz);
-        Object[] propertyValues = customMeta.getPropertyValues(obj, EntityMode.POJO);
+        Object[] propertyValues = customMeta.getPropertyValues(obj);
         String[] propertyNames = customMeta.getPropertyNames();
         Type[] propertyTypes = customMeta.getPropertyTypes();
         String prdStatusName = AuditConstants.PRDSTATUSPATH;
@@ -652,7 +652,7 @@ public class InterceptHelper {
 
         ClassMetadata customMeta = StaticHibernateUtil.getSessionFactory().getClassMetadata(l);
 
-        Object[] propertyValues = customMeta.getPropertyValues(obj, EntityMode.POJO);
+        Object[] propertyValues = customMeta.getPropertyValues(obj);
         String[] propertyNames = customMeta.getPropertyNames();
         Type[] propertyTypes = customMeta.getPropertyTypes();
 
@@ -951,7 +951,7 @@ public class InterceptHelper {
 
         ClassMetadata customMeta = StaticHibernateUtil.getSessionFactory().getClassMetadata(l);
 
-        Object[] propertyValues = customMeta.getPropertyValues(obj, EntityMode.POJO);
+        Object[] propertyValues = customMeta.getPropertyValues(obj);
         String[] propertyNames = customMeta.getPropertyNames();
         Type[] propertyTypes = customMeta.getPropertyTypes();
 
@@ -1414,22 +1414,22 @@ public class InterceptHelper {
         if (state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)) {
             String oldValue = getOldValueToKey(initialValues, name);
             logger.debug("i setPrimaryKeyValueForCollectionType : " + name + " value : "
-                    + customMeta.getIdentifier(obj, EntityMode.POJO));
+                    + customMeta.getIdentifier(obj));
             if (AuditConfiguration.checkForPropertyName(entityName, name, localeId)) {
                 String value = AuditConfiguration.getValueOfCorrespondingId(entityName, name, customMeta.getIdentifier(
-                        obj, EntityMode.POJO), localeId);
+                        obj), localeId);
                 if (!oldValue.equals("")) {
                     initialValues.put(name, value.concat(",").concat(oldValue));
                 } else {
                     initialValues.put(name, value);
                 }
             } else {
-                if (customMeta.getIdentifier(obj, EntityMode.POJO) != null) {
+                if (customMeta.getIdentifier(obj) != null) {
                     if (!oldValue.equals("")) {
-                        initialValues.put(name, customMeta.getIdentifier(obj, EntityMode.POJO).toString().concat(",")
+                        initialValues.put(name, customMeta.getIdentifier(obj).toString().concat(",")
                                 .concat(oldValue));
                     } else {
-                        initialValues.put(name, customMeta.getIdentifier(obj, EntityMode.POJO));
+                        initialValues.put(name, customMeta.getIdentifier(obj));
                     }
                 }
             }
@@ -1442,22 +1442,22 @@ public class InterceptHelper {
         } else {
             String oldValue = getOldValueToKey(changedValues, name);
             logger.debug("c setPrimaryKeyValueForCollectionType : " + name + " value : "
-                    + customMeta.getIdentifier(obj, EntityMode.POJO));
+                    + customMeta.getIdentifier(obj));
             if (AuditConfiguration.checkForPropertyName(entityName, name, localeId)) {
                 String value = AuditConfiguration.getValueOfCorrespondingId(entityName, name, customMeta.getIdentifier(
-                        obj, EntityMode.POJO), localeId);
+                        obj), localeId);
                 if (!oldValue.equals("")) {
                     changedValues.put(name, value.concat(",").concat(oldValue));
                 } else {
                     changedValues.put(name, value);
                 }
             } else {
-                if (customMeta.getIdentifier(obj, EntityMode.POJO) != null) {
+                if (customMeta.getIdentifier(obj) != null) {
                     if (!oldValue.equals("")) {
-                        changedValues.put(name, customMeta.getIdentifier(obj, EntityMode.POJO).toString().concat(",")
+                        changedValues.put(name, customMeta.getIdentifier(obj).toString().concat(",")
                                 .concat(oldValue));
                     } else {
-                        changedValues.put(name, customMeta.getIdentifier(obj, EntityMode.POJO));
+                        changedValues.put(name, customMeta.getIdentifier(obj));
                     }
                 }
             }
@@ -1474,11 +1474,11 @@ public class InterceptHelper {
             String state) {
         if (state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)) {
             logger.debug("i setPrimaryKeyValueForCollectionTypeAndMerge : " + name + " value : "
-                    + customMeta.getIdentifier(obj, EntityMode.POJO));
+                    + customMeta.getIdentifier(obj));
             if (isValueLoggable(name, null)) {
                 if (AuditConfiguration.checkForPropertyName(entityName, name, localeId)) {
                     String value = AuditConfiguration.getValueOfCorrespondingId(entityName, name, customMeta
-                            .getIdentifier(obj, EntityMode.POJO), localeId);
+                            .getIdentifier(obj), localeId);
                     if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(",")) {
                         initialArray.append(value);
                     } else if (value.trim().length() != 0) {
@@ -1486,19 +1486,19 @@ public class InterceptHelper {
                     }
                 } else {
                     if (initialArray.toString().trim().length() == 0 || initialArray.toString().endsWith(",")) {
-                        initialArray.append(customMeta.getIdentifier(obj, EntityMode.POJO));
-                    } else if (customMeta.getIdentifier(obj, EntityMode.POJO).toString().trim().length() != 0) {
-                        initialArray.append("-").append(customMeta.getIdentifier(obj, EntityMode.POJO));
+                        initialArray.append(customMeta.getIdentifier(obj));
+                    } else if (customMeta.getIdentifier(obj).toString().trim().length() != 0) {
+                        initialArray.append("-").append(customMeta.getIdentifier(obj));
                     }
                 }
             }
         } else {
             logger.debug("c setPrimaryKeyValueForCollectionTypeAndMerge : " + name + " value : "
-                    + customMeta.getIdentifier(obj, EntityMode.POJO));
+                    + customMeta.getIdentifier(obj));
             if (isValueLoggable(name, null)) {
                 if (AuditConfiguration.checkForPropertyName(entityName, name, localeId)) {
                     String value = AuditConfiguration.getValueOfCorrespondingId(entityName, name, customMeta
-                            .getIdentifier(obj, EntityMode.POJO), localeId);
+                            .getIdentifier(obj), localeId);
                     if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(",")) {
                         changeArray.append(value);
                     } else if (value.trim().length() != 0) {
@@ -1506,9 +1506,9 @@ public class InterceptHelper {
                     }
                 } else {
                     if (changeArray.toString().trim().length() == 0 || changeArray.toString().endsWith(",")) {
-                        changeArray.append(customMeta.getIdentifier(obj, EntityMode.POJO));
-                    } else if (customMeta.getIdentifier(obj, EntityMode.POJO).toString().trim().length() != 0) {
-                        changeArray.append("-").append(customMeta.getIdentifier(obj, EntityMode.POJO));
+                        changeArray.append(customMeta.getIdentifier(obj));
+                    } else if (customMeta.getIdentifier(obj).toString().trim().length() != 0) {
+                        changeArray.append("-").append(customMeta.getIdentifier(obj));
                     }
                 }
             }
@@ -1519,13 +1519,13 @@ public class InterceptHelper {
         if (state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)) {
             if (AuditConfiguration.checkForPropertyName(entityName, name, localeId)) {
                 String value = AuditConfiguration.getValueOfCorrespondingId(entityName, name, customMeta.getIdentifier(
-                        obj, EntityMode.POJO), localeId);
+                        obj), localeId);
                 initialValues.put(name, value);
                 logger.debug("i setPrimaryKeyValues " + name + " value : " + value);
             } else {
-                initialValues.put(name, customMeta.getIdentifier(obj, EntityMode.POJO));
+                initialValues.put(name, customMeta.getIdentifier(obj));
                 logger.debug("i setPrimaryKeyValues " + name + " value : "
-                        + customMeta.getIdentifier(obj, EntityMode.POJO));
+                        + customMeta.getIdentifier(obj));
             }
             String columnName = AuditConfiguration.getColumnNameForPropertyName(entityName, name);
             if (columnName != null && !columnName.equals("")) {
@@ -1536,11 +1536,11 @@ public class InterceptHelper {
         } else {
             if (AuditConfiguration.checkForPropertyName(entityName, name, localeId)) {
                 String value = AuditConfiguration.getValueOfCorrespondingId(entityName, name, customMeta.getIdentifier(
-                        obj, EntityMode.POJO), localeId);
+                        obj), localeId);
                 logger.debug("c setPrimaryKeyValues " + name + " value : " + value);
                 changedValues.put(name, value);
             } else {
-                changedValues.put(name, customMeta.getIdentifier(obj, EntityMode.POJO));
+                changedValues.put(name, customMeta.getIdentifier(obj));
             }
             String columnName = AuditConfiguration.getColumnNameForPropertyName(entityName, name);
             if (columnName != null && !columnName.equals("")) {

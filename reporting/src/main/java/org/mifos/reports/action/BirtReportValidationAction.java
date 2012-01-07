@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.impl.SessionFactoryImpl;
+import org.hibernate.internal.SessionFactoryImpl;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.servlet.ModifiableParameterServletRequest;
 import org.mifos.platform.validations.Errors;
@@ -72,12 +72,12 @@ public class BirtReportValidationAction extends HttpServlet {
         }
         request.getRequestDispatcher("/preview").forward(modifiedRequest, response);
     }
-    
+
     private void addDatabaseInformationsToRequestAttributes(HttpServletRequest request){
         SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl)StaticHibernateUtil.getSessionFactory();
         Properties properties = sessionFactoryImpl.getProperties();
         request.setAttribute("odaURL", properties.get("hibernate.connection.url"));
         request.setAttribute("odaUser", properties.get("hibernate.connection.username"));
-        request.setAttribute("odaPassword", properties.get("hibernate.connection.password"));	
+        request.setAttribute("odaPassword", properties.get("hibernate.connection.password"));
     }
 }

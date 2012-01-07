@@ -15,7 +15,7 @@
 
     <context:annotation-config/>
 
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="configLocation" value="/org/mifos/platform/cashflow/domain/cashflow_hibernate.cfg.xml"/>
         <property name="annotatedClasses">
@@ -28,7 +28,7 @@
         </property>
     </bean>
 
-    <bean id="platformTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    <bean id="platformTransactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory">
             <ref local="sessionFactory"/>
         </property>
