@@ -211,6 +211,15 @@
             <forward name="cancel_success" path="/custSearchAction.do?method=loadMainSearch&amp;input=bulkentrypage"/>
         </action>
         <!-- Ends-->
+          
+        <!-- By Prudhvi: Hugo technologies -->
+        <action path="/collectionsheetmemberaction" type="org.mifos.application.collectionsheet.struts.action.CollectionSheetMemberAction"
+                parameter="method" scope="session" name="collectionsheetactionform" validate="true">
+                
+                <forward name="load_member_success" path="/pages/application/collectionsheet/jsp/bulkentry_child.jsp"/>
+        </action>        
+     
+        <!-- Ends-->
 
         <!-- offAction start-->
         <action path="/offAction" type="org.mifos.customers.office.struts.action.OffAction"

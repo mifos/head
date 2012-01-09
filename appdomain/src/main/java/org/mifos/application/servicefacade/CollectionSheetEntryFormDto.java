@@ -36,6 +36,8 @@ public class CollectionSheetEntryFormDto implements DataTransferObject {
     private final List<ListItem<Short>> paymentTypesList;
     private final List<PersonnelDto> loanOfficerList;
     private final List<CustomerDto> customerList;
+    private final List<CustomerDto> groupsList;//By Prudhvi : Hugo Technologies
+    private final List<CustomerDto> membersList;//By Prudhvi : Hugo Technologies
     private final Short reloadFormAutomatically;
     private final Short centerHierarchyExists;
     private final Short backDatedTransactionAllowed;
@@ -52,6 +54,9 @@ public class CollectionSheetEntryFormDto implements DataTransferObject {
         this.centerHierarchyExists = centerHierarchyExists;
         this.backDatedTransactionAllowed = backDatedTransactionAllowed;
         this.meetingDate = null;
+        this.membersList=null;//By Prudhvi : Hugo Technologies
+        this.groupsList=null;//By Prudhvi : Hugo Technologies
+        
     }
 
     public CollectionSheetEntryFormDto(List<OfficeDetailsDto> activeBranches, List<ListItem<Short>> paymentTypesDtoList,
@@ -65,13 +70,38 @@ public class CollectionSheetEntryFormDto implements DataTransferObject {
         this.centerHierarchyExists = centerHierarchyExists;
         this.backDatedTransactionAllowed = backDatedTransactionAllowed;
         this.meetingDate = meetingDate;
+        this.groupsList=null; //By Prudhvi : Hugo Technologies
+        this.membersList=null; //By Prudhvi : Hugo Technologies
+    }
+    //By Prudhvi : Hugo Technologies
+    public CollectionSheetEntryFormDto(List<OfficeDetailsDto> activeBranches, List<ListItem<Short>> paymentTypesDtoList,
+            List<PersonnelDto> loanOfficerList, List<CustomerDto> customerList, Short reloadFormAutomatically,
+            Short centerHierarchyExists, Short backDatedTransactionAllowed, Date meetingDate,List<CustomerDto> groupsList,List<CustomerDto> membersList) {
+        this.activeBranchesList = activeBranches;
+        this.paymentTypesList = paymentTypesDtoList;
+        this.loanOfficerList = loanOfficerList;
+        this.customerList = customerList;
+        this.reloadFormAutomatically = reloadFormAutomatically;
+        this.centerHierarchyExists = centerHierarchyExists;
+        this.backDatedTransactionAllowed = backDatedTransactionAllowed;
+        this.meetingDate = meetingDate;
+        this.groupsList=groupsList;
+        this.membersList=membersList;
     }
 
     public List<OfficeDetailsDto> getActiveBranchesList() {
         return this.activeBranchesList;
     }
 
-    public List<ListItem<Short>> getPaymentTypesList() {
+    public List<CustomerDto> getGroupsList() {
+		return groupsList;
+	}
+
+	public List<CustomerDto> getMembersList() {
+		return membersList;
+	}
+
+	public List<ListItem<Short>> getPaymentTypesList() {
         return this.paymentTypesList;
     }
 

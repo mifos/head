@@ -37,6 +37,8 @@ public interface CollectionSheetServiceFacade {
 
     CollectionSheetEntryFormDto loadCustomersForBranchAndLoanOfficer(Short personnelId, Short officeId,
             CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto);
+    CollectionSheetEntryFormDto loadGroupsForCustomer(final Integer customerId,final CollectionSheetEntryFormDto formDto);// By Prudhvi : Hugo Technologies
+    CollectionSheetEntryFormDto loadMembersByGroup(final Integer groupId,final CollectionSheetEntryFormDto formDto);    // By Prudhvi : Hugo Technologies   
 
     CollectionSheetEntryFormDto loadMeetingDateForCustomer(Integer customerId,
             CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto);

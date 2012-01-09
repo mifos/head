@@ -177,6 +177,60 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                 .getLoanOfficerList(), customerList, formDto.getReloadFormAutomatically(), formDto
                 .getCenterHierarchyExists(), formDto.getBackDatedTransactionAllowed());
     }
+    //By Prudhvi : Hugo Technologies
+    public CollectionSheetEntryFormDto loadGroupsForCustomer(final Integer customerId,
+            final CollectionSheetEntryFormDto formDto) {
+
+        Short backDatedTransactionAllowed = Constants.NO;
+        java.util.Date meetingDate = null;
+        try {
+            meetingDate = customerPersistence.getLastMeetingDateForCustomer(customerId);
+
+            final boolean isBackDatedTrxnAllowed = AccountingRules.isBackDatedTxnAllowed();
+            if (meetingDate == null) {
+                meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
+            }
+            backDatedTransactionAllowed = isBackDatedTrxnAllowed ? Constants.YES : Constants.NO;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+        
+        List<CustomerDto> groupList = new ArrayList<CustomerDto>();
+        try {
+        	groupList = customerPersistence.getActiveGroupsList(customerId, Short.valueOf(CustomerLevel.GROUP.getValue()));
+        	
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+
+        return new CollectionSheetEntryFormDto(formDto.getActiveBranchesList(), formDto.getPaymentTypesList(), formDto
+                .getLoanOfficerList(), formDto.getCustomerList(), formDto.getReloadFormAutomatically(), formDto
+                .getCenterHierarchyExists(), backDatedTransactionAllowed, meetingDate,groupList,null);
+    }
+    //By Prudhvi : Hugo Technologies
+    public CollectionSheetEntryFormDto loadMembersByGroup(final Integer groupId,final CollectionSheetEntryFormDto formDto) {
+   		
+		   
+	        
+      List<CustomerDto> customerList = new ArrayList<CustomerDto>();
+      
+      try {	        	
+      	customerList = customerPersistence.getActiveGroupsList(groupId, Short.valueOf(CustomerLevel.CLIENT.getValue()));
+      	if(customerList == null){
+      		return null;
+      	}        	
+      	
+      } catch (PersistenceException e) {
+          throw new MifosRuntimeException(e);
+      }
+      
+      
+      return new CollectionSheetEntryFormDto(formDto.getActiveBranchesList(), formDto.getPaymentTypesList(), formDto
+              .getLoanOfficerList(), formDto.getCustomerList(), formDto.getReloadFormAutomatically(), formDto
+              .getCenterHierarchyExists(), formDto.getBackDatedTransactionAllowed(), formDto.getMeetingDate(),formDto.getGroupsList(),customerList);      
+}
+
+
 
     @Override
 	public CollectionSheetEntryFormDto loadMeetingDateForCustomer(final Integer customerId,
@@ -204,9 +258,14 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     @Override
 	public CollectionSheetEntryGridDto generateCollectionSheetEntryGridView(
             final CollectionSheetFormEnteredDataDto formEnteredDataDto, final MifosCurrency currency) {
+       //By Prudhvi : Hugo Technologies
+       /* final CollectionSheetDto collectionSheet = getCollectionSheet(formEnteredDataDto
+                .getCustomer().getCustomerId(), DateUtils.getLocalDateFromDate(formEnteredDataDto.getMeetingDate()));*/
+    	 //By Prudhvi : Hugo Technologies
+        final CollectionSheetDto collectionSheet = getCollectionSheet(formEnteredDataDto, DateUtils.getLocalDateFromDate(formEnteredDataDto.getMeetingDate()));
+        //end
 
-        final CollectionSheetDto collectionSheet = getCollectionSheet(formEnteredDataDto
-                .getCustomer().getCustomerId(), DateUtils.getLocalDateFromDate(formEnteredDataDto.getMeetingDate()));
+    	
 
         try {
             final List<CustomValueListElementDto> attendanceTypesList = legacyMasterDao.getCustomValueList(
@@ -226,6 +285,13 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     public CollectionSheetDto getCollectionSheet(Integer customerId, LocalDate meetingDate) {
     	return collectionSheetService.retrieveCollectionSheet(customerId, meetingDate);
     }
+  //By Prudhvi : Hugo Technologies
+    public CollectionSheetDto getCollectionSheet(final CollectionSheetFormEnteredDataDto formEnteredDataDto, LocalDate meetingDate) {
+            //commented by Prudhvi : Hugo Technologies
+            //return collectionSheetService.retrieveCollectionSheet(customerId, meetingDate);
+    	return collectionSheetService.retrieveCollectionSheet(formEnteredDataDto, meetingDate);
+    }
+
 
     @Override
 	public CollectionSheetEntryGridDto previewCollectionSheetEntry(

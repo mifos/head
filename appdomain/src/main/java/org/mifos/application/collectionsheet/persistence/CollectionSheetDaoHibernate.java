@@ -37,6 +37,7 @@ import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerLoanDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
+import org.mifos.application.servicefacade.CollectionSheetFormEnteredDataDto;
 import org.mifos.application.servicefacade.CollectionSheetLoanFeeDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 import org.mifos.core.MifosRuntimeException;
@@ -90,6 +91,61 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
         collectionSheetCutomerList.addAll(restOfHierarchy);
 
         return collectionSheetCutomerList;
+    }
+    //By Prudhvi : Hugo Technologies
+    @Override
+	@SuppressWarnings("unchecked")
+    public List<CollectionSheetCustomerDto> findCustomerHierarchy(final CollectionSheetFormEnteredDataDto formEnteredDataDto,final LocalDate transactionDate) {
+    	Integer customerId=formEnteredDataDto.getCustomer().getCustomerId();
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("CUSTOMER_ID", customerId);
+		queryParameters.put("TRANSACTION_DATE", transactionDate.toString());
+
+		CollectionSheetCustomerDto topCustomer = execUniqueResultNamedQueryWithResultTransformer(
+				"findCustomerAtTopOfHierarchyAsDto", queryParameters, CollectionSheetCustomerDto.class);
+
+		if (topCustomer == null) {
+			return new ArrayList<CollectionSheetCustomerDto>();
+		}
+		
+		List<CollectionSheetCustomerDto> rest=new ArrayList<CollectionSheetCustomerDto>();
+		
+		Map<String, Object> withinHierarchyQueryParameters = new HashMap<String, Object>();
+		withinHierarchyQueryParameters.put("BRANCH_ID", topCustomer.getBranchId());
+		withinHierarchyQueryParameters.put("TRANSACTION_DATE", transactionDate.toString());
+		
+		if(formEnteredDataDto.getGroup()==null){
+			
+		    withinHierarchyQueryParameters.put("SEARCH_ID", topCustomer.getSearchId() + ".%");
+		    rest = executeNamedQueryWithResultTransformer("findCustomersWithinHierarchyAsDto", withinHierarchyQueryParameters, CollectionSheetCustomerDto.class);
+		}
+		else{
+			String groupSearchId=formEnteredDataDto.getGroup().getCustomerSearchId();
+			if(formEnteredDataDto.getMember()==null){
+				withinHierarchyQueryParameters.put("SEARCH_ID", groupSearchId);
+				List<CollectionSheetCustomerDto> group = executeNamedQueryWithResultTransformer("findCustomersWithinHierarchyAsDto", withinHierarchyQueryParameters, CollectionSheetCustomerDto.class);
+				withinHierarchyQueryParameters.put("SEARCH_ID", groupSearchId + ".%");
+				List<CollectionSheetCustomerDto> members = executeNamedQueryWithResultTransformer("findCustomersWithinHierarchyAsDto", withinHierarchyQueryParameters, CollectionSheetCustomerDto.class);
+				rest.addAll(group);
+				rest.addAll(members);
+			}
+			else{
+				String memberSearchId=formEnteredDataDto.getMember().getCustomerSearchId();
+				withinHierarchyQueryParameters.put("SEARCH_ID", groupSearchId);
+				List<CollectionSheetCustomerDto> group = executeNamedQueryWithResultTransformer("findCustomersWithinHierarchyAsDto", withinHierarchyQueryParameters, CollectionSheetCustomerDto.class);
+				withinHierarchyQueryParameters.put("SEARCH_ID", memberSearchId);
+				List<CollectionSheetCustomerDto> members = executeNamedQueryWithResultTransformer("findCustomersWithinHierarchyAsDto", withinHierarchyQueryParameters, CollectionSheetCustomerDto.class);
+				rest.addAll(group);
+				rest.addAll(members);
+			}
+		}
+		
+		final List<CollectionSheetCustomerDto> restOfHierarchy=rest;
+		final List<CollectionSheetCustomerDto> collectionSheetCutomerList = new ArrayList<CollectionSheetCustomerDto>();
+		collectionSheetCutomerList.add(topCustomer);
+		collectionSheetCutomerList.addAll(restOfHierarchy);
+		return collectionSheetCutomerList;
+
     }
 
     /*

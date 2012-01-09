@@ -53,7 +53,25 @@ public class BulkEntryActionForm extends BaseActionForm {
 
     private static final Logger logger = LoggerFactory.getLogger(BulkEntryActionForm.class);
     private String customerId;
-    private String loanOfficerId;
+    private String groupId;//By Prudhvi :Hugo Technologies
+    private String memberId;//By Prudhvi :Hugo Technologies
+    public String getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(String groupId) {
+		this.groupId = groupId;
+	}
+
+	public String getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
+	}
+
+	private String loanOfficerId;
     private String paymentId;
     private String receiptId;
     private String receiptDateDD;

@@ -210,13 +210,23 @@ public class LoanAccountController {
     	if (!mandatoryHidden.isHideSystemExternalId()) {
     	    formBean.setExternalIdMandatory(mandatoryHidden.isMandatorySystemExternalId());
     	}
-
-    	LocalDate possibleDisbursementDate = dto.getNextPossibleDisbursementDate();
-    	if (possibleDisbursementDate != null) {
-        	formBean.setDisbursementDateDD(possibleDisbursementDate.getDayOfMonth());
-        	formBean.setDisbursementDateMM(possibleDisbursementDate.getMonthOfYear());
-        	formBean.setDisbursementDateYY(possibleDisbursementDate.getYearOfEra());
-    	}
+    	if (dto.isRepaymentIndependentOfMeetingEnabled()) {
+    		LocalDate possibleDisbursementDate = new LocalDate();
+        	if (possibleDisbursementDate != null) {
+            	formBean.setDisbursementDateDD(possibleDisbursementDate.getDayOfMonth());
+            	formBean.setDisbursementDateMM(possibleDisbursementDate.getMonthOfYear());
+            	formBean.setDisbursementDateYY(possibleDisbursementDate.getYearOfEra());
+        	}
+		} else {
+			LocalDate possibleDisbursementDate = dto.getNextPossibleDisbursementDate();
+	    	if (possibleDisbursementDate != null) {
+	        	formBean.setDisbursementDateDD(possibleDisbursementDate.getDayOfMonth());
+	        	formBean.setDisbursementDateMM(possibleDisbursementDate.getMonthOfYear());
+	        	formBean.setDisbursementDateYY(possibleDisbursementDate.getYearOfEra());
+	    	}
+		}
+    	
+    	
     	
     	formBean.setCollateralNotes("");
 
