@@ -27,6 +27,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -88,13 +89,13 @@ explanation of the license and how it is applied.
 										 <c:out value="${BusinessKey.customer.parentCustomer.displayName}"/>
 									</p>
 									<p>
-										<span class="fontnormalbold"><mifos:mifoslabel name="loan.amountDisbursed" isColonRequired="Yes" /></span> <c:out value="${BusinessKey.loanAmount}"/>
+										<span class="fontnormalbold"><mifos:mifoslabel name="loan.amountDisbursed" isColonRequired="Yes" /></span> <fmt:formatNumber value="${BusinessKey.loanAmount.amount}"/>
 										<br>
 										<span class="fontnormalbold"><mifos:mifoslabel name="loan.proposed_date" isColonRequired="Yes" /></span> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.disbursementDate)}" />
 										<br>
 										<span class="fontnormalbold"><mifos:mifoslabel name="loan.nopaymentsmade" isColonRequired="Yes" /></span> <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'paymentssize')}" />
 										<br>
-										<span class="fontnormalbold"><mifos:mifoslabel name="loan.amt_paid" isColonRequired="Yes" /></span> <c:out value="${BusinessKey.loanSummary.totalAmntPaid}"/>
+										<span class="fontnormalbold"><mifos:mifoslabel name="loan.amt_paid" isColonRequired="Yes" /></span> <fmt:formatNumber value="${BusinessKey.loanSummary.totalAmntPaid.amount}"/>
 										<br>
 										<br>
 									</p>
@@ -132,7 +133,7 @@ explanation of the license and how it is applied.
 									<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,payment.actionDate)}" />
 								</td>
 								<td width="40%" class="drawtablerow">
-									<c:out value="${payment.total}" />
+									<fmt:formatNumber value="${payment.total}" />
 								</td>
 							</tr>
 							</c:if>

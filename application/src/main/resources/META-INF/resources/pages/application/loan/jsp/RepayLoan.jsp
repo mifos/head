@@ -123,10 +123,10 @@ explanation of the license and how it is applied.
 								</td>
 								<td class="fontnormal">
                                     <div id="totalRepaymentAmount">
-                                        <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'totalRepaymentAmount')}"/>
+                                        <fmt:formatNumber value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'totalRepaymentAmount').amount}"/>
                                     </div>
                                     <div id="waivedRepaymentAmount">
-                                        <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'waivedRepaymentAmount')}"/>
+                                        <fmt:formatNumber value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'waivedRepaymentAmount').amount}"/>
                                     </div>
 								</td>
 							</tr>

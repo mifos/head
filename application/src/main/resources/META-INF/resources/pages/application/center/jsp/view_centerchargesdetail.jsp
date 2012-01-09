@@ -28,6 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <span id="page.id" title="view_centerchargesdetail"></span>
@@ -93,8 +94,8 @@ explanation of the license and how it is applied.
 					</tr>
 					<tr>
 						<td class="fontnormal"><span class="fontnormal"> <mifos:mifoslabel
-							name="Center.AmountDue" bundle="CenterUIResources" isColonRequired="yes" /><c:out
-							value='${BusinessKey.nextDueAmount}' /> </span> <c:if
+							name="Center.AmountDue" bundle="CenterUIResources" isColonRequired="yes" /><fmt:formatNumber
+							value='${BusinessKey.nextDueAmount.amount}' /> </span> <c:if
 							test='${BusinessKey.nextDueAmount.amountDoubleValue != 0.0}'>
 							<html-el:link styleId="view_centerchargesdetail.link.waiveChargeDue"
 								href="customerAction.do?method=waiveChargeDue&globalCustNum=${BusinessKey.customer.globalCustNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&statusId=${BusinessKey.customer.customerStatus.id}&type=Center&input=Center&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
@@ -102,8 +103,8 @@ explanation of the license and how it is applied.
 							</html-el:link>
 						</c:if> <br>
 						<span class="fontnormal"> <mifos:mifoslabel
-							name="Center.AmountOverdue" bundle="CenterUIResources" isColonRequired="yes" /><c:out
-							value='${BusinessKey.totalAmountInArrears}' /> </span> <c:if
+							name="Center.AmountOverdue" bundle="CenterUIResources" isColonRequired="yes" /><fmt:formatNumber
+							value='${BusinessKey.totalAmountInArrears.amount}' /> </span> <c:if
 							test='${BusinessKey.totalAmountInArrears.amountDoubleValue != 0.0}'>
 							<html-el:link styleId="view_centerchargesdetail.link.waiveChargeOverDue"
 								href="customerAction.do?method=waiveChargeOverDue&globalCustNum=${BusinessKey.customer.globalCustNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&statusId=${BusinessKey.customer.customerStatus.id}&type=Center&input=Center&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
@@ -111,8 +112,8 @@ explanation of the license and how it is applied.
 							</html-el:link>
 						</c:if> <BR>
 						<span class="fontnormalbold"> <mifos:mifoslabel
-							name="accounts.total" isColonRequired="Yes"></mifos:mifoslabel> <c:out
-							value='${BusinessKey.totalAmountDue}'></c:out>
+							name="accounts.total" isColonRequired="Yes"></mifos:mifoslabel> <fmt:formatNumber
+							value='${BusinessKey.totalAmountDue.amount}'/>
 
 						</span></td>
 					</tr>
@@ -149,8 +150,8 @@ explanation of the license and how it is applied.
 								<tr>
 									<td width="19%" class="drawtablerow"><c:out
 										value="${upcomingCharges.fee.feeName}" /></td>
-									<td width="49%" align="right" class="drawtablerow"><c:out
-										value="${upcomingCharges.feeAmount}" /></td>
+									<td width="49%" align="right" class="drawtablerow"><fmt:formatNumber
+										value="${upcomingCharges.feeAmount.amount}" /></td>
 									<td width="32%" class="drawtablerow">&nbsp;</td>
 								</tr>
 							</c:if>
@@ -158,16 +159,16 @@ explanation of the license and how it is applied.
 						<c:if test='${(!empty BusinessKey.upcomingInstallment.miscFeeDue) and (BusinessKey.upcomingInstallment.miscFeeDue.amountDoubleValue!=0.0)}'>
 								<tr>
 									<td width="19%" class="drawtablerow"><mifos:mifoslabel name="Customer.miscfee" bundle="CustomerUIResources" /></td>
-									<td width="49%" align="right" class="drawtablerow"><c:out
-										value="${BusinessKey.upcomingInstallment.miscFeeDue}" /></td>
+									<td width="49%" align="right" class="drawtablerow"><fmt:formatNumber
+										value="${BusinessKey.upcomingInstallment.miscFeeDue.amount}" /></td>
 									<td width="32%" class="drawtablerow">&nbsp;</td>
 								</tr>
 						</c:if>
 						<c:if test='${(!empty BusinessKey.upcomingInstallment.miscPenaltyDue) and (BusinessKey.upcomingInstallment.miscPenaltyDue.amountDoubleValue!=0.0)}'>
 								<tr>
 									<td width="19%" class="drawtablerow"><mifos:mifoslabel name="Customer.miscpenalty" bundle="CustomerUIResources" /></td>
-									<td width="49%" align="right" class="drawtablerow"><c:out
-										value="${BusinessKey.upcomingInstallment.miscPenaltyDue}" /></td>
+									<td width="49%" align="right" class="drawtablerow"><fmt:formatNumber
+										value="${BusinessKey.upcomingInstallment.miscPenaltyDue.amount}" /></td>
 									<td width="32%" class="drawtablerow">&nbsp;</td>
 								</tr>
 						</c:if>
@@ -213,7 +214,7 @@ explanation of the license and how it is applied.
 									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,recentActivities.activityDate)}" /></td>
 								<td width="35%" class="drawtablerow"><c:out
 									value="${recentActivities.description}" /></td>
-								<td width="27%" align="right" class="drawtablerow"><c:out
+								<td width="27%" align="right" class="drawtablerow"><fmt:formatNumber
 									value="${recentActivities.amount}" /></td>
 								<td width="6%" class="drawtablerow">&nbsp;</td>
 								<td width="21%" class="drawtablerow"><c:out
@@ -244,7 +245,7 @@ explanation of the license and how it is applied.
 						<c:if test="${recurrenceFees.periodic && recurrenceFees.active}">
 							<tr class="fontnormal">
 								<td width="15%"><c:out value="${recurrenceFees.fees.feeName}" />:</td>
-								<td width="30%"><c:out value="${recurrenceFees.feeAmount}" />
+								<td width="30%"><fmt:formatNumber value="${recurrenceFees.feeAmount.amount}" />
 								&nbsp;&nbsp; ( <mifos:mifoslabel name="Fees.labelRecurEvery"
 									bundle="FeesUIResources" /> <c:out
 									value="${recurrenceFees.fees.feeFrequency.feeMeetingFrequency.meetingDetails.recurAfter}"></c:out>

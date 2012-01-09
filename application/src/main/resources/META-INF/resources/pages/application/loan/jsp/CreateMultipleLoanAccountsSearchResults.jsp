@@ -200,8 +200,8 @@ explanation of the license and how it is applied.
 												property="clientDetails[${loopStatus.index}].loanAmount"/>
 											</td>
 											<td width="15%" valign="top" class="drawtablerow">
-												<span id="CreateMultipleLoanAccountsSearchResults.minLoanAmount.${loopStatus.index}"><c:out value="${clientDetail.minLoanAmount}" /></span> &nbsp; - &nbsp; 
-												<span id="CreateMultipleLoanAccountsSearchResults.maxLoanAmount.${loopStatus.index}"><c:out value="${clientDetail.maxLoanAmount}" /></span>
+												<span id="CreateMultipleLoanAccountsSearchResults.minLoanAmount.${loopStatus.index}"><fmt:formatNumber value="${clientDetail.minLoanAmount.amount}" /></span> &nbsp; - &nbsp; 
+												<span id="CreateMultipleLoanAccountsSearchResults.maxLoanAmount.${loopStatus.index}"><fmt:formatNumber value="${clientDetail.maxLoanAmount.amount}" /></span>
 											</td>
 											<td width="15%" valign="top" class="drawtablerow">
 												<span id="CreateMultipleLoanAccountsSearchResults.NoOfInstall.${loopStatus.index}"><fmt:formatNumber value="${clientDetail.defaultNoOfInstall}" /></span> 

@@ -80,14 +80,14 @@ explanation of the license and how it is applied.
 							</span> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 							<mifos:mifoslabel name="label.loancyclenumber"
 								bundle="CustomerUIResources"></mifos:mifoslabel> <span
-								class="fontnormal"> <c:out
+								class="fontnormal"> <fmt:formatNumber
 								value="${sessionScope.custHistoricalDataActionForm.loanCycleNumber}" /><br>
 							</span> <mifos:mifoslabel name="label.productname"
 								bundle="CustomerUIResources"></mifos:mifoslabel> <span
 								class="fontnormal"> <c:out
 								value="${sessionScope.custHistoricalDataActionForm.productName}" /><br>
 							</span> <mifos:mifoslabel name="label.amountof"
-								bundle="CustomerUIResources" /><mifos:mifoslabel
+								bundle="CustomerUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
 								name="label.colon" bundle="CustomerUIResources" /> <span
 								class="fontnormal"> <fmt:formatNumber
@@ -103,11 +103,11 @@ explanation of the license and how it is applied.
 								value="${sessionScope.custHistoricalDataActionForm.interestPaid}" /><br>
 							</span> <mifos:mifoslabel name="label.numberofmissedpayments"
 								bundle="CustomerUIResources"></mifos:mifoslabel> <span
-								class="fontnormal"> <c:out
+								class="fontnormal"> <fmt:formatNumber
 								value="${sessionScope.custHistoricalDataActionForm.missedPaymentsCount}" /><br>
 							</span> <mifos:mifoslabel name="label.totalnumberofpayments"
 								bundle="CustomerUIResources"></mifos:mifoslabel> <span
-								class="fontnormal"><c:out
+								class="fontnormal"><fmt:formatNumber
 								value="${sessionScope.custHistoricalDataActionForm.totalPaymentsCount}" /><br>
 							<br>
 							</span> <mifos:mifoslabel name="label.notes"

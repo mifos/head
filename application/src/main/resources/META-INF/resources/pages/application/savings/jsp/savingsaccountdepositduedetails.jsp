@@ -91,7 +91,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="Savings.nextdeposit" />
 								</td>
 								<td align="right" class="drawtablerow">
-									<c:out value="${BusinessKey.totalAmountDueForNextInstallment}" />
+									<fmt:formatNumber value="${BusinessKey.totalAmountDueForNextInstallment.amount}" />
 								</td>
 								<td align="right" class="drawtablerow">
 									<c:choose>
@@ -123,7 +123,7 @@ explanation of the license and how it is applied.
 									<em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <mifos:mifoslabel name="Savings.subtotal" /> </em>
 								</td>
 								<td align="right" class="drawtablerow">
-									<c:out value="${BusinessKey.totalAmountInArrears}" />
+									<fmt:formatNumber value="${BusinessKey.totalAmountInArrears.amount}" />
 								</td>
 								<td align="right" class="drawtablerow">
 									<c:choose>
@@ -147,7 +147,7 @@ explanation of the license and how it is applied.
 									</c:if>
 								</td>
 								<td align="right" class="drawtablerow">
-									<c:out value="${BusinessKey.totalAmountDue}" />
+									<fmt:formatNumber value="${BusinessKey.totalAmountDue.amount}" />
 								</td>
 								<td align="right" class="drawtablerow">
 									&nbsp;
