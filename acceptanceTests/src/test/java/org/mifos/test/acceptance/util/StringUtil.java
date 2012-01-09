@@ -27,5 +27,29 @@ public class StringUtil {
     public static String getRandomString(int length) {
         return RandomStringUtils.randomAlphanumeric(length);
     }
+    public static String formatNumber(final String number) {
+    	String num = "";
+        String decimal = "";
+        int index = number.lastIndexOf('.');
+        
+        if(index >= 0) {
+            num = number.substring(0, index);
+            decimal = number.substring(index);
+        } else {
+            num = number;
+        }
+        
+        StringBuilder builder = new StringBuilder(num);
+        
+        for(int i = num.length() - 3; i >= 0; i -= 4) {
+            if(num.length() > 3){
+        	builder = builder.insert(i, ',');
+            }
+        }
+        if(!decimal.equalsIgnoreCase(".0")) {
+        builder = builder.append(decimal);
+        }
+        return builder.toString();
+    }
 }
 

@@ -20,8 +20,6 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
-import java.text.DecimalFormat;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -31,6 +29,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
+import org.mifos.test.acceptance.util.StringUtil;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -65,7 +64,7 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public void verifyLoanAmount(String amount) {
-        Assert.assertEquals(getOriginalLoanAmount(), formatNumber(amount));
+        Assert.assertEquals(getOriginalLoanAmount(), StringUtil.formatNumber(amount));
     }
 
     public void verifyExactLoanAmount(String amount) {
@@ -99,7 +98,7 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public void verifyTotalOriginalLoan(String amount) {
-        Assert.assertEquals(getOriginalTotalAmount(), formatNumber(amount));
+        Assert.assertEquals(getOriginalTotalAmount(), StringUtil.formatNumber(amount));
     }
 
     public void verifyTotalAmountPaid(String amount) {
@@ -158,7 +157,7 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public void verifyInterestRate(String interestRate) {
-        Assert.assertEquals(selenium.getText("loanaccountdetail.text.interestRate"), formatNumber(interestRate));
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.interestRate"), StringUtil.formatNumber(interestRate));
     }
 
     public void verifyPurposeOfLoan(String purpose) {
@@ -524,9 +523,6 @@ public class LoanAccountPage extends MifosPage {
         Assert.assertEquals(selenium.getText("loanaccountdetail.details.disbursaldate"), disbursalDate);
     }
     
-    private String formatNumber(final String number) {
-        DecimalFormat df = new DecimalFormat("###,###,###.###");
-        return df.format(Double.parseDouble(number));
-    }
+
 }
 
