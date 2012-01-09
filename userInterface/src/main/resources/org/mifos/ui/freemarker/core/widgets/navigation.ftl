@@ -55,9 +55,32 @@
 </div>
 [/#macro]
 
+[#macro topNavigationNoSecurityMobile currentTab]
+<div>	
+	[@headerTopMobile /]
+    <div class="top_menu" style="margin-left: 0px;margin-top: 5px;">
+    	<ul style="white-space: nowrap;">
+         <li><a id="header.link.home" href="custSearchAction.do?method=getHomePage" class="[#if currentTab == "Home"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Home" /]">[@spring.message "tab.Home" /]</a>
+         </li> <li> <a id="header.link.clientsAndAccounts" href="custSearchAction.do?method=loadMainSearch" class="[#if currentTab == "ClientsAndAccounts"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.ClientsAndAccounts" /]">[@spring.message "tab.ClientsAndAccounts" /]</a>
+         </li> <li> <a id="header.link.reports" href="reportsAction.do?method=load" class="[#if currentTab == "Reports"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Reports" /]">[@spring.message "tab.Reports" /]</a>
+         </li> <li><a id="header.link.admin" href="AdminAction.do?method=load" class="[#if currentTab == "Admin"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a></li>
+     	</ul>
+    </div>
+</div>
+[/#macro]
+
 [#macro headerTop]
 <div class="site_logo">
     <span class="logo"></span>
+    <a id="changeLanguagLink" href="#">Change Language</a>
+    <span id="dialog" title="Change Language" style="display:none;">Change Language</span>&nbsp;|&nbsp;
+    <a href="yourSettings.do?method=get" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>&nbsp;|&nbsp;
+    <a id="logout_link" href="j_spring_security_logout" title="[@spring.message "logout"/]">[@spring.message "logout"/]</a>
+</div>
+[/#macro]
+
+[#macro headerTopMobile]
+<div>
     <a id="changeLanguagLink" href="#">Change Language</a>
     <span id="dialog" title="Change Language" style="display:none;">Change Language</span>&nbsp;|&nbsp;
     <a href="yourSettings.do?method=get" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>&nbsp;|&nbsp;

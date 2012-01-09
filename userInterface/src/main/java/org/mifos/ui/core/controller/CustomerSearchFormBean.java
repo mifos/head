@@ -37,6 +37,8 @@ public class CustomerSearchFormBean implements Serializable {
 
     @NotEmpty
     private String searchString;
+    
+    private String selectedDateOption;
 
     @Autowired
     private transient MifosBeanValidator validator;
@@ -53,7 +55,15 @@ public class CustomerSearchFormBean implements Serializable {
         return searchString;
     }
 
-    /**
+    public String getSelectedDateOption() {
+		return selectedDateOption;
+	}
+
+	public void setSelectedDateOption(String selectedDateOption) {
+		this.selectedDateOption = selectedDateOption;
+	}
+
+	/**
      * Validation method that Spring webflow calls on state transition out of
      * customerSearchStep.
      */

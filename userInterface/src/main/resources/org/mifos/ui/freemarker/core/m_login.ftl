@@ -40,7 +40,7 @@
         <div class="paddingTop5">
               <span class="normalFont">&nbsp;<label for="login.input.password">[@spring.message "login.password"/]</label>:&nbsp;</span>
               <span><input type="password" name="j_password" id="login.input.password"></span>
-              <input type="hidden" name="spring-security-redirect" value="/custSearchAction.do?method=getHomePage"/>
+              <input type="hidden" name="spring-security-redirect" value="/home.ftl"/>
         </div>
             <div>&nbsp;</div>
             <div>
