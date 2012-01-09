@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-        <span id="page.id" title="BulkEntry"></span>
+        <span id="page.id" title="Printentry"></span>
 		<script src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 		<script language="javascript">
 		<!--
@@ -165,15 +165,7 @@ explanation of the license and how it is applied.
 															<img src="pages/framework/images/timeline/bigarrow.gif" width="17" height="17">
 														</td>
 														<td class="timelineboldorange">
-															<mifos:mifoslabel name="bulkEntry.select" />
-															<c:choose>
-																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')==Constants.YES}">
-																	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
-																</c:when>
-																<c:otherwise>
-																	<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
-																</c:otherwise>
-															</c:choose>
+															<mifos:mifoslabel name="bulkEntry.print"/>
 														</td>
 													</tr>
 												</table>
@@ -213,33 +205,13 @@ explanation of the license and how it is applied.
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td class="headingorange">
-												<span id="bulkentry.heading" class="heading"> <mifos:mifoslabel name="${ConfigurationConstants.BULKENTRY}" /> - </span>
+												<span id="bulkentry.heading" class="heading"> <mifos:mifoslabel name="bulkEntry.print"/> - </span>
 												<mifos:mifoslabel name="bulkEntry.select" />
-												<c:choose>
-													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')==Constants.YES}">
-														<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
-													</c:when>
-													<c:otherwise>
 														<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
-													</c:otherwise>
-												</c:choose>
 											</td>
 										</tr>
 										<tr>
 											<td class="fontnormal">
-												<fmt:message key="bulkEntry.selectOfficeFromList">
-												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.OFFICE}" /></fmt:param>
-												</fmt:message>
-												<c:choose>
-													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')==Constants.YES}">
-														<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
-													</c:when>
-													<c:otherwise>
-														<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
-													</c:otherwise>
-												</c:choose>
-												.
-												<mifos:mifoslabel name="bulkEntry.clickcanc" />
 												<br>
 												<span class="mandatorytext"> <font color="#FF0000">*</font> </span>
 												<mifos:mifoslabel name="bulkEntry.mandatory" />

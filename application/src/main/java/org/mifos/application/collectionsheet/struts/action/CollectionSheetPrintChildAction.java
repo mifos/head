@@ -38,17 +38,10 @@ public class CollectionSheetPrintChildAction extends BaseAction {
 		String branchOfficerName="";
 		String groupOfficerName="";
 		String memberOfficerName="";
-		
 		for(OfficeDetailsDto officeDetails:previousCollectionSheetEntryFormDto.getActiveBranchesList()){
 			if(officeDetails.getOfficeId().equals(Short.valueOf(bulkEntryActionForm.getOfficeId())))
 				branchOfficerName=officeDetails.getOfficeName();
 		}
-		
-		/*for(int i=0;i<=previousCollectionSheetEntryFormDto.getActiveBranchesList().size();i++){
-			OfficeDetailsDto detailsDto=previousCollectionSheetEntryFormDto.getActiveBranchesList().get(i);
-			if(detailsDto.getOfficeId().equals(bulkEntryActionForm.getOfficeId()))
-					branchOfficerName=detailsDto.getDisplayName(); 
-		}*/
 		
 		for(PersonnelDto personnelDto:previousCollectionSheetEntryFormDto.getLoanOfficerList()){
 			if(personnelDto.getPersonnelId().equals(Short.valueOf(bulkEntryActionForm.getLoanOfficerId())))
@@ -64,7 +57,7 @@ public class CollectionSheetPrintChildAction extends BaseAction {
 			if(customerDetailsDto.getCustomerId().equals(Integer.valueOf(bulkEntryActionForm.getMemberId())))
 				memberOfficerName=customerDetailsDto.getDisplayName();
 		}
-
+		
 		Date transactionDate = new DateTimeService().getCurrentJavaSqlDate();
 		
 		final List<AccountPayment> accountPayments = collectionSheetServiceFacade.customerPrintDetails(Integer.parseInt(bulkEntryActionForm.getMemberId()),transactionDate);
@@ -85,7 +78,6 @@ public class CollectionSheetPrintChildAction extends BaseAction {
 		request.getSession().setAttribute("branchId", branchOfficerName);
 		request.getSession().setAttribute("groupId", groupOfficerName);
 		request.getSession().setAttribute("loanoffId", loanOfficerName);
-		
 		
 		if(totals!=null && totals.size()<=3){
 		request.getSession().setAttribute("principalSum", totals.get(0));

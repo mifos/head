@@ -162,19 +162,13 @@ public class CollectionSheetEntryAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward getLastMeetingDateForCustomer(final ActionMapping mapping, final ActionForm form,
             final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-
-
 		final BulkEntryActionForm actionForm = (BulkEntryActionForm) form;
-
 		final Integer customerId = Integer.valueOf(actionForm.getCustomerId());
 		final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = retrieveFromRequestCollectionSheetEntryFormDto(request);
-
-
 		//commented By Prudhvi:HugoTechnologies
 		//final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto = collectionSheetServiceFacade.loadMeetingDateForCustomer(customerId, previousCollectionSheetEntryFormDto);
 		//actionForm.setTransactionDate(latestCollectionSheetEntryFormDto.getMeetingDate());
 		//storeOnRequestCollectionSheetEntryFormDto(request, latestCollectionSheetEntryFormDto);
-
 		//By Prudhvi:HugoTechnologies        
 		final CollectionSheetEntryFormDto groupsCollectionFormDto = collectionSheetServiceFacade.loadGroupsForCustomer(customerId,previousCollectionSheetEntryFormDto);
 		actionForm.setTransactionDate(groupsCollectionFormDto.getMeetingDate());
@@ -196,11 +190,12 @@ public class CollectionSheetEntryAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward get(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 			final HttpServletResponse response) throws Exception {
-
     	logTrackingInfo("get", request, form);
 		final BulkEntryActionForm collectionSheetEntryActionForm = (BulkEntryActionForm) form;
 		final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = retrieveFromRequestCollectionSheetEntryFormDto(request);
+		//By Prudhvi : Hugo Technologies
 		final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto=retrieveCollectionSheetEntryFormDtoIncludingMembers(previousCollectionSheetEntryFormDto, request);
+		
 		final CollectionSheetEntryFormDtoDecorator dtoDecorator = new CollectionSheetEntryFormDtoDecorator( latestCollectionSheetEntryFormDto);
 		final CollectionSheetFormEnteredDataDto formEnteredDataDto = new FormEnteredDataAssembler(collectionSheetEntryActionForm, dtoDecorator).toDto();
 		
@@ -455,7 +450,11 @@ public class CollectionSheetEntryAction extends BaseAction {
   //By Prudhvi : Hugo Technologies
     private CollectionSheetEntryFormDto retrieveCollectionSheetEntryFormDtoIncludingMembers(final CollectionSheetEntryFormDto collSheetEntryFormDto,final HttpServletRequest request)
             throws PageExpiredException {
+    	
     	List<CustomerDto> membersList=(List<CustomerDto>)request.getSession().getAttribute(CollectionSheetEntryConstants.MEMBERSLIST);
+                
+    	
+    	
         return new CollectionSheetEntryFormDto(collSheetEntryFormDto.getActiveBranchesList(),collSheetEntryFormDto.getPaymentTypesList(),collSheetEntryFormDto.getLoanOfficerList(),
          collSheetEntryFormDto.getCustomerList(),collSheetEntryFormDto.getReloadFormAutomatically(),collSheetEntryFormDto.getCenterHierarchyExists(),
          collSheetEntryFormDto.getBackDatedTransactionAllowed(),collSheetEntryFormDto.getMeetingDate(),collSheetEntryFormDto.getGroupsList(), membersList);

@@ -77,18 +77,23 @@ public class CollectionSheetMemberAction extends BaseAction {
 				return mapping.findForward(CollectionSheetEntryConstants.LOAD_MEMBER_SUCCESS);
 	}
 	
+	
+	
+	//-------------------------------------
+	
+	
+	
+	//-------------------------------------
+	
 	//by sivaji: hugo
 	public ActionForward printMembers(final ActionMapping mapping, final ActionForm form,final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-
 		final BulkEntryActionForm actionForm = (BulkEntryActionForm) form;
 		final Integer groupId = Integer.valueOf(actionForm.getGroupId()); 
 		final Short personnelId = Short.valueOf(actionForm.getLoanOfficerId());
 		final Short officeId = Short.valueOf(actionForm.getOfficeId());
-
 		final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto =(CollectionSheetEntryFormDto)request.getSession().getAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO);//By Prudhvi
-
 		final CollectionSheetEntryFormDto membersCollectionFormDto = collectionSheetServiceFacade.loadMembersByGroup(personnelId,officeId,groupId,previousCollectionSheetEntryFormDto);
-			storeMembersListOnRequestCollectionSheetEntryFormDto(request, membersCollectionFormDto);				
+			storeMembersListOnRequestCollectionSheetEntryFormDtoPrint(request, membersCollectionFormDto);				
 			return mapping.findForward(CollectionSheetEntryConstants.PRINT_MEMBER_SUCCESS);
 }
 	
@@ -101,8 +106,16 @@ public class CollectionSheetMemberAction extends BaseAction {
 	private void storeMembersListOnRequestCollectionSheetEntryFormDto(final HttpServletRequest request,
 			final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto) throws PageExpiredException {
 		//By Prudhvi
-		request.getSession().setAttribute(CollectionSheetEntryConstants.MEMBERSLIST,latestCollectionSheetEntryFormDto.getMembersList()); 
-		SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.MEMBERSLIST,latestCollectionSheetEntryFormDto.getMembersList(), request);
+		request.getSession().setAttribute(CollectionSheetEntryConstants.MEMBERSLIST,latestCollectionSheetEntryFormDto.getMembersList());
+	}
+	
+	//By Sivaji : Hugo Technologies
+	private void storeMembersListOnRequestCollectionSheetEntryFormDtoPrint(final HttpServletRequest request,
+			final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto) throws PageExpiredException {
+		//By Prudhvi
+		request.getSession().setAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO,latestCollectionSheetEntryFormDto);
+		request.getSession().setAttribute(CollectionSheetEntryConstants.MEMBERSLIST,latestCollectionSheetEntryFormDto.getMembersList());
+		
 	}
 	
 	private void getErrorString(final StringBuilder builder, final List<String> accountNums, final String message) {

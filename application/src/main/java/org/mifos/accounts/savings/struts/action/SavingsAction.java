@@ -440,6 +440,7 @@ public class SavingsAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In SavingsAction::getDepositDueDetails()");
         SavingsActionForm actionform = (SavingsActionForm) form;
+        System.out.println(form);
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
 
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);

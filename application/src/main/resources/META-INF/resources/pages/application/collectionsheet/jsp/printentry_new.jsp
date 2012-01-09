@@ -180,16 +180,16 @@ color: #404040;
 </p>
 </fieldset>
 
-<table id="tblSearch" border=1 class="pkgtable" border=0 width="100%" cellpadding="0" cellspacing="0">
-<COL WIDTH="15%"><COL WIDTH="35%"><COL WIDTH="35%"><COL WIDTH="15%">
+<table id="tblSearch" border=1 class="pkgtable" border=0  cellpadding="0" cellspacing="0">
+<COL WIDTH="10%"><COL WIDTH="20%"><COL WIDTH="25%"><COL WIDTH="15%">
 <tr class="pkgtableheaderrow">            
 			<th align="left">Customer Id</th>
 			<th align="left">Customer Name</th>                
 			<th align="left">Global Customer No</th>
 			<th align='left'>Action</th>
 </tr>
-<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'GroupMemberList')}" var="groupMembers">
-<tr >
+<c:forEach items="${sessionScope.GroupMemberList}" var="groupMembers">
+<tr>
 <td align="left">${groupMembers.customerId}</td>
 <td align="left">${groupMembers.displayName}</td>
 <td align="left">${groupMembers.globalCustNum}</td>

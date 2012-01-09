@@ -18,7 +18,6 @@ See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
 --%>
 
-
 <%@page import="java.math.BigDecimal"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
@@ -65,15 +64,13 @@ color: #404040;
 </head>
 <span id="page.id" title="CustomerList"></span>
 <script src="pages/js/jquery/jquery-1.4.2.min.js"></script>
-<!-- <script language="javascript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script> -->
 <script language="javascript">
-
-/* function print() {
-    alert("hello");	
-	window.print();
-	window.close();
-} */
-
+ 
+ function printerFormat() {
+		window.print();
+		window.close();
+	}
+ 
 </script>
 <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.BulkEntryUIResources"/>
@@ -140,10 +137,10 @@ color: #404040;
 </table>
 <br>
 	<table align="right"><tr><td>Authorized Signatory</td></tr></table>
+	
 										<table align="center"><tr>
-												<!-- <td><input type="button" value="print priview" onclick='javascript:printerFormat();'/></td> -->
-												<td><input type='button' value='print' onclick='window.print()'/></td>
+												<!-- <td><input type='button' value='print' onclick='window.print()'/></td> -->
+												<td><input type='button' value='print' onclick='javascript:printerFormat()'/></td>
 												</tr>
-												
 										</table>
 <%-- </html-el:form> --%>

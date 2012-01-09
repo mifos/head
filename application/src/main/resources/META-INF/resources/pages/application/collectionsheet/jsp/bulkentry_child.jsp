@@ -180,7 +180,7 @@ color: #404040;
 			<th align="left">Customer Name</th>                
 			<th align="left">Global Customer No</th>			
 </tr>
-<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'GroupMemberList')}" var="groupMembers">
+<c:forEach items="${sessionScope.GroupMemberList}" var="groupMembers">
 <tr >
 <td align="left">${groupMembers.customerId}</td>
 <td align="left">${groupMembers.displayName}</td>
