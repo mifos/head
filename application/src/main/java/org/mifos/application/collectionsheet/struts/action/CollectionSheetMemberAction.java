@@ -100,14 +100,9 @@ public class CollectionSheetMemberAction extends BaseAction {
 	 */
 	private void storeMembersListOnRequestCollectionSheetEntryFormDto(final HttpServletRequest request,
 			final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto) throws PageExpiredException {
-
-	
 		//By Prudhvi
-		request.getSession().setAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO, latestCollectionSheetEntryFormDto);
+		request.getSession().setAttribute(CollectionSheetEntryConstants.MEMBERSLIST,latestCollectionSheetEntryFormDto.getMembersList()); 
 		SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.MEMBERSLIST,latestCollectionSheetEntryFormDto.getMembersList(), request);
-				
-	  
-		
 	}
 	
 	private void getErrorString(final StringBuilder builder, final List<String> accountNums, final String message) {

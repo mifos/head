@@ -60,10 +60,10 @@ public class FormEnteredDataAssembler {
         //By Prudhvi: Hugo technololgies
         CustomerDto selectedMember = null;
         CustomerDto selectedGroup = null;
-        if(collectionSheetForm.getGroupId().length() > 0){
+        if(collectionSheetForm.getGroupId()!=null){
            selectedGroup = collectionSheetFormDtoDecorator.findSelectedGroupById(Integer.valueOf(collectionSheetForm
                     .getGroupId()));    
-           if(collectionSheetForm.getMemberId().length() > 0){
+           if(collectionSheetForm.getMemberId()!=null){
            	selectedMember = collectionSheetFormDtoDecorator.findSelectedMemberById(Integer.valueOf(collectionSheetForm.getMemberId()));        //By Prudhvi: Hugo technologies
                       
            }     

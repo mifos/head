@@ -55,6 +55,7 @@ import org.mifos.config.business.Configuration;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -196,15 +197,11 @@ public class CollectionSheetEntryAction extends BaseAction {
     public ActionForward get(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
 			final HttpServletResponse response) throws Exception {
 
-		logTrackingInfo("get", request, form);
-
+    	logTrackingInfo("get", request, form);
 		final BulkEntryActionForm collectionSheetEntryActionForm = (BulkEntryActionForm) form;
-		//commented by Prudhvi
-//		final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = retrieveFromRequestCollectionSheetEntryFormDto(request);
-		final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto =(CollectionSheetEntryFormDto)request.getSession().getAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO);//By Prudhvi
-		
-		final CollectionSheetEntryFormDtoDecorator dtoDecorator = new CollectionSheetEntryFormDtoDecorator(previousCollectionSheetEntryFormDto);
-
+		final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = retrieveFromRequestCollectionSheetEntryFormDto(request);
+		final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto=retrieveCollectionSheetEntryFormDtoIncludingMembers(previousCollectionSheetEntryFormDto, request);
+		final CollectionSheetEntryFormDtoDecorator dtoDecorator = new CollectionSheetEntryFormDtoDecorator( latestCollectionSheetEntryFormDto);
 		final CollectionSheetFormEnteredDataDto formEnteredDataDto = new FormEnteredDataAssembler(collectionSheetEntryActionForm, dtoDecorator).toDto();
 		
 
@@ -454,6 +451,16 @@ public class CollectionSheetEntryAction extends BaseAction {
         return (CollectionSheetEntryFormDto) SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO, request);
     }
+    
+  //By Prudhvi : Hugo Technologies
+    private CollectionSheetEntryFormDto retrieveCollectionSheetEntryFormDtoIncludingMembers(final CollectionSheetEntryFormDto collSheetEntryFormDto,final HttpServletRequest request)
+            throws PageExpiredException {
+    	List<CustomerDto> membersList=(List<CustomerDto>)request.getSession().getAttribute(CollectionSheetEntryConstants.MEMBERSLIST);
+        return new CollectionSheetEntryFormDto(collSheetEntryFormDto.getActiveBranchesList(),collSheetEntryFormDto.getPaymentTypesList(),collSheetEntryFormDto.getLoanOfficerList(),
+         collSheetEntryFormDto.getCustomerList(),collSheetEntryFormDto.getReloadFormAutomatically(),collSheetEntryFormDto.getCenterHierarchyExists(),
+         collSheetEntryFormDto.getBackDatedTransactionAllowed(),collSheetEntryFormDto.getMeetingDate(),collSheetEntryFormDto.getGroupsList(), membersList);
+    }
+
 
     private void storeOnRequestCollectionSheetEntryFormDto(final HttpServletRequest request,
             final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto) throws PageExpiredException {
