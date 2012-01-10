@@ -217,8 +217,20 @@
                 parameter="method" scope="session" name="collectionsheetactionform" validate="true">
                 
                 <forward name="load_member_success" path="/pages/application/collectionsheet/jsp/bulkentry_child.jsp"/>
+                <forward name="print_member_success" path="/pages/application/collectionsheet/jsp/printentry_new.jsp"/>  <!-- sivaji -->
         </action>        
      
+        <!-- Ends-->
+        <!-- sivaji :hugo -->
+        
+         <action path="/collectionsheetprintaction" type="org.mifos.application.collectionsheet.struts.action.CollectionSheetPrintAction"
+                parameter="method" scope="session" name="collectionsheetactionform" validate="true">
+                <forward name="load_success" path="/pages/application/collectionsheet/jsp/printentry.jsp"/>
+        </action> 
+         <action path="/collectionsheetprintchildaction" type="org.mifos.application.collectionsheet.struts.action.CollectionSheetPrintChildAction"
+                parameter="method" scope="session" name="collectionsheetactionform" validate="true">
+                <forward name="print_success" path="/pages/application/collectionsheet/jsp/printentry_child.jsp"/>
+        </action> 
         <!-- Ends-->
 
         <!-- offAction start-->

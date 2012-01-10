@@ -74,6 +74,9 @@ public class CollectionSheetEntryFormDto implements DataTransferObject {
         this.membersList=null; //By Prudhvi : Hugo Technologies
     }
     //By Prudhvi : Hugo Technologies
+    
+    
+    
     public CollectionSheetEntryFormDto(List<OfficeDetailsDto> activeBranches, List<ListItem<Short>> paymentTypesDtoList,
             List<PersonnelDto> loanOfficerList, List<CustomerDto> customerList, Short reloadFormAutomatically,
             Short centerHierarchyExists, Short backDatedTransactionAllowed, Date meetingDate,List<CustomerDto> groupsList,List<CustomerDto> membersList) {

@@ -20,6 +20,7 @@
 package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -356,4 +357,46 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         }
         return paymentTypesDtoList;
     }
+    
+  //By Sivaji : HugoTechnologies
+    @Override
+  	public List<AccountPayment> customerPrintDetails(final Integer customerId,final Date transactionDate) {
+
+          
+
+          List<AccountPayment> customerPaymentList = new ArrayList<AccountPayment>();
+          try {
+        	  customerPaymentList = customerPersistence.getCustomerPaymentList(customerId, transactionDate);
+          } catch (PersistenceException e) {
+              throw new MifosRuntimeException(e);
+          }
+          return customerPaymentList;
+      }
+
+    
+    /*sivaji : hugo*/
+    @Override
+	public CollectionSheetEntryFormDto loadMembersByGroup(final Short personnelId,
+            final Short officeId,final Integer groupId,final CollectionSheetEntryFormDto formDto) {
+		
+		   
+	        
+	        List<CustomerDto> customerList = new ArrayList<CustomerDto>();
+	        
+	        try {	        	
+	        	customerList = customerPersistence.getActiveGroupsList(groupId, Short.valueOf(CustomerLevel.CLIENT.getValue()));
+	        	if(customerList == null){
+	        		return null;
+	        	}        	
+	        	
+	        } catch (PersistenceException e) {
+	            throw new MifosRuntimeException(e);
+	        }
+	        
+	        
+	        return new CollectionSheetEntryFormDto(formDto.getActiveBranchesList(), formDto.getPaymentTypesList(), formDto
+	                .getLoanOfficerList(), formDto.getCustomerList(), formDto.getReloadFormAutomatically(), formDto
+	                .getCenterHierarchyExists(), formDto.getBackDatedTransactionAllowed(), formDto.getMeetingDate(),formDto.getGroupsList(),customerList);      
+          
+	}
 }

@@ -39,6 +39,7 @@ public interface CollectionSheetEntryConstants {
     String PREVIOUSSUCCESS = "previous_success";
     String GET_FAILURE = "get_failure";
     String LOAD_MEMBER_SUCCESS="load_member_success";//BY Prudhvi:Hugo Technologies
+    String PRINT_MEMBER_SUCCESS="print_member_success";//sivaji
     
 
     String BRANCHOFFICESLIST = "BranchOfficesList";
@@ -46,6 +47,7 @@ public interface CollectionSheetEntryConstants {
     String CUSTOMERSLIST = "CustomersList";
     String GROUPSLIST="CenterGroupList";//By Prudhvi : Hugo Technologies
     String MEMBERSLIST="GroupMemberList";//By Prudhvi : Hugo Technologies
+    String PRINT_SUCCESS = "print_success";// By Sivaji
 
 
     String MEETINGDATE = "MeetingDate";

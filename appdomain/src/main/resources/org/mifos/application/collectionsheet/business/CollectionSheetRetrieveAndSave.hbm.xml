@@ -178,6 +178,23 @@
                 and (a.account_state_id in (3 , 4)) and date(:TRANSACTION_DATE) >= la.disbursement_date
         ]]>
     </sql-query>
+    
+    
+    <!-- sivaji:hugotechnologies -->
+     
+      <sql-query name="findPrintDetailsAsDto">
+        <return-scalar column="paymentId" type="integer" />
+        <return-scalar column="customerId" type="integer" />
+        <return-scalar column="customerName" type="string" />
+        <return-scalar column="accountId" type="integer" />
+        <return-scalar column="productName" type="string" />
+        <return-scalar column="amount" type="big_decimal" />
+        <return-scalar column="principal" type="big_decimal" />
+        <return-scalar column="interest" type="big_decimal" />
+        <![CDATA[Select paymentId,customerId,customerName,accountId,productName,amount,principal,interest from customer_payments 
+        where customerid=:CUSTOMER_ID and paymentdate=date(:TRANSACTION_DATE)
+ 			]]>
+    </sql-query>
 
     <sql-query name="findLoanDisbursementsforCustomerHierarchyAsDto">
         <return-scalar column="customerId" type="integer" />

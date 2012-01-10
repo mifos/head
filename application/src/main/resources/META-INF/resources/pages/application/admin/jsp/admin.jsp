@@ -373,6 +373,16 @@ explanation of the license and how it is applied.
 								</a> | <html-el:link styleId="admin.link.defineNewCategory"
 								href="reportsCategoryAction.do?method=loadDefineNewCategoryPage"><mifos:mifoslabel name="admin.defineNewCategory" /></html-el:link></td>
                   </tr>
+                  
+                  
+                   <tr class="fontnormal">
+                   <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                   
+                   <td width="97%">
+                   <a  href="collectionsheetprintaction.do?method=load">print receipt </a></td>
+															
+              		</tr>  
+                  
                 </table>
                 <br>
 

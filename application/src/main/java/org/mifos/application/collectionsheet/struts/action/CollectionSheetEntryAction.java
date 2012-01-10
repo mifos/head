@@ -203,7 +203,7 @@ public class CollectionSheetEntryAction extends BaseAction {
 //		final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = retrieveFromRequestCollectionSheetEntryFormDto(request);
 		final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto =(CollectionSheetEntryFormDto)request.getSession().getAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO);//By Prudhvi
 		
-		final CollectionSheetEntryFormDtoDecorator dtoDecorator = new CollectionSheetEntryFormDtoDecorator( previousCollectionSheetEntryFormDto);
+		final CollectionSheetEntryFormDtoDecorator dtoDecorator = new CollectionSheetEntryFormDtoDecorator(previousCollectionSheetEntryFormDto);
 
 		final CollectionSheetFormEnteredDataDto formEnteredDataDto = new FormEnteredDataAssembler(collectionSheetEntryActionForm, dtoDecorator).toDto();
 		

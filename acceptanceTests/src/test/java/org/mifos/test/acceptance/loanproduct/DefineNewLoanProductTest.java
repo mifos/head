@@ -53,7 +53,7 @@ import java.util.Random;
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(singleThreaded = true, groups = {"loanproduct", "acceptance", "no_db_unit"})
 public class DefineNewLoanProductTest extends UiTestCaseBase {
-
+	
     private Random random;
     private QuestionGroupHelper questionGroupHelper;
 

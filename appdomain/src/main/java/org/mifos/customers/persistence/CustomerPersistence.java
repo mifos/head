@@ -49,6 +49,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.AccountPayment;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.config.AccountingRules;
@@ -259,6 +260,16 @@ public class CustomerPersistence extends LegacyGenericDao {
         return queryResult;
     }
 
+    
+    public List<AccountPayment> getCustomerPaymentList(final Integer customerId,final java.util.Date transactionDate) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CUSTOMER_ID", customerId);
+        queryParameters.put("TRANSACTION_DATE", transactionDate);
+        List<AccountPayment> queryResult =executeNamedQueryWithResultTransformer(
+                "findPrintDetailsAsDto", queryParameters, AccountPayment.class);
+        return queryResult;
+
+    }
 
     /**
      * @deprecated use {@link CustomerDao#findCustomerById(Integer)}

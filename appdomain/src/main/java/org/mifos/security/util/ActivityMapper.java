@@ -192,15 +192,35 @@ public class ActivityMapper {
         parseActionSecurity(getImportTransactionsSecurity());
         //By Prudhvi : Hugo technologies
         parseActionSecurity(getCollectionSheetMemberEntrySecurity());
+        parseActionSecurity(getCollectionSheetPrintEntrySecurity()); //By Sivaji : Hugo Technologies 
+        parseActionSecurity(getCollectionSheetPrintChildEntrySecurity());// By Sivaji : Hugo Technologies
+        
         parseActionSecurity(getMigrateSecurity());
     }
   //By Prudhvi: Hugo technologies
     private ActionSecurity getCollectionSheetMemberEntrySecurity() {
         ActionSecurity security = new ActionSecurity("collectionsheetmemberaction");   
-        security.allow("loadMembers", SecurityConstants.VIEW);        
+        security.allow("loadMembers", SecurityConstants.VIEW); 
+        security.allow("printMembers", SecurityConstants.VIEW); //sivaji
         
         return security;
     }
+    
+  //By Sivaji : Hugo Technologies
+    private ActionSecurity getCollectionSheetPrintEntrySecurity() {
+        ActionSecurity security = new ActionSecurity("collectionsheetprintaction");   
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("getLastMeetingDateForCustomer", SecurityConstants.VIEW);
+        security.allow("loadLoanOfficers", SecurityConstants.VIEW);
+        security.allow("loadCustomerList", SecurityConstants.VIEW);
+        return security;
+    }
+    private ActionSecurity getCollectionSheetPrintChildEntrySecurity() {
+        ActionSecurity security = new ActionSecurity("collectionsheetprintchildaction");   
+        security.allow("memberPrintDetails", SecurityConstants.VIEW);
+        return security;
+    }
+    //end
 
     private ActionSecurity getMigrateSecurity() {
         ActionSecurity security = new ActionSecurity("migrateAction");

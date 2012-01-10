@@ -19,6 +19,9 @@
  */
 package org.mifos.application.servicefacade;
 
+import java.util.Date;
+import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataDto;
@@ -38,8 +41,10 @@ public interface CollectionSheetServiceFacade {
     CollectionSheetEntryFormDto loadCustomersForBranchAndLoanOfficer(Short personnelId, Short officeId,
             CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto);
     CollectionSheetEntryFormDto loadGroupsForCustomer(final Integer customerId,final CollectionSheetEntryFormDto formDto);// By Prudhvi : Hugo Technologies
-    CollectionSheetEntryFormDto loadMembersByGroup(final Integer groupId,final CollectionSheetEntryFormDto formDto);    // By Prudhvi : Hugo Technologies   
-
+    CollectionSheetEntryFormDto loadMembersByGroup(final Integer groupId,final CollectionSheetEntryFormDto formDto);    // By Prudhvi : Hugo Technologies  
+    
+    List<AccountPayment> customerPrintDetails(Integer customerId, Date transactionDate);// By Sivaji : Hugo Technologies
+    
     CollectionSheetEntryFormDto loadMeetingDateForCustomer(Integer customerId,
             CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto);
 
@@ -54,5 +59,10 @@ public interface CollectionSheetServiceFacade {
 	CollectionSheetErrorsDto saveCollectionSheet(SaveCollectionSheetDto saveCollectionSheet);
 
 	CollectionSheetDto getCollectionSheet(Integer customerId, LocalDate meetingDate);
+	
+	
+	
+	 CollectionSheetEntryFormDto loadMembersByGroup(final Short personnelId,
+	            final Short officeId,final Integer groupId,final CollectionSheetEntryFormDto formDto); //by sivaji
 
 }

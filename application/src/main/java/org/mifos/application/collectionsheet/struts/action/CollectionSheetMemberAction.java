@@ -77,6 +77,20 @@ public class CollectionSheetMemberAction extends BaseAction {
 				return mapping.findForward(CollectionSheetEntryConstants.LOAD_MEMBER_SUCCESS);
 	}
 	
+	//by sivaji: hugo
+	public ActionForward printMembers(final ActionMapping mapping, final ActionForm form,final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+
+		final BulkEntryActionForm actionForm = (BulkEntryActionForm) form;
+		final Integer groupId = Integer.valueOf(actionForm.getGroupId()); 
+		final Short personnelId = Short.valueOf(actionForm.getLoanOfficerId());
+		final Short officeId = Short.valueOf(actionForm.getOfficeId());
+
+		final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto =(CollectionSheetEntryFormDto)request.getSession().getAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO);//By Prudhvi
+
+		final CollectionSheetEntryFormDto membersCollectionFormDto = collectionSheetServiceFacade.loadMembersByGroup(personnelId,officeId,groupId,previousCollectionSheetEntryFormDto);
+			storeMembersListOnRequestCollectionSheetEntryFormDto(request, membersCollectionFormDto);				
+			return mapping.findForward(CollectionSheetEntryConstants.PRINT_MEMBER_SUCCESS);
+}
 	
 	/**
 	 * By Hugo Technolgies
