@@ -119,7 +119,7 @@ color: #404040;
 												// show the matching rows (using the containsNoCase from Rick Strahl)
 											
 												jQuery(
-														'#tblSearch tr td:nth-child(2):containsNoCase(\''
+														'#tblSearch tr td:nth-child(1):containsNoCase(\''
 																+ jQuery(
 																		'#txtSearch')
 																		.val()
