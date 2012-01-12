@@ -41,14 +41,16 @@ public class StringUtil {
         
         StringBuilder builder = new StringBuilder(num);
         
-        for(int i = num.length() - 3; i >= 0; i -= 4) {
-            if(num.length() > 3){
-        	builder = builder.insert(i, ',');
+        if(num.length() > 3){
+            for(int i = num.length() - 3; i >= 0; i -= 4) {
+                builder = builder.insert(i, ',');
             }
         }
+        
         if(!decimal.equalsIgnoreCase(".0")) {
-        builder = builder.append(decimal);
+            builder = builder.append(decimal);
         }
+        
         return builder.toString();
     }
 }

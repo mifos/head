@@ -94,7 +94,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("DefineNewSavingsProductTestCenter", params.getProductInstanceName(), "7,777.8");
+        createSavingAccountWithCreatedProduct("DefineNewSavingsProductTestCenter", params.getProductInstanceName(), "7777.8");
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-137
@@ -149,7 +149,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("DefineNewSavingsProductTestCenter", params.getProductInstanceName(), "7,777.8");
+        createSavingAccountWithCreatedProduct("DefineNewSavingsProductTestCenter", params.getProductInstanceName(), "7777.8");
     }
 
     private SavingsAccountDetailPage createSavingAccountWithCreatedProduct(String client, String productName, String amount){
@@ -158,7 +158,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         searchParameters.setSavingsProduct(productName);
 
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
-        submitAccountParameters.setAmount(amount.replace(",", ""));
+        submitAccountParameters.setAmount(amount);
         SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters);
         savingsAccountPage.verifyPage();
         savingsAccountPage.verifySavingsAmount(amount);

@@ -35,6 +35,7 @@ import org.mifos.test.acceptance.framework.loan.PerformanceHistoryAtributes;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -280,7 +281,7 @@ public class ClientViewDetailsPage extends MifosPage {
     }
 
     public void verifyDelinquentPortfolio(Double delinquentPortfolioValue) {
-        Assert.assertEquals(selenium.getText("viewClientDetails.text.delinquentportfolio"), delinquentPortfolioValue.toString());
+        Assert.assertEquals(selenium.getText("viewClientDetails.text.delinquentportfolio"), StringUtil.formatNumber(delinquentPortfolioValue.toString()));
     }
 
     public void verifyLoanCyclePerProduct(String product, Integer count) {

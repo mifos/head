@@ -214,7 +214,7 @@ explanation of the license and how it is applied.
 										<mifos:mifoslabel name="Savings.maxAmountPerWithdrawl" isColonRequired="yes"/>
 										<fmt:formatNumber value="${BusinessKey.savingsOffering.maxAmntWithdrawl.amount}" />
 										<br>
-										<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel name="Savings.rate" />: <c:out value="${BusinessKey.savingsOffering.interestRate}" /><mifos:mifoslabel name="Savings.perc" />
+										<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel name="Savings.rate" />: <fmt:formatNumber value="${BusinessKey.savingsOffering.interestRate}" /><mifos:mifoslabel name="Savings.perc" />
 										</span>
 										<br>
 										

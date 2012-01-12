@@ -3,6 +3,6 @@
 1 rows contained no errors and will be imported
 0 rows will be ignored
 0 rows contained errors and were not imported
-Total amount of transactions imported: 2000.0
-Total amount of disbursements imported: 0.0
-Total amount of transactions with error: 0.0
+Total amount of transactions imported: 2,000
+Total amount of disbursements imported: 0
+Total amount of transactions with error: 0

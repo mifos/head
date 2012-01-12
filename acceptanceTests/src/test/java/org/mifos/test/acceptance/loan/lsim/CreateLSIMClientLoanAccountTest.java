@@ -190,7 +190,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
             
             createLoanAccountEntryPage = navigationHelper.navigateToClientsAndAccountsPage().navigateToCreateLoanAccountUsingLeftMenu().searchAndNavigateToCreateLoanAccountPage(formParameters); 
             
-            createLoanAccountEntryPage.verifyAllowedAmounts("1000.0", "10000.0", "1000.0");
+            createLoanAccountEntryPage.verifyAllowedAmounts("1,000", "10,000", "1000.0");
             createLoanAccountEntryPage.verifyDisbsursalDate("25", "3", "2011");
             
             createLoanAccountEntryPage.setAmount("");

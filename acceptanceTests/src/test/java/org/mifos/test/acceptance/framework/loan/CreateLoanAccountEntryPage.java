@@ -420,20 +420,17 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     @SuppressWarnings("PMD")
     public void verifyAllowedAmounts(String min, String max, String def) {
-        min = min.substring(0, min.length()-2);
-        max = max.substring(0, max.length()-2);
         final String expectedText = "(Allowed amount: " + min + " - " + max +")";
-        final String expectedText2 = "(Allowed amount: " + min + ".0 - " + max +".0)";
 
         if (!selenium.isElementPresent("//span[@id='createloan.allowedamounttext']")) {
             Assert.fail("failed as span with id: createloan.allowedamounttext not on page: " +  selenium.getLocation());
         } else {
             String allowedAmountText = selenium.getText("//span[@id='createloan.allowedamounttext']");
         
-            if (allowedAmountText.equalsIgnoreCase(expectedText) || allowedAmountText.equalsIgnoreCase(expectedText2)) {
+            if (allowedAmountText.equalsIgnoreCase(expectedText)) {
                 Assert.assertTrue(true);
             } else {
-                Assert.fail(expectedText + " or " + expectedText2 + " was expected but not found on page. instead was: " + allowedAmountText);
+                Assert.fail(expectedText + " was expected but not found on page. instead was: " + allowedAmountText);
             }
         
             Assert.assertEquals(selenium.getValue("loancreationdetails.input.sumLoanAmount"), def);
@@ -441,11 +438,9 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public void verifyAllowedInterestRate(String min, String max, String def) {
-        min = min.substring(0, min.length()-2);
-        max = max.substring(0, max.length()-2);
         final String expectedText = "(Allowed interest rate: " + min + " - " + max + " %)";
-        final String expectedText2 = "(Allowed interest rate: " + min + ".0 - " + max + ".0 %)";
-        if (selenium.isTextPresent(expectedText) || selenium.isTextPresent(expectedText2)) {
+        
+        if (selenium.isTextPresent(expectedText)) {
             Assert.assertTrue(true);
         } else {
             Assert.fail(expectedText + " was expected but not found on page.");
