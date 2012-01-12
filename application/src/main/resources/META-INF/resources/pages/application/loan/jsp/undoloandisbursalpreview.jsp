@@ -93,7 +93,7 @@ explanation of the license and how it is applied.
 										<br>
 										<span class="fontnormalbold"><mifos:mifoslabel name="loan.proposed_date" isColonRequired="Yes" /></span> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.disbursementDate)}" />
 										<br>
-										<span class="fontnormalbold"><mifos:mifoslabel name="loan.nopaymentsmade" isColonRequired="Yes" /></span> <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'paymentssize')}" />
+										<span class="fontnormalbold"><mifos:mifoslabel name="loan.nopaymentsmade" isColonRequired="Yes" /></span> <fmt:formatNumber value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'paymentssize')}" />
 										<br>
 										<span class="fontnormalbold"><mifos:mifoslabel name="loan.amt_paid" isColonRequired="Yes" /></span> <fmt:formatNumber value="${BusinessKey.loanSummary.totalAmntPaid.amount}"/>
 										<br>

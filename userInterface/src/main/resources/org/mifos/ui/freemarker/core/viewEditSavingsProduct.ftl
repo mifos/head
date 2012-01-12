@@ -116,7 +116,7 @@
             </div>
             <div>
                 <span>[@spring.message "manageSavngsProducts.editsavingsproduct.mandatoryamountfordeposit" /]</span>
-                <span>${savingsProductDetails.amountForDeposit}</span>
+                <span>${savingsProductDetails.amountForDeposit?string.number}</span>
             </div>
             <div>
                 <span>[@spring.message "manageSavngsProducts.editsavingsproduct.amountAppliesto" /]</span>
@@ -134,7 +134,7 @@
             </div>
             <div>
                 <span>[@spring.message "manageSavngsProducts.editsavingsproduct.maxamountperwithdrawal" /]</span>
-                <span>${savingsProductDetails.maxWithdrawal}</span>
+                <span>${savingsProductDetails.maxWithdrawal?string.number}</span>
             </div>
             </p>
             <p class="span-24 ">
@@ -142,7 +142,7 @@
             <div class="fontBold black-subheading">[@spring.message "manageSavngsProducts.editsavingsproduct.interestrate" /]</div>
             <div>
                 <span>[@spring.message "manageSavngsProducts.editsavingsproduct.interestrate" /]</span>
-                <span>${savingsProductDetails.interestRate}</span>
+                <span>${savingsProductDetails.interestRate?string.number}</span>
             </div>
             [#if savingsProductDetails.interestRate != 0]
             <div>
@@ -160,10 +160,10 @@
                 <span>[@spring.message "manageSavngsProducts.editsavingsproduct.timeperiodforInterestcalculation" /]</span>
                 [#switch savingsProductDetails.interestCalculationFrequencyPeriod]
                     [#case 2]
-                        <span>${savingsProductDetails.interestCalculationFrequency} [@spring.message "manageProducts.defineSavingsProducts.month(s)" /]</span>
+                        <span>${savingsProductDetails.interestCalculationFrequency?string.number} [@spring.message "manageProducts.defineSavingsProducts.month(s)" /]</span>
                         [#break]
                     [#case 3]
-                        <span>${savingsProductDetails.interestCalculationFrequency} [@spring.message "manageProducts.defineSavingsProducts.day(s)" /]</span>
+                        <span>${savingsProductDetails.interestCalculationFrequency?string.number} [@spring.message "manageProducts.defineSavingsProducts.day(s)" /]</span>
                         [#break]
                 [/#switch]
             </div>

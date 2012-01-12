@@ -346,25 +346,25 @@ explanation of the license and how it is applied.
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
                 	<mifos:mifoslabel name="Savings.totalDeposits" isColonRequired="yes"/>
-                	<c:out value="${BusinessKey.savingsPerformance.totalDeposits}" />
+                	<fmt:formatNumber value="${BusinessKey.savingsPerformance.totalDeposits.amount}" />
 
                 </span></td>
               </tr>
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-                <mifos:mifoslabel name="Savings.totalInterestEarned" isColonRequired="yes"/> <c:out value="${BusinessKey.savingsPerformance.totalInterestEarned}" /></span></td>
+                <mifos:mifoslabel name="Savings.totalInterestEarned" isColonRequired="yes"/> <fmt:formatNumber value="${BusinessKey.savingsPerformance.totalInterestEarned.amount}" /></span></td>
               </tr>
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-                <mifos:mifoslabel name="Savings.totalWithdrawls" isColonRequired="yes"/> <c:out value="${BusinessKey.savingsPerformance.totalWithdrawals}" /> </span></td>
+                <mifos:mifoslabel name="Savings.totalWithdrawls" isColonRequired="yes"/> <fmt:formatNumber value="${BusinessKey.savingsPerformance.totalWithdrawals.amount}" /> </span></td>
               </tr>
                <c:if test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
                    <tr>
 	                <td class="paddingL10">
 	                <span class="fontnormal8pt">
-	                <mifos:mifoslabel name="Savings.missedDeposits" isColonRequired="yes"/> <c:out value="${BusinessKey.savingsPerformance.missedDeposits}" /> </span></td>
+	                <mifos:mifoslabel name="Savings.missedDeposits" isColonRequired="yes"/> <fmt:formatNumber value="${BusinessKey.savingsPerformance.missedDeposits}" /> </span></td>
 	  			  </tr>
 	  			</c:if>
 						</table>

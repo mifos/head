@@ -286,7 +286,7 @@ explanation of the license and how it is applied.
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
 												<mifos:mifoslabel name="loan.interest_rate" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${interestRate}" /> <mifos:mifoslabel name="loan.allowed_interest1" /> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
+												:&nbsp; <span class="fontnormal"> <fmt:formatNumber value="${interestRate}" /> <mifos:mifoslabel name="loan.allowed_interest1" /> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
 														name="loan.allowed_interest2" /> :&nbsp; <fmt:formatNumber value="${LoanOffering.minInterestRate}" />&nbsp; - &nbsp; <formatNumber value="${LoanOffering.maxInterestRate}" />) </span>
 											</td>
 										</tr>

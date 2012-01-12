@@ -128,9 +128,9 @@
                     <span class="span-5 last">[@spring.message "manageLoanProducts.previewLoanProduct.defaultamount"/]</span>
                 </div>
                 <div class="span-17 paddingLeft">
-                    <span class="span-4 ">${loanProductDetails.loanAmountDetails.sameForAllLoanRange.min}</span>
-                    <span class="span-4 ">${loanProductDetails.loanAmountDetails.sameForAllLoanRange.max}</span>
-                    <span class="span-5 last">${loanProductDetails.loanAmountDetails.sameForAllLoanRange.theDefault}</span>
+                    <span class="span-4 ">${loanProductDetails.loanAmountDetails.sameForAllLoanRange.min?string.number}</span>
+                    <span class="span-4 ">${loanProductDetails.loanAmountDetails.sameForAllLoanRange.max?string.number}</span>
+                    <span class="span-5 last">${loanProductDetails.loanAmountDetails.sameForAllLoanRange.theDefault?string.number}</span>
                 </div>
                   <div>&nbsp;</div>
               </div>
@@ -145,10 +145,10 @@
               <div class="span-20 ">
                   [#list loanProductDetails.loanAmountDetails.byLastLoanAmountList as byLoanAmount]
                   <div class="span-17 paddingLeft">
-                      <span class="span-4 ">${byLoanAmount.lower} - ${byLoanAmount.upper}</span>
-                    <span class="span-4 ">${byLoanAmount.min}</span>
-                    <span class="span-4 ">${byLoanAmount.max}</span>
-                    <span class="span-5 last">${byLoanAmount.theDefault}</span>
+                      <span class="span-4 ">${byLoanAmount.lower?string.number} - ${byLoanAmount.upper?string.number}</span>
+                    <span class="span-4 ">${byLoanAmount.min?string.number}</span>
+                    <span class="span-4 ">${byLoanAmount.max?string.number}</span>
+                    <span class="span-5 last">${byLoanAmount.theDefault?string.number}</span>
                 </div>
                 [/#list]
                   <div>&nbsp;</div>
@@ -187,9 +187,9 @@
                         <span class="span-4 ">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.abovefour"/]</span>
                         [#break]
                           [/#switch]
-                        <span class="span-4 ">${byLoanCycle.min}</span>
-                        <span class="span-4 ">${byLoanCycle.max}</span>
-                        <span class="span-5 last">${byLoanCycle.theDefault}</span>
+                        <span class="span-4 ">${byLoanCycle.min?string.number}</span>
+                        <span class="span-4 ">${byLoanCycle.max?string.number}</span>
+                        <span class="span-5 last">${byLoanCycle.theDefault?string.number}</span>
                     </div>
                     [#assign loanCycleNumber = loanCycleNumber + 1]
                     [/#list]
@@ -208,15 +208,15 @@
             </div>
             <div class="span-22 ">
                 <span>[@spring.message "manageLoanProducts.editloanproduct.maxInterestrate" /]</span>
-                <span>${loanProductDetails.interestRateRange.max}</span>
+                <span>${loanProductDetails.interestRateRange.max?string.number}</span>
             </div>
             <div class="span-22 ">
                 <span>[@spring.message "manageLoanProducts.editloanproduct.minInterestrate" /]</span>
-                <span>${loanProductDetails.interestRateRange.min}</span>
+                <span>${loanProductDetails.interestRateRange.min?string.number}</span>
             </div>
             <div class="span-22 ">
                 <span>[@spring.message "manageLoanProducts.editloanproduct.defaultInterestrate" /]</span>
-                <span>${loanProductDetails.interestRateRange.theDefault}</span>
+                <span>${loanProductDetails.interestRateRange.theDefault?string.number}</span>
             </div>
         </p>
         <div class="clear">&nbsp;</div>
@@ -259,9 +259,9 @@
                     <span class="span-5 last">[@spring.message "manageLoanProducts.previewLoanProduct.defaultofinstallments"/]</span>
                 </div>
                 <div class="span-17 paddingLeft">
-                    <span class="span-4 ">${loanProductDetails.repaymentDetails.installmentCalculationDetails.sameForAllLoanRange.min}</span>
-                    <span class="span-4 ">${loanProductDetails.repaymentDetails.installmentCalculationDetails.sameForAllLoanRange.max}</span>
-                    <span class="span-5 last">${loanProductDetails.repaymentDetails.installmentCalculationDetails.sameForAllLoanRange.theDefault}</span>
+                    <span class="span-4 ">${loanProductDetails.repaymentDetails.installmentCalculationDetails.sameForAllLoanRange.min?string.number}</span>
+                    <span class="span-4 ">${loanProductDetails.repaymentDetails.installmentCalculationDetails.sameForAllLoanRange.max?string.number}</span>
+                    <span class="span-5 last">${loanProductDetails.repaymentDetails.installmentCalculationDetails.sameForAllLoanRange.theDefault?string.number}</span>
                 </div>
                   <div>&nbsp;</div>
               </div>
@@ -277,10 +277,10 @@
                       <div class="span-20 ">
                           [#list loanProductDetails.repaymentDetails.installmentCalculationDetails.byLastLoanAmountList as byLoanAmount]
                           <div class="span-17 paddingLeft">
-                              <span class="span-4 ">${byLoanAmount.lower} - ${byLoanAmount.upper}</span>
-                            <span class="span-4 ">${byLoanAmount.min}</span>
-                            <span class="span-4 ">${byLoanAmount.max}</span>
-                            <span class="span-5 last">${byLoanAmount.theDefault}</span>
+                              <span class="span-4 ">${byLoanAmount.lower?string.number} - ${byLoanAmount.upper?string.number}</span>
+                            <span class="span-4 ">${byLoanAmount.min?string.number}</span>
+                            <span class="span-4 ">${byLoanAmount.max?string.number}</span>
+                            <span class="span-5 last">${byLoanAmount.theDefault?string.number}</span>
                         </div>
                         [/#list]
                     </div>
@@ -319,9 +319,9 @@
                             <span class="span-4 ">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo.abovefour"/]</span>
                             [#break]
                               [/#switch]
-                            <span class="span-4 ">${byLoanCycle.min}</span>
-                            <span class="span-4 ">${byLoanCycle.max}</span>
-                            <span class="span-5 last">${byLoanCycle.theDefault}</span>
+                            <span class="span-4 ">${byLoanCycle.min?string.number}</span>
+                            <span class="span-4 ">${byLoanCycle.max?string.number}</span>
+                            <span class="span-5 last">${byLoanCycle.theDefault?string.number}</span>
                         </div>
                         [#assign loanCycleNumber = loanCycleNumber + 1]
                         [/#list]
@@ -348,7 +348,7 @@
           </div>
           <div class="span-22 ">
               <span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.graceperiodduration" /]</span>
-              <span class="span-4">${loanProductDetails.repaymentDetails.gracePeriodDuration}</span>
+              <span class="span-4">${loanProductDetails.repaymentDetails.gracePeriodDuration?string.number}</span>
           </div>
         </p>
 
