@@ -1,0 +1,417 @@
+From 3ce4f4a030fe5164f83b248bfa78a0aa3134b378 Mon Sep 17 00:00:00 2001
+From: Kamil Kalfas <kkalfas@soldevelo.com>
+Date: Mon, 9 Jan 2012 14:20:23 +0100
+Subject: [PATCH] MIFOS-3670: fixed for 6 pages, fixed tests
+
+---
+ .../acceptance/framework/loan/LoanAccountPage.java |   14 +++------
+ .../savings/SavingsAccountDetailPage.java          |    4 ++-
+ .../org/mifos/test/acceptance/util/StringUtil.java |   24 +++++++++++++++++
+ .../client/jsp/view_clientchargesdetail.jsp        |   28 ++++++++++----------
+ .../application/customer/jsp/applyadjustment.jsp   |    2 +-
+ .../customer/jsp/cust_historicaldata.jsp           |   10 +++---
+ .../customer/jsp/getallclosedaccounts.jsp          |    6 ++--
+ .../group/jsp/view_groupchargesdetail.jsp          |   22 ++++++++--------
+ .../savings/jsp/savingsaccountdetail.jsp           |   12 +++++---
+ 9 files changed, 73 insertions(+), 49 deletions(-)
+
+diff --git a/acceptanceTests/src/test/java/org/mifos/test/acceptance/framework/loan/LoanAccountPage.java b/acceptanceTests/src/test/java/org/mifos/test/acceptance/framework/loan/LoanAccountPage.java
+index 194a707..0d73bf0 100644
+--- a/acceptanceTests/src/test/java/org/mifos/test/acceptance/framework/loan/LoanAccountPage.java
++++ b/acceptanceTests/src/test/java/org/mifos/test/acceptance/framework/loan/LoanAccountPage.java
+@@ -20,8 +20,6 @@
+ 
+ package org.mifos.test.acceptance.framework.loan;
+ 
+-import java.text.DecimalFormat;
+-
+ import org.joda.time.DateTime;
+ import org.joda.time.format.DateTimeFormat;
+ import org.joda.time.format.DateTimeFormatter;
+@@ -31,6 +29,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
+ import org.mifos.test.acceptance.framework.admin.AdminPage;
+ import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
+ import org.testng.Assert;
++import org.mifos.test.acceptance.util.StringUtil;
+ 
+ import com.thoughtworks.selenium.Selenium;
+ 
+@@ -65,7 +64,7 @@ public class LoanAccountPage extends MifosPage {
+     }
+ 
+     public void verifyLoanAmount(String amount) {
+-        Assert.assertEquals(getOriginalLoanAmount(), formatNumber(amount));
++        Assert.assertEquals(getOriginalLoanAmount(), StringUtil.formatNumber(amount));
+     }
+ 
+     public void verifyExactLoanAmount(String amount) {
+@@ -99,7 +98,7 @@ public class LoanAccountPage extends MifosPage {
+     }
+ 
+     public void verifyTotalOriginalLoan(String amount) {
+-        Assert.assertEquals(getOriginalTotalAmount(), formatNumber(amount));
++        Assert.assertEquals(getOriginalTotalAmount(), StringUtil.formatNumber(amount));
+     }
+ 
+     public void verifyTotalAmountPaid(String amount) {
+@@ -158,7 +157,7 @@ public class LoanAccountPage extends MifosPage {
+     }
+ 
+     public void verifyInterestRate(String interestRate) {
+-        Assert.assertEquals(selenium.getText("loanaccountdetail.text.interestRate"), formatNumber(interestRate));
++        Assert.assertEquals(selenium.getText("loanaccountdetail.text.interestRate"), StringUtil.formatNumber(interestRate));
+     }
+ 
+     public void verifyPurposeOfLoan(String purpose) {
+@@ -524,9 +523,6 @@ public class LoanAccountPage extends MifosPage {
+         Assert.assertEquals(selenium.getText("loanaccountdetail.details.disbursaldate"), disbursalDate);
+     }
+     
+-    private String formatNumber(final String number) {
+-        DecimalFormat df = new DecimalFormat("###,###,###.###");
+-        return df.format(Double.parseDouble(number));
+-    }
++
+ }
+ 
+diff --git a/acceptanceTests/src/test/java/org/mifos/test/acceptance/framework/savings/SavingsAccountDetailPage.java b/acceptanceTests/src/test/java/org/mifos/test/acceptance/framework/savings/SavingsAccountDetailPage.java
+index 3f5935b..6dd4689 100644
+--- a/acceptanceTests/src/test/java/org/mifos/test/acceptance/framework/savings/SavingsAccountDetailPage.java
++++ b/acceptanceTests/src/test/java/org/mifos/test/acceptance/framework/savings/SavingsAccountDetailPage.java
+@@ -20,6 +20,7 @@
+ 
+ package org.mifos.test.acceptance.framework.savings;
+ 
++import org.mifos.test.acceptance.util.StringUtil;
+ import org.mifos.test.acceptance.framework.AbstractPage;
+ import org.mifos.test.acceptance.framework.loan.AccountAddNotesPage;
+ import org.mifos.test.acceptance.framework.loan.AccountNotesPage;
+@@ -50,7 +51,7 @@ public class SavingsAccountDetailPage extends AbstractPage {
+     }
+ 
+     public void verifySavingsAmount(String amount) {
+-        Assert.assertTrue(selenium.isTextPresent(amount));
++        Assert.assertTrue(selenium.isTextPresent(StringUtil.formatNumber(amount)));
+     }
+ 
+     public void verifyDate(String date){
+@@ -132,4 +133,5 @@ public class SavingsAccountDetailPage extends AbstractPage {
+         
+         return new TransactionHistoryPage(selenium);
+     }
++    
+ }
+\ No newline at end of file
+diff --git a/acceptanceTests/src/test/java/org/mifos/test/acceptance/util/StringUtil.java b/acceptanceTests/src/test/java/org/mifos/test/acceptance/util/StringUtil.java
+index 43c09a6..7068eec 100644
+--- a/acceptanceTests/src/test/java/org/mifos/test/acceptance/util/StringUtil.java
++++ b/acceptanceTests/src/test/java/org/mifos/test/acceptance/util/StringUtil.java
+@@ -27,5 +27,29 @@ public class StringUtil {
+     public static String getRandomString(int length) {
+         return RandomStringUtils.randomAlphanumeric(length);
+     }
++    public static String formatNumber(final String number) {
++    	String num = "";
++        String decimal = "";
++        int index = number.lastIndexOf('.');
++        
++        if(index >= 0) {
++            num = number.substring(0, index);
++            decimal = number.substring(index);
++        } else {
++            num = number;
++        }
++        
++        StringBuilder builder = new StringBuilder(num);
++        
++        for(int i = num.length() - 3; i >= 0; i -= 4) {
++            if(num.length() > 3){
++        	builder = builder.insert(i, ',');
++            }
++        }
++        if(!decimal.equalsIgnoreCase(".0")) {
++        builder = builder.append(decimal);
++        }
++        return builder.toString();
++    }
+ }
+ 
+diff --git a/application/src/main/resources/META-INF/resources/pages/application/client/jsp/view_clientchargesdetail.jsp b/application/src/main/resources/META-INF/resources/pages/application/client/jsp/view_clientchargesdetail.jsp
+index 0e2c2af..4998659 100644
+--- a/application/src/main/resources/META-INF/resources/pages/application/client/jsp/view_clientchargesdetail.jsp
++++ b/application/src/main/resources/META-INF/resources/pages/application/client/jsp/view_clientchargesdetail.jsp
+@@ -111,8 +111,8 @@ explanation of the license and how it is applied.
+ 					</tr>
+ 					<tr>
+ 						<td class="fontnormal"><span class="fontnormal"> <mifos:mifoslabel
+-							name="client.amtdue" bundle="ClientUIResources" isColonRequired="yes"/> <c:out
+-							value='${BusinessKey.nextDueAmount}' /> </span> <c:if
++							name="client.amtdue" bundle="ClientUIResources" isColonRequired="yes"/> <fmt:formatNumber
++							value='${BusinessKey.nextDueAmount.amount}' /> </span> <c:if
+ 							test='${BusinessKey.nextDueAmount.amountDoubleValue != 0.0}'>
+ 							<html-el:link styleId="view_clientchargesdetail.link.waiveChargeDue"
+ 								href="customerAction.do?method=waiveChargeDue&globalCustNum=${BusinessKey.customer.globalCustNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&statusId=${BusinessKey.customer.customerStatus.id}&type=Client&input=Client&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+@@ -120,8 +120,8 @@ explanation of the license and how it is applied.
+ 							</html-el:link>
+ 						</c:if> <br>
+ 						<span class="fontnormal"> <mifos:mifoslabel
+-							name="client.amtoverdue" bundle="ClientUIResources" isColonRequired="yes"/> <c:out
+-							value='${BusinessKey.totalAmountInArrears}' /> </span> <c:if
++							name="client.amtoverdue" bundle="ClientUIResources" isColonRequired="yes"/> <fmt:formatNumber
++							value='${BusinessKey.totalAmountInArrears.amount}' /> </span> <c:if
+ 							test='${BusinessKey.totalAmountInArrears.amountDoubleValue != 0.0}'>
+ 							<html-el:link styleId="view_clientchargesdetail.link.waiveChargeOverDue"
+ 								href="customerAction.do?method=waiveChargeOverDue&globalCustNum=${BusinessKey.customer.globalCustNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&statusId=${BusinessKey.customer.customerStatus.id}&type=Client&input=Client&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+@@ -130,8 +130,8 @@ explanation of the license and how it is applied.
+ 						</c:if> <BR>
+ 						<span class="fontnormalbold"> <mifos:mifoslabel
+ 							name="client.total" isColonRequired="Yes"
+-							bundle="ClientUIResources" /> <c:out
+-							value='${BusinessKey.totalAmountDue}'></c:out>
++							bundle="ClientUIResources" /> <fmt:formatNumber
++							value='${BusinessKey.totalAmountDue.amount}'/>
+ 						</span></td>
+ 					</tr>
+ 				</table>
+@@ -169,8 +169,8 @@ explanation of the license and how it is applied.
+ 								<tr>
+ 									<td width="19%" class="drawtablerow"><c:out
+ 										value="${upcomingCharges.fee.feeName}" /></td>
+-									<td width="49%" align="right" class="drawtablerow"><c:out
+-										value="${upcomingCharges.feeAmount}" /></td>
++									<td width="49%" align="right" class="drawtablerow"><fmt:formatNumber
++										value="${upcomingCharges.feeAmount.amount}" /></td>
+ 									<td width="32%" class="drawtablerow">&nbsp;</td>
+ 								</tr>
+ 							</c:if>
+@@ -178,16 +178,16 @@ explanation of the license and how it is applied.
+ 						<c:if test='${(!empty BusinessKey.upcomingInstallment.miscFeeDue) and (BusinessKey.upcomingInstallment.miscFeeDue.amountDoubleValue!=0.0)}'>
+ 								<tr>
+ 									<td width="19%" class="drawtablerow"><mifos:mifoslabel name="Customer.miscfee" bundle="CustomerUIResources" /></td>
+-									<td width="49%" align="right" class="drawtablerow"><c:out
+-										value="${BusinessKey.upcomingInstallment.miscFeeDue}" /></td>
++									<td width="49%" align="right" class="drawtablerow"><fmt:formatNumber
++										value="${BusinessKey.upcomingInstallment.miscFeeDue.amount}" /></td>
+ 									<td width="32%" class="drawtablerow">&nbsp;</td>
+ 								</tr>
+ 						</c:if>
+ 						<c:if test='${(!empty BusinessKey.upcomingInstallment.miscPenaltyDue) and (BusinessKey.upcomingInstallment.miscPenaltyDue.amountDoubleValue!=0.0)}'>
+ 								<tr>
+ 									<td width="19%" class="drawtablerow"><mifos:mifoslabel name="Customer.miscpenalty" bundle="CustomerUIResources" /></td>
+-									<td width="49%" align="right" class="drawtablerow"><c:out
+-										value="${BusinessKey.upcomingInstallment.miscPenaltyDue}" /></td>
++									<td width="49%" align="right" class="drawtablerow"><fmt:formatNumber
++										value="${BusinessKey.upcomingInstallment.miscPenaltyDue.aomunt}" /></td>
+ 									<td width="32%" class="drawtablerow">&nbsp;</td>
+ 								</tr>
+ 						</c:if>
+@@ -232,7 +232,7 @@ explanation of the license and how it is applied.
+ 									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,recentActivities.activityDate)}" /></td>
+ 								<td width="35%" class="drawtablerow"><c:out
+ 									value="${recentActivities.description}" /></td>
+-								<td width="27%" align="right" class="drawtablerow"><c:out
++								<td width="27%" align="right" class="drawtablerow"><fmt:formatNumber
+ 									value="${recentActivities.amount}" /></td>
+ 								<td width="6%" class="drawtablerow">&nbsp;</td>
+ 								<td width="21%" class="drawtablerow"><c:out
+@@ -265,7 +265,7 @@ explanation of the license and how it is applied.
+ 
+ 							<tr class="fontnormal">
+ 								<td width="15%"><c:out value="${recurrenceFees.fees.feeName}" />:</td>
+-								<td width="30%"><c:out value="${recurrenceFees.accountFeeAmount}" />&nbsp;&nbsp;
++								<td width="30%"><fmt:formatNumber value="${recurrenceFees.accountFeeAmount.amount}" />&nbsp;&nbsp;
+ 								( <mifos:mifoslabel name="Fees.labelRecurEvery"
+ 									bundle="FeesUIResources" /> <c:out
+ 									value="${recurrenceFees.fees.feeFrequency.feeMeetingFrequency.meetingDetails.recurAfter}"></c:out>
+diff --git a/application/src/main/resources/META-INF/resources/pages/application/customer/jsp/applyadjustment.jsp b/application/src/main/resources/META-INF/resources/pages/application/customer/jsp/applyadjustment.jsp
+index 498e381..e01a1a7 100644
+--- a/application/src/main/resources/META-INF/resources/pages/application/customer/jsp/applyadjustment.jsp
++++ b/application/src/main/resources/META-INF/resources/pages/application/customer/jsp/applyadjustment.jsp
+@@ -102,7 +102,7 @@ explanation of the license and how it is applied.
+ 						</c:choose>
+ 						<c:choose>
+ 							<c:when test="${requestScope.method=='loadAdjustment'}">
+-								<mifos:mifoslabel name="Customer.last_pmnt" />: <c:out:formatNumber
++								<mifos:mifoslabel name="Customer.last_pmnt" />: <c:out
+ 									value="${BusinessKey.customerAccount.lastPmntAmntToBeAdjusted}" />
+ 								<br>
+ 								<br>
+diff --git a/application/src/main/resources/META-INF/resources/pages/application/customer/jsp/cust_historicaldata.jsp b/application/src/main/resources/META-INF/resources/pages/application/customer/jsp/cust_historicaldata.jsp
+index d2f2eba..8109fa0 100644
+--- a/application/src/main/resources/META-INF/resources/pages/application/customer/jsp/cust_historicaldata.jsp
++++ b/application/src/main/resources/META-INF/resources/pages/application/customer/jsp/cust_historicaldata.jsp
+@@ -25,7 +25,7 @@ explanation of the license and how it is applied.
+ <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
+ <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+ <%@ taglib uri="/sessionaccess" prefix="session"%>
+-
++<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+ 
+ <tiles:insert definition=".clientsacclayoutsearchmenu">
+ 	<tiles:put name="body" type="string">
+@@ -95,14 +95,14 @@ explanation of the license and how it is applied.
+ 							</span> <mifos:mifoslabel name="label.totalamountpaidLabel"
+ 								bundle="CustomerUIResources" /><mifos:mifoslabel
+ 								name="label.colon" bundle="CustomerUIResources" /> <span
+-								class="fontnormal"><c:out
+-								value="${BusinessKey.historicalData.totalAmountPaid}" /><br>
++								class="fontnormal"><fmt:formatNumber
++								value="${BusinessKey.historicalData.totalAmountPaid.amount}" /><br>
+ 							</span> <mifos:mifoslabel
+ 								name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
+ 								name="label.interestpaidLabel" bundle="CustomerUIResources" /><mifos:mifoslabel
+ 								name="label.colon" bundle="CustomerUIResources" /> <span
+-								class="fontnormal"> <c:out
+-								value="${BusinessKey.historicalData.interestPaid}" /><br>
++								class="fontnormal"> <fmt:formatNumber
++								value="${BusinessKey.historicalData.interestPaid.amount}" /><br>
+ 							</span> <mifos:mifoslabel name="label.numberofmissedpayments"
+ 								bundle="CustomerUIResources" /><mifos:mifoslabel
+ 								name="label.colon" bundle="CustomerUIResources" /> <span
+diff --git a/application/src/main/resources/META-INF/resources/pages/application/customer/jsp/getallclosedaccounts.jsp b/application/src/main/resources/META-INF/resources/pages/application/customer/jsp/getallclosedaccounts.jsp
+index bb872e6..011ffec 100644
+--- a/application/src/main/resources/META-INF/resources/pages/application/customer/jsp/getallclosedaccounts.jsp
++++ b/application/src/main/resources/META-INF/resources/pages/application/customer/jsp/getallclosedaccounts.jsp
+@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
+ <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
+ <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+ <%@ taglib uri="/sessionaccess" prefix="session"%>
+-
++<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+ 
+ <tiles:insert definition=".clientsacclayoutsearchmenu">
+ 	<tiles:put name="body" type="string">
+@@ -100,8 +100,8 @@ explanation of the license and how it is applied.
+ 											</tr>
+ 										</table>
+ 										<span class="fontnormal"> <c:out value="Loan" /> <mifos:mifoslabel
+-											name="client.amount" bundle="ClientUIResources" />: <c:out
+-											value="${closedAccount.loanAmount}" /> <br>
++											name="client.amount" bundle="ClientUIResources" />: <fmt:formatNumber
++											value="${closedAccount.loanAmount.amount}" /> <br>
+ 										<mifos:mifoslabel name="client.date"
+ 											bundle="ClientUIResources" />&nbsp;<c:out
+ 											value="${closedAccount.accountState.name}" />:&nbsp; <c:out
+diff --git a/application/src/main/resources/META-INF/resources/pages/application/group/jsp/view_groupchargesdetail.jsp b/application/src/main/resources/META-INF/resources/pages/application/group/jsp/view_groupchargesdetail.jsp
+index d17b318..55b1600 100644
+--- a/application/src/main/resources/META-INF/resources/pages/application/group/jsp/view_groupchargesdetail.jsp
++++ b/application/src/main/resources/META-INF/resources/pages/application/group/jsp/view_groupchargesdetail.jsp
+@@ -111,8 +111,8 @@ explanation of the license and how it is applied.
+ 					</tr>
+ 					<tr>
+ 						<td class="fontnormal"><span class="fontnormal"> <mifos:mifoslabel
+-							name="Group.amtdue" bundle="GroupUIResources" />: <c:out
+-							value='${BusinessKey.nextDueAmount}' /> </span> <c:if
++							name="Group.amtdue" bundle="GroupUIResources" />: <fmt:formatNumber
++							value='${BusinessKey.nextDueAmount.amount}' /> </span> <c:if
+ 							test='${BusinessKey.nextDueAmount.amountDoubleValue != 0.0}'>
+ 							<html-el:link styleId="view_groupchargesdetail.link.waiveChargeDue"
+ 								href="customerAction.do?method=waiveChargeDue&globalCustNum=${BusinessKey.customer.globalCustNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&statusId=${BusinessKey.customer.customerStatus.id}&type=Group&input=Group&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+@@ -120,8 +120,8 @@ explanation of the license and how it is applied.
+ 							</html-el:link>
+ 						</c:if> <br>
+ 						<span class="fontnormal"> <mifos:mifoslabel
+-							name="Group.amtoverdue" bundle="GroupUIResources" />: <c:out
+-							value='${BusinessKey.totalAmountInArrears}' /> </span> <c:if
++							name="Group.amtoverdue" bundle="GroupUIResources" />: <fmt:formatNumber
++							value='${BusinessKey.totalAmountInArrears.amount}' /> </span> <c:if
+ 							test='${BusinessKey.totalAmountInArrears.amountDoubleValue != 0.0}'>
+ 							<html-el:link styleId="view_groupchargesdetail.link.waiveChargeOverDue"
+ 								href="customerAction.do?method=waiveChargeOverDue&globalCustNum=${BusinessKey.customer.globalCustNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&statusId=${BusinessKey.customer.customerStatus.id}&type=Group&input=Group&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+@@ -167,8 +167,8 @@ explanation of the license and how it is applied.
+ 								<tr>
+ 									<td width="19%" class="drawtablerow"><c:out
+ 										value="${upcomingCharges.fee.feeName}" /></td>
+-									<td width="49%" align="right" class="drawtablerow"><c:out
+-										value="${upcomingCharges.feeAmount}" /></td>
++									<td width="49%" align="right" class="drawtablerow"><fmt:formatNumber
++										value="${upcomingCharges.feeAmount.amount}" /></td>
+ 									<td width="32%" class="drawtablerow">&nbsp;</td>
+ 								</tr>
+ 							</c:if>
+@@ -176,16 +176,16 @@ explanation of the license and how it is applied.
+ 						<c:if test='${(!empty BusinessKey.upcomingInstallment.miscFeeDue) and (BusinessKey.upcomingInstallment.miscFeeDue.amountDoubleValue!=0.0)}'>
+ 								<tr>
+ 									<td width="19%" class="drawtablerow"><mifos:mifoslabel name="Customer.miscfee" bundle="CustomerUIResources" /></td>
+-									<td width="49%" align="right" class="drawtablerow"><c:out
+-										value="${BusinessKey.upcomingInstallment.miscFeeDue}" /></td>
++									<td width="49%" align="right" class="drawtablerow"><fmt:formatNumber
++										value="${BusinessKey.upcomingInstallment.miscFeeDue.amount}" /></td>
+ 									<td width="32%" class="drawtablerow">&nbsp;</td>
+ 								</tr>
+ 						</c:if>
+ 						<c:if test='${(!empty BusinessKey.upcomingInstallment.miscPenaltyDue) and (BusinessKey.upcomingInstallment.miscPenaltyDue.amountDoubleValue!=0.0)}'>
+ 								<tr>
+ 									<td width="19%" class="drawtablerow"><mifos:mifoslabel name="Customer.miscpenalty" bundle="CustomerUIResources" /></td>
+-									<td width="49%" align="right" class="drawtablerow"><c:out
+-										value="${BusinessKey.upcomingInstallment.miscPenaltyDue}" /></td>
++									<td width="49%" align="right" class="drawtablerow"><fmt:formatNumber
++										value="${BusinessKey.upcomingInstallment.miscPenaltyDue.amount}" /></td>
+ 									<td width="32%" class="drawtablerow">&nbsp;</td>
+ 								</tr>
+ 						</c:if>
+@@ -229,7 +229,7 @@ explanation of the license and how it is applied.
+ 									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,recentActivities.activityDate)}" /></td>
+ 								<td width="35%" class="drawtablerow"><c:out
+ 									value="${recentActivities.description}" /></td>
+-								<td width="27%" align="right" class="drawtablerow"><c:out
++								<td width="27%" align="right" class="drawtablerow"><fmt:formatNumber
+ 									value="${recentActivities.amount}" /></td>
+ 								<td width="6%" class="drawtablerow">&nbsp;</td>
+ 								<td width="21%" class="drawtablerow"><c:out
+diff --git a/application/src/main/resources/META-INF/resources/pages/application/savings/jsp/savingsaccountdetail.jsp b/application/src/main/resources/META-INF/resources/pages/application/savings/jsp/savingsaccountdetail.jsp
+index ec69646..c1537fe 100644
+--- a/application/src/main/resources/META-INF/resources/pages/application/savings/jsp/savingsaccountdetail.jsp
++++ b/application/src/main/resources/META-INF/resources/pages/application/savings/jsp/savingsaccountdetail.jsp
+@@ -27,6 +27,8 @@ explanation of the license and how it is applied.
+ <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+ <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
+ <%@ taglib uri="/sessionaccess" prefix="session"%>
++<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
++
+ <tiles:insert definition=".clientsacclayoutsearchmenu">
+ 	<tiles:put name="body" type="string">
+ 	<span id="page.id" title="savingsaccountdetail"></span>
+@@ -97,7 +99,7 @@ explanation of the license and how it is applied.
+ 							<tr>
+ 								<td class="fontnormal">
+ 									<mifos:mifoslabel name="Savings.accountBalance" />:
+-									<c:out value="${BusinessKey.savingsBalance}" />
++									<fmt:formatNumber value="${BusinessKey.savingsBalance.amount}" />
+ 									<br>
+ 								</td>
+ 								<td align="right" valign="top" class="fontnormal">
+@@ -126,10 +128,10 @@ explanation of the license and how it is applied.
+ 										</c:choose>
+ 										<span id="savingsaccountdetail.text.totalAmountDue">
+ 											<c:if test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
+-												<c:out value="${BusinessKey.totalAmountDue}" />
++												<fmt:formatNumber value="${BusinessKey.totalAmountDue.amount}" />
+ 											</c:if>
+ 											<c:if test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_VOLUNTARY}">
+-												<c:out value="${BusinessKey.totalAmountDueForNextInstallment}" />
++												<fmt:formatNumber value="${BusinessKey.totalAmountDueForNextInstallment.amount}" />
+ 											</c:if>
+ 										</span>										
+ 									</td>
+@@ -180,7 +182,7 @@ explanation of the license and how it is applied.
+ 												<c:otherwise>
+ 													<mifos:mifoslabel name="Savings.recommendedAmountForDeposit" isColonRequired="yes"/>
+ 	                  </c:otherwise>
+-											</c:choose> <c:out value="${BusinessKey.recommendedAmount}" /> <c:choose>
++											</c:choose> <fmt:formatNumber value="${BusinessKey.recommendedAmount.amount}" /> <c:choose>
+ 												<c:when test="${BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
+ 	                    ( <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}"
+ 											var="item">
+@@ -210,7 +212,7 @@ explanation of the license and how it is applied.
+ 											 </span>
+ 										<br>
+ 										<mifos:mifoslabel name="Savings.maxAmountPerWithdrawl" isColonRequired="yes"/>
+-										<c:out value="${BusinessKey.savingsOffering.maxAmntWithdrawl}" />
++										<fmt:formatNumber value="${BusinessKey.savingsOffering.maxAmntWithdrawl.amount}" />
+ 										<br>
+ 										<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel name="Savings.rate" />: <c:out value="${BusinessKey.savingsOffering.interestRate}" /><mifos:mifoslabel name="Savings.perc" />
+ 										</span>
+-- 
+1.7.4.1
+
