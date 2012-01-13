@@ -49,7 +49,7 @@ public class HomePageController {
 		Device currentDevice = DeviceUtils.getCurrentDevice(request);
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		 
-        ModelAndView modelAndView = new ModelAndView("home");
+        ModelAndView modelAndView = new ModelAndView("m_home");
         if (currentDevice.isMobile()) {
             modelAndView = new ModelAndView("m_home");
         }
