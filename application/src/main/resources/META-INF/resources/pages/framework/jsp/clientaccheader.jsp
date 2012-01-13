@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
           <td class="tablightorange"><a id="clientsAndAccountsHeader.link.home" href="custSearchAction.do?method=getHomePage" >
 		<mifos:mifoslabel name="framework.home" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
           <c:choose>
-              <c:when test="${requestScope.perspective == 'redoLoan'}">
+              <c:when test="${requestScope.perspective == 'redoLoan' || requestScope.perspective == 'UserChangeLog'}">
                   <td class="tablightorange"><a id="clientsAndAccountsHeader.link.clientsAndAccounts" href="custSearchAction.do?method=loadMainSearch"><mifos:mifoslabel
 								name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
                   <td class="tablightorange"><a id="clientsAndAccountsHeader.link.reports" href="reportsAction.do?method=load"><mifos:mifoslabel

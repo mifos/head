@@ -36,6 +36,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
+import org.mifos.accounts.loan.util.helpers.RequestConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -455,7 +456,17 @@ public class PersonAction extends SearchAction {
         String method = (String) request.getAttribute("methodCalled");
         return mapping.findForward(method + "_failure");
     }
-
+    
+    @Override
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward loadChangeLog(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        //select admin tab in the header menu
+        setPerspective(request, PersonnelConstants.USER_CHANGE_LOG);
+        
+        return super.loadChangeLog(mapping, form, request, response);
+    }
+    
     @SuppressWarnings("unused")
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -577,7 +588,7 @@ public class PersonAction extends SearchAction {
         if (errors != null && !errors.isEmpty()) {
             addErrors(request, errors);
             return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
-        }
+        } 
         return createGroupQuestionnaire.rejoinFlow(mapping);
     }
 
@@ -587,5 +598,9 @@ public class PersonAction extends SearchAction {
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         request.setAttribute(METHODCALLED, "editQuestionResponses");
         return createGroupQuestionnaire.editResponses(mapping, request, (PersonActionForm) form);
+    }
+    
+    private void setPerspective(HttpServletRequest request, String perspective) {
+        request.setAttribute(RequestConstants.PERSPECTIVE, perspective);
     }
 }
