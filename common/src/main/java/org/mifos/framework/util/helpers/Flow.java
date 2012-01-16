@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.mifos.framework.hibernate.helper.QueryResult;
 
+@SuppressWarnings("PMD")
 public class Flow implements Serializable {
 
     private Map<String, Object> sessionData = new HashMap<String, Object>();

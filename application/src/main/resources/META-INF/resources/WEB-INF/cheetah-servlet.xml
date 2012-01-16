@@ -29,6 +29,7 @@
     <mvc:interceptors>
        <bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" />
        <bean class="org.springframework.mobile.device.site.SitePreferenceHandlerInterceptor" />
+       <bean class="org.mifos.interceptors.FlowKeyInterceptor" />
     </mvc:interceptors>
 
 	<context:annotation-config />

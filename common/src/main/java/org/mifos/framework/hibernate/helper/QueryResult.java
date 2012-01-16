@@ -33,6 +33,7 @@ import org.mifos.framework.exceptions.HibernateSearchException;
  * call to close from the front end on this interface would result in the
  * hibernate session object getting closed.
  */
+@SuppressWarnings("PMD")
 public interface QueryResult {
 
     /**

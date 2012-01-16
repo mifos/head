@@ -33,6 +33,7 @@ import org.hibernate.type.Type;
  * call to close from the front end on this interface would result in the
  * hibernate session object getting closed.
  */
+@SuppressWarnings("PMD")
 public class QueryInputs {
 
     private String dtoPath;
@@ -41,7 +42,7 @@ public class QueryInputs {
 
     private String[] aliasNames;
 
-    private boolean buildDTO = true;
+    private boolean buildDTO = true;	
 
     private String[] queryStrings = new String[2];
 

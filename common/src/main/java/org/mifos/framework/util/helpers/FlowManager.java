@@ -27,6 +27,7 @@ import java.util.Map;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 
+@SuppressWarnings("PMD")
 public class FlowManager implements Serializable {
 
     private Map<String, Flow> flowData = new HashMap<String, Flow>();
