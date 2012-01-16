@@ -20,7 +20,6 @@
 --]
 
 [@layout.header "mifos" /]
-[#include "layout.ftl"]
 [#assign mifostag=JspTaglibs["/tags/mifos-html"]]
 
 <script language="javascript">
@@ -40,7 +39,7 @@
 			</span>
 			<span class="fontnormal"> <!-- Edit center status link --> 
 				[#if clientInformationDto.clientDisplay.customerStatusId != 6]
-				<a id="viewClientDetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=${clientInformationDto.clientDisplay.customerId}&input=client&currentFlowKey=">
+				<a id="viewClientDetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=${clientInformationDto.clientDisplay.customerId}&input=client&currentFlowKey=${Request.currentFlowKey}">
 					[#assign arguments = ["${ConfigurationConstants.CLIENT}"]/]
 					[@spring.messageArgs "client.editStatus" arguments/] 
 				</a>
@@ -95,7 +94,7 @@
 			<td class="fontnormalbold">
 					<span class="fontnormal"> 
 							<a id="viewClientDetails.link.seePhoto" href="javascript:photopopup(${clientInformationDto.clientDisplay.customerId},
-								 '${clientInformationDto.clientDisplay.loanOfficerName}}', 0)">
+								 '${clientInformationDto.clientDisplay.loanOfficerName}', '${Request.currentFlowKey}')">
 								[@spring.message "client.seephoto"/]
 							</a>
 					</span><br>
@@ -231,7 +230,7 @@
 			<div>
 				<span class="fontnormal">
 					[#if clientInformationDto.clientDisplay.customerStatusId !=1 && clientInformationDto.clientDisplay.customerStatusId !=2 ]
-						<a id="viewClientDetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${clientInformationDto.clientDisplay.customerId}&input=client&currentFlowKey=&randomNUm=${Session.randomNUm}">
+						<a id="viewClientDetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${clientInformationDto.clientDisplay.customerId}&input=client&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
 	  						[@spring.message "client.ClosedAccountsLink" /]
 	  					</a>
 	  				[/#if]
@@ -249,7 +248,7 @@
 					[@spring.message "client.MFIInformationHeading" /]
 				</span>		
 				<span class="fontnormal">
-					<a id="viewClientDetails.link.editMfiInformation" href="clientCustAction.do?method=editMfiInfo&currentFlowKey=&randomNUm=${Session.randomNUm}">
+					<a id="viewClientDetails.link.editMfiInformation" href="clientCustAction.do?method=editMfiInfo&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
 						[@spring.message "client.EditMfiInformationLink" /]
 					</a>
 				</span>
@@ -326,20 +325,20 @@
 				<span><!-- Editing group or branch membership based on whether client belongs to group or not -->
 					[#if clientInformationDto.clientDisplay.clientUnderGroup ]
 						<a id="viewClientDetails.link.editRemoveGroupMembership"
-							href="clientTransferAction.do?method=loadParents&currentFlowKey=&randomNUm=${Session.randomNUm}">
+							href="clientTransferAction.do?method=loadParents&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
 							[#assign arguments = ["${ConfigurationConstants.GROUP}"]/]
 							[@spring.messageArgs "client.EditRemoveMembership" arguments /]
 						</a>
 						<br>
 					[#else]
 						<a id="viewClientDetails.link.editBranchOfficeMembership"
-							href="clientTransferAction.do?method=loadBranches&currentFlowKey=&randomNUm=${Session.randomNUm}">
+							href="clientTransferAction.do?method=loadBranches&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
 							[#assign arguments = ["${ConfigurationConstants.BRANCHOFFICE}"]/]
 							[@spring.messageArgs "client.editMembership" arguments /]
 						</a>
 						<br>
 						<a id="viewClientDetails.link.editMeetingScheduleAddGroup"
-							href="meetingAction.do?method=edit&currentFlowKey=&randomNUm=${Session.randomNUm}&customerLevel=${clientInformationDto.clientDisplay.customerLevelId}">
+							href="meetingAction.do?method=edit&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}&customerLevel=${clientInformationDto.clientDisplay.customerLevelId}">
 							[@spring.message "client.EditMeetingLink" /]
 							[@spring.message "client.Separator" /]
 							[@spring.message "client.AddGroup" /]												
@@ -359,7 +358,7 @@
 						[@spring.message "client.PersonalInformationHeading" /]
 					</span>
 					<span class="fontnormal">
-						<a id="viewClientDetails.link.editPersonalInformation" href="clientCustAction.do?method=editPersonalInfo&currentFlowKey=&randomNUm=${Session.randomNUm}">
+						<a id="viewClientDetails.link.editPersonalInformation" href="clientCustAction.do?method=editPersonalInfo&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
 							[@spring.message "client.EditPersonalInformationLink" /]
 						</a>
 					</span>

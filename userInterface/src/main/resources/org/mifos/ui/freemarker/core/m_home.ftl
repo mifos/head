@@ -20,7 +20,6 @@
 *  explanation of the license and how it is applied.
 --]
 [@layout.header "mifos" /]
-[#include "layout.ftl"]
 
 [@widget.topNavigationNoSecurityMobile currentTab="Home" /]
 <span id="page.id" title="Home"></span>
@@ -34,10 +33,7 @@
 			[@spring.message "CustomerSearch.lastlog"/] ${Session.UserContext.lastLogin}
 		</span>
 	[/#if]
-	<div style="width:100%">
-		<!-- Not working yet because of struts/jsp currentFlowKey property. 
-			 SpringMVC/ftl is neeeded for customer search.	
-		-->			 
+	<div style="width:100%"> 
 		<form method="POST" action="/mifos/custSearchAction.do">
 			<div class="span-8 last" style="text-align:left;">
 	        	<div class="error">
@@ -84,7 +80,8 @@
 		        		<input type="hidden" name="officeId" value="0"/>
 		        	[/#if]
 					<input type="hidden" name="officeId" value="0"/>
-					<input type="hidden" name="method" value="mainSearch" />	
+					<input type="hidden" name="method" value="mainSearch" />
+					<input type="hidden" name="currentFlowKey" value="${Request.currentFlowKey}" />		
 		        </div>
 		        <div>
 		        	<input type="submit" value="Search" id="home.button.search" name="searchButton" class="buttn"/>

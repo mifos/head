@@ -3,6 +3,7 @@ package org.mifos.ui.core.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.mifos.application.servicefacade.ClientServiceFacade;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -21,8 +22,11 @@ public class ViewClientDetailsController {
 	@Autowired
 	ClientServiceFacade clientServiceFacade;
 	
+	@Autowired
+	private ConfigurationServiceFacade configurationServiceFacade;
+	
 	@RequestMapping(method=RequestMethod.GET)
-    public ModelAndView showDetails(HttpServletRequest request) throws Exception{
+    public ModelAndView showDetails(HttpServletRequest request) throws ApplicationException{
 		Device currentDevice = DeviceUtils.getCurrentDevice(request);
 		
         ModelAndView modelAndView = new ModelAndView("m_viewClientDetails");
@@ -43,13 +47,9 @@ public class ViewClientDetailsController {
         }
         
         modelAndView.addObject("clientInformationDto", clientInformationDto);
-        /*
-         * In ClientCustAction.get there is SessionUtils.setAttribute(ClientConstants.IS_PHOTO_FIELD_HIDDEN, FieldConfig.getInstance().isFieldHidden("Client.Photo"), request);
-         * but mifos-userinterface can not access FieldConfig
-         */
-        modelAndView.addObject("isPhotoFieldHidden", false);
-        
-        
+
+        boolean isPhotoFieldHidden = Boolean.parseBoolean(configurationServiceFacade.getConfig("Client.Photo"));
+        modelAndView.addObject("isPhotoFieldHidden", isPhotoFieldHidden);
         
         return modelAndView;
 	}
