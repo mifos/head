@@ -79,6 +79,10 @@ public class LoanAccountPage extends MifosPage {
         Assert.assertTrue(selenium.isTextPresent(purpose));
     }
 
+    public void verifyGLIMPurpose(String purpose, int index) {
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + (index+1) + "]/td[5]"), purpose);
+    }
+    
     public void verifyLoanIsPendingApproval(){
         Assert.assertTrue(selenium.isTextPresent("Application Pending Approval"));
     }
