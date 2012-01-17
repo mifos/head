@@ -150,7 +150,7 @@ public class LegacyLoanDao extends LegacyGenericDao {
 
     public LoanBO getAccount(final Integer accountId) throws PersistenceException {
         LoanBO loan = getPersistentObject(LoanBO.class, accountId);
-        if (loan.getLoanOffering() != null) {
+        if (loan != null && loan.getLoanOffering() != null) {
             Hibernate.initialize(loan.getLoanOffering());
 
             if (loan.getLoanOffering().getCurrency() != null) {
