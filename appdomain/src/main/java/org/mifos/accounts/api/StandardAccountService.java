@@ -154,7 +154,15 @@ public class StandardAccountService implements AccountService {
             throw new AccountException("errors.invalidTxndate");
         }
 
+        Money overpaymentAmount = null;
         Money amount = new Money(account.getCurrency(), accountPaymentParametersDto.getPaymentAmount());
+
+        if (account instanceof LoanBO &&
+                accountPaymentParametersDto.getPaymentOptions().contains(AccountPaymentParametersDto.PaymentOptions.ALLOW_OVERPAYMENTS) &&
+                amount.isGreaterThan(((LoanBO) account).getTotalRepayableAmount())) {
+            overpaymentAmount = amount.subtract(((LoanBO) account).getTotalRepayableAmount());
+            amount = ((LoanBO) account).getTotalRepayableAmount();
+        }
 
         Date receiptDate = null;
         if (accountPaymentParametersDto.getReceiptDate() != null) {
@@ -169,6 +177,7 @@ public class StandardAccountService implements AccountService {
                 accountPaymentParametersDto.getCustomer().getCustomerId()));
         }
         paymentData.setComment(accountPaymentParametersDto.getComment());
+        paymentData.setOverpaymentAmount(overpaymentAmount);
 
         account.applyPayment(paymentData);
 
@@ -276,7 +285,7 @@ public class StandardAccountService implements AccountService {
         if (!getLoanDisbursementTypes().contains(payment.getPaymentType())) {
             errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);
         }
-        if (!loanAccount.paymentAmountIsValid(new Money(loanAccount.getCurrency(), payment.getPaymentAmount()))) {
+        if (!loanAccount.paymentAmountIsValid(new Money(loanAccount.getCurrency(), payment.getPaymentAmount()), payment.getPaymentOptions())) {
             errors.add(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT);
         }
         if (loanAccount.getCustomer().isDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProduct(loanAccount.getLoanOffering())) {
@@ -327,7 +336,7 @@ public class StandardAccountService implements AccountService {
                 errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);
             }
         }
-        if (!accountBo.paymentAmountIsValid(new Money(accountBo.getCurrency(), payment.getPaymentAmount()))) {
+        if (!accountBo.paymentAmountIsValid(new Money(accountBo.getCurrency(), payment.getPaymentAmount()), payment.getPaymentOptions())) {
             errors.add(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT);
         }
         return errors;

@@ -77,6 +77,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -471,6 +472,10 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     public final void applyPayment(final PaymentData paymentData) throws AccountException {
+        if (paymentData.getOverpaymentAmount() != null) {
+             // TODO MIFOS-3305: implement overpayement logic
+            System.out.println("Overpayment: " + paymentData.getOverpaymentAmount());
+        }
         AccountPaymentEntity accountPayment = makePayment(paymentData);
         addAccountPayment(accountPayment);
         buildFinancialEntries(accountPayment.getAccountTrxns());
@@ -1786,7 +1791,8 @@ public class AccountBO extends AbstractBusinessObject {
      *            the payment amount to validate.
      *
      */
-    public boolean paymentAmountIsValid(final Money amount) {
+
+    public boolean paymentAmountIsValid(final Money amount, Set<AccountPaymentParametersDto.PaymentOptions> options) {
         return true;
     }
 

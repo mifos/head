@@ -145,6 +145,7 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
+import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.screen.LoanAccountDetailDto;
@@ -1652,7 +1653,7 @@ public class LoanBO extends AccountBO implements Loan {
     }
 
     private void validateForTotalAmount(PaymentData paymentData) throws AccountException {
-        if (!paymentAmountIsValid(paymentData.getTotalAmount())) {
+        if (!paymentAmountIsValid(paymentData.getTotalAmount(), Collections.<AccountPaymentParametersDto.PaymentOptions>emptySet())) {
             throw new AccountException("errors.makePayment", new String[] { getGlobalAccountNum() });
         }
     }
@@ -2566,10 +2567,11 @@ public class LoanBO extends AccountBO implements Loan {
      * @return true if the payment amount will be accepted
      */
     @Override
-    public boolean paymentAmountIsValid(final Money amount) {
+    public boolean paymentAmountIsValid(final Money amount, Set<AccountPaymentParametersDto.PaymentOptions> options) {
         Money totalRepayableAmount = getTotalRepayableAmount();
         return (null != amount) && (amount.isGreaterThanOrEqualZero()) &&
-                (amount.isLessThanOrEqual(totalRepayableAmount) || totalRepayableAmount.subtract(amount).isTinyAmount());
+                (options.contains(AccountPaymentParametersDto.PaymentOptions.ALLOW_OVERPAYMENTS) ||
+                        amount.isLessThanOrEqual(totalRepayableAmount) || totalRepayableAmount.subtract(amount).isTinyAmount());
     }
 
     private LoanPaymentTypes getLoanPaymentType(final Money amount) {
@@ -2597,7 +2599,7 @@ public class LoanBO extends AccountBO implements Loan {
                 personnel, this));
     }
 
-    private Money getTotalRepayableAmount() {
+    public Money getTotalRepayableAmount() {
         Money amount = new Money(getCurrency());
         for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
             amount = amount.add(((LoanScheduleEntity) accountActionDateEntity).getTotalDueWithFees());
