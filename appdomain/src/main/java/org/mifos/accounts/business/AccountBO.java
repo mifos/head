@@ -472,10 +472,6 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     public final void applyPayment(final PaymentData paymentData) throws AccountException {
-        if (paymentData.getOverpaymentAmount() != null) {
-             // TODO MIFOS-3305: implement overpayement logic
-            System.out.println("Overpayment: " + paymentData.getOverpaymentAmount());
-        }
         AccountPaymentEntity accountPayment = makePayment(paymentData);
         addAccountPayment(accountPayment);
         buildFinancialEntries(accountPayment.getAccountTrxns());

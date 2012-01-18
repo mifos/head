@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class
+        name="org.mifos.accounts.business.AccountOverpaymentEntity" table="account_overpayment" >
+        <id name="overpaymentId" column="overpayment_id" type="integer" access="field">
+            <generator class="native" />
+        </id>
+
+        <many-to-one name="account" column="account_id" class="org.mifos.accounts.business.AccountBO" access="field"/>
+
+        <many-to-one name="payment" column="payment_id" class="org.mifos.accounts.business.AccountPaymentEntity" access="field"/>
+
+        <property name="originalOverpaymentAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+         <column name="original_currency_id" />
+         <column name="original_amount" />
+        </property>
+
+        <property name="actualOverpaymentAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+         <column name="actual_currency_id" />
+         <column name="actual_amount" />
+        </property>
+
+        <property name="overpaymentStatus" column="overpayment_status" />
+
+    </class>
+
+</hibernate-mapping>

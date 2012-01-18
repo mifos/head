@@ -107,6 +107,7 @@
         <mapping class="org.mifos.accounts.business.AccountCustomFieldEntity" />
         <mapping resource="org/mifos/accounts/business/AccountFeesEntity.hbm.xml" />
         <mapping resource="org/mifos/accounts/business/AccountPaymentEntity.hbm.xml" />
+        <mapping resource="org/mifos/accounts/business/AccountOverpaymentEntity.hbm.xml" />
         <mapping resource="org/mifos/accounts/business/AccountNotesEntity.hbm.xml" />
         <mapping resource="org/mifos/accounts/business/AccountTrxnEntity.hbm.xml" />
         <mapping resource="org/mifos/accounts/business/FeesTrxnDetailEntity.hbm.xml" />
