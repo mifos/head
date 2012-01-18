@@ -348,6 +348,10 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
             loanAccountEntryPage.selectPurposeForGlim();
             loanAccountEntryPage.clickContinue();
         } finally {
+        	AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        	DefineHiddenMandatoryFieldsPage defineHiddenMandatoryFieldsPage = adminPage.navigateToDefineHiddenMandatoryFields();
+            defineHiddenMandatoryFieldsPage.uncheckMandatoryLoanAccountPurpose();
+            defineHiddenMandatoryFieldsPage.submit();
             applicationDatabaseOperation.updateGLIM(0);
         }
     }
