@@ -39,6 +39,7 @@ import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PersonnelBusinessService implements BusinessService {
     private static final String BRANCH_MANAGER_ROLE_NAME_KEY = "RolesAndPermissions.BranchManager.RoleName";
@@ -49,6 +50,8 @@ public class PersonnelBusinessService implements BusinessService {
     public PersonnelBusinessService() {
         this(ApplicationContextProvider.getBean(LegacyPersonnelDao.class), ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class));
     }
+
+    @Autowired
     public PersonnelBusinessService(LegacyPersonnelDao legacyPersonnelDao,
                                     LegacyRolesPermissionsDao legacyRolesPermissionDao) {
         this.legacyPersonnelDao = legacyPersonnelDao;

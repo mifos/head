@@ -4,9 +4,9 @@
 1 rows will be ignored
 4 rows contained errors and were not imported
 
-Total amount of transactions imported: 17995.0
-Total amount of disbursements imported: 17900.0
-Total amount of transactions with error: 26710.0
+Total amount of transactions imported: 17,995
+Total amount of disbursements imported: 17,900
+Total amount of transactions with error: 26,710
 
 The following row(s) contain errors and will not be imported:
 

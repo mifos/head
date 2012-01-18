@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-    xmlns:beans="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-    http://www.springframework.org/schema/security
-    http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+    xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
     <beans:bean id="loginFormAuthentication" class="org.mifos.security.authentication.MifosLoginUrlAuthenticationEntryPoint">
         <beans:property name="loginFormUrl" value="/login.ftl" />
     </beans:bean>
 
-    <beans:bean id="authenticationSuccessHandler" class="org.mifos.security.authentication.MifosAuthenticationSuccessHandler">
-        <beans:property name="defaultTargetUrl" value="/custSearchAction.do?method=getHomePage" />
-        <beans:property name="alwaysUseDefaultTargetUrl" value="false" />
-    </beans:bean>
+    <beans:bean id="authenticationSuccessHandler" class="org.mifos.security.authentication.MifosAuthenticationSuccessHandler" 
+                p:defaultTargetUrl="/custSearchAction.do?method=getHomePage" 
+                p:targetUrlParameter="spring-security-redirect" />
 
     <beans:bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
         <beans:property name="defaultFailureUrl" value="/login.ftl?accessDenied" />
@@ -27,23 +24,24 @@
 
     <global-method-security pre-post-annotations="enabled" />
 
+    <http pattern="/ping.ftl" security="none" />
+    <http pattern="/dateTimeUpdate.ftl*" security="none" />
+    <http pattern="/initializeApplication.ftl*" security="none" />
+    <http pattern="/customPropertiesUpdate.ftl*" security="none" />
+    <http pattern="/uncaughtException.ftl" security="none" />
+    
+    <http pattern="/**/*.css*" security="none" />
+    <http pattern="/**/*.gif" security="none" />
+    <http pattern="/pages/framework/images/favicon.ico" security="none" />
+    <http pattern="/**/*.jpg" security="none" />
+    <http pattern="/**/*.js" security="none" />
+    <http pattern="/**/*.html" security="none" />
+    <http pattern="/login.ftl*" security="none" />
+    <http pattern="/restLogin.ftl" security="none" />
+    <http pattern="/accessDenied.json" security="none" />
+
     <http auto-config="false" entry-point-ref="loginFormAuthentication" use-expressions="true">
         <custom-filter position="FORM_LOGIN_FILTER" ref="mifosLegacyAuthenticationFilter" />
-        <intercept-url pattern="/ping.ftl" filters="none" />
-        <intercept-url pattern="/dateTimeUpdate.ftl*" filters="none" />
-        <intercept-url pattern="/initializeApplication.ftl*" filters="none" />
-        <intercept-url pattern="/customPropertiesUpdate.ftl*" filters="none" />
-        <intercept-url pattern="/uncaughtException.ftl" filters="none" />
-
-        <intercept-url pattern="/**/*.css*" filters="none" />
-        <intercept-url pattern="/**/*.gif" filters="none" />
-        <intercept-url pattern="/pages/framework/images/favicon.ico" filters="none" />
-        <intercept-url pattern="/**/*.jpg" filters="none" />
-        <intercept-url pattern="/**/*.js" filters="none" />
-        <intercept-url pattern="/**/*.html" filters="none" />
-        <intercept-url pattern="/login.ftl*" filters="none" />
-        <intercept-url pattern="/restLogin.ftl" filters="none" />
-        <intercept-url pattern="/accessDenied.json" filters="none" />
 
         <intercept-url pattern="/createQuestion.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
         <intercept-url pattern="/createQuestionGroup.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>

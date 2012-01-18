@@ -91,7 +91,7 @@
                     <div class="span-20 ">
                                     <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.mandatoryamountfordeposit" /]
                                         :&nbsp;</span>
-                        <span class="span-4">${savingsProduct.amountForDeposit}</span>
+                        <span class="span-4">${savingsProduct.amountForDeposit?string.number}</span>
                     </div>
                     <div class="span-20 ">
                                     <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.amountAppliesto" /]
@@ -101,7 +101,7 @@
                     <div class="span-20 ">
                                     <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.maxamountperwithdrawal" /]
                                         :&nbsp;</span>
-                        <span class="span-4">${savingsProduct.maxWithdrawalAmount}</span>
+                        <span class="span-4">${savingsProduct.maxWithdrawalAmount?string.number}</span>
                     </div>
                 </div>
                 <div class="clear">&nbsp;</div>
@@ -111,7 +111,7 @@
 	                    <div class="span-20">
 	                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.interestrate" /]
 	                                        :&nbsp;</span>
-	                        <span class="span-4">${savingsProduct.interestRate}</span>
+	                        <span class="span-4">${savingsProduct.interestRate?string.number}</span>
 	                    </div>
 	                    <div class="span-20 ">
 	                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.balanceusedforInterestcalculation" /]
@@ -121,12 +121,12 @@
 	                    <div class="span-20 ">
 	                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.timeperiodforInterestcalculation" /]
 	                                        :&nbsp;</span>
-	                        <span class="span-4">${savingsProduct.interestCalculationFrequency} ${interestCalculationTimePeriod}</span>
+	                        <span class="span-4">${savingsProduct.interestCalculationFrequency?string.number} ${interestCalculationTimePeriod}</span>
 	                    </div>
 	                    <div class="span-20 ">
 	                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.frequencyofInterestpostingtoaccounts" /]
 	                                        :&nbsp;</span>
-	                        <span class="span-4">${savingsProduct.interestPostingMonthlyFrequency} [@spring.message "manageProducts.defineSavingsProducts.month(s)" /]</span>
+	                        <span class="span-4">${savingsProduct.interestPostingMonthlyFrequency?string.number} [@spring.message "manageProducts.defineSavingsProducts.month(s)" /]</span>
 	                    </div>
 	                    <div class="span-20 ">
 	                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.minimumbalancerequiredforInterestcalculation" /]

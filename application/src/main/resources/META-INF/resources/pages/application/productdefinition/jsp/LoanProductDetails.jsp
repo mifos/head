@@ -147,7 +147,7 @@ explanation of the license and how it is applied.
 														</tr>	
 														<c:forEach items="${loanPrd.loanAmountSameForAllLoan}" var="loanAmountSameForAllLoan">	
 														<tr>							
-															<td class="fontnormal" width="20%"><fmt:formatNumber value="${loanAmountSameForAllLoan.minLoanAmountString}"type="number"/></td>
+															<td class="fontnormal" width="20%"><fmt:formatNumber value="${loanAmountSameForAllLoan.minLoanAmountString}" type="number"/></td>
 															<td class="fontnormal" width="20%" align="right"><fmt:formatNumber value="${loanAmountSameForAllLoan.maxLoanAmountString}" type="number"/></td>
 															<td class="fontnormal" width="20%" align="right"><fmt:formatNumber value="${loanAmountSameForAllLoan.defaultLoanAmountString}" type="number"/></td>																													
 														</tr>

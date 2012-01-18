@@ -146,7 +146,7 @@ explanation of the license and how it is applied.
 										</html-el:link>
 									</td>
 									<td width="15%" valign="top" class="drawtablerow">
-										<c:out value="${loan.loanAmount}" />
+										<fmt:formatNumber value="${loan.loanAmount.amount}" />
 									</td>
 									<td width="15%" valign="top" class="drawtablerow">
 										<c:out value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,loan.disbursementDate)}' />

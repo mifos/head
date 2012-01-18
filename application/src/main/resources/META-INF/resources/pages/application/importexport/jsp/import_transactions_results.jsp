@@ -113,22 +113,22 @@ explanation of the license and how it is applied.
 													isColonRequired="Yes" bundle="adminUIResources" />
 												<p>
 												<fmt:message key="admin.importexport.rowsWereRead">
-													<fmt:param><c:out value="${requestScope.numberOfReadRows}"/></fmt:param>
+													<fmt:param><fmt:formatNumber value="${requestScope.numberOfReadRows}"/></fmt:param>
 												</fmt:message>:
 												<ul>
 													<li>
 														<fmt:message key="admin.importexport.rowsNoError">
-															<fmt:param><c:out value="${requestScope.numSuccessfulRows}"/></fmt:param>
+															<fmt:param><fmt:formatNumber value="${requestScope.numSuccessfulRows}"/></fmt:param>
 														</fmt:message>
 													</li>
 													<li>
 														<fmt:message key="admin.importexport.rowsIgnored">
-															<fmt:param><c:out value="${requestScope.numberOfIgnoredRows}"/></fmt:param>
+															<fmt:param><fmt:formatNumber value="${requestScope.numberOfIgnoredRows}"/></fmt:param>
 														</fmt:message>
 													</li>
 													<li>
 														<fmt:message key="admin.importexport.rowsError">
-															<fmt:param><c:out value="${requestScope.numberOfErrorRows}"/></fmt:param>
+															<fmt:param><fmt:formatNumber value="${requestScope.numberOfErrorRows}"/></fmt:param>
 														</fmt:message>
 													</li>
 												</ul>
@@ -136,19 +136,19 @@ explanation of the license and how it is applied.
 												<p>
 													<fmt:message key="admin.importexport.amountImported">
 															<fmt:param>
-																<c:out value="${requestScope.totalAmountOfTransactionsImported}"/>
+																<fmt:formatNumber value="${requestScope.totalAmountOfTransactionsImported}"/>
 															</fmt:param>
 													</fmt:message>
                                                                                                         <br/>
                                                                                                         <fmt:message key="admin.importexport.amountDisbursementsImported">
                                                                                                             <fmt:param>
-                                                                                                                   <c:out value="${requestScope.totalAmountOfDisbursementsTransactionsImported}"/>
+                                                                                                                   <fmt:formatNumber value="${requestScope.totalAmountOfDisbursementsTransactionsImported.amount}"/>
                                                                                                             </fmt:param>
 													</fmt:message>
 													<br/>
 													<fmt:message key="admin.importexport.amountError">
 															<fmt:param>
-																<c:out value="${requestScope.totalAmountOfTransactionsWithError}"/>
+																<fmt:formatNumber value="${requestScope.totalAmountOfTransactionsWithError}"/>
 															</fmt:param>
 													</fmt:message>
 												</p>
@@ -162,7 +162,7 @@ explanation of the license and how it is applied.
 												<c:otherwise>
 													<fmt:message key="admin.importexport.successfulImportRows">
 														<fmt:param>
-															<c:out value="${requestScope.numSuccessfulRows}" />
+															<fmt:formatNumber value="${requestScope.numSuccessfulRows}" />
 														</fmt:param>
 													</fmt:message>
 												</c:otherwise>

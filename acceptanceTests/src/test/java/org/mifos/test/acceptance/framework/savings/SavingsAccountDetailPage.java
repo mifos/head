@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework.savings;
 
+import org.mifos.test.acceptance.util.StringUtil;
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.loan.AccountAddNotesPage;
 import org.mifos.test.acceptance.framework.loan.AccountNotesPage;
@@ -50,7 +51,7 @@ public class SavingsAccountDetailPage extends AbstractPage {
     }
 
     public void verifySavingsAmount(String amount) {
-        Assert.assertTrue(selenium.isTextPresent(amount));
+        Assert.assertTrue(selenium.isTextPresent(StringUtil.formatNumber(amount)));
     }
 
     public void verifyDate(String date){
@@ -132,4 +133,5 @@ public class SavingsAccountDetailPage extends AbstractPage {
         
         return new TransactionHistoryPage(selenium);
     }
+    
 }

@@ -132,7 +132,7 @@
                             <span class="span-1">&nbsp;</span>
                             <span class="span-8">
                                 [@spring.message "systemAdministration.batchjobs.taskPriority" /]:&nbsp;
-                                ${batchjobs.priority}
+                                ${batchjobs.priority?string.number}
                             </span>
                         </div>
                         <div class="span-21">

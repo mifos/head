@@ -267,4 +267,25 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "99999");
         loanAccountEntryPage.checkTotalAmount("209997.0");
     }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
+    public void checkGLIMAccountEmptyPurpose() throws Exception {
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Default Group");
+        searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
+        CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
+        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "9999", "0012-Sheep Purchase");
+        loanAccountEntryPage.selectGLIMClients(1, "Stu1233266309851 Client1233266309851 Client Id: 0002-000000013", "99999");
+        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "99999");
+                
+        CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = loanAccountEntryPage.navigateToReviewInstallmentsPage();
+        CreateLoanAccountPreviewPage createLoanAccountPreviewPage = createLoanAccountReviewInstallmentPage.clickPreviewAndGoToReviewLoanAccountPage();
+        CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountPreviewPage.submitForApprovalAndNavigateToConfirmationPage();
+        LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
+                
+        loanAccountPage.verifyGLIMPurpose("0012-Sheep Purchase", 1);
+        loanAccountPage.verifyGLIMPurpose("-", 2);
+        loanAccountPage.verifyGLIMPurpose("-", 3);
+    }
 }

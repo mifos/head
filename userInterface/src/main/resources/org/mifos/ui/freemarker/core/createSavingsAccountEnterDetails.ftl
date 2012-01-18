@@ -57,7 +57,7 @@
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "createSavingsAccount.productSummary.maxWithdrawalAmount"/]</div>
-        <div class="value">${savingsAccountFormBean.product.savingsProductDetails.maxWithdrawal}</div>
+        <div class="value">${savingsAccountFormBean.product.savingsProductDetails.maxWithdrawal?string.number}</div>
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "createSavingsAccount.productSummary.balanceForInterestCalculation"/]</div>
@@ -80,13 +80,13 @@
     <div class="row">
         <div class="attribute">[@spring.message "createSavingsAccount.productSummary.minBalanceForInterestCalculation"/]</div>
         <div class="value">
-            ${savingsAccountFormBean.product.savingsProductDetails.minBalanceForInterestCalculation}
+            ${savingsAccountFormBean.product.savingsProductDetails.minBalanceForInterestCalculation?string.number}
         </div>
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "createSavingsAccount.productSummary.interestRate"/]</div>
         <div class="value">
-            ${savingsAccountFormBean.product.savingsProductDetails.interestRate} %
+            ${savingsAccountFormBean.product.savingsProductDetails.interestRate?string.number} %
         </div>
     </div>
 </div>

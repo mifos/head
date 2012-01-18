@@ -27,6 +27,8 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="savingsaccountdetail"></span>
@@ -97,7 +99,7 @@ explanation of the license and how it is applied.
 							<tr>
 								<td class="fontnormal">
 									<mifos:mifoslabel name="Savings.accountBalance" />:
-									<c:out value="${BusinessKey.savingsBalance}" />
+									<fmt:formatNumber value="${BusinessKey.savingsBalance.amount}" />
 									<br>
 								</td>
 								<td align="right" valign="top" class="fontnormal">
@@ -126,10 +128,10 @@ explanation of the license and how it is applied.
 										</c:choose>
 										<span id="savingsaccountdetail.text.totalAmountDue">
 											<c:if test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
-												<c:out value="${BusinessKey.totalAmountDue}" />
+												<fmt:formatNumber value="${BusinessKey.totalAmountDue.amount}" />
 											</c:if>
 											<c:if test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_VOLUNTARY}">
-												<c:out value="${BusinessKey.totalAmountDueForNextInstallment}" />
+												<fmt:formatNumber value="${BusinessKey.totalAmountDueForNextInstallment.amount}" />
 											</c:if>
 										</span>										
 									</td>
@@ -180,7 +182,7 @@ explanation of the license and how it is applied.
 												<c:otherwise>
 													<mifos:mifoslabel name="Savings.recommendedAmountForDeposit" isColonRequired="yes"/>
 	                  </c:otherwise>
-											</c:choose> <c:out value="${BusinessKey.recommendedAmount}" /> <c:choose>
+											</c:choose> <fmt:formatNumber value="${BusinessKey.recommendedAmount.amount}" /> <c:choose>
 												<c:when test="${BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
 	                    ( <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}"
 											var="item">
@@ -210,9 +212,9 @@ explanation of the license and how it is applied.
 											 </span>
 										<br>
 										<mifos:mifoslabel name="Savings.maxAmountPerWithdrawl" isColonRequired="yes"/>
-										<c:out value="${BusinessKey.savingsOffering.maxAmntWithdrawl}" />
+										<fmt:formatNumber value="${BusinessKey.savingsOffering.maxAmntWithdrawl.amount}" />
 										<br>
-										<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel name="Savings.rate" />: <c:out value="${BusinessKey.savingsOffering.interestRate}" /><mifos:mifoslabel name="Savings.perc" />
+										<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel name="Savings.rate" />: <fmt:formatNumber value="${BusinessKey.savingsOffering.interestRate}" /><mifos:mifoslabel name="Savings.perc" />
 										</span>
 										<br>
 										
@@ -344,25 +346,25 @@ explanation of the license and how it is applied.
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
                 	<mifos:mifoslabel name="Savings.totalDeposits" isColonRequired="yes"/>
-                	<c:out value="${BusinessKey.savingsPerformance.totalDeposits}" />
+                	<fmt:formatNumber value="${BusinessKey.savingsPerformance.totalDeposits.amount}" />
 
                 </span></td>
               </tr>
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-                <mifos:mifoslabel name="Savings.totalInterestEarned" isColonRequired="yes"/> <c:out value="${BusinessKey.savingsPerformance.totalInterestEarned}" /></span></td>
+                <mifos:mifoslabel name="Savings.totalInterestEarned" isColonRequired="yes"/> <fmt:formatNumber value="${BusinessKey.savingsPerformance.totalInterestEarned.amount}" /></span></td>
               </tr>
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-                <mifos:mifoslabel name="Savings.totalWithdrawls" isColonRequired="yes"/> <c:out value="${BusinessKey.savingsPerformance.totalWithdrawals}" /> </span></td>
+                <mifos:mifoslabel name="Savings.totalWithdrawls" isColonRequired="yes"/> <fmt:formatNumber value="${BusinessKey.savingsPerformance.totalWithdrawals.amount}" /> </span></td>
               </tr>
                <c:if test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
                    <tr>
 	                <td class="paddingL10">
 	                <span class="fontnormal8pt">
-	                <mifos:mifoslabel name="Savings.missedDeposits" isColonRequired="yes"/> <c:out value="${BusinessKey.savingsPerformance.missedDeposits}" /> </span></td>
+	                <mifos:mifoslabel name="Savings.missedDeposits" isColonRequired="yes"/> <fmt:formatNumber value="${BusinessKey.savingsPerformance.missedDeposits}" /> </span></td>
 	  			  </tr>
 	  			</c:if>
 						</table>

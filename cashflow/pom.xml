@@ -17,7 +17,6 @@
         <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
         <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
         <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
-        <maven.surefire.memory>-Xmx1024m</maven.surefire.memory>
     </properties>
 
     <parent>
@@ -159,7 +158,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.4.3</version>
                 <configuration>
                     <printSummary>true</printSummary>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>

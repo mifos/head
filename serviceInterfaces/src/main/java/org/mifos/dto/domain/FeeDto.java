@@ -246,6 +246,8 @@ public class FeeDto implements Serializable {
     }
 
 	public boolean isValidForCurrency(Integer currencyId) {
-		return currencyId.equals(this.currencyId);
+        //  Rate fees do not have currency hence the currencyId will be null for them,
+        //  when fee has a currency  then it should match loan account currency id
+        return (getCurrencyId()== null || getCurrencyId().equals(currencyId));
 	}
 }

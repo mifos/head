@@ -124,7 +124,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
         searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
 
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
-        submitAccountParameters.setAmount("248.0");
+        submitAccountParameters.setAmount("248");
 
         verifySavingsAccountCreationWithQG(searchParameters, submitAccountParameters);
     }

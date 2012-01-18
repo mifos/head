@@ -65,9 +65,21 @@ public class AbstractPage {
     public void verifyPage(String pageName) {
         String pageId = selenium.getAttribute("page.id@title");
         if(!pageId.equals(pageName)) {
-            String errors = getTextIfExists("error.messages");
+            String errors = getErrors();
             Assert.fail("Expected page <" +pageName +">, actual page <"+pageId+">!!! with error message > " + errors);
         }
+    }
+    
+    public String getErrors() {
+    	int totalErrorElements = selenium.getXpathCount("//*[contains(@id, \'error.message\')]").intValue();
+    	StringBuilder sb = new StringBuilder();
+    	for (int i = 1; i <= totalErrorElements; i++) {
+    		String text = selenium.getText("//*[contains(@id, \'error.message\')][" + i + "]");
+    		if (text != null) {
+    			sb.append(text);
+    		}
+    	}
+    	return sb.toString();
     }
 
     public String getTextIfExists(String locator) {

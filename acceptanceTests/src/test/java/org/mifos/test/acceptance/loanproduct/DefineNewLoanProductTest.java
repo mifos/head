@@ -161,14 +161,14 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         Assert.assertEquals("Note: Interest due will be waived off.", selenium.getText("waiverInterestWarning"));
         Assert.assertFalse(repayLoanPage.isTotalRepaymentAmountVisible());
         Assert.assertTrue(repayLoanPage.isWaivedRepaymentAmoutVisible());
-        Assert.assertEquals(repayLoanPage.waivedRepaymentAmount(), "2500.0");
+        Assert.assertEquals(repayLoanPage.waivedRepaymentAmount(), "2,500");
         //When
         repayLoanPage.interestWaiver(false);
         //Then
         Assert.assertTrue(repayLoanPage.isTotalRepaymentAmountVisible());
         Assert.assertFalse(repayLoanPage.isWaivedRepaymentAmoutVisible());
         Assert.assertFalse(selenium.isTextPresent("Note: Interest due will be waived off."));
-        Assert.assertEquals(repayLoanPage.totalRepaymentAmount(), "2509.1");
+        Assert.assertEquals(repayLoanPage.totalRepaymentAmount(), "2,509.1");
         //When
         RepayLoanParameters params = new RepayLoanParameters();
         params.setModeOfRepayment("Cash");

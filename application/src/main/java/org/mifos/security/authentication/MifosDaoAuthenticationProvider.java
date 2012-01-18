@@ -42,8 +42,7 @@ public class MifosDaoAuthenticationProvider extends DaoAuthenticationProvider {
 
         if (authentication.getCredentials() == null) {
             throw new BadCredentialsException(messages.getMessage(
-                    "AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"),
-                    isIncludeDetailsObject() ? userDetails : null);
+                    "AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
         }
 
         String presentedPassword = authentication.getCredentials().toString();
@@ -52,8 +51,7 @@ public class MifosDaoAuthenticationProvider extends DaoAuthenticationProvider {
 
         if (!isPasswordValid) {
             throw new BadCredentialsException(messages.getMessage(
-                    "AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"),
-                    isIncludeDetailsObject() ? userDetails : null);
+                    "AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
         }
     }
 }

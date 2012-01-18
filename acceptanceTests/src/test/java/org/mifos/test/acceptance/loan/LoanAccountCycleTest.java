@@ -112,16 +112,16 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         LoanProductDetailsPage loanProductDetailsPage = loanProductTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyLoanAmountTableTypeFromCycle(cycleLoanAmount);
         loanProductDetailsPage.verifyInstallments("10", "100", "50");
-        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1000.0", "5000.0", "3000.0"}, null, new String[]{"10", "100", "50"});
+        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1,000", "5,000", "3000.0"}, null, new String[]{"10", "100", "50"});
         String loan1ID = loanAccountPage.getAccountId();
         loanAccountPage.disburseLoan(disburseParams);
 
-        loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"2000.0", "6000.0", "4000.0"}, null, new String[]{"10", "100", "50"});
+        loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"2,000", "6,000", "4000.0"}, null, new String[]{"10", "100", "50"});
         String loan2ID = loanAccountPage.getAccountId();
         loanTestHelper.repayLoan(loan1ID);
         loanTestHelper.disburseLoan(loan2ID, disburseParams);
 
-        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"3000.0", "7000.0", "5000.0"}, null, new String[]{"10", "100", "50"});
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"3,000", "7,000", "5000.0"}, null, new String[]{"10", "100", "50"});
     }
 
     /**
@@ -149,10 +149,10 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         LoanProductDetailsPage loanProductDetailsPage = loanProductTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyLoanAmountTableTypeFromCycle(cycleLoanAmount);
         loanProductDetailsPage.verifyInstallmentsTableTypeFromCycle(calculateInstallments);
-        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1000.0", "5000.0", "3000.0"}, null, new String[]{"26", "52", "52"});
+        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1,000", "5,000", "3000.0"}, null, new String[]{"26", "52", "52"});
         loanAccountPage.disburseLoan(disburseParams);
 
-        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"2000.0", "6000.0", "4000.0"}, null, new String[]{"20", "30", "30"});
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"2,000", "6,000", "4000.0"}, null, new String[]{"20", "30", "30"});
     }
 
     /**
@@ -180,13 +180,13 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         LoanProductDetailsPage loanProductDetailsPage = loanProductTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyLoanAmountTableTypeFromCycle(cycleLoanAmount);
         loanProductDetailsPage.verifyInstallmentTableTypeFromLastAmount(calculateInstallments);
-        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1000.0", "5000.0", "3000.0"}, null, new String[]{"5", "10", "5"});
+        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1,000", "5,000", "3000.0"}, null, new String[]{"5", "10", "5"});
         String loanFirstID = loanAccountPage.getAccountId();
         loanAccountPage.disburseLoan(disburseParams);
-        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"2000.0", "6000.0", "4000.0"}, null, new String[]{"5", "10", "5"});
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"2,000", "6,000", "4000.0"}, null, new String[]{"5", "10", "5"});
         loanTestHelper.repayLoan(loanFirstID);
 
-        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"2000.0", "6000.0", "4000.0"}, null, new String[]{"10", "30", "25"});
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"2,000", "6,000", "4000.0"}, null, new String[]{"10", "30", "25"});
     }
 
     /**
@@ -214,13 +214,13 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         LoanProductDetailsPage loanProductDetailsPage = loanProductTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyAmountTableTypeFromLastAmount(lastLoanAmount);
         loanProductDetailsPage.verifyInstallments("10", "100", "50");
-        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, null);
+        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500", "1,500", "1200.0"}, null, null);
         String loanFirstID = loanAccountPage.getAccountId();
         loanAccountPage.disburseLoan(disburseParams);
-        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, null);
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500", "1,500", "1200.0"}, null, null);
         loanTestHelper.repayLoan(loanFirstID);
 
-        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1500.0", "2500.0", "2200.0"}, null, null);
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1,500", "2,500", "2200.0"}, null, null);
     }
 
     /**
@@ -248,13 +248,13 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         LoanProductDetailsPage loanProductDetailsPage = loanProductTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyAmountTableTypeFromLastAmount(lastLoanAmount);
         loanProductDetailsPage.verifyInstallmentsTableTypeFromCycle(calculateInstallments);
-        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, new String[]{"26", "52", "52"});
+        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500", "1,500", "1200.0"}, null, new String[]{"26", "52", "52"});
         String loanFirstID = loanAccountPage.getAccountId();
         loanAccountPage.disburseLoan(disburseParams);
-        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, new String[]{"20", "30", "30"});
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500", "1,500", "1200.0"}, null, new String[]{"20", "30", "30"});
         loanTestHelper.repayLoan(loanFirstID);
 
-        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1500.0", "2500.0", "2200.0"}, null, new String[]{"20", "30", "30"});
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1,500", "2,500", "2200.0"}, null, new String[]{"20", "30", "30"});
     }
 
     /**
@@ -282,13 +282,13 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         LoanProductDetailsPage loanProductDetailsPage = loanProductTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyAmountTableTypeFromLastAmount(lastLoanAmount);
         loanProductDetailsPage.verifyInstallmentTableTypeFromLastAmount(calculateInstallments);
-        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, new String[]{"5", "10", "5"});
+        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500", "1,500", "1200.0"}, null, new String[]{"5", "10", "5"});
         String loanFirstID = loanAccountPage.getAccountId();
         loanAccountPage.disburseLoan(disburseParams);
-        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, new String[]{"5", "10", "5"});
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500", "1,500", "1200.0"}, null, new String[]{"5", "10", "5"});
         loanTestHelper.repayLoan(loanFirstID);
 
-        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1500.0", "2500.0", "2200.0"}, null, new String[]{"10", "20", "15"});
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1,500", "2,500", "2200.0"}, null, new String[]{"10", "20", "15"});
     }
 
     private String[][] getInstallmentsFromLastAmount() {

@@ -28,6 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="ViewOriginalSchedule"></span>
@@ -64,7 +65,7 @@ explanation of the license and how it is applied.
                         <mifos:mifoslabel name="loan.amt" />:&nbsp;
                     </span>
                     <span class="fontnormal">
-                        <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAmount')}"/>
+                        <fmt:formatNumber value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAmount')}"/>
                         <br>
                     </span>
                     <span class="fontnormalbold">

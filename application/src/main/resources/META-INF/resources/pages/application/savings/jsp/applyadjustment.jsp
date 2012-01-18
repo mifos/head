@@ -26,6 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="applyadjustment"></span>
@@ -77,7 +78,7 @@ explanation of the license and how it is applied.
                 <mifos:mifoslabel name="savings.Last" bundle="SavingsUIResources" />
                 <c:out value="${accountActionValue.name}"/>
                 <mifos:mifoslabel name="savings.made" bundle="SavingsUIResources" isColonRequired="yes" />
-                  <c:out value="${BusinessKey.lastPmnt.amount}"/></td>
+                  <fmt:formatNumber value="${BusinessKey.lastPmnt.amount.amount}"/></td>
                 </tr>
               <tr>
                 <td class="fontnormal">

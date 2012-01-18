@@ -105,7 +105,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("DefineNewSavingsProductTestGroup", params.getProductInstanceName(), "234.0");
+        createSavingAccountWithCreatedProduct("DefineNewSavingsProductTestGroup", params.getProductInstanceName(), "234");
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-1093
@@ -116,7 +116,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("DefineNewSavingsProduct TestClient", params.getProductInstanceName(), "200.0");
+        createSavingAccountWithCreatedProduct("DefineNewSavingsProduct TestClient", params.getProductInstanceName(), "200");
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-1094
@@ -127,7 +127,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("DefineNewSavingsProductTestGroup", params.getProductInstanceName(), "534.0");
+        createSavingAccountWithCreatedProduct("DefineNewSavingsProductTestGroup", params.getProductInstanceName(), "534");
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-138
@@ -138,7 +138,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("DefineNewSavingsProduct TestClient", params.getProductInstanceName(), "248.0");
+        createSavingAccountWithCreatedProduct("DefineNewSavingsProduct TestClient", params.getProductInstanceName(), "248");
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-1095
@@ -161,7 +161,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         submitAccountParameters.setAmount(amount);
         SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters);
         savingsAccountPage.verifyPage();
-        savingsAccountPage.verifySavingsAmount(submitAccountParameters.getAmount());
+        savingsAccountPage.verifySavingsAmount(amount);
         savingsAccountPage.verifySavingsProduct(searchParameters.getSavingsProduct());
         return savingsAccountPage;
     }

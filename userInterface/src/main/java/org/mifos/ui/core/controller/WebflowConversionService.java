@@ -11,7 +11,7 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.format.Parser;
 import org.springframework.format.Printer;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.datetime.joda.JodaTimeFormattingConfigurer;
+import org.springframework.format.datetime.joda.JodaTimeFormatterRegistrar;
 import org.springframework.format.number.NumberFormatAnnotationFormatterFactory;
 import org.springframework.format.support.FormattingConversionServiceFactoryBean;
 import org.springframework.stereotype.Component;
@@ -22,7 +22,7 @@ public class WebflowConversionService extends FormattingConversionServiceFactory
 
     private static final boolean JODATIMEPRESENT = ClassUtils.isPresent(
             "org.joda.time.LocalDate", WebflowConversionService.class.getClassLoader());
-    
+
     /**
      * Install Formatters and Converters into the new FormattingConversionService using the FormatterRegistry SPI.
      * Subclasses may override to customize the set of formatters and/or converters that are installed.
@@ -31,13 +31,13 @@ public class WebflowConversionService extends FormattingConversionServiceFactory
     protected void installFormatters(FormatterRegistry registry) {
         registry.addFormatterForFieldAnnotation(new NumberFormatAnnotationFormatterFactory());
         if (JODATIMEPRESENT) {
-            new JodaTimeFormattingConfigurer().installJodaTimeFormatting(registry);         
+            new JodaTimeFormatterRegistrar().registerFormatters(registry);
         }
         else {
             registry.addFormatterForFieldAnnotation(new NoJodaDateTimeFormatAnnotationFormatterFactory());
         }
     }
-    
+
     /**
      * Dummy AnnotationFormatterFactory that simply fails if @DateTimeFormat is being used
      * without the JodaTime library being present.

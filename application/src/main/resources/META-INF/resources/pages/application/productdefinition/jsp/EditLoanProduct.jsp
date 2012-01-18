@@ -667,11 +667,7 @@ explanation of the license and how it is applied.
 							<td valign="top">
 							    <div id="cashFlowThresholdInputDiv" style="display: none;">
 							        <mifos:decimalinput styleId="editLoanProduct.input.cashFlowThreshold" property="cashFlowThreshold"/>
-							        <c:out value="( "/>
-                                    <fmt:formatNumber value="${sessionScope.loanproductactionform.minCashFlowThreshold}" />
-                                    <c:out value=" - " />
-                                    <fmt:formatNumber value="${sessionScope.loanproductactionform.maxCashFlowThreshold}" />
-                                    <c:out value=" )" />
+							        ( <fmt:formatNumber value="${sessionScope.loanproductactionform.minCashFlowThreshold}" /> - <fmt:formatNumber value="${sessionScope.loanproductactionform.maxCashFlowThreshold}" /> )
 							        <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources"/></div>
 							</td>
 						</tr>
@@ -684,11 +680,7 @@ explanation of the license and how it is applied.
 							<td valign="top">
 							    <div id="cashFlowIndebtednessRatioInputDiv" style="display: none;">
 							        <mifos:decimalinput styleId="editLoanProduct.input.indebtednessRatio" property="indebtednessRatio"/>
-							        <c:out value="( "/>
-                                    <fmt:formatNumber value="${sessionScope.loanproductactionform.minIndebtednessRatio}" />
-                                    <c:out value=" - " />
-                                    <fmt:formatNumber value="${sessionScope.loanproductactionform.maxIndebtednessRatio}" />
-                                    <c:out value=" )" />
+							        ( <fmt:formatNumber value="${sessionScope.loanproductactionform.minIndebtednessRatio}" /> - <fmt:formatNumber value="${sessionScope.loanproductactionform.maxIndebtednessRatio}" /> )
 							        <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources"/></div>
 							</td>
 						</tr>
@@ -701,11 +693,7 @@ explanation of the license and how it is applied.
 							<td valign="top">
 							    <div id="cashFlowRepaymentCapacityInputDiv" style="display: none;">
 							        <mifos:decimalinput styleId="editLoanProduct.input.repaymentCapacity" property="repaymentCapacity"/>
-							        <c:out value="( "/>
-                                    <fmt:formatNumber value="${sessionScope.loanproductactionform.minRepaymentCapacity}" />
-                                    <c:out value=" - " />
-                                    <fmt:formatNumber value="${sessionScope.loanproductactionform.maxRepaymentCapacity}" />
-                                    <c:out value=" )" />
+							        ( <fmt:formatNumber value="${sessionScope.loanproductactionform.minRepaymentCapacity}" /> - <fmt:formatNumber value="${sessionScope.loanproductactionform.maxRepaymentCapacity}" /> )
 							        <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources"/></div>
 							</td>
 						</tr>

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
     
     <bean id="birtCollectionSheetService" class="org.mifos.reports.business.service.BirtCollectionSheetService" />
     <bean id="officeBusinessService" class="org.mifos.customers.office.business.service.OfficeBusinessService" />
-    <bean id="personnelBusinessService" class="org.mifos.customers.personnel.business.service.PersonnelBusinessService" />
+    <bean id="personnelBusinessService" class="org.mifos.customers.personnel.business.service.PersonnelBusinessService" >
+        <constructor-arg ref="legacyPersonnelDao" />
+        <constructor-arg ref="legacyRolesPermissions" />
+    </bean>
 
     <bean id="customerBusinessService" class="org.mifos.customers.business.service.CustomerBusinessService" />
     <bean id="accountBusinessService" class="org.mifos.accounts.business.service.AccountBusinessService" />

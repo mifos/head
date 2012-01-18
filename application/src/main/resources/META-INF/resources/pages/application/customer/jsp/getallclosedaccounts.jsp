@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -100,8 +100,8 @@ explanation of the license and how it is applied.
 											</tr>
 										</table>
 										<span class="fontnormal"> <c:out value="Loan" /> <mifos:mifoslabel
-											name="client.amount" bundle="ClientUIResources" />: <c:out
-											value="${closedAccount.loanAmount}" /> <br>
+											name="client.amount" bundle="ClientUIResources" />: <fmt:formatNumber
+											value="${closedAccount.loanAmount.amount}" /> <br>
 										<mifos:mifoslabel name="client.date"
 											bundle="ClientUIResources" />&nbsp;<c:out
 											value="${closedAccount.accountState.name}" />:&nbsp; <c:out

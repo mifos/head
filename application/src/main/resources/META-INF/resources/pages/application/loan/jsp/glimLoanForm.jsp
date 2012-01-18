@@ -138,8 +138,8 @@ explanation of the license and how it is applied.
                     <td valign="top" class="fontnormal"><html-el:text
                         property="loanAmount" value="0.0" readonly="true"  styleId="sumLoanAmount"  />
                     <mifos:mifoslabel
-                        name="loan.allowed_amount" /> &nbsp; <c:out
-                        value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
+                        name="loan.allowed_amount" /> &nbsp; <fmt:formatNumber
+                        value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <fmt:formatNumber
                         value="${loanAccountActionForm.maxLoanAmount}" /> )</td>
                     <script>CalculateTotalLoanAmount(CLIENTS_COUNT);</script>    
                 </tr>

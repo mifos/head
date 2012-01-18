@@ -318,6 +318,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 && loanInformationDto.isGroup()) {
 
             List<LoanAccountDetailsDto> loanAccountDetails = this.loanAccountServiceFacade.retrieveLoanAccountDetails(loanInformationDto);
+            addEmptyBuisnessActivities(loanAccountDetails);
             SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanAccountDetails, request);
         }
         SessionUtils.setCollectionAttribute(CUSTOM_FIELDS, new ArrayList<CustomFieldDefinitionEntity>(), request);
@@ -361,6 +362,15 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
+    private void addEmptyBuisnessActivities(List<LoanAccountDetailsDto> loanAccountDetails) {
+        for (LoanAccountDetailsDto details : loanAccountDetails) {
+            if (details.getBusinessActivity() == null) {
+                details.setBusinessActivity("-");
+                details.setBusinessActivityName("-");
+            }
+        }
+    }
+    
     private void setQuestionGroupInstances(HttpServletRequest request, LoanBO loanBO) throws PageExpiredException {
         QuestionnaireServiceFacade questionnaireServiceFacade = questionnaireServiceFacadeLocator.getService(request);
         boolean containsQGForCloseLoan = false;

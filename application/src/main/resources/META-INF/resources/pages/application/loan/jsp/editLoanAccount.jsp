@@ -209,9 +209,9 @@ explanation of the license and how it is applied.
 										styleId="editLoanAccount.input.loanAmount"
 										property="loanAmount"
 										value="${sessionScope.loanAccountActionForm.loanAmount}" /> <mifos:mifoslabel
-										name="loan.allowed_amount" />&nbsp; <c:out
+										name="loan.allowed_amount" />&nbsp; <fmt:formatNumber
 										value="${sessionScope.loanAccountActionForm.minLoanAmount}" />
-									&nbsp; - &nbsp; <c:out
+									&nbsp; - &nbsp; <fmt:formatNumber
 										value="${sessionScope.loanAccountActionForm.maxLoanAmount}" />)
 									</td>
 								</tr>
@@ -231,9 +231,9 @@ explanation of the license and how it is applied.
 								value="${sessionScope.loanAccountActionForm.interestRate}" /> 
 								<fmt:message key="loan.allowedInterest">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
-								</fmt:message>&nbsp; <c:out
+								</fmt:message>&nbsp; <fmt:formatNumber
 								value="${sessionScope.loanAccountActionForm.minInterestRate}" />&nbsp;
-							- &nbsp; <c:out
+							- &nbsp; <fmt:formatNumber
 								value="${sessionScope.loanAccountActionForm.maxInterestRate}" />
 							%)</td>
 						</tr>
@@ -245,9 +245,9 @@ explanation of the license and how it is applied.
 								name="loanAccountActionForm" property="noOfInstallments" 
 								readonly="${loanfn:isDisabledWhileEditingGlim('noOfInstallments',accountState)}"
 								value="${sessionScope.loanAccountActionForm.noOfInstallments}" />
-							<mifos:mifoslabel name="loan.allowed_no_of_inst" />&nbsp; <c:out
+							<mifos:mifoslabel name="loan.allowed_no_of_inst" />&nbsp; <fmt:formatNumber
 								value="${sessionScope.loanAccountActionForm.minNoInstallments}" />&nbsp;
-							- &nbsp; <c:out
+							- &nbsp; <fmt:formatNumber
 								value="${sessionScope.loanAccountActionForm.maxNoInstallments}" />)
 							</td>
 						</tr>

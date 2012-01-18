@@ -696,7 +696,7 @@ explanation of the license and how it is applied.
 								var="loanCycleCounter">
 								<tr>
 									<td class="paddingL10"><span class="fontnormal8pt">&nbsp;&nbsp;&nbsp;<c:out
-										value="${loanCycleCounter.offeringName}" />: <c:out
+										value="${loanCycleCounter.offeringName}" />: <fmt:formatNumber
 										value="${loanCycleCounter.counter}" /></span></td>
 								</tr>
 							</c:forEach>

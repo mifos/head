@@ -176,7 +176,7 @@
     		<td>&nbsp;</td>
     		<td>Total amount:</td>
     		<td>[@form.input path="loanAccountFormBean.amount"  id="glimsumloanamount" attributes="readonly=readonly"/]</td>
-    		<td><span id="createloan.allowedamounttext">([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string("0.#")} - ${loanProductReferenceData.maxLoanAmount?string("0.#")})</span></td>
+    		<td><span id="createloan.allowedamounttext">([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.number} - ${loanProductReferenceData.maxLoanAmount?string.number})</span></td>
     		<td>&nbsp;</td>
     	</tr>
     </table>
@@ -185,14 +185,14 @@
     <div class="row">
         [@form.label "amount" true ][@spring.message "createLoanAccount.amount"/][/@form.label]
         [@form.input path="loanAccountFormBean.amount"  id="loancreationdetails.input.sumLoanAmount" /]
-        <span id="createloan.allowedamounttext">([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string("0.#")} - ${loanProductReferenceData.maxLoanAmount?string("0.#")})</span>
+        <span id="createloan.allowedamounttext">([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.number} - ${loanProductReferenceData.maxLoanAmount?string.number})</span>
     </div>
     [/#if]
     
     <div class="row">
         [@form.label "interestRate" true ][@spring.message "createLoanAccount.interestRate"/][/@form.label]
         [@form.input path="loanAccountFormBean.interestRate" id="loancreationdetails.input.interestRate" /]
-        <span>([@spring.message "createLoanAccount.allowedInterestRate"/] ${loanProductReferenceData.minInterestRate?string("0.#")} - ${loanProductReferenceData.maxInterestRate?string("0.#")} %)</span>
+        <span>([@spring.message "createLoanAccount.allowedInterestRate"/] ${loanProductReferenceData.minInterestRate?string.number} - ${loanProductReferenceData.maxInterestRate?string.number} %)</span>
     </div>
     <div class="row">
         [@form.label "numberOfInstallments" true ][@spring.message "createLoanAccount.numberOfInstallments"/][/@form.label]
@@ -374,7 +374,7 @@
     </div>
     
     [#list loanProductReferenceData.additionalFees as additionalFee]
-    	<input type="hidden" id="hiddenFeeAmount${additionalFee.id}" value="${additionalFee.amountOrRate}" />
+    	<input type="hidden" id="hiddenFeeAmount${additionalFee.id}" value="${additionalFee.amountOrRate?string.number}" />
     [/#list]
 </form>
 
