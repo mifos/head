@@ -111,7 +111,7 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
     StringBuilder buildAmountUI(Money amount) {
         StringBuilder builder = new StringBuilder();
         builder.append("<td align=\"right\" class=\"drawtablerow\">");
-        builder.append(amount);
+        builder.append(ConversionUtil.formatNumber(amount.toString()));
         builder.append("</td>");
         builder.append("<td align=\"right\" class=\"drawtablerow\">");
         builder.append("&nbsp;");

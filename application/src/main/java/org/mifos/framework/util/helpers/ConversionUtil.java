@@ -26,6 +26,7 @@ import java.util.Locale;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.struts.action.ActionForm;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.ValueObjectConversionException;
 
@@ -81,9 +82,18 @@ public class ConversionUtil {
         	builder = builder.insert(i, ',');
         	}
         }
-        if(!decimal.equalsIgnoreCase(".0")) {
-        builder = builder.append(decimal);
+        
+        String check =".";
+        
+        for(int i = 0; i < AccountingRules.getDigitsAfterDecimal(); i++){
+        	check = check.concat("0");
         }
+        
+		if (!decimal.equalsIgnoreCase(check)) {
+			builder = builder.append(decimal);
+		}
+
+        
         return builder.toString();
     }
 }
