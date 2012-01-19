@@ -121,7 +121,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         CollectionSheetEntryEnterDataPage enterDataPage = navigateToCollectionSheetEntryEnterData(formParameters);
         //check amount due for client who has two loan accounts on the same product
-        enterDataPage.verifyLoanAmountValue(3, 0, 2088.0);
+        enterDataPage.verifyLoanAmountValue(3, 0, 2088);
         enterDataPage.cancel();
 
     }

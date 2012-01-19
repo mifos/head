@@ -232,7 +232,7 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         Integer zeroPrincipalCount = 0;
         for (int i = 1; i < rowCount; i++) {
             if (getNoOfInstallmentFromSchedule(i).matches("^[0-9]+$")){
-                    if(getPrincipalOfInstallmentFromSchedule(i).equals("0.0")) {
+                    if(getPrincipalOfInstallmentFromSchedule(i).equals("0")) {
                         zeroPrincipalCount++;
                     }
                     else{
