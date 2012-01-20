@@ -108,4 +108,6 @@
     <bean id="accountingConfigurationService" class="org.mifos.config.service.impl.AccountingConfigurationServiceImpl"/>
 
     <bean id="configurationServiceFacade" class="org.mifos.config.servicefacade.ConfigurationServiceFacadeWebTier"/>
+    
+    <bean id="customerSearchServiceFacade" class="org.mifos.application.servicefacade.CustomerSearchServiceFacadeWebTier"/>
 </beans>
