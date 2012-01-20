@@ -386,11 +386,21 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						<c:if test="${loanAccountDetailsView != null}">
 							<table width="96%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
-									<td valign="top"><mifoscustom:mifostabletag
-										source="loanAccountDetailsView" scope="session"
-										xmlFileName="LoanAccountDetails.xml"
-										moduleName="org/mifos/accounts/loan/util/resources" passLocale="true"
-                                        randomNUm="${sessionScope.randomNUm}" currentFlowKey="${requestScope.currentFlowKey}" /></td>
+									<td valign="top">
+                                        <c:choose>
+                                            <c:when test="${loanInformationDto.disbursed == true}">
+                                                <mifoscustom:mifostabletag source="loanAccountDetailsView" scope="session"
+                                                  xmlFileName="LoanAccountDetails.xml" moduleName="org/mifos/accounts/loan/util/resources"
+                                                  passLocale="true" randomNUm="${sessionScope.randomNUm}"
+                                                  currentFlowKey="${requestScope.currentFlowKey}" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                <mifoscustom:mifostabletag source="loanAccountDetailsView" scope="session"
+                                                  xmlFileName="LoanAccountDetails.xml" moduleName="org/mifos/accounts/loan/util/resources"
+                                                  passLocale="true"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
 								</tr>
 							</table>
 						</c:if>

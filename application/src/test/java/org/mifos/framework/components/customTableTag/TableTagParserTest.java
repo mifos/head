@@ -88,6 +88,7 @@ public class TableTagParserTest {
         ActionParam actionParam = new ActionParam();
         actionParam.setName("officeName");
         actionParam.setValue("officeName");
+        actionParam.setValueType("method");
         StringBuilder stringBuilder = new StringBuilder();
         actionParam.generateParameter(stringBuilder, createOfficeView());
        Assert.assertEquals("officeName=abcd", stringBuilder.toString());
@@ -101,6 +102,7 @@ public class TableTagParserTest {
         ActionParam actionParam = new ActionParam();
         actionParam.setName("officeName");
         actionParam.setValue("officeName");
+        actionParam.setValueType("method");
         linkDetails.setActionParam(new ActionParam[] { actionParam });
         StringBuilder stringBuilder = new StringBuilder();
         linkDetails.generateLink(stringBuilder, createOfficeView());

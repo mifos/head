@@ -21,6 +21,7 @@
 package org.mifos.framework.components.customTableTag;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -133,17 +134,33 @@ public class TableTag extends BodyTagSupport {
         try {
 
             table = TableTagParser.getInstance().parser(moduleName + "/" + xmlFileName);
-            
-            for(Column column : table.getRow().getColumn()) {
-                if (column.getLinkDetails() != null) {
-                    LinkDetails linkDetails = column.getLinkDetails();
-                    
-                    for (ActionParam param : linkDetails.getActionParam()) {
-                        if (param.getValueType().equalsIgnoreCase(TableTagConstants.INBUILD)) {
-                            if (param.getName().equalsIgnoreCase("randomNUm")) {
-                                param.setValue(randomNUm);
-                            } else if (param.getName().equalsIgnoreCase("currentFlowKey")) {
-                                param.setValue(currentFlowKey);
+
+            Column[] column = table.getRow().getColumn();
+            for (int i = 0; i < column.length; ++i) {
+                if (column[i].getLinkDetails() != null) {
+                    if (randomNUm == null || currentFlowKey == null) {
+                        column[i] = null;
+                        
+                        if(i < column.length - 1) {
+                            int j = i;
+                            
+                            for(; j < column.length - 1; ++j) {
+                                column[j] = column[j + 1];
+                            }
+                        }
+                        
+                        column = Arrays.copyOf(column, column.length - 1);
+                        table.getRow().setColumn(column);
+                    } else {
+                        LinkDetails linkDetails = column[i].getLinkDetails();
+                        
+                        for (ActionParam param : linkDetails.getActionParam()) {
+                            if (param.getValueType().equalsIgnoreCase(TableTagConstants.INBUILD)) {
+                                if (param.getName().equalsIgnoreCase("randomNUm")) {
+                                    param.setValue(randomNUm);
+                                } else if (param.getName().equalsIgnoreCase("currentFlowKey")) {
+                                    param.setValue(currentFlowKey);
+                                }
                             }
                         }
                     }

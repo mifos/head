@@ -145,7 +145,7 @@ public class Column {
             if (method.getName().equalsIgnoreCase("get".concat(getValue()))) {
                 try {
                 	String total = String.valueOf(method.invoke(obj, new Object[] {}));
-                	Pattern pattern = Pattern.compile("(total|debit|credi|installment|principal|interest|feesWithMiscFee|amount|runningBalance|feesWithMiscFee)");
+                	Pattern pattern = Pattern.compile("(total|debit|credi|installment|principal|interest|feesWithMiscFee|loanAmount|amount|runningBalance|feesWithMiscFee)");
                 	Matcher matcher = pattern.matcher(getValue());
                 	if(matcher.find()){
                     total = ConversionUtil.formatNumber(total);

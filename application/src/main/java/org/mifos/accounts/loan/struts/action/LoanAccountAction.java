@@ -459,9 +459,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         UserContext userContext = getUserContext(request);
         Integer loanId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
         LoanBO loan = (LoanBO) SessionUtils.getAttribute(BUSINESS_KEY, request);
+        boolean originalSchedule = loan == null ? true : loan.getAccountId().equals(loanId);
 
         OriginalScheduleInfoDto dto = loanServiceFacade.retrieveOriginalLoanSchedule(loanId);
-        SessionUtils.setAttribute("originalSchedule", loan.getAccountId().equals(loanId), request);
+        
+        SessionUtils.setAttribute("originalSchedule", originalSchedule, request);
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, dto.getDisbursementDate(), request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, dto.getLoanAmount(), request);
         SessionUtils.setCollectionAttribute(LoanConstants.ORIGINAL_INSTALLMENTS, dto.getOriginalLoanScheduleInstallment(), request);

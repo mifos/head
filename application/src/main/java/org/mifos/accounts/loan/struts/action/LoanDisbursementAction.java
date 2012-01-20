@@ -132,7 +132,6 @@ public class LoanDisbursementAction extends BaseAction {
 
         Integer loanAccountId = Integer.valueOf(actionForm.getAccountId());
         AccountBO accountBO = new AccountBusinessService().getAccount(loanAccountId);
-        LoanInformationDto loanInformationDto = this.loanAccountServiceFacade.retrieveLoanInformation(accountBO.getGlobalAccountNum());
         
         createGroupQuestionnaire.saveResponses(request, actionForm, loanAccountId);
 
@@ -154,16 +153,15 @@ public class LoanDisbursementAction extends BaseAction {
 
             this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
             
-            if(loanInformationDto.isGroup()) {
-                List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(loanAccountId);
+            //GLIM
+            List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(loanAccountId);
                 
-                for(LoanBO individual : individualLoans) {
-                    loanDisbursement = new AccountPaymentParametersDto(new UserReferenceDto(uc.getId()), new AccountReferenceDto(
-                            individual.getAccountId()), individual.getLoanAmount().getAmount(), new LocalDate(trxnDate), paymentType, comment,
-                            new LocalDate(receiptDate), actionForm.getReceiptId(), customerDto);
-                    
-                    this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
-                }
+            for(LoanBO individual : individualLoans) {
+                loanDisbursement = new AccountPaymentParametersDto(new UserReferenceDto(uc.getId()), new AccountReferenceDto(
+                        individual.getAccountId()), individual.getLoanAmount().getAmount(), new LocalDate(trxnDate), paymentType, comment,
+                        new LocalDate(receiptDate), actionForm.getReceiptId(), customerDto);
+                
+                this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
             }
         } catch (BusinessRuleException e) {
             throw new AccountException(e.getMessage());

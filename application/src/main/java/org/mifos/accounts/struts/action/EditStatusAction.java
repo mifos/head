@@ -182,7 +182,6 @@ public class EditStatusAction extends BaseAction {
 
         Integer accountId = Integer.valueOf(editStatusActionForm.getAccountId());
         AccountBO accountBO = new AccountBusinessService().getAccount(accountId);
-        LoanInformationDto loanInformationDto = this.loanAccountServiceFacade.retrieveLoanInformation(accountBO.getGlobalAccountNum());
 
         Short flagId = null;
         Short newStatusId = null;
@@ -200,21 +199,17 @@ public class EditStatusAction extends BaseAction {
             initializeLoanQuestionnaire(accountBO.getGlobalAccountNum(), newStatusId != null ? newStatusId.toString() : null);
             loanQuestionnaire.saveResponses(request, editStatusActionForm, accountId);
 
-            if(loanInformationDto.isGroup()) {
-                List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(accountId);
-                List<AccountUpdateStatus> updateStatus = new ArrayList<AccountUpdateStatus>(individualLoans.size() + 1);
+            //GLIM
+            List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(accountId);
+            List<AccountUpdateStatus> updateStatus = new ArrayList<AccountUpdateStatus>(individualLoans.size() + 1);
             
-                updateStatus.add(new AccountUpdateStatus(accountId.longValue(), newStatusId, flagId, updateComment));
+            updateStatus.add(new AccountUpdateStatus(accountId.longValue(), newStatusId, flagId, updateComment));
             
-                for(LoanBO individual : individualLoans) {
-                    updateStatus.add(new AccountUpdateStatus(individual.getAccountId().longValue(), newStatusId, flagId, updateComment));
-                }
+            for(LoanBO individual : individualLoans) {
+            	updateStatus.add(new AccountUpdateStatus(individual.getAccountId().longValue(), newStatusId, flagId, updateComment));
+            }
                 
-                this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(updateStatus);
-            } else{
-                AccountUpdateStatus updateStatus = new AccountUpdateStatus(accountId.longValue(), newStatusId, flagId, updateComment);
-                this.loanAccountServiceFacade.updateLoanAccountStatus(updateStatus);
-            } 
+            this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(updateStatus);
             
             return mapping.findForward(ActionForwards.loan_detail_page.toString());
         } if (accountBO.isSavingsAccount()) {

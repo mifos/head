@@ -83,6 +83,25 @@ public class LoanAccountPage extends MifosPage {
         Assert.assertEquals(selenium.getText("xpath=//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + (index+1) + "]/td[5]"), purpose);
     }
     
+    public void verifyGLIMIndividualScheduleLinks(int clientCount, boolean hidden) {
+        Assert.assertEquals(selenium.getXpathCount("//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[1]/td").intValue() == 5, hidden);
+        
+        if(!hidden) {
+            for(int i = 1; i <= clientCount; ++i) {
+                String xpath = "//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + (i + 1) + "]/td[6]";
+                Assert.assertEquals(selenium.getText(xpath), "show");
+                
+                selenium.click(xpath + "/a");
+                waitForPageToLoad();
+                
+                Assert.assertTrue(selenium.isElementPresent("originalInstallments"));
+                
+                selenium.click("loanRepayment.button.return");
+                waitForPageToLoad();
+            }
+        }
+    }
+    
     public void verifyLoanIsPendingApproval(){
         Assert.assertTrue(selenium.isTextPresent("Application Pending Approval"));
     }
