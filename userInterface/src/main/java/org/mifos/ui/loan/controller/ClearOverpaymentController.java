@@ -46,8 +46,8 @@ public class ClearOverpaymentController {
 		OverpaymentDto result = this.loanAccountServiceFacade.retrieveOverpayment(overpaymentId);
 
         clearOverpaymentFormBean.setOverpaymentId(result.getPaymentId());
-        clearOverpaymentFormBean.setOriginalOverpaymentAmount(result.getActualAmount()); // getActualAmount is called by purpose
-        clearOverpaymentFormBean.setActualOverpaymentAmount(result.getActualAmount());
+        clearOverpaymentFormBean.setOriginalOverpaymentAmount(result.getActualAmount().doubleValue()); // getActualAmount is called by purpose
+        clearOverpaymentFormBean.setActualOverpaymentAmount(result.getActualAmount().doubleValue());
 
 		return result;
 	}
