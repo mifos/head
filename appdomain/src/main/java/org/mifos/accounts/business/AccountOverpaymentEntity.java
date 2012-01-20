@@ -20,8 +20,12 @@
 
 package org.mifos.accounts.business;
 
+import org.mifos.accounts.util.helpers.OverpaymentStatus;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.service.BusinessRuleException;
+
+import java.math.BigDecimal;
 
 public class AccountOverpaymentEntity extends AbstractEntity {
     private final Integer overpaymentId = null;
@@ -35,6 +39,10 @@ public class AccountOverpaymentEntity extends AbstractEntity {
     private Money actualOverpaymentAmount;
 
     protected Short overpaymentStatus;
+
+    protected AccountOverpaymentEntity() {
+        this(null, null, null, null);
+    }
 
     public AccountOverpaymentEntity(AccountBO account, AccountPaymentEntity paymentType, Money originalOverpaymentAmount, Short overPaymentStatus) {
         this.account = account;
@@ -78,5 +86,20 @@ public class AccountOverpaymentEntity extends AbstractEntity {
 
     public void setOverpaymentStatus(Short overpaymentStatus) {
         this.overpaymentStatus = overpaymentStatus;
+    }
+
+    public void clearOverpayment(BigDecimal overpaymentAmount) {
+        if (getOverpaymentStatus().equals(OverpaymentStatus.CLEARED.getValue()) ||
+                getActualOverpaymentAmount().getAmount().compareTo(overpaymentAmount) < 0) {
+            throw new BusinessRuleException("overpayments.clear.invalid.value");
+        }
+        actualOverpaymentAmount = actualOverpaymentAmount.subtract(new Money(actualOverpaymentAmount.getCurrency(), overpaymentAmount));
+        if (actualOverpaymentAmount.isTinyAmount()) {
+            setOverpaymentStatus(OverpaymentStatus.CLEARED.getValue());
+        }
+    }
+
+    public boolean isNotCleared() {
+        return !getOverpaymentStatus().equals(OverpaymentStatus.CLEARED.getValue());
     }
 }

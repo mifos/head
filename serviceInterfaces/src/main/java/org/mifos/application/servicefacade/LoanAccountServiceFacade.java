@@ -49,6 +49,7 @@ import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.LoanRepaymentScheduleItemDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
+import org.mifos.dto.domain.OverpaymentDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.dto.screen.ExpectedPaymentDto;
@@ -227,4 +228,10 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
 
     @PreAuthorize("isFullyAuthenticated()")
 	void makeEarlyRepaymentWithCommit(RepayLoanInfoDto repayLoanInfoDto);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    OverpaymentDto retrieveOverpayment(String overpaymentId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void applyOverpaymentClear(String overpaymentId, BigDecimal overpaymentAmount);
 }

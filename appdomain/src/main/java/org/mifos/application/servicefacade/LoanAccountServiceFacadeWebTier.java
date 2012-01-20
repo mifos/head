@@ -46,6 +46,7 @@ import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountNotesEntity;
+import org.mifos.accounts.business.AccountOverpaymentEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateFlagEntity;
@@ -79,6 +80,7 @@ import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.AmountRange;
 import org.mifos.accounts.productdefinition.business.CashFlowDetail;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
@@ -178,6 +180,7 @@ import org.mifos.dto.domain.LoanRepaymentScheduleItemDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
+import org.mifos.dto.domain.OverpaymentDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -252,6 +255,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Autowired
     private FeeDao feeDao;
+
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
 
     @Autowired
     private LegacyMasterDao legacyMasterDao;
@@ -2419,6 +2425,36 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             return new VariableInstallmentWithFeeValidationResult(feeCanBeAppliedToVariableInstallmentLoan, feeName);
         } catch (PropertyNotFoundException e) {
             throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public OverpaymentDto retrieveOverpayment(String overpaymentId) {
+        try {
+            return accountService.getOverpayment(overpaymentId);
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public void applyOverpaymentClear(String overpaymentId, BigDecimal overpaymentAmount) {
+        try {
+            this.transactionHelper.startTransaction();
+            AccountOverpaymentEntity overpaymentEntity = legacyAccountDao.findOverpaymentById(Integer.valueOf(overpaymentId));
+
+            overpaymentEntity.clearOverpayment(overpaymentAmount);
+
+            legacyAccountDao.save(overpaymentEntity);
+            this.transactionHelper.commitTransaction();
+        } catch (BusinessRuleException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getMessageKey(), e);
+        } catch (PersistenceException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.transactionHelper.closeSession();
         }
     }
 }

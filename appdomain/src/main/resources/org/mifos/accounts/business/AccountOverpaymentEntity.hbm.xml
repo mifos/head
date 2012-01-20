@@ -30,4 +30,9 @@
 
     </class>
 
+    <query name="accountOverpayment.findOverpaymentById">
+        <![CDATA[from org.mifos.accounts.business.AccountOverpaymentEntity accoverpayment
+                where accoverpayment.overpaymentId = :overpaymentId) ]]>
+    </query>
+
 </hibernate-mapping>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <var name="clearOverpaymentFormBean" class="org.mifos.ui.loan.controller.ClearOverpaymentFormBean"/>
+
+    <on-start>
+        <set name="flowScope.loanAccountNumber" value="requestParameters.globalAccountNum" type="string" />
+        <set name="flowScope.overpaymentId" value="requestParameters.overpaymentId" type="string" />
+    </on-start>
+
+    <view-state id="enterOverpaymentClearDetails" view="enterOverpaymentClearDetails" model="clearOverpaymentFormBean">
+        <on-entry>
+            <evaluate expression="clearOverpaymentController.retrieveOverpayment(flowScope.overpaymentId, clearOverpaymentFormBean)" />
+        </on-entry>
+        <transition on="detailsEntered" to="submitOverpaymentClear" bind="true" />
+        <transition on="cancel" to="cancel" />
+    </view-state>
+
+    <action-state id="submitOverpaymentClear">
+        <evaluate expression="clearOverpaymentController.applyOverpaymentClear(flowScope.overpaymentId, clearOverpaymentFormBean, messageContext)" />
+        <transition on="success" to="success" />
+        <transition on="error" to="enterOverpaymentClearDetails" />
+    </action-state>
+
+    <end-state id="success" view="externalRedirect:contextRelative:/loanAccountAction.do?globalAccountNum=${flowScope.loanAccountNumber}&amp;randomNUm=-2&amp;method=get" />
+    <end-state id="cancel" view="externalRedirect:contextRelative:/loanAccountAction.do?globalAccountNum=${flowScope.loanAccountNumber}&amp;randomNUm=-2&amp;method=get"/>
+
+</flow>

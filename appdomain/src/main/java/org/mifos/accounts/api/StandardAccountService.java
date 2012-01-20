@@ -32,6 +32,7 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountOverpaymentEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -60,6 +61,7 @@ import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
+import org.mifos.dto.domain.OverpaymentDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -524,6 +526,18 @@ public class StandardAccountService implements AccountService {
             }
         }
         return result;
+    }
+
+    @Override
+    public OverpaymentDto getOverpayment(String overpaymentId) throws PersistenceException {
+        AccountOverpaymentEntity overpaymentEntity = this.legacyAccountDao.findOverpaymentById(Integer.valueOf(overpaymentId));
+        if (overpaymentEntity == null) {
+            throw new PersistenceException("Overpayment not found for id " + overpaymentId);
+        }
+
+        return new OverpaymentDto(overpaymentEntity.getOverpaymentId().toString(),
+                overpaymentEntity.getOriginalOverpaymentAmount().getAmount(),
+                overpaymentEntity.getActualOverpaymentAmount().getAmount());
     }
 
     private BigDecimal computeWithdrawnForMPESA(BigDecimal withdrawAmount, LoanBO loanAccount) {

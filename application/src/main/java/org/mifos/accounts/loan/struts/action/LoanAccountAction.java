@@ -69,6 +69,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.accounts.business.AccountOverpaymentEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
@@ -357,9 +358,21 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         setCurrentPageUrl(request, loan);
         setQuestionGroupInstances(request, loan);
+        setOverpayments(request, loan);
         List<RepaymentScheduleInstallment> installments = loan.toRepaymentScheduleDto(userContext.getPreferredLocale());
         loanAccountActionForm.initializeInstallments(installments);
         return mapping.findForward(ActionForwards.get_success.toString());
+    }
+
+    private void setOverpayments(HttpServletRequest request, LoanBO loan) throws PageExpiredException {
+        List<AccountOverpaymentEntity> overpayments = new ArrayList<AccountOverpaymentEntity>();
+        // filter cleared overpayments
+        for (AccountOverpaymentEntity overpayment : loan.getAccountOverpayments()) {
+            if (overpayment.isNotCleared()) {
+                overpayments.add(overpayment);
+            }
+        }
+        SessionUtils.setCollectionAttribute("overpayments", overpayments, request);
     }
 
     private void addEmptyBuisnessActivities(List<LoanAccountDetailsDto> loanAccountDetails) {
