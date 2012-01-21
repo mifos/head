@@ -67,8 +67,7 @@ public class SavingsOverDueDepositsTagIntegrationTest extends MifosIntegrationTe
 
     @Test
     public void testBuildAmountUI() {
-       Assert.assertTrue(new SavingsOverDueDepositsTag().buildAmountUI(new Money(getCurrency(), "1000")).toString().contains("1000"));
-
+       Assert.assertTrue(new SavingsOverDueDepositsTag().buildAmountUI(new Money(getCurrency(), "1000")).toString().contains("1,000"));
     }
 
     @Test
@@ -79,7 +78,7 @@ public class SavingsOverDueDepositsTagIntegrationTest extends MifosIntegrationTe
                 new Money(getCurrency(), "1000")).toString();
        Assert.assertTrue(outString.contains(DateUtils.getUserLocaleDate(new Locale("en", "GB"), date.toString())));
 
-       Assert.assertTrue(outString.contains("1000"));
+       Assert.assertTrue(outString.contains("1,000"));
     }
 
     @Test

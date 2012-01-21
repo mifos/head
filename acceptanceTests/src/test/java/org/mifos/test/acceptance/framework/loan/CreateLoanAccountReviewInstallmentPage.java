@@ -20,8 +20,6 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,6 +34,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -314,10 +313,10 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         double  cashFlow = cashFlowIncremental;
         boolean cashflowAdded = false;
         // TODO - English locale hard-coded
-        DecimalFormat df = new DecimalFormat("#.0", new DecimalFormatSymbols(Locale.ENGLISH));
+        //DecimalFormat df = new DecimalFormat("#.0", new DecimalFormatSymbols(Locale.ENGLISH));
         for (int rowIndex = 0; rowIndex < noOfMonths - 1; rowIndex++) {
             String cashFlowDisplayed = selenium.getText(tableXpath + "//tr[" + (rowIndex + 1) + "]/td[2]");
-            Assert.assertEquals(cashFlowDisplayed, df.format(cashFlow));
+            Assert.assertEquals(StringUtil.formatNumber(String.valueOf(cashFlowDisplayed)), StringUtil.formatNumber(String.valueOf(cashFlow)));
             Assert.assertEquals(selenium.getText(tableXpath + "//tr[" + (rowIndex + 1) + "]/td[5]"), "notes" + (rowIndex+1));
             if(!cashflowAdded){
                 cashFlow += loanAmount;
@@ -349,15 +348,15 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
 
     public CreateLoanAccountReviewInstallmentPage verifyCashFlowDefaultValues() {
 //        verifyCellValueOfCashFlow(3,1,"Cumulative cash flow-Total installment amount per month");
-        verifyCellValueOfCashFlow(3,1,"1.0");
-        verifyCellValueOfCashFlow(3,2,"330.0");
+        verifyCellValueOfCashFlow(3,1,"1");
+        verifyCellValueOfCashFlow(3,2,"330");
         verifyCellValueOfCashFlow(3,3,"667.4");
-        verifyCellValueOfCashFlow(3,4,"1004.0");
+        verifyCellValueOfCashFlow(3,4,"1004");
 //        verifyCellValueOfCashFlow(4,1,"Total installment amount per month as % of cash flow");
-        verifyCellValueOfCashFlow(4,1,"0.0");
+        verifyCellValueOfCashFlow(4,1,"0");
 //        verifyCellValueOfCashFlow(4,2,"33600.00");
 //        verifyCellValueOfCashFlow(4,3,"11189.33");
-        verifyCellValueOfCashFlow(4,4,"0.0");
+        verifyCellValueOfCashFlow(4,4,"0");
         return this;
     }
 
@@ -391,10 +390,10 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         setFirstAndSecondInstallmentTotal("1");
         selenium.click(button);
         selenium.waitForPageToLoad("3000");
-        verifyCellValueOfCashFlow(3,2,"0.00");
-        verifyCellValueOfCashFlow(3,3,"1.00");
-        verifyCellValueOfCashFlow(4,2,"100.00");
-        verifyCellValueOfCashFlow(4,3,"50.00");
+        verifyCellValueOfCashFlow(3,2,"0");
+        verifyCellValueOfCashFlow(3,3,"1");
+        verifyCellValueOfCashFlow(4,2,"100");
+        verifyCellValueOfCashFlow(4,3,"50");
     }
 
     private void verifyRecalculationForForSameMonth(String button) {
@@ -404,10 +403,10 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         setFirstAndSecondInstallmentTotal("1");
         selenium.click(button);
         selenium.waitForPageToLoad("3000");
-        verifyCellValueOfCashFlow(3,2,"-1.00");
-        verifyCellValueOfCashFlow(3,3,"2.00");
-        verifyCellValueOfCashFlow(4,2,"200.00");
-        verifyCellValueOfCashFlow(4,3,"0.00");
+        verifyCellValueOfCashFlow(3,2,"-1");
+        verifyCellValueOfCashFlow(3,3,"2");
+        verifyCellValueOfCashFlow(4,2,"200");
+        verifyCellValueOfCashFlow(4,3,"0");
     }
 
     private void setInstallmentDate(String installment, String date) {

@@ -21,6 +21,7 @@ package org.mifos.test.acceptance.framework.loan;
 
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.testng.Assert;
 
 public class AccountActivityPage extends MifosPage{
@@ -67,7 +68,7 @@ public class AccountActivityPage extends MifosPage{
     }
 
     public void verifyLastTotalPaid(String amount, int row){
-        Assert.assertEquals(Double.parseDouble(getLastTotalPaid(row)), Double.parseDouble(amount));
+        Assert.assertEquals(getLastTotalPaid(row), StringUtil.formatNumber(amount));
     }
 
     public String getActivity(int row) {

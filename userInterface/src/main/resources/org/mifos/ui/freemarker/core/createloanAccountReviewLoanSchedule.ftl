@@ -261,9 +261,9 @@ $(document).ready(function() {
 		[#list cashflowSummaryDetails as row]
 		<tr>
 			<td style="border-top: 1px solid grey; width: 100px;">${row.month} ${row.year}</td>
-			<td style="border-top: 1px solid grey;">${row.cumulativeCashFlow}</td>
-			<td style="border-top: 1px solid grey;">${row.diffCumulativeCashflowAndInstallment}</td>
-			<td style="border-top: 1px solid grey;">${row.diffCumulativeCashflowAndInstallmentPercent}</td>
+			<td style="border-top: 1px solid grey;">${row.cumulativeCashFlow?number}</td>
+			<td style="border-top: 1px solid grey;">${row.diffCumulativeCashflowAndInstallment?number}</td>
+			<td style="border-top: 1px solid grey;">${row.diffCumulativeCashflowAndInstallmentPercent?number}</td>
 			<td style="border-top: 1px solid grey;">${row.notes}</td>
 		</tr>
 		[/#list]

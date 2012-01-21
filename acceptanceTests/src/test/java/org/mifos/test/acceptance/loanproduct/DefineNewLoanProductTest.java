@@ -184,9 +184,9 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         loanAccountPage.verifyAccountSummary(accountSummaryTable);
         loanAccountPage.navigateToAccountActivityPage();
         Assert.assertEquals("Loan Repayment", selenium.getTable("accountActivityTable.2.1").trim());
-        Assert.assertEquals("2500.0", selenium.getTable("accountActivityTable.2.2").trim());
-        Assert.assertEquals("0.0", selenium.getTable("accountActivityTable.2.10").trim());
-
+        Assert.assertEquals("2,500", selenium.getTable("accountActivityTable.2.2").trim());
+        Assert.assertEquals("0", selenium.getTable("accountActivityTable.2.10").trim());
+        
     }
 }
 

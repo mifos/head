@@ -100,11 +100,11 @@ public class CollectionSheetEntryEnterDataPage extends AbstractPage {
     }
 
     public void verifyCustomerAccountValue(int row, int col, double amount) {
-        Assert.assertEquals(selenium.getValue("customerAccountAmountEntered[" + row + "][" + col + "]"), Double.toString(amount));
+        Assert.assertEquals(Double.valueOf(selenium.getValue("customerAccountAmountEntered[" + row + "][" + col + "]")), amount);
 
     }
     public void verifyLoanAmountValue(int row, int col, double amount) {
-        Assert.assertEquals(selenium.getValue("enteredAmount[" + row + "][" + col + "]"), Double.toString(amount));
+        Assert.assertEquals(Double.valueOf(selenium.getValue("enteredAmount[" + row + "][" + col + "]")), amount);
 
     }
 

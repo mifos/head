@@ -601,9 +601,12 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 																	&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="loan.apply_payment" />
 										</html-el:link>
-										
+
+										<!--
+										// temporarily disable apply principal pre-payment link
 										<br/>
 										<a href="customLoanRepayment.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}">Apply Principal Pre-payment</a>
+										-->
 										<br/>
 									</c:if> 
 									<c:if test="${loanInformationDto.accountStateId!='6' && loanInformationDto.accountStateId!='7'}">

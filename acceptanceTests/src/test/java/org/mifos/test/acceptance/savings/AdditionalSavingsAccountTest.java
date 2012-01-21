@@ -206,7 +206,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         runBatchJobsForSavingsIntPosting();
 
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
-        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"1254.1");
+        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"1,254.1");
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-721
@@ -331,13 +331,13 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         runBatchJobsForSavingsIntPostingWithCleanup();
 
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
-        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"20594.9");
+        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"20,594.9");
 
         //Then
         DepositWithdrawalSavingsParameters depositParams = new DepositWithdrawalSavingsParameters();
         DateTime badDate = new DateTime(2011,5,5,13,0,0,0);
 
-        makeDefaultDepositWithdrawal(badDate,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT, "100000.0");
+        makeDefaultDepositWithdrawal(badDate,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT, "100000");
 
         Assert.assertTrue(selenium.isTextPresent("Date of transaction is invalid. It can not be prior to the last meeting date of the customer or prior to activation date of the savings account."));
     }
@@ -361,7 +361,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
 
         DepositWithdrawalSavingsParameters depositParams = new DepositWithdrawalSavingsParameters();
 
-        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT, "2000.0");
+        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT, "2000");
 
         //Then
         targetTime = new DateTime(2011,3,1,13,0,0,0);
@@ -382,13 +382,13 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         SavingsProductDetailsPage savingsProductDetailsPage = viewSavingsProducts.viewSavingsProductDetails(productName);
         EditSavingsProductPage editSavingsProductPage = savingsProductDetailsPage.editSavingsProduct();
 
-        selenium.type("interestRate", "10.0");
-        selenium.type("minBalanceRequiredForInterestCalculation", "100.0");
+        selenium.type("interestRate", "10");
+        selenium.type("minBalanceRequiredForInterestCalculation", "100");
 
         EditSavingsProductPreviewPage editSavingsProductPreviewPage = editSavingsProductPage.editSubmit();
         savingsProductDetailsPage = editSavingsProductPreviewPage.submit();
 
-        makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT, "2000.0");
+        makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT, "2000");
 
         targetTime = new DateTime(2011,4,1,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
@@ -419,11 +419,11 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         params.setInterestRate("10");
         String savingsId = createSavingsAccount(params);
         DepositWithdrawalSavingsParameters depositParams = new DepositWithdrawalSavingsParameters();
-        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT, "500.0");
+        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT, "500");
 
         targetTime = new DateTime(2011,2,1,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.WITHDRAWAL, "200.0");
+        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.WITHDRAWAL, "200");
 
         targetTime = new DateTime(2011,3,1,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
@@ -444,7 +444,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         SavingsAccountDetailPage savingsAccountDetailPage = new SavingsAccountDetailPage(selenium);
         SavingsApplyAdjustmentPage savingsApplyAdjustmentPage = new SavingsApplyAdjustmentPage(selenium);
 
-        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT, "123.0");
+        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT, "123");
         savingsAccountDetailPage=navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
         savingsApplyAdjustmentPage = savingsAccountDetailPage.navigateToApplyAdjustmentPage();
         savingsApplyAdjustmentPage.applyAdjustment("234", "adjustment");
@@ -457,7 +457,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
 
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"4.4");
-        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.WITHDRAWAL, "45.0");
+        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.WITHDRAWAL, "45");
         savingsAccountDetailPage=navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
         savingsApplyAdjustmentPage = savingsAccountDetailPage.navigateToApplyAdjustmentPage();
         savingsApplyAdjustmentPage.applyAdjustment("55", "adjustment");
@@ -516,7 +516,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         confirmationPage.navigateToSavingsProductDetails();
 
         //account1
-        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Default Group",params.getProductInstanceName(),"2000.0");
+        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Default Group",params.getProductInstanceName(),"2000");
         String savingsId = savingsAccountDetailPage.getAccountId();
 
         EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
@@ -526,9 +526,9 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
 
         DepositWithdrawalSavingsParameters depositParams = new DepositWithdrawalSavingsParameters();
 
-        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT, "2000.0");
+        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT, "2000");
 
-        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.WITHDRAWAL, "250.0");
+        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.WITHDRAWAL, "250");
 
         targetTime = new DateTime(2012,2,1,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);

@@ -118,9 +118,9 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
 
     private void verifyAfterLastInstallment() {
         String[][] tableAfterLastInstallment = { { "Installments due", "", "", "", "", "" },
-                { "1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0" },
-                { "2", "26-Oct-2010", "-", "333.4", "5.5", "0.0", "338.9" },
-                { "3", "02-Nov-2010", "-", "334.4", "3.3", "0.0", "337.7" } };
+                { "1", "19-Oct-2010", "-", "332.2", "3.8", "0", "336" },
+                { "2", "26-Oct-2010", "-", "333.4", "5.5", "0", "338.9" },
+                { "3", "02-Nov-2010", "-", "334.4", "3.3", "0", "337.7" } };
         verifyScheduleTable(tableAfterLastInstallment);
 
     }
@@ -131,37 +131,37 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
 
     private void verifyOnDayBetweenSecondAndThirdInstallment() {
         String[][] tableOnDayBetweenSecondAndThirdInstallment = { { "Installments due", "", "", "", "", "" },
-                { "1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0" },
-                { "2", "26-Oct-2010", "-", "333.4", "4.2", "0.0", "337.6" },
+                { "1", "19-Oct-2010", "-", "332.2", "3.8", "0", "336" },
+                { "2", "26-Oct-2010", "-", "333.4", "4.2", "0.", "337.6" },
                 { "Future Installments", "", "", "", "", "" },
-                { "3", "02-Nov-2010", "-", "334.4", "1.7", "0.0", "336.1" } };
+                { "3", "02-Nov-2010", "-", "334.4", "1.7", "0", "336.1" } };
         verifyScheduleTable(tableOnDayBetweenSecondAndThirdInstallment);
     }
 
     private void verifyOnDayOfSecondInstallment() {
         String[][] tableOnSecondInstallment = { { "Installments due", "", "", "", "", "" },
-                { "1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0" },
-                { "2", "26-Oct-2010", "-", "333.4", "3.9", "0.0", "337.3" },
+                { "1", "19-Oct-2010", "-", "332.2", "3.8", "0", "336" },
+                { "2", "26-Oct-2010", "-", "333.4", "3.9", "0", "337.3" },
                 { "Future Installments", "", "", "", "", "" },
-                { "3", "02-Nov-2010", "-", "334.4", "1.3", "0.0", "335.7" } };
+                { "3", "02-Nov-2010", "-", "334.4", "1.3", "0", "335.7" } };
         verifyScheduleTable(tableOnSecondInstallment);
     }
 
     private void verifyOnDayBetweenFirstAndSecondInstallment() {
         String[][] tableOnBetweenFirstAndSecondInstallment = { { "Installments due", "", "", "", "", "" },
-                { "1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0" },
+                { "1", "19-Oct-2010", "-", "332.2", "3.8", "0", "336" },
                 { "Future Installments", "", "", "", "", "" },
-                { "2", "26-Oct-2010", "-", "333.4", "3.5", "0.0", "336.9" },
-                { "3", "02-Nov-2010", "-", "334.4", "1.3", "0.0", "335.7" } };
+                { "2", "26-Oct-2010", "-", "333.4", "3.5", "0", "336.9" },
+                { "3", "02-Nov-2010", "-", "334.4", "1.3", "0", "335.7" } };
         verifyScheduleTable(tableOnBetweenFirstAndSecondInstallment);
     }
 
     private void verifyOnFirstInstallmentDate() {
         String[][] tableOnFirstInstalment = { { "Installments due", "", "", "", "", "" },
-                { "1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0" },
+                { "1", "19-Oct-2010", "-", "332.2", "3.8", "0", "336" },
                 { "Future Installments", "", "", "", "", "" },
-                { "2", "26-Oct-2010", "-", "333.4", "2.6", "0.0", "336.0" },
-                { "3", "02-Nov-2010", "-", "334.4", "1.3", "0.0", "335.7" } };
+                { "2", "26-Oct-2010", "-", "333.4", "2.6", "0", "336" },
+                { "3", "02-Nov-2010", "-", "334.4", "1.3", "0", "335.7" } };
         verifyScheduleTable(tableOnFirstInstalment);
     }
 
@@ -232,7 +232,7 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         Integer zeroPrincipalCount = 0;
         for (int i = 1; i < rowCount; i++) {
             if (getNoOfInstallmentFromSchedule(i).matches("^[0-9]+$")){
-                    if(getPrincipalOfInstallmentFromSchedule(i).equals("0.0")) {
+                    if(getPrincipalOfInstallmentFromSchedule(i).equals("0")) {
                         zeroPrincipalCount++;
                     }
                     else{

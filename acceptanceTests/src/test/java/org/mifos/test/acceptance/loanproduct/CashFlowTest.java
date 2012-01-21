@@ -2,7 +2,7 @@
  * Copyright (c) 2005-2011 Grameen Foundation USA
  * All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -37,6 +37,7 @@ import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -162,8 +163,8 @@ public class CashFlowTest extends UiTestCaseBase {
         applicationDatabaseOperation.updateLSIM(1);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         createAndValidateLoanProductWithCashFlow("89.99", formParameters, "49.99", minRC, true);
-        validateCashFlowForLoanAccount(formParameters, minRC, "998.46");
-        verifyRepaymentCapacityOnValidate(formParameters, minRC, "998.46");
+        validateCashFlowForLoanAccount(formParameters, StringUtil.formatNumber(minRC), "998.46");
+        verifyRepaymentCapacityOnValidate(formParameters, StringUtil.formatNumber(minRC), "998.46");
         applicationDatabaseOperation.updateLSIM(0);
     }
 
@@ -208,7 +209,7 @@ public class CashFlowTest extends UiTestCaseBase {
         cashFlowPage.verifyErrorsOnPage("Indebtedness rate of the client is 175 % which is greater than allowed value of 49 %.");
         cashFlowPage.enterValidData("1000", 1000, 100, "5000", "400");
         CreateLoanAccountReviewInstallmentPage reviewPage = cashFlowPage.clickContinue();
-		reviewPage.verifyCashFlow(100.0, 2000.0, new String[]{"100.0","1858.0","1445.0","1716.0","2334.7","2600.0"}, new String[]{"0.0", "15.5","37.2","28.5","6.6","0.0"});
+		reviewPage.verifyCashFlow(100, 2000, new String[]{"100","1858","1445","1716","2334.7","2600"}, new String[]{"0", "15.5","37.2","28.5","6.6","0"});
 		reviewPage = reviewPage.clickPreview();
 		
 		reviewPage.verifyErrorsOnPage("Repayment Capacity of the client is 127.06 % which should be greater than the required value of 400.0 %");
@@ -227,18 +228,18 @@ public class CashFlowTest extends UiTestCaseBase {
 		ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
 		
 		String[][] tableAfterLastInstallment = { { "Future Installments", "", "", "", "", "" },
-		        { "1", "19-Oct-2010", "-", "163.7", "7.3", "0.0", "0.0", "171.0" },
-		        { "2", "26-Oct-2010", "-", "164.3", "6.7", "0.0", "0.0", "171.0" },
-		        { "3", "02-Nov-2010", "-", "165.0", "6.0", "0.0", "0.0", "171.0" },
-		        { "4", "09-Nov-2010", "-", "165.6", "5.4", "0.0", "0.0", "171.0" },
-		        { "5", "16-Nov-2010", "-", "166.2", "4.8", "0.0", "0.0", "171.0" },
-		        { "6", "23-Nov-2010", "-", "166.8", "4.2", "0.0", "0.0", "171.0" },
-		        { "7", "30-Nov-2010", "-", "167.5", "3.5", "0.0", "0.0", "171.0" },
-		        { "8", "07-Dec-2010", "-", "168.1", "2.9", "0.0", "0.0", "171.0" },
-		        { "9", "14-Dec-2010", "-", "168.7", "2.3", "0.0", "0.0", "171.0" },
-		        { "10", "21-Dec-2010", "-", "169.3", "1.7", "0.0", "0.0", "171.0" },
-		        { "11", "28-Dec-2010", "-", "169.9", "1.1", "0.0", "0.0", "171.0" },
-		        { "12", "04-Jan-2011", "-", "164.9", "0.4", "0.0", "0.0", "165.3" } };
+		        { "1", "19-Oct-2010", "-", "163.7", "7.3", "0", "0", "171" },
+		        { "2", "26-Oct-2010", "-", "164.3", "6.7", "0", "0", "171" },
+		        { "3", "02-Nov-2010", "-", "165", "6", "0", "0", "171" },
+		        { "4", "09-Nov-2010", "-", "165.6", "5.4", "0", "0", "171" },
+		        { "5", "16-Nov-2010", "-", "166.2", "4.8", "0", "0", "171" },
+		        { "6", "23-Nov-2010", "-", "166.8", "4.2", "0", "0", "171" },
+		        { "7", "30-Nov-2010", "-", "167.5", "3.5", "0", "0", "171" },
+		        { "8", "07-Dec-2010", "-", "168.1", "2.9", "0", "0", "171" },
+		        { "9", "14-Dec-2010", "-", "168.7", "2.3", "0", "0", "171" },
+		        { "10", "21-Dec-2010", "-", "169.3", "1.7", "0", "0", "171" },
+		        { "11", "28-Dec-2010", "-", "169.9", "1.1", "0", "0", "171" },
+		        { "12", "04-Jan-2011", "-", "164.9", "0.4", "0", "0", "165.3" } };
 		
 		viewRepaymentSchedulePage.verifyScheduleTable(tableAfterLastInstallment);
 		
@@ -273,7 +274,7 @@ public class CashFlowTest extends UiTestCaseBase {
     private void validateCashFlowForLoanAccount(DefineNewLoanProductPage.SubmitFormParameters formParameters, String minRc, String expectedRc) {
         DateTime disbursalDate = systemDateTime.plusDays(1); //next week tuesday
         int installment = 5;
-        double cashFlowIncremental = 5685.0;
+        double cashFlowIncremental = 5685;
         String loanProductName = formParameters.getOfferingName();
         int frequency = formParameters.getFreqOfInstallments();
         verifyCashFlowForLoanAccount(disbursalDate, installment, cashFlowIncremental, loanProductName, frequency);
@@ -285,7 +286,7 @@ public class CashFlowTest extends UiTestCaseBase {
         int installment = 5;
         int cashFlowIncremental = 5685;
         new NavigationHelper(selenium).navigateToHomePage();
-        loanTestHelper.
+        loanTestHelper.	
                 navigateToCreateLoanAccountEntryPageWithoutLogout(clientName, formParameters.getOfferingName()).
                 setDisbursalDate(disbursalDate).
                 setInstallments(installment).

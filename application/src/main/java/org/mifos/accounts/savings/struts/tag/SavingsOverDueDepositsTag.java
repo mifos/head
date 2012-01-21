@@ -36,6 +36,7 @@ import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ConversionUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
@@ -110,7 +111,7 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
     StringBuilder buildAmountUI(Money amount) {
         StringBuilder builder = new StringBuilder();
         builder.append("<td align=\"right\" class=\"drawtablerow\">");
-        builder.append(amount);
+        builder.append(ConversionUtil.formatNumber(amount.toString()));
         builder.append("</td>");
         builder.append("<td align=\"right\" class=\"drawtablerow\">");
         builder.append("&nbsp;");

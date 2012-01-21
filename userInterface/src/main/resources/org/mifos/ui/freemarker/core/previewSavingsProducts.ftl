@@ -131,7 +131,7 @@
 	                    <div class="span-20 ">
 	                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.minimumbalancerequiredforInterestcalculation" /]
 	                                        :&nbsp;</span>
-	                        <span class="span-4">${savingsProduct.minBalanceRequiredForInterestCalculation}</span>
+	                        <span class="span-4">${savingsProduct.minBalanceRequiredForInterestCalculation?number}</span>
 	                    </div>
 	                </div>
                 [#else]
