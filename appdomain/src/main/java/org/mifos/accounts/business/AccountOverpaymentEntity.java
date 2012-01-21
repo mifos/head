@@ -90,7 +90,8 @@ public class AccountOverpaymentEntity extends AbstractEntity {
 
     public void clearOverpayment(BigDecimal overpaymentAmount) {
         if (getOverpaymentStatus().equals(OverpaymentStatus.CLEARED.getValue()) ||
-                getActualOverpaymentAmount().getAmount().compareTo(overpaymentAmount) < 0) {
+                getActualOverpaymentAmount().getAmount().compareTo(overpaymentAmount) < 0 ||
+                overpaymentAmount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new BusinessRuleException("overpayments.clear.invalid.value");
         }
         actualOverpaymentAmount = actualOverpaymentAmount.subtract(new Money(actualOverpaymentAmount.getCurrency(), overpaymentAmount));
