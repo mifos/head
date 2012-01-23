@@ -263,7 +263,9 @@
 				<span class="fontnormal">
 					[#assign arguments = ["${ConfigurationConstants.CLIENT}"]/]
 					[@spring.messageArgs "client.ClientStartDate" arguments /]:
+					[#if clientInformationDto.clientDisplay.customerActivationDate?has_content]
 						${i18n.date_formatter(clientInformationDto.clientDisplay.customerActivationDate, "dd/MM/yyyy", Application.LocaleSetting.locale)}
+					[/#if]
 					<br>
 					</span> 
 				<span class="fontnormal">
@@ -283,7 +285,7 @@
 				<!-- If the training status is set then the date is displayed -->
 				<span class="fontnormal"> 
 					[@spring.message "client.TrainedOn" /]
-					[#if clientInformationDto.clientDisplay.trainedDate?if_exists ]
+					[#if clientInformationDto.clientDisplay.trainedDate?has_content ]
 						${i18n.date_formatter(clientInformationDto.clientDisplay.trainedDate, "dd/MM/yyyy", Application.LocaleSetting.locale)}
 					[/#if]
 				</span> 
@@ -296,10 +298,10 @@
 			<div>
 				<span class="fontnormalbold">
 					[#if clientInformationDto.clientDisplay.clientUnderGroup ]
-						[#assign arguments = ["${ConfigurationConstants.GROUP}"]/]
+						[#assign arguments = ["${springMacroRequestContext.getMessage(ConfigurationConstants.GROUP)}"]/]
 						[@spring.messageArgs "client.GroupMembershipDetails" arguments /]
 					[#else]
-						[#assign arguments = ["${ConfigurationConstants.BRANCHOFFICE}"]/]
+						[#assign arguments = ["${springMacroRequestContext.getMessage(ConfigurationConstants.BRANCHOFFICE)}"]/]
 						[@spring.messageArgs "client.GroupMembershipDetails" arguments /]
 					[/#if]<br>
 					<span class="fontnormalRed"> 
@@ -318,7 +320,7 @@
 								${clientInformationDto.clientDisplay.parentCustomerDisplayName}
 							</span><br>
 						[#else]
-							${clientInformationDto.clientDisplay.branchName}><br>
+							${clientInformationDto.clientDisplay.branchName}<br>
 						[/#if]
 					</span>
 				</span>
@@ -326,14 +328,14 @@
 					[#if clientInformationDto.clientDisplay.clientUnderGroup ]
 						<a id="viewClientDetails.link.editRemoveGroupMembership"
 							href="clientTransferAction.do?method=loadParents&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
-							[#assign arguments = ["${ConfigurationConstants.GROUP}"]/]
+							[#assign arguments = ["${springMacroRequestContext.getMessage(ConfigurationConstants.GROUP)}"]/]
 							[@spring.messageArgs "client.EditRemoveMembership" arguments /]
 						</a>
 						<br>
 					[#else]
 						<a id="viewClientDetails.link.editBranchOfficeMembership"
 							href="clientTransferAction.do?method=loadBranches&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
-							[#assign arguments = ["${ConfigurationConstants.BRANCHOFFICE}"]/]
+							[#assign arguments = ["${springMacroRequestContext.getMessage(ConfigurationConstants.BRANCHOFFICE)}"]/]
 							[@spring.messageArgs "client.editMembership" arguments /]
 						</a>
 						<br>
