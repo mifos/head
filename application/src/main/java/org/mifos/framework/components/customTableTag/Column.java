@@ -23,6 +23,8 @@ package org.mifos.framework.components.customTableTag;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.jsp.PageContext;
 
@@ -31,6 +33,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ConversionUtil;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 import org.mifos.security.util.UserContext;
 
@@ -141,8 +144,14 @@ public class Column {
         for (Method method : methods) {
             if (method.getName().equalsIgnoreCase("get".concat(getValue()))) {
                 try {
-                    tableInfo.append(method.invoke(obj, new Object[] {}));
-                } catch (IllegalAccessException e) {
+                	String total = String.valueOf(method.invoke(obj, new Object[] {}));
+                	Pattern pattern = Pattern.compile("(total|debit|credi|installment|principal|interest|feesWithMiscFee|loanAmount|amount|runningBalance|feesWithMiscFee)");
+                	Matcher matcher = pattern.matcher(getValue());
+                	if(matcher.find()){
+                    total = ConversionUtil.formatNumber(total);
+                	}
+                    tableInfo.append(total);
+                	                } catch (IllegalAccessException e) {
                     throw new TableTagParseException(e);
                 } catch (InvocationTargetException ex) {
                     throw new TableTagParseException(ex);

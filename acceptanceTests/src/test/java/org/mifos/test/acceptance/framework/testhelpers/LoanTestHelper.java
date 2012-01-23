@@ -169,6 +169,8 @@ public class LoanTestHelper {
             createLoanAccountConfirmationPage = loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPageSaveForLaterButton();
         }
         LoanAccountPage loanAccountPage =  createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
+        
+        loanAccountPage.verifyGLIMIndividualScheduleLinks(3, true);
 
         if(loanSaveType) {
             loanAccountPage.verifyLoanIsPendingApproval();
@@ -182,6 +184,8 @@ public class LoanTestHelper {
         }
 
         editLoanAccountInformationPage.navigateBack();
+        
+        loanAccountPage.verifyGLIMIndividualScheduleLinks(3, true);
 
         return loanAccountPage;
     }

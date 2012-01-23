@@ -57,15 +57,19 @@ public class ActionParam {
 
     public void generateParameter(StringBuilder tableInfo, Object obj) throws TableTagParseException {
         tableInfo.append(getName() + "=");
-        Method[] methods = obj.getClass().getMethods();
-        for (Method method : methods) {
-            if (method.getName().equalsIgnoreCase("get".concat(getValue()))) {
-                try {
-                    tableInfo.append(method.invoke(obj, new Object[] {}));
-                } catch (IllegalAccessException e) {
-                    throw new TableTagParseException(e);
-                } catch (InvocationTargetException ex) {
-                    throw new TableTagParseException(ex);
+        if (getValueType().equalsIgnoreCase(TableTagConstants.TEXT) || getValueType().equalsIgnoreCase(TableTagConstants.INBUILD)) {
+            tableInfo.append(getValue());
+        } else {
+            Method[] methods = obj.getClass().getMethods();
+            for (Method method : methods) {
+                if (method.getName().equalsIgnoreCase("get".concat(getValue()))) {
+                    try {
+                        tableInfo.append(method.invoke(obj, new Object[] {}));
+                    } catch (IllegalAccessException e) {
+                        throw new TableTagParseException(e);
+                    } catch (InvocationTargetException ex) {
+                        throw new TableTagParseException(ex);
+                    }
                 }
             }
         }

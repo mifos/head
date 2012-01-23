@@ -36,7 +36,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.LocalDate;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -54,6 +57,7 @@ import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.dto.screen.LoanDisbursalDto;
+import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -127,6 +131,8 @@ public class LoanDisbursementAction extends BaseAction {
         Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc.getPreferredLocale());
 
         Integer loanAccountId = Integer.valueOf(actionForm.getAccountId());
+        AccountBO accountBO = new AccountBusinessService().getAccount(loanAccountId);
+        
         createGroupQuestionnaire.saveResponses(request, actionForm, loanAccountId);
 
         try {
@@ -146,6 +152,17 @@ public class LoanDisbursementAction extends BaseAction {
                     new LocalDate(receiptDate), actionForm.getReceiptId(), customerDto);
 
             this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
+            
+            //GLIM
+            List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(loanAccountId);
+                
+            for(LoanBO individual : individualLoans) {
+                loanDisbursement = new AccountPaymentParametersDto(new UserReferenceDto(uc.getId()), new AccountReferenceDto(
+                        individual.getAccountId()), individual.getLoanAmount().getAmount(), new LocalDate(trxnDate), paymentType, comment,
+                        new LocalDate(receiptDate), actionForm.getReceiptId(), customerDto);
+                
+                this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
+            }
         } catch (BusinessRuleException e) {
             throw new AccountException(e.getMessage());
         } catch (MifosRuntimeException e) {

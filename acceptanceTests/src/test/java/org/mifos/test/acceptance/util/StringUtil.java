@@ -27,6 +27,7 @@ public class StringUtil {
     public static String getRandomString(int length) {
         return RandomStringUtils.randomAlphanumeric(length);
     }
+    
     public static String formatNumber(final String number) {
     	String num = "";
         String decimal = "";
@@ -47,9 +48,15 @@ public class StringUtil {
             }
         }
         
-        if(!decimal.equalsIgnoreCase(".0")) {
-            builder = builder.append(decimal);
+        String check =".";
+        
+        for(int i = 0; i < decimal.length() - 1; i++){
+        	check = check.concat("0");
         }
+        
+		if (!decimal.equalsIgnoreCase(check)) {
+			builder = builder.append(decimal);
+		}
         
         return builder.toString();
     }

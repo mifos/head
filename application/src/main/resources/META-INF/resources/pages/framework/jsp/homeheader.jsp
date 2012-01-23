@@ -33,7 +33,6 @@ explanation of the license and how it is applied.
           </td>
           <td class="tablightorange"><a id="homeheader.link.clientsAndAccounts" href="custSearchAction.do?method=loadMainSearch"><mifos:mifoslabel name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
           <td class="tablightorange"><a id="homeheader.link.reports" href="reportsAction.do?method=load"><mifos:mifoslabel name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-          <td class="tablightorange"><a id="homeheader.link.pentahoreports" href="pentahoReportsAction.do?method=load"><mifos:mifoslabel name="framework.pentahoreports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
           <td class="tablightorange"><a id="homeheader.link.admin" href="AdminAction.do?method=load"><mifos:mifoslabel name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
         </tr>
       </table>

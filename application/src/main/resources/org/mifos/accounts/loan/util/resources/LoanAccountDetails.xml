@@ -11,13 +11,22 @@
          <columnDetails  rowStyle="drawtablerow" colWidth="22"/>
     </column>
     <column label="Goverment ID" value="govermentId" valueType="method" columnType="text">
-         <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
+         <columnDetails  rowStyle="drawtablerow" colWidth="10"/>
     </column>
     <column label="Loan amount" value="loanAmount" valueType="method" columnType="text">
-         <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
+         <columnDetails  rowStyle="drawtablerow" colWidth="15"/>
     </column>
     <column label="Loan purpose" value="businessActivityName" valueType="method" columnType="text">
-         <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
+         <columnDetails  rowStyle="drawtablerow" colWidth="15"/>
+    </column>
+    <column label="Individual schedule" value="show" valueType="text" columnType="link">
+         <columnDetails  rowStyle="drawtablerow" colWidth="11"/>
+         <linkDetails action="loanAccountAction.do">
+            <actionParam name="method" value="viewOriginalSchedule" valueType="text"/>
+            <actionParam name="accountId" value="loanAccountId" valueType="method"/>
+            <actionParam name="randomNUm" valueType="inbuilt"/>
+            <actionParam name="currentFlowKey" valueType="inbuilt"/>
+         </linkDetails>
     </column>
   </row>
 

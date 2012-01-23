@@ -144,6 +144,12 @@
                 <key column="account_id" />
                 <one-to-many class="org.mifos.accounts.loan.business.LoanActivityEntity" />
             </bag>
+            <bag name="accountOverpayments" cascade="all" inverse="true"
+                access="field" table="account_overpayment" lazy="true" order-by="overpayment_id desc">
+                <key column="account_id" />
+                <one-to-many class="org.mifos.accounts.business.AccountOverpaymentEntity" />
+            </bag>
+
             <set name="accountActionDates" cascade="all" inverse="true" lazy="true"
                 order-by="INSTALLMENT_ID asc" access="field">
                 <key column="account_id" />

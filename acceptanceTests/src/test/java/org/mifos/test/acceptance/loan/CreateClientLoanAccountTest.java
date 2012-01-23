@@ -592,16 +592,16 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(10, 1, "27-Jun-2011");
         viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(11, 1, "04-Jul-2011");
         viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(12, 1, "11-Jul-2011");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(3, 3, "100.0");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(4, 3, "100.0");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(5, 3, "100.0");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(6, 3, "100.0");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(7, 3, "100.0");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(8, 3, "100.0");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(9, 3, "100.0");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(10, 3, "100.0");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(11, 3, "100.0");
-        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(12, 3, "100.0");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(3, 3, "100");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(4, 3, "100");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(5, 3, "100");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(6, 3, "100");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(7, 3, "100");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(8, 3, "100");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(9, 3, "100");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(10, 3, "100");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(11, 3, "100");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(12, 3, "100");
         viewRepaymentSchedulePage.navigateToLoanAccountPage();
     }
        

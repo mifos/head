@@ -90,7 +90,7 @@
         [#elseif savingsAccountFormBean.product.savingsProductDetails.depositType?string == "2"]
             <div class="attribute">[@spring.message "createSavingsAccount.preview.savingAccountDetail.depositAmount.voluntary" /]</div>
         [/#if]
-        <div class="value">${savingsAccountFormBean.mandatoryDepositAmount ! "0"}</div>
+        <div class="value">${savingsAccountFormBean.mandatoryDepositAmount?number ! "0"}</div>
     </div>
     <div class="row">&nbsp;</div>
     <div class="row">

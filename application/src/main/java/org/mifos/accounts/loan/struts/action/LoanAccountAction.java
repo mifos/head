@@ -69,6 +69,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.accounts.business.AccountOverpaymentEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
@@ -350,16 +351,28 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                     legacyAdminDocAccStateMixDao.getAllMixedAdminDocuments(), request);
 
         }
-
+        
         // John W - temporarily put back because needed in applychargeaction - update
         // keithW - and for recentAccountNotes
         LoanBO loan = getLoan(loanInformationDto.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         setCurrentPageUrl(request, loan);
         setQuestionGroupInstances(request, loan);
+        setOverpayments(request, loan);
         List<RepaymentScheduleInstallment> installments = loan.toRepaymentScheduleDto(userContext.getPreferredLocale());
         loanAccountActionForm.initializeInstallments(installments);
         return mapping.findForward(ActionForwards.get_success.toString());
+    }
+
+    private void setOverpayments(HttpServletRequest request, LoanBO loan) throws PageExpiredException {
+        List<AccountOverpaymentEntity> overpayments = new ArrayList<AccountOverpaymentEntity>();
+        // filter cleared overpayments
+        for (AccountOverpaymentEntity overpayment : loan.getAccountOverpayments()) {
+            if (overpayment.isNotCleared()) {
+                overpayments.add(overpayment);
+            }
+        }
+        SessionUtils.setCollectionAttribute("overpayments", overpayments, request);
     }
 
     private void addEmptyBuisnessActivities(List<LoanAccountDetailsDto> loanAccountDetails) {
@@ -445,12 +458,15 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         UserContext userContext = getUserContext(request);
         Integer loanId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
+        LoanBO loan = (LoanBO) SessionUtils.getAttribute(BUSINESS_KEY, request);
+        boolean originalSchedule = loan == null ? true : loan.getAccountId().equals(loanId);
 
         OriginalScheduleInfoDto dto = loanServiceFacade.retrieveOriginalLoanSchedule(loanId);
+        
+        SessionUtils.setAttribute("originalSchedule", originalSchedule, request);
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, dto.getDisbursementDate(), request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, dto.getLoanAmount(), request);
-        SessionUtils.setCollectionAttribute(LoanConstants.ORIGINAL_INSTALLMENTS,
-                dto.getOriginalLoanScheduleInstallment(), request);
+        SessionUtils.setCollectionAttribute(LoanConstants.ORIGINAL_INSTALLMENTS, dto.getOriginalLoanScheduleInstallment(), request);
         return mapping.findForward(ActionForwards.viewOriginalSchedule.name());
     }
 

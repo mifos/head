@@ -175,6 +175,8 @@ public interface NamedQueryConstants {
     String RETRIEVE_LAST_TRXN = "accounts.retrieveLastTrxn";
     String RETRIEVE_FIRST_TRXN = "accounts.retrieveFirstTrxn";
 
+    String FIND_OVERPAYMENT_BY_ID = "accountOverpayment.findOverpaymentById";
+
     String GET_ENTITIES = "entities";
     String GET_LOOKUPVALUES = "lookupvalues";
     String SUPPORTED_LOCALE_LIST = "supportedlocales";

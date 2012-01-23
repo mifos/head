@@ -27,6 +27,8 @@ public class EditLoanAccountStatusParameters {
     public final static String PARTIAL_APPLICATION = "Partial Application";
     public final static String PENDING_APPROVAL = "Application Pending Approval";
     public final static String CANCEL = "Cancel";
+    
+    public final static String CLOSED_WRITTEN_OFF = "Closed- Written Off";
 
     public final static String CANCEL_REASON_OTHER = "Other";
     public final static String CANCEL_REASON_WITHDRAW = "Withdraw";
@@ -65,6 +67,7 @@ public class EditLoanAccountStatusParameters {
         if (PENDING_APPROVAL.equals(status)) { return 2; }
         if (APPROVED.equals(status)) { return 3; }
         if (CANCEL.equals(status)) { return 10; }
+        if (CLOSED_WRITTEN_OFF.equals(status)) { return 7; }
 
         return -1;
     }

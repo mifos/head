@@ -135,7 +135,7 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
         //veryfy "USDfee"(10) and "USDfeeAdditional"(20)
         Assert.assertEquals(selenium.getTable("loanSummaryTable.3.1"),"30");
         //restore parameters
-        propertiesHelper.setDigitsAfterDecimal(1);
+        propertiesHelper.setDigitsAfterDecimal(2);
     }
 
      @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -155,7 +155,7 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
         searchParameters.setLoanProduct("Loan With Different Currency");
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
-        submitAccountParameters.setAmount("1012.0");
+        submitAccountParameters.setAmount("1012");
         String fee = "USDfeeAdditional";
         submitAccountParameters.setAdditionalFee1(fee);
         return createLoanAndCheckAmount(searchParameters, submitAccountParameters);

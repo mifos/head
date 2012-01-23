@@ -83,19 +83,12 @@
     </definition>
 
     <definition name=".clientsacclayoutsearchmenu" extends=".withmenu_andsearch" >
-    	<put name="header" value="/pages/framework/jsp/clientaccheader.jsp"/>
+    <put name="header" value="/pages/framework/jsp/clientaccheader.jsp"/>
     </definition>
-    
-    <definition name=".reportLayout" extends=".mainLayout">
+     <definition name=".reportLayout" extends=".mainLayout">
         <put name="body" value="" />
         <put name="menu" value=".reportsearch" />
-        <put name="header" value="/pages/framework/jsp/reportsheader.jsp" />
-    </definition>
-    
-    <definition name=".pentahoReportLayout" extends=".mainLayout">
-        <put name="body" value="" />
-        <put name="menu" value="" />
-        <put name="header" value="/pages/framework/jsp/pentahoReportsHeader.jsp" />
+         <put name="header" value="/pages/framework/jsp/reportsheader.jsp" />
     </definition>
 
      <definition name=".reportsearch" extends=".searchmenu">

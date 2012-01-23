@@ -207,12 +207,14 @@ public class TableTagParser {
 
             actionParam[i].setName(actionParamNodeList.item(i).getAttributes().getNamedItem(TableTagConstants.NAME)
                     .getNodeValue());
-
-            actionParam[i].setValue(actionParamNodeList.item(i).getAttributes().getNamedItem(TableTagConstants.VALUE)
-                    .getNodeValue());
-
+            
             actionParam[i].setValueType(actionParamNodeList.item(i).getAttributes().getNamedItem(
                     TableTagConstants.VALUETYPE).getNodeValue());
+            
+            if (!actionParam[i].getValueType().equalsIgnoreCase(TableTagConstants.INBUILD)) {
+                actionParam[i].setValue(actionParamNodeList.item(i).getAttributes()
+                        .getNamedItem(TableTagConstants.VALUE).getNodeValue());
+            }
         }
         return actionParam;
     }

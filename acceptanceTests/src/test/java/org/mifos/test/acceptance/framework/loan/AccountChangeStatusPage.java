@@ -41,12 +41,15 @@ public class AccountChangeStatusPage extends MifosPage {
            name + value (id + value is not supported by Selenium). */
         selenium.check("name=newStatusId value=" + params.getStatusValue());
 
-        selenium.fireEvent("name=newStatusId value=10", "click");
+        if(selenium.isElementPresent("name=newStatusId value=10")) {
+            selenium.fireEvent("name=newStatusId value=10", "click");
 
-        // TODO: fix me, it'll never be empty.
-        if (StringUtils.isNotEmpty(params.getCancelReason())) {
-            selenium.select("change_status.input.cancel_reason", "value=" + params.getCancelReasonValue());
+            // TODO: fix me, it'll never be empty.
+            if (StringUtils.isNotEmpty(params.getCancelReason())) {
+                selenium.select("change_status.input.cancel_reason", "value=" + params.getCancelReasonValue());
+            }
         }
+        
         selenium.type("change_status.input.note", params.getNote());
 
         submit();

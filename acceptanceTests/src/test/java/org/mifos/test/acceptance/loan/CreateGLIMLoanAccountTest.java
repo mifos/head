@@ -36,6 +36,7 @@ import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
@@ -287,5 +288,74 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyGLIMPurpose("0012-Sheep Purchase", 1);
         loanAccountPage.verifyGLIMPurpose("-", 2);
         loanAccountPage.verifyGLIMPurpose("-", 3);
+        
+        loanAccountPage.verifyGLIMIndividualScheduleLinks(3, true);
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
+    public void checkGLIMIndividualSchedule() throws Exception {
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011, 03, 1, 13, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Default Group");
+        searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
+        CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
+        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "9999", "0012-Sheep Purchase");
+        loanAccountEntryPage.selectGLIMClients(1, "Stu1233266309851 Client1233266309851 Client Id: 0002-000000013", "99999");
+        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "99999");
+                
+        LoanAccountPage loanAccountPage = loanAccountEntryPage.navigateToReviewInstallmentsPage()
+                .clickPreviewAndGoToReviewLoanAccountPage()
+                .submitForApprovalAndNavigateToConfirmationPage()
+                .navigateToLoanAccountDetailsPage();
+        
+        loanAccountPage.verifyGLIMIndividualScheduleLinks(3, true);
+        
+        EditLoanAccountStatusParameters statusParams = new EditLoanAccountStatusParameters();
+        statusParams.setNote("GLIM test");
+        statusParams.setStatus(EditLoanAccountStatusParameters.APPROVED);
+        
+        loanAccountPage.changeAccountStatus(statusParams);
+        loanAccountPage.verifyGLIMIndividualScheduleLinks(3, true);
+        String loanId = loanAccountPage.getAccountId();
+        
+        dateTimeUpdaterRemoteTestingService.setDateTime(new LocalDate(2011, 3, 8).toDateTimeAtStartOfDay());
+        
+        loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+        
+        DisburseLoanParameters disburseParams = new DisburseLoanParameters();
+        disburseParams.setAmount("209997.0");
+        disburseParams.setDisbursalDateDD("8");
+        disburseParams.setDisbursalDateMM("3");
+        disburseParams.setDisbursalDateYYYY("2011");
+        disburseParams.setPaymentType(DisburseLoanParameters.CASH);
+        
+        loanAccountPage.disburseLoan(disburseParams);
+        loanAccountPage.verifyGLIMIndividualScheduleLinks(3, false);
+        
+        PaymentParameters paymentParams = new PaymentParameters();
+        paymentParams.setAmount("1500.0");
+        paymentParams.setTransactionDateDD("8");
+        paymentParams.setTransactionDateMM("3");
+        paymentParams.setTransactionDateYYYY("2011");
+        paymentParams.setPaymentType(PaymentParameters.CASH);
+        
+        loanTestHelper.applyPayment(loanId, paymentParams);
+        loanAccountPage.verifyGLIMIndividualScheduleLinks(3, false);
+        
+        loanTestHelper.repayLoan(loanId);
+        loanAccountPage.verifyGLIMIndividualScheduleLinks(3, false);
+        
+        loanAccountPage.navigateToApplyAdjustment().submitAdjustment();
+        loanAccountPage.verifyGLIMIndividualScheduleLinks(3, false);
+        
+        statusParams.setNote("GLIM test");
+        statusParams.setStatus(EditLoanAccountStatusParameters.CLOSED_WRITTEN_OFF);
+        
+        loanAccountPage.changeAccountStatus(statusParams);
+        loanAccountPage.verifyGLIMIndividualScheduleLinks(3, false);
     }
 }

@@ -56,7 +56,14 @@ explanation of the license and how it is applied.
 								<c:out value="${BusinessKey.loanOffering.prdOfferingName}"/>&nbsp;#
 								<c:out value="${BusinessKey.globalAccountNum}"/>-
 								</span>
-                                <mifos:mifoslabel name="loan.original.schedule" bundle="loanUIResources" />
+                                <c:choose>
+                                    <c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'originalSchedule')}">
+                                        <mifos:mifoslabel name="loan.original.schedule" bundle="loanUIResources" />
+                                    </c:when>
+                                    <c:otherwise>
+                                        <mifos:mifoslabel name="loan.individual.schedule" bundle="loanUIResources" />
+                                    </c:otherwise>
+                                </c:choose>
                             </td>
 						</tr>
 					</table>
@@ -88,10 +95,20 @@ explanation of the license and how it is applied.
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center">
-                                <html-el:button styleId="loanRepayment.button.return" property="returnToRepaymentScheduleButton"
-                                    onclick="LoanRepayment.submit(this.form,'getLoanRepaymentSchedule&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}');" styleClass="buttn" >
-                                    <mifos:mifoslabel name="loan.returnToRepaymentSchedule" bundle="loanUIResources" />
-                                </html-el:button>
+                                <c:choose>
+                                    <c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'originalSchedule')}">
+                                        <html-el:button styleId="loanRepayment.button.return" property="returnToRepaymentScheduleButton"
+                                            onclick="LoanRepayment.submit(this.form,'getLoanRepaymentSchedule&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}');" styleClass="buttn" >
+                                            <mifos:mifoslabel name="loan.returnToRepaymentSchedule" bundle="loanUIResources" />
+                                        </html-el:button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <html-el:button styleId="loanRepayment.button.return" property="returnToAccountDetailsbutton"
+                                            onclick="LoanRepayment.submit(this.form,'get');" styleClass="buttn" >
+                                            <mifos:mifoslabel name="loan.returnToAccountDetails" bundle="loanUIResources" />
+                                        </html-el:button>
+                                    </c:otherwise>
+                                </c:choose>
 							</td>
 						</tr>
 					</table>

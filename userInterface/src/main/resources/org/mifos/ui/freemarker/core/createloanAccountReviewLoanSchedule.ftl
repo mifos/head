@@ -194,9 +194,9 @@ $(document).ready(function() {
 					[@spring.bind "loanScheduleFormBean.installmentAmounts[${ind}]"/]
 					[#if cashFlowSummaryFormBean.installmentAmounts[ind]??]
 						[#if ind == loanAccountFormBean.numberOfInstallments - 1]
-						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.installmentAmounts[ind]?string.number}" disabled="disabled" /></td>
+						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.installmentAmounts[ind]}" disabled="disabled" /></td>
 						[#else]
-						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.installmentAmounts[ind]?string.number}" /></td>
+						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.installmentAmounts[ind]}" /></td>
 						[/#if]
 					[#else]
 						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="0" /></td>
@@ -227,9 +227,9 @@ $(document).ready(function() {
 					[@spring.bind "loanScheduleFormBean.installmentAmounts[${ind}]"/]
 					[#if loanScheduleFormBean.installmentAmounts[ind]??]
 						[#if ind == loanAccountFormBean.numberOfInstallments - 1]
-						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]?string.number}" disabled="disabled" /></td>
+						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]}" disabled="disabled" /></td>
 						[#else]
-						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]?string.number}" /></td>
+						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]}" /></td>
 						[/#if]
 					[#else]
 						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="0" /></td>
@@ -261,9 +261,9 @@ $(document).ready(function() {
 		[#list cashflowSummaryDetails as row]
 		<tr>
 			<td style="border-top: 1px solid grey; width: 100px;">${row.month} ${row.year}</td>
-			<td style="border-top: 1px solid grey;">${row.cumulativeCashFlow}</td>
-			<td style="border-top: 1px solid grey;">${row.diffCumulativeCashflowAndInstallment}</td>
-			<td style="border-top: 1px solid grey;">${row.diffCumulativeCashflowAndInstallmentPercent}</td>
+			<td style="border-top: 1px solid grey;">${row.cumulativeCashFlow?number}</td>
+			<td style="border-top: 1px solid grey;">${row.diffCumulativeCashflowAndInstallment?number}</td>
+			<td style="border-top: 1px solid grey;">${row.diffCumulativeCashflowAndInstallmentPercent?number}</td>
 			<td style="border-top: 1px solid grey;">${row.notes}</td>
 		</tr>
 		[/#list]

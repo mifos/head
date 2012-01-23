@@ -21,6 +21,7 @@
 package org.mifos.framework.components.customTableTag;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,6 +56,10 @@ public class TableTag extends BodyTagSupport {
     private String moduleName = null;
 
     private String passLocale = null;
+    
+    private String randomNUm = null;
+    
+    private String currentFlowKey = null;
 
     // FIXME: now unused and should be able to be deleted
     private String rootName;
@@ -106,6 +111,22 @@ public class TableTag extends BodyTagSupport {
     public String getModuleName() {
         return moduleName;
     }
+    
+    public String getRandomNUm() {
+        return randomNUm;
+    }
+
+    public void setRandomNUm(String randomNUm) {
+        this.randomNUm = randomNUm;
+    }
+
+    public String getCurrentFlowKey() {
+        return currentFlowKey;
+    }
+
+    public void setCurrentFlowKey(String currentFlowKey) {
+        this.currentFlowKey = currentFlowKey;
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -113,6 +134,38 @@ public class TableTag extends BodyTagSupport {
         try {
 
             table = TableTagParser.getInstance().parser(moduleName + "/" + xmlFileName);
+
+            Column[] column = table.getRow().getColumn();
+            for (int i = 0; i < column.length; ++i) {
+                if (column[i].getLinkDetails() != null) {
+                    if (randomNUm == null || currentFlowKey == null) {
+                        column[i] = null;
+                        
+                        if(i < column.length - 1) {
+                            int j = i;
+                            
+                            for(; j < column.length - 1; ++j) {
+                                column[j] = column[j + 1];
+                            }
+                        }
+                        
+                        column = Arrays.copyOf(column, column.length - 1);
+                        table.getRow().setColumn(column);
+                    } else {
+                        LinkDetails linkDetails = column[i].getLinkDetails();
+                        
+                        for (ActionParam param : linkDetails.getActionParam()) {
+                            if (param.getValueType().equalsIgnoreCase(TableTagConstants.INBUILD)) {
+                                if (param.getName().equalsIgnoreCase("randomNUm")) {
+                                    param.setValue(randomNUm);
+                                } else if (param.getName().equalsIgnoreCase("currentFlowKey")) {
+                                    param.setValue(currentFlowKey);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             tableInfo = new StringBuilder();
             if (source == null || scope == null) {

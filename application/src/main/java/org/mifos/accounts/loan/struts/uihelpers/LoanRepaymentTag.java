@@ -39,6 +39,7 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ConversionUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.LabelTagUtils;
@@ -290,29 +291,29 @@ public class LoanRepaymentTag extends BodyTagSupport {
         html.endTag("td");
 
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
-        html.text((isPaymentMade ? installment.getPrincipalPaid() : installment.getPrincipalDue()).toString());
+        html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getPrincipalPaid().toString()) : ConversionUtil.formatNumber(installment.getPrincipalDue().toString())));
         html.endTag("td");
 
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
-        html.text((isPaymentMade ? installment.getEffectiveInterestPaid() :
-                installment.getEffectiveInterestDue()).toString());
+        html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getEffectiveInterestPaid().toString()) :
+                ConversionUtil.formatNumber(installment.getEffectiveInterestDue().toString())));
         html.endTag("td");
 
         html.startTag("td", "width", "10%", "align", "right", "class", "drawtablerow");
-        html.text((isPaymentMade ? installment.getTotalFeeAmountPaidWithMiscFee() : installment
-                .getTotalFeeDueWithMiscFeeDue()).toString());
+        html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getTotalFeeAmountPaidWithMiscFee().toString()) : ConversionUtil.formatNumber(installment
+                .getTotalFeeDueWithMiscFeeDue().toString())));
         html.endTag("td");
         
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
-        html.text((isPaymentMade ? installment.getMiscPenaltyPaid() :
-                installment.getPenaltyDue()).toString());
+        html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getMiscPenaltyPaid().toString()) :
+                ConversionUtil.formatNumber(installment.getPenaltyDue().toString())));
         html.endTag("td");
 
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
-        html.text((isPaymentMade ? installment.getPrincipalPaid().add(installment.getEffectiveInterestPaid()).add(
-                installment.getTotalFeeAmountPaidWithMiscFee()).add(installment.getMiscPenaltyPaid()) : installment.getPrincipalDue().add(
+        html.text((isPaymentMade ? ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalPaid().add(installment.getEffectiveInterestPaid()).add(
+                installment.getTotalFeeAmountPaidWithMiscFee()).add(installment.getMiscPenaltyPaid()))) : ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalDue().add(
                 installment.getEffectiveInterestDue()).add(installment.getTotalFeeDueWithMiscFeeDue()).add(
-                installment.getPenaltyDue())).toString());
+                installment.getPenaltyDue())))));
         html.endTag("td");
 
         html.endTag("tr");
@@ -324,23 +325,23 @@ public class LoanRepaymentTag extends BodyTagSupport {
         XmlBuilder html = new XmlBuilder();
         html.startTag("tr");
         html.startTag("td", "width", "20%", "align", "right", "class", "drawtablerow");
-        html.text(totalPrincipal.subtract(installment.getPrincipalPaid()).toString());
+        html.text(ConversionUtil.formatNumber(totalPrincipal.subtract(installment.getPrincipalPaid()).toString()));
         html.endTag("td");
         html.startTag("td", "width", "20%", "align", "right", "class", "drawtablerow");
-        html.text(totalInterest.subtract(installment.getEffectiveInterestPaid()).toString());
+        html.text(ConversionUtil.formatNumber(totalInterest.subtract(installment.getEffectiveInterestPaid()).toString()));
         html.endTag("td");
         html.startTag("td", "width", "20%", "align", "right", "class", "drawtablerow");
-        html.text(totalFees.subtract(installment.getTotalFeeAmountPaidWithMiscFee()).toString());
+        html.text(ConversionUtil.formatNumber(totalFees.subtract(installment.getTotalFeeAmountPaidWithMiscFee()).toString()));
         html.endTag("td");
         html.startTag("td", "width", "20%", "align", "right", "class", "drawtablerow");
-        html.text(totalPenalties.subtract(installment.getMiscPenaltyPaid()).toString());
+        html.text(ConversionUtil.formatNumber(totalPenalties.subtract(installment.getMiscPenaltyPaid()).toString()));
         html.endTag("td");
         html.startTag("td", "width", "20%", "align", "right", "class", "drawtablerow");
         
-        html.text((totalPrincipal.add(totalInterest).add(totalFees).add(totalPenalties).subtract(
+        html.text((ConversionUtil.formatNumber(String.valueOf(totalPrincipal.add(totalInterest).add(totalFees).add(totalPenalties).subtract(
                 installment.getPrincipalPaid()).subtract(installment.getEffectiveInterestPaid()).subtract(
                 installment.getTotalFeeAmountPaidWithMiscFee()).subtract(
-                installment.getMiscPenaltyPaid())).toString());
+                installment.getMiscPenaltyPaid())))).toString());
         html.endTag("td");
         html.endTag("tr");
         return html;
