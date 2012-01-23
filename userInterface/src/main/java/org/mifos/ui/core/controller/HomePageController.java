@@ -30,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/home")
+@SuppressWarnings("PMD.AvoidUsingShortType")
 public class HomePageController {
 	
 	@Autowired
@@ -54,13 +55,13 @@ public class HomePageController {
             modelAndView = new ModelAndView("m_home");
         }
         
-        Short userId = new Integer(user.getUserId()).shortValue();
+        Short userId = (short) user.getUserId();
         UserDetailDto userDetails = this.centerServiceFacade.retrieveUsersDetails(userId);
         modelAndView.addObject("customerSearch", customerSearchFormBean);
         boolean isCenterHierarchyExists = Boolean.parseBoolean(configurationServiceFacade.getConfig("ClientRules.CenterHierarchyExists"));
         modelAndView.addObject("isCenterHierarchyExists", isCenterHierarchyExists );
         if (userDetails.isLoanOfficer()) {
-            loadLoanOfficerCustomersHierarchyForSelectedDay(new Integer(user.getUserId()).shortValue(), modelAndView, customerSearchFormBean);
+            loadLoanOfficerCustomersHierarchyForSelectedDay(userId, modelAndView, customerSearchFormBean);
             modelAndView.addObject("isLoanOfficer", true);
         } else {
         	modelAndView.addObject("isLoanOfficer", false);

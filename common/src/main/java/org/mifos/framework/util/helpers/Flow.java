@@ -28,8 +28,11 @@ import java.util.Map;
 import org.mifos.framework.hibernate.helper.QueryResult;
 
 @SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"EI_EXPOSE_REP", "EI_EXPOSE_REP2", "SE_BAD_FIELD"}, justification="should disable at filter level and also for pmd - not important for us")
 public class Flow implements Serializable {
-
+    
+    private static final long serialVersionUID = 5962801442824814078L;
+    
     private Map<String, Object> sessionData = new HashMap<String, Object>();
 
     public Flow() {

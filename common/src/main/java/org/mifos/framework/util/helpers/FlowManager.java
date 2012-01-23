@@ -28,7 +28,10 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 
 @SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_BAD_FIELD"}, justification="instance fields are serializable")
 public class FlowManager implements Serializable {
+    
+    private static final long serialVersionUID = -1267975781821089878L;
 
     private Map<String, Flow> flowData = new HashMap<String, Flow>();
 

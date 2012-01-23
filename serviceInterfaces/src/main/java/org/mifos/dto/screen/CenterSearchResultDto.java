@@ -25,7 +25,9 @@ import java.util.List;
 
 @SuppressWarnings("PMD")
 public class CenterSearchResultDto implements Serializable {
-
+    
+    private static final long serialVersionUID = -6668881719109275547L;
+    
     private Short officeId;
     private String officeName;
 

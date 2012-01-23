@@ -49,7 +49,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/searchResult")
 @SessionAttributes("customerSearch")
 public class SearchResultController {
-    private final int pageSize = 10;
+    private static final int pageSize = 10;
 
     @Autowired
     private CustomerSearchServiceFacade customerSearchServiceFacade;

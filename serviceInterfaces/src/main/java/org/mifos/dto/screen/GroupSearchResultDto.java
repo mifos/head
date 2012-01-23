@@ -24,8 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("PMD")
-public class GroupSearchResultDto implements Serializable {
-	
+public class GroupSearchResultDto implements Serializable {	
+    
+    private static final long serialVersionUID = -3993245267863360016L;
+    
     private Short officeId;
     private String officeName;
 

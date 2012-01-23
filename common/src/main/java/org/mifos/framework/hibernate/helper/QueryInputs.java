@@ -34,6 +34,7 @@ import org.hibernate.type.Type;
  * hibernate session object getting closed.
  */
 @SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
 public class QueryInputs {
 
     private String dtoPath;

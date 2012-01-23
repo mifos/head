@@ -26,7 +26,10 @@ import java.util.List;
 
 @SuppressWarnings("PMD")
 public class CustomerHierarchyDto implements Serializable {
-	private int size;
+    
+    private static final long serialVersionUID = 7475645034919589243L;
+
+    private int size;
 	
 	private List<ClientSearchResultDto> clients = new ArrayList<ClientSearchResultDto>();
 	private List<GroupSearchResultDto> groups = new ArrayList<GroupSearchResultDto>();
