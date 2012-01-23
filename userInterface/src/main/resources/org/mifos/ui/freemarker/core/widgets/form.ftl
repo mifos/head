@@ -59,6 +59,29 @@ Renders an HTML select element.
 [/#macro]
 
 [#-- 
+Renders an HTML select element with nested option tags (if any).
+
+    path        : spring bind path 
+    options     : An map of id (option value) to name (option label) or just a simple List of values (id or string).
+    attributes  : Extra HTML attributes that should be added to the select element. For example, "class=blah" and "id=blah".
+--]
+[#macro singleSelectWithNested path options id="" attributes=""]
+    [@spring.bind path/]
+    <select id="${id}" name="${spring.status.expression}" ${attributes}>
+	    [#nested]
+        [#if options?is_hash]
+            [#list options?keys as value]
+            <option value="${value?html}"[@spring.checkSelected value/]>${options[value]?html}</option>
+            [/#list]
+        [#else]
+            [#list options as value]
+            <option value="${value?html}"[@spring.checkSelected value/]>${value?html}</option>
+            [/#list]
+        [/#if]
+    </select>
+[/#macro]
+
+[#-- 
 Display form validation errors in one place.
 
     springBindPath: The path for Spring bind. For example, "userFormBean.*" 

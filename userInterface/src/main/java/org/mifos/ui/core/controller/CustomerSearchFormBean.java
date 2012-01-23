@@ -39,6 +39,8 @@ public class CustomerSearchFormBean implements Serializable {
     private String searchString;
     
     private String selectedDateOption;
+    
+    private Short officeId = 0;
 
     @Autowired
     private transient MifosBeanValidator validator;
@@ -61,6 +63,14 @@ public class CustomerSearchFormBean implements Serializable {
 
 	public void setSelectedDateOption(String selectedDateOption) {
 		this.selectedDateOption = selectedDateOption;
+	}
+
+	public Short getOfficeId() {
+		return officeId;
+	}
+
+	public void setOfficeId(Short officeId) {
+		this.officeId = officeId;
 	}
 
 	/**

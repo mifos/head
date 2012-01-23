@@ -34,7 +34,7 @@
 		</span>
 	[/#if]
 	<div style="width:100%"> 
-		<form method="POST" action="/mifos/custSearchAction.do">
+		<form method="POST" action="searchResult.ftl">
 			<div class="span-8 last" style="text-align:left;">
 	        	<div class="error">
 		            <span id="home.error.message">

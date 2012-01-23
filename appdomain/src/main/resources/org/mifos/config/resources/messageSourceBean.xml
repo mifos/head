@@ -27,10 +27,13 @@
                 <value>classpath:org/mifos/config/localizedResources/SharedMessages</value>
                 <value>classpath:org/mifos/config/localizedResources/LoginUIResources</value>
                 <value>classpath:org/mifos/config/localizedResources/CustomerSearchUIResources</value>
+                <value>classpath:org/mifos/config/localizedResources/CustomerUIResources</value>
                 <value>classpath:org/mifos/config/localizedResources/UIResources</value>
                 <value>classpath:org/mifos/config/localizedResources/ClientUIResources</value>
                 <value>classpath:org/mifos/config/localizedResources/SavingsUIResources</value>
                 <value>classpath:org/mifos/config/localizedResources/FieldUIResources</value>
+                <value>classpath:org/mifos/config/localizedResources/accountsUIResources</value>
+                <value>classpath:org/mifos/config/localizedResources/Resources</value>
             </list>
         </property>
         <property name="fileEncodings" value="UTF-8" />
