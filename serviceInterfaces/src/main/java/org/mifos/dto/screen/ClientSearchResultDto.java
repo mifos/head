@@ -24,7 +24,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@SuppressWarnings("PMD")
 public class ClientSearchResultDto implements Serializable {
 
     private Short officeId;

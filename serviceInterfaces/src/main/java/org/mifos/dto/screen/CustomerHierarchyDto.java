@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("PMD")
 public class CustomerHierarchyDto implements Serializable {
 	private int size;
 	

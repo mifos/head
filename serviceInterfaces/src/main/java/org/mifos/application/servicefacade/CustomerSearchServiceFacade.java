@@ -25,7 +25,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 
 public interface CustomerSearchServiceFacade {
 
-	public CustomerHierarchyDto search(String searchString, Short officeId,
+	CustomerHierarchyDto search(String searchString, Short officeId,
 			int pageNumber, int pageSize) throws ApplicationException;
 
 }

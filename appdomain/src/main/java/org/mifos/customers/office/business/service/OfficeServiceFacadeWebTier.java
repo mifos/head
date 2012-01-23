@@ -41,6 +41,8 @@ import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
@@ -71,11 +73,13 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
 
     private final OfficeDao officeDao;
     private final HolidayDao holidayDao;
+    private final PersonnelDao personnelDao;
 
     @Autowired
-    public OfficeServiceFacadeWebTier(OfficeDao officeDao, HolidayDao holidayDao) {
+    public OfficeServiceFacadeWebTier(OfficeDao officeDao, HolidayDao holidayDao, PersonnelDao personnelDao) {
         this.officeDao = officeDao;
         this.holidayDao = holidayDao;
+        this.personnelDao = personnelDao;
     }
 
     @Override
@@ -455,4 +459,22 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
             throw new MifosRuntimeException(e);
         }
     }
+
+    @Override
+    public List<OfficeDto> retrieveActiveBranchesUnderUser(Short userId) throws ApplicationException {
+         
+        PersonnelBO personnel = personnelDao.findPersonnelById(userId);
+        List<OfficeBO> officesListBO = new OfficePersistence().getActiveBranchesUnderUser(personnel.getOfficeSearchId());
+        List<OfficeDto> officesList = new ArrayList<OfficeDto>();
+        for ( OfficeBO officeBO : officesListBO){
+            OfficeDto officeDto = new OfficeDto(officeBO.getOfficeId(), officeBO.getOfficeName(), officeBO.getSearchId(), 
+                    officeBO.getShortName(), officeBO.getGlobalOfficeNum(), officeBO.getParentOffice().getOfficeId(), 
+                    officeBO.getStatus().getId(), officeBO.getLevel().getId());
+            officesList.add(officeDto);
+        }
+        
+        return officesList;
+    }
+    
+    
 }

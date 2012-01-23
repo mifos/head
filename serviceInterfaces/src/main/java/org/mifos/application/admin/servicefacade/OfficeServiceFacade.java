@@ -31,6 +31,7 @@ import org.mifos.dto.screen.OfficeDetailsForEdit;
 import org.mifos.dto.screen.OfficeFormDto;
 import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
+import org.mifos.framework.exceptions.ApplicationException;
 
 public interface OfficeServiceFacade {
 
@@ -53,4 +54,6 @@ public interface OfficeServiceFacade {
     OfficeDetailsForEdit retrieveOfficeDetailsForEdit(String officeLevel);
 
     boolean updateOffice(Short officeId, Integer versionNum, OfficeUpdateRequest officeUpdateRequest);
+    
+    List<OfficeDto> retrieveActiveBranchesUnderUser(Short userId) throws ApplicationException;
 }
