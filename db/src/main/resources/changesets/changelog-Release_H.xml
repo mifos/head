@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <changeSet id="MIFOS_3305_1" author="Jakub Slawinski" context="expansion">
+        <sql endDelimiter=";">
+                DROP TABLE IF EXISTS account_overpayment;
+                CREATE TABLE account_overpayment (
+                  overpayment_id integer auto_increment not null,
+                  account_id integer not null,
+                  payment_id integer not null,
+                  original_currency_id smallint,
+                  original_amount decimal(21,4) not null,
+                  actual_currency_id smallint,
+                  actual_amount decimal(21,4) not null,
+                  overpayment_status smallint not null,
+                  PRIMARY KEY (overpayment_id),
+                  foreign key(account_id)
+                    references account(account_id)
+                      on delete no action
+                      on update no action,
+                  foreign key(payment_id)
+                    references account_payment(payment_id)
+                      on delete no action
+                      on update no action,
+                  foreign key(original_currency_id)
+                    references currency(currency_id)
+                      on delete no action
+                      on update no action,
+                  foreign key(actual_currency_id)
+                    references currency(currency_id)
+                      on delete no action
+                      on update no action
+                ) ENGINE=InnoDB character set utf8;
+                  create index account_id_account_overpayment_idx on account_overpayment (account_id);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                DROP TABLE IF EXISTS account_overpayment;
+            </sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

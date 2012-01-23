@@ -49,6 +49,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountNotesEntity;
+import org.mifos.accounts.business.AccountOverpaymentEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
@@ -90,6 +91,7 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.FeeInstallment;
 import org.mifos.accounts.util.helpers.InstallmentDate;
 import org.mifos.accounts.util.helpers.OverDueAmounts;
+import org.mifos.accounts.util.helpers.OverpaymentStatus;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
@@ -145,6 +147,7 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
+import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.screen.LoanAccountDetailDto;
@@ -214,6 +217,7 @@ public class LoanBO extends AccountBO implements Loan {
 
     // associations
     private List<LoanActivityEntity> loanActivityDetails;
+    private List<AccountOverpaymentEntity> accountOverpayments;
 
     // persistence
     private LoanPrdPersistence loanPrdPersistence;
@@ -237,6 +241,7 @@ public class LoanBO extends AccountBO implements Loan {
     protected LoanBO() {
         this.loanPrdPersistence = null;
         this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
+        this.accountOverpayments = new ArrayList<AccountOverpaymentEntity>();
         this.redone = false;
         this.parentAccount = null;
         this.loanOffering = null;
@@ -293,6 +298,7 @@ public class LoanBO extends AccountBO implements Loan {
         this.gracePeriodType = new GracePeriodTypeEntity(loanProduct.getGraceType());
 
         this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
+        this.accountOverpayments = new ArrayList<AccountOverpaymentEntity>();
         this.rawAmountTotal = loanSchedule.getRawAmount();
         this.loanSummary = buildLoanSummary();
 
@@ -529,6 +535,14 @@ public class LoanBO extends AccountBO implements Loan {
 
     public List<LoanActivityEntity> getLoanActivityDetails() {
         return loanActivityDetails;
+    }
+
+    public List<AccountOverpaymentEntity> getAccountOverpayments() {
+        return accountOverpayments;
+    }
+
+    public void addAccountOverpayment(final AccountOverpaymentEntity overpayment) {
+        this.accountOverpayments.add(overpayment);
     }
 
     public void addLoanActivity(final LoanActivityEntity loanActivity) {
@@ -1582,6 +1596,11 @@ public class LoanBO extends AccountBO implements Loan {
         LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
         ApplicationContextProvider.getBean(LoanBusinessService.class).applyPayment(paymentData, this, accountPaymentEntity);
         postPayment(paymentData, accountPaymentEntity, loanPaymentType);
+        if (paymentData.getOverpaymentAmount() != null) {
+            AccountOverpaymentEntity overpaymentEntity = new AccountOverpaymentEntity(this, accountPaymentEntity,
+                    paymentData.getOverpaymentAmount(), OverpaymentStatus.UNCLEARED.getValue());
+            addAccountOverpayment(overpaymentEntity);
+        }
         return accountPaymentEntity;
     }
 
@@ -1652,7 +1671,7 @@ public class LoanBO extends AccountBO implements Loan {
     }
 
     private void validateForTotalAmount(PaymentData paymentData) throws AccountException {
-        if (!paymentAmountIsValid(paymentData.getTotalAmount())) {
+        if (!paymentAmountIsValid(paymentData.getTotalAmount(), Collections.<AccountPaymentParametersDto.PaymentOptions>emptySet())) {
             throw new AccountException("errors.makePayment", new String[] { getGlobalAccountNum() });
         }
     }
@@ -2566,10 +2585,11 @@ public class LoanBO extends AccountBO implements Loan {
      * @return true if the payment amount will be accepted
      */
     @Override
-    public boolean paymentAmountIsValid(final Money amount) {
+    public boolean paymentAmountIsValid(final Money amount, Set<AccountPaymentParametersDto.PaymentOptions> options) {
         Money totalRepayableAmount = getTotalRepayableAmount();
         return (null != amount) && (amount.isGreaterThanOrEqualZero()) &&
-                (amount.isLessThanOrEqual(totalRepayableAmount) || totalRepayableAmount.subtract(amount).isTinyAmount());
+                (options.contains(AccountPaymentParametersDto.PaymentOptions.ALLOW_OVERPAYMENTS) ||
+                        amount.isLessThanOrEqual(totalRepayableAmount) || totalRepayableAmount.subtract(amount).isTinyAmount());
     }
 
     private LoanPaymentTypes getLoanPaymentType(final Money amount) {
@@ -2597,7 +2617,7 @@ public class LoanBO extends AccountBO implements Loan {
                 personnel, this));
     }
 
-    private Money getTotalRepayableAmount() {
+    public Money getTotalRepayableAmount() {
         Money amount = new Money(getCurrency());
         for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
             amount = amount.add(((LoanScheduleEntity) accountActionDateEntity).getTotalDueWithFees());

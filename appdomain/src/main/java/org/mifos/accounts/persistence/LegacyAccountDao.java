@@ -36,6 +36,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountOverpaymentEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateFlagEntity;
@@ -490,6 +491,10 @@ public class LegacyAccountDao extends LegacyGenericDao {
         }
     }
 
+    public void save(AccountOverpaymentEntity overpaymentEntity) {
+        StaticHibernateUtil.getSessionTL().save(overpaymentEntity);
+    }
+
     private List<Object[]> getListOfAccountIdsHavingSchedulesWithinAHoliday(final String queryName, final Holiday holiday)
             throws PersistenceException {
 
@@ -568,4 +573,10 @@ public class LegacyAccountDao extends LegacyGenericDao {
          return executeNamedQuery("findAccountPaymentsByReceiptNumber", parameters);
     }
 
+    public AccountOverpaymentEntity findOverpaymentById(Integer overpaymentId) throws PersistenceException {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("overpaymentId", overpaymentId);
+        Object queryResult = execUniqueResultNamedQuery(NamedQueryConstants.FIND_OVERPAYMENT_BY_ID, parameters);
+        return queryResult == null ? null : (AccountOverpaymentEntity) queryResult;
+    }
 }

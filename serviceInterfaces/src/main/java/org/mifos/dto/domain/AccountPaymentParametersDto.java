@@ -23,6 +23,8 @@ package org.mifos.dto.domain;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The Class AccountPaymentParametersDto is a data transfer
@@ -33,6 +35,10 @@ public class AccountPaymentParametersDto {
 
     public enum TransactionType {
         PAYMENT, LOAN_DISBURSAL;
+    }
+
+    public enum PaymentOptions {
+        ALLOW_OVERPAYMENTS
     }
 
     /** The user making the payment. */
@@ -64,6 +70,9 @@ public class AccountPaymentParametersDto {
 
     /** Optional transaction type indicator */
     TransactionType transactionType;
+
+    /** Optional payment options */
+    private Set<PaymentOptions> paymentOptions;
 
 
     /**
@@ -232,4 +241,17 @@ public class AccountPaymentParametersDto {
         this.transactionType = transactionType;
     }
 
+    public Set<PaymentOptions> getPaymentOptions() {
+        if (paymentOptions == null) {
+            paymentOptions = new HashSet<PaymentOptions>();
+        }
+        return paymentOptions;
+    }
+
+    public void addPaymentOption(PaymentOptions option) {
+        if (paymentOptions == null) {
+            paymentOptions = new HashSet<PaymentOptions>();
+        }
+        paymentOptions.add(option);
+    }
 }

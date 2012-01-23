@@ -32,6 +32,7 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountOverpaymentEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -60,6 +61,7 @@ import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
+import org.mifos.dto.domain.OverpaymentDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -154,7 +156,15 @@ public class StandardAccountService implements AccountService {
             throw new AccountException("errors.invalidTxndate");
         }
 
+        Money overpaymentAmount = null;
         Money amount = new Money(account.getCurrency(), accountPaymentParametersDto.getPaymentAmount());
+
+        if (account instanceof LoanBO &&
+                accountPaymentParametersDto.getPaymentOptions().contains(AccountPaymentParametersDto.PaymentOptions.ALLOW_OVERPAYMENTS) &&
+                amount.isGreaterThan(((LoanBO) account).getTotalRepayableAmount())) {
+            overpaymentAmount = amount.subtract(((LoanBO) account).getTotalRepayableAmount());
+            amount = ((LoanBO) account).getTotalRepayableAmount();
+        }
 
         Date receiptDate = null;
         if (accountPaymentParametersDto.getReceiptDate() != null) {
@@ -169,6 +179,7 @@ public class StandardAccountService implements AccountService {
                 accountPaymentParametersDto.getCustomer().getCustomerId()));
         }
         paymentData.setComment(accountPaymentParametersDto.getComment());
+        paymentData.setOverpaymentAmount(overpaymentAmount);
 
         account.applyPayment(paymentData);
 
@@ -276,7 +287,7 @@ public class StandardAccountService implements AccountService {
         if (!getLoanDisbursementTypes().contains(payment.getPaymentType())) {
             errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);
         }
-        if (!loanAccount.paymentAmountIsValid(new Money(loanAccount.getCurrency(), payment.getPaymentAmount()))) {
+        if (!loanAccount.paymentAmountIsValid(new Money(loanAccount.getCurrency(), payment.getPaymentAmount()), payment.getPaymentOptions())) {
             errors.add(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT);
         }
         if (loanAccount.getCustomer().isDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProduct(loanAccount.getLoanOffering())) {
@@ -327,7 +338,7 @@ public class StandardAccountService implements AccountService {
                 errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);
             }
         }
-        if (!accountBo.paymentAmountIsValid(new Money(accountBo.getCurrency(), payment.getPaymentAmount()))) {
+        if (!accountBo.paymentAmountIsValid(new Money(accountBo.getCurrency(), payment.getPaymentAmount()), payment.getPaymentOptions())) {
             errors.add(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT);
         }
         return errors;
@@ -515,6 +526,18 @@ public class StandardAccountService implements AccountService {
             }
         }
         return result;
+    }
+
+    @Override
+    public OverpaymentDto getOverpayment(String overpaymentId) throws PersistenceException {
+        AccountOverpaymentEntity overpaymentEntity = this.legacyAccountDao.findOverpaymentById(Integer.valueOf(overpaymentId));
+        if (overpaymentEntity == null) {
+            throw new PersistenceException("Overpayment not found for id " + overpaymentId);
+        }
+
+        return new OverpaymentDto(overpaymentEntity.getOverpaymentId().toString(),
+                overpaymentEntity.getOriginalOverpaymentAmount().getAmount(),
+                overpaymentEntity.getActualOverpaymentAmount().getAmount());
     }
 
     private BigDecimal computeWithdrawnForMPESA(BigDecimal withdrawAmount, LoanBO loanAccount) {

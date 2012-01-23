@@ -24,9 +24,12 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 
+import org.mifos.accounts.business.AccountOverpaymentEntity;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
+import org.mifos.dto.domain.OverpaymentDto;
 import org.mifos.dto.domain.PaymentTypeDto;
+import org.mifos.framework.exceptions.PersistenceException;
 
 /**
  * The Interface AccountService provides methods to make and support making
@@ -231,4 +234,5 @@ public interface AccountService {
     List<AccountReferenceDto> lookupLoanAccountReferencesFromClientPhoneNumberAndWithdrawAmount(
             String phoneNumber, BigDecimal withdrawAmount) throws Exception;
 
+    OverpaymentDto getOverpayment(String overpaymentId) throws Exception;
 }

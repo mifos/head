@@ -713,6 +713,44 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</span></td>
 						</tr>
 					</table>
+					<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'overpayments')}"
+					var="overpayments" />
+					<c:if test="${!empty overpayments}">
+					    <table width="95%" border="0" cellspacing="0" cellpadding="0">
+						    <tr>
+							    <td><img src="pages/framework/images/trans.gif" width="7" height="8"></td>
+						    </tr>
+					    </table>
+				        <table width="100%" border="0" cellpadding="2" cellspacing="0"
+							class="bluetableborder">
+							<tr>
+								<td colspan="2" class="bluetablehead05">
+								    <span class="fontnormalbold"> <mifos:mifoslabel name="loan.overpayments" /> </span>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" class="paddingL10">
+								    <img src="pages/framework/images/trans.gif" width="10" height="2">
+								</td>
+							</tr>
+						    <c:forEach items="${overpayments}" var="overpayment">
+						              <tr>
+						                <td width="70%" class="paddingL10">
+						                  <span class="fontnormal8pt">
+						                    <c:out value="${overpayment.actualOverpaymentAmount}"/>
+						                  </span>
+						                </td>
+						                <td width="30%" align="left" class="paddingL10">
+						                  <span class="fontnormal8pt">
+						                      <a href="clearOverpayment.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}&overpaymentId=${overpayment.overpaymentId}">
+						                          <mifos:mifoslabel name="loan.overpayments_clear" />
+						                      </a>
+						                  </span>
+						                </td>
+						              </tr>
+						    </c:forEach>
+					    </table>
+					</c:if>
 					<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'questionGroupInstances')}"
 			   				var="questionGroupInstances" />
 					<table width="95%" border="0" cellspacing="0" cellpadding="0">

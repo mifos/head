@@ -44,6 +44,7 @@ public class PaymentData {
     private Date receiptDate;
     private final Short paymentTypeId;
     private String comment;
+    private Money overpaymentAmount;
 
     /*
      * Holds information including the installment this payment is to be applied
@@ -133,4 +134,11 @@ public class PaymentData {
         this.transactionDate = date;
     }
 
+    public Money getOverpaymentAmount() {
+        return overpaymentAmount;
+    }
+
+    public void setOverpaymentAmount(Money overpaymentAmount) {
+        this.overpaymentAmount = overpaymentAmount;
+    }
 }
