@@ -27,6 +27,7 @@
                          "createLoanAccount.flowState.reviewAndSubmit"]]
                          
 <span id="page.id" title="LoanCreationDetail"></span>
+[@i18n.formattingInfo /]
 
 [#if customerSearchFormBean.redoLoanAccount]
 <p class="red standout" style="margin-bottom: 5px;">[@spring.message "redoLoanAccount.wizard.highlightedNote" /]</p>
@@ -184,7 +185,7 @@
     [#else]
     <div class="row">
         [@form.label "amount" true ][@spring.message "createLoanAccount.amount"/][/@form.label]
-        [@form.input path="loanAccountFormBean.amount"  id="loancreationdetails.input.sumLoanAmount" /]
+        [@form.input path="loanAccountFormBean.amount"  id="loancreationdetails.input.sumLoanAmount" attributes="class=separatedNumber" /]
         <span id="createloan.allowedamounttext">([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.number} - ${loanProductReferenceData.maxLoanAmount?string.number})</span>
     </div>
     [/#if]

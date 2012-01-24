@@ -27,3 +27,10 @@
 [#-- Template method for localized formatting of Java or Joda dates --]
 [#-- usage: ${i18n.date_formatter(monthlyCashFlow.dateTime, "MMMM", Application.LocaleSetting.locale)} --]
 [#assign date_formatter="org.mifos.ui.ftl.DateFormatter"?new()]
+
+[#-- Locale information for grouping separation script --]
+[#macro formattingInfo]
+<span id="format.decimalSeparator" title="${Application.LocaleSetting.decimalSeparator}"></span>
+<span id="format.groupingSeparator" title="${Application.LocaleSetting.groupingSeparator}"></span>
+<span id="format.groupingSize" title="${Application.LocaleSetting.groupingSize}"></span>
+[/#macro]
