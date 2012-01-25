@@ -35,7 +35,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups = {"admin", "acceptance", "ui"})
+@Test(singleThreaded = true, groups = {"import"})
 public class ImportTransactionsTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
