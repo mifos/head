@@ -102,7 +102,7 @@ public class MpesaImportTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.SystemPrintln"})
-    @Test(enabled=true)
+    @Test(enabled=false) //blocked by http://mifosforge.jira.com/browse/MIFOS-4853 - ldomzalski
     public void importMpesaTransactions() throws Exception {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ViewOrganizationSettingsPage viewOrganizationSettingsPage = adminPage.navigateToViewOrganizationSettingsPage();
@@ -238,7 +238,7 @@ public class MpesaImportTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled = true)
+    @Test(enabled = false) //blocked by http://mifosforge.jira.com/browse/MIFOS-4853 - ldomzalski
     public void failImportTransaction() throws Exception {
         //Given
         String path = this.getClass().getResource("/mpesa/" + FILE_WITH_OVERPAYMENT_AMOUNT).toString();
