@@ -56,8 +56,11 @@ public class ClearOverpaymentController {
 	public String applyOverpaymentClear(final String overpaymentId, ClearOverpaymentFormBean clearOverpaymentFormBean, MessageContext messageContext) {
 		String returnCode = "";
 		try {
-			BigDecimal overpaymentAmount = BigDecimal.valueOf(clearOverpaymentFormBean.getActualOverpaymentAmount().doubleValue());
-			
+            BigDecimal overpaymentAmount = null;
+            if (clearOverpaymentFormBean.getActualOverpaymentAmount() != null) {
+                overpaymentAmount = BigDecimal.valueOf(clearOverpaymentFormBean.getActualOverpaymentAmount().doubleValue());
+            }
+
 			this.loanAccountServiceFacade.applyOverpaymentClear(overpaymentId, overpaymentAmount);
 			returnCode = "success";
 		} catch (BusinessRuleException e) {
