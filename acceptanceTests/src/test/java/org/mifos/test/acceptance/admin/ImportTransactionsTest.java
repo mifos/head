@@ -74,7 +74,7 @@ public class ImportTransactionsTest extends UiTestCaseBase {
 
     //  Test the import transaction page loads with no plugins available  - regression test for MIFOS-2683
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true)
+    @Test(enabled=true, groups = "no_db_unit")
     public void importTransactionPageLoad() throws Exception {
         String tempFileName = pluginsUtil.movePluginToTemp();
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
