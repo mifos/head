@@ -63,7 +63,7 @@ public class ImportTransactionsTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false) //TODO http://mifosforge.jira.com/browse/MIFOS-5081
+    @Test(enabled=true)
     public void importExcelFormatAudiBankTransactions() throws Exception {
         String importFile = this.getClass().getResource("/AudiUSD-SevenTransactions.xls").toString();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "mpesa_export_dbunit.xml", dataSource, selenium);
