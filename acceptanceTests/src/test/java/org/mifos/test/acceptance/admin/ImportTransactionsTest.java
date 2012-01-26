@@ -20,14 +20,12 @@
 
 package org.mifos.test.acceptance.admin;
 
-import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.ImportTransactionsConfirmationPage;
 import org.mifos.test.acceptance.framework.admin.ImportTransactionsPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.util.PluginsUtil;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.Test;
@@ -42,19 +40,16 @@ public class ImportTransactionsTest extends UiTestCaseBase {
     private static final String EXCEL_IMPORT_TYPE = "Audi Bank (Excel 2007)";
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false) // TODO - this test causes that four tests from AdditionalSavingsAccountTest fail
+    @Test(enabled=true)
     public void importExcelFormatAudiBankTransactions() throws Exception {
         pluginsUtil.loadPlugin();
         navigationHelper = new NavigationHelper(selenium);
-
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009, 11, 7, 10, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         String importFile = this.getClass().getResource("/AudiUSD-SevenTransactions.xls").toString();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "mpesa_export_dbunit.xml", dataSource, selenium);
 
         importTransaction(importFile, EXCEL_IMPORT_TYPE);
+
         // TODO - add proper UI verifications and enable this test after MIFOS-4651 is fixed
 
         (new MifosPage(selenium)).logout();
