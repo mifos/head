@@ -149,9 +149,9 @@
 						[#if loan.accountStateId==5 || loan.accountStateId==9 ]
 						<span class="fontnormal"> 
 							[@spring.message "loan.outstandingbalance"/] 
-							${loan.outstandingBalance} <br>
+							${loan.outstandingBalance?number} <br>
 							[@spring.message "loan.amount_due" /] 
-							${loan.totalAmountDue} 
+							${loan.totalAmountDue?number} 
 						</span>
 						[/#if]
 					</div>
@@ -190,7 +190,7 @@
 				<div>
 					<span class="fontnormal">
 						[@spring.message "Client.balance" /] 
-						${savings.savingsBalance} 
+						${savings.savingsBalance?number} 
 					</span>
 				</div>
 				<div>
@@ -218,7 +218,7 @@
 					<span class="fontnormal">
 						[@spring.message "client.amtdue" /]
 						<span id="viewClientDetails.text.amountDue">
-							${clientInformationDto.customerAccountSummary.nextDueAmount}
+							${clientInformationDto.customerAccountSummary.nextDueAmount?number}
 						</span>
 					</span>
 				</div>
