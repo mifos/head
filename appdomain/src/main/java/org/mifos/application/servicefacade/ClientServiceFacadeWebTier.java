@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
@@ -105,11 +107,14 @@ import org.mifos.dto.screen.ClientPhotoDto;
 import org.mifos.dto.screen.ClientRemovalFromGroupDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.image.domain.ClientPhoto;
 import org.mifos.framework.image.service.ClientPhotoService;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
@@ -776,4 +781,18 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         byte[] out = clientPhotoService.getData(clientPhoto.getImageInfo().getPath());
         return new ClientPhotoDto(contentType, contentLength, out);
     }
+
+    /**
+     * Workaround for NullPointerException when accessing some struts/jsp page from spring/ftl.
+     */
+    @Override
+    public void putClientBusinessKeyInSession(String globalCustNum, HttpServletRequest request) {
+        ClientBO clientBO = customerDao.findClientBySystemId(globalCustNum);
+        try {
+            SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, clientBO, request);
+        } catch (PageExpiredException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+    
 }

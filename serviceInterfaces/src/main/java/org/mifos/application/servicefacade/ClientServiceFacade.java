@@ -22,6 +22,8 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.joda.time.DateTime;
 import org.mifos.dto.domain.ClientCreationDetail;
 import org.mifos.dto.domain.ClientFamilyDetailsDto;
@@ -93,4 +95,6 @@ public interface ClientServiceFacade {
     String transferClientToGroup(Integer parentGroupIdValue, String clientGlobalCustNum, Integer previousClientVersionNo);
 
     String transferClientToBranch(String globalCustNum, Short officeId);
+    
+    void putClientBusinessKeyInSession(String globalCustNum, HttpServletRequest request);
 }

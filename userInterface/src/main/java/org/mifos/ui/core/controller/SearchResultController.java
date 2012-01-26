@@ -28,7 +28,6 @@ import javax.validation.Valid;
 
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.servicefacade.CustomerSearchServiceFacade;
-import org.mifos.core.MifosException;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.screen.CustomerHierarchyDto;
 import org.mifos.security.MifosUser;
@@ -41,7 +40,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;  
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -61,48 +60,50 @@ public class SearchResultController {
     private OfficeServiceFacade officeServiceFacade;
 
     @ModelAttribute("customerSearch")
-    public CustomerSearchFormBean populateForm(){
+    public CustomerSearchFormBean populateForm() {
         return new CustomerSearchFormBean();
     }
-    
-    @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET})
+
+    @RequestMapping(method = { RequestMethod.POST, RequestMethod.GET })
     public ModelAndView showSearchResults(HttpServletRequest request, SitePreference sitePreference,
-            @ModelAttribute("customerSearch") @Valid CustomerSearchFormBean customerSearchFormBean, BindingResult result) throws MifosException {
+            @ModelAttribute("customerSearch") @Valid CustomerSearchFormBean customerSearchFormBean, BindingResult result) {
         Device currentDevice = DeviceUtils.getCurrentDevice(request);
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CustomerHierarchyDto customerHierarchyDto = null;
-        
+
         List<OfficeDto> officeDtoList = officeServiceFacade.retrieveActiveBranchesUnderUser((short) user.getUserId());
         Map<String, String> officesMap = new HashMap<String, String>();
-        for (OfficeDto officeDto : officeDtoList){
+        for (OfficeDto officeDto : officeDtoList) {
             officesMap.put(officeDto.getId().toString(), officeDto.getName());
-        }     
+        }
         customerSearchFormBean.setOffices(officesMap);
-        
+
         ModelAndView modelAndView = new ModelAndView("m_searchResult");
         if (currentDevice.isMobile()) {
             modelAndView = new ModelAndView("m_searchResult");
         }
-        
-        if ( result.hasErrors() ){
-            return modelAndView; 
-        }        
-        
+
+        if (result.hasErrors()) {
+            return modelAndView;
+        }
+
         int currentPage = 0;
         if (request.getParameter("currentPage") != null) {
             currentPage = new Integer(request.getParameter("currentPage")).intValue();
         }
-        
+
         modelAndView.addObject("customerSearch", customerSearchFormBean);
-        
-        customerHierarchyDto = customerSearchServiceFacade.search(customerSearchFormBean.getSearchString(), customerSearchFormBean.getOfficeId(), currentPage*this.pageSize, this.pageSize);
+
+        customerHierarchyDto = customerSearchServiceFacade.search(customerSearchFormBean.getSearchString(),
+                customerSearchFormBean.getOfficeId(), currentPage * this.pageSize, this.pageSize);
 
         boolean prevPageAvailable = false;
         if (currentPage > 0) {
             prevPageAvailable = true;
         }
         boolean nextPageAvailable = false;
-        if ( customerHierarchyDto.getSize()/this.pageSize > 0 && customerHierarchyDto.getSize()/this.pageSize >= currentPage + 1  ) {
+        if (customerHierarchyDto.getSize() / this.pageSize > 0
+                && customerHierarchyDto.getSize() / this.pageSize >= currentPage + 1) {
             nextPageAvailable = true;
         }
 
@@ -115,7 +116,7 @@ public class SearchResultController {
 
         return modelAndView;
     }
-    
+
     @InitBinder("customerSearch")
     protected void initBinder(WebDataBinder binder) {
         binder.setValidator(new CustomerSearchFormValidator());

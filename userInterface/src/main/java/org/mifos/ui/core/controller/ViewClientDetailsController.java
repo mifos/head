@@ -59,6 +59,8 @@ public class ViewClientDetailsController {
         containsQGForCloseClient = questionnaireServiceFacade.getQuestionGroupInstances(clientInformationDto.getClientDisplay().getCustomerId(), "Close", "Client").size() > 0;
         modelAndView.addObject("containsQGForCloseClient", containsQGForCloseClient);
         
+        clientServiceFacade.putClientBusinessKeyInSession(clientSystemId, request);
+        
         return modelAndView;
 	}
 	
