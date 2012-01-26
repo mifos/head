@@ -71,30 +71,27 @@ public class PluginsUtil {
     public String movePluginToTemp() throws Exception {
         File pluginFile = new File(configPath + "plugins" + File.separator + pluginName);
         File temp = File.createTempFile(pluginName, ".tmp");
+        String tempFilePath = null;
 
-        if (!pluginFile.exists()) {
-            return null;
+        if (pluginFile.exists()) {
+            copyFile(pluginFile,temp);
+            pluginFile.delete();
+            tempFilePath = temp.getAbsolutePath();
         }
 
-        copyFile(pluginFile,temp);
-
-        pluginFile.delete();
-
-        return temp.getAbsolutePath();
+        return tempFilePath;
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void movePluginFromTemp(String tempFileName) throws Exception {
-        if (tempFileName == null) {
-            return;
+        if (tempFileName != null) {
+            File temp = new File(tempFileName);
+            File pluginFile = new File(configPath + "plugins" + File.separator + pluginName);
+
+            copyFile(temp,pluginFile);
+
+            temp.delete();
         }
-
-        File temp = new File(tempFileName);
-        File pluginFile = new File(configPath + "plugins" + File.separator + pluginName);
-
-        copyFile(temp,pluginFile);
-
-        temp.delete();
     }
 
     private static void copyFile(File sourceFile, File destFile) throws IOException {
