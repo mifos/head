@@ -72,6 +72,10 @@ public class PluginsUtil {
         File pluginFile = new File(configPath + "plugins" + File.separator + pluginName);
         File temp = File.createTempFile(pluginName, ".tmp");
 
+        if (!pluginFile.exists()) {
+            return null;
+        }
+
         copyFile(pluginFile,temp);
 
         pluginFile.delete();
@@ -81,6 +85,10 @@ public class PluginsUtil {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void movePluginFromTemp(String tempFileName) throws Exception {
+        if (tempFileName == null) {
+            return;
+        }
+
         File temp = new File(tempFileName);
         File pluginFile = new File(configPath + "plugins" + File.separator + pluginName);
 
