@@ -461,19 +461,23 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
     }
 
     @Override
-    public List<OfficeDto> retrieveActiveBranchesUnderUser(Short userId) throws ApplicationException {
+    public List<OfficeDto> retrieveActiveBranchesUnderUser(Short userId){
          
         PersonnelBO personnel = personnelDao.findPersonnelById(userId);
-        List<OfficeBO> officesListBO = new OfficePersistence().getActiveBranchesUnderUser(personnel.getOfficeSearchId());
-        List<OfficeDto> officesList = new ArrayList<OfficeDto>();
-        for ( OfficeBO officeBO : officesListBO){
-            OfficeDto officeDto = new OfficeDto(officeBO.getOfficeId(), officeBO.getOfficeName(), officeBO.getSearchId(), 
-                    officeBO.getShortName(), officeBO.getGlobalOfficeNum(), officeBO.getParentOffice().getOfficeId(), 
-                    officeBO.getStatus().getId(), officeBO.getLevel().getId());
-            officesList.add(officeDto);
+        try{
+            List<OfficeBO> officesListBO = new OfficePersistence().getActiveBranchesUnderUser(personnel.getOfficeSearchId());
+            List<OfficeDto> officesList = new ArrayList<OfficeDto>();
+            for ( OfficeBO officeBO : officesListBO){
+                OfficeDto officeDto = new OfficeDto(officeBO.getOfficeId(), officeBO.getOfficeName(), officeBO.getSearchId(), 
+                        officeBO.getShortName(), officeBO.getGlobalOfficeNum(), officeBO.getParentOffice().getOfficeId(), 
+                        officeBO.getStatus().getId(), officeBO.getLevel().getId());
+                officesList.add(officeDto);
+            }
+            
+            return officesList;
+        } catch ( PersistenceException e){
+            throw new MifosRuntimeException(e);
         }
-        
-        return officesList;
     }
     
     

@@ -71,7 +71,7 @@
 					<span id="home.label.search">[@spring.message "CustomerSearch.searchby"/]</span>:
 		        </div>
 		        <div>
-		        	<input type="text" id="home.input.search" name="searchString" maxlength="200"/>
+	                [@form.input "customerSearch.searchString" "home.input.search" "name='searchString' maxlength='200'" /]
 		        </div>
 		        <div>
 		        	[#if Session.UserContext.officeLevelId == 5]

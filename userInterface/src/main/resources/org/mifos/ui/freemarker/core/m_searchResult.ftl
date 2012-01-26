@@ -29,10 +29,11 @@
 	</div>
 	<div class="fontnormal">
 		<form method="POST" action="searchResult.ftl">
+			[@form.showAllErrors "customerSearch.*"/]
 			[@spring.message "CustomerSearch.searchFor" /]:
 			[@spring.bind "customerSearch.searchString" /]
 			<input type="text" name="${spring.status.expression}" value="${spring.status.value?if_exists}" maxlength="200"/>
-			[@form.singleSelectWithNested "customerSearch.officeId", officesMap ]
+			[@form.singleSelectWithNested "customerSearch.officeId", customerSearch.offices ]
 				<option value="0">
 					[@spring.message "CustomerSearch.all" /]&nbsp; 
 					[@spring.message "${ConfigurationConstants.BRANCHOFFICE}" /]
@@ -42,6 +43,7 @@
 			<input type="submit" value="Search" id="home.button.search" name="searchButton" class="buttn"/>
 		</form>
 	</div>
+	[#if customerHierarchy?has_content]
 	<div style="width: 325px">
 		[#assign number = pageSize*currentPage /]
 		<div class="blueline">
@@ -296,4 +298,5 @@
 		</span>
 		[/#if]			
 	</div>
+	[/#if]
 </div>

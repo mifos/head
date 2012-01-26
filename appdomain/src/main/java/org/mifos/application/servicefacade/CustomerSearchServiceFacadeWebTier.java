@@ -3,9 +3,9 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.mifos.accounts.servicefacade.UserContextFactory;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerSearchDto;
 import org.mifos.customers.center.util.helpers.CenterConstants;
-import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
@@ -13,7 +13,8 @@ import org.mifos.dto.screen.CenterSearchResultDto;
 import org.mifos.dto.screen.ClientSearchResultDto;
 import org.mifos.dto.screen.CustomerHierarchyDto;
 import org.mifos.dto.screen.GroupSearchResultDto;
-import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.HibernateSearchException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
@@ -33,26 +34,37 @@ public class CustomerSearchServiceFacadeWebTier implements
 	OfficeDao officeDao;
 	
 	@Override
-	public CustomerHierarchyDto search(String searchString, Short officeId, int pageNumber, int pageSize  ) throws ApplicationException{
+	public CustomerHierarchyDto search(String searchString, Short officeId, int pageNumber, int pageSize  ){
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(user);
 
         if (searchString == null) {
-            throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
+            throw new MifosRuntimeException(CenterConstants.NO_SEARCH_STRING);
         }
 
         String normalisedSearchString = org.mifos.framework.util.helpers.SearchUtils
                 .normalizeSearchString(searchString);
 
         if (normalisedSearchString.equals("")) {
-            throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
+            throw new MifosRuntimeException(CenterConstants.NO_SEARCH_STRING);
         }
 
-        QueryResult searchResult = new CustomerPersistence().search(normalisedSearchString, officeId, userContext.getId(), userContext.getBranchId());
-        List<CustomerSearchDto> resultList = searchResult.get(pageNumber, pageSize);
-        
         CustomerHierarchyDto customerHierarchyDto = new CustomerHierarchyDto();
-        customerHierarchyDto.setSize(searchResult.getSize());
+        QueryResult searchResult = null;
+        List<CustomerSearchDto> resultList = null;
+        
+        try {
+            searchResult = new CustomerPersistence().search(normalisedSearchString, officeId, userContext.getId(), userContext.getBranchId());
+        } catch ( PersistenceException e ) {
+            throw new MifosRuntimeException(e);
+        }
+       
+        try {
+            resultList = searchResult.get(pageNumber, pageSize);
+            customerHierarchyDto.setSize(searchResult.getSize());
+        } catch ( HibernateSearchException e ){
+            throw new MifosRuntimeException(e);
+        }
         
         for ( CustomerSearchDto customerSearchDto : resultList ){
         	//client

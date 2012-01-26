@@ -21,11 +21,9 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.dto.screen.CustomerHierarchyDto;
-import org.mifos.framework.exceptions.ApplicationException;
 
 public interface CustomerSearchServiceFacade {
 
-	CustomerHierarchyDto search(String searchString, Short officeId,
-			int pageNumber, int pageSize) throws ApplicationException;
+    CustomerHierarchyDto search(String searchString, Short officeId, int pageNumber, int pageSize);
 
 }

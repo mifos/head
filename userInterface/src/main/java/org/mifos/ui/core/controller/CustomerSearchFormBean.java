@@ -21,6 +21,7 @@
 package org.mifos.ui.core.controller;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.mifos.platform.validation.MifosBeanValidator;
@@ -41,6 +42,8 @@ public class CustomerSearchFormBean implements Serializable {
     private String selectedDateOption;
     
     private Short officeId = 0;
+    
+    private Map<String, String> offices;
 
     @Autowired
     private transient MifosBeanValidator validator;
@@ -71,9 +74,17 @@ public class CustomerSearchFormBean implements Serializable {
 
 	public void setOfficeId(Short officeId) {
 		this.officeId = officeId;
-	}
+	}	
+	
+	public Map<String, String> getOffices() {
+        return offices;
+    }
 
-	/**
+    public void setOffices(Map<String, String> offices) {
+        this.offices = offices;
+    }
+
+    /**
      * Validation method that Spring webflow calls on state transition out of
      * customerSearchStep.
      */

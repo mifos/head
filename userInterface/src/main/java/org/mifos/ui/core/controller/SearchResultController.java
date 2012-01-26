@@ -24,13 +24,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.servicefacade.CustomerSearchServiceFacade;
 import org.mifos.core.MifosException;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.screen.CustomerHierarchyDto;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
@@ -38,7 +38,10 @@ import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.mobile.device.site.SitePreference;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;  
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -64,45 +67,42 @@ public class SearchResultController {
     
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView showSearchResults(HttpServletRequest request, SitePreference sitePreference,
-            @ModelAttribute("customerSearch") CustomerSearchFormBean customerSearchFormBean) throws MifosException {
+            @ModelAttribute("customerSearch") @Valid CustomerSearchFormBean customerSearchFormBean, BindingResult result) throws MifosException {
         Device currentDevice = DeviceUtils.getCurrentDevice(request);
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        int currentPage = 0;
-
-        if (request.getParameter("currentPage") != null) {
-            currentPage = new Integer(request.getParameter("currentPage")).intValue();
-        }
-
+        CustomerHierarchyDto customerHierarchyDto = null;
+        
+        List<OfficeDto> officeDtoList = officeServiceFacade.retrieveActiveBranchesUnderUser((short) user.getUserId());
+        Map<String, String> officesMap = new HashMap<String, String>();
+        for (OfficeDto officeDto : officeDtoList){
+            officesMap.put(officeDto.getId().toString(), officeDto.getName());
+        }     
+        customerSearchFormBean.setOffices(officesMap);
+        
         ModelAndView modelAndView = new ModelAndView("m_searchResult");
         if (currentDevice.isMobile()) {
             modelAndView = new ModelAndView("m_searchResult");
         }
-
+        
+        if ( result.hasErrors() ){
+            return modelAndView; 
+        }        
+        
+        int currentPage = 0;
+        if (request.getParameter("currentPage") != null) {
+            currentPage = new Integer(request.getParameter("currentPage")).intValue();
+        }
+        
         modelAndView.addObject("customerSearch", customerSearchFormBean);
-
-        CustomerHierarchyDto customerHierarchyDto = null;
-        List<OfficeDto> officeDtoList = null;
-        try {
-            customerHierarchyDto = customerSearchServiceFacade.search(customerSearchFormBean.getSearchString(),
-                    customerSearchFormBean.getOfficeId(), currentPage*this.pageSize, this.pageSize);
-            officeDtoList = officeServiceFacade.retrieveActiveBranchesUnderUser((short) user.getUserId());
-        } catch (ApplicationException e) {
-            throw new MifosException(e);
-        }
         
-        Map<String, String> officesMap = new HashMap<String, String>();
-        for (OfficeDto officeDto : officeDtoList){
-            officesMap.put(officeDto.getId().toString(), officeDto.getName());
-        }
-        
+        customerHierarchyDto = customerSearchServiceFacade.search(customerSearchFormBean.getSearchString(), customerSearchFormBean.getOfficeId(), currentPage*this.pageSize, this.pageSize);
 
         boolean prevPageAvailable = false;
         if (currentPage > 0) {
             prevPageAvailable = true;
         }
         boolean nextPageAvailable = false;
-        if ( customerHierarchyDto.getSize()/this.pageSize > 0 && customerHierarchyDto.getSize()/this.pageSize > currentPage + 1  ) {
+        if ( customerHierarchyDto.getSize()/this.pageSize > 0 && customerHierarchyDto.getSize()/this.pageSize >= currentPage + 1  ) {
             nextPageAvailable = true;
         }
 
@@ -112,9 +112,13 @@ public class SearchResultController {
         modelAndView.addObject("pageSize", this.pageSize);
 
         modelAndView.addObject("customerHierarchy", customerHierarchyDto);
-        modelAndView.addObject("officesMap", officesMap);
 
         return modelAndView;
+    }
+    
+    @InitBinder("customerSearch")
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(new CustomerSearchFormValidator());
     }
 
 }
