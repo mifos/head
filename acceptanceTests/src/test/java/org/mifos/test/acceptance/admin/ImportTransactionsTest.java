@@ -30,8 +30,6 @@ import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.util.PluginsUtil;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
@@ -43,44 +41,39 @@ public class ImportTransactionsTest extends UiTestCaseBase {
 
     private static final String EXCEL_IMPORT_TYPE = "Audi Bank (Excel 2007)";
 
-    @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // one of the dependent methods throws Exception
-    @BeforeMethod
-    public void setUp() throws Exception {
+    @Test(enabled=true)
+    public void importExcelFormatAudiBankTransactions() throws Exception {
         pluginsUtil.loadPlugin();
         navigationHelper = new NavigationHelper(selenium);
+
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2009, 11, 7, 10, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
-    }
-
-    @AfterMethod
-    public void tearDown() {
-        (new MifosPage(selenium)).logout();
-        pluginsUtil.unloadPlugin();
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true)
-    public void importExcelFormatAudiBankTransactions() throws Exception {
         String importFile = this.getClass().getResource("/AudiUSD-SevenTransactions.xls").toString();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "mpesa_export_dbunit.xml", dataSource, selenium);
 
         importTransaction(importFile, EXCEL_IMPORT_TYPE);
         // TODO - add proper UI verifications and enable this test after MIFOS-4651 is fixed
+
+        (new MifosPage(selenium)).logout();
+        pluginsUtil.unloadPlugin();
     }
 
     //  Test the import transaction page loads with no plugins available  - regression test for MIFOS-2683
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled=true, groups = "no_db_unit")
     public void importTransactionPageLoad() throws Exception {
+        navigationHelper = new NavigationHelper(selenium);
+
         String tempFileName = pluginsUtil.movePluginToTemp();
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ImportTransactionsPage importTransactionsPage = adminPage.navigateToImportTransactionsPage();
         importTransactionsPage.verifyPage();
         pluginsUtil.movePluginFromTemp(tempFileName);
+
+        (new MifosPage(selenium)).logout();
     }
 
     private void importTransaction(String importFile, String importType) {
