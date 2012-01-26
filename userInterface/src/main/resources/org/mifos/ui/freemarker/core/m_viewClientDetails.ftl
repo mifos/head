@@ -505,7 +505,29 @@
 					</span> 
 					<br>
 				</div>
-				[/#if]
+				[/#if]			
+				<div>
+					<img src="pages/framework/images/trans.gif" width="10" height="10">
+				</div>				
+				<div>
+					<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Create&source=Client&backPageUrl=${currentPageUrl}">
+				    	[@spring.message "client.ViewQuestionGroupResponsesLink" /]
+					</a>
+					<br/>
+					[#if containsQGForCloseClient]		
+                    <a id="viewClientDetails.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Close&source=Client&backPageUrl=${currentPageUrl}">
+                        [@spring.message "client.ViewQuestionGroupForClosedClientResponsesLink" /]
+                    </a>
+                    <br/>
+                    [/#if]
+					<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=${clientInformationDto.clientDisplay.globalCustNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+					    [@spring.message "client.HistoricalDataLink" /]
+					</a>
+					<br/>
+					<a id="viewClientDetails.link.viewChangeLog" href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${clientInformationDto.clientDisplay.customerId}&currentFlowKey=${Request.currentFlowKey}">
+						[@spring.message "client.ChangeLogLink" /]
+					</a>
+				</div>
 			</div>
 				
 		</div>

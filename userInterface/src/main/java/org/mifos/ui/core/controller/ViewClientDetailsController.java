@@ -1,12 +1,15 @@
 package org.mifos.ui.core.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.mifos.application.servicefacade.ClientServiceFacade;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.DeviceUtils;
@@ -24,6 +27,8 @@ public class ViewClientDetailsController {
 	
 	@Autowired
 	private ConfigurationServiceFacade configurationServiceFacade;
+	@Autowired
+	private QuestionnaireServiceFacade questionnaireServiceFacade;
 	
 	@RequestMapping(method=RequestMethod.GET)
     public ModelAndView showDetails(HttpServletRequest request) throws ApplicationException{
@@ -36,21 +41,31 @@ public class ViewClientDetailsController {
         
         String clientSystemId = request.getParameter("globalCustNum");
         ClientInformationDto clientInformationDto;
-        try {
-            clientInformationDto = clientServiceFacade.getClientInformationDto(clientSystemId);
-        }
-        catch (MifosRuntimeException e) {
-            if (e.getCause() instanceof ApplicationException) {
-                throw (ApplicationException) e.getCause();
-            }
-            throw e;
-        }
+
+        clientInformationDto = clientServiceFacade.getClientInformationDto(clientSystemId);
         
         modelAndView.addObject("clientInformationDto", clientInformationDto);
 
         boolean isPhotoFieldHidden = Boolean.parseBoolean(configurationServiceFacade.getConfig("Client.Photo"));
         modelAndView.addObject("isPhotoFieldHidden", isPhotoFieldHidden);
         
+        try {
+            modelAndView.addObject("currentPageUrl", constructCurrentPageUrl(clientSystemId));
+        } catch (UnsupportedEncodingException e) {
+            throw new ApplicationException(e);
+        }
+        
+        boolean containsQGForCloseClient = false;
+        containsQGForCloseClient = questionnaireServiceFacade.getQuestionGroupInstances(clientInformationDto.getClientDisplay().getCustomerId(), "Close", "Client").size() > 0;
+        modelAndView.addObject("containsQGForCloseClient", containsQGForCloseClient);
+        
         return modelAndView;
 	}
+	
+	private String constructCurrentPageUrl(String globalCustNum) throws UnsupportedEncodingException{
+	    String viewName = "viewClientDetails.ftl";
+	    String url = String.format("%s?globalCustNum=%s", viewName, globalCustNum);
+	    return URLEncoder.encode(url, "UTF-8");
+	}
+	
 }
