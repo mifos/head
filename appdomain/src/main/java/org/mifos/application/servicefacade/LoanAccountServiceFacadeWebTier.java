@@ -53,9 +53,11 @@ import org.mifos.accounts.business.AccountStateFlagEntity;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
+import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
@@ -950,16 +952,36 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             // for GLIM loans only
             List<GroupMemberLoanDetail> individualMembersOfGroupLoan = new ArrayList<GroupMemberLoanDetail>();
+            List<BigDecimal> radio = new ArrayList<BigDecimal>(loan.getNoOfInstallments());
             for (GroupMemberAccountDto groupMemberAccount : memberDetails) {
                 ClientBO member = this.customerDao.findClientBySystemId(groupMemberAccount.getGlobalId());
                 Money loanAmount = new Money(loanAccountDetail.getLoanProduct().getCurrency(), groupMemberAccount.getLoanAmount());
-                LoanProductOverridenDetail memberOverridenDetail = new LoanProductOverridenDetail(loanAmount, new ArrayList<AccountFeesEntity>(), overridenDetail);
+                List<CreateAccountFeeDto> defaultAccountFees = new ArrayList<CreateAccountFeeDto>();
+                
+                radio.add(loanAmount.divide(loan.getLoanAmount()));
+                
+                for(CreateAccountFeeDto createAccountFeeDto : loanAccountInfo.getAccountFees()) {
+                    Integer feeId = createAccountFeeDto.getFeeId();
+                    String amount = createAccountFeeDto.getAmount();
+                    FeeBO feeBO = this.feeDao.findById(feeId.shortValue());
+                    
+                    if(feeBO instanceof AmountFeeBO) {
+                        amount = String.valueOf(Double.valueOf(createAccountFeeDto.getAmount()) * (loanAmount.divide(loanAccountInfo.getLoanAmount()).getAmount().doubleValue()));
+                    }
+                    
+                    defaultAccountFees.add(new CreateAccountFeeDto(feeId, amount));
+                }
+                
+                List<AccountFeesEntity> feeEntities = assembleAccountFees(defaultAccountFees);
+                LoanProductOverridenDetail memberOverridenDetail = new LoanProductOverridenDetail(loanAmount, feeEntities, overridenDetail);
 
                 LoanSchedule memberSchedule = assembleLoanSchedule(member, loanAccountDetail.getLoanProduct(), memberOverridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>(), loanAccountInfo.getDisbursementDate(), new ArrayList<Number>());
 
                 GroupMemberLoanDetail groupMemberLoanDetail = new GroupMemberLoanDetail(member, memberOverridenDetail, memberSchedule, groupMemberAccount.getLoanPurposeId());
                 individualMembersOfGroupLoan.add(groupMemberLoanDetail);
             }
+            
+            checkScheduleForMembers(loanSchedule, loan, individualMembersOfGroupLoan, radio);
 
             for (GroupMemberLoanDetail groupMemberAccount : individualMembersOfGroupLoan) {
 
@@ -1064,6 +1086,62 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             throw new MifosRuntimeException(e);
         } finally {
             this.transactionHelper.closeSession();
+        }
+    }
+
+    private void checkScheduleForMembers(LoanSchedule loanSchedule, LoanBO loan,
+                List<GroupMemberLoanDetail> individualMembersOfGroupLoan, List<BigDecimal> radio) {
+
+        for(int i = 0; i < loan.getNoOfInstallments(); ++i) {
+            BigDecimal principal = loanSchedule.getRoundedLoanSchedules().get(i).getPrincipal().getAmount();
+            BigDecimal interest = loanSchedule.getRoundedLoanSchedules().get(i).getInterest().getAmount();
+            BigDecimal miscFee = loanSchedule.getRoundedLoanSchedules().get(i).getMiscFee().getAmount();
+            BigDecimal miscPenalty = loanSchedule.getRoundedLoanSchedules().get(i).getMiscPenalty().getAmount();
+            
+            for (GroupMemberLoanDetail groupMemberLoanDetail : individualMembersOfGroupLoan) {
+                LoanScheduleEntity loanScheduleEntity = groupMemberLoanDetail.getMemberSchedule().getRoundedLoanSchedules().get(i);
+                
+                principal = principal.subtract(loanScheduleEntity.getPrincipal().getAmount());
+                interest = interest.subtract(loanScheduleEntity.getInterest().getAmount());
+                miscFee = miscFee.subtract(loanScheduleEntity.getMiscFee().getAmount());
+                miscPenalty = miscPenalty.subtract(loanScheduleEntity.getMiscPenalty().getAmount());
+            }
+            
+            if(principal.compareTo(BigDecimal.ZERO) != 0) {
+                for (int j = 0; j < individualMembersOfGroupLoan.size(); ++j) {
+                    Money oldPrincipal = individualMembersOfGroupLoan.get(j).getMemberSchedule().getRoundedLoanSchedules().get(i).getPrincipal();
+                    Money newPrincipal = oldPrincipal.add(new Money(loan.getCurrency(), principal.multiply(radio.get(j))));
+                    
+                    individualMembersOfGroupLoan.get(j).getMemberSchedule().getRoundedLoanSchedules().get(i).setPrincipal(newPrincipal);
+                }
+            }
+            
+            if(interest.compareTo(BigDecimal.ZERO) != 0) {
+                for (int j = 0; j < individualMembersOfGroupLoan.size(); ++j) {
+                    Money oldinterest = individualMembersOfGroupLoan.get(j).getMemberSchedule().getRoundedLoanSchedules().get(i).getInterest();
+                    Money newInterest = oldinterest.add(new Money(loan.getCurrency(), interest.multiply(radio.get(j))));
+                    
+                    individualMembersOfGroupLoan.get(j).getMemberSchedule().getRoundedLoanSchedules().get(i).setInterest(newInterest);
+                }
+            }
+            
+            if(miscFee.compareTo(BigDecimal.ZERO) != 0) {
+                for (int j = 0; j < individualMembersOfGroupLoan.size(); ++j) {
+                    Money oldMiscFee = individualMembersOfGroupLoan.get(j).getMemberSchedule().getRoundedLoanSchedules().get(i).getMiscFee();
+                    Money newMiscFee = oldMiscFee.add(new Money(loan.getCurrency(), miscFee.multiply(radio.get(j))));
+                    
+                    individualMembersOfGroupLoan.get(j).getMemberSchedule().getRoundedLoanSchedules().get(i).setMiscFee(newMiscFee);
+                }
+            }
+            
+            if(miscPenalty.compareTo(BigDecimal.ZERO) != 0) {
+                for (int j = 0; j < individualMembersOfGroupLoan.size(); ++j) {
+                    Money oldMiscPenalty = individualMembersOfGroupLoan.get(j).getMemberSchedule().getRoundedLoanSchedules().get(i).getMiscPenalty();
+                    Money newMiscPenalty = oldMiscPenalty.add(new Money(loan.getCurrency(), miscPenalty.multiply(radio.get(j))));
+                    
+                    individualMembersOfGroupLoan.get(j).getMemberSchedule().getRoundedLoanSchedules().get(i).setMiscPenalty(newMiscPenalty);
+                }
+            }
         }
     }
 

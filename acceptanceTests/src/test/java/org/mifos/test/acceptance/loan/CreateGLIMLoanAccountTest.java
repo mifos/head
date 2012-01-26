@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.loan;
 
+import java.sql.SQLException;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
@@ -37,6 +39,7 @@ import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParame
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
+import org.mifos.test.acceptance.framework.loan.ViewOriginalSchedulePage;
 import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
@@ -48,8 +51,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.sql.SQLException;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
@@ -335,6 +336,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         
         loanAccountPage.disburseLoan(disburseParams);
         loanAccountPage.verifyGLIMIndividualScheduleLinks(3, false);
+        totalGroupLoanEqualSumOfindividual(loanAccountPage, 3, 1.0);
         
         PaymentParameters paymentParams = new PaymentParameters();
         paymentParams.setAmount("1500.0");
@@ -345,17 +347,47 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         
         loanTestHelper.applyPayment(loanId, paymentParams);
         loanAccountPage.verifyGLIMIndividualScheduleLinks(3, false);
+        totalGroupLoanEqualSumOfindividual(loanAccountPage, 3, 1.0);
         
         loanTestHelper.repayLoan(loanId);
         loanAccountPage.verifyGLIMIndividualScheduleLinks(3, false);
+        totalGroupLoanEqualSumOfindividual(loanAccountPage, 3, 1.0);
         
         loanAccountPage.navigateToApplyAdjustment().submitAdjustment();
         loanAccountPage.verifyGLIMIndividualScheduleLinks(3, false);
+        totalGroupLoanEqualSumOfindividual(loanAccountPage, 3, 1.0);
         
         statusParams.setNote("GLIM test");
         statusParams.setStatus(EditLoanAccountStatusParameters.CLOSED_WRITTEN_OFF);
         
         loanAccountPage.changeAccountStatus(statusParams);
         loanAccountPage.verifyGLIMIndividualScheduleLinks(3, false);
+        totalGroupLoanEqualSumOfindividual(loanAccountPage, 3, 1.0);
+    }
+    
+    private void totalGroupLoanEqualSumOfindividual(LoanAccountPage page, int count, double delta) {
+        ViewOriginalSchedulePage originalSchedulePage = page.navigateToRepaymentSchedulePage().navigateToViewOriginalSchedulePage();
+        double[][] installments = originalSchedulePage.getInstallments(delta);
+        originalSchedulePage.returnToRepaymentSchedule().navigateToLoanAccountPage();
+        
+        for(int i = 0; i < count; ++i) {
+            ViewOriginalSchedulePage individualSchedulePage = page.navigateToIndividualSchedulePage(i + 2);
+            double[][] individual = individualSchedulePage.getInstallments(delta);
+            individualSchedulePage.returnToLoanAccountDetail();
+            
+            for(int j = 0; j < installments.length; ++j) {
+                installments[j][0] -= individual[j][0];
+                installments[j][1] -= individual[j][1];
+                installments[j][2] -= individual[j][2];
+                installments[j][3] -= individual[j][3];
+            }
+        }
+        
+        for (int i = 0; i < installments.length; ++i) {
+            Assert.assertEquals(installments[i][0], 0, delta);
+            Assert.assertEquals(installments[i][1], 0, delta);
+            Assert.assertEquals(installments[i][2], 0, delta);
+            Assert.assertEquals(installments[i][3], 0, delta);
+        }
     }
 }
