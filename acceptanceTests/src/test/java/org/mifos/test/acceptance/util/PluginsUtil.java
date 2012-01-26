@@ -36,15 +36,14 @@ public class PluginsUtil {
 
     public PluginsUtil(String pluginName) {
         this.pluginName = pluginName;
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void loadPlugin() throws Exception {
 
         if (!configPath.endsWith(File.separator)) {
             configPath += File.separator;
         }
+    }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void loadPlugin() throws Exception {
         String plugin = PluginsUtil.class.getResource("/jars/" + pluginName).getFile();
         File pluginFile = new File(configPath + "plugins" + File.separator + pluginName);
         File folderPlugins = new File(configPath + "plugins");
@@ -70,12 +69,12 @@ public class PluginsUtil {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public String movePluginToTemp() throws Exception {
-        File mpesa = new File(configPath+"plugins" + File.separator + pluginName);
+        File pluginFile = new File(configPath + "plugins" + File.separator + pluginName);
         File temp = File.createTempFile(pluginName, ".tmp");
 
-        copyFile(mpesa,temp);
+        copyFile(pluginFile,temp);
 
-        mpesa.delete();
+        pluginFile.delete();
 
         return temp.getAbsolutePath();
     }
@@ -83,9 +82,9 @@ public class PluginsUtil {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void movePluginFromTemp(String tempFileName) throws Exception {
         File temp = new File(tempFileName);
-        File mpesa = new File(configPath+"plugins" + File.separator + pluginName);
+        File pluginFile = new File(configPath + "plugins" + File.separator + pluginName);
 
-        copyFile(temp,mpesa);
+        copyFile(temp,pluginFile);
 
         temp.delete();
     }
