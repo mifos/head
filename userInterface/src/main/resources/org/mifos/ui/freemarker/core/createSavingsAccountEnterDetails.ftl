@@ -26,6 +26,7 @@
                          "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
 <span id="page.id" title="continuecreatesavingsaccount"></span>
+[@i18n.formattingInfo /]
 
 <h1>[@spring.message "createSavingsAccount.enterAccountInfo.pageTitle" /] - <span class="standout">[@spring.message "createSavingsAccount.enterAccountInfo.pageSubtitle" /]</span></h1>
 <p>[@spring.message "createSavingsAccount.enterAccountInfo.instructions" /]</p>
@@ -102,7 +103,7 @@
         [#elseif savingsAccountFormBean.product.savingsProductDetails.depositType?string == "2"]
             [@form.label "mandatoryDepositAmount" false][@spring.message "createSavingsAccount.enterAccountInfo.savingAccountDetail.depositAmount.voluntary" /][/@form.label]
         [/#if]
-        [@form.input path="savingsAccountFormBean.mandatoryDepositAmount" id="continuecreatesavingsaccount.input.recommendedAmount" /]
+        [@form.input path="savingsAccountFormBean.mandatoryDepositAmount" id="continuecreatesavingsaccount.input.recommendedAmount" attributes="class=separatedNumber" /]
     </div>
     </fieldset>
     <div class="row webflow-controls">

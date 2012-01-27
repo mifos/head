@@ -306,7 +306,7 @@ public class LoanPrdAction extends BaseAction {
         List<FeeDto> feeSelected = new ArrayList<FeeDto>();
         for (LoanOfferingFeesEntity prdOfferingFees : loanOffering.getLoanOfferingFees()) {
             FeeBO fee = prdOfferingFees.getFees();
-            fee = feeDao.findById(fee.getFeeId());
+            fee = feeDao.initializeAndUnproxy(feeDao.findById(fee.getFeeId()));
             feeSelected.add(new FeeDto(getUserContext(request), fee));
         }
         return feeSelected;

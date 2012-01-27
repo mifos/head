@@ -276,6 +276,13 @@ public class LoanAccountPage extends MifosPage {
         waitForPageToLoad();
         return new ViewRepaymentSchedulePage(selenium);
     }
+    
+    public ViewOriginalSchedulePage navigateToIndividualSchedulePage(int row) {
+        selenium.click("//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + row + "]/td[6]/a");
+        waitForPageToLoad();
+        
+        return new ViewOriginalSchedulePage(selenium);
+    }
 
     public AccountActivityPage navigateToAccountActivityPage() {
         selenium.click("link=View all account activity");

@@ -20,6 +20,7 @@
 
 package org.mifos.config;
 
+import java.text.DecimalFormat;
 import java.util.Locale;
 
 import org.mifos.config.business.MifosConfigurationManager;
@@ -130,4 +131,26 @@ public class LocaleSetting {
         this.labLevel = labLevel;
     }
 
+    public DecimalFormat getDecialFormat() {
+    	DecimalFormat decimalFormat = (DecimalFormat)DecimalFormat.getInstance(getLocale());
+    	if (decimalFormat == null) {
+    		decimalFormat = (DecimalFormat)DecimalFormat.getInstance();
+    	}
+    	return decimalFormat;
+    }
+    
+    public char getDecimalSeparator() {
+    	DecimalFormat decimalFormat = getDecialFormat();
+    	return decimalFormat.getDecimalFormatSymbols().getDecimalSeparator();
+    }
+    
+    public char getGroupingSeparator() {
+    	DecimalFormat decimalFormat =  getDecialFormat();
+    	return decimalFormat.getDecimalFormatSymbols().getGroupingSeparator();
+    }
+    
+    public int getGroupingSize() {
+    	DecimalFormat decimalFormat = getDecialFormat();
+    	return decimalFormat.getGroupingSize();
+    }
 }

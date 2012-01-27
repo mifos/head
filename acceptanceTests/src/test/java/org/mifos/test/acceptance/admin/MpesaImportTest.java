@@ -25,15 +25,12 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.channels.FileChannel;
 import org.joda.time.DateTime;
 import org.junit.Assert;
-import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -52,6 +49,7 @@ import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.PluginsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -71,10 +69,8 @@ public class MpesaImportTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
     CustomPropertiesHelper propertiesHelper;
-    private boolean copyPlugin = false;
+    private final PluginsUtil pluginsUtil = new PluginsUtil("mpesa-xls-importer-0.0.2-SNAPSHOT-jar-with-dependencies.jar");
     private static final String EXCEL_IMPORT_TYPE = "M-PESA Excel 97(-2007)";
-    private static final String PLUGIN_NAME = "mpesa-xls-importer-0.0.2-SNAPSHOT-jar-with-dependencies.jar";
-    private String configPath = new ConfigurationLocator().getConfigurationDirectory();
     static final String[] TEST_FILES = new String[] { "loan_product_code.xls", "mixed.xls", "saving_and_loan.xls",
         "savings_product_code.xls", "example_loan_disb.xls"};
 
@@ -89,97 +85,24 @@ public class MpesaImportTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void loadPlugin() throws Exception{
-
-        if (!configPath.endsWith(File.separator)) {
-            configPath += File.separator;
-        }
-
-        String plugin = MpesaImportTest.class.getResource("/mpesa/" + PLUGIN_NAME).getFile();
-        File mpesa = new File(configPath+"plugins" + File.separator + PLUGIN_NAME);
-        File folderPlugins = new File(configPath+"plugins");
-
-        if(!folderPlugins.exists())
-        {
-            folderPlugins.mkdir();
-        }
-
-        if(!mpesa.exists())
-        {
-            mpesa.createNewFile();
-            copyFile(new File(plugin), mpesa);
-            copyPlugin = true;
-        }
-    }
-
-    private void unloadPlugin()
-    {
-        File mpesa = new File(configPath +"plugins" + File.separator + PLUGIN_NAME);
-
-        if(copyPlugin && mpesa.exists()){
-            mpesa.delete();
-        }
-    }
-
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
-        loadPlugin();
+        pluginsUtil.loadPlugin();
         navigationHelper = new NavigationHelper(selenium);
         propertiesHelper = new CustomPropertiesHelper(selenium);
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private String copyPluginToTemp() throws Exception {
-        File mpesa = new File(configPath+"plugins" + File.separator + PLUGIN_NAME);
-        File temp = File.createTempFile(PLUGIN_NAME, ".tmp");
-
-        copyFile(mpesa,temp);
-
-        mpesa.delete();
-
-        return temp.getAbsolutePath();
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void copyPluginFromTemp(String tempFileName) throws Exception {
-        File temp = new File(tempFileName);
-        File mpesa = new File(configPath+"plugins" + File.separator + PLUGIN_NAME);
-
-        copyFile(temp,mpesa);
-
-        temp.delete();
-    }
-
-    private static void copyFile(File sourceFile, File destFile) throws IOException {
-        FileChannel source = null;
-        FileChannel destination = null;
-        try {
-            source = new FileInputStream(sourceFile).getChannel();
-            destination = new FileOutputStream(destFile).getChannel();
-            destination.transferFrom(source, 0, source.size());
-        }
-        finally {
-            if(source != null) {
-                source.close();
-            }
-            if(destination != null) {
-                destination.close();
-            }
-        }
-     }
-
     @AfterMethod
     public void tearDown() {
         (new MifosPage(selenium)).logout();
-        unloadPlugin();
+        pluginsUtil.unloadPlugin();
     }
 
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.SystemPrintln"})
-    @Test(enabled=false) //blocked by http://mifosforge.jira.com/browse/MIFOS-4853 - ldomzalski
+    @Test(enabled=true)
     public void importMpesaTransactions() throws Exception {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ViewOrganizationSettingsPage viewOrganizationSettingsPage = adminPage.navigateToViewOrganizationSettingsPage();
@@ -301,11 +224,11 @@ public class MpesaImportTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled=true)
     public void importTransactionPageLoad() throws Exception {
-        String tempFileName = copyPluginToTemp();
+        String tempFileName = pluginsUtil.movePluginToTemp();
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ImportTransactionsPage importTransactionsPage = adminPage.navigateToImportTransactionsPage();
         importTransactionsPage.verifyPage();
-        copyPluginFromTemp(tempFileName);
+        pluginsUtil.movePluginFromTemp(tempFileName);
     }
 
     /**
@@ -315,7 +238,7 @@ public class MpesaImportTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled = false) //blocked by http://mifosforge.jira.com/browse/MIFOS-4853 - ldomzalski
+    @Test(enabled = true)
     public void failImportTransaction() throws Exception {
         //Given
         String path = this.getClass().getResource("/mpesa/" + FILE_WITH_OVERPAYMENT_AMOUNT).toString();
@@ -337,7 +260,7 @@ public class MpesaImportTest extends UiTestCaseBase {
         //Then
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage("000100000000013");
         loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE);
-        loanAccountPage.verifyExactLoanAmount("2000.0");
+        loanAccountPage.verifyExactLoanAmount("2,000");
 
         TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistoryPage();
         transactionHistoryPage.verifyTransactionHistory(183, 1, 6);
