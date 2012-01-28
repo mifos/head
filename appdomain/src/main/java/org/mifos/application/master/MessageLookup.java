@@ -20,12 +20,8 @@
 
 package org.mifos.application.master;
 
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.admin.servicefacade.CustomizedTextServiceFacade;
@@ -36,11 +32,8 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
-import org.mifos.config.Localization;
 import org.mifos.config.LocalizedTextLookup;
-import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
-import org.mifos.config.util.helpers.LabelKey;
 import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -78,8 +71,6 @@ public class MessageLookup implements MessageSourceAware, FactoryBean<MessageLoo
     @Autowired
     private ApplicationConfigurationDao applicationConfigurationDao;
 
-    private Map<LabelKey, String> labelCache = new ConcurrentHashMap<LabelKey, String>();
-
     @Autowired
     private GenericDao genericDao;
 
@@ -99,43 +90,39 @@ public class MessageLookup implements MessageSourceAware, FactoryBean<MessageLoo
     }
 
     public String lookup(LocalizedTextLookup namedObject) {
-        return replaceSubstitutions(lookup(namedObject.getPropertiesKey()));
+        return lookup(namedObject.getPropertiesKey());
     }
 
     public String lookup(LocalizedTextLookup namedObject, Object[] params) {
         Locale locale = personnelServiceFacade.getUserPreferredLocale();
-        return replaceSubstitutions(messageSource.getMessage(
-                namedObject.getPropertiesKey(), params, namedObject.getPropertiesKey(), locale));
+        return messageSource.getMessage(namedObject.getPropertiesKey(), params, namedObject.getPropertiesKey(), locale);
     }
 
     public String lookup(String lookupKey) {
-        try {
-            Locale locale = personnelServiceFacade.getUserPreferredLocale();
-            String textMessage = getLabel(lookupKey);
-            // if we don't find a message above, then it means that it has not
-            // been customized and
-            // we should return the default message from the properties file
-            return StringUtils.isEmpty(textMessage) ?
-                    replaceSubstitutions(messageSource.getMessage(lookupKey, null, lookupKey, locale))
-                    : replaceSubstitutions(textMessage);
-        } catch (ConfigurationException e) {
-            throw new RuntimeException(e);
-        }
+        return getLabel(lookupKey);
     }
 
     /*
      * Return a label for given label key. Label keys are listed in {@link ConfigurationConstants}.
      */
     public String lookupLabel(String labelKey) {
-        try {
-            String labelText = getLabel(labelKey);
-            // if we don't find a label here, then it means that it has not been
-            // customized and
-            // we should return the default label from the properties file
-            return StringUtils.isEmpty(labelText) ? lookup(labelKey + ".Label") : labelText;
-        } catch (ConfigurationException e) {
-            throw new RuntimeException(e);
-        }
+        String labelText = getLabel(labelKey);
+        return StringUtils.isEmpty(labelText) ? lookup(labelKey + ".Label") : labelText;
+    }
+
+    public String getCustomLabel(String labelKey) {
+        // only update the value if there is a change
+            for (LookUpEntity entity : applicationConfigurationDao.findLookupEntities()) {
+                if (entity.getEntityType().equals(labelKey)) {
+                    Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+                    for (LookUpLabelEntity label : labels) {
+                        if(label.getLocaleId().equals((short)1)) {
+                            return label.getLabelText();
+                        }
+                    }
+                }
+            }
+            return null;
     }
 
     /*
@@ -153,27 +140,10 @@ public class MessageLookup implements MessageSourceAware, FactoryBean<MessageLoo
                     Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
                     for (LookUpLabelEntity label : labels) {
                         label.setLabelName(value);
-                        genericDao.createOrUpdate(label);
+                        genericDao.update(label);
                         StaticHibernateUtil.commitTransaction();
-                        updateLookupValueInCache(labelKey, value);
                     }
                 }
-            }
-        }
-    }
-
-    public void updateLookupValueInCache(LocalizedTextLookup keyContainer, String newValue) {
-        updateLookupValueInCache(keyContainer.getPropertiesKey(), newValue);
-    }
-
-    public void updateLookupValueInCache(String lookupKey, String newValue) {
-        synchronized (labelCache) {
-            LabelKey key = new LabelKey(lookupKey, Localization.ENGLISH_LOCALE_ID);
-            if (labelCache.containsKey(key)) {
-                labelCache.remove(key);
-                labelCache.put(key, newValue);
-            } else {
-                labelCache.put(key, newValue);
             }
         }
     }
@@ -185,7 +155,6 @@ public class MessageLookup implements MessageSourceAware, FactoryBean<MessageLoo
      */
     @Deprecated
     public void updateLookupValue(LookUpValueEntity lookupValueEntity, String newValue) {
-
         Set<LookUpValueLocaleEntity> lookUpValueLocales = lookupValueEntity.getLookUpValueLocales();
         if ((lookUpValueLocales != null) && StringUtils.isNotBlank(newValue)) {
             for (LookUpValueLocaleEntity entity : lookUpValueLocales) {
@@ -197,61 +166,27 @@ public class MessageLookup implements MessageSourceAware, FactoryBean<MessageLoo
                     } catch (Exception ex) {
                         throw new RuntimeException(ex.getMessage());
                     }
-                    updateLookupValueInCache(lookupValueEntity.getLookUpName(), newValue);
                     break;
                 }
             }
         }
     }
 
-    public void updateLabelKey(String keyString, String newLabelValue, Short localeId) {
-        synchronized (labelCache) {
-            LabelKey key = new LabelKey(keyString, localeId);
-            if (labelCache.containsKey(key)) {
-                labelCache.remove(key);
-                labelCache.put(key, newLabelValue);
-            } else {
-                labelCache.put(key, newLabelValue);
-            }
+    public String getLabel(String key) {
+        Locale locale = personnelServiceFacade.getUserPreferredLocale();
+
+        // FIXME : Make sure JPA caching is working for these lookups
+        String messageText = legacyMasterDao.getLookUpLabel(key);
+
+        if (messageText == null || messageText.equals(key)) {
+            messageText = getCustomLabel(key);
         }
-    }
 
-    public void initializeLabelCache() {
-        labelCache.clear();
-
-        List<LookUpValueEntity> lookupValueEntities = applicationConfigurationDao.findLookupValues();
-        for (LookUpValueEntity lookupValueEntity : lookupValueEntities) {
-            String keyString = lookupValueEntity.getPropertiesKey();
-            if (keyString == null) {
-                throw new IllegalStateException("Key is empty");
-            }
-
-            String messageText = lookupValueEntity.getMessageText();
-            if (StringUtils.isBlank(messageText)) {
-                messageText = lookup(keyString);
-            }
-
-            labelCache.put(new LabelKey(keyString, Localization.ENGLISH_LOCALE_ID), messageText);
+        if (messageText == null || messageText.equals(key)) {
+            messageText = messageSource.getMessage(key, null, key, locale);
         }
-    }
 
-    public void deleteKey(String lookupValueKey) {
-        synchronized (labelCache) {
-            LabelKey key = new LabelKey(lookupValueKey, Localization.ENGLISH_LOCALE_ID);
-            if (labelCache.containsKey(key)) {
-                labelCache.remove(key);
-            }
-        }
-    }
-
-    public Map<LabelKey, String> getLabelCache() {
-        return labelCache;
-    }
-
-    public String getLabel(String key) throws ConfigurationException {
-        // we only use localeId 1 to store labels since it is an override for
-        // all locales
-        return (key == null) ? null : labelCache.get(new LabelKey(key, Localization.ENGLISH_LOCALE_ID));
+        return replaceSubstitutions(messageText);
     }
 
     /**
@@ -265,9 +200,6 @@ public class MessageLookup implements MessageSourceAware, FactoryBean<MessageLoo
 
     @Override
     public MessageLookup getObject() throws Exception {
-        if(labelCache.isEmpty()) {
-            initializeLabelCache();
-        }
         return this;
     }
 
