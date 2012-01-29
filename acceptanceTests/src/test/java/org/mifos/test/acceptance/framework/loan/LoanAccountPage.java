@@ -82,26 +82,26 @@ public class LoanAccountPage extends MifosPage {
     public void verifyGLIMPurpose(String purpose, int index) {
         Assert.assertEquals(selenium.getText("xpath=//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + (index+1) + "]/td[5]"), purpose);
     }
-    
+
     public void verifyGLIMIndividualScheduleLinks(int clientCount, boolean hidden) {
         Assert.assertEquals(selenium.getXpathCount("//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[1]/td").intValue() == 5, hidden);
-        
+
         if(!hidden) {
             for(int i = 1; i <= clientCount; ++i) {
                 String xpath = "//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + (i + 1) + "]/td[6]";
                 Assert.assertEquals(selenium.getText(xpath), "show");
-                
+
                 selenium.click(xpath + "/a");
                 waitForPageToLoad();
-                
+
                 Assert.assertTrue(selenium.isElementPresent("originalInstallments"));
-                
+
                 selenium.click("loanRepayment.button.return");
                 waitForPageToLoad();
             }
         }
     }
-    
+
     public void verifyLoanIsPendingApproval(){
         Assert.assertTrue(selenium.isTextPresent("Application Pending Approval"));
     }
@@ -172,7 +172,7 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public void verifyError(String error) {
-        Assert.assertTrue(selenium.isElementPresent("//span[@id='loanaccountdetail.error.message']/li[text()='"+error+"']"));
+        Assert.assertTrue(selenium.isElementPresent("//span[@id='loanaccountdetail.error.message']/ul/li[text()='"+error+"']"));
     }
 
     public void verifyNumberOfInstallments(String numberOfInstallments) {
@@ -225,7 +225,7 @@ public class LoanAccountPage extends MifosPage {
 
     public void verifyNumberOfInstallments(String min, String max, String expected) {
 
-        String expectedInstallmentText2 = "(Allowed Number of Installments: " + min + " - " + max; 
+        String expectedInstallmentText2 = "(Allowed Number of Installments: " + min + " - " + max;
         String expectedInstallmentText = "(Allowed number of installments: " + min + " - " + max + ")";
         boolean result = selenium.isTextPresent(expected);
         boolean result2 = selenium.isTextPresent(expectedInstallmentText);
@@ -276,11 +276,11 @@ public class LoanAccountPage extends MifosPage {
         waitForPageToLoad();
         return new ViewRepaymentSchedulePage(selenium);
     }
-    
+
     public ViewOriginalSchedulePage navigateToIndividualSchedulePage(int row) {
         selenium.click("//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + row + "]/td[6]/a");
         waitForPageToLoad();
-        
+
         return new ViewOriginalSchedulePage(selenium);
     }
 
@@ -470,11 +470,11 @@ public class LoanAccountPage extends MifosPage {
     public String getOriginalLoanAmount() {
         return selenium.getTable("loanSummaryTable.1.1").trim();
     }
-    
+
     public String getDisbursalDate(){
     	return selenium.getText("loanaccountdetail.details.disbursaldate");
     }
-    
+
     public void verifyDisbursalDate(DateTime disbursalDate){
     	DateTimeFormatter formater = DateTimeFormat.forPattern("dd/MM/yyyy");
     	Assert.assertEquals(getDisbursalDate(), formater.print(disbursalDate));
@@ -548,11 +548,11 @@ public class LoanAccountPage extends MifosPage {
         .submitAndNavigateToDisburseLoanConfirmationPage(disburseParams)
         .submitAndNavigateToLoanAccountPage();
     }
-    
+
     public void verifyDisbursalDate(String disbursalDate) {
         Assert.assertEquals(selenium.getText("loanaccountdetail.details.disbursaldate"), disbursalDate);
     }
-    
+
 
 }
 
