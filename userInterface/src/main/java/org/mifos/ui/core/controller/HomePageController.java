@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
@@ -17,9 +18,8 @@ import org.mifos.core.MifosException;
 import org.mifos.dto.domain.CustomerHierarchyDto;
 import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.security.MifosUser;
+import org.mifos.ui.core.controller.util.helpers.SitePreferenceHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mobile.device.Device;
-import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.mobile.device.site.SitePreference;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -42,18 +42,18 @@ public class HomePageController {
 	@Autowired
 	private ConfigurationServiceFacade configurationServiceFacade;
 	
+	private final SitePreferenceHelper sitePreferenceHelper = new SitePreferenceHelper();
+	
 	@RequestMapping(method = RequestMethod.GET)
 	@ModelAttribute("customerSearch")
-	public ModelAndView showPopulatedForm(HttpServletRequest request, SitePreference sitePreference,
+	public ModelAndView showPopulatedForm(HttpServletRequest request, HttpServletResponse response, SitePreference sitePreference,
 			@ModelAttribute("customerSearch") CustomerSearchFormBean customerSearchFormBean )
 			throws MifosException {
-		Device currentDevice = DeviceUtils.getCurrentDevice(request);
+
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		 
-        ModelAndView modelAndView = new ModelAndView("m_home");
-        if (currentDevice.isMobile()) {
-            modelAndView = new ModelAndView("m_home");
-        }
+        ModelAndView modelAndView = new ModelAndView();
+        sitePreferenceHelper.resolveSiteType(modelAndView, "home", request);
         
         Short userId = (short) user.getUserId();
         UserDetailDto userDetails = this.centerServiceFacade.retrieveUsersDetails(userId);

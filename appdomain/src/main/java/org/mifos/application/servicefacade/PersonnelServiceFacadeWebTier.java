@@ -33,10 +33,12 @@ import org.joda.time.Days;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.config.ClientRules;
 import org.mifos.config.Localization;
+import org.mifos.config.SitePreferenceType;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
@@ -488,17 +490,26 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         String gender = getNameForBusinessActivityEntity(personnel.getPersonnelDetails().getGender());
         String martialStatus = getNameForBusinessActivityEntity(personnel.getPersonnelDetails().getMaritalStatus());
         String language = Localization.getInstance().getDisplayName(personnel.getPreferredLocale());
-
+        String sitePreference = SitePreferenceType.getSitePreference(personnel.getSitePreference()).name();
+        
         List<ValueListElement> genders = this.customerDao.retrieveGenders();
         List<ValueListElement> martialStatuses = this.customerDao.retrieveMaritalStatuses();
         List<ValueListElement> languages = Localization.getInstance().getLocaleForUI();
-
+        List<ValueListElement> sitePreferenceTypes = new ArrayList<ValueListElement>();
+        
+        for ( short i = 0; i < SitePreferenceType.values().length; i++ ){
+            SitePreferenceType sitePreferenceType = SitePreferenceType.values()[i];
+            ValueListElement valueListElement = new BusinessActivityEntity(sitePreferenceType.getValue().intValue(), 
+                    sitePreferenceType.name(), sitePreferenceType.name());
+            sitePreferenceTypes.add(valueListElement);
+        }
+        
         int age = DateUtils.DateDiffInYears(((Date) personnel.getPersonnelDetails().getDob()));
         if (age < 0) {
             age = 0;
         }
 
-        return new UserSettingsDto(gender, martialStatus, language, age, genders, martialStatuses, languages);
+        return new UserSettingsDto(gender, martialStatus, language, age, sitePreference, genders, martialStatuses, languages, sitePreferenceTypes);
     }
 
     private String getNameForBusinessActivityEntity(Integer entityId) {
@@ -514,15 +525,16 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     }
 
     @Override
-    public UserSettingsDto retrieveUserSettings(Integer genderId, Integer maritalStatusId, Integer localeId) {
+    public UserSettingsDto retrieveUserSettings(Integer genderId, Integer maritalStatusId, Integer localeId, Short sitePreferenceId) {
 
         String gender = getNameForBusinessActivityEntity(genderId);
         String martialStatus = getNameForBusinessActivityEntity(maritalStatusId);
         String language = (localeId != null) ? Localization.getInstance().getDisplayName(localeId.shortValue()) : "";
-
+        String sitePreference = SitePreferenceType.getSitePreference(sitePreferenceId).name();
+        
         int age = 0;
         List<ValueListElement> empty = new ArrayList<ValueListElement>();
-        return new UserSettingsDto(gender, martialStatus, language, age, empty, empty, empty);
+        return new UserSettingsDto(gender, martialStatus, language, age, sitePreference, empty, empty, empty, empty);
     }
 
     @Override
@@ -534,7 +546,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
     @Override
     public void updateUserSettings(Short personnelId, String emailId, Name name, Integer maritalStatusValue, Integer genderValue,
-            AddressDto address, Short preferredLocale) {
+            AddressDto address, Short preferredLocale, Short sitePreference) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(user);
@@ -556,7 +568,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                         address.getState(), address.getCountry(), address.getZip(), address.getPhoneNumber());
             }
 
-            personnel.update(emailId, name, maritalStatusValue, genderValue, theAddress, preferredLocale);
+            personnel.update(emailId, name, maritalStatusValue, genderValue, theAddress, preferredLocale, sitePreference);
             this.transactionHelper.commitTransaction();
         } catch (Exception e) {
             this.transactionHelper.rollbackTransaction();
@@ -684,4 +696,10 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         return hierarchy;
     }
 
+    @Override
+    public SitePreferenceType retrieveSitePreference(Integer userId) {
+        PersonnelBO personnelBO = personnelDao.findPersonnelById(userId.shortValue());
+        return SitePreferenceType.getSitePreference(personnelBO.getSitePreference());
+    }
+    
 }

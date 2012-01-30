@@ -38,6 +38,7 @@ import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.NewLoginServiceFacade;
 import org.mifos.config.Localization;
+import org.mifos.config.SitePreferenceType;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
@@ -52,6 +53,7 @@ import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+import org.mifos.ui.core.controller.util.helpers.SitePreferenceHelper;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -147,12 +149,12 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
         request.setAttribute("username", username);
         final String password = obtainPassword(request);
 
-        handleLegacySuccessfulAuthentication(request, username, password);
+        handleLegacySuccessfulAuthentication(request, response, username, password);
 
         super.successfulAuthentication(request, response, authResult);
     }
 
-    private void handleLegacySuccessfulAuthentication(HttpServletRequest request, final String username,
+    private void handleLegacySuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, final String username,
             final String password) {
         try {
             FlowManager flowManager = new FlowManager();
@@ -160,14 +162,17 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
             flowManager.addFLow(flowKey, new Flow(), this.getFilterName());
 
             request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-
+            
             request.getSession(false).setAttribute(Constants.FLOWMANAGER, flowManager);
             request.getSession(false).setAttribute(Constants.RANDOMNUM, new Random().nextLong());
 
             LoginDto loginActivity = loginServiceFacade.login(username, password);
-
+            
             PersonnelBO user =  ApplicationContextProvider.getBean(LegacyPersonnelDao.class).findPersonnelById(loginActivity.getUserId());
 
+            SitePreferenceHelper sitePreferenceHelper = new SitePreferenceHelper();
+            sitePreferenceHelper.setSitePreferenceCookie(SitePreferenceType.getSitePreference(user.getSitePreference()), response);
+            
             ActivityContext activityContext = new ActivityContext(Short.valueOf("0"), user.getOffice().getOfficeId(), user.getPersonnelId());
             request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, activityContext);
             request.setAttribute("activityDto", loginActivity);
