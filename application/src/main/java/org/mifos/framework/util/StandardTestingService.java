@@ -119,7 +119,7 @@ public class StandardTestingService implements TestingService {
             HierarchyManager.getInstance().init();
             AccountingRules.init();
             ActivityMapper.getInstance().init();
-            ProcessFlowRules.init();
+            ProcessFlowRules.initFromDB();
             FinancialInitializer.initialize();
             EntityMasterData.getInstance().init();
         } catch (Exception e) {

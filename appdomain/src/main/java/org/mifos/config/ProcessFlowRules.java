@@ -74,6 +74,24 @@ public class ProcessFlowRules {
         }
     }
 
+    public static void initFromDB() {
+        MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
+        CustomerDao customerDao = ApplicationContextProvider.getBean(CustomerDao.class);
+        LegacyAccountDao ap = ApplicationContextProvider.getBean(LegacyAccountDao.class);
+
+        CustomerStatusEntity cse = customerDao.findClientPendingStatus();
+        cm.setProperty(CLIENT_PENDING_APPROVAL, isClientPendingApprovalStateEnabledOnDatabaseConfiguration(cse));
+
+        cse = customerDao.findGroupPendingStatus();
+        cm.setProperty(GROUP_PENDING_APPROVAL, isGroupPendingApprovalStateEnabledOnDatabaseConfiguration(cse));
+
+        AccountStateEntity ase = ap.loadPersistentObject(AccountStateEntity.class, AccountState.LOAN_PENDING_APPROVAL.getValue());
+        cm.setProperty(LOAN_PENDING_APPROVAL, isLoanPendingApprovalStateEnabledOnDatabaseConfig(ase));
+
+        ase = ap.loadPersistentObject(AccountStateEntity.class, AccountState.SAVINGS_PENDING_APPROVAL.getValue());
+        cm.setProperty(SAVINGS_PENDING_APPROVAL, isSavingPendingApprovalStateEnabledOnDatabaseConfig(ase));
+    }
+
     private static String getBadOverrideMsg(String key, String detailMsg) {
         return "The value for key " + key + " in the file " + MifosConfigurationManager.CUSTOM_CONFIG_PROPS_FILENAME
                 + " must to be set to 1 because it was set to 1"
