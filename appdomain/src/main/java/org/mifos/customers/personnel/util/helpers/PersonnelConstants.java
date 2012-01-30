@@ -30,6 +30,8 @@ public interface PersonnelConstants {
     String GENDER_LIST = "genderList";
     String MARITAL_STATUS_LIST = "maritalStatusList";
     String LANGUAGE_LIST = "languageList";
+    String SITE_TYPE_PREFERRED = "siteTypePreferred";
+    String SITE_TYPES_LIST = "siteTypesList";
     String TITLE_LIST = "titleList";
     String CUSTOM_FIELDS = "customFields";
     String DISPLAY_ADDRESS = "displayAddress";

@@ -57,6 +57,8 @@ public class PersonnelSettingsActionForm extends BaseActionForm {
     private String gender;
 
     private String preferredLocale;
+    
+    private Short preferredSiteTypeId;
 
     private String userName;
 
@@ -230,4 +232,13 @@ public class PersonnelSettingsActionForm extends BaseActionForm {
             errors.add(PersonnelConstants.ERROR_VALID_EMAIL, new ActionMessage(PersonnelConstants.ERROR_VALID_EMAIL));
         }
     }
+
+    public Short getPreferredSiteTypeId() {
+        return preferredSiteTypeId;
+    }
+
+    public void setPreferredSiteTypeId(Short preferredSiteTypeId) {
+        this.preferredSiteTypeId = preferredSiteTypeId;
+    }
+    
 }

@@ -193,6 +193,21 @@ explanation of the license and how it is applied.
 									</mifos:select>
 									</td>
 								</tr>
+								
+								<tr class="fontnormal">
+									<td align="right"><mifos:mifoslabel
+										name="Personnel.SiteTypePreferred" />
+									</td>
+									<td>
+									<html-el:select property="preferredSiteTypeId">
+											<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'siteTypesList')}"
+											var="siteType">
+											<html-el:option value="${siteType.id}">${siteType.name}</html-el:option>
+											</c:forEach>
+									</html-el:select>
+									</td>
+								</tr>
+								
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="Personnel.UserName"
 										bundle="PersonnelUIResources"></mifos:mifoslabel></td>

@@ -157,6 +157,12 @@ explanation of the license and how it is applied.
 	           	 </span><br>
 				</td></tr>
 				<tr><td class="fontnormalbold">
+	           	 <mifos:mifoslabel name="Personnel.SiteTypePreferred" />
+	           	 <span class="fontnormal">
+		           	 <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'siteTypePreferred')}"/>
+	           	 </span><br>
+				</td></tr>
+				<tr><td class="fontnormalbold">
 	           	 <mifos:mifoslabel name="Personnel.UserName"  bundle="PersonnelUIResources"></mifos:mifoslabel>
 				<span class="fontnormal">
 					<c:out value="${form.userName}"/>

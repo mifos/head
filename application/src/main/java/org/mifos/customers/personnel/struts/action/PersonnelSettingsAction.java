@@ -43,6 +43,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.MifosUser;
+import org.mifos.ui.core.controller.util.helpers.SitePreferenceHelper;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class PersonnelSettingsAction extends BaseAction {
@@ -62,11 +63,13 @@ public class PersonnelSettingsAction extends BaseAction {
         SessionUtils.setAttribute(PersonnelConstants.GENDER, userSettings.getGender(), request);
         SessionUtils.setAttribute(PersonnelConstants.MARITALSTATUS, userSettings.getMartialStatus(), request);
         SessionUtils.setAttribute(MasterConstants.LANGUAGE, userSettings.getLanguage(), request);
+        SessionUtils.setAttribute(PersonnelConstants.SITE_TYPE_PREFERRED, userSettings.getSitePreference(), request);
 
         SessionUtils.setCollectionAttribute(PersonnelConstants.GENDER_LIST, userSettings.getGenders(), request);
         SessionUtils.setCollectionAttribute(PersonnelConstants.MARITAL_STATUS_LIST, userSettings.getMartialStatuses(), request);
         SessionUtils.setCollectionAttribute(PersonnelConstants.LANGUAGE_LIST, userSettings.getLanguages(), request);
-
+        SessionUtils.setCollectionAttribute(PersonnelConstants.SITE_TYPES_LIST, userSettings.getSitePreferenceTypes(), request);
+        
         SessionUtils.removeAttribute(PersonnelConstants.PERSONNEL_AGE, request);
         SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_AGE, userSettings.getAge(), request);
         return mapping.findForward(ActionForwards.get_success.toString());
@@ -93,6 +96,7 @@ public class PersonnelSettingsAction extends BaseAction {
         form1.setAddress(personnel.getPersonnelDetails().getAddress());
         form1.setDob(personnel.getPersonnelDetails().getDob().toString());
         form1.setPreferredLocale(Localization.getInstance().getDisplayName(personnel.getPreferredLocale()));
+        form1.setPreferredSiteTypeId(personnel.getSitePreference());
         form1.setMaritalStatus(getStringValue(personnel.getPersonnelDetails().getMaritalStatus()));
 
         return mapping.findForward(ActionForwards.manage_success.toString());
@@ -109,11 +113,12 @@ public class PersonnelSettingsAction extends BaseAction {
 
         UserSettingsDto userSettings = this.personnelServiceFacade.retrieveUserSettings(personnelactionForm.getGenderValue(),
                                                                                         personnelactionForm.getMaritalStatusValue(),
-                                                                                        prefeeredLocaleId);
+                                                                                        prefeeredLocaleId, personnelactionForm.getPreferredSiteTypeId());
 
         SessionUtils.setAttribute(PersonnelConstants.GENDER, userSettings.getGender(), request);
         SessionUtils.setAttribute(PersonnelConstants.MARITALSTATUS, userSettings.getMartialStatus(), request);
         SessionUtils.setAttribute(MasterConstants.LANGUAGE, userSettings.getLanguage(), request);
+        SessionUtils.setAttribute(PersonnelConstants.SITE_TYPE_PREFERRED, userSettings.getSitePreference(), request);
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
@@ -126,7 +131,7 @@ public class PersonnelSettingsAction extends BaseAction {
     @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+            HttpServletResponse response) throws Exception {
 
         PersonnelSettingsActionForm personnelSettingsActionForm = (PersonnelSettingsActionForm) form;
 
@@ -139,11 +144,13 @@ public class PersonnelSettingsAction extends BaseAction {
 
         this.personnelServiceFacade.updateUserSettings(personnel.getPersonnelId(), personnelSettingsActionForm.getEmailId(), personnelSettingsActionForm.getName(),
                 personnelSettingsActionForm.getMaritalStatusValue(), personnelSettingsActionForm.getGenderValue(),
-                address, personnelSettingsActionForm.getPreferredLocaleValue());
+                address, personnelSettingsActionForm.getPreferredLocaleValue(), personnelSettingsActionForm.getPreferredSiteTypeId());
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         user.setPreferredLocaleId(personnelSettingsActionForm.getPreferredLocaleValue());
-
+        
+        (new SitePreferenceHelper()).setSitePreferenceCookie(personnelServiceFacade.retrieveSitePreference(user.getUserId()), response);
+        
         return mapping.findForward(ActionForwards.updateSettings_success.toString());
     }
 
