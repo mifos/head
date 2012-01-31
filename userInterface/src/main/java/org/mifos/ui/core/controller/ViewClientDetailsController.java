@@ -4,15 +4,15 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.mifos.application.servicefacade.ClientServiceFacade;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.ui.core.controller.util.helpers.SitePreferenceHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mobile.device.Device;
-import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,14 +30,13 @@ public class ViewClientDetailsController {
 	@Autowired
 	private QuestionnaireServiceFacade questionnaireServiceFacade;
 	
+	private final SitePreferenceHelper sitePreferenceHelper = new SitePreferenceHelper();
+	
 	@RequestMapping(method=RequestMethod.GET)
-    public ModelAndView showDetails(HttpServletRequest request) throws ApplicationException{
-		Device currentDevice = DeviceUtils.getCurrentDevice(request);
-		
-        ModelAndView modelAndView = new ModelAndView("m_viewClientDetails");
-        if (currentDevice.isMobile()) {
-            modelAndView = new ModelAndView("m_viewClientDetails");
-        }
+    public ModelAndView showDetails(HttpServletRequest request, HttpServletResponse response) throws ApplicationException{		
+        ModelAndView modelAndView = new ModelAndView();
+        sitePreferenceHelper.resolveSiteType(modelAndView, "viewClientDetails", request);
+        modelAndView.addObject("Response", response); // handling STANDARD pages with no ftl version
         
         String clientSystemId = request.getParameter("globalCustNum");
         ClientInformationDto clientInformationDto;
