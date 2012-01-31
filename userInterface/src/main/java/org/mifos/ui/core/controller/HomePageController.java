@@ -54,7 +54,6 @@ public class HomePageController {
 		 
         ModelAndView modelAndView = new ModelAndView();
         sitePreferenceHelper.resolveSiteType(modelAndView, "home", request);
-        modelAndView.addObject("Response", response); // handling STANDARD pages with no ftl version
         
         Short userId = (short) user.getUserId();
         UserDetailDto userDetails = this.centerServiceFacade.retrieveUsersDetails(userId);
@@ -67,7 +66,7 @@ public class HomePageController {
         } else {
         	modelAndView.addObject("isLoanOfficer", false);
         }
-
+        
         return modelAndView;
 	}
 

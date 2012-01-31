@@ -47,7 +47,7 @@
           <div class="paddingTop5" style="text-align:right;">
               <span class="normalFont">&nbsp;<label for="login.input.password">[@spring.message "login.password"/]</label>:&nbsp;</span>
             <span><input type="password" name="j_password" id="login.input.password"></span>
-            <input type="hidden" name="spring-security-redirect" value="/home.ftl"/>
+            <input type="hidden" name="spring-security-redirect" value="/custSearchAction.do?method=getHomePage"/>
         </div>
           <div>&nbsp;</div>
           <div> <input type="submit" value="[@spring.message "login.login" /]" class="buttn" style="position: relative; left:136px;" id="login.button.login" />

@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
     <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
         <tr>
           <td class="taborange">
-              <a id="homeheader.link.home" href="home.ftl" class="tabfontwhite">
+              <a id="homeheader.link.home" href="custSearchAction.do?method=getHomePage" class="tabfontwhite">
                 <mifos:mifoslabel name="framework.home" bundle="FrameworkUIResources"></mifos:mifoslabel>
               </a>
           </td>
