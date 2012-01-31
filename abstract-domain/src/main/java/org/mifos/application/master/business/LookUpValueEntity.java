@@ -22,7 +22,6 @@ package org.mifos.application.master.business;
 
 import java.util.Set;
 
-import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,8 +36,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.business.AbstractEntity;
 
@@ -48,8 +45,6 @@ import org.mifos.framework.business.AbstractEntity;
 
 @Entity
 @Table(name = "lookup_value")
-@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class LookUpValueEntity extends AbstractEntity implements LocalizedTextLookup {
 
     @Id

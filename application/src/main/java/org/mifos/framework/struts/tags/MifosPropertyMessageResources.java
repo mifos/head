@@ -28,6 +28,7 @@ import org.apache.struts.util.MessageResourcesFactory;
 import org.apache.struts.util.PropertyMessageResources;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.framework.util.helpers.BundleKey;
 
 public class MifosPropertyMessageResources extends PropertyMessageResources {
@@ -52,7 +53,12 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
         String returnVal = null;
         returnVal = super.getMessage(locale, key);
         if (returnVal == null) {
-            returnVal = ApplicationContextProvider.getBean(MessageLookup.class).getLabel(key);
+            // try to get from the local hashmap
+            try {
+                returnVal = ApplicationContextProvider.getBean(MessageLookup.class).getLabel(key);
+            } catch (ConfigurationException ce) {
+                // eat it
+            }
         }
 
         if (returnVal == null) {
