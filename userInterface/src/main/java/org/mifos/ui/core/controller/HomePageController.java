@@ -28,8 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import freemarker.ext.servlet.IncludePage;
-
 @Controller
 @RequestMapping("/home")
 @SuppressWarnings("PMD.AvoidUsingShortType")
@@ -56,7 +54,7 @@ public class HomePageController {
 		 
         ModelAndView modelAndView = new ModelAndView();
         sitePreferenceHelper.resolveSiteType(modelAndView, "home", request);
-        modelAndView.addObject("include_page", new IncludePage(request, response)); 
+        modelAndView.addObject("Response", response); // handling STANDARD pages with no ftl version
         
         Short userId = (short) user.getUserId();
         UserDetailDto userDetails = this.centerServiceFacade.retrieveUsersDetails(userId);

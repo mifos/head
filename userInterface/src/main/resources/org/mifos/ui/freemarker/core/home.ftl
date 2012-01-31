@@ -18,4 +18,4 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[@include_page path="custSearchAction.do?method=getHomePage" /]
+${Response.sendRedirect('custSearchAction.do?method=getHomePage')}
