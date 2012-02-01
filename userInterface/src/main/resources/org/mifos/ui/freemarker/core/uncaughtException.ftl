@@ -20,6 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
+<span id="page.id" title="Exception"></span>
 <script src="pages/js/uncaughtException.js" type="text/javascript"></script>
 <div class="content_panel">
     <p class="error">[@spring.message "system.unhandledErrorHeading" /]</p>
