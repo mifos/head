@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
   <tr>
     <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
         <tr>
-          <td class="tablightorange"><a id="clientsAndAccountsHeader.link.home" href="custSearchAction.do?method=getHomePage" >
+          <td class="tablightorange"><a id="clientsAndAccountsHeader.link.home" href="home.ftl" >
 		<mifos:mifoslabel name="framework.home" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
           <c:choose>
               <c:when test="${requestScope.perspective == 'redoLoan' || requestScope.perspective == 'UserChangeLog'}">
