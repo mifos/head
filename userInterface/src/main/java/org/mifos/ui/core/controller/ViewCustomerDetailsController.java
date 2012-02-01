@@ -7,8 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.mifos.application.servicefacade.ClientServiceFacade;
+import org.mifos.application.servicefacade.GroupServiceFacade;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.dto.screen.ClientInformationDto;
+import org.mifos.dto.screen.GroupInformationDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.ui.core.controller.util.helpers.SitePreferenceHelper;
@@ -21,54 +23,83 @@ import org.springframework.web.servlet.ModelAndView;
 import freemarker.ext.servlet.IncludePage;
 
 @Controller
-@RequestMapping("/viewClientDetails")
-public class ViewClientDetailsController {
+public class ViewCustomerDetailsController {
 
 	@Autowired
 	ClientServiceFacade clientServiceFacade;
-	
+	@Autowired
+	GroupServiceFacade groupServiceFacade;
+
 	@Autowired
 	private ConfigurationServiceFacade configurationServiceFacade;
 	@Autowired
 	private QuestionnaireServiceFacade questionnaireServiceFacade;
-	
+
 	private final SitePreferenceHelper sitePreferenceHelper = new SitePreferenceHelper();
-	
-	@RequestMapping(method=RequestMethod.GET)
-    public ModelAndView showDetails(HttpServletRequest request, HttpServletResponse response) throws ApplicationException{		
+
+	@RequestMapping(value = "/viewClientDetails", method=RequestMethod.GET)
+    public ModelAndView showClientDetails(HttpServletRequest request, HttpServletResponse response) throws ApplicationException{
         ModelAndView modelAndView = new ModelAndView();
         sitePreferenceHelper.resolveSiteType(modelAndView, "viewClientDetails", request);
-        modelAndView.addObject("include_page", new IncludePage(request, response)); 
-        
+        modelAndView.addObject("include_page", new IncludePage(request, response));
+
         String clientSystemId = request.getParameter("globalCustNum");
         ClientInformationDto clientInformationDto;
 
         clientInformationDto = clientServiceFacade.getClientInformationDto(clientSystemId);
-        
+
         modelAndView.addObject("clientInformationDto", clientInformationDto);
 
-        boolean isPhotoFieldHidden = configurationServiceFacade.getBooleanConfig("Client.Photo");
+        boolean isPhotoFieldHidden = Boolean.parseBoolean(configurationServiceFacade.getConfig("Client.Photo"));
         modelAndView.addObject("isPhotoFieldHidden", isPhotoFieldHidden);
-        
+
         try {
-            modelAndView.addObject("currentPageUrl", constructCurrentPageUrl(clientSystemId));
+            modelAndView.addObject("currentPageUrl", constructCurrentPageUrl("Client", clientSystemId));
+        } catch (UnsupportedEncodingException e) {
+            throw new ApplicationException(e);
+        }
+
+        boolean containsQGForCloseClient = false;
+        containsQGForCloseClient = questionnaireServiceFacade.getQuestionGroupInstances(clientInformationDto.getClientDisplay().getCustomerId(), "Close", "Client").size() > 0;
+        modelAndView.addObject("containsQGForCloseClient", containsQGForCloseClient);
+
+        clientServiceFacade.putClientBusinessKeyInSession(clientSystemId, request);
+
+        return modelAndView;
+	}
+
+	@RequestMapping(value = "/viewGroupDetails", method=RequestMethod.GET)
+	public ModelAndView showGroupDetails(HttpServletRequest request, HttpServletResponse response) throws ApplicationException{
+	    ModelAndView modelAndView = new ModelAndView();
+	    sitePreferenceHelper.resolveSiteType(modelAndView, "viewGroupDetails", request);
+	    modelAndView.addObject("include_page", new IncludePage(request, response));
+	    
+	    String groupSystemId = request.getParameter("globalCustNum");
+	    GroupInformationDto groupInformationDto = this.groupServiceFacade.getGroupInformationDto(groupSystemId);
+
+	    modelAndView.addObject("groupInformationDto", groupInformationDto);
+
+	    boolean isGroupLoanAllowed = Boolean.parseBoolean(configurationServiceFacade.getConfig("ClientRules.GroupCanApplyLoans"));
+	    modelAndView.addObject("isGroupLoanAllowed", isGroupLoanAllowed);
+	    
+	    boolean isCenterHierarchyExists = configurationServiceFacade.getBooleanConfig("ClientRules.CenterHierarchyExists");
+        modelAndView.addObject("isCenterHierarchyExists", isCenterHierarchyExists );
+
+        try {
+            modelAndView.addObject("currentPageUrl", constructCurrentPageUrl("Group", groupSystemId));
         } catch (UnsupportedEncodingException e) {
             throw new ApplicationException(e);
         }
         
-        boolean containsQGForCloseClient = false;
-        containsQGForCloseClient = questionnaireServiceFacade.getQuestionGroupInstances(clientInformationDto.getClientDisplay().getCustomerId(), "Close", "Client").size() > 0;
-        modelAndView.addObject("containsQGForCloseClient", containsQGForCloseClient);
+        groupServiceFacade.putGroupBusinessKeyInSession(groupSystemId, request);
         
-        clientServiceFacade.putClientBusinessKeyInSession(clientSystemId, request);
-        
-        return modelAndView;
+	    return modelAndView;
 	}
-	
-	private String constructCurrentPageUrl(String globalCustNum) throws UnsupportedEncodingException{
-	    String viewName = "viewClientDetails.ftl";
+
+	private String constructCurrentPageUrl(String customer, String globalCustNum) throws UnsupportedEncodingException{
+	    String viewName =  String.format("view%sDetails.ftl", customer);
 	    String url = String.format("%s?globalCustNum=%s", viewName, globalCustNum);
 	    return URLEncoder.encode(url, "UTF-8");
 	}
-	
+
 }
