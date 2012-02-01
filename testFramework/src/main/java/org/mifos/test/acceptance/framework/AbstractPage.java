@@ -64,7 +64,7 @@ public class AbstractPage {
 
     public void verifyPage(String pageName) {
         String pageId = selenium.getAttribute("page.id@title");
-        if(pageId.equals("Exception")){
+        if("Exception".equals(pageId)){
             String stackTrace = selenium.getText("css=div.stackTrace pre");
             Assert.fail("Expected page <" +pageName +">, actual page <"+pageId+">!!! with error message > " + stackTrace);
         }
