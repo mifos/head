@@ -20,7 +20,6 @@ import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.security.MifosUser;
 import org.mifos.ui.core.controller.util.helpers.SitePreferenceHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mobile.device.site.SitePreference;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -48,7 +47,7 @@ public class HomePageController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ModelAttribute("customerSearch")
-	public ModelAndView showPopulatedForm(HttpServletRequest request, HttpServletResponse response, SitePreference sitePreference,
+	public ModelAndView showPopulatedForm(HttpServletRequest request, HttpServletResponse response,
 			@ModelAttribute("customerSearch") CustomerSearchFormBean customerSearchFormBean )
 			throws MifosException {
 
@@ -61,14 +60,16 @@ public class HomePageController {
         Short userId = (short) user.getUserId();
         UserDetailDto userDetails = this.centerServiceFacade.retrieveUsersDetails(userId);
         modelAndView.addObject("customerSearch", customerSearchFormBean);
-        boolean isCenterHierarchyExists = Boolean.parseBoolean(configurationServiceFacade.getConfig("ClientRules.CenterHierarchyExists"));
+        boolean isCenterHierarchyExists = configurationServiceFacade.getBooleanConfig("ClientRules.CenterHierarchyExists");
         modelAndView.addObject("isCenterHierarchyExists", isCenterHierarchyExists );
+        
         if (userDetails.isLoanOfficer()) {
             loadLoanOfficerCustomersHierarchyForSelectedDay(userId, modelAndView, customerSearchFormBean);
             modelAndView.addObject("isLoanOfficer", true);
         } else {
         	modelAndView.addObject("isLoanOfficer", false);
         }
+        
         return modelAndView;
 	}
 

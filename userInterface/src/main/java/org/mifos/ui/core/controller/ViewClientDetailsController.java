@@ -47,7 +47,7 @@ public class ViewClientDetailsController {
         
         modelAndView.addObject("clientInformationDto", clientInformationDto);
 
-        boolean isPhotoFieldHidden = Boolean.parseBoolean(configurationServiceFacade.getConfig("Client.Photo"));
+        boolean isPhotoFieldHidden = configurationServiceFacade.getBooleanConfig("Client.Photo");
         modelAndView.addObject("isPhotoFieldHidden", isPhotoFieldHidden);
         
         try {

@@ -8,4 +8,5 @@ public interface ConfigurationServiceFacade {
 
     String getConfig(String key);
 
+    boolean getBooleanConfig(String key);
 }
