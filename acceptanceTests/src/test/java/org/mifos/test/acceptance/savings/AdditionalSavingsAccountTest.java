@@ -355,7 +355,10 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters();
         params.setBalanceUsedForInterestCalculation(SavingsProductParameters.AVERAGE_BALANCE);
         params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
-
+        params.setStartDateDD("1");
+        params.setStartDateMM("2");
+        params.setStartDateYYYY("2011");
+        
         String productName = params.getProductInstanceName();
         String savingsId = createSavingsAccount(params);
 
