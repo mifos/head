@@ -142,10 +142,12 @@
         <transition on="submit" to="confirmation">
         	<set name="flowScope.accountStateId" value="requestParameters.accountState" type="int"/>
         	<evaluate expression="cashFlowController.transformCashFlow(flowScope.cashFlow)" result="flowScope.loanAccountCashFlow" />
-        	<evaluate expression="loanAccountController.submitLoanApplication(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean)" result="flowScope.loanCreationResultDto" />
+        	<evaluate expression="loanAccountController.submitLoanApplication(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean, messageContext)" result="flowScope.loanCreationResultDto" />
         </transition>
         
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+
+        <transition on-exception="org.mifos.service.BusinessRuleException" to="enterAccountDetailsStep" />
     </view-state>
     
     <decision-state id="chooseCorrectViewForEditLoanSchedule">

@@ -18,4 +18,9 @@ public class StubConfigurationServiceFacade implements ConfigurationServiceFacad
         return RESTConfigKey.TRUE;
     }
 
+    @Override
+    public boolean getBooleanConfig(String key) {
+        return Boolean.parseBoolean(RESTConfigKey.TRUE);
+    }
+
 }

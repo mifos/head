@@ -31,8 +31,11 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
+import org.mifos.security.util.UserContext;
 
 public class FieldConfigurationHelperIntegrationTest extends MifosIntegrationTestCase {
+
+    private UserContext userContext = TestUtils.makeUser();
 
     @Before
     public void setUp() throws Exception {

@@ -143,6 +143,14 @@ explanation of the license and how it is applied.
 			</span>
 		</td>
 	</tr>
+	<tr id="Personnel.SiteTypePreferred">
+		<td class="fontnormal">
+			<mifos:mifoslabel name="Personnel.SiteTypePreferred"/>
+			<span class="fontnormal">
+				<c:out value ="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey, 'siteTypePreferred')}"/>
+			</span>
+		</td>
+	</tr>
 </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>

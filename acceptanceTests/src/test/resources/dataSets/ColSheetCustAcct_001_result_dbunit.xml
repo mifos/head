@@ -17,6 +17,7 @@
   <DATABASECHANGELOG ID="MIFOSSUPPORT-44_1" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="250" EXECTYPE="EXECUTED" MD5SUM="3:eb1d1711b1eea8756e15291e03873ba5" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOSSUPPORT-44_2" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="251" EXECTYPE="EXECUTED" MD5SUM="3:ad14c03a6c51a27ff46e10e0a28842d2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_2852_1" AUTHOR="Piotr Bogacz" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="259" EXECTYPE="EXECUTED" MD5SUM="3:0781b02231b6f43b1a820baab16cb49b" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_3305_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-01-31 14:42:00.0" ORDEREXECUTED="211" EXECTYPE="EXECUTED" MD5SUM="3:eb09aad6ab0494b392d6cb34acafe853" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_4286_1" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="252" EXECTYPE="EXECUTED" MD5SUM="3:3e4d0adcdb97bb21a911166e0edf2102" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4286_2" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="253" EXECTYPE="EXECUTED" MD5SUM="3:7cc61cbea46a54647f8c062512688ccb" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_4286_3" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="254" EXECTYPE="EXECUTED" MD5SUM="3:2625878c01e2f8e59ecf83d790b8777c" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
@@ -46,6 +47,7 @@
   <DATABASECHANGELOG ID="MIFOS_5164_2" AUTHOR="Udai Gupta" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-28 18:06:57.0" ORDEREXECUTED="210" EXECTYPE="EXECUTED" MD5SUM="3:7050ad7056dd89097b10de0cad2f2e5f" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5186_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-24 15:29:30.0" ORDEREXECUTED="183" EXECTYPE="EXECUTED" MD5SUM="3:257c6dbd69a28ceb9a8a866a405e23f2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5218_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-09 11:57:53.0" ORDEREXECUTED="185" EXECTYPE="EXECUTED" MD5SUM="3:a55cb7c0cd264ab9133926be13e0c714" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_5359_1" AUTHOR="Michal Dudzinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-01-31 14:42:00.0" ORDEREXECUTED="212" EXECTYPE="EXECUTED" MD5SUM="3:8c408cc6b30629a54545806b2f771895" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
   <QRTZ_CALENDARS/>
@@ -542,6 +544,7 @@
   <account_notes account_notes_id="151" account_id="206" note="approve" comment_date="2009-01-30" officer_id="1"/>
   <account_notes account_notes_id="152" account_id="207" note="approved." comment_date="2009-01-30" officer_id="1"/>
   <account_notes account_notes_id="153" account_id="208" note="approved." comment_date="2009-01-30" officer_id="1"/>
+  <account_overpayment/>
   <account_payment payment_id="1" account_id="13" payment_type_id="1" currency_id="2" amount="2000.0000" receipt_number="" payment_date="2009-01-29" receipt_date="2009-01-29"/>
   <account_payment payment_id="2" account_id="14" payment_type_id="1" currency_id="2" amount="2000.0000" receipt_number="" payment_date="2009-01-29" receipt_date="2009-01-29"/>
   <account_payment payment_id="3" account_id="17" payment_type_id="1" currency_id="2" amount="2000.0000" receipt_number="" payment_date="2009-01-29" receipt_date="2009-01-29"/>

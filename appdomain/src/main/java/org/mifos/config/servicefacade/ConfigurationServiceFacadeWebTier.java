@@ -22,6 +22,11 @@ public class ConfigurationServiceFacadeWebTier implements ConfigurationServiceFa
         return MifosConfigurationManager.getInstance().getString(key);
     }
 
+    @Override
+    public boolean getBooleanConfig(String key) {
+        return MifosConfigurationManager.getInstance().getBoolean(key);
+    }
+
     @Autowired
     public void setAccountingConfigurationService(AccountingConfigurationService accountingConfigurationService) {
         this.accountingConfigurationService = accountingConfigurationService;

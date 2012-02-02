@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.joda.time.DateTime;
+import org.mifos.config.SitePreferenceType;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.CustomerHierarchyDto;
@@ -58,14 +59,14 @@ public interface PersonnelServiceFacade {
     UserSettingsDto retrieveUserSettings();
 
     @PreAuthorize("isFullyAuthenticated()")
-    UserSettingsDto retrieveUserSettings(Integer genderValue, Integer maritalStatusValue, Integer prefeeredLocaleId);
+    UserSettingsDto retrieveUserSettings(Integer genderValue, Integer maritalStatusValue, Integer prefeeredLocaleId, Short sitePreferenceId);
 
     @PreAuthorize("isFullyAuthenticated()")
     UserDetailDto retrieveUserInformation(Short personnelId);
 
     @PreAuthorize("isFullyAuthenticated()")
     void updateUserSettings(Short personnelId, String emailId, Name name, Integer maritalStatusId, Integer genderId,
-            AddressDto address, Short preferredLocaleId);
+            AddressDto address, Short preferredLocaleId, Short sitePreferenceId);
 
     @PreAuthorize("isFullyAuthenticated()")
     void unLockUserAccount(String globalAccountNum);
@@ -79,4 +80,6 @@ public interface PersonnelServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     CustomerHierarchyDto getLoanOfficerCustomersHierarchyForDay(Short loanOfficerId, DateTime day);
+    
+    SitePreferenceType retrieveSitePreference(Integer userId);
 }

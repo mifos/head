@@ -273,6 +273,10 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled=true)
     public void checkGLIMAccountEmptyPurpose() throws Exception {
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011, 03, 1, 13, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Default Group");
         searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");

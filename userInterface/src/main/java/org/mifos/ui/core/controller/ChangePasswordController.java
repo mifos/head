@@ -44,7 +44,7 @@ public class ChangePasswordController {
     private static final String REDIRECT_AND_LOGOUT = "redirect:/j_spring_security_logout";
     private static final String CANCEL_PARAM = "CANCEL";
     private static final String CANCEL_PARAM_VALUE = "Cancel";
-    private static final String HOME_PAGE = "redirect:/custSearchAction.do?method=getHomePage";
+    private static final String HOME_PAGE = "redirect:/home.ftl";
 
     @Autowired
     private NewLoginServiceFacade loginServiceFacade;

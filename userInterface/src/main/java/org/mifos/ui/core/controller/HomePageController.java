@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
@@ -17,16 +18,16 @@ import org.mifos.core.MifosException;
 import org.mifos.dto.domain.CustomerHierarchyDto;
 import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.security.MifosUser;
+import org.mifos.ui.core.controller.util.helpers.SitePreferenceHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mobile.device.Device;
-import org.springframework.mobile.device.DeviceUtils;
-import org.springframework.mobile.device.site.SitePreference;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import freemarker.ext.servlet.IncludePage;
 
 @Controller
 @RequestMapping("/home")
@@ -42,24 +43,26 @@ public class HomePageController {
 	@Autowired
 	private ConfigurationServiceFacade configurationServiceFacade;
 	
+	private final SitePreferenceHelper sitePreferenceHelper = new SitePreferenceHelper();
+	
 	@RequestMapping(method = RequestMethod.GET)
 	@ModelAttribute("customerSearch")
-	public ModelAndView showPopulatedForm(HttpServletRequest request, SitePreference sitePreference,
+	public ModelAndView showPopulatedForm(HttpServletRequest request, HttpServletResponse response,
 			@ModelAttribute("customerSearch") CustomerSearchFormBean customerSearchFormBean )
 			throws MifosException {
-		Device currentDevice = DeviceUtils.getCurrentDevice(request);
+
 		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		 
-        ModelAndView modelAndView = new ModelAndView("m_home");
-        if (currentDevice.isMobile()) {
-            modelAndView = new ModelAndView("m_home");
-        }
+        ModelAndView modelAndView = new ModelAndView();
+        sitePreferenceHelper.resolveSiteType(modelAndView, "home", request);
+        modelAndView.addObject("include_page", new IncludePage(request, response)); 
         
         Short userId = (short) user.getUserId();
         UserDetailDto userDetails = this.centerServiceFacade.retrieveUsersDetails(userId);
         modelAndView.addObject("customerSearch", customerSearchFormBean);
-        boolean isCenterHierarchyExists = Boolean.parseBoolean(configurationServiceFacade.getConfig("ClientRules.CenterHierarchyExists"));
+        boolean isCenterHierarchyExists = configurationServiceFacade.getBooleanConfig("ClientRules.CenterHierarchyExists");
         modelAndView.addObject("isCenterHierarchyExists", isCenterHierarchyExists );
+        
         if (userDetails.isLoanOfficer()) {
             loadLoanOfficerCustomersHierarchyForSelectedDay(userId, modelAndView, customerSearchFormBean);
             modelAndView.addObject("isLoanOfficer", true);

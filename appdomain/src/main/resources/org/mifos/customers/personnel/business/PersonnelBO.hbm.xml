@@ -21,6 +21,7 @@
             class="org.mifos.customers.office.business.OfficeBO" unique="true"
             lazy="false" />
         <property name="preferredLocale" column="preferred_locale" type="short" not-null="true" access="field" />
+        <property name="sitePreference" column="site_preference" type="short" access="field" />
         <one-to-one name="personnelDetails"
             class="org.mifos.customers.personnel.business.PersonnelDetailsEntity"
             cascade="all" lazy="false" />

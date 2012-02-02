@@ -118,6 +118,7 @@ public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
                 if (StringUtils.isBlank(messageText)) {
                     messageText = ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupValue.getPropertiesKey());
                 }
+                ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValueInCache(entity.getLookUpValue().getLookUpName(), messageText);
             }
 
             for (GracePeriodTypeEntity entity : gracePeriods) {
@@ -127,10 +128,12 @@ public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
                 if (StringUtils.isBlank(messageText)) {
                     messageText = ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookupValue.getPropertiesKey());
                 }
+                ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValueInCache(entity.getLookUpValue().getLookUpName(), messageText);
             }
 
             for (LookUpEntity entity : lookupEntities) {
                 applicationConfigurationDao.save(entity);
+                ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValueInCache(entity.getEntityType(), entity.findLabel());
             }
 
             for (LookUpValueEntity entity : accountStatuses) {

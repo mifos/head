@@ -886,6 +886,16 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, List<DateTime> loanScheduleInstallmentDates,
             List<Number> totalInstallmentAmounts, List<GroupMemberAccountDto> memberDetails, boolean isBackdatedLoan) {
 
+        DateTime creationDate = new DateTime();
+
+        // 0. verify member details for GLIM group accounts
+        for (GroupMemberAccountDto groupMemberAccount : memberDetails) {
+            ClientBO member = this.customerDao.findClientBySystemId(groupMemberAccount.getGlobalId());
+            if (creationDate.isBefore(new DateTime(member.getCreatedDate()))) {
+                throw new BusinessRuleException("errors.cannotCreateLoan.because.clientsAreCreatedInFuture");
+            }
+        }
+
         // 1. assemble loan details
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
@@ -921,7 +931,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 loanAccountInfo.getMaxAllowedNumberOfInstallments().shortValue(), null);
         AmountRange amountRange = new MaxMinLoanAmount(loanAccountInfo.getMaxAllowedLoanAmount().doubleValue(), loanAccountInfo.getMinAllowedLoanAmount().doubleValue(), null);
 
-        DateTime creationDate = new DateTime();
         if (isBackdatedLoan) {
             creationDate = loanAccountInfo.getDisbursementDate().toDateMidnight().toDateTime();
         }

@@ -87,6 +87,7 @@ public class PersonnelBO extends AbstractBusinessObject {
     private Short noOfTries = 0;
     private Set<PersonnelRoleEntity> personnelRoles;
     private Short preferredLocale;
+    private Short sitePreference;
     private byte[] encryptedPassword;
 
     public PersonnelBO(final PersonnelLevel level, final OfficeBO office, final Integer title, final Short preferredLocale, final String password,
@@ -388,11 +389,14 @@ public class PersonnelBO extends AbstractBusinessObject {
 
     }
 
-    public void update(final String emailId, final Name name, final Integer maritalStatus, final Integer gender, final Address address, final Short preferredLocaleId) {
+    public void update(final String emailId, final Name name, final Integer maritalStatus, final Integer gender, final Address address, final Short preferredLocaleId, final Short sitePreferenceId) {
 
         this.emailId = emailId;
         if (preferredLocaleId != null && preferredLocaleId != 0) {
             this.preferredLocale = preferredLocaleId;
+        }
+        if (sitePreferenceId != null && sitePreferenceId != 0) {
+            this.sitePreference = sitePreferenceId;
         }
         setDisplayName(name.getDisplayName());
         updatePersonnelDetails(name, maritalStatus, gender, address, null);
@@ -601,4 +605,13 @@ public class PersonnelBO extends AbstractBusinessObject {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+    public Short getSitePreference() {
+        return sitePreference;
+    }
+
+    public void setSitePreference(Short sitePreference) {
+        this.sitePreference = sitePreference;
+    }
+    
 }

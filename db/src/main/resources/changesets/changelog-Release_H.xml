@@ -41,4 +41,16 @@
             </sql>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_5359_1" author="Michal Dudzinski" context="expansion">
+    	<sql endDelimiter=";">
+    			ALTER TABLE personnel
+				ADD COLUMN site_preference smallint(3) AFTER preferred_locale;
+    	</sql>
+    	<rollback>
+    		<sql endDelimiter=";">
+    			ALTER TABLE personnel
+				DROP COLUMN site_preference;
+    		</sql>	
+    	</rollback>
+    </changeSet>
 </databaseChangeLog>

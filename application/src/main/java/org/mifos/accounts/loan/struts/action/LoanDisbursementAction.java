@@ -151,12 +151,17 @@ public class LoanDisbursementAction extends BaseAction {
                     loanAccountId), disbursalAmount, new LocalDate(trxnDate), paymentType, comment,
                     new LocalDate(receiptDate), actionForm.getReceiptId(), customerDto);
 
-            this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
-            
-            //GLIM
+            // GLIM
             List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(loanAccountId);
-                
-            for(LoanBO individual : individualLoans) {
+            for (LoanBO individual : individualLoans) {
+                if (!loanAccountServiceFacade.isTrxnDateValid(Integer.valueOf(individual.getAccountId()), trxnDate)) {
+                    throw new BusinessRuleException("errors.invalidTxndateOfDisbursal");
+                }
+            }
+
+            this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
+
+            for (LoanBO individual : individualLoans) {
                 loanDisbursement = new AccountPaymentParametersDto(new UserReferenceDto(uc.getId()), new AccountReferenceDto(
                         individual.getAccountId()), individual.getLoanAmount().getAmount(), new LocalDate(trxnDate), paymentType, comment,
                         new LocalDate(receiptDate), actionForm.getReceiptId(), customerDto);
