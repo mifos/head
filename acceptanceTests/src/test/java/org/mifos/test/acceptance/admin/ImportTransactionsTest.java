@@ -40,7 +40,7 @@ public class ImportTransactionsTest extends UiTestCaseBase {
     private static final String EXCEL_IMPORT_TYPE = "Audi Bank (Excel 2007)";
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false) // TODO - this test somehow breaks AdditionalSavingsAccountTest
+    @Test(enabled=true)
     public void importExcelFormatAudiBankTransactions() throws Exception {
         pluginsUtil.loadPlugin();
         navigationHelper = new NavigationHelper(selenium);
