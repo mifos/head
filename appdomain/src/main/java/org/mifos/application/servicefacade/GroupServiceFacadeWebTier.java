@@ -24,6 +24,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
@@ -95,6 +97,7 @@ import org.mifos.dto.screen.GroupPerformanceHistoryDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
@@ -102,6 +105,7 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
@@ -673,6 +677,16 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
         } catch (ApplicationException e) {
             this.transactionHelper.rollbackTransaction();
             throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+    
+    @Override
+    public void putGroupBusinessKeyInSession(String globalCustNum, HttpServletRequest request) {
+        GroupBO groupBO = customerDao.findGroupBySystemId(globalCustNum);
+        try {
+            SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, groupBO, request);
+        } catch (PageExpiredException e) {
+            throw new MifosRuntimeException(e);
         }
     }
 

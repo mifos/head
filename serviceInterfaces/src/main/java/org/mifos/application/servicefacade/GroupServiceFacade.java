@@ -20,6 +20,8 @@
 
 package org.mifos.application.servicefacade;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.mifos.dto.domain.CenterDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
@@ -65,4 +67,6 @@ public interface GroupServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void updateCustomerHistoricalData(String globalCustNum, CustomerHistoricalDataUpdateRequest historicalData);
+    
+    void putGroupBusinessKeyInSession(String globalCustNum, HttpServletRequest request);
 }
