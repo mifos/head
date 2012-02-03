@@ -171,6 +171,9 @@ public class EditLoanProductTest extends UiTestCaseBase {
         ///////////////////////SAVINGS////////////////////
         SavingsProductHelper savingsProductHelper = new SavingsProductHelper(selenium);
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CENTERS);
+        params.setStartDateDD("2");
+        params.setStartDateMM("2");
+        params.setStartDateYYYY("2011");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
         EditSavingsProductPage editSavingsProductPage = confirmationPage.navigateToSavingsProductDetails().editSavingsProduct();
 
