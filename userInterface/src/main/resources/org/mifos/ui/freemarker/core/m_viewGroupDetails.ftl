@@ -33,7 +33,7 @@
 		</span>
 		<span class="fontnormal"> <!-- Edit center status link --> 
 			[#if groupInformationDto.groupDisplay.customerStatusId != CustomerStatus.GROUP_CLOSED.value]
-			<a id="viewgroupdetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=${groupInformationDto.groupDisplay.customerId}&input=client&currentFlowKey=${Request.currentFlowKey}">
+			<a id="viewgroupdetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=${groupInformationDto.groupDisplay.customerId}&input=group&currentFlowKey=${Request.currentFlowKey}">
 				[#assign arguments = ["${ConfigurationConstants.GROUP}"]/]
 				[@spring.messageArgs "Group.editStatus" arguments/] 
 			</a>
@@ -42,7 +42,7 @@
 	</div>
 	<div>
 		<font class="fontnormalRedBold">
-			<span id="viewClientDetails.error.message">
+			<span id="viewgroupdetails.error.message">
 			</span>
 		</font>
 	</div>
@@ -51,7 +51,7 @@
 		<div class="fontnormalbold">
 			<span class="fontnormal">
 				[@mifostag.MifosImage id="${groupInformationDto.groupDisplay.customerStatusId}" moduleName="org.mifos.customers.util.resources.customerImages" /] 
-				<span id="viewClientDetails.text.status">
+				<span id="viewGroupDetails.text.status">
 					${groupInformationDto.groupDisplay.customerStatusName}
 				</span>
 				[#list groupInformationDto.customerFlags as flagSet] 
@@ -63,14 +63,14 @@
 					</span>
 				[/#list] 
 			</span><br>
-		<!-- System Id of the client --> 
+		[#-- System Id of the group --] 
 		<span class="fontnormal">
 			[@spring.message "Group.systemId" /]
 		</span>
 		<span id="viewGroupDetails.text.globalcustnum" class="fontnormal">
 			${groupInformationDto.groupDisplay.globalCustNum}
 		</span><br>
-		<!-- Loan Officer of the client --> 
+		[#-- Loan Officer of the group --] 
 		<span class="fontnormal"> 
 			[@spring.message "Group.loanofficer" /]
 			${groupInformationDto.groupDisplay.loanOfficerName}
@@ -124,9 +124,11 @@
 			</span>
 		<br>
 		</div>
-		<div>
-			<img src="pages/framework/images/trans.gif" width="5" height="5">
-		</div>
+	</div>
+	<div>
+		<img src="pages/framework/images/trans.gif" width="5" height="5">
+	</div>
+	<div>
 		<div>
 			<div>
 				<span class="headingorange">
@@ -163,7 +165,7 @@
 						<span class="fontnormal"> 
 							<a id="viewgroupdetails.link.viewLoanAccount"
 								href="loanAccountAction.do?globalAccountNum=${loan.globalAccountNum}&customerId=${groupInformationDto.groupDisplay.customerId}&method=get&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
-								${loan.prdOfferingName}, [@spring.message "client.acc" /] ${loan.globalAccountNum}
+								${loan.prdOfferingName}, [@spring.message "Group.acc" /] ${loan.globalAccountNum}
 							</a> 
 						</span>
 						<br/>
@@ -243,7 +245,7 @@
 					</span>
 					<br/>
 					<span class="fontnormal">
-						[@spring.message "client.amtdue" /]
+						[@spring.message "Group.amountdue" /]
 						<span id="viewgroupdetails.text.amountDue">
 							${groupInformationDto.customerAccountSummary.nextDueAmount?number}
 						</span>
@@ -312,7 +314,7 @@
 			<div>
 				<span class="fontnormalbold">
 					[@spring.message "Group.officialtitlesassigned" /]
-				</span>
+				</span> <br/>
 				<span class="fontnormal">
 					[#list groupInformationDto.customerPositions?if_exists as pos]
 						[#if pos.positionName?has_content ]
@@ -378,7 +380,11 @@
 				<span class="fontnormal">
 					[#list groupInformationDto.customFields as customField]
 						[@spring.message "${customField.lookUpEntityType}" /]:
+						[#if customField.fieldType == 3 ]
+						${i18n.date_formatter(customField.fieldValue, "dd/MM/yyyy", Application.LocaleSetting.locale)}	
+						[#else]
 						${customField.fieldValue}
+						[/#if]
 						<br/>
 					[/#list] 
 				</span>
@@ -386,7 +392,7 @@
 			[/#if]
 			<div>
 				<div>
-					<div> [#-- Dynamic links --]
+					<div> 
 					[#if isCenterHierarchyExists ]
 						<div>
 							<span class="fontnormalbold">			
@@ -443,7 +449,6 @@
 						<img src="pages/framework/images/trans.gif" width="10" height="10">
 					</div>
 					<div>
-						[#-- Historical data link --]
 						<span class="fontnormal">
                         	<a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${groupInformationDto.groupDisplay.customerId}&event=Create&source=Group&backPageUrl=${currentPageUrl}%26recordOfficeId%3D${groupInformationDto.groupDisplay.branchId}%26recordLoanOfficerId%3D${groupInformationDto.groupDisplay.loanOfficerId}">
                             	[@spring.message "client.ViewQuestionGroupResponsesLink" /]
