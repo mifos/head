@@ -120,13 +120,13 @@
 					</a>
 					[#if client.centerGlobalCustNum?has_content]
 					 /
-					<a href="centerCustAction.do?method=get&globalCustNum=${client.centerGlobalCustNum}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+					<a href="viewCenterDetails.ftl?globalCustNum=${client.centerGlobalCustNum}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
 						${client.centerName}
 					</a>
 					[/#if]
 					[#if client.groupGlobalCustNum?has_content]
 					 /
-					<a href="groupCustAction.do?method=get&globalCustNum=${client.groupGlobalCustNum}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+					<a href="viewGroupDetails.ftl?globalCustNum=${client.groupGlobalCustNum}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
 						${client.groupName}
 					</a>
 					[/#if]
@@ -144,8 +144,7 @@
 				${number}.
 				[@spring.message "${ConfigurationConstants.GROUP}" /]
 				<span class="headingblue">
-					<a href="groupCustAction.do?method=get&globalCustNum=${group.groupGlobalCustNum}&recordOfficeId=${group.branchId}&
-							 recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomnum=${Session.randomNUm}">
+					<a href="viewGroupDetails.ftl?globalCustNum=${group.groupGlobalCustNum}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
 						${group.groupName}: ${group.groupGlobalCustNum}
 					</a>
 				</span>
@@ -202,7 +201,7 @@
 					</a> 
 					[#if group.centerGlobalCustNum?has_content]
 					 /
-					<a href="centerCustAction.do?method=get&globalCustNum=${group.centerGlobalCustNum}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+					<a href="viewCenterDetails.ftl?globalCustNum=${group.centerGlobalCustNum}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
 						${group.centerName}
 					</a>
 					[/#if]
@@ -220,7 +219,7 @@
 				${number}.
 				[@spring.message "${ConfigurationConstants.CENTER}" /]
 				<span class="headingblue">
-					<a href="centerCustAction.do?method=get&globalCustNum=${center.centerGlobalCustNum}&recordOfficeId=${center.branchId}&
+					<a href="viewCenterDetails.ftl?globalCustNum=${center.centerGlobalCustNum}&recordOfficeId=${center.branchId}&
 							 recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomnum=${Session.randomNUm}">
 						${center.centerName}: ${center.centerGlobalCustNum}
 					</a>

@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
@@ -113,6 +115,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -120,8 +123,10 @@ import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
@@ -941,6 +946,16 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
             throw new MifosRuntimeException(e);
         } finally {
             this.transactionHelper.closeSession();
+        }
+    }
+    
+    @Override
+    public void putCenterBusinessKeyInSession(String globalCustNum, HttpServletRequest request) {
+        CenterBO centerBO = customerDao.findCenterBySystemId(globalCustNum);
+        try {
+            SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, centerBO, request);
+        } catch (PageExpiredException e) {
+            throw new MifosRuntimeException(e);
         }
     }
 

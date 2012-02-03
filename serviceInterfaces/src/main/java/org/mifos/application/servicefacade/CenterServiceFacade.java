@@ -22,6 +22,8 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CenterCreationDetail;
@@ -122,4 +124,6 @@ public interface CenterServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void addNoteToPersonnel(Short personnelId, String comment);
+    
+    void putCenterBusinessKeyInSession(String globalCustNum, HttpServletRequest request);
 }

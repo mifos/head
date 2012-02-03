@@ -6,9 +6,11 @@ import java.net.URLEncoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.ClientServiceFacade;
 import org.mifos.application.servicefacade.GroupServiceFacade;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
+import org.mifos.dto.domain.CenterInformationDto;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.GroupInformationDto;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -29,6 +31,8 @@ public class ViewCustomerDetailsController {
 	ClientServiceFacade clientServiceFacade;
 	@Autowired
 	GroupServiceFacade groupServiceFacade;
+	@Autowired
+	CenterServiceFacade centerServiceFacade;
 
 	@Autowired
 	private ConfigurationServiceFacade configurationServiceFacade;
@@ -92,6 +96,28 @@ public class ViewCustomerDetailsController {
         }
         
         groupServiceFacade.putGroupBusinessKeyInSession(groupSystemId, request);
+        
+	    return modelAndView;
+	}
+	
+	@RequestMapping(value = "/viewCenterDetails", method=RequestMethod.GET)
+	public ModelAndView showCenterDetails(HttpServletRequest request, HttpServletResponse response) throws ApplicationException {
+	    ModelAndView modelAndView = new ModelAndView();
+	    sitePreferenceHelper.resolveSiteType(modelAndView, "viewCenterDetails", request);
+	    modelAndView.addObject("include_page", new IncludePage(request, response));
+	    
+	    String centerSystemId = request.getParameter("globalCustNum");
+	    CenterInformationDto centerInformationDto = this.centerServiceFacade.getCenterInformationDto(centerSystemId);
+	    
+	    modelAndView.addObject("centerInformationDto", centerInformationDto);
+	    
+        try {
+            modelAndView.addObject("currentPageUrl", constructCurrentPageUrl("Center", centerSystemId));
+        } catch (UnsupportedEncodingException e) {
+            throw new ApplicationException(e);
+        }
+	    
+        centerServiceFacade.putCenterBusinessKeyInSession(centerSystemId, request);
         
 	    return modelAndView;
 	}
