@@ -22,6 +22,7 @@ package org.mifos.accounts.struts.action;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,8 +41,8 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.EditStatusActionForm;
-import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
@@ -51,6 +52,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
+import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -180,6 +182,7 @@ public class EditStatusAction extends BaseAction {
 
         Integer accountId = Integer.valueOf(editStatusActionForm.getAccountId());
         AccountBO accountBO = new AccountBusinessService().getAccount(accountId);
+        LoanInformationDto loanInformationDto = this.loanAccountServiceFacade.retrieveLoanInformation(accountBO.getGlobalAccountNum());
 
         Short flagId = null;
         Short newStatusId = null;
@@ -197,9 +200,22 @@ public class EditStatusAction extends BaseAction {
             initializeLoanQuestionnaire(accountBO.getGlobalAccountNum(), newStatusId != null ? newStatusId.toString() : null);
             loanQuestionnaire.saveResponses(request, editStatusActionForm, accountId);
 
-            AccountUpdateStatus updateStatus = new AccountUpdateStatus(accountId.longValue(), newStatusId, flagId, updateComment);
-            this.loanAccountServiceFacade.updateLoanAccountStatus(updateStatus);
-
+            if(loanInformationDto.isGroup()) {
+                List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(accountId);
+                List<AccountUpdateStatus> updateStatus = new ArrayList<AccountUpdateStatus>(individualLoans.size() + 1);
+            
+                updateStatus.add(new AccountUpdateStatus(accountId.longValue(), newStatusId, flagId, updateComment));
+            
+                for(LoanBO individual : individualLoans) {
+                    updateStatus.add(new AccountUpdateStatus(individual.getAccountId().longValue(), newStatusId, flagId, updateComment));
+                }
+                
+                this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(updateStatus);
+            } else{
+                AccountUpdateStatus updateStatus = new AccountUpdateStatus(accountId.longValue(), newStatusId, flagId, updateComment);
+                this.loanAccountServiceFacade.updateLoanAccountStatus(updateStatus);
+            } 
+            
             return mapping.findForward(ActionForwards.loan_detail_page.toString());
         } if (accountBO.isSavingsAccount()) {
             AccountUpdateStatus updateStatus = new AccountUpdateStatus(accountId.longValue(), newStatusId, flagId, updateComment);

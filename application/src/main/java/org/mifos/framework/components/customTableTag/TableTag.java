@@ -55,6 +55,10 @@ public class TableTag extends BodyTagSupport {
     private String moduleName = null;
 
     private String passLocale = null;
+    
+    private String randomNUm = null;
+    
+    private String currentFlowKey = null;
 
     // FIXME: now unused and should be able to be deleted
     private String rootName;
@@ -106,6 +110,22 @@ public class TableTag extends BodyTagSupport {
     public String getModuleName() {
         return moduleName;
     }
+    
+    public String getRandomNUm() {
+        return randomNUm;
+    }
+
+    public void setRandomNUm(String randomNUm) {
+        this.randomNUm = randomNUm;
+    }
+
+    public String getCurrentFlowKey() {
+        return currentFlowKey;
+    }
+
+    public void setCurrentFlowKey(String currentFlowKey) {
+        this.currentFlowKey = currentFlowKey;
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -113,6 +133,22 @@ public class TableTag extends BodyTagSupport {
         try {
 
             table = TableTagParser.getInstance().parser(moduleName + "/" + xmlFileName);
+            
+            for(Column column : table.getRow().getColumn()) {
+                if (column.getLinkDetails() != null) {
+                    LinkDetails linkDetails = column.getLinkDetails();
+                    
+                    for (ActionParam param : linkDetails.getActionParam()) {
+                        if (param.getValueType().equalsIgnoreCase(TableTagConstants.INBUILD)) {
+                            if (param.getName().equalsIgnoreCase("randomNUm")) {
+                                param.setValue(randomNUm);
+                            } else if (param.getName().equalsIgnoreCase("currentFlowKey")) {
+                                param.setValue(currentFlowKey);
+                            }
+                        }
+                    }
+                }
+            }
 
             tableInfo = new StringBuilder();
             if (source == null || scope == null) {

@@ -1644,6 +1644,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             loandetails.setLoanAmount(null != individualLoan.getLoanAmount()
                     && !EMPTY.equals(individualLoan.getLoanAmount().toString()) ? individualLoan.getLoanAmount()
                     .toString() : "0.0");
+            loandetails.setLoanAccountId(individualLoan.getAccountId().toString());
 
             if (null != individualLoan.getBusinessActivityId()) {
                 loandetails.setBusinessActivity(individualLoan.getBusinessActivityId().toString());

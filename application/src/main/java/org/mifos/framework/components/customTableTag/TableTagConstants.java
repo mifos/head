@@ -42,6 +42,7 @@ public interface TableTagConstants {
     String NAME = "name";
     String METHOD = "method";
     String TEXT = "text";
+    String INBUILD = "inbuilt";
     String TRUE = "true";
     String HEADERSTYLE = "headerStyle";
     String ROWSTYLE = "rowStyle";

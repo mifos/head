@@ -351,7 +351,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                     legacyAdminDocAccStateMixDao.getAllMixedAdminDocuments(), request);
 
         }
-
+        
         // John W - temporarily put back because needed in applychargeaction - update
         // keithW - and for recentAccountNotes
         LoanBO loan = getLoan(loanInformationDto.getAccountId());
@@ -458,12 +458,13 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         UserContext userContext = getUserContext(request);
         Integer loanId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
+        LoanBO loan = (LoanBO) SessionUtils.getAttribute(BUSINESS_KEY, request);
 
         OriginalScheduleInfoDto dto = loanServiceFacade.retrieveOriginalLoanSchedule(loanId);
+        SessionUtils.setAttribute("originalSchedule", loan.getAccountId().equals(loanId), request);
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, dto.getDisbursementDate(), request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, dto.getLoanAmount(), request);
-        SessionUtils.setCollectionAttribute(LoanConstants.ORIGINAL_INSTALLMENTS,
-                dto.getOriginalLoanScheduleInstallment(), request);
+        SessionUtils.setCollectionAttribute(LoanConstants.ORIGINAL_INSTALLMENTS, dto.getOriginalLoanScheduleInstallment(), request);
         return mapping.findForward(ActionForwards.viewOriginalSchedule.name());
     }
 

@@ -389,7 +389,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									<td valign="top"><mifoscustom:mifostabletag
 										source="loanAccountDetailsView" scope="session"
 										xmlFileName="LoanAccountDetails.xml"
-										moduleName="org/mifos/accounts/loan/util/resources" passLocale="true" /></td>
+										moduleName="org/mifos/accounts/loan/util/resources" passLocale="true"
+                                        randomNUm="${sessionScope.randomNUm}" currentFlowKey="${requestScope.currentFlowKey}" /></td>
 								</tr>
 							</table>
 						</c:if>

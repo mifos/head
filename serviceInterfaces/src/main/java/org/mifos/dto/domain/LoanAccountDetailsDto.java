@@ -36,6 +36,8 @@ public class LoanAccountDetailsDto implements Serializable {
     private String loanAmount;
     private String businessActivity;
     private String businessActivityName;
+    
+    private String loanAccountId;
 
     /**
      * @deprecated use builder to create test doubles
@@ -135,7 +137,15 @@ public class LoanAccountDetailsDto implements Serializable {
     public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
+    
+    public String getLoanAccountId() {
+        return loanAccountId;
+    }
 
+    public void setLoanAccountId(String loanAccountId) {
+        this.loanAccountId = loanAccountId;
+    }
+    
     public boolean isEmpty() {
         return StringUtils.isBlank(loanAmount) && StringUtils.isBlank(businessActivity);
     }
