@@ -41,7 +41,7 @@
     <fieldset>
     <div class="row">
         [@form.label "productId" true][@spring.message "createSavingsAccount.enterAccountInfo.selectSavingsProduct" /][/@form.label]
-        [@form.singleSelectWithPrompt path="savingsAccountFormBean.productId" options=savingsAccountFormBean.productOfferingOptions selectPrompt="createSavingsAccount.selectProduct.selectPrompt" /]
+        [@form.singleSelectWithPrompt path="savingsAccountFormBean.productId" options=savingsAccountFormBean.productOfferingOptions selectPrompt="" /]
     </div>
     </fieldset>
 </form>
