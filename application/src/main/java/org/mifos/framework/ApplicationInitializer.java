@@ -145,7 +145,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         for(Object key :  properties.keySet()) {
             props += key + " : " +properties.get(key) +"\n";
         }
-        logger.info(props);
+        logger.info("Dump of all Java System Properties: " + props);
     }
 
     private void printMemoryPool() {
