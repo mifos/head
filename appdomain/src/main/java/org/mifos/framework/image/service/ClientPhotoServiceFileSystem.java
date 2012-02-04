@@ -14,8 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ClientPhotoServiceFileSystem implements ClientPhotoService {
-
-    public static final Logger LOG = LoggerFactory.getLogger(ClientPhotoServiceFileSystem.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClientPhotoServiceFileSystem.class);
 
 
     @Autowired
@@ -24,13 +23,10 @@ public class ClientPhotoServiceFileSystem implements ClientPhotoService {
     @Autowired
     private GenericDao genericDao;
 
-    // TODO use spring configuration
-    private ImageStorageManager imageStorageManager = new ImageStorageManager();
-
     @Override
     public boolean create(Long clientId, InputStream in) {
         try {
-            ImageInfo imInfo = imageStorageManager.createImage(in, clientId.toString());
+            ImageInfo imInfo = ImageStorageManager.createImage(in, clientId.toString());
             if(imInfo == null) {
                 return false;
             }
@@ -70,7 +66,7 @@ public class ClientPhotoServiceFileSystem implements ClientPhotoService {
         }
 
         try {
-            ImageInfo updateImageInfo = imageStorageManager.updateImage(in, clientPhoto.getImageInfo());
+            ImageInfo updateImageInfo = ImageStorageManager.updateImage(in, clientPhoto.getImageInfo());
             if(updateImageInfo == null) {
                 return false;
             }
@@ -97,11 +93,11 @@ public class ClientPhotoServiceFileSystem implements ClientPhotoService {
         hibernateTransactionHelper.startTransaction();
         genericDao.getSession().delete(clientPhoto);
         hibernateTransactionHelper.commitTransaction();
-        return imageStorageManager.delete(imageInfo.getPath());
+        return ImageStorageManager.delete(imageInfo.getPath());
     }
 
     @Override
     public byte[] getData(String path) {
-        return imageStorageManager.getData(path);
+        return ImageStorageManager.getData(path);
     }
 }
