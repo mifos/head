@@ -107,6 +107,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     private Short loanCounter;
     private Short waiverInterest;
     private Short variableInstallmentsAllowed;
+    private Short fixedRepaymentSchedule;
     private VariableInstallmentDetailsBO variableInstallmentDetails;
     private PrdOfferingMeetingEntity loanOfferingMeeting;
     private final GLCodeEntity principalGLcode;
@@ -1505,6 +1506,14 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
     public void setVariableInstallmentsAllowed(boolean variableInstallmentsAllowed) {
         this.variableInstallmentsAllowed = variableInstallmentsAllowed ? YesNoFlag.YES.getValue() : YesNoFlag.NO.getValue();
+    }
+
+    public boolean isFixedRepaymentSchedule() {
+        return YesNoFlag.YES.getValue().equals(fixedRepaymentSchedule);
+    }
+
+    public void setFixedRepaymentSchedule(boolean fixedRepaymentSchedule) {
+        this.fixedRepaymentSchedule = fixedRepaymentSchedule ? YesNoFlag.YES.getValue() : YesNoFlag.NO.getValue();
     }
 
     public VariableInstallmentDetailsBO getVariableInstallmentDetails() {

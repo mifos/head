@@ -300,6 +300,7 @@ public class LoanPrdActionForm extends BaseActionForm {
     private Double defInterestRateValue;
 
     private String canConfigureVariableInstallments;
+    private String isFixedRepaymentSchedule;
     private Integer minimumGapBetweenInstallments;
     private Integer maximumGapBetweenInstallments;
 
@@ -1770,6 +1771,7 @@ public class LoanPrdActionForm extends BaseActionForm {
             gracePeriodDuration = null;
             loanOfferingQGs = null;
             canConfigureVariableInstallments = null;
+            isFixedRepaymentSchedule = null;
             cashFlowValidation = null;
             cashFlowThreshold = null;
             cashFlowThresholdValue = null;
@@ -3092,6 +3094,22 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     public boolean canConfigureVariableInstallments() {
         return getBooleanValue(canConfigureVariableInstallments);
+    }
+
+    public String getIsFixedRepaymentSchedule() {
+        return isFixedRepaymentSchedule;
+    }
+
+    public void setIsFixedRepaymentSchedule(String isFixedRepaymentSchedule) {
+        this.isFixedRepaymentSchedule = isFixedRepaymentSchedule;
+    }
+
+    public void setIsFixedRepaymentSchedule(boolean isFixedRepaymentSchedule) {
+        this.setIsFixedRepaymentSchedule(getStringValue(isFixedRepaymentSchedule));
+    }
+
+    public boolean isFixedRepaymentSchedule() {
+        return getBooleanValue(isFixedRepaymentSchedule);
     }
 
     public boolean getCashFlowValidation() {

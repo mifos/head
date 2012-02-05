@@ -611,6 +611,18 @@ explanation of the license and how it is applied.
                             </tr>
                             <tr class="fontnormal">
                                 <td width="30%" align="right" valign="top">
+                                    <div id="fixedRepaymentScheduleLabelDiv"  style="display: none;">
+                                        <mifos:mifoslabel name="product.fixedRepaymentSchedule" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                    </div>
+                                </td>
+                                <td valign="top">
+                                    <div id="fixedRepaymentScheduleInputDiv"  style="display: none;">
+                                        <html-el:checkbox styleId="createLoanProduct.checkbox.fixedRepaymentSchedule" property="isFixedRepaymentSchedule" value="1" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="fontnormal">
+                                <td width="30%" align="right" valign="top">
                                     <div id="minimumGapBetweenInstallmentsLabelDiv"  style="display: none;">
                                         <mifos:mifoslabel name="product.minimumGapBetweenInstallments" mandatory="yes" bundle="ProductDefUIResources" /> :
                                     </div>

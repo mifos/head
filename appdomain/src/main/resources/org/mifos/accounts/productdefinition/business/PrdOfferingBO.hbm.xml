@@ -78,6 +78,8 @@
                 access="field" type="short" />
             <property name="variableInstallmentsAllowed" column="variable_installment_flag"
                 access="field" type="short" />
+            <property name="fixedRepaymentSchedule" column="fixed_repayment_flag"
+                access="field" type="short" />
 
             <property name="cashFlowCheckEnabled" column="cash_flow_comparison_flag" type="short" access="field"/>
 

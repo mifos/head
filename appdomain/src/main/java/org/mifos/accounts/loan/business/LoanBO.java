@@ -2979,6 +2979,10 @@ public class LoanBO extends AccountBO implements Loan {
         return loanOffering.isVariableInstallmentsAllowed();
     }
 
+    public boolean isFixedRepaymentSchedule() {
+        return loanOffering.isFixedRepaymentSchedule();
+    }
+
     public boolean paymentsAllowed() {
         AccountState state = getState();
         return (state.equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING) ||

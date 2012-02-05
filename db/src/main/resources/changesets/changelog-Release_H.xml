@@ -53,4 +53,12 @@
     		</sql>	
     	</rollback>
     </changeSet>
+    <changeSet id="MIFOS-5371_1" author="Jakub Slawinski" context="expansion">
+        <addColumn tableName="loan_offering">
+            <column name="fixed_repayment_flag" type="smallint" defaultValue="0"/>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="loan_offering" columnName="fixed_repayment_flag"/>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

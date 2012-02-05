@@ -267,6 +267,18 @@ explanation of the license and how it is applied.
                                     <c:if test="${loanPrd.variableInstallmentsAllowed}">
                                         <tr>
                                             <td height="23" class="fontnormal">
+                                                <mifos:mifoslabel name="product.fixedRepaymentSchedule" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                                <span class="fontnormal">
+                                                    <c:choose>
+                                                        <c:when test="${loanPrd.fixedRepaymentSchedule}">
+                                                            <mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </span>
+                                                <br/>
                                                 <mifos:mifoslabel name="product.minimumGapBetweenInstallments" bundle="ProductDefUIResources" isColonRequired="yes" />
                                                 <span class="fontnormal">
 	                                                <c:choose>
