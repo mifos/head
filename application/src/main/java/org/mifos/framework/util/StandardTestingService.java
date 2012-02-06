@@ -83,10 +83,14 @@ public class StandardTestingService implements TestingService {
 
     public String[] getAllSettingsFilenames() throws IOException {
         ArrayList<String> settingsFilenames = new ArrayList<String>();
-        settingsFilenames.add(configurationLocator.getFilePath(getDefaultSettingsFilename(getTestMode())));
         try {
-            String optionalOverrides = configurationLocator.getFilePath(FilePaths.LOCAL_CONFIGURATION_OVERRIDES);
-            settingsFilenames.add(optionalOverrides);
+        	settingsFilenames.add(configurationLocator.getFilePath(getDefaultSettingsFilename(getTestMode())));
+        } catch (FileNotFoundException e) {
+            // basically ignore; no matter if they don't have default settings
+            logger.info("no file with default settings.");
+        }
+        try {
+            settingsFilenames.add(configurationLocator.getFilePath(FilePaths.LOCAL_CONFIGURATION_OVERRIDES));
         } catch (FileNotFoundException e) {
             // basically ignore; no matter if they don't have local overrides
             logger.info("no local overrides in use.");
