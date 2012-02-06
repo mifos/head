@@ -1786,6 +1786,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             throw new BusinessRuleException("errors.invalidTxndate");
         }
 
+        if (loan.isFixedRepaymentSchedule()) {
+            for (AccountActionDateEntity installment : loan.getAccountActionDates()) {
+                if (installment.compareDate(trxnDate) <= 0) {
+                    throw new BusinessRuleException("errors.invalidTxndateWhenDisbursalAfterFirstRepayment");
+                }
+            }
+        }
+
         List<AccountPaymentParametersDto> loanDisbursements = new ArrayList<AccountPaymentParametersDto>();
         loanDisbursements.add(loanDisbursement);
 
