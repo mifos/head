@@ -143,6 +143,14 @@ explanation of the license and how it is applied.
 							<a id="admin.link.viewOrganizationSettings" href="viewOrganizationSettings.ftl"><mifos:mifoslabel name="admin.vieworganizationsettings" /></a>
 							</td>
 						</tr>
+                        <tr class="fontnormal">
+                            <td><img src="pages/framework/images/bullet_circle.gif" width="9"
+                                height="11"></td>
+                            <td>
+                            <a id="admin.link.viewPenalties" href="viewPenalties.ftl"><mifos:mifoslabel name="admin.viewpenalties" /></a>
+                            | <a href="defineNewPenalty.ftl" id="admin.link.defineNewPenalty"><mifos:mifoslabel name="admin.defnewpenalties" /></a>
+                            </td>
+                        </tr>
 					</table>
 					 <br>
 					<span class="fontnormalbold"><mifos:mifoslabel name="admin.datadisplayrules" /></span><br>

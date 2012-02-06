@@ -18,26 +18,21 @@ import org.slf4j.LoggerFactory;
 import com.mchange.v1.io.InputStreamUtils;
 
 public class ImageStorageManager {
+    private static final Logger LOG = LoggerFactory.getLogger(ImageStorageManager.class);
 
-    public static final Logger LOG = LoggerFactory.getLogger(ImageStorageManager.class);
+    private static final String BASE_DIR = "/imageStore/";
+    private static final String DEFAULT_CONTENT_TYPE = "image/png";
+    private static final String NO_PHOTO_PNG = "/org/mifos/image/nopicture.png";
+    private static final String SYSERROR_PNG = "/org/mifos/image/syserror.png";
+    private static final String STORAGE_CONFIG_KEY = "GeneralConfig.ImageStorageDirectory";
 
     public static String location;
-
-    public static final String BASE_DIR = "/imageStore/";
-
-    public static final String DEFAULT_CONTENT_TYPE = "image/png";
-
-    public static final String NO_PHOTO_PNG = "/org/mifos/image/nopicture.png";
-
-    public static final String SYSERROR_PNG = "/org/mifos/image/syserror.png";
-
-    public static final String STORAGE_CONFIG_KEY = "GeneralConfig.ImageStorageDirectory";
-
-    public ImageInfo createImage(InputStream in, String name) throws IOException {
+    
+    public static ImageInfo createImage(InputStream in, String name) throws IOException {
         if (in == null) {
             return null;
         }
-        String filePath = generateRandomSubDir() + name;
+
         String contentType;
         contentType = URLConnection.guessContentTypeFromStream(in);
         if (contentType == null) {
@@ -49,6 +44,7 @@ public class ImageStorageManager {
             return null;
         }
 
+        String filePath = generateRandomSubDir() + name;
         File file = new File(getStorageLocation() + filePath);
         FileUtils.touch(file);
         FileUtils.writeByteArrayToFile(file, data);
@@ -60,7 +56,7 @@ public class ImageStorageManager {
         return imInfo;
     }
 
-    public ImageInfo updateImage(InputStream in, ImageInfo imInfo) throws IOException {
+    public static ImageInfo updateImage(InputStream in, ImageInfo imInfo) throws IOException {
         if (in == null) {
             return null;
         }
@@ -85,7 +81,7 @@ public class ImageStorageManager {
         return imInfo;
     }
 
-    public byte[] getData(String path) {
+    public static byte[] getData(String path) {
         byte[] data;
         try {
             if (path == null) {
@@ -106,15 +102,15 @@ public class ImageStorageManager {
         return data;
     }
 
-    public boolean delete(String path) {
+    public static boolean delete(String path) {
         return FileUtils.deleteQuietly(new File(getStorageLocation() + path));
     }
 
     public static void initStorage() {
-        new ImageStorageManager().getStorageLocation();
+        getStorageLocation();
     }
 
-    private String generateRandomSubDir() {
+    private static String generateRandomSubDir() {
         int deep = RandomUtils.nextInt(4) + 1;
         String subPath = "";
         for (int i = 0; i < deep; i++) {
@@ -123,7 +119,7 @@ public class ImageStorageManager {
         return subPath;
     }
 
-    private synchronized String getStorageLocation() {
+    private static synchronized String getStorageLocation() {
         if (location == null) {
             String pathConfig = MifosConfigurationManager.getInstance().getString(STORAGE_CONFIG_KEY);
             if (StringUtils.isBlank(pathConfig) || pathConfig.equals(ConfigurationLocator.LOCATOR_ENVIRONMENT_PROPERTY_NAME)) {
@@ -137,7 +133,7 @@ public class ImageStorageManager {
         return location;
     }
 
-    private void checkStoragePermission() {
+    private static void checkStoragePermission() {
         try {
             File file = new File(location + "/permissionCheck");
             FileUtils.touch(file);

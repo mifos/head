@@ -589,7 +589,7 @@ public class RESTAPITest extends UiTestCaseBase {
     class AssertJSON {
         Map<String, Object> actualJSON;
         Map<String, Object> expectedJSON;
-        @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+        @SuppressWarnings({ "PMD.SignatureDeclareThrowsException", "unchecked" })
         public AssertJSON(String actualJSONString, String expectedJSONString) throws Exception {
             ObjectMapper mapper = helper.getObjectMapper();
             actualJSON = mapper.readValue(actualJSONString, Map.class);

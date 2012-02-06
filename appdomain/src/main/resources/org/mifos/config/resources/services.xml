@@ -21,6 +21,8 @@
     <bean id="checkListServiceFacade" class="org.mifos.application.servicefacade.CheckListServiceFacadeWebTier"/>
 
     <bean id="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.FeeServiceFacadeWebTier" />
+    
+    <bean id="penaltyServiceFacade" class="org.mifos.accounts.penalties.servicefacade.WebTierPenaltyServiceFacade"/>
 
     <bean id="fundServiceFacade" class="org.mifos.accounts.fund.servicefacade.WebTierFundServiceFacade" />
 

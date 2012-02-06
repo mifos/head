@@ -27,13 +27,14 @@ import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationConverter;
 import org.mifos.core.MifosResourceUtil;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.util.ConfigurationLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 /**
@@ -52,8 +53,7 @@ import org.springframework.core.io.Resource;
  * changed significantly as iterative development proceeds.
  */
 public class MifosConfigurationManager implements Configuration {
-
-    private static final Logger logger = Logger.getLogger(MifosConfigurationManager.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MifosConfigurationManager.class);
 
     /**
      * Filename where default application-wide configuration values are stored.
@@ -101,7 +101,7 @@ public class MifosConfigurationManager implements Configuration {
                 props.load(is);
                 is.close();
             }
-            logger.info(props.toString());
+            LOGGER.info("Dump of all configuration properties read by MifosConfigurationManager: " + props.toString());
         } catch (IOException e) {
             throw new MifosRuntimeException(e);
         }

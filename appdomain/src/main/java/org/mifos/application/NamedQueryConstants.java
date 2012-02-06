@@ -491,4 +491,9 @@ public interface NamedQueryConstants {
     String SCHEDULED_TASK_GET_SUCCESSFUL_TASK = "scheduledTasks.getSuccessfulTask";
 
     String GET_ORIGINAL_SCHEDULE_BY_ACCOUNT_ID = "originalLoanScheduleEntity.getScheduleForLoan";
+    
+    // PENALTIES
+    String GET_PENALTY_BY_ID = "penalty.getPenaltyById";
+    String GET_LOAN_PENALTIES = "penalty.getLoanPenalties";
+    String GET_SAVING_PENALTIES = "penalty.getSavingPenalties";
 }

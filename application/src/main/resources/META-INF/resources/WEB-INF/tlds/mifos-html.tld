@@ -1641,4 +1641,13 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+    
+    <!-- MifosNumberFormattingInfoTag -->
+    <tag>
+        <name>NumberFormattingInfo</name>
+        <tag-class>
+            org.mifos.framework.struts.tags.MifosNumberFormattingInfoTag
+        </tag-class>
+        <body-content>JSP</body-content>
+    </tag>
 </taglib>

@@ -30,7 +30,7 @@
 
 [#-- Locale information for grouping separation script --]
 [#macro formattingInfo]
-<span id="format.decimalSeparator" title="${Application.LocaleSetting.decimalSeparator}"></span>
-<span id="format.groupingSeparator" title="${Application.LocaleSetting.groupingSeparator}"></span>
-<span id="format.groupingSize" title="${Application.LocaleSetting.groupingSize}"></span>
+<span id="format.decimalSeparator" title="${Application.UserLocale.decimalSeparator}"></span>
+<span id="format.groupingSeparator" title="${Application.UserLocale.groupingSeparator}"></span>
+<span id="format.groupingSize" title="${Application.UserLocale.groupingSize}"></span>
 [/#macro]
