@@ -26,6 +26,7 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountCashFlowPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountReviewInstallmentPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
@@ -39,6 +40,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(singleThreaded = true, groups = {"loanproduct", "acceptance", "ui","no_db_unit"})
@@ -112,9 +117,6 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    /*
-     * supressed this test for now. cant see anything wrong functionality. not sure why timing out after pressing button. - keithw
-     */
     @Test(enabled=true)
     public void verifyPrincipalAndInterestRecalculation() throws Exception {
         int noOfInstallments = 4;
@@ -141,6 +143,57 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
         applicationDatabaseOperation.updateLSIM(0);
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    @Test(enabled=true)
+    public void verifyPrincipalAndInterestRecalculationAfterDisbursalWithFixedRepaymentSchedule() throws Exception {
+        verifyPrincipalAndInterestRecalculationAfterDisbursal(true,
+                Arrays.asList("252", "252", "252", "254.2"), // 252.4
+                Arrays.asList("19-Oct-2010", "26-Oct-2010", "02-Nov-2010", "09-Nov-2010"));
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    @Test(enabled=true)
+    public void verifyPrincipalAndInterestRecalculationAfterDisbursalWithoutFixedRepaymentSchedule() throws Exception {
+        verifyPrincipalAndInterestRecalculationAfterDisbursal(false,
+                Arrays.asList("252", "252", "252", "252.5"),
+                Arrays.asList("16-Oct-2010", "23-Oct-2010", "30-Oct-2010", "06-Nov-2010"));
+    }
+
+    private void verifyPrincipalAndInterestRecalculationAfterDisbursal(boolean fixedRepaymentSchedule,
+                                                                       List<String> totals, List<String> dueDates) throws SQLException {
+        int noOfInstallments = 4;
+        int loanAmount = 1000;
+        int interestRate = 20;
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(noOfInstallments, loanAmount, interestRate);
+        formParameters.setFixedRepaymentSchedule(fixedRepaymentSchedule);
+        applicationDatabaseOperation.updateLSIM(1);
+
+        int maxGap = 10;
+        int minGap = 1;
+        int minInstalmentAmount = 100;
+        int cashFlowIncremental = 1;
+        int cashFlowBase = 100000;
+        double warningThreshold = 1.0;
+
+        DateTime disbursalDate = systemDateTime.plusDays(3);
+
+        createLoanProduct(maxGap, minGap, minInstalmentAmount, formParameters, warningThreshold);
+        CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = createNewLoanAccountAndNavigateToRepaymentSchedule(disbursalDate).
+                enterValidData("100", cashFlowIncremental, cashFlowBase, null, null).
+                clickContinue();
+
+        createLoanAccountReviewInstallmentPage.clickPreviewAndNavigateToPreviewPage().
+                submitForApprovalAndNavigateToConfirmationPage().
+                navigateToLoanAccountDetailsPage().
+                changeAccountStatusToAccepted().
+                disburseLoan(DisburseLoanParameters.getDisbursalParameters("11", "10", "2010")).
+                navigateToRepaymentSchedulePage().
+                verifyScheduleAndAmounts(totals, dueDates);
+
+
+        applicationDatabaseOperation.updateLSIM(0);
+    }
+
     private DefineNewLoanProductPage.SubmitFormParameters defineLoanProductParameters(int defInstallments, int defaultLoanAmount, int defaultInterestRate) {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         formParameters.setDefInstallments(String.valueOf(defInstallments));
@@ -155,6 +208,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
         loanProductTestHelper.
                 navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 fillVariableInstalmentOption(String.valueOf(maxGap),String.valueOf(minGap), String.valueOf(minInstalmentAmount)).
+                selectFixedRepaymentSchedule(formParameters).
                 fillCashFlow(String.valueOf(cashFlowIncremental), "", "").
                 submitAndGotoNewLoanProductPreviewPage().
                 submit();

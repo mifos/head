@@ -73,11 +73,11 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
     }
     
     private String getTotalOfInstallmentFromSchedule(int row) {
-        return getCellOfScheduleTable(row, 6);
+        return getCellOfScheduleTable(row, 7);
     }
     
     private void verifyTotalOfInstallmentFromSchedule(int row, String amount) {
-    	Assert.assertEquals(getTotalOfInstallmentFromSchedule(row), amount+".0");
+    	Assert.assertEquals(getTotalOfInstallmentFromSchedule(row), amount);
     }
     
     private void verifyDateOfInstallmentFromSchedule(int row, String date) {

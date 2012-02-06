@@ -58,6 +58,15 @@ public class DefineNewLoanProductPage extends AbstractPage {
         return this;
     }
 
+    public DefineNewLoanProductPage selectFixedRepaymentSchedule(SubmitFormParameters formParameters) {
+        if(formParameters.isFixedRepaymentSchedule()){
+            selenium.check("createLoanProduct.checkbox.fixedRepaymentSchedule");
+        }else{
+            selenium.uncheck("createLoanProduct.checkbox.fixedRepaymentSchedule");
+        }
+        return this;
+    }
+
     @SuppressWarnings("PMD.TooManyFields")
     // lots of fields ok for form input case
     public static class SubmitFormParameters {
@@ -123,6 +132,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String principalGLCode;
         private boolean interestWaiver;
         private boolean includeInLoanCounter;
+        private boolean fixedRepaymentSchedule;
         private List<String> questionGroups;
         private String startDateDd;
         private String startDateMm;
@@ -316,6 +326,14 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
         public void setIncludeInLoanCounter(boolean includeInLoanCounter) {
             this.includeInLoanCounter = includeInLoanCounter;
+        }
+
+        public boolean isFixedRepaymentSchedule() {
+            return fixedRepaymentSchedule;
+        }
+
+        public void setFixedRepaymentSchedule(boolean fixedRepaymentSchedule) {
+            this.fixedRepaymentSchedule = fixedRepaymentSchedule;
         }
 
         public List<String> getQuestionGroups() {
