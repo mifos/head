@@ -14,6 +14,8 @@
     <bean id="fundDao" class="org.mifos.accounts.fund.persistence.FundDaoHibernate"/>
 
     <bean id="feeDao" class="org.mifos.accounts.fees.persistence.FeeDaoHibernate"/>
+    
+    <bean id="penaltyDao" class="org.mifos.accounts.penalties.persistence.PenaltyDaoHibernate"/>
 
     <bean id="customerDao" class="org.mifos.customers.persistence.CustomerDaoHibernate"/>
 

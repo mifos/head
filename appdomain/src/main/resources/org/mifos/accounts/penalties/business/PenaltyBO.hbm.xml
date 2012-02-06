@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    <class name="org.mifos.accounts.penalties.business.PenaltyBO" table="penalty">
+        <id name="penaltyId" column="penalty_id" type="short" unsaved-value="null" access="field">
+            <generator class="native" />
+        </id>
+        <discriminator>
+            <column name="discriminator" />
+        </discriminator>
+        <version name="versionNo" column="version_no" type="integer" unsaved-value="null" />
+
+        <property name="penaltyName" column="penalty_name" access="field" />
+        <property name="periodDuration" column="period_duration" access="field"/>
+        <property name="minimumLimit" column="limit_min" access="field"/>
+        <property name="maximumLimit" column="limit_max" access="field"/>
+        
+        <property name="createdDate" column="created_date" />
+        <property name="createdBy" column="created_by" />
+        <property name="updatedDate" column="updated_date" />
+        <property name="updatedBy" column="updated_by" />
+
+        <many-to-one name="status" column="status_id" class="org.mifos.accounts.penalties.business.PenaltyStatusEntity" update="true" insert="true" access="field" />
+        <many-to-one name="categoryType" column="category_id" class="org.mifos.accounts.penalties.business.PenaltyCategoryEntity" update="false" insert="true" access="field" />
+        <many-to-one name="periodType" column="period_type_id" class="org.mifos.accounts.penalties.business.PenaltyPeriodEntity" update="true" insert="true" access="field"/>
+        <many-to-one name="penaltyFrequency" column="penalty_frequency_id" class="org.mifos.accounts.penalties.business.PenaltyFrequencyEntity" update="true" insert="true" access="field"/>
+        <many-to-one name="glCode" column="glcode_id" class="org.mifos.accounts.financial.business.GLCodeEntity" insert="true" update="true" access="field" />
+        
+        <subclass name="org.mifos.accounts.penalties.business.RatePenaltyBO" discriminator-value="RATE">
+            <property name="rate" column="rate" />
+            <many-to-one name="formula" column="formula_id" class="org.mifos.accounts.penalties.business.PenaltyFormulaEntity"  lazy="false" insert="true" update="true" access="field" />
+        </subclass>
+
+        <subclass name="org.mifos.accounts.penalties.business.AmountPenaltyBO" discriminator-value="AMOUNT">
+            <property name="amount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+                <column name="amount_currency_id" />
+                <column name="amount" />
+            </property>
+        </subclass>
+    </class>
+    
+    <query name="penalty.getPenaltyById">
+        <![CDATA[from PenaltyBO penalty where penalty.penaltyId = :id]]>
+    </query>
+    
+    <query name="penalty.getLoanPenalties">
+        <![CDATA[from PenaltyBO penalty where penalty.categoryType.id in (1) order by penalty.penaltyName]]>
+    </query>
+
+    <query name="penalty.getSavingPenalties">
+        <![CDATA[from PenaltyBO penalty where penalty.categoryType.id in (2) order by penalty.penaltyName]]>
+    </query>
+
+</hibernate-mapping>

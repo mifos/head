@@ -15,6 +15,7 @@
                 <value>classpath:org/mifos/ui/localizedProperties/messages</value>
                 <value>classpath:org/mifos/ui/localizedProperties/savings_messages</value>
                 <value>classpath:org/mifos/ui/localizedProperties/loan_messages</value>
+                <value>classpath:org/mifos/ui/localizedProperties/penalties_messages</value>
                 <value>classpath:org/mifos/ui/localizedProperties/widget_messages</value>
                 <value>classpath:org/mifos/ui/localizedProperties/LookupValueMessages</value>
                 <value>classpath:org/mifos/platform/cashflow/ui/localizedProperties/cashflow_messages</value>

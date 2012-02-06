@@ -20,8 +20,6 @@
 
 package org.mifos.test.acceptance.framework.admin;
 
-import com.thoughtworks.selenium.Selenium;
-
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
@@ -30,9 +28,9 @@ import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loan.UndoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductConfirmationPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
-import org.mifos.test.acceptance.framework.loanproduct.DefineProductMixPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineProductMixPage;
 import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.loanproduct.multicurrrency.DefineNewDifferentCurrencyLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.multicurrrency.DefineNewDifferentCurrencyLoanProductPage.SubmitMultiCurrencyFormParameters;
@@ -48,6 +46,8 @@ import org.mifos.test.acceptance.framework.savingsproduct.ViewSavingsProductsPag
 import org.mifos.test.acceptance.framework.user.CreateUserParameters;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.testng.Assert;
+
+import com.thoughtworks.selenium.Selenium;
 
 /**
  * Encapsulates the GUI based actions that can
@@ -359,6 +359,18 @@ public class AdminPage extends MifosPage {
         selenium.click("admin.link.defineNewFees");
         waitForPageToLoad();
         return new FeesCreatePage(selenium);
+    }
+    
+    public PenaltyFormPage navigateToDefineNewPenaltyPage() {
+        selenium.click("admin.link.defineNewPenalty");
+        waitForPageToLoad();
+        return new PenaltyFormPage(selenium, "newPenalty");
+    }
+    
+    public ViewPenaltiesPage navigateToViewPenaltiesPage() {
+        selenium.click("admin.link.viewPenalties");
+        waitForPageToLoad();
+        return new ViewPenaltiesPage(selenium);
     }
 
     public DefineProductMixPage navigateToDefineProductMix() {

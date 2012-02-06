@@ -48,6 +48,8 @@
   <DATABASECHANGELOG ID="MIFOS_5186_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-24 15:29:22.0" ORDEREXECUTED="182" EXECTYPE="EXECUTED" MD5SUM="3:257c6dbd69a28ceb9a8a866a405e23f2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5218_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-09 11:57:39.0" ORDEREXECUTED="183" EXECTYPE="EXECUTED" MD5SUM="3:a55cb7c0cd264ab9133926be13e0c714" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5359_1" AUTHOR="Michal Dudzinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-01-31 14:42:36.0" ORDEREXECUTED="214" EXECTYPE="EXECUTED" MD5SUM="3:8c408cc6b30629a54545806b2f771895" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5382_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-01 19:04:00.0" ORDEREXECUTED="227" EXECTYPE="EXECUTED" MD5SUM="3:8087265e7debf6021ee1f88472a900a8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5382_2" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-02 13:47:38.0" ORDEREXECUTED="228" EXECTYPE="EXECUTED" MD5SUM="3:864b0fd522895b0aa7142d936ddc4bc4" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
   <QRTZ_CALENDARS/>
@@ -1330,6 +1332,11 @@
   <lookup_entity entity_id="90" entity_name="FeeFrequency" description="Fee Frequency"/>
   <lookup_entity entity_id="91" entity_name="RepaymentRule" description="Repayment Rule Types"/>
   <lookup_entity entity_id="92" entity_name="LivingStatus" description="Living Status of the clients family member"/>
+  <lookup_entity entity_id="93" entity_name="PenaltyCategory" description="This is mainly used in penalties to show the categories where this penalty is applicable"/>
+  <lookup_entity entity_id="94" entity_name="PenaltyFormula" description="PenaltyFormula"/>
+  <lookup_entity entity_id="95" entity_name="PenaltyPeriod" description="PenaltyPeriod"/>
+  <lookup_entity entity_id="96" entity_name="PenaltyFrequency" description="PenaltyFrequency"/>
+  <lookup_entity entity_id="97" entity_name="PenaltyStatus" description="PenaltyStatus"/>
   <lookup_label label_id="1" entity_id="1" locale_id="1"/>
   <lookup_label label_id="3" entity_id="2" locale_id="1"/>
   <lookup_label label_id="5" entity_id="3" locale_id="1"/>
@@ -1401,6 +1408,11 @@
   <lookup_label label_id="170" entity_id="86" locale_id="1"/>
   <lookup_label label_id="171" entity_id="87" locale_id="1"/>
   <lookup_label label_id="172" entity_id="88" locale_id="1"/>
+  <lookup_label label_id="173" entity_id="93" locale_id="1"/>
+  <lookup_label label_id="174" entity_id="94" locale_id="1"/>
+  <lookup_label label_id="175" entity_id="95" locale_id="1"/>
+  <lookup_label label_id="176" entity_id="96" locale_id="1"/>
+  <lookup_label label_id="177" entity_id="97" locale_id="1"/>
   <lookup_value lookup_id="1" entity_id="1" lookup_name="ClientStatus-PartialApplication"/>
   <lookup_value lookup_id="2" entity_id="1" lookup_name="ClientStatus-ApplicationPendingApproval"/>
   <lookup_value lookup_id="3" entity_id="1" lookup_name="ClientStatus-Active"/>
@@ -1972,6 +1984,20 @@
   <lookup_value lookup_id="716" entity_id="87" lookup_name="Permissions-Clients-CanEditPhoneNumber"/>
   <lookup_value lookup_id="717" entity_id="87" lookup_name="Permissions-CanUseAccountingIntegration"/>
   <lookup_value lookup_id="718" entity_id="87" lookup_name="Permissions-CanApproveRESTAPI"/>
+  <lookup_value lookup_id="719" entity_id="93" lookup_name="PenaltyCategory-Loans"/>
+  <lookup_value lookup_id="720" entity_id="93" lookup_name="PenaltyCategory-Savings"/>
+  <lookup_value lookup_id="721" entity_id="94" lookup_name="PenaltyFormula-OutstandingPrincipalAmount"/>
+  <lookup_value lookup_id="722" entity_id="94" lookup_name="PenaltyFormula-OutstandingLoanAmount"/>
+  <lookup_value lookup_id="723" entity_id="94" lookup_name="PenaltyFormula-OverdueAmountDue"/>
+  <lookup_value lookup_id="724" entity_id="94" lookup_name="PenaltyFormula-OverduePrincipal"/>
+  <lookup_value lookup_id="725" entity_id="95" lookup_name="PenaltyPeriod-NumberOfInstallments"/>
+  <lookup_value lookup_id="726" entity_id="95" lookup_name="PenaltyPeriod-NumberOfDays"/>
+  <lookup_value lookup_id="727" entity_id="96" lookup_name="PenaltyFrequency-None"/>
+  <lookup_value lookup_id="728" entity_id="96" lookup_name="PenaltyFrequency-Daily"/>
+  <lookup_value lookup_id="729" entity_id="96" lookup_name="PenaltyFrequency-Weekly"/>
+  <lookup_value lookup_id="730" entity_id="96" lookup_name="PenaltyFrequency-Monthly"/>
+  <lookup_value lookup_id="731" entity_id="97" lookup_name="PenaltyStatus-Active"/>
+  <lookup_value lookup_id="732" entity_id="97" lookup_name="PenaltyStatus-InActive"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -2520,6 +2546,20 @@
   <lookup_value_locale lookup_value_id="967" locale_id="1" lookup_id="716"/>
   <lookup_value_locale lookup_value_id="968" locale_id="1" lookup_id="717"/>
   <lookup_value_locale lookup_value_id="970" locale_id="1" lookup_id="718"/>
+  <lookup_value_locale lookup_value_id="971" locale_id="1" lookup_id="719"/>
+  <lookup_value_locale lookup_value_id="972" locale_id="1" lookup_id="720"/>
+  <lookup_value_locale lookup_value_id="973" locale_id="1" lookup_id="721"/>
+  <lookup_value_locale lookup_value_id="974" locale_id="1" lookup_id="722"/>
+  <lookup_value_locale lookup_value_id="975" locale_id="1" lookup_id="723"/>
+  <lookup_value_locale lookup_value_id="976" locale_id="1" lookup_id="724"/>
+  <lookup_value_locale lookup_value_id="977" locale_id="1" lookup_id="725"/>
+  <lookup_value_locale lookup_value_id="978" locale_id="1" lookup_id="726"/>
+  <lookup_value_locale lookup_value_id="979" locale_id="1" lookup_id="727"/>
+  <lookup_value_locale lookup_value_id="980" locale_id="1" lookup_id="728"/>
+  <lookup_value_locale lookup_value_id="981" locale_id="1" lookup_id="729"/>
+  <lookup_value_locale lookup_value_id="982" locale_id="1" lookup_id="730"/>
+  <lookup_value_locale lookup_value_id="983" locale_id="1" lookup_id="731"/>
+  <lookup_value_locale lookup_value_id="984" locale_id="1" lookup_id="732"/>
   <max_min_interest_rate/>
   <max_min_loan_amount/>
   <max_min_no_of_install/>
@@ -2566,6 +2606,20 @@
   <payment_type payment_type_id="2" payment_type_lookup_id="179"/>
   <payment_type payment_type_id="3" payment_type_lookup_id="180"/>
   <penalty/>
+  <penalty_category category_id="1" lookup_id="719"/>
+  <penalty_category category_id="2" lookup_id="720"/>
+  <penalty_formula formula_id="1" lookup_id="721"/>
+  <penalty_formula formula_id="2" lookup_id="722"/>
+  <penalty_formula formula_id="3" lookup_id="723"/>
+  <penalty_formula formula_id="4" lookup_id="724"/>
+  <penalty_frequency frequency_id="1" lookup_id="727"/>
+  <penalty_frequency frequency_id="2" lookup_id="728"/>
+  <penalty_frequency frequency_id="3" lookup_id="729"/>
+  <penalty_frequency frequency_id="4" lookup_id="730"/>
+  <penalty_period period_id="1" lookup_id="725"/>
+  <penalty_period period_id="2" lookup_id="726"/>
+  <penalty_status status_id="1" lookup_id="731"/>
+  <penalty_status status_id="2" lookup_id="732"/>
   <personnel personnel_id="1" level_id="2" global_personnel_num="1" office_id="1" title="1" personnel_status="1" preferred_locale="1" max_child_count="1" password="ImSMpCMwpWGWTb4y9U5qBKSdA/IDymSyUVM42Q==" login_name="mifos" password_changed="1" display_name="mifos" created_by="1" updated_by="1" last_login="2010-01-20" locked="0" no_of_tries="0" version_no="1"/>
   <personnel personnel_id="2" level_id="1" global_personnel_num="0002-00002" office_id="2" personnel_status="1" preferred_locale="1" password="gQVezMmsoQbLul5ebLBSznaf+UelAZyoNt6QTQ==" login_name="loanofficer" email_id="" password_changed="0" display_name="LoanOfficer MultiCurrency" created_by="1" created_date="2010-01-20" locked="0" no_of_tries="0" version_no="1"/>
   <personnel_custom_field/>

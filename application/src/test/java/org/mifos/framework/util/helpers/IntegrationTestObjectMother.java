@@ -32,6 +32,8 @@ import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.penalties.business.PenaltyBO;
+import org.mifos.accounts.penalties.persistence.PenaltyDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
@@ -107,6 +109,7 @@ public class IntegrationTestObjectMother {
     private static final OfficePersistence officePersistence = new OfficePersistence();
     private static final OfficeDao officeDao = ApplicationContextProvider.getBean(OfficeDao.class);
     private static final HolidayDao holidayDao = ApplicationContextProvider.getBean(HolidayDao.class);
+    private static final PenaltyDao penaltyDao = ApplicationContextProvider.getBean(PenaltyDao.class);
     private static final FundDao fundDao = ApplicationContextProvider.getBean(FundDao.class);
     private static final SavingsDao savingsDao = ApplicationContextProvider.getBean(SavingsDao.class);
     private static final LoanProductDao loanProductDao = ApplicationContextProvider.getBean(LoanProductDao.class);
@@ -468,6 +471,16 @@ public class IntegrationTestObjectMother {
             StaticHibernateUtil.flushSession();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+    
+    public static PenaltyBO createPenalty(PenaltyBO penalty) throws Exception {
+        try {
+            penaltyDao.save(penalty);
+            StaticHibernateUtil.flushSession();
+            return penalty;
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
         }
     }
 
