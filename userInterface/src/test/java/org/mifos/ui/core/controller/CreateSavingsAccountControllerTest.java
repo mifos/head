@@ -60,7 +60,7 @@ public class CreateSavingsAccountControllerTest {
         controller.setSavingsServiceFacade(savingsServiceFacade);
         formBean = mock(CreateSavingsAccountFormBean.class);
 
-        offering = new PrdOfferingDto(new Integer(1).shortValue(), "Offering 1", "10001");
+        offering = new PrdOfferingDto((short) 1, "Offering 1", "10001");
         offerings = new ArrayList<PrdOfferingDto>(1);
         offerings.add(offering);
 

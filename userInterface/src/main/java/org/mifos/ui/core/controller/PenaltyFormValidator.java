@@ -138,7 +138,7 @@ public class PenaltyFormValidator implements Validator {
     
     @SuppressWarnings("PMD.EmptyCatchBlock")
     private void checkMinGreaterMax(Errors errors, String min, String max) {
-        if((min == null || !StringUtils.hasText(min)) || (min == null || !StringUtils.hasText(max))) {
+        if((min == null || !StringUtils.hasText(min)) || (max == null || !StringUtils.hasText(max))) {
             return;
         }
         
