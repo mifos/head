@@ -101,7 +101,7 @@ public class PenaltyFormValidator implements Validator {
     private void incorrectDoubleValue(Errors errors, String value, String field) {
         if(value != null && StringUtils.hasText(value)) {
             try {
-                Double val = Double.parseDouble(value);
+                Double val = Double.valueOf(value);
                 
                 if(val < 0) {
                     errors.reject("error.penalty.incorrectDouble", new String[] { field }, null);
@@ -115,7 +115,7 @@ public class PenaltyFormValidator implements Validator {
     private void incorrectIntegerValue(Errors errors, String value, String field) {
         if(value != null && StringUtils.hasText(value)) {
             try {
-                Integer val = Integer.parseInt(value);
+                Integer val = Integer.valueOf(value);
                 
                 if(val < 0) {
                     errors.reject("error.penalty.incorrectInteger", new String[] { field }, null);
@@ -143,8 +143,8 @@ public class PenaltyFormValidator implements Validator {
         }
         
         try {
-            int minimum = Integer.parseInt(min);
-            int maximum = Integer.parseInt(max);
+            int minimum = Integer.valueOf(min);
+            int maximum = Integer.valueOf(max);
 
             if(minimum - maximum > 0) {
                 errors.reject("error.penalty.minGreaterMax");

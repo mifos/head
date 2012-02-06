@@ -45,8 +45,8 @@ public class PenaltyFormBean {
     }
 
     public PenaltyFormBean(PenaltyDto dto) {
-        id = dto.getId();
-        oldName = dto.getName();
+        id = dto.getPenaltyId();
+        oldName = dto.getPenaltyName();
         name = oldName;
         
         categoryTypeId = Short.toString(dto.getCategoryType().getId());
@@ -126,7 +126,7 @@ public class PenaltyFormBean {
     }
 
     public void setDuration(String duration) {
-        this.duration = duration;
+        this.duration = duration.trim();
     }
 
     public String getMin() {
@@ -134,7 +134,7 @@ public class PenaltyFormBean {
     }
 
     public void setMin(String min) {
-        this.min = min;
+        this.min = min.trim();
     }
 
     public String getMax() {
@@ -142,7 +142,7 @@ public class PenaltyFormBean {
     }
 
     public void setMax(String max) {
-        this.max = max;
+        this.max = max.trim();
     }
 
     public String getAmount() {
@@ -150,7 +150,7 @@ public class PenaltyFormBean {
     }
 
     public void setAmount(String amount) {
-        this.amount = amount;
+        this.amount = amount.trim();
     }
 
     public String getCurrencyId() {
@@ -166,7 +166,7 @@ public class PenaltyFormBean {
     }
 
     public void setRate(String rate) {
-        this.rate = rate;
+        this.rate = rate.trim();
     }
 
     public String getFormulaId() {
