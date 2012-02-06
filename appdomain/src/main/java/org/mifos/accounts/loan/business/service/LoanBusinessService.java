@@ -283,9 +283,9 @@ public class LoanBusinessService implements BusinessService {
         }
     }
 
-    public void adjustDatesForVariableInstallments(boolean variableInstallmentsAllowed, List<RepaymentScheduleInstallment> originalInstallments,
+    public void adjustDatesForVariableInstallments(boolean variableInstallmentsAllowed, boolean fixedRepaymentSchedule, List<RepaymentScheduleInstallment> originalInstallments,
                                                    Date oldDisbursementDate, Date newDisbursementDate, Short officeId) {
-        if (variableInstallmentsAllowed) {
+        if (!fixedRepaymentSchedule && variableInstallmentsAllowed) {
             adjustInstallmentGapsPostDisbursal(originalInstallments, oldDisbursementDate, newDisbursementDate, officeId);
         }
     }
