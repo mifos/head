@@ -52,13 +52,16 @@ import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.admin.servicefacade.CustomizedTextServiceFacade;
+import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.admin.system.ShutdownManager;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CustomJDBCService;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.LocaleSetting;
 import org.mifos.config.Localization;
 import org.mifos.config.ProcessFlowRules;
+import org.mifos.config.UserLocale;
 import org.mifos.config.business.Configuration;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -334,11 +337,16 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         Configuration.getInstance();
         configureAuditLogValues(Localization.getInstance().getConfiguredLocale());
         LocaleSetting configLocale = new LocaleSetting();
+        
+        @SuppressWarnings("deprecation")
+        final UserLocale userLocale = new UserLocale(ApplicationContextProvider.getBean(PersonnelServiceFacade.class));
+        
         if (servletContext != null) {
             mifosScheduler.initialize();
             servletContext.setAttribute(MifosScheduler.class.getName(), mifosScheduler);
             servletContext.setAttribute(ShutdownManager.class.getName(), shutdownManager);
             servletContext.setAttribute(LocaleSetting.class.getSimpleName(), configLocale);
+            servletContext.setAttribute(UserLocale.class.getSimpleName(), userLocale);
         }
     }
 

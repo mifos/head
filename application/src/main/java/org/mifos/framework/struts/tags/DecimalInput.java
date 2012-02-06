@@ -51,7 +51,7 @@ public class DecimalInput extends ELTextTag {
      */
     @Override
     public int doStartTag() throws JspException {
-
+    	this.setStyleClass("separatedNumber");
         return super.doStartTag();
     }
 }

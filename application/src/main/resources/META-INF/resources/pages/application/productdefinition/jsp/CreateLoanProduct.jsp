@@ -36,9 +36,14 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
         <span id="page.id" title="CreateLoanProduct"></span>
+        <mifos:NumberFormattingInfo />
+        
 		<script src="pages/framework/js/date.js"></script>
 		<script src="pages/framework/js/func.js"></script>
 		<script type="text/javascript" src="pages/application/loan/js/CreateLoanProduct.js"></script>
+		<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="pages/js/separator.js"></script>
+		
 		<html-el:form action="/loanproductaction"
 			onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
 				validateMyForm(endDate,endDateFormat,endDateYY))"
@@ -1069,7 +1074,7 @@ explanation of the license and how it is applied.
 									<br>
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
-											<td align="center"><html-el:submit styleId="createLoanProduct.button.preview" styleClass="buttn"
+											<td align="center"><html-el:submit styleId="createLoanProduct.button.preview" styleClass="buttn submit"
 												onclick="transferData(this.form.loanOfferingQGs);transferData(this.form.loanOfferingFunds);transferData(this.form.prdOfferinFees);">
 												<mifos:mifoslabel name="product.preview"
 													bundle="ProductDefUIResources" />
