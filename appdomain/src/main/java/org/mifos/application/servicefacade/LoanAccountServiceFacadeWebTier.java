@@ -580,6 +580,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             }
 
             boolean variableInstallmentsAllowed = loanProduct.isVariableInstallmentsAllowed();
+            boolean fixedRepaymentSchedule = loanProduct.isFixedRepaymentSchedule();
             Integer minGapInDays = Integer.valueOf(0);
             Integer maxGapInDays = Integer.valueOf(0);
             BigDecimal minInstallmentAmount = BigDecimal.ZERO;
@@ -628,7 +629,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                     BigDecimal.valueOf(eligibleLoanAmount.getDefaultLoanAmount()),
                     BigDecimal.valueOf(eligibleLoanAmount.getMaxLoanAmount()), BigDecimal.valueOf(eligibleLoanAmount.getMinLoanAmount()), defaultInterestRate, maxInterestRate, minInterestRate,
                     eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue(), nextPossibleDisbursementDate,
-                    daysOfTheWeekOptions, weeksOfTheMonthOptions, variableInstallmentsAllowed, minGapInDays, maxGapInDays, minInstallmentAmount, compareCashflowEnabled,
+                    daysOfTheWeekOptions, weeksOfTheMonthOptions, variableInstallmentsAllowed, fixedRepaymentSchedule, minGapInDays, maxGapInDays, minInstallmentAmount, compareCashflowEnabled,
                     isGlimEnabled, isGroup, clientDetails, appConfig);
 
         } catch (SystemException e) {

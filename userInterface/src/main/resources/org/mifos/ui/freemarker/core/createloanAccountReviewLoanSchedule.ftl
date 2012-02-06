@@ -100,6 +100,14 @@ $(document).ready(function() {
 	    <div class="value">[@spring.message "boolean.yes"/]</div>
 	</div>
 	<div class="row">
+	    <div class="attribute"><span class="standout">[@spring.message "productSummary.fixedRepaymentSchedule"/]</span></div>
+	    [#if loanProductReferenceData.fixedRepaymentSchedule]
+	        <div class="value">[@spring.message "boolean.yes"/]</div>
+	    [#else]
+	        <div class="value">[@spring.message "boolean.no"/]</div>
+	    [/#if]
+	</div>
+	<div class="row">
 	    <div class="attribute"><span class="standout">[@spring.message "productSummary.variabeInstallments.minGap"/]</span></div>
 	    <div class="value">${loanProductReferenceData.minGapInDays?string.number}<span>&nbsp;[@spring.message "productSummary.variabeInstallments.days"/]</span></div>
 	</div>

@@ -72,6 +72,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     private final Integer minNumberOfInstallments;
     private final LocalDate nextPossibleDisbursementDate;
     private final boolean variableInstallmentsAllowed;
+    private final boolean fixedRepaymentSchedule;
     private final Integer minGapInDays;
     private final Integer maxGapInDays;
     private final BigDecimal minInstallmentAmount;
@@ -92,7 +93,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
             Double defaultInterestRate, Double maxInterestRate, Double minInterestRate, 
             Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments, LocalDate nextPossibleDisbursementDate, 
             LinkedHashMap<String, String> daysOfTheWeekOptions, LinkedHashMap<String, String> weeksOfTheMonthOptions, 
-            boolean variableInstallmentsAllowed, Integer minGapInDays, Integer maxGapInDays, BigDecimal minInstallmentAmount, boolean compareCashflowEnabled, 
+            boolean variableInstallmentsAllowed, boolean fixedRepaymentSchedule, Integer minGapInDays, Integer maxGapInDays, BigDecimal minInstallmentAmount, boolean compareCashflowEnabled,
             boolean isGlimEnabled, boolean isGroup, List<LoanAccountDetailsDto> clientDetails, ApplicationConfigurationDto appConfig) {
         this.repaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
         this.loanOfferingMeetingDetail = loanOfferingMeetingDetail;
@@ -119,6 +120,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
         this.daysOfTheWeekOptions = daysOfTheWeekOptions;
         this.weeksOfTheMonthOptions = weeksOfTheMonthOptions;
         this.variableInstallmentsAllowed = variableInstallmentsAllowed;
+        this.fixedRepaymentSchedule = fixedRepaymentSchedule;
         this.minGapInDays = minGapInDays;
         this.maxGapInDays = maxGapInDays;
         this.minInstallmentAmount = minInstallmentAmount;
@@ -273,6 +275,10 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     
     public boolean isVariableInstallmentsAllowed() {
         return variableInstallmentsAllowed;
+    }
+
+    public boolean isFixedRepaymentSchedule() {
+        return fixedRepaymentSchedule;
     }
 
     public Integer getMinGapInDays() {
