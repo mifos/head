@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.admin;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.TimeMachinePage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -32,8 +33,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.mifos.test.acceptance.util.FileUtil;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
@@ -84,5 +90,32 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
 
         SystemInfoPage systemInfoPage = adminTestHelper.navigateToSystemInfoPage();
         systemInfoPage.verifyDateTime(targetTime);
+    }
+    
+	public void verifyDatabaseInformationSource() throws Exception {
+        SystemInfoPage systemInfoPage = adminTestHelper.navigateToSystemInfoPage();
+        String data = systemInfoPage.getDatabaseSource();
+        String [] databaseConfigs = data.substring(1, data.length()-1 ).split(", ");
+        List<File> temp = new ArrayList<File>();
+        for (String database : databaseConfigs) { 
+            File oldFile = new File(database);
+            File tempFile = File.createTempFile(oldFile.getName(), ".tmp");
+    	    temp.add(tempFile); 
+        	if (oldFile.exists()) {
+        		FileUtil.copyFile(oldFile,tempFile);
+        		oldFile.delete(); 
+            }
+        }
+
+        SystemInfoPage systemInfoPage2 = adminTestHelper.navigateToSystemInfoPage();
+        systemInfoPage2.verifyDatabaseSource("[]");
+
+        Iterator<File> it = temp.iterator();
+        for (String database : databaseConfigs) { 
+            File newFile = new File(database);
+            File tempFile = it.next();
+            FileUtil.copyFile(tempFile,newFile);
+            tempFile.delete();
+        }
     }
 }

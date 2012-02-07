@@ -40,7 +40,11 @@ public class SystemInfoPage extends MifosPage {
     public String getDateTime() {
         return selenium.getText("sysinfo.text.dateTime");
     }
-
+    
+    public String getDatabaseSource() {
+        return selenium.getText("sysinfo.text.databaseSource");
+    }
+    
     public void verifyDateTime(DateTime dateTime) {
         DateTimeFormatter formatter;
         String expected = getDateTime();
@@ -60,6 +64,11 @@ public class SystemInfoPage extends MifosPage {
                 Assert.assertEquals(expected, actual, "System date time and Mifos date time should be the same.");
             }
         }
+    }
+    
+    public void verifyDatabaseSource(String expected) {
+        String is = getDatabaseSource();
+        Assert.assertEquals(is, expected, "");
     }
 
 }

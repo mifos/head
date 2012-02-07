@@ -73,7 +73,7 @@
         </tr>
         <tr>
             <td>[@spring.message "systemAdministration.viewsysteminformation.databaseSource" /]</td>
-            <td>${model.systemInformationDto.infoSource}</td>
+            <td id='sysinfo.text.databaseSource'>${model.systemInformationDto.infoSource}</td>
         </tr>
         <tr>
             <td>[@spring.message "systemAdministration.viewsysteminformation.databaseServer" /]</td>
