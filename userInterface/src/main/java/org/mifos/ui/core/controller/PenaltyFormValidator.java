@@ -149,7 +149,7 @@ public class PenaltyFormValidator implements Validator {
                 } else if (value.length() > digits) {
                     errors.reject("error.penalty.digitsBeforeDecimal", new String[] { field, Integer.toString(digits) }, null);
                 }
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 errors.reject("error.penalty.incorrectInteger", new String[] { field }, null);
             }
         }
