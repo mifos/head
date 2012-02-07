@@ -33,7 +33,7 @@
             <p class="fontnormalbold">[@spring.message "Penalties.loanPenalties"/]</p>
             [#list loanPenalties as penalty]
                 <span><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></span>
-                <a href="viewPenalty.ftl?penaltyId=${penalty.id}">${penalty.name}</a>
+                <a href="viewPenalty.ftl?penaltyId=${penalty.penaltyId}">${penalty.penaltyName}</a>
                 [#if penalty.status.id == 2]
                     <span>
                         <img src="pages/framework/images/status_closedblack.gif"/>[@spring.message "inactive"/]
@@ -48,7 +48,7 @@
             <p class="fontnormalbold">[@spring.message "Penalties.savingPenalties"/]</p>
             [#list savingPenalties as penalty]
                 <span><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></span>
-                <a href="viewPenalty.ftl?penaltyId=${penalty.id}">${penalty.name}</a>
+                <a href="viewPenalty.ftl?penaltyId=${penalty.penaltyId}">${penalty.penaltyName}</a>
                 [#if penalty.status.id == 2]
                     <span>
                         <img src="pages/framework/images/status_closedblack.gif"/>[@spring.message "inactive"/]

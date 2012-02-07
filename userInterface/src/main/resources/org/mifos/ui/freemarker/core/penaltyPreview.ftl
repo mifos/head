@@ -44,6 +44,7 @@
                     [@spring.bind "formBean.oldName"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
                     [@spring.bind "formBean.id"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
                     [@spring.bind "formBean.categoryTypeId"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
+                    [@spring.bind "formBean.showAmount"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
                     
                     <div class="span-20">
                         <span class="fontBold">[@spring.message "organizationPreferences.definenewpenalty.name" /]</span>

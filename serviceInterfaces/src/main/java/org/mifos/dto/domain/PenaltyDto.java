@@ -20,9 +20,13 @@
 
 package org.mifos.dto.domain;
 
-public class PenaltyDto {
-    private String id;
-    private String name;
+import java.io.Serializable;
+
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2", "NM_CONFUSING"}, justification="should disable at filter level and also for pmd - not important for us")
+public class PenaltyDto implements Serializable {
+    private String penaltyId;
+    private String penaltyName;
     private PenaltyStatusDto status;
     private PenaltyCategoryDto categoryType;
     private PenaltyPeriodDto periodType;
@@ -38,20 +42,20 @@ public class PenaltyDto {
     private Double rate;
     private PenaltyFormulaDto penaltyFormula;
 
-    public String getId() {
-        return id;
+    public String getPenaltyId() {
+        return penaltyId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setPenaltyId(String penaltyId) {
+        this.penaltyId = penaltyId;
     }
 
-    public String getName() {
-        return name;
+    public String getPenaltyName() {
+        return penaltyName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPenaltyName(String penaltyName) {
+        this.penaltyName = penaltyName;
     }
 
     public PenaltyStatusDto getStatus() {

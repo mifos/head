@@ -20,10 +20,12 @@
 
 package org.mifos.ui.core.controller;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.penalty.servicefacade.PenaltyServiceFacade;
+import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
 import org.mifos.dto.domain.PenaltyDto;
 import org.mifos.dto.screen.PenaltyParametersDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +47,12 @@ import org.springframework.web.servlet.ModelAndView;
 public class EditPenaltyController {
     private static final String REDIRECT_TO_VIEW_PENALTY = "redirect:/viewPenalty.ftl?penaltyId=";
     private static final String CANCEL_PARAM = "CANCEL";
+    private static boolean showAmount;
     @Autowired
     private PenaltyServiceFacade penaltyServiceFacade;
+    
+    @Autowired
+    private ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade;
     
     private PenaltyParametersDto parametersDto;
     
@@ -54,13 +60,15 @@ public class EditPenaltyController {
         //spring autowiring
     }
     
-    public EditPenaltyController(final PenaltyServiceFacade penaltyServiceFacade) {
+    public EditPenaltyController(final PenaltyServiceFacade penaltyServiceFacade,
+            final ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade) {
         this.penaltyServiceFacade = penaltyServiceFacade;
+        this.viewOrganizationSettingsServiceFacade = viewOrganizationSettingsServiceFacade;
     }
     
     @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        binder.setValidator(new PenaltyFormValidator());
+    protected void initBinder(WebDataBinder binder, HttpSession session) {
+        binder.setValidator(new PenaltyFormValidator(viewOrganizationSettingsServiceFacade, session));
     }
     
     @RequestMapping(method = RequestMethod.GET)

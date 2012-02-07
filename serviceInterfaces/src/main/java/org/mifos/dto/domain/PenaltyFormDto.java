@@ -34,8 +34,8 @@ public class PenaltyFormDto {
     private Double rate;
     private String amount;
     private Integer duration;
-    private Integer max;
-    private Integer min;
+    private Double max;
+    private Double min;
 
     public Short getId() {
         return id;
@@ -141,19 +141,19 @@ public class PenaltyFormDto {
         this.duration = duration;
     }
 
-    public Integer getMax() {
+    public Double getMax() {
         return max;
     }
 
-    public void setMax(Integer max) {
+    public void setMax(Double max) {
         this.max = max;
     }
 
-    public Integer getMin() {
+    public Double getMin() {
         return min;
     }
 
-    public void setMin(Integer min) {
+    public void setMin(Double min) {
         this.min = min;
     }
 

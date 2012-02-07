@@ -30,7 +30,7 @@ public class AmountPenaltyBO extends PenaltyBO {
     private Money amount;
     
     public AmountPenaltyBO(final UserContext userContext, final String name, final PenaltyCategoryEntity categoryEntity,
-            final PenaltyPeriodEntity periodEntity, final Integer duration, final Integer min, final Integer max,
+            final PenaltyPeriodEntity periodEntity, final Integer duration, final Double min, final Double max,
             final PenaltyFrequencyEntity frequencyEntity, final GLCodeEntity glCodeEntity, final Money amount) throws PenaltyException {
         super(userContext, name, categoryEntity, periodEntity, duration, min, max, frequencyEntity, glCodeEntity);
         

@@ -88,11 +88,11 @@ public class PenaltyDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         glCodeEntity = new GLCodeEntity((short) 42, "31102");
 
         amountPenalty = new AmountPenaltyBO(TestUtils.makeUser(), "Amount Penalty Test", new PenaltyCategoryEntity(
-                PenaltyCategory.SAVING), periodEntity, 6, 1, 14, frequencyEntity, glCodeEntity,
+                PenaltyCategory.SAVING), periodEntity, 6, 1.0, 14.0, frequencyEntity, glCodeEntity,
                 TestUtils.createMoney(158.5));
 
-        ratePenalty = new RatePenaltyBO(TestUtils.makeUser(), "Rate Penalty Test", categoryEntity, periodEntity, 6, 1,
-                10, frequencyEntity, glCodeEntity, formulaEntity, 10.5);
+        ratePenalty = new RatePenaltyBO(TestUtils.makeUser(), "Rate Penalty Test", categoryEntity, periodEntity, 6, 1.0,
+                10.0, frequencyEntity, glCodeEntity, formulaEntity, 10.5);
 
         IntegrationTestObjectMother.createPenalty(amountPenalty);
         IntegrationTestObjectMother.createPenalty(ratePenalty);
@@ -136,11 +136,11 @@ public class PenaltyDaoHibernateIntegrationTest extends MifosIntegrationTestCase
 
     @Test
     public void shouldFindPenaltyById() throws Exception {
-        PenaltyBO found = penaltyDao.findPenalty(amountPenalty.getPenaltyId());
+        PenaltyBO found = penaltyDao.findPenaltyById(amountPenalty.getPenaltyId());
 
         assertThat((AmountPenaltyBO) found, is(amountPenalty));
 
-        found = penaltyDao.findPenalty(ratePenalty.getPenaltyId());
+        found = penaltyDao.findPenaltyById(ratePenalty.getPenaltyId());
 
         assertThat((RatePenaltyBO) found, is(ratePenalty));
     }

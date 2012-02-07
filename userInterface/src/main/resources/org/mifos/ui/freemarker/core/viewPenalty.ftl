@@ -23,16 +23,16 @@
 <div class=" content">
     <span id="page.id" title="viewPenalty"></span>
     <div class="span-24">
-        [@spring.bind "penalty.name"/]
+        [@spring.bind "penalty.penaltyName"/]
             [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "penalty.viewPenalties":"viewPenalties.ftl",spring.status.value?default(""):""}/]
         [@widget.crumbpairs breadcrumb/]
         
         <div class="clear">&nbsp;</div>
         <div class="marginLeft30" style="line-height:1.2">
             <div class="span-18 width90prc" style="margin-bottom:7px;">
-                <span class="orangeheading">${penalty.name}</span>
+                <span class="orangeheading">${penalty.penaltyName}</span>
                 <div style="position:relative;top:-17px; text-align:right;">
-                    <a id="Penalty.link.editPenalty" href="editPenalty.ftl?penaltyId=${penalty.id}">
+                    <a id="Penalty.link.editPenalty" href="editPenalty.ftl?penaltyId=${penalty.penaltyId}">
                         [@spring.message "penalty.editPenalty" /]
                     </a>
                 </div>
@@ -44,7 +44,7 @@
                 </div>
                 <div>
                     <span>[@spring.message "organizationPreferences.definenewpenalty.name" /]</span>
-                    <span>${penalty.name}</span>
+                    <span>${penalty.penaltyName}</span>
                 </div>
                 <div>
                     <span>[@spring.message "organizationPreferences.definenewpenalty.appliesto" /]</span>

@@ -37,7 +37,7 @@ import org.mifos.accounts.penalties.util.helpers.PenaltyStatus;
 public interface PenaltyDao {
     public void save(PenaltyBO penaltyBO);
     
-    public PenaltyBO findPenalty(int penaltyId);
+    public PenaltyBO findPenaltyById(int penaltyId);
     
     public List<PenaltyBO> findAllLoanPenalties();
     

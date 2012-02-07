@@ -95,8 +95,8 @@ public class EditPenaltyPreviewController {
                 currencyId = Short.valueOf(formBean.getCurrencyId());
             }
             
-            Integer min = Integer.valueOf(formBean.getMin());
-            Integer max = Integer.valueOf(formBean.getMax());
+            Double min = Double.valueOf(formBean.getMin());
+            Double max = Double.valueOf(formBean.getMax());
             
             PenaltyFormDto dto = new PenaltyFormDto();
             dto.setId(id);

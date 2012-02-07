@@ -38,10 +38,12 @@ public class PenaltyFormBean {
     private String formulaId;
     private String frequencyId;
     private String glCodeId;
+    private boolean showAmount;
     
     public PenaltyFormBean() {
         frequencyId = "1";
         statusId = "1";
+        showAmount = false;
     }
 
     public PenaltyFormBean(PenaltyDto dto) {
@@ -71,6 +73,8 @@ public class PenaltyFormBean {
         frequencyId = Short.toString(dto.getPenaltyFrequency().getId());
         
         glCodeId = Short.toString(dto.getGlCodeDto().getGlcodeId());
+        
+        showAmount = !amount.equalsIgnoreCase("");
     }
 
     public String getId() {
@@ -191,6 +195,14 @@ public class PenaltyFormBean {
 
     public void setGlCodeId(String glCodeId) {
         this.glCodeId = glCodeId;
+    }
+
+    public boolean isShowAmount() {
+        return showAmount;
+    }
+
+    public void setShowAmount(boolean showAmount) {
+        this.showAmount = showAmount;
     }
     
 }

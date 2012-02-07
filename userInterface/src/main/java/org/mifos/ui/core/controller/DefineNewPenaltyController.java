@@ -20,10 +20,12 @@
 
 package org.mifos.ui.core.controller;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.penalty.servicefacade.PenaltyServiceFacade;
+import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
 import org.mifos.dto.screen.PenaltyParametersDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,19 +50,24 @@ public class DefineNewPenaltyController {
     @Autowired
     private PenaltyServiceFacade penaltyServiceFacade;
     
+    @Autowired
+    private ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade;
+    
     private PenaltyParametersDto parametersDto;
     
     protected DefineNewPenaltyController() {
         //for spring autowiring
     }
 
-    public DefineNewPenaltyController(final PenaltyServiceFacade penaltyServiceFacade) {
+    public DefineNewPenaltyController(final PenaltyServiceFacade penaltyServiceFacade,
+            final ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade) {
         this.penaltyServiceFacade = penaltyServiceFacade;
+        this.viewOrganizationSettingsServiceFacade = viewOrganizationSettingsServiceFacade;
     }
     
     @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        binder.setValidator(new PenaltyFormValidator());
+    protected void initBinder(WebDataBinder binder, HttpSession session) {
+        binder.setValidator(new PenaltyFormValidator(viewOrganizationSettingsServiceFacade, session));
     }
     
     @RequestMapping(method = RequestMethod.GET)

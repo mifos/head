@@ -44,6 +44,7 @@
             <div class="prepend-3 span-20 last">
                 [@spring.bind "formBean.id"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
                 [@spring.bind "formBean.categoryTypeId"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
+                [@spring.bind "formBean.showAmount"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
                 
                 <div class="span-20 ">
                     <span class="span-7 rightAlign">
@@ -94,7 +95,7 @@
             <p class="fontBold">[@spring.message "organizationPreferences.definenewpenalty.interestcalculation"/]</p>
             
             <div class="prepend-3 span-20 last">
-            [#if formBean.categoryTypeId == "2"]
+            [#if formBean.showAmount]
                 <div class="span-20 ">
                     <span class="span-7 rightAlign">
                         <span class="red">* </span>[@spring.message "organizationPreferences.definenewpenalty.fixedamount"/]

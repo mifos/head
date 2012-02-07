@@ -91,8 +91,8 @@ public class WebTierPenaltyServiceFacade implements PenaltyServiceFacade {
             PenaltyBO penaltyBO = null;
             String penaltyName = dto.getPenaltyName();
             Integer periodDuration = dto.getDuration();
-            Integer min = dto.getMin();
-            Integer max = dto.getMax();
+            Double min = dto.getMin();
+            Double max = dto.getMax();
             
             if (dto.isRatePenalty()) {
                 Double rate = dto.getRate();
@@ -127,7 +127,7 @@ public class WebTierPenaltyServiceFacade implements PenaltyServiceFacade {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(user);
         
-        PenaltyBO penaltyBO = this.penaltyDao.findPenalty(dto.getId());
+        PenaltyBO penaltyBO = this.penaltyDao.findPenaltyById(dto.getId());
         penaltyBO.updateDetails(userContext);
         
         try {
@@ -171,7 +171,7 @@ public class WebTierPenaltyServiceFacade implements PenaltyServiceFacade {
     
     @Override
     public PenaltyDto getPenalty(int penaltyId) {
-        return this.penaltyDao.findPenalty(penaltyId).toDto();
+        return this.penaltyDao.findPenaltyById(penaltyId).toDto();
     }
     
     @Override

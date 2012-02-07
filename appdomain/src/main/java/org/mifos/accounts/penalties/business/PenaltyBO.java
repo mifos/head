@@ -43,13 +43,13 @@ public abstract class PenaltyBO extends AbstractBusinessObject {
     private final PenaltyCategoryEntity categoryType;
     private PenaltyPeriodEntity periodType;
     private Integer periodDuration;
-    private Integer minimumLimit;
-    private Integer maximumLimit;
+    private Double minimumLimit;
+    private Double maximumLimit;
     private PenaltyFrequencyEntity penaltyFrequency;
     private GLCodeEntity glCode;
     
     protected PenaltyBO(final UserContext userContext, final String name, final PenaltyCategoryEntity categoryEntity,
-            final PenaltyPeriodEntity periodEntity, final Integer duration, final Integer min, final Integer max,
+            final PenaltyPeriodEntity periodEntity, final Integer duration, final Double min, final Double max,
             final PenaltyFrequencyEntity frequencyEntity, final GLCodeEntity glCodeEntity) throws PenaltyException {
         
         validateFields(name, categoryEntity, periodEntity, min, max, frequencyEntity, glCodeEntity);
@@ -114,19 +114,19 @@ public abstract class PenaltyBO extends AbstractBusinessObject {
         this.periodDuration = periodDuration;
     }
 
-    public Integer getMinimumLimit() {
+    public Double getMinimumLimit() {
         return minimumLimit;
     }
 
-    public void setMinimumLimit(Integer minimumLimit) {
+    public void setMinimumLimit(Double minimumLimit) {
         this.minimumLimit = minimumLimit;
     }
 
-    public Integer getMaximumLimit() {
+    public Double getMaximumLimit() {
         return maximumLimit;
     }
 
-    public void setMaximumLimit(Integer maximumLimit) {
+    public void setMaximumLimit(Double maximumLimit) {
         this.maximumLimit = maximumLimit;
     }
 
@@ -156,14 +156,14 @@ public abstract class PenaltyBO extends AbstractBusinessObject {
 
     public PenaltyDto toDto() {
         PenaltyDto dto = new PenaltyDto();
-        dto.setId(Short.toString(this.penaltyId));
-        dto.setName(this.penaltyName);
+        dto.setPenaltyId(Short.toString(this.penaltyId));
+        dto.setPenaltyName(this.penaltyName);
         dto.setStatus(this.status.toDto());
         dto.setCategoryType(this.categoryType.toDto());
         dto.setPeriodType(this.periodType.toDto());
         dto.setPeriodDuration(this.periodDuration == null ? null : Integer.toString(this.periodDuration));
-        dto.setMinimumLimit(Integer.toString(this.minimumLimit));
-        dto.setMaximumLimit(Integer.toString(this.maximumLimit));
+        dto.setMinimumLimit(Double.toString(this.minimumLimit));
+        dto.setMaximumLimit(Double.toString(this.maximumLimit));
         dto.setPenaltyFrequency(this.penaltyFrequency.toDto());
         dto.setGlCodeDto(this.glCode.toDto());
 
@@ -207,7 +207,7 @@ public abstract class PenaltyBO extends AbstractBusinessObject {
     }
     
     protected void validateFields(String name, PenaltyCategoryEntity categoryEntity, PenaltyPeriodEntity periodEntity,
-            Integer min, Integer max, PenaltyFrequencyEntity frequencyEntity, GLCodeEntity glCodeEntity) throws PenaltyException {
+            Double min, Double max, PenaltyFrequencyEntity frequencyEntity, GLCodeEntity glCodeEntity) throws PenaltyException {
         validateName(name);
         validateCategory(categoryEntity);
         validatePeriod(periodEntity);
@@ -234,7 +234,7 @@ public abstract class PenaltyBO extends AbstractBusinessObject {
         }
     }
     
-    private void validateMinAndMax(final Integer min, final Integer max) throws PenaltyException {
+    private void validateMinAndMax(final Double min, final Double max) throws PenaltyException {
         if (min == null) {
             throw new PenaltyException(PenaltyConstants.INVALID_PENALTY_MINIMUM);
         }

@@ -103,8 +103,8 @@ public class NewPenaltyPreviewController {
             dto.setRate(rate);
             dto.setAmount(formBean.getAmount());
             dto.setDuration(duration);
-            dto.setMin(Integer.valueOf(formBean.getMin()));
-            dto.setMax(Integer.valueOf(formBean.getMax()));
+            dto.setMin(Double.valueOf(formBean.getMin()));
+            dto.setMax(Double.valueOf(formBean.getMax()));
             
             this.penaltyServiceFacade.createPenalty(dto);
             

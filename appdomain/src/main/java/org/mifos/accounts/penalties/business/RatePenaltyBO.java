@@ -30,7 +30,7 @@ public class RatePenaltyBO extends PenaltyBO {
     private PenaltyFormulaEntity formula;
     
     public RatePenaltyBO(final UserContext userContext, final String name, final PenaltyCategoryEntity categoryEntity,
-            final PenaltyPeriodEntity periodEntity, final Integer duration, final Integer min, final Integer max,
+            final PenaltyPeriodEntity periodEntity, final Integer duration, final Double min, final Double max,
             final PenaltyFrequencyEntity frequencyEntity, final GLCodeEntity glCodeEntity, final PenaltyFormulaEntity formulaEntity,
             final Double rate) throws PenaltyException {
         super(userContext, name, categoryEntity, periodEntity, duration, min, max, frequencyEntity, glCodeEntity);

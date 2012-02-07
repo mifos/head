@@ -20,17 +20,29 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.List;
+import java.util.Properties;
+
+import javax.servlet.http.HttpSession;
+
+import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
 import org.mifos.dto.screen.PenaltyParametersDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
 public class PenaltyFormValidator implements Validator {
-    private final static boolean DECIMAL = true;
-    private final static boolean INTEGER = false;
+    private final ViewOrganizationSettingsServiceFacade serviceFacade;
+    private final Properties properties;
     private final static boolean MANDATORY = true;
     private final static boolean OPTIONAL = false;
+    
+    public PenaltyFormValidator(ViewOrganizationSettingsServiceFacade service, HttpSession session) {
+        this.serviceFacade = service;
+        properties = this.serviceFacade.getOrganizationSettings(session);
+    }
     
     @Override
     public boolean supports(Class<?> clazz) {
@@ -46,6 +58,9 @@ public class PenaltyFormValidator implements Validator {
         }
         
         PenaltyFormBean formBean = (PenaltyFormBean) target;
+        int digits = Integer.valueOf(properties.getProperty("digitsBeforeDecimal"));
+        @SuppressWarnings("unchecked")
+        int decimal = Integer.valueOf(((List<Properties>) properties.get("currencies")).get(0).getProperty("digitsAfterDecimal"));
         
         checkCategory(errors, formBean.getCategoryTypeId());
         checkStatus(errors, formBean.getStatusId());
@@ -55,9 +70,9 @@ public class PenaltyFormValidator implements Validator {
         emptyField(errors, formBean.getFrequencyId(), "Penalty Application Frequency");
         emptyField(errors, formBean.getGlCodeId(), "GL Code");
         
-        checkNumber(errors, formBean.getDuration(), "Grace Period Duration", OPTIONAL, INTEGER);
-        checkNumber(errors, formBean.getMin(), "Cumulative Penalty Limit (Minimum)", MANDATORY, INTEGER);
-        checkNumber(errors, formBean.getMax(), "Cumulative Penalty Limit (Maximum)", MANDATORY, INTEGER);
+        checkNumber(errors, formBean.getDuration(), "Grace Period Duration", OPTIONAL, digits);
+        checkNumber(errors, formBean.getMin(), "Cumulative Penalty Limit (Minimum)", MANDATORY, digits, decimal);
+        checkNumber(errors, formBean.getMax(), "Cumulative Penalty Limit (Maximum)", MANDATORY, digits, decimal);
         
         checkMinGreaterMax(errors, formBean.getMin(), formBean.getMax());
         
@@ -65,22 +80,21 @@ public class PenaltyFormValidator implements Validator {
             if (StringUtils.hasText(formBean.getRate()) && StringUtils.hasText(formBean.getAmount())) {
                 errors.reject("error.penalty.amountAndRateOrFormula");
             } else if (StringUtils.hasText(formBean.getRate()) && StringUtils.hasText(formBean.getFormulaId())) {
-                checkNumber(errors, formBean.getRate(), "Rate", MANDATORY, DECIMAL);
+                checkNumber(errors, formBean.getRate(), "Rate", MANDATORY, digits, decimal);
             } else if (StringUtils.hasText(formBean.getRate()) && !StringUtils.hasText(formBean.getFormulaId())) {
                 errors.reject("error.penalty.rate");
             } else if (StringUtils.hasText(formBean.getAmount())) {
-                checkNumber(errors, formBean.getAmount(), "Amount", MANDATORY, DECIMAL);
+                checkNumber(errors, formBean.getAmount(), "Amount", MANDATORY, digits, decimal);
             } else {
                 errors.reject("error.penalty.amountAndRateOrFormula");
             }
         } else {
-            checkNumber(errors, formBean.getAmount(), "Amount", MANDATORY, DECIMAL);
+            checkNumber(errors, formBean.getAmount(), "Amount", MANDATORY, digits, decimal);
         }
         
-
     }
     
-    private void checkNumber(Errors errors, String value, String field, boolean isMandatory, boolean isDecimal) {
+    private void checkNumber(Errors errors, String value, String field, boolean isMandatory, int digits, int decimal) {
         int count = errors.getErrorCount();
 
         if(isMandatory) {
@@ -91,20 +105,36 @@ public class PenaltyFormValidator implements Validator {
             }
         }
         
-        if(isDecimal) {
-            incorrectDoubleValue(errors, value, field);
-        } else {
-            incorrectIntegerValue(errors, value, field);
-        }
+        
+        incorrectDoubleValue(errors, value, field, digits, decimal);
     }
     
-    private void incorrectDoubleValue(Errors errors, String value, String field) {
-        if(value != null && StringUtils.hasText(value)) {
+    private void checkNumber(Errors errors, String value, String field, boolean isMandatory, int digits) {
+        int count = errors.getErrorCount();
+
+        if(isMandatory) {
+            emptyField(errors, value, field);
+        
+            if(errors.getErrorCount() > count) {
+                return;
+            }
+        }
+        
+        incorrectIntegerValue(errors, value, field, digits);
+    }
+    
+    private void incorrectDoubleValue(Errors errors, String value, String field, int digits, int decimal) {
+        if (value != null && StringUtils.hasText(value)) {
             try {
                 Double val = Double.valueOf(value);
-                
-                if(val < 0) {
+                Double frac = val % 1;
+
+                if (val < 0.0d) {
                     errors.reject("error.penalty.incorrectDouble", new String[] { field }, null);
+                } else if (Long.toString(val.longValue()).length() > digits) {
+                    errors.reject("error.penalty.digitsBeforeDecimal", new String[] { field, Integer.toString(digits) }, null);
+                } else if (Double.toString(frac).length() - 2 > decimal) {
+                    errors.reject("error.penalty.digitsAfterDecimal", new String[] { field, Integer.toString(decimal) }, null);
                 }
             } catch (NumberFormatException e) {
                 errors.reject("error.penalty.incorrectDouble", new String[] { field }, null);
@@ -112,15 +142,17 @@ public class PenaltyFormValidator implements Validator {
         }
     }
     
-    private void incorrectIntegerValue(Errors errors, String value, String field) {
-        if(value != null && StringUtils.hasText(value)) {
+    private void incorrectIntegerValue(Errors errors, String value, String field, int digits) {
+        if (value != null && StringUtils.hasText(value)) {
             try {
-                Integer val = Integer.valueOf(value);
-                
-                if(val < 0) {
+                long val = Long.valueOf(value);
+
+                if (val < 0) {
                     errors.reject("error.penalty.incorrectInteger", new String[] { field }, null);
+                } else if (value.length() > digits) {
+                    errors.reject("error.penalty.digitsBeforeDecimal", new String[] { field, Integer.toString(digits) }, null);
                 }
-            } catch (NumberFormatException e) {
+            } catch (Exception e) {
                 errors.reject("error.penalty.incorrectInteger", new String[] { field }, null);
             }
         }
@@ -143,10 +175,10 @@ public class PenaltyFormValidator implements Validator {
         }
         
         try {
-            int minimum = Integer.valueOf(min);
-            int maximum = Integer.valueOf(max);
+            Double minimum = Double.valueOf(min);
+            Double maximum = Double.valueOf(max);
 
-            if(minimum - maximum > 0) {
+            if(minimum > 0 && maximum > 0 && Double.compare(minimum, maximum) > 0) {
                 errors.reject("error.penalty.minGreaterMax");
             }
         } catch (NumberFormatException e) {

@@ -51,7 +51,7 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateWithoutPenaltyName() throws Exception {
         try {
             penalty = new AmountPenaltyBO(TestUtils.makeUser(), "", new PenaltyCategoryEntity(PenaltyCategory.LOAN),
-                    new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 10, 1, 15, new PenaltyFrequencyEntity(
+                    new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 10, 1.0, 15.0, new PenaltyFrequencyEntity(
                             PenaltyFrequency.MONTHLY), getGLCode("42"), TestUtils.createMoney(258.7));
             Assert.assertFalse("Penalty is created without name", true);
         } catch (PenaltyException e) {
@@ -64,7 +64,7 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateWithoutPenaltyCategory() throws Exception {
         try {
             penalty = new AmountPenaltyBO(TestUtils.makeUser(), "Penalty Test", null, new PenaltyPeriodEntity(
-                    PenaltyPeriod.DAYS), 10, 1, 15, new PenaltyFrequencyEntity(PenaltyFrequency.MONTHLY),
+                    PenaltyPeriod.DAYS), 10, 1.0, 15.0, new PenaltyFrequencyEntity(PenaltyFrequency.MONTHLY),
                     getGLCode("42"), TestUtils.createMoney(258.7));
             Assert.assertFalse("Penalty is created without category", true);
         } catch (PenaltyException e) {
@@ -77,7 +77,7 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateWithoutPenaltyPeriod() throws Exception {
         try {
             penalty = new AmountPenaltyBO(TestUtils.makeUser(), "Penalty Test", new PenaltyCategoryEntity(
-                    PenaltyCategory.LOAN), null, 10, 1, 15, new PenaltyFrequencyEntity(PenaltyFrequency.MONTHLY),
+                    PenaltyCategory.LOAN), null, 10, 1.0, 15.0, new PenaltyFrequencyEntity(PenaltyFrequency.MONTHLY),
                     getGLCode("42"), TestUtils.createMoney(258.7));
             Assert.assertFalse("Penalty is created without period", true);
         } catch (PenaltyException e) {
@@ -90,7 +90,7 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateWithoutMinimumLimit() throws Exception {
         try {
             penalty = new AmountPenaltyBO(TestUtils.makeUser(), "Penalty Test", new PenaltyCategoryEntity(
-                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 10, null, 15,
+                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 10, null, 15.0,
                     new PenaltyFrequencyEntity(PenaltyFrequency.MONTHLY), getGLCode("42"), TestUtils.createMoney(258.7));
             Assert.assertFalse("Penalty is created without minimum limit", true);
         } catch (PenaltyException e) {
@@ -103,7 +103,7 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateWithoutMaximumLimit() throws Exception {
         try {
             penalty = new AmountPenaltyBO(TestUtils.makeUser(), "Penalty Test", new PenaltyCategoryEntity(
-                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 10, 1, null,
+                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 10, 1.0, null,
                     new PenaltyFrequencyEntity(PenaltyFrequency.MONTHLY), getGLCode("42"), TestUtils.createMoney(258.7));
             Assert.assertFalse("Penalty is created without maximum limit", true);
         } catch (PenaltyException e) {
@@ -116,7 +116,7 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateWithoutPenaltyFrequency() throws Exception {
         try {
             penalty = new AmountPenaltyBO(TestUtils.makeUser(), "Penalty Test", new PenaltyCategoryEntity(
-                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 10, 1, 15, null,
+                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 10, 1.0, 15.0, null,
                     getGLCode("42"), TestUtils.createMoney(258.7));
             Assert.assertFalse("Penalty is created without frequency", true);
         } catch (PenaltyException e) {
@@ -129,7 +129,7 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateWithoutGlCode() throws Exception {
         try {
             penalty = new AmountPenaltyBO(TestUtils.makeUser(), "Penalty Test", new PenaltyCategoryEntity(
-                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 10, 1, 15,
+                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 10, 1.0, 15.0,
                     new PenaltyFrequencyEntity(PenaltyFrequency.MONTHLY), null, TestUtils.createMoney(258.7));
             Assert.assertFalse("Penalty is created without gl code", true);
         } catch (PenaltyException e) {
@@ -142,7 +142,7 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateMaximumCanNotBeGreaterThatMinimum() throws Exception {
         try {
             penalty = new AmountPenaltyBO(TestUtils.makeUser(), "Penalty Test", new PenaltyCategoryEntity(
-                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 10, 15, 1,
+                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 10, 15.0, 1.0,
                     new PenaltyFrequencyEntity(PenaltyFrequency.MONTHLY), getGLCode("42"), TestUtils.createMoney(258.7));
             Assert.assertFalse("penalty is created with maximum limit greater than minimum limit", true);
         } catch (PenaltyException e) {
@@ -155,7 +155,7 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateAmountPenaltyWithoutAmount() throws Exception {
         try {
             penalty = new AmountPenaltyBO(TestUtils.makeUser(), "Penalty Test", new PenaltyCategoryEntity(
-                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 10, 1, 15,
+                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 10, 1.0, 15.0,
                     new PenaltyFrequencyEntity(PenaltyFrequency.MONTHLY), getGLCode("42"), null);
             Assert.assertFalse("Penalty is created without amount", true);
         } catch (PenaltyException e) {
@@ -168,7 +168,7 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateRatePenaltyWithoutRate() throws Exception {
         try {
             penalty = new RatePenaltyBO(TestUtils.makeUser(), "Penalty Test", new PenaltyCategoryEntity(
-                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 1, 1, 15,
+                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 1, 1.0, 15.0,
                     new PenaltyFrequencyEntity(PenaltyFrequency.MONTHLY), getGLCode("42"), new PenaltyFormulaEntity(
                             PenaltyFormula.OVERDUE_AMOUNT_DUE), null);
             Assert.assertFalse("Penalty is created without rate", true);
@@ -182,7 +182,7 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateRatePenaltyWithoutFormula() throws Exception {
         try {
             penalty = new RatePenaltyBO(TestUtils.makeUser(), "Penalty Test", new PenaltyCategoryEntity(
-                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 1, 1, 15,
+                    PenaltyCategory.LOAN), new PenaltyPeriodEntity(PenaltyPeriod.DAYS), 1, 1.0, 15.0,
                     new PenaltyFrequencyEntity(PenaltyFrequency.MONTHLY), getGLCode("42"), null, 7.5);
             Assert.assertFalse("Penalty is created without formula", true);
         } catch (PenaltyException e) {
@@ -197,8 +197,8 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
         PenaltyCategoryEntity categoryEntity = new PenaltyCategoryEntity(PenaltyCategory.LOAN);
         PenaltyPeriodEntity periodEntity = new PenaltyPeriodEntity(PenaltyPeriod.DAYS);
         int duration = 10;
-        int min = 1;
-        int max = 15;
+        double min = 1.0;
+        double max = 15.0;
         PenaltyFrequencyEntity frequencyEntity = new PenaltyFrequencyEntity(PenaltyFrequency.MONTHLY);
         GLCodeEntity glCode = getGLCode("42");
         Money amount = TestUtils.createMoney(587.6);
@@ -229,8 +229,8 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
         PenaltyCategoryEntity categoryEntity = new PenaltyCategoryEntity(PenaltyCategory.LOAN);
         PenaltyPeriodEntity periodEntity = new PenaltyPeriodEntity(PenaltyPeriod.DAYS);
         int duration = 2;
-        int min = 1;
-        int max = 15;
+        double min = 1.0;
+        double max = 15.0;
         PenaltyFrequencyEntity frequencyEntity = new PenaltyFrequencyEntity(PenaltyFrequency.MONTHLY);
         GLCodeEntity glCode = getGLCode("42");
         PenaltyFormulaEntity formulaEntity = new PenaltyFormulaEntity(PenaltyFormula.OVERDUE_AMOUNT_DUE);

@@ -55,7 +55,7 @@ public class PenaltyDaoHibernate implements PenaltyDao {
     }
     
     @Override
-    public PenaltyBO findPenalty(int penaltyId) {
+    public PenaltyBO findPenaltyById(int penaltyId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("id", (short)penaltyId);
         
