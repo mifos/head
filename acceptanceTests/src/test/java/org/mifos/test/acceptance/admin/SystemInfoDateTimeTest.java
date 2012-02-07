@@ -90,7 +90,8 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
         SystemInfoPage systemInfoPage = adminTestHelper.navigateToSystemInfoPage();
         systemInfoPage.verifyDateTime(targetTime);
     }
-    
+
+    @Test(enabled = false) // TODO - need to support MIFOS_CONF variable
 	public void verifyDatabaseInformationSource() throws Exception {
         SystemInfoPage systemInfoPage = adminTestHelper.navigateToSystemInfoPage();
         String data = systemInfoPage.getDatabaseSource();
