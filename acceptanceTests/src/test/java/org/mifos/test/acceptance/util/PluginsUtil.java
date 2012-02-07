@@ -22,12 +22,7 @@ package org.mifos.test.acceptance.util;
 
 
 import org.mifos.framework.util.ConfigurationLocator;
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 
 public class PluginsUtil {
     private boolean copyPlugin = false;
@@ -54,7 +49,7 @@ public class PluginsUtil {
 
         if (!pluginFile.exists()) {
             pluginFile.createNewFile();
-            copyFile(new File(plugin), pluginFile);
+            FileUtil.copyFile(new File(plugin), pluginFile);
             copyPlugin = true;
         }
     }
@@ -69,46 +64,12 @@ public class PluginsUtil {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public String movePluginToTemp() throws Exception {
-        File pluginFile = new File(configPath + "plugins" + File.separator + pluginName);
-        File temp = File.createTempFile(pluginName, ".tmp");
-        String tempFilePath = null;
-
-        if (pluginFile.exists()) {
-            copyFile(pluginFile,temp);
-            pluginFile.delete();
-            tempFilePath = temp.getAbsolutePath();
-        }
-
-        return tempFilePath;
+    	return FileUtil.moveConfigFileToTemp("plugins" + File.separator + pluginName);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void movePluginFromTemp(String tempFileName) throws Exception {
-        if (tempFileName != null) {
-            File temp = new File(tempFileName);
-            File pluginFile = new File(configPath + "plugins" + File.separator + pluginName);
-
-            copyFile(temp,pluginFile);
-
-            temp.delete();
-        }
-    }
-
-    private static void copyFile(File sourceFile, File destFile) throws IOException {
-        FileChannel source = null;
-        FileChannel destination = null;
-        try {
-            source = new FileInputStream(sourceFile).getChannel();
-            destination = new FileOutputStream(destFile).getChannel();
-            destination.transferFrom(source, 0, source.size());
-        } finally {
-            if (source != null) {
-                source.close();
-            }
-            if (destination != null) {
-                destination.close();
-            }
-        }
+    	FileUtil.moveConfigFileFromTemp("plugins" + File.separator + pluginName, tempFileName);
     }
 }
 
