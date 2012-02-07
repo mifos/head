@@ -22,7 +22,6 @@ package org.mifos.test.acceptance.admin;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.TimeMachinePage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
