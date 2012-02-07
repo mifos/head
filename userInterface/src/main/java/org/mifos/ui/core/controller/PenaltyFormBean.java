@@ -22,6 +22,7 @@ package org.mifos.ui.core.controller;
 
 import org.mifos.dto.domain.PenaltyDto;
 
+@SuppressWarnings("PMD.TooManyFields")
 public class PenaltyFormBean {
     private String id;
     private String name;
@@ -39,7 +40,7 @@ public class PenaltyFormBean {
     private String frequencyId;
     private String glCodeId;
     private boolean showAmount;
-    
+
     public PenaltyFormBean() {
         frequencyId = "1";
         statusId = "1";
@@ -50,31 +51,31 @@ public class PenaltyFormBean {
         id = dto.getPenaltyId();
         oldName = dto.getPenaltyName();
         name = oldName;
-        
+
         categoryTypeId = Short.toString(dto.getCategoryType().getId());
-        
+
         statusId = Short.toString(dto.getStatus().getId());
-        
+
         periodTypeId = Short.toString(dto.getPeriodType().getId());
-        
+
         duration = dto.getPeriodDuration();
         min = dto.getMinimumLimit();
         max = dto.getMaximumLimit();
-        
+
         amount = dto.getAmount() == null ? "" : dto.getAmount();
         currencyId = dto.getCurrencyId() == null ? null : Integer.toString(dto.getCurrencyId());
-        
-        if(dto.getRate() != null) {
+
+        if (dto.getRate() != null) {
             rate = Double.toString(dto.getRate());
-        
+
             formulaId = Short.toString(dto.getPenaltyFormula().getId());
         }
-        
+
         frequencyId = Short.toString(dto.getPenaltyFrequency().getId());
-        
+
         glCodeId = Short.toString(dto.getGlCodeDto().getGlcodeId());
-        
-        showAmount = !amount.equalsIgnoreCase("");
+
+        showAmount = amount.equalsIgnoreCase("") ^ true;
     }
 
     public String getId() {
@@ -204,5 +205,5 @@ public class PenaltyFormBean {
     public void setShowAmount(boolean showAmount) {
         this.showAmount = showAmount;
     }
-    
+
 }

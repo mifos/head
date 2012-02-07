@@ -47,7 +47,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class EditPenaltyController {
     private static final String REDIRECT_TO_VIEW_PENALTY = "redirect:/viewPenalty.ftl?penaltyId=";
     private static final String CANCEL_PARAM = "CANCEL";
-    private static boolean showAmount;
     @Autowired
     private PenaltyServiceFacade penaltyServiceFacade;
     

@@ -27,21 +27,18 @@ import javax.servlet.http.HttpSession;
 
 import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
 import org.mifos.dto.screen.PenaltyParametersDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
 public class PenaltyFormValidator implements Validator {
-    private final ViewOrganizationSettingsServiceFacade serviceFacade;
     private final Properties properties;
     private final static boolean MANDATORY = true;
     private final static boolean OPTIONAL = false;
     
     public PenaltyFormValidator(ViewOrganizationSettingsServiceFacade service, HttpSession session) {
-        this.serviceFacade = service;
-        properties = this.serviceFacade.getOrganizationSettings(session);
+        properties = service.getOrganizationSettings(session);
     }
     
     @Override
