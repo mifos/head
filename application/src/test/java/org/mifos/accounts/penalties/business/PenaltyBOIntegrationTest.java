@@ -192,7 +192,7 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testCreateAmountFee() throws Exception {
+    public void testCreateAmountPenalty() throws Exception {
         String name = "Amount Penalty Test";
         PenaltyCategoryEntity categoryEntity = new PenaltyCategoryEntity(PenaltyCategory.LOAN);
         PenaltyPeriodEntity periodEntity = new PenaltyPeriodEntity(PenaltyPeriod.DAYS);
@@ -214,8 +214,8 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(name, penalty.getPenaltyName());
         Assert.assertEquals(categoryEntity.getId(), penalty.getCategoryType().getId());
         Assert.assertEquals(duration, penalty.getPeriodDuration().intValue());
-        Assert.assertEquals(min, penalty.getMinimumLimit().intValue());
-        Assert.assertEquals(max, penalty.getMaximumLimit().intValue());
+        Assert.assertEquals(min, penalty.getMinimumLimit().doubleValue());
+        Assert.assertEquals(max, penalty.getMaximumLimit().doubleValue());
         Assert.assertEquals(frequencyEntity.getId(), penalty.getPenaltyFrequency().getId());
         Assert.assertEquals(glCode.getGlcodeId(), penalty.getGlCode().getGlcodeId());
         Assert.assertEquals(amount.getAmount(), ((AmountPenaltyBO) penalty).getAmount().getAmount());
@@ -224,7 +224,7 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testCreateOneTimeRateFee() throws Exception {
+    public void testCreateRatePenalty() throws Exception {
         String name = "Rate Penalty Test";
         PenaltyCategoryEntity categoryEntity = new PenaltyCategoryEntity(PenaltyCategory.LOAN);
         PenaltyPeriodEntity periodEntity = new PenaltyPeriodEntity(PenaltyPeriod.DAYS);
@@ -247,8 +247,8 @@ public class PenaltyBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(name, penalty.getPenaltyName());
         Assert.assertEquals(categoryEntity.getId(), penalty.getCategoryType().getId());
         Assert.assertEquals(duration, penalty.getPeriodDuration().intValue());
-        Assert.assertEquals(min, penalty.getMinimumLimit().intValue());
-        Assert.assertEquals(max, penalty.getMaximumLimit().intValue());
+        Assert.assertEquals(min, penalty.getMinimumLimit().doubleValue());
+        Assert.assertEquals(max, penalty.getMaximumLimit().doubleValue());
         Assert.assertEquals(frequencyEntity.getId(), penalty.getPenaltyFrequency().getId());
         Assert.assertEquals(glCode.getGlcodeId(), penalty.getGlCode().getGlcodeId());
         Assert.assertEquals(formulaEntity.getId(), ((RatePenaltyBO) penalty).getFormula().getId());
