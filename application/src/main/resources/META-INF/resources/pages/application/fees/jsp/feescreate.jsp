@@ -24,9 +24,15 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="pages/js/separator.js"></script>
+
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-		<span id="page.id" title="feescreate"></span> <script
+		<span id="page.id" title="feescreate"></span> 
+		<mifos:NumberFormattingInfo />
+		<script
 			src="pages/application/fees/js/Fees.js"></script> <html-el:form
 			action="/feeaction.do?method=preview" focus="feeName">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -244,7 +250,7 @@ explanation of the license and how it is applied.
 									<td align="left">
 									<table>
 										<tr>
-											<td><html-el:text styleId="feescreate.input.amount"
+											<td><html-el:text styleId="feescreate.input.amount" styleClass="separatedNumber"
 												property="amount" /></td>
 											<c:if test='${sessionScope.isMultiCurrencyEnabled}'>
 												<td class="fontnormal">
@@ -339,7 +345,7 @@ explanation of the license and how it is applied.
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center">
-										<html-el:submit styleId="feescreate.button.preview" property="preview" styleClass="buttn">
+										<html-el:submit styleId="feescreate.button.preview" property="preview" styleClass="buttn submit">
 										<mifos:mifoslabel name="Fees.preview" />
 									</html-el:submit> &nbsp; <html-el:button property="cancel"
 										styleClass="cancelbuttn"

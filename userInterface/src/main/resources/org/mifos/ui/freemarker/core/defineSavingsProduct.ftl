@@ -57,7 +57,7 @@
 
   <!--  Main Content Begins-->
 <span id="page.id" title="CreateSavingsProduct"></span>
-
+[@i18n.formattingInfo /] 
 <div class="content definePageMargin">
     <div class="borders margin20lefttop width90prc">
         <div class="borderbtm width100prc height25px">
@@ -149,7 +149,7 @@
             <div class="span-20 ">
                 <span class="span-8 rightAlign" id="recamnt">[@spring.message "manageProducts.defineSavingsProducts.recommendedAmountforDeposit" /]:</span>
                 <span class="  span-8 rightAlign" id="mandamnt" style="display: none"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.mandatoryAmountforDeposit" /]:</span>
-                <span class="span-4">[@spring.formInput "savingsProduct.amountForDeposit" /]</span>
+                <span class="span-4">[@spring.formInput "savingsProduct.amountForDeposit" 'class="separatedNumber"' /]</span>
               </div>
             <div class="span-20 "><span class="  span-8 rightAlign" id="appliesto"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.amountAppliesto" /]:</span>
                 <span class="span-4">
@@ -157,7 +157,7 @@
                 </span>
             </div>
             <div class="span-20 "><span class="  span-8 rightAlign">[@spring.message "manageProducts.defineSavingsProducts.maxamountperwithdrawal" /]:</span>
-                <span class="span-4">[@spring.formInput "savingsProduct.maxWithdrawalAmount" /]</span>
+                <span class="span-4">[@spring.formInput "savingsProduct.maxWithdrawalAmount" 'class="separatedNumber"'/]</span>
               </div>
           </div>
           <div class="clear">&nbsp;</div>
@@ -191,7 +191,7 @@
 	            </div>
 	            <div class="span-20 ">
 	                <span class="  span-8 rightAlign">[@spring.message "manageProducts.defineSavingsProducts.minimumbalancerequiredforInterestcalculation" /]:</span>
-	                <span class="span-4">[@spring.formInput "savingsProduct.minBalanceRequiredForInterestCalculation" /]</span>
+	                <span class="span-4">[@spring.formInput "savingsProduct.minBalanceRequiredForInterestCalculation" 'class="separatedNumber"'/]</span>
 	          	</div>
           	</div>
           </div>
@@ -211,7 +211,7 @@
           </div>
           <div class="clear">&nbsp;</div>
           <div class="buttonsSubmitCancel" style="margin-right:20px;">
-                <input class="buttn" type="submit" id="CreateSavingsProduct.button.preview" class="buttn" name="preview" value="[@spring.message "preview"/]" />
+                <input class="buttn submit" type="submit" id="CreateSavingsProduct.button.preview" class="buttn" name="preview" value="[@spring.message "preview"/]" />
                 <input class="buttn2" type="submit" name="CANCEL" value="[@spring.message "cancel"/]"/>
           </div>
           <div class="clear">&nbsp;</div>

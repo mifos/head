@@ -25,7 +25,7 @@
 ]
                          
 <span id="page.id" title="ApplyLoanRepayment"></span>
-
+[@i18n.formattingInfo /]
 [@form.errors "loanRepaymentFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
     <fieldset>
@@ -35,7 +35,7 @@
     </div>
     <div class="row">
         <label for="paymentAmount">Amount:</label>
-        [@form.input path="loanRepaymentFormBean.paymentAmount" id="paymentAmount" attributes="" /]
+        [@form.input path="loanRepaymentFormBean.paymentAmount" id="paymentAmount" attributes="class=separatedNumber" /]
     </div>
     </fieldset>
     <div class="row">

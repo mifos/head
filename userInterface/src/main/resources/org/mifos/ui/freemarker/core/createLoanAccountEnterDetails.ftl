@@ -200,7 +200,7 @@
     
     <div class="row">
         [@form.label "interestRate" true ][@spring.message "createLoanAccount.interestRate"/][/@form.label]
-        [@form.input path="loanAccountFormBean.interestRate" id="loancreationdetails.input.interestRate" /]
+        [@form.input path="loanAccountFormBean.interestRate" id="loancreationdetails.input.interestRate" attributes="class=separatedNumber" /]
         <span>([@spring.message "createLoanAccount.allowedInterestRate"/] ${loanProductReferenceData.minInterestRate?string.number} - ${loanProductReferenceData.maxInterestRate?string.number} %)</span>
     </div>
     <div class="row">
@@ -325,7 +325,7 @@
 		        [@form.label "defaultFeeAmountOrRate[${index}]" false ]${defaultFee.name}:[/@form.label]
 		        
 		        [#if defaultFee.feeFrequency.oneTime]
-		        	[@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmountOrRate[${index}]" /]
+		        	[@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmountOrRate[${index}]" attributes="class=separatedNumber" /]
 		        [#else]
 					[@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmountOrRate[${index}]" attributes="disabled='disabled'"/]							        	
 		        [/#if]

@@ -27,12 +27,15 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="pages/js/separator.js"></script>
 
 <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources"/>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+	<mifos:NumberFormattingInfo />
 	<span id="page.id" title="Edit_SavingsProduct"></span>
 		<script>
 			function showMeetingFrequency(){
@@ -266,7 +269,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="product.mandamntdep" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
-									<html-el:text property="recommendedAmount"  />
+									<html-el:text property="recommendedAmount" styleClass="separatedNumber" />
 								</td>
 							</tr>
 							<script type="text/javascript">
@@ -292,7 +295,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="product.maxamtwid" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
-									<html-el:text property="maxAmntWithdrawl" />
+									<html-el:text property="maxAmntWithdrawl" styleClass="separatedNumber"/>
 								</td>
 							</tr>
 						</table>
@@ -393,7 +396,7 @@ explanation of the license and how it is applied.
 									</fmt:message>:
 								</td>
 								<td valign="top">
-									<html-el:text property="minAmntForInt" />
+									<html-el:text property="minAmntForInt" styleClass="separatedNumber" />
 								</td>
 							</tr>
 						</table>
@@ -446,7 +449,7 @@ explanation of the license and how it is applied.
 						<table width="93%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit styleClass="buttn">
+									<html-el:submit styleClass="buttn submit">
 										<mifos:mifoslabel name="product.preview" bundle="ProductDefUIResources" />
 									</html-el:submit>
 									&nbsp;

@@ -27,9 +27,12 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="pages/js/separator.js"></script>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="applypayment_savingsaccount"></span>
+	<mifos:NumberFormattingInfo /> 
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<script language="javascript">
 		function funCancel(form){
@@ -139,7 +142,7 @@ explanation of the license and how it is applied.
                 	<mifos:mifoslabel name="Savings.enterAmount" mandatory="Yes" isColonRequired="Yes"/>
                 </td>
                 <td width="76%">
-	                <html-el:text  styleId="applypayment_savingsaccount.input.amount" property="amount"/>
+	                <html-el:text  styleId="applypayment_savingsaccount.input.amount" property="amount" styleClass="separatedNumber"/>
                 </td>
               </tr>
               
@@ -182,7 +185,7 @@ explanation of the license and how it is applied.
               </tr>
               <tr>
                 <td align="center">
-					<html-el:submit styleId="applypayment_savingsaccount.button.submit" styleClass="buttn">
+					<html-el:submit styleId="applypayment_savingsaccount.button.submit" styleClass="buttn submit">
 						<mifos:mifoslabel name="Savings.reviewTransaction" />
 					</html-el:submit>
                   &nbsp;

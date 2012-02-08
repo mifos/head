@@ -29,11 +29,13 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-
+<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="pages/js/separator.js"></script>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="ApplyCharges"></span>
+	<mifos:NumberFormattingInfo />
 		<script>
 				function fun_cancel(form)
 				{
@@ -176,7 +178,7 @@ explanation of the license and how it is applied.
 							<td width="10%" align="left" class="fontnormal"><span id="applyCharges.label.amount"><mifos:mifoslabel
 								name="accounts.amount_(Rs)"></mifos:mifoslabel></span></td>
 							<td width="10%" class="fontnormal" align="left">
-							<html-el:text styleId="applyCharges.input.amount" property="chargeAmount" />
+							<html-el:text styleId="applyCharges.input.amount" property="chargeAmount" styleClass="separatedNumber"/>
 							</td>
 							<td  width="40%" class="fontnormal" align="left">
 							<SPAN id="formula"></SPAN>
@@ -206,7 +208,7 @@ explanation of the license and how it is applied.
 						<tr>
 
 
-							<td align="center"><html-el:submit styleId="applyCharges.button.submit" styleClass="buttn">
+							<td align="center"><html-el:submit styleId="applyCharges.button.submit" styleClass="buttn submit">
 								<mifos:mifoslabel name="accounts.submit"></mifos:mifoslabel>
 							</html-el:submit> &nbsp;
 							 <html-el:button styleId="applyCharges.button.cancel" property="btn"  styleClass="cancelbuttn"

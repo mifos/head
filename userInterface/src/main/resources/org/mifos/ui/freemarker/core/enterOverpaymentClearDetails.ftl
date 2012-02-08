@@ -25,7 +25,7 @@
 ]
 
 <span id="page.id" title="ApplyLoanOverpaymentClear"></span>
-
+[@i18n.formattingInfo /]
 [@form.errors "clearOverpaymentFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
     <fieldset>
@@ -35,7 +35,7 @@
     </div>
     <div class="row">
         <label for="overpaymentAmount">[@spring.message "createLoanAccount.amount"/]</label>
-        [@form.input path="clearOverpaymentFormBean.actualOverpaymentAmount" id="overpaymentAmount" attributes="" /]
+        [@form.input path="clearOverpaymentFormBean.actualOverpaymentAmount" id="overpaymentAmount" attributes="class=separatedNumber" /]
     </div>
     </fieldset>
     <div class="row">

@@ -27,10 +27,13 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-
+<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="pages/js/separator.js"></script>
+                
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="editsavingsaccount"></span>
+	<mifos:NumberFormattingInfo />
 		<SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>
         <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 	<html-el:form method="post" action="/savingsAction.do?method=editPreview" >
@@ -96,7 +99,7 @@ explanation of the license and how it is applied.
                  </td>
                 <td width="70%" valign="top">
                
-                <html-el:text name="savingsActionForm" property="recommendedAmount"	/>
+                <html-el:text name="savingsActionForm" property="recommendedAmount" styleClass="separatedNumber"	/>
 	                  <c:choose>
 	                    <c:when test="${sessionScope.BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
 	                    (<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}" 
@@ -166,7 +169,7 @@ explanation of the license and how it is applied.
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-                <html-el:submit styleClass="buttn" >
+                <html-el:submit styleClass="buttn submit" >
 						<mifos:mifoslabel name="loan.preview" />
 				  </html-el:submit>
 &nbsp;

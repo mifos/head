@@ -27,9 +27,13 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="pages/js/separator.js"></script>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="applyadjustment"></span>
+	<mifos:NumberFormattingInfo /> 
 	<html-el:form action="/savingsApplyAdjustmentAction.do?method=preview" >
 	 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
@@ -86,10 +90,10 @@ explanation of the license and how it is applied.
                 <c:out value="${accountActionValue.name}"/>
                 <mifos:mifoslabel name="Savings.amount" isColonRequired="yes" />
                    <c:if test="${param.method == 'load'}">
-						<html-el:text styleId="applyadjustment.input.amount" name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount" value=""/>
+						<html-el:text styleId="applyadjustment.input.amount" name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount" styleClass="separatedNumber" value=""/>
 					</c:if>
 					<c:if test="${param.method != 'load'}">
-						<html-el:text styleId="applyadjustment.input.amount" name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount"/>
+						<html-el:text styleId="applyadjustment.input.amount" name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount" styleClass="separatedNumber" />
 					</c:if>
 				   	<c:if test="${isLastPaymentValid == 1}">
                     &nbsp; <c:if test="${(!empty clientName) or (BusinessKey.customer.customerLevel.id!=1)}"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
@@ -129,7 +133,7 @@ explanation of the license and how it is applied.
             <table width="95%" border="0" cellspacing="0" cellpadding="1">
               <tr>
                 <td align="center">
-                <html-el:submit styleId="applyadjustment.button.submit" styleClass="buttn" >
+                <html-el:submit styleId="applyadjustment.button.submit" styleClass="buttn submit" >
 						<mifos:mifoslabel name="Savings.reviewAdjustment" />
 	  		    </html-el:submit>
 &nbsp;

@@ -26,13 +26,15 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="pages/js/separator.js"></script>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="ApplyPayment"></span>
+	<mifos:NumberFormattingInfo />
 <SCRIPT>
 	function ViewDetails(){
 		customerAccountActionForm.action="customerAccountAction.do?method=load";
@@ -111,12 +113,12 @@ explanation of the license and how it is applied.
 							<td width="76%">
 							<c:choose>
 								<c:when test="${AccountType=='LOAN_ACCOUNT'}">
-								<html-el:text property="amount"
+								<html-el:text property="amount" styleClass="separatedNumber"
 								styleId="applypayment.input.amount"
 								name="applyPaymentActionForm" />
 								</c:when>
 								<c:otherwise>
-								<html-el:text property="amount"
+								<html-el:text property="amount" styleClass="separatedNumber"
 								styleId="applypayment.input.amount"
 								name="applyPaymentActionForm" />
 								</c:otherwise>
@@ -165,7 +167,7 @@ explanation of the license and how it is applied.
 									</html-el:submit>
 								</c:when>
 								<c:otherwise>
-									<html-el:submit styleId="applypayment.button.reviewTransaction" styleClass="buttn" property="Preview">
+									<html-el:submit styleId="applypayment.button.reviewTransaction" styleClass="buttn submit"  property="Preview">
 										<mifos:mifoslabel name="accounts.reviewtransaction">
 										</mifos:mifoslabel>
 									</html-el:submit>
