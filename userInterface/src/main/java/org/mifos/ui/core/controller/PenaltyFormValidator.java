@@ -23,9 +23,6 @@ package org.mifos.ui.core.controller;
 import java.util.List;
 import java.util.Properties;
 
-import javax.servlet.http.HttpSession;
-
-import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
 import org.mifos.dto.screen.PenaltyParametersDto;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
