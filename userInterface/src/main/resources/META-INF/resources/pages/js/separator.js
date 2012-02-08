@@ -120,6 +120,8 @@ $(document).ready(function() {
     	$(".separatedNumber").each(function(index){
     		var amount;
     		var input = $(this).val();
+    		var digitsAfterDecimal = (input.indexOf(decimalSeparator) == -1) ? 0 : input.length-1 - input.indexOf(decimalSeparator); 
+    		
     		if (validateNumber(input, decimalSeparator, groupingSeparator, groupingSize) == false) {
     			amount = NaN;
     		} 
@@ -127,7 +129,8 @@ $(document).ready(function() {
     			amount = parseFloatOpts(input, decimalSeparator, groupingSeparator);
     		}
     		if (!isNaN(amount)) {
-    			$(this).val(amount);
+    			var output = (digitsAfterDecimal > 0) ? amount.toFixed(digitsAfterDecimal) : amount;
+    			$(this).val(output);
     		}
     	});
     });
