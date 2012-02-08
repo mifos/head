@@ -44,6 +44,7 @@ import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.productdefinition.business.CashFlowDetail;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
@@ -53,6 +54,7 @@ import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
+import org.mifos.accounts.productdefinition.business.PrdOfferingPenaltiesEntity;
 import org.mifos.accounts.productdefinition.business.NoOfInstallFromLastLoanAmountBO;
 import org.mifos.accounts.productdefinition.business.NoOfInstallFromLoanCycleBO;
 import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
@@ -73,6 +75,7 @@ import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.dto.domain.PenaltyDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -120,7 +123,7 @@ public class LoanPrdAction extends BaseAction {
         request.getSession().setAttribute(ProductDefinitionConstants.LOANPRODUCTACTIONFORM, null);
         loadMasterData(request);
         setRepaymentIndepOfMeetingEnabledFlag(request);
-        loadSelectedFeesAndFunds(new ArrayList<FeeDto>(), new ArrayList<FundBO>(), request);
+        loadSelectedFeesPenaltiesAndFunds(new ArrayList<FeeDto>(), new ArrayList<FundBO>(), new ArrayList<PenaltyDto>(), request);
         logger.debug("Load method of loan Product Action called");
         request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
         request.getSession().setAttribute("currencies", AccountingRules.getCurrencies());
@@ -179,28 +182,44 @@ public class LoanPrdAction extends BaseAction {
         UserContext userContext = getUserContext(request);
         Locale locale = getLocale(userContext);
 
-        LoanOfferingBO loanOffering = new LoanOfferingBO(userContext, loanPrdActionForm.getPrdOfferingName(),
-                loanPrdActionForm.getPrdOfferingShortName(), getProductCategory(((List<ProductCategoryBO>) SessionUtils
-                        .getAttribute(ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST, request)), loanPrdActionForm
-                        .getPrdCategoryValue()), (PrdApplicableMasterEntity) findMasterEntity(request,
-                        ProductDefinitionConstants.LOANAPPLFORLIST, loanPrdActionForm.getPrdApplicableMasterEnum()
-                                .getValue()), loanPrdActionForm.getStartDateValue(locale), loanPrdActionForm
-                           .getEndDateValue(locale), loanPrdActionForm.getDescription(),
+        LoanOfferingBO loanOffering = new LoanOfferingBO(
+                userContext,
+                loanPrdActionForm.getPrdOfferingName(),
+                loanPrdActionForm.getPrdOfferingShortName(),
+                getProductCategory(((List<ProductCategoryBO>) SessionUtils.getAttribute(
+                        ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST, request)), loanPrdActionForm
+                        .getPrdCategoryValue()),
+                (PrdApplicableMasterEntity) findMasterEntity(request, ProductDefinitionConstants.LOANAPPLFORLIST,
+                        loanPrdActionForm.getPrdApplicableMasterEnum().getValue()),
+                loanPrdActionForm.getStartDateValue(locale),
+                loanPrdActionForm.getEndDateValue(locale),
+                loanPrdActionForm.getDescription(),
                 (GracePeriodTypeEntity) findMasterEntity(request, ProductDefinitionConstants.LOANGRACEPERIODTYPELIST,
-                        loanPrdActionForm.getGracePeriodTypeValue()), loanPrdActionForm.getGracePeriodDurationValue(),
+                        loanPrdActionForm.getGracePeriodTypeValue()),
+                loanPrdActionForm.getGracePeriodDurationValue(),
                 (InterestTypesEntity) findMasterEntity(request, ProductDefinitionConstants.INTERESTTYPESLIST,
-                        loanPrdActionForm.getInterestTypesValue()), loanPrdActionForm.getMaxInterestRateValue(),
-                loanPrdActionForm.getMinInterestRateValue(), loanPrdActionForm.getDefInterestRateValue(),
-                loanPrdActionForm.isLoanCounterValue(), loanPrdActionForm.isIntDedAtDisbValue(), loanPrdActionForm
-                        .isPrinDueLastInstValue(), getFundsFromList((List<FundBO>) SessionUtils.getAttribute(
-                        ProductDefinitionConstants.SRCFUNDSLIST, request), loanPrdActionForm.getLoanOfferingFunds()),
+                        loanPrdActionForm.getInterestTypesValue()),
+                loanPrdActionForm.getMaxInterestRateValue(),
+                loanPrdActionForm.getMinInterestRateValue(),
+                loanPrdActionForm.getDefInterestRateValue(),
+                loanPrdActionForm.isLoanCounterValue(),
+                loanPrdActionForm.isIntDedAtDisbValue(),
+                loanPrdActionForm.isPrinDueLastInstValue(),
+                getFundsFromList(
+                        (List<FundBO>) SessionUtils.getAttribute(ProductDefinitionConstants.SRCFUNDSLIST, request),
+                        loanPrdActionForm.getLoanOfferingFunds()),
                 getFeeList((List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE, request),
-                        loanPrdActionForm.getPrdOfferinFees()), new MeetingBO(RecurrenceType.fromInt(loanPrdActionForm
-                        .getFreqOfInstallmentsValue()), loanPrdActionForm.getRecurAfterValue(), loanPrdActionForm
-                        .getStartDateValue(locale), MeetingType.LOAN_INSTALLMENT), findGLCodeEntity(request,
+                        loanPrdActionForm.getPrdOfferinFees()),
+                getPenaltyList(
+                        (List<PenaltyBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDPENALTY, request),
+                        loanPrdActionForm.getPrdOfferinPenalties()), new MeetingBO(
+                        RecurrenceType.fromInt(loanPrdActionForm.getFreqOfInstallmentsValue()),
+                        loanPrdActionForm.getRecurAfterValue(), loanPrdActionForm.getStartDateValue(locale),
+                        MeetingType.LOAN_INSTALLMENT), findGLCodeEntity(request,
                         ProductDefinitionConstants.LOANPRICIPALGLCODELIST, loanPrdActionForm.getPrincipalGLCode()),
-                findGLCodeEntity(request, ProductDefinitionConstants.LOANINTERESTGLCODELIST, loanPrdActionForm.getInterestGLCode()),
-                loanPrdActionForm, loanPrdActionForm.shouldWaiverInterest());
+                findGLCodeEntity(request, ProductDefinitionConstants.LOANINTERESTGLCODELIST,
+                        loanPrdActionForm.getInterestGLCode()), loanPrdActionForm,
+                loanPrdActionForm.shouldWaiverInterest());
 
         loanOffering.setQuestionGroups(getQuestionGroups(request));
         loanOffering.setCurrency(getCurrency(loanPrdActionForm.getCurrencyId()));
@@ -282,7 +301,7 @@ public class LoanPrdAction extends BaseAction {
         loanPrdActionForm.clear();
         LoanOfferingBO loanOffering = getLoanOffering(prdOfferingId);
         loadMasterData(request);
-        loadSelectedFeesAndFunds(getFeesSelected(request, loanOffering), getFundsSelected(loanOffering), request);
+        loadSelectedFeesPenaltiesAndFunds(getFeesSelected(request, loanOffering), getFundsSelected(loanOffering), getPenaltiesSelected(loanOffering), request);
         loadStatusList(request);
         setDataIntoActionForm(loanOffering, loanPrdActionForm, request);
         setSelectedQuestionGroupsOnSession(request, loanOffering, getQuestionnaireServiceFacade(request));
@@ -320,6 +339,18 @@ public class LoanPrdAction extends BaseAction {
         }
         return fundsSelected;
     }
+    
+    private List<PenaltyDto> getPenaltiesSelected(LoanOfferingBO loanOffering) {
+        List<PenaltyDto> penaltySelected = new ArrayList<PenaltyDto>();
+        
+        for (PrdOfferingPenaltiesEntity prdOfferingPenalties : loanOffering.getLoanOfferingPenalties()) {
+            PenaltyBO penalty = prdOfferingPenalties.getPenalty();
+            penalty = penaltyDao.findPenaltyById(penalty.getPenaltyId());
+            penaltySelected.add(penalty.toDto());
+        }
+        
+        return penaltySelected;
+    }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward editPreview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
@@ -356,28 +387,44 @@ public class LoanPrdAction extends BaseAction {
         setInitialObjectForAuditLogging(loanOffering);
         mapVariableInstallmentDetails(loanOffering, loanPrdActionForm);
         loanOffering.setFixedRepaymentSchedule(loanPrdActionForm.isFixedRepaymentSchedule());
-        mapCashFlowDetail(loanPrdActionForm,loanOffering);
-        loanOffering.update(userContext.getId(), loanPrdActionForm.getPrdOfferingName(), loanPrdActionForm
-                .getPrdOfferingShortName(),
-                getProductCategory(((List<ProductCategoryBO>) SessionUtils.getAttribute(
-                        ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST, request)), loanPrdActionForm
-                        .getPrdCategoryValue()), (PrdApplicableMasterEntity) findMasterEntity(request,
-                        ProductDefinitionConstants.LOANAPPLFORLIST, loanPrdActionForm.getPrdApplicableMasterEnum()
-                                .getValue()), loanPrdActionForm.getStartDateValue(locale), loanPrdActionForm
-                        .getEndDateValue(locale), loanPrdActionForm.getDescription(), PrdStatus
-                        .fromInt(loanPrdActionForm.getPrdStatusValue()), (GracePeriodTypeEntity) findMasterEntity(
-                        request, ProductDefinitionConstants.LOANGRACEPERIODTYPELIST, loanPrdActionForm
-                                .getGracePeriodTypeValue()), (InterestTypesEntity) findMasterEntity(request,
-                        ProductDefinitionConstants.INTERESTTYPESLIST, loanPrdActionForm.getInterestTypesValue()),
-                loanPrdActionForm.getGracePeriodDurationValue(), loanPrdActionForm.getMaxInterestRateValue(),
-                loanPrdActionForm.getMinInterestRateValue(), loanPrdActionForm.getDefInterestRateValue(),
-                loanPrdActionForm.isLoanCounterValue(), loanPrdActionForm.isIntDedAtDisbValue(), loanPrdActionForm
-                        .isPrinDueLastInstValue(), getFundsFromList((List<FundBO>) SessionUtils.getAttribute(
-                        ProductDefinitionConstants.SRCFUNDSLIST, request), loanPrdActionForm.getLoanOfferingFunds()),
-                getFeeList((List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE, request),
-                        loanPrdActionForm.getPrdOfferinFees()), loanPrdActionForm.getRecurAfterValue(), RecurrenceType
-                        .fromInt(loanPrdActionForm.getFreqOfInstallmentsValue()), loanPrdActionForm, loanPrdActionForm.shouldWaiverInterest(),
-                getQuestionGroups(request));
+        mapCashFlowDetail(loanPrdActionForm, loanOffering);
+        loanOffering
+                .update(userContext.getId(),
+                        loanPrdActionForm.getPrdOfferingName(),
+                        loanPrdActionForm.getPrdOfferingShortName(),
+                        getProductCategory(((List<ProductCategoryBO>) SessionUtils.getAttribute(
+                                ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST, request)), loanPrdActionForm
+                                .getPrdCategoryValue()),
+                        (PrdApplicableMasterEntity) findMasterEntity(request,
+                                ProductDefinitionConstants.LOANAPPLFORLIST, loanPrdActionForm
+                                        .getPrdApplicableMasterEnum().getValue()),
+                        loanPrdActionForm.getStartDateValue(locale),
+                        loanPrdActionForm.getEndDateValue(locale),
+                        loanPrdActionForm.getDescription(),
+                        PrdStatus.fromInt(loanPrdActionForm.getPrdStatusValue()),
+                        (GracePeriodTypeEntity) findMasterEntity(request,
+                                ProductDefinitionConstants.LOANGRACEPERIODTYPELIST,
+                                loanPrdActionForm.getGracePeriodTypeValue()),
+                        (InterestTypesEntity) findMasterEntity(request, ProductDefinitionConstants.INTERESTTYPESLIST,
+                                loanPrdActionForm.getInterestTypesValue()),
+                        loanPrdActionForm.getGracePeriodDurationValue(),
+                        loanPrdActionForm.getMaxInterestRateValue(),
+                        loanPrdActionForm.getMinInterestRateValue(),
+                        loanPrdActionForm.getDefInterestRateValue(),
+                        loanPrdActionForm.isLoanCounterValue(),
+                        loanPrdActionForm.isIntDedAtDisbValue(),
+                        loanPrdActionForm.isPrinDueLastInstValue(),
+                        getFundsFromList((List<FundBO>) SessionUtils.getAttribute(
+                                ProductDefinitionConstants.SRCFUNDSLIST, request), loanPrdActionForm
+                                .getLoanOfferingFunds()),
+                        getFeeList(
+                                (List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE, request),
+                                loanPrdActionForm.getPrdOfferinFees()),
+                        getPenaltyList((List<PenaltyBO>) SessionUtils.getAttribute(
+                                ProductDefinitionConstants.LOANPRDPENALTY, request), loanPrdActionForm
+                                .getPrdOfferinPenalties()), loanPrdActionForm.getRecurAfterValue(), RecurrenceType
+                                .fromInt(loanPrdActionForm.getFreqOfInstallmentsValue()), loanPrdActionForm,
+                        loanPrdActionForm.shouldWaiverInterest(), getQuestionGroups(request));
 
         logger.debug("update method of Loan Product Action called" + loanPrdActionForm.getPrdOfferingId());
         return mapping.findForward(ActionForwards.update_success.toString());
@@ -435,6 +482,7 @@ public class LoanPrdAction extends BaseAction {
         LoanPrdBusinessService service = new LoanPrdBusinessService();
 
         List<FeeBO> fees = feeDao.getAllAppllicableFeeForLoanCreation();
+        List<PenaltyBO> penalties = penaltyDao.findAllLoanPenalties();
         Short localeId = getUserContext(request).getLocaleId();
 
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST, service
@@ -451,11 +499,13 @@ public class LoanPrdAction extends BaseAction {
                 request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANFEESLIST, getFeeViewList(
                 getUserContext(request), fees), request);
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPENALTIESLIST, getPenaltyViewList(penalties), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRICIPALGLCODELIST, getGLCodes(
                 FinancialActionConstants.PRINCIPALPOSTING, FinancialConstants.CREDIT), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANINTERESTGLCODELIST, getGLCodes(
                 FinancialActionConstants.INTERESTPOSTING, FinancialConstants.CREDIT), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFEE, fees, request);
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDPENALTY, penalties, request);
         setQuestionGroupsOnSession(request, getQuestionnaireServiceFacade(request));
         logger.debug("Load master data method of Loan Product Action called");
     }
@@ -468,10 +518,11 @@ public class LoanPrdAction extends BaseAction {
         }
     }
 
-    private void loadSelectedFeesAndFunds(List<FeeDto> feesSelected, List<FundBO> fundsSelected,
+    private void loadSelectedFeesPenaltiesAndFunds(List<FeeDto> feesSelected, List<FundBO> fundsSelected, List<PenaltyDto> penaltiesSelected,
             HttpServletRequest request) throws Exception {
         logger.debug("start loadSelectedFeesAndFunds method of Loan Product Action ");
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, feesSelected, request);
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDPENALTYSELECTEDLIST, penaltiesSelected, request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST, fundsSelected, request);
         logger.debug("loadSelectedFeesAndFunds method of Loan Product Action called ");
     }
@@ -567,6 +618,18 @@ public class LoanPrdAction extends BaseAction {
         logger.debug("getFeeViewList method of Loan Product Action called");
         return feeDtos.size() > 0 ? feeDtos : null;
     }
+    
+    private List<PenaltyDto> getPenaltyViewList(List<PenaltyBO> penalties) {
+        logger.debug("start getPenaltyViewList method of Loan Product Action ");
+        List<PenaltyDto> penaltyDtos = new ArrayList<PenaltyDto>();
+        if (penalties != null && penalties.size() > 0) {
+            for (PenaltyBO penalty : penalties) {
+                penaltyDtos.add(penalty.toDto());
+            }
+        }
+        logger.debug("getPenaltyViewList method of Loan Product Action called");
+        return penaltyDtos.size() > 0 ? penaltyDtos : null;
+    }
 
     private List<FeeBO> getFeeList(List<FeeBO> fees, String[] feesSelected) {
         logger.debug("start getFeeList method of Loan Product Action ");
@@ -582,6 +645,21 @@ public class LoanPrdAction extends BaseAction {
         logger.debug("getFeeList method of Loan Product Action called");
         return feeList;
     }
+    
+    private List<PenaltyBO> getPenaltyList(List<PenaltyBO> penalties, String[] penaltiesSelected) {
+        logger.debug("start getPenaltyList method of Loan Product Action ");
+        List<PenaltyBO> penaltyList = new ArrayList<PenaltyBO>();
+        if (penaltiesSelected != null && penaltiesSelected.length > 0 && penalties != null && penalties.size() > 0) {
+            for (String penaltySelected : penaltiesSelected) {
+                PenaltyBO penalty = getPenaltyFromList(penalties, penaltySelected);
+                if (penalty != null) {
+                    penaltyList.add(penalty);
+                }
+            }
+        }
+        logger.debug("getPenaltyList method of Loan Product Action called");
+        return penaltyList;
+    }
 
     private FeeBO getFeeFromList(List<FeeBO> fees, String feeSelected) {
         logger.debug("start getFeeFromList method of Loan Product Action ");
@@ -590,6 +668,17 @@ public class LoanPrdAction extends BaseAction {
                 return fee;
             }
         }
+        return null;
+    }
+    
+    private PenaltyBO getPenaltyFromList(List<PenaltyBO> penalties, String penaltySelected) {
+        logger.debug("start getPenaltyFromList method of Loan Product Action ");
+        for (PenaltyBO penalty : penalties) {
+            if (penalty.getPenaltyId().equals(getShortValue(penaltySelected))) {
+                return penalty;
+            }
+        }
+        
         return null;
     }
 

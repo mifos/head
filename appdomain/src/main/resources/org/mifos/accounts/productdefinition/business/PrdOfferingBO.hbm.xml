@@ -121,6 +121,12 @@
                 <one-to-many
                     class="org.mifos.accounts.productdefinition.business.LoanOfferingFeesEntity" />
             </set>
+            <set name="loanOfferingPenalties" cascade="all,delete-orphan"
+                inverse="true" table="prd_offering_penalties" access="field">
+                <key column="prd_offering_id" />
+                <one-to-many
+                    class="org.mifos.accounts.productdefinition.business.PrdOfferingPenaltiesEntity" />
+            </set>
             <set name="loanAmountFromLastLoan"
                 cascade="all,delete-orphan" inverse="true"
                 table="loan_amount_from_last_loan" access="field"
@@ -206,7 +212,7 @@
                 column="interest_calculation_type_id"
                 class="org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity"
                 not-null="true" />
-
+                
             <many-to-one name="depositGLCode" column="deposit_glcode_id"
                 class="org.mifos.accounts.financial.business.GLCodeEntity"
                 insert="true" update="false" access="field" />
@@ -222,7 +228,6 @@
                 <one-to-many
                     class="org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity" />
             </set>
-
             <set name="historicalInterestDetails" cascade="all,delete-orphan" inverse="true" table="savings_offering_historical_interest_detail" lazy="true" access="field">
                 <key column="product_id" />
                 <one-to-many class="org.mifos.accounts.savings.interest.SavingsProductHistoricalInterestDetail" />

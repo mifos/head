@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class
+        name="org.mifos.accounts.productdefinition.business.PrdOfferingPenaltiesEntity"
+        table="prd_offering_penalties">
+        <id name="prdOfferingPenaltyId" column="prd_offering_penalty_id" access="field">
+            <generator class="native" />
+        </id>
+        
+        <many-to-one name="prdOffering" column="prd_offering_id" class="org.mifos.accounts.productdefinition.business.PrdOfferingBO"
+            cascade="none" insert="true" update="true" unique="true" access="field" />
+        <many-to-one name="penalty" column="penalty_id" class="org.mifos.accounts.penalties.business.PenaltyBO" cascade="none"
+            insert="true" update="true" unique="true" access="field" />
+    </class>
+
+</hibernate-mapping>

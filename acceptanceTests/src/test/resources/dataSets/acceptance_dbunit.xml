@@ -95,6 +95,7 @@
   <DATABASECHANGELOG ID="MIFOS_5359_1" AUTHOR="Michal Dudzinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-01-31 14:44:37.0" ORDEREXECUTED="220" EXECTYPE="EXECUTED" MD5SUM="3:8c408cc6b30629a54545806b2f771895" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5382_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-01 19:05:04.0" ORDEREXECUTED="234" EXECTYPE="EXECUTED" MD5SUM="3:8087265e7debf6021ee1f88472a900a8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5382_2" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-02 13:48:36.0" ORDEREXECUTED="235" EXECTYPE="EXECUTED" MD5SUM="3:864b0fd522895b0aa7142d936ddc4bc4" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5383_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-06 11:32:33.0" ORDEREXECUTED="236" EXECTYPE="EXECUTED" MD5SUM="3:e3f2fdea6e47675516523f634130672c" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
   <QRTZ_CALENDARS/>
@@ -4513,6 +4514,7 @@
   <prd_offering_meeting prd_offering_meeting_id="24" prd_offering_id="19" prd_meeting_id="74" prd_offering_meeting_type_id="3"/>
   <prd_offering_meeting prd_offering_meeting_id="25" prd_offering_id="19" prd_meeting_id="75" prd_offering_meeting_type_id="2"/>
   <prd_offering_mix/>
+  <prd_offering_penalties/>
   <prd_offering_question_group prd_offering_id="13" question_group_id="9"/>
   <prd_offering_question_group prd_offering_id="5" question_group_id="9"/>
   <prd_offering_question_group prd_offering_id="16" question_group_id="9"/>

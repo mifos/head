@@ -30,7 +30,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="..")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "EI_EXPOSE_REP", justification = "..")
 public class LoanProductFormBean {
 
     @Valid
@@ -56,16 +56,16 @@ public class LoanProductFormBean {
     private String selectedInterestRateCalculationType;
     private Map<String, String> interestRateCalculationTypeOptions;
 
-    @Min(value=0)
-    @Max(value=999)
+    @Min(value = 0)
+    @Max(value = 999)
     @NotNull
     private Double maxInterestRate;
-    @Min(value=0)
-    @Max(value=999)
+    @Min(value = 0)
+    @Max(value = 999)
     @NotNull
     private Double minInterestRate;
-    @Min(value=0)
-    @Max(value=99)
+    @Min(value = 0)
+    @Max(value = 99)
     @NotNull
     private Double defaultInterestRate;
 
@@ -73,8 +73,8 @@ public class LoanProductFormBean {
     private String installmentFrequencyPeriod;
     private Map<String, String> installmentFrequencyPeriodOptions;
 
-    @Min(value=0)
-    @Max(value=100)
+    @Min(value = 0)
+    @Max(value = 100)
     @NotNull
     private Integer installmentFrequencyRecurrenceEvery;
 
@@ -94,6 +94,11 @@ public class LoanProductFormBean {
     private Map<String, String> selectedFeeOptions;
     private String[] applicableFees;
     private String[] selectedFees;
+
+    private Map<String, String> applicablePenaltyOptions;
+    private Map<String, String> selectedPenaltyOptions;
+    private String[] applicablePenalties;
+    private String[] selectedPenalties;
 
     private Map<String, String> applicableFundOptions;
     private Map<String, String> selectedFundOptions;
@@ -248,7 +253,6 @@ public class LoanProductFormBean {
         return this.principalGeneralLedgerOptions;
     }
 
-
     public void setPrincipalGeneralLedgerOptions(Map<String, String> principalGeneralLedgerOptions) {
         this.principalGeneralLedgerOptions = principalGeneralLedgerOptions;
     }
@@ -397,6 +401,38 @@ public class LoanProductFormBean {
         this.generalDetails = generalDetails;
     }
 
+    public String[] getApplicablePenalties() {
+        return applicablePenalties;
+    }
+
+    public void setApplicablePenalties(String[] applicablePenalties) {
+        this.applicablePenalties = applicablePenalties;
+    }
+
+    public String[] getSelectedPenalties() {
+        return selectedPenalties;
+    }
+
+    public void setSelectedPenalties(String[] selectedPenalties) {
+        this.selectedPenalties = selectedPenalties;
+    }
+    
+    public Map<String, String> getApplicablePenaltyOptions() {
+        return applicablePenaltyOptions;
+    }
+
+    public void setApplicablePenaltyOptions(Map<String, String> applicablePenaltyOptions) {
+        this.applicablePenaltyOptions = applicablePenaltyOptions;
+    }
+
+    public Map<String, String> getSelectedPenaltyOptions() {
+        return selectedPenaltyOptions;
+    }
+
+    public void setSelectedPenaltyOptions(Map<String, String> selectedPenaltyOptions) {
+        this.selectedPenaltyOptions = selectedPenaltyOptions;
+    }
+
     public void resetMultiSelectListBoxes() {
         if (this.selectedFees != null) {
             for (String selectedFee : this.selectedFees) {
@@ -412,6 +448,15 @@ public class LoanProductFormBean {
                 if (this.applicableFundOptions.containsKey(selectedFund)) {
                     String value = this.applicableFundOptions.remove(selectedFund);
                     this.selectedFundOptions.put(selectedFund, value);
+                }
+            }
+        }
+        
+        if (this.selectedPenalties != null) {
+            for (String selectedPenalty : this.selectedPenalties) {
+                if (this.applicablePenaltyOptions.containsKey(selectedPenalty)) {
+                    String value = this.applicablePenaltyOptions.remove(selectedPenalty);
+                    this.selectedPenaltyOptions.put(selectedPenalty, value);
                 }
             }
         }
@@ -431,6 +476,14 @@ public class LoanProductFormBean {
             for (String selectedFund : this.selectedFunds) {
                 if (containsKey(this.applicableFunds, selectedFund)) {
                     this.selectedFunds = null;
+                }
+            }
+        }
+        
+        if (this.selectedPenalties != null) {
+            for (String selectedPenalty : this.selectedPenalties) {
+                if (containsKey(this.applicablePenalties, selectedPenalty)) {
+                    this.selectedPenalties = null;
                 }
             }
         }
@@ -479,7 +532,7 @@ public class LoanProductFormBean {
         ByLoanCycleBean fourCycle = new ByLoanCycleBean(5);
         ByLoanCycleBean greaterThanFourCycle = new ByLoanCycleBean(6);
 
-        return new ByLoanCycleBean[] {zeroCycle,oneCycle, twoCycle, threeCycle, fourCycle, greaterThanFourCycle};
+        return new ByLoanCycleBean[] { zeroCycle, oneCycle, twoCycle, threeCycle, fourCycle, greaterThanFourCycle };
     }
 
     public ByLastLoanAmountBean[] createByLastLoanAmountBeans() {
@@ -491,6 +544,6 @@ public class LoanProductFormBean {
         ByLastLoanAmountBean four = new ByLastLoanAmountBean();
         ByLastLoanAmountBean five = new ByLastLoanAmountBean();
 
-        return new ByLastLoanAmountBean[] {zero, one, two, three, four, five};
+        return new ByLastLoanAmountBean[] { zero, one, two, three, four, five };
     }
 }

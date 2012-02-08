@@ -919,20 +919,38 @@ explanation of the license and how it is applied.
 					</table>
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td width="100%" height="23" class="fontnormalbold"><mifos:mifoslabel
-								name="product.fees&pen" bundle="ProductDefUIResources" /></td>
-						</tr>
+                            <td width="100%" height="23" class="fontnormalbold"><mifos:mifoslabel
+                                name="product.fees" bundle="ProductDefUIResources" /> &amp; 
+                            <mifos:mifoslabel name="product.penalties" bundle="ProductDefUIResources" /></td>
 						<tr>
-							<td height="23" class="fontnormalbold"><span
-								class="fontnormal"><c:forEach
-								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanprdfeeselectedlist')}"
-								var="prdOfferingFees">
-								<c:out value="${prdOfferingFees.feeName}" />
-								<br>
-							</c:forEach></span> <br>
+                            <td height="23" class="fontnormalbold">
+                                <mifos:mifoslabel name="product.feestypes" bundle="ProductDefUIResources" isColonRequired="yes"/>
+                                <span class="fontnormal">
+                                    <br>
+							        <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanprdfeeselectedlist')}"
+								        var="prdOfferingFees">
+								        <c:out value="${prdOfferingFees.feeName}" />
+								        <br>
+							        </c:forEach>
+                                </span>
+                                <br>
 							</td>
 						</tr>
-					</table>
+                        <tr>
+                            <td height="23" class="fontnormalbold">
+                                <mifos:mifoslabel name="product.penaltiestypes" bundle="ProductDefUIResources" isColonRequired="yes"/>
+                                <span class="fontnormal">
+                                    <br>
+                                    <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanprdpenaltyselectedlist')}"
+                                        var="prdOfferingPenalties">
+                                        <c:out value="${prdOfferingPenalties.penaltyName}" />
+                                        <br>
+                                    </c:forEach>
+                                </span>
+                                <br>
+                            </td>
+                        </tr>
+                    </table>
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="100%" height="23" class="fontnormalbold"><mifos:mifoslabel

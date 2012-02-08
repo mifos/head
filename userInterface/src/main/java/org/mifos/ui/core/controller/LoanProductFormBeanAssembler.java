@@ -193,6 +193,13 @@ public class LoanProductFormBeanAssembler {
                 applicableFees.add(Integer.valueOf(feeId));
             }
         }
+        
+        List<Integer> applicablePenalties = new ArrayList<Integer>();
+        if (loanProductFormBean.getSelectedPenalties() != null) {
+            for (String penaltyId : loanProductFormBean.getSelectedPenalties()) {
+                applicablePenalties.add(Integer.valueOf(penaltyId));
+            }
+        }
 
         AccountingDetailsDto accountDetails = translateToAccountingDetails(loanProductFormBean);
 
@@ -203,7 +210,7 @@ public class LoanProductFormBeanAssembler {
 
         return new LoanProductRequest(loanProductDetails, loanProductFormBean.isIncludeInLoanCycleCounter(),
                 loanProductFormBean.isWaiverInterest(), currencyId, loanAmountDetails, interestRateType,
-                interestRateRange, repaymentDetails, applicableFees, accountDetails);
+                interestRateRange, repaymentDetails, applicableFees, applicablePenalties, accountDetails);
     }
 
     private AccountingDetailsDto translateToAccountingDetails(LoanProductFormBean loanProductFormBean) {

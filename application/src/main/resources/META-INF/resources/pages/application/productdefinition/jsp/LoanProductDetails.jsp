@@ -481,7 +481,7 @@ explanation of the license and how it is applied.
 								<table width="96%" border="0" cellpadding="3" cellspacing="0">
 									<tr>
 										<td width="100%" height="23" class="fontnormalbold">
-											<mifos:mifoslabel name="product.fees&pen" bundle="ProductDefUIResources" />
+											<mifos:mifoslabel name="product.fees" bundle="ProductDefUIResources" />
 										</td>
 									</tr>
 									<tr>
@@ -493,6 +493,21 @@ explanation of the license and how it is applied.
 										</td>
 									</tr>
 								</table>
+                                <table width="96%" border="0" cellpadding="3" cellspacing="0">
+                                    <tr>
+                                        <td width="100%" height="23" class="fontnormalbold">
+                                            <mifos:mifoslabel name="product.penalties" bundle="ProductDefUIResources" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="23" class="fontnormalbold">
+                                            <span class="fontnormal"> <c:forEach items="${loanPrd.loanOfferingPenalties}" var="prdOfferingPenalties">
+                                                    <c:out value="${prdOfferingPenalties.penalty.penaltyName}" />
+                                                    <br>
+                                                </c:forEach> <br> </span>
+                                        </td>
+                                    </tr>
+                                </table>
 								<table width="96%" border="0" cellpadding="3" cellspacing="0">
 									<tr>
 										<td width="100%" height="23" class="fontnormalbold">

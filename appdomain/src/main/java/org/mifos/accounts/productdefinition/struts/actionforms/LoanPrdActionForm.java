@@ -39,6 +39,7 @@ import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
@@ -49,6 +50,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.dto.domain.PenaltyDto;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.LocalizationConverter;
@@ -122,6 +124,8 @@ public class LoanPrdActionForm extends BaseActionForm {
     private String gracePeriodDuration;
 
     private String[] prdOfferinFees;
+    
+    private String[] prdOfferinPenalties;
 
     private String[] loanOfferingFunds;
 
@@ -1371,6 +1375,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         super();
         prdOfferinFees = null;
         loanOfferingFunds = null;
+        prdOfferinPenalties = null;
     }
 
     public String getDefaultLoanAmount() {
@@ -1580,6 +1585,14 @@ public class LoanPrdActionForm extends BaseActionForm {
     public void setPrdOfferinFees(String[] prdOfferinFees) {
         this.prdOfferinFees = prdOfferinFees;
     }
+    
+    public String[] getPrdOfferinPenalties() {
+        return prdOfferinPenalties;
+    }
+
+    public void setPrdOfferinPenalties(String[] prdOfferinPenalties) {
+        this.prdOfferinPenalties = prdOfferinPenalties;
+    }
 
     public String getPrdOfferingId() {
         return prdOfferingId;
@@ -1766,6 +1779,7 @@ public class LoanPrdActionForm extends BaseActionForm {
             loanCounter = null;
             waiverInterest = null;
             prdOfferinFees = null;
+            prdOfferinPenalties = null;
             loanOfferingFunds = null;
             gracePeriodType = null;
             gracePeriodDuration = null;
@@ -1850,6 +1864,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         this.gracePeriodType = null;
         this.gracePeriodDuration = null;
         this.prdOfferinFees = null;
+        this.prdOfferinPenalties = null;
         this.loanOfferingFunds = null;
         this.principalGLCode = null;
         this.interestGLCode = null;
@@ -1881,7 +1896,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         validateMinMaxDefInterestRates(errors, locale, request);
         vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors, request);
         validatePrincDueOnLastInstAndPrincGraceType(errors);
-        setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
+        setSelectedFeesPenaltiesAndFundsAndValidateForFrequency(request, errors);
         setSelectedQuestionGroups(request);
         validateInterestGLCode(request, errors);
         validateVariableInstallmentPeriods(errors, locale);
@@ -1950,7 +1965,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         validateMinMaxDefInterestRates(errors, locale, request);
         vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors, request);
         validatePrincDueOnLastInstAndPrincGraceType(errors);
-        setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
+        setSelectedFeesPenaltiesAndFundsAndValidateForFrequency(request, errors);
         setSelectedQuestionGroups(request);
         validateInterestGLCode(request, errors);
         validateVariableInstallmentPeriods(errors, locale);
@@ -2099,14 +2114,24 @@ public class LoanPrdActionForm extends BaseActionForm {
             throws PageExpiredException {
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, feeDtos, request);
     }
+    
+    void setSelectedPenaltyDtoOnSession(HttpServletRequest request, List<PenaltyDto> penaltyDtos)
+            throws PageExpiredException {
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDPENALTYSELECTEDLIST, penaltyDtos, request);
+    }
 
     @SuppressWarnings("unchecked")
     List<FeeBO> getAllLoanPrdFee(HttpServletRequest request) throws PageExpiredException {
         return (List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE, request);
     }
+    
+    @SuppressWarnings("unchecked")
+    List<PenaltyBO> getAllLoanPrdPenalty(HttpServletRequest request) throws PageExpiredException {
+        return (List<PenaltyBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDPENALTY, request);
+    }
 
-    private void setSelectedFeesAndFundsAndValidateForFrequency(HttpServletRequest request, ActionErrors errors) {
-        logger.debug("start setSelectedFeesAndFundsAndValidateForFrequency method "
+    private void setSelectedFeesPenaltiesAndFundsAndValidateForFrequency(HttpServletRequest request, ActionErrors errors) {
+        logger.debug("start setSelectedFeesPenaltiesAndFundsAndValidateForFrequency method "
                 + "of Loan Product Action form method :");
         request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
         List<FeeDto> feeDtos = new ArrayList<FeeDto>();
@@ -2144,7 +2169,21 @@ public class LoanPrdActionForm extends BaseActionForm {
                     request);
         } catch (PageExpiredException e) {
         }
-        logger.debug("setSelectedFeesAndFundsAndValidateForFrequency method "
+        List<PenaltyDto> selectedPenalties = new ArrayList<PenaltyDto>();
+        try {
+            if (getPrdOfferinPenalties() != null && getPrdOfferinPenalties().length > 0) {
+                List<PenaltyBO> penalties = getAllLoanPrdPenalty(request);
+                for (String selectedPenalty : getPrdOfferinPenalties()) {
+                    PenaltyBO penalty = getPenaltyFromList(penalties, selectedPenalty);
+                    if (penalty != null) {
+                        selectedPenalties.add(penalty.toDto());
+                    }
+                }
+            }
+            setSelectedPenaltyDtoOnSession(request, selectedPenalties);
+        } catch (PageExpiredException e) {
+        }
+        logger.debug("setSelectedFeesPenaltiesAndFundsAndValidateForFrequency method "
                 + "of Loan Product Action form method called :");
     }
 
@@ -2180,6 +2219,16 @@ public class LoanPrdActionForm extends BaseActionForm {
         for (FundBO fund : funds) {
             if (fund.getFundId().equals(getShortValue(fundSelected))) {
                 return fund;
+            }
+        }
+        return null;
+    }
+    
+    private PenaltyBO getPenaltyFromList(List<PenaltyBO> penalties, String penaltySelected) {
+        logger.debug("getPenaltyFromList method of Loan Product Action form method called :" + penaltySelected);
+        for (PenaltyBO penalty : penalties) {
+            if (penalty.getPenaltyId().equals(getShortValue(penaltySelected))) {
+                return penalty;
             }
         }
         return null;

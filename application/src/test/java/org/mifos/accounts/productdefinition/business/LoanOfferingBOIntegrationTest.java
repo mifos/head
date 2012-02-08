@@ -125,7 +125,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         ((AuditInterceptor) StaticHibernateUtil.getInterceptor()).createInitialValueMap(product);
         product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, 12.0, 2.0, 12.0, false,
-                false, true, null, fees, (short) 2, RecurrenceType.MONTHLY, populateLoanPrdActionForm("1", "1",
+                false, true, null, fees, null, (short) 2, RecurrenceType.MONTHLY, populateLoanPrdActionForm("1", "1",
                         new Double("3000"), new Double("1000"), new Double("1000"), "12", "1", "2"), waiverInterest, null);
         StaticHibernateUtil.flushAndClearSession();
         StaticHibernateUtil.getInterceptor().afterTransactionCompletion(new AuditTransactionForTests());
@@ -138,7 +138,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         ((AuditInterceptor) StaticHibernateUtil.getInterceptor()).createInitialValueMap(product);
         product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, 12.0, 2.0, 12.0, false,
-                true, false, null, fees, (short) 2, RecurrenceType.MONTHLY, populateLoanPrdActionForm("1", "1",
+                true, false, null, fees, null, (short) 2, RecurrenceType.MONTHLY, populateLoanPrdActionForm("1", "1",
                         new Double("3000"), new Double("1000"), new Double("1000"), "12", "1", "2"), waiverInterest, null);
         StaticHibernateUtil.flushAndClearSession();
         StaticHibernateUtil.getInterceptor().afterTransactionCompletion(new AuditTransactionForTests());
@@ -181,7 +181,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         ((AuditInterceptor) StaticHibernateUtil.getInterceptor()).createInitialValueMap(product);
         product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, 12.0, 2.0, 12.0, false,
-                true, true, null, fees, (short) 2, RecurrenceType.MONTHLY, populateLoanPrdActionForm("1", "1",
+                true, true, null, fees, null, (short) 2, RecurrenceType.MONTHLY, populateLoanPrdActionForm("1", "1",
                         new Double("3000"), new Double("1000"), new Double("1000"), "12", "1", "2"), waiverInterest, null);
         StaticHibernateUtil.flushAndClearSession();
         StaticHibernateUtil.getInterceptor().afterTransactionCompletion(new AuditTransactionForTests());
@@ -225,7 +225,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
     public void testBuildloanOfferingWithoutDataForAllFields() {
         try {
             new LoanOfferingBO(null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-                    null, null, null, null, null, null, false, false, false, null, null, null, null, null, false);
+                    null, null, null, null, null, null, false, false, false, null, null, null, null, null, null, false);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -335,7 +335,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money(getCurrency(), "1000"),
                     new Money(getCurrency(), "3000"), null, 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false, false, false,
-                    null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
+                    null, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -392,7 +392,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money(getCurrency(), "1000"),
                     new Money(getCurrency(), "3000"), new Money(getCurrency(), "200.0"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
-                    false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
+                    false, false, null, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -407,7 +407,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money(getCurrency(), "10000"),
                     new Money(getCurrency(), "3000"), null, 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false, false, false,
-                    null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
+                    null, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -422,7 +422,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money(getCurrency(), "1000"),
                     new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 13.0, (short) 20, (short) 1, (short) 12, false,
-                    false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
+                    false, false, null, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -437,7 +437,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money(getCurrency(), "1000"),
                     new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 20.0, 13.0, (short) 20, (short) 1, (short) 12, false,
-                    false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
+                    false, false, null, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -452,7 +452,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money(getCurrency(), "1000"),
                     new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 31, (short) 21, false,
-                    false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
+                    false, false, null, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -467,7 +467,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money(getCurrency(), "1000"),
                     new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11, (short) 7, false,
-                    false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
+                    false, false, null, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -481,7 +481,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP",
                 productCategory, prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money(
                         getCurrency(), "1000"), new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
-                (short) 17, false, true, false, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
+                (short) 17, false, true, false, null, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
         Assert.assertNotNull(loanOffering.getGracePeriodType());
         Assert.assertNotNull(loanOffering.getGracePeriodDuration());
        Assert.assertEquals(GraceType.NONE.getValue(), loanOffering.getGracePeriodType().getId());
@@ -498,7 +498,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                     prdApplicableMaster, startDate, endDate, null, gracePeriodType, null, interestTypes, new Money(
                             getCurrency(), "1000"), new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
-                    (short) 17, false, false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
+                    (short) 17, false, false, false, null, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -513,7 +513,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP",
                 productCategory, prdApplicableMaster, startDate, endDate, null, gracePeriodType, null, interestTypes,
                 new Money(getCurrency(), "1000"), new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
-                (short) 17, false, false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
+                (short) 17, false, false, false, null, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
         Assert.assertNotNull(loanOffering.getGracePeriodDuration());
        Assert.assertEquals(GraceType.NONE.getValue(), loanOffering.getGracePeriodType().getId());
        Assert.assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
@@ -535,7 +535,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                     prdApplicableMaster, startDate, endDate, null, gracePeriodType, null, interestTypes, new Money(
                             getCurrency(), "1000"), new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
-                    (short) 17, false, false, false, null, fees, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
+                    (short) 17, false, false, false, null, fees, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -561,7 +561,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP",
                 productCategory, prdApplicableMaster, startDate, endDate, null, gracePeriodType, (short) 2,
                 interestTypes, new Money(getCurrency(), "1000"), new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 3.0, (short) 20,
-                (short) 11, (short) 17, false, false, false, funds, fees, frequency, principalglCodeEntity,
+                (short) 11, (short) 17, false, false, false, funds, fees, null, frequency, principalglCodeEntity,
                 intglCodeEntity, waiverInterest);
        Assert.assertEquals(2, loanOffering.getLoanOfferingFees().size());
        Assert.assertEquals(1, loanOffering.getLoanOfferingFunds().size());
@@ -584,7 +584,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         product = new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                 prdApplicableMaster, startDate, endDate, "1234", gracePeriodType, (short) 2, interestTypes, new Money(
                         getCurrency(), "1000"), new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
-                (short) 17, false, false, false, null, fees, frequency, principalglCodeEntity, intglCodeEntity,
+                (short) 17, false, false, false, null, fees, null, frequency, principalglCodeEntity, intglCodeEntity,
                 ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN.toString(),
                 ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN.toString(), waiverInterest);
         product.save();
@@ -628,7 +628,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         product = createLoanOfferingBO("Loan Product", "LOAP");
         try {
             product.update(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-                    null, null, null, null, null, null, false, false, false, null, null, null, null, waiverInterest);
+                    null, null, null, null, null, null, false, false, false, null, null, null, null, null, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -642,7 +642,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             product.update((short) 1, null, "S", productCategory, prdApplicableMaster, new Date(System
                     .currentTimeMillis()), null, "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes,
                     (short) 0, new Money(getCurrency(), "3000"), new Money(getCurrency(), "1000"), new Money(getCurrency(), "2000"), 12.0, 2.0, 3.0, (short) 20,
-                    (short) 1, (short) 12, false, false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    (short) 1, (short) 12, false, false, false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -656,7 +656,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             product.update((short) 1, "Loan Product", "LOANS", productCategory, prdApplicableMaster, new Date(System
                     .currentTimeMillis()), null, "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes,
                     (short) 0, new Money(getCurrency(), "3000"), new Money(getCurrency(), "1000"), new Money(getCurrency(), "2000"), 12.0, 2.0, 3.0, (short) 20,
-                    (short) 1, (short) 12, false, false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    (short) 1, (short) 12, false, false, false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -671,7 +671,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, null,
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(getCurrency(), "3000"),
                     new Money(getCurrency(), "1000"), new Money(getCurrency(), "2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
-                    false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    false, false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -685,7 +685,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, null,
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(getCurrency(), "3000"),
                 new Money(getCurrency(), "1000"), new Money(getCurrency(), "2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false, false,
-                false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
         StaticHibernateUtil.flushAndClearSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
        Assert.assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
@@ -702,7 +702,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, null,
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(getCurrency(), "3000"),
                     new Money(getCurrency(), "1000"), new Money(getCurrency(), "2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
-                    false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    false, false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -719,7 +719,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             loanOffering1.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate,
                     null, "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(
                             getCurrency(), "3000"), new Money(getCurrency(), "1000"), new Money(getCurrency(), "2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1,
-                    (short) 12, false, false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    (short) 12, false, false, false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -736,7 +736,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             loanOffering1.update((short) 1, "Loan Product1", "LOAP", productCategory, prdApplicableMaster, startDate,
                     null, "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(
                             getCurrency(), "3000"), new Money(getCurrency(), "1000"), new Money(getCurrency(), "2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1,
-                    (short) 12, false, false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    (short) 12, false, false, false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -753,7 +753,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(getCurrency(), "3000"),
                     new Money(getCurrency(), "1000"), new Money(getCurrency(), "2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
-                    false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    false, false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -768,7 +768,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, null,
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, null, (short) 0, new Money(getCurrency(), "3000"), new Money(
                             getCurrency(), "1000"), new Money(getCurrency(), "2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
-                    false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    false, false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -783,7 +783,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, null,
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, null, new Money(
                             getCurrency(), "1000"), new Money(getCurrency(), "2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
-                    false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    false, false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -800,7 +800,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(getCurrency(), "1000"),
                     new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
-                    false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    false, false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -816,7 +816,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(getCurrency(), "1000"),
                     new Money(getCurrency(), "3000"), new Money(getCurrency(), "1000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
-                    false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    false, false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -831,7 +831,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, null,
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(getCurrency(), "3000"),
                     new Money(getCurrency(), "1000"), new Money(getCurrency(), "1000"), 12.0, 2.0, 13.0, (short) 20, (short) 1, (short) 12, false,
-                    false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    false, false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -847,7 +847,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(getCurrency(), "3000"),
                     new Money(getCurrency(), "1000"), new Money(getCurrency(), "1000"), 12.0, 22.0, 12.0, (short) 20, (short) 1, (short) 12, false,
-                    false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    false, false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -863,7 +863,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(getCurrency(), "3000"),
                     new Money(getCurrency(), "1000"), new Money(getCurrency(), "1000"), 12.0, 2.0, 12.0, (short) 2, (short) 12, (short) 2, false,
-                    false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    false, false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -879,7 +879,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(getCurrency(), "3000"),
                     new Money(getCurrency(), "1000"), new Money(getCurrency(), "1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1, (short) 22, false,
-                    false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    false, false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -894,7 +894,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(getCurrency(), "3000"),
                 new Money(getCurrency(), "1000"), new Money(getCurrency(), "1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1, (short) 2, false, true,
-                false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                false, null, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
         StaticHibernateUtil.flushAndClearSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
@@ -921,7 +921,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                     "Loan Product updated", PrdStatus.LOAN_ACTIVE, gracePeriodType, interestTypes, (short) 0,
                     new Money(getCurrency(), "3000"), new Money(getCurrency(), "1000"), new Money(getCurrency(), "1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1,
-                    (short) 2, false, true, false, null, fees, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                    (short) 2, false, true, false, null, fees, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
         }
@@ -948,7 +948,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, gracePeriodType, interestTypes, (short) 0, new Money(
                         getCurrency(), "3000"), new Money(getCurrency(), "1000"), new Money(getCurrency(), "1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1,
-                (short) 2, false, true, false, funds, fees, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
+                (short) 2, false, true, false, funds, fees, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
        Assert.assertEquals(2, product.getLoanOfferingFees().size());
        Assert.assertEquals(1, product.getLoanOfferingFunds().size());
     }
@@ -969,7 +969,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(getCurrency(), "3000"),
                 new Money(getCurrency(), "1000"), new Money(getCurrency(), "1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1, (short) 2, false, true,
-                false, null, fees, (short) 2, RecurrenceType.MONTHLY, waiverInterest);
+                false, null, fees, null, (short) 2, RecurrenceType.MONTHLY, waiverInterest);
         StaticHibernateUtil.flushAndClearSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
@@ -1007,7 +1007,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money(getCurrency(), "1000"),
                     new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11, (short) 17, false,
-                    true, false, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
+                    true, false, null, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
            Assert.assertEquals("exceptions.declineinterestdisbursementdeduction", e.getKey());
@@ -1023,7 +1023,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP",
                 productCategory, prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money(
                         getCurrency(), "1000"), new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
-                (short) 17, false, false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
+                (short) 17, false, false, false, null, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
        Assert.assertEquals(InterestType.DECLINING, loanOffering.getInterestType());
     }
 
@@ -1037,7 +1037,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
             new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                     prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money(getCurrency(), "1000"),
                     new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11, (short) 17, false,
-                    true, false, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
+                    true, false, null, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
            Assert.assertEquals("exceptions.declineinterestdisbursementdeduction", e.getKey());
@@ -1053,7 +1053,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP",
                 productCategory, prdApplicableMaster, startDate, endDate, null, null, null, interestTypes, new Money(
                         getCurrency(), "1000"), new Money(getCurrency(), "3000"), new Money(getCurrency(), "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
-                (short) 17, false, false, false, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
+                (short) 17, false, false, false, null, null, null, frequency, principalglCodeEntity, intglCodeEntity, waiverInterest);
        Assert.assertEquals(InterestType.DECLINING_EPI, loanOffering.getInterestType());
     }
 
@@ -1114,7 +1114,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         LoanPrdActionForm loanPrdActionForm = new LoanPrdActionForm();
         product = new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                 prdApplicableMaster, startDate, endDate, "1234", gracePeriodType, (short) 2, interestTypes, 12.0, 2.0,
-                3.0, false, false, false, null, fees, frequency, principalglCodeEntity, intglCodeEntity,
+                3.0, false, false, false, null, fees, null, frequency, principalglCodeEntity, intglCodeEntity,
                 populateNoOfInstallSameForAllLoan("1", "12", "1", "2", populateLoanAmountSameForAllLoan("1",
                         new Double("3000"), new Double("1000"), new Double("2000"), loanPrdActionForm)), waiverInterest);
         product.save();
@@ -1171,7 +1171,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         LoanPrdActionForm loanPrdActionForm = new LoanPrdActionForm();
         product = new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                 prdApplicableMaster, startDate, endDate, "1234", gracePeriodType, (short) 2, interestTypes, 12.0, 2.0,
-                3.0, false, false, false, null, fees, frequency, principalglCodeEntity, intglCodeEntity,
+                3.0, false, false, false, null, fees, null, frequency, principalglCodeEntity, intglCodeEntity,
                 LoanOfferingTestUtils.populateNoOfInstallFromLastLoanAmount("2", new Integer("0"), new Integer("1000"), new Integer("1001"),
                         new Integer("2000"), new Integer("2001"), new Integer("3000"), new Integer("3001"),
                         new Integer("4000"), new Integer("4001"), new Integer("5000"), new Integer("5001"),
@@ -1307,7 +1307,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         LoanPrdActionForm loanPrdActionForm = new LoanPrdActionForm();
         product = new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering", "LOAP", productCategory,
                 prdApplicableMaster, startDate, endDate, "1234", gracePeriodType, (short) 2, interestTypes, 12.0, 2.0,
-                3.0, false, false, false, null, fees, frequency, principalglCodeEntity, intglCodeEntity,
+                3.0, false, false, false, null, fees, null, frequency, principalglCodeEntity, intglCodeEntity,
                 LoanOfferingTestUtils.populateNoOfInstallFromLoanCycle("3", "10", "30", "20", "20", "40", "30", "30", "50", "40", "40", "60",
                         "50", "50", "70", "60", "60", "80", "70", LoanOfferingTestUtils.populateLoanAmountFromLoanCycle("3", new Double(
                                 "1000"), new Double("3000"), new Double("2000"), new Double("2000"),

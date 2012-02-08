@@ -37,8 +37,8 @@ public class PenaltyFormValidator implements Validator {
     private final static boolean MANDATORY = true;
     private final static boolean OPTIONAL = false;
     
-    public PenaltyFormValidator(ViewOrganizationSettingsServiceFacade service, HttpSession session) {
-        properties = service.getOrganizationSettings(session);
+    public PenaltyFormValidator(Properties properties) {
+        this.properties = properties;
     }
     
     @Override
@@ -124,13 +124,12 @@ public class PenaltyFormValidator implements Validator {
         if (value != null && StringUtils.hasText(value)) {
             try {
                 Double val = Double.valueOf(value);
-                Double frac = val % 1;
 
                 if (val < 0.0d) {
                     errors.reject("error.penalty.incorrectDouble", new String[] { field }, null);
                 } else if (Long.toString(val.longValue()).length() > digits) {
                     errors.reject("error.penalty.digitsBeforeDecimal", new String[] { field, Integer.toString(digits) }, null);
-                } else if (Double.toString(frac).length() - 2 > decimal) {
+                } else if (value.indexOf('.') >= 0 && value.substring(value.indexOf('.') + 1).length() > decimal) {
                     errors.reject("error.penalty.digitsAfterDecimal", new String[] { field, Integer.toString(decimal) }, null);
                 }
             } catch (NumberFormatException e) {

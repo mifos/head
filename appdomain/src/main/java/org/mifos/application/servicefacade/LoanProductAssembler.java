@@ -31,6 +31,8 @@ import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.business.service.GeneralLedgerDao;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
+import org.mifos.accounts.penalties.business.PenaltyBO;
+import org.mifos.accounts.penalties.persistence.PenaltyDao;
 import org.mifos.accounts.productdefinition.LoanAmountCalculation;
 import org.mifos.accounts.productdefinition.LoanInstallmentCalculation;
 import org.mifos.accounts.productdefinition.LoanProductCaluclationTypeAssembler;
@@ -62,12 +64,15 @@ public class LoanProductAssembler {
     private final LoanProductDao loanProductDao;
     private final GeneralLedgerDao generalLedgerDao;
     private final FundDao fundDao;
+    private final PenaltyDao penaltyDao;
     private LoanProductCaluclationTypeAssembler loanProductCaluclationTypeAssembler = new LoanProductCaluclationTypeAssembler();
 
-    public LoanProductAssembler(LoanProductDao loanProductDao, GeneralLedgerDao generalLedgerDao, FundDao fundDao) {
+    public LoanProductAssembler(LoanProductDao loanProductDao, GeneralLedgerDao generalLedgerDao, FundDao fundDao,
+            PenaltyDao penaltyDao) {
         this.loanProductDao = loanProductDao;
         this.generalLedgerDao = generalLedgerDao;
         this.fundDao = fundDao;
+        this.penaltyDao = penaltyDao;
     }
 
     public LoanOfferingBO fromDto(MifosUser user, LoanProductRequest loanProductRequest) {
@@ -140,6 +145,13 @@ public class LoanProductAssembler {
                 FundBO fund = this.fundDao.findById(fundId.shortValue());
                 applicableFunds.add(fund);
             }
+            
+            List<PenaltyBO> applicablePenalties = new ArrayList<PenaltyBO>();
+            List<Integer> applicablePenaltyIds = loanProductRequest.getApplicablePenalties();
+            for (Integer penaltyId : applicablePenaltyIds) {
+                PenaltyBO penalty = this.penaltyDao.findPenaltyById(penaltyId);
+                applicablePenalties.add(penalty);
+            }
 
             GLCodeEntity interestGlCode = this.generalLedgerDao.findGlCodeById(loanProductRequest.getAccountDetails()
                     .getInterestGlCodeId().shortValue());
@@ -153,7 +165,7 @@ public class LoanProductAssembler {
                     minRate, maxRate, defaultRate, recurrence, recurEvery, interestGlCode, principalGlCode,
                     activeStatus, inActiveStatus, gracePeriodTypeEntity, gracePeriodDuration, waiverInterest,
                     loanCycleCounter, loanAmountCalculation, loanInstallmentCalculation, applicableFees,
-                    applicableFunds);
+                    applicableFunds, applicablePenalties);
             loanProduct.updateStatus(selectedStatus);
             return loanProduct;
         } catch (PersistenceException e) {

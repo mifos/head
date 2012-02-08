@@ -43,12 +43,15 @@ import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
+import org.mifos.accounts.penalties.business.PenaltyBO;
+import org.mifos.accounts.penalties.persistence.PenaltyDao;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity;
+import org.mifos.accounts.productdefinition.business.PrdOfferingPenaltiesEntity;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
@@ -145,6 +148,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private final OfficeDao officeDao;
     private final ApplicationConfigurationDao applicationConfigurationDao;
     private final FundDao fundDao;
+    private final PenaltyDao penaltyDao;
     private final GeneralLedgerDao generalLedgerDao;
     private LoanProductAssembler loanProductAssembler;
 
@@ -172,7 +176,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     public AdminServiceFacadeWebTier(ProductService productService, OfficeHierarchyService officeHierarchyService,
             MandatoryHiddenFieldService mandatoryHiddenFieldService, LoanProductDao loanProductDao,
             SavingsProductDao savingsProductDao, OfficeDao officeDao,
-            ApplicationConfigurationDao applicationConfigurationDao, FundDao fundDao, GeneralLedgerDao generalLedgerDao) {
+            ApplicationConfigurationDao applicationConfigurationDao, FundDao fundDao,
+            GeneralLedgerDao generalLedgerDao, PenaltyDao penaltyDao) {
         this.productService = productService;
         this.officeHierarchyService = officeHierarchyService;
         this.mandatoryHiddenFieldService = mandatoryHiddenFieldService;
@@ -181,8 +186,9 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         this.officeDao = officeDao;
         this.applicationConfigurationDao = applicationConfigurationDao;
         this.fundDao = fundDao;
+        this.penaltyDao = penaltyDao;
         this.generalLedgerDao = generalLedgerDao;
-        this.loanProductAssembler = new LoanProductAssembler(this.loanProductDao, this.generalLedgerDao, this.fundDao);
+        this.loanProductAssembler = new LoanProductAssembler(this.loanProductDao, this.generalLedgerDao, this.fundDao, this.penaltyDao);
     }
 
     @Override
@@ -931,6 +937,12 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             for (PrdStatusEntity entity : applicableStatuses) {
                 statusOptions.add(new ListElement(entity.getOfferingStatusId().intValue(), entity.getPrdState().getName()));
             }
+            
+            List<ListElement> penaltiesOptions = new ArrayList<ListElement>();
+            List<PenaltyBO> applicablePenalties = this.penaltyDao.findAllSavingPenalties();
+            for (PenaltyBO entity : applicablePenalties) {
+                penaltiesOptions.add(new ListElement(entity.getPenaltyId().intValue(), entity.getPenaltyName()));
+            }
 
             List<ListElement> productCategoryOptions = new ArrayList<ListElement>();
             List<ProductCategoryBO> productCategories = service.getActiveSavingsProductCategories();
@@ -1139,6 +1151,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
             loanProductForUpdate.updateFees(newLoanProductDetails.getLoanOfferingFees());
             loanProductForUpdate.updateFunds(newLoanProductDetails.getLoanOfferingFunds());
+            loanProductForUpdate.updatePenalties(newLoanProductDetails.getLoanOfferingPenalties());
 
             this.loanProductDao.save(loanProductForUpdate);
             transactionHelper.commitTransaction();
@@ -1207,7 +1220,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                         .getInterestCalcType(), newSavingsDetails.getTimePerForInstcalc(), newSavingsDetails
                         .getFreqOfPostIntcalc(), newSavingsDetails.getMinAmntForInt());
             }
-
+            
             this.savingsProductDao.save(savingsProductForUpdate);
             transactionHelper.commitTransaction();
             return savingsProductForUpdate.toDto();

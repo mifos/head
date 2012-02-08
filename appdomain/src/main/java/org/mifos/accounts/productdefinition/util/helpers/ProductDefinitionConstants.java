@@ -132,6 +132,7 @@ public interface ProductDefinitionConstants {
     String LOANPRODUCTNAME = "loanProductName";
     String SRCFUNDSLIST = "SrcFundsList";
     String LOANFEESLIST = "LoanFeesList";
+    String LOANPENALTIESLIST = "LoanPenaltiesList";
     String LOANCATEGORYID = "loanCategoryId";
     String LOANFEESSTATUS = "feeStatus";
     String OFFERINGAPPLICENTERSID = "offerinApplicableCentersId";
@@ -230,8 +231,10 @@ public interface ProductDefinitionConstants {
     String LOANPRODUCTACTIONFORM = "loanproductactionform";
     String LOANPRDGLOBALOFFERINGNUM = "loanprdglobalofferingnum";
     String LOANPRDFEESELECTEDLIST = "loanprdfeeselectedlist";
+    String LOANPRDPENALTYSELECTEDLIST = "loanprdpenaltyselectedlist";
     String LOANPRDFUNDSELECTEDLIST = "loanprdfundselectedlist";
     String LOANPRDFEE = "loanprdfee";
+    String LOANPRDPENALTY = "loanprdpenalty";
     String RATETYPE = "rate type";
     String RATE = "rate";
     String MAX = "Max";

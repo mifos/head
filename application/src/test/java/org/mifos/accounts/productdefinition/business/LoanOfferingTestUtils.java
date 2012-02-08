@@ -26,6 +26,7 @@ import java.util.List;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -213,7 +214,7 @@ public class LoanOfferingTestUtils {
             final Short gracePeriodDuration, final InterestTypesEntity interestTypes, final Money minLoanAmount, final Money maxLoanAmount,
             final Money defaultLoanAmount, final Double maxInterestRate, final Double minInterestRate, final Double defInterestRate,
             final Short maxNoInstallments, final Short minNoInstallments, final Short defNoInstallments, final boolean loanCounter,
-            final boolean intDedDisbursement, final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees,
+            final boolean intDedDisbursement, final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final List<PenaltyBO> penalties,
             final MeetingBO meeting, final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode)
             throws ProductDefinitionException {
         boolean waiverInterest = true;
@@ -221,7 +222,7 @@ public class LoanOfferingTestUtils {
                 prdCategory, prdApplicableMaster, new DateTimeService().getCurrentJavaDateTime(), endDate, description,
                 gracePeriodType, gracePeriodDuration, interestTypes, minLoanAmount, maxLoanAmount, defaultLoanAmount,
                 maxInterestRate, minInterestRate, defInterestRate, maxNoInstallments, minNoInstallments,
-                defNoInstallments, loanCounter, intDedDisbursement, prinDueLastInst, funds, fees, meeting,
+                defNoInstallments, loanCounter, intDedDisbursement, prinDueLastInst, funds, fees, penalties, meeting,
                 principalGLcode, interestGLcode, waiverInterest);
         loanOffering.setStartDate(startDate);
         return loanOffering;

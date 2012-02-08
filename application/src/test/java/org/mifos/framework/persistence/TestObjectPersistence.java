@@ -24,6 +24,7 @@ import org.hibernate.Session;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
@@ -88,6 +89,12 @@ public class TestObjectPersistence {
         Session session = StaticHibernateUtil.getSessionTL();
         session.save(fee);
         return fee;
+    }
+    
+    public PenaltyBO createPenalty(PenaltyBO penalty) {
+        Session session = StaticHibernateUtil.getSessionTL();
+        session.save(penalty);
+        return penalty;
     }
 
     /**

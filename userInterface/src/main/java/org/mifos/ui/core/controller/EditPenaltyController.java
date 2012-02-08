@@ -67,7 +67,7 @@ public class EditPenaltyController {
     
     @InitBinder
     protected void initBinder(WebDataBinder binder, HttpSession session) {
-        binder.setValidator(new PenaltyFormValidator(viewOrganizationSettingsServiceFacade, session));
+        binder.setValidator(new PenaltyFormValidator(viewOrganizationSettingsServiceFacade.getOrganizationSettings(session)));
     }
     
     @RequestMapping(method = RequestMethod.GET)

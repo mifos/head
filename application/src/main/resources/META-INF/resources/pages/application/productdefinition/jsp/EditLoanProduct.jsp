@@ -1095,7 +1095,7 @@ explanation of the license and how it is applied.
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
-								name="product.fees&pen" bundle="ProductDefUIResources" /> <br>
+								name="product.fees" bundle="ProductDefUIResources" /> <br>
 							<br>
 							</td>
 						</tr>
@@ -1125,6 +1125,39 @@ explanation of the license and how it is applied.
 							</mifos:MifosSelect></td>
 						</tr>
 					</table>
+                    <table width="93%" border="0" cellpadding="3" cellspacing="0">
+                        <tr>
+                            <td colspan="2" class="fontnormalbold"><mifos:mifoslabel
+                                name="product.penalties" bundle="ProductDefUIResources" /> <br>
+                            <br>
+                            </td>
+                        </tr>
+                        <tr class="fontnormal">
+                            <td width="30%" align="right" valign="top"><mifos:mifoslabel
+                                name="product.attachpenaltiestypes" bundle="ProductDefUIResources" isColonRequired="yes"/>
+                            </td>
+                            <td width="70%" valign="top">
+                            <table width="80%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td class="fontnormal"><mifos:mifoslabel
+                                        name="product.clickpenaltytypes" bundle="ProductDefUIResources" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><img src="pages/framework/images/trans.gif" width="1"
+                                        height="1"></td>
+                                </tr>
+                            </table>
+                            <c:set var="LoanPenaltiesList" scope="request"
+                                value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanPenaltiesList')}" />
+                            <c:set var="selectedPenaltyList" scope="request"
+                                value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanprdpenaltyselectedlist')}" />
+                            <mifos:MifosSelect property="prdOfferinPenalties" input="LoanPenaltiesList"
+                                output="selectedPenaltyList" property1="penaltyId" property2="penaltyName"
+                                multiple="true">
+                            </mifos:MifosSelect></td>
+                        </tr>
+                    </table>
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
@@ -1200,7 +1233,7 @@ explanation of the license and how it is applied.
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center"><html-el:submit styleId="EditLoanProduct.button.preview" styleClass="buttn"
-								onclick="transferData(this.form.loanOfferingQGs);transferData(this.form.loanOfferingFunds);transferData(this.form.prdOfferinFees);">
+								onclick="transferData(this.form.loanOfferingQGs);transferData(this.form.loanOfferingFunds);transferData(this.form.prdOfferinFees);transferData(this.form.prdOfferinPenalties);">
 								<mifos:mifoslabel name="product.preview"
 									bundle="ProductDefUIResources" />
 							</html-el:submit> &nbsp; <html-el:button styleId="EditLoanProduct.button.cancel" property="cancel"

@@ -41,6 +41,7 @@ import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.penalties.persistence.PenaltyDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
@@ -126,6 +127,7 @@ public abstract class BaseAction extends DispatchAction {
     protected LoanProductDao loanProductDao;
     protected SavingsProductDao savingsProductDao;
     protected FeeDao feeDao;
+    protected PenaltyDao penaltyDao;
     protected FundDao fundDao;
     protected ApplicationConfigurationDao applicationConfigurationDao;
 
@@ -232,6 +234,7 @@ public abstract class BaseAction extends DispatchAction {
         this.loanProductDao = getBean(LoanProductDao.class);
         this.savingsProductDao = getBean(SavingsProductDao.class);
         this.feeDao = getBean(FeeDao.class);
+        this.penaltyDao = getBean(PenaltyDao.class);
         this.fundDao = getBean(FundDao.class);
         this.applicationConfigurationDao = getBean(ApplicationConfigurationDao.class);
     }

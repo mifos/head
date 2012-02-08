@@ -68,6 +68,7 @@ import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDto;
+import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -667,12 +668,12 @@ public class TestObjectFactory {
             boolean waiverInterest = true;
         try {
             loanOffering = new LoanOfferingBO(getContext(), name, shortName, productCategory, prdApplicableMaster,
-                    startDate, null, null, gracePeriodType, gracePeriodDuration, interestTypes, TestUtils
-                            .createMoney(defLnAmnt), TestUtils.createMoney(defLnAmnt),
+                    startDate, null, null, gracePeriodType, gracePeriodDuration, interestTypes,
+                    TestUtils.createMoney(defLnAmnt), TestUtils.createMoney(defLnAmnt),
                     TestUtils.createMoney(defLnAmnt), defIntRate, defIntRate, defIntRate, defInstallments,
                     defInstallments, defInstallments, loanCounter, interestDeductedAtDisbursement,
-                    principalDueInLastInstallment, new ArrayList<FundBO>(), new ArrayList<FeeBO>(), meeting,
-                    glCodePrincipal, glCodeInterest, waiverInterest);
+                    principalDueInLastInstallment, new ArrayList<FundBO>(), new ArrayList<FeeBO>(),
+                    new ArrayList<PenaltyBO>(), meeting, glCodePrincipal, glCodeInterest, waiverInterest);
         } catch (ProductDefinitionException e) {
             throw new RuntimeException(e);
         }
@@ -716,12 +717,13 @@ public class TestObjectFactory {
         boolean waiverInterest = true;
         try {
             loanOffering = new LoanOfferingBO(getContext(), name, shortName, productCategory, prdApplicableMaster,
-                    startDate, null, null, gracePeriodType, gracePeriodDuration, interestTypes, new Money(currency, defLnAmnt.toString()),
-                    new Money(currency, defLnAmnt.toString()), new Money(currency, defLnAmnt.toString()),
-                    defIntRate, defIntRate, defIntRate, defInstallments,
+                    startDate, null, null, gracePeriodType, gracePeriodDuration, interestTypes, new Money(currency,
+                            defLnAmnt.toString()), new Money(currency, defLnAmnt.toString()), new Money(currency,
+                            defLnAmnt.toString()), defIntRate, defIntRate, defIntRate, defInstallments,
                     defInstallments, defInstallments, loanCounter, interestDeductedAtDisbursement,
-                    principalDueInLastInstallment, new ArrayList<FundBO>(), new ArrayList<FeeBO>(), meeting,
-                    glCodePrincipal, glCodeInterest, loanAmountCalcType, noOfInstallCalcType, waiverInterest);
+                    principalDueInLastInstallment, new ArrayList<FundBO>(), new ArrayList<FeeBO>(),
+                    new ArrayList<PenaltyBO>(), meeting, glCodePrincipal, glCodeInterest, loanAmountCalcType,
+                    noOfInstallCalcType, waiverInterest);
         } catch (ProductDefinitionException e) {
             throw new RuntimeException(e);
         }
@@ -762,8 +764,8 @@ public class TestObjectFactory {
             loanOffering = new LoanOfferingBO(getContext(), name, shortName, productCategory, prdApplicableMaster,
                     startDate, null, null, gracePeriodType, gracePeriodDuration, interestTypes, defIntRate, defIntRate,
                     defIntRate, loanCounter, interestDeductedAtDisbursement, principalDueInLastInstallment,
-                    new ArrayList<FundBO>(), new ArrayList<FeeBO>(), meeting, glCodePrincipal, glCodeInterest,
-                    loanPrdActionForm, waiverInterest);
+                    new ArrayList<FundBO>(), new ArrayList<FeeBO>(), new ArrayList<PenaltyBO>(), meeting,
+                    glCodePrincipal, glCodeInterest, loanPrdActionForm, waiverInterest);
         } catch (ProductDefinitionException e) {
             throw new RuntimeException(e);
         }
@@ -793,7 +795,7 @@ public class TestObjectFactory {
                 prdApplicableMaster, DateUtils.getCurrentDateWithoutTimeStamp(), null, null, gracePeriodType,
                 (short) 2, interestTypes, TestUtils.createMoney("1000"), TestUtils.createMoney("3000"), TestUtils
                         .createMoney("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11, (short) 17, false, false,
-                false, funds, fees, frequency, principalglCodeEntity, intglCodeEntity, true);
+                false, funds, fees, null, frequency, principalglCodeEntity, intglCodeEntity, true);
         loanOfferingBO.save();
         return loanOfferingBO;
     }
@@ -1012,7 +1014,7 @@ public class TestObjectFactory {
     }
 
     public static FeeBO createPeriodicAmountFee(final String feeName, final FeeCategory feeCategory,
-                                                final String feeAmnt, final RecurrenceType meetingFrequency, final Short recurAfter, String categoryTypeName) {
+            final String feeAmnt, final RecurrenceType meetingFrequency, final Short recurAfter, String categoryTypeName) {
         try {
             FeeBO fee = createPeriodicAmountFee(feeName, feeCategory, feeAmnt, meetingFrequency, recurAfter,
                     TestObjectFactory.getUserContext(), categoryTypeName);
@@ -1059,7 +1061,7 @@ public class TestObjectFactory {
             throw new RuntimeException(e);
         }
     }
-
+    
     /**
      * *************************
      * Begin creating a periodic rate fee

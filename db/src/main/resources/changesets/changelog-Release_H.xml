@@ -335,4 +335,27 @@
             <dropColumn tableName="loan_offering" columnName="fixed_repayment_flag"/>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_5383_1" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+            CREATE TABLE prd_offering_penalties (
+                prd_offering_penalty_id SMALLINT AUTO_INCREMENT NOT NULL,
+                penalty_id SMALLINT,
+                prd_offering_id SMALLINT,
+                PRIMARY KEY (prd_offering_penalty_id),
+                FOREIGN KEY(penalty_id)
+                  REFERENCES penalty(penalty_id)
+                    ON DELETE NO ACTION
+                    ON UPDATE NO ACTION,
+                FOREIGN KEY(prd_offering_id)
+                  REFERENCES prd_offering(prd_offering_id)
+                    ON DELETE NO ACTION
+                    ON UPDATE NO ACTION
+            ) ENGINE=InnoDB CHARACTER SET utf8;
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                DROP TABLE IF EXISTS prd_offering_penalties;
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

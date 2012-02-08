@@ -37,6 +37,7 @@ public class LoanProductRequest {
     private final RepaymentDetailsDto repaymentDetails;
     private final LoanAmountDetailsDto loanAmountDetails;
     private final List<Integer> applicableFees;
+    private final List<Integer> applicablePenalties;
     private final AccountingDetailsDto accountDetails;
 
     // used for response details
@@ -45,12 +46,15 @@ public class LoanProductRequest {
     private String interestRateTypeName;
     private List<String> fees;
     private List<String> funds;
+    private List<String> penalties;
     private String interestGlCodeValue;
     private String principalGlCodeValue;
 
-    public LoanProductRequest(ProductDetailsDto loanProductDetails, final boolean includeInLoanCycleCounter, boolean waiverInterest, Integer currencyId, LoanAmountDetailsDto loanAmountDetails, Integer interestRateType,
-            MinMaxDefaultDto interestRateRange, RepaymentDetailsDto repaymentDetails, List<Integer> applicableFees, AccountingDetailsDto accountDetails) {
-        this.productDetails = loanProductDetails;
+    public LoanProductRequest(ProductDetailsDto loanProductDetails, final boolean includeInLoanCycleCounter,
+            boolean waiverInterest, Integer currencyId, LoanAmountDetailsDto loanAmountDetails,
+            Integer interestRateType, MinMaxDefaultDto interestRateRange, RepaymentDetailsDto repaymentDetails,
+            List<Integer> applicableFees, List<Integer> applicablePenalties, AccountingDetailsDto accountDetails) {
+    this.productDetails = loanProductDetails;
         this.includeInLoanCycleCounter = includeInLoanCycleCounter;
         this.waiverInterest = waiverInterest;
         this.currencyId = currencyId;
@@ -60,6 +64,7 @@ public class LoanProductRequest {
         this.repaymentDetails = repaymentDetails;
         this.applicableFees = applicableFees;
         this.accountDetails = accountDetails;
+        this.applicablePenalties = applicablePenalties;
     }
 
     public Integer getInterestRateType() {
@@ -134,6 +139,14 @@ public class LoanProductRequest {
         this.fees = fees;
     }
 
+    public List<String> getPenalties() {
+        return this.penalties;
+    }
+    
+    public void setPenalties(List<String> penalties) {
+        this.penalties = penalties;
+    }
+
     public List<String> getFunds() {
         return this.funds;
     }
@@ -157,4 +170,10 @@ public class LoanProductRequest {
     public void setPrincipalGlCodeValue(String principalGlCodeValue) {
         this.principalGlCodeValue = principalGlCodeValue;
     }
+
+    public List<Integer> getApplicablePenalties() {
+        return applicablePenalties;
+    }
+    
+    
 }

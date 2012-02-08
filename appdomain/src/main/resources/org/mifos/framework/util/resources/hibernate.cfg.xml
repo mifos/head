@@ -83,6 +83,7 @@
         <mapping resource="org/mifos/accounts/productdefinition/business/PrdOfferingBO.hbm.xml" />
         <mapping resource="org/mifos/accounts/productdefinition/business/SavingsProductHistoricalInterestDetail.hbm.xml" />
         <mapping resource="org/mifos/accounts/productdefinition/business/LoanOfferingFeesEntity.hbm.xml" />
+        <mapping resource="org/mifos/accounts/productdefinition/business/PrdOfferingPenaltiesEntity.hbm.xml" />
         <mapping resource="org/mifos/accounts/productdefinition/business/PrdOfferingMeetingEntity.hbm.xml" />
         <mapping resource="org/mifos/accounts/productdefinition/business/PrdStateEntity.hbm.xml" />
         <mapping resource="org/mifos/accounts/productdefinition/business/PrdStatusEntity.hbm.xml" />
