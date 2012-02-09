@@ -41,6 +41,7 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountTypes;
@@ -144,6 +145,9 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
     @Autowired
     private FeeDao feeDao;
+    
+    @Autowired
+    private LoanDao loanDao;
 
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
@@ -811,6 +815,18 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
         try {
             AccountBO account = new AccountBusinessService().getAccount(accountId);
+
+            if(account instanceof LoanBO) {
+                List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(account.getAccountId());
+                
+                if(individualLoans != null && individualLoans.size() > 0) {
+                    for(LoanBO individual : individualLoans) {
+                        individual.updateDetails(userContext);
+                        individual.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(feeId, userContext.getId());
+                        this.customerDao.save(individual);
+                    }
+                }
+            }
 
             account.updateDetails(userContext);
 
