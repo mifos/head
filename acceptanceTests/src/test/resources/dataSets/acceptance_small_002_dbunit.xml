@@ -52,6 +52,7 @@
   <DATABASECHANGELOG ID="MIFOS_5382_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-01 19:05:11.0" ORDEREXECUTED="235" EXECTYPE="EXECUTED" MD5SUM="3:8087265e7debf6021ee1f88472a900a8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5382_2" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-02 13:48:42.0" ORDEREXECUTED="236" EXECTYPE="EXECUTED" MD5SUM="3:864b0fd522895b0aa7142d936ddc4bc4" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5383_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-06 11:32:40.0" ORDEREXECUTED="237" EXECTYPE="EXECUTED" MD5SUM="3:e3f2fdea6e47675516523f634130672c" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5425_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-09 14:42:10.0" ORDEREXECUTED="238" EXECTYPE="EXECUTED" MD5SUM="3:b28cb3448b7729cfbea082f33eeca853" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
   <QRTZ_CALENDARS/>
@@ -145,6 +146,7 @@
   <account_payment payment_id="5" account_id="22" payment_type_id="1" currency_id="2" amount="2000.0000" receipt_number="" payment_date="2008-12-04" receipt_date="2008-12-04"/>
   <account_payment payment_id="6" account_id="26" payment_type_id="1" currency_id="2" amount="10000.0000" receipt_number="" payment_date="2008-12-04" receipt_date="2008-12-04"/>
   <account_payment payment_id="7" account_id="4" payment_type_id="1" currency_id="2" amount="99.0000" receipt_number="" payment_date="2008-12-25"/>
+  <account_penalties/>
   <account_state account_state_id="1" lookup_id="17" prd_type_id="1" currently_in_use="1" status_description="Partial application"/>
   <account_state account_state_id="2" lookup_id="18" prd_type_id="1" currently_in_use="1" status_description="Application pending approval"/>
   <account_state account_state_id="3" lookup_id="19" prd_type_id="1" currently_in_use="1" status_description="Application approved"/>

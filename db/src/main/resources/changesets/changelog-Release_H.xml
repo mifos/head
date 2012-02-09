@@ -358,4 +358,42 @@
             </sql>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_5425_1" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+            CREATE TABLE account_penalties (
+              account_penalty_id INTEGER AUTO_INCREMENT NOT NULL,
+              account_id INTEGER NOT NULL,
+              penalty_id SMALLINT NOT NULL,
+              account_penalty_amnt DECIMAL(21,4) NOT NULL,
+              account_penalty_amnt_currency_id SMALLINT,
+              penalty_amnt DECIMAL(21,4) NOT NULL,
+              penalty_status SMALLINT,
+              status_change_date DATE,
+              version_no INTEGER NOT NULL,
+              last_applied_date DATE,
+              PRIMARY KEY (account_penalty_id),
+              FOREIGN KEY (account_id)
+                REFERENCES account(account_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+              FOREIGN KEY (penalty_id)
+                REFERENCES penalty(penalty_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+              FOREIGN KEY (account_penalty_amnt_currency_id)
+                REFERENCES currency(currency_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION
+            ) ENGINE=InnoDB CHARACTER SET utf8;
+            
+            CREATE INDEX account_penalties_id_idx ON account_penalties (account_id, penalty_id);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                ALTER TABLE account_penalties DROP INDEX account_penalties_id_idx;
+                
+                DROP TABLE IF EXISTS account_penalties;
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

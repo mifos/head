@@ -70,6 +70,7 @@ public class LoanInformationDto implements Serializable {
     private final String collateralNote;
     private final String externalId;
     private final Set<AccountFeesDto> accountFees;
+    private final Set<AccountPenaltiesDto> accountPenalties;
     private final Date createdDate;
     private final LoanPerformanceHistoryDto performanceHistory;
     private final boolean group;
@@ -91,7 +92,8 @@ public class LoanInformationDto implements Serializable {
                               Integer collateralTypeId, String collateralNote, String externalId,
                               Set<AccountFeesDto> accountFees, Date createdDate, LoanPerformanceHistoryDto performanceHistory, boolean group,
                               List<LoanActivityDto> recentAccountActivities, final Boolean activeSurveys, final List<SurveyDto> accountSurveys,
-                              String customerName, String globalCustNum, String officeName, List<CustomerNoteDto> recentNoteDtos) {
+                              String customerName, String globalCustNum, String officeName, List<CustomerNoteDto> recentNoteDtos,
+                              final Set<AccountPenaltiesDto> accountPenalties) {
 
         this.prdOfferingName = prdOfferingName;
         this.globalAccountNum = globalAccountNum;
@@ -128,6 +130,7 @@ public class LoanInformationDto implements Serializable {
         this.collateralNote = collateralNote;
         this.externalId = externalId;
         this.accountFees = accountFees;
+        this.accountPenalties = accountPenalties;
         this.createdDate = createdDate;
         this.performanceHistory = performanceHistory;
         this.group = group;
@@ -321,4 +324,9 @@ public class LoanInformationDto implements Serializable {
     public boolean isDisbursed() {
         return disbursed;
     }
+
+    public Set<AccountPenaltiesDto> getAccountPenalties() {
+        return accountPenalties;
+    }
+    
 }

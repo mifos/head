@@ -155,6 +155,11 @@
                 <key column="account_id" />
                 <one-to-many class="org.mifos.accounts.loan.business.LoanScheduleEntity" />
             </set>
+            
+            <set name="loanAccountPenalties" cascade="all" inverse="true" lazy="true" table="account_penalties" access="field">
+                <key column="account_id" />
+                <many-to-many class="org.mifos.accounts.business.AccountPenaltiesEntity" column="account_penalty_id" />
+            </set>
 
             <many-to-one name="parentAccount" column="parent_account_id"
                 class="org.mifos.accounts.loan.business.LoanBO" not-null="false">

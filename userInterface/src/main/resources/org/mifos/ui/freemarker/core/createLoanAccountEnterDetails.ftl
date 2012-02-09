@@ -384,7 +384,7 @@
                 [@spring.formHiddenInput "loanAccountFormBean.defaultPenaltyId[${idx}]" /]
                 --]
             </div>
-            [#assign index = index + 1]
+            [#assign idx = idx + 1]
         [/#list]
     </div>  
     <div class="clear"/>  

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+    <class name="org.mifos.accounts.business.AccountPenaltiesEntity" table="account_penalties">
+        <id name="loanAccountPenaltyId" column="account_penalty_id" type="integer" access="field">
+            <generator class="native"/>
+        </id>
+        
+        <version name="versionNo" column="version_no" type="integer" unsaved-value="null"/>
+        
+        <property name="penaltyAmount" column="penalty_amnt"/>
+        <property name="accountPenaltyAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+            <column name="account_penalty_amnt_currency_id" />
+            <column name="account_penalty_amnt"/>
+        </property>
+        <property name="penaltyStatus" column="penalty_status" type="short"/>
+        <property name="statusChangeDate" column="status_change_date" type="date"/>
+        <property name="lastAppliedDate" column="last_applied_date"/>
+        
+        <many-to-one name="account" column="account_id" class="org.mifos.accounts.business.AccountBO" lazy="false" access="field"/>
+        <many-to-one name="penalty" column="penalty_id" class="org.mifos.accounts.penalties.business.PenaltyBO" unique="true" fetch="join" access="field"/>
+    </class>
+    
+    <query name="getAccountsForPenalty">
+        <![CDATA[select distinct(ape.account) from AccountPenaltiesEntity ape where ape.penalty.penaltyId =:PENALTYID]]>
+    </query>
+</hibernate-mapping>

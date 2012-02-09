@@ -52,7 +52,7 @@ import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateFlagEntity;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.business.AccountTrxnEntity;
-import org.mifos.accounts.business.LoanAccountPenaltiesEntity;
+import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -195,6 +195,7 @@ import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.AccountFeesDto;
+import org.mifos.dto.screen.AccountPenaltiesDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.dto.screen.ExpectedPaymentDto;
@@ -732,7 +733,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         List<AccountFeesEntity> accountFeeEntities = assembleAccountFees(createLoanSchedule.getAccountFeeEntities());
         LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAmountDisbursed, createLoanSchedule.getDisbursementDate(),
                 createLoanSchedule.getInterestRate(), createLoanSchedule.getNumberOfInstallments(), createLoanSchedule.getGraceDuration(), accountFeeEntities,
-                new ArrayList<LoanAccountPenaltiesEntity>());
+                new ArrayList<AccountPenaltiesEntity>());
 
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = createLoanSchedule.isRepaymentIndependentOfCustomerMeetingSchedule();
@@ -785,7 +786,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         List<AccountFeesEntity> accountFeeEntities = assembleAccountFees(createLoanSchedule.getAccountFeeEntities());
         LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAmountDisbursed, createLoanSchedule.getDisbursementDate(),
                 createLoanSchedule.getInterestRate(), createLoanSchedule.getNumberOfInstallments(), createLoanSchedule.getGraceDuration(), accountFeeEntities,
-                new ArrayList<LoanAccountPenaltiesEntity>());
+                new ArrayList<AccountPenaltiesEntity>());
 
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = createLoanSchedule.isRepaymentIndependentOfCustomerMeetingSchedule();
@@ -930,7 +931,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         LoanAccountDetail loanAccountDetail = assembleLoanAccountDetail(loanAccountInfo);
 
         List<AccountFeesEntity> accountFeeEntities = assembleAccountFees(loanAccountInfo.getAccountFees());
-        List<LoanAccountPenaltiesEntity> accountPenaltyEntities = assembleAccountPenalties(loanAccountInfo.getAccountPenalties());
+        List<AccountPenaltiesEntity> accountPenaltyEntities = assembleAccountPenalties(loanAccountInfo.getAccountPenalties());
         LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAccountDetail.getLoanAmount(), loanAccountInfo.getDisbursementDate(),
                 loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration(), accountFeeEntities, accountPenaltyEntities);
 
@@ -1016,7 +1017,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 }
                 
                 List<AccountFeesEntity> feeEntities = assembleAccountFees(defaultAccountFees);
-                List<LoanAccountPenaltiesEntity> penaltyEntities = assembleAccountPenalties(defaultAccountPenalties);
+                List<AccountPenaltiesEntity> penaltyEntities = assembleAccountPenalties(defaultAccountPenalties);
                 LoanProductOverridenDetail memberOverridenDetail = new LoanProductOverridenDetail(loanAmount, feeEntities, overridenDetail, penaltyEntities);
 
                 LoanSchedule memberSchedule = assembleLoanSchedule(member, loanAccountDetail.getLoanProduct(), memberOverridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>(), loanAccountInfo.getDisbursementDate(), new ArrayList<Number>());
@@ -1199,11 +1200,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         return accountFeeEntities;
     }
     
-    private List<LoanAccountPenaltiesEntity> assembleAccountPenalties(List<CreateAccountPenaltyDto> defaultAccountPenalties) {
-        List<LoanAccountPenaltiesEntity> accountPenaltyEntities = new ArrayList<LoanAccountPenaltiesEntity>();
+    private List<AccountPenaltiesEntity> assembleAccountPenalties(List<CreateAccountPenaltyDto> defaultAccountPenalties) {
+        List<AccountPenaltiesEntity> accountPenaltyEntities = new ArrayList<AccountPenaltiesEntity>();
         for (CreateAccountPenaltyDto defaultPenalty : defaultAccountPenalties) {
             PenaltyBO penalty = this.penaltyDao.findPenaltyById(defaultPenalty.getPenaltyId().shortValue());
-            LoanAccountPenaltiesEntity deafultAccountPenaltyEntity = new LoanAccountPenaltiesEntity(null, penalty, Double.valueOf(defaultPenalty.getAmount()));
+            AccountPenaltiesEntity deafultAccountPenaltyEntity = new AccountPenaltiesEntity(null, penalty, Double.valueOf(defaultPenalty.getAmount()));
             accountPenaltyEntities.add(deafultAccountPenaltyEntity);
         }
         return accountPenaltyEntities;
@@ -1514,6 +1515,18 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 accountFeesDtos.add(accountFeesDto);
             }
         }
+        
+        Set<AccountPenaltiesDto> accountPenaltiesDtos = new HashSet<AccountPenaltiesDto>();
+        if(!loan.getAccountPenalties().isEmpty()) {
+            for (AccountPenaltiesEntity accountPenaltiesEntity: loan.getAccountPenalties()) {
+                accountPenaltiesDtos.add(new AccountPenaltiesDto(accountPenaltiesEntity.getPenalty().getPenaltyFrequency().getId(),
+                        accountPenaltiesEntity.getPenaltyStatus(),
+                        accountPenaltiesEntity.getPenalty().getPenaltyName(),
+                        accountPenaltiesEntity.getAccountPenaltyAmount().toString(),
+                        accountPenaltiesEntity.getPenalty().getPenaltyFrequency().getName(),
+                        accountPenaltiesEntity.getPenalty().getPenaltyId()));
+            }
+        }
 
         Set<String> accountFlagNames = getAccountStateFlagEntityNames(loan.getAccountFlags());
         Short accountStateId = loan.getAccountState().getId();
@@ -1542,7 +1555,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                                      loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), loan.getCollateralNote(),loan.getExternalId(),
                                      accountFeesDtos, loan.getCreatedDate(), loanPerformanceHistory,
                                      loan.getCustomer().isGroup(), getRecentActivityView(globalAccountNum), activeSurveys, accountSurveys,
-                                     loan.getCustomer().getDisplayName(), loan.getCustomer().getGlobalCustNum(), loan.getOffice().getOfficeName(), recentNoteDtos);
+                                     loan.getCustomer().getDisplayName(), loan.getCustomer().getGlobalCustNum(), loan.getOffice().getOfficeName(), recentNoteDtos,
+                                     accountPenaltiesDtos);
     }
 
     private String getMeetingRecurrence(MeetingBO meeting, UserContext userContext) {
@@ -1720,7 +1734,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     	        LocalDate disbursementDate = new LocalDate(loan.getDetailsOfUpcomigInstallment().getActionDate());
     	        
     	        LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(totalPrincipalDueNow, disbursementDate,
-    	        		loan.getInterestRate(), unpaidInstallments, gracePeriodsRemaining, accountFeeEntities, new ArrayList<LoanAccountPenaltiesEntity>());
+    	        		loan.getInterestRate(), unpaidInstallments, gracePeriodsRemaining, accountFeeEntities, new ArrayList<AccountPenaltiesEntity>());
 
     	        Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
     	        boolean loanScheduleIndependentOfCustomerMeetingEnabled = false; 

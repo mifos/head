@@ -56,7 +56,7 @@ import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.AccountTypeEntity;
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.accounts.business.LoanAccountPenaltiesEntity;
+import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
@@ -223,7 +223,7 @@ public class LoanBO extends AccountBO implements Loan {
     private List<AccountOverpaymentEntity> accountOverpayments;
     
     // automatic penalties
-    private Set<LoanAccountPenaltiesEntity> loanAccountPenalties;
+    private Set<AccountPenaltiesEntity> loanAccountPenalties;
 
     // persistence
     private LoanPrdPersistence loanPrdPersistence;
@@ -248,7 +248,7 @@ public class LoanBO extends AccountBO implements Loan {
         this.loanPrdPersistence = null;
         this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
         this.accountOverpayments = new ArrayList<AccountOverpaymentEntity>();
-        this.loanAccountPenalties = new LinkedHashSet<LoanAccountPenaltiesEntity>();
+        this.loanAccountPenalties = new LinkedHashSet<AccountPenaltiesEntity>();
         this.redone = false;
         this.parentAccount = null;
         this.loanOffering = null;
@@ -276,7 +276,7 @@ public class LoanBO extends AccountBO implements Loan {
 
         this.loanSummary = buildLoanSummary();
         this.performanceHistory = null;
-        this.loanAccountPenalties = new LinkedHashSet<LoanAccountPenaltiesEntity>();
+        this.loanAccountPenalties = new LinkedHashSet<AccountPenaltiesEntity>();
     }
 
     // opening balance loan constructor
@@ -300,11 +300,11 @@ public class LoanBO extends AccountBO implements Loan {
         }
         this.accountFees = new HashSet<AccountFeesEntity>(accountFeeEntities);
         
-        List<LoanAccountPenaltiesEntity> accountPenaltyEntities = overridenDetail.getAccountPenaltyEntities();
-        for(LoanAccountPenaltiesEntity accountPenaltyEntity : accountPenaltyEntities) {
-            accountPenaltyEntity.setLoan(this);
+        List<AccountPenaltiesEntity> accountPenaltyEntities = overridenDetail.getAccountPenaltyEntities();
+        for(AccountPenaltiesEntity accountPenaltyEntity : accountPenaltyEntities) {
+            accountPenaltyEntity.setAccount(this);
         }
-        this.loanAccountPenalties = new HashSet<LoanAccountPenaltiesEntity>(accountPenaltyEntities);
+        this.loanAccountPenalties = new HashSet<AccountPenaltiesEntity>(accountPenaltyEntities);
 
         // inherit properties from loan product
         this.interestType = new InterestTypesEntity(loanProduct.getInterestType());
@@ -480,16 +480,16 @@ public class LoanBO extends AccountBO implements Loan {
     }
     
     /**
-     * Returns the set of {@link LoanAccountPenaltiesEntity}s -- links to the penalties that apply to this loan.
+     * Returns the set of {@link AccountPenaltiesEntity}s -- links to the penalties that apply to this loan.
      */
-    public Set<LoanAccountPenaltiesEntity> getAccountPenaltiesIncludingInactivePenalties() {
+    public Set<AccountPenaltiesEntity> getAccountPenaltiesIncludingInactivePenalties() {
         return loanAccountPenalties;
     }
 
-    public Set<LoanAccountPenaltiesEntity> getAccountPenalties() {
-        Set<LoanAccountPenaltiesEntity> activeAccountPenalties = new HashSet<LoanAccountPenaltiesEntity>();
+    public Set<AccountPenaltiesEntity> getAccountPenalties() {
+        Set<AccountPenaltiesEntity> activeAccountPenalties = new HashSet<AccountPenaltiesEntity>();
         
-        for (LoanAccountPenaltiesEntity accountPenaltyEntity : getAccountPenaltiesIncludingInactivePenalties()) {
+        for (AccountPenaltiesEntity accountPenaltyEntity : getAccountPenaltiesIncludingInactivePenalties()) {
             if (accountPenaltyEntity.isActive()) {
                 activeAccountPenalties.add(accountPenaltyEntity);
             }
@@ -497,16 +497,16 @@ public class LoanBO extends AccountBO implements Loan {
         return activeAccountPenalties;
     }
     
-    public void addAccountPenalty(final LoanAccountPenaltiesEntity penalty) {
+    public void addAccountPenalty(final AccountPenaltiesEntity penalty) {
        loanAccountPenalties.add(penalty);
     }
 
-    public void removeAccountPenalty(final LoanAccountPenaltiesEntity penalty) {
+    public void removeAccountPenalty(final AccountPenaltiesEntity penalty) {
         loanAccountPenalties.remove(penalty);
     }
     
     protected void updateLoanAccountPenaltiesEntity(final Short penaltyId) {
-        LoanAccountPenaltiesEntity accountPenalty = getAccountPenalty(penaltyId);
+        AccountPenaltiesEntity accountPenalty = getAccountPenalty(penaltyId);
         if (accountPenalty != null) {
             accountPenalty.changePenaltyStatus(PenaltyStatus.INACTIVE, getDateTimeService().getCurrentJavaDateTime());
             accountPenalty.setLastAppliedDate(null);
@@ -514,15 +514,15 @@ public class LoanBO extends AccountBO implements Loan {
     }
     
     /**
-     * Return an {@link LoanAccountPenaltiesEntity} that links this account to the given penalty, or null if the penalty does not apply
+     * Return an {@link AccountPenaltiesEntity} that links this account to the given penalty, or null if the penalty does not apply
      * to this account.
      *
      * @param penaltyId
      *            the primary key of the {@link PenaltyBO} being sought.
      * @return
      */
-    public LoanAccountPenaltiesEntity getAccountPenalty(final Short penaltyId) {
-        for (LoanAccountPenaltiesEntity accountPenaltyEntity : this.getAccountPenalties()) {
+    public AccountPenaltiesEntity getAccountPenalty(final Short penaltyId) {
+        for (AccountPenaltiesEntity accountPenaltyEntity : this.getAccountPenalties()) {
             if (accountPenaltyEntity.getPenalty().getPenaltyId().equals(penaltyId)) {
                 return accountPenaltyEntity;
             }
@@ -531,7 +531,7 @@ public class LoanBO extends AccountBO implements Loan {
     }
 
     public PenaltyBO getAccountPenaltyObject(final Short penaltyId) {
-        LoanAccountPenaltiesEntity accountPenalty = getAccountPenalty(penaltyId);
+        AccountPenaltiesEntity accountPenalty = getAccountPenalty(penaltyId);
         if (accountPenalty != null) {
             return accountPenalty.getPenalty();
         }
@@ -539,7 +539,7 @@ public class LoanBO extends AccountBO implements Loan {
     }
 
     public Boolean isPenaltyActive(final Short penaltyId) {
-        LoanAccountPenaltiesEntity accountPenalty = getAccountPenalty(penaltyId);
+        AccountPenaltiesEntity accountPenalty = getAccountPenalty(penaltyId);
         return accountPenalty.isActive();
     }
     
@@ -549,24 +549,24 @@ public class LoanBO extends AccountBO implements Loan {
     
     /**
      * If the given {@PenaltyBO} has not yet been applied to this account, build and return a new
-     * {@link LoanAccountPenaltiesEntity} linking this account to the penalty; otherwise return the link object with the penalty amount
+     * {@link AccountPenaltiesEntity} linking this account to the penalty; otherwise return the link object with the penalty amount
      * replaced with the charge.
      *
      * @param penalty
      *            the penalty to apply or update
      * @param charge
      *            the amount to charge for the given penalty
-     * @return return the new or updated {@link LoanAccountPenaltiesEntity} linking this account to the penalty
+     * @return return the new or updated {@link AccountPenaltiesEntity} linking this account to the penalty
      */
-    protected final LoanAccountPenaltiesEntity getAccountPenalty(final PenaltyBO penalty, final Double charge) {
-        LoanAccountPenaltiesEntity accountPenalty = null;
+    protected final AccountPenaltiesEntity getAccountPenalty(final PenaltyBO penalty, final Double charge) {
+        AccountPenaltiesEntity accountPenalty = null;
         if (!penalty.isOneTime() && isPenaltyAlreadyApplied(penalty)) {
             accountPenalty = getAccountPenalty(penalty.getPenaltyId());
             accountPenalty.setPenaltyAmount(charge);
             accountPenalty.setPenaltyStatus(PenaltyStatus.ACTIVE);
             accountPenalty.setStatusChangeDate(getDateTimeService().getCurrentJavaDateTime());
         } else {
-            accountPenalty = new LoanAccountPenaltiesEntity(this, penalty, charge, PenaltyStatus.ACTIVE.getValue(),
+            accountPenalty = new AccountPenaltiesEntity(this, penalty, charge, PenaltyStatus.ACTIVE.getValue(),
                     null, null);
         }
         return accountPenalty;
