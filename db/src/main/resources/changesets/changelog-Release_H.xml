@@ -390,8 +390,6 @@
         </sql>
         <rollback>
             <sql endDelimiter=";">
-                ALTER TABLE account_penalties DROP INDEX account_penalties_id_idx;
-                
                 DROP TABLE IF EXISTS account_penalties;
             </sql>
         </rollback>
