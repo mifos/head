@@ -59,6 +59,7 @@ import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CreateAccountFeeDto;
+import org.mifos.dto.domain.CreateAccountPenaltyDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -184,7 +185,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
                 graceDuration, sourceOfFundId, loanPurposeId, 
                 collateralTypeId, collateralNotes, externalId, 
                 repaymentScheduleIndependentOfCustomerMeeting, 
-                recurringSchedule, accountFees);
+                recurringSchedule, accountFees, new ArrayList<CreateAccountPenaltyDto>());
         
         return IntegrationTestObjectMother.createClientLoan(createLoanAccount);
     }

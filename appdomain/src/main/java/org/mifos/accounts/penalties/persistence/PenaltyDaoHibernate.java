@@ -149,4 +149,12 @@ public class PenaltyDaoHibernate implements PenaltyDao {
         return masterEntities;
     }
 
+    @Override
+    public List<PenaltyBO> getAllAppllicablePenaltyForLoanCreation() {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("active", PenaltyStatus.ACTIVE.getValue());
+        queryParameters.put("category", PenaltyCategory.LOAN.getValue());
+        return (List<PenaltyBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_ALL_APPLICABLE_PENALTY_FOR_LOAN_CREATION, queryParameters);
+    }
+
 }

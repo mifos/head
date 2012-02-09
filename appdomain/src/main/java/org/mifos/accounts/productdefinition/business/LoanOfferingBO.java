@@ -697,6 +697,18 @@ public class LoanOfferingBO extends PrdOfferingBO {
         }
         return false;
     }
+    
+    public boolean isPenaltyPresent(final PenaltyBO penalty) {
+        logger.debug("checking isPenaltyPresent :" + penalty);
+        if (loanOfferingPenalties != null && loanOfferingPenalties.size() > 0) {
+            for (PrdOfferingPenaltiesEntity prdOfferingPenalty : loanOfferingPenalties) {
+                if (prdOfferingPenalty.isPenaltyPresent(penalty.getPenaltyId())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public void save() throws ProductDefinitionException {
         try {

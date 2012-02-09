@@ -33,6 +33,7 @@ import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.FeeDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
+import org.mifos.dto.domain.PenaltyDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.dto.domain.ValueListElement;
@@ -61,6 +62,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 
     private final List<FundDto> fundDtos;
     private final List<FeeDto> defaultFees;
+    private final List<PenaltyDto> defaultPenalties;
     private final BigDecimal defaultLoanAmount;
     private final BigDecimal maxLoanAmount;
     private final BigDecimal minLoanAmount;
@@ -94,7 +96,8 @@ public class LoanCreationLoanDetailsDto implements Serializable {
             Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments, LocalDate nextPossibleDisbursementDate, 
             LinkedHashMap<String, String> daysOfTheWeekOptions, LinkedHashMap<String, String> weeksOfTheMonthOptions, 
             boolean variableInstallmentsAllowed, boolean fixedRepaymentSchedule, Integer minGapInDays, Integer maxGapInDays, BigDecimal minInstallmentAmount, boolean compareCashflowEnabled,
-            boolean isGlimEnabled, boolean isGroup, List<LoanAccountDetailsDto> clientDetails, ApplicationConfigurationDto appConfig) {
+            boolean isGlimEnabled, boolean isGroup, List<LoanAccountDetailsDto> clientDetails, ApplicationConfigurationDto appConfig,
+            List<PenaltyDto> defaultPenalties) {
         this.repaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
         this.loanOfferingMeetingDetail = loanOfferingMeetingDetail;
         this.customerMeetingDetail = customerMeetingDetail;
@@ -106,6 +109,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 		this.interestRateType = interestRateType;
 		this.fundDtos = fundDtos;
         this.defaultFees = defaultFees;
+        this.defaultPenalties = defaultPenalties;
         this.additionalFees = additionalFees;
         this.defaultLoanAmount = defaultLoanAmount;
         this.maxLoanAmount = maxLoanAmount;
@@ -225,6 +229,10 @@ public class LoanCreationLoanDetailsDto implements Serializable {
         return defaultFees;
     }
     
+    public List<PenaltyDto> getDefaultPenalties() {
+        return defaultPenalties;
+    }
+
     public List<FeeDto> getAdditionalFees() {
         return additionalFees;
     }

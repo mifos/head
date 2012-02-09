@@ -18,28 +18,23 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.penalties.util.helpers;
+package org.mifos.dto.domain;
 
-public enum PenaltyStatus {
-    ACTIVE(1), INACTIVE(2);
+public class CreateAccountPenaltyDto {
 
-    Short value;
+    private final Integer penaltyId;
+    private final String amount;
 
-    PenaltyStatus(int value) {
-        this.value = (short)value;
+    public CreateAccountPenaltyDto(Integer penaltyId, String amount) {
+        this.penaltyId = penaltyId;
+        this.amount = amount;
     }
 
-    public Short getValue() {
-        return value;
+    public Integer getPenaltyId() {
+        return this.penaltyId;
     }
 
-    public static PenaltyStatus getPenaltyStatus(Short value) {
-        for (PenaltyStatus penaltyStatus : PenaltyStatus.values()) {
-            if (penaltyStatus.getValue().equals(value)) {
-                return penaltyStatus;
-            }
-        }
-        
-        throw new RuntimeException("no penalty status " + value);
+    public String getAmount() {
+        return this.amount;
     }
 }

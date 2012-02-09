@@ -35,6 +35,7 @@ public class PenaltyDto implements Serializable {
     private String maximumLimit;
     private PenaltyFrequencyDto penaltyFrequency;
     private GLCodeDto glCodeDto;
+    private boolean rateBasedPenalty;
 
     private String amount;
     private Integer currencyId;
@@ -129,6 +130,10 @@ public class PenaltyDto implements Serializable {
     public void setAmount(String amount) {
         this.amount = amount;
     }
+    
+    public Double getAmountAsNumber() {
+        return Double.valueOf(amount);
+    }
 
     public Integer getCurrencyId() {
         return currencyId;
@@ -153,4 +158,13 @@ public class PenaltyDto implements Serializable {
     public void setPenaltyFormula(PenaltyFormulaDto penaltyFormula) {
         this.penaltyFormula = penaltyFormula;
     }
+
+    public boolean isRateBasedPenalty() {
+        return rateBasedPenalty;
+    }
+
+    public void setRateBasedPenalty(boolean rateBasedPenalty) {
+        this.rateBasedPenalty = rateBasedPenalty;
+    }
+    
 }

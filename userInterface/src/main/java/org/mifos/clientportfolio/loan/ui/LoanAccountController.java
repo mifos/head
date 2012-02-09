@@ -42,6 +42,7 @@ import org.mifos.clientportfolio.newloan.applicationservice.LoanAccountCashFlow;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
 import org.mifos.dto.domain.CashFlowDto;
 import org.mifos.dto.domain.CreateAccountFeeDto;
+import org.mifos.dto.domain.CreateAccountPenaltyDto;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.FeeDto;
@@ -50,6 +51,7 @@ import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
+import org.mifos.dto.domain.PenaltyDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.CustomerSearchResultsDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
@@ -238,13 +240,30 @@ public class LoanAccountController {
     	formBean.setDefaultFeeId(defaultFeeId);
     	formBean.setDefaultFeeSelected(new Boolean[dto.getDefaultFees().size()]);
     	formBean.setDefaultFees(dto.getDefaultFees());
+    	
+        Number[] defaultPenaltyId = new Number[dto.getDefaultPenalties().size()];
+        Number[] defaultPenaltyAmountOrRate = new Number[dto.getDefaultPenalties().size()];
+        int idx=0;
+        for (PenaltyDto defaultPenalty : dto.getDefaultPenalties()) {
+            if (defaultPenalty.isRateBasedPenalty()) {
+                defaultPenaltyAmountOrRate[idx] = defaultPenalty.getRate();
+            } else {
+                defaultPenaltyAmountOrRate[idx] = defaultPenalty.getAmountAsNumber();
+            }
+            defaultPenaltyId[idx] = Long.valueOf(defaultPenalty.getPenaltyId());
+            idx++;
+        }
+        formBean.setDefaultPenaltyAmountOrRate(defaultPenaltyAmountOrRate);
+        formBean.setDefaultPenaltyId(defaultPenaltyId);
+        formBean.setDefaultPenaltySelected(new Boolean[dto.getDefaultPenalties().size()]);
+        formBean.setDefaultPenalties(dto.getDefaultPenalties());
 
     	Number[] selectedFeeId = new Number[3];
 		formBean.setSelectedFeeId(selectedFeeId);
 
 		Number[] selectedFeeAmount = new Number[3];
 		formBean.setSelectedFeeAmount(selectedFeeAmount);
-		formBean.setAdditionalFees(dto.getAdditionalFees());
+        formBean.setAdditionalFees(dto.getAdditionalFees());
 
     	return dto;
     }
@@ -344,9 +363,20 @@ public class LoanAccountController {
             if (defaultFeeSelectedForRemoval == null || !defaultFeeSelectedForRemoval) {
                 Integer feeId = formBean.getDefaultFeeId()[feeIndex].intValue();
                 BigDecimal amountOrRate = BigDecimal.valueOf(formBean.getDefaultFeeAmountOrRate()[feeIndex].doubleValue());
-                applicableFees.add(findById(dto.getDefaultFees(), feeId, amountOrRate));
+                applicableFees.add(findFeeById(dto.getDefaultFees(), feeId, amountOrRate));
             }
             feeIndex++;
+        }
+        
+        List<PenaltyDto> applicablePenalties = new ArrayList<PenaltyDto>();
+        int penaltyIndex = 0;
+        for (Boolean defaultPenaltySelectedForRemoval : formBean.getDefaultPenaltySelected()) {
+            if (defaultPenaltySelectedForRemoval == null || !defaultPenaltySelectedForRemoval) {
+                Integer penaltyId = formBean.getDefaultPenaltyId()[penaltyIndex].intValue();
+                BigDecimal amountOrRate = BigDecimal.valueOf(formBean.getDefaultPenaltyAmountOrRate()[penaltyIndex].doubleValue());
+                applicablePenalties.add(findPenaltyById(dto.getDefaultPenalties(), penaltyId, amountOrRate));
+            }
+            penaltyIndex++;
         }
         
         feeIndex = 0;
@@ -355,16 +385,17 @@ public class LoanAccountController {
             for (Number additionalFee : additionalFeesSelected) {
                 if (additionalFee != null) {
                     BigDecimal amountOrRate = BigDecimal.valueOf(formBean.getSelectedFeeAmount()[feeIndex].doubleValue());
-                    applicableFees.add(findById(dto.getAdditionalFees(), additionalFee.intValue(), amountOrRate));
+                    applicableFees.add(findFeeById(dto.getAdditionalFees(), additionalFee.intValue(), amountOrRate));
                 }
                 feeIndex++;
             }
         }
         
         loanScheduleFormBean.setApplicableFees(applicableFees);
+        loanScheduleFormBean.setApplicablePenalties(applicablePenalties);
     }
 
-    private FeeDto findById(List<FeeDto> defaultFees, Integer feeId, BigDecimal amountOrRate) {
+    private FeeDto findFeeById(final List<FeeDto> defaultFees, final Integer feeId, final BigDecimal amountOrRate) {
         FeeDto found = null;
         
         for (FeeDto feeDto : defaultFees) {
@@ -374,6 +405,22 @@ public class LoanAccountController {
                     feeDto.setRate(amountOrRate.doubleValue());
                 }
                 found = feeDto;
+            }
+        }
+        
+        return found;
+    }
+    
+    private PenaltyDto findPenaltyById(final List<PenaltyDto> defaultPenalties, final Integer penaltyId, final BigDecimal amountOrRate) {
+        PenaltyDto found = null;
+        
+        for (PenaltyDto penaltyDto : defaultPenalties) {
+            if (Integer.valueOf(penaltyDto.getPenaltyId()).equals(penaltyId)) {
+                penaltyDto.setAmount(amountOrRate.toPlainString());
+                if (penaltyDto.isRateBasedPenalty()) {
+                    penaltyDto.setRate(amountOrRate.doubleValue());
+                }
+                found = penaltyDto;
             }
         }
         
@@ -513,6 +560,7 @@ public class LoanAccountController {
         LocalDate disbursementDate = translateDisbursementDateToLocalDate(formBean);
         RecurringSchedule recurringSchedule = determineRecurringSchedule(formBean);
         List<CreateAccountFeeDto> accountFees = translateToAccountFeeDtos(formBean);
+        List<CreateAccountPenaltyDto> accountPenalties = translateToAccountPenaltyDtos(formBean);
         List<CreateAccountFeeDto> additionalAccountFees = translateToAdditionalAccountFeeDtos(formBean);
         accountFees.addAll(additionalAccountFees);
         
@@ -526,7 +574,7 @@ public class LoanAccountController {
                 formBean.getMinNumberOfInstallments().intValue(), formBean.getMaxNumberOfInstallments().intValue(),
                 formBean.getGraceDuration().intValue(), formBean.getFundId(),
                 formBean.getLoanPurposeId(), formBean.getCollateralTypeId(), formBean.getCollateralNotes(),
-                formBean.getExternalId(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule, accountFees);
+                formBean.getExternalId(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule, accountFees, accountPenalties);
         
         List<LoanPaymentDto> backdatedLoanPayments = new ArrayList<LoanPaymentDto>();
         int index = 0;
@@ -576,6 +624,7 @@ public class LoanAccountController {
         RecurringSchedule recurringSchedule = determineRecurringSchedule(formBean);
         List<CreateAccountFeeDto> accountFees = translateToAccountFeeDtos(formBean);
         List<CreateAccountFeeDto> additionalAccountFees = translateToAdditionalAccountFeeDtos(formBean);
+        List<CreateAccountPenaltyDto> accountPenalties =translateToAccountPenaltyDtos(formBean);
         accountFees.addAll(additionalAccountFees);
         
         BigDecimal loanAmount = BigDecimal.valueOf(formBean.getAmount().doubleValue());
@@ -588,7 +637,7 @@ public class LoanAccountController {
                 formBean.getMinNumberOfInstallments().intValue(), formBean.getMaxNumberOfInstallments().intValue(),
                 formBean.getGraceDuration().intValue(), formBean.getFundId(),
                 formBean.getLoanPurposeId(), formBean.getCollateralTypeId(), formBean.getCollateralNotes(),
-                formBean.getExternalId(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule, accountFees);
+                formBean.getExternalId(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule, accountFees, accountPenalties);
 
         LoanCreationResultDto loanCreationResultDto = null;
 
@@ -653,6 +702,24 @@ public class LoanAccountController {
             }
         }
         return accountFees;
+    }
+    
+    private List<CreateAccountPenaltyDto> translateToAccountPenaltyDtos(LoanAccountFormBean formBean) {
+        List<CreateAccountPenaltyDto> accountPenalties = new ArrayList<CreateAccountPenaltyDto>();
+        Number[] defaultPenaltyIds = formBean.getDefaultPenaltyId();
+        if (defaultPenaltyIds != null) {
+            int penaltyIndex = 0;
+            for (Number penaltyId : defaultPenaltyIds) {
+                Boolean removeDefaultPenaltySelected = formBean.getDefaultPenaltySelected()[penaltyIndex];
+                if (removeDefaultPenaltySelected == null || !removeDefaultPenaltySelected) {
+                    String amount = formBean.getDefaultPenaltyAmountOrRate()[penaltyIndex].toString();
+                    CreateAccountPenaltyDto accountPenalty = new CreateAccountPenaltyDto(penaltyId.intValue(), amount);
+                    accountPenalties.add(accountPenalty);
+                }
+                penaltyIndex++;
+            }
+        }
+        return accountPenalties;
     }
 
     @SuppressWarnings("PMD")

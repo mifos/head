@@ -60,6 +60,7 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CreateAccountFeeDto;
+import org.mifos.dto.domain.CreateAccountPenaltyDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -134,7 +135,7 @@ public class LoanBOTestUtils {
                 graceDuration, sourceOfFundId, loanPurposeId, 
                 collateralTypeId, collateralNotes, externalId, 
                 repaymentScheduleIndependentOfCustomerMeeting, 
-                recurringSchedule, accountFees);
+                recurringSchedule, accountFees, new ArrayList<CreateAccountPenaltyDto>());
 
         
         SecurityContext securityContext = new SecurityContextImpl();
@@ -241,7 +242,7 @@ public class LoanBOTestUtils {
                 graceDuration, sourceOfFundId, loanPurposeId, 
                 collateralTypeId, collateralNotes, externalId, 
                 repaymentScheduleIndependentOfCustomerMeeting, 
-                recurringSchedule, accountFees);
+                recurringSchedule, accountFees, new ArrayList<CreateAccountPenaltyDto>());
 
         
         SecurityContext securityContext = new SecurityContextImpl();
