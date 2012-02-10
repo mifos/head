@@ -28,6 +28,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
@@ -123,6 +125,7 @@ import org.mifos.dto.screen.SavingsTransactionHistoryDto;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.exceptions.HibernateSearchException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
@@ -130,9 +133,11 @@ import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -1155,6 +1160,22 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         return savingsAccount.toDto();
     }
+    
+    @Override
+    public SavingsAccountDetailDto retrieveSavingsAccountDetails(String globalAccountNum) {
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+
+        SavingsBO savingsAccount = this.savingsDao.findBySystemId(globalAccountNum);
+        savingsAccount.setUserContext(userContext);
+        try {
+            personnelDao.checkAccessPermission(userContext, savingsAccount.getOfficeId(), savingsAccount.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
+        }
+
+        return savingsAccount.toDto();
+    }
 
     @Override
     public void waiveNextDepositAmountDue(Long savingsId) {
@@ -1332,4 +1353,15 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 .getValue(), customer.getCustomerLevel().getId(), customer.getVersionNo(), customer.getOfficeId(),
                 customer.getLoanOfficerId());
     }
+
+    @Override
+    public void putSavingsBusinessKeyInSession(String globalAccountNum, HttpServletRequest request) {
+        SavingsBO savingsBO = this.savingsDao.findBySystemId(globalAccountNum);
+        try {
+            SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, savingsBO, request);
+        } catch (PageExpiredException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+    
 }

@@ -35,6 +35,8 @@ public class SavingsAccountDetailDto implements Serializable {
     private final List<CustomerNoteDto> recentNoteDtos;
     private final String recommendedOrMandatoryAmount;
     private final String globalAccountNum;
+    private final Integer accountId;
+    private final Short accountStateId;
     private final String accountStateName;
     private final String accountBalance;
     private final Date dueDate;
@@ -42,12 +44,18 @@ public class SavingsAccountDetailDto implements Serializable {
     private final SavingsPerformanceHistoryDto performanceHistory;
     private final String depositTypeName;
 
-    public SavingsAccountDetailDto(SavingsProductDto productDetails, List<SavingsRecentActivityDto> recentActivity, List<CustomerNoteDto> recentNoteDtos, String recommendedOrMandatoryAmount, String globalAccountNum, String accountStateName, String accountBalance, Date dueDate, String totalAmountDue, SavingsPerformanceHistoryDto performanceHistory, String depositTypeName) {
+    public SavingsAccountDetailDto(SavingsProductDto productDetails, List<SavingsRecentActivityDto> recentActivity,
+            List<CustomerNoteDto> recentNoteDtos, String recommendedOrMandatoryAmount, String globalAccountNum,
+            Integer accountId, Short accountStateId, String accountStateName, String accountBalance, Date dueDate,
+            String totalAmountDue, SavingsPerformanceHistoryDto performanceHistory, String depositTypeName) {
+        super();
         this.productDetails = productDetails;
         this.recentActivity = recentActivity;
         this.recentNoteDtos = recentNoteDtos;
         this.recommendedOrMandatoryAmount = recommendedOrMandatoryAmount;
         this.globalAccountNum = globalAccountNum;
+        this.accountId = accountId;
+        this.accountStateId = accountStateId;
         this.accountStateName = accountStateName;
         this.accountBalance = accountBalance;
         this.dueDate = dueDate;
@@ -76,8 +84,16 @@ public class SavingsAccountDetailDto implements Serializable {
         return this.globalAccountNum;
     }
 
+    public Integer getAccountId() {
+        return accountId;
+    }
+
     public String getAccountStateName() {
         return accountStateName;
+    }
+    
+    public Short getAccountStateId() {
+        return accountStateId;
     }
 
     public String getAccountBalance() {
@@ -99,4 +115,5 @@ public class SavingsAccountDetailDto implements Serializable {
     public String getDepositTypeName() {
         return depositTypeName;
     }
+
 }

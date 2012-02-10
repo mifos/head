@@ -22,6 +22,8 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.joda.time.LocalDate;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
@@ -115,6 +117,9 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     SavingsAccountDetailDto retrieveSavingsAccountDetails(Long savingsId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    SavingsAccountDetailDto retrieveSavingsAccountDetails(String globalAccountNum);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_WAIVE_NEXT_SAVINGS_DEPOSIT_DUE_AMOUNT')")
     void waiveNextDepositAmountDue(Long savingsId);
@@ -139,4 +144,6 @@ public interface SavingsServiceFacade {
 
 	@PreAuthorize("isFullyAuthenticated()")
 	CustomerDto retreieveCustomerDetails(Integer customerId);
+	
+	void putSavingsBusinessKeyInSession(String globalAccountNum, HttpServletRequest request);
 }
