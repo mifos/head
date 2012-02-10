@@ -507,8 +507,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									</c:forEach>
 								</c:forEach> </span>
 								<br>
-							</c:if> <span class="fontnormalbold"> <mifos:mifoslabel
-								name="loan.recurring_acc_fees" /><br>
+							</c:if>
+                            <span class="fontnormalbold"> <mifos:mifoslabel name="loan.recurring_acc_fees" /><br>
 							</span> <c:forEach items="${loanInformationDto.accountFees}" var="feesSet">
 								<c:if
 									test="${feesSet.feeFrequencyTypeId == '1' && feesSet.feeStatus != '2'}">
@@ -545,7 +545,38 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<%--	<span class="fontnormal"><a id="loanaccountdetail.link.partial" href="loan_account_detail_partial.htm">Detail
 										- partial/pending/cancelled</a><br>
 										<a id="loanaccountdetail.link.closed" href="loan_account_detail_closed.htm">Detail - closed</a></span>
-										<br> --%></td>
+										<br> --%>
+                            <span class="fontnormalbold">
+                                <mifos:mifoslabel name="loan.recurring_acc_penalties" />
+                                <br>
+                            </span>
+                            <c:forEach items="${loanInformationDto.accountPenalties}" var="penaltySet">
+                                <c:if test="${penaltySet.penaltyFrequencyId != '1' && penaltySet.penaltyStatus != '2'}">
+                                    <c:out value="${penaltySet.penaltyName}" />:
+                                    <span class="fontnormal">
+                                        <fmt:formatNumber value="${penaltySet.accountPenaltyAmount}" />&nbsp;
+                                        (<c:out value="${penaltySet.penaltyFrequencyName}"/>)
+                                    </span>
+                                </c:if>
+                            </c:forEach>
+                            <br>
+                            <span class="fontnormalbold">
+                                <mifos:mifoslabel name="loan.one_time_acc_penalties" />
+                                <br>
+                            </span>
+                            <c:forEach items="${loanInformationDto.accountPenalties}" var="penaltySet" varStatus="status">
+                                <c:if test="${penaltySet.penaltyFrequencyId == '1' && penaltySet.penaltyStatus != '2'}">
+                                    <span id="loanAccountDetail.text.oneTimePenaltyName_<fmt:formatNumber value="${status.count}"/>">
+                                        <c:out value="${penaltySet.penaltyName}"/>
+                                    </span>:
+                                    <span class="fontnormal">
+                                        <fmt:formatNumber value="${penaltySet.accountPenaltyAmount}" />&nbsp;
+                                        <br>
+                                    </span>
+                                </c:if>
+                            </c:forEach>
+                            <br>
+                            </td>
 						</tr>
 					</table>
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">

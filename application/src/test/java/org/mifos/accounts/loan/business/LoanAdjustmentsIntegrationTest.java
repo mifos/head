@@ -65,6 +65,7 @@ import org.mifos.domain.builders.GroupBuilder;
 import org.mifos.domain.builders.LoanProductBuilder;
 import org.mifos.domain.builders.MeetingBuilder;
 import org.mifos.dto.domain.CreateAccountFeeDto;
+import org.mifos.dto.domain.CreateAccountPenaltyDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -323,7 +324,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
                 graceDuration, sourceOfFundId, loanPurposeId, 
                 collateralTypeId, collateralNotes, externalId, 
                 repaymentScheduleIndependentOfCustomerMeeting, 
-                recurringSchedule, accountFees);
+                recurringSchedule, accountFees, new ArrayList<CreateAccountPenaltyDto>());
         
         return IntegrationTestObjectMother.createClientLoan(createLoanAccount);
     }

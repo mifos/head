@@ -27,6 +27,8 @@ import java.io.Serializable;
 public class PenaltyFrequencyDto implements Serializable {
     private Short id;
     private String name;
+    private boolean oneTime;
+    private boolean weekly;
 
     public void setId(Short id) {
         this.id = id;
@@ -43,4 +45,21 @@ public class PenaltyFrequencyDto implements Serializable {
     public String getName() {
         return name;
     }
+
+    public boolean isOneTime() {
+        return oneTime;
+    }
+
+    public void setOneTime(boolean oneTime) {
+        this.oneTime = oneTime;
+    }
+
+    public boolean isWeekly() {
+        return weekly;
+    }
+
+    public void setWeekly(boolean weekly) {
+        this.weekly = weekly;
+    }
+    
 }

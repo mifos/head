@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.penalties.util.helpers;
 
-import org.mifos.framework.exceptions.PropertyNotFoundException;
-
 public enum PenaltyStatus {
     ACTIVE(1), INACTIVE(2);
 
@@ -35,13 +33,13 @@ public enum PenaltyStatus {
         return value;
     }
 
-    public static PenaltyStatus getPenaltyStatus(Short value) throws PropertyNotFoundException {
+    public static PenaltyStatus getPenaltyStatus(Short value) {
         for (PenaltyStatus penaltyStatus : PenaltyStatus.values()) {
             if (penaltyStatus.getValue().equals(value)) {
                 return penaltyStatus;
             }
         }
         
-        throw new PropertyNotFoundException("FeeCategory");
+        throw new RuntimeException("no penalty status " + value);
     }
 }

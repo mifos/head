@@ -354,6 +354,41 @@
 	</div>  
 	<div class="clear"/>  
     <br />
+    <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.defaultpenalties.header" /]</span></p>
+
+    <div class="default-penalties">
+        [#assign idx = 0]
+        [#list loanProductReferenceData.defaultPenalties as defaultPenalty]
+            <div class="row">
+                [@form.label "defaultPenaltyAmountOrRate[${idx}]" false ]${defaultPenalty.penaltyName}:[/@form.label]
+                
+                [#--
+                [#if defaultPenalty.penaltyFrequency.oneTime]
+                    [@form.input path="loanAccountFormBean.defaultPenaltyAmountOrRate[${idx}]" id="defaultPenaltyAmountOrRate[${idx}]" attributes="class=separatedNumber" /]
+                [#else]
+                    [@form.input path="loanAccountFormBean.defaultPenaltyAmountOrRate[${idx}]" id="defaultPenaltyAmountOrRate[${idx}]" attributes="disabled='disabled'"/]
+                [/#if]
+                --]
+                
+                [@form.input path="loanAccountFormBean.defaultPenaltyAmountOrRate[${idx}]" id="defaultPenaltyAmountOrRate[${idx}]" attributes="disabled='disabled'"/]
+                
+                <span style="margin-left: 20px;">
+                    [@spring.message "createLoanAccount.periodicity"/] ${defaultPenalty.penaltyFrequency.name}
+                
+                [#if defaultPenalty.rateBasedPenalty]
+                    <span style="position:relative; left: -116px; top: 15px">[@spring.message "createLoanAccount.formula"/] ${defaultPenalty.penaltyFormula.name}</span>
+                [/#if]
+                </span>
+                [#--
+                <div style="position:relative; left: 650px; top: -25px; height: 2px;">[@spring.formCheckbox "loanAccountFormBean.defaultPenaltySelected[${idx}]"/]Check to remove</div>
+                [@spring.formHiddenInput "loanAccountFormBean.defaultPenaltyId[${idx}]" /]
+                --]
+            </div>
+            [#assign idx = idx + 1]
+        [/#list]
+    </div>  
+    <div class="clear"/>  
+    <br />
     <p><div class="standout">[@spring.message "createLoanAccount.enterAccountInfo.additionalfees.header" /]</div></p>
     
     <div class="additional-fees">

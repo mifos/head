@@ -62,5 +62,7 @@ public interface PenaltyDao {
     public List<PenaltyFrequencyEntity> getPenaltiesFrequencies();
 
     public List<PenaltyStatusEntity> getPenaltiesStatuses();
+
+    public List<PenaltyBO> getAllAppllicablePenaltyForLoanCreation();
     
 }

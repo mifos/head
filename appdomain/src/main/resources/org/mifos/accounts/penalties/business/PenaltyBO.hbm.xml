@@ -52,5 +52,9 @@
     <query name="penalty.getSavingPenalties">
         <![CDATA[from PenaltyBO penalty where penalty.categoryType.id in (2) order by penalty.penaltyName]]>
     </query>
+    
+    <query name="penalty.getAllApplicablePenaltiesForLoanCreation">
+        <![CDATA[from PenaltyBO penalty where penalty.status.id=:active and penalty.categoryType.id =:category]]>
+    </query>
 
 </hibernate-mapping>

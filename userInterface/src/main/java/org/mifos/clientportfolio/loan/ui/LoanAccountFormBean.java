@@ -36,6 +36,7 @@ import org.mifos.clientportfolio.newloan.applicationservice.LoanDisbursementDate
 import org.mifos.clientportfolio.newloan.applicationservice.VariableInstallmentWithFeeValidationResult;
 import org.mifos.clientportfolio.newloan.applicationservice.VariableInstallmentsFeeValidationServiceFacade;
 import org.mifos.dto.domain.FeeDto;
+import org.mifos.dto.domain.PenaltyDto;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.mifos.platform.validations.ErrorEntry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +135,12 @@ public class LoanAccountFormBean implements Serializable {
 
     private Number[] selectedFeeId;
     private Number[] selectedFeeAmount;
+    
+    // penalties
+    private List<PenaltyDto> defaultPenalties;
+    private Boolean[] defaultPenaltySelected;
+    private Number[] defaultPenaltyAmountOrRate;
+    private Number[] defaultPenaltyId;
     
     // validation of interest field
     private int digitsBeforeDecimalForInterest;
@@ -1078,6 +1085,14 @@ public class LoanAccountFormBean implements Serializable {
         this.defaultFeeSelected = defaultFeeSelected;
     }
     
+    public Boolean[] getDefaultPenaltySelected() {
+        return defaultPenaltySelected;
+    }
+
+    public void setDefaultPenaltySelected(Boolean[] defaultPenaltySelected) {
+        this.defaultPenaltySelected = defaultPenaltySelected;
+    }
+    
     public Number[] getDefaultFeeAmountOrRate() {
         return defaultFeeAmountOrRate;
     }
@@ -1086,12 +1101,36 @@ public class LoanAccountFormBean implements Serializable {
         this.defaultFeeAmountOrRate = defaultFeeAmountOrRate;
     }
     
+    public List<PenaltyDto> getDefaultPenalties() {
+        return defaultPenalties;
+    }
+
+    public void setDefaultPenalties(List<PenaltyDto> defaultPenalties) {
+        this.defaultPenalties = defaultPenalties;
+    }
+
+    public Number[] getDefaultPenaltyAmountOrRate() {
+        return defaultPenaltyAmountOrRate;
+    }
+
+    public void setDefaultPenaltyAmountOrRate(Number[] defaultPenaltyAmountOrRate) {
+        this.defaultPenaltyAmountOrRate = defaultPenaltyAmountOrRate;
+    }
+    
     public Number[] getDefaultFeeId() {
         return defaultFeeId;
     }
 
     public void setDefaultFeeId(Number[] defaultFeeId) {
         this.defaultFeeId = defaultFeeId;
+    }
+    
+    public Number[] getDefaultPenaltyId() {
+        return defaultPenaltyId;
+    }
+
+    public void setDefaultPenaltyId(Number[] defaultPenaltyId) {
+        this.defaultPenaltyId = defaultPenaltyId;
     }
     
     public Number getMaxGraceDuration() {

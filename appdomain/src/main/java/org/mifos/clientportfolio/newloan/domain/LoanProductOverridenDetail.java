@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanProductOverridenDetail {
@@ -34,23 +35,29 @@ public class LoanProductOverridenDetail {
     private final int numberOfInstallments;
     private final int graceDuration;
     private final List<AccountFeesEntity> accountFeeEntities;
+    private final List<AccountPenaltiesEntity> accountPenaltyEntities;
 
-    public LoanProductOverridenDetail(Money loanAmount, LocalDate disbursementDate, Double interestRate, int numberOfInstallments, int graceDuration, List<AccountFeesEntity> accountFeeEntities) {
+    public LoanProductOverridenDetail(Money loanAmount, LocalDate disbursementDate, Double interestRate,
+            int numberOfInstallments, int graceDuration, List<AccountFeesEntity> accountFeeEntities,
+            List<AccountPenaltiesEntity> accountPenaltyEntities) {
         this.loanAmount = loanAmount;
         this.disbursementDate = disbursementDate;
         this.interestRate = interestRate;
         this.numberOfInstallments = numberOfInstallments;
         this.graceDuration = graceDuration;
         this.accountFeeEntities = accountFeeEntities;
+        this.accountPenaltyEntities = accountPenaltyEntities;
     }
 
-    public LoanProductOverridenDetail(Money loanAmount, List<AccountFeesEntity> accountFeeEntities, LoanProductOverridenDetail overridenDetail) {
+    public LoanProductOverridenDetail(Money loanAmount, List<AccountFeesEntity> accountFeeEntities,
+            LoanProductOverridenDetail overridenDetail, List<AccountPenaltiesEntity> accountPenaltyEntities) {
         this.loanAmount = loanAmount;
         this.disbursementDate = overridenDetail.getDisbursementDate();
         this.interestRate = overridenDetail.getInterestRate();
         this.numberOfInstallments = overridenDetail.getNumberOfInstallments();
         this.graceDuration = overridenDetail.getGraceDuration();
         this.accountFeeEntities = accountFeeEntities;
+        this.accountPenaltyEntities = accountPenaltyEntities;
     }
 
     public Money getLoanAmount() {
@@ -72,8 +79,13 @@ public class LoanProductOverridenDetail {
     public int getGraceDuration() {
         return graceDuration;
     }
-    
+
     public List<AccountFeesEntity> getAccountFeeEntities() {
         return accountFeeEntities;
     }
+
+    public List<AccountPenaltiesEntity> getAccountPenaltyEntities() {
+        return accountPenaltyEntities;
+    }
+
 }

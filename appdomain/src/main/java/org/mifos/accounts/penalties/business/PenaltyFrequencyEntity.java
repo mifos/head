@@ -97,6 +97,8 @@ public class PenaltyFrequencyEntity extends MasterDataEntity {
         PenaltyFrequencyDto dto = new PenaltyFrequencyDto();
         dto.setId(id);
         dto.setName(getName());
+        dto.setOneTime(this.isOneTime());
+        dto.setWeekly(this.isWeeklyTime());
         
         return dto;
     }

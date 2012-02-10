@@ -30,8 +30,12 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.business.RateFeeBO;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
+import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -76,6 +80,12 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     
     @Autowired
     private PersonnelDao personnelDao;
+    
+    @Autowired
+    private LoanDao loanDao;
+    
+    @Autowired
+    private FeeDao feeDao;
 
     @Autowired
     public WebTierAccountServiceFacade(AccountService accountService, HibernateTransactionHelper transactionHelper,
@@ -220,6 +230,28 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
 
         try {
             AccountBO account = new AccountBusinessService().getAccount(accountId);
+            
+            if (account instanceof LoanBO) {
+                List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(account.getAccountId());
+
+                if (individualLoans != null && individualLoans.size() > 0) {
+                    for (LoanBO individual : individualLoans) {
+                        individual.updateDetails(userContext);
+
+                        FeeBO fee = this.feeDao.findById(feeId);
+
+                        if (fee instanceof RateFeeBO) {
+                            individual.applyCharge(feeId, chargeAmount);
+                        } else {
+                            Double radio = individual.getLoanAmount().getAmount().doubleValue()
+                                    / ((LoanBO) account).getLoanAmount().getAmount().doubleValue();
+
+                            individual.applyCharge(feeId, chargeAmount * radio);
+                        }
+                    }
+                }
+            }
+            
             account.updateDetails(userContext);
 
             CustomerLevel customerLevel = null;

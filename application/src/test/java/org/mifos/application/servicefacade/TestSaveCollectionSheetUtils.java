@@ -57,6 +57,7 @@ import org.mifos.domain.builders.FeeBuilder;
 import org.mifos.domain.builders.GroupBuilder;
 import org.mifos.domain.builders.MeetingBuilder;
 import org.mifos.dto.domain.CreateAccountFeeDto;
+import org.mifos.dto.domain.CreateAccountPenaltyDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -227,7 +228,7 @@ public class TestSaveCollectionSheetUtils {
                 graceDuration, sourceOfFundId, loanPurposeId, 
                 collateralTypeId, collateralNotes, externalId, 
                 repaymentScheduleIndependentOfCustomerMeeting, 
-                recurringSchedule, accountFees);
+                recurringSchedule, accountFees, new ArrayList<CreateAccountPenaltyDto>());
         
         loan = IntegrationTestObjectMother.createClientLoan(createLoanAccount);
         loan.updateDetails(TestUtils.makeUser());

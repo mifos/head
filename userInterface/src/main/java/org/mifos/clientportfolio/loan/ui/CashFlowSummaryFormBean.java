@@ -34,6 +34,7 @@ import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.dto.domain.FeeDto;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
+import org.mifos.dto.domain.PenaltyDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.LoanInstallmentsDto;
 import org.mifos.dto.screen.LoanScheduleDto;
@@ -83,6 +84,7 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
     private Integer customerId;
     private List<LoanCreationInstallmentDto> variableInstallments = new ArrayList<LoanCreationInstallmentDto>();
     private List<FeeDto> applicableFees = new ArrayList<FeeDto>();
+    private List<PenaltyDto> applicablePenalties = new ArrayList<PenaltyDto>();
     private BigDecimal loanPrincipal;
     private BigDecimal totalLoanInterest;
     private BigDecimal totalLoanFees;
@@ -726,4 +728,13 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
     public void setLoanAccountFormBean(LoanAccountFormBean loanAccountFormBean) {
         this.loanAccountFormBean = loanAccountFormBean;
     }
+
+    public List<PenaltyDto> getApplicablePenalties() {
+        return applicablePenalties;
+    }
+
+    public void setApplicablePenalties(List<PenaltyDto> applicablePenalties) {
+        this.applicablePenalties = applicablePenalties;
+    }
+    
 }

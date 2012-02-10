@@ -26,6 +26,7 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.mifos.clientportfolio.loan.service.RecurringSchedule;
 import org.mifos.dto.domain.CreateAccountFeeDto;
+import org.mifos.dto.domain.CreateAccountPenaltyDto;
 
 @SuppressWarnings("PMD")
 public class CreateLoanAccount implements RecurringSchedule {
@@ -46,16 +47,19 @@ public class CreateLoanAccount implements RecurringSchedule {
     private final boolean repaymentScheduleIndependentOfCustomerMeeting;
     private final RecurringSchedule recurringSchedule;
     private final List<CreateAccountFeeDto> accountFees;
+    private final List<CreateAccountPenaltyDto> accountPenalties;
     private final int minAllowedNumberOfInstallments;
     private final int maxAllowedNumberOfInstallments;
     private final BigDecimal minAllowedLoanAmount;
     private final BigDecimal maxAllowedLoanAmount;
-    
-    public CreateLoanAccount(Integer customerId, Integer productId, Integer accountState, 
-            BigDecimal loanAmount, BigDecimal minAllowedLoanAmount, BigDecimal maxAllowedLoanAmount, 
-            Double interestRate, LocalDate disbursementDate, int numberOfInstallments, int minAllowedNumberOfInstallments, int maxAllowedNumberOfInstallments, 
-            int graceDuration, Integer sourceOfFundId, Integer loanPurposeId, Integer collateralTypeId, 
-            String collateralNotes, String externalId, boolean repaymentScheduleIndependentOfCustomerMeeting, RecurringSchedule recurringSchedule, List<CreateAccountFeeDto> accountFees) {
+
+    public CreateLoanAccount(Integer customerId, Integer productId, Integer accountState, BigDecimal loanAmount,
+            BigDecimal minAllowedLoanAmount, BigDecimal maxAllowedLoanAmount, Double interestRate,
+            LocalDate disbursementDate, int numberOfInstallments, int minAllowedNumberOfInstallments,
+            int maxAllowedNumberOfInstallments, int graceDuration, Integer sourceOfFundId, Integer loanPurposeId,
+            Integer collateralTypeId, String collateralNotes, String externalId,
+            boolean repaymentScheduleIndependentOfCustomerMeeting, RecurringSchedule recurringSchedule,
+            List<CreateAccountFeeDto> accountFees, List<CreateAccountPenaltyDto> accountPenalties) {
         this.customerId = customerId;
         this.productId = productId;
         this.accountState = accountState;
@@ -76,6 +80,7 @@ public class CreateLoanAccount implements RecurringSchedule {
         this.repaymentScheduleIndependentOfCustomerMeeting = repaymentScheduleIndependentOfCustomerMeeting;
         this.recurringSchedule = recurringSchedule;
         this.accountFees = accountFees;
+        this.accountPenalties = accountPenalties;
     }
 
     public Integer getCustomerId() {
@@ -173,6 +178,10 @@ public class CreateLoanAccount implements RecurringSchedule {
         return accountFees;
     }
     
+    public List<CreateAccountPenaltyDto> getAccountPenalties() {
+        return accountPenalties;
+    }
+
     public Integer getMinAllowedNumberOfInstallments() {
         return minAllowedNumberOfInstallments;
     }

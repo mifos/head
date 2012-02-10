@@ -26,6 +26,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.penalties.exceptions.PenaltyException;
 import org.mifos.accounts.penalties.util.helpers.PenaltyConstants;
+import org.mifos.accounts.penalties.util.helpers.PenaltyFrequency;
 import org.mifos.accounts.penalties.util.helpers.PenaltyStatus;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -153,6 +154,22 @@ public abstract class PenaltyBO extends AbstractBusinessObject {
     public PenaltyCategoryEntity getCategoryType() {
         return categoryType;
     }
+    
+    public boolean isOneTime() {
+        return getPenaltyFrequency().isOneTime();
+    }
+    
+    public boolean isDailyTime() {
+        return getPenaltyFrequency().isDailyTime();
+    }
+    
+    public boolean isWeeklyTime() {
+        return getPenaltyFrequency().isWeeklyTime();
+    }
+    
+    public boolean isMonthlyTime() {
+        return getPenaltyFrequency().isMonthlyTime();
+    }
 
     public PenaltyDto toDto() {
         PenaltyDto dto = new PenaltyDto();
@@ -171,10 +188,12 @@ public abstract class PenaltyBO extends AbstractBusinessObject {
             Money amount = ((AmountPenaltyBO) this).getAmount();
             dto.setCurrencyId(amount.getCurrency().getCurrencyId().intValue());
             dto.setAmount(amount.toString(AccountingRules.getDigitsAfterDecimal()));
+            dto.setRateBasedPenalty(false);
         } else {
             RatePenaltyBO rate = (RatePenaltyBO) this;
             dto.setRate(rate.getRate());
             dto.setPenaltyFormula(rate.getFormula().toDto());
+            dto.setRateBasedPenalty(true);
         }
         
         return dto;

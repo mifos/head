@@ -160,6 +160,27 @@ $(document).ready(function() {
 	    <!-- end of row -->
 	    </div>
  		[#assign index = index + 1]	    	
+    [/#list]  
+    [#list loanScheduleFormBean.applicablePenalties as defaultPenalty]
+        <div class="row">
+            <div class="attribute"><span class="standout">${defaultPenalty.penaltyName}</span></div>
+            <div class="value">
+                [#if defaultPenalty.rateBasedPenalty]
+                    [#setting number_format="#.###"]
+                    ${defaultPenalty.rate?string.number}%
+                    [#setting number_format=loanAccountFormBean.numberFormatForMonetaryAmounts]
+                [#else]
+                    ${defaultPenalty.amountAsNumber?string.number}
+                [/#if]
+                
+                [#if defaultPenalty.rateBasedPenalty]
+                    ${defaultPenalty.penaltyFormula.name}
+                [/#if]
+                
+                <span class="standout">[@spring.message "createLoanAccount.periodicity"/]</span> ${defaultPenalty.penaltyFrequency.name}
+            </div>
+        <!-- end of row -->
+        </div>
     [/#list]    
 <!-- end of product summary -->
 </div>
