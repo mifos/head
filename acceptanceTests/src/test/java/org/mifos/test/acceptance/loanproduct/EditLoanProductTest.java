@@ -133,7 +133,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
     public void editExistingLoanAndSavingsProduct() throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011,2,02,13,0,0,0);
+        DateTime targetTime = new DateTime(2011, 2, 2, 13, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         EditLoanProductPage editLoanProductPage = createNewLoanProductAndNavigateToEditLoanPage();
@@ -170,10 +170,9 @@ public class EditLoanProductTest extends UiTestCaseBase {
 
         ///////////////////////SAVINGS////////////////////
         SavingsProductHelper savingsProductHelper = new SavingsProductHelper(selenium);
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CENTERS);
-        params.setStartDateDD("2");
-        params.setStartDateMM("2");
-        params.setStartDateYYYY("2011");
+        SavingsProductParameters params = savingsProductHelper.
+                getGenericSavingsProductParameters(new DateTime(2011, 2, 2, 12, 0, 0, 0),
+                        SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CENTERS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
         EditSavingsProductPage editSavingsProductPage = confirmationPage.navigateToSavingsProductDetails().editSavingsProduct();
 

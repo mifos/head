@@ -65,16 +65,15 @@ public class SavingsProductHelper {
      * @param typeOfDeposits
      * @param applicableFor
      */
-    public SavingsProductParameters getGenericSavingsProductParameters(int typeOfDeposits, int applicableFor) {
+    public SavingsProductParameters getGenericSavingsProductParameters(DateTime startDate, int typeOfDeposits, int applicableFor) {
         SavingsProductParameters params = new SavingsProductParameters();
 
         params.setProductInstanceName("Savings product test" + StringUtil.getRandomString(3));
         params.setShortName(StringUtil.getRandomString(4));
         params.setProductCategory(SavingsProductParameters.OTHER);
-        DateTime today = new DateTime();
-        params.setStartDateDD(Integer.valueOf(today.getDayOfMonth()).toString());
-        params.setStartDateMM(Integer.valueOf(today.getMonthOfYear()).toString());
-        params.setStartDateYYYY(Integer.valueOf(today.getYearOfEra()).toString());
+        params.setStartDateDD(Integer.valueOf(startDate.getDayOfMonth()).toString());
+        params.setStartDateMM(Integer.valueOf(startDate.getMonthOfYear()).toString());
+        params.setStartDateYYYY(Integer.valueOf(startDate.getYearOfEra()).toString());
 
         params.setApplicableFor(applicableFor);
         params.setTypeOfDeposits(typeOfDeposits);
@@ -96,9 +95,9 @@ public class SavingsProductHelper {
         return params;
     }
 
-    public SavingsProductParameters getMandatoryClientsMinimumBalanceSavingsProductParameters()
+    public SavingsProductParameters getMandatoryClientsMinimumBalanceSavingsProductParameters(DateTime startDate)
     {
-        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY, SavingsProductParameters.CLIENTS);
+        SavingsProductParameters params = getGenericSavingsProductParameters(startDate, SavingsProductParameters.MANDATORY, SavingsProductParameters.CLIENTS);
         params.setDaysOrMonthsForInterestCalculation(params.DAYS);
         params.setInterestRate("1");
         params.setFrequencyOfInterestPostings("1");
@@ -108,9 +107,9 @@ public class SavingsProductHelper {
         return params;
     }
 
-    public SavingsProductParameters getVoluntaryClients3MonthCalculactionPostingProductParameters()
+    public SavingsProductParameters getVoluntaryClients3MonthCalculactionPostingProductParameters(DateTime startDate)
     {
-        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CLIENTS);
+        SavingsProductParameters params = getGenericSavingsProductParameters(startDate, SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CLIENTS);
         params.setDaysOrMonthsForInterestCalculation(params.MONTHS);
         params.setInterestRate("5");
         params.setFrequencyOfInterestPostings("3");
@@ -123,8 +122,8 @@ public class SavingsProductHelper {
         return params;
     }
     
-    public SavingsProductParameters getInvalidSavingsProductParameters(int typeOfDeposits, int applicableFor){
-        SavingsProductParameters params = this.getGenericSavingsProductParameters(typeOfDeposits, applicableFor);
+    public SavingsProductParameters getInvalidSavingsProductParameters(DateTime startDate, int typeOfDeposits, int applicableFor){
+        SavingsProductParameters params = this.getGenericSavingsProductParameters(startDate, typeOfDeposits, applicableFor);
         params.setNumberOfDaysOrMonthsForInterestCalculation("0");
         params.setFrequencyOfInterestPostings("0");
         params.setAmountAppliesTo(0);
