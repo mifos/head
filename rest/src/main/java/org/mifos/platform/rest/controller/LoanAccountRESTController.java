@@ -88,7 +88,7 @@ public class LoanAccountRESTController {
                               @RequestParam(required=false) String paymentDate,
                               @RequestParam(required=false) Short receiptId,
                               @RequestParam(required=false) String receiptDate,
-                              @RequestParam(required=false) Short paymentModeId) throws Exception {
+                              @RequestParam Short paymentModeId) throws Exception {
 
         validateAmount(amount);
 
@@ -158,7 +158,7 @@ public class LoanAccountRESTController {
                                   @RequestParam(required = false) String paymentDate,
                                   @RequestParam(required = false) Short receiptId,
                                   @RequestParam(required = false) String receiptDate,
-                                  @RequestParam(required = false) Short paymentModeId,
+                                  @RequestParam Short paymentModeId,
                                   @RequestParam Boolean waiveInterest) throws Exception {
 
 
@@ -193,13 +193,23 @@ public class LoanAccountRESTController {
 
         BigDecimal totalRepaymentAmount = (new Money(loan.getCurrency(), repayLoanDto.getEarlyRepaymentMoney())).getAmount();
         BigDecimal waivedAmount = (new Money(loan.getCurrency(), repayLoanDto.getWaivedRepaymentMoney())).getAmount();
-
-        RepayLoanInfoDto repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
-                Double.toString(totalRepaymentAmount.doubleValue()), receiptIdString,
-                receiptDateTime, paymentTypeId, (short) user.getUserId(),
-                waiveInterest.booleanValue(),
-                paymentDateTime, totalRepaymentAmount, waivedAmount);
-
+        BigDecimal instalments = totalRepaymentAmount.subtract(waivedAmount);
+        RepayLoanInfoDto repayLoanInfoDto;
+        if (waiveInterest.equals(true)) {
+    		repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
+            Double.toString(totalRepaymentAmount.subtract(instalments).doubleValue()), receiptIdString,
+            receiptDateTime, paymentTypeId, (short) user.getUserId(),
+            waiveInterest.booleanValue(),
+            paymentDateTime, totalRepaymentAmount.subtract(instalments), waivedAmount);
+        }
+        else {
+			repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
+	        Double.toString(totalRepaymentAmount.doubleValue()), receiptIdString,
+	        receiptDateTime, paymentTypeId, (short) user.getUserId(),
+	        waiveInterest.booleanValue(),
+	        paymentDateTime, totalRepaymentAmount, waivedAmount);
+        }
+        
         Money outstandingBeforePayment = loan.getLoanSummary().getOutstandingBalance();
 
         this.loanAccountServiceFacade.makeEarlyRepaymentWithCommit(repayLoanInfoDto);
