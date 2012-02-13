@@ -21,6 +21,8 @@
 package org.mifos.application.admin.business.service;
 
 import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.service.BusinessRuleException;
 
 import java.util.Date;
 
@@ -36,5 +38,13 @@ public class MonthClosingServiceFacadeWebTier implements MonthClosingServiceFaca
     @Override
     public Date getMonthClosingDate() {
         return monthClosingDay;
+    }
+
+    @Override
+    public void validateTransactionDate(Date trxnDate) {
+        if (getMonthClosingDate() != null &&
+                getMonthClosingDate().compareTo(DateUtils.getDateWithoutTimeStamp(trxnDate)) >= 0) {
+            throw new BusinessRuleException("errors.invalidTxndateMonthAlreadyClosed");
+        }
     }
 }

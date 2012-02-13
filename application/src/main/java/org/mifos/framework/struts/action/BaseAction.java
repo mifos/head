@@ -51,6 +51,7 @@ import org.mifos.application.admin.servicefacade.CheckListServiceFacade;
 import org.mifos.application.admin.servicefacade.FeeServiceFacade;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
+import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.admin.system.ShutdownManager;
@@ -140,6 +141,7 @@ public abstract class BaseAction extends DispatchAction {
     protected AccountServiceFacade accountServiceFacade;
     protected MeetingServiceFacade meetingServiceFacade;
     protected LoanAccountServiceFacade loanAccountServiceFacade;
+    protected MonthClosingServiceFacade monthClosingServiceFacade;
     protected SavingsServiceFacade savingsServiceFacade;
     protected HolidayServiceFacade holidayServiceFacade;
     protected OfficeServiceFacade officeServiceFacade;
@@ -215,6 +217,7 @@ public abstract class BaseAction extends DispatchAction {
         this.meetingServiceFacade = getBean(MeetingServiceFacade.class);
         this.loanServiceFacade = getBean(LoanServiceFacade.class);
         this.loanAccountServiceFacade = getBean(LoanAccountServiceFacade.class);
+        this.monthClosingServiceFacade = getBean(MonthClosingServiceFacade.class);
         this.holidayServiceFacade = getBean(HolidayServiceFacade.class);
         this.officeServiceFacade = getBean(OfficeServiceFacade.class);
         this.feeServiceFacade = getBean(FeeServiceFacade.class);

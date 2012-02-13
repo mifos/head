@@ -106,6 +106,7 @@ import org.mifos.accounts.util.helpers.AccountSearchResultsDto;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
+import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
@@ -280,6 +281,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Autowired
     private QuestionnaireServiceFacade questionnaireServiceFacade;
+
+    @Autowired
+    private MonthClosingServiceFacade monthClosingServiceFacade;
 
     @Autowired
     private LegacyRolesPermissionsDao legacyRolesPermissionsDao;
@@ -1845,6 +1849,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         loanDisbursement.setPaymentType(paymentType);
 
         Date trxnDate = DateUtils.getDateWithoutTimeStamp(loanDisbursement.getPaymentDate().toDateMidnight().toDate());
+
+        monthClosingServiceFacade.validateTransactionDate(trxnDate);
+
         if (!isTrxnDateValid(Integer.valueOf(loanDisbursement.getAccountId()), trxnDate)) {
             throw new BusinessRuleException("errors.invalidTxndate");
         }

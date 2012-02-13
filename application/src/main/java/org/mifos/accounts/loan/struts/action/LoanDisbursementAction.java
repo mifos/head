@@ -151,6 +151,8 @@ public class LoanDisbursementAction extends BaseAction {
                     loanAccountId), disbursalAmount, new LocalDate(trxnDate), paymentType, comment,
                     new LocalDate(receiptDate), actionForm.getReceiptId(), customerDto);
 
+            monthClosingServiceFacade.validateTransactionDate(trxnDate);
+
             // GLIM
             List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(loanAccountId);
             for (LoanBO individual : individualLoans) {

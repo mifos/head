@@ -46,6 +46,7 @@ import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
+import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -89,6 +90,8 @@ public class StandardAccountService implements AccountService {
     private LoanBusinessService loanBusinessService;
     private HibernateTransactionHelper transactionHelper;
 
+    @Autowired
+    private MonthClosingServiceFacade monthClosingServiceFacade;
 
     private LegacyMasterDao legacyMasterDao;
 
@@ -149,6 +152,8 @@ public class StandardAccountService implements AccountService {
         } catch (AccountException e) {
             throw new MifosRuntimeException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED, e);
         }
+
+        monthClosingServiceFacade.validateTransactionDate(accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate());
         
         PersonnelBO loggedInUser = ApplicationContextProvider.getBean(LegacyPersonnelDao.class).findPersonnelById(accountPaymentParametersDto.getUserMakingPayment().getUserId());
         List<InvalidPaymentReason> validationErrors = validatePayment(accountPaymentParametersDto);

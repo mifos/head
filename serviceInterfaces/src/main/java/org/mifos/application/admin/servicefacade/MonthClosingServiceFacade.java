@@ -29,4 +29,6 @@ public interface MonthClosingServiceFacade {
     void setMonthClosingDate(Date day);
 
     Date getMonthClosingDate();
+
+    void validateTransactionDate(Date trxnDate);
 }
