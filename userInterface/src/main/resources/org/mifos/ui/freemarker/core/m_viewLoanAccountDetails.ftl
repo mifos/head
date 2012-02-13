@@ -378,12 +378,12 @@
 				[@spring.message "loan.more_details" /]
 			</span><br/>
 			<span class="fontnormal">
-	            <a id="loanaccountdetail.link.questionGroups" href="loanAccountAction.do?method=viewAndEditAdditionalInformation&creatorId=${Session.UserContext.id}&entityId=${loanInformationDto.accountId}&event=Create&source=Loan&backPageUrl=${currentPageUrl}">
+	            <a id="loanaccountdetail.link.questionGroups" href="loanAccountAction.do?method=viewAndEditAdditionalInformation&creatorId=${Session.UserContext.id}&entityId=${loanInformationDto.accountId}&event=Create&source=Loan&backPageUrl=${backPageUrl}">
 	    			[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 				</a>
 	            <br/>
                 [#if containsQGForCloseLoan]
-	                <a id="loanaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${loanInformationDto.accountId}&event=Close&source=Loan&backPageUrl=${currentPageUrl}">
+	                <a id="loanaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${loanInformationDto.accountId}&event=Close&source=Loan&backPageUrl=${backPageUrl}">
 	                	[@spring.message "loan.ViewQuestionGroupForClosedLoanResponsesLink" /]
 	                </a> <br/>
                 [/#if]

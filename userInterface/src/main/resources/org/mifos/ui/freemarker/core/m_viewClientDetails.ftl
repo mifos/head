@@ -510,12 +510,12 @@
 					<img src="pages/framework/images/trans.gif" width="10" height="10">
 				</div>				
 				<div>
-					<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Create&source=Client&backPageUrl=${currentPageUrl}">
+					<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Create&source=Client&backPageUrl=${backPageUrl}">
 				    	[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 					</a>
 					<br/>
 					[#if containsQGForCloseClient]		
-                    <a id="viewClientDetails.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Close&source=Client&backPageUrl=${currentPageUrl}">
+                    <a id="viewClientDetails.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Close&source=Client&backPageUrl=${backPageUrl}">
                         [@spring.message "client.ViewQuestionGroupForClosedClientResponsesLink" /]
                     </a>
                     <br/>

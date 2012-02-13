@@ -1,8 +1,5 @@
 package org.mifos.ui.core.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,9 +10,9 @@ import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.dto.domain.CenterInformationDto;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.GroupInformationDto;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.ui.core.controller.util.helpers.SitePreferenceHelper;
+import org.mifos.ui.core.controller.util.helpers.UrlHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +39,7 @@ public class ViewCustomerDetailsController {
 	private final SitePreferenceHelper sitePreferenceHelper = new SitePreferenceHelper();
 
 	@RequestMapping(value = "/viewClientDetails", method=RequestMethod.GET)
-    public ModelAndView showClientDetails(HttpServletRequest request, HttpServletResponse response) throws ApplicationException{
+    public ModelAndView showClientDetails(HttpServletRequest request, HttpServletResponse response) {
         ModelAndView modelAndView = new ModelAndView();
         sitePreferenceHelper.resolveSiteType(modelAndView, "viewClientDetails", request);
         modelAndView.addObject("include_page", new IncludePage(request, response));
@@ -57,11 +54,7 @@ public class ViewCustomerDetailsController {
         boolean isPhotoFieldHidden = Boolean.parseBoolean(configurationServiceFacade.getConfig("Client.Photo"));
         modelAndView.addObject("isPhotoFieldHidden", isPhotoFieldHidden);
 
-        try {
-            modelAndView.addObject("currentPageUrl", constructCurrentPageUrl("Client", clientSystemId));
-        } catch (UnsupportedEncodingException e) {
-            throw new ApplicationException(e);
-        }
+        modelAndView.addObject("backPageUrl", UrlHelper.constructCurrentPageUrl(request));
 
         boolean containsQGForCloseClient = false;
         containsQGForCloseClient = questionnaireServiceFacade.getQuestionGroupInstances(clientInformationDto.getClientDisplay().getCustomerId(), "Close", "Client").size() > 0;
@@ -73,7 +66,7 @@ public class ViewCustomerDetailsController {
 	}
 
 	@RequestMapping(value = "/viewGroupDetails", method=RequestMethod.GET)
-	public ModelAndView showGroupDetails(HttpServletRequest request, HttpServletResponse response) throws ApplicationException{
+	public ModelAndView showGroupDetails(HttpServletRequest request, HttpServletResponse response) {
 	    ModelAndView modelAndView = new ModelAndView();
 	    sitePreferenceHelper.resolveSiteType(modelAndView, "viewGroupDetails", request);
 	    modelAndView.addObject("include_page", new IncludePage(request, response));
@@ -89,11 +82,7 @@ public class ViewCustomerDetailsController {
 	    boolean isCenterHierarchyExists = configurationServiceFacade.getBooleanConfig("ClientRules.CenterHierarchyExists");
         modelAndView.addObject("isCenterHierarchyExists", isCenterHierarchyExists );
 
-        try {
-            modelAndView.addObject("currentPageUrl", constructCurrentPageUrl("Group", groupSystemId));
-        } catch (UnsupportedEncodingException e) {
-            throw new ApplicationException(e);
-        }
+        modelAndView.addObject("backPageUrl", UrlHelper.constructCurrentPageUrl(request));
         
         groupServiceFacade.putGroupBusinessKeyInSession(groupSystemId, request);
         
@@ -101,7 +90,7 @@ public class ViewCustomerDetailsController {
 	}
 	
 	@RequestMapping(value = "/viewCenterDetails", method=RequestMethod.GET)
-	public ModelAndView showCenterDetails(HttpServletRequest request, HttpServletResponse response) throws ApplicationException {
+	public ModelAndView showCenterDetails(HttpServletRequest request, HttpServletResponse response) {
 	    ModelAndView modelAndView = new ModelAndView();
 	    sitePreferenceHelper.resolveSiteType(modelAndView, "viewCenterDetails", request);
 	    modelAndView.addObject("include_page", new IncludePage(request, response));
@@ -111,21 +100,11 @@ public class ViewCustomerDetailsController {
 	    
 	    modelAndView.addObject("centerInformationDto", centerInformationDto);
 	    
-        try {
-            modelAndView.addObject("currentPageUrl", constructCurrentPageUrl("Center", centerSystemId));
-        } catch (UnsupportedEncodingException e) {
-            throw new ApplicationException(e);
-        }
-	    
+        modelAndView.addObject("backPageUrl", UrlHelper.constructCurrentPageUrl(request));
+            
         centerServiceFacade.putCenterBusinessKeyInSession(centerSystemId, request);
         
 	    return modelAndView;
-	}
-
-	private String constructCurrentPageUrl(String customer, String globalCustNum) throws UnsupportedEncodingException{
-	    String viewName =  String.format("view%sDetails.ftl", customer);
-	    String url = String.format("%s?globalCustNum=%s", viewName, globalCustNum);
-	    return URLEncoder.encode(url, "UTF-8");
 	}
 
 }
