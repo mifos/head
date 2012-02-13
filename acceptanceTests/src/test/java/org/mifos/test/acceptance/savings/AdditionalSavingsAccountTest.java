@@ -101,7 +101,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
     public void savingsAccountWithDailyInterestMandatoryDeposits() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011,2,10,13,0,0,0);
+        DateTime targetTime = new DateTime(2011,2,14,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
