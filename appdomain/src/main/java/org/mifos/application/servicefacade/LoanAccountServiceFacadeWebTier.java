@@ -37,6 +37,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -216,6 +218,7 @@ import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
 import org.mifos.framework.exceptions.HibernateSearchException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -225,8 +228,10 @@ import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.Transformer;
 import org.mifos.platform.cashflow.CashFlowConstants;
 import org.mifos.platform.cashflow.CashFlowService;
@@ -2612,4 +2617,15 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             this.transactionHelper.closeSession();
         }
     }
+
+    @Override
+    public void putLoanBusinessKeyInSession(String globalAccountNum, HttpServletRequest request) {
+        LoanBO loanBO = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        try {
+            SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, loanBO, request);
+        } catch (PageExpiredException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+    
 }

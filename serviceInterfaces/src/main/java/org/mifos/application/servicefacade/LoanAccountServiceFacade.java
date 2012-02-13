@@ -24,6 +24,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
@@ -234,4 +236,6 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
 
     @PreAuthorize("isFullyAuthenticated()")
     void applyOverpaymentClear(String overpaymentId, BigDecimal overpaymentAmount);
+    
+    void putLoanBusinessKeyInSession(String globalAccountNum, HttpServletRequest request);
 }
