@@ -37,6 +37,7 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CenterTestHelper;
@@ -206,6 +207,37 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         navigationHelper.navigateToLoanAccountPage(loanId).navigateToRepaymentSchedulePage().verifyScheduleNotContainDate("16-Mar-2009");
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void testHolidayLoanDisbursement() throws Exception {
+    	DateTime targetTime = new DateTime(2020, 8, 9, 0, 0, 0, 0);
+    	dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+    	String officeName = "MyOfficeDHMFT";
+    	String loanId = "000100000000035";
+ 
+    	CreateHolidaySubmitParameters holidayParams = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
+    	holidayParams.setName("Holiday" + StringUtil.getRandomString(8));
+    	holidayParams.setFromDateDD("16");
+    	holidayParams.setFromDateMM("08");
+    	holidayParams.setFromDateYYYY("2020");
+    	holidayParams.setRepaymentRule(CreateHolidaySubmitParameters.MORATORIUM);
+    	holidayParams.addOffice(officeName);
+
+    	holidayTestHelper.createHoliday(holidayParams);
+    	DateTime targetTime1 = new DateTime(2020, 8, 16, 0, 0, 0, 0);
+    	dateTimeUpdaterRemoteTestingService.setDateTime(targetTime1);
+    	
+    	DisburseLoanParameters disburseParams = new DisburseLoanParameters();
+    	disburseParams.setDisbursalDateDD("16");
+    	disburseParams.setDisbursalDateMM("08");
+    	disburseParams.setDisbursalDateYYYY("2020");
+    	disburseParams.setPaymentType(DisburseLoanParameters.CASH);
+    	
+    	loanTestHelper.prepareToDisburseLoan(loanId)
+    			.submitAndNavigateToDisburseLoanConfirmationPage(disburseParams)
+    			.submitButDisbursalFailed("Disbursement date must be on a working day.");
+    }
+    
     private void createLoan(final CreateLoanAccountSearchParameters searchParameters,
                             final CreateLoanAccountSubmitParameters submitAccountParameters) {
         logOut();

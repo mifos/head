@@ -19,6 +19,8 @@
  */
 package org.mifos.ui.core.controller.util.helpers;
 
+import java.net.URLDecoder;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -61,6 +63,10 @@ public class SitePreferenceHelper extends CookieGenerator{
         }
 
         modelAndView.setViewName(resultViewName.toString());
+        
+        //FIXME should working without decoding
+        String url = URLDecoder.decode(UrlHelper.constructCurrentPageUrl(request));
+        request.setAttribute("currentPageUrl", removeSitePreferenceParameterFromUrl(url));
     }
 
     public void setSitePreferenceCookie(Integer userId, HttpServletResponse response) {
@@ -74,6 +80,10 @@ public class SitePreferenceHelper extends CookieGenerator{
         } else {
             addCookie(response, sitePreferenceType.name());
         }
+    }
+    
+    private String removeSitePreferenceParameterFromUrl(String url){
+        return url.replaceFirst("&site_preference=normal", "").replaceFirst("&site_preference=mobile", "");
     }
 
 }

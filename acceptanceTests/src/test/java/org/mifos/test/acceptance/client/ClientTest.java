@@ -1094,7 +1094,9 @@ public class ClientTest extends UiTestCaseBase {
         // Given
         String clientName = "client1 lastname";
         String groupName = navigationHelper.navigateToClientViewDetailsPage(clientName).getGroupMembership();
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.GROUPS);
+        SavingsProductParameters params = savingsProductHelper.
+                getGenericSavingsProductParameters(new DateTime(2009, 7, 13, 12, 0, 0, 0),
+                        SavingsProductParameters.MANDATORY,SavingsProductParameters.GROUPS);
         savingsProductHelper.createSavingsProduct(params);
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         searchParameters.setSearchString(groupName);
@@ -1174,7 +1176,9 @@ public class ClientTest extends UiTestCaseBase {
         String savingsId = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters).getAccountId();
         savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
 
-        SavingsProductParameters savingsProductParameters = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.GROUPS);
+        SavingsProductParameters savingsProductParameters = savingsProductHelper.
+                getGenericSavingsProductParameters(new DateTime(2009, 7, 13, 12, 0, 0, 0),
+                        SavingsProductParameters.MANDATORY,SavingsProductParameters.GROUPS);
         savingsProductParameters.setShortName("M-45");
         savingsProductParameters.setAmountAppliesTo(SavingsProductParameters.PER_INDIVIDUAL);
         savingsProductHelper.createSavingsProduct(savingsProductParameters);

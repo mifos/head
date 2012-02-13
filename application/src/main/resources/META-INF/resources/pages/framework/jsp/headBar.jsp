@@ -8,6 +8,19 @@
   <tr>
     <td width="200" rowspan="2"><img src="pages/framework/images/logo.jpg" width="200" height="70"></td>
     <td align="right" bgcolor="#FFFFFF" class="fontnormal">
+		<c:if test="${requestScope.currentPageUrl != null}">
+			<c:choose>
+				<c:when test="${requestScope.currentSitePreference == 'MOBILE'}">
+					<a href="${requestScope.currentPageUrl}&site_preference=normal">
+				</c:when>
+				<c:otherwise>
+					<a href="${requestScope.currentPageUrl}&site_preference=mobile">
+				</c:otherwise>
+			</c:choose>
+				<mifos:mifoslabel name="framework.switchSiteType" bundle="FrameworkUIResources"></mifos:mifoslabel>
+			</a>
+			&nbsp;|
+		</c:if>
          <a id="changeLanguagLink" href="#">Change Language</a>
          <span id="dialog" title="Change Language" style="display:none;">Change Language</span>
      &nbsp;|&nbsp;

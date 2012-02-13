@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.savingsproduct;
 
+import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
@@ -66,7 +67,9 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     }
 
     public void validateDefineSavingsProductForm() throws Exception {
-        SavingsProductParameters params = savingsProductHelper.getInvalidSavingsProductParameters(SavingsProductParameters.MANDATORY, SavingsProductParameters.GROUPS);
+        SavingsProductParameters params = savingsProductHelper.
+                getInvalidSavingsProductParameters(new DateTime(),
+                        SavingsProductParameters.MANDATORY, SavingsProductParameters.GROUPS);
         params.setShortName("V140");
         DefineNewSavingsProductPage newSavingsProductPage = savingsProductHelper.getDefineSavingsProductPageWithValidationErrors(params);
         
@@ -77,7 +80,9 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     }
     
     public void createSavingsProductWithoutInterestRateDetails() throws Exception {
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CENTERS);
+        SavingsProductParameters params = savingsProductHelper.
+                getGenericSavingsProductParameters(new DateTime(),
+                        SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CENTERS);
         
         params.setShortName(StringUtil.getRandomString(3));
         DefineNewSavingsProductPreviewPage savingsProductPreviewPage = savingsProductHelper.getDefineSavingsProductPreviewPageWithoutInterestRateDetails(params);
@@ -89,7 +94,9 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     
     // http://mifosforge.jira.com/browse/MIFOSTEST-139
     public void createVoluntarySavingsProductForCenters() throws Exception {
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CENTERS);
+        SavingsProductParameters params = savingsProductHelper.
+                getGenericSavingsProductParameters(new DateTime(),
+                        SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CENTERS);
         params.setShortName("M139");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
@@ -100,7 +107,9 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     // http://mifosforge.jira.com/browse/MIFOSTEST-137
     public void createVoluntarySavingsProductForGroups() throws Exception {
 
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY, SavingsProductParameters.GROUPS);
+        SavingsProductParameters params = savingsProductHelper.
+                getGenericSavingsProductParameters(new DateTime(),
+                        SavingsProductParameters.VOLUNTARY, SavingsProductParameters.GROUPS);
         params.setShortName("M137");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
@@ -111,7 +120,9 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     // http://mifosforge.jira.com/browse/MIFOSTEST-1093
     public void createVoluntarySavingsProductForClients() throws Exception {
 
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CLIENTS);
+        SavingsProductParameters params = savingsProductHelper.
+                getGenericSavingsProductParameters(new DateTime(),
+                        SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CLIENTS);
         params.setShortName("1093");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
@@ -122,7 +133,9 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     // http://mifosforge.jira.com/browse/MIFOSTEST-1094
     public void createMandatorySavingsProductForGroups() throws Exception {
 
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY, SavingsProductParameters.GROUPS);
+        SavingsProductParameters params = savingsProductHelper.
+                getGenericSavingsProductParameters(new DateTime(),
+                        SavingsProductParameters.MANDATORY, SavingsProductParameters.GROUPS);
         params.setShortName("1094");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
@@ -133,7 +146,9 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     // http://mifosforge.jira.com/browse/MIFOSTEST-138
     public void createMandatorySavingsProductForClients() throws Exception {
 
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY, SavingsProductParameters.CLIENTS);
+        SavingsProductParameters params = savingsProductHelper.
+                getGenericSavingsProductParameters(new DateTime(),
+                        SavingsProductParameters.MANDATORY, SavingsProductParameters.CLIENTS);
         params.setShortName("M138");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
@@ -144,7 +159,9 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     // http://mifosforge.jira.com/browse/MIFOSTEST-1095
     public void createMandatorySavingsProductForCenters() throws Exception {
 
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY, SavingsProductParameters.CENTERS);
+        SavingsProductParameters params = savingsProductHelper.
+                getGenericSavingsProductParameters(new DateTime(),
+                        SavingsProductParameters.MANDATORY, SavingsProductParameters.CENTERS);
         params.setShortName("1095");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 

@@ -106,7 +106,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         //When
-        SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters();
+        SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters(targetTime);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
         confirmationPage.navigateToSavingsProductDetails();     //"Stu1233266079799 Client1233266079799"
         SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233266079799 Client1233266079799", params.getProductInstanceName(), "100000.0");
@@ -171,7 +171,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         //When
-        SavingsProductParameters params = savingsProductHelper.getVoluntaryClients3MonthCalculactionPostingProductParameters();
+        SavingsProductParameters params = savingsProductHelper.getVoluntaryClients3MonthCalculactionPostingProductParameters(targetTime);
 
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
         confirmationPage.navigateToSavingsProductDetails();
@@ -219,7 +219,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         //When
-        SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters();
+        SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters(targetTime);
         params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
         confirmationPage.navigateToSavingsProductDetails();
@@ -284,7 +284,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         //When
-        SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters();
+        SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters(targetTime);
         params.setBalanceUsedForInterestCalculation(SavingsProductParameters.AVERAGE_BALANCE);
 
         String savingsId = createSavingsAccount(params);
@@ -352,7 +352,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         //When
-        SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters();
+        SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters(targetTime);
         params.setBalanceUsedForInterestCalculation(SavingsProductParameters.AVERAGE_BALANCE);
         params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
         params.setStartDateDD("1");
@@ -414,11 +414,8 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         //When
-        SavingsProductParameters params = getVoluntaryGroupsMonthCalculactionProductParameters();
+        SavingsProductParameters params = getVoluntaryGroupsMonthCalculactionProductParameters(targetTime);
         params.setApplicableFor(SavingsProductParameters.CLIENTS);
-        params.setStartDateDD("01");
-        params.setStartDateMM("01");
-        params.setStartDateYYYY("2011");
         params.setInterestRate("10");
         String savingsId = createSavingsAccount(params);
         DepositWithdrawalSavingsParameters depositParams = new DepositWithdrawalSavingsParameters();
@@ -485,11 +482,8 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"7.6");
         //step 12-15
-        params = getVoluntaryGroupsMonthCalculactionProductParameters();
+        params = getVoluntaryGroupsMonthCalculactionProductParameters(targetTime);
         params.setApplicableFor(SavingsProductParameters.CLIENTS);
-        params.setStartDateDD("01");
-        params.setStartDateMM("07");
-        params.setStartDateYYYY("2011");
 
         String savingsId2 = createSavingsAccount(params);
         depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId2, DepositWithdrawalSavingsParameters.DEPOSIT, "555");
@@ -514,7 +508,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         //When
-        SavingsProductParameters params = getVoluntaryGroupsMonthCalculactionProductParameters();
+        SavingsProductParameters params = getVoluntaryGroupsMonthCalculactionProductParameters(targetTime);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
         confirmationPage.navigateToSavingsProductDetails();
 
@@ -625,8 +619,10 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         return depositParamsreturn;
     }
 
-    private SavingsProductParameters getVoluntaryGroupsMonthCalculactionProductParameters() {
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.GROUPS);
+    private SavingsProductParameters getVoluntaryGroupsMonthCalculactionProductParameters(DateTime startDate) {
+        SavingsProductParameters params = savingsProductHelper.
+                getGenericSavingsProductParameters(startDate,
+                        SavingsProductParameters.VOLUNTARY,SavingsProductParameters.GROUPS);
         params.setMandatoryAmount("2000");
         params.setInterestRate("5");
         params.setDaysOrMonthsForInterestCalculation(params.MONTHS);

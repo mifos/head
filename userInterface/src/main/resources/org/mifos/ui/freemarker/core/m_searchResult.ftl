@@ -89,7 +89,7 @@
 				</span>
 				<span>
 				[#list client.savingsGlobalAccountNum as saving]
-					<a href="savingsAction.do?globalAccountNum=${saving}&method=get&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+					<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
 						${saving}
 					</a>
 				[/#list]
@@ -103,7 +103,7 @@
 				</span>
 				<span>
 				[#list client.loanGlobalAccountNum as loan]
-					<a href="loanAccountAction.do?globalAccountNum=${loan}&method=get&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+					<a href="viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
 						${loan}
 					</a>
 				[/#list]
@@ -170,7 +170,7 @@
 				</span>
 				<span>
 				[#list group.savingsGlobalAccountNum as saving]
-					<a href="savingsAction.do?globalAccountNum=${saving}&method=get&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+					<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&method=get&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
 						${saving}
 					</a>
 				[/#list]
@@ -184,7 +184,7 @@
 				</span>
 				<span>
 				[#list group.loanGlobalAccountNum as loan]
-					<a href="loanAccountAction.do?globalAccountNum=${loan}&method=get&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+					<a href="viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
 						${loan}
 					</a>
 				[/#list]
@@ -246,7 +246,7 @@
 				</span>
 				<span>
 				[#list center.savingsGlobalAccountNum as saving]
-					<a href="savingsAction.do?globalAccountNum=${saving}&method=get&recordOfficeId=${center.branchId}&recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+					<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${center.branchId}&recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
 						${saving}
 					</a>
 				[/#list]

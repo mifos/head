@@ -72,6 +72,7 @@
 [#macro headerTop]
 <div class="site_logo">
     <span class="logo"></span>
+    [@switchSiteType/]
     <a id="changeLanguagLink" href="#">Change Language</a>
     <span id="dialog" title="Change Language" style="display:none;">Change Language</span>&nbsp;|&nbsp;
     <a href="yourSettings.do?method=get" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>&nbsp;|&nbsp;
@@ -81,9 +82,22 @@
 
 [#macro headerTopMobile]
 <div>
+	[@switchSiteType/]
     <a id="changeLanguagLink" href="#">Change Language</a>
     <span id="dialog" title="Change Language" style="display:none;">Change Language</span>&nbsp;|&nbsp;
     <a href="yourSettings.do?method=get" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>&nbsp;|&nbsp;
     <a id="logout_link" href="j_spring_security_logout" title="[@spring.message "logout"/]">[@spring.message "logout"/]</a>
 </div>
+[/#macro]
+
+[#macro switchSiteType]
+	[#if Request.currentPageUrl?has_content]
+		[#if Request.currentSitePreference == "MOBILE"]
+		<a href="${Request.currentPageUrl}&site_preference=normal">	
+		[#else]
+		<a href="${Request.currentPageUrl}&site_preference=mobile">
+		[/#if]
+		[@spring.message "switchSiteType" /]
+		</a>&nbsp;|
+	[/#if]
 [/#macro]
