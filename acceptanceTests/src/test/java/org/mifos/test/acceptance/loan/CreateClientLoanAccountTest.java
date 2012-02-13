@@ -372,7 +372,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         multipleAccParameters2.setLoanProduct("product95B");
         DisburseLoanParameters disburseParams = new DisburseLoanParameters();
         disburseParams.setPaymentType(DisburseLoanParameters.CASH);
-        disburseParams.setDisbursalDateDD("20");
+        disburseParams.setDisbursalDateDD("18");
         disburseParams.setDisbursalDateMM("03");
         disburseParams.setDisbursalDateYYYY("2011");
         String error = "The loan could not be disbursed as " + multipleAccParameters1.getLoanProduct() + " and " + multipleAccParameters2.getLoanProduct() + " are not allowed to co-exist";
