@@ -109,6 +109,27 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         verifyOriginalSchedule(tableOnOriginalInstallment);
     }
 
+    @Test(enabled=true)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyForFlatVariableInstallmentLoanEarlyDisbursal() throws Exception {
+        int interestType = DefineNewLoanProductPage.SubmitFormParameters.FLAT;
+        applicationDatabaseOperation.updateLSIM(1);
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(interestType);
+        loanProductTestHelper.
+                navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
+                fillVariableInstalmentOption("20","1","100").
+                submitAndGotoNewLoanProductPreviewPage().submit();
+        String[][] tableOnOriginalInstallment = OriginalScheduleData.FLAT_VARIABLE_LOAN_EARLY_DISBURSAL_SCHEDULE;
+        createLoanAccount(systemDateTime.plusDays(1), systemDateTime, false);
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
+        loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        loanTestHelper.makePayment(systemDateTime.plusDays(5), "100");
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        applicationDatabaseOperation.updateLSIM(0);
+    }
+
     // http://mifosforge.jira.com/browse/MIFOSTEST-1163
     @Test(enabled=false) //blocked by http://mifosforge.jira.com/browse/MIFOS-5026 - ldomzalski
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -136,7 +157,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
                 navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 fillVariableInstalmentOption("30","1","100");
         defineNewLoanProductPage.submitWithErrors("fee cannot be applied to variable installment loan product");
-        defineNewLoanProductPage.setInterestRateType(DefineNewLoanProductPage.SubmitFormParameters.FLAT);
+        defineNewLoanProductPage.setInterestRateType(DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION);
         defineNewLoanProductPage.submitWithErrors("The selected interest type is invalid for variable installment loan product");
         defineNewLoanProductPage.setInterestRateType(interestType);
         defineNewLoanProductPage.submitAndGotoNewLoanProductPreviewPage().submit();

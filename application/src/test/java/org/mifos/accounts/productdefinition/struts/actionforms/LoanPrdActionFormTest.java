@@ -172,7 +172,7 @@ public class LoanPrdActionFormTest {
 
         loanPrdActionForm.setInterestTypes(InterestType.FLAT.getValueAsString());
         loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
-        Mockito.verify(errors).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
+        Mockito.verifyZeroInteractions(errors);
         Mockito.reset(errors);
 
         loanPrdActionForm.setInterestTypes(InterestType.DECLINING.getValueAsString());

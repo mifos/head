@@ -31,7 +31,7 @@ public class LoanInterestCalculatorFactoryImpl implements LoanInterestCalculator
         if (variableInstallmentLoanProduct) {
             switch (interestType) {
             case FLAT:
-                throw new MifosRuntimeException("interestType not supported: " + interestType);
+                return new FlatWithInterestCalculatedDailyLoanInterestCalculator();
             case DECLINING:
                 return new DecliningBalanceWithInterestCalculatedDailyLoanInterestCalculator();
             case DECLINING_EPI:

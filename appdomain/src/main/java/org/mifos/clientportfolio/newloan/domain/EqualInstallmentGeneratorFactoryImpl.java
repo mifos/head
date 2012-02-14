@@ -14,7 +14,7 @@ public class EqualInstallmentGeneratorFactoryImpl implements EqualInstallmentGen
         if (variableInstallmentLoanProduct) {
             switch (interestType) {
             case FLAT:
-                throw new MifosRuntimeException("interestType not supported: " + interestType);
+                return new FlatVariableInstallmentPrincipalWithInterestGenerator();
             case DECLINING:
                 return new VariableInstallmentPrincipalWithInterestGenerator();
             case DECLINING_EPI:

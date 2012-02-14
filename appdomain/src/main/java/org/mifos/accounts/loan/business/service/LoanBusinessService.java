@@ -37,6 +37,7 @@ import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.holiday.business.service.HolidayService;
@@ -228,7 +229,7 @@ public class LoanBusinessService implements BusinessService {
         return loanScheduleGenerationDto.isVariableInstallmentsAllowed() || loanBO.isDecliningBalanceInterestRecalculation();
     }
 
-    public void applyDailyInterestRates(LoanScheduleGenerationDto loanScheduleGenerationDto) {
+    public void applyDailyInterestRates(LoanScheduleGenerationDto loanScheduleGenerationDto, boolean flatInterestType) {
         Double dailyInterestFactor = loanScheduleGenerationDto.getInterestRate() / (AccountingRules.getNumberOfInterestDays() * 100d);
         Money principalOutstanding = loanScheduleGenerationDto.getLoanAmountValue();
         Money runningPrincipal = new Money(loanScheduleGenerationDto.getLoanAmountValue().getCurrency());
@@ -246,7 +247,9 @@ public class LoanBusinessService implements BusinessService {
             Money principal = total.subtract(interest.add(fees).add(miscFee).add(miscPenality));
             installment.setPrincipalAndInterest(interest, principal);
             initialDueDate = currentDueDate;
-            principalOutstanding = principalOutstanding.subtract(principal);
+            if (!flatInterestType) {
+                principalOutstanding = principalOutstanding.subtract(principal);
+            }
             runningPrincipal = runningPrincipal.add(principal);
         }
 
@@ -296,7 +299,8 @@ public class LoanBusinessService implements BusinessService {
         LoanBO loanBO = loanScheduleGenerationDto.getLoanBO();
         if (dailyInterestRatesApplicable(loanScheduleGenerationDto, loanBO)) {
             loanScheduleGenerationDto.setInstallments(installments);
-            applyDailyInterestRates(loanScheduleGenerationDto);
+            applyDailyInterestRates(loanScheduleGenerationDto, loanBO.getInterestType() != null
+                    && InterestType.isFlatInterestType(loanBO.getInterestType().getId()));
             loanBO.updateInstallmentSchedule(installments);
         }
         return installments;
