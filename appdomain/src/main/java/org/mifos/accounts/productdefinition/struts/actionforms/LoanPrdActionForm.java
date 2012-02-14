@@ -2590,7 +2590,8 @@ public class LoanPrdActionForm extends BaseActionForm {
     void validateInterestTypeForVariableInstallment(ActionErrors errors, Locale locale) {
         if(canConfigureVariableInstallments()) {
             try {
-                if (!InterestType.isDecliningInterestType(Integer.parseInt(interestTypes))) {
+                if (!InterestType.isDecliningInterestType(Integer.parseInt(interestTypes)) &&
+                        !InterestType.isFlatInterestType(Integer.parseInt(interestTypes))) {
                     addError(errors,interestTypes,ProductDefinitionConstants.INVALID_INTEREST_TYPE_FOR_VARIABLE_INSTALLMENT);
                 }
             } catch(NumberFormatException e) {

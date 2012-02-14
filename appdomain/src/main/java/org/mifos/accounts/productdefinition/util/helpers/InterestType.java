@@ -42,6 +42,10 @@ public enum InterestType {
         return fromInt(interestTypeNum).equals(DECLINING_PB);
     }
 
+    public static boolean isFlatInterestType(int interestTypeNum) {
+        return fromInt(interestTypeNum).equals(FLAT);
+    }
+
     public Short getValue() {
         return value;
     }

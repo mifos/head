@@ -876,7 +876,6 @@ public class DefineNewLoanProductPage extends AbstractPage {
     }
 
     public DefineNewLoanProductPage verifyBlockedInterestTypes() {
-        verifyInterestBlockedForVariableInstallment(SubmitFormParameters.FLAT);
         verifyInterestBlockedForVariableInstallment(SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION);
         verifyInterestBlockedForVariableInstallment(SubmitFormParameters.DECLINING_BALANCE_EPI);
         return this;

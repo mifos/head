@@ -264,7 +264,7 @@ public class LoanBusinessServiceTest {
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
         Date disbursementDate = TestUtils.getDate(25, 8, 2010);
         final Money loanAmount = new Money(rupee, "1000");
-        loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments));
+        loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments), false);
 
         assertInstallment(installment1, "78.6", "20.4");
         assertInstallment(installment2, "180.8", "18.2");
@@ -287,7 +287,7 @@ public class LoanBusinessServiceTest {
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
         Date disbursementDate = TestUtils.getDate(25, 8, 2010);
         final Money loanAmount = new Money(rupee, "1000");
-        loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments));
+        loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments), false);
 
         assertInstallment(installment1, "78.6", "20.4");
         assertInstallment(installment2, "180.8", "18.2");
@@ -309,7 +309,7 @@ public class LoanBusinessServiceTest {
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
         Date disbursementDate = TestUtils.getDate(25, 8, 2010);
         final Money loanAmount = new Money(rupee, "1000");
-        loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments));
+        loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments), false);
 
         assertInstallment(installment1, "94.4", "4.6");
         assertInstallment(installment2, "194.8", "4.2");
@@ -337,7 +337,7 @@ public class LoanBusinessServiceTest {
                 installment4, installment5, installment6, installment7);
         Date disbursementDate = TestUtils.getDate(25, 8, 2010);
         final Money loanAmount = new Money(rupee, "1000");
-        loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments));
+        loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments), false);
 
         assertInstallment(installment1, "69.4", "4.6");
         assertInstallment(installment2, "94.7", "4.3");
