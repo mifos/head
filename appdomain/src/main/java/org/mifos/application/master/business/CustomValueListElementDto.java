@@ -64,7 +64,7 @@ public class CustomValueListElementDto implements DataTransferObject {
     public CustomValueListElementDto() {
     }
 
-    public CustomValueListElementDto(Integer lookUpId, String lookUpValue, String lookUpValueKey) {
+    public CustomValueListElementDto(java.lang.Integer lookUpId, String lookUpValue, String lookUpValueKey) {
 
         this.lookUpId = lookUpId;
         this.lookUpValue = lookUpValue;
@@ -74,7 +74,7 @@ public class CustomValueListElementDto implements DataTransferObject {
     /**
      * Possibly used in legacyMasterDao.getCustomValueListElements
      */
-    public CustomValueListElementDto(Short id, Integer lookUpId, String lookUpValue,
+    public CustomValueListElementDto(java.lang.Short id, java.lang.Integer lookUpId, String lookUpValue,
             String lookUpValueKey) {
 
         this.lookUpId = lookUpId;
@@ -86,7 +86,7 @@ public class CustomValueListElementDto implements DataTransferObject {
     /**
      * Possibly used in legacyMasterDao.getCustomValueListElements
      */
-    public CustomValueListElementDto(Integer id, Integer lookUpId, String lookUpValue) {
+    public CustomValueListElementDto(java.lang.Integer id, java.lang.Integer lookUpId, String lookUpValue) {
 
         this.lookUpId = lookUpId;
         this.lookUpValue = lookUpValue;
@@ -97,18 +97,18 @@ public class CustomValueListElementDto implements DataTransferObject {
      * This method is used in some places, but it is unclear if the id value is
      * ever set.
      */
-    public Integer getAssociatedId() {
+    public java.lang.Integer getAssociatedId() {
         return associatedId;
     }
 
-    public Integer getLookUpId() {
+    public java.lang.Integer getLookUpId() {
         return lookUpId;
     }
 
     /*
      * Use the key for the LookUpValueEntity to resolve the value.
      */
-    public String getLookUpValue() {
+    public java.lang.String getLookUpValue() {
         return ApplicationContextProvider.getBean(MessageLookup.class).lookup(lookUpValueKey);
     }
 
