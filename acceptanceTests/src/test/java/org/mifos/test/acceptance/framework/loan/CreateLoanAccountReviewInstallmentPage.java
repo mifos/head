@@ -147,8 +147,8 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         if (!selenium.isTextPresent(validationMessage)) {
             Assert.fail(validationMessage + " was expected but not found on: " + selenium.getLocation() + " source code <br/> " + selenium.getHtmlSource());
         }
-        Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/ul/li[text()='']"), "Blank Error message is thrown");
-        Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/ul/li[text()=' ']"), "Blank Error message is thrown");
+        Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()='']"), "Blank Error message is thrown");
+        Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()=' ']"), "Blank Error message is thrown");
     }
 
     private void validateErrorForInstallmentGapsGraterThanMaxGap(int maxGap, int noOfInstallments, DateTime disbursalDate) {
