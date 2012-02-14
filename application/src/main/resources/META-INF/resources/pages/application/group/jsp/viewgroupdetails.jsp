@@ -56,7 +56,7 @@ explanation of the license and how it is applied.
 							<td width="27%" rowspan="2" align="right" valign="top"
 								class="fontnormal"><c:if
 								test="${groupInformationDto.groupDisplay.customerStatusId != CustomerStatus.GROUP_CLOSED.value}">
-								<a id="viewgroupdetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${groupInformationDto.groupDisplay.customerId}"/>&input=group&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								<a id="viewgroupdetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=${groupInformationDto.groupDisplay.customerId}&input=group&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 									
 									<fmt:message key="Group.editStatus">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
@@ -308,7 +308,7 @@ explanation of the license and how it is applied.
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td width="53%"><span class="fontnormal"> <a id="viewgroupdetails.link.viewDetails"
-												href="customerAccountAction.do?method=load&globalCustNum=<c:out value="${groupInformationDto.groupDisplay.globalCustNum}"/>">
+												href="customerAccountAction.do?method=load&globalCustNum=${groupInformationDto.groupDisplay.globalCustNum}">
 											<mifos:mifoslabel name="Group.viewdetails"
 												bundle="GroupUIResources" /> </a> </span></td>
 										</tr>
@@ -609,7 +609,7 @@ explanation of the license and how it is applied.
                             </a>
                             <br/>
 							<a id="viewgroupdetails.link.viewHistoricalData"
-								href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${groupInformationDto.groupDisplay.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=${groupInformationDto.groupDisplay.globalCustNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 							<mifos:mifoslabel name="Group.viewhistoricaldata"
 								bundle="GroupUIResources"></mifos:mifoslabel> </a> <br>
 								<html-el:link styleId="viewgroupdetails.link.viewChangeLog" href="groupCustAction.do?method=loadChangeLog&entityType=Group&entityId=${groupInformationDto.groupDisplay.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
@@ -726,7 +726,7 @@ explanation of the license and how it is applied.
               <tr>
                 <td width="70%" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${groupInformationDto.groupDisplay.customerId}&instanceId=${questionGroupInstance.id}&event=View&source=Group&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${groupInformationDto.groupDisplay.customerId}&instanceId=${questionGroupInstance.id}&event=View&source=Group&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
                       <c:out value="${questionGroupInstance.questionGroupTitle}"/>
                     </a>
                   </span>
@@ -795,12 +795,12 @@ explanation of the license and how it is applied.
 							<td align="right" class="paddingleft05"><span
 								class="fontnormal8pt"> <c:if test="${!empty groupInformationDto.recentCustomerNotes}">
 								<a id="viewgroupdetails.link.seeAllNotes"
-									href="customerNotesAction.do?method=search&customerId=<c:out value="${groupInformationDto.groupDisplay.customerId}"/>&globalAccountNum=<c:out value="${groupInformationDto.groupDisplay.globalCustNum}"/>&customerName=<c:out value="${groupInformationDto.groupDisplay.displayName}"/>&securityParamInput=Group&levelId=<c:out value="${groupInformationDto.groupDisplay.customerLevelId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									href="customerNotesAction.do?method=search&customerId=${groupInformationDto.groupDisplay.customerId}&globalAccountNum=${groupInformationDto.groupDisplay.globalCustNum}&customerName=${groupInformationDto.groupDisplay.displayName}&securityParamInput=Group&levelId=${groupInformationDto.groupDisplay.customerLevelId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="Group.seeallnotes"
 									bundle="GroupUIResources"></mifos:mifoslabel> </a>
 								<br>
 							</c:if> <a id="viewgroupdetails.link.addNote"
-								href="customerNotesAction.do?method=load&customerId=<c:out value="${groupInformationDto.groupDisplay.customerId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								href="customerNotesAction.do?method=load&customerId=${groupInformationDto.groupDisplay.customerId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="Group.addanote" bundle="GroupUIResources"></mifos:mifoslabel>
 							</a> </span></td>
 						</tr>

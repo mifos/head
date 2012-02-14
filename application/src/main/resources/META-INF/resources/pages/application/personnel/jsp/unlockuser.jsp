@@ -45,7 +45,7 @@ explanation of the license and how it is applied.
 						name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 					</a> / <c:set var="personnelBO" scope="request"
 						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
-						<a id="unlockuser.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${personnelBO.globalPersonnelNum}"/>">
+						<a id="unlockuser.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=${personnelBO.globalPersonnelNum}">
            		<c:out value="${personnelBO.displayName}"/>
            	</a>
             </span>

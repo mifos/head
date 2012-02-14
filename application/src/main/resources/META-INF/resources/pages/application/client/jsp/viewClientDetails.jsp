@@ -66,7 +66,7 @@ explanation of the license and how it is applied.
 							<td rowspan="2" align="right" valign="top" class="headingorange">
 							<span class="fontnormal"> <!-- Edit center status link --> <c:if
 								test="${clientInformationDto.clientDisplay.customerStatusId != 6}">
-								<a id="viewClientDetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${clientInformationDto.clientDisplay.customerId}"/>&input=client&currentFlowKey=${requestScope.currentFlowKey}">
+								<a id="viewClientDetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=${clientInformationDto.clientDisplay.customerId}&input=client&currentFlowKey=${requestScope.currentFlowKey}">
 									<fmt:message key="client.editStatus">
 										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
 									</fmt:message>
@@ -265,7 +265,7 @@ explanation of the license and how it is applied.
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td width="53%"><span class="fontnormal"> <a id="viewClientDetails.link.viewDetails"
-												href="customerAccountAction.do?method=load&globalCustNum=<c:out value="${clientInformationDto.clientDisplay.globalCustNum}"/>">
+												href="customerAccountAction.do?method=load&globalCustNum=${clientInformationDto.clientDisplay.globalCustNum}">
 											<mifos:mifoslabel name="client.viewdetails"
 												bundle="ClientUIResources" /> </a> </span></td>
 										</tr>
@@ -663,15 +663,15 @@ explanation of the license and how it is applied.
 							</table>
 					</c:if>
 							<span class="paddingL10"> <br>
-								<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Create&source=Client&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+								<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Create&source=Client&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
 								    <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
 								</a> <br>
                                 <c:if test="${containsQGForCloseClient}">
-                                    <a id="viewClientDetails.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Close&source=Client&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+                                    <a id="viewClientDetails.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Close&source=Client&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
                                         <mifos:mifoslabel name="client.ViewQuestionGroupForClosedClientResponsesLink" bundle="ClientUIResources" />
                                     </a> <br>
                                 </c:if>
-								<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${clientInformationDto.clientDisplay.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=${clientInformationDto.clientDisplay.globalCustNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								    <mifos:mifoslabel name="client.HistoricalDataLink" bundle="ClientUIResources" />
 								</a> <br>
 								<html-el:link styleId="viewClientDetails.link.viewChangeLog" href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${clientInformationDto.clientDisplay.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
@@ -781,7 +781,7 @@ explanation of the license and how it is applied.
               <tr>
                 <td width="70%" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&instanceId=${questionGroupInstance.id}&event=View&source=Client&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&instanceId=${questionGroupInstance.id}&event=View&source=Client&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
                       <c:out value="${questionGroupInstance.questionGroupTitle}"/>
                     </a>
                   </span>
@@ -863,7 +863,7 @@ explanation of the license and how it is applied.
                     </html-el:link>
 								    <br/>
 							    </c:if> 
-                  <a id="viewClientDetails.link.notesLink" href="customerNotesAction.do?method=load&customerId=<c:out value="${clientInformationDto.clientDisplay.customerId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+                  <a id="viewClientDetails.link.notesLink" href="customerNotesAction.do?method=load&customerId=${clientInformationDto.clientDisplay.customerId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							      <mifos:mifoslabel name="client.NotesLink" bundle="ClientUIResources"/> 
                   </a> 
                 </span>

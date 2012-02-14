@@ -69,7 +69,7 @@ explanation of the license and how it is applied.
                     <br>
                     </span>
                      <!-- Link to view the center details -->
-                    <a id="createcenterconfirmation.link.viewDetailsInfo" href="centerCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.centerCustActionForm.globalCustNum}"/>&recordOfficeId=${sessionScope.centerCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.centerCustActionForm.loanOfficerId}&randomNUm=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}">
+                    <a id="createcenterconfirmation.link.viewDetailsInfo" href="centerCustAction.do?method=get&globalCustNum=${sessionScope.centerCustActionForm.globalCustNum}&recordOfficeId=${sessionScope.centerCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.centerCustActionForm.loanOfficerId}&randomNUm=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}">
                     	
                     	<fmt:message key="Center.ViewDetailsInfo">
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>

@@ -188,7 +188,7 @@ explanation of the license and how it is applied.
                                     <c:remove var="urlMap" />
                                     <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
                                      <c:set target="${urlMap}" property="${officeDto.name}" value="offAction.do?method=get&officeId=${officeDto.id}"/>
-									<a id="officeDetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${officeDto.id}&event=Create&source=Office&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+									<a id="officeDetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${officeDto.id}&event=Create&source=Office&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
                                 		<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
                             		</a>                        		
 									</td>

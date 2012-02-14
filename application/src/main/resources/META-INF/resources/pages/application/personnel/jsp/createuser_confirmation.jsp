@@ -54,7 +54,7 @@ explanation of the license and how it is applied.
 		<span class="fontnormal"><br>    
                             <br>
                             </span>
-			<a id="createuser_confirmation.link.viewUser"  href="PersonAction.do?method=get&randomNUm=${sessionScope.randomNUm}&globalPersonnelNum=<c:out value="${requestScope.globalPersonnelNum}"/>">
+			<a id="createuser_confirmation.link.viewUser"  href="PersonAction.do?method=get&randomNUm=${sessionScope.randomNUm}&globalPersonnelNum=${requestScope.globalPersonnelNum}">
 			<mifos:mifoslabel name="Personnel.ViewUserdetailsNow" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			</a>
 			<span class="fontnormal"><br>

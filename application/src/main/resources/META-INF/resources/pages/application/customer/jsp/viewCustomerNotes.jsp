@@ -54,7 +54,7 @@ explanation of the license and how it is applied.
 						<mifos:mifoslabel name="Customer.addnoteheading"></mifos:mifoslabel>
 					</td>
               		<td width="17%" align="right" class="fontnormal">
-						<a id="viewCustomerNotes.link.addNote" href="customerNotesAction.do?method=load&customerId=<c:out value="${sessionScope.customerNotesActionForm.customerId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+						<a id="viewCustomerNotes.link.addNote" href="customerNotesAction.do?method=load&customerId=${sessionScope.customerNotesActionForm.customerId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 						<mifos:mifoslabel name="Customer.addnoteheading" ></mifos:mifoslabel></a>
 				 	</td>
             	</tr>

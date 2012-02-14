@@ -45,7 +45,7 @@ function goToCancelPage(){
 						name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 					</a> / 
 					<c:set var="personnelBO" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
-					<a id="addpersonnelnotes.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${personnelBO.globalPersonnelNum}"/>">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
+					<a id="addpersonnelnotes.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=${personnelBO.globalPersonnelNum}">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">

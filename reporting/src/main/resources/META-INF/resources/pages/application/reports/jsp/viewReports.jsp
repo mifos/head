@@ -117,11 +117,11 @@ explanation of the license and how it is applied.
 		                    
 											
 					      					<td width="30%" class="blueline"> 
-												<a href="birtReportsUploadAction.do?method=edit&reportId=<c:out value="${report.reportId}" />">
+												<a href="birtReportsUploadAction.do?method=edit&reportId=${report.reportId}">
 													<mifos:mifoslabel name = "reports.edit" bundle="reportsUIResources" />
 												</a>
 									      		|
-												<a href="birtReportsUploadAction.do?method=downloadBirtReport&reportId=<c:out value="${report.reportId}" />">
+												<a href="birtReportsUploadAction.do?method=downloadBirtReport&reportId=${report.reportId}">
 													<mifos:mifoslabel name = "reports.download" bundle="reportsUIResources" />
 												</a>
 											</td>
