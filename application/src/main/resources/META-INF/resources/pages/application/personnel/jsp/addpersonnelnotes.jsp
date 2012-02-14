@@ -38,14 +38,26 @@ function goToCancelPage(){
 		<html-el:form action="personnelNoteAction.do?method=preview">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"> <a id="addpersonnelnotes.link.admin"
-						href="AdminAction.do?method=load"> <mifos:mifoslabel
-						name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>
-					</a> / <a id="addpersonnelnotes.link.viewUsers" href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
+					<td class="bluetablehead05"><span class="fontnormal8pt"> 
+					<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+						<c:param name="method" value="load" />
+					</c:url >
+					<a id="addpersonnelnotes.link.admin"
+						href="${AdminActionLoadMethodUrl}"> <mifos:mifoslabel
+						name="Personnel.Admin" bundle="PersonnelUIResources">
+				<c:url value="PersonAction.do" var="PersonActionLoadSearchMethodUrl" >
+					<c:param name="method" value="loadSearch" />
+				</c:url >
+				</mifos:mifoslabel>
+					</a> / <a id="addpersonnelnotes.link.viewUsers" href="${PersonActionLoadSearchMethodUrl}"> <mifos:mifoslabel
 						name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 					</a> / 
+				<c:url value="PersonAction.do" var="PersonActionGetMethodUrl" >
+					<c:param name="method" value="get" />
+					<c:param name="globalPersonnelNum" value="${personnelBO.globalPersonnelNum}" />
+				</c:url >
 					<c:set var="personnelBO" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
-					<a id="addpersonnelnotes.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=${personnelBO.globalPersonnelNum}">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
+					<a id="addpersonnelnotes.link.viewUser" href="${PersonActionGetMethodUrl}">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">

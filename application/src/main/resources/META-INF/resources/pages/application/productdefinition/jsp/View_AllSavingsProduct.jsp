@@ -37,8 +37,12 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt">
-					<html-el:link href="AdminAction.do?method=load">
+					<td class="bluetablehead05">
+				<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+					<c:param name="method" value="load" />
+				</c:url >
+				<span class="fontnormal8pt">
+					<html-el:link href="${AdminActionLoadMethodUrl}">
 						<mifos:mifoslabel name="product.admin"	bundle="ProductDefUIResources" />
 					</html-el:link> / </span> 
 					<span class="fontnormal8ptbold">					
@@ -68,8 +72,14 @@ explanation of the license and how it is applied.
 								class="fontnormal">
 								<fmt:message key="product.clickToMakeChangesSavings">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
+							<c:url value="savingsproductaction.do" var="savingsproductactionLoadMethodUrl" >
+								<c:param name="method" value="load" />
+								<c:param name="recordOfficeId" value="${UserContext.branchId}" />
+								<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+							</c:url >
 								</fmt:message>
-								<html-el:link href="savingsproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								<html-el:link href="${savingsproductactionLoadMethodUrl}">
 									<fmt:message key="product.defineNew">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>
@@ -84,8 +94,14 @@ explanation of the license and how it is applied.
 										<td width="1%"><img
 											src="pages/framework/images/bullet_circle.gif" width="9"
 											height="11"></td>
-										<td width="99%"><html-el:link
-											href="savingsproductaction.do?method=get&prdOfferingId=${SavingsProduct.prdOfferingId}&randomNUm=${sessionScope.randomNUm}">
+										<td width="99%">
+										<c:url value="savingsproductaction.do" var="savingsproductactionGetMethodUrl" >
+											<c:param name="method" value="get" />
+											<c:param name="prdOfferingId" value="${SavingsProduct.prdOfferingId}" />
+											<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+										</c:url >
+										<html-el:link
+											href="${savingsproductactionGetMethodUrl}">
 											<c:out value="${SavingsProduct.prdOfferingName}" />
 										</html-el:link>
 										<c:if test="${SavingsProduct.prdStatus.offeringStatusId == PrdStatus.SAVINGSINACTIVE.value}">

@@ -40,7 +40,11 @@ explanation of the license and how it is applied.
             <script>
             function fun_cancel(form)
             {
-                location.href="AdminAction.do?method=load";
+               <c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+                <c:param name="method" value="load" />
+               </c:url >
+               
+                location.href="${AdminActionLoadMethodUrl}";
             }
             </script>
         </c:if>

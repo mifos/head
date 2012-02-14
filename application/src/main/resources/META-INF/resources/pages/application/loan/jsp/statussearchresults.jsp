@@ -139,8 +139,12 @@ explanation of the license and how it is applied.
 										<c:out value="${loan.accountState.name}" />
 									</td>
 
+									<c:url value="loanAccountAction.do" var="loanAccountActionGetMethodUrl" >
+										<c:param name="method" value="get" />
+										<c:param name="globalAccountNum" value="${loan.globalAccountNum}" />
+									</c:url >
 									<td width="15%" valign="top" class="drawtablerow">
-										<html-el:link styleId="statussearchresults.link.viewLoanAccount" href="loanAccountAction.do?method=get&globalAccountNum=${loan.globalAccountNum}">
+										<html-el:link styleId="statussearchresults.link.viewLoanAccount" href="${loanAccountActionGetMethodUrl}">
 											<mifos:mifoslabel name="accountStatus.account" />
 											<c:out value="${loan.globalAccountNum}" />
 										</html-el:link>

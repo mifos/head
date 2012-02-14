@@ -53,13 +53,25 @@ explanation of the license and how it is applied.
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
 								</fmt:message>:</span>
 								<c:out value="${requestScope.savingsprdglobalofferingnum}" />
-								<span class="fontnormal"><br> </span><span class="fontnormal"><br> <br> </span>
-								<html-el:link href="savingsproductaction.do?method=get&prdOfferingId=${requestScope.savingsId}&randomNUm=${sessionScope.randomNUm}" styleId="CreateSavingsProductConfirmation.link.viewSavingsDetails">
+								<span class="fontnormal"><br> </span><span class="fontnormal"><br> <br> 
+							<c:url value="savingsproductaction.do" var="savingsproductactionGetMethodUrl" >
+								<c:param name="method" value="get" />
+								<c:param name="prdOfferingId" value="${requestScope.savingsId}" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+							</c:url >
+							</span>
+								<html-el:link href="${savingsproductactionGetMethodUrl}" styleId="CreateSavingsProductConfirmation.link.viewSavingsDetails">
 									<fmt:message key="product.viewSavingsDetails">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>
+							<c:url value="savingsproductaction.do" var="savingsproductactionLoadMethodUrl" >
+								<c:param name="method" value="load" />
+								<c:param name="recordOfficeId" value="${UserContext.branchId}" />
+								<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+							</c:url >
 								</html-el:link>
-								<span class="fontnormal"><br> <br> </span><span class="fontnormal"> <html-el:link href="savingsproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								<span class="fontnormal"><br> <br> </span><span class="fontnormal"> <html-el:link href="${savingsproductactionLoadMethodUrl}">
 									<fmt:message key="product.defineNew">
 										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>

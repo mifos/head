@@ -26,10 +26,22 @@ explanation of the license and how it is applied.
   <tr>
     <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
         <tr>
-          <td class="tablightorange"><a href="home.ftl"><mifos:mifoslabel name="framework.home" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-          <td class="tablightorange"><a href="custSearchAction.do?method=loadMainSearch"><mifos:mifoslabel name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-          <td class="taborange"><a href="reportsAction.do?method=load" class="tabfontwhite"><mifos:mifoslabel name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-          <td class="tablightorange"><a href="AdminAction.do?method=load"><mifos:mifoslabel name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
+          <td class="tablightorange"><a href="home.ftl"><mifos:mifoslabel name="framework.home" bundle="FrameworkUIResources"></mifos:mifoslabel></a>
+         <c:url value="custSearchAction.do" var="custSearchActionLoadMainSearchMethodUrl" >
+          <c:param name="method" value="loadMainSearch" />
+         </c:url >
+         </td>
+          <td class="tablightorange"><a href="${custSearchActionLoadMainSearchMethodUrl}"><mifos:mifoslabel name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a>
+         <c:url value="reportsAction.do" var="reportsActionLoadMethodUrl" >
+          <c:param name="method" value="load" />
+         </c:url >
+         </td>
+          <td class="taborange"><a href="${reportsActionLoadMethodUrl}" class="tabfontwhite"><mifos:mifoslabel name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a>
+         <c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+          <c:param name="method" value="load" />
+         </c:url >
+         </td>
+          <td class="tablightorange"><a href="${AdminActionLoadMethodUrl}"><mifos:mifoslabel name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
         </tr>
       </table>
         <c:if test="${requestScope.shutdownIsImminent == true}">

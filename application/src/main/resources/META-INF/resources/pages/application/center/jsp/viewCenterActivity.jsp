@@ -46,8 +46,13 @@ explanation of the license and how it is applied.
 			   var="BusinessKey" />
         <table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
-				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/>
-				<html-el:link styleId="viewCenterActivity.link.viewCenterCharges" href="customerAccountAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
+				<td class="bluetablehead05"><span class="fontnormal8pt"> 
+			<c:url value="customerAccountAction.do" var="customerAccountActionLoadMethodUrl" >
+				<c:param name="method" value="load" />
+				<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+			</c:url >
+			<customtags:headerLink/>
+				<html-el:link styleId="viewCenterActivity.link.viewCenterCharges" href="${customerAccountActionLoadMethodUrl}">
 	          	  <mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
 	          		<mifos:mifoslabel name="Center.Charges" bundle="CenterUIResources"/>
 	          	</html-el:link></span>
@@ -79,15 +84,55 @@ explanation of the license and how it is applied.
 	                	<span class="fontnormalbold">
 	                	<mifos:mifoslabel name="Center.ApplyTransaction" bundle="CenterUIResources"/></span>
 	                	&nbsp;&nbsp;&nbsp;&nbsp;
-	                	<html-el:link styleId="viewCenterActivity.link.applyPayment" href="applyPaymentAction.do?method=load&searchInput=ClientChargesDetails&statusId=${param.statusId}&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+	                <c:url value="applyPaymentAction.do" var="applyPaymentActionLoadMethodUrl" >
+	                	<c:param name="method" value="load" />
+	                	<c:param name="searchInput" value="ClientChargesDetails" />
+	                	<c:param name="statusId" value="${param.statusId}" />
+	                	<c:param name="globalCustNum" value="${param.globalCustNum}" />
+	                	<c:param name="prdOfferingName" value="${param.prdOfferingName}" />
+	                	<c:param name="input" value="ViewCenterCharges" />
+	                	<c:param name="globalAccountNum" value="${param.globalAccountNum}" />
+	                	<c:param name="accountType" value="${param.accountType}" />
+	                	<c:param name="accountId" value="${param.accountId}" />
+	                	<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+	                	<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+	                </c:url >
+	                
+	                	<html-el:link styleId="viewCenterActivity.link.applyPayment" href="${applyPaymentActionLoadMethodUrl}">
 	                    	<mifos:mifoslabel name="accounts.apply_payment" />
 	                    </html-el:link>
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	                    <html-el:link styleId="viewCenterActivity.link.applyAdjustment" href="custApplyAdjustment.do?method=loadAdjustment&statusId=${param.statusId}&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+	                   <c:url value="custApplyAdjustment.do" var="custApplyAdjustmentLoadAdjustmentMethodUrl" >
+	                    <c:param name="method" value="loadAdjustment" />
+	                    <c:param name="statusId" value="${param.statusId}" />
+	                    <c:param name="globalCustNum" value="${param.globalCustNum}" />
+	                    <c:param name="prdOfferingName" value="${param.prdOfferingName}" />
+	                    <c:param name="input" value="ViewCenterCharges" />
+	                    <c:param name="globalAccountNum" value="${param.globalAccountNum}" />
+	                    <c:param name="accountType" value="${param.accountType}" />
+	                    <c:param name="accountId" value="${param.accountId}" />
+	                    <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+	                    <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+	                   </c:url >
+	                   
+	                    <html-el:link styleId="viewCenterActivity.link.applyAdjustment" href="${custApplyAdjustmentLoadAdjustmentMethodUrl}">
 	                    	<mifos:mifoslabel name="Center.ApplyAdjustment" bundle="CenterUIResources"/>
 	                    </html-el:link>
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	                    <html-el:link styleId="viewCenterActivity.link.applyCharges" href="applyChargeAction.do?method=load&statusId=${param.statusId}&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+	                   <c:url value="applyChargeAction.do" var="applyChargeActionLoadMethodUrl" >
+	                    <c:param name="method" value="load" />
+	                    <c:param name="statusId" value="${param.statusId}" />
+	                    <c:param name="globalCustNum" value="${param.globalCustNum}" />
+	                    <c:param name="prdOfferingName" value="${param.prdOfferingName}" />
+	                    <c:param name="input" value="ViewCenterCharges" />
+	                    <c:param name="globalAccountNum" value="${param.globalAccountNum}" />
+	                    <c:param name="accountType" value="${param.accountType}" />
+	                    <c:param name="accountId" value="${param.accountId}" />
+	                    <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+	                    <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+	                   </c:url >
+	                   
+	                    <html-el:link styleId="viewCenterActivity.link.applyCharges" href="${applyChargeActionLoadMethodUrl}">
 	                    	<mifos:mifoslabel name="Center.ApplyCharges" />
 						</html-el:link>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>

@@ -33,7 +33,11 @@ explanation of the license and how it is applied.
 		<SCRIPT>
             function fun_cancel()
             {
-                location.href="AdminAction.do?method=load";
+               <c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+                <c:param name="method" value="load" />
+               </c:url >
+               
+                location.href="${AdminActionLoadMethodUrl}";
             }
         </SCRIPT>
 	  <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>

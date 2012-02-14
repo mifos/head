@@ -31,8 +31,13 @@ explanation of the license and how it is applied.
 		<html-el:form action="/productCategoryAction?method=search">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link
-						href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
+					<td class="bluetablehead05"><span class="fontnormal8pt">
+					<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+						<c:param name="method" value="load" />
+						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+					</c:url >
+					<html-el:link
+						href="${AdminActionLoadMethodUrl}">
 						<mifos:mifoslabel name="product.admin"
 							bundle="ProductDefUIResources" />
 					</html-el:link>/ </span> <span class="fontnormal8ptbold"><mifos:mifoslabel
@@ -49,8 +54,13 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal"><mifos:mifoslabel
-								name="product.clickcatdet" bundle="ProductDefUIResources" />&nbsp;<html-el:link
-								href="productCategoryAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
+								name="product.clickcatdet" bundle="ProductDefUIResources" />&nbsp;
+							<c:url value="productCategoryAction.do" var="productCategoryActionLoadMethodUrl" >
+								<c:param name="method" value="load" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+							</c:url >
+							<html-el:link
+								href="${productCategoryActionLoadMethodUrl}">
 								<mifos:mifoslabel name="product.addnewprdcat"
 									bundle="ProductDefUIResources" />
 							</html-el:link>
@@ -93,8 +103,14 @@ explanation of the license and how it is applied.
 										<td width="1%"><img
 											src="pages/framework/images/bullet_circle.gif" width="9"
 											height="11"></td>
-										<td width="99%"><html-el:link
-											href="productCategoryAction.do?method=get&globalPrdCategoryNum=${productCategory.globalPrdCategoryNum}&randomNUm=${sessionScope.randomNUm}">
+										<td width="99%">
+										<c:url value="productCategoryAction.do" var="productCategoryActionGetMethodUrl" >
+											<c:param name="method" value="get" />
+											<c:param name="globalPrdCategoryNum" value="${productCategory.globalPrdCategoryNum}" />
+											<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+										</c:url >
+										<html-el:link
+											href="${productCategoryActionGetMethodUrl}">
 											<c:out value="${productCategory.productCategoryName}" />
 										</html-el:link> <c:if
 											test="${productCategory.prdCategoryStatus.id eq 0}">

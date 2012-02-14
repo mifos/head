@@ -31,8 +31,14 @@ explanation of the license and how it is applied.
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"> <html-el:link
-						href="rolesPermission.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+					<td class="bluetablehead05"><span class="fontnormal8pt"> 
+					<c:url value="rolesPermission.do" var="rolesPermissionCancelMethodUrl" >
+						<c:param name="method" value="cancel" />
+						<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+					</c:url >
+					<html-el:link
+						href="${rolesPermissionCancelMethodUrl}">
 
 
 						<mifos:mifoslabel name="roleandpermission.labelAdmin"
@@ -57,8 +63,14 @@ explanation of the license and how it is applied.
 								bundle="RolesAndPermissionResources"></mifos:mifoslabel> <br>
 							<span class="fontnormal"><mifos:mifoslabel
 								name="roleandpermission.labelAddNewRoleInstruction"
-								bundle="RolesAndPermissionResources"></mifos:mifoslabel> </span>
-							<span class="fontnormal"> <html-el:link href="rolesPermission.do?method=load&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								bundle="RolesAndPermissionResources"></mifos:mifoslabel> 
+						<c:url value="rolesPermission.do" var="rolesPermissionLoadMethodUrl" >
+							<c:param name="method" value="load" />
+							<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+						</c:url >
+						</span>
+							<span class="fontnormal"> <html-el:link href="${rolesPermissionLoadMethodUrl}">
 								<mifos:mifoslabel name="roleandpermission.labelNewRole"
 									bundle="RolesAndPermissionResources"></mifos:mifoslabel>
 							</html-el:link></td>
@@ -73,11 +85,24 @@ explanation of the license and how it is applied.
 							<c:forEach var="item" items="${Roles}">
 								<tr>
 									<td width="39%" class="blueline"><span class="fontnormalbold">
+									<c:url value="rolesPermission.do" var="rolesPermissionManageMethodUrl" >
+										<c:param name="method" value="manage" />
+										<c:param name="id" value="${item.id}" />
+										<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+										<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+									</c:url >
 									<html-el:link
-										styleId="viewroles.link.${item.name}" href="rolesPermission.do?method=manage&id=${item.id}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"><c:out value="${item.name}"/></html-el:link>
+										styleId="viewroles.link.${item.name}" href="${rolesPermissionManageMethodUrl}"><c:out value="${item.name}"/></html-el:link>
 									</span></td>
-									<td width="61%" class="blueline"><span class="fontnormal"> <html-el:link
-										href="rolesPermission.do?method=preview&id=${item.id}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+									<td width="61%" class="blueline"><span class="fontnormal"> 
+									<c:url value="rolesPermission.do" var="rolesPermissionPreviewMethodUrl" >
+										<c:param name="method" value="preview" />
+										<c:param name="id" value="${item.id}" />
+										<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+										<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+									</c:url >
+									<html-el:link
+										href="${rolesPermissionPreviewMethodUrl}">
 										<mifos:mifoslabel name="roleandpermission.labelDeleteRole"
 											bundle="RolesAndPermissionResources"></mifos:mifoslabel>
 									</html-el:link> </span></td>

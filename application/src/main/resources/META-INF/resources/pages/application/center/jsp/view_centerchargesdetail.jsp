@@ -72,15 +72,46 @@ explanation of the license and how it is applied.
 								style="padding-left:10px; padding-bottom:3px;"><span
 								class="fontnormalbold"> <mifos:mifoslabel
 								name="Center.ApplyTransaction" bundle="CenterUIResources" /></span>
-							&nbsp;&nbsp;&nbsp;&nbsp; <html-el:link styleId="view_centerchargesdetail.link.applyPayment"
-								href="applyPaymentAction.do?method=load&globalCustNum=${BusinessKey.customer.globalCustNum}&prdOfferingName=${BusinessKey.customer.displayName}&input=ViewCenterCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+							&nbsp;&nbsp;&nbsp;&nbsp; 
+							<c:url value="applyPaymentAction.do" var="applyPaymentActionLoadMethodUrl" >
+								<c:param name="method" value="load" />
+								<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
+								<c:param name="prdOfferingName" value="${BusinessKey.customer.displayName}" />
+								<c:param name="input" value="ViewCenterCharges" />
+								<c:param name="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
+								<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
+								<c:param name="accountId" value="${BusinessKey.accountId}" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+							</c:url >
+							<html-el:link styleId="view_centerchargesdetail.link.applyPayment"
+								href="${applyPaymentActionLoadMethodUrl}">
 								<mifos:mifoslabel name="accounts.apply_payment" />
-							</html-el:link> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <html-el:link styleId="view_centerchargesdetail.link.applyAdjustment"
-								href="custApplyAdjustment.do?method=loadAdjustment&globalCustNum=${BusinessKey.customer.globalCustNum}&prdOfferingName=${BusinessKey.customer.displayName}&globalAccountNum=${BusinessKey.globalAccountNum}&input=ViewCenterCharges&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+							</html-el:link> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+							<c:url value="custApplyAdjustment.do" var="custApplyAdjustmentLoadAdjustmentMethodUrl" >
+								<c:param name="method" value="loadAdjustment" />
+								<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
+								<c:param name="prdOfferingName" value="${BusinessKey.customer.displayName}" />
+								<c:param name="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
+								<c:param name="input" value="ViewCenterCharges" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+							</c:url >
+							<html-el:link styleId="view_centerchargesdetail.link.applyAdjustment"
+								href="${custApplyAdjustmentLoadAdjustmentMethodUrl}">
 								<mifos:mifoslabel name="Center.ApplyAdjustment"
 									bundle="CenterUIResources" />
-							</html-el:link> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <html-el:link styleId="view_centerchargesdetail.link.applyCharges"
-								href="applyChargeAction.do?method=load&accountId=${BusinessKey.accountId}&globalCustNum=${BusinessKey.customer.globalCustNum}&input=ViewCenterCharges&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+							</html-el:link> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+							<c:url value="applyChargeAction.do" var="applyChargeActionLoadMethodUrl" >
+								<c:param name="method" value="load" />
+								<c:param name="accountId" value="${BusinessKey.accountId}" />
+								<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
+								<c:param name="input" value="ViewCenterCharges" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+							</c:url >
+							<html-el:link styleId="view_centerchargesdetail.link.applyCharges"
+								href="${applyChargeActionLoadMethodUrl}">
 								<mifos:mifoslabel name="Center.ApplyCharges" />
 							</html-el:link> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
@@ -97,8 +128,21 @@ explanation of the license and how it is applied.
 							name="Center.AmountDue" bundle="CenterUIResources" isColonRequired="yes" /><fmt:formatNumber
 							value='${BusinessKey.nextDueAmount.amount}' /> </span> <c:if
 							test='${BusinessKey.nextDueAmount.amountDoubleValue != 0.0}'>
+							<c:url value="customerAction.do" var="customerActionWaiveChargeDueMethodUrl" >
+								<c:param name="method" value="waiveChargeDue" />
+								<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
+								<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
+								<c:param name="prdOfferingName" value="${BusinessKey.customer.displayName}" />
+								<c:param name="statusId" value="${BusinessKey.customer.customerStatus.id}" />
+								<c:param name="type" value="Center" />
+								<c:param name="input" value="Center" />
+								<c:param name="accountId" value="${BusinessKey.accountId}" />
+								<c:param name="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+							</c:url >
 							<html-el:link styleId="view_centerchargesdetail.link.waiveChargeDue"
-								href="customerAction.do?method=waiveChargeDue&globalCustNum=${BusinessKey.customer.globalCustNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&statusId=${BusinessKey.customer.customerStatus.id}&type=Center&input=Center&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								href="${customerActionWaiveChargeDueMethodUrl}">
 								<mifos:mifoslabel name="Center.waive" bundle="CenterUIResources" />
 							</html-el:link>
 						</c:if> <br>
@@ -106,8 +150,21 @@ explanation of the license and how it is applied.
 							name="Center.AmountOverdue" bundle="CenterUIResources" isColonRequired="yes" /><fmt:formatNumber
 							value='${BusinessKey.totalAmountInArrears.amount}' /> </span> <c:if
 							test='${BusinessKey.totalAmountInArrears.amountDoubleValue != 0.0}'>
+							<c:url value="customerAction.do" var="customerActionWaiveChargeOverDueMethodUrl" >
+								<c:param name="method" value="waiveChargeOverDue" />
+								<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
+								<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
+								<c:param name="prdOfferingName" value="${BusinessKey.customer.displayName}" />
+								<c:param name="statusId" value="${BusinessKey.customer.customerStatus.id}" />
+								<c:param name="type" value="Center" />
+								<c:param name="input" value="Center" />
+								<c:param name="accountId" value="${BusinessKey.accountId}" />
+								<c:param name="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+							</c:url >
 							<html-el:link styleId="view_centerchargesdetail.link.waiveChargeOverDue"
-								href="customerAction.do?method=waiveChargeOverDue&globalCustNum=${BusinessKey.customer.globalCustNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&statusId=${BusinessKey.customer.customerStatus.id}&type=Center&input=Center&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								href="${customerActionWaiveChargeOverDueMethodUrl}">
 								<mifos:mifoslabel name="Center.waive" bundle="CenterUIResources" />
 							</html-el:link>
 						</c:if> <BR>
@@ -125,8 +182,23 @@ explanation of the license and how it is applied.
 							name="Center.UpcomingCharges" bundle="CenterUIResources" /> (<c:out
 							value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.upcomingChargesDate)}' />)
 						</td>
-						<td width="70%" align="right" class="fontnormal"><html-el:link styleId="view_centerchargesdetail.link.transactionHistory"
-							href="accountAppAction.do?method=getTrxnHistory&statusId=${BusinessKey.customer.customerStatus.id}&globalCustNum=${BusinessKey.customer.globalCustNum}&input=ViewCenterCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountId=${BusinessKey.accountId}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&headingInput=ViewCenterCharges&searchInput=ClientChargesDetails&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+						<td width="70%" align="right" class="fontnormal">
+						<c:url value="accountAppAction.do" var="accountAppActionGetTrxnHistoryMethodUrl" >
+							<c:param name="method" value="getTrxnHistory" />
+							<c:param name="statusId" value="${BusinessKey.customer.customerStatus.id}" />
+							<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
+							<c:param name="input" value="ViewCenterCharges" />
+							<c:param name="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
+							<c:param name="accountId" value="${BusinessKey.accountId}" />
+							<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
+							<c:param name="prdOfferingName" value="${BusinessKey.customer.displayName}" />
+							<c:param name="headingInput" value="ViewCenterCharges" />
+							<c:param name="searchInput" value="ClientChargesDetails" />
+							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+							<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+						</c:url >
+						<html-el:link styleId="view_centerchargesdetail.link.transactionHistory"
+							href="${accountAppActionGetTrxnHistoryMethodUrl}">
 							<mifos:mifoslabel name="Center.TransactionHistory" />
 						</html-el:link></td>
 					</tr>
@@ -186,8 +258,22 @@ explanation of the license and how it is applied.
 						<td width="28%" class="headingorange"><mifos:mifoslabel
 							name="Center.RecentAccountActivity" bundle="CenterUIResources" />
 						</td>
-						<td width="72%" align="right" class="fontnormal"><html-el:link styleId="view_centerchargesdetail.link.accountActivity"
-							href="customerAction.do?method=getAllActivity&statusId=${BusinessKey.customer.customerStatus.id}&type=Center&globalCustNum=${BusinessKey.customer.globalCustNum}&prdOfferingName=${BusinessKey.customer.displayName}&input=ViewCenterCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+						<td width="72%" align="right" class="fontnormal">
+						<c:url value="customerAction.do" var="customerActionGetAllActivityMethodUrl" >
+							<c:param name="method" value="getAllActivity" />
+							<c:param name="statusId" value="${BusinessKey.customer.customerStatus.id}" />
+							<c:param name="type" value="Center" />
+							<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
+							<c:param name="prdOfferingName" value="${BusinessKey.customer.displayName}" />
+							<c:param name="input" value="ViewCenterCharges" />
+							<c:param name="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
+							<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
+							<c:param name="accountId" value="${BusinessKey.accountId}" />
+							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+							<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+						</c:url >
+						<html-el:link styleId="view_centerchargesdetail.link.accountActivity"
+							href="${customerActionGetAllActivityMethodUrl}">
 							<mifos:mifoslabel name="Center.AccountActivity"
 								bundle="CenterUIResources" />
 						</html-el:link></td>
@@ -259,8 +345,23 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="Fees.labelMonths"
 										bundle="FeesUIResources" />
 								</c:if> )</td>
-								<td width="55%"><html-el:link styleId="view_centerchargesdetail.link.remove"
-									href="accountAppAction.do?method=removeFees&statusId=${BusinessKey.customer.customerStatus.id}&globalCustNum=${BusinessKey.customer.globalCustNum}&feeId=${recurrenceFees.fees.feeId}&accountId=${recurrenceFees.account.accountId}&fromPage=center&input=Center&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								<td width="55%">
+								<c:url value="accountAppAction.do" var="accountAppActionRemoveFeesMethodUrl" >
+									<c:param name="method" value="removeFees" />
+									<c:param name="statusId" value="${BusinessKey.customer.customerStatus.id}" />
+									<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
+									<c:param name="feeId" value="${recurrenceFees.fees.feeId}" />
+									<c:param name="accountId" value="${recurrenceFees.account.accountId}" />
+									<c:param name="fromPage" value="center" />
+									<c:param name="input" value="Center" />
+									<c:param name="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
+									<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
+									<c:param name="prdOfferingName" value="${BusinessKey.customer.displayName}" />
+									<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+									<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+								</c:url >
+								<html-el:link styleId="view_centerchargesdetail.link.remove"
+									href="${accountAppActionRemoveFeesMethodUrl}">
 									<mifos:mifoslabel name="Center.remove"
 										bundle="CenterUIResources" />
 								</html-el:link></td>

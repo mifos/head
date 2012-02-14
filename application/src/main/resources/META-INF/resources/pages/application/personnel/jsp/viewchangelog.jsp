@@ -45,15 +45,26 @@ explanation of the license and how it is applied.
 				var="BusinessKey" />
 		   <table width="95%" border="0" cellpadding="0" cellspacing="0">
 	          <tr>
+	           <c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+	            <c:param name="method" value="load" />
+	           </c:url >
 	            <td class="bluetablehead05">
-	            <span class="fontnormal8pt"><a id="viewchangelog.link.admin" href="AdminAction.do?method=load">
+	            <span class="fontnormal8pt"><a id="viewchangelog.link.admin" href="${AdminActionLoadMethodUrl}">
 		             <mifos:mifoslabel name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>
 	           	  </a>
 			   /
-			  	  <a id="viewchangelog.link.viewUsers" href="PersonAction.do?method=loadSearch">
+			  	 <c:url value="PersonAction.do" var="PersonActionLoadSearchMethodUrl" >
+			  	  <c:param name="method" value="loadSearch" />
+			  	 </c:url >
+			  	 
+			  	  <a id="viewchangelog.link.viewUsers" href="${PersonActionLoadSearchMethodUrl}">
 			  	  <mifos:mifoslabel name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
+				 <c:url value="PersonAction.do" var="PersonActionGetMethodUrl" >
+				  <c:param name="method" value="get" />
+				  <c:param name="globalPersonnelNum" value="${BusinessKey.globalPersonnelNum}" />
+				 </c:url >
 			  	  </a> /
-				  <a id="viewchangelog.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=${BusinessKey.globalPersonnelNum}">
+				  <a id="viewchangelog.link.viewUser" href="${PersonActionGetMethodUrl}">
 		             <c:out value="${BusinessKey.displayName}"/>
 	           	  </a>
 	            </span></td>

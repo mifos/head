@@ -47,11 +47,19 @@ explanation of the license and how it is applied.
 			 enctype="multipart/form-data">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt">
-					<html-el:link href="AdminAction.do?method=load">
+					<td class="bluetablehead05">
+				<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+					<c:param name="method" value="load" />
+				</c:url >
+				<span class="fontnormal8pt">
+					<html-el:link href="${AdminActionLoadMethodUrl}">
 						<mifos:mifoslabel name="reports.Admin"/>
-					</html-el:link> / </span> 
-					<span class="fontnormal8pt"><html-el:link href="birtReportsUploadAction.do?method=getViewReportPage">
+					</html-el:link> / 
+				<c:url value="birtReportsUploadAction.do" var="birtReportsUploadActionGetViewReportPageMethodUrl" >
+					<c:param name="method" value="getViewReportPage" />
+				</c:url >
+				</span> 
+					<span class="fontnormal8pt"><html-el:link href="${birtReportsUploadActionGetViewReportPageMethodUrl}">
 						<mifos:mifoslabel name="reports.linkviewreport"	bundle="reportsUIResources" />
 					</html-el:link> / </span> 
 					 

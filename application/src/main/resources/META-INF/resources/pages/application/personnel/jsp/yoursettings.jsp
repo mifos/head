@@ -66,8 +66,13 @@ explanation of the license and how it is applied.
                     <tr>
                       <td width="51%" class="fontnormal">
                       <span class="fontnormalbold"><mifos:mifoslabel name="Personnel.YourDetails"/></span></td>
+                     <c:url value="yourSettings.do" var="yourSettingsManageMethodUrl" >
+                      <c:param name="method" value="manage" />
+                      <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+                      <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+                     </c:url >
                       <td width="49%" align="right" class="fontnormal">
-                      <a id="yoursettings.link.edit" href="yourSettings.do?method=manage&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+                      <a id="yoursettings.link.edit" href="${yourSettingsManageMethodUrl}">
                      	 <mifos:mifoslabel name="Personnel.EditInformation"/>
                       </a></td>
                     </tr>

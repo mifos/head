@@ -29,20 +29,42 @@ explanation of the license and how it is applied.
           <td class="tablightorange"><a id="clientsAndAccountsHeader.link.home" href="home.ftl" >
 		<mifos:mifoslabel name="framework.home" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
           <c:choose>
+                 <c:url value="custSearchAction.do" var="custSearchActionLoadMainSearchMethodUrl" >
+                  <c:param name="method" value="loadMainSearch" />
+                 </c:url >
               <c:when test="${requestScope.perspective == 'redoLoan' || requestScope.perspective == 'UserChangeLog'}">
-                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.clientsAndAccounts" href="custSearchAction.do?method=loadMainSearch"><mifos:mifoslabel
-								name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.reports" href="reportsAction.do?method=load"><mifos:mifoslabel
-								name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-                  <td class="taborange"><a id="clientsAndAccountsHeader.link.admin" href="AdminAction.do?method=load" class="tabfontwhite"><mifos:mifoslabel
+                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.clientsAndAccounts" href="${custSearchActionLoadMainSearchMethodUrl}"><mifos:mifoslabel
+								name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a>
+                 <c:url value="reportsAction.do" var="reportsActionLoadMethodUrl" >
+                  <c:param name="method" value="load" />
+                 </c:url >
+                 </td>
+                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.reports" href="${reportsActionLoadMethodUrl}"><mifos:mifoslabel
+								name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a>
+                 <c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+                  <c:param name="method" value="load" />
+                 </c:url >
+                 </td>
+                  <td class="taborange"><a id="clientsAndAccountsHeader.link.admin" href="${AdminActionLoadMethodUrl}" class="tabfontwhite"><mifos:mifoslabel
 								name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
               </c:when>
+                 <c:url value="custSearchAction.do" var="custSearchActionLoadMainSearchMethodUrl" >
+                  <c:param name="method" value="loadMainSearch" />
+                 </c:url >
               <c:otherwise>
-                  <td class="taborange"><a id="clientsAndAccountsHeader.link.clientsAndAccounts" href="custSearchAction.do?method=loadMainSearch" class="tabfontwhite"><mifos:mifoslabel
-								name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.reports" href="reportsAction.do?method=load"><mifos:mifoslabel
-								name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.admin" href="AdminAction.do?method=load"><mifos:mifoslabel
+                  <td class="taborange"><a id="clientsAndAccountsHeader.link.clientsAndAccounts" href="${custSearchActionLoadMainSearchMethodUrl}" class="tabfontwhite"><mifos:mifoslabel
+								name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a>
+                 <c:url value="reportsAction.do" var="reportsActionLoadMethodUrl" >
+                  <c:param name="method" value="load" />
+                 </c:url >
+                 </td>
+                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.reports" href="${reportsActionLoadMethodUrl}"><mifos:mifoslabel
+								name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a>
+                 <c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+                  <c:param name="method" value="load" />
+                 </c:url >
+                 </td>
+                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.admin" href="${AdminActionLoadMethodUrl}"><mifos:mifoslabel
 								name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
               </c:otherwise>
           </c:choose>

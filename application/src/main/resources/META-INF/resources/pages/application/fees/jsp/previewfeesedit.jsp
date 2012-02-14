@@ -35,14 +35,29 @@ explanation of the license and how it is applied.
 		<html-el:form action="/feeaction.do?method=update" onsubmit="return func_disableSubmitBtn('submitBtn');">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
+					<c:url value="feeaction.do" var="feeactionCancelCreateMethodUrl" >
+						<c:param name="method" value="cancelCreate" />
+						<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+					</c:url >
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> <html-el:link href="feeaction.do?method=cancelCreate&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+						<span class="fontnormal8pt"> <html-el:link href="${feeactionCancelCreateMethodUrl}">
 								<mifos:mifoslabel name="Fees.admin">
+						<c:url value="feeaction.do" var="feeactionViewAllMethodUrl" >
+							<c:param name="method" value="viewAll" />
+							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+						</c:url >
 								</mifos:mifoslabel>
-							</html-el:link> / <html-el:link href="feeaction.do?method=viewAll&randomNUm=${sessionScope.randomNUm}">
+							</html-el:link> / <html-el:link href="${feeactionViewAllMethodUrl}">
 								<mifos:mifoslabel name="Fees.viewfees">
+						<c:url value="feeaction.do" var="feeactionCancelEditMethodUrl" >
+							<c:param name="method" value="cancelEdit" />
+							<c:param name="feeId" value="${feeModel.id}" />
+							<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+						</c:url >
 								</mifos:mifoslabel>
-							</html-el:link> / <html-el:link href="feeaction.do?method=cancelEdit&feeId=${feeModel.id}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+							</html-el:link> / <html-el:link href="${feeactionCancelEditMethodUrl}">
 								<c:out value="${feeModel.name}" />
 							</html-el:link> </span>
 					</td>

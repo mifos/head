@@ -55,13 +55,25 @@ explanation of the license and how it is applied.
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
 								</fmt:message>:</span>
 								<c:out value="${requestScope.loanprdglobalofferingnum}" />
-								<span class="fontnormal"><br> </span><span class="fontnormal"><br> <br> </span>
-								<html-el:link styleId="createLoanProductConfirmation.link.viewLoanDetails" href="loanproductaction.do?method=get&prdOfferingId=${requestScope.loanId}&randomNUm=${sessionScope.randomNUm}">
+								<span class="fontnormal"><br> </span><span class="fontnormal"><br> <br> 
+							<c:url value="loanproductaction.do" var="loanproductactionGetMethodUrl" >
+								<c:param name="method" value="get" />
+								<c:param name="prdOfferingId" value="${requestScope.loanId}" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+							</c:url >
+							</span>
+								<html-el:link styleId="createLoanProductConfirmation.link.viewLoanDetails" href="${loanproductactionGetMethodUrl}">
 									<fmt:message key="product.viewLoanDetails">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>
+							<c:url value="loanproductaction.do" var="loanproductactionLoadMethodUrl" >
+								<c:param name="method" value="load" />
+								<c:param name="recordOfficeId" value="${UserContext.branchId}" />
+								<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+							</c:url >
 								</html-el:link>
-								<span class="fontnormal"><br> <br> </span><span class="fontnormal"> <html-el:link styleId="createLoanProductConfirmation.link.defineNew" href="loanproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								<span class="fontnormal"><br> <br> </span><span class="fontnormal"> <html-el:link styleId="createLoanProductConfirmation.link.defineNew" href="${loanproductactionLoadMethodUrl}">
 										<fmt:message key="product.defineNew">
 										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
 										</fmt:message>

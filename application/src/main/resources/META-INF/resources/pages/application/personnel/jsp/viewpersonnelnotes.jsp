@@ -32,14 +32,27 @@ explanation of the license and how it is applied.
 						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"> <a id="viewpersonnelnotes.link.admin"
-						href="AdminAction.do?method=load"> <mifos:mifoslabel
-						name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>
-					</a> / <a id="viewpersonnelnotes.link.viewUsers" href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
+					<td class="bluetablehead05"><span class="fontnormal8pt"> 
+					<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+						<c:param name="method" value="load" />
+					</c:url >
+					<a id="viewpersonnelnotes.link.admin"
+						href="${AdminActionLoadMethodUrl}"> <mifos:mifoslabel
+						name="Personnel.Admin" bundle="PersonnelUIResources">
+				<c:url value="PersonAction.do" var="PersonActionLoadSearchMethodUrl" >
+					<c:param name="method" value="loadSearch" />
+				</c:url >
+				</mifos:mifoslabel>
+					</a> / <a id="viewpersonnelnotes.link.viewUsers" href="${PersonActionLoadSearchMethodUrl}"> <mifos:mifoslabel
 						name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 					</a> / <c:set var="personnelBO" scope="request"
 						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
-					<a id="viewpersonnelnotes.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=${personnelBO.globalPersonnelNum}">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
+				<c:url value="PersonAction.do" var="PersonActionGetMethodUrl" >
+					<c:param name="method" value="get" />
+					<c:param name="globalPersonnelNum" value="${personnelBO.globalPersonnelNum}" />
+				</c:url >
+				
+					<a id="viewpersonnelnotes.link.viewUser" href="${PersonActionGetMethodUrl}">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -55,8 +68,15 @@ explanation of the license and how it is applied.
 								value="${sessionScope.personnelNoteActionForm.personnelName}" />
 							- </span> <mifos:mifoslabel name="Personnel.Notes"
 								bundle="PersonnelUIResources"></mifos:mifoslabel></td>
-							<td width="17%" align="right" class="fontnormal"><a id="viewpersonnelnotes.link.addNote"
-								href="personnelNoteAction.do?method=load&randomNUm=${sessionScope.randomNUm}&personnelId=${sessionScope.personnelNoteActionForm.personnelId}&currentFlowKey=${requestScope.currentFlowKey}"> <mifos:mifoslabel
+							<td width="17%" align="right" class="fontnormal">
+							<c:url value="personnelNoteAction.do" var="personnelNoteActionLoadMethodUrl" >
+								<c:param name="method" value="load" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+								<c:param name="personnelId" value="${sessionScope.personnelNoteActionForm.personnelId}" />
+								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+							</c:url >
+							<a id="viewpersonnelnotes.link.addNote"
+								href="${personnelNoteActionLoadMethodUrl}"> <mifos:mifoslabel
 								name="Personnel.AddNewNote" bundle="PersonnelUIResources"></mifos:mifoslabel>
 							</a></td>
 						</tr>

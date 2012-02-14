@@ -50,8 +50,12 @@ explanation of the license and how it is applied.
 				<br>
 				<font class="fontnormalRedBold"> <html-el:messages
 					id="import.confirm.message" bundle="adminUIResources" /> <html-el:errors
-					bundle="adminUIResources" /> </font> </span> <html-el:link styleId="import_transactions_confirmation.link.importTransactions"
-					href="manageImportAction.do?method=load">
+					bundle="adminUIResources" /> </font> </span> 
+				<c:url value="manageImportAction.do" var="manageImportActionLoadMethodUrl" >
+					<c:param name="method" value="load" />
+				</c:url >
+				<html-el:link styleId="import_transactions_confirmation.link.importTransactions"
+					href="${manageImportActionLoadMethodUrl}">
 					<mifos:mifoslabel name="admin.importexport.importtransactions"
 						bundle="adminUIResources" />
 				</html-el:link> <span class="fontnormal"><br>

@@ -51,15 +51,22 @@ explanation of the license and how it is applied.
 							<td class="fontnormalbold">
 								<mifos:mifoslabel name="loan.plz_note" />
 								<span class="fontnormal"> <mifos:mifoslabel name="loan.new" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.accsWithFollowingIdCreated" isColonRequired="Yes" /> <br> <br> </span>
+							<c:url value="loanAccountAction.do" var="loanAccountAction${loanGlobalNum}MethodUrl" >
+								<c:param name="globalAccountNum" value="${loanGlobalNum}" />
+								<c:param name="method" value="get" />
+							</c:url >
 								<c:forEach var="loanGlobalNum" items="${requestScope.accountsList}" varStatus="status" >
-								<html-el:link href="loanAccountAction.do?globalAccountNum=${loanGlobalNum}&method=get" styleId="CreateMultipleLoanAccountsConfirm.link.account.${status.index}"><mifos:mifoslabel name="loan.accountNumber" />${loanGlobalNum}</html-el:link>
+								<html-el:link href="${loanAccountAction${loanGlobalNum}MethodUrl}" styleId="CreateMultipleLoanAccountsConfirm.link.account.${status.index}"><mifos:mifoslabel name="loan.accountNumber" />${loanGlobalNum}</html-el:link>
 								<br>
 								</c:forEach>
 								<br>
 								<br>
 								<span class="fontnormalboldorange"><mifos:mifoslabel name="loan.suggested_steps" /></span>
+							<c:url value="multipleloansaction.do" var="multipleloansactionLoadMethodUrl" >
+								<c:param name="method" value="load" />
+							</c:url >
 								<br>
-								<span class="fontnormal"> <html-el:link styleId="CreateMultipleLoanAccountsConfirmation.link.createMultipleLoanAccounts" href="multipleloansaction.do?method=load">
+								<span class="fontnormal"> <html-el:link styleId="CreateMultipleLoanAccountsConfirmation.link.createMultipleLoanAccounts" href="${multipleloansactionLoadMethodUrl}">
 										<mifos:mifoslabel name="loan.createMultiple" />
 										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 										<mifos:mifoslabel name="loan.accs" />

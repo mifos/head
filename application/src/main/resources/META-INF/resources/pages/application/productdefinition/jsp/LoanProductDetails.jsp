@@ -39,10 +39,21 @@ explanation of the license and how it is applied.
 			<c:set var="loanAmountType" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAmountType')}" />
 			<c:set var="installType" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'installType')}" />
 			<tr>
+				<c:url value="loanproductaction.do" var="loanproductactionCancelCreateMethodUrl" >
+					<c:param name="method" value="cancelCreate" />
+					<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+					<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+				</c:url >
 				<td class="bluetablehead05">
-					<span class="fontnormal8pt"> <html-el:link href="loanproductaction.do?method=cancelCreate&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+					<span class="fontnormal8pt"> <html-el:link href="${loanproductactionCancelCreateMethodUrl}">
+					<c:url value="loanproductaction.do" var="loanproductactionViewAllLoanProductsMethodUrl" >
+						<c:param name="method" value="viewAllLoanProducts" />
+						<c:param name="recordOfficeId" value="${UserContext.branchId}" />
+						<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
+						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+					</c:url >
 							<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
-						</html-el:link> / <html-el:link href="loanproductaction.do?method=viewAllLoanProducts&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+						</html-el:link> / <html-el:link href="${loanproductactionViewAllLoanProductsMethodUrl}">
 							<fmt:message key="product.viewLoanProducts">
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
 							</fmt:message>
@@ -58,8 +69,15 @@ explanation of the license and how it is applied.
 							<td width="74%" height="23" class="headingorange">
 								<c:out value="${loanPrd.prdOfferingName}" />
 							</td>
+							<c:url value="loanproductaction.do" var="loanproductactionManageMethodUrl" >
+								<c:param name="method" value="manage" />
+								<c:param name="prdOfferingId" value="${loanPrd.prdOfferingId}" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+								<c:param name="prdOfferName" value="${loanPrd.prdOfferingName}" />
+							</c:url >
 							<td width="26%" align="right">
-								<html-el:link styleId="loanproductdetails.link.editLoanProduct" href="loanproductaction.do?method=manage&prdOfferingId=${loanPrd.prdOfferingId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&prdOfferName=${loanPrd.prdOfferingName}">
+								<html-el:link styleId="loanproductdetails.link.editLoanProduct" href="${loanproductactionManageMethodUrl}">
 									<fmt:message key="product.editLoanInfo">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>
@@ -523,8 +541,17 @@ explanation of the license and how it is applied.
 													value="${loanPrd.interestGLcode.glcode}" /> <br> <mifos:mifoslabel name="product.principal" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.principalGLcode.glcode}" /> <br> </span>
 											<br>
 											<br>
-											<span class="fontnormal"> <html-el:link styleId="loanproductdetails.link.viewChangeLog" 
-													href="loanproductaction.do?method=loadChangeLog&entityType=LoanProduct&entityId=${loanPrd.prdOfferingId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&prdOfferName=${loanPrd.prdOfferingName}">
+											<span class="fontnormal"> 
+												<c:url value="loanproductaction.do" var="loanproductactionLoadChangeLogMethodUrl" >
+													<c:param name="method" value="loadChangeLog" />
+													<c:param name="entityType" value="LoanProduct" />
+													<c:param name="entityId" value="${loanPrd.prdOfferingId}" />
+													<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+													<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+													<c:param name="prdOfferName" value="${loanPrd.prdOfferingName}" />
+												</c:url >
+												<html-el:link styleId="loanproductdetails.link.viewChangeLog" 
+													href="${loanproductactionLoadChangeLogMethodUrl}">
 													<mifos:mifoslabel name="product.viewchangelog" bundle="ProductDefUIResources" />
 												</html-el:link> </span>
 										</td>

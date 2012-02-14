@@ -32,8 +32,11 @@ explanation of the license and how it is applied.
        <table width="95%" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td class="bluetablehead05">
+        <c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+        	<c:param name="method" value="load" />
+        </c:url >
         <span class="fontnormal8pt">
-        	<a id="viewusers.link.admin" href="AdminAction.do?method=load">
+        	<a id="viewusers.link.admin" href="${AdminActionLoadMethodUrl}">
 	           <mifos:mifoslabel name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>             	
          	</a> / 
         </span>

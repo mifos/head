@@ -77,8 +77,15 @@ explanation of the license and how it is applied.
 							<td class="headingorange"><span id="viewCenterDetails.text.displayName"><c:out
 								value="${centerInformationDto.centerDisplay.displayName}" /></span></td>
 							<td rowspan="2" align="right" valign="top" class="headingorange">
-							<span class="fontnormal"> <!-- Edit center status link --> <a id="viewCenterDetails.link.edit"
-								href="editCustomerStatusAction.do?method=loadStatus&customerId=${centerInformationDto.centerDisplay.customerId}&input=center&currentFlowKey=${requestScope.currentFlowKey}">
+							<span class="fontnormal"> <!-- Edit center status link --> 
+							<c:url value="editCustomerStatusAction.do" var="editCustomerStatusActionLoadStatusMethodUrl" >
+								<c:param name="method" value="loadStatus" />
+								<c:param name="customerId" value="${centerInformationDto.centerDisplay.customerId}" />
+								<c:param name="input" value="center" />
+								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+							</c:url >
+							<a id="viewCenterDetails.link.edit"
+								href="${editCustomerStatusActionLoadStatusMethodUrl}">
 							<mifos:mifoslabel name="Center.Edit" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.CENTER}" /> <mifos:mifoslabel
 								name="Center.Status1" /> </a><br>
@@ -118,8 +125,17 @@ explanation of the license and how it is applied.
 								</span>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<c:if test="${statusID != CustomerConstants.CENTER_INACTIVE_STATE}">
-								<span class="fontnormal"> <a id="viewCenterDetails.link.add"
-									href="groupCustAction.do?method=load&centerSystemId=${centerInformationDto.centerDisplay.globalCustNum}&parentOfficeId=${centerInformationDto.centerDisplay.branchId}&recordOfficeId=${centerInformationDto.centerDisplay.branchId}&recordLoanOfficerId=${centerInformationDto.centerDisplay.loanOfficerId}&randomNUm=${sessionScope.randomNUm}">
+								<span class="fontnormal"> 
+								<c:url value="groupCustAction.do" var="groupCustActionLoadMethodUrl" >
+									<c:param name="method" value="load" />
+									<c:param name="centerSystemId" value="${centerInformationDto.centerDisplay.globalCustNum}" />
+									<c:param name="parentOfficeId" value="${centerInformationDto.centerDisplay.branchId}" />
+									<c:param name="recordOfficeId" value="${centerInformationDto.centerDisplay.branchId}" />
+									<c:param name="recordLoanOfficerId" value="${centerInformationDto.centerDisplay.loanOfficerId}" />
+									<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+								</c:url >
+								<a id="viewCenterDetails.link.add"
+									href="${groupCustActionLoadMethodUrl}">
 								<mifos:mifoslabel name="Center.Add"  />
 								<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></a>
 								</span>
@@ -136,8 +152,15 @@ explanation of the license and how it is applied.
 							<span class="fontnormal"> <c:choose>
 								<c:when test="${!empty centerInformationDto.groupsOtherThanClosedAndCancelled}">
 									<c:forEach var="group" items="${centerInformationDto.groupsOtherThanClosedAndCancelled}">
-										<span class="fontnormal"> <a id="viewCenterDetails.link.group"
-											href="groupCustAction.do?method=get&globalCustNum=${group.globalCustNum}&recordOfficeId=${centerInformationDto.centerDisplay.branchId}&recordLoanOfficerId=${centerInformationDto.centerDisplay.branchId}">
+										<span class="fontnormal"> 
+										<c:url value="groupCustAction.do" var="groupCustActionGetMethodUrl" >
+											<c:param name="method" value="get" />
+											<c:param name="globalCustNum" value="${group.globalCustNum}" />
+											<c:param name="recordOfficeId" value="${centerInformationDto.centerDisplay.branchId}" />
+											<c:param name="recordLoanOfficerId" value="${centerInformationDto.centerDisplay.branchId}" />
+										</c:url >
+										<a id="viewCenterDetails.link.group"
+											href="${groupCustActionGetMethodUrl}">
 										<c:out value="${group.displayName}" /></a><br>
 										</span>
 									</c:forEach>
@@ -168,8 +191,13 @@ explanation of the license and how it is applied.
 								test="${statusID == CustomerConstants.CENTER_ACTIVE_STATE}">
 								<mifos:mifoslabel name="Center.AccountsLink"
 									/>&nbsp;
+								<c:url value="createSavingsAccount.ftl" var="createSavingsAccount.${centerInformationDto.centerDisplay.customerId}MethodUrl" >
+									<c:param name="customerId" value="${centerInformationDto.centerDisplay.customerId}" />
+									<c:param name="recordOfficeId" value="${UserContext.branchId}" />
+									<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
+								</c:url >
 		               <html-el:link styleId="viewCenterDetails.link.newSavingsAccount"
-									href="createSavingsAccount.ftl?customerId=${centerInformationDto.centerDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+									href="${createSavingsAccount.${centerInformationDto.centerDisplay.customerId}MethodUrl}">
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
 								</html-el:link></span> </c:if></td>
 						</tr>
@@ -199,8 +227,15 @@ explanation of the license and how it is applied.
 											<table width="100%" border="0" cellspacing="0"
 												cellpadding="0">
 												<tr>
-													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewCenterDetails.link.savingsAccount"
-														href="savingsAction.do?globalAccountNum=${savings.globalAccountNum}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
+													<td width="65%"><span class="fontnormal"> 
+													<c:url value="savingsAction.do" var="savingsAction${savings.globalAccountNum}MethodUrl" >
+														<c:param name="globalAccountNum" value="${savings.globalAccountNum}" />
+														<c:param name="method" value="get" />
+														<c:param name="recordOfficeId" value="${param.recordOfficeId}" />
+														<c:param name="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
+													</c:url >
+													<html-el:link styleId="viewCenterDetails.link.savingsAccount"
+														href="${savingsAction${savings.globalAccountNum}MethodUrl}">
 														<c:out value="${savings.prdOfferingName}" />, <mifos:mifoslabel name="Center.acc" bundle="CenterUIResources" /><c:out
 															value="${savings.globalAccountNum}" />
 													</html-el:link> </span></td>
@@ -248,8 +283,13 @@ explanation of the license and how it is applied.
 										<c:set var="accID" scope="request" value="${cp.accountId}"/>
 
 									</c:if>
-								</c:forEach> --%> <a id="viewCenterDetails.link.viewDetails"
-										href="customerAccountAction.do?method=load&globalCustNum=${centerInformationDto.centerDisplay.globalCustNum}">
+								</c:forEach> --%> 
+									<c:url value="customerAccountAction.do" var="customerAccountActionLoadMethodUrl" >
+										<c:param name="method" value="load" />
+										<c:param name="globalCustNum" value="${centerInformationDto.centerDisplay.globalCustNum}" />
+									</c:url >
+									<a id="viewCenterDetails.link.viewDetails"
+										href="${customerAccountActionLoadMethodUrl}">
 										<mifos:mifoslabel name="Center.Viewdetails" bundle="CenterUIResources" />
 									</a> </span></td>
 										</tr>
@@ -277,8 +317,16 @@ explanation of the license and how it is applied.
 
 						<tr>
 							<td width="38%" align="right" class="fontnormal"><span
-								class="fontnormal"><a id="viewCenterDetails.link.viewAllClosedAccounts"
-								href="custAction.do?method=getClosedAccounts&customerId=${centerInformationDto.centerDisplay.customerId}&input=center&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								class="fontnormal">
+							<c:url value="custAction.do" var="custActionGetClosedAccountsMethodUrl" >
+								<c:param name="method" value="getClosedAccounts" />
+								<c:param name="customerId" value="${centerInformationDto.centerDisplay.customerId}" />
+								<c:param name="input" value="center" />
+								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+							</c:url >
+							<a id="viewCenterDetails.link.viewAllClosedAccounts"
+								href="${custActionGetClosedAccountsMethodUrl}">
 								<mifos:mifoslabel name="Group.viewallclosedaccounts"
 									bundle="GroupUIResources"></mifos:mifoslabel>
 							</a> </span></td>
@@ -473,12 +521,25 @@ explanation of the license and how it is applied.
 							</span>
 							</c:if>
 							<span class="fontnormal">
+	                           <c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaire.${sessionScope.UserContext.id}MethodUrl" >
+	                            <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+	                            <c:param name="entityId" value="${centerInformationDto.centerDisplay.customerId}" />
+	                            <c:param name="event" value="Create" />
+	                            <c:param name="source" value="Center" />
+	                            <c:param name="backPageUrl" value="centerCustAction.do?method%3Dget%26globalAccountNum%3D${client.globalCustNum}%26recordOfficeId%3D${centerInformationDto.centerDisplay.branchId}%26recordLoanOfficerId%3D${centerInformationDto.centerDisplay.loanOfficerId}" />
+	                           </c:url >
 	                            <c:set var="questionnaireFor" scope="session" value="${centerInformationDto.centerDisplay.displayName}"/>
-	                            <a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${centerInformationDto.centerDisplay.customerId}&event=Create&source=Center&backPageUrl=centerCustAction.do?method%3Dget%26globalAccountNum%3D${client.globalCustNum}%26recordOfficeId%3D${centerInformationDto.centerDisplay.branchId}%26recordLoanOfficerId%3D${centerInformationDto.centerDisplay.loanOfficerId}">
+	                            <a id="groupdetail.link.questionGroups" href="${viewAndEditQuestionnaire.${sessionScope.UserContext.id}MethodUrl}">
 	                                <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
 	                            </a>
+							<c:url value="centerCustAction.do" var="centerCustActionLoadChangeLogMethodUrl" >
+								<c:param name="method" value="loadChangeLog" />
+								<c:param name="entityType" value="Center" />
+								<c:param name="entityId" value="${centerInformationDto.centerDisplay.customerId}" />
+								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+							</c:url >
 	                            <br/>
-								<html-el:link styleId="viewCenterDetails.link.viewChangeLog" href="centerCustAction.do?method=loadChangeLog&entityType=Center&entityId=${centerInformationDto.centerDisplay.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
+								<html-el:link styleId="viewCenterDetails.link.viewChangeLog" href="${centerCustActionLoadChangeLogMethodUrl}">
 								<mifos:mifoslabel
 									name="Center.ChangeLogLink" bundle="CenterUIResources"></mifos:mifoslabel>
 								</html-el:link> <br>
@@ -562,8 +623,16 @@ explanation of the license and how it is applied.
             <c:forEach items="${questionGroupInstances}" var="questionGroupInstance">
               <tr>
                 <td width="70%" class="paddingL10">
+                   <c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaire.${sessionScope.UserContext.id}MethodUrl" >
+                    <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+                    <c:param name="entityId" value="${centerInformationDto.centerDisplay.customerId}" />
+                    <c:param name="instanceId" value="${questionGroupInstance.id}" />
+                    <c:param name="event" value="View" />
+                    <c:param name="source" value="Center" />
+                    <c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
+                   </c:url >
                   <span class="fontnormal8pt">
-                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${centerInformationDto.centerDisplay.customerId}&instanceId=${questionGroupInstance.id}&event=View&source=Center&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
+                    <a id="${questionGroupInstance.id}" href="${viewAndEditQuestionnaire.${sessionScope.UserContext.id}MethodUrl}">
                       <c:out value="${questionGroupInstance.questionGroupTitle}"/>
                     </a>
                   </span>
@@ -584,8 +653,15 @@ explanation of the license and how it is applied.
                   <c:set var="questionnaireFor" scope="session" value="${centerInformationDto.centerDisplay.displayName}"/>
                   <c:remove var="urlMap" />
                   <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
+                 <c:url value="questionnaire.ftl" var="questionnaire.CenterMethodUrl" >
+                  <c:param name="source" value="Center" />
+                  <c:param name="event" value="View" />
+                  <c:param name="entityId" value="${centerInformationDto.centerDisplay.customerId}" />
+                  <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+                  <c:param name="backPageUrl" value="centerCustAction.do%3Fmethod%3Dget" />
+                 </c:url >
                   <c:set target="${urlMap}" property="${centerInformationDto.centerDisplay.displayName}" value="centerCustAction.do?method=get&globalCustNum=${centerInformationDto.centerDisplay.globalCustNum}"/>
-                  <a id="viewCenterDetails.link.attachSurvey" href="questionnaire.ftl?source=Center&event=View&entityId=${centerInformationDto.centerDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=centerCustAction.do%3Fmethod%3Dget">
+                  <a id="viewCenterDetails.link.attachSurvey" href="${questionnaire.CenterMethodUrl}">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                 </span>
@@ -630,14 +706,31 @@ explanation of the license and how it is applied.
 						<tr>
 							<td align="right" class="paddingleft05"><span
 								class="fontnormal8pt"> <c:if test="${!empty centerInformationDto.recentCustomerNotes}">
+								<c:url value="customerNotesAction.do" var="customerNotesActionSearchMethodUrl" >
+									<c:param name="method" value="search" />
+									<c:param name="customerId" value="${centerInformationDto.centerDisplay.customerId}" />
+									<c:param name="globalAccountNum" value="${centerInformationDto.centerDisplay.globalCustNum}" />
+									<c:param name="customerName" value="${centerInformationDto.centerDisplay.displayName}" />
+									<c:param name="securityParamInput" value="Center" />
+									<c:param name="levelId" value="${centerInformationDto.centerDisplay.customerLevelId}" />
+									<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+									<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+								</c:url >
 								<html-el:link styleId="viewCenterDetails.link.seeAllNotes"
-									href="customerNotesAction.do?method=search&customerId=${centerInformationDto.centerDisplay.customerId}&globalAccountNum=${centerInformationDto.centerDisplay.globalCustNum}&customerName=${centerInformationDto.centerDisplay.displayName}&securityParamInput=Center&levelId=${centerInformationDto.centerDisplay.customerLevelId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									href="${customerNotesActionSearchMethodUrl}">
 									<mifos:mifoslabel name="center.SeeAllNotesLink"
 										bundle="CenterUIResources"></mifos:mifoslabel>
 								</html-el:link>
 								<br>
-							</c:if> <a id="viewCenterDetails.link.notesLink"
-								href="customerNotesAction.do?method=load&customerId=${centerInformationDto.centerDisplay.customerId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+							</c:if> 
+							<c:url value="customerNotesAction.do" var="customerNotesActionLoadMethodUrl" >
+								<c:param name="method" value="load" />
+								<c:param name="customerId" value="${centerInformationDto.centerDisplay.customerId}" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+							</c:url >
+							<a id="viewCenterDetails.link.notesLink"
+								href="${customerNotesActionLoadMethodUrl}">
 							<mifos:mifoslabel name="Center.NotesLink"
 								/> </a> </span></td>
 						</tr>

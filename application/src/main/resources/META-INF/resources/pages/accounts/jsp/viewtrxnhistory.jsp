@@ -54,8 +54,11 @@ explanation of the license and how it is applied.
 	          	<c:choose>
 	          	<c:when test="${param.input == 'LoanDetails'}">
 	          	</c:when>
+	          <c:url value="customerAccountAction.do" var="customerAccountActionLoadMethodUrl" >
+	          	<c:param name="method" value="load" />
+	          </c:url >
 	          	<c:otherwise>
-	          	<html-el:link styleId="viewtrxhistory.link.viewCharges" href="customerAccountAction.do?method=load">
+	          	<html-el:link styleId="viewtrxhistory.link.viewCharges" href="${customerAccountActionLoadMethodUrl}">
 	          	<c:if test="${param.input == 'ViewCenterCharges'}">
 	          		<mifos:mifoslabel name="Center.CenterCharges" bundle="CenterUIResources"/>
 	          	</c:if>

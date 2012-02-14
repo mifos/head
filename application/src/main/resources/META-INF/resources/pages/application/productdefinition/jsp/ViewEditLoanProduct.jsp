@@ -36,8 +36,13 @@ explanation of the license and how it is applied.
 
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
+				<c:url value="loanproductaction.do" var="loanproductactionCancelCreateMethodUrl" >
+					<c:param name="method" value="cancelCreate" />
+					<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+					<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+				</c:url >
 				<td class="bluetablehead05">
-					<span class="fontnormal8pt"><html-el:link href="loanproductaction.do?method=cancelCreate&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+					<span class="fontnormal8pt"><html-el:link href="${loanproductactionCancelCreateMethodUrl}">
 							<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
 						</html-el:link> / </span> <span class="fontnormal8ptbold"> 
 						<fmt:message key="product.viewLoanProducts">
@@ -61,8 +66,15 @@ explanation of the license and how it is applied.
 						<tr>
 							<td class="fontnormalbold">
 								<span class="fontnormal"> <mifos:mifoslabel name="product.clickon" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.pro"
-										bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.makechanges" bundle="ProductDefUIResources" /> &nbsp;<html-el:link
-										href="loanproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+										bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.makechanges" bundle="ProductDefUIResources" /> &nbsp;
+									<c:url value="loanproductaction.do" var="loanproductactionLoadMethodUrl" >
+										<c:param name="method" value="load" />
+										<c:param name="recordOfficeId" value="${UserContext.branchId}" />
+										<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
+										<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+									</c:url >
+									<html-el:link
+										href="${loanproductactionLoadMethodUrl}">
 										<fmt:message key="product.defineNew">
 										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
 										</fmt:message>
@@ -74,8 +86,13 @@ explanation of the license and how it is applied.
 											<td width="1%">
 												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
 											</td>
+											<c:url value="loanproductaction.do" var="loanproductactionGetMethodUrl" >
+												<c:param name="method" value="get" />
+												<c:param name="prdOfferingId" value="${LoanProduct.prdOfferingId}" />
+												<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+											</c:url >
 											<td width="99%">
-												<html-el:link href="loanproductaction.do?method=get&prdOfferingId=${LoanProduct.prdOfferingId}&randomNUm=${sessionScope.randomNUm}">
+												<html-el:link href="${loanproductactionGetMethodUrl}">
 													<c:out value="${LoanProduct.prdOfferingName}" />
 												</html-el:link>
 												<c:if test="${LoanProduct.prdStatus.offeringStatusId eq 4}">

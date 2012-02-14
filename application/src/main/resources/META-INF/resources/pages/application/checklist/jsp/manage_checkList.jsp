@@ -55,8 +55,15 @@ explanation of the license and how it is applied.
 							<mifos:mifoslabel name="checklist.view_checklists" />
 						</html-el:link> /
 					</span>
+					<c:url value="chkListAction.do" var="chkListActionGetMethodUrl" >
+						<c:param name="method" value="get" />
+						<c:param name="checkListId" value="${sessionScope.ChkListActionForm.checkListId}" />
+						<c:param name="recordOfficeId" value="${UserContext.branchId}" />
+						<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
+						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+					</c:url >
 					<span class="fontnormal8pt">
-						<html-el:link href="chkListAction.do?method=get&checkListId=${sessionScope.ChkListActionForm.checkListId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+						<html-el:link href="${chkListActionGetMethodUrl}">
 							${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'oldChecklistName')}
 						</html-el:link>
 					</span></td>

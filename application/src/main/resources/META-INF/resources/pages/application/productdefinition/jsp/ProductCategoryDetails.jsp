@@ -34,11 +34,21 @@ explanation of the license and how it is applied.
 			   var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"> <html-el:link
-						href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
+					<td class="bluetablehead05"><span class="fontnormal8pt"> 
+					<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+						<c:param name="method" value="load" />
+						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+					</c:url >
+					<html-el:link
+						href="${AdminActionLoadMethodUrl}">
 						<mifos:mifoslabel name="product.admin"
 							bundle="ProductDefUIResources" />
-					</html-el:link> / <html-el:link href="productCategoryAction.do?method=getAllCategories&randomNUm=${sessionScope.randomNUm}">
+				<c:url value="productCategoryAction.do" var="productCategoryActionGetAllCategoriesMethodUrl" >
+					<c:param name="method" value="getAllCategories" />
+					<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+				</c:url >
+				
+					</html-el:link> / <html-el:link href="${productCategoryActionGetAllCategoriesMethodUrl}">
 						<mifos:mifoslabel name="product.viewprdcat"
 							bundle="ProductDefUIResources" />
 					</html-el:link> / </span> <span class="fontnormal8ptbold"><c:out

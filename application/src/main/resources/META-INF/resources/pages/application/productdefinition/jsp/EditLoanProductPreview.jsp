@@ -56,18 +56,36 @@ explanation of the license and how it is applied.
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt">
+					<c:url value="loanproductaction.do" var="loanproductactionCancelCreateMethodUrl" >
+						<c:param name="method" value="cancelCreate" />
+						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+						<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+					</c:url >
 					<html-el:link styleId="EditLoanProductPreview.link.admin"
-						href="loanproductaction.do?method=cancelCreate&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+						href="${loanproductactionCancelCreateMethodUrl}">
 						<mifos:mifoslabel name="product.admin"
 							bundle="ProductDefUIResources" />
-					</html-el:link> / <html-el:link styleId="EditLoanProductPreview.link.viewLoanProducts"
-						href="loanproductaction.do?method=viewAllLoanProducts&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+					</html-el:link> / 
+					<c:url value="loanproductaction.do" var="loanproductactionViewAllLoanProductsMethodUrl" >
+						<c:param name="method" value="viewAllLoanProducts" />
+						<c:param name="recordOfficeId" value="${UserContext.branchId}" />
+						<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
+						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+					</c:url >
+					<html-el:link styleId="EditLoanProductPreview.link.viewLoanProducts"
+						href="${loanproductactionViewAllLoanProductsMethodUrl}">
 						<fmt:message key="product.viewLoanProducts">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}"
 							bundle="ProductDefUIResources" /></fmt:param>
 						</fmt:message>
-					</html-el:link> / <html-el:link styleId="EditLoanProductPreview.link.viewLoanProduct"
-						href="loanproductaction.do?method=get&prdOfferingId=${sessionScope.loanproductactionform.prdOfferingId}&randomNUm=${sessionScope.randomNUm}">
+					</html-el:link> / 
+					<c:url value="loanproductaction.do" var="loanproductactionGetMethodUrl" >
+						<c:param name="method" value="get" />
+						<c:param name="prdOfferingId" value="${sessionScope.loanproductactionform.prdOfferingId}" />
+						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+					</c:url >
+					<html-el:link styleId="EditLoanProductPreview.link.viewLoanProduct"
+						href="${loanproductactionGetMethodUrl}">
 						<c:out value="${param.prdOfferName}" />
 					</html-el:link></span></td>
 				</tr>

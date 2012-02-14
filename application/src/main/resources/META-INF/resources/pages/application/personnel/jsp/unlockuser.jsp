@@ -38,14 +38,27 @@ explanation of the license and how it is applied.
 
    <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-          <td class="bluetablehead05"><span class="fontnormal8pt"> <a id="unlockuser.link.admin"
-						href="AdminAction.do?method=load"> <mifos:mifoslabel
-						name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>
-					</a> / <a id="unlockuser.link.viewUsers" href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
+          <td class="bluetablehead05"><span class="fontnormal8pt"> 
+					<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+						<c:param name="method" value="load" />
+					</c:url >
+					<a id="unlockuser.link.admin"
+						href="${AdminActionLoadMethodUrl}"> <mifos:mifoslabel
+						name="Personnel.Admin" bundle="PersonnelUIResources">
+				<c:url value="PersonAction.do" var="PersonActionLoadSearchMethodUrl" >
+					<c:param name="method" value="loadSearch" />
+				</c:url >
+				</mifos:mifoslabel>
+					</a> / <a id="unlockuser.link.viewUsers" href="${PersonActionLoadSearchMethodUrl}"> <mifos:mifoslabel
 						name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 					</a> / <c:set var="personnelBO" scope="request"
 						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
-						<a id="unlockuser.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=${personnelBO.globalPersonnelNum}">
+					<c:url value="PersonAction.do" var="PersonActionGetMethodUrl" >
+						<c:param name="method" value="get" />
+						<c:param name="globalPersonnelNum" value="${personnelBO.globalPersonnelNum}" />
+					</c:url >
+					
+						<a id="unlockuser.link.viewUser" href="${PersonActionGetMethodUrl}">
            		<c:out value="${personnelBO.displayName}"/>
            	</a>
             </span>

@@ -83,8 +83,13 @@ explanation of the license and how it is applied.
 											class="fontnormal"> </span>
 										<table width="100%" border="0" cellspacing="0" cellpadding="0">
 											<tr>
-												<td width="50%"><span class="fontnormal"> <html-el:link styleId="getallclosedaccounts.link.viewLoanAccount"
-													href="loanAccountAction.do?method=get&globalAccountNum=${closedAccount.globalAccountNum}">
+												<td width="50%"><span class="fontnormal"> 
+												<c:url value="loanAccountAction.do" var="loanAccountActionGetMethodUrl" >
+													<c:param name="method" value="get" />
+													<c:param name="globalAccountNum" value="${closedAccount.globalAccountNum}" />
+												</c:url >
+												<html-el:link styleId="getallclosedaccounts.link.viewLoanAccount"
+													href="${loanAccountActionGetMethodUrl}">
 													<c:out
 														value="${closedAccount.loanOffering.prdOfferingName}" />,&nbsp;
 													<c:out value="Acct #" />
@@ -137,8 +142,13 @@ explanation of the license and how it is applied.
 											class="fontnormal"> </span>
 										<table width="100%" border="0" cellspacing="0" cellpadding="0">
 											<tr>
-												<td width="50%"><span class="fontnormal"> <html-el:link styleId="getallclosedaccounts.link.viewSavingsAccount"
-													href="savingsAction.do?method=get&globalAccountNum=${closedSavingsAccount.globalAccountNum}">
+												<td width="50%"><span class="fontnormal"> 
+												<c:url value="savingsAction.do" var="savingsActionGetMethodUrl" >
+													<c:param name="method" value="get" />
+													<c:param name="globalAccountNum" value="${closedSavingsAccount.globalAccountNum}" />
+												</c:url >
+												<html-el:link styleId="getallclosedaccounts.link.viewSavingsAccount"
+													href="${savingsActionGetMethodUrl}">
 													<c:out
 														value="${closedSavingsAccount.savingsOffering.prdOfferingName}" />,&nbsp;
 													<c:out value="Acct #" />

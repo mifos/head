@@ -290,8 +290,14 @@ explanation of the license and how it is applied.
 		                      && sessionScope.clientCustActionForm.picture.fileName != '' }" >
                                 <img src="clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}" width="150"/>
                                 <br />
+                               <c:url value="clientCustAction.do" var="clientCustActionEditPersonalInfoMethodUrl" >
+                                <c:param name="method" value="editPersonalInfo" />
+                                <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+                                <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+                                <c:param name="photoDelete" value="true" />
+                               </c:url >
                                 <a id="editPersonalInformation.link.deletePhoto"
-                                href="clientCustAction.do?method=editPersonalInfo&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&photoDelete=true">
+                                href="${clientCustActionEditPersonalInfoMethodUrl}">
                                 Delete
                                 </a>
                                 <br />

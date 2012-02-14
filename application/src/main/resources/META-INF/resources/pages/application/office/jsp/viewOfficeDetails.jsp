@@ -38,10 +38,20 @@ explanation of the license and how it is applied.
 
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td class="bluetablehead05"><span class="fontnormal8pt">
-							<html-el:link styleId="viewOfficeDetails.link.admin" href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel
-								name="Office.labelLinkAdmin" /></html-el:link> / <html-el:link styleId="viewOfficeDetails.link.viewOffices"
-										href="offAction.do?method=getAllOffices&randomNUm=${sessionScope.randomNUm}" > <mifos:mifoslabel
+							<td class="bluetablehead05">
+						<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+							<c:param name="method" value="load" />
+							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+						</c:url >
+						<span class="fontnormal8pt">
+							<html-el:link styleId="viewOfficeDetails.link.admin" href="${AdminActionLoadMethodUrl}"><mifos:mifoslabel
+								name="Office.labelLinkAdmin" /></html-el:link> / 
+									<c:url value="offAction.do" var="offActionGetAllOfficesMethodUrl" >
+										<c:param name="method" value="getAllOffices" />
+										<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+									</c:url >
+									<html-el:link styleId="viewOfficeDetails.link.viewOffices"
+										href="${offActionGetAllOfficesMethodUrl}" > <mifos:mifoslabel
 								name="Office.labelLinkViewOffices" />
 
 							</html-el:link> / </span><span class="fontnormal8ptbold"><c:out
@@ -55,8 +65,14 @@ explanation of the license and how it is applied.
 								<tr>
 									<td width="50%" height="23" class="headingorange"><span id="viewOfficeDetails.text.officeName"><c:out
 										value="${officeDto.name}"></c:out></span></td>
+								<c:url value="offAction.do" var="offActionEditMethodUrl" >
+									<c:param name="method" value="edit" />
+									<c:param name="officeLevel" value="${officeDto.levelId}" />
+									<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+									<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+								</c:url >
 									<td width="50%" align="right">
-									<html-el:link styleId="viewOfficeDetails.link.editOfficeInformation" href="offAction.do?method=edit&officeLevel=${officeDto.levelId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"
+									<html-el:link styleId="viewOfficeDetails.link.editOfficeInformation" href="${offActionEditMethodUrl}"
 										>
 										<mifos:mifoslabel name="Office.labelEditOfficeInfo"
 											/>
@@ -187,8 +203,15 @@ explanation of the license and how it is applied.
 									<c:set var="questionnaireFor" scope="session" value="${officeDto.name}"/>
                                     <c:remove var="urlMap" />
                                     <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
+								<c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaire.${sessionScope.UserContext.id}MethodUrl" >
+									<c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+									<c:param name="entityId" value="${officeDto.id}" />
+									<c:param name="event" value="Create" />
+									<c:param name="source" value="Office" />
+									<c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
+								</c:url >
                                      <c:set target="${urlMap}" property="${officeDto.name}" value="offAction.do?method=get&officeId=${officeDto.id}"/>
-									<a id="officeDetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${officeDto.id}&event=Create&source=Office&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
+									<a id="officeDetail.link.questionGroups" href="${viewAndEditQuestionnaire.${sessionScope.UserContext.id}MethodUrl}">
                                 		<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
                             		</a>                        		
 									</td>

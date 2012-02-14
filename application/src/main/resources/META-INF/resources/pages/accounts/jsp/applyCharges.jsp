@@ -115,8 +115,11 @@ explanation of the license and how it is applied.
 										<customtags:headerLink/>
 									</c:when>
 									<c:otherwise>
+									<c:url value="customerAccountAction.do" var="customerAccountActionLoadMethodUrl" >
+										<c:param name="method" value="load" />
+									</c:url >
 										<customtags:headerLink selfLink="false"/>
-										<html-el:link styleId="applyCharges.link.viewCharges" href="customerAccountAction.do?method=load">
+										<html-el:link styleId="applyCharges.link.viewCharges" href="${customerAccountActionLoadMethodUrl}">
 								          	<c:if test="${param.input == 'ViewCenterCharges'}">
 	        			  						<mifos:mifoslabel name="Center.CenterCharges" bundle="CenterUIResources"/>
 	          								</c:if>

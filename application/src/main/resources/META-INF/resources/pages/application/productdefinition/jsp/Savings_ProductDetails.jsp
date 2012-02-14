@@ -57,11 +57,17 @@ explanation of the license and how it is applied.
 			<c:set	value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
+					<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
+						<c:param name="method" value="load" />
+					</c:url >
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> <html-el:link href="AdminAction.do?method=load">
+						<span class="fontnormal8pt"> <html-el:link href="${AdminActionLoadMethodUrl}">
 								<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
+						<c:url value="savingsproductaction.do" var="savingsproductactionSearchMethodUrl" >
+							<c:param name="method" value="search" />
+						</c:url >
 							</html-el:link> / 
-							<a	href="savingsproductaction.do?method=search">
+							<a	href="${savingsproductactionSearchMethodUrl}">
 								<fmt:message key="product.viewSavingsProducts">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
 								</fmt:message>
@@ -77,8 +83,13 @@ explanation of the license and how it is applied.
 								<td width="68%" height="23" class="headingorange">
 									<c:out value="${BusinessKey.prdOfferingName}" />
 								</td>
+								<c:url value="savingsproductaction.do" var="savingsproductactionManageMethodUrl" >
+									<c:param name="method" value="manage" />
+									<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+									<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+								</c:url >
 								<td width="32%" align="right">
-									<a href="savingsproductaction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+									<a href="${savingsproductactionManageMethodUrl}">
 
 										<fmt:message key="product.editSavingsInfo">
 										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
@@ -247,8 +258,17 @@ explanation of the license and how it is applied.
 														<c:if test="${glCode.glcodeId == BusinessKey.interestGLCode.glcodeId}">
 															<c:out value="${glCode.glcode}" />
 														</c:if>
-													</c:forEach> <br> <br>
-													 <html-el:link	href="savingsproductaction.do?method=loadChangeLog&entityType=SavingsProduct&entityId=${BusinessKey.prdOfferingId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&prdOfferName=${requestScope.BusinessKey.prdOfferingName}">
+													</c:forEach> <br> 
+													<c:url value="savingsproductaction.do" var="savingsproductactionLoadChangeLogMethodUrl" >
+													 <c:param name="method" value="loadChangeLog" />
+													 <c:param name="entityType" value="SavingsProduct" />
+													 <c:param name="entityId" value="${BusinessKey.prdOfferingId}" />
+													 <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+													 <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+													 <c:param name="prdOfferName" value="${requestScope.BusinessKey.prdOfferingName}" />
+													</c:url >
+													<br>
+													 <html-el:link	href="${savingsproductactionLoadChangeLogMethodUrl}">
 														<mifos:mifoslabel name="product.viewchangelog" bundle="ProductDefUIResources" />
 													</html-el:link> 
 													</span>

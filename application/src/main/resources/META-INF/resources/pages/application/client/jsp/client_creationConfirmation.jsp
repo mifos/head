@@ -62,11 +62,23 @@ explanation of the license and how it is applied.
 						<br>
 						</span> <!-- Link to view the center details -->
 						<c:choose>
+					<c:url value="clientCustAction.do" var="clientCustActionGetMethodUrl" >
+						<c:param name="method" value="get" />
+						<c:param name="globalCustNum" value="${sessionScope.clientCustActionForm.globalCustNum}" />
+						<c:param name="recordOfficeId" value="${sessionScope.clientCustActionForm.officeId}" />
+						<c:param name="recordLoanOfficerId" value="${sessionScope.clientCustActionForm.loanOfficerId}" />
+					</c:url >
 						<c:when test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
-						<a id="client_creationConfirmation.link.viewClientDetailsLink" href="clientCustAction.do?method=get&globalCustNum=${sessionScope.clientCustActionForm.globalCustNum}&recordOfficeId=${sessionScope.clientCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.clientCustActionForm.loanOfficerId}">
+						<a id="client_creationConfirmation.link.viewClientDetailsLink" href="${clientCustActionGetMethodUrl}">
 						</c:when>
+					<c:url value="clientCustAction.do" var="clientCustActionGetMethodUrl" >
+						<c:param name="method" value="get" />
+						<c:param name="globalCustNum" value="${sessionScope.clientCustActionForm.globalCustNum}" />
+						<c:param name="recordOfficeId" value="${sessionScope.clientCustActionForm.officeId}" />
+						<c:param name="recordLoanOfficerId" value="${sessionScope.clientCustActionForm.loanOfficerId}" />
+					</c:url >
 						<c:otherwise>
-						<a id="client_creationConfirmation.link.viewClientDetailsLink" href="clientCustAction.do?method=get&globalCustNum=${sessionScope.clientCustActionForm.globalCustNum}&recordOfficeId=${sessionScope.clientCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.clientCustActionForm.loanOfficerId}">
+						<a id="client_creationConfirmation.link.viewClientDetailsLink" href="${clientCustActionGetMethodUrl}">
 						</c:otherwise>
 						</c:choose>
 
@@ -87,8 +99,14 @@ explanation of the license and how it is applied.
 							<br>
 						</c:if> <span class="fontnormal"> <!-- Link to create a new savings  account link -->
 						<c:if test="${requestScope.clientVO.statusId == 3}">
+							<c:url value="createSavingsAccount.ftl" var="createSavingsAccount.${sessionScope.clientCustActionForm.customerId}MethodUrl" >
+								<c:param name="customerId" value="${sessionScope.clientCustActionForm.customerId}" />
+								<c:param name="recordOfficeId" value="${UserContext.branchId}" />
+								<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+							</c:url >
 							<html-el:link styleId="client_creationConfirmation.link.createNewSavingsAccount"
-								href="createSavingsAccount.ftl?customerId=${sessionScope.clientCustActionForm.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								href="${createSavingsAccount.${sessionScope.clientCustActionForm.customerId}MethodUrl}">
 								<fmt:message key="client.CreateNewClientLink">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
 								</fmt:message>
@@ -96,8 +114,12 @@ explanation of the license and how it is applied.
 							<br>
 						</c:if> <!-- Link to create a new loan  account link --> <!-- bug id 29352. Added if condition to show link to open accounts if only client is active-->
 						<c:if test="${requestScope.clientVO.statusId == 3}">
+							<c:url value="createLoanAccount.ftl" var="createLoanAccount.${sessionScope.clientCustActionForm.customerId}MethodUrl" >
+								<c:param name="customerId" value="${sessionScope.clientCustActionForm.customerId}" />
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+							</c:url >
 							<html-el:link styleId="client_creationConfirmation.link.createNewLoanAccount"
-								href="createLoanAccount.ftl?customerId=${sessionScope.clientCustActionForm.customerId}&randomNUm=${sessionScope.randomNUm}">					
+								href="${createLoanAccount.${sessionScope.clientCustActionForm.customerId}MethodUrl}">					
 								<fmt:message key="client.CreateNewClientLink">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 								</fmt:message>
@@ -105,19 +127,38 @@ explanation of the license and how it is applied.
 							<br>
 						</c:if> <!-- Link to create a new group -->
 						<c:choose>
+					<c:url value="groupCustAction.do" var="groupCustActionHierarchyCheckMethodUrl" >
+						<c:param name="method" value="hierarchyCheck" />
+						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+						<c:param name="input" value="createGroup" />
+						<c:param name="office.officeId" value="${sessionScope.clientCustActionForm.officeId}" />
+					</c:url >
 						<c:when test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
-						<a id="client_creationConfirmation.link.createNewGroup" href="groupCustAction.do?method=hierarchyCheck&randomNUm=${sessionScope.randomNUm}&input=createGroup&office.officeId=${sessionScope.clientCustActionForm.officeId}">
+						<a id="client_creationConfirmation.link.createNewGroup" href="${groupCustActionHierarchyCheckMethodUrl}">
 						</c:when>
+					<c:url value="groupCustAction.do" var="groupCustActionHierarchyCheckMethodUrl" >
+						<c:param name="method" value="hierarchyCheck" />
+						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+						<c:param name="input" value="createGroup" />
+						<c:param name="office.officeId" value="${sessionScope.clientCustActionForm.officeId}" />
+					</c:url >
 						<c:otherwise>
-						<a id="client_creationConfirmation.link.createNewGroup" href="groupCustAction.do?method=hierarchyCheck&randomNUm=${sessionScope.randomNUm}&input=createGroup&office.officeId=${sessionScope.clientCustActionForm.officeId}">
+						<a id="client_creationConfirmation.link.createNewGroup" href="${groupCustActionHierarchyCheckMethodUrl}">
 						</c:otherwise>
 						</c:choose>
 
 						<fmt:message key="client.createNewClient">
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 						</fmt:message> </a> <br>
-						<!-- Link to create a new client --> <a id="client_creationConfirmation.link.createNewClient"
-							href="groupCustAction.do?method=loadSearch&input=createClient&recordOfficeId=0&recordLoanOfficerId=0" />
+						<!-- Link to create a new client --> 
+						<c:url value="groupCustAction.do" var="groupCustActionLoadSearchMethodUrl" >
+							<c:param name="method" value="loadSearch" />
+							<c:param name="input" value="createClient" />
+							<c:param name="recordOfficeId" value="0" />
+							<c:param name="recordLoanOfficerId" value="0" />
+						</c:url >
+						<a id="client_creationConfirmation.link.createNewClient"
+							href="${groupCustActionLoadSearchMethodUrl}" />
 						<fmt:message key="client.createNewClient">
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
 						</fmt:message> </a></span></td>

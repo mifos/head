@@ -116,8 +116,13 @@ explanation of the license and how it is applied.
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td class="fontnormalbold"><span class="fontnormal">
+									<c:url value="groupTransferAction.do" var="groupTransferActionLoadGrpMemberShipMethodUrl" >
+										<c:param name="method" value="loadGrpMemberShip" />
+										<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+										<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+									</c:url >
 									<a id="group_search_client_transfer.link.removeGroupMembership"
-										href="groupTransferAction.do?method=loadGrpMemberShip&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+										href="${groupTransferActionLoadGrpMemberShipMethodUrl}">
 									<mifos:mifoslabel name="Group.removeGroupMembership"
 										bundle="GroupUIResources" /> </a> </span></td>
 								</tr>

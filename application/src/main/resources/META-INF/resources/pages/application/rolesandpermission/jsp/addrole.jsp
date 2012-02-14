@@ -39,8 +39,13 @@ explanation of the license and how it is applied.
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td class="bluetablehead05"><span class="fontnormal8pt">
+											<c:url value="rolesPermission.do" var="rolesPermissionCancelMethodUrl" >
+												<c:param name="method" value="cancel" />
+												<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+												<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+											</c:url >
 							
-												<html-el:link href="rolesPermission.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+												<html-el:link href="${rolesPermissionCancelMethodUrl}">
 								<mifos:mifoslabel
 								name="roleandpermission.labelAdmin"
 								bundle="RolesAndPermissionResources"></mifos:mifoslabel>
@@ -49,8 +54,12 @@ explanation of the license and how it is applied.
 								class="fontnormal8ptbold"> </span><span class="fontnormal8pt">
 								
 								
+								<c:url value="rolesPermission.do" var="rolesPermissionViewRolesMethodUrl" >
+								 <c:param name="method" value="viewRoles" />
+								 <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+								</c:url >
 								
-								 <html-el:link href="rolesPermission.do?method=viewRoles&randomNUm=${sessionScope.randomNUm}"
+								 <html-el:link href="${rolesPermissionViewRolesMethodUrl}"
 								>
 								
 								
