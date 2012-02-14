@@ -1844,6 +1844,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             throw new BusinessRuleException("errors.invalidTxndate");
         }
 
+        DateTime loanDisbursementDate = new DateTime(trxnDate);
+        holidayServiceFacade.validateDisbursementDateForNewLoan(loan.getOfficeId(), loanDisbursementDate);
+
         if (loan.isFixedRepaymentSchedule()) {
             for (AccountActionDateEntity installment : loan.getAccountActionDates()) {
                 if (installment.compareDate(trxnDate) <= 0) {
