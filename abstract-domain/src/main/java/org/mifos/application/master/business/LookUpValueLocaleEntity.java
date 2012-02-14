@@ -20,6 +20,7 @@
 
 package org.mifos.application.master.business;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,6 +29,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 @NamedQueries({
     @NamedQuery(name = "lookUpValueLocaleEntity.getByLocaleAndLookUpId",
                 query = "from LookUpValueLocaleEntity l where l.localeId=:aLocaleId and l.lookUpId=:aLookUpId")
@@ -35,6 +39,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "lookup_value_locale")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class LookUpValueLocaleEntity {
     /*
      * The maximum length of lookUpValue as defined in the SQL schema. This

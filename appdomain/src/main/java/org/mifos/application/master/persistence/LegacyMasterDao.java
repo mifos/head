@@ -25,9 +25,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueDto;
@@ -58,9 +60,28 @@ public class LegacyMasterDao extends LegacyGenericDao {
     protected LegacyMasterDao() {
     }
 
-    /**
-     * Only two non-test usages, one that may never be called and one for getting labels.
-     */
+    @Transactional
+    public String getLookUpLabel(final String key) throws SystemException {
+        Session session = getSession();
+        String message = null;
+        LookUpValueEntity l = (LookUpValueEntity) session.createCriteria(LookUpValueEntity.class)
+                .add(Restrictions.eq("lookUpName", key)).uniqueResult();
+
+        if (l != null) {
+            message = l.getMessageText();
+        }
+        return StringUtils.isNotEmpty(message) ? message : key;
+    }
+
+    @Transactional
+    public LookUpValueEntity getLookupValueEntity(final String key) throws SystemException {
+        Session session = getSession();
+        LookUpValueEntity l = (LookUpValueEntity) session.createCriteria(LookUpValueEntity.class)
+                .add(Restrictions.eq("lookUpName", key)).uniqueResult();
+        return l;
+    }
+
+
     @Transactional
     public CustomValueDto getLookUpEntity(final String entityName) throws SystemException {
         Session session = getSession();
@@ -186,7 +207,6 @@ public class LegacyMasterDao extends LegacyGenericDao {
                 if (entity.getLookUpId().equals(lookupValueEntityId)) {
                     entity.setLookUpValue(newValue);
                     createOrUpdate(entity);
-                    ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValueInCache(lookupValueEntity.getLookUpName(), newValue);
                     StaticHibernateUtil.commitTransaction();
                     break;
                 }
@@ -222,10 +242,6 @@ public class LegacyMasterDao extends LegacyGenericDao {
         lookUpValueLocaleEntity.setLookUpId(lookUpValueEntity.getLookUpId());
         createOrUpdate(lookUpValueLocaleEntity);
 
-        // MifosConfiguration.getInstance().updateKey(lookUpValueEntity,
-        // newElementText);
-        ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValueInCache(lookUpValueEntity, newElementText);
-
         return lookUpValueEntity;
     }
 
@@ -242,7 +258,6 @@ public class LegacyMasterDao extends LegacyGenericDao {
         LookUpValueEntity lookUpValueEntity = getPersistentObject(LookUpValueEntity.class,
                 lookupValueEntityId);
         delete(lookUpValueEntity);
-        ApplicationContextProvider.getBean(MessageLookup.class).deleteKey(lookUpValueEntity.getLookUpName());
     }
 
     public void addLookUpEntity(final LookUpEntity lookUpEntity) throws PersistenceException {

@@ -33,7 +33,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
@@ -356,7 +355,6 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
         anLookUp.setLookUpName(lookupName);
         anLookUp.setLookUpEntity(lookUpEntity);
         createOrUpdate(anLookUp);
-        ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValueInCache(lookupName, lookUpDescription);
         int lookUpId = anLookUp.getLookUpId().intValue();
         return lookUpId;
     }

@@ -20,8 +20,6 @@
 
 package org.mifos.config;
 
-import java.util.Map;
-
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -40,21 +38,6 @@ public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
         configuration = ApplicationContextProvider.getBean(MessageLookup.class);
     }
 
-    @Test
-    public void testInitializeLabelCache() {
-        Map<LabelKey, String> labelCache = configuration.getLabelCache();
-       Assert.assertEquals(true, labelCache.size() > 10);
-    }
-
-
-
-    /*
-     * Will be uncommented when spanish values will be entered in master data.
-     * @Test
-    public void testGetLabelValueSpanish(){Assert.assertEquals("Entrada agranel
-     * ",MifosConfiguration.getInstance().getLabelValue(ConfigurationConstants.BULKENTRY,(short)2))
-     * ; }
-     */
 
     @Test
     public void testLabelKey() {

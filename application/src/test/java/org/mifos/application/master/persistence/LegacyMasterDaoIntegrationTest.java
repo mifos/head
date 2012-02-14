@@ -36,7 +36,6 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class LegacyMasterDaoIntegrationTest extends MifosIntegrationTestCase {
@@ -150,28 +149,6 @@ public class LegacyMasterDaoIntegrationTest extends MifosIntegrationTestCase {
             }
         }
         return elementId;
-    }
-
-    @Test
-    public void testAddAndDeleteValueListElement() throws Exception {
-        // get the CustomValueDto that we want to add to
-        CustomValueDto salutationValueList = legacyMasterDao.getLookUpEntity(MasterConstants.SALUTATION);
-
-        // add a CustomValueListElementDto to the list
-        final String NEW_SALUTATION_STRING = "Sir";
-        legacyMasterDao.addValueListElementForLocale(DynamicLookUpValueCreationTypes.LookUpOption, salutationValueList.getEntityId(), NEW_SALUTATION_STRING);
-        StaticHibernateUtil.flushSession();
-
-        // verify that the new salutation was created
-        Integer newSalutationId = findValueListElementId(legacyMasterDao, MasterConstants.SALUTATION, NEW_SALUTATION_STRING);
-       Assert.assertTrue(newSalutationId != null);
-
-        StaticHibernateUtil.flushAndClearSession();
-        // remove the new salutation
-        legacyMasterDao.deleteValueListElement(newSalutationId);
-
-        // verify that the new salutation was deleted
-        Assert.assertFalse(foundStringInCustomValueList(MasterConstants.SALUTATION, NEW_SALUTATION_STRING));
     }
 
     @Test
