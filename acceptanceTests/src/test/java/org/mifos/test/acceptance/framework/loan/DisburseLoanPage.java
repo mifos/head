@@ -81,7 +81,7 @@ public class DisburseLoanPage extends MifosPage {
         selenium.click("DisburseLoan.button.reviewTransaction");
 
         waitForPageToLoad();
-        Assert.assertTrue(selenium.isElementPresent("//span[@id='DisburseLoan.error.message']/li[text()='"+msg+"']"));
+        Assert.assertTrue(selenium.isElementPresent("//span[@id='DisburseLoan.error.message']/ul/li[text()='"+msg+"']"));
     }
 
     public void verifyPaymentModeOfPaymentIsEditable(String message) {

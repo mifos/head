@@ -21,7 +21,6 @@
 package org.mifos.test.acceptance.loan;
 
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -57,7 +56,6 @@ import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -77,10 +75,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     private LoanProductTestHelper loanProductTestHelper;
     private NavigationHelper navigationHelper;
 
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
     private Random random;
@@ -133,7 +127,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         questionResponseDetailPage.verifyQuestionPresent(question1, answer);
         questionResponseDetailPage.verifyQuestionPresent(question2, choiceAnswer);
         questionResponseDetailPage.navigateToDetailsPage();
-        
+
         questionGroupTestHelper.markQuestionGroupAsInactive(questionGroupTitle);
     }
 
@@ -194,7 +188,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         //Then
         createLoanAndCheckAmount(searchParameters, submitAccountParameters, null);
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-308
     @Test(enabled=true)
@@ -304,14 +298,14 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         productParams.setDefaultLoanAmount("13333");
         productParams.setDefInstallments("13");
         productParams.setApplicableFor(DefineNewLoanProductPage.SubmitFormParameters.GROUPS);
-        
+
         loanProductTestHelper.defineNewLoanProduct(productParams);
-        
+
         productParams.setOfferingName("product94B");
         productParams.setOfferingShortName("p94b");
-        
+
         loanProductTestHelper.defineNewLoanProduct(productParams);
-        
+
         CreateLoanAccountSearchParameters searchParams1 = new CreateLoanAccountSearchParameters();
         searchParams1.setSearchString("GroupWeekly");
         searchParams1.setLoanProduct("product94");
@@ -352,14 +346,14 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         productParams.setInterestTypes(SubmitFormParameters.DECLINING_BALANCE);
         productParams.setDefaultLoanAmount("13333");
         productParams.setDefInstallments("13");
-        
+
         loanProductTestHelper.defineNewLoanProduct(productParams);
-        
+
         productParams.setOfferingName("product95B");
         productParams.setOfferingShortName("p95b");
-        
+
         loanProductTestHelper.defineNewLoanProduct(productParams);
-        
+
         CreateMultipleLoanAccountSelectParameters multipleAccParameters1 = new CreateMultipleLoanAccountSelectParameters();
         multipleAccParameters1.setBranch("MyOfficeDHMFT");
         multipleAccParameters1.setLoanOfficer("loan officer");
@@ -444,7 +438,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyPrincipalBalance("5,000");
         loanTestHelper.applyOneChargeOnLoanAccount(chargeParameters);
         loanAccountPage.navigateToViewInstallmentDetails()
-                .verifyInstallmentAmount(4, 1, "599"); 
+                .verifyInstallmentAmount(4, 1, "599");
     }
 
     /**
@@ -537,7 +531,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         //Then
         loanTestHelper.disburseLoan(loanId, disburseParameters);
     }
-    
+
     /**
     * Verify functionality of 'Cancel' buttons during the Loan creation flow
     * http://mifosforge.jira.com/browse/MIFOSTEST-1178
@@ -573,7 +567,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         CreateLoanAccountPreviewPage createLoanAccountPreviewPage = createLoanAccountReviewInstallmentPage.clickPreviewAndGoToReviewLoanAccountPage();
         createLoanAccountPreviewPage.cancel();
     }
-    
+
     /**
     * Create a new Client Loan in 'Partial Application' status
     * http://mifosforge.jira.com/browse/MIFOSTEST-1177
@@ -623,12 +617,12 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(12, 3, "100");
         viewRepaymentSchedulePage.navigateToLoanAccountPage();
     }
-       
+
     private void verifyFirstInstallmentAndDisbursalDateOnReviewPage(){
         Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary']/div[3]/div[2]"), ("02-May-2011"));
         Assert.assertEquals(selenium.getTable("installments.1.1"), ("09/05/11"));
     }
-        
+
     private void verifyFirstInstallmentAndDisbursalDateOnPreviewPage(){
         Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[4]/div[2]"), ("02-May-2011"));
         Assert.assertEquals(selenium.getTable("installments.1.1"), ("09-May-2011"));

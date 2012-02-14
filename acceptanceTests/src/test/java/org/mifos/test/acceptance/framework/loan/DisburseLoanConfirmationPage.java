@@ -41,7 +41,7 @@ public class DisburseLoanConfirmationPage extends MifosPage {
     public void submitButDisbursalFailed(String msg) {
         selenium.click("Review_loanDisbursement.button.submit");
         waitForPageToLoad();
-        Assert.assertTrue(selenium.isElementPresent("//span[@id='Review_loanDisbursement.error.message']/li[text()='"+msg+"']"));
+        Assert.assertTrue(selenium.isElementPresent("//span[@id='Review_loanDisbursement.error.message']/ul/li[text()='"+msg+"']"));
     }
 
     public QuestionResponsePage navigateToEditAdditionalInformation() {

@@ -71,9 +71,9 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
     }
 
     private void isTextPresentInPage(String validationMessage) {
-        Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()=' ']"),"Blank Error message is thrown");
+        Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/ul/li[text()=' ']"),"Blank Error message is thrown");
         Assert.assertTrue(selenium.isTextPresent(validationMessage),validationMessage);
-        Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()='']"),"Blank Error message is thrown");
+        Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/ul/li[text()='']"),"Blank Error message is thrown");
     }
 
     public CreateLoanAccountPreviewPage verifyZeroCashFlowWarning(String warningThreshold) {

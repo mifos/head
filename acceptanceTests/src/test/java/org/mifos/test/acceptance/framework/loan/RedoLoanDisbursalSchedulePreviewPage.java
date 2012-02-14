@@ -108,8 +108,8 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
 
     private void isTextPresentInPage(String validationMessage) {
         assertTrue(selenium.isTextPresent(validationMessage), validationMessage);
-        assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()='']"), "Blank Error message is thrown");
-        assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()=' ']"), "Blank Error message is thrown");
+        assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/ul/li[text()='']"), "Blank Error message is thrown");
+        assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/ul/li[text()=' ']"), "Blank Error message is thrown");
     }
 
     private void validateErrorForInstallmentsGapGraterThanMaxGap(int maxGap, int noOfInstallments, DateTime disbursalDate) {
