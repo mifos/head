@@ -24,12 +24,7 @@
          <a id="changeLanguagLink" href="#">Change Language</a>
          <span id="dialog" title="Change Language" style="display:none;">Change Language</span>
      &nbsp;|&nbsp;
-        <c:url value="yourSettings.do" var="yourSettingsGetMethodUrl" >
-         <c:param name="method" value="get" />
-         <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-        </c:url >
-        
-         <a id="homeheader.link.yourSettings" href="${yourSettingsGetMethodUrl}">
+         <a id="homeheader.link.yourSettings" href="yourSettings.do?method=get&randomNUm=${sessionScope.randomNUm}">
             <mifos:mifoslabel name="framework.yoursettings" bundle="FrameworkUIResources"></mifos:mifoslabel>
          </a>
      &nbsp;|&nbsp; 

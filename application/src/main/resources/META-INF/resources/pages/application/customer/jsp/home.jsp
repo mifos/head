@@ -171,12 +171,8 @@ explanation of the license and how it is applied.
 								<table width="90%" border="0" cellspacing="3" cellpadding="0" class="paddingL10">
 									<tr class="fontnormal">
 										<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-										<c:url value="centerCustAction.do" var="centerCustActionGetMethodUrl" >
-											<c:param name="method" value="get" />
-											<c:param name="globalCustNum" value="${center.globalCustNum}" />
-										</c:url >
 										<td width="99%">
-											<a href="${centerCustActionGetMethodUrl}">
+											<a href="centerCustAction.do?method=get&globalCustNum=${center.globalCustNum}">
 												<c:out value="${center.displayName}" />
 											</a>
 										</td>
@@ -186,23 +182,15 @@ explanation of the license and how it is applied.
 										<td>
 											<ul>
 												<c:forEach var="group" items="${center.groups}">
-													<c:url value="groupCustAction.do" var="groupCustActionGetMethodUrl" >
-														<c:param name="method" value="get" />
-														<c:param name="globalCustNum" value="${group.globalCustNum}" />
-													</c:url >
 													<li class="fontnormal" style="margin-bottom:3px;">
-														<a href="${groupCustActionGetMethodUrl}">
+														<a href="groupCustAction.do?method=get&globalCustNum=${group.globalCustNum}">
 															<c:out value="${group.displayName}" />
 														</a>
 													</li>
 													<ul>
 														<c:forEach var="client" items="${group.clients}">
-															<c:url value="clientCustAction.do" var="clientCustActionGetMethodUrl" >
-																<c:param name="method" value="get" />
-																<c:param name="globalCustNum" value="${client.globalCustNum}" />
-															</c:url >
 															<li class="fontnormal" style="margin-bottom:3px;">
-																<a href="${clientCustActionGetMethodUrl}">
+																<a href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}">
 																	<c:out value="${client.displayName}" />
 																</a>
 															</li>
@@ -222,12 +210,8 @@ explanation of the license and how it is applied.
 								<table width="90%" border="0" cellspacing="3" cellpadding="0" class="paddingL10">
 									<tr class="fontnormal">
 										<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-										<c:url value="groupCustAction.do" var="groupCustActionGetMethodUrl" >
-											<c:param name="method" value="get" />
-											<c:param name="globalCustNum" value="${group.globalCustNum}" />
-										</c:url >
 										<td width="99%">
-											<a href="${groupCustActionGetMethodUrl}">
+											<a href="groupCustAction.do?method=get&globalCustNum=${group.globalCustNum}">
 												<c:out value="${group.displayName}" />
 											</a>
 										</td>
@@ -237,12 +221,8 @@ explanation of the license and how it is applied.
 										<td>
 											<ul>
 												<c:forEach var="client" items="${group.clients}">
-													<c:url value="clientCustAction.do" var="clientCustActionGetMethodUrl" >
-														<c:param name="method" value="get" />
-														<c:param name="globalCustNum" value="${client.globalCustNum}" />
-													</c:url >
 													<li class="fontnormal" style="margin-bottom:3px;">
-														<a href="${clientCustActionGetMethodUrl}">
+														<a href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}">
 															<c:out value="${client.displayName}" />
 														</a>
 													</li>

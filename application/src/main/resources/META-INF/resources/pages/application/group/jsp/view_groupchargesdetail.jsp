@@ -79,51 +79,22 @@ explanation of the license and how it is applied.
 								class="fontnormalbold"><mifos:mifoslabel
 								name="Group.applyTransaction" bundle="GroupUIResources" />:</span>
 
-							&nbsp;&nbsp;&nbsp;&nbsp; 
-							<c:url value="applyPaymentAction.do" var="applyPaymentActionLoadMethodUrl" >
-								<c:param name="method" value="load" />
-								<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
-								<c:param name="prdOfferingName" value="${BusinessKey.customer.displayName}" />
-								<c:param name="input" value="ViewGroupCharges" />
-								<c:param name="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
-								<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
-								<c:param name="accountId" value="${BusinessKey.accountId}" />
-								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-							</c:url >
-							<html-el:link styleId="view_groupchargesdetail.link.applyPayment"
-								href="${applyPaymentActionLoadMethodUrl}">
+							&nbsp;&nbsp;&nbsp;&nbsp; <html-el:link styleId="view_groupchargesdetail.link.applyPayment"
+								href="applyPaymentAction.do?method=load&globalCustNum=${BusinessKey.customer.globalCustNum}&prdOfferingName=${BusinessKey.customer.displayName}&input=ViewGroupCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="accounts.apply_payment" />
 							</html-el:link> <c:if
 								test="${BusinessKey.customer.customerStatus.id == 9 || BusinessKey.customer.customerStatus.id == 10}"> 
 		               &nbsp;&nbsp;&nbsp;&nbsp;
-								<c:url value="custApplyAdjustment.do" var="custApplyAdjustmentLoadAdjustmentMethodUrl" >
-									<c:param name="method" value="loadAdjustment" />
-									<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
-									<c:param name="prdOfferingName" value="${BusinessKey.customer.displayName}" />
-									<c:param name="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
-									<c:param name="input" value="ViewGroupCharges" />
-									<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-									<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-								</c:url >
 		                    <html-el:link styleId="view_groupchargesdetail.link.applyAdjustment"
-									href="${custApplyAdjustmentLoadAdjustmentMethodUrl}">
+									href="custApplyAdjustment.do?method=loadAdjustment&globalCustNum=${BusinessKey.customer.globalCustNum}&prdOfferingName=${BusinessKey.customer.displayName}&globalAccountNum=${BusinessKey.globalAccountNum}&input=ViewGroupCharges&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="Group.applyAdjustment"
 										bundle="GroupUIResources" />
 								</html-el:link>
 							</c:if> <c:if
 								test="${BusinessKey.customer.customerStatus.id == 7 || BusinessKey.customer.customerStatus.id == 8 || BusinessKey.customer.customerStatus.id == 9 || BusinessKey.customer.customerStatus.id == 10}">
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<c:url value="applyChargeAction.do" var="applyChargeActionLoadMethodUrl" >
-									<c:param name="method" value="load" />
-									<c:param name="accountId" value="${BusinessKey.accountId}" />
-									<c:param name="input" value="ViewGroupCharges" />
-									<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
-									<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-									<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-								</c:url >
 	                    <html-el:link styleId="view_groupchargesdetail.link.applyCharges"
-									href="${applyChargeActionLoadMethodUrl}">
+									href="applyChargeAction.do?method=load&accountId=${BusinessKey.accountId}&input=ViewGroupCharges&globalCustNum=${BusinessKey.customer.globalCustNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="group.applycharges"
 										bundle="GroupUIResources" />
 								</html-el:link>
@@ -143,21 +114,8 @@ explanation of the license and how it is applied.
 							name="Group.amtdue" bundle="GroupUIResources" />: <fmt:formatNumber
 							value='${BusinessKey.nextDueAmount.amount}' /> </span> <c:if
 							test='${BusinessKey.nextDueAmount.amountDoubleValue != 0.0}'>
-							<c:url value="customerAction.do" var="customerActionWaiveChargeDueMethodUrl" >
-								<c:param name="method" value="waiveChargeDue" />
-								<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
-								<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
-								<c:param name="prdOfferingName" value="${BusinessKey.customer.displayName}" />
-								<c:param name="statusId" value="${BusinessKey.customer.customerStatus.id}" />
-								<c:param name="type" value="Group" />
-								<c:param name="input" value="Group" />
-								<c:param name="accountId" value="${BusinessKey.accountId}" />
-								<c:param name="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
-								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-							</c:url >
 							<html-el:link styleId="view_groupchargesdetail.link.waiveChargeDue"
-								href="${customerActionWaiveChargeDueMethodUrl}">
+								href="customerAction.do?method=waiveChargeDue&globalCustNum=${BusinessKey.customer.globalCustNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&statusId=${BusinessKey.customer.customerStatus.id}&type=Group&input=Group&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="Group.waive" bundle="GroupUIResources" />
 							</html-el:link>
 						</c:if> <br>
@@ -165,21 +123,8 @@ explanation of the license and how it is applied.
 							name="Group.amtoverdue" bundle="GroupUIResources" />: <fmt:formatNumber
 							value='${BusinessKey.totalAmountInArrears.amount}' /> </span> <c:if
 							test='${BusinessKey.totalAmountInArrears.amountDoubleValue != 0.0}'>
-							<c:url value="customerAction.do" var="customerActionWaiveChargeOverDueMethodUrl" >
-								<c:param name="method" value="waiveChargeOverDue" />
-								<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
-								<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
-								<c:param name="prdOfferingName" value="${BusinessKey.customer.displayName}" />
-								<c:param name="statusId" value="${BusinessKey.customer.customerStatus.id}" />
-								<c:param name="type" value="Group" />
-								<c:param name="input" value="Group" />
-								<c:param name="accountId" value="${BusinessKey.accountId}" />
-								<c:param name="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
-								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-							</c:url >
 							<html-el:link styleId="view_groupchargesdetail.link.waiveChargeOverDue"
-								href="${customerActionWaiveChargeOverDueMethodUrl}">
+								href="customerAction.do?method=waiveChargeOverDue&globalCustNum=${BusinessKey.customer.globalCustNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&statusId=${BusinessKey.customer.customerStatus.id}&type=Group&input=Group&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="Group.waive" bundle="GroupUIResources" />
 							</html-el:link>
 						</c:if> <BR>
@@ -197,23 +142,8 @@ explanation of the license and how it is applied.
 							value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.upcomingChargesDate)}' />)
 						<!-- c:out value='${requestScope.Context.businessResults["UpcomingChargesDate"]}'/-->
 						</td>
-						<td width="70%" align="right" class="fontnormal">
-						<c:url value="accountAppAction.do" var="accountAppActionGetTrxnHistoryMethodUrl" >
-							<c:param name="method" value="getTrxnHistory" />
-							<c:param name="statusId" value="${BusinessKey.customer.customerStatus.id}" />
-							<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
-							<c:param name="input" value="ViewGroupCharges" />
-							<c:param name="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
-							<c:param name="accountId" value="${BusinessKey.accountId}" />
-							<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
-							<c:param name="prdOfferingName" value="${BusinessKey.customer.displayName}" />
-							<c:param name="headingInput" value="ViewGroupCharges" />
-							<c:param name="searchInput" value="ClientChargesDetails" />
-							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-							<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-						</c:url >
-						<html-el:link styleId="view_groupchargesdetail.link.transactionHistory"
-							href="${accountAppActionGetTrxnHistoryMethodUrl}">
+						<td width="70%" align="right" class="fontnormal"><html-el:link styleId="view_groupchargesdetail.link.transactionHistory"
+							href="accountAppAction.do?method=getTrxnHistory&statusId=${BusinessKey.customer.customerStatus.id}&globalCustNum=${BusinessKey.customer.globalCustNum}&input=ViewGroupCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountId=${BusinessKey.accountId}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&headingInput=ViewGroupCharges&searchInput=ClientChargesDetails&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="Center.TransactionHistory" />
 						</html-el:link></td>
 					</tr>
@@ -272,22 +202,8 @@ explanation of the license and how it is applied.
 					<tr>
 						<td width="28%" class="headingorange"><mifos:mifoslabel
 							name="Group.recaccact" bundle="GroupUIResources" /></td>
-						<td width="72%" align="right" class="fontnormal">
-						<c:url value="customerAction.do" var="customerActionGetAllActivityMethodUrl" >
-							<c:param name="method" value="getAllActivity" />
-							<c:param name="statusId" value="${BusinessKey.customer.customerStatus.id}" />
-							<c:param name="type" value="Group" />
-							<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
-							<c:param name="prdOfferingName" value="${BusinessKey.customer.displayName}" />
-							<c:param name="input" value="ViewGroupCharges" />
-							<c:param name="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
-							<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
-							<c:param name="accountId" value="${BusinessKey.accountId}" />
-							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-							<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-						</c:url >
-						<html-el:link styleId="view_groupchargesdetail.link.viewAllActivities"
-							href="${customerActionGetAllActivityMethodUrl}">
+						<td width="72%" align="right" class="fontnormal"><html-el:link styleId="view_groupchargesdetail.link.viewAllActivities"
+							href="customerAction.do?method=getAllActivity&statusId=${BusinessKey.customer.customerStatus.id}&type=Group&globalCustNum=${BusinessKey.customer.globalCustNum}&prdOfferingName=${BusinessKey.customer.displayName}&input=ViewGroupCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="Group.viewallactivities"
 								bundle="GroupUIResources" />
 						</html-el:link></td>
@@ -361,22 +277,8 @@ explanation of the license and how it is applied.
 								</c:if> )</td>
 								<td width="55%">
 								<c:if test="${BusinessKey.customer.customerStatus.id != CustomerStatus.GROUP_CANCELLED.value and BusinessKey.customer.customerStatus.id != CustomerStatus.GROUP_CLOSED.value}">
-								<c:url value="accountAppAction.do" var="accountAppActionRemoveFeesMethodUrl" >
-									<c:param name="method" value="removeFees" />
-									<c:param name="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
-									<c:param name="statusId" value="${BusinessKey.customer.customerStatus.id}" />
-									<c:param name="feeId" value="${recurrenceFees.fees.feeId}" />
-									<c:param name="accountId" value="${recurrenceFees.account.accountId}" />
-									<c:param name="fromPage" value="group" />
-									<c:param name="input" value="Group" />
-									<c:param name="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
-									<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
-									<c:param name="prdOfferingName" value="${BusinessKey.customer.displayName}" />
-									<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-									<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-								</c:url >
 								<html-el:link styleId="view_groupchargesdetail.link.remove"
-									href="${accountAppActionRemoveFeesMethodUrl}">
+									href="accountAppAction.do?method=removeFees&globalCustNum=${BusinessKey.customer.globalCustNum}&statusId=${BusinessKey.customer.customerStatus.id}&feeId=${recurrenceFees.fees.feeId}&accountId=${recurrenceFees.account.accountId}&fromPage=group&input=Group&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="Group.remove" />
 								</html-el:link>
 								</c:if>

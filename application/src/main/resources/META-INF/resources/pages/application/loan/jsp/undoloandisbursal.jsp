@@ -35,12 +35,8 @@ explanation of the license and how it is applied.
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<c:url value="reverseloandisbaction.do" var="reverseloandisbactionCancelMethodUrl" >
-						<c:param name="method" value="cancel" />
-						<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-					</c:url >
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"><html-el:link styleId="undoloandisbursal.link.admin" href="${reverseloandisbactionCancelMethodUrl}">
+						<span class="fontnormal8pt"><html-el:link styleId="undoloandisbursal.link.admin" href="reverseloandisbaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="loan.admin" />
 							</html-el:link> / </span> <span class="fontnormal8ptbold"><mifos:mifoslabel name="loan.reverse" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.disbursal" /></span>
 					</td>

@@ -45,27 +45,14 @@ explanation of the license and how it is applied.
 						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"> 
-					<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
-						<c:param name="method" value="load" />
-					</c:url >
-					<a id="previewpersonnelnotes.link.admin"
-						href="${AdminActionLoadMethodUrl}"> <mifos:mifoslabel
-						name="Personnel.Admin" bundle="PersonnelUIResources">
-				<c:url value="PersonAction.do" var="PersonActionLoadSearchMethodUrl" >
-					<c:param name="method" value="loadSearch" />
-				</c:url >
-				</mifos:mifoslabel>
-					</a> / <a id="previewpersonnelnotes.link.viewUsers" href="${PersonActionLoadSearchMethodUrl}"> <mifos:mifoslabel
+					<td class="bluetablehead05"><span class="fontnormal8pt"> <a id="previewpersonnelnotes.link.admin"
+						href="AdminAction.do?method=load"> <mifos:mifoslabel
+						name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>
+					</a> / <a id="previewpersonnelnotes.link.viewUsers" href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
 						name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 					</a> / <c:set var="personnelBO" scope="request"
 						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
-				<c:url value="PersonAction.do" var="PersonActionGetMethodUrl" >
-					<c:param name="method" value="get" />
-					<c:param name="globalPersonnelNum" value="${personnelBO.globalPersonnelNum}" />
-				</c:url >
-				
-					<a id="previewpersonnelnotes.link.viewUser" href="${PersonActionGetMethodUrl}">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
+					<a id="previewpersonnelnotes.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=${personnelBO.globalPersonnelNum}">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">

@@ -40,19 +40,11 @@ explanation of the license and how it is applied.
 		<html-el:form method = "post" action="/reportsCategoryAction.do?method=deleteReportsCategory">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05">
-				<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
-					<c:param name="method" value="load" />
-				</c:url >
-				<span class="fontnormal8pt">
-					<html-el:link href="${AdminActionLoadMethodUrl}">
+					<td class="bluetablehead05"><span class="fontnormal8pt">
+					<html-el:link href="AdminAction.do?method=load">
 						<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
-					</html-el:link> / 
-				<c:url value="reportsCategoryAction.do" var="reportsCategoryActionViewReportsCategoryMethodUrl" >
-					<c:param name="method" value="viewReportsCategory" />
-				</c:url >
-				</span> 
-					<span class="fontnormal8pt"><html-el:link href="${reportsCategoryActionViewReportsCategoryMethodUrl}">
+					</html-el:link> / </span> 
+					<span class="fontnormal8pt"><html-el:link href="reportsCategoryAction.do?method=viewReportsCategory">
 						<mifos:mifoslabel name="reportsCategory.linkViewReportCategory"	bundle="reportsCategoryUIResources" />
 					</html-el:link> / </span> 
 					 

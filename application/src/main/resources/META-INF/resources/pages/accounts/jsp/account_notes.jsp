@@ -59,13 +59,8 @@ explanation of the license and how it is applied.
 						</span>
 						<mifos:mifoslabel name="Account.Notes" bundle="accountsUIResources"></mifos:mifoslabel>
 					</td>
-					<c:url value="notesAction.do" var="notesActionLoadMethodUrl" >
-						<c:param name="method" value="load" />
-						<c:param name="globalAccountNum" value="${sessionScope.notesActionForm.globalAccountNum}" />
-						<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-					</c:url >
               		<td width="17%" align="right" class="fontnormal">
-						<a id="account_notes.link.AddNewNote" href="${notesActionLoadMethodUrl}">
+						<a id="account_notes.link.AddNewNote" href="notesAction.do?method=load&globalAccountNum=${sessionScope.notesActionForm.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}">
 						<mifos:mifoslabel name="Account.AddNewNote" bundle="accountsUIResources"></mifos:mifoslabel></a>
 				 	</td>
             	</tr>

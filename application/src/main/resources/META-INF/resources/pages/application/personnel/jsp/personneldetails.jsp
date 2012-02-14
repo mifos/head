@@ -45,18 +45,10 @@ explanation of the license and how it is applied.
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"> 
-					<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
-						<c:param name="method" value="load" />
-					</c:url >
-					<a id="personneldetails.link.admin"
-						href="${AdminActionLoadMethodUrl}"> <mifos:mifoslabel
-						name="Personnel.Admin" bundle="PersonnelUIResources">
-				<c:url value="PersonAction.do" var="PersonActionLoadSearchMethodUrl" >
-					<c:param name="method" value="loadSearch" />
-				</c:url >
-				</mifos:mifoslabel>
-					</a> / <a id="personneldetails.link.viewUsers" href="${PersonActionLoadSearchMethodUrl}"> <mifos:mifoslabel
+					<td class="bluetablehead05"><span class="fontnormal8pt"> <a id="personneldetails.link.admin"
+						href="AdminAction.do?method=load"> <mifos:mifoslabel
+						name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>
+					</a> / <a id="personneldetails.link.viewUsers" href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
 						name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 					</a> / </span> <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,
 												'personnelInformationDto')}" var="personnelInformationDto" />					
@@ -71,14 +63,8 @@ explanation of the license and how it is applied.
 					<tr>
 						<td width="50%" height="23" class="headingorange"><span id="personneldetails.text.fullName"><c:out
 							value="${personnelInformationDto.displayName}" /></span></td>
-						<td width="50%" align="right">
-						<c:url value="PersonAction.do" var="PersonActionManageMethodUrl" >
-							<c:param name="method" value="manage" />
-							<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-						</c:url >
-						<a id="personneldetails.link.editUser"
-							href="${PersonActionManageMethodUrl}"> <mifos:mifoslabel
+						<td width="50%" align="right"><a id="personneldetails.link.editUser"
+							href="PersonAction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
 							name="Personnel.EditUserInformation"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> </a></td>
 					</tr>
@@ -254,26 +240,13 @@ explanation of the license and how it is applied.
 						<c:set var="questionnaireFor" scope="session" value="${personnelInformationDto.displayName}"/>
                         <c:remove var="urlMap" />
                         <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
-					<c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaire.${sessionScope.UserContext.id}MethodUrl" >
-						<c:param name="creatorId" value="${sessionScope.UserContext.id}" />
-						<c:param name="entityId" value="${personnelInformationDto.personnelId}" />
-						<c:param name="event" value="Create" />
-						<c:param name="source" value="Personnel" />
-						<c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
-					</c:url >
                         <c:set target="${urlMap}" property="${personnelInformationDto.displayName}" value="PersonAction.do?method=get&globalPersonnelNum=${personnelInformationDto.globalPersonnelNum}"/>
-						<a id="personnelDetail.link.questionGroups" href="${viewAndEditQuestionnaire.${sessionScope.UserContext.id}MethodUrl}">
+						<a id="personnelDetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${personnelInformationDto.personnelId}&event=Create&source=Personnel&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
                         	<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
                         </a> 
 						<br/>
-						<c:url value="PersonAction.do" var="PersonActionLoadChangeLogMethodUrl" >
-							<c:param name="method" value="loadChangeLog" />
-							<c:param name="entityType" value="Personnel" />
-							<c:param name="entityId" value="${personnelInformationDto.personnelId}" />
-							<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-						</c:url >
 						<html-el:link styleId="personneldetails.link.viewChangeLog"
-							href="${PersonActionLoadChangeLogMethodUrl}">
+							href="PersonAction.do?method=loadChangeLog&entityType=Personnel&entityId=${personnelInformationDto.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
 
 							<mifos:mifoslabel name="Personnel.ViewChangeLog"
 								bundle="PersonnelUIResources"></mifos:mifoslabel>
@@ -281,13 +254,7 @@ explanation of the license and how it is applied.
 						</td>
 						<td height="23" align="right" valign="top" class="fontnormal"><c:if
 							test="${personnelInformationDto.locked == 'true'}">
-						<c:url value="PersonAction.do" var="PersonActionLoadUnLockUserMethodUrl" >
-							<c:param name="method" value="loadUnLockUser" />
-							<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-						</c:url >
-						
-							<a id="personneldetails.link.unlockUser" href="${PersonActionLoadUnLockUserMethodUrl}">
+							<a id="personneldetails.link.unlockUser" href="PersonAction.do?method=loadUnLockUser&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 							 <mifos:mifoslabel
 								name="Personnel.UnlockUser" bundle="PersonnelUIResources"></mifos:mifoslabel>
 							</a>
@@ -331,26 +298,12 @@ explanation of the license and how it is applied.
 					</tr>
 					<tr>
 						<td align="right" class="paddingleft05"><span
-							class="fontnormal8pt"> 
-						<c:url value="personnelNoteAction.do" var="personnelNoteActionSearchMethodUrl" >
-							<c:param name="method" value="search" />
-							<c:param name="personnelId" value="${personnelInformationDto.personnelId}" />
-							<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-							<c:param name="personnelName" value="${personnelInformationDto.displayName}" />
-						</c:url >
-						<c:if test="${!empty personnelInformationDto.recentPersonnelNotes}">
-							<a id="personneldetails.link.seeAllNotes" href="${personnelNoteActionSearchMethodUrl}"> <mifos:mifoslabel
+							class="fontnormal8pt"> <c:if test="${!empty personnelInformationDto.recentPersonnelNotes}">
+							<a id="personneldetails.link.seeAllNotes" href="personnelNoteAction.do?method=search&personnelId=${personnelInformationDto.personnelId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&personnelName=${personnelInformationDto.displayName}"> <mifos:mifoslabel
 								name="Personnel.SeeAllNotes" bundle="PersonnelUIResources"></mifos:mifoslabel>
 							</a>
-					<c:url value="personnelNoteAction.do" var="personnelNoteActionLoadMethodUrl" >
-						<c:param name="method" value="load" />
-						<c:param name="personnelId" value="${personnelInformationDto.personnelId}" />
-						<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-					</c:url >
 							<br>
-						</c:if> <a id="personneldetails.link.addNote" href="${personnelNoteActionLoadMethodUrl}"> <mifos:mifoslabel
+						</c:if> <a id="personneldetails.link.addNote" href="personnelNoteAction.do?method=load&personnelId=${personnelInformationDto.personnelId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
 							name="Personnel.AddNote" bundle="PersonnelUIResources"></mifos:mifoslabel>
 						</a> </span></td>
 					</tr>

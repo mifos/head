@@ -125,25 +125,14 @@ explanation of the license and how it is applied.
 			<c:set var="prdOfferName" value="${BusinessKey.prdOfferingName}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
-						<c:param name="method" value="load" />
-					</c:url >
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> <html-el:link href="${AdminActionLoadMethodUrl}">
-						<c:url value="savingsproductaction.do" var="savingsproductactionSearchMethodUrl" >
-							<c:param name="method" value="search" />
-						</c:url >
+						<span class="fontnormal8pt"> <html-el:link href="AdminAction.do?method=load">
 								<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
-							</html-el:link> / <html-el:link href="${savingsproductactionSearchMethodUrl}">
+							</html-el:link> / <html-el:link href="savingsproductaction.do?method=search">
 								<fmt:message key="product.viewSavingsProducts">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
-						<c:url value="savingsproductaction.do" var="savingsproductactionGetMethodUrl" >
-							<c:param name="method" value="get" />
-							<c:param name="prdOfferingId" value="${BusinessKey.prdOfferingId}" />
-							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-						</c:url >
 								</fmt:message>
-							</html-el:link> / <html-el:link href="${savingsproductactionGetMethodUrl}">
+							</html-el:link> / <html-el:link href="savingsproductaction.do?method=get&prdOfferingId=${BusinessKey.prdOfferingId}&randomNUm=${sessionScope.randomNUm}">
 								<c:out value="${BusinessKey.prdOfferingName}" />
 							</html-el:link></span>
 					</td>

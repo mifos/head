@@ -50,30 +50,14 @@ explanation of the license and how it is applied.
 				var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<c:url value="loanproductaction.do" var="loanproductactionCancelCreateMethodUrl" >
-						<c:param name="method" value="cancelCreate" />
-						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-						<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-					</c:url >
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> <html-el:link href="${loanproductactionCancelCreateMethodUrl}">
-						<c:url value="loanproductaction.do" var="loanproductactionViewAllLoanProductsMethodUrl" >
-							<c:param name="method" value="viewAllLoanProducts" />
-							<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-							<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-						</c:url >
+						<span class="fontnormal8pt"> <html-el:link href="loanproductaction.do?method=cancelCreate&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
-							</html-el:link> / <html-el:link href="${loanproductactionViewAllLoanProductsMethodUrl}">
+							</html-el:link> / <html-el:link href="loanproductaction.do?method=viewAllLoanProducts&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<fmt:message key="product.viewLoanProducts">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
-						<c:url value="loanproductaction.do" var="loanproductactionGetMethodUrl" >
-							<c:param name="method" value="get" />
-							<c:param name="prdOfferingId" value="${sessionScope.loanproductactionform.prdOfferingId}" />
-							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-						</c:url >
 								</fmt:message>
-							</html-el:link> / <html-el:link href="${loanproductactionGetMethodUrl}">
+							</html-el:link> / <html-el:link href="loanproductaction.do?method=get&prdOfferingId=${sessionScope.loanproductactionform.prdOfferingId}&randomNUm=${sessionScope.randomNUm}">
 								<c:out value="${BusinessKey.prdOfferingName}" />
 							</html-el:link></span>
 					</td>

@@ -50,13 +50,8 @@ explanation of the license and how it is applied.
 					<c:forEach var="account" items="${accountsList}">
 					<tr class="fontnormal">
 						<td valign="top">
-							<c:url value="loanAccountAction.do" var="loanAccountActionGetMethodUrl" >
-								<c:param name="method" value="get" />
-								<c:param name="globalAccountNum" value="${account}" />
-								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-							</c:url >
 							<span class="fontnormal">
-								<html-el:link styleId="confirmation.link.viewLoanAccount" href="${loanAccountActionGetMethodUrl}">
+								<html-el:link styleId="confirmation.link.viewLoanAccount" href="loanAccountAction.do?method=get&globalAccountNum=${account}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="accountStatus.account" />
 									<c:out value="${account}" />
 								</html-el:link>

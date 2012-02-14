@@ -46,12 +46,8 @@ explanation of the license and how it is applied.
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"> 
-				<c:url value="customerAccountAction.do" var="customerAccountActionLoadMethodUrl" >
-					<c:param name="method" value="load" />
-				</c:url >
-				<customtags:headerLink />
-					<a id="applyadjustment.link.viewDetails" href="${customerAccountActionLoadMethodUrl}"> <!--  html-el:link href="javascript:ViewDetails()" -->/
+					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
+					<a id="applyadjustment.link.viewDetails" href="customerAccountAction.do?method=load"> <!--  html-el:link href="javascript:ViewDetails()" -->/
 					<c:if test="${param.input == 'ViewCenterCharges'}">
 						<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 					</c:if> <c:if test="${param.input == 'ViewGroupCharges'}">

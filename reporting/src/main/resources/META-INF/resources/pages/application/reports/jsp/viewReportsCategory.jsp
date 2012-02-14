@@ -33,11 +33,8 @@ explanation of the license and how it is applied.
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 	      <tr>
 	        <td class="bluetablehead05">
-			<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
-				<c:param name="method" value="load" />
-			</c:url >
 	        <span class="fontnormal8pt">
-				<html-el:link href="${AdminActionLoadMethodUrl}">
+				<html-el:link href="AdminAction.do?method=load">
 					<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
 				</html-el:link>
 				/
@@ -64,11 +61,8 @@ explanation of the license and how it is applied.
               		<td valign="top" class="fontnormalbold"> 
               			<span class="fontnormal">
 				 			<mifos:mifoslabel name="admin.infoclickonlabel" />
-						<c:url value="reportsCategoryAction.do" var="reportsCategoryActionLoadDefineNewCategoryPageMethodUrl" >
-							<c:param name="method" value="loadDefineNewCategoryPage" />
-						</c:url >
 				 			<mifos:mifoslabel name="reportsCategory.labelinfo" bundle="reportsCategoryUIResources" /> 
-							<html-el:link href="${reportsCategoryActionLoadDefineNewCategoryPageMethodUrl}">
+							<html-el:link href="reportsCategoryAction.do?method=loadDefineNewCategoryPage">
 							<mifos:mifoslabel name="reportsCategory.linkinfo" bundle="reportsCategoryUIResources" />
 							</html-el:link>
 		              		<br />
@@ -94,21 +88,12 @@ explanation of the license and how it is applied.
 	    			                				<c:out value="${reportCategory.reportCategoryName}"/>
 	                    						</span>
 		                    				</td>
-											<c:url value="reportsCategoryAction.do" var="reportsCategoryActionEditMethodUrl" >
-												<c:param name="method" value="edit" />
-												<c:param name="categoryId" value="${reportCategory.reportCategoryId}" />
-											</c:url >
 					                    	<td width="30%" class="blueline"> 
-												<a id="edit_<c:out value="${reportCategory.reportCategoryId}" />" href="${reportsCategoryActionEditMethodUrl}">
+												<a id="edit_<c:out value="${reportCategory.reportCategoryId}" />" href="reportsCategoryAction.do?method=edit&categoryId=${reportCategory.reportCategoryId}">
 													<mifos:mifoslabel name = "reportsCategory.edit" bundle="reportsCategoryUIResources" />
 												</a>
 												|
-											<c:url value="reportsCategoryAction.do" var="reportsCategoryActionConfirmDeleteReportsCategoryMethodUrl" >
-												<c:param name="method" value="confirmDeleteReportsCategory" />
-												<c:param name="categoryId" value="${reportCategory.reportCategoryId}" />
-											</c:url >
-											
-												<a id="delete_<c:out value="${reportCategory.reportCategoryId}" />" href="${reportsCategoryActionConfirmDeleteReportsCategoryMethodUrl}">
+												<a id="delete_<c:out value="${reportCategory.reportCategoryId}" />" href="reportsCategoryAction.do?method=confirmDeleteReportsCategory&categoryId=${reportCategory.reportCategoryId}">
 													<mifos:mifoslabel name = "reportsCategory.delete" bundle="reportsCategoryUIResources" />
 												</a>
 											</td>

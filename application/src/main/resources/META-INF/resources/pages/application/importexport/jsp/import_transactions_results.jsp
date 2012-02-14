@@ -182,11 +182,8 @@ explanation of the license and how it is applied.
                                 </tr>
 								<c:if test="${requestScope.isExtraInformationFilled}">
 									<tr class="fontnormal">
-										<c:url value="manageImportAction.do" var="manageImportActionDownloadLogMethodUrl" >
-											<c:param name="method" value="downloadLog" />
-										</c:url >
 										<td>
-											<p><a href="${manageImportActionDownloadLogMethodUrl}" target="_blank"><fmt:message key="admin.importexport.downloadLog"/>
+											<p><a href="manageImportAction.do?method=downloadLog" target="_blank"><fmt:message key="admin.importexport.downloadLog"/>
 												</a></p>
 										</td>
 									</tr>	

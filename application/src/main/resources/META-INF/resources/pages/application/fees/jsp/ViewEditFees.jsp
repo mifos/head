@@ -34,13 +34,8 @@ explanation of the license and how it is applied.
 		<html-el:form action="/feeaction.do?method=get">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<c:url value="feeaction.do" var="feeactionCancelCreateMethodUrl" >
-						<c:param name="method" value="cancelCreate" />
-						<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-					</c:url >
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> <html-el:link href="${feeactionCancelCreateMethodUrl}">
+						<span class="fontnormal8pt"> <html-el:link href="feeaction.do?method=cancelCreate&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Fees.admin" bundle="FeesUIResources">
 								</mifos:mifoslabel>
 							</html-el:link> / </span> <span class="fontnormal8ptbold"> <mifos:mifoslabel name="Fees.viewfees" bundle="FeesUIResources">
@@ -59,13 +54,8 @@ explanation of the license and how it is applied.
 							</tr>
 							<tr>
 								<td class="fontnormalbold">
-									<span class="fontnormal"> 
-									<c:url value="feeaction.do" var="feeactionLoadMethodUrl" >
-										<c:param name="method" value="load" />
-										<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-									</c:url >
-									<mifos:mifoslabel name="Fees.ViewFeesInstruction" bundle="FeesUIResources">
-										</mifos:mifoslabel> <html-el:link href="${feeactionLoadMethodUrl}">
+									<span class="fontnormal"> <mifos:mifoslabel name="Fees.ViewFeesInstruction" bundle="FeesUIResources">
+										</mifos:mifoslabel> <html-el:link href="feeaction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 											<mifos:mifoslabel name="Fees.smalldefinenewfee" bundle="FeesUIResources">
 											</mifos:mifoslabel>
 										</html-el:link> <br> </span> <span class="fontnormalbold"> <span class="fontnormalbold"> <br> </span> </span> <span class="fontnormalbold"> </span> <span class="fontnormal"> </span> <span class="fontnormalbold"> <span class="fontnormalbold"> <font
@@ -77,13 +67,8 @@ explanation of the license and how it is applied.
 												<td width="1%">
 													<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
 												</td>
-												<c:url value="feeaction.do" var="feeactionGetMethodUrl" >
-													<c:param name="method" value="get" />
-													<c:param name="feeId" value="${productFee.id}" />
-													<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-												</c:url >
 												<td width="99%">
-													<html-el:link href="${feeactionGetMethodUrl}">
+													<html-el:link href="feeaction.do?method=get&feeId=${productFee.id}&randomNUm=${sessionScope.randomNUm}">
 														<c:out value="${productFee.name}" />
 													</html-el:link>
 													(
@@ -109,13 +94,8 @@ explanation of the license and how it is applied.
 												<td width="1%">
 													<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
 												</td>
-												<c:url value="feeaction.do" var="feeactionGetMethodUrl" >
-													<c:param name="method" value="get" />
-													<c:param name="feeId" value="${clientFee.id}" />
-													<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-												</c:url >
 												<td width="99%">
-													<html-el:link href="${feeactionGetMethodUrl}">
+													<html-el:link href="feeaction.do?method=get&feeId=${clientFee.id}&randomNUm=${sessionScope.randomNUm}">
 														<c:out value="${clientFee.name}" />
 													</html-el:link>
 													(

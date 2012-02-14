@@ -117,11 +117,8 @@ function addMe(page)
 										    <c:forEach var="rp" items="${sessionScope.listOfAllParameters}" varStatus="loop" begin='0'>			            	  			            	  	
 						            	  	<option value="${rp.parameterId}">${rp.name}</option>
 				                        	  </c:forEach>
-										  <c:url value="javascript:addMe('reportsParamsMapAction.do" var="javascript:addMe('reportsParamsMapActionCreateParamsMap')MethodUrl" >
-										   <c:param name="method" value="createParamsMap')" />
-										  </c:url >
 										   </mifos:select> 
-										   <a href="${javascript:addMe('reportsParamsMapActionCreateParamsMap')MethodUrl}">
+										   <a href="javascript:addMe('reportsParamsMapAction.do?method=createParamsMap')">
 						              		<mifos:mifoslabel name="reports.addreportsparams" bundle="reportsUIResources"/>          			               		              	
 						              		</a>
 							          </span></td>
@@ -138,11 +135,8 @@ function addMe(page)
 									 <c:forEach var="reportParamsMapRep" items="${sessionScope.listOfAllParametersForReportId}" varStatus="loop" begin='0'>			            	  			            	  	
             	  				  <tr>
 								      <td width="30%"><span class="fontnormal"><%=i++%>.</span><span class="fontnormalbold"><c:out value="${reportParamsMapRep.reportsParams.name}"/></span></td>
-									 <c:url value="javascript:deleteMe('reportsParamsMapAction.do" var="javascript:deleteMe('reportsParamsMapActionDeleteParamsMap',${reportParamsMapRep.mapId})MethodUrl" >
-									  <c:param name="method" value="deleteParamsMap',${reportParamsMapRep.mapId})" />
-									 </c:url >
 							
-									  <td nowrap><a href="${javascript:deleteMe('reportsParamsMapActionDeleteParamsMap',${reportParamsMapRep.mapId})MethodUrl}">Delete</a></td>
+									  <td nowrap><a href="javascript:deleteMe('reportsParamsMapAction.do?method=deleteParamsMap',${reportParamsMapRep.mapId})">Delete</a></td>
 									</tr>
 									
 									

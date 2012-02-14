@@ -49,30 +49,14 @@ explanation of the license and how it is applied.
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<c:set var="officeDto" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'officeDto')}"></c:set>
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt">
-					<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
-						<c:param name="method" value="load" />
-						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-					</c:url >
-					<html-el:link styleId="editoffice.link.admin"
-						href="${AdminActionLoadMethodUrl}">
+					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link styleId="editoffice.link.admin"
+						href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="Office.labelLinkAdmin" />
-					</html-el:link> / 
-					<c:url value="offAction.do" var="offActionGetAllOfficesMethodUrl" >
-						<c:param name="method" value="getAllOffices" />
-						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-					</c:url >
-					<html-el:link styleId="editoffice.link.viewOffices"
-						href="${offActionGetAllOfficesMethodUrl}">
+					</html-el:link> / <html-el:link styleId="editoffice.link.viewOffices"
+						href="offAction.do?method=getAllOffices&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="Office.labelLinkViewOffices" />
-					</html-el:link> / 
-					<c:url value="offAction.do" var="offActionGetMethodUrl" >
-						<c:param name="method" value="get" />
-						<c:param name="officeId" value="${offActionForm.officeId}" />
-						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-					</c:url >
-					<html-el:link styleId="editoffice.link.viewOffice"
-						href="${offActionGetMethodUrl}">
+					</html-el:link> / <html-el:link styleId="editoffice.link.viewOffice"
+						href="offAction.do?method=get&officeId=${offActionForm.officeId}&randomNUm=${sessionScope.randomNUm}">
 						<c:out value="${officeDto.name}"></c:out>
 					</html-el:link> </span></td>
 				</tr>

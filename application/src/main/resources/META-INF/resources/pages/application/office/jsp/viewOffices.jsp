@@ -34,13 +34,8 @@ explanation of the license and how it is applied.
 		<html-el:form action="/offAction.do?method=preview">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt">
-					<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
-						<c:param name="method" value="load" />
-						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-					</c:url >
-					<html-el:link styleId="viewOffices.link.admin"
-						href="${AdminActionLoadMethodUrl}">
+					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link styleId="viewOffices.link.admin"
+						href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="office.labelLinkAdmin"
 							bundle="OfficeResources"></mifos:mifoslabel>
 					</html-el:link> / </span> <span class="fontnormal8ptbold"><mifos:mifoslabel
@@ -58,14 +53,8 @@ explanation of the license and how it is applied.
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal"><mifos:mifoslabel
 								name="office.labelViewOfficeInstruction"
-								bundle="OfficeResources"></mifos:mifoslabel> 
-							<c:url value="offAction.do" var="offActionLoadMethodUrl" >
-								<c:param name="method" value="load" />
-								<c:param name="officeLevel" value="" />
-								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-							</c:url >
-							<html-el:link styleId="viewOffices.link.newOffice"
-								href="${offActionLoadMethodUrl}">
+								bundle="OfficeResources"></mifos:mifoslabel> <html-el:link styleId="viewOffices.link.newOffice"
+								href="offAction.do?method=load&officeLevel=&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="office.labelViewOfficeAddNewOffice"
 									bundle="OfficeResources"></mifos:mifoslabel>
 							</html-el:link><br>
@@ -76,13 +65,8 @@ explanation of the license and how it is applied.
 							<c:set var="area" />
 							 
 							<c:forEach var="headOffice" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'headOfficeList')}">
-								<c:url value="offAction.do" var="offActionGetMethodUrl" >
-									<c:param name="method" value="get" />
-									<c:param name="officeId" value="${headOffice.id}" />
-									<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-								</c:url >
 									<span class="fontnormalbold">
-									<html-el:link styleId="viewOffices.link.viewHeadOffice" href="${offActionGetMethodUrl}">
+									<html-el:link styleId="viewOffices.link.viewHeadOffice" href="offAction.do?method=get&officeId=${headOffice.id}&randomNUm=${sessionScope.randomNUm}">
 									<c:out value="${headOffice.name}" /></html-el:link> <br>
 									</span>
 							</c:forEach>
@@ -103,13 +87,8 @@ explanation of the license and how it is applied.
 											<td width="61%"><span class="fontnormalbold"> <mifos:mifoslabel
 												name="Office.labelRegionalOffice" bundle="OfficeUIResources" />
 											</span></td>
-										<c:url value="offAction.do" var="offActionLoadMethodUrl" >
-											<c:param name="method" value="load" />
-											<c:param name="officeLevel" value="${OfficeLevel.REGIONALOFFICE.value}" />
-											<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-										</c:url >
 											<td width="39%" align="right">
-											<html-el:link styleId="viewOffices.link.newRegionalOffice" href="${offActionLoadMethodUrl}">
+											<html-el:link styleId="viewOffices.link.newRegionalOffice" href="offAction.do?method=load&officeLevel=${OfficeLevel.REGIONALOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources" />
 												<mifos:mifoslabel name="Office.labelRegionalOffice" bundle="OfficeUIResources" />
 											</html-el:link>
@@ -124,13 +103,8 @@ explanation of the license and how it is applied.
 											<td width="61%"><span class="fontnormalbold">
 												<span class="fontnormalbold"><c:out value="${office.level.name}" /></span></span></td>
 											<td width="39%" align="right">
-												<c:url value="offAction.do" var="offActionLoadMethodUrl" >
-													<c:param name="method" value="load" />
-													<c:param name="officeLevel" value="${OfficeLevel.REGIONALOFFICE.value}" />
-													<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-												</c:url >
 												<html-el:link styleId="viewOffices.link.newRegionalOffice" 
-													href="${offActionLoadMethodUrl}">
+													href="offAction.do?method=load&officeLevel=${OfficeLevel.REGIONALOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
 													<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources" />
 													<mifos:mifoslabel name="Office.labelRegionalOffice" bundle="OfficeUIResources" />
 												</html-el:link>
@@ -142,14 +116,8 @@ explanation of the license and how it is applied.
 										<table width="90%" border="0" cellspacing="0" cellpadding="0">
 											<tr class="fontnormal">
 												<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-												<td width="99%">
-												<c:url value="offAction.do" var="offActionGetMethodUrl" >
-													<c:param name="method" value="get" />
-													<c:param name="officeId" value="${regionalOffice.id}" />
-													<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-												</c:url >
-												<html-el:link styleId="viewOffices.link.viewRegionalOffice"
-													href="${offActionGetMethodUrl}">
+												<td width="99%"><html-el:link styleId="viewOffices.link.viewRegionalOffice"
+													href="offAction.do?method=get&officeId=${regionalOffice.id}&randomNUm=${sessionScope.randomNUm}">
 													<c:out value="${regionalOffice.name}" />
 												</html-el:link>&nbsp;&nbsp;&nbsp;
 												<c:if test="${office.statusId == OfficeStatus.INACTIVE.value}">
@@ -174,13 +142,8 @@ explanation of the license and how it is applied.
 											<td width="61%">
 												<span class="fontnormalbold"><mifos:mifoslabel name="Office.labelDivisionalOffice" bundle="OfficeUIResources" /></span>
 											</td>
-											<c:url value="offAction.do" var="offActionLoadMethodUrl" >
-												<c:param name="method" value="load" />
-												<c:param name="officeLevel" value="${OfficeLevel.SUBREGIONALOFFICE.value}" />
-												<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-											</c:url >
 											<td width="39%" align="right">
-												<html-el:link styleId="viewOffices.link.newDivisionalOffice" href="${offActionLoadMethodUrl}">
+												<html-el:link styleId="viewOffices.link.newDivisionalOffice" href="offAction.do?method=load&officeLevel=${OfficeLevel.SUBREGIONALOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
 													<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources" />
 													<mifos:mifoslabel name="Office.labelDivisionalOffice" bundle="OfficeUIResources" />
 												</html-el:link>
@@ -197,14 +160,8 @@ explanation of the license and how it is applied.
 													<span class="fontnormalbold"><mifos:mifoslabel name="Office.labelDivisionalOffice" bundle="OfficeUIResources" /></span>
 												</span>
 											</td>
-											<td width="39%" align="right">
-											<c:url value="offAction.do" var="offActionLoadMethodUrl" >
-												<c:param name="method" value="load" />
-												<c:param name="officeLevel" value="${OfficeLevel.SUBREGIONALOFFICE.value}" />
-												<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-											</c:url >
-											<html-el:link styleId="viewOffices.link.newDivisionalOffice"
-												href="${offActionLoadMethodUrl}">
+											<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newDivisionalOffice"
+												href="offAction.do?method=load&officeLevel=${OfficeLevel.SUBREGIONALOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources"></mifos:mifoslabel>
 												<mifos:mifoslabel name="Office.labelDivisionalOffice" bundle="OfficeUIResources" />
 											</html-el:link></td>
@@ -217,13 +174,8 @@ explanation of the license and how it is applied.
 											<tr class="fontnormal">
 												<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 												<td width="99%">
-													<c:url value="offAction.do" var="offActionGetMethodUrl" >
-														<c:param name="method" value="get" />
-														<c:param name="officeId" value="${divisionalOffice.id}" />
-														<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-													</c:url >
 													<html-el:link styleId="viewOffices.link.viewDivisionalOffice" 
-														href="${offActionGetMethodUrl}">
+														href="offAction.do?method=get&officeId=${divisionalOffice.id}&randomNUm=${sessionScope.randomNUm}">
 														<c:out value="${divisionalOffice.name}" />
 													</html-el:link>&nbsp;&nbsp;&nbsp;
 												
@@ -251,13 +203,8 @@ explanation of the license and how it is applied.
 												<span class="fontnormalbold"><mifos:mifoslabel name="Office.labelAreaOffice" bundle="OfficeUIResources" /></span>
 											</td>
 											<td width="39%" align="right">
-												<c:url value="offAction.do" var="offActionLoadMethodUrl" >
-													<c:param name="method" value="load" />
-													<c:param name="officeLevel" value="${OfficeLevel.AREAOFFICE.value}" />
-													<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-												</c:url >
 												<html-el:link styleId="viewOffices.link.newAreaOffice"
-													href="${offActionLoadMethodUrl}">
+													href="offAction.do?method=load&officeLevel=${OfficeLevel.AREAOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
 													<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources" />
 													<mifos:mifoslabel name="Office.labelAreaOffice" bundle="OfficeUIResources" />
 												</html-el:link>
@@ -275,13 +222,8 @@ explanation of the license and how it is applied.
 												</span>
 											</td>
 											<td width="39%" align="right">
-												<c:url value="offAction.do" var="offActionLoadMethodUrl" >
-													<c:param name="method" value="load" />
-													<c:param name="officeLevel" value="${OfficeLevel.AREAOFFICE.value}" />
-													<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-												</c:url >
 												<html-el:link styleId="viewOffices.link.newAreaOffice"
-													href="${offActionLoadMethodUrl}">
+													href="offAction.do?method=load&officeLevel=${OfficeLevel.AREAOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
 													<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources"></mifos:mifoslabel>
 													<mifos:mifoslabel name="Office.labelAreaOffice" bundle="OfficeUIResources" />
 												</html-el:link>
@@ -295,13 +237,8 @@ explanation of the license and how it is applied.
 											<tr class="fontnormal">
 												<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 												<td width="99%">
-													<c:url value="offAction.do" var="offActionGetMethodUrl" >
-														<c:param name="method" value="get" />
-														<c:param name="officeId" value="${areaOffice.id}" />
-														<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-													</c:url >
 													<html-el:link styleId="viewOffices.link.viewAreaOffice" 
-														href="${offActionGetMethodUrl}">
+														href="offAction.do?method=get&officeId=${areaOffice.id}&randomNUm=${sessionScope.randomNUm}">
 														<c:out value="${areaOffice.name}" />
 													</html-el:link>&nbsp;&nbsp;&nbsp;
 													<c:if test="${areaOffice.statusId == OfficeStatus.INACTIVE.value}">
@@ -330,13 +267,8 @@ explanation of the license and how it is applied.
 												</span>
 											</td>
 											<td width="39%" align="right">
-												<c:url value="offAction.do" var="offActionLoadMethodUrl" >
-													<c:param name="method" value="load" />
-													<c:param name="officeLevel" value="${OfficeLevel.BRANCHOFFICE.value}" />
-													<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-												</c:url >
 												<html-el:link styleId="viewOffices.link.newBranchOffice" 
-													href="${offActionLoadMethodUrl}">
+													href="offAction.do?method=load&officeLevel=${OfficeLevel.BRANCHOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
 													<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources" />
 													<mifos:mifoslabel name="Office.labelBranchOffice" bundle="OfficeUIResources" />
 												</html-el:link>
@@ -351,13 +283,8 @@ explanation of the license and how it is applied.
 											<td width="61%">
 												<span class="fontnormalbold"><mifos:mifoslabel name="Office.labelBranchOffice" bundle="OfficeUIResources" /></span>
 											</td>
-											<c:url value="offAction.do" var="offActionLoadMethodUrl" >
-												<c:param name="method" value="load" />
-												<c:param name="officeLevel" value="5" />
-												<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-											</c:url >
 											<td width="39%" align="right">
-												<html-el:link styleId="viewOffices.link.newBranchOffice" href="${offActionLoadMethodUrl}">
+												<html-el:link styleId="viewOffices.link.newBranchOffice" href="offAction.do?method=load&officeLevel=5&randomNUm=${sessionScope.randomNUm}">
 													<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources" />
 													<mifos:mifoslabel name="Office.labelBranchOffice" bundle="OfficeUIResources" />
 												</html-el:link>
@@ -378,13 +305,8 @@ explanation of the license and how it is applied.
 										<table width="90%" border="0" cellspacing="0" cellpadding="0">
 											<tr class="fontnormal">
 												<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-												<c:url value="offAction.do" var="offActionGetMethodUrl" >
-													<c:param name="method" value="get" />
-													<c:param name="officeId" value="${branchOffice.id}" />
-													<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-												</c:url >
 												<td width="99%">
-													<html-el:link styleId="viewOffices.link.viewBranchOffice" href="${offActionGetMethodUrl}">
+													<html-el:link styleId="viewOffices.link.viewBranchOffice" href="offAction.do?method=get&officeId=${branchOffice.id}&randomNUm=${sessionScope.randomNUm}">
 													<c:out value="${branchOffice.name}" /></html-el:link>&nbsp;&nbsp;&nbsp; 
 													<c:if test="${branchOffice.statusId == OfficeStatus.INACTIVE.value}">
 														<mifos:MifosImage id="inactive" moduleName="org.mifos.customers.office.util.resources.officeImages" />

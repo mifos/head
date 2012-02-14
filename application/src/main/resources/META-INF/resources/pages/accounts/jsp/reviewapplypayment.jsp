@@ -58,12 +58,8 @@ explanation of the license and how it is applied.
 					<c:choose>
 						<c:when test="${param.input == 'loan'}">
 						</c:when>
-						<c:url value="customerAccountAction.do" var="customerAccountActionLoadMethodUrl" >
-							<c:param name="method" value="load" />
-							<c:param name="globalCustNum" value="${param.globalCustNum}" />
-						</c:url >
 						<c:otherwise>
-							<html-el:link styleId="reviewapplypayment.link.viewCharges" href="${customerAccountActionLoadMethodUrl}">
+							<html-el:link styleId="reviewapplypayment.link.viewCharges" href="customerAccountAction.do?method=load&globalCustNum=${param.globalCustNum}">
 					          	<c:if test="${param.input == 'ViewCenterCharges'}">
 	          						<mifos:mifoslabel name="Center.CenterCharges" bundle="CenterUIResources"/>
 	          					</c:if>

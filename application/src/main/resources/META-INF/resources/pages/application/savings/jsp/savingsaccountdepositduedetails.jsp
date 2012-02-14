@@ -63,22 +63,11 @@ explanation of the license and how it is applied.
 						<table width="60%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td bgcolor="#F0D4A5" style="padding-left:10px; padding-bottom:3px;">
-									<span class="fontnormalbold"><mifos:mifoslabel name="Savings.applytrans" isColonRequired="yes"/>
-								<c:url value="savingsDepositWithdrawalAction.do" var="savingsDepositWithdrawalActionLoadMethodUrl" >
-									<c:param name="method" value="load" />
-									<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-									<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-								</c:url >
-								</span>&nbsp;&nbsp;&nbsp;&nbsp; 
-									<html-el:link  href="${savingsDepositWithdrawalActionLoadMethodUrl}">
+									<span class="fontnormalbold"><mifos:mifoslabel name="Savings.applytrans" isColonRequired="yes"/></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+									<html-el:link  href="savingsDepositWithdrawalAction.do?method=load&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 										<mifos:mifoslabel name="Savings.makeDepositWithdrawl" />
-								<c:url value="savingsApplyAdjustmentAction.do" var="savingsApplyAdjustmentActionLoadMethodUrl" >
-									<c:param name="method" value="load" />
-									<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-									<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-								</c:url >
 									</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-									<html-el:link href="${savingsApplyAdjustmentActionLoadMethodUrl}">
+									<html-el:link href="savingsApplyAdjustmentAction.do?method=load&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 										<mifos:mifoslabel name="Savings.applyAdjustment" />
 									</html-el:link>
 								</td>

@@ -33,11 +33,8 @@ explanation of the license and how it is applied.
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 	      <tr>
 	        <td class="bluetablehead05">
-			<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
-				<c:param name="method" value="load" />
-			</c:url >
 	        <span class="fontnormal8pt">
-				<html-el:link href="${AdminActionLoadMethodUrl}">
+				<html-el:link href="AdminAction.do?method=load">
 					<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
 				</html-el:link>
 				/
@@ -64,12 +61,8 @@ explanation of the license and how it is applied.
               		<td valign="top" class="fontnormalbold"> 
               			<span class="fontnormal">
 				 			<mifos:mifoslabel name="admin.belowislistofadministrativedocuments"  bundle="adminUIResources" />
-				 		<c:url value="birtAdminDocumentUploadAction.do" var="birtAdminDocumentUploadActionGetBirtAdminDocumentUploadPageMethodUrl" >
-				 			<c:param name="method" value="getBirtAdminDocumentUploadPage" />
-				 			<c:param name="viewPath" value="administerreports_path" />
-				 		</c:url >
 				 			<mifos:mifoslabel name="reports.toeditclickon" bundle="reportsUIResources"/>
-				 			<html-el:link href="${birtAdminDocumentUploadActionGetBirtAdminDocumentUploadPageMethodUrl}">
+				 			<html-el:link href="birtAdminDocumentUploadAction.do?method=getBirtAdminDocumentUploadPage&viewPath=administerreports_path">
 								<mifos:mifoslabel name="reports.uploadanewadmindoc" bundle="reportsUIResources" />
 							</html-el:link>
 		              		<br />
@@ -94,21 +87,12 @@ explanation of the license and how it is applied.
 									
 								</td>
 															
-								<c:url value="birtAdminDocumentUploadAction.do" var="birtAdminDocumentUploadActionEditMethodUrl" >
-									<c:param name="method" value="edit" />
-									<c:param name="admindocId" value="${adminDocuments.admindocId}" />
-								</c:url >
 		      					<td width="45%" class="blueline"> 
-									<a href="${birtAdminDocumentUploadActionEditMethodUrl}">
+									<a href="birtAdminDocumentUploadAction.do?method=edit&admindocId=${adminDocuments.admindocId}">
 										<mifos:mifoslabel name = "reports.edit" bundle="reportsUIResources" />
 									</a>
 						      		|
-								<c:url value="birtAdminDocumentUploadAction.do" var="birtAdminDocumentUploadActionDownloadAdminDocumentMethodUrl" >
-									<c:param name="method" value="downloadAdminDocument" />
-									<c:param name="admindocId" value="${adminDocuments.admindocId}" />
-								</c:url >
-								
-									<a href="${birtAdminDocumentUploadActionDownloadAdminDocumentMethodUrl}" >
+									<a href="birtAdminDocumentUploadAction.do?method=downloadAdminDocument&admindocId=${adminDocuments.admindocId}" >
 										<mifos:mifoslabel name = "reports.downloadadminDocuments" bundle="reportsUIResources" />
 									</a>
 								</td>				

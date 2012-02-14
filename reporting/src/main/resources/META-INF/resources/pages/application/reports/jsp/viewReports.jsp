@@ -42,11 +42,8 @@ explanation of the license and how it is applied.
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 	      <tr>
 	        <td class="bluetablehead05">
-			<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
-				<c:param name="method" value="load" />
-			</c:url >
 	        <span class="fontnormal8pt">
-				<html-el:link href="${AdminActionLoadMethodUrl}">
+				<html-el:link href="AdminAction.do?method=load">
 					<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
 				</html-el:link>
 				/
@@ -72,12 +69,8 @@ explanation of the license and how it is applied.
 				 		<mifos:mifoslabel name="reports.changeReportInfo" />
 				 		<br />
 				 		<fmt:message key="reports.createNewReportInfo">
-							<c:url value="birtReportsUploadAction.do" var="birtReportsUploadActionGetBirtReportsUploadPageMethodUrl" >
-								<c:param name="method" value="getBirtReportsUploadPage" />
-								<c:param name="viewPath" value="administerreports_path" />
-							</c:url >
 				 			<fmt:param>
-								<html-el:link href="${birtReportsUploadActionGetBirtReportsUploadPageMethodUrl}">
+								<html-el:link href="birtReportsUploadAction.do?method=getBirtReportsUploadPage&viewPath=administerreports_path">
 									<mifos:mifoslabel name="reports.newReportLinkText" bundle="reportsUIResources" />
 								</html-el:link>
 							</fmt:param>
@@ -123,21 +116,12 @@ explanation of the license and how it is applied.
 		                    				</td>
 		                    
 											
-											<c:url value="birtReportsUploadAction.do" var="birtReportsUploadActionEditMethodUrl" >
-												<c:param name="method" value="edit" />
-												<c:param name="reportId" value="${report.reportId}" />
-											</c:url >
 					      					<td width="30%" class="blueline"> 
-												<a href="${birtReportsUploadActionEditMethodUrl}">
+												<a href="birtReportsUploadAction.do?method=edit&reportId=${report.reportId}">
 													<mifos:mifoslabel name = "reports.edit" bundle="reportsUIResources" />
 												</a>
 									      		|
-											<c:url value="birtReportsUploadAction.do" var="birtReportsUploadActionDownloadBirtReportMethodUrl" >
-												<c:param name="method" value="downloadBirtReport" />
-												<c:param name="reportId" value="${report.reportId}" />
-											</c:url >
-											
-												<a href="${birtReportsUploadActionDownloadBirtReportMethodUrl}">
+												<a href="birtReportsUploadAction.do?method=downloadBirtReport&reportId=${report.reportId}">
 													<mifos:mifoslabel name = "reports.download" bundle="reportsUIResources" />
 												</a>
 											</td>

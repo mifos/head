@@ -61,16 +61,8 @@ explanation of the license and how it is applied.
 											<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></span>
 											<c:forEach var="checklist" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'centerchecklist')}">
 												<br>
-											<c:url value="chkListAction.do" var="chkListActionGetMethodUrl" >
-												<c:param name="method" value="get" />
-												<c:param name="checkListId" value="${checklist.checklistId}" />
-												<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-												<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-												<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-												<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-											</c:url >
 												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
-												<html-el:link href="${chkListActionGetMethodUrl}">	
+												<html-el:link href="chkListAction.do?method=get&checkListId=${checklist.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
 															${checklist.checklistName}
 														</html-el:link>
 														(${checklist.name})
@@ -85,16 +77,8 @@ explanation of the license and how it is applied.
 											<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></span>
 											<c:forEach var="checklist" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groupchecklist')}">
 												<br>
-											<c:url value="chkListAction.do" var="chkListActionGetMethodUrl" >
-												<c:param name="method" value="get" />
-												<c:param name="checkListId" value="${checklist.checklistId}" />
-												<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-												<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-												<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-												<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-											</c:url >
 												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
-												<html-el:link href="${chkListActionGetMethodUrl}">	
+												<html-el:link href="chkListAction.do?method=get&checkListId=${checklist.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
 															${checklist.checklistName}
 														</html-el:link>
 														(${checklist.name})
@@ -109,16 +93,8 @@ explanation of the license and how it is applied.
 											<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></span>
 											<c:forEach var="checklist" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientchecklist')}">
 												<br>
-											<c:url value="chkListAction.do" var="chkListActionGetMethodUrl" >
-												<c:param name="method" value="get" />
-												<c:param name="checkListId" value="${checklist.checklistId}" />
-												<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-												<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-												<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-												<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-											</c:url >
 												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
-												<html-el:link href="${chkListActionGetMethodUrl}">	
+												<html-el:link href="chkListAction.do?method=get&checkListId=${checklist.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
 															${checklist.checklistName}
 														</html-el:link>
 														(${checklist.name})
@@ -132,16 +108,8 @@ explanation of the license and how it is applied.
 											<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></span>
 											<c:forEach var="checklist" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanchecklist')}">
 												<br>
-											<c:url value="chkListAction.do" var="chkListActionGetMethodUrl" >
-												<c:param name="method" value="get" />
-												<c:param name="checkListId" value="${checklist.checklistId}" />
-												<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-												<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-												<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-												<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-											</c:url >
 												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
-												<html-el:link href="${chkListActionGetMethodUrl}">	
+												<html-el:link href="chkListAction.do?method=get&checkListId=${checklist.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
 															${checklist.checklistName}
 														</html-el:link>
 														(${checklist.name})
@@ -155,16 +123,8 @@ explanation of the license and how it is applied.
 											<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></span>
 											<c:forEach var="checklist" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'savingschecklist')}">
 												<br>
-											<c:url value="chkListAction.do" var="chkListActionGetMethodUrl" >
-												<c:param name="method" value="get" />
-												<c:param name="checkListId" value="${checklist.checklistId}" />
-												<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-												<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-												<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-												<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-											</c:url >
 												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
-												<html-el:link href="${chkListActionGetMethodUrl}">	
+												<html-el:link href="chkListAction.do?method=get&checkListId=${checklist.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
 															${checklist.checklistName}
 														</html-el:link>
 														(${checklist.name})

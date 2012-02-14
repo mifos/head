@@ -150,13 +150,8 @@ function goToCancelPage()
                   							<c:set var="groupHierarchyRequired"
 								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groupHierarchyRequired')}" />
                   
-                  <c:url value="clientCustAction.do" var="clientCustActionChooseOfficeMethodUrl" >
-                   <c:param name="method" value="chooseOffice" />
-                   <c:param name="amp;groupFlag" value="0" />
-                   <c:param name="amp;currentFlowKey" value="${requestScope.currentFlowKey}" />
-                  </c:url >
                   <c:if test="${groupHierarchyRequired eq 'No'}">
-                   <a id="group_search.link.membershipNotRequired" href="${clientCustActionChooseOfficeMethodUrl}"> 
+                   <a id="group_search.link.membershipNotRequired" href="clientCustAction.do?method=chooseOffice&amp;groupFlag=0&amp;currentFlowKey=${requestScope.currentFlowKey}"> 
                   <br>
                   	<fmt:message key="Group.membershipNotRequired">
                     	<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param> 

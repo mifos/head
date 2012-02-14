@@ -52,13 +52,8 @@ explanation of the license and how it is applied.
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt">
-							<c:url value="lookupOptionsAction.do" var="lookupOptionsActionCancelMethodUrl" >
-								<c:param name="method" value="cancel" />
-								<c:param name="amp;currentFlowKey" value="${requestScope.currentFlowKey}" />
-							</c:url >
-							<html-el:link
-								href="${lookupOptionsActionCancelMethodUrl}">
+						<span class="fontnormal8pt"><html-el:link
+								href="lookupOptionsAction.do?method=cancel&amp;currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="configuration.admin" />
 							</html-el:link> / </span><span class="fontnormal8ptbold"><mifos:mifoslabel
 								name="configuration.definelookupoptions" />

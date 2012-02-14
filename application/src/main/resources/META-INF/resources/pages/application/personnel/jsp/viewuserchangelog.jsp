@@ -45,26 +45,15 @@ explanation of the license and how it is applied.
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td class="bluetablehead05">
-			<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
-				<c:param name="method" value="load" />
-			</c:url >
         	<span class="fontnormal8pt">
-				<a id="viewuserchangelog.link.admin" href="${AdminActionLoadMethodUrl}">
+				<a id="viewuserchangelog.link.admin" href="AdminAction.do?method=load">
 		           <mifos:mifoslabel name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>             	
 	           	</a>
 			 	/ 
-			<c:url value="PersonnelAction.do" var="PersonnelActionLoadSearchMethodUrl" >
-				<c:param name="method" value="loadSearch" />
-			</c:url >
-			
-				<a id="viewuserchangelog.link.viewUsers" href="${PersonnelActionLoadSearchMethodUrl}">
+				<a id="viewuserchangelog.link.viewUsers" href="PersonnelAction.do?method=loadSearch">
 					<mifos:mifoslabel name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
-			<c:url value="PersonnelAction.do" var="PersonnelActionGetMethodUrl" >
-				<c:param name="method" value="get" />
-				<c:param name="globalPersonnelNum" value="${requestScope.PersonnelVO.globalPersonnelNum}" />
-			</c:url >
 				</a> / 
-				<a id="viewuserchangelog.link.viewUser" href="${PersonnelActionGetMethodUrl}">
+				<a id="viewuserchangelog.link.viewUser" href="PersonnelAction.do?method=get&globalPersonnelNum=${requestScope.PersonnelVO.globalPersonnelNum}">
 		           <c:out value="${requestScope.PersonnelVO.displayName}"/>            	
 	           	</a>
             </span>

@@ -196,13 +196,8 @@ function goToCancelPage(){
 								<tr>
 								<td align="right"></td>
 									<td align="left" class="fontnormalbold"><span class="fontnormal">
-									<c:url value="addGroupMembershipAction.do" var="addGroupMembershipActionLoadSearchMethodUrl" >
-										<c:param name="method" value="loadSearch" />
-										<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-										<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-									</c:url >
 									<a
-										href="${addGroupMembershipActionLoadSearchMethodUrl}">
+										href="addGroupMembershipAction.do?method=loadSearch&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="client.AddGroupMemberShip"									
 										bundle="ClientUIResources" /> </a> </span></td>
 								</tr>

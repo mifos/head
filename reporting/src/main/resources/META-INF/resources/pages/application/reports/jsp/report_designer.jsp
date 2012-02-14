@@ -176,23 +176,15 @@ explanation of the license and how it is applied.
 									        <td width="20%" nowrap></td>
 									      </c:when>
 									      <c:otherwise>
-									        <c:url value="reportsParamsMapAction.do" var="reportsParamsMapActionLoadAddListMethodUrl" >
-									        	<c:param name="method" value="loadAddList" />
-									        	<c:param name="reportId" value="${report.reportId}" />
-									        </c:url >
 									        <td width="20%" nowrap>
-									        	<a href="${reportsParamsMapActionLoadAddListMethodUrl}">
+									        	<a href="reportsParamsMapAction.do?method=loadAddList&reportId=${report.reportId}">
 									        		<mifos:mifoslabel name="reports.parameters" bundle="reportsUIResources"/>
 									        	</a>
 									        	</td>  
 									      </c:otherwise>
 					                    </c:choose>
-									  <c:url value="reportsUserParamsAction.do" var="reportsUserParamsActionLoadAddListMethodUrl" >
-									  	<c:param name="method" value="loadAddList" />
-									  	<c:param name="reportId" value="${report.reportId}" />
-									  </c:url >
 									  <td width="20%" nowrap>
-									  	<a href="${reportsUserParamsActionLoadAddListMethodUrl}">
+									  	<a href="reportsUserParamsAction.do?method=loadAddList&reportId=${report.reportId}">
 									  		<mifos:mifoslabel name="reports.preview" bundle="reportsUIResources"/>
 									  	</a>
 									  </td>

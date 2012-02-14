@@ -23,34 +23,17 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="200" rowspan="2"><img src="pages/framework/images/logo.jpg" width="200" height="70">
-   <c:url value="yourSettings.do" var="yourSettingsGetMethodUrl" >
-    <c:param name="method" value="get" />
-    <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-   </c:url >
-   </td>
-    <td align="right" bgcolor="#FFFFFF" class="fontnormal"><a href="${yourSettingsGetMethodUrl}"><mifos:mifoslabel name="framework.yoursettings" bundle="FrameworkUIResources"></mifos:mifoslabel></a>
+    <td width="200" rowspan="2"><img src="pages/framework/images/logo.jpg" width="200" height="70"></td>
+    <td align="right" bgcolor="#FFFFFF" class="fontnormal"><a href="yourSettings.do?method=get&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel name="framework.yoursettings" bundle="FrameworkUIResources"></mifos:mifoslabel></a>
      &nbsp;|&nbsp; <a id="logout_link" href="j_spring_security_logout"><mifos:mifoslabel name="framework.logout" bundle="FrameworkUIResources"></mifos:mifoslabel></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
   </tr>
   <tr>
     <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
         <tr>
-          <td class="tablightorange"><a href="home.ftl"><mifos:mifoslabel name="framework.home" bundle="FrameworkUIResources"></mifos:mifoslabel></a>
-         <c:url value="custSearchAction.do" var="custSearchActionLoadMainSearchMethodUrl" >
-          <c:param name="method" value="loadMainSearch" />
-         </c:url >
-         </td>
-          <td class="tablightorange"><a href="${custSearchActionLoadMainSearchMethodUrl}"><mifos:mifoslabel name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a>
-         <c:url value="reportsAction.do" var="reportsActionLoadMethodUrl" >
-          <c:param name="method" value="load" />
-         </c:url >
-         </td>
-          <td class="tablightorange"><a href="${reportsActionLoadMethodUrl}"><mifos:mifoslabel name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a>
-         <c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
-          <c:param name="method" value="load" />
-         </c:url >
-         </td>
-          <td class="tablightorange"><a href="${AdminActionLoadMethodUrl}"><mifos:mifoslabel name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
+          <td class="tablightorange"><a href="home.ftl"><mifos:mifoslabel name="framework.home" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
+          <td class="tablightorange"><a href="custSearchAction.do?method=loadMainSearch"><mifos:mifoslabel name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
+          <td class="tablightorange"><a href="reportsAction.do?method=load"><mifos:mifoslabel name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
+          <td class="tablightorange"><a href="AdminAction.do?method=load"><mifos:mifoslabel name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
         </tr>
       </table>
         <c:if test="${requestScope.shutdownIsImminent == true}">

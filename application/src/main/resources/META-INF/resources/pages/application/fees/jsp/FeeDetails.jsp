@@ -37,20 +37,11 @@ explanation of the license and how it is applied.
 		<html-el:form action="/feeaction.do">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<c:url value="feeaction.do" var="feeactionCancelCreateMethodUrl" >
-						<c:param name="method" value="cancelCreate" />
-						<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-					</c:url >
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> <html-el:link href="${feeactionCancelCreateMethodUrl}">
+						<span class="fontnormal8pt"> <html-el:link href="feeaction.do?method=cancelCreate&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Fees.admin" bundle="FeesUIResources">
-						<c:url value="feeaction.do" var="feeactionViewAllMethodUrl" >
-							<c:param name="method" value="viewAll" />
-							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-						</c:url >
 								</mifos:mifoslabel>
-							</html-el:link> / <html-el:link href="${feeactionViewAllMethodUrl}">
+							</html-el:link> / <html-el:link href="feeaction.do?method=viewAll&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Fees.viewfees" bundle="FeesUIResources">
 								</mifos:mifoslabel>
 							</html-el:link> / </span> <span class="fontnormal8ptbold"> <c:out value="${feeModel.name}"></c:out> </span>
@@ -65,14 +56,8 @@ explanation of the license and how it is applied.
 								<td width="67%" height="23" class="headingorange">
 									<c:out value="${feeModel.name}"></c:out>
 								</td>
-								<c:url value="feeaction.do" var="feeactionManageMethodUrl" >
-									<c:param name="method" value="manage" />
-									<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-									<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-									<c:param name="feeId" value="${feeModel.id}" />
-								</c:url >
 								<td width="33%" align="right">
-									<html-el:link href="${feeactionManageMethodUrl}">
+									<html-el:link href="feeaction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&feeId=${feeModel.id}">
 										<mifos:mifoslabel name="Fees.editfeeinformation" bundle="FeesUIResources">
 										</mifos:mifoslabel>
 									</html-el:link>

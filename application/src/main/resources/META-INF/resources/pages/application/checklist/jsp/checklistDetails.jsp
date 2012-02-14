@@ -58,16 +58,8 @@ explanation of the license and how it is applied.
 							<td width="50%" height="23" class="headingorange">
 								<span id="checklistDetails.text.name">${checkList.checklistName}</span>
 							</td>
-							<c:url value="chkListAction.do" var="chkListActionManageMethodUrl" >
-								<c:param name="method" value="manage" />
-								<c:param name="checkListId" value="${checkList.checklistId}" />
-								<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-								<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-							</c:url >
 							<td width="50%" align="right">
-								<html-el:link styleId="checklistDetails.link.edit" href="${chkListActionManageMethodUrl}">
+								<html-el:link styleId="checklistDetails.link.edit" href="chkListAction.do?method=manage&checkListId=${checkList.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="checklist.edit_checklist" />
 								</html-el:link>
 							</td>

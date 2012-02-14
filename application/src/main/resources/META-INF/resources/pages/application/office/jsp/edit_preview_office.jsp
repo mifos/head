@@ -50,33 +50,17 @@ function goToCancelPage(id){
 			<c:set var="officeDto" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'officeDto')}"></c:set>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt">
-					<c:url value="AdminAction.do" var="AdminActionLoadMethodUrl" >
-						<c:param name="method" value="load" />
-						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-					</c:url >
-					<html-el:link styleId="edit_preview_office.link.admin"
-						href="${AdminActionLoadMethodUrl}">
+					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link styleId="edit_preview_office.link.admin"
+						href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="office.labelLinkAdmin"
 							bundle="OfficeResources"></mifos:mifoslabel>
-					</html-el:link> / 
-					<c:url value="offAction.do" var="offActionGetAllOfficesMethodUrl" >
-						<c:param name="method" value="getAllOffices" />
-						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-					</c:url >
-					<html-el:link styleId="edit_preview_office.link.viewOffices"
-						href="${offActionGetAllOfficesMethodUrl}">
+					</html-el:link> / <html-el:link styleId="edit_preview_office.link.viewOffices"
+						href="offAction.do?method=getAllOffices&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="office.labelLinkViewOffices"
 							bundle="OfficeResources"></mifos:mifoslabel>
 
-					</html-el:link> / 
-					<c:url value="offAction.do" var="offActionGetMethodUrl" >
-						<c:param name="method" value="get" />
-						<c:param name="officeId" value="${officeDto.officeId}" />
-						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-					</c:url >
-					<html-el:link styleId="edit_preview_office.link.viewOffice"
-						href="${offActionGetMethodUrl}">
+					</html-el:link> / <html-el:link styleId="edit_preview_office.link.viewOffice"
+						href="offAction.do?method=get&officeId=${officeDto.officeId}&randomNUm=${sessionScope.randomNUm}">
 						<c:out value="${officeDto.name}"></c:out>
 					</html-el:link> </span></td>
 				</tr>

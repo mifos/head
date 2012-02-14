@@ -90,12 +90,8 @@ explanation of the license and how it is applied.
 							  	 <table width="90%" border="0" cellspacing="0" cellpadding="0">
 								  	<tr class="fontnormal">
 					                  <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-						                 <c:url value="reportsUserParamsAction.do" var="reportsUserParamsActionLoadAddListMethodUrl" >
-						                  <c:param name="method" value="loadAddList" />
-						                  <c:param name="reportId" value="${report.reportId}" />
-						                 </c:url >
 					                  <td width="97%">
-						                  <a href="${reportsUserParamsActionLoadAddListMethodUrl}" />
+						                  <a href="reportsUserParamsAction.do?method=loadAddList&reportId=${report.reportId}" />
 						                  <c:out value="${report.reportName}" />
 					                  </td>
 					                </tr>
@@ -124,12 +120,8 @@ explanation of the license and how it is applied.
 					  			<table width="98%" border="0" cellspacing="0" cellpadding="0">
 					                <tr class="fontnormal">
 					                  <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-						                 <c:url value="reportsUserParamsAction.do" var="reportsUserParamsActionLoadAddListMethodUrl" >
-						                  <c:param name="method" value="loadAddList" />
-						                  <c:param name="reportId" value="${report.reportId}" />
-						                 </c:url >
 					                  <td width="97%">
-						                  <a href="${reportsUserParamsActionLoadAddListMethodUrl}" />
+						                  <a href="reportsUserParamsAction.do?method=loadAddList&reportId=${report.reportId}" />
 						                  <c:out value="${report.reportName}" />
 					                  </td>
 					                </tr>

@@ -52,13 +52,8 @@ explanation of the license and how it is applied.
 					<span class="fontnormal"><font class="fontnormalRedBold"><html-el:errors bundle="FeesUIResources" /> </font>
                     <br>
                     <br>
-				<c:url value="feeaction.do" var="feeactionGetMethodUrl" >
-					<c:param name="method" value="get" />
-					<c:param name="feeId" value="${sessionScope.feeactionform.feeId}" />
-					<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-				</c:url >
                     </span>
-					<html-el:link styleId="CreateFeesConfirmation.label.viewFeeDetail" href="${feeactionGetMethodUrl}">
+					<html-el:link styleId="CreateFeesConfirmation.label.viewFeeDetail" href="feeaction.do?method=get&feeId=${sessionScope.feeactionform.feeId}&randomNUm=${sessionScope.randomNUm}">
 					<mifos:mifoslabel name="Fees.viewfeedetail" bundle="FeesUIResources"></mifos:mifoslabel>
 					</html-el:link>
                     
@@ -66,12 +61,8 @@ explanation of the license and how it is applied.
                     <br>
                     <br>
                     <span>
-                   <c:url value="feeaction.do" var="feeactionLoadMethodUrl" >
-                    <c:param name="method" value="load" />
-                    <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-                   </c:url >
                     <span class="fontnormal">
-                    <html-el:link href="${feeactionLoadMethodUrl}">
+                    <html-el:link href="feeaction.do?method=load&randomNUm=${sessionScope.randomNUm}">
                     <mifos:mifoslabel name="Fees.definenewfee" bundle="FeesUIResources">
                     </mifos:mifoslabel>
                     </html-el:link>

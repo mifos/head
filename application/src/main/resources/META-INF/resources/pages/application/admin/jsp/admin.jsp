@@ -59,24 +59,10 @@ explanation of the license and how it is applied.
 							<td width="3%"><img
 								src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
-							<td width="97%">
-							<c:url value="PersonAction.do" var="PersonActionLoadSearchMethodUrl" >
-								<c:param name="method" value="loadSearch" />
-								<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-								<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-							</c:url >
-							<a id="admin.link.viewSysUsers"
-								href="${PersonActionLoadSearchMethodUrl}">
-								<mifos:mifoslabel name="admin.viewsysusers" /></a> | 
-							<c:url value="PersonAction.do" var="PersonActionChooseOfficeMethodUrl" >
-								<c:param name="method" value="chooseOffice" />
-								<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-								<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-							</c:url >
-							<a id="admin.link.defineNewUsers"
-								href="${PersonActionChooseOfficeMethodUrl}">
+							<td width="97%"><a id="admin.link.viewSysUsers"
+								href="PersonAction.do?method=loadSearch&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								<mifos:mifoslabel name="admin.viewsysusers" /></a> | <a id="admin.link.defineNewUsers"
+								href="PersonAction.do?method=chooseOffice&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.definenewusers" /></a></td>
 						</tr>
 						<tr class="fontnormal">
@@ -111,15 +97,8 @@ explanation of the license and how it is applied.
 							<td width="3%"><img
 								src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
-							<td width="97%">
-							<c:url value="feeaction.do" var="feeactionViewAllMethodUrl" >
-								<c:param name="method" value="viewAll" />
-								<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-								<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-							</c:url >
-							<a id="admin.link.viewFees"
-								href="${feeactionViewAllMethodUrl}">
+							<td width="97%"><a id="admin.link.viewFees"
+								href="feeaction.do?method=viewAll&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.viewfees" /></a> | <html-el:link styleId="admin.link.defineNewFees"
 								action="feeaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}" >
 								<mifos:mifoslabel name="admin.defnewfees" /></html-el:link></td>
@@ -207,11 +186,8 @@ explanation of the license and how it is applied.
 							<table width="90%" border="0" cellspacing="0" cellpadding="0">
 								<tr class="fontnormal">
 									<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-									<c:url value="manageImportAction.do" var="manageImportActionLoadMethodUrl" >
-										<c:param name="method" value="load" />
-									</c:url >
 									<td width="97%">
-										<a id="admin.link.manageImports" href="${manageImportActionLoadMethodUrl}">
+										<a id="admin.link.manageImports" href="manageImportAction.do?method=load">
 										<mifos:mifoslabel name="admin.importexport.importtransactions" bundle="adminUIResources" /></a>
                                         </td>
 								</tr>
@@ -278,22 +254,10 @@ explanation of the license and how it is applied.
 								src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<td width="97%">
-							<c:url value="productCategoryAction.do" var="productCategoryActionGetAllCategoriesMethodUrl" >
-								<c:param name="method" value="getAllCategories" />
-								<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-								<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-							</c:url >
 								<!--
-								<html-el:link styleId="admin.link.viewProductCategories" href="${productCategoryActionGetAllCategoriesMethodUrl}">
-							<c:url value="productCategoryAction.do" var="productCategoryActionLoadMethodUrl" >
-								<c:param name="method" value="load" />
-								<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-								<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-							</c:url >
+								<html-el:link styleId="admin.link.viewProductCategories" href="productCategoryAction.do?method=getAllCategories&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.viewprdcat" />
-								</html-el:link> | <html-el:link styleId="admin.link.defineNewProductCategory" href="${productCategoryActionLoadMethodUrl}">
+								</html-el:link> | <html-el:link styleId="admin.link.defineNewProductCategory" href="productCategoryAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.defnewcat" />
 								</html-el:link>
 								-->
@@ -332,25 +296,11 @@ explanation of the license and how it is applied.
 								src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<!-- Bug id 28065  Added a  parameter input in the link of admin page.-->
-							<td width="97%">
-							<c:url value="loanproductaction.do" var="loanproductactionViewAllLoanProductsMethodUrl" >
-								<c:param name="method" value="viewAllLoanProducts" />
-								<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-								<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-							</c:url >
-							<html-el:link styleId="admin.link.viewLoanProducts"
-								href="${loanproductactionViewAllLoanProductsMethodUrl}">
+							<td width="97%"><html-el:link styleId="admin.link.viewLoanProducts"
+								href="loanproductaction.do?method=viewAllLoanProducts&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.viewLoanProducts" />
-								</html-el:link> | 
-							<c:url value="loanproductaction.do" var="loanproductactionLoadMethodUrl" >
-								<c:param name="method" value="load" />
-								<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-								<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-							</c:url >
-							<html-el:link styleId="admin.link.defineNewLoanProduct"
-								href="${loanproductactionLoadMethodUrl}">
+								</html-el:link> | <html-el:link styleId="admin.link.defineNewLoanProduct"
+								href="loanproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.defineNewLoanProduct" />
 								</html-el:link></td>
 						</tr>
@@ -366,14 +316,8 @@ explanation of the license and how it is applied.
 								height="11"></td>
 							<!-- Bug id 28065  Added a  parameter input in the link of admin page.-->
 							<td width="97%">
-							<c:url value="savingsproductaction.do" var="savingsproductactionSearchMethodUrl" >
-								<c:param name="method" value="search" />
-								<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-								<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-							</c:url >
 								<!-- 
-								<html-el:link styleId="admin.link.viewSavingsProducts" href="${savingsproductactionSearchMethodUrl}">
+								<html-el:link styleId="admin.link.viewSavingsProducts" href="savingsproductaction.do?method=search&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								</html-el:link>
 								-->
 								<a id="admin.link.viewSavingsProducts" href="viewSavingsProducts.ftl">
@@ -381,14 +325,8 @@ explanation of the license and how it is applied.
 								</a> | <a id="admin.link.defineNewSavingsProduct" href="defineSavingsProduct.ftl">
 									<mifos:mifoslabel name="admin.defineNewSavingsProduct" />
 									</a>
-								<c:url value="savingsproductaction.do" var="savingsproductactionLoadMethodUrl" >
-									<c:param name="method" value="load" />
-									<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-									<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-									<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-								</c:url >
 									<!--
-									<html-el:link styleId="admin.link.defineNewSavingsProduct" href="${savingsproductactionLoadMethodUrl}">
+									<html-el:link styleId="admin.link.defineNewSavingsProduct" href="savingsproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 									</html-el:link>
 									 -->
 								</td>
@@ -400,15 +338,8 @@ explanation of the license and how it is applied.
                 <table width="90%" border="0" cellspacing="0" cellpadding="0">
                   <tr class="fontnormal">
                     <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-                    <td width="97%">
-							<c:url value="reverseloandisbaction.do" var="reverseloandisbactionSearchMethodUrl" >
-								<c:param name="method" value="search" />
-								<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-								<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-								<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-							</c:url >
-							<html-el:link styleId="admin.link.reverseLoanDisbursal"
-								href="${reverseloandisbactionSearchMethodUrl}">
+                    <td width="97%"><html-el:link styleId="admin.link.reverseLoanDisbursal"
+								href="reverseloandisbaction.do?method=search&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.reverseLoanDisbursal" />
 								</html-el:link></td>
 
@@ -417,14 +348,8 @@ explanation of the license and how it is applied.
                     <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                     <td width="97%"><html-el:link styleId="admin.link.redoLoanDisbursal"
                     	href="redoLoanAccount.ftl">
-					<c:url value="loanAccountAction.do" var="loanAccountActionRedoLoanBeginMethodUrl" >
-						<c:param name="method" value="redoLoanBegin" />
-						<c:param name="recordOfficeId" value="${UserContext.branchId}" />
-						<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-						<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-					</c:url >
 						<!-- 
-						href="${loanAccountActionRedoLoanBeginMethodUrl}">
+						href="loanAccountAction.do?method=redoLoanBegin&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 						 -->
 								<mifos:mifoslabel name="admin.redoLoanDisbursal" />
 								</html-el:link></td>
@@ -436,51 +361,25 @@ explanation of the license and how it is applied.
                    <table width="90%" border="0" cellspacing="0" cellpadding="0">
                    <tr class="fontnormal">
                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-                   <td width="97%">
-							<c:url value="birtAdminDocumentUploadAction.do" var="birtAdminDocumentUploadActionGetViewBirtAdminDocumentPageMethodUrl" >
-								<c:param name="method" value="getViewBirtAdminDocumentPage" />
-							</c:url >
-							<a id="admin.link.ViewAdminDocuments"
-								href="${birtAdminDocumentUploadActionGetViewBirtAdminDocumentPageMethodUrl}"><mifos:mifoslabel name="admin.ViewAdminDocuments" />
-								</a> | 
-							<c:url value="birtAdminDocumentUploadAction.do" var="birtAdminDocumentUploadActionGetBirtAdminDocumentUploadPageMethodUrl" >
-								<c:param name="method" value="getBirtAdminDocumentUploadPage" />
-								<c:param name="viewPath" value="administerreports_path" />
-							</c:url >
-							<html-el:link styleId="admin.link.uploadAdminDocuments"
-								href="${birtAdminDocumentUploadActionGetBirtAdminDocumentUploadPageMethodUrl}"><mifos:mifoslabel name="admin.UploadAdminDocuments" /></html-el:link></td>
+                   <td width="97%"><a id="admin.link.ViewAdminDocuments"
+								href="birtAdminDocumentUploadAction.do?method=getViewBirtAdminDocumentPage"><mifos:mifoslabel name="admin.ViewAdminDocuments" />
+								</a> | <html-el:link styleId="admin.link.uploadAdminDocuments"
+								href="birtAdminDocumentUploadAction.do?method=getBirtAdminDocumentUploadPage&viewPath=administerreports_path"><mifos:mifoslabel name="admin.UploadAdminDocuments" /></html-el:link></td>
                   </tr>
                   
                   <tr class="fontnormal">
                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-                   <td width="97%">
-							<c:url value="birtReportsUploadAction.do" var="birtReportsUploadActionGetViewReportPageMethodUrl" >
-								<c:param name="method" value="getViewReportPage" />
-							</c:url >
-							<a id="admin.link.ViewReportsTemplates"
-								href="${birtReportsUploadActionGetViewReportPageMethodUrl}"><mifos:mifoslabel name="admin.ViewReportsTemplates" />
-								</a> | 
-							<c:url value="birtReportsUploadAction.do" var="birtReportsUploadActionGetBirtReportsUploadPageMethodUrl" >
-								<c:param name="method" value="getBirtReportsUploadPage" />
-								<c:param name="viewPath" value="administerreports_path" />
-							</c:url >
-							<html-el:link styleId="admin.link.uploadReportTemplate"
-								href="${birtReportsUploadActionGetBirtReportsUploadPageMethodUrl}"><mifos:mifoslabel name="admin.uploadReportTemplate" /></html-el:link></td>
+                   <td width="97%"><a id="admin.link.ViewReportsTemplates"
+								href="birtReportsUploadAction.do?method=getViewReportPage"><mifos:mifoslabel name="admin.ViewReportsTemplates" />
+								</a> | <html-el:link styleId="admin.link.uploadReportTemplate"
+								href="birtReportsUploadAction.do?method=getBirtReportsUploadPage&viewPath=administerreports_path"><mifos:mifoslabel name="admin.uploadReportTemplate" /></html-el:link></td>
                   </tr>
                    <tr class="fontnormal">
                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-                   <td width="97%">
-							<c:url value="reportsCategoryAction.do" var="reportsCategoryActionViewReportsCategoryMethodUrl" >
-								<c:param name="method" value="viewReportsCategory" />
-							</c:url >
-							<a id="admin.link.ViewReportsCategory"
-								href="${reportsCategoryActionViewReportsCategoryMethodUrl}"><mifos:mifoslabel name="admin.ViewReportsCategory" />
-								</a> | 
-							<c:url value="reportsCategoryAction.do" var="reportsCategoryActionLoadDefineNewCategoryPageMethodUrl" >
-								<c:param name="method" value="loadDefineNewCategoryPage" />
-							</c:url >
-							<html-el:link styleId="admin.link.defineNewCategory"
-								href="${reportsCategoryActionLoadDefineNewCategoryPageMethodUrl}"><mifos:mifoslabel name="admin.defineNewCategory" /></html-el:link></td>
+                   <td width="97%"><a id="admin.link.ViewReportsCategory"
+								href="reportsCategoryAction.do?method=viewReportsCategory"><mifos:mifoslabel name="admin.ViewReportsCategory" />
+								</a> | <html-el:link styleId="admin.link.defineNewCategory"
+								href="reportsCategoryAction.do?method=loadDefineNewCategoryPage"><mifos:mifoslabel name="admin.defineNewCategory" /></html-el:link></td>
                   </tr>
                 </table>
                 <br>
@@ -489,20 +388,12 @@ explanation of the license and how it is applied.
 		<span class="headingorange"><mifos:mifoslabel name="admin.manage.surveys" bundle="adminUIResources"/></span><br />
                   <table width="90%" border="0" cellspacing="0" cellpadding="0">
                     <tr class="fontnormal">
-                      <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
-                     <c:url value="surveysAction.do" var="surveysActionMainpageMethodUrl" >
-                      <c:param name="method" value="mainpage" />
-                     </c:url >
-                     </td>
-                      <td width="97%"><a id="admin.link.surveys" href="${surveysActionMainpageMethodUrl}"><mifos:mifoslabel name="admin.view.surveys" bundle="adminUIResources"/> </a></td>
+                      <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                      <td width="97%"><a id="admin.link.surveys" href="surveysAction.do?method=mainpage"><mifos:mifoslabel name="admin.view.surveys" bundle="adminUIResources"/> </a></td>
                     </tr>
                     <tr class="fontnormal">
-                      <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
-                     <c:url value="questionsAction.do" var="questionsActionViewQuestionsMethodUrl" >
-                      <c:param name="method" value="viewQuestions" />
-                     </c:url >
-                     </td>
-                      <td width="97%"><a id="admin.link.viewQuestions" href="${questionsActionViewQuestionsMethodUrl}"><mifos:mifoslabel name="admin.viewquestions" bundle="adminUIResources"/> </a></td>
+                      <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                      <td width="97%"><a id="admin.link.viewQuestions" href="questionsAction.do?method=viewQuestions"><mifos:mifoslabel name="admin.viewquestions" bundle="adminUIResources"/> </a></td>
                   </tr>
                 </table>
 -->

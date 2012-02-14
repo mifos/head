@@ -42,12 +42,8 @@ explanation of the license and how it is applied.
 							<td class="fontnormalbold">
 								<mifos:mifoslabel name="bulkEntry.plsnote" isColonRequired="Yes" />
 								 <span class="fontnormal"> <mifos:mifoslabel name="bulkEntry.datafor" />&nbsp;<c:out value="${requestScope.Center}" /> </span> <span class="fontnormal"><mifos:mifoslabel name="bulkEntry.hasenter" /><br> <br> <font class="fontnormalRedBold"> <html-el:messages
-											id="abc" bundle="bulkEntryUIResources" /> <html-el:errors bundle="bulkEntryUIResources" /> </font> 
-							<c:url value="collectionsheetaction.do" var="collectionsheetactionLoadMethodUrl" >
-								<c:param name="method" value="load" />
-							</c:url >
-							</span>
-								<html-el:link styleId="bulkentryconfirmation.link.enterCollSheetData" href="${collectionsheetactionLoadMethodUrl}">
+											id="abc" bundle="bulkEntryUIResources" /> <html-el:errors bundle="bulkEntryUIResources" /> </font> </span>
+								<html-el:link styleId="bulkentryconfirmation.link.enterCollSheetData" href="collectionsheetaction.do?method=load">
 									<mifos:mifoslabel name="bulkEntry.entercollsheetdata" />
 								</html-el:link>
 								<span class="fontnormal"><br> <br> </span>

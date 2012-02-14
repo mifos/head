@@ -53,24 +53,15 @@ explanation of the license and how it is applied.
 		<c:out value="${requestScope.globalPersonnelNum}"/></span>
 		<span class="fontnormal"><br>    
                             <br>
-		<c:url value="PersonAction.do" var="PersonActionGetMethodUrl" >
-			<c:param name="method" value="get" />
-			<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-			<c:param name="globalPersonnelNum" value="${requestScope.globalPersonnelNum}" />
-		</c:url >
                             </span>
-			<a id="createuser_confirmation.link.viewUser"  href="${PersonActionGetMethodUrl}">
+			<a id="createuser_confirmation.link.viewUser"  href="PersonAction.do?method=get&randomNUm=${sessionScope.randomNUm}&globalPersonnelNum=${requestScope.globalPersonnelNum}">
 			<mifos:mifoslabel name="Personnel.ViewUserdetailsNow" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			</a>
 			<span class="fontnormal"><br>
                             <br>
                         </span>
-			<c:url value="PersonAction.do" var="PersonActionChooseOfficeMethodUrl" >
-			 <c:param name="method" value="chooseOffice" />
-			 <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-			</c:url >
 			<span class="fontnormal">
-			 <a id="createuser_confirmation.link.addNewUser" href="${PersonActionChooseOfficeMethodUrl}">
+			 <a id="createuser_confirmation.link.addNewUser" href="PersonAction.do?method=chooseOffice&randomNUm=${sessionScope.randomNUm}">
 			<mifos:mifoslabel name="Personnel.AddNewUser" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			</a>
 			</span></td>

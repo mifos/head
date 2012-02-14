@@ -68,15 +68,8 @@ explanation of the license and how it is applied.
       				<br>
                     <br>
                     </span>
-                   <c:url value="centerCustAction.do" var="centerCustActionGetMethodUrl" >
-                    <c:param name="method" value="get" />
-                    <c:param name="globalCustNum" value="${sessionScope.centerCustActionForm.globalCustNum}" />
-                    <c:param name="recordOfficeId" value="${sessionScope.centerCustActionForm.officeId}" />
-                    <c:param name="recordLoanOfficerId" value="${sessionScope.centerCustActionForm.loanOfficerId}" />
-                    <c:param name="randomNUm" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}" />
-                   </c:url >
                      <!-- Link to view the center details -->
-                    <a id="createcenterconfirmation.link.viewDetailsInfo" href="${centerCustActionGetMethodUrl}">
+                    <a id="createcenterconfirmation.link.viewDetailsInfo" href="centerCustAction.do?method=get&globalCustNum=${sessionScope.centerCustActionForm.globalCustNum}&recordOfficeId=${sessionScope.centerCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.centerCustActionForm.loanOfficerId}&randomNUm=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}">
                     	
                     	<fmt:message key="Center.ViewDetailsInfo">
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
@@ -90,14 +83,8 @@ explanation of the license and how it is applied.
                     </span><span class="fontnormalboldorange"><mifos:mifoslabel name="Center.Confirmation.NextStep" bundle="CenterUIResources"></mifos:mifoslabel>
       				</span><span class="fontnormal"> <br>
                     </span><mifos:mifoslabel name="Center.AccountsHeading" bundle="CenterUIResources"/><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /><span class="fontnormal"><br>
-                   <c:url value="createSavingsAccount.ftl" var="createSavingsAccount.${sessionScope.centerCustActionForm.customerId}MethodUrl" >
-                    <c:param name="customerId" value="${sessionScope.centerCustActionForm.customerId}" />
-                    <c:param name="recordOfficeId" value="${UserContext.branchId}" />
-                    <c:param name="recordLoanOfficerId" value="${UserContext.id}" />
-                    <c:param name="randomNUm" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}" />
-                   </c:url >
 					<!-- Link to create a new savingsa account link -->
-                    <html-el:link styleId="createcenterconfirmation.link.createNewSavingsAccount" href="${createSavingsAccount.${sessionScope.centerCustActionForm.customerId}MethodUrl}">
+                    <html-el:link styleId="createcenterconfirmation.link.createNewSavingsAccount" href="createSavingsAccount.ftl?customerId=${sessionScope.centerCustActionForm.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}">
                     
                     <fmt:message key="Center.CreateNewAccount">
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
@@ -106,14 +93,8 @@ explanation of the license and how it is applied.
                     
                     </html-el:link><br>
                     <br>
-                   <c:url value="centerCustAction.do" var="centerCustActionChooseOfficeMethodUrl" >
-                    <c:param name="method" value="chooseOffice" />
-                    <c:param name="recordOfficeId" value="0" />
-                    <c:param name="recordLoanOfficerId" value="0" />
-                    <c:param name="randomNUm" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}" />
-                   </c:url >
                     <!-- Link to create a new center -->
-                    <a id="createcenterconfirmation.link.CreateLinkNewCenter" href="${centerCustActionChooseOfficeMethodUrl}"/>
+                    <a id="createcenterconfirmation.link.CreateLinkNewCenter" href="centerCustAction.do?method=chooseOffice&recordOfficeId=0&recordLoanOfficerId=0&randomNUm=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}"/>
                     
                     <fmt:message key="Center.CreateLinkNewCenter">
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
