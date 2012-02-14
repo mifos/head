@@ -53,7 +53,7 @@ explanation of the license and how it is applied.
 				<a id="viewuserchangelog.link.viewUsers" href="PersonnelAction.do?method=loadSearch">
 					<mifos:mifoslabel name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 				</a> / 
-				<a id="viewuserchangelog.link.viewUser" href="PersonnelAction.do?method=get&globalPersonnelNum=<c:out value="${requestScope.PersonnelVO.globalPersonnelNum}"/>">
+				<a id="viewuserchangelog.link.viewUser" href="PersonnelAction.do?method=get&globalPersonnelNum=${requestScope.PersonnelVO.globalPersonnelNum}">
 		           <c:out value="${requestScope.PersonnelVO.displayName}"/>            	
 	           	</a>
             </span>

@@ -89,11 +89,11 @@ explanation of the license and how it is applied.
 	                    						</span>
 		                    				</td>
 					                    	<td width="30%" class="blueline"> 
-												<a id="edit_<c:out value="${reportCategory.reportCategoryId}" />" href="reportsCategoryAction.do?method=edit&categoryId=<c:out value="${reportCategory.reportCategoryId}" />">
+												<a id="edit_<c:out value="${reportCategory.reportCategoryId}" />" href="reportsCategoryAction.do?method=edit&categoryId=${reportCategory.reportCategoryId}">
 													<mifos:mifoslabel name = "reportsCategory.edit" bundle="reportsCategoryUIResources" />
 												</a>
 												|
-												<a id="delete_<c:out value="${reportCategory.reportCategoryId}" />" href="reportsCategoryAction.do?method=confirmDeleteReportsCategory&categoryId=<c:out value="${reportCategory.reportCategoryId}" />">
+												<a id="delete_<c:out value="${reportCategory.reportCategoryId}" />" href="reportsCategoryAction.do?method=confirmDeleteReportsCategory&categoryId=${reportCategory.reportCategoryId}">
 													<mifos:mifoslabel name = "reportsCategory.delete" bundle="reportsCategoryUIResources" />
 												</a>
 											</td>

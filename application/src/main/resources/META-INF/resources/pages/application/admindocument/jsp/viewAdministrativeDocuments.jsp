@@ -88,11 +88,11 @@ explanation of the license and how it is applied.
 								</td>
 															
 		      					<td width="45%" class="blueline"> 
-									<a href="birtAdminDocumentUploadAction.do?method=edit&admindocId=<c:out value="${adminDocuments.admindocId}" />">
+									<a href="birtAdminDocumentUploadAction.do?method=edit&admindocId=${adminDocuments.admindocId}">
 										<mifos:mifoslabel name = "reports.edit" bundle="reportsUIResources" />
 									</a>
 						      		|
-									<a href="birtAdminDocumentUploadAction.do?method=downloadAdminDocument&admindocId=<c:out value="${adminDocuments.admindocId}" />" >
+									<a href="birtAdminDocumentUploadAction.do?method=downloadAdminDocument&admindocId=${adminDocuments.admindocId}" >
 										<mifos:mifoslabel name = "reports.downloadadminDocuments" bundle="reportsUIResources" />
 									</a>
 								</td>				

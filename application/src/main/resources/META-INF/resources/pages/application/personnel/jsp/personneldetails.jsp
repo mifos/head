@@ -241,7 +241,7 @@ explanation of the license and how it is applied.
                         <c:remove var="urlMap" />
                         <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
                         <c:set target="${urlMap}" property="${personnelInformationDto.displayName}" value="PersonAction.do?method=get&globalPersonnelNum=${personnelInformationDto.globalPersonnelNum}"/>
-						<a id="personnelDetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${personnelInformationDto.personnelId}&event=Create&source=Personnel&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+						<a id="personnelDetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${personnelInformationDto.personnelId}&event=Create&source=Personnel&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
                         	<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
                         </a> 
 						<br/>
@@ -299,11 +299,11 @@ explanation of the license and how it is applied.
 					<tr>
 						<td align="right" class="paddingleft05"><span
 							class="fontnormal8pt"> <c:if test="${!empty personnelInformationDto.recentPersonnelNotes}">
-							<a id="personneldetails.link.seeAllNotes" href="personnelNoteAction.do?method=search&personnelId=<c:out value="${personnelInformationDto.personnelId}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&personnelName=<c:out value="${personnelInformationDto.displayName}"/>"> <mifos:mifoslabel
+							<a id="personneldetails.link.seeAllNotes" href="personnelNoteAction.do?method=search&personnelId=${personnelInformationDto.personnelId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&personnelName=${personnelInformationDto.displayName}"> <mifos:mifoslabel
 								name="Personnel.SeeAllNotes" bundle="PersonnelUIResources"></mifos:mifoslabel>
 							</a>
 							<br>
-						</c:if> <a id="personneldetails.link.addNote" href="personnelNoteAction.do?method=load&personnelId=<c:out value="${personnelInformationDto.personnelId}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
+						</c:if> <a id="personneldetails.link.addNote" href="personnelNoteAction.do?method=load&personnelId=${personnelInformationDto.personnelId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
 							name="Personnel.AddNote" bundle="PersonnelUIResources"></mifos:mifoslabel>
 						</a> </span></td>
 					</tr>

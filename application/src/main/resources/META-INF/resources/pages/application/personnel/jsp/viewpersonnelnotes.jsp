@@ -39,7 +39,7 @@ explanation of the license and how it is applied.
 						name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 					</a> / <c:set var="personnelBO" scope="request"
 						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
-					<a id="viewpersonnelnotes.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${personnelBO.globalPersonnelNum}"/>">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
+					<a id="viewpersonnelnotes.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=${personnelBO.globalPersonnelNum}">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -56,7 +56,7 @@ explanation of the license and how it is applied.
 							- </span> <mifos:mifoslabel name="Personnel.Notes"
 								bundle="PersonnelUIResources"></mifos:mifoslabel></td>
 							<td width="17%" align="right" class="fontnormal"><a id="viewpersonnelnotes.link.addNote"
-								href="personnelNoteAction.do?method=load&randomNUm=${sessionScope.randomNUm}&personnelId=<c:out value="${sessionScope.personnelNoteActionForm.personnelId}"/>&currentFlowKey=${requestScope.currentFlowKey}"> <mifos:mifoslabel
+								href="personnelNoteAction.do?method=load&randomNUm=${sessionScope.randomNUm}&personnelId=${sessionScope.personnelNoteActionForm.personnelId}&currentFlowKey=${requestScope.currentFlowKey}"> <mifos:mifoslabel
 								name="Personnel.AddNewNote" bundle="PersonnelUIResources"></mifos:mifoslabel>
 							</a></td>
 						</tr>
