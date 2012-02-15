@@ -174,6 +174,16 @@ explanation of the license and how it is applied.
 								</td>
 							</tr>
 						</table>
+                    <br>
+                    <span class="fontnormalbold"><mifos:mifoslabel name="admin.accounting" /></span><br>
+                    <table width="90%" border="0" cellspacing="0" cellpadding="0">
+                        <tr class="fontnormal">
+                            <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                            <td width="97%">
+                                <a id="admin.link.monthclosing" href="monthClosing.ftl"><mifos:mifoslabel name="admin.monthClosing" /></a>
+                            </td>
+                        </tr>
+                    </table>
 
 					<!-- spacer -->
 					<table width="90%" border="0" cellspacing="0" cellpadding="0">

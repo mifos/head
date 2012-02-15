@@ -46,6 +46,7 @@ import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
+import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -88,7 +89,7 @@ public class StandardAccountService implements AccountService {
     private CustomerDao customerDao;
     private LoanBusinessService loanBusinessService;
     private HibernateTransactionHelper transactionHelper;
-
+    private MonthClosingServiceFacade monthClosingServiceFacade;
 
     private LegacyMasterDao legacyMasterDao;
 
@@ -96,7 +97,8 @@ public class StandardAccountService implements AccountService {
     public StandardAccountService(LegacyAccountDao legacyAccountDao, LegacyLoanDao legacyLoanDao,
                                   LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence, PersonnelDao personnelDao,
                                   CustomerDao customerDao, LoanBusinessService loanBusinessService,
-                                  HibernateTransactionHelper transactionHelper, LegacyMasterDao legacyMasterDao) {
+                                  HibernateTransactionHelper transactionHelper, LegacyMasterDao legacyMasterDao,
+                                  MonthClosingServiceFacade monthClosingServiceFacade) {
         this.legacyAccountDao = legacyAccountDao;
         this.legacyLoanDao = legacyLoanDao;
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
@@ -105,6 +107,7 @@ public class StandardAccountService implements AccountService {
         this.loanBusinessService = loanBusinessService;
         this.transactionHelper = transactionHelper;
         this.legacyMasterDao = legacyMasterDao;
+        this.monthClosingServiceFacade = monthClosingServiceFacade;
     }
 
     @Override
@@ -149,6 +152,8 @@ public class StandardAccountService implements AccountService {
         } catch (AccountException e) {
             throw new MifosRuntimeException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED, e);
         }
+
+        monthClosingServiceFacade.validateTransactionDate(accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate());
         
         PersonnelBO loggedInUser = ApplicationContextProvider.getBean(LegacyPersonnelDao.class).findPersonnelById(accountPaymentParametersDto.getUserMakingPayment().getUserId());
         List<InvalidPaymentReason> validationErrors = validatePayment(accountPaymentParametersDto);

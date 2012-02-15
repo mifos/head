@@ -180,6 +180,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         SavingsDepositWithdrawalActionForm actionForm = (SavingsDepositWithdrawalActionForm) form;
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         Date trxnDate = getDateFromString(actionForm.getTrxnDate(), uc.getPreferredLocale());
+        monthClosingServiceFacade.validateTransactionDate(trxnDate);
 
         Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(savings.getCustomer().getCustomerId());
         boolean repaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
