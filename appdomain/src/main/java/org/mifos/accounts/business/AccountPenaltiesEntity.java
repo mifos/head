@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.penalties.business.AmountPenaltyBO;
 import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.penalties.util.helpers.PenaltyStatus;
 import org.mifos.application.master.business.MifosCurrency;
@@ -106,6 +107,10 @@ public class AccountPenaltiesEntity extends AbstractEntity {
         return PenaltyStatus.getPenaltyStatus(penaltyStatus);
     }
     
+    public boolean isAmountPenalty() {
+        return penalty instanceof AmountPenaltyBO;
+    }
+    
     /**
      * For hibernate.
      */
@@ -145,6 +150,18 @@ public class AccountPenaltiesEntity extends AbstractEntity {
     
     public boolean isOneTime() {
         return getPenalty().isOneTime();
+    }
+    
+    public boolean isDailyTime() {
+        return getPenalty().isDailyTime();
+    }
+    
+    public boolean isWeeklyTime() {
+        return getPenalty().isWeeklyTime();
+    }
+    
+    public boolean isMonthlyTime() {
+        return getPenalty().isMonthlyTime();
     }
     
     public boolean isActive() {

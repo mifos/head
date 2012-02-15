@@ -55,7 +55,6 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     private Money interest;
     private Money interestPaid;
 
-    // TODO: Instance variable "penalty" appears to be unused. Verify and remove.
     private Money penalty;
     private Money penaltyPaid;
 
@@ -126,7 +125,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         this.interestPaid = interestPaid;
     }
 
-    void setPenalty(Money penalty) {
+    public void setPenalty(Money penalty) {
         this.penalty = penalty;
     }
 

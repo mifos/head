@@ -23,6 +23,7 @@ package org.mifos.accounts.penalties.business;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.penalties.exceptions.PenaltyException;
 import org.mifos.accounts.penalties.util.helpers.PenaltyConstants;
+import org.mifos.accounts.penalties.util.helpers.PenaltyFormula;
 import org.mifos.security.util.UserContext;
 
 public class RatePenaltyBO extends PenaltyBO {
@@ -44,6 +45,22 @@ public class RatePenaltyBO extends PenaltyBO {
         super();
         this.rate = null;
         this.formula = null;
+    }
+    
+    public boolean isOutstandingPrincipalAmount() {
+        return getFormula().getPenaltyFormula().getValue().equals(PenaltyFormula.OUTSTANDING_PRINCIPAL_AMOUNT.getValue());
+    }
+    
+    public boolean isOutstandingLoanAmount() {
+        return getFormula().getPenaltyFormula().getValue().equals(PenaltyFormula.OUTSTANDING_LOAN_AMOUNT.getValue());
+    }
+    
+    public boolean isOverdueAmountDue() {
+        return getFormula().getPenaltyFormula().getValue().equals(PenaltyFormula.OVERDUE_AMOUNT_DUE.getValue());
+    }
+    
+    public boolean isOverduePrincipal() {
+        return getFormula().getPenaltyFormula().getValue().equals(PenaltyFormula.OVERDUE_PRINCIPAL.getValue());
     }
 
     public Double getRate() {
