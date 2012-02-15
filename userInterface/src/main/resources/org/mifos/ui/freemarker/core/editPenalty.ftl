@@ -23,6 +23,7 @@
 <!--  Main Content Begins-->
 <div class="content">
 <span id="page.id" title="editPenalty"></span>
+[@i18n.formattingInfo /]
 <form method="POST" action="editPenalty.ftl" name="editPenalty">
     <div class="span-24">
         [@spring.bind "formBean.oldName"/]
@@ -51,8 +52,7 @@
                         <span class="red">* </span>[@spring.message "organizationPreferences.definenewpenalty.name"/]
                     </span>
                     <span class="span-5">
-                        &nbsp;[@spring.bind "formBean.name"/]
-                        <input type="text" name="${spring.status.expression}" id="${spring.status.expression}" value="${spring.status.value?if_exists}"/>
+                        &nbsp;[@form.input path="formBean.name" id="name" attributes="" /]
                     </span>
                 </div>
                 
@@ -67,8 +67,7 @@
                 <div class="span-20 ">
                     <span class="span-7 rightAlign">[@spring.message "organizationPreferences.definenewpenalty.graceperiodduration"/]</span>
                     <span class="span-5">
-                        &nbsp;[@spring.bind "formBean.duration"/]
-                        <input type="text" name="${spring.status.expression}" id="${spring.status.expression}" value="${spring.status.value?if_exists}"/>
+                        &nbsp;[@form.input path="formBean.duration" id="duration" attributes="class=separatedNumber" /]
                     </span>
                 </div>
                 <div class="span-20 ">
@@ -76,8 +75,7 @@
                         <span class="red">* </span>[@spring.message "organizationPreferences.definenewpenalty.mincumulativepenaltylimit"/]
                     </span>
                     <span class="span-5">
-                        &nbsp;[@spring.bind "formBean.min"/]
-                        <input type="text" name="${spring.status.expression}" id="${spring.status.expression}" value="${spring.status.value?if_exists}"/>
+                        &nbsp;[@form.input path="formBean.min" id="min" attributes="class=separatedNumber" /]
                     </span>
                  </div>
                  <div class="span-20 ">
@@ -85,8 +83,7 @@
                         <span class="red">* </span>[@spring.message "organizationPreferences.definenewpenalty.maxcumulativepenaltylimit"/]
                     </span>
                     <span class="span-5">
-                        &nbsp;[@spring.bind "formBean.max"/]
-                        <input type="text" name="${spring.status.expression}" id="${spring.status.expression}" value="${spring.status.value?if_exists}"/>
+                        &nbsp;[@form.input path="formBean.max" id="max" attributes="class=separatedNumber" /]
                     </span>
                  </div>
             </div>
@@ -101,8 +98,7 @@
                         <span class="red">* </span>[@spring.message "organizationPreferences.definenewpenalty.fixedamount"/]
                     </span>
                     <span class="span-5">
-                        &nbsp;[@spring.bind "formBean.amount"/]
-                        <input type="text" name="${spring.status.expression}" id="${spring.status.expression}" value="${spring.status.value?if_exists}"/>
+                        &nbsp;[@form.input path="formBean.amount" id="amount" attributes="class=separatedNumber" /]
                     </span>
                 </div>
             [#else]
@@ -111,8 +107,8 @@
                         <span class="red">* </span>[@spring.message "organizationPreferences.definenewpenalty.calculatepenaltyas"/]
                     </span>
                     <span class="span-5">
-                        &nbsp;[@spring.bind "formBean.rate"/]
-                        <input type="text" name="${spring.status.expression}" id="${spring.status.expression}" value="${spring.status.value?if_exists}"/>
+                        &nbsp;
+                        [@form.input path="formBean.rate" id="rate" attributes="class=separatedNumber" /]
                         [@spring.message "organizationPreferences.definenewpenalty.percentof"/]
                         &nbsp;[@form.formSingleSelectWithPrompt "formBean.formulaId", param.formulaType, "--Select--" /]
                     </span>
@@ -152,7 +148,7 @@
             
             <div class="clear">&nbsp;</div>
             <div class="buttonsSubmitCancel">
-                <input class="buttn" type="submit" name="preview" value="[@spring.message "preview"/]"/>
+                <input class="buttn submit" type="submit" name="preview" value="[@spring.message "preview"/]"/>
                 <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
             </div>
         </div>
