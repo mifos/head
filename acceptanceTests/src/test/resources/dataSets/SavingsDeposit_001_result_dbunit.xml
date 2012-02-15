@@ -53,6 +53,7 @@
   <DATABASECHANGELOG ID="MIFOS_5382_2" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-02 13:47:32.0" ORDEREXECUTED="227" EXECTYPE="EXECUTED" MD5SUM="3:864b0fd522895b0aa7142d936ddc4bc4" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5383_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-06 11:31:29.0" ORDEREXECUTED="228" EXECTYPE="EXECUTED" MD5SUM="3:e3f2fdea6e47675516523f634130672c" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5425_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-09 14:40:53.0" ORDEREXECUTED="229" EXECTYPE="EXECUTED" MD5SUM="3:b28cb3448b7729cfbea082f33eeca853" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5433_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-15 14:59:32.0" ORDEREXECUTED="230" EXECTYPE="EXECUTED" MD5SUM="3:b32077bdab52d6cb9a4337ee44105586" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
   <QRTZ_CALENDARS/>
@@ -7421,6 +7422,7 @@
   <lookup_value lookup_id="652" entity_id="96" lookup_name="PenaltyFrequency-Monthly"/>
   <lookup_value lookup_id="653" entity_id="97" lookup_name="PenaltyStatus-Active"/>
   <lookup_value lookup_id="654" entity_id="97" lookup_name="PenaltyStatus-InActive"/>
+  <lookup_value lookup_id="655" entity_id="95" lookup_name="PenaltyPeriod-None"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -7985,6 +7987,7 @@
   <lookup_value_locale lookup_value_id="983" locale_id="1" lookup_id="652"/>
   <lookup_value_locale lookup_value_id="984" locale_id="1" lookup_id="653"/>
   <lookup_value_locale lookup_value_id="985" locale_id="1" lookup_id="654"/>
+  <lookup_value_locale lookup_value_id="986" locale_id="1" lookup_id="655"/>
   <max_min_interest_rate account_id="4" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="5" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="9" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
@@ -8605,6 +8608,7 @@
   <penalty_frequency frequency_id="4" lookup_id="652"/>
   <penalty_period period_id="1" lookup_id="647"/>
   <penalty_period period_id="2" lookup_id="648"/>
+  <penalty_period period_id="3" lookup_id="655"/>
   <penalty_status status_id="1" lookup_id="653"/>
   <penalty_status status_id="2" lookup_id="654"/>
   <personnel personnel_id="1" level_id="2" global_personnel_num="1" office_id="1" title="1" personnel_status="1" preferred_locale="1" max_child_count="1" password="ImSMpCMwpWGWTb4y9U5qBKSdA/IDymSyUVM42Q==" login_name="mifos" password_changed="1" display_name="mifos" created_by="1" updated_by="1" last_login="2009-09-09" locked="0" no_of_tries="0" version_no="17"/>

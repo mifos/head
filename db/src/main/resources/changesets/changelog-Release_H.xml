@@ -394,4 +394,32 @@
             </sql>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_5433_1" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+            ALTER TABLE penalty DROP FOREIGN KEY penalty_ibfk_3;
+            
+            ALTER TABLE penalty CHANGE COLUMN period_type_id period_type_id SMALLINT(6) NULL DEFAULT NULL;
+            ALTER TABLE penalty ADD CONSTRAINT penalty_ibfk_3 FOREIGN KEY penalty_ibfk_3 (period_type_id) REFERENCES penalty_period (period_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+        
+            INSERT INTO lookup_value(entity_id, lookup_name) SELECT entity_id, 'PenaltyPeriod-None' FROM lookup_entity WHERE entity_name LIKE 'PenaltyPeriod';
+
+            INSERT INTO lookup_value_locale(locale_id, lookup_id) SELECT 1, lookup_id FROM lookup_value WHERE lookup_name LIKE 'PenaltyPeriod-None';
+            
+            INSERT INTO penalty_period(lookup_id) SELECT lookup_id FROM lookup_value WHERE lookup_name LIKE 'PenaltyPeriod-None';
+        </sql>
+         <rollback>
+            <sql endDelimiter=";">
+                ALTER TABLE penalty DROP FOREIGN KEY penalty_ibfk_3;
+            
+                ALTER TABLE penalty CHANGE COLUMN period_type_id period_type_id SMALLINT(6) NOT NULL;
+                ALTER TABLE penalty ADD CONSTRAINT penalty_ibfk_3 FOREIGN KEY penalty_ibfk_3 (period_type_id) REFERENCES penalty_period (period_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+                
+                DELETE FROM lookup_value_locale WHERE lookup_id IN (SELECT lookup_id FROM lookup_value WHERE lookup_name LIKE 'PenaltyPeriod-None');
+            
+                DELETE FROM penalty_period WHERE lookup_id IN (SELECT lookup_id FROM lookup_value WHERE lookup_name LIKE 'PenaltyPeriod-None');
+                
+                DELETE FROM lookup_value WHERE lookup_name LIKE 'PenaltyPeriod-None';
+            </sql>
+         </rollback>
+    </changeSet>
 </databaseChangeLog>

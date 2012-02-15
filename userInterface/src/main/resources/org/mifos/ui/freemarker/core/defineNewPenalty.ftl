@@ -75,7 +75,7 @@ function showRateOrAmount() {
                         </div>
                         <div class="span-20 ">
                             <span class="span-7 rightAlign">
-                                <span class="red">* </span>[@spring.message "organizationPreferences.definenewpenalty.graceperiodtype"/]
+                                [@spring.message "organizationPreferences.definenewpenalty.graceperiodtype"/]
                             </span>
                             <span class="span-5">
                                 &nbsp;[@form.formSingleSelectWithPrompt "formBean.periodTypeId", param.periodType, "--Select--" /]
