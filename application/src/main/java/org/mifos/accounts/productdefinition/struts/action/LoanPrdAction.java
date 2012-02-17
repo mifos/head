@@ -482,7 +482,7 @@ public class LoanPrdAction extends BaseAction {
         LoanPrdBusinessService service = new LoanPrdBusinessService();
 
         List<FeeBO> fees = feeDao.getAllAppllicableFeeForLoanCreation();
-        List<PenaltyBO> penalties = penaltyDao.getAllAppllicablePenaltyForLoanCreation();
+        List<PenaltyBO> penalties = penaltyDao.findAllLoanPenalties();
         Short localeId = getUserContext(request).getLocaleId();
 
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST, service

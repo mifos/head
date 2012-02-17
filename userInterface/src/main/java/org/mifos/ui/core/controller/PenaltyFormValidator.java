@@ -30,13 +30,12 @@ import org.springframework.validation.Validator;
 
 @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
 public class PenaltyFormValidator implements Validator {
-    private final int digits;
-    private final int decimal;
+    private final Properties properties;
+    private final static boolean MANDATORY = true;
+    private final static boolean OPTIONAL = false;
     
-    @SuppressWarnings("unchecked")
     public PenaltyFormValidator(Properties properties) {
-        this.digits = Integer.valueOf(properties.getProperty("digitsBeforeDecimal"));
-        this.decimal = Integer.valueOf(((List<Properties>) properties.get("currencies")).get(0).getProperty("digitsAfterDecimal"));
+        this.properties = properties;
     }
     
     @Override
@@ -53,22 +52,21 @@ public class PenaltyFormValidator implements Validator {
         }
         
         PenaltyFormBean formBean = (PenaltyFormBean) target;
+        int digits = Integer.valueOf(properties.getProperty("digitsBeforeDecimal"));
+        @SuppressWarnings("unchecked")
+        int decimal = Integer.valueOf(((List<Properties>) properties.get("currencies")).get(0).getProperty("digitsAfterDecimal"));
         
         checkCategory(errors, formBean.getCategoryTypeId());
         checkStatus(errors, formBean.getStatusId());
         
-        if(StringUtils.hasText(formBean.getPeriodTypeId()) && !formBean.getPeriodTypeId().equalsIgnoreCase("3")) {
-            checkNumber(errors, formBean.getDuration(), "Grace Period Duration", digits);
-        } else {
-            incorrectIntegerValue(errors, formBean.getDuration(), "Grace Period Duration", digits);
-        }
-        
         emptyField(errors, formBean.getName(), "Penalty Name");
+        emptyField(errors, formBean.getPeriodTypeId(), "Grace Period Type");
         emptyField(errors, formBean.getFrequencyId(), "Penalty Application Frequency");
         emptyField(errors, formBean.getGlCodeId(), "GL Code");
         
-        checkNumber(errors, formBean.getMin(), "Cumulative Penalty Limit (Minimum)", digits, decimal);
-        checkNumber(errors, formBean.getMax(), "Cumulative Penalty Limit (Maximum)", digits, decimal);
+        checkNumber(errors, formBean.getDuration(), "Grace Period Duration", OPTIONAL, digits);
+        checkNumber(errors, formBean.getMin(), "Cumulative Penalty Limit (Minimum)", MANDATORY, digits, decimal);
+        checkNumber(errors, formBean.getMax(), "Cumulative Penalty Limit (Maximum)", MANDATORY, digits, decimal);
         
         checkMinGreaterMax(errors, formBean.getMin(), formBean.getMax());
         
@@ -76,41 +74,46 @@ public class PenaltyFormValidator implements Validator {
             if (StringUtils.hasText(formBean.getRate()) && StringUtils.hasText(formBean.getAmount())) {
                 errors.reject("error.penalty.amountAndRateOrFormula");
             } else if (StringUtils.hasText(formBean.getRate()) && StringUtils.hasText(formBean.getFormulaId())) {
-                checkNumber(errors, formBean.getRate(), "Rate", digits, decimal);
+                checkNumber(errors, formBean.getRate(), "Rate", MANDATORY, digits, decimal);
             } else if (StringUtils.hasText(formBean.getRate()) && !StringUtils.hasText(formBean.getFormulaId())) {
                 errors.reject("error.penalty.rate");
             } else if (StringUtils.hasText(formBean.getAmount())) {
-                checkNumber(errors, formBean.getAmount(), "Amount", digits, decimal);
+                checkNumber(errors, formBean.getAmount(), "Amount", MANDATORY, digits, decimal);
             } else {
                 errors.reject("error.penalty.amountAndRateOrFormula");
             }
         } else {
-            checkNumber(errors, formBean.getAmount(), "Amount", digits, decimal);
+            checkNumber(errors, formBean.getAmount(), "Amount", MANDATORY, digits, decimal);
         }
         
     }
     
-    private void checkNumber(Errors errors, String value, String field, int digits, int decimal) {
+    private void checkNumber(Errors errors, String value, String field, boolean isMandatory, int digits, int decimal) {
         int count = errors.getErrorCount();
 
-        emptyField(errors, value, field);
-
-        if (errors.getErrorCount() > count) {
-            return;
+        if(isMandatory) {
+            emptyField(errors, value, field);
+        
+            if(errors.getErrorCount() > count) {
+                return;
+            }
         }
-
+        
+        
         incorrectDoubleValue(errors, value, field, digits, decimal);
     }
     
-    private void checkNumber(Errors errors, String value, String field, int digits) {
+    private void checkNumber(Errors errors, String value, String field, boolean isMandatory, int digits) {
         int count = errors.getErrorCount();
 
-        emptyField(errors, value, field);
-
-        if (errors.getErrorCount() > count) {
-            return;
+        if(isMandatory) {
+            emptyField(errors, value, field);
+        
+            if(errors.getErrorCount() > count) {
+                return;
+            }
         }
-
+        
         incorrectIntegerValue(errors, value, field, digits);
     }
     

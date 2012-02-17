@@ -55,6 +55,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     private Money interest;
     private Money interestPaid;
 
+    // TODO: Instance variable "penalty" appears to be unused. Verify and remove.
     private Money penalty;
     private Money penaltyPaid;
 
@@ -125,16 +126,12 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         this.interestPaid = interestPaid;
     }
 
-    public void setPenalty(Money penalty) {
+    void setPenalty(Money penalty) {
         this.penalty = penalty;
     }
 
     public Money getPenaltyPaid() {
         return penaltyPaid;
-    }
-    
-    public Money getTotalPenaltyPaid() {
-        return penaltyPaid.add(miscPenaltyPaid);
     }
 
     void setPenaltyPaid(Money penaltyPaid) {
@@ -176,7 +173,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     public void addAccountFeesAction(AccountFeesActionDetailEntity accountFeesAction) {
         accountFeesActionDetails.add(accountFeesAction);
     }
-    
+
     public Money getMiscFee() {
         return miscFee;
     }
@@ -324,7 +321,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         }
         return totalFees;
     }
-    
+
     public Money getTotalFeeAmountPaidWithMiscFee() {
         Money totalFees = new Money(getCurrency());
         for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
@@ -333,7 +330,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         totalFees = totalFees.add(getMiscFeePaid());
         return totalFees;
     }
-    
+
     public Money getTotalScheduledFeeAmountWithMiscFee() {
         Money totalFees = new Money(getCurrency());
         for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
@@ -366,7 +363,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     public Money getTotalFeeDueWithMiscFeeDue() {
         return getMiscFeeDue().add(getTotalFeesDue());
     }
-    
+
     public Money getTotalPaymentDue() {
         return getTotalDue().add(getTotalFeesDue());
     }

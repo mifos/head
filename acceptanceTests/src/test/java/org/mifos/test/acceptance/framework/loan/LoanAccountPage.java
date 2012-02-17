@@ -28,8 +28,8 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
-import org.mifos.test.acceptance.util.StringUtil;
 import org.testng.Assert;
+import org.mifos.test.acceptance.util.StringUtil;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -147,14 +147,6 @@ public class LoanAccountPage extends MifosPage {
     public void verifyPenaltyOriginal(String value) {
         Assert.assertEquals(getOriginalPenaltyAmount(), value);
     }
-    
-    public void verifyPenaltyBalance(String value) {
-        Assert.assertEquals(getPenaltyBalance(), value);
-    }
-    
-    public void verifyPenaltyPaid(String value) {
-        Assert.assertEquals(getPenaltyPaid(), value);
-    }
 
     public void verifyPerformanceHistory(String payments, String missedPayments) {
         Assert.assertTrue(selenium.isTextPresent("of payments: "+payments));
@@ -162,11 +154,8 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public void verifyAccountSummary(String totalAmount, String date, String amountInArrears) {
-        String totalAmountDue = String.format("Total amount due on %s: %s", date, totalAmount);
-        String inArrears = String.format("Amount in arrears: %s", amountInArrears);
-        
-        Assert.assertTrue(selenium.isTextPresent(totalAmountDue), String.format("Not found text: '%s'", totalAmountDue));
-        Assert.assertTrue(selenium.isTextPresent(inArrears), String.format("Not found text: '%s'", inArrears));
+        Assert.assertTrue(selenium.isTextPresent("Total amount due on "+date+": "+totalAmount));
+        Assert.assertTrue(selenium.isTextPresent("Amount in arrears: "+amountInArrears));
     }
 
     public void verifyStatus(String status) {

@@ -25,8 +25,7 @@ import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public enum PenaltyPeriod implements LocalizedTextLookup {
     INSTALLMENTS(1, "PenaltyPeriod-NumberOfInstallments"),
-    DAYS(2, "PenaltyPeriod-NumberOfDays"),
-    NONE(3, "PenaltyPeriod-None");
+    DAYS(2, "PenaltyPeriod-NumberOfDays");
 
     Short value;
     String messageKey;

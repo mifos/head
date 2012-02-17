@@ -33,7 +33,6 @@ function showRateOrAmount() {
 [@widget.topNavigationNoSecurity currentTab="Admin" /]
 <!--  Main Content Begins-->
 <span id="page.id" title="newPenalty"></span>
-[@i18n.formattingInfo /]
 <div class="content definePageMargin">
     <div class="borders margin20lefttop width90prc">
         <div class="borderbtm width100prc height25px">
@@ -62,7 +61,8 @@ function showRateOrAmount() {
                                 <span class="red">* </span>[@spring.message "organizationPreferences.definenewpenalty.name"/]
                             </span>
                             <span class="span-5">
-                                &nbsp;[@form.input path="formBean.name" id="name" attributes="" /]
+                                &nbsp;[@spring.bind "formBean.name"/]
+                                <input type="text" name="${spring.status.expression}" id="${spring.status.expression}" value="${spring.status.value?if_exists}"/>
                             </span>
                         </div>
                         <div class="span-20 ">
@@ -75,7 +75,7 @@ function showRateOrAmount() {
                         </div>
                         <div class="span-20 ">
                             <span class="span-7 rightAlign">
-                                [@spring.message "organizationPreferences.definenewpenalty.graceperiodtype"/]
+                                <span class="red">* </span>[@spring.message "organizationPreferences.definenewpenalty.graceperiodtype"/]
                             </span>
                             <span class="span-5">
                                 &nbsp;[@form.formSingleSelectWithPrompt "formBean.periodTypeId", param.periodType, "--Select--" /]
@@ -85,7 +85,8 @@ function showRateOrAmount() {
                             <span class="span-7 rightAlign">[@spring.message "organizationPreferences.definenewpenalty.graceperiodduration"/]
                             </span>
                             <span class="span-5">
-                                &nbsp;[@form.input path="formBean.duration" id="duration" attributes="class=separatedNumber" /]
+                                &nbsp;[@spring.bind "formBean.duration"/]
+                                <input type="text" name="${spring.status.expression}" id="${spring.status.expression}" value="${spring.status.value?if_exists}"/>
                             </span>
                         </div>
                         <div class="span-20 ">
@@ -93,7 +94,8 @@ function showRateOrAmount() {
                                 <span class="red">* </span>[@spring.message "organizationPreferences.definenewpenalty.mincumulativepenaltylimit"/]
                             </span>
                             <span class="span-5">
-                                &nbsp;[@form.input path="formBean.min" id="min" attributes="class=separatedNumber" /]
+                                &nbsp;[@spring.bind "formBean.min"/]
+                                <input type="text" name="${spring.status.expression}" id="${spring.status.expression}" value="${spring.status.value?if_exists}"/>
                             </span>
                         </div>
                         <div class="span-20 ">
@@ -101,7 +103,8 @@ function showRateOrAmount() {
                                 <span class="red">* </span>[@spring.message "organizationPreferences.definenewpenalty.maxcumulativepenaltylimit"/]
                             </span>
                             <span class="span-5">
-                                &nbsp;[@form.input path="formBean.max" id="max" attributes="class=separatedNumber" /]
+                                &nbsp;[@spring.bind "formBean.max"/]
+                                <input type="text" name="${spring.status.expression}" id="${spring.status.expression}" value="${spring.status.value?if_exists}"/>
                             </span>
                         </div>
                     </div>
@@ -115,7 +118,8 @@ function showRateOrAmount() {
                                 <span class="red">* </span>[@spring.message "organizationPreferences.definenewpenalty.fixedamount"/]
                             </span>
                             <span class="span-5">
-                                &nbsp;[@form.input path="formBean.amount" id="amount" attributes="class=separatedNumber" /]
+                                &nbsp;[@spring.bind "formBean.amount"/]
+                                <input type="text" name="${spring.status.expression}" id="${spring.status.expression}" value="${spring.status.value?if_exists}"/>
                             </span>
                         </div>
                         <div id="rateDiv" class="span-20" style="display: none;">
@@ -126,7 +130,8 @@ function showRateOrAmount() {
                             <span class="span-5">
                                 &nbsp;&nbsp;&nbsp;[@spring.message "organizationPreferences.definenewpenalty.or"/]
                                 <br/>
-                                &nbsp;[@form.input path="formBean.rate" id="rate" attributes="class=separatedNumber" /]
+                                &nbsp;[@spring.bind "formBean.rate"/]
+                                <input type="text" name="${spring.status.expression}" id="${spring.status.expression}" value="${spring.status.value?if_exists}"/>
                                 [@spring.message "organizationPreferences.definenewpenalty.percentof"/]
                                 &nbsp;[@form.formSingleSelectWithPrompt "formBean.formulaId", param.formulaType, "--Select--" /]
                             </span>
@@ -157,7 +162,7 @@ function showRateOrAmount() {
                 </div>
                 <div class="clear">&nbsp;</div>
                 <div class="buttonsSubmitCancel margin20leftright" >
-                    <input class="buttn submit" type="submit" name="preview" value="[@spring.message "preview"/]"/>
+                    <input class="buttn" type="submit" name="preview" value="[@spring.message "preview"/]"/>
                     <input class="buttn2" type="submit" name="CANCEL" value="[@spring.message "cancel"/]"/>
                 </div>
                 <div class="clear">&nbsp;</div>

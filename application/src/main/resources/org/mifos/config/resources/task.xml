@@ -144,25 +144,6 @@
     </batch:job>
     <bean name="LoanArrearsTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.LoanArrearsHelper" />
     <bean name="PortfolioAtRiskTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskHelper" />
-    
-    <!-- 
-                ApplyPenaltyToLoanAccountsTask:
-    -->
-    <bean name="ApplyPenaltyToLoanAccountsTask" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
-        <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.ApplyPenaltyToLoanAccountsTask"/>
-        <property name="name" value="ApplyPenaltyToLoanAccountsTaskJob" />
-    </bean>
-    <bean id="applyPenaltyToLoanAccountsTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-        <property name="name" value="ApplyPenaltyToLoanAccountsTaskJob"/>
-        <property name="jobDetail" ref="ApplyPenaltyToLoanAccountsTask" />
-        <property name="cronExpression" value="0 0 0 * * ?" />
-    </bean>
-    <batch:job id="ApplyPenaltyToLoanAccountsTaskJob" parent="jobBase" job-repository="jobRepository">
-        <batch:step id="ApplyPenaltyToLoanAccountsTask-step-1">
-            <batch:tasklet ref="ApplyPenaltyToLoanAccountsTasklet" />
-        </batch:step>
-    </batch:job>
-    <bean name="ApplyPenaltyToLoanAccountsTasklet" class="org.mifos.framework.components.batchjobs.helpers.ApplyPenaltyToLoanAccountsHelper" />
 
     <!--
                 GenerateMeetingsForCustomerAndSavingsTask:
@@ -224,7 +205,6 @@
                 <ref bean="loanArrearsAndPortfolioAtRiskTaskTrigger" />
                 <ref bean="generateMeetingsForCustomerAndSavingsTaskTrigger" />
                 <ref bean="branchReportTaskTrigger" />
-                <ref bean="applyPenaltyToLoanAccountsTaskTrigger"/>
             </list>
         </property>
     </bean>

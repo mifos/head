@@ -27,7 +27,6 @@ public class PenaltyFormParameters {
 
     public static final String PERIOD_INSTALLMENTS = "Number Of Installments";
     public static final String PERIOD_DAYS = "Number Of Days";
-    public static final String PERIOD_NONE = "None";
 
     public static final String FORMULA_OUTSTANDING_PRINCIPAL = "Outstanding Principal Amount";
     public static final String FORMULA_OUTSTANDING_LOAN = "Outstanding Loan Amount";

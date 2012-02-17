@@ -51,13 +51,11 @@
                         ${formBean.name}
                         [@spring.bind "formBean.name"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
                     </div>
-                    [#if period?has_content]
-                        <div class="span-20">
-                            <span class="fontBold">[@spring.message "organizationPreferences.definenewpenalty.graceperiodtype" /]</span>
-                            ${period}
-                            [@spring.bind "formBean.periodTypeId"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
-                        </div>
-                    [/#if]
+                    <div class="span-20">
+                        <span class="fontBold">[@spring.message "organizationPreferences.definenewpenalty.graceperiodtype" /]</span>
+                        ${period}
+                        [@spring.bind "formBean.periodTypeId"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
+                    </div>
                     [#if formBean.duration?has_content]
                         <div class="span-20">
                             <span class="fontBold">[@spring.message "organizationPreferences.definenewpenalty.graceperiodduration" /]</span>

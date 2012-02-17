@@ -172,7 +172,7 @@ public class PenaltyDaoHibernateIntegrationTest extends MifosIntegrationTestCase
     public void shouldFindAllPenaltyPeriodEntity() throws Exception {
         List<PenaltyPeriodEntity> found = penaltyDao.getPenaltiesPeriods();
 
-        assertThat(found.size(), is(3));
+        assertThat(found.size(), is(2));
     }
 
     @Test

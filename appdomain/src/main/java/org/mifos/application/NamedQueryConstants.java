@@ -451,7 +451,6 @@ public interface NamedQueryConstants {
     String GET_ALL_OFFICES_FOR_CUSTOM_FIELD = "office.getAllOfficesForCustomField";
     String GET_ALL_PERSONNEL = "personnel.getAllPersonnel";
     String GET_ALL_LOAN_ACCOUNTS = "accounts.getAllLoanAccounts";
-    String GET_ALL_LOAN_ACCOUNTS_WITH_PENALTIES = "accounts.getAllLoanAccountsWithLateInstallments";
 
     String GET_BRANCH_REPORT_FOR_DATE_AND_BRANCH = "branchReport.getBranchReportForDateAndBranch";
     String GET_BRANCH_REPORT_FOR_DATE = "branchReport.getBranchReportForDate";

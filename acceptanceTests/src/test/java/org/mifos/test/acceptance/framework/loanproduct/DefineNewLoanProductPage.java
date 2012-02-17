@@ -140,7 +140,6 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private int status;
         private int productCategory;
         private final List<String> fees = new ArrayList<String>();
-        private final List<String> penalties = new ArrayList<String>();
         private String additionalFee1;
         private String additionalFee2;
         private String additionalFee3;
@@ -576,14 +575,6 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public void addFee(String feeName){
         	fees.add(feeName);
         }
-        
-        public List<String> getPenalties() {
-            return penalties;
-        }
-        
-        public void addPenalty(String penaltyName) {
-            penalties.add(penaltyName);
-        }
     }
     
     private void addSelectionFee(String feeName){
@@ -611,33 +602,6 @@ public class DefineNewLoanProductPage extends AbstractPage {
 			selectAddedFee(fee);
 		}
     	removeAddedFees();
-    }
-    
-    private void addSelectionPenalty(String penaltyName){
-        selenium.addSelection("penaltyId", "label="+penaltyName);
-    }
-    
-    private void selectPenalty(String penaltyName){
-        selenium.select("penaltyId", "label="+penaltyName);
-    }
-    
-    private void addSelectedPenalties(){
-        selenium.click("LoanPenaltiesList.button.add");
-    }
-    
-    private void selectAddedPenalty(String penaltyName){
-        selenium.addSelection("prdOfferinPenalties", "label="+penaltyName);
-    }
-    
-    private void removeAddedPenalties(){
-        selenium.click("LoanPenaltiesList.button.remove");
-    }
-    
-    public void removePenalties(List<String> penalties){
-        for (String penalty : penalties) {
-            selectAddedPenalty(penalty);
-        }
-        removeAddedPenalties();
     }
 
     @SuppressWarnings("PMD.NPathComplexity")
@@ -708,18 +672,6 @@ public class DefineNewLoanProductPage extends AbstractPage {
 			}
         	addSelectedFees();
         }
-        
-        if(parameters.getPenalties().size()>0){
-            for (int i=0;i<parameters.getPenalties().size();i++){
-                if(i==0){
-                    selectPenalty(parameters.getPenalties().get(i));
-                }else{
-                    addSelectionPenalty(parameters.getPenalties().get(i));
-                }
-            }
-            addSelectedPenalties();
-        }
-        
         selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodType());
         selenium.fireEvent("gracePeriodType", "change");
         if(parameters.getGracePeriodType()>1){
