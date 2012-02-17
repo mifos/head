@@ -73,7 +73,6 @@ public class EditPenaltyPreviewController {
             Short id = Short.valueOf(formBean.getId());
             Short categoryType = Short.valueOf(formBean.getCategoryTypeId());
             Short penaltyStatus = Short.valueOf(formBean.getStatusId());
-            Short penaltyPeriod = Short.valueOf(formBean.getPeriodTypeId());
             Short penaltyFrequency = Short.valueOf(formBean.getFrequencyId());
             Short glCode = Short.valueOf(formBean.getGlCodeId());
             boolean ratePenalty = StringUtils.isBlank(formBean.getAmount());
@@ -81,6 +80,7 @@ public class EditPenaltyPreviewController {
             Double rate = null;
             Short penaltyFormula = null;
             Integer duration = null;
+            Short penaltyPeriod = 3;
             
             if(ratePenalty) {
                 rate = Double.valueOf(formBean.getRate());
@@ -93,6 +93,10 @@ public class EditPenaltyPreviewController {
             
             if(StringUtils.isNotBlank(formBean.getCurrencyId())) {
                 currencyId = Short.valueOf(formBean.getCurrencyId());
+            }
+            
+            if(StringUtils.isNotBlank(formBean.getPeriodTypeId())) {
+                penaltyPeriod = Short.valueOf(formBean.getPeriodTypeId());
             }
             
             Double min = Double.valueOf(formBean.getMin());

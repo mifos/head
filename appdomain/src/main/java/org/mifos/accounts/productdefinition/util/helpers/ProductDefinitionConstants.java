@@ -195,7 +195,6 @@ public interface ProductDefinitionConstants {
     String STARTDATEUPDATEEXCEPTION = "errors.startdateupdateexception";
     String ERRORMAXPENALTYRATE = "errors.maxpenaltyrate";
     String ERRORFEEFREQUENCY = "errors.feefrequency";
-    String ERRORPENALTYFREQUENCY = "errors.penaltyfrequency";
     String ERROR_FEE_CURRENCY_MATCH = "errors.feeCurrencyMatch";
     String ERRORMANDAMOUNT = "errors.mandAmount";
     String INVALIDFIELD = "exceptions.application.productDef.invalidfield";

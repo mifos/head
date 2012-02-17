@@ -180,7 +180,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
                     totalPrincipal = totalPrincipal.subtract(installment.getPrincipalPaid());
                     totalInterest = totalInterest.subtract(installment.getEffectiveInterestPaid());
                     totalFees = totalFees.subtract(installment.getTotalFeeAmountPaidWithMiscFee());
-                    totalPenalties = totalPenalties.subtract(installment.getMiscPenaltyPaid());
+                    totalPenalties = totalPenalties.subtract(installment.getPenaltyPaid());
                     if (index != list.size() - 1 && installment.isPaid()) {
                         index++;
                         installment = (LoanScheduleEntity) list.get(index);
@@ -305,13 +305,13 @@ public class LoanRepaymentTag extends BodyTagSupport {
         html.endTag("td");
         
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
-        html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getMiscPenaltyPaid().toString()) :
+        html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getTotalPenaltyPaid().toString()) :
                 ConversionUtil.formatNumber(installment.getPenaltyDue().toString())));
         html.endTag("td");
 
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
         html.text((isPaymentMade ? ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalPaid().add(installment.getEffectiveInterestPaid()).add(
-                installment.getTotalFeeAmountPaidWithMiscFee()).add(installment.getMiscPenaltyPaid()))) : ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalDue().add(
+                installment.getTotalFeeAmountPaidWithMiscFee()).add(installment.getPenaltyPaid()))) : ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalDue().add(
                 installment.getEffectiveInterestDue()).add(installment.getTotalFeeDueWithMiscFeeDue()).add(
                 installment.getPenaltyDue())))));
         html.endTag("td");
@@ -334,14 +334,14 @@ public class LoanRepaymentTag extends BodyTagSupport {
         html.text(ConversionUtil.formatNumber(totalFees.subtract(installment.getTotalFeeAmountPaidWithMiscFee()).toString()));
         html.endTag("td");
         html.startTag("td", "width", "20%", "align", "right", "class", "drawtablerow");
-        html.text(ConversionUtil.formatNumber(totalPenalties.subtract(installment.getMiscPenaltyPaid()).toString()));
+        html.text(ConversionUtil.formatNumber(totalPenalties.subtract(installment.getTotalPenaltyPaid()).toString()));
         html.endTag("td");
         html.startTag("td", "width", "20%", "align", "right", "class", "drawtablerow");
         
         html.text((ConversionUtil.formatNumber(String.valueOf(totalPrincipal.add(totalInterest).add(totalFees).add(totalPenalties).subtract(
                 installment.getPrincipalPaid()).subtract(installment.getEffectiveInterestPaid()).subtract(
                 installment.getTotalFeeAmountPaidWithMiscFee()).subtract(
-                installment.getMiscPenaltyPaid())))).toString());
+                installment.getTotalPenaltyPaid())))).toString());
         html.endTag("td");
         html.endTag("tr");
         return html;
