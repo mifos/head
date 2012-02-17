@@ -28,11 +28,13 @@ import java.util.List;
 import org.hibernate.Query;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.penalties.business.AmountPenaltyBO;
 import org.mifos.accounts.penalties.business.RatePenaltyBO;
+import org.mifos.accounts.penalties.util.helpers.PenaltyPeriod;
 import org.mifos.accounts.penalties.util.helpers.PenaltyStatus;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
@@ -70,13 +72,24 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
                     loanAccountId = loanAccount.getAccountId();
                     final List<AccountPenaltiesEntity> penaltyEntities = new ArrayList<AccountPenaltiesEntity>(loanAccount.getAccountPenalties());
                     final List<LoanScheduleEntity> schedule = new ArrayList<LoanScheduleEntity>(loanAccount.getLoanScheduleEntities());
-                    final Short installmentId = loanAccount.getDetailsOfUnpaidInstallmentsOn(null).get(0).getInstallmentId();
+                    List<AccountActionDateEntity> lateInstallments = loanAccount.getDetailsOfLateInstallmentsOn(new Date(timeInMillis));
+                    final Short installmentId = lateInstallments.get(0).getInstallmentId();
                     
                     for (AccountPenaltiesEntity penaltyEntity : penaltyEntities) {
-                        if (!penaltyEntity.isOneTime()) {
-                            Days days = Days.daysBetween(new LocalDate(schedule.get(installmentId - 1).getActionDate().getTime()),
-                                                         new LocalDate(timeInMillis));
+                        Days days = Days.daysBetween(new LocalDate(schedule.get(installmentId - 1).getActionDate().getTime()),
+                                                     new LocalDate(timeInMillis));
+                        
+                        if(penaltyEntity.hasPeriodType()) {
+                            PenaltyPeriod penaltyPeriod = penaltyEntity.getPenalty().getPeriodType().getPenaltyPeriod();
+                            Integer duration = penaltyEntity.getPenalty().getPeriodDuration();
                             
+                            if(penaltyPeriod == PenaltyPeriod.DAYS && days.getDays() < duration
+                                    || penaltyPeriod == PenaltyPeriod.INSTALLMENTS && lateInstallments.size() < duration + 1) {
+                                continue;
+                            }
+                        }
+                        
+                        if (!penaltyEntity.isOneTime()) {
                             if (penaltyEntity.isDailyTime() && days.getDays() == penaltyEntity.getCalculativeCount()
                                     || penaltyEntity.isMonthlyTime() && days.getDays() % 31 != 1
                                     || penaltyEntity.isWeeklyTime() && days.getDays() % 7 != 1) {
@@ -122,7 +135,6 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
         
         try {
             StaticHibernateUtil.startTransaction();
-            StaticHibernateUtil.getSessionTL().update(penaltyEntity);
             StaticHibernateUtil.getSessionTL().update(loanAccount);
             StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {

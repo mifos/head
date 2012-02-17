@@ -939,6 +939,21 @@ public class AccountBO extends AbstractBusinessObject {
         return unpaidInstallments;
     }
     
+    public List<AccountActionDateEntity> getDetailsOfLateInstallmentsOn(Date asOf) {
+        List<AccountActionDateEntity> lateInstallments = new ArrayList<AccountActionDateEntity>();
+
+        Set<AccountActionDateEntity> accountActionDates = getAccountActionDates();
+        
+        if (accountActionDates != null && !accountActionDates.isEmpty()) {
+            for (AccountActionDateEntity accountAction : accountActionDates) {
+                if (!accountAction.isPaid() && accountAction.getActionDate().before(asOf)) {
+                    lateInstallments.add(accountAction);
+                }
+            }
+        }
+        return lateInstallments;
+    }
+    
     public List<AccountActionDateEntity> getDetailsOfPaidInstallmentsOn(LocalDate asOf) {
         List<AccountActionDateEntity> paidInstallments = new ArrayList<AccountActionDateEntity>();
 

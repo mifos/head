@@ -46,6 +46,7 @@ import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 @Test(singleThreaded = true, groups = {"penalties", "acceptance", "ui"})
+@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.AvoidFinalLocalVariable"})
 public class BatchJobPenaltyTest extends UiTestCaseBase {
     private static final String[] PENALTY_NAME = new String[] {
         "Penalty 5.7.1", "Penalty 5.7.2", "Penalty 5.7.3", "Penalty 5.7.4", "Penalty 5.7.5",
@@ -57,7 +58,6 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
     
     @Override
     @BeforeMethod
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void setUp() throws Exception {
         super.setUp();
         
@@ -68,15 +68,13 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
     }
     
     @AfterMethod
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void logOut() throws Exception {
         (new MifosPage(selenium)).logout();
     }
     
     @Test(enabled = true)
-    @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.AvoidFinalLocalVariable"})
     public void shouldCalculateOneTimePenaltyOnLoanAccount() throws Exception {
-        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[0], null, null);
+        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[0], null, null, null);
         
         changeDateTime(04, 1);
         verifyCalculatePenalty(accountId,
@@ -85,30 +83,12 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
                 new String[] { "3,151", "05/04/2012", "2,701" }
         );
         
-        final RepayLoanParameters params = new RepayLoanParameters();
-        params.setModeOfRepayment(RepayLoanParameters.CASH);
-        navigationHelper.navigateToLoanAccountPage(accountId)
-            .navigateToRepayLoan().submitAndNavigateToRepayLoanConfirmationPage(params)
-            .submitAndNavigateToLoanAccountDetailsPage();
-        
-        verifyCalculatePenalty(accountId,
-                new String[] { "1", "1", "0" },
-                new String[][] { { "0", "450" }, { "1", "451" }, { "0", "450" } },
-                null
-        );
-        
-        changeDateTime(05, 1);
-        verifyCalculatePenalty(accountId,
-                new String[] { "1", "1", "0" },
-                new String[][] { { "0", "450" }, { "1", "451" }, { "0", "450" } },
-                null
-        );
+        verifyAfterRepayLoan(accountId, "1", "451");
     }
-    
+
     @Test(enabled = true)
-    @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.AvoidFinalLocalVariable"})
-    public void shouldCalculateDailyPenaltyOnLoanAccount() throws Exception {
-        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[1], null, PenaltyFormParameters.FREQUENCY_DAILY);
+    public void shouldCalculateDailyAmountPenaltyOnLoanAccount() throws Exception {
+        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[1], null, null, PenaltyFormParameters.FREQUENCY_DAILY);
         
         changeDateTime(03, 1);
         verifyCalculatePenalty(accountId,
@@ -117,30 +97,12 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
                 new String[] { "907", "01/03/2012", "457" }
         );
         
-        final RepayLoanParameters params = new RepayLoanParameters();
-        params.setModeOfRepayment(RepayLoanParameters.CASH);
-        navigationHelper.navigateToLoanAccountPage(accountId)
-            .navigateToRepayLoan().submitAndNavigateToRepayLoanConfirmationPage(params)
-            .submitAndNavigateToLoanAccountDetailsPage();
-        
-        verifyCalculatePenalty(accountId,
-                new String[] { "7", "7", "0" },
-                new String[][] { { "0", "450" }, { "7", "457" }, { "0", "450" } },
-                null
-        );
-        
-        changeDateTime(04, 1);
-        verifyCalculatePenalty(accountId,
-                new String[] { "7", "7", "0" },
-                new String[][] { { "0", "450" }, { "7", "457" }, { "0", "450" } },
-                null
-        );
+        verifyAfterRepayLoan(accountId, "7", "457");
     }
     
     @Test(enabled = true)
-    @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.AvoidFinalLocalVariable"})
-    public void shouldCalculateWeeklyPenaltyOnLoanAccount() throws Exception {
-        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[2], null, PenaltyFormParameters.FREQUENCY_WEEKLY);
+    public void shouldCalculateWeeklyAmountPenaltyOnLoanAccount() throws Exception {
+        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[2], null, null, PenaltyFormParameters.FREQUENCY_WEEKLY);
         
         changeDateTime(03, 3);
         verifyCalculatePenalty(accountId,
@@ -149,32 +111,95 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
                 new String[] { "1,352", "08/03/2012", "902" }
         );
         
-        final RepayLoanParameters params = new RepayLoanParameters();
+        verifyAfterRepayLoan(accountId, "2", "452");
+    }
+    
+    @Test(enabled = true)
+    public void shouldCalculateWeeklyAmountPenaltyWithPeriodInstallmentsOnLoanAccount() throws Exception {
+        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[3], PenaltyFormParameters.PERIOD_INSTALLMENTS, "1", PenaltyFormParameters.FREQUENCY_WEEKLY);
+        
+        changeDateTime(02, 24);
+        verifyCalculatePenalty(accountId,
+                new String[] { "0", "0", "0" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, null /* Future Installments */, { "0", "450" } },
+                new String[] { "900", "01/03/2012", "450" }
+        );
+        
+        changeDateTime(03, 3);
+        verifyCalculatePenalty(accountId,
+                new String[] { "1", "0", "1" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "1", "451" }, { "0", "450" } },
+                new String[] { "1,351", "08/03/2012", "901" }
+        );
+        
+        changeDateTime(03, 10);
+        verifyCalculatePenalty(accountId,
+                new String[] { "2", "0", "2" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "2", "452" }, { "0", "450" } },
+                new String[] { "1,802", "15/03/2012", "1,352" }
+        );
+        
+        verifyAfterRepayLoan(accountId, "2", "452");
+    }
+    
+    @Test(enabled = false)
+    public void shouldCalculateWeeklyRatePenaltyOnLoanAccpunt() throws Exception {
+        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[4], null, null,
+                PenaltyFormParameters.FREQUENCY_WEEKLY, "0.5", PenaltyFormParameters.FORMULA_OUTSTANDING_LOAN);
+        
+        changeDateTime(02, 24);
+        verifyCalculatePenalty(accountId,
+                new String[] { "22.5", "0", "22.5" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "22.5", "472.5" }, null /* Future Installments */, { "0", "450" } },
+                new String[] { "922.5", "01/03/2012", "472.5" }
+        );
+        
+        changeDateTime(03, 3);
+        verifyCalculatePenalty(accountId,
+                new String[] { "45.1", "0", "45.1" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "45.1", "495.1" }, { "0", "450" } },
+                new String[] { "1,352", "08/03/2012", "945.1" }
+        );
+        
+        verifyAfterRepayLoan(accountId, "45.1", "495.1");
+    }
+    
+    private void verifyAfterRepayLoan(final String accountId, final String penalty, final String dueWithPenalty) throws Exception {
+        RepayLoanParameters params = new RepayLoanParameters();
         params.setModeOfRepayment(RepayLoanParameters.CASH);
+        
         navigationHelper.navigateToLoanAccountPage(accountId)
             .navigateToRepayLoan().submitAndNavigateToRepayLoanConfirmationPage(params)
             .submitAndNavigateToLoanAccountDetailsPage();
         
         verifyCalculatePenalty(accountId,
-                new String[] { "2", "2", "0" },
-                new String[][] { { "0", "450" }, { "2", "452" }, { "0", "450" } },
+                new String[] { penalty, penalty, "0" },
+                new String[][] { { "0", "450" }, { penalty, dueWithPenalty }, { "0", "450" } },
                 null
         );
         
-        changeDateTime(04, 1);
+        changeDateTime(05, 1);
         verifyCalculatePenalty(accountId,
-                new String[] { "2", "2", "0" },
-                new String[][] { { "0", "450" }, { "2", "452" }, { "0", "450" } },
+                new String[] { penalty, penalty, "0" },
+                new String[][] { { "0", "450" }, { penalty, dueWithPenalty }, { "0", "450" } },
                 null
         );
     }
     
-    @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.AvoidFinalLocalVariable"})
-    private String setUpPenaltyAndLoanAccount(final String name, final String period, final String frequency) throws Exception {
+    private String setUpPenaltyAndLoanAccount(final String name, final String period, final String duration, final String frequency) throws Exception {
         String penaltyName = name + StringUtil.getRandomString(4);
         
         changeDateTime(02, 15);
-        createAmountPenalty(penaltyName, period, frequency);
+        createAmountPenalty(penaltyName, period, duration, frequency);
+        return createWeeklyLoanAccountWithPenalty(penaltyName);
+    }
+    
+    private String setUpPenaltyAndLoanAccount(final String name, final String period, final String duration, final String frequency,
+            final String rate, final String formula) throws Exception {
+        String penaltyName = name + StringUtil.getRandomString(4);
+        
+        changeDateTime(02, 15);
+        createRatePenalty(penaltyName, period, duration, frequency, rate, formula);
         return createWeeklyLoanAccountWithPenalty(penaltyName);
     }
     
@@ -204,7 +229,6 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         repaymentSchedulePage.navigateToLoanAccountPage();
     }
 
-    @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.AvoidFinalLocalVariable"})
     private String createWeeklyLoanAccountWithPenalty(final String penaltyName) throws Exception {
         final SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         formParameters.addPenalty(penaltyName);
@@ -268,12 +292,12 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         return accountId;
     }
 
-    @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.AvoidFinalLocalVariable"})
-    private void createAmountPenalty(final String name, final String period, final String frequency) throws Exception {
+    private void createAmountPenalty(final String name, final String period, final String duration, final String frequency) throws Exception {
         final PenaltyFormParameters param = new PenaltyFormParameters();
         param.setName(name);
         param.setApplies(PenaltyFormParameters.APPLIES_LOANS);
         param.setPeriod(period == null ? PenaltyFormParameters.PERIOD_NONE : period);
+        param.setDuration(duration == null ? "" : duration);
         param.setMin("1");
         param.setMax("2");
         param.setAmount("1");
@@ -284,7 +308,24 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
             .fillParameters(param).submitPageAndGotoPenaltyPreviewPage(NewPenaltyPreviewPage.class).submit();
     }
     
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    private void createRatePenalty(String name, String period, String duration, String frequency, String rate,
+            String formula) throws Exception {
+        final PenaltyFormParameters param = new PenaltyFormParameters();
+        param.setName(name);
+        param.setApplies(PenaltyFormParameters.APPLIES_LOANS);
+        param.setPeriod(period == null ? PenaltyFormParameters.PERIOD_NONE : period);
+        param.setDuration(duration == null ? "" : duration);
+        param.setMin("1");
+        param.setMax("2");
+        param.setRate(rate);
+        param.setFormula(formula);
+        param.setFrequency(frequency == null ? PenaltyFormParameters.FREQUENCY_NONE : frequency);
+        param.setGlCode("31102");
+        
+        navigationHelper.navigateToAdminPage().navigateToDefineNewPenaltyPage()
+            .fillParameters(param).submitPageAndGotoPenaltyPreviewPage(NewPenaltyPreviewPage.class).submit();
+    }
+    
     private void changeDateTime(final int month, final int day) throws Exception {
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2012, month, day, 13, 0, 0, 0));
                                 
