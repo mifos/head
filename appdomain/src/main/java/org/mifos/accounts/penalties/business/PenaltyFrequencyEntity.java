@@ -48,18 +48,6 @@ public class PenaltyFrequencyEntity extends MasterDataEntity {
     public boolean isOneTime() {
         return getId().equals(PenaltyFrequency.NONE.getValue());
     }
-    
-    public boolean isDailyTime() {
-        return getId().equals(PenaltyFrequency.DAILY.getValue());
-    }
-    
-    public boolean isWeeklyTime() {
-        return getId().equals(PenaltyFrequency.WEEKLY.getValue());
-    }
-    
-    public boolean isMonthlyTime() {
-        return getId().equals(PenaltyFrequency.MONTHLY.getValue());
-    }
 
     @Override
     public Short getId() {
