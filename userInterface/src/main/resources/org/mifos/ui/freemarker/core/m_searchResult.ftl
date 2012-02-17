@@ -79,7 +79,7 @@
 					[@spring.message "client.LoanOff" /]
 				</span>
 				<span>
-					${client.loanOfficerName}
+					${client.loanOfficerName?if_exists}
 				</span>
 			</div>
 			[#if client.savingsGlobalAccountNum?has_content]
@@ -160,7 +160,7 @@
 					[@spring.message "client.LoanOff" /]
 				</span>
 				<span>
-					${group.loanOfficerName}
+					${group.loanOfficerName?if_exists}
 				</span>
 			</div>
 			[#if group.savingsGlobalAccountNum?has_content]
@@ -236,7 +236,7 @@
 					[@spring.message "client.LoanOff" /]
 				</span>
 				<span>
-					${center.loanOfficerName}
+					${center.loanOfficerName?if_exists}
 				</span>
 			</div>
 			[#if center.savingsGlobalAccountNum?has_content]

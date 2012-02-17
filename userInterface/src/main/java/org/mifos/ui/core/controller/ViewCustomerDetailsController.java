@@ -76,7 +76,7 @@ public class ViewCustomerDetailsController {
 
 	    modelAndView.addObject("groupInformationDto", groupInformationDto);
 
-	    boolean isGroupLoanAllowed = Boolean.parseBoolean(configurationServiceFacade.getConfig("ClientRules.GroupCanApplyLoans"));
+	    boolean isGroupLoanAllowed = configurationServiceFacade.getBooleanConfig("ClientRules.GroupCanApplyLoans");
 	    modelAndView.addObject("isGroupLoanAllowed", isGroupLoanAllowed);
 	    
 	    boolean isCenterHierarchyExists = configurationServiceFacade.getBooleanConfig("ClientRules.CenterHierarchyExists");

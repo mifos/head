@@ -310,7 +310,7 @@
 			</span><br/> 
 			<span>
 				[#list loanInformationDto.accountFees as feesSet]
-					[#if feesSet.feeFrequencyTypeId == '1' && feesSet.feeStatus != '2']
+					[#if feesSet.feeFrequencyTypeId == 1 && feesSet.feeStatus != 2]
 						<span class="fontnormal">
 							${feesSet.feeName}: ${feesSet.accountFeeAmount?number}&nbsp;( [@spring.message "loan.periodicityTypeRate" /] ${feesSet.meetingRecurrence})
 							<a id="loanaccountdetail.link.removeFee"
@@ -326,7 +326,7 @@
 			</span><br/>
 			[#assign status = 0 /] 
 			[#list loanInformationDto.accountFees as feesSet]
-				[#if feesSet.feeFrequencyTypeId == '2' && feesSet.feeStatus != '2']
+				[#if (feesSet.feeFrequencyTypeId?has_content && feesSet.feeStatus?has_content) && feesSet.feeFrequencyTypeId == 2 && feesSet.feeStatus != 2]
 					<span id="loanAccountDetail.text.oneTimeFeeName_${status?number}"/>
 						${feesSet.feeName}
 					</span>:
@@ -348,7 +348,7 @@
                 <br/>
             </span>
             [#list loanInformationDto.accountPenalties as penaltySet ]
-                [#if penaltySet.penaltyFrequencyId != '1' && penaltySet.penaltyStatus != '2']
+                [#if (penaltySet.penaltyFrequencyId?has_content && penaltySet.penaltyStatus?has_content) && penaltySet.penaltyFrequencyId != 1 && penaltySet.penaltyStatus != 2]
                     ${penaltySet.penaltyName}:
                     <span class="fontnormal">
                         ${penaltySet.accountPenaltyAmount?number}&nbsp; (${penaltySet.penaltyFrequencyName})

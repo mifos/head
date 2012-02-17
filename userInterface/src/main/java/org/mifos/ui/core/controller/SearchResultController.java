@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
@@ -32,9 +33,6 @@ import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.screen.CustomerHierarchyDto;
 import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mobile.device.Device;
-import org.springframework.mobile.device.DeviceUtils;
-import org.springframework.mobile.device.site.SitePreference;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -65,9 +63,9 @@ public class SearchResultController {
     }
 
     @RequestMapping(method = { RequestMethod.POST, RequestMethod.GET })
-    public ModelAndView showSearchResults(HttpServletRequest request, SitePreference sitePreference,
+    public ModelAndView showSearchResults(HttpServletRequest request, HttpServletResponse response,
             @ModelAttribute("customerSearch") @Valid CustomerSearchFormBean customerSearchFormBean, BindingResult result) {
-        Device currentDevice = DeviceUtils.getCurrentDevice(request);
+        ModelAndView modelAndView = new ModelAndView("m_searchResult");
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CustomerHierarchyDto customerHierarchyDto = null;
 
@@ -77,11 +75,6 @@ public class SearchResultController {
             officesMap.put(officeDto.getId().toString(), officeDto.getName());
         }
         customerSearchFormBean.setOffices(officesMap);
-
-        ModelAndView modelAndView = new ModelAndView("m_searchResult");
-        if (currentDevice.isMobile()) {
-            modelAndView = new ModelAndView("m_searchResult");
-        }
 
         if (result.hasErrors()) {
             return modelAndView;
