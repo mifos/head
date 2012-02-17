@@ -593,7 +593,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                         <c:remove var="urlMap" />
                                         <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
                                         <c:set target="${urlMap}" property="${loanInformationDto.officeName}" value="custSearchAction.do?method=getOfficeHomePage&officeId=${loanInformationDto.officeId}"/>
-                                        <c:set target="${urlMap}" property="${loanInformationDto.customerName}" value="clientCustAction.do?method=get&globalCustNum=${loanInformationDto.globalCustNum}"/>
+                                        <c:set target="${urlMap}" property="${loanInformationDto.customerName}" value="viewClientDetails.ftl?globalCustNum=${loanInformationDto.globalCustNum}"/>
                                         <c:set target="${urlMap}" property="${loanInformationDto.prdOfferingName}" value="loanAccountAction.do?method=get&globalAccountNum=${loanInformationDto.globalAccountNum}"/>
 							            <a id="loanaccountdetail.link.questionGroups" href="loanAccountAction.do?method=viewAndEditAdditionalInformation&creatorId=${sessionScope.UserContext.id}&entityId=${loanInformationDto.accountId}&event=Create&source=Loan&backPageUrl=loanAccountAction.do?method%3Dget%26globalAccountNum%3D${loanInformationDto.globalAccountNum}">
 							    			<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />

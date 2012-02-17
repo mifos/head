@@ -48,7 +48,7 @@ explanation of the license and how it is applied.
             <c:remove var="urlMap" />
             <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
             <c:set target="${urlMap}" property="${BusinessKey.office.officeName}" value="custSearchAction.do?method=getOfficeHomePage&officeId=${BusinessKey.office.officeId}"/>
-            <c:set target="${urlMap}" property="${BusinessKey.customer.displayName}" value="clientCustAction.do?method=get&globalCustNum=${BusinessKey.customer.globalCustNum}"/>
+            <c:set target="${urlMap}" property="${BusinessKey.customer.displayName}" value="viewClientDetails.ftl?globalCustNum=${BusinessKey.customer.globalCustNum}"/>
             <c:set target="${urlMap}" property="${BusinessKey.savingsOffering.prdOfferingName}" value="savingsAction.do?method=get&globalAccountNum=${BusinessKey.globalAccountNum}"/>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>

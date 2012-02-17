@@ -119,7 +119,7 @@ explanation of the license and how it is applied.
 											test="${!empty groupInformationDto.groupDisplay and !empty groupInformationDto.groupDisplay.loanOfficerId}">
 											<c:forEach var="client" items="${groupInformationDto.clientsOtherThanClosedAndCancelled}">
 												<a id="viewgroupdetails.link.client"
-													href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}&recordOfficeId=${groupInformationDto.groupDisplay.branchId}&recordLoanOfficerId=${groupInformationDto.groupDisplay.loanOfficerId}">
+													href="viewClientDetails.ftl?globalCustNum=${client.globalCustNum}&recordOfficeId=${groupInformationDto.groupDisplay.branchId}&recordLoanOfficerId=${groupInformationDto.groupDisplay.loanOfficerId}">
 												<c:out value="${client.displayName}" /> <c:out
 													value="${customerfn:getClientPosition(groupInformationDto.customerPositions,client)}" />
 												<br>
@@ -129,7 +129,7 @@ explanation of the license and how it is applied.
 										<c:otherwise>
 											<c:forEach var="client" items="${groupInformationDto.clientsOtherThanClosedAndCancelled}">
 												<a id="viewgroupdetails.link.client"
-													href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+													href="viewClientDetails.ftl?globalCustNum=${client.globalCustNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 												<c:out value="${client.displayName}" /><%-- <c:out
 													value="${customerfn:getClientPositions(requestScope.customerPositions,client)}" />--%>
 												<br>
@@ -747,7 +747,7 @@ explanation of the license and how it is applied.
                   <c:set var="questionnaireFor" scope="session" value="${groupInformationDto.groupDisplay.displayName}"/>
                   <c:remove var="urlMap" />
                   <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
-                  <c:set target="${urlMap}" property="${groupInformationDto.groupDisplay.displayName}" value="groupCustAction.do?method=get&globalCustNum=${groupInformationDto.groupDisplay.globalCustNum}"/>
+                  <c:set target="${urlMap}" property="${groupInformationDto.groupDisplay.displayName}" value="viewGroupDetails.ftl?globalCustNum=${groupInformationDto.groupDisplay.globalCustNum}"/>
                   <a id="viewgroupdetails.link.attachSurvey" href="questionnaire.ftl?source=Group&event=View&entityId=${groupInformationDto.groupDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=groupCustAction.do%3Fmethod%3Dget">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>

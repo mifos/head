@@ -134,14 +134,14 @@ explanation of the license and how it is applied.
 												<c:choose>
 													<c:when test='${isCenterHierarchyExists eq true}'>
 														<html-el:link styleId="branch_search_loanofficer.link.selectCenter"
-															href='centerCustAction.do?method=get&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}'>
+															href='viewCenterDetails.ftl?customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}'>
 															<c:out value="${customer.displayName}" />
 														</html-el:link>
 														<br>
 													</c:when>
 													<c:otherwise>
 														<html-el:link styleId="branch_search_loanofficer.link.selectGroup"
-															href='groupCustAction.do?method=get&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}'>
+															href='viewGroupDetails.ftl?customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}'>
 															<c:out value="${customer.displayName}" />
 														</html-el:link>
 														<br>
@@ -247,14 +247,14 @@ explanation of the license and how it is applied.
 										                      <c:choose>
 											                     <c:when test='${isCenterHierarchyExists eq true}'>
 												                    <html-el:link styleId="branch_search_loanofficer.link.selectCenter"
-													                       href='centerCustAction.do?method=get&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}'>
+													                       href='viewCenterDetails.ftl?customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}'>
 													                   <c:out value="${customer.displayName}" />
 												                    </html-el:link>
 												                    <br>
 											                     </c:when>
 											                     <c:otherwise>
 												                    <html-el:link styleId="branch_search_loanofficer.link.selectGroup"
-													                       href='groupCustAction.do?method=get&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}'>
+													                       href='viewGroupDetails.ftl?customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}'>
 													                   <c:out value="${customer.displayName}" />
 												                    </html-el:link>
 												                    <br>

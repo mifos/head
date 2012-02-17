@@ -803,7 +803,7 @@ explanation of the license and how it is applied.
                   <c:remove var="urlMap" />
                   <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
                   <c:set target="${urlMap}" property="${clientInformationDto.clientDisplay.branchName}" value="custSearchAction.do?method=getOfficeHomePage&officeId=${clientInformationDto.clientDisplay.branchId}"/>
-                  <c:set target="${urlMap}" property="${clientInformationDto.clientDisplay.displayName}" value="clientCustAction.do?method=get&globalCustNum=${clientInformationDto.clientDisplay.globalCustNum}"/>
+                  <c:set target="${urlMap}" property="${clientInformationDto.clientDisplay.displayName}" value="viewClientDetails.ftl?globalCustNum=${clientInformationDto.clientDisplay.globalCustNum}"/>
                   <a id="viewClientDetails.link.attachSurvey" href="questionnaire.ftl?source=Client&event=View&entityId=${clientInformationDto.clientDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=clientCustAction.do%3Fmethod%3Dget">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>

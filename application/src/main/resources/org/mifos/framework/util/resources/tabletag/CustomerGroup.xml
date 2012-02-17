@@ -6,7 +6,7 @@
   <path key="customersearch" forwardkey="mainSearch_success" action="custSearchAction.do"/>
   <pagerequirements numbersrequired="true" bluelinerequired="false"  blanklinerequired="true" headingrequired="true"/>
   <row>
-    <column label="Group" labeltype="key" boldlabel="false" type="link" action="groupCustAction.do" styleClass="headingblue">
+    <column label="Group" labeltype="key" boldlabel="false" type="link" action="viewGroupDetails.ftl" styleClass="headingblue">
       <displayname bold="true">
        <fragment-name name="centerName" type="method"/>
        <fragment-name name=": ID " type="string"/>
@@ -14,7 +14,6 @@
       </displayname>
       <parameters>
         <parameter name="globalCustNum" value="centerGlobalCustNum" valuetype="method"/>
-        <parameter name="method" value="get" valuetype="string"/>
         <parameter name="recordOfficeId" value="branchGlobalNum" valuetype="method"/>
         <parameter name="recordLoanOfficerId" value="loanOffcerGlobalNum" valuetype="method"/>
       </parameters>
@@ -35,14 +34,13 @@
   </row>
 
   <row>
-      <column label="Savings" labeltype="key" boldlabel="true" type="link" action="savingsAction.do">
+      <column label="Savings" labeltype="key" boldlabel="true" type="link" action="viewSavingsAccountDetails.ftl">
           <displayname>
               <fragment-name name="Account # " type="string"/>
               <fragment-name name="savingsGlobalAccountNum" type="method"/>
           </displayname>
           <parameters>
               <parameter name="globalAccountNum" value="savingsGlobalAccountNum" valuetype="method"/>
-              <parameter name="method" value="get" valuetype="string"/>
               <parameter name="recordOfficeId" value="branchGlobalNum" valuetype="method"/>
             <parameter name="recordLoanOfficerId" value="loanOffcerGlobalNum" valuetype="method"/>
           </parameters>
@@ -50,14 +48,13 @@
   </row>
 
   <row>
-      <column label="Loan" labeltype="key" boldlabel="true" type="link" action="loanAccountAction.do">
+      <column label="Loan" labeltype="key" boldlabel="true" type="link" action="viewLoanAccountDetails.ftl">
           <displayname>
               <fragment-name name="Account # " type="string"/>
               <fragment-name name="loanGlobalAccountNum" type="method"/>
           </displayname>
           <parameters>
               <parameter name="globalAccountNum" value="loanGlobalAccountNum" valuetype="method"/>
-              <parameter name="method" value="get" valuetype="string"/>
               <parameter name="recordOfficeId" value="branchGlobalNum" valuetype="method"/>
                <parameter name="recordLoanOfficerId" value="loanOffcerGlobalNum" valuetype="method"/>
           </parameters>
@@ -74,14 +71,13 @@
             <parameter name="officeId" value="branchGlobalNum" valuetype="method"/>
         </parameters>
     </column>
-    <column label="/" labeltype="string" boldlabel="false" type="link" action="centerCustAction.do">
+    <column label="/" labeltype="string" boldlabel="false" type="link" action="viewCenterDetails.ftl">
         <displayname>
             <fragment-name name="groupName" type="method" />
 
         </displayname>
         <parameters>
             <parameter name="globalCustNum" value="groupGlobalCustNum" valuetype="method"/>
-            <parameter name="method" value="get" valuetype="string"/>
             <parameter name="recordOfficeId" value="branchGlobalNum" valuetype="method"/>
             <parameter name="recordLoanOfficerId" value="loanOffcerGlobalNum" valuetype="method"/>
         </parameters>

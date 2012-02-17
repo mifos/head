@@ -137,7 +137,7 @@ explanation of the license and how it is applied.
 								<c:when test="${!empty centerInformationDto.groupsOtherThanClosedAndCancelled}">
 									<c:forEach var="group" items="${centerInformationDto.groupsOtherThanClosedAndCancelled}">
 										<span class="fontnormal"> <a id="viewCenterDetails.link.group"
-											href="groupCustAction.do?method=get&globalCustNum=<c:out value="${group.globalCustNum}"/>&recordOfficeId=${centerInformationDto.centerDisplay.branchId}&recordLoanOfficerId=${centerInformationDto.centerDisplay.branchId}">
+											href="viewGroupDetails.ftl?globalCustNum=<c:out value="${group.globalCustNum}"/>&recordOfficeId=${centerInformationDto.centerDisplay.branchId}&recordLoanOfficerId=${centerInformationDto.centerDisplay.branchId}">
 										<c:out value="${group.displayName}" /></a><br>
 										</span>
 									</c:forEach>
@@ -584,7 +584,7 @@ explanation of the license and how it is applied.
                   <c:set var="questionnaireFor" scope="session" value="${centerInformationDto.centerDisplay.displayName}"/>
                   <c:remove var="urlMap" />
                   <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
-                  <c:set target="${urlMap}" property="${centerInformationDto.centerDisplay.displayName}" value="centerCustAction.do?method=get&globalCustNum=${centerInformationDto.centerDisplay.globalCustNum}"/>
+                  <c:set target="${urlMap}" property="${centerInformationDto.centerDisplay.displayName}" value="viewCenterDetails.ftl?globalCustNum=${centerInformationDto.centerDisplay.globalCustNum}"/>
                   <a id="viewCenterDetails.link.attachSurvey" href="questionnaire.ftl?source=Center&event=View&entityId=${centerInformationDto.centerDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=centerCustAction.do%3Fmethod%3Dget">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
