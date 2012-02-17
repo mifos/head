@@ -90,7 +90,7 @@
 		</span><br/>
 		<span class="fontnormal">
 			<a id="savingsaccountdetail.link.viewAllAccountActivity" 
-				href="savingsAction.do?method=getRecentActivity&globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+				href="viewSavingsAccountRecentActivity.ftl?globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
 				[@spring.message "Savings.viewAllAccountActivity" /]
 			</a>
 		</span>

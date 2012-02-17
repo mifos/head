@@ -153,7 +153,7 @@ explanation of the license and how it is applied.
 								<td width="65%" align="right" class="fontnormal">
 									&nbsp;
 									<html-el:link styleId="savingsaccountdetail.link.viewAllAccountActivity" 
-										href="savingsAction.do?method=getRecentActivity&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+										href="viewSavingsAccountRecentActivity.ftl?globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 										<mifos:mifoslabel name="Savings.viewAllAccountActivity" />
 									</html-el:link>
 								</td>

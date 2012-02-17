@@ -310,7 +310,7 @@
 			</span><br/> 
 			<span>
 				[#list loanInformationDto.accountFees as feesSet]
-					[#if feesSet.feeFrequencyTypeId == 1 && feesSet.feeStatus != 2]
+					[#if (feesSet.feeFrequencyTypeId?has_content && feesSet.feeStatus?has_content) && feesSet.feeFrequencyTypeId == 1 && feesSet.feeStatus != 2]
 						<span class="fontnormal">
 							${feesSet.feeName}: ${feesSet.accountFeeAmount?number}&nbsp;( [@spring.message "loan.periodicityTypeRate" /] ${feesSet.meetingRecurrence})
 							<a id="loanaccountdetail.link.removeFee"
@@ -333,7 +333,7 @@
 					<span class="fontnormal"> 
 						${feesSet.accountFeeAmount?number}&nbsp;
 						<!-- if account state is LOAN_PARTIAL_APPLICATION or LOAN_PENDING_APPROVAL then enable removal -->
-						[#if loanInformationDto.accountStateId == '1' || loanInformationDto.accountStateId == '2' ]					
+						[#if loanInformationDto.accountStateId == 1 || loanInformationDto.accountStateId == 2 ]					
 							<a id="loanAccountDetail.link.removeOneTimeFee_${status}"
 							href="accountAppAction.do?method=removeFees&feeId=${feesSet.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}&input=Loan">
 								[@spring.message "loan.remove" /]
@@ -361,7 +361,7 @@
             </span><br/>
             [#assign status = 0 /]
             [#list loanInformationDto.accountPenalties as penaltySet]
-            	[#if penaltySet.penaltyFrequencyId == '1' && penaltySet.penaltyStatus != '2' ]
+            	[#if (penaltySet.penaltyFrequencyId?has_content && penaltySet.penaltyStatus?has_content) && penaltySet.penaltyFrequencyId == 1 && penaltySet.penaltyStatus != 2 ]
                     <span id="loanAccountDetail.text.oneTimePenaltyName_${status?number}"/>
                         ${penaltySet.penaltyName}
                     </span>:
