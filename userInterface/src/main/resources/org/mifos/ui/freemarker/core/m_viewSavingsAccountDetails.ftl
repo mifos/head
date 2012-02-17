@@ -141,7 +141,7 @@
                 </a><br/>
             [/#if]
 			<a id="savingsaccountdetail.link.viewTransactionHistory" 
-				href="savingsAction.do?method=getTransactionHistory&globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+				href="viewSavingsAccountTransactionHistory.ftl?globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
 				[@spring.message "Savings.viewTransactionHistory" /]
 			</a>
 			<br/>

@@ -271,7 +271,7 @@ explanation of the license and how it is applied.
                                         </a> <br>
                                     </c:if>
 									<html-el:link styleId="savingsaccountdetail.link.viewTransactionHistory" 
-										href="savingsAction.do?method=getTransactionHistory&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+										href="viewSavingsAccountTransactionHistory.ftl?globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 										<mifos:mifoslabel name="Savings.viewTransactionHistory" />
 									</html-el:link>
 									<br>

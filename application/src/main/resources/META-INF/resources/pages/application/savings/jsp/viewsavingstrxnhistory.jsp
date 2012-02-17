@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="viewsavingstrxnhistory"></span>
 		<SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>
-	<html-el:form method="post" action="/savingsAction.do?method=editPreview" >
+	<form method="get" action="viewSavingsAccountDetails.ftl" >
 	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 
@@ -65,11 +65,8 @@ explanation of the license and how it is applied.
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td align="center">
-					   <html-el:button property="returnToAccountDetailsbutton"
-					       onclick="javascript:fun_editCancel(this.form)"
-						     styleClass="buttn">
-						<mifos:mifoslabel name="Savings.returnToAccountDetails"/>
-						</html-el:button>
+					   <input type="submit" name="returnToAccountDetailsbutton" value="<mifos:mifoslabel name="Savings.returnToAccountDetails"/>"
+						     class="buttn" />
 					</td>
 				</tr>
     		</table>
@@ -78,6 +75,6 @@ explanation of the license and how it is applied.
       </table>
       <html-el:hidden property="accountId" value="${BusinessKey.accountId}"/>
       <html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}"/>
-</html-el:form>
+</form>
 </tiles:put>
 </tiles:insert>        

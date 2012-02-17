@@ -23,7 +23,7 @@
 
 [@widget.topNavigationNoSecurityMobile currentTab="ClientsAndAccounts" /]
 
-<span id="page.id" title="viewsavingsaccountactivity"></span>
+<span id="page.id" title="viewsavingstrxnhistory"></span>
 
 <div class="content" style="width: 350px">
 	<div>
@@ -31,12 +31,11 @@
 			${savingsAccountDetailDto.productDetails.productDetails.name} #&nbsp;${savingsAccountDetailDto.globalAccountNum} -
 		</span>
 		<span class="headingorange">
-			[@spring.message "Savings.Accountstatementasof"/]
-			${i18n.date_formatter(currentDate, "dd/MM/yyyy", Application.LocaleSetting.locale)}
+			[@spring.message "Savings.Transactionhistory"/]
 		</span>
 	</div>
 	<div>
-		[@mifoscustom.mifostabletag source="recentActivityList" scope="request" xmlFileName="SavingsAccountActivity.xml" moduleName="org/mifos/accounts/savings/util/resources" passLocale="true"/]
+		[@mifoscustom.mifostabletag source="trxnHistoryList" scope="request" xmlFileName="SavingsTrxnHistory.xml" moduleName="org/mifos/accounts/savings/util/resources" passLocale="true"/]
 	</div>
 	<div>
 		<form action="viewSavingsAccountDetails.ftl" method="get">

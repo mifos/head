@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.dto.domain.SavingsAccountDetailDto;
 import org.mifos.dto.screen.SavingsRecentActivityDto;
+import org.mifos.dto.screen.SavingsTransactionHistoryDto;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.ui.core.controller.util.helpers.SitePreferenceHelper;
 import org.mifos.ui.core.controller.util.helpers.UrlHelper;
@@ -69,8 +70,26 @@ public class SavingsAccountController {
         modelAndView.addObject("currentDate", new Date());
         
         List<SavingsRecentActivityDto> recentActivity = this.savingsServiceFacade.retrieveRecentSavingsActivities(savingsAccountDetailDto.getAccountId().longValue());
-        request.getSession().removeAttribute("recentActivityList");
-        request.getSession().setAttribute("recentActivityList", recentActivity);
+        request.setAttribute("recentActivityList", recentActivity);
+        
+        savingsServiceFacade.putSavingsBusinessKeyInSession(globalAccountNum, request);
+        
+        return modelAndView;
+    }
+    
+    @RequestMapping(value = "/viewSavingsAccountTransactionHistory", method=RequestMethod.GET)
+    public ModelAndView showSavingsAccountTransactionHistory(HttpServletRequest request, HttpServletResponse response){
+        ModelAndView modelAndView =new ModelAndView();
+        sitePreferenceHelper.resolveSiteType(modelAndView, "viewSavingsAccountTransactionHistory", request);
+        modelAndView.addObject("include_page", new IncludePage(request, response));
+    
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        
+        SavingsAccountDetailDto savingsAccountDetailDto = savingsServiceFacade.retrieveSavingsAccountDetails(globalAccountNum);
+        modelAndView.addObject("savingsAccountDetailDto", savingsAccountDetailDto);
+        
+        List<SavingsTransactionHistoryDto> savingsTransactionHistoryViewList = this.savingsServiceFacade.retrieveTransactionHistory(globalAccountNum);
+        request.setAttribute("trxnHistoryList", savingsTransactionHistoryViewList);
         
         savingsServiceFacade.putSavingsBusinessKeyInSession(globalAccountNum, request);
         
