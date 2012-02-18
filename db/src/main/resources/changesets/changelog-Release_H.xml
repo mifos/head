@@ -422,4 +422,28 @@
             </sql>
          </rollback>
     </changeSet>
+    <changeSet id="MIFOS_5370_1" author="Jakub Slawinski" context="expansion">
+        <sql endDelimiter=";">
+            insert into lookup_value(lookup_id,entity_id,lookup_name)
+                values((select max(lv.lookup_id)+1 from lookup_value lv),87,'Permissions-CanSetMonthClosingDate');
+            insert into lookup_value_locale(locale_id, lookup_id, lookup_value)
+                values(1,
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanSetMonthClosingDate'), null);
+            insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values
+                (248,1,
+                (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanSetMonthClosingDate'),
+                (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanSetMonthClosingDate'));
+            insert into roles_activity values (248,1);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                delete from roles_activity where activity_id = 248;
+                delete from activity where activity_id = 248;
+                delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value where lookup_name='Permissions-CanSetMonthClosingDate');
+                delete from lookup_value where entity_id = 87 and lookup_name = 'Permissions-CanSetMonthClosingDate';
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

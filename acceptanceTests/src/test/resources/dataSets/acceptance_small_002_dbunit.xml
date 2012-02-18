@@ -49,6 +49,7 @@
   <DATABASECHANGELOG ID="MIFOS_5186_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-24 15:29:17.0" ORDEREXECUTED="181" EXECTYPE="EXECUTED" MD5SUM="3:257c6dbd69a28ceb9a8a866a405e23f2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5218_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-09 11:58:37.0" ORDEREXECUTED="191" EXECTYPE="EXECUTED" MD5SUM="3:a55cb7c0cd264ab9133926be13e0c714" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5359_1" AUTHOR="Michal Dudzinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-01-31 14:45:09.0" ORDEREXECUTED="222" EXECTYPE="EXECUTED" MD5SUM="3:8c408cc6b30629a54545806b2f771895" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5370_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-17 15:58:59.0" ORDEREXECUTED="240" EXECTYPE="EXECUTED" MD5SUM="3:ba16a0b76593f67399076254a19d8e94" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5382_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-01 19:05:11.0" ORDEREXECUTED="235" EXECTYPE="EXECUTED" MD5SUM="3:8087265e7debf6021ee1f88472a900a8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5382_2" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-02 13:48:42.0" ORDEREXECUTED="236" EXECTYPE="EXECUTED" MD5SUM="3:864b0fd522895b0aa7142d936ddc4bc4" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5383_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-06 11:32:40.0" ORDEREXECUTED="237" EXECTYPE="EXECUTED" MD5SUM="3:e3f2fdea6e47675516523f634130672c" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
@@ -403,6 +404,7 @@
   <activity activity_id="245" parent_id="34" activity_name_lookup_id="639" description_lookup_id="639"/>
   <activity activity_id="246" parent_id="196" activity_name_lookup_id="640" description_lookup_id="640"/>
   <activity activity_id="247" parent_id="196" activity_name_lookup_id="641" description_lookup_id="641"/>
+  <activity activity_id="248" parent_id="1" activity_name_lookup_id="657" description_lookup_id="657"/>
   <admin_document/>
   <admin_document_acc_state_mix/>
   <applied_upgrades upgrade_id="1277565300"/>
@@ -2520,6 +2522,7 @@
   <lookup_value lookup_id="654" entity_id="97" lookup_name="PenaltyStatus-Active"/>
   <lookup_value lookup_id="655" entity_id="97" lookup_name="PenaltyStatus-InActive"/>
   <lookup_value lookup_id="656" entity_id="95" lookup_name="PenaltyPeriod-None"/>
+  <lookup_value lookup_id="657" entity_id="87" lookup_name="Permissions-CanSetMonthClosingDate"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -2918,6 +2921,7 @@
   <lookup_value_locale lookup_value_id="985" locale_id="1" lookup_id="654"/>
   <lookup_value_locale lookup_value_id="986" locale_id="1" lookup_id="655"/>
   <lookup_value_locale lookup_value_id="987" locale_id="1" lookup_id="656"/>
+  <lookup_value_locale lookup_value_id="988" locale_id="1" lookup_id="657"/>
   <max_min_interest_rate account_id="4" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="6" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="8" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
@@ -3326,6 +3330,7 @@
   <roles_activity activity_id="245" role_id="1"/>
   <roles_activity activity_id="246" role_id="1"/>
   <roles_activity activity_id="247" role_id="1"/>
+  <roles_activity activity_id="248" role_id="1"/>
   <saving_schedule/>
   <savings_account/>
   <savings_activity_details/>

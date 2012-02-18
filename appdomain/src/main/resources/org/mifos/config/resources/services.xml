@@ -7,6 +7,8 @@
     <bean id="viewOrganizationSettingsServiceFacade" class="org.mifos.application.admin.business.service.ViewOrganizationSettingsServiceFacadeWebTier"/>
 
     <bean id="appliedUpgradesServiceFacade" class="org.mifos.application.admin.business.service.AppliedUpgradesServiceFacadeWebTier"/>
+    
+    <bean id="monthClosingServiceFacade" class="org.mifos.application.admin.business.service.MonthClosingServiceFacadeWebTier"/>
 
     <bean id="importTransactionsServiceFacade" class="org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacadeWebTier"/>
 
