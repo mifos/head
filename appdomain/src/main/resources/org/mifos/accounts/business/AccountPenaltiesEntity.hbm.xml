@@ -17,7 +17,6 @@
             <column name="account_penalty_amnt_currency_id" />
             <column name="account_penalty_amnt"/>
         </property>
-        <property name="calculativeCount" column="cal_count"/>
         <property name="penaltyStatus" column="penalty_status" type="short"/>
         <property name="statusChangeDate" column="status_change_date" type="date"/>
         <property name="lastAppliedDate" column="last_applied_date"/>

@@ -422,14 +422,4 @@
             </sql>
          </rollback>
     </changeSet>
-    <changeSet id="MIFOS_5426_1" author="Lukasz Lewczynski" context="expansion">
-        <sql endDelimiter=";">
-            ALTER TABLE account_penalties ADD COLUMN cal_count INT NOT NULL DEFAULT 0 AFTER penalty_amnt;
-        </sql>
-        <rollback>
-            <sql endDelimiter=";">
-                ALTER TABLE account_penalties DROP COLUMN cal_count;
-            </sql>
-        </rollback>
-    </changeSet>
 </databaseChangeLog>

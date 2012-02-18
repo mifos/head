@@ -570,10 +570,10 @@ having max(cs.installment_id) > max(cfs.installment_id)
     
     <query name="accounts.getAllLoanAccountsWithLateInstallments">
         <![CDATA[
-            select distinct loan
+            select loan
             from org.mifos.accounts.loan.business.LoanBO loan
             join loan.accountActionDates a
-            where size(loan.loanAccountPenalties) > 0 and a.paymentStatus = 0 and a.actionDate < :currentDate
+            where size(loan.loanAccountPenalties) > 0 and a.paymentStatus = 0 and a.actionDate < current_date()
         ]]>
     </query>
 

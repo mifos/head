@@ -37,7 +37,6 @@ public class AccountPenaltiesEntity extends AbstractEntity {
     private final PenaltyBO penalty;
     private Money accountPenaltyAmount;
     private Double penaltyAmount;
-    private Integer calculativeCount = 0;
     private Short penaltyStatus;
     private Date statusChangeDate;
     private Date lastAppliedDate;
@@ -96,18 +95,6 @@ public class AccountPenaltiesEntity extends AbstractEntity {
         this.penaltyAmount = penaltyAmount;
     }
     
-    public Integer getCalculativeCount() {
-        return calculativeCount;
-    }
-
-    public void incrementCalculativeCount() {
-        ++calculativeCount;
-    }
-    
-    protected void setCalculativeCount(Integer calculativeCount) {
-        this.calculativeCount = calculativeCount;
-    }
-
     public PenaltyBO getPenalty() {
         return penalty;
     }
