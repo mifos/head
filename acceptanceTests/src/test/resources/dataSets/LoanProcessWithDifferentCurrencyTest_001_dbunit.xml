@@ -49,7 +49,6 @@
   <DATABASECHANGELOG ID="MIFOS_5186_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-24 15:29:22.0" ORDEREXECUTED="182" EXECTYPE="EXECUTED" MD5SUM="3:257c6dbd69a28ceb9a8a866a405e23f2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5218_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-09 11:57:39.0" ORDEREXECUTED="183" EXECTYPE="EXECUTED" MD5SUM="3:a55cb7c0cd264ab9133926be13e0c714" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5359_1" AUTHOR="Michal Dudzinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-01-31 14:42:36.0" ORDEREXECUTED="214" EXECTYPE="EXECUTED" MD5SUM="3:8c408cc6b30629a54545806b2f771895" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
-  <DATABASECHANGELOG ID="MIFOS_5370_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-17 16:00:00.0" ORDEREXECUTED="247" EXECTYPE="EXECUTED" MD5SUM="3:ba16a0b76593f67399076254a19d8e94" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5382_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-01 19:04:00.0" ORDEREXECUTED="227" EXECTYPE="EXECUTED" MD5SUM="3:8087265e7debf6021ee1f88472a900a8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5382_2" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-02 13:47:38.0" ORDEREXECUTED="228" EXECTYPE="EXECUTED" MD5SUM="3:864b0fd522895b0aa7142d936ddc4bc4" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5383_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-06 11:31:35.0" ORDEREXECUTED="229" EXECTYPE="EXECUTED" MD5SUM="3:e3f2fdea6e47675516523f634130672c" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
@@ -337,7 +336,6 @@
   <activity activity_id="245" parent_id="34" activity_name_lookup_id="716" description_lookup_id="716"/>
   <activity activity_id="246" parent_id="196" activity_name_lookup_id="717" description_lookup_id="717"/>
   <activity activity_id="247" parent_id="196" activity_name_lookup_id="718" description_lookup_id="718"/>
-  <activity activity_id="248" parent_id="1" activity_name_lookup_id="734" description_lookup_id="734"/>
   <admin_document/>
   <admin_document_acc_state_mix/>
   <applied_upgrades upgrade_id="1277565300"/>
@@ -2007,7 +2005,6 @@
   <lookup_value lookup_id="731" entity_id="97" lookup_name="PenaltyStatus-Active"/>
   <lookup_value lookup_id="732" entity_id="97" lookup_name="PenaltyStatus-InActive"/>
   <lookup_value lookup_id="733" entity_id="95" lookup_name="PenaltyPeriod-None"/>
-  <lookup_value lookup_id="734" entity_id="87" lookup_name="Permissions-CanSetMonthClosingDate"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -2571,7 +2568,6 @@
   <lookup_value_locale lookup_value_id="983" locale_id="1" lookup_id="731"/>
   <lookup_value_locale lookup_value_id="984" locale_id="1" lookup_id="732"/>
   <lookup_value_locale lookup_value_id="985" locale_id="1" lookup_id="733"/>
-  <lookup_value_locale lookup_value_id="986" locale_id="1" lookup_id="734"/>
   <max_min_interest_rate/>
   <max_min_loan_amount/>
   <max_min_no_of_install/>
@@ -2892,7 +2888,6 @@
   <roles_activity activity_id="245" role_id="1"/>
   <roles_activity activity_id="246" role_id="1"/>
   <roles_activity activity_id="247" role_id="1"/>
-  <roles_activity activity_id="248" role_id="1"/>
   <saving_schedule/>
   <savings_account/>
   <savings_activity_details/>

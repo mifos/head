@@ -49,7 +49,6 @@
   <DATABASECHANGELOG ID="MIFOS_5186_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-24 15:28:47.0" ORDEREXECUTED="177" EXECTYPE="EXECUTED" MD5SUM="3:257c6dbd69a28ceb9a8a866a405e23f2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5218_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-09 11:58:25.0" ORDEREXECUTED="189" EXECTYPE="EXECUTED" MD5SUM="3:a55cb7c0cd264ab9133926be13e0c714" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5359_1" AUTHOR="Michal Dudzinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-01-31 14:43:17.0" ORDEREXECUTED="216" EXECTYPE="EXECUTED" MD5SUM="3:8c408cc6b30629a54545806b2f771895" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
-  <DATABASECHANGELOG ID="MIFOS_5370_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-17 15:58:48.0" ORDEREXECUTED="239" EXECTYPE="EXECUTED" MD5SUM="3:ba16a0b76593f67399076254a19d8e94" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5382_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-01 19:04:56.0" ORDEREXECUTED="233" EXECTYPE="EXECUTED" MD5SUM="3:8087265e7debf6021ee1f88472a900a8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5382_2" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-02 13:48:28.0" ORDEREXECUTED="234" EXECTYPE="EXECUTED" MD5SUM="3:864b0fd522895b0aa7142d936ddc4bc4" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5383_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-06 11:32:25.0" ORDEREXECUTED="235" EXECTYPE="EXECUTED" MD5SUM="3:e3f2fdea6e47675516523f634130672c" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
@@ -1470,7 +1469,6 @@
   <activity activity_id="245" parent_id="34" activity_name_lookup_id="638" description_lookup_id="638"/>
   <activity activity_id="246" parent_id="196" activity_name_lookup_id="639" description_lookup_id="639"/>
   <activity activity_id="247" parent_id="196" activity_name_lookup_id="640" description_lookup_id="640"/>
-  <activity activity_id="248" parent_id="1" activity_name_lookup_id="656" description_lookup_id="656"/>
   <admin_document admin_document_id="1" admin_document_name="test2" admin_document_identifier="test2.rptdesign" admin_document_active="1" version_no="0"/>
   <admin_document_acc_state_mix admin_doc_acc_state_mix_id="1" account_state_id="1" admin_document_id="1" version_no="0"/>
   <admin_document_acc_state_mix admin_doc_acc_state_mix_id="2" account_state_id="2" admin_document_id="1" version_no="0"/>
@@ -7421,7 +7419,6 @@
   <lookup_value lookup_id="653" entity_id="97" lookup_name="PenaltyStatus-Active"/>
   <lookup_value lookup_id="654" entity_id="97" lookup_name="PenaltyStatus-InActive"/>
   <lookup_value lookup_id="655" entity_id="95" lookup_name="PenaltyPeriod-None"/>
-  <lookup_value lookup_id="656" entity_id="87" lookup_name="Permissions-CanSetMonthClosingDate"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -7987,7 +7984,6 @@
   <lookup_value_locale lookup_value_id="984" locale_id="1" lookup_id="653"/>
   <lookup_value_locale lookup_value_id="985" locale_id="1" lookup_id="654"/>
   <lookup_value_locale lookup_value_id="986" locale_id="1" lookup_id="655"/>
-  <lookup_value_locale lookup_value_id="987" locale_id="1" lookup_id="656"/>
   <max_min_interest_rate account_id="4" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="5" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="9" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
@@ -9320,7 +9316,6 @@
   <roles_activity activity_id="245" role_id="1"/>
   <roles_activity activity_id="246" role_id="1"/>
   <roles_activity activity_id="247" role_id="1"/>
-  <roles_activity activity_id="248" role_id="1"/>
   <saving_schedule id="1" account_id="15" customer_id="9" action_date="2009-01-29" deposit="0.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="1" version_no="0"/>
   <saving_schedule id="2" account_id="15" customer_id="9" action_date="2009-02-05" deposit="0.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="2" version_no="0"/>
   <saving_schedule id="3" account_id="15" customer_id="9" action_date="2009-02-12" deposit="0.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="3" version_no="0"/>

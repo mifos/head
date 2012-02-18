@@ -25,7 +25,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.Date;
 
 public interface MonthClosingServiceFacade {
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_SET_MONTH_CLOSING_DATE')")
+    @PreAuthorize("isFullyAuthenticated()") // TODO: add similar role as: and hasRole('ROLE_CAN_SHUT_DOWN_MIFOS')
     void setMonthClosingDate(Date day);
 
     Date getMonthClosingDate();
