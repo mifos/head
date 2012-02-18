@@ -8,6 +8,8 @@
 
     <bean id="batchjobsServiceFacade" class="org.mifos.application.admin.business.service.BatchjobsServiceFacadeWebTier"/>
 
+    <bean id="monthClosingServiceFacade" class="org.mifos.application.admin.business.service.MonthClosingServiceFacadeWebTier"/>
+
     <bean id="loanServiceFacade" class="org.mifos.application.servicefacade.LoanServiceFacadeWebTier" />
 
     <bean id="collectionSheetServiceFacade" class="org.mifos.application.servicefacade.CollectionSheetServiceFacadeWebTier"/>
