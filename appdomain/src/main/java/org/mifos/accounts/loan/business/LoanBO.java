@@ -643,6 +643,10 @@ public class LoanBO extends AccountBO implements Loan {
     public List<LoanActivityEntity> getLoanActivityDetails() {
         return loanActivityDetails;
     }
+    
+    public LoanActivityEntity getLastLoanActivityDetails() {
+        return loanActivityDetails.get(loanActivityDetails.size() - 1);
+    }
 
     public List<AccountOverpaymentEntity> getAccountOverpayments() {
         return accountOverpayments;
@@ -2240,7 +2244,17 @@ public class LoanBO extends AccountBO implements Loan {
     protected boolean canApplyMiscCharge(final Money charge) {
         return !havePaymentsBeenMade() || MoneyUtils.isRoundedAmount(charge);
     }
+    
+    public void applyPenalty(final String penaltyName, final Money charge,
+            final AccountActionDateEntity accountActionDateEntity) {
+        LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
+        loanScheduleEntity.setPenalty(loanScheduleEntity.getPenalty().add(charge));
+        getLoanSummary().updateOriginalPenalty(charge);
 
+        addLoanActivity(new LoanActivityEntity(this, personnel, new Money(getCurrency()), new Money(getCurrency()),
+                new Money(getCurrency()), charge, getLoanSummary(), penaltyName + " applied"));
+    }
+    
     private void applyMiscCharge(final Short chargeType, final Money charge,
             final AccountActionDateEntity accountActionDateEntity) throws AccountException {
 

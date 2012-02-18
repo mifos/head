@@ -76,6 +76,7 @@ public class NewPenaltyPreviewController {
             Short currencyId = null;
             Double rate = null;
             Short penaltyFormula = null;
+            Short periodId = 3;
             Integer duration = null;
             
             if(ratePenalty) {
@@ -91,9 +92,13 @@ public class NewPenaltyPreviewController {
                 currencyId = Short.valueOf(formBean.getCurrencyId());
             }
             
+            if(StringUtils.isNotBlank(formBean.getPeriodTypeId())) {
+                periodId = Short.valueOf(formBean.getPeriodTypeId());
+            }
+            
             PenaltyFormDto dto = new PenaltyFormDto();
             dto.setCategoryType(Short.valueOf(formBean.getCategoryTypeId()));
-            dto.setPenaltyPeriod(Short.valueOf(formBean.getPeriodTypeId()));
+            dto.setPenaltyPeriod(periodId);
             dto.setPenaltyFrequency(Short.valueOf(formBean.getFrequencyId()));
             dto.setGlCode(Short.valueOf(formBean.getGlCodeId()));
             dto.setPenaltyFormula(penaltyFormula);

@@ -25,7 +25,7 @@
         <many-to-one name="status" column="status_id" class="org.mifos.accounts.penalties.business.PenaltyStatusEntity" update="true" insert="true" access="field" />
         <many-to-one name="categoryType" column="category_id" class="org.mifos.accounts.penalties.business.PenaltyCategoryEntity" update="false" insert="true" access="field" />
         <many-to-one name="periodType" column="period_type_id" class="org.mifos.accounts.penalties.business.PenaltyPeriodEntity" update="true" insert="true" access="field"/>
-        <many-to-one name="penaltyFrequency" column="penalty_frequency_id" class="org.mifos.accounts.penalties.business.PenaltyFrequencyEntity" update="true" insert="true" lazy="false" access="field"/>
+        <many-to-one name="penaltyFrequency" column="penalty_frequency_id" class="org.mifos.accounts.penalties.business.PenaltyFrequencyEntity" update="true" insert="true" access="field"/>
         <many-to-one name="glCode" column="glcode_id" class="org.mifos.accounts.financial.business.GLCodeEntity" insert="true" update="true" access="field" />
         
         <subclass name="org.mifos.accounts.penalties.business.RatePenaltyBO" discriminator-value="RATE">
