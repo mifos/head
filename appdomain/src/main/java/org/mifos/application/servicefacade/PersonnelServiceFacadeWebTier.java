@@ -627,7 +627,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                 this.transactionHelper.rollbackTransaction();
                 throw new MifosRuntimeException(e);
             }
-            ApplicationContextProvider.getBean(MessageLookup.class).initializeLabelCache();
+            ApplicationContextProvider.getBean(MessageLookup.class).updateLabelCache();
         }
         return user.getPreferredLocaleId();
     }

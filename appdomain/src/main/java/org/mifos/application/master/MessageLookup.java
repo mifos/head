@@ -168,7 +168,7 @@ public class MessageLookup implements MessageSourceAware, FactoryBean<MessageLoo
 
     public void updateLookupValueInCache(String lookupKey, String newValue) {
         synchronized (labelCache) {
-            LabelKey key = new LabelKey(lookupKey, Localization.ENGLISH_LOCALE_ID);
+            LabelKey key = new LabelKey(lookupKey, getLocaleId());
             if (labelCache.containsKey(key)) {
                 labelCache.remove(key);
                 labelCache.put(key, newValue);
@@ -216,9 +216,7 @@ public class MessageLookup implements MessageSourceAware, FactoryBean<MessageLoo
         }
     }
 
-    public void initializeLabelCache() {
-        labelCache.clear();
-
+    public void updateLabelCache() {
         List<LookUpValueEntity> lookupValueEntities = applicationConfigurationDao.findLookupValues();
         for (LookUpValueEntity lookupValueEntity : lookupValueEntities) {
             String keyString = lookupValueEntity.getPropertiesKey();
@@ -231,13 +229,13 @@ public class MessageLookup implements MessageSourceAware, FactoryBean<MessageLoo
                 messageText = lookup(keyString);
             }
 
-            labelCache.put(new LabelKey(keyString, Localization.ENGLISH_LOCALE_ID), messageText);
+            labelCache.put(new LabelKey(keyString, getLocaleId()), messageText);
         }
     }
 
     public void deleteKey(String lookupValueKey) {
         synchronized (labelCache) {
-            LabelKey key = new LabelKey(lookupValueKey, Localization.ENGLISH_LOCALE_ID);
+            LabelKey key = new LabelKey(lookupValueKey, getLocaleId());
             if (labelCache.containsKey(key)) {
                 labelCache.remove(key);
             }
@@ -251,7 +249,11 @@ public class MessageLookup implements MessageSourceAware, FactoryBean<MessageLoo
     public String getLabel(String key) throws ConfigurationException {
         // we only use localeId 1 to store labels since it is an override for
         // all locales
-        return (key == null) ? null : labelCache.get(new LabelKey(key, Localization.ENGLISH_LOCALE_ID));
+        return (key == null) ? null : labelCache.get(new LabelKey(key, getLocaleId()));
+    }
+
+    private Short getLocaleId() {
+        return Localization.getInstance().getLocaleId(personnelServiceFacade.getUserPreferredLocale());
     }
 
     /**
@@ -266,7 +268,7 @@ public class MessageLookup implements MessageSourceAware, FactoryBean<MessageLoo
     @Override
     public MessageLookup getObject() throws Exception {
         if(labelCache.isEmpty()) {
-            initializeLabelCache();
+            updateLabelCache();
         }
         return this;
     }

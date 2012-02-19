@@ -643,10 +643,6 @@ public class LoanBO extends AccountBO implements Loan {
     public List<LoanActivityEntity> getLoanActivityDetails() {
         return loanActivityDetails;
     }
-    
-    public LoanActivityEntity getLastLoanActivityDetails() {
-        return loanActivityDetails.get(loanActivityDetails.size() - 1);
-    }
 
     public List<AccountOverpaymentEntity> getAccountOverpayments() {
         return accountOverpayments;
