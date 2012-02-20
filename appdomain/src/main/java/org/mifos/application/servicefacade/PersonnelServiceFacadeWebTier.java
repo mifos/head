@@ -491,19 +491,19 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         String martialStatus = getNameForBusinessActivityEntity(personnel.getPersonnelDetails().getMaritalStatus());
         String language = Localization.getInstance().getDisplayName(personnel.getPreferredLocale());
         String sitePreference = SitePreferenceType.getSitePreference(personnel.getSitePreference()).name();
-        
+
         List<ValueListElement> genders = this.customerDao.retrieveGenders();
         List<ValueListElement> martialStatuses = this.customerDao.retrieveMaritalStatuses();
         List<ValueListElement> languages = Localization.getInstance().getLocaleForUI();
         List<ValueListElement> sitePreferenceTypes = new ArrayList<ValueListElement>();
-        
+
         for ( short i = 0; i < SitePreferenceType.values().length; i++ ){
             SitePreferenceType sitePreferenceType = SitePreferenceType.values()[i];
-            ValueListElement valueListElement = new BusinessActivityEntity(sitePreferenceType.getValue().intValue(), 
+            ValueListElement valueListElement = new BusinessActivityEntity(sitePreferenceType.getValue().intValue(),
                     sitePreferenceType.name(), sitePreferenceType.name());
             sitePreferenceTypes.add(valueListElement);
         }
-        
+
         int age = DateUtils.DateDiffInYears(((Date) personnel.getPersonnelDetails().getDob()));
         if (age < 0) {
             age = 0;
@@ -531,7 +531,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         String martialStatus = getNameForBusinessActivityEntity(maritalStatusId);
         String language = (localeId != null) ? Localization.getInstance().getDisplayName(localeId.shortValue()) : "";
         String sitePreference = SitePreferenceType.getSitePreference(sitePreferenceId).name();
-        
+
         int age = 0;
         List<ValueListElement> empty = new ArrayList<ValueListElement>();
         return new UserSettingsDto(gender, martialStatus, language, age, sitePreference, empty, empty, empty, empty);
@@ -558,10 +558,6 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             this.transactionHelper.startTransaction();
             this.transactionHelper.beginAuditLoggingFor(personnel);
 
-            if (preferredLocale == null) {
-                preferredLocale = Localization.getInstance().getConfiguredLocaleId();
-            }
-
             Address theAddress = null;
             if (address != null) {
                 theAddress = new Address(address.getLine1(), address.getLine2(), address.getLine3(), address.getCity(),
@@ -569,6 +565,11 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             }
 
             personnel.update(emailId, name, maritalStatusValue, genderValue, theAddress, preferredLocale, sitePreference);
+
+            if (preferredLocale != null && preferredLocale != 0) {
+                user.setPreferredLocaleId(preferredLocale);
+            }
+
             this.transactionHelper.commitTransaction();
         } catch (Exception e) {
             this.transactionHelper.rollbackTransaction();
@@ -701,5 +702,5 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         PersonnelBO personnelBO = personnelDao.findPersonnelById(userId.shortValue());
         return SitePreferenceType.getSitePreference(personnelBO.getSitePreference());
     }
-    
+
 }

@@ -73,8 +73,8 @@
 <div class="site_logo">
     <span class="logo"></span>
     [@switchSiteType/]
-    <a id="changeLanguagLink" href="#">Change Language</a>
-    <span id="dialog" title="Change Language" style="display:none;">Change Language</span>&nbsp;|&nbsp;
+    <a id="changeLanguagLink" href="#">Change Preferred Language</a>
+    <span id="dialog" title="Change Preferred Language" style="display:none;">Change Preferred Language</span>&nbsp;|&nbsp;
     <a href="yourSettings.do?method=get" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>&nbsp;|&nbsp;
     <a id="logout_link" href="j_spring_security_logout" title="[@spring.message "logout"/]">[@spring.message "logout"/]</a>
 </div>
@@ -83,8 +83,8 @@
 [#macro headerTopMobile]
 <div>
 	[@switchSiteType/]
-    <a id="changeLanguagLink" href="#">Change Language</a>
-    <span id="dialog" title="Change Language" style="display:none;">Change Language</span>&nbsp;|&nbsp;
+    <a id="changeLanguagLink" href="#">Change Preferred Language</a>
+    <span id="dialog" title="Change Preferred Language" style="display:none;">Change Preferred Language</span>&nbsp;|&nbsp;
     <a href="yourSettings.do?method=get" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>&nbsp;|&nbsp;
     <a id="logout_link" href="j_spring_security_logout" title="[@spring.message "logout"/]">[@spring.message "logout"/]</a>
 </div>

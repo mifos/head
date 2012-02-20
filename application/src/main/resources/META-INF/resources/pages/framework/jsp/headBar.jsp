@@ -21,8 +21,8 @@
 			</a>
 			&nbsp;|
 		</c:if>
-         <a id="changeLanguagLink" href="#">Change Language</a>
-         <span id="dialog" title="Change Language" style="display:none;">Change Language</span>
+         <a id="changeLanguagLink" href="#">Change Preferred Language</a>
+         <span id="dialog" title="Change Preferred Language" style="display:none;">Change Preferred Language</span>
      &nbsp;|&nbsp;
          <a id="homeheader.link.yourSettings" href="yourSettings.do?method=get&randomNUm=${sessionScope.randomNUm}">
             <mifos:mifoslabel name="framework.yoursettings" bundle="FrameworkUIResources"></mifos:mifoslabel>

@@ -69,7 +69,7 @@ public class PersonnelSettingsAction extends BaseAction {
         SessionUtils.setCollectionAttribute(PersonnelConstants.MARITAL_STATUS_LIST, userSettings.getMartialStatuses(), request);
         SessionUtils.setCollectionAttribute(PersonnelConstants.LANGUAGE_LIST, userSettings.getLanguages(), request);
         SessionUtils.setCollectionAttribute(PersonnelConstants.SITE_TYPES_LIST, userSettings.getSitePreferenceTypes(), request);
-        
+
         SessionUtils.removeAttribute(PersonnelConstants.PERSONNEL_AGE, request);
         SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_AGE, userSettings.getAge(), request);
         return mapping.findForward(ActionForwards.get_success.toString());
@@ -147,10 +147,9 @@ public class PersonnelSettingsAction extends BaseAction {
                 address, personnelSettingsActionForm.getPreferredLocaleValue(), personnelSettingsActionForm.getPreferredSiteTypeId());
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        user.setPreferredLocaleId(personnelSettingsActionForm.getPreferredLocaleValue());
-        
+
         (new SitePreferenceHelper()).setSitePreferenceCookie(personnelServiceFacade.retrieveSitePreference(user.getUserId()), response);
-        
+
         return mapping.findForward(ActionForwards.updateSettings_success.toString());
     }
 
