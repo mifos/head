@@ -120,16 +120,10 @@ public class LoanAccountRESTController {
             receiptLocalDate = validateDateString(receiptDate, format).toLocalDate();
         }
 
-        PaymentTypeDto paymentType = accountService.getLoanPaymentTypes().get(0);
-        if (paymentModeId != null) {
-            for (PaymentTypeDto loanPaymentType : accountService.getLoanPaymentTypes()) {
-                if (loanPaymentType.getValue().equals(paymentModeId)) {
-                    paymentType = loanPaymentType;
-                    break;
-                }
-            }
-        }
-
+        PaymentTypeDto paymentType = new PaymentTypeDto(paymentModeId, "");        
+        validatePaymentTypeId(paymentType, accountService.getLoanPaymentTypes());
+        
+        
         CustomerBO client = loan.getCustomer();
         CustomerDto customer = new CustomerDto();
         customer.setCustomerId(client.getCustomerId());
@@ -190,7 +184,7 @@ public class LoanAccountRESTController {
         if (paymentModeId != null) {
             paymentTypeId = paymentModeId.toString();
         }
-
+        validateDisbursementPaymentTypeId(paymentModeId, accountService.getLoanPaymentTypes());
         BigDecimal totalRepaymentAmount = (new Money(loan.getCurrency(), repayLoanDto.getEarlyRepaymentMoney())).getAmount();
         BigDecimal waivedAmount = (new Money(loan.getCurrency(), repayLoanDto.getWaivedRepaymentMoney())).getAmount();
         BigDecimal instalments = totalRepaymentAmount.subtract(waivedAmount);
@@ -449,6 +443,18 @@ public class LoanAccountRESTController {
     	boolean valid = false;
     	for ( PaymentTypeDto paymentType : disbursementPaymentTypes){
     		if ( paymentType.getValue().equals(paymentTypeId) ){
+    			valid = true;
+    		}
+    	}
+    	if ( !valid) {
+    		throw new ParamValidationException(ErrorMessage.INVALID_PAYMENT_TYPE_ID);
+    	}
+    }
+    
+    public void validatePaymentTypeId(PaymentTypeDto paymentModeId, List<PaymentTypeDto> paymentTypes) throws ParamValidationException{
+    	boolean valid = false;
+    	for ( PaymentTypeDto paymentType : paymentTypes){
+    		if ( paymentType.getValue().equals(paymentModeId.getValue()) ){
     			valid = true;
     		}
     	}
