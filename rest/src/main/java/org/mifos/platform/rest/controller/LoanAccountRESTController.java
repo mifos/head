@@ -187,22 +187,16 @@ public class LoanAccountRESTController {
         validateDisbursementPaymentTypeId(paymentModeId, accountService.getLoanPaymentTypes());
         BigDecimal totalRepaymentAmount = (new Money(loan.getCurrency(), repayLoanDto.getEarlyRepaymentMoney())).getAmount();
         BigDecimal waivedAmount = (new Money(loan.getCurrency(), repayLoanDto.getWaivedRepaymentMoney())).getAmount();
-        BigDecimal instalments = totalRepaymentAmount.subtract(waivedAmount);
-        RepayLoanInfoDto repayLoanInfoDto;
-        if (waiveInterest.equals(true)) {
-    		repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
-            Double.toString(totalRepaymentAmount.subtract(instalments).doubleValue()), receiptIdString,
-            receiptDateTime, paymentTypeId, (short) user.getUserId(),
-            waiveInterest.booleanValue(),
-            paymentDateTime, totalRepaymentAmount.subtract(instalments), waivedAmount);
+        BigDecimal earlyRepayAmount = totalRepaymentAmount;
+        if (Boolean.TRUE.equals(waiveInterest)) {
+        	earlyRepayAmount = waivedAmount;
         }
-        else {
-			repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
-	        Double.toString(totalRepaymentAmount.doubleValue()), receiptIdString,
+    	RepayLoanInfoDto repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
+	        Double.toString(earlyRepayAmount.doubleValue()), receiptIdString,
 	        receiptDateTime, paymentTypeId, (short) user.getUserId(),
 	        waiveInterest.booleanValue(),
 	        paymentDateTime, totalRepaymentAmount, waivedAmount);
-        }
+        
         
         Money outstandingBeforePayment = loan.getLoanSummary().getOutstandingBalance();
 
