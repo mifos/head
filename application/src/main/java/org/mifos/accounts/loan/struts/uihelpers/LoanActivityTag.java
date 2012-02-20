@@ -51,7 +51,10 @@ public class LoanActivityTag extends BodyTagSupport {
             String currentFlowKey = (String) pageContext.getRequest().getAttribute(Constants.CURRENTFLOWKEY);
             HttpSession session = pageContext.getSession();
             FlowManager flowManager = (FlowManager) session.getAttribute(Constants.FLOWMANAGER);
-            Object object = flowManager.getFromFlow(currentFlowKey, LoanConstants.LOAN_ALL_ACTIVITY_VIEW);
+            Object object = flowManager.getFromFlow(currentFlowKey, LoanConstants.LOAN_ALL_ACTIVITY_VIEW);   
+            if ( object == null ){
+                object = pageContext.getRequest().getAttribute(LoanConstants.LOAN_ALL_ACTIVITY_VIEW); // for spring/ftl 
+            }
             if (null != object) {
                 UserContext userContext = (UserContext) pageContext.getSession().getAttribute(
                         Constants.USER_CONTEXT_KEY);
@@ -59,7 +62,7 @@ public class LoanActivityTag extends BodyTagSupport {
                 xmlBuilder.startTag("table", "width", "100%", "border", "0", "cellspacing", "0", "cellpadding", "0", "id", "accountActivityTable");
                 xmlBuilder.startTag("tr");
                 xmlBuilder.startTag("td", "colspan", "8");
-                xmlBuilder.nonBreakingSpace();
+                //xmlBuilder.nonBreakingSpace();
                 xmlBuilder.endTag("td");
                 xmlBuilder.startTag("td", "colspan", "4", "class", "drawtablerowboldnoline");
                 xmlBuilder.text(getLabel("loan.running_bal", locale));
@@ -88,7 +91,7 @@ public class LoanActivityTag extends BodyTagSupport {
                 xmlBuilder.text(getLabel("loan.total", locale));
                 xmlBuilder.endTag("td");
                 xmlBuilder.startTag("td", "width", "4", "align", "right", "class", "fontnormalbold");
-                xmlBuilder.nonBreakingSpace();
+                //xmlBuilder.nonBreakingSpace();
                 xmlBuilder.endTag("td");
                 xmlBuilder.startTag("td", "width", "8%", "align", "right", "class", "drawtablerowbold");
                 xmlBuilder.text(getLabel("loan.principal", locale));

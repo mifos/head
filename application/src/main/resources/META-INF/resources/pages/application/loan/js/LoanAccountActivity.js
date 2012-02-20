@@ -19,6 +19,6 @@
  */
 function fun_return(form)
 {
-	form.action="loanAccountAction.do?method=get";
+	form.action="viewLoanAccountDetails.ftl";
 	form.submit();
 }

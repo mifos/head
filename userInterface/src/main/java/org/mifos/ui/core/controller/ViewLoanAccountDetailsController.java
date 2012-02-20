@@ -1,5 +1,6 @@
 package org.mifos.ui.core.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,6 +64,26 @@ public class ViewLoanAccountDetailsController {
         request.getSession().setAttribute("recentAccountActivities", loanInformationDto.getRecentAccountActivity());
 
         modelAndView.addObject("backPageUrl", UrlHelper.constructCurrentPageUrl(request));
+        
+        return modelAndView;
+    }
+    
+    @RequestMapping(value = "/viewLoanAccountAllActivity", method=RequestMethod.GET)
+    public ModelAndView showLoanAccountAllActivity(HttpServletRequest request, HttpServletResponse response){
+        ModelAndView modelAndView =new ModelAndView();
+        sitePreferenceHelper.resolveSiteType(modelAndView, "viewLoanAccountAllActivity", request);
+        modelAndView.addObject("include_page", new IncludePage(request, response));
+        
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        
+        LoanInformationDto loanInformationDto = loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
+        modelAndView.addObject("loanInformationDto", loanInformationDto);
+        modelAndView.addObject("currentDate", new Date());
+        
+        List<LoanActivityDto> allLoanAccountActivities = this.loanAccountServiceFacade.retrieveAllLoanAccountActivities(globalAccountNum);
+        request.setAttribute("loanAllActivityView", allLoanAccountActivities);
+        
+        this.loanAccountServiceFacade.putLoanBusinessKeyInSession(globalAccountNum, request);
         
         return modelAndView;
     }

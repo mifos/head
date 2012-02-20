@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="ViewLoanAccountActivity"></span>
-	<html-el:form method="post" action="/loanAccountAction.do" >
+	<form method="get" action="viewLoanAccountDetails.ftl" >
 	<SCRIPT SRC="pages/application/loan/js/LoanAccountActivity.js"></SCRIPT>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -125,6 +125,6 @@ explanation of the license and how it is applied.
 	  <html-el:hidden property="recordLoanOfficerId" value="${param.recordLoanOfficerId}"/>
       <html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>
       <html-el:hidden property="input" value="reviewTransactionPage"/>
-</html-el:form>
+</form>
 </tiles:put>
 </tiles:insert>        

@@ -19,11 +19,11 @@
 *  explanation of the license and how it is applied.
 --]
 [@layout.header "mifos" /]
-[#assign mifoscustom=JspTaglibs["/mifos/customtags"]]
+[#assign mifoscustom=JspTaglibs["/mifos/custom-tags"]]
 
 [@widget.topNavigationNoSecurityMobile currentTab="ClientsAndAccounts" /]
 
-<span id="page.id" title="ViewTransactionHistory"></span>
+<span id="page.id" title="ViewLoanAccountActivity"></span>
 
 <div class="content" style="width: 350px">
 	<div>
@@ -31,15 +31,16 @@
 			${loanInformationDto.prdOfferingName} #&nbsp;${loanInformationDto.globalAccountNum} -
 		</span>
 		<span class="headingorange">
-			[@spring.message "Savings.Transactionhistory"/]
+			[@spring.message "loan.acc_statement"/]
+			${i18n.date_formatter(currentDate, "dd/MM/yyyy", Application.LocaleSetting.locale)}
 		</span>
 	</div>
 	<div>
-		[@mifoscustom.mifostabletag source="trxnHistoryList" scope="request" xmlFileName="SavingsTrxnHistory.xml" moduleName="org/mifos/accounts/savings/util/resources" passLocale="true"/]
+		[@mifoscustom.allActivity /]
 	</div>
 	<div>
 		<form action="viewLoanAccountDetails.ftl" method="get">
-			 <input type="submit" value="[@spring.message "accounts.returndetails"/]" class="buttn" id="viewtrxnhistory.button.back" />
+			 <input type="submit" value="[@spring.message "loan.returnToAccountDetails"/]" class="buttn" id="viewloanaccountactivity.button.return"/>
 			 <input type="hidden" name="globalAccountNum" value="${loanInformationDto.globalAccountNum}"/>	
 		</form>
 	</div>

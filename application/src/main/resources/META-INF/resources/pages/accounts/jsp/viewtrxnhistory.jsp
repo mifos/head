@@ -43,7 +43,7 @@ explanation of the license and how it is applied.
 	}
 
 </SCRIPT>
-	<html-el:form method="post" action="/loanAccountAction.do?method=get" >
+	<form method="get" action="viewLoanAccountDetails.ftl" >
 	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -126,7 +126,7 @@ explanation of the license and how it is applied.
         </tr>
       </table>
 <html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>
-</html-el:form>
+</form>
 
 <html-el:form action="customerAccountAction.do">
 	<html-el:hidden property="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />

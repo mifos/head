@@ -204,7 +204,7 @@
 				[#if loanInformationDto.loanActivityDetails == true]
 					</span class="fontnormal">
 						<a id="loanaccountdetail.link.viewAccountActivity"
-							href="loanAccountAction.do?method=getAllActivity&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&accountStateId=${loanInformationDto.accountStateId}&globalAccountNum=${loanInformationDto.globalAccountNum}&lastPaymentAction=${loanInformationDto.accountId}&accountType=${loanInformationDto.accountTypeId}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+							href="viewLoanAccountAllActivity.ftl?accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&accountStateId=${loanInformationDto.accountStateId}&globalAccountNum=${loanInformationDto.globalAccountNum}&lastPaymentAction=${loanInformationDto.accountId}&accountType=${loanInformationDto.accountTypeId}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
 						[@spring.message "loan.view_acc_activity" /]
 						</a>
 					</span><br/>

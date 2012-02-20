@@ -280,7 +280,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<td width="65%" align="right" class="fontnormal">&nbsp; <c:if
 								test="${loanInformationDto.loanActivityDetails == true}">
 								<html-el:link styleId="loanaccountdetail.link.viewAccountActivity"
-									href="loanAccountAction.do?method=getAllActivity&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&accountStateId=${loanInformationDto.accountStateId}&globalAccountNum=${loanInformationDto.globalAccountNum}&lastPaymentAction=${loanInformationDto.accountId}&accountType=${loanInformationDto.accountTypeId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									href="viewLoanAccountAllActivity.ftl?accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&accountStateId=${loanInformationDto.accountStateId}&globalAccountNum=${loanInformationDto.globalAccountNum}&lastPaymentAction=${loanInformationDto.accountId}&accountType=${loanInformationDto.accountTypeId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="loan.view_acc_activity" />
 								</html-el:link>
 							</c:if></td>
