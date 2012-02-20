@@ -615,7 +615,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 										</html-el:link>
 										<br>
 										<html-el:link styleId="loanaccountdetail.link.viewTransactionHistory"
-											href="accountAppAction.do?method=getTrxnHistory&input=LoanDetails&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+											href="viewLoanAccountTransactionHistory.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="Center.TransactionHistory" />
 										</html-el:link> 
 									</span>

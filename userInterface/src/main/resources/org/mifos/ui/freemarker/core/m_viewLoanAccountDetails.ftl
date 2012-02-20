@@ -267,7 +267,7 @@
 				<span id="loanaccountdetail.text.noOfInst">
 					${loanInformationDto.noOfInstallments?if_exists?number}
 				</span> 
-				[@spring.message "loan.allowed_no_of_inst" /]&nbsp;${loanInformationDto.minNoOfInstall?if_exists?number} -&nbsp;${loanInformationDto.maxNoOfInstall?if_exists?number})
+				[@spring.message "loan.allowed_no_of_inst" /]&nbsp;${loanInformationDto.minNoOfInstall?if_exists} -&nbsp;${loanInformationDto.maxNoOfInstall?if_exists})
 				<br/>
 				[@spring.message "loan.grace_period" /]:&nbsp;
 				${loanInformationDto.gracePeriodDuration?if_exists?number}&nbsp;[@spring.message "loan.inst" /]<br/>
@@ -398,7 +398,7 @@
 				</a>
 				<br/>
 				<a id="loanaccountdetail.link.viewTransactionHistory"
-				href="accountAppAction.do?method=getTrxnHistory&input=LoanDetails&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+				href="viewLoanAccountTransactionHistory.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
 					[@spring.message "Center.TransactionHistory" /]
 				</a> 
 			</span>
