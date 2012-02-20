@@ -21,6 +21,11 @@
 package org.mifos.application.admin.business.service;
 
 import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
+import org.mifos.config.business.ConfigurationKeyValue;
+import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.service.BusinessRuleException;
 
@@ -28,15 +33,40 @@ import java.util.Date;
 
 public class MonthClosingServiceFacadeWebTier implements MonthClosingServiceFacade {
 
-    private static Date monthClosingDay; // TODO - this is a temporary solution. This value needs to be persisted.
+    private final static String MONTH_CLOSING_DAY_CONFIG_KEY = "MonthClosingDay";
+    private ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
 
     @Override
     public void setMonthClosingDate(Date day) {
-        monthClosingDay = day;
+        try {
+            StaticHibernateUtil.startTransaction();
+            if (day != null) {
+                configurationPersistence.createOrUpdateConfigurationKeyValueString(MONTH_CLOSING_DAY_CONFIG_KEY,
+                        DateUtils.toDatabaseFormat(day));
+            }
+            else {
+                configurationPersistence.deleteConfigurationKeyValue(MONTH_CLOSING_DAY_CONFIG_KEY);
+            }
+            StaticHibernateUtil.commitTransaction();
+        }
+        catch (PersistenceException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException("Unable to set Month Closing Date", e);
+        }
+        finally {
+            StaticHibernateUtil.closeSession();
+        }
     }
 
     @Override
     public Date getMonthClosingDate() {
+        ConfigurationKeyValue configurationKeyValue = configurationPersistence.getConfigurationKeyValue(MONTH_CLOSING_DAY_CONFIG_KEY);
+        Date monthClosingDay = null;
+
+        if (configurationKeyValue != null) {
+            monthClosingDay = DateUtils.getDateAsRetrievedFromDb(configurationKeyValue.getValue());
+        }
+
         return monthClosingDay;
     }
 

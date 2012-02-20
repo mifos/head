@@ -139,4 +139,20 @@ public class ConfigurationPersistence extends LegacyGenericDao {
     public boolean isGlimEnabled() {
         return (getConfigurationValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED) == LoanConstants.GLIM_ENABLED_VALUE);
     }
+
+    public void createOrUpdateConfigurationKeyValueString(String key, String value) throws PersistenceException {
+        ConfigurationKeyValue keyValue = getConfigurationKeyValue(key);
+
+        if (keyValue == null) {
+            keyValue = new ConfigurationKeyValue(key, value);
+        }
+        else if (ConfigurationKeyValue.Type.TEXT.getTypeId().equals(keyValue.getType())) {
+            keyValue.setValue(value);
+        }
+        else {
+            throw new RuntimeException("Invalid configuration type for key: " + "'" + key + "'");
+        }
+
+        createOrUpdate(keyValue);
+    }
 }

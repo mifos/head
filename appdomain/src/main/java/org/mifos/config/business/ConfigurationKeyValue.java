@@ -56,6 +56,10 @@ public class ConfigurationKeyValue {
         this(key, Type.INTEGER.typeId, Integer.toString(value));
     }
 
+    public ConfigurationKeyValue(String key, String value) throws IllegalArgumentException {
+        this(key, Type.TEXT.typeId, value);
+    }
+
     public ConfigurationKeyValue(String key, Short type, String value) throws IllegalArgumentException {
         if (key == null) {
             throw new IllegalArgumentException("A null key is not allowed for ConfigurationKeyValue");
