@@ -273,8 +273,8 @@ explanation of the license and how it is applied.
 										<td width="30%" align="right"><mifos:mifoslabel
 											name="product.calcloanamount" mandatory="yes"
 											bundle="ProductDefUIResources" />:</td>
-										<td width="70%" valign="top"><input type="radio" id="createLoanProduct.radio.calcLoanAmountsameForAllLoans" 
-											name="loanAmtCalcType" value="1" onclick="checkRow();" checked />
+										<td width="70%" valign="top"><html-el:radio styleId="createLoanProduct.radio.calcLoanAmountsameForAllLoans"
+											property="loanAmtCalcType" value="1" onclick="checkRow();" />
 										<mifos:mifoslabel name="product.sameforallloans"
 											bundle="ProductDefUIResources" /> &nbsp;&nbsp;&nbsp; <html-el:radio styleId="createLoanProduct.radio.calcLoanAmountByLastLoanAmount"
 											property="loanAmtCalcType" value="2" onclick="checkRow();" />
