@@ -50,6 +50,7 @@ $(document).ready(function() {
 	});
 </script>
 
+<span id="page.id" title="monthClosing"></span>
 <!--  Main Content Begins-->
 <div class="content">
     <form method="post" name="monthClosing" action="monthClosing.ftl">
@@ -67,7 +68,7 @@ $(document).ready(function() {
                     <div class="clear">&nbsp;</div>
                     <div class="span-23">
                         <span class="span-7">[@spring.message "systemAdministration.monthClosing.currentMonthClosingDate" /]</span>
-                    <span class="span-11">${model.currentDate}</span>
+                    <span class="span-11" id="monthClosingCurrentDate">${model.currentDate}</span>
                     </div>
                     <div class="span-23">
                         <span class="span-7">[@spring.message "systemAdministration.monthClosing.changeTo" /]</span>

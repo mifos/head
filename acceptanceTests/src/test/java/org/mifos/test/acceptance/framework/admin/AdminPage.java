@@ -431,6 +431,12 @@ public class AdminPage extends MifosPage {
         return new DefineHiddenMandatoryFieldsPage(selenium);
     }
 
+    public MonthClosingPage navigateToMonthClosing(){
+        selenium.click("admin.link.monthClosing");
+        waitForPageToLoad();
+        return new MonthClosingPage(selenium);
+    }
+
     public UploadQuestionGroupPage navigateToActivatePPI() {
         selenium.click("admin.link.uploadPPI");
         waitForPageToLoad();
