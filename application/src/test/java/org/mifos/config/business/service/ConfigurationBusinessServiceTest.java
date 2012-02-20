@@ -29,7 +29,7 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
-import org.mifos.config.business.ConfigurationKeyValueInteger;
+import org.mifos.config.business.ConfigurationKeyValue;
 import org.mifos.config.persistence.ConfigurationPersistence;
 
 public class ConfigurationBusinessServiceTest extends TestCase {
@@ -43,8 +43,8 @@ public class ConfigurationBusinessServiceTest extends TestCase {
     }
 
     public void testRetreiveConfigurationFromPersistence() throws Exception {
-        expect(configPersistenceMock.getAllConfigurationKeyValueIntegers()).andReturn(
-                new ArrayList<ConfigurationKeyValueInteger>());
+        expect(configPersistenceMock.getAllConfigurationKeyValues()).andReturn(
+                new ArrayList<ConfigurationKeyValue>());
         replay(configPersistenceMock);
         new ConfigurationBusinessService(configPersistenceMock).getConfiguration();
         verify(configPersistenceMock);

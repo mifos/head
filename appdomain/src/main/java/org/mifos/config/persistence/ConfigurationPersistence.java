@@ -30,7 +30,7 @@ import java.util.Map;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.config.business.ConfigurationKeyValueInteger;
+import org.mifos.config.business.ConfigurationKeyValue;
 import org.mifos.config.util.helpers.ConfigConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -38,7 +38,7 @@ import org.mifos.framework.persistence.LegacyGenericDao;
 
 /**
  * This class concerns certain configuration settings, especially
- * {@link ConfigurationKeyValueInteger} and friends.
+ * {@link ConfigurationKeyValue} and friends.
  */
 public class ConfigurationPersistence extends LegacyGenericDao {
 
@@ -66,21 +66,12 @@ public class ConfigurationPersistence extends LegacyGenericDao {
         return (MifosCurrency) queryResult.get(0);
     }
 
-    /**
-     * Lookup an integer valued, persistent configuration key-value pair based
-     * on the key. This is intended to be more of a helper method than to be
-     * used directly.
-     *
-     * @return if the key is found return the corresponding
-     *         ConfigurationKeyValueInteger, if not then return null.
-     */
-    public ConfigurationKeyValueInteger getConfigurationKeyValueInteger(String key) {
+    public ConfigurationKeyValue getConfigurationKeyValue(String key) {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(KEY_QUERY_PARAMETER, key);
         try {
-            ConfigurationKeyValueInteger keyValue = (ConfigurationKeyValueInteger) execUniqueResultNamedQuery(
+            return (ConfigurationKeyValue) execUniqueResultNamedQuery(
                     NamedQueryConstants.GET_CONFIGURATION_KEYVALUE_BY_KEY, queryParameters);
-            return keyValue;
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
@@ -93,10 +84,10 @@ public class ConfigurationPersistence extends LegacyGenericDao {
      *             thrown if no value is found for the key.
      */
     public int getConfigurationValueInteger(String key) {
-        ConfigurationKeyValueInteger keyValue = getConfigurationKeyValueInteger(key);
+        ConfigurationKeyValue keyValue = getConfigurationKeyValue(key);
 
-        if (keyValue != null) {
-            return keyValue.getValue();
+        if (keyValue != null && ConfigurationKeyValue.Type.INTEGER.getTypeId().equals(keyValue.getType())) {
+            return Integer.parseInt(keyValue.getValue());
         }
 
         throw new RuntimeException("Configuration parameter not found for key: " + "'" + key + "'");
@@ -106,24 +97,30 @@ public class ConfigurationPersistence extends LegacyGenericDao {
      * Update the value of a persistent integer configuration value;
      */
     public void updateConfigurationKeyValueInteger(String key, int value) throws PersistenceException {
-        ConfigurationKeyValueInteger keyValue = getConfigurationKeyValueInteger(key);
-        keyValue.setValue(value);
-        createOrUpdate(keyValue);
+        ConfigurationKeyValue keyValue = getConfigurationKeyValue(key);
+
+        if (keyValue != null && ConfigurationKeyValue.Type.INTEGER.getTypeId().equals(keyValue.getType())) {
+            keyValue.setValue(Integer.toString(value));
+            createOrUpdate(keyValue);
+        }
+        else {
+            throw new RuntimeException("Configuration parameter not found for key: " + "'" + key + "'");
+        }
     }
 
     /**
      * Create a new persistent integer configuration key value pair.
      */
     public void addConfigurationKeyValueInteger(String key, int value) throws PersistenceException {
-        ConfigurationKeyValueInteger keyValue = new ConfigurationKeyValueInteger(key, value);
+        ConfigurationKeyValue keyValue = new ConfigurationKeyValue(key, value);
         createOrUpdate(keyValue);
     }
 
     /**
      * Delete a persistent integer configuration key value pair.
      */
-    public void deleteConfigurationKeyValueInteger(String key) throws PersistenceException {
-        ConfigurationKeyValueInteger keyValue = getConfigurationKeyValueInteger(key);
+    public void deleteConfigurationKeyValue(String key) throws PersistenceException {
+        ConfigurationKeyValue keyValue = getConfigurationKeyValue(key);
         delete(keyValue);
     }
 
@@ -131,13 +128,11 @@ public class ConfigurationPersistence extends LegacyGenericDao {
      * Helper method for loan repayments independent of meeting schedule.
      */
     public boolean isRepaymentIndepOfMeetingEnabled() {
-        Integer repIndepOfMeetingEnabled = getConfigurationKeyValueInteger(
-                REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED).getValue();
-        return !(repIndepOfMeetingEnabled == null || repIndepOfMeetingEnabled == 0);
+        return getConfigurationValueInteger(REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED) != 0;
     }
 
     @SuppressWarnings("unchecked")
-    public List<ConfigurationKeyValueInteger> getAllConfigurationKeyValueIntegers() throws PersistenceException {
+    public List<ConfigurationKeyValue> getAllConfigurationKeyValues() throws PersistenceException {
         return executeNamedQuery(NamedQueryConstants.GET_ALL_CONFIGURATION_VALUES, Collections.EMPTY_MAP);
     }
 

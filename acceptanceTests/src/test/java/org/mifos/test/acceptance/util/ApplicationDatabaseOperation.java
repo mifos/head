@@ -34,17 +34,17 @@ public class ApplicationDatabaseOperation {
     }
 
     public void  updateLSIM(int lsimValue) throws SQLException {
-        getStatement().executeUpdate("update config_key_value_integer set configuration_value=" + lsimValue + " where configuration_key='repaymentSchedulesIndependentOfMeetingIsEnabled'");
+        getStatement().executeUpdate("update config_key_value set configuration_value=" + lsimValue + " where configuration_key='repaymentSchedulesIndependentOfMeetingIsEnabled'");
         closeConnection();
     }
 
     public void  updateGLIM(int glimValue) throws SQLException {
-        getStatement().executeUpdate("update config_key_value_integer set configuration_value=" + glimValue + " where configuration_key='loanIndividualMonitoringIsEnabled'");
+        getStatement().executeUpdate("update config_key_value set configuration_value=" + glimValue + " where configuration_key='loanIndividualMonitoringIsEnabled'");
         closeConnection();
     }
 
     public void updateGapBetweenDisbursementAndFirstMeetingDate(int gap) throws SQLException {
-        getStatement().executeUpdate("update config_key_value_integer set configuration_value=" + gap + " where configuration_key='minDaysBetweenDisbursalAndFirstRepaymentDay'");
+        getStatement().executeUpdate("update config_key_value set configuration_value=" + gap + " where configuration_key='minDaysBetweenDisbursalAndFirstRepaymentDay'");
         closeConnection();
     }
 

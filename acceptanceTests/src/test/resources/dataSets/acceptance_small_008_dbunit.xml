@@ -50,6 +50,8 @@
   <DATABASECHANGELOG ID="MIFOS_5218_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-09 11:58:25.0" ORDEREXECUTED="189" EXECTYPE="EXECUTED" MD5SUM="3:a55cb7c0cd264ab9133926be13e0c714" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5359_1" AUTHOR="Michal Dudzinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-01-31 14:43:17.0" ORDEREXECUTED="216" EXECTYPE="EXECUTED" MD5SUM="3:8c408cc6b30629a54545806b2f771895" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5370_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-17 15:58:48.0" ORDEREXECUTED="239" EXECTYPE="EXECUTED" MD5SUM="3:ba16a0b76593f67399076254a19d8e94" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5370_2" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-20 16:18:45.0" ORDEREXECUTED="240" EXECTYPE="EXECUTED" MD5SUM="3:5fadf56b6281ff63c5e0d7b8709d0a7b" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5370_3" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-20 16:18:45.0" ORDEREXECUTED="241" EXECTYPE="EXECUTED" MD5SUM="3:88011d73e0ae8a44af13cdab0a9ed704" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5382_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-01 19:04:56.0" ORDEREXECUTED="233" EXECTYPE="EXECUTED" MD5SUM="3:8087265e7debf6021ee1f88472a900a8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5382_2" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-02 13:48:28.0" ORDEREXECUTED="234" EXECTYPE="EXECUTED" MD5SUM="3:864b0fd522895b0aa7142d936ddc4bc4" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5383_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-06 11:32:25.0" ORDEREXECUTED="235" EXECTYPE="EXECUTED" MD5SUM="3:e3f2fdea6e47675516523f634130672c" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
@@ -2343,18 +2345,18 @@
   <coahierarchy coa_id="54" parent_coaid="53"/>
   <coahierarchy coa_id="55" parent_coaid="54"/>
   <coahierarchy coa_id="56" parent_coaid="54"/>
-  <config_key_value_integer configuration_id="1" configuration_key="x" configuration_value="0"/>
-  <config_key_value_integer configuration_id="2" configuration_key=" " configuration_value="0"/>
-  <config_key_value_integer configuration_id="3" configuration_key="jasperReportIsHidden" configuration_value="1"/>
-  <config_key_value_integer configuration_id="4" configuration_key="loanIndividualMonitoringIsEnabled" configuration_value="0"/>
-  <config_key_value_integer configuration_id="5" configuration_key="repaymentSchedulesIndependentOfMeetingIsEnabled" configuration_value="0"/>
-  <config_key_value_integer configuration_id="6" configuration_key="CenterHierarchyExists" configuration_value="1"/>
-  <config_key_value_integer configuration_id="7" configuration_key="ClientCanExistOutsideGroup" configuration_value="1"/>
-  <config_key_value_integer configuration_id="8" configuration_key="GroupCanApplyLoans" configuration_value="1"/>
-  <config_key_value_integer configuration_id="9" configuration_key="minDaysBetweenDisbursalAndFirstRepaymentDay" configuration_value="1"/>
-  <config_key_value_integer configuration_id="10" configuration_key="maxDaysBetweenDisbursalAndFirstRepaymentDay" configuration_value="365"/>
-  <config_key_value_integer configuration_id="11" configuration_key="AdministrativeDocumentsIsEnabled" configuration_value="1"/>
-  <config_key_value_integer configuration_id="12" configuration_key="MIFOS-4948" configuration_value="1"/>
+  <config_key_value configuration_id="1" configuration_type="0" configuration_key="x" configuration_value="0"/>
+  <config_key_value configuration_id="2" configuration_type="0" configuration_key=" " configuration_value="0"/>
+  <config_key_value configuration_id="3" configuration_type="0" configuration_key="jasperReportIsHidden" configuration_value="1"/>
+  <config_key_value configuration_id="4" configuration_type="0" configuration_key="loanIndividualMonitoringIsEnabled" configuration_value="0"/>
+  <config_key_value configuration_id="5" configuration_type="0" configuration_key="repaymentSchedulesIndependentOfMeetingIsEnabled" configuration_value="0"/>
+  <config_key_value configuration_id="6" configuration_type="0" configuration_key="CenterHierarchyExists" configuration_value="1"/>
+  <config_key_value configuration_id="7" configuration_type="0" configuration_key="ClientCanExistOutsideGroup" configuration_value="1"/>
+  <config_key_value configuration_id="8" configuration_type="0" configuration_key="GroupCanApplyLoans" configuration_value="1"/>
+  <config_key_value configuration_id="9" configuration_type="0" configuration_key="minDaysBetweenDisbursalAndFirstRepaymentDay" configuration_value="1"/>
+  <config_key_value configuration_id="10" configuration_type="0" configuration_key="maxDaysBetweenDisbursalAndFirstRepaymentDay" configuration_value="365"/>
+  <config_key_value configuration_id="11" configuration_type="0" configuration_key="AdministrativeDocumentsIsEnabled" configuration_value="1"/>
+  <config_key_value configuration_id="12" configuration_type="0" configuration_key="MIFOS-4948" configuration_value="1"/>
   <currency currency_id="1" currency_name="US Dollar" rounding_amount="1.000" currency_code="USD"/>
   <currency currency_id="2" currency_name="Indian Rupee" rounding_amount="1.000" currency_code="INR"/>
   <currency currency_id="3" currency_name="Euro" rounding_amount="1.000" currency_code="EUR"/>

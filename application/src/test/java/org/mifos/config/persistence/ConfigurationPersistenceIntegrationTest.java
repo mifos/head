@@ -48,7 +48,7 @@ public class ConfigurationPersistenceIntegrationTest extends MifosIntegrationTes
     @Test
     public void testCheckIndividualMonitoringKeyExists() throws Exception {
         Assert.assertNotNull(new ConfigurationPersistence()
-                .getConfigurationKeyValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED));
+                .getConfigurationKeyValue(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED));
     }
 
     @Test

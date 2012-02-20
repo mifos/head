@@ -446,4 +446,56 @@
             </sql>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_5370_2" author="Jakub Slawinski" context="expansion">
+        <sql endDelimiter=";">
+            create table config_key_value (
+                configuration_id integer auto_increment not null,
+                configuration_type smallint not null,
+                configuration_key varchar(100) not null,
+                configuration_value varchar(200) not null,
+                primary key(configuration_id),
+                unique (configuration_key)
+            )
+            engine = innodb character set utf8;
+
+            insert into config_key_value (configuration_key, configuration_type, configuration_value)
+                select configuration_key, 0, configuration_value from config_key_value_integer;
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                DROP TABLE IF EXISTS config_key_value;
+            </sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="MIFOS_5370_3" author="Jakub Slawinski" context="contraction">
+        <sql endDelimiter=";">
+            DROP TABLE IF EXISTS config_key_value_integer;
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                create table config_key_value_integer (
+                    configuration_id integer auto_increment not null,
+                    configuration_key varchar(100) not null,
+                    configuration_value integer not null,
+                    primary key(configuration_id),
+                    unique (configuration_key)
+                )
+                engine = innodb character set utf8;
+
+                insert into config_key_value_integer(configuration_key, configuration_value) values
+                    ('x',0),
+                    (' ',0),
+                    ('jasperReportIsHidden',1),
+                    ('loanIndividualMonitoringIsEnabled',0),
+                    ('repaymentSchedulesIndependentOfMeetingIsEnabled',0),
+                    ('CenterHierarchyExists',1),
+                    ('ClientCanExistOutsideGroup',0),
+                    ('GroupCanApplyLoans',0),
+                    ('minDaysBetweenDisbursalAndFirstRepaymentDay',1),
+                    ('maxDaysBetweenDisbursalAndFirstRepaymentDay',365),
+                    ('AdministrativeDocumentsIsEnabled',1),
+                    ('MIFOS-4948', 1);
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

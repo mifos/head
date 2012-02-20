@@ -23,7 +23,7 @@ package org.mifos.config;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.mifos.config.business.ConfigurationKeyValueInteger;
+import org.mifos.config.business.ConfigurationKeyValue;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -35,8 +35,8 @@ public class ClientRulesIntegrationTest extends MifosIntegrationTestCase {
     public void testGetGroupCanApplyLoans() throws Exception {
         MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         ConfigurationPersistence configPersistence = new ConfigurationPersistence();
-        ConfigurationKeyValueInteger savedDBValue = null;
-        savedDBValue = configPersistence.getConfigurationKeyValueInteger(ClientRules.GroupCanApplyLoansKey);
+        ConfigurationKeyValue savedDBValue = null;
+        savedDBValue = configPersistence.getConfigurationKeyValue(ClientRules.GroupCanApplyLoansKey);
         Boolean savedValue = ClientRules.getGroupCanApplyLoans();
         configMgr.setProperty(ClientRules.ClientRulesGroupCanApplyLoans, false);
         configPersistence.updateConfigurationKeyValueInteger(ClientRules.GroupCanApplyLoansKey, Constants.NO);
@@ -49,7 +49,7 @@ public class ClientRulesIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertFalse(ClientRules.getGroupCanApplyLoans());
         // set the saved value back for following tests
         configPersistence
-                .updateConfigurationKeyValueInteger(ClientRules.GroupCanApplyLoansKey, savedDBValue.getValue());
+                .updateConfigurationKeyValueInteger(ClientRules.GroupCanApplyLoansKey, Integer.parseInt(savedDBValue.getValue()));
         configMgr.setProperty(ClientRules.ClientRulesGroupCanApplyLoans, savedValue);
         ClientRules.refresh();
     }
@@ -58,8 +58,8 @@ public class ClientRulesIntegrationTest extends MifosIntegrationTestCase {
     public void testClientCanExistOutsideGroup() throws Exception {
         MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         ConfigurationPersistence configPersistence = new ConfigurationPersistence();
-        ConfigurationKeyValueInteger savedDBValue = null;
-        savedDBValue = configPersistence.getConfigurationKeyValueInteger(ClientRules.ClientCanExistOutsideGroupKey);
+        ConfigurationKeyValue savedDBValue = null;
+        savedDBValue = configPersistence.getConfigurationKeyValue(ClientRules.ClientCanExistOutsideGroupKey);
         Boolean savedValue = ClientRules.getClientCanExistOutsideGroup();
         configMgr.setProperty(ClientRules.ClientRulesClientCanExistOutsideGroup, false);
         configPersistence.updateConfigurationKeyValueInteger(ClientRules.ClientCanExistOutsideGroupKey, Constants.NO);
@@ -71,8 +71,8 @@ public class ClientRulesIntegrationTest extends MifosIntegrationTestCase {
         ClientRules.refresh();
         Assert.assertFalse(ClientRules.getClientCanExistOutsideGroup());
         // set the saved value back for following tests
-        configPersistence.updateConfigurationKeyValueInteger(ClientRules.ClientCanExistOutsideGroupKey, savedDBValue
-                .getValue());
+        configPersistence.updateConfigurationKeyValueInteger(ClientRules.ClientCanExistOutsideGroupKey, Integer.parseInt(savedDBValue
+                .getValue()));
         configMgr.setProperty(ClientRules.ClientRulesClientCanExistOutsideGroup, savedValue);
         ClientRules.refresh();
     }

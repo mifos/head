@@ -41,9 +41,9 @@ public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegratio
         configurationPersistence.addConfigurationKeyValueInteger(TEST_KEY, TEST_VALUE);
         StaticHibernateUtil.flushSession();
 
-        ConfigurationKeyValueInteger keyValue = configurationPersistence.getConfigurationKeyValueInteger(TEST_KEY);
+        ConfigurationKeyValue keyValue = configurationPersistence.getConfigurationKeyValue(TEST_KEY);
         Assert.assertEquals(keyValue.getKey(), TEST_KEY);
-        Assert.assertEquals(keyValue.getValue(), TEST_VALUE);
+        Assert.assertEquals(Integer.parseInt(keyValue.getValue()), TEST_VALUE);
         Assert.assertEquals(TEST_VALUE, configurationPersistence.getConfigurationValueInteger(TEST_KEY));
 
         configurationPersistence.delete(keyValue);
@@ -52,7 +52,7 @@ public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegratio
 
     @Test
     public void testUnusedConfigurationKeyValueInteger() throws Exception {
-        ConfigurationKeyValueInteger keyValue = configurationPersistence.getConfigurationKeyValueInteger(UNUSED_KEY);
+        ConfigurationKeyValue keyValue = configurationPersistence.getConfigurationKeyValue(UNUSED_KEY);
         Assert.assertNull(keyValue);
         try {
             configurationPersistence.getConfigurationValueInteger(UNUSED_KEY);
@@ -75,15 +75,15 @@ public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegratio
         }
 
         StaticHibernateUtil.getSessionTL().clear();
-        configurationPersistence.deleteConfigurationKeyValueInteger(TEST_KEY);
+        configurationPersistence.deleteConfigurationKeyValue(TEST_KEY);
         StaticHibernateUtil.flushSession();
     }
 
     @Test
     public void testIllegalArgument() throws Exception {
         try {
-            new ConfigurationKeyValueInteger(null, 0);
-            Assert.fail("A null key is not allowed for ConfiguruationKeyValueInteger");
+            new ConfigurationKeyValue(null, 0);
+            Assert.fail("A null key is not allowed for ConfigurationKeyValue");
         } catch (IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().contains("null"));
         }
@@ -97,11 +97,11 @@ public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegratio
         configurationPersistence.updateConfigurationKeyValueInteger(TEST_KEY, TEST_VALUE_2);
         StaticHibernateUtil.flushSession();
 
-        ConfigurationKeyValueInteger keyValue = configurationPersistence.getConfigurationKeyValueInteger(TEST_KEY);
+        ConfigurationKeyValue keyValue = configurationPersistence.getConfigurationKeyValue(TEST_KEY);
         Assert.assertEquals(keyValue.getKey(), TEST_KEY);
-        Assert.assertEquals(keyValue.getValue(), TEST_VALUE_2);
+        Assert.assertEquals(Integer.parseInt(keyValue.getValue()), TEST_VALUE_2);
 
-        configurationPersistence.deleteConfigurationKeyValueInteger(TEST_KEY);
+        configurationPersistence.deleteConfigurationKeyValue(TEST_KEY);
         StaticHibernateUtil.flushSession();
 
     }

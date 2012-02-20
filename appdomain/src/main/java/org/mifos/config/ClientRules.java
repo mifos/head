@@ -189,7 +189,7 @@ public class ClientRules {
     private static boolean getGroupCanApplyLoansFromConfig() {
         boolean cfgValue;
         try {
-            int dbValue = getConfigPersistence().getConfigurationKeyValueInteger(GroupCanApplyLoansKey).getValue();
+            int dbValue = getConfigPersistence().getConfigurationValueInteger(GroupCanApplyLoansKey);
             MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
             cfgValue = configMgr.getBoolean(ClientRulesGroupCanApplyLoans);
 
@@ -220,8 +220,7 @@ public class ClientRules {
     private static boolean getClientCanExistOutsideGroupFromConfig() {
         boolean cfgValue;
         try {
-            int dbValue = getConfigPersistence().getConfigurationKeyValueInteger(ClientCanExistOutsideGroupKey)
-                    .getValue();
+            int dbValue = getConfigPersistence().getConfigurationValueInteger(ClientCanExistOutsideGroupKey);
             MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
             cfgValue = configMgr.getBoolean(ClientRulesClientCanExistOutsideGroup);
 

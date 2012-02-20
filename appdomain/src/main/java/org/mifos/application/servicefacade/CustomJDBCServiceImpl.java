@@ -16,14 +16,14 @@ public class CustomJDBCServiceImpl implements CustomJDBCService {
     @Override
     public boolean mifos4948IssueKeyExists() {
         
-        int count = this.template.queryForInt("select count(*) from config_key_value_integer c where c.configuration_key like 'MIFOS-4948'");
+        int count = this.template.queryForInt("select count(*) from config_key_value c where c.configuration_key like 'MIFOS-4948'");
         
         return count > 0;
     }
 
     @Override
     public void insertMifos4948Issuekey() {
-        this.template.execute("insert into config_key_value_integer (configuration_key, configuration_value) values ('MIFOS-4948', 1)");
+        this.template.execute("insert into config_key_value (configuration_key, configuration_type, configuration_value) values ('MIFOS-4948', 0, 1)");
     }
 
 }

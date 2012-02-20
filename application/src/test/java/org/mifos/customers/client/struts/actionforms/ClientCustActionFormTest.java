@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.config.ClientRules;
-import org.mifos.config.business.ConfigurationKeyValueInteger;
+import org.mifos.config.business.ConfigurationKeyValue;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.testng.annotations.Test;
@@ -48,15 +48,15 @@ public class ClientCustActionFormTest extends TestCase {
         form = new ClientCustActionForm();
         errors = new ActionErrors();
 
-        ConfigurationKeyValueInteger groupCanApplyLoansKey = new ConfigurationKeyValueInteger(
+        ConfigurationKeyValue groupCanApplyLoansKey = new ConfigurationKeyValue(
                 ClientRules.GroupCanApplyLoansKey, 1);
-        ConfigurationKeyValueInteger clientCanExistOutsideGroupKey = new ConfigurationKeyValueInteger(
+        ConfigurationKeyValue clientCanExistOutsideGroupKey = new ConfigurationKeyValue(
                 ClientRules.ClientCanExistOutsideGroupKey, 1);
 
         ConfigurationPersistence configPersistence = mock(ConfigurationPersistence.class);
-        when(configPersistence.getConfigurationKeyValueInteger(ClientRules.GroupCanApplyLoansKey)).thenReturn(
+        when(configPersistence.getConfigurationKeyValue(ClientRules.GroupCanApplyLoansKey)).thenReturn(
                 groupCanApplyLoansKey);
-        when(configPersistence.getConfigurationKeyValueInteger(ClientRules.ClientCanExistOutsideGroupKey)).thenReturn(
+        when(configPersistence.getConfigurationKeyValue(ClientRules.ClientCanExistOutsideGroupKey)).thenReturn(
                 clientCanExistOutsideGroupKey);
 
         ClientRules.setConfigPersistence(configPersistence);

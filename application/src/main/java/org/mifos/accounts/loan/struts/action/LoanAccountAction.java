@@ -305,7 +305,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         SessionUtils.removeAttribute(BUSINESS_KEY, request);
 
-        Integer loanIndividualMonitoringIsEnabled = configurationPersistence.getConfigurationKeyValueInteger(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
+        Integer loanIndividualMonitoringIsEnabled = configurationPersistence.getConfigurationValueInteger(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED);
 
         if (null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue() != 0) {
             SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, loanIndividualMonitoringIsEnabled.intValue(), request);
@@ -341,7 +341,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         request.setAttribute(CustomerConstants.SURVEY_COUNT, loanInformationDto.getActiveSurveys());
         request.setAttribute(AccountConstants.SURVEY_KEY, loanInformationDto.getAccountSurveys());
 
-        Integer administrativeDocumentsIsEnabled = configurationPersistence.getConfigurationKeyValueInteger(ADMINISTRATIVE_DOCUMENT_IS_ENABLED).getValue();
+        Integer administrativeDocumentsIsEnabled = configurationPersistence.getConfigurationValueInteger(ADMINISTRATIVE_DOCUMENT_IS_ENABLED);
 
         if (null != administrativeDocumentsIsEnabled && administrativeDocumentsIsEnabled.intValue() == 1) {
             SessionUtils.setCollectionAttribute(AdminDocumentsContants.ADMINISTRATIVEDOCUMENTSLIST,
@@ -559,8 +559,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
      * @throws PersistenceException
      */
     private Date resolveRepaymentStartDate(final Date disbursementDate) {
-        int minDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(
-                MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
+        int minDaysInterval = configurationPersistence.getConfigurationValueInteger(
+                MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY);
 
         final GregorianCalendar repaymentStartDate = new GregorianCalendar();
         repaymentStartDate.setTime(disbursementDate);

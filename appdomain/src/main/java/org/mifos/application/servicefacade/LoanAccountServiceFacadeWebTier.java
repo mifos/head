@@ -1222,8 +1222,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private MeetingBO createNewMeetingForRepaymentDay(LocalDate disbursementDate, RecurringSchedule recurringSchedule, CustomerBO customer) {
         MeetingBO newMeetingForRepaymentDay = null;
 
-        final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(
-                MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
+        final int minDaysInterval = new ConfigurationPersistence().getConfigurationValueInteger(
+                MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY);
 
         final Date repaymentStartDate = disbursementDate.plusDays(minDaysInterval).toDateMidnight().toDateTime().toDate();
         try {

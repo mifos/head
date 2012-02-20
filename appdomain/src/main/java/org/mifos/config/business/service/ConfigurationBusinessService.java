@@ -22,7 +22,7 @@ package org.mifos.config.business.service;
 
 import java.util.List;
 
-import org.mifos.config.business.ConfigurationKeyValueInteger;
+import org.mifos.config.business.ConfigurationKeyValue;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -47,9 +47,9 @@ public class ConfigurationBusinessService implements BusinessService {
         return null;
     }
 
-    public List<ConfigurationKeyValueInteger> getConfiguration() throws ServiceException {
+    public List<ConfigurationKeyValue> getConfiguration() throws ServiceException {
         try {
-            return configurationPersistence.getAllConfigurationKeyValueIntegers();
+            return configurationPersistence.getAllConfigurationKeyValues();
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
