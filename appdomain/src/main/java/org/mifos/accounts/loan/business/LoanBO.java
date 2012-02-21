@@ -1101,7 +1101,7 @@ public class LoanBO extends AccountBO implements Loan {
 
         // if the trxn date is not equal to disbursementDate we need to
         // regenerate the installments
-        if (!DateUtils.getDateWithoutTimeStamp(disbursementDate.getTime()).equals(
+        if (!isFixedRepaymentSchedule() && !DateUtils.getDateWithoutTimeStamp(disbursementDate.getTime()).equals(
                 DateUtils.getDateWithoutTimeStamp(transactionDate.getTime()))) {
             final boolean lsimEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
             if (lsimEnabled) {

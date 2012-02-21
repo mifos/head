@@ -4,11 +4,18 @@ package org.mifos.test.acceptance.loan;
 public class OriginalScheduleData {
 
     public static final String[][] FLAT_LOAN_SCHEDULE = {{"Installment", "DueDate", "Principal", "Interest", "Fees", "Total (with Penalty)"},
-            {"1", "11-Oct-2011", "200.2", "3.8", "110", "324"}, //110
+            {"1", "11-Oct-2011", "200.2", "3.8", "110", "324"},
             {"2", "18-Oct-2011", "200.2", "3.8", "100", "304"},
             {"3", "25-Oct-2011", "200.2", "3.8", "100", "304"},
             {"4", "02-Nov-2011", "200.2", "3.8", "100", "304"},
             {"5", "08-Nov-2011", "199.2", "4.8", "100", "304"}};
+
+    public static final String[][] FLAT_LOAN_SCHEDULE_ONE_WEEK_LATER = {{"Installment", "DueDate", "Principal", "Interest", "Fees", "Total (with Penalty)"},
+            {"1", "18-Oct-2011", "200.2", "3.8", "110", "324"},
+            {"2", "25-Oct-2011", "200.2", "3.8", "100", "304"},
+            {"3", "02-Nov-2011", "200.2", "3.8", "100", "304"},
+            {"4", "08-Nov-2011", "200.2", "3.8", "100", "304"},
+            {"5", "22-Nov-2011", "199.2", "4.8", "100", "304"}};
 
     public static final String[][] FLAT_VARIABLE_LOAN_EARLY_DISBURSAL_SCHEDULE = {{"Installment", "DueDate", "Principal", "Interest", "Fees", "Total (with Penalty)"},
             {"1", "18-Oct-2011", "200.6", "4.4", "10", "225"},

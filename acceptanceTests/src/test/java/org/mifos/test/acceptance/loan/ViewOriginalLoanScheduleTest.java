@@ -93,12 +93,12 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         dataSetup.createHoliday(systemDateTime.plusDays(36), null, CreateHolidaySubmitParameters.NEXT_MEETING_OR_REPAYMENT);//15/11/2011
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     @Test(enabled=true)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForFlatLoanEarlyDisbursal() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.FLAT;
         applicationDatabaseOperation.updateLSIM(0);
-        createLoanProduct(interestType);
+        createLoanProduct(interestType, false);
         String[][] tableOnOriginalInstallment = OriginalScheduleData.FLAT_LOAN_SCHEDULE;
         createLoanAccount(systemDateTime.plusDays(1), systemDateTime, true);
         verifyOriginalSchedule(tableOnOriginalInstallment);
@@ -107,6 +107,39 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         verifyOriginalSchedule(tableOnOriginalInstallment);
         loanTestHelper.makePayment(systemDateTime.plusDays(5), "100");
         verifyOriginalSchedule(tableOnOriginalInstallment);
+    }
+
+    @Test(enabled=true)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyForFlatLoanEarlyDisbursalWithFixedRepaymentSchedule() throws Exception {
+        int interestType = DefineNewLoanProductPage.SubmitFormParameters.FLAT;
+        applicationDatabaseOperation.updateLSIM(0);
+        createLoanProduct(interestType, true);
+        String[][] tableOnOriginalInstallment = OriginalScheduleData.FLAT_LOAN_SCHEDULE_ONE_WEEK_LATER;
+        createLoanAccount(systemDateTime.plusDays(1), systemDateTime, true);
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
+        loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        loanTestHelper.makePayment(systemDateTime.plusDays(5), "100");
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+    }
+
+    @Test(enabled=true)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyForFlatLoanEarlyDisbursalWithFixedRepaymentScheduleAndLSIMOn() throws Exception {
+        int interestType = DefineNewLoanProductPage.SubmitFormParameters.FLAT;
+        applicationDatabaseOperation.updateLSIM(1);
+        createLoanProduct(interestType, true);
+        String[][] tableOnOriginalInstallment = OriginalScheduleData.FLAT_LOAN_SCHEDULE_ONE_WEEK_LATER;
+        createLoanAccount(systemDateTime.plusDays(1), systemDateTime, true);
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
+        loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        loanTestHelper.makePayment(systemDateTime.plusDays(5), "100");
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     @Test(enabled=true)
@@ -248,7 +281,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     public void verifyForDecBalIntReCalcLoanEarlyDisbursalLSIMOn() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
         applicationDatabaseOperation.updateLSIM(1);
-        createLoanProduct(interestType);
+        createLoanProduct(interestType, false);
         
         navigationHelper.navigateToHomePage();
         loanTestHelper.
@@ -284,7 +317,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     public void verifyForDecBalIntReCalcLoanLateDisbursalLSIMOn() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
         applicationDatabaseOperation.updateLSIM(1);
-        createLoanProduct(interestType);
+        createLoanProduct(interestType, false);
         String[][] tableOnOriginalInstallment = OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_LATE_DISBURSAL_SCHEDULE_ON;
         createLoanAccount(systemDateTime, systemDateTime.plusDays(1), true);
         verifyOriginalSchedule(tableOnOriginalInstallment);
@@ -305,7 +338,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     public void verifyForDecBalIntReCalcLoanEarlyDisbursalLSIMOff() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
         applicationDatabaseOperation.updateLSIM(0);
-        createLoanProduct(interestType);
+        createLoanProduct(interestType, false);
         String[][] tableOnOriginalInstallment = OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE_OFF;
         createLoanAccount(systemDateTime.plusDays(1), systemDateTime, true);
         verifyOriginalSchedule(tableOnOriginalInstallment);
@@ -324,7 +357,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     public void verifyForDecBalIntReCalcLoanLateDisbursalLSIMOff() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
         applicationDatabaseOperation.updateLSIM(0);
-        createLoanProduct(interestType);
+        createLoanProduct(interestType, false);
         String[][] tableOnOriginalInstallment = OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_LATE_DISBURSAL_SCHEDULE_OFF;
         createLoanAccount(systemDateTime.plusDays(1), systemDateTime.plusDays(8), true);
         verifyOriginalSchedule(tableOnOriginalInstallment);
@@ -364,10 +397,12 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
                 returnToRepaymentSchedule().navigateToLoanAccountPage();
     }
 
-    private void createLoanProduct(int interestType) {
+    private void createLoanProduct(int interestType, boolean fixedRepaymentSchedule) {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(interestType);
+        formParameters.setFixedRepaymentSchedule(fixedRepaymentSchedule);
         loanProductTestHelper.
                 navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
+                selectFixedRepaymentSchedule(formParameters).
                 submitAndGotoNewLoanProductPreviewPage().submit();
     }
 
