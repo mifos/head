@@ -26,6 +26,7 @@ import java.util.List;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.penalties.business.AmountPenaltyBO;
 import org.mifos.accounts.penalties.business.PenaltyBO;
+import org.mifos.accounts.penalties.util.helpers.PenaltyPeriod;
 import org.mifos.accounts.penalties.util.helpers.PenaltyStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.business.AbstractEntity;
@@ -37,6 +38,7 @@ public class AccountPenaltiesEntity extends AbstractEntity {
     private final PenaltyBO penalty;
     private Money accountPenaltyAmount;
     private Double penaltyAmount;
+    private Integer calculativeCount = 0;
     private Short penaltyStatus;
     private Date statusChangeDate;
     private Date lastAppliedDate;
@@ -95,6 +97,18 @@ public class AccountPenaltiesEntity extends AbstractEntity {
         this.penaltyAmount = penaltyAmount;
     }
     
+    public Integer getCalculativeCount() {
+        return calculativeCount;
+    }
+
+    public void incrementCalculativeCount() {
+        ++calculativeCount;
+    }
+    
+    protected void setCalculativeCount(Integer calculativeCount) {
+        this.calculativeCount = calculativeCount;
+    }
+
     public PenaltyBO getPenalty() {
         return penalty;
     }
@@ -162,6 +176,10 @@ public class AccountPenaltiesEntity extends AbstractEntity {
     
     public boolean isMonthlyTime() {
         return getPenalty().isMonthlyTime();
+    }
+    
+    public boolean hasPeriodType() {
+        return getPenalty().getPeriodType().getPenaltyPeriod() != PenaltyPeriod.NONE;
     }
     
     public boolean isActive() {
