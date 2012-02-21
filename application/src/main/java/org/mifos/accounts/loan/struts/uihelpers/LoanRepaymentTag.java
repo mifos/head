@@ -311,7 +311,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
         html.text((isPaymentMade ? ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalPaid().add(installment.getEffectiveInterestPaid()).add(
-                installment.getTotalFeeAmountPaidWithMiscFee()).add(installment.getPenaltyPaid()))) : ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalDue().add(
+                installment.getTotalFeeAmountPaidWithMiscFee()).add(installment.getTotalPenaltyPaid()))) : ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalDue().add(
                 installment.getEffectiveInterestDue()).add(installment.getTotalFeeDueWithMiscFeeDue()).add(
                 installment.getPenaltyDue())))));
         html.endTag("td");

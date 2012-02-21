@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.penalties;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 import org.joda.time.DateTime;
@@ -79,92 +80,84 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         changeDateTime(04, 1);
         verifyCalculatePenalty(accountId,
                 new String[] { "1", "0", "1" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "1", "451" }, { "0", "450" } },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, { "1", "451" }, { "0", "450" }, { "0", "450" },
+                                 { "0", "450" }, { "0", "450" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" } },
                 new String[] { "3,151", "05/04/2012", "2,701" }
         );
         
-        verifyAfterRepayLoan(accountId, "1", "451");
+        verifyAfterRepayLoan(accountId, new String[] { "0", "0", "1", "0", "0", "0", "0", "0", "0", "0" });
     }
 
     @Test(enabled = true)
     public void shouldCalculateDailyAmountPenaltyOnLoanAccount() throws Exception {
         final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[1], null, null, PenaltyFormParameters.FREQUENCY_DAILY);
         
-        changeDateTime(03, 1);
+        changeDateTime(04, 1);
         verifyCalculatePenalty(accountId,
-                new String[] { "7", "0", "7" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "7", "457" }, { "0", "450" } },
-                new String[] { "907", "01/03/2012", "457" }
+                new String[] { "38", "0", "38" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, { "6", "456" }, { "7", "457" }, { "7", "457" },
+                                 { "7", "457" }, { "7", "457" }, null /* Future Installments */, { "4", "454" }, { "0", "450" }, { "0", "450" } },
+                new String[] { "3,188", "05/04/2012", "2,734" }
         );
         
-        verifyAfterRepayLoan(accountId, "7", "457");
+        verifyAfterRepayLoan(accountId, new String[] { "0", "0", "6", "7", "7", "7", "7", "4", "0", "0" });
     }
     
     @Test(enabled = true)
     public void shouldCalculateWeeklyAmountPenaltyOnLoanAccount() throws Exception {
         final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[2], null, null, PenaltyFormParameters.FREQUENCY_WEEKLY);
         
-        changeDateTime(03, 3);
+        changeDateTime(04, 1);
         verifyCalculatePenalty(accountId,
-                new String[] { "2", "0", "2" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "2", "452" }, { "0", "450" } },
-                new String[] { "1,352", "08/03/2012", "902" }
+                new String[] { "6", "0", "6" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, { "1", "451" }, { "1", "451" }, { "1", "451" },
+                                 { "1", "451" }, { "1", "451" }, null /* Future Installments */, { "1", "451" }, { "0", "450" }, { "0", "450" } },
+                new String[] { "3,156", "05/04/2012", "2,705" }
         );
         
-        verifyAfterRepayLoan(accountId, "2", "452");
+        verifyAfterRepayLoan(accountId, new String[] { "0", "0", "1", "1", "1", "1", "1", "1", "0", "0" });
     }
     
     @Test(enabled = true)
     public void shouldCalculateWeeklyAmountPenaltyWithPeriodInstallmentsOnLoanAccount() throws Exception {
         final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[3], PenaltyFormParameters.PERIOD_INSTALLMENTS, "1", PenaltyFormParameters.FREQUENCY_WEEKLY);
         
-        changeDateTime(02, 24);
+        changeDateTime(04, 1);
         verifyCalculatePenalty(accountId,
-                new String[] { "0", "0", "0" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, null /* Future Installments */, { "0", "450" } },
-                new String[] { "900", "01/03/2012", "450" }
+                new String[] { "5", "0", "5" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, { "0", "450" }, { "1", "451" }, { "1", "451" },
+                                 { "1", "451" }, { "1", "451" }, null /* Future Installments */, { "1", "451" }, { "0", "450" }, { "0", "450" } },
+                new String[] { "3,155", "05/04/2012", "2,704" }
         );
         
-        changeDateTime(03, 3);
-        verifyCalculatePenalty(accountId,
-                new String[] { "1", "0", "1" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "1", "451" }, { "0", "450" } },
-                new String[] { "1,351", "08/03/2012", "901" }
-        );
-        
-        changeDateTime(03, 10);
-        verifyCalculatePenalty(accountId,
-                new String[] { "2", "0", "2" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "2", "452" }, { "0", "450" } },
-                new String[] { "1,802", "15/03/2012", "1,352" }
-        );
-        
-        verifyAfterRepayLoan(accountId, "2", "452");
+        verifyAfterRepayLoan(accountId, new String[] { "0", "0", "0", "1", "1", "1", "1", "1", "0", "0" });
     }
     
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void shouldCalculateWeeklyRatePenaltyOnLoanAccpunt() throws Exception {
         final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[4], null, null,
                 PenaltyFormParameters.FREQUENCY_WEEKLY, "0.5", PenaltyFormParameters.FORMULA_OUTSTANDING_LOAN);
         
         changeDateTime(02, 24);
         verifyCalculatePenalty(accountId,
-                new String[] { "22.5", "0", "22.5" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "22.5", "472.5" }, null /* Future Installments */, { "0", "450" } },
-                new String[] { "922.5", "01/03/2012", "472.5" }
+                new String[] { "20.2", "0", "20.2" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, null /* Future Installments */, { "20.2", "470.2" },
+                                 { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
+                new String[] { "920.2", "01/03/2012", "450" }
         );
         
         changeDateTime(03, 3);
         verifyCalculatePenalty(accountId,
-                new String[] { "45.1", "0", "45.1" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "45.1", "495.1" }, { "0", "450" } },
-                new String[] { "1,352", "08/03/2012", "945.1" }
+                new String[] { "40.6", "0", "40.6" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, { "20.2", "470.2" }, null /* Future Installments */,
+                                 { "20.4", "470.4" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
+                new String[] { "1,390.6", "08/03/2012", "920.2" }
         );
         
-        verifyAfterRepayLoan(accountId, "45.1", "495.1");
+        verifyAfterRepayLoan(accountId, new String[] { "0", "0", "20.2", "20.4", "0", "0", "0", "0", "0", "0" });
     }
     
-    private void verifyAfterRepayLoan(final String accountId, final String penalty, final String dueWithPenalty) throws Exception {
+    private void verifyAfterRepayLoan(final String accountId, final String[] penalties) throws Exception {
         RepayLoanParameters params = new RepayLoanParameters();
         params.setModeOfRepayment(RepayLoanParameters.CASH);
         
@@ -172,16 +165,31 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
             .navigateToRepayLoan().submitAndNavigateToRepayLoanConfirmationPage(params)
             .submitAndNavigateToLoanAccountDetailsPage();
         
+        BigDecimal sum = BigDecimal.ZERO;
+        BigDecimal principal = new BigDecimal(450);
+        String[][] schedule = new String[penalties.length][2];
+        
+        for(int i = 0; i < penalties.length; ++i) {
+            BigDecimal penalty = BigDecimal.valueOf(Double.valueOf(penalties[i]));
+            
+            sum = sum.add(penalty.setScale(1, BigDecimal.ROUND_HALF_UP));
+            
+            schedule[i][0] = penalties[i];
+            schedule[i][1] = StringUtil.formatNumber(penalty.add(principal).setScale(1, BigDecimal.ROUND_HALF_UP).toString());
+        }
+        
+        String sumToString = StringUtil.formatNumber(sum.toString());
+        
         verifyCalculatePenalty(accountId,
-                new String[] { penalty, penalty, "0" },
-                new String[][] { { "0", "450" }, { penalty, dueWithPenalty }, { "0", "450" } },
+                new String[] { sumToString, sumToString, "0" },
+                schedule,
                 null
         );
         
         changeDateTime(05, 1);
         verifyCalculatePenalty(accountId,
-                new String[] { penalty, penalty, "0" },
-                new String[][] { { "0", "450" }, { penalty, dueWithPenalty }, { "0", "450" } },
+                new String[] { sumToString, sumToString, "0" },
+                schedule,
                 null
         );
     }
@@ -278,14 +286,16 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         
         verifyCalculatePenalty(accountId,
                 new String[] { "0", "0", "0" },
-                new String[][] { { "0", "450" }, null, /* Installments due */ { "0", "450" }, { "0", "450" } },
+                new String[][] { { "0", "450" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" },
+                                 { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
                 new String[] { "0", "16/02/2012", "0" }
         );
         
         changeDateTime(02, 23);
         verifyCalculatePenalty(accountId,
                 new String[] { "0", "0", "0" },
-                new String[][] { { "0", "450" }, null, /* Installments due */ { "0", "450" }, null, /* Future Installments */ { "0", "450" } },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, null /* Future Installments */, { "0", "450" },
+                                 { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
                 new String[] { "450", "23/02/2012", "0" }
         );
         

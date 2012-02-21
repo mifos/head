@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountPenaltiesEntity;
@@ -49,12 +50,19 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
     
     @Override
     public void execute(final long timeInMillis) throws BatchJobException {
+        DateTime nowDT = new DateTime(timeInMillis);
+        LocalDate nowLD = nowDT.toLocalDate();
+        
+        if(nowDT.getHourOfDay() != 0 || nowDT.getMinuteOfDay() != 0 || nowDT.getSecondOfDay() != 0) {
+            return;
+        }
+        
         final List<String> errorList = new ArrayList<String>();
         List<LoanBO> loanAccounts = null;
 
         try {
             Query select = StaticHibernateUtil.getSessionTL().getNamedQuery(NamedQueryConstants.GET_ALL_LOAN_ACCOUNTS_WITH_PENALTIES);
-            select.setDate("currentDate", new Date(timeInMillis));
+            select.setDate("currentDate", nowDT.toDate());
             
             loanAccounts =  new ArrayList<LoanBO>(castList(LoanBO.class, select.list()));
         } catch (Exception e) {
@@ -69,36 +77,41 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
                     loanAccountId = loanAccount.getAccountId();
                     final List<AccountPenaltiesEntity> penaltyEntities = new ArrayList<AccountPenaltiesEntity>(loanAccount.getAccountPenalties());
                     final List<LoanScheduleEntity> schedule = new ArrayList<LoanScheduleEntity>(loanAccount.getLoanScheduleEntities());
-                    Short lateInstallments = 0;
+                    short paidInstallments = 0;
+                    short dueInstallments = 0;
                     Short installmentId = null;
                     
                     for(LoanScheduleEntity entity : schedule) {
-                        if(entity.isBefore(new LocalDate(timeInMillis))) {
-                            ++lateInstallments;
-                        } else if(entity.isAfter(new LocalDate(timeInMillis))) {
+                        if(entity.isBefore(nowLD)) {
+                            if(entity.isPaid()) {
+                                ++paidInstallments;
+                            } else {
+                                ++dueInstallments;
+                            }
+                        } else if(entity.isAfter(nowLD)) {
                             installmentId = entity.getInstallmentId();
                             break;
                         }
                     }
                     
                     for (AccountPenaltiesEntity penaltyEntity : penaltyEntities) {
-                        Days days = Days.daysBetween(new LocalDate(schedule.get(installmentId - 1).getActionDate().getTime()),
-                                                     new LocalDate(timeInMillis));
+                        Days days = Days.daysBetween(new LocalDate(schedule.get(paidInstallments + dueInstallments - 1).getActionDate().getTime()),
+                                                     nowLD);
                         
                         if(penaltyEntity.hasPeriodType()) {
                             PenaltyPeriod penaltyPeriod = penaltyEntity.getPenalty().getPeriodType().getPenaltyPeriod();
                             Integer duration = penaltyEntity.getPenalty().getPeriodDuration();
                             
-                            if(penaltyPeriod == PenaltyPeriod.DAYS && days.getDays() < duration
-                                    || penaltyPeriod == PenaltyPeriod.INSTALLMENTS && lateInstallments < duration + 1) {
+                            if((penaltyPeriod == PenaltyPeriod.DAYS && days.getDays() < duration)
+                                    || (penaltyPeriod == PenaltyPeriod.INSTALLMENTS && dueInstallments < duration + 1)) {
                                 continue;
                             }
                         }
                         
                         if (!penaltyEntity.isOneTime()) {
-                            if (penaltyEntity.isDailyTime() && days.getDays() == penaltyEntity.getCalculativeCount()
-                                    || penaltyEntity.isMonthlyTime() && days.getDays() % 31 != 1
-                                    || penaltyEntity.isWeeklyTime() && days.getDays() % 7 != 1) {
+                            if ((penaltyEntity.isDailyTime() && days.getDays() == penaltyEntity.getCalculativeCount())
+                                    || (penaltyEntity.isMonthlyTime() && days.getDays() % 31 != 1)
+                                    || (penaltyEntity.isWeeklyTime() && days.getDays() % 7 != 1)) {
                                 continue;
                             }
                         } else {
