@@ -95,7 +95,7 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
                     }
                     
                     for (AccountPenaltiesEntity penaltyEntity : penaltyEntities) {
-                        Days days = Days.daysBetween(new LocalDate(schedule.get(paidInstallments + dueInstallments - 1).getActionDate().getTime()),
+                        Days days = Days.daysBetween(new LocalDate(schedule.get(paidInstallments).getActionDate().getTime()),
                                                      nowLD);
                         
                         if(penaltyEntity.hasPeriodType()) {

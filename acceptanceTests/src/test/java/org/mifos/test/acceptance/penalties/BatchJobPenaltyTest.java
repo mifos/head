@@ -51,7 +51,7 @@ import org.testng.annotations.Test;
 public class BatchJobPenaltyTest extends UiTestCaseBase {
     private static final String[] PENALTY_NAME = new String[] {
         "Penalty 5.7.1", "Penalty 5.7.2", "Penalty 5.7.3", "Penalty 5.7.4", "Penalty 5.7.5",
-        "Penalty 5.7.6", "Penalty 5.7.7", "Penalty 5.7.8", "Penalty 5.7.9"
+        "Penalty 5.7.6", "Penalty 5.7.8", "Penalty 5.7.9"
     };
     
     private NavigationHelper navigationHelper;
@@ -134,7 +134,7 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
     }
     
     @Test(enabled = true)
-    public void shouldCalculateWeeklyRatePenaltyOnLoanAccpunt() throws Exception {
+    public void shouldCalculateWeeklyRatePenaltyWithOutstandingOnLoanAccount() throws Exception {
         final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[4], null, null,
                 PenaltyFormParameters.FREQUENCY_WEEKLY, "0.5", PenaltyFormParameters.FORMULA_OUTSTANDING_LOAN);
         
@@ -155,6 +155,54 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         );
         
         verifyAfterRepayLoan(accountId, new String[] { "0", "0", "20.2", "20.4", "0", "0", "0", "0", "0", "0" });
+    }
+    
+    @Test(enabled = true)
+    public void shouldCalculateWeeklyRatePenaltyWithOverdueOnLoanAccount() throws Exception {
+        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[5], null, null,
+                PenaltyFormParameters.FREQUENCY_WEEKLY, "1", PenaltyFormParameters.FORMULA_OVERDUE_AMOUNT);
+        
+        changeDateTime(02, 24);
+        verifyCalculatePenalty(accountId,
+                new String[] { "4.5", "0", "4.5" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, null /* Future Installments */, { "4.5", "454.5" },
+                                 { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
+                new String[] { "904.5", "01/03/2012", "450" }
+        );
+        
+        changeDateTime(03, 3);
+        verifyCalculatePenalty(accountId,
+                new String[] { "9", "0", "9" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, { "4.5", "454.5" }, null /* Future Installments */,
+                                 { "4.5", "454.5" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
+                new String[] { "1,359", "08/03/2012", "904.5" }
+        );
+        
+        verifyAfterRepayLoan(accountId, new String[] { "0", "0", "4.5", "4.5", "0", "0", "0", "0", "0", "0" });
+    }
+    
+    @Test(enabled = true)
+    public void shouldCalculateWeeklyRatePenaltyWithPeriodOnLoanAccount() throws Exception {
+        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[6], PenaltyFormParameters.PERIOD_DAYS, "7",
+                PenaltyFormParameters.FREQUENCY_WEEKLY, "0.1", PenaltyFormParameters.FORMULA_OUTSTANDING_PRINCIPAL);
+        
+        changeDateTime(03, 01);
+        verifyCalculatePenalty(accountId,
+                new String[] { "0", "0", "0" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, { "0", "450" }, null /* Future Installments */, 
+                                 { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
+                new String[] { "900", "01/03/2012", "450" }
+        );
+        
+        changeDateTime(03, 15);
+        verifyCalculatePenalty(accountId,
+                new String[] { "9", "0", "9" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, { "0", "450" }, { "4.5", "454.5" },
+                { "4.5", "454.5" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
+                new String[] { "1,809", "15/03/2012", "1,354.5" }
+        );
+        
+        verifyAfterRepayLoan(accountId, new String[] { "0", "0", "0", "4.5", "4.5", "0", "0", "0", "0", "0" });
     }
     
     private void verifyAfterRepayLoan(final String accountId, final String[] penalties) throws Exception {
