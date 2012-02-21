@@ -20,6 +20,10 @@
 
 package org.mifos.framework.util.helpers;
 
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
+import org.mifos.core.CurrencyMismatchException;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -27,10 +31,6 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
-
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.config.AccountingRules;
-import org.mifos.core.CurrencyMismatchException;
 
 /**
  * This class represents Money objects in the system, it should be used for all
@@ -142,6 +142,17 @@ public final class Money implements Serializable, Comparable<Money> {
         return new Money(money.getCurrency(), amount.subtract(money.getAmount()));
     }
 
+    public Money multiply(Double factor,int days,int duration){
+    	return multiply(new BigDecimal(factor),new BigDecimal(days),new BigDecimal(duration));
+    }
+    
+    public Money multiply(BigDecimal factor,BigDecimal days,BigDecimal duration){
+    	
+    	BigDecimal total=(factor.multiply(days));
+    	factor=total.divide(duration,internalPrecision, internalRoundingMode);
+    	
+    	return new Money(currency,amount.multiply(factor).setScale(internalPrecision, internalRoundingMode));
+    }
     public Money multiply(Double factor) {
         return multiply(new BigDecimal(factor));
     }

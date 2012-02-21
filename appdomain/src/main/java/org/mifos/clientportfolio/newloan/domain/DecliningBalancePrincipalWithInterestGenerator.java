@@ -3,10 +3,14 @@ package org.mifos.clientportfolio.newloan.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.loan.util.helpers.InstallmentPrincipalAndInterest;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.PRORATE_RULE;
 
 public class DecliningBalancePrincipalWithInterestGenerator implements PrincipalWithInterestGenerator {
 
@@ -19,8 +23,28 @@ public class DecliningBalancePrincipalWithInterestGenerator implements Principal
         Integer numberOfInstallments = loanInterestCalculationDetails.getNumberOfInstallments();
         Double interestFractionalRatePerInstallment = loanInterestCalculationDetails.getInterestFractionalRatePerInstallment();
         Double interestRate = loanInterestCalculationDetails.getInterestRate();
-
-        return allDecliningInstallments_v2(loanAmount, numberOfInstallments, graceType, gracePeriodDuration, interestFractionalRatePerInstallment, interestRate);
+       
+        
+        
+        LocalDate disbursalDateWithLocalDate=loanInterestCalculationDetails.getDisbursementDate();
+        DateTime disbursalDate=disbursalDateWithLocalDate.toDateTimeAtCurrentTime();
+        List<DateTime> dates=loanInterestCalculationDetails.getLoanScheduleDates();
+        DateTime firstRepaymentDay=dates.get(0);
+        
+        long  differenceOfTwoDatesinMilliseconds=(firstRepaymentDay.toDate().getTime()-disbursalDate.toDate().getTime());
+		long noOfDays=differenceOfTwoDatesinMilliseconds/(1000*60*60*24);
+		int days=(int)noOfDays;
+		
+		DateTime secondRepaymentDay=dates.get(1);
+		long duration=(secondRepaymentDay.toDate().getTime()-firstRepaymentDay.toDate().getTime())/(1000*60*60*24);
+		int durationInDays=(int)duration;
+		
+		final int prorateValue = new ConfigurationPersistence().getConfigurationKeyValueInteger(
+				PRORATE_RULE).getValue();
+     if (prorateValue==1) 
+    	   return allDecliningInstallments_v2(loanAmount, numberOfInstallments, graceType, gracePeriodDuration, interestFractionalRatePerInstallment, interestRate,days,durationInDays);
+	 else 
+		 return allDecliningInstallments_v2(loanAmount, numberOfInstallments, graceType, gracePeriodDuration, interestFractionalRatePerInstallment, interestRate);
     }
 
     /**
@@ -44,6 +68,30 @@ public class DecliningBalancePrincipalWithInterestGenerator implements Principal
             // getGraceType() == GraceType.PRINCIPALONLYGRACE which is disabled.
 
             emiInstallments = generateDecliningInstallmentsInterestOnly_v2(loanAmount, gracePeriodDuration, interestFractionalRatePerInstallment);
+
+            int nonGraceInstallments = (numberOfInstallments - gracePeriodDuration);
+            Money paymentPerPeriod = getPaymentPerPeriodForDecliningInterest_v2(nonGraceInstallments, interestRate, loanAmount, interestFractionalRatePerInstallment);
+            emiInstallments.addAll(generateDecliningInstallmentsNoGrace_v2(nonGraceInstallments, loanAmount, interestFractionalRatePerInstallment, paymentPerPeriod));
+        }
+        return emiInstallments;
+    }
+    
+    
+    
+    
+    private List<InstallmentPrincipalAndInterest> allDecliningInstallments_v2(Money loanAmount, Integer numberOfInstallments,
+            GraceType graceType, Integer gracePeriodDuration, Double interestFractionalRatePerInstallment, Double interestRate,Integer days,Integer durationInDays) {
+
+        List<InstallmentPrincipalAndInterest> emiInstallments = new ArrayList<InstallmentPrincipalAndInterest>();
+
+        if (graceType == GraceType.NONE || graceType == GraceType.GRACEONALLREPAYMENTS) {
+            Money paymentPerPeriod = getPaymentPerPeriodForDecliningInterest_v2(numberOfInstallments, interestRate, loanAmount, interestFractionalRatePerInstallment);
+            emiInstallments = generateDecliningInstallmentsNoGrace_v2(numberOfInstallments, loanAmount, interestFractionalRatePerInstallment, paymentPerPeriod);
+        } else {
+
+            // getGraceType() == GraceType.PRINCIPALONLYGRACE which is disabled.
+
+            emiInstallments = generateDecliningInstallmentsInterestOnly_v2(loanAmount, gracePeriodDuration, interestFractionalRatePerInstallment,days,durationInDays);
 
             int nonGraceInstallments = (numberOfInstallments - gracePeriodDuration);
             Money paymentPerPeriod = getPaymentPerPeriodForDecliningInterest_v2(nonGraceInstallments, interestRate, loanAmount, interestFractionalRatePerInstallment);
@@ -86,19 +134,45 @@ public class DecliningBalancePrincipalWithInterestGenerator implements Principal
      * Generate interest-only payments for the duration of the grace period. Interest paid is on the outstanding
      * balance, which during the grace period is the entire principal amount.
      */
+    
     private List<InstallmentPrincipalAndInterest> generateDecliningInstallmentsInterestOnly_v2(Money loanAmount, Integer gracePeriodDuration, Double interestFractionalRatePerInstallment) {
 
         List<InstallmentPrincipalAndInterest> emiInstallments = new ArrayList<InstallmentPrincipalAndInterest>();
         Money zero = MoneyUtils.zero(loanAmount.getCurrency());
-        for (int i = 0; i < gracePeriodDuration; i++) {
-
+         
+       for (int i = 0; i < gracePeriodDuration; i++) {
             InstallmentPrincipalAndInterest installment = new InstallmentPrincipalAndInterest(zero, loanAmount.multiply(interestFractionalRatePerInstallment));
             emiInstallments.add(installment);
-        }
-
+    		}
         return emiInstallments;
     }
 
+   
+    private List<InstallmentPrincipalAndInterest> generateDecliningInstallmentsInterestOnly_v2(Money loanAmount, Integer gracePeriodDuration, Double interestFractionalRatePerInstallment,Integer days,Integer durationInDays) {
+
+        List<InstallmentPrincipalAndInterest> emiInstallments = new ArrayList<InstallmentPrincipalAndInterest>();
+        Money zero = MoneyUtils.zero(loanAmount.getCurrency());
+
+        for (int i = 0; i < gracePeriodDuration; i++) {
+        	 if (i<1) {
+             	int noOfDaysBetweenDisbursaldateAndNextMeetingDate=days;
+                 InstallmentPrincipalAndInterest installment = new InstallmentPrincipalAndInterest(zero, loanAmount.multiply(interestFractionalRatePerInstallment,noOfDaysBetweenDisbursaldateAndNextMeetingDate,durationInDays));
+                 emiInstallments.add(installment);
+     		}
+        	 else{
+        InstallmentPrincipalAndInterest installment = new InstallmentPrincipalAndInterest(zero, loanAmount.multiply(interestFractionalRatePerInstallment));
+        emiInstallments.add(installment);
+        }
+        	 }
+    return emiInstallments;
+}
+    
+    
+    
+    
+    
+    
+    
     /**
      * Return the list if payment installments for declining interest method, for the number of installments specified.
      */
