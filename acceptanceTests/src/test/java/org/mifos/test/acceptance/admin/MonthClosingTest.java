@@ -20,27 +20,54 @@
 
 package org.mifos.test.acceptance.admin;
 
+import org.joda.time.DateTime;
+import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.MonthClosingPage;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
+import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
+import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.springframework.test.context.ContextConfiguration;
+
+import java.io.UnsupportedEncodingException;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(singleThreaded = true, groups={"acceptance", "ui", "no_db_unit"})
 public class MonthClosingTest extends UiTestCaseBase{
 
     private NavigationHelper navigationHelper;
+    private LoanProductTestHelper loanProductTestHelper;
+    private LoanTestHelper loanTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @BeforeMethod(alwaysRun=true)
     public void setUp() throws Exception {
-        navigationHelper = new NavigationHelper(selenium);
         super.setUp();
+        navigationHelper = new NavigationHelper(selenium);
+        loanTestHelper = new LoanTestHelper(selenium);
+        loanProductTestHelper = new LoanProductTestHelper(selenium);
     }
+
+    @AfterMethod(alwaysRun = true)
+    public void logOut() {
+        navigationHelper.
+                navigateToAdminPage().
+                navigateToMonthClosing().
+                fillMonthClosingDate("").
+                submit().
+                verifyCurrentMonthClosingDate("-");
+        (new MifosPage(selenium)).logout();
+    }
+
 
     @Test(enabled = true)
     public void testMonthClosingPermission(){
@@ -63,9 +90,30 @@ public class MonthClosingTest extends UiTestCaseBase{
                 fillMonthClosingDate("20/02/12").
                 submit().
                 verifyCurrentMonthClosingDate("20/02/12");
-        monthClosingPage.
-                fillMonthClosingDate("").
+    }
+
+    @Test(enabled = true)
+    public void testDisbursalBeforeMonthClosingDate() throws UnsupportedEncodingException {
+        // When
+        new DateTimeUpdaterRemoteTestingService(selenium).
+                setDateTime(new DateTime(2012, 1, 10, 12, 0, 0, 0));
+        navigationHelper.
+                navigateToAdminPage().
+                navigateToMonthClosing().
+                fillMonthClosingDate("20/01/12").
                 submit().
-                verifyCurrentMonthClosingDate("-");
+                verifyCurrentMonthClosingDate("20/01/12");
+
+        // Then
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
+        loanProductTestHelper.
+                navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
+                submitAndGotoNewLoanProductPreviewPage().submit();
+        loanTestHelper.
+                createLoanAccount("WeeklyClient Monday", formParameters.getOfferingName()).
+                changeAccountStatusToAccepted().
+                navigateToDisburseLoan().
+                submitAndNavigateToDisburseLoanConfirmationPage(DisburseLoanParameters.getDisbursalParameters("10", "01", "2012")).
+                submitButDisbursalFailed("Date of transaction is invalid. This date has already been closed for accounting.");
     }
 }
