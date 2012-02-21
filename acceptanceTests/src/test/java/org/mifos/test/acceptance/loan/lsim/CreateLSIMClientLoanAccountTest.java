@@ -44,6 +44,7 @@ import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.util.UiTestUtils;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
@@ -305,21 +306,25 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
     private void verify10SearchResults() {
         selenium.select("name=customerSearchResults_length", "value=10");
+        UiTestUtils.sleep(3000);
         Assert.assertEquals(selenium.getXpathCount("//table[@id='customerSearchResults']/tbody/tr").intValue(), 10);
     }
 
     private void verify25SearchResults() {
         selenium.select("name=customerSearchResults_length", "value=25");
+        UiTestUtils.sleep(3000);
         Assert.assertEquals(selenium.getXpathCount("//table[@id='customerSearchResults']/tbody/tr").intValue(), 25);
     }
 
     private void verify50SearchResults() {
         selenium.select("name=customerSearchResults_length", "value=50");
+        UiTestUtils.sleep(3000);
         Assert.assertTrue(selenium.getXpathCount("//table[@id='customerSearchResults']/tbody/tr").intValue() > 30);
     }
 
     private void verify100SearchResults() {
         selenium.select("name=customerSearchResults_length", "value=100");
+        UiTestUtils.sleep(3000);
         Assert.assertTrue(selenium.getXpathCount("//table[@id='customerSearchResults']/tbody/tr").intValue() > 30);
     }
 
