@@ -29,7 +29,6 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.config.Localization;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.struts.actionforms.PersonnelSettingsActionForm;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -95,7 +94,7 @@ public class PersonnelSettingsAction extends BaseAction {
         form1.setGovernmentIdNumber(personnel.getPersonnelDetails().getGovernmentIdNumber());
         form1.setAddress(personnel.getPersonnelDetails().getAddress());
         form1.setDob(personnel.getPersonnelDetails().getDob().toString());
-        form1.setPreferredLocale(Localization.getInstance().getDisplayName(personnel.getPreferredLocale()));
+        form1.setPreferredLocale(personnel.getPreferredLocale().toString());
         form1.setPreferredSiteTypeId(personnel.getSitePreference());
         form1.setMaritalStatus(getStringValue(personnel.getPersonnelDetails().getMaritalStatus()));
 
