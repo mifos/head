@@ -22,7 +22,6 @@ package org.mifos.accounts.productdefinition.business;
 
 import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION;
 import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.ERRORFEEFREQUENCY;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.ERRORPENALTYFREQUENCY;
 import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN;
 import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE;
 import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN;
@@ -375,9 +374,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
         this.loanOfferingPenalties = new HashSet<PrdOfferingPenaltiesEntity>();
         if (penalties != null && penalties.size() > 0) {
             for (PenaltyBO penalty : penalties) {
-                if(isFrequencyMatchingOfferingFrequency(penalty, meeting)) {
-                    addPrdOfferingPenalty(new PrdOfferingPenaltiesEntity(this, penalty));
-                }
+                addPrdOfferingPenalty(new PrdOfferingPenaltiesEntity(this, penalty));
             }
         }
         logger.debug("Loan offering build :" + getGlobalPrdOfferingNum());
@@ -439,9 +436,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
         this.loanOfferingPenalties = new HashSet<PrdOfferingPenaltiesEntity>();
         if (penalties != null && penalties.size() > 0) {
             for (PenaltyBO penalty : penalties) {
-                if(isFrequencyMatchingOfferingFrequency(penalty, meeting)) {
-                    addPrdOfferingPenalty(new PrdOfferingPenaltiesEntity(this, penalty));
-                }
+                addPrdOfferingPenalty(new PrdOfferingPenaltiesEntity(this, penalty));
             }
         }
         logger.debug("Loan offering build :" + getGlobalPrdOfferingNum());
@@ -832,9 +827,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             this.loanOfferingPenalties.clear();
             if (penalties != null && penalties.size() > 0) {
                 for (PenaltyBO penalty : penalties) {
-                    if(isFrequencyMatchingOfferingFrequency(penalty, this.loanOfferingMeeting.getMeeting())) {
-                        addPrdOfferingPenalty(new PrdOfferingPenaltiesEntity(this, penalty));
-                    }
+                    addPrdOfferingPenalty(new PrdOfferingPenaltiesEntity(this, penalty));
                 }
             }
         }
@@ -933,23 +926,6 @@ public class LoanOfferingBO extends PrdOfferingBO {
             return true;
         } else {
             throw new ProductDefinitionException(ERRORFEEFREQUENCY);
-        }
-
-    }
-    
-    private boolean isFrequencyMatchingOfferingFrequency(final PenaltyBO penalty, final MeetingBO meeting)
-            throws ProductDefinitionException {
-        logger.debug("Loan offering isFrequencyMatchingOfferingFrequency called - penalty:" + penalty);
-        if (penalty.getPenaltyFrequency().isOneTime()) {
-            return true;
-        } else if (penalty.getPenaltyFrequency().isWeeklyTime()
-                && meeting.getMeetingDetails().getRecurrenceType().isWeekly()) {
-            return true;
-        } else if (penalty.getPenaltyFrequency().isMonthlyTime()
-                && meeting.getMeetingDetails().getRecurrenceType().isMonthly()) {
-            return true;
-        } else {
-            throw new ProductDefinitionException(ERRORPENALTYFREQUENCY);
         }
 
     }
@@ -1605,13 +1581,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
         this.loanOfferingPenalties.clear();
         if (penalties != null) {
             for (PrdOfferingPenaltiesEntity penalty : penalties) {
-                try {
-                    if(isFrequencyMatchingOfferingFrequency(penalty.getPenalty(), this.loanOfferingMeeting.getMeeting())) {
-                        addPrdOfferingPenalty(new PrdOfferingPenaltiesEntity(this, penalty.getPenalty()));
-                    }
-                } catch (ProductDefinitionException e) {
-                    throw new BusinessRuleException(e.getKey(), e);
-                }
+                addPrdOfferingPenalty(new PrdOfferingPenaltiesEntity(this, penalty.getPenalty()));
             }
         }
     }

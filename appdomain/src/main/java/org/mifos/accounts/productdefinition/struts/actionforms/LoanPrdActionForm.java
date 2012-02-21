@@ -2178,7 +2178,6 @@ public class LoanPrdActionForm extends BaseActionForm {
                 for (String selectedPenalty : getPrdOfferinPenalties()) {
                     PenaltyBO penalty = getPenaltyFromList(penalties, selectedPenalty);
                     if (penalty != null) {
-                        isFrequencyMatchingOfferingFrequency(penalty, errors);
                         selectedPenalties.add(penalty.toDto());
                     }
                 }
@@ -2249,17 +2248,6 @@ public class LoanPrdActionForm extends BaseActionForm {
             addError(errors, "Fee", ProductDefinitionConstants.ERRORFEEFREQUENCY, fee.getFeeName());
         }
         logger.debug("Loan prd Action Form isFrequencyMatchingOfferingFrequency called - fee:" + fee);
-    }
-    
-    private void isFrequencyMatchingOfferingFrequency(PenaltyBO penalty, ActionErrors errors) {
-        logger.debug("start Loan prd Action Form isFrequencyMatchingOfferingFrequency - penalty:" + penalty);
-
-        if (getFreqOfInstallmentsValue() != null && !penalty.getPenaltyFrequency().isOneTime()
-                && (!(penalty.getPenaltyFrequency().getId().equals((short)(getFreqOfInstallmentsValue() + 2))))) {
-            addError(errors, "Penalty", ProductDefinitionConstants.ERRORPENALTYFREQUENCY, penalty.getPenaltyName());
-        }
-        
-        logger.debug("Loan prd Action Form isFrequencyMatchingOfferingFrequency called - penalty:" + penalty);
     }
 
     private void vaildateDecliningInterestSvcChargeDeductedAtDisbursement(ActionErrors errors,
