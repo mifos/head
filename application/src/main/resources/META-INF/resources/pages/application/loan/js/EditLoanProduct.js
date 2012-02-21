@@ -142,23 +142,19 @@ function changeInstallmentValue(event, editbox, endvalue, rownum)
 function showVariableInstallmentInputs() {
     var isVariableInstallmentType = document.getElementById("EditLoanProduct.checkbox.canConfigureVariableInstallments");
     if (isVariableInstallmentType.checked == true) {
-        document.getElementById("fixedRepaymentScheduleLabelDiv").style.display = "block";
         document.getElementById("minimumGapBetweenInstallmentsLabelDiv").style.display = "block";
         document.getElementById("maximumGapBetweenInstallmentsLabelDiv").style.display = "block";
         document.getElementById("minimumInstallmentAmountLabelDiv").style.display = "block";
 
-        document.getElementById("fixedRepaymentScheduleInputDiv").style.display = "block";
         document.getElementById("minimumGapBetweenInstallmentsInputDiv").style.display = "block";
         document.getElementById("maximumGapBetweenInstallmentsInputDiv").style.display = "block";
         document.getElementById("minimumInstallmentAmountInputDiv").style.display = "block";
 
     } else {
-        document.getElementById("fixedRepaymentScheduleLabelDiv").style.display = "none";
         document.getElementById("minimumGapBetweenInstallmentsLabelDiv").style.display = "none";
         document.getElementById("maximumGapBetweenInstallmentsLabelDiv").style.display = "none";
         document.getElementById("minimumInstallmentAmountLabelDiv").style.display = "none";
 
-        document.getElementById("fixedRepaymentScheduleInputDiv").style.display = "none";
         document.getElementById("minimumGapBetweenInstallmentsInputDiv").style.display = "none";
         document.getElementById("maximumGapBetweenInstallmentsInputDiv").style.display = "none";
         document.getElementById("minimumInstallmentAmountInputDiv").style.display = "none";

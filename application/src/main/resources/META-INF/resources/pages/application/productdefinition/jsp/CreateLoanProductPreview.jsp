@@ -527,20 +527,20 @@ explanation of the license and how it is applied.
                                             </c:choose>
                                         </span>
 								        <br/>
+								        <mifos:mifoslabel name="product.fixedRepaymentSchedule" bundle="ProductDefUIResources" isColonRequired="yes" />
+								        <span class="fontnormal">
+                                            <c:choose>
+                                                <c:when test="${sessionScope.loanproductactionform.isFixedRepaymentSchedule == '1'}">
+                                                    <mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </span>
+                                        <br/>
                                         <c:if test="${sessionScope.loanproductactionform.canConfigureVariableInstallments=='1'}">
 
-                                                    <mifos:mifoslabel name="product.fixedRepaymentSchedule" bundle="ProductDefUIResources" isColonRequired="yes" />
-                                                    <span class="fontnormal">
-                                                        <c:choose>
-                                                            <c:when test="${sessionScope.loanproductactionform.isFixedRepaymentSchedule == '1'}">
-                                                                <mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </span>
-                                                    <br/>
                                                     <mifos:mifoslabel name="product.minimumGapBetweenInstallments" bundle="ProductDefUIResources" isColonRequired="yes" />
                                                     <span class="fontnormal">
                                                         <c:choose>

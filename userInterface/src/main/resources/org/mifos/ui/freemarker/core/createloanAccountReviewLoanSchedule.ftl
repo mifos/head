@@ -86,6 +86,14 @@ $(document).ready(function() {
 	    <div class="attribute"><span class="standout">[@spring.message "reviewInstallments.disbursmentDate"/]</span></div>
 	    <div class="value">${loanScheduleReferenceData.disbursementDate?date?string.medium}</div>
 	</div>
+	<div class="row">
+	    <div class="attribute"><span class="standout">[@spring.message "productSummary.fixedRepaymentSchedule"/]</span></div>
+	    [#if loanProductReferenceData.fixedRepaymentSchedule]
+	        <div class="value">[@spring.message "boolean.yes"/]</div>
+	    [#else]
+	        <div class="value">[@spring.message "boolean.no"/]</div>
+	    [/#if]
+	</div>
 [#if loanProductReferenceData.variableInstallmentsAllowed]
 	<div class="row">
 	    <div class="attribute"><span class="standout">[@spring.message "productSummary.variabeInstallments.minInstallmentAmount"/]</span></div>
@@ -98,14 +106,6 @@ $(document).ready(function() {
 	<div class="row">
 	    <div class="attribute"><span class="standout">[@spring.message "productSummary.variableInstallmentsAllowed"/]</span></div>
 	    <div class="value">[@spring.message "boolean.yes"/]</div>
-	</div>
-	<div class="row">
-	    <div class="attribute"><span class="standout">[@spring.message "productSummary.fixedRepaymentSchedule"/]</span></div>
-	    [#if loanProductReferenceData.fixedRepaymentSchedule]
-	        <div class="value">[@spring.message "boolean.yes"/]</div>
-	    [#else]
-	        <div class="value">[@spring.message "boolean.no"/]</div>
-	    [/#if]
 	</div>
 	<div class="row">
 	    <div class="attribute"><span class="standout">[@spring.message "productSummary.variabeInstallments.minGap"/]</span></div>

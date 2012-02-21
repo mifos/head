@@ -66,11 +66,6 @@
         <div class="attribute">[@spring.message "productSummary.freqOfInstallments"/]</div>
         <div class="value">${loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.every}&nbsp;${loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceName}</div>
     </div>
-    [#if loanProductReferenceData.variableInstallmentsAllowed]
-    <div class="row">
-        <div class="attribute">[@spring.message "productSummary.variableInstallmentsAllowed"/]</div>
-        <div class="value">[@spring.message "boolean.yes"/]</div>
-    </div>
     <div class="row">
         <div class="attribute">[@spring.message "productSummary.fixedRepaymentSchedule"/]</div>
         [#if loanProductReferenceData.fixedRepaymentSchedule]
@@ -78,6 +73,11 @@
 	    [#else]
 	        <div class="value">[@spring.message "boolean.no"/]</div>
 	    [/#if]
+    </div>
+    [#if loanProductReferenceData.variableInstallmentsAllowed]
+    <div class="row">
+        <div class="attribute">[@spring.message "productSummary.variableInstallmentsAllowed"/]</div>
+        <div class="value">[@spring.message "boolean.yes"/]</div>
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "productSummary.variabeInstallments.minGap"/]</div>
