@@ -117,11 +117,19 @@ public class ConfigurationPersistence extends LegacyGenericDao {
     }
 
     /**
-     * Delete a persistent integer configuration key value pair.
+     * Delete a persistent configuration key value pair.
+     *
+     * If the key doesn't exist, then nothing happens.
+     *
+     * @param key ConfigurationKeyValue key
+     *
+     * @throws PersistenceException when the ConfigurationKeyValue cannot be deleted
      */
     public void deleteConfigurationKeyValue(String key) throws PersistenceException {
         ConfigurationKeyValue keyValue = getConfigurationKeyValue(key);
-        delete(keyValue);
+        if (keyValue != null) {
+            delete(keyValue);
+        }
     }
 
     /**
