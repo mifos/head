@@ -60,7 +60,7 @@ public class PenaltyFormValidator implements Validator {
         if(StringUtils.hasText(formBean.getPeriodTypeId()) && !formBean.getPeriodTypeId().equalsIgnoreCase("3")) {
             checkNumber(errors, formBean.getDuration(), "Grace Period Duration", digits);
         } else {
-            incorrectIntegerValue(errors, formBean.getDuration(), "Grace Period Duration", digits);
+            formBean.setDuration("");
         }
         
         emptyField(errors, formBean.getName(), "Penalty Name");
