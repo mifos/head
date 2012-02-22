@@ -28,6 +28,16 @@ function showRateOrAmount() {
         document.getElementById("rateDiv").style.display = "none";
     }
 }
+
+function fnGracePeriod() {
+    if(document.getElementsByName("periodTypeId")[0].selectedIndex==0 ||
+        document.getElementsByName("periodTypeId")[0].value==3) {
+        document.getElementsByName("duration")[0].value="";
+        document.getElementsByName("duration")[0].disabled=true;
+    }else {
+        document.getElementsByName("duration")[0].disabled=false;
+    }
+}
 </script>
 [@layout.header "title" /]
 [@widget.topNavigationNoSecurity currentTab="Admin" /]
@@ -78,7 +88,7 @@ function showRateOrAmount() {
                                 [@spring.message "organizationPreferences.definenewpenalty.graceperiodtype"/]
                             </span>
                             <span class="span-5">
-                                &nbsp;[@form.formSingleSelectWithPrompt "formBean.periodTypeId", param.periodType, "--Select--" /]
+                                &nbsp;[@form.formSingleSelectWithPrompt "formBean.periodTypeId", param.periodType, "--Select--", "onchange=fnGracePeriod()" /]
                             </span>
                         </div>
                         <div class="span-20 ">
@@ -168,6 +178,7 @@ function showRateOrAmount() {
 </div>
 <script>
 showRateOrAmount();
+fnGracePeriod();
 </script>
 <!--Main Content Ends-->
 [@layout.footer/]
