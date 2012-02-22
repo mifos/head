@@ -266,6 +266,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private final LoanBusinessService loanBusinessService;
     private final LoanScheduleService loanScheduleService;
     private final HibernateTransactionHelper transactionHelper;
+    private final MonthClosingServiceFacade monthClosingServiceFacade;
 
     @Autowired
     private FeeDao feeDao;
@@ -283,9 +284,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private QuestionnaireServiceFacade questionnaireServiceFacade;
 
     @Autowired
-    private MonthClosingServiceFacade monthClosingServiceFacade;
-
-    @Autowired
     private LegacyRolesPermissionsDao legacyRolesPermissionsDao;
 
     @Autowired
@@ -298,7 +296,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                                            PersonnelDao personnelDao, FundDao fundDao, LoanDao loanDao,
                                            AccountService accountService, ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
                                            LoanBusinessService loanBusinessService, LoanScheduleService loanScheduleService,
-                                           InstallmentsValidator installmentsValidator, HolidayServiceFacade holidayServiceFacade) {
+                                           InstallmentsValidator installmentsValidator, HolidayServiceFacade holidayServiceFacade,
+                                           MonthClosingServiceFacade monthClosingServiceFacade) {
         this.officeDao = officeDao;
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
@@ -311,7 +310,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         this.loanScheduleService = loanScheduleService;
         this.installmentsValidator = installmentsValidator;
         this.holidayServiceFacade = holidayServiceFacade;
-        transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+        this.transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+        this.monthClosingServiceFacade = monthClosingServiceFacade;
     }
 
     @Override
@@ -1430,6 +1430,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         } catch (AccountException e) {
             throw new MifosRuntimeException(e.getMessage(), e);
         }
+        monthClosingServiceFacade.validateTransactionDate(repayLoanInfoDto.getDateOfPayment());
         
         try {
             if (repayLoanInfoDto.isWaiveInterest() && !loan.isInterestWaived()) {

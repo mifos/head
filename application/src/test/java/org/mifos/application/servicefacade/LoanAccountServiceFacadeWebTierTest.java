@@ -57,6 +57,7 @@ import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
+import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.clientportfolio.newloan.domain.LoanService;
@@ -131,6 +132,9 @@ public class LoanAccountServiceFacadeWebTierTest {
 
     @Mock
     private OfficeDao officeDao;
+    @Mock
+    private MonthClosingServiceFacade monthClosingServiceFacade;
+
     private MifosCurrency rupee;
 
     private UserContext userContext;
@@ -138,7 +142,8 @@ public class LoanAccountServiceFacadeWebTierTest {
     @Before
     public void setupAndInjectDependencies() {
         loanAccountServiceFacade = new LoanAccountServiceFacadeWebTier(officeDao, loanProductDao, customerDao, personnelDao,
-                fundDao, loanDao, accountService, scheduleCalculatorAdaptor, loanBusinessService, loanScheduleService, installmentsValidator, holidayServiceFacade);
+                fundDao, loanDao, accountService, scheduleCalculatorAdaptor, loanBusinessService, loanScheduleService,
+                installmentsValidator, holidayServiceFacade, monthClosingServiceFacade);
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         userContext = TestUtils.makeUser();
     }

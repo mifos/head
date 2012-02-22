@@ -47,6 +47,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.persistence.LegacyAccountDao;
+import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -90,6 +91,9 @@ public class WebTierAccountServiceFacadeTest {
     private HibernateTransactionHelper transactionHelper;
     @Mock
     private UserContext userContext;
+    @Mock
+    private MonthClosingServiceFacade monthClosingServiceFacade;
+
     private WebTierAccountServiceFacade accountServiceFacade;
     private MifosCurrency rupee;
     private static final int LOAN_ID = 1;
@@ -98,7 +102,8 @@ public class WebTierAccountServiceFacadeTest {
     @Before
     public void setUp() throws Exception {
         accountServiceFacade = new WebTierAccountServiceFacade(null, transactionHelper,
-                accountBusinessService, scheduleCalculatorAdaptor, acceptedPaymentTypePersistence, personnelPersistence, legacyAccountDao){
+                accountBusinessService, scheduleCalculatorAdaptor, acceptedPaymentTypePersistence, personnelPersistence,
+                legacyAccountDao, monthClosingServiceFacade){
             @Override
             void clearSessionAndRollback() {
                 // do nothing
@@ -187,7 +192,7 @@ public class WebTierAccountServiceFacadeTest {
         verify(transactionHelper).commitTransaction();
         verify(accountBusinessService).checkPermissionForAdjustmentOnBackDatedPayments(paymentDate, userContext,
                 recordOfficeId, recordLoanOfficer);
-        verify(lastPmntToBeAdjusted).getPaymentDate();
+        verify(lastPmntToBeAdjusted, times(2)).getPaymentDate();
     }
 
     @Test

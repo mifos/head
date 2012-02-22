@@ -38,6 +38,7 @@ import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.util.helpers.TrxnTypes;
@@ -77,6 +78,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     private LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence;
     private LegacyPersonnelDao personnelPersistence;
     private LegacyAccountDao legacyAccountDao;
+    private MonthClosingServiceFacade monthClosingServiceFacade;
     
     @Autowired
     private PersonnelDao personnelDao;
@@ -92,7 +94,8 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                                        AccountBusinessService accountBusinessService,
                                        ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
                                        LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence,
-                                       LegacyPersonnelDao personnelPersistence, LegacyAccountDao legacyAccountDao) {
+                                       LegacyPersonnelDao personnelPersistence, LegacyAccountDao legacyAccountDao,
+                                       MonthClosingServiceFacade monthClosingServiceFacade) {
         this.accountService = accountService;
         this.transactionHelper = transactionHelper;
         this.accountBusinessService = accountBusinessService;
@@ -100,6 +103,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
         this.personnelPersistence = personnelPersistence;
         this.legacyAccountDao = legacyAccountDao;
+        this.monthClosingServiceFacade = monthClosingServiceFacade;
     }
 
     @Override
@@ -314,6 +318,12 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             accountBO.setUserContext(getUserContext());
             checkPermissionForAdjustment(accountBO);
             PersonnelBO personnelBO = personnelPersistence.findPersonnelById(loggedInUser);
+
+            AccountPaymentEntity accountPaymentEntity = accountBO.getLastPmntToBeAdjusted();
+            if (accountPaymentEntity != null) {
+                monthClosingServiceFacade.validateTransactionDate(accountPaymentEntity.getPaymentDate());
+            }
+
             transactionHelper.startTransaction();
             accountBO.adjustLastPayment(adjustmentNote, personnelBO);
             legacyAccountDao.createOrUpdate(accountBO);

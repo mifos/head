@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataDto;
@@ -69,6 +70,8 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     @Autowired
     private LegacyPersonnelDao legacyPersonnelDao;
 
+    @Autowired
+    private MonthClosingServiceFacade monthClosingServiceFacade;
 
     @Autowired
     public CollectionSheetServiceFacadeWebTier(final CollectionSheetService collectionSheetService,
@@ -80,13 +83,15 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     public CollectionSheetServiceFacadeWebTier(final OfficePersistence officePersistence,
             final LegacyMasterDao legacyMasterDao, final LegacyPersonnelDao personnelPersistence,
             final CustomerPersistence customerPersistence, final CollectionSheetService collectionSheetService,
-            final CollectionSheetDtoTranslator collectionSheetTranslator) {
+            final CollectionSheetDtoTranslator collectionSheetTranslator,
+            final MonthClosingServiceFacade monthClosingServiceFacade) {
         this.officePersistence = officePersistence;
         this.legacyMasterDao = legacyMasterDao;
         this.legacyPersonnelDao = personnelPersistence;
         this.customerPersistence = customerPersistence;
         this.collectionSheetService = collectionSheetService;
         this.collectionSheetTranslator = collectionSheetTranslator;
+        this.monthClosingServiceFacade = monthClosingServiceFacade;
     }
 
     @Override
@@ -255,6 +260,8 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
         final SaveCollectionSheetDto saveCollectionSheetDto = new SaveCollectionSheetFromLegacyAssembler()
                 .fromWebTierLegacyStructuretoSaveCollectionSheetDto(previousCollectionSheetEntryDto, userId);
+
+        monthClosingServiceFacade.validateTransactionDate(saveCollectionSheetDto.getTransactionDate().toDateMidnight().toDate());
 
         return saveCollectionSheet(saveCollectionSheetDto);
     }

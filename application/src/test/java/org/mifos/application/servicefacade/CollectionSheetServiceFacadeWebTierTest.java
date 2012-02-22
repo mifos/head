@@ -34,6 +34,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -85,6 +86,9 @@ public class CollectionSheetServiceFacadeWebTierTest {
     @Mock
     private CollectionSheetDtoTranslator collectionSheetTranslator;
 
+    @Mock
+    private MonthClosingServiceFacade monthClosingServiceFacade;
+
     private UserContext userContext;
     private BulkEntryActionForm collectionSheetForm;
     private static final Short defaultCurrencyId = Short.valueOf("2");
@@ -111,7 +115,8 @@ public class CollectionSheetServiceFacadeWebTierTest {
         collectionSheetForm.setPaymentId("2");
 
         collectionSheetServiceFacadeWebTier = new CollectionSheetServiceFacadeWebTier(officePersistence,
-                legacyMasterDao, personnelPersistence, customerPersistence, collectionSheetService, collectionSheetTranslator);
+                legacyMasterDao, personnelPersistence, customerPersistence, collectionSheetService, collectionSheetTranslator,
+                monthClosingServiceFacade);
     }
 
     @Test
