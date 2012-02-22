@@ -138,14 +138,6 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[4], null, null,
                 PenaltyFormParameters.FREQUENCY_WEEKLY, "0.5", PenaltyFormParameters.FORMULA_OUTSTANDING_LOAN);
         
-        changeDateTime(02, 24);
-        verifyCalculatePenalty(accountId,
-                new String[] { "20.2", "0", "20.2" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, null /* Future Installments */, { "20.2", "470.2" },
-                                 { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
-                new String[] { "920.2", "01/03/2012", "450" }
-        );
-        
         changeDateTime(03, 3);
         verifyCalculatePenalty(accountId,
                 new String[] { "40.6", "0", "40.6" },
@@ -162,14 +154,6 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[5], null, null,
                 PenaltyFormParameters.FREQUENCY_WEEKLY, "1", PenaltyFormParameters.FORMULA_OVERDUE_AMOUNT);
         
-        changeDateTime(02, 24);
-        verifyCalculatePenalty(accountId,
-                new String[] { "4.5", "0", "4.5" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, null /* Future Installments */, { "4.5", "454.5" },
-                                 { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
-                new String[] { "904.5", "01/03/2012", "450" }
-        );
-        
         changeDateTime(03, 3);
         verifyCalculatePenalty(accountId,
                 new String[] { "9", "0", "9" },
@@ -185,14 +169,6 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
     public void shouldCalculateWeeklyRatePenaltyWithPeriodOnLoanAccount() throws Exception {
         final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[6], PenaltyFormParameters.PERIOD_DAYS, "7",
                 PenaltyFormParameters.FREQUENCY_WEEKLY, "0.1", PenaltyFormParameters.FORMULA_OUTSTANDING_PRINCIPAL);
-        
-        changeDateTime(03, 01);
-        verifyCalculatePenalty(accountId,
-                new String[] { "0", "0", "0" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, { "0", "450" }, null /* Future Installments */, 
-                                 { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
-                new String[] { "900", "01/03/2012", "450" }
-        );
         
         changeDateTime(03, 15);
         verifyCalculatePenalty(accountId,
@@ -234,7 +210,7 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
                 null
         );
         
-        changeDateTime(05, 1);
+        changeDateTime(04, 5);
         verifyCalculatePenalty(accountId,
                 new String[] { sumToString, sumToString, "0" },
                 schedule,
@@ -337,14 +313,6 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
                 new String[][] { { "0", "450" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" },
                                  { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
                 new String[] { "0", "16/02/2012", "0" }
-        );
-        
-        changeDateTime(02, 23);
-        verifyCalculatePenalty(accountId,
-                new String[] { "0", "0", "0" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "0", "450" }, null /* Future Installments */, { "0", "450" },
-                                 { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
-                new String[] { "450", "23/02/2012", "0" }
         );
         
         return accountId;

@@ -395,18 +395,21 @@ public class MainPenaltyTest extends UiTestCaseBase {
         for (int k = 0; k < 4; ++k) {
             switch (k) {
             case 0:
+                parameters.setPeriod(PenaltyFormParameters.PERIOD_DAYS);
                 parameters.setDuration("dshjgfhdsjklf");
                 parameters.setMin("dsgffdsg");
                 parameters.setMax("fdgdfg");
                 parameters.setAmount("dsgfdfg");
                 break;
             case 1:
+                parameters.setPeriod(PenaltyFormParameters.PERIOD_DAYS);
                 parameters.setDuration("-3");
                 parameters.setMin("-5");
                 parameters.setMax("-10");
                 parameters.setAmount("-15");
                 break;
             case 2:
+                parameters.setPeriod(PenaltyFormParameters.PERIOD_DAYS);
                 parameters.setDuration("123456789012345");
                 parameters.setMin("123456789012345");
                 parameters.setMax("123456789012345");
