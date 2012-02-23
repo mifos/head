@@ -40,8 +40,9 @@ explanation of the license and how it is applied.
         
 		<script src="pages/framework/js/date.js"></script>
 		<script src="pages/framework/js/func.js"></script>
-		<script type="text/javascript" src="pages/application/loan/js/CreateLoanProduct.js"></script>
 		<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="pages/application/loan/js/CreateLoanProduct.js"></script>
+		
 		<script type="text/javascript" src="pages/js/separator.js"></script>
 		
 		<html-el:form action="/loanproductaction"
