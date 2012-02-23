@@ -21,6 +21,9 @@
 package org.mifos.servlet.filters;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -44,6 +47,26 @@ public class CharacterEncodingFilter extends GenericFilterBean /* NOT OncePerReq
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         request.setCharacterEncoding(CharEncoding.UTF_8);
         response.setCharacterEncoding(CharEncoding.UTF_8);
+        if (!CharEncoding.UTF_8.equals(response.getCharacterEncoding())) {
+            // MIFOS-5435 - the character encoding was not set because the connection is in including state
+            try {
+                Method getResponse = response.getClass().getMethod("getResponse");
+                ServletResponse servletResponse = (ServletResponse) getResponse.invoke(response);
+                getResponse = servletResponse.getClass().getMethod("getResponse");
+                ServletResponse jettyResponse = (ServletResponse) getResponse.invoke(servletResponse);
+                Field _characterEncoding = jettyResponse.getClass().getDeclaredField("_characterEncoding");
+                _characterEncoding.setAccessible(true);
+                _characterEncoding.set(jettyResponse, CharEncoding.UTF_8);
+            } catch (NoSuchFieldException e) {
+                logger.debug(e);
+            } catch (IllegalAccessException e) {
+                logger.debug(e);
+            } catch (NoSuchMethodException e) {
+                logger.debug(e);
+            } catch (InvocationTargetException e) {
+                logger.debug(e);
+            }
+        }
         chain.doFilter(request, response);
     }
 
