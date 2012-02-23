@@ -6,20 +6,28 @@
 
     <import resource="classpath:org/mifos/config/resources/propertyConfigurer.xml" />
 
+    <bean id="dbConfig" class="org.mifos.config.DatabaseConfiguration">
+        <constructor-arg index="0" value="${${mifos.mode}.database.user}" />
+        <constructor-arg index="1" value="${${mifos.mode}.database.password}" />
+        <constructor-arg index="2" value="${${mifos.mode}.database}" />
+        <constructor-arg index="3" value="${${mifos.mode}.database.host}" />
+        <constructor-arg index="4" value="${${mifos.mode}.database.port}" />
+    </bean>
+
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     	<property name="driverClassName" value="${${mifos.mode}.database.driver}" />
-     	<property name="url" value="jdbc:mysql://${${mifos.mode}.database.host}:${${mifos.mode}.database.port}/${${mifos.mode}.database}?${${mifos.mode}.database.params}" />
-        <property name="username" value="${${mifos.mode}.database.user}" />
-        <property name="password" value="${${mifos.mode}.database.password}" />
+     	<property name="url" value="jdbc:mysql://#{dbConfig.host}:#{dbConfig.port}/#{dbConfig.dbName}?${${mifos.mode}.database.params}" />
+        <property name="username" value="#{dbConfig.user}" />
+        <property name="password" value="#{dbConfig.password}" />
  	</bean>
 
 	<bean id="dbSpecificHibernateProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="properties">
 			<props>
-				<prop key="hibernate.connection.url">jdbc:mysql://${${mifos.mode}.database.host}:${${mifos.mode}.database.port}/${${mifos.mode}.database}?${${mifos.mode}.database.params}</prop>
+				<prop key="hibernate.connection.url">jdbc:mysql://#{dbConfig.host}:#{dbConfig.port}/#{dbConfig.dbName}?${${mifos.mode}.database.params}</prop>
 				<prop key="hibernate.connection.driver_class">${${mifos.mode}.database.driver}</prop>
-				<prop key="hibernate.connection.username">${${mifos.mode}.database.user}</prop>
-				<prop key="hibernate.connection.password">${${mifos.mode}.database.password}</prop>
+				<prop key="hibernate.connection.username">#{dbConfig.user}</prop>
+				<prop key="hibernate.connection.password">#{dbConfig.password}</prop>
 				<prop key="hibernate.dialect">${${mifos.mode}.database.hibernate.dialect}</prop>
 				<prop key="hibernate.show_sql">${${mifos.mode}.database.hibernate.show_sql}</prop>
 				<prop key="hibernate.generate_statistics">false</prop>

@@ -9,11 +9,19 @@
     <import resource="propertyConfigurer.xml"/>    
     -->
      
+    <bean id="dbConfig" class="org.mifos.config.DatabaseConfiguration">
+        <constructor-arg index="0" value="${${mifos.mode}.database.user}" />
+        <constructor-arg index="1" value="${${mifos.mode}.database.password}" />
+        <constructor-arg index="2" value="${${mifos.mode}.database}" />
+        <constructor-arg index="3" value="${${mifos.mode}.database.host}" />
+        <constructor-arg index="4" value="${${mifos.mode}.database.port}" />
+    </bean>
+     
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
         p:driverClass="${${mifos.mode}.database.driver}"
-        p:jdbcUrl="jdbc:mysql://${${mifos.mode}.database.host}:${${mifos.mode}.database.port}/${${mifos.mode}.database}?${${mifos.mode}.database.params}"
-        p:user="${${mifos.mode}.database.user}"
-        p:password="${${mifos.mode}.database.password}"
+        p:jdbcUrl="jdbc:mysql://#{dbConfig.host}:#{dbConfig.port}/#{dbConfig.dbName}?${${mifos.mode}.database.params}"
+        p:user="#{dbConfig.user}"
+        p:password="#{dbConfig.password}"
         p:initialPoolSize="5"
         p:minPoolSize="${${mifos.mode}.database.hibernate.c3p0.min_size}"
         p:maxPoolSize="${${mifos.mode}.database.hibernate.c3p0.max_size}"
