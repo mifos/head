@@ -126,4 +126,21 @@ public class ViewLoanAccountDetailsController {
         return modelAndView;
     }
     
+    @RequestMapping(value = "/viewLoanAccountRepaymentSchedule", method=RequestMethod.GET)
+    public ModelAndView showLoanAccountRepaymentSchedule(HttpServletRequest request, HttpServletResponse response){
+        ModelAndView modelAndView =new ModelAndView();
+        sitePreferenceHelper.resolveSiteType(modelAndView, "viewLoanAccountRepaymentSchedule", request);
+        modelAndView.addObject("include_page", new IncludePage(request, response));
+        
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        
+        LoanInformationDto loanInformationDto = loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
+        modelAndView.addObject("loanInformationDto", loanInformationDto);
+        modelAndView.addObject("currentDate", new Date());
+        
+        this.loanAccountServiceFacade.putLoanBusinessKeyInSession(globalAccountNum, request);
+        
+        return modelAndView;
+    }
+    
 }
