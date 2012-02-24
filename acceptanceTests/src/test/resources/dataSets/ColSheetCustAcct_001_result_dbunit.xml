@@ -57,6 +57,8 @@
   <DATABASECHANGELOG ID="MIFOS_5383_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-06 11:31:50.0" ORDEREXECUTED="231" EXECTYPE="EXECUTED" MD5SUM="3:e3f2fdea6e47675516523f634130672c" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5425_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-09 14:41:16.0" ORDEREXECUTED="232" EXECTYPE="EXECUTED" MD5SUM="3:b28cb3448b7729cfbea082f33eeca853" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5426_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-17 15:12:15.0" ORDEREXECUTED="234" EXECTYPE="EXECUTED" MD5SUM="3:e864e501fd0636f5efecb104e370cdd4" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5426_2" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-24 14:02:34.0" ORDEREXECUTED="258" EXECTYPE="EXECUTED" MD5SUM="3:bfb13d5be65b049f92b6056f84d6a75c" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5426_3" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-24 14:02:34.0" ORDEREXECUTED="259" EXECTYPE="EXECUTED" MD5SUM="3:1ba3e60d6e8916c9814bf2befd5eb460" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5433_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-15 14:59:55.0" ORDEREXECUTED="233" EXECTYPE="EXECUTED" MD5SUM="3:b32077bdab52d6cb9a4337ee44105586" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
@@ -4762,6 +4764,7 @@
   <loan_offering prd_offering_id="9" interest_type_id="1" graceperiod_type_id="1" max_interest_rate="99.0000000000" min_interest_rate="1.0000000000" def_interest_rate="10.0000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="15" interest_glcode_id="40" interest_waiver_flag="0" variable_installment_flag="0" cash_flow_comparison_flag="0" fixed_repayment_flag="0"/>
   <loan_offering_fund/>
   <loan_penalty/>
+  <loan_penalty_schedule/>
   <loan_perf_history id="1" account_id="4" no_of_payments="0"/>
   <loan_perf_history id="2" account_id="5" no_of_payments="0"/>
   <loan_perf_history id="3" account_id="9" no_of_payments="0"/>
