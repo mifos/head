@@ -39,7 +39,7 @@
 		<span class="fontnormal">
 			[#if savingsAccountDetailDto.accountStateId != AccountState.SAVINGS_CANCELLED.value && savingsAccountDetailDto.accountStateId != AccountState.SAVINGS_CLOSED.value ]
 				<a id="savingsaccountdetail.link.editAccountStatus" 
-				href="editStatusAction.do?method=load&accountId=${savingsAccountDetailDto}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+				href="editStatusAction.do?method=load&accountId=${savingsAccountDetailDto.accountId}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
 					[@spring.message "Savings.editAccountStatus" /]
 				</a>
 			[/#if]

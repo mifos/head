@@ -121,6 +121,8 @@ public class ViewLoanAccountDetailsController {
         modelAndView.addObject("loanInformationDto", loanInformationDto);
         modelAndView.addObject("loanInstallmentDetailsDto", loanInstallmentDetailsDto);
         
+        this.loanAccountServiceFacade.putLoanBusinessKeyInSession(globalAccountNum, request);
+        
         return modelAndView;
     }
     
