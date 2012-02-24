@@ -64,7 +64,7 @@
 		 ( savingsAccountDetailDto.accountStateId == AccountStates.SAVINGS_ACC_APPROVED || savingsAccountDetailDto.accountStateId == AccountStates.SAVINGS_ACC_INACTIVE ) ]
 		<span class="fontnormal">
 			<a id="savingsaccountdetail.link.viewDepositDueDetails" 
-				href="savingsAction.do?method=getDepositDueDetails&globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+				href="viewSavingsAccountDepositDueDetails.ftl?globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
 				[@spring.message "Savings.viewDepositDueDetails" /]
 			</a>
 		</span><br/>

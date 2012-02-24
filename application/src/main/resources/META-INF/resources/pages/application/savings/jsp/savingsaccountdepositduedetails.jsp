@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="savingsaccountdepositduedetails"></span>
-		<html-el:form method="post" action="/savingsAction.do">
+		<form method="get" action="viewSavingsAccountDetails.ftl">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 		
@@ -182,6 +182,6 @@ explanation of the license and how it is applied.
 				</tr>
 			</table>
 			<br>
-		</html-el:form>
+		</form>
 	</tiles:put>
 </tiles:insert>

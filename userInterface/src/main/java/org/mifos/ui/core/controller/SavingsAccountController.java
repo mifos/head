@@ -96,4 +96,20 @@ public class SavingsAccountController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/viewSavingsAccountDepositDueDetails", method=RequestMethod.GET)
+    public ModelAndView showSavingsAccountDepositDueDetails(HttpServletRequest request, HttpServletResponse response){
+        ModelAndView modelAndView =new ModelAndView();
+        sitePreferenceHelper.resolveSiteType(modelAndView, "viewSavingsAccountDepositDueDetails", request);
+        modelAndView.addObject("include_page", new IncludePage(request, response));
+        
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        
+        SavingsAccountDetailDto savingsAccountDetailDto = savingsServiceFacade.retrieveSavingsAccountDetails(globalAccountNum);
+        modelAndView.addObject("savingsAccountDetailDto", savingsAccountDetailDto);
+        
+        savingsServiceFacade.putSavingsBusinessKeyInSession(globalAccountNum, request);
+        
+        return modelAndView;
+    }
+    
 }

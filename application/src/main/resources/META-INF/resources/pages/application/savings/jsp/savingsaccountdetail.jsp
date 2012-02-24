@@ -108,7 +108,7 @@ explanation of the license and how it is applied.
 												&& (BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED ||
 												BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE)}">
 										<html-el:link styleId="savingsaccountdetail.link.viewDepositDueDetails" 
-											href="savingsAction.do?method=getDepositDueDetails&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+											href="viewSavingsAccountDepositDueDetails.ftl?globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 											<mifos:mifoslabel name="Savings.viewDepositDueDetails" />
 										</html-el:link>
 									</c:if>
