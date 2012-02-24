@@ -1441,8 +1441,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             BigDecimal interestDueForCurrentInstallment =
                     interestDueForNextInstallment(repayLoanInfoDto.getTotalRepaymentAmount(),
                     repayLoanInfoDto.getWaivedAmount(),loan,repayLoanInfoDto.isWaiveInterest());
-            loan.makeEarlyRepayment(earlyRepayAmount, repayLoanInfoDto.getReceiptNumber(),
-                    repayLoanInfoDto.getReceiptDate(), repayLoanInfoDto.getPaymentTypeId(), repayLoanInfoDto.getId(),
+            loan.makeEarlyRepayment(earlyRepayAmount, repayLoanInfoDto.getDateOfPayment(),
+                    repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(),
+                    repayLoanInfoDto.getPaymentTypeId(), repayLoanInfoDto.getId(),
                     repayLoanInfoDto.isWaiveInterest(), new Money(loan.getCurrency(), interestDueForCurrentInstallment));
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);

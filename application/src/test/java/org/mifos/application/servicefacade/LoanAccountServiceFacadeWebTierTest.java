@@ -165,7 +165,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         loanAccountServiceFacade.makeEarlyRepayment(new RepayLoanInfoDto("1", "100", receiptNumber, date,
                 paymentMethod, (short) 1, waiveInterest, date,BigDecimal.TEN,BigDecimal.ZERO));
 
-        verify(loanBO).makeEarlyRepayment(new Money(rupee, "100"), receiptNumber, date,
+        verify(loanBO).makeEarlyRepayment(new Money(rupee, "100"), date, receiptNumber, date,
                 paymentMethod, (short) 1, waiveInterest, new Money(rupee, BigDecimal.ZERO));
         verify(loanBusinessService).computeExtraInterest(loanBO, date);
     }
@@ -190,7 +190,7 @@ public class LoanAccountServiceFacadeWebTierTest {
                 waiveInterest, date,BigDecimal.ZERO,BigDecimal.ZERO));
 
         short userId = (short) 1;
-        verify(loanBO).makeEarlyRepayment(new Money(rupee, "100"), receiptNumber, date, paymentMethod, userId, waiveInterest, new Money(rupee, 100d));
+        verify(loanBO).makeEarlyRepayment(new Money(rupee, "100"), date, receiptNumber, date, paymentMethod, userId, waiveInterest, new Money(rupee, 100d));
         verify(loanBusinessService).computeExtraInterest(loanBO, date);
     }
 
@@ -208,7 +208,7 @@ public class LoanAccountServiceFacadeWebTierTest {
             loanAccountServiceFacade.makeEarlyRepayment(new RepayLoanInfoDto("1", "100", "001", mock(java.sql.Date.class),
                     "Cash", (short) 1, true, date,BigDecimal.ZERO,BigDecimal.ZERO));
         } catch (BusinessRuleException e) {
-            verify(loanBO, never()).makeEarlyRepayment((Money) anyObject(), anyString(), (Date) anyObject(), anyString(), (Short) anyObject(), anyBoolean(), Matchers.<Money>anyObject());
+            verify(loanBO, never()).makeEarlyRepayment((Money) anyObject(), (Date) anyObject(), anyString(), (Date) anyObject(), anyString(), (Short) anyObject(), anyBoolean(), Matchers.<Money>anyObject());
             verify(loanBO, never()).getCurrency();
             verify(loanBusinessService,never()).computeExtraInterest(eq(loanBO), Matchers.<Date>anyObject());
             assertThat(e.getMessageKey(), is(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED));

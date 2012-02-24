@@ -1214,13 +1214,13 @@ public class LoanBO extends AccountBO implements Loan {
         return amount;
     }
 
-    public void makeEarlyRepayment(final Money totalAmount, final String receiptNumber, final Date receiptDate,
+    public void makeEarlyRepayment(final Money totalAmount, final Date transactionDate,
+                                   final String receiptNumber, final Date receiptDate,
                                    final String paymentTypeId, final Short personnelId,
                                    boolean waiveInterest, Money interestDue) throws AccountException {
         try {
             PersonnelBO currentUser = legacyPersonnelDao.getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
-            Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
             this.setUpdatedDate(transactionDate);
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, totalAmount, receiptNumber,
                     receiptDate, getPaymentTypeEntity(Short.valueOf(paymentTypeId)), transactionDate);
