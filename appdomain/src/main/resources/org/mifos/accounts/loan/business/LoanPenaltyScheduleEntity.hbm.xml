@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+
+    <class name="org.mifos.accounts.loan.business.LoanPenaltyScheduleEntity" table="loan_penalty_schedule">
+        <id name="loanPenaltyScheduleEntityId" column="loan_penalties_schedule_id" type="integer" unsaved-value="null" access="field">
+            <generator class="native" />
+        </id>
+
+        <version name="versionNo" column="version_no" type="integer" unsaved-value="null" />
+
+        <property name="installmentId" column="installment_id" access="field"/>
+        <property name="penaltyAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+            <column name="amount_currency_id" />
+            <column name="amount" />
+        </property>
+        <property name="penaltyAmountPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+            <column name="amount_paid_currency_id" />
+            <column name="amount_paid" />
+        </property>
+
+        <many-to-one name="accountPenalty" column="account_penalty_id" class="org.mifos.accounts.business.AccountPenaltiesEntity" access="field"/>
+        <many-to-one name="loanSchedule" column="id" class="org.mifos.accounts.loan.business.LoanScheduleEntity" access="field"/>
+        <many-to-one name="penalty" column="penalty_id" class="org.mifos.accounts.penalties.business.PenaltyBO" access="field"/>
+
+    </class>
+</hibernate-mapping>

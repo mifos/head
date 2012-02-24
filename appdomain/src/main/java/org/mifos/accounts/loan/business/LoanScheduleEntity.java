@@ -68,6 +68,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     private Money miscPenaltyPaid;
 
     private Set<AccountFeesActionDetailEntity> accountFeesActionDetails = new HashSet<AccountFeesActionDetailEntity>();
+    private Set<LoanPenaltyScheduleEntity> loanPenaltiesSchedule = new HashSet<LoanPenaltyScheduleEntity>();
 
     private int versionNo;
 
@@ -177,6 +178,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         accountFeesActionDetails.add(accountFeesAction);
     }
     
+    public Set<LoanPenaltyScheduleEntity> getLoanPenaltyScheduleEntities() {
+        return loanPenaltiesSchedule;
+    }
+
+    public void addLoanPenaltySchedule(LoanPenaltyScheduleEntity loanPenaltySchedule) {
+        loanPenaltiesSchedule.add(loanPenaltySchedule);
+    }
+
     public Money getMiscFee() {
         return miscFee;
     }
@@ -271,6 +280,11 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet) {
             ((LoanFeeScheduleEntity) accountFeesActionDetailEntity).makeRepaymentEnteries(payFullOrPartial);
         }
+        
+        Set<LoanPenaltyScheduleEntity> loanPenaltyScheduleSet = this.getLoanPenaltyScheduleEntities();
+        for (LoanPenaltyScheduleEntity loanPenaltyScheduleEntity : loanPenaltyScheduleSet) {
+            loanPenaltyScheduleEntity.makeRepaymentEnteries(payFullOrPartial);
+        }
     }
 
     public void updatePaymentDetailsForAdjustment(LoanTrxnDetailEntity loanReverseTrxn) {
@@ -305,12 +319,20 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
             chargeWaived = chargeWaived.add(((LoanFeeScheduleEntity) accountFeesActionDetailEntity).waiveCharges());
         }
+        setMiscPenalty(getMiscPenaltyPaid());
+        for (LoanPenaltyScheduleEntity entity: getLoanPenaltyScheduleEntities()) {
+            chargeWaived = chargeWaived.add(entity.waiveCharges());
+        }
         return chargeWaived;
     }
 
     // watch out, this relies on passing in the same reference as the object held in the collection
     void removeAccountFeesActionDetailEntity(AccountFeesActionDetailEntity accountFeesActionDetailEntity) {
         accountFeesActionDetails.remove(accountFeesActionDetailEntity);
+    }
+    
+    void removeLoanPenaltySchedule(LoanPenaltyScheduleEntity loanPenaltySchedule) {
+        loanPenaltiesSchedule.remove(loanPenaltySchedule);
     }
 
     public Money getMiscFeeDue() {
