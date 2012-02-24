@@ -11,6 +11,7 @@ import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.dto.domain.LoanActivityDto;
+import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -102,6 +103,23 @@ public class ViewLoanAccountDetailsController {
         List<TransactionHistoryDto> transactionHistoryDto = this.centerServiceFacade.retrieveAccountTransactionHistory(globalAccountNum);
         
         request.setAttribute("trxnHistoryList", transactionHistoryDto);
+        
+        return modelAndView;
+    }
+    
+    @RequestMapping(value = "/viewLoanAccountNextInstallmentDetails", method=RequestMethod.GET)
+    public ModelAndView showLoanAccountNextInstallmentDetails(HttpServletRequest request, HttpServletResponse response){
+        ModelAndView modelAndView =new ModelAndView();
+        sitePreferenceHelper.resolveSiteType(modelAndView, "viewLoanAccountNextInstallmentDetails", request);
+        modelAndView.addObject("include_page", new IncludePage(request, response));
+        
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        
+        LoanInformationDto loanInformationDto = loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
+        LoanInstallmentDetailsDto loanInstallmentDetailsDto = this.loanAccountServiceFacade.retrieveInstallmentDetails(loanInformationDto.getAccountId());
+        
+        modelAndView.addObject("loanInformationDto", loanInformationDto);
+        modelAndView.addObject("loanInstallmentDetailsDto", loanInstallmentDetailsDto);
         
         return modelAndView;
     }
