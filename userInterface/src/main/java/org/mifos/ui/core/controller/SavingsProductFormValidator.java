@@ -22,14 +22,12 @@ package org.mifos.ui.core.controller;
 
 import org.joda.time.MutableDateTime;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
-import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
-
-import antlr.CppCodeGenerator;
 
 import java.util.Date;
 import java.math.BigDecimal;
@@ -38,7 +36,7 @@ import java.math.BigDecimal;
 public class SavingsProductFormValidator implements Validator {
     final private LazyBindingErrorProcessor errorProcessor;   
     @Autowired
-    private ConfigurationServiceFacade configurationServiceFacade;
+    final private ConfigurationServiceFacade configurationServiceFacade;
     
     public SavingsProductFormValidator(LazyBindingErrorProcessor errorProcessor, ConfigurationServiceFacade configurationServiceFacade) {
         this.errorProcessor = errorProcessor;
