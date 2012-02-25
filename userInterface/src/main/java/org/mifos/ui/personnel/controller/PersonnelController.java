@@ -3,7 +3,6 @@ package org.mifos.ui.personnel.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
-import org.mifos.framework.util.helpers.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
