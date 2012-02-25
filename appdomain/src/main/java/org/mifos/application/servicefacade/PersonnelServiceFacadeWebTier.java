@@ -621,14 +621,14 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             Short newLocaleId = id;
             assert Localization.getInstance().getLocaleById(newLocaleId) != null;
             user.setPreferredLocaleId(newLocaleId);
-
+            
             // Legacy struts actions uses this
             // Eg. LoanPrdActionForm.validateInterestGLCode
             UserContext userContext = (UserContext) request.getSession().getAttribute(Constants.USERCONTEXT);
             if (userContext != null) {
                 userContext.setPreferredLocale(Localization.getInstance().getLocaleById(newLocaleId));
             }
-
+            
             try {
                 this.transactionHelper.startTransaction();
                 PersonnelBO p = this.personnelDao.findPersonnelById((short) user.getUserId());

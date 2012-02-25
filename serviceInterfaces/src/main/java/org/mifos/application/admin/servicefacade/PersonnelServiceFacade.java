@@ -82,6 +82,6 @@ public interface PersonnelServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     CustomerHierarchyDto getLoanOfficerCustomersHierarchyForDay(Short loanOfficerId, DateTime day);
-
+    
     SitePreferenceType retrieveSitePreference(Integer userId);
 }
