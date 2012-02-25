@@ -116,6 +116,9 @@ $(document).ready(function() {
 		}
 	});
 	
+	var script = $(".submit").attr("onclick");
+	alert(script);
+	
     $(".submit").click(function(event) {
     	$(".separatedNumber").each(function(index){
     		var amount;
