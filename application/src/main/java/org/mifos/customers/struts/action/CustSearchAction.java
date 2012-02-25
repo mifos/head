@@ -88,6 +88,11 @@ public class CustSearchAction extends SearchAction {
             SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD, CustomerSearchConstants.LOADFORWARDLOANOFFICER, request);
         }
 
+        if (StringUtils.isNotBlank(actionForm.getOfficeId())) {
+            List<PersonnelBO> personnelList = legacyPersonnelDao.getActiveLoanOfficersUnderOffice(getShortValue(actionForm.getOfficeId()));
+            SessionUtils.setCollectionAttribute(CustomerSearchConstants.LOANOFFICERSLIST, personnelList, request);
+        }
+        
         UserContext userContext = getUserContext(request);
         Short userBranchId = userContext.getBranchId();
         String officeName = retrieveOfficeName(actionForm, userBranchId);

@@ -28,6 +28,7 @@ import org.mifos.config.SitePreferenceType;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.CustomerHierarchyDto;
+import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.domain.UserSearchDto;
 import org.mifos.dto.domain.ValueListElement;
@@ -80,6 +81,9 @@ public interface PersonnelServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     CustomerHierarchyDto getLoanOfficerCustomersHierarchyForDay(Short loanOfficerId, DateTime day);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    List<PersonnelDto> retrieveActiveLoanOfficersUnderOffice(Short officeId);
     
     SitePreferenceType retrieveSitePreference(Integer userId);
 }

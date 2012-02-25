@@ -67,6 +67,7 @@ import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerHierarchyDto;
 import org.mifos.dto.domain.GroupDescriptionDto;
+import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.domain.UserSearchDto;
 import org.mifos.dto.domain.ValueListElement;
@@ -695,6 +696,23 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         }
 
         return hierarchy;
+    }
+
+    @Override
+    public List<PersonnelDto> retrieveActiveLoanOfficersUnderOffice(Short officeId) {
+        List<PersonnelBO> personnelList;
+        try {
+            personnelList = legacyPersonnelDao.getActiveLoanOfficersUnderOffice(officeId);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+        
+        List<PersonnelDto> personnelDtoList = new ArrayList<PersonnelDto>();
+        for (PersonnelBO personnelBO : personnelList){
+            personnelDtoList.add(new PersonnelDto(personnelBO.getPersonnelId(), personnelBO.getDisplayName()));
+        }
+        
+        return personnelDtoList;
     }
 
     @Override
