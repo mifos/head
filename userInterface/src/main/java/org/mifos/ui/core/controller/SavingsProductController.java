@@ -23,6 +23,7 @@ package org.mifos.ui.core.controller;
 import java.util.List;
 
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.dto.screen.ProductDisplayDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,7 +39,7 @@ public class SavingsProductController {
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
-
+    
     protected SavingsProductController() {
         // default contructor for spring autowiring
     }
@@ -46,6 +47,7 @@ public class SavingsProductController {
     public SavingsProductController(final AdminServiceFacade adminServiceFacade) {
         this.adminServiceFacade = adminServiceFacade;
     }
+
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView showAllSavingsProducts() {

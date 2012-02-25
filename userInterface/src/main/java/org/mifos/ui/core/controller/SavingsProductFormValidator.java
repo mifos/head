@@ -21,21 +21,30 @@
 package org.mifos.ui.core.controller;
 
 import org.joda.time.MutableDateTime;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
+import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+
+import antlr.CppCodeGenerator;
 
 import java.util.Date;
 import java.math.BigDecimal;
 
 @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity", "PMD.ExcessiveMethodLength"})
 public class SavingsProductFormValidator implements Validator {
-    final private LazyBindingErrorProcessor errorProcessor;
-
-    public SavingsProductFormValidator(LazyBindingErrorProcessor errorProcessor) {
+    final private LazyBindingErrorProcessor errorProcessor;   
+    @Autowired
+    private ConfigurationServiceFacade configurationServiceFacade;
+    
+    public SavingsProductFormValidator(LazyBindingErrorProcessor errorProcessor, ConfigurationServiceFacade configurationServiceFacade) {
         this.errorProcessor = errorProcessor;
+        this.configurationServiceFacade = configurationServiceFacade;
     }
+
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -180,6 +189,32 @@ public class SavingsProductFormValidator implements Validator {
         if (formBean.getSelectedInterestGlCode().trim().isEmpty()) {
             errors.reject("NotEmpty.savingsProduct.selectedInterestGlCode");
         }
+        Short digsAfterDec = configurationServiceFacade.getAccountingConfiguration().getDigitsAfterDecimal();
+        Short digsBeforeDec = configurationServiceFacade.getAccountingConfiguration().getDigitsBeforeDecimal();
+        int dot = formBean.getMaxWithdrawalAmount().toString().lastIndexOf(".");
+        int length = formBean.getMaxWithdrawalAmount().toString().length();
+        
+        if (formBean.getMaxWithdrawalAmount().toString().lastIndexOf(0, dot) > digsBeforeDec) {
+			errors.reject("MaxDigits.savingProduct.amount");       	
+        }
+        if (formBean.getMaxWithdrawalAmount().toString().lastIndexOf(dot, length) > digsAfterDec) {
+    		errors.reject("MaxDigits.savingProduct.amount");
+        }
+        if (length > (digsAfterDec +dot +digsBeforeDec)) {
+        	errors.reject("MaxDigits.savingProduct.amount");
+        }
+        
+        if (formBean.getAmountForDeposit().toString().lastIndexOf(0, dot) > digsBeforeDec) {
+			errors.reject("MaxDigits.savingProduct.amount");       	
+        }
+        if (formBean.getAmountForDeposit().toString().lastIndexOf(dot, length) > digsAfterDec) {
+    		errors.reject("MaxDigits.savingProduct.amount");
+        }
+        if (formBean.getAmountForDeposit().toString().length() > (digsAfterDec +dot +digsBeforeDec)) {
+        	errors.reject("MaxDigits.savingProduct.amount");
+        }
+
+         
     }
 
 }
