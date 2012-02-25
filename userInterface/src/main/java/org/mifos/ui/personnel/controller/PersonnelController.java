@@ -1,6 +1,9 @@
 package org.mifos.ui.personnel.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
+import org.mifos.framework.util.helpers.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +19,8 @@ public class PersonnelController {
     private PersonnelServiceFacade personnelServiceFacade;
 
     @RequestMapping("/changeLocale.ftl")
-    public ModelAndView changeUserLocale(@RequestParam(value = LOCALE_ID, required = false) Short id) {
-        Short currentLocaleId = personnelServiceFacade.changeUserLocale(id);
+    public ModelAndView changeUserLocale(@RequestParam(value = LOCALE_ID, required = false) Short id, HttpServletRequest request) {
+        Short currentLocaleId = personnelServiceFacade.changeUserLocale(id, request);
         ModelAndView mav = new ModelAndView();
         mav.addObject("CURRENT_LOCALE_ID", currentLocaleId);
         mav.addObject("LOCALE_LIST", personnelServiceFacade.getDisplayLocaleList());
