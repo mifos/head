@@ -48,7 +48,8 @@ explanation of the license and how it is applied.
 		<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
 		
-		<html-el:form action="repayLoanAction.do?method=preview&globalAccountNum=${param.globalAccountNum}" onsubmit="return validateMyForm(receiptDate,receiptDateFormat,receiptDateYY)">
+		<html-el:form action="repayLoanAction.do?method=preview&globalAccountNum=${param.globalAccountNum}"
+		    onsubmit="return validateMyForm(receiptDate,receiptDateFormat,receiptDateYY) && validateMyForm(dateOfPayment,dateOfPaymentFormat,dateOfPaymentYY)">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -108,13 +109,12 @@ explanation of the license and how it is applied.
 								</td>
 							</tr>
 							<tr>
-								<td width="29%" align="right" class="fontnormal">
-									<mifos:mifoslabel name="loan.dateofpayment" />
-									:
-								</td>
-								<td width="71%" class="fontnormal">
-									<c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.preferredLocale)}" />
-								</td>
+                                <td width="29%" align="right" class="fontnormal">
+                                    <mifos:mifoslabel mandatory="yes" isColonRequired="Yes" name="accounts.date_of_trxn" />
+                                </td>
+                                <td width="71%" class="fontnormal">
+                                    <date:datetag property="dateOfPayment" />
+                                </td>
 							</tr>
 							<tr>
 								<td align="right" class="fontnormal">
@@ -197,7 +197,6 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="amount" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'totalRepaymentAmount')}" />
 			<html-el:hidden property="repaymentAmount" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'totalRepaymentAmount')}" />
 			<html-el:hidden property="waivedAmount" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'waivedRepaymentAmount')}" />
-			<html-el:hidden property="dateOfPayment" value="${loanfn:getCurrrentDate(sessionScope.UserContext.preferredLocale)}" />
 			<html-el:hidden property="waiverInterest" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'waiverInterest')}" />
 		</html-el:form>
 	</tiles:put>

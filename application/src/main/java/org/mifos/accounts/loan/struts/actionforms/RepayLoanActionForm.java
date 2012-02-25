@@ -22,15 +22,25 @@ package org.mifos.accounts.loan.struts.actionforms;
 
 import java.sql.Date;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.util.UserContext;
+
+import static org.mifos.framework.util.helpers.DateUtils.dateFallsBeforeDate;
+import static org.mifos.framework.util.helpers.DateUtils.getDateAsSentFromBrowser;
 
 public class RepayLoanActionForm extends BaseActionForm {
 
@@ -41,6 +51,7 @@ public class RepayLoanActionForm extends BaseActionForm {
     private String dateOfPayment;
     private String paymentTypeId;
     private boolean waiverInterest;
+    private java.util.Date lastPaymentDate;
 
     public RepayLoanActionForm() {
         waiverInterest = true;
@@ -98,9 +109,12 @@ public class RepayLoanActionForm extends BaseActionForm {
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String method = request.getParameter("method");
         ActionErrors errors = new ActionErrors();
+        Locale userLocale = getUserLocale(request);
+        ResourceBundle resources = getResourceBundle(userLocale);
         if (!method.equals("loadRepayment") && !method.equals("makeRepayment") && !method.equals("validate")
                 && !method.equals("previous") && !method.equals("cancel")) {
-                    errors.add(super.validate(mapping, request));
+            errors.add(super.validate(mapping, request));
+            validateDateOfPayment(errors, resources);
         }
 
         if (!errors.isEmpty()) {
@@ -125,5 +139,80 @@ public class RepayLoanActionForm extends BaseActionForm {
 
     public Date getDateOfPaymentValue(Locale preferredLocale) throws InvalidDateException {
         return new Date(DateUtils.getLocaleDate(preferredLocale, dateOfPayment).getTime());
+    }
+
+    protected Locale getUserLocale(HttpServletRequest request) {
+        Locale locale = null;
+        HttpSession session = request.getSession();
+        if (session != null) {
+            UserContext userContext = (UserContext) session.getAttribute(LoginConstants.USERCONTEXT);
+            if (null != userContext) {
+                locale = userContext.getCurrentLocale();
+
+            }
+        }
+        return locale;
+    }
+
+    ResourceBundle getResourceBundle(Locale userLocale) {
+        return ResourceBundle.getBundle(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE,
+                userLocale);
+    }
+
+    private void validateDateOfPayment(ActionErrors errors, ResourceBundle resources) {
+        String fieldName = "accounts.date_of_trxn";
+        ActionErrors validationErrors = validateDate(getDateOfPayment(), resources.getString(fieldName));
+        if (null != validationErrors && !validationErrors.isEmpty()) {
+            errors.add(validationErrors);
+        }
+        validationErrors = validatePaymentDate(getDateOfPayment(), resources.getString(fieldName));
+        if (null != validationErrors && !validationErrors.isEmpty()) {
+            errors.add(validationErrors);
+        }
+    }
+
+    protected ActionErrors validateDate(String date, String fieldName) {
+        ActionErrors errors = null;
+        java.sql.Date sqlDate = null;
+        if (date != null && !date.equals("")) {
+            try {
+                sqlDate = getDateAsSentFromBrowser(date);
+                if (DateUtils.whichDirection(sqlDate) > 0) {
+                    errors = new ActionErrors();
+                    errors.add(AccountConstants.ERROR_FUTUREDATE, new ActionMessage(AccountConstants.ERROR_FUTUREDATE,
+                            fieldName));
+                }
+            } catch (InvalidDateException ide) {
+                errors = new ActionErrors();
+                errors.add(AccountConstants.ERROR_INVALIDDATE, new ActionMessage(AccountConstants.ERROR_INVALIDDATE,
+                        fieldName));
+            }
+        } else {
+            errors = new ActionErrors();
+            errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
+                            fieldName));
+        }
+        return errors;
+    }
+
+    public ActionErrors validatePaymentDate(String transactionDate, String fieldName) {
+        ActionErrors errors = null;
+        try {
+            if (lastPaymentDate != null && dateFallsBeforeDate(getDateAsSentFromBrowser(transactionDate), lastPaymentDate)) {
+                errors = new ActionErrors();
+                errors.add(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
+                        new ActionMessage(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
+                                fieldName));
+            }
+        } catch (InvalidDateException ide) {
+            errors = new ActionErrors();
+            errors.add(AccountConstants.ERROR_INVALIDDATE, new ActionMessage(AccountConstants.ERROR_INVALIDDATE,
+                    fieldName));
+        }
+        return errors;
+    }
+
+    public void setLastPaymentDate(java.util.Date lastPaymentDate) {
+        this.lastPaymentDate = lastPaymentDate;
     }
 }
