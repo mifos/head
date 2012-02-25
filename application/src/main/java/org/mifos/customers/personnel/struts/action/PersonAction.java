@@ -88,7 +88,7 @@ import org.mifos.service.BusinessRuleException;
 public class PersonAction extends SearchAction {
 
     private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Personnel",
-            ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", new DefaultQuestionnaireServiceFacadeLocator());
+            ActionForwards.preview_success, "clientsAndAccounts.ftl", new DefaultQuestionnaireServiceFacadeLocator());
 
     @SuppressWarnings("unused")
     @TransactionDemarcate(saveToken = true)

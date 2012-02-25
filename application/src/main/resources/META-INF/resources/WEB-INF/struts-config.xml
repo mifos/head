@@ -93,7 +93,7 @@
             <forward name="update_success" path="/centerCustAction.do?method=get"/>
             <forward name="update_failure" path="/pages/application/center/jsp/previeweditcenter.jsp"/>
             <!-- Cancel Page Forwards -->
-            <forward name="cancel_success" path="/custSearchAction.do?method=loadMainSearch&amp;input=mainpage"/>
+            <forward name="cancel_success" path="clientsAndAccounts.ftl" redirect="true"/>
             <forward name="editcancel_success" path="/centerCustAction.do?method=get"/>
             <forward name="get_success" path="/pages/application/center/jsp/viewCenterDetails.jsp"/>
             <forward name="get_failure" path="/pages/application/customer/jsp/empty.jsp"/>
@@ -141,7 +141,7 @@
             <!--Cancel forwards-->
             <forward name="cancelEdit_success" path="/groupCustAction.do?method=get"/>
             <forward name="cancelCreate_success"
-                     path="/custSearchAction.do?method=loadMainSearch&amp;input=createClient"/>
+                     path="clientsAndAccounts.ftl" redirect="true"/>
             <forward name="loadSearch_success" path="/pages/application/group/jsp/group_search.jsp"/>
             <forward name="search_success" path="/pages/application/group/jsp/group_search_results.jsp"/>
             <forward name="search_failure" path="/pages/application/group/jsp/group_search.jsp"/>
@@ -247,7 +247,7 @@
             <forward name="failure" path="/error.jsp"/>
             <!-- Cancel Page Forwards -->
             <forward name="cancelCreate_success"
-                     path="/custSearchAction.do?method=loadMainSearch&amp;input=clientCreate"/>
+                     path="clientsAndAccounts.ftl" redirect="true"/>
             <forward name="cancelEdit_success" path="/clientCustAction.do?method=get"/>
             <forward name="viewClientChangeLog" path="/pages/application/client/jsp/viewChangeLog.jsp"/>
             <forward name="cancelClientChangeLog" path="/clientCustAction.do?method=get"/>

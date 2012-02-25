@@ -79,7 +79,7 @@ public class CenterCustAction extends CustAction {
     private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
 
     private QuestionnaireFlowAdapter createCenterQuestionnaire = new QuestionnaireFlowAdapter("Create", "Center",
-            ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator
+            ActionForwards.preview_success, "clientsAndAccounts.ftl", questionnaireServiceFacadeLocator
         );
 
     @TransactionDemarcate(saveToken = true)

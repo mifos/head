@@ -154,5 +154,5 @@
     </decision-state>
     
     <end-state id="confirmation" view="createLoanAccountConfirmation"/>
-    <end-state id="cancel" view="externalRedirect:contextRelative:/custSearchAction.do?method=loadMainSearch"/>
+    <end-state id="cancel" view="externalRedirect:contextRelative:/clientsAndAccounts.ftl"/>
 </flow>

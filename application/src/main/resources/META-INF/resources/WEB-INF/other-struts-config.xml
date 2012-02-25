@@ -208,7 +208,7 @@
             <forward name="create_failure" path="/pages/application/collectionsheet/jsp/bulkentry_preview.jsp"/>
             <forward name="previous_success" path="/pages/application/collectionsheet/jsp/bulkentry_data.jsp"/>
             <forward name="get_failure" path="/pages/application/collectionsheet/jsp/bulkentry.jsp"/>
-            <forward name="cancel_success" path="/custSearchAction.do?method=loadMainSearch&amp;input=bulkentrypage"/>
+            <forward name="cancel_success" path="clientsAndAccounts.ftl" redirect="true"/>
         </action>
         <!-- Ends-->
 

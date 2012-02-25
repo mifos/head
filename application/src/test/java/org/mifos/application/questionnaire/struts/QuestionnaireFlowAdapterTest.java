@@ -74,7 +74,7 @@ public class QuestionnaireFlowAdapterTest {
         QuestionnaireFlowAdapter createLoanQuestionnaire =
             new QuestionnaireFlowAdapter("Create","Loan",
                 ActionForwards.schedulePreview_success,
-                "custSearchAction.do?method=loadMainSearch", serviceLocator);
+                "clientsAndAccounts.ftl", serviceLocator);
         List<QuestionGroupDetail> applicableGroups = getQuestionGroups();
 
         when(mapping.findForward("captureQuestionResponses")).thenReturn(captureResponseActFwd);
@@ -90,7 +90,7 @@ public class QuestionnaireFlowAdapterTest {
         verify(questionForm).setQuestionGroups(applicableGroups);
         verify(request).setAttribute("questionsHostForm", questionForm);
         verify(request).setAttribute("origFlowRequestURI", "/loanAccountAction.do");
-        verify(request).setAttribute("cancelToURL", "custSearchAction.do?method=loadMainSearch");
+        verify(request).setAttribute("cancelToURL", "clientsAndAccounts.ftl");
     }
 
     private List<QuestionGroupDetail> getQuestionGroups() {

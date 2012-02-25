@@ -67,7 +67,7 @@ import org.mifos.security.authorization.HierarchyManager;
 public class OffAction extends BaseAction {
 
     private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Office",
-            ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", new DefaultQuestionnaireServiceFacadeLocator());
+            ActionForwards.preview_success, "clientsAndAccounts.ftl", new DefaultQuestionnaireServiceFacadeLocator());
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,

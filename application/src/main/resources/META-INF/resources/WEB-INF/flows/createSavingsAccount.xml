@@ -88,7 +88,7 @@
     </view-state>
 
     <end-state id="complete" view="createSavingsAccountComplete" />
-    <end-state id="cancel" view="externalRedirect:contextRelative:/custSearchAction.do?method=loadMainSearch"/>
+    <end-state id="cancel" view="externalRedirect:contextRelative:/clientsAndAccounts.ftl"/>
 
     <global-transitions>
         <transition on="cancel" to="cancel" validate="false" history="invalidate"/>

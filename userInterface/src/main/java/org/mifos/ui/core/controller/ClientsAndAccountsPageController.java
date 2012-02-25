@@ -45,7 +45,7 @@ public class ClientsAndAccountsPageController {
     
     private final SitePreferenceHelper sitePreferenceHelper = new SitePreferenceHelper();
     
-    @RequestMapping(value = "/clientsAndAccounts", method=RequestMethod.GET)
+    @RequestMapping(value = "/clientsAndAccounts", method = { RequestMethod.POST, RequestMethod.GET })
     public ModelAndView showClientsAndAccounts(HttpServletRequest request, HttpServletResponse response,
             @ModelAttribute("customerSearch") CustomerSearchFormBean customerSearchFormBean, @RequestParam(required=false) Short officeId, 
             @RequestParam(required=false) Short loanOfficerId ){
@@ -56,23 +56,29 @@ public class ClientsAndAccountsPageController {
         boolean isCenterHierarchyExists = configurationServiceFacade.getBooleanConfig("ClientRules.CenterHierarchyExists");
         modelAndView.addObject("isCenterHierarchyExists", isCenterHierarchyExists );
         
-        if ( officeId != null && loanOfficerId != null){
-            return showClientsAndAccountsBranchSearchLoanOfficer(request, customerSearchFormBean, modelAndView,officeId, loanOfficerId);
-        } else if ( officeId != null ){
-            return showClientsAndAccountsBranchSearch(request, customerSearchFormBean, modelAndView, officeId);
-        } 
-        return showClientsAndAccountsMainSearch(request, customerSearchFormBean, modelAndView);
+        if ( officeId == null && loanOfficerId == null ){
+            modelAndView = showClientsAndAccountsMainSearch(request, customerSearchFormBean, modelAndView);
+        } else {
+            if ( loanOfficerId == null ){
+                modelAndView = showClientsAndAccountsBranchSearch(request, customerSearchFormBean, modelAndView, officeId); 
+            } else{
+                modelAndView = showClientsAndAccountsBranchSearchLoanOfficer(request, customerSearchFormBean, modelAndView,officeId, loanOfficerId);
+            }
+        }
+        
+        return modelAndView;
     }
     
+    @SuppressWarnings("PMD.AvoidUsingShortType")
     public ModelAndView showClientsAndAccountsMainSearch(HttpServletRequest request, CustomerSearchFormBean customerSearchFormBean, 
             ModelAndView modelAndView ){
         sitePreferenceHelper.resolveSiteType(modelAndView, "clientsAndAccounts", request);
         
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Short userId = new Integer(user.getUserId()).shortValue();
+        Short userId = (short)user.getUserId();
         UserDetailDto userDetails = this.centerServiceFacade.retrieveUsersDetails(userId);
         
-        List<OfficeDto> officeDtoList = officeServiceFacade.retrieveActiveBranchesUnderUser((short) user.getUserId());
+        List<OfficeDto> officeDtoList = officeServiceFacade.retrieveActiveBranchesUnderUser(userId);
         Map<String, String> officesMap = new HashMap<String, String>();
         for (OfficeDto officeDto : officeDtoList) {
             officesMap.put(officeDto.getId().toString(), officeDto.getName());
