@@ -22,6 +22,8 @@
 
     <bean class="org.springframework.core.LocalVariableTableParameterNameDiscoverer"/>
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean"/>
+    
+    <bean id="exceptionResolver" class="org.mifos.platform.rest.ui.controller.RESTDefaultHandlerExceptionResolver" />
 
     <context:component-scan base-package="org.mifos.platform.rest.controller" />
     

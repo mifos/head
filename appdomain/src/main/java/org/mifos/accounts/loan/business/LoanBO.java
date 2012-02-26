@@ -1316,11 +1316,10 @@ public class LoanBO extends AccountBO implements Loan {
     }
 
     @Override
-    protected void writeOff() throws AccountException {
+    protected void writeOff(Date transactionDate) throws AccountException {
         try {
             Short personnelId = this.getUserContext().getId();
             PersonnelBO currentUser = legacyPersonnelDao.getPersonnel(personnelId);
-            Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
             this.setUpdatedBy(personnelId);
             this.setUpdatedDate(transactionDate);
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, getEarlyClosureAmount(), null,
@@ -1344,12 +1343,11 @@ public class LoanBO extends AccountBO implements Loan {
     }
 
     @Override
-    protected void reschedule() throws AccountException {
+    protected void reschedule(Date transactionDate) throws AccountException {
         try {
             Short personnelId = this.getUserContext().getId();
             PersonnelBO currentUser = legacyPersonnelDao.getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
-            Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
             this.setUpdatedDate(transactionDate);
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, getEarlyClosureAmount(), null,
                     null, getPaymentTypeEntity(Short.valueOf("1")), transactionDate);
@@ -2776,7 +2774,7 @@ public class LoanBO extends AccountBO implements Loan {
         Money totalAmt = principal.add(interest).add(fees).add(penalty);
 
         LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes, loanSchedule
-                .getInstallmentId(), loanSchedule.getActionDate(), currentUser, new DateTimeService().getCurrentJavaDateTime(),
+                .getInstallmentId(), loanSchedule.getActionDate(), currentUser, accountPaymentEntity.getPaymentDate(),
                 totalAmt, comments, null, principal, interest,
                 loanSchedule.getPenalty().subtract(loanSchedule.getPenaltyPaid()),
                 loanSchedule.getMiscFeeDue(), loanSchedule.getMiscPenaltyDue(), null);
@@ -2798,9 +2796,9 @@ public class LoanBO extends AccountBO implements Loan {
         Money penalty = loanSchedule.getPenaltyDue();
         Money totalAmt = principal.add(fees).add(penalty);
 
-        LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes, loanSchedule
-                .getInstallmentId(), loanSchedule.getActionDate(), currentUser, new DateTimeService()
-                .getCurrentJavaDateTime(), totalAmt, comments, null, principal, extraInterestDue,
+        LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes,
+                loanSchedule.getInstallmentId(), loanSchedule.getActionDate(), currentUser,
+                accountPaymentEntity.getPaymentDate(), totalAmt, comments, null, principal, extraInterestDue,
                 loanSchedule.getPenalty().subtract(loanSchedule.getPenaltyPaid()), loanSchedule.getMiscFeeDue(), loanSchedule
                 .getMiscPenaltyDue(), null);
 
@@ -2830,9 +2828,9 @@ public class LoanBO extends AccountBO implements Loan {
             Money fees = loanSchedule.getTotalFeeDueWithMiscFeeDue();
             Money penalty = loanSchedule.getPenaltyDue();
 
-            LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes, loanSchedule
-                    .getInstallmentId(), loanSchedule.getActionDate(), currentUser, new DateTimeService()
-                    .getCurrentJavaDateTime(), principal, comments, null, principal, new Money(getCurrency()),
+            LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes,
+                    loanSchedule.getInstallmentId(), loanSchedule.getActionDate(), currentUser,
+                    accountPaymentEntity.getPaymentDate(), principal, comments, null, principal, new Money(getCurrency()),
                     new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
 
             accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
@@ -2853,9 +2851,9 @@ public class LoanBO extends AccountBO implements Loan {
             Money fees = loanSchedule.getTotalFeeDueWithMiscFeeDue();
             Money penalty = loanSchedule.getPenaltyDue();
 
-            LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes, loanSchedule
-                    .getInstallmentId(), loanSchedule.getActionDate(), currentUser, new DateTimeService()
-                    .getCurrentJavaDateTime(), principal, comments, null, principal, new Money(getCurrency()),
+            LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes,
+                    loanSchedule.getInstallmentId(), loanSchedule.getActionDate(), currentUser,
+                    accountPaymentEntity.getPaymentDate(), principal, comments, null, principal, new Money(getCurrency()),
                     new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
 
             accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
@@ -3400,9 +3398,9 @@ public class LoanBO extends AccountBO implements Loan {
 	            Money fees = loanSchedule.getTotalFeeDueWithMiscFeeDue();
 	            Money penalty = loanSchedule.getPenaltyDue();
 
-	            LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes, loanSchedule
-	                    .getInstallmentId(), loanSchedule.getActionDate(), currentUser, new DateTimeService()
-	                    .getCurrentJavaDateTime(), principal, comments, null, principal, new Money(getCurrency()),
+	            LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes,
+                        loanSchedule.getInstallmentId(), loanSchedule.getActionDate(), currentUser,
+                        accountPaymentEntity.getPaymentDate(), principal, comments, null, principal, new Money(getCurrency()),
 	                    new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
 
 	            accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);

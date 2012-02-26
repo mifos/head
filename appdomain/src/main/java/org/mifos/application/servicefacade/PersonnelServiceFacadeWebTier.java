@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -85,6 +87,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.business.RoleBO;
@@ -613,12 +616,20 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     }
 
     @Override
-    public Short changeUserLocale(Short id) {
+    public Short changeUserLocale(Short id, HttpServletRequest request) {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (id != null) {
             Short newLocaleId = id;
             assert Localization.getInstance().getLocaleById(newLocaleId) != null;
             user.setPreferredLocaleId(newLocaleId);
+            
+            // Legacy struts actions uses this
+            // Eg. LoanPrdActionForm.validateInterestGLCode
+            UserContext userContext = (UserContext) request.getSession().getAttribute(Constants.USERCONTEXT);
+            if (userContext != null) {
+                userContext.setPreferredLocale(Localization.getInstance().getLocaleById(newLocaleId));
+            }
+            
             try {
                 this.transactionHelper.startTransaction();
                 PersonnelBO p = this.personnelDao.findPersonnelById((short) user.getUserId());

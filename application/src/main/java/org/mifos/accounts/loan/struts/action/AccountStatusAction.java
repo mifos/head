@@ -101,7 +101,7 @@ public class AccountStatusAction extends BaseAction {
             }
         }
 
-        List<String> accountNumbers = this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(accountsForUpdate);
+        List<String> accountNumbers = this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(accountsForUpdate, null);
 
         request.setAttribute(LoanConstants.ACCOUNTS_LIST, accountNumbers);
 

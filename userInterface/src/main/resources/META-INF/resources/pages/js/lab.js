@@ -1,16 +1,25 @@
-$(document).ready(function() {
+$(document).ready(makeDialog);
+
+function makeDialog() {
+try {
+    var s = $("#dialog");
     $("#dialog").dialog({
         autoOpen : false,
         modal : true,
         width : 600
     });
-    $("#changeLanguagLink").click(function() {
-        $("#dialog").dialog("open");
-        languageForm();
-    })
-});
+    
+    $("#changeLanguagLink").click(languageForm);
+    } catch(e) {
+       //fail to init so remove the link
+       // This happens at loan product creation page
+       $("#changeLanguagLink").remove();
+       throw e;
+    }
+}
 
 function languageForm() {
+    $("#dialog").dialog("open");
 	$("#dialog").html("Loading...");
     $.get("changeLocale.ftl", function(data) {
         $("#dialog").html(data);
