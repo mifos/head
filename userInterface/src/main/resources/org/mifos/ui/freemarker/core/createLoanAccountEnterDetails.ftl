@@ -174,7 +174,7 @@
     			[@spring.formHiddenInput "loanAccountFormBean.clientGlobalId[${index}]" /]
     		</td>
     		<td>&nbsp;</td>
-    		<td>[@form.input path="loanAccountFormBean.clientAmount[${index}]"  id="clientAmount[${index}]" attributes="class='amountfield separatedNumber' "/]</td>
+    		<td>[@form.input path="loanAccountFormBean.clientAmount[${index}]"  id="clientAmount[${index}]" attributes="class='amountfield'"/]</td>
     		<td>&nbsp;</td>
     		<td>[@form.singleSelectWithPrompt path="loanAccountFormBean.clientLoanPurposeId[${index}]" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" attributes="class=trigger"/]</td>
     	</tr>

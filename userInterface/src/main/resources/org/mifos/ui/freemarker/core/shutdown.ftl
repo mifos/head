@@ -20,13 +20,12 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]<!--Container Begins-->
+
 <!--  Main Content Begins-->
 <div class="content">
     <form method="post" name="shutdown" action="shutdown.ftl">
-    [@i18n.formattingInfo /]
         [@widget.crumbs breadcrumbs /]
         [@spring.bind "shutdownFormBean" /]
-        
         <div class="marginLeft30">
             <div class="span-24">
                 <div class="clear">&nbsp;</div>
@@ -45,11 +44,10 @@
                         <span class="span-7">[@spring.message "systemAdministration.shutdown.scheduleIn" /]</span>
                     <span class="span-11">
                         [@spring.bind "shutdownFormBean.timeout" /]
-                        
                         [#if shutdownFormBean.timeout??]
-                        <input type="text" maxlength="7" id="timeout" name="${spring.status.expression}" value="${shutdownFormBean.timeout?c}" class="separatedNumber"/>&nbsp;[@spring.message "systemAdministration.shutdown.seconds" /]
+                        <input type="text" maxlength="7" id="timeout" name="${spring.status.expression}" value="${shutdownFormBean.timeout?c}" />&nbsp;[@spring.message "systemAdministration.shutdown.seconds" /]
                         [#else]
-                        <input type="text" maxlength="7" id="timeout" name="${spring.status.expression}" value="" class="separatedNumber" />&nbsp;[@spring.message "systemAdministration.shutdown.seconds" /]
+                        <input type="text" maxlength="7" id="timeout" name="${spring.status.expression}" value="" />&nbsp;[@spring.message "systemAdministration.shutdown.seconds" /]
                         [/#if]
                     </span>
                     </div>
@@ -58,10 +56,10 @@
                 <div class="clear">&nbsp;</div>
                 <div class="prepend-9">
                     [#if model.submitButtonDisabled]
-                    <input class="disabledbuttn2 submit"  type="submit" disabled="true" id="START" name="START" value="[@spring.message "systemAdministration.shutdown.startShutdown"/]"/>
+                    <input class="disabledbuttn2"  type="submit" disabled="true" id="START" name="START" value="[@spring.message "systemAdministration.shutdown.startShutdown"/]"/>
                     <input class="cancelbuttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "systemAdministration.shutdown.cancelShutdown"/]"/>
                     [#else]
-                    <input class="buttn submit"  type="submit" id="START" name="START" value="[@spring.message "systemAdministration.shutdown.startShutdown"/]"/>
+                    <input class="buttn"  type="submit" id="START" name="START" value="[@spring.message "systemAdministration.shutdown.startShutdown"/]"/>
                     <input class="disabledbuttn2" type="submit" disabled="true" id="CANCEL" name="CANCEL" value="[@spring.message "systemAdministration.shutdown.cancelShutdown"/]"/>
                     [/#if]
                     <input class="buttn"  type="submit" name="REFRESH" value="[@spring.message "systemAdministration.shutdown.refresh"/]"/>

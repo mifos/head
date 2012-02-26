@@ -40,7 +40,6 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.framework.util.LocalizationConverter;
-import org.mifos.framework.util.helpers.ConversionUtil;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
@@ -244,6 +243,7 @@ public class BulkEntryDisplayHelper {
         getWithdrawalSavingsRow(builder, bulkEntrySavingsAccounts, savingsProducts, rowIndex, groupTotals,
                 centerTotals, groupChildSize, groupInitialAccNum, loanProducts.size(),
                 method, levelId, currency);
+
         BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
         BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
         buildCustomerAccount(collectionSheetEntryDto.getCustomerAccountDetails(), builder, method, currency, rowIndex,
@@ -441,7 +441,7 @@ public class BulkEntryDisplayHelper {
             groupTotals[columns] = groupTotals[columns] == null ? actualMoneyValue : groupTotals[columns].add(actualMoneyValue);
             centerTotals[columns] = centerTotals[columns] == null ? actualMoneyValue : centerTotals[columns].add(actualMoneyValue);
         } else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
-            Money totalAmount = new Money(Money.getDefaultCurrency(), "0");
+            Money totalAmount = new Money(Money.getDefaultCurrency(), "0.0");
             Money enteredAmount;
             if (isShowingDue) {
                 enteredAmount = new Money(Money.getDefaultCurrency(), accountViewBO.getEnteredAmount());
@@ -456,10 +456,10 @@ public class BulkEntryDisplayHelper {
             }
             if (amountToBeShown.subtract(totalAmount).isNonZero()) {
                 builder.append("<font color=\"#FF0000\">");
-                builder.append(ConversionUtil.formatNumber(enteredAmount.toString()));
+                builder.append(enteredAmount);
                 builder.append("</font>");
             } else {
-                builder.append(ConversionUtil.formatNumber(totalAmount.toString()));
+                builder.append(totalAmount);
             }
             Money actualMoneyValue = new Money(amountToBeShown.getCurrency(), totalAmount.toString());
             groupTotals[columns] = groupTotals[columns] == null ? actualMoneyValue : groupTotals[columns].add(actualMoneyValue);
@@ -467,7 +467,7 @@ public class BulkEntryDisplayHelper {
         } else if (method.equals(CollectionSheetEntryConstants.PREVIOUSMETHOD)
                 || method.equals(CollectionSheetEntryConstants.VALIDATEMETHOD)) {
 
-            Money enteredAmount = new Money(Money.getDefaultCurrency(), "0");
+            Money enteredAmount = new Money(Money.getDefaultCurrency(), "0.0");
             if (isShowingDue) {
                 enteredAmount = new Money(Money.getDefaultCurrency(), accountViewBO.getEnteredAmount());
             } else {
@@ -484,7 +484,7 @@ public class BulkEntryDisplayHelper {
                         savingsProductSize);
             }
 
-            Money totalAmount = new Money(Money.getDefaultCurrency(), "0");
+            Money totalAmount = new Money(Money.getDefaultCurrency(), "0.0");
             boolean isValidAmountEntered;
             if (isShowingDue) {
                 isValidAmountEntered = accountViewBO.isValidAmountEntered();
@@ -564,12 +564,12 @@ public class BulkEntryDisplayHelper {
                     && accountView.getSavingsTypeId().equals(
                             SavingsType.MANDATORY.getValue())) {
                 builder.append("<font color=\"#FF0000\">");
-                builder.append(ConversionUtil.formatNumber(amount.toString()));
+                builder.append(amount);
                 builder.append("</font>");
             } else if ("".equals(amount)) {
                 builder.append("&nbsp;");
             } else {
-                builder.append(ConversionUtil.formatNumber(amount.toString()));
+                builder.append(amount);
             }
         }
         groupTotals[totalsColumn] = groupTotals[totalsColumn] == null ? totalAmount : groupTotals[totalsColumn].add(totalAmount);
@@ -625,10 +625,10 @@ public class BulkEntryDisplayHelper {
         } else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
             if (totalAmount.subtract(customerAccountDto.getTotalAmountDue()).isNonZero()) {
                 builder.append("<font color=\"#FF0000\">");
-                builder.append(ConversionUtil.formatNumber(amount.toString()));
+                builder.append(amount);
                 builder.append("</font>");
             } else {
-                builder.append(ConversionUtil.formatNumber(amount));
+                builder.append(amount);
             }
         }
         groupTotals[columnIndex] = groupTotals[columnIndex] == null ? totalAmount : groupTotals[columnIndex].add(totalAmount);
@@ -660,7 +660,7 @@ public class BulkEntryDisplayHelper {
                     Money groupTotalMoney = totals[i] == null ? new Money(collectionSheetEntryDto.getCurrency(), "0.0") : totals[i];
                     builder.append("<td class=\"drawtablerow\">");
                     builder.append("<input name=\"group[" + rows + "][" + i + "]\" type=\"text\" style=\"width:40px\""
-                            + " value=\"" + ConversionUtil.formatNumber(groupTotalMoney.toString()) + "\" size=\"6\" disabled>");
+                            + " value=\"" + groupTotalMoney + "\" size=\"6\" disabled>");
                     builder.append("</td>");
                 }
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
@@ -669,7 +669,7 @@ public class BulkEntryDisplayHelper {
                     Money groupTotalMoney = totals[i] == null ? new Money(collectionSheetEntryDto.getCurrency(), "0.0") : totals[i];
                     builder.append("<td class=\"drawtablerow\">");
                     builder.append("<input name=\"group[" + rows + "][" + i + "]\" type=\"text\" style=\"width:40px\""
-                            + " value=\"" + ConversionUtil.formatNumber(groupTotalMoney.toString()) + "\" size=\"6\" disabled>");
+                            + " value=\"" + groupTotalMoney + "\" size=\"6\" disabled>");
                     builder.append("</td>");
                 }
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
@@ -678,7 +678,7 @@ public class BulkEntryDisplayHelper {
                         : totals[(2 * (loanProductsSize + savingsProductSize))];
                 builder.append("<td class=\"drawtablerow\">");
                 builder.append("<input name=\"group[" + rows + "][" + 2 * (loanProductsSize + savingsProductSize)
-                        + "]\" type=\"text\" style=\"width:40px\"" + " value=\"" + ConversionUtil.formatNumber(groupTotalMoney.toString())
+                        + "]\" type=\"text\" style=\"width:40px\"" + " value=\"" + groupTotalMoney
                         + "\" size=\"6\" disabled>");
                 builder.append("</td>");
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
@@ -686,14 +686,14 @@ public class BulkEntryDisplayHelper {
             } else if (customerLevel.equals(CustomerLevel.CENTER.getValue())) {
                 BulkEntryTagUIHelper.getInstance().generateStartTR(builder);
                 builder.append("<td align=\"right\" class=\"drawtablerowSmall\">"
-                        + "<span class=\"fontnormal8pt\"><em>" +  centerTotalStr + "</em></span></td>");
+                        + "<span class=\"fontnormal8pt\"><em>" + centerTotalStr + "</em></span></td>");
                 builder.append("<td height=\"30\" class=\"drawtablerow\">&nbsp;&nbsp;</td>");
 
                 for (int i = 0; i < loanProductsSize + savingsProductSize; i++) {
                     Money centerTotalMoney = totals[i] == null ? new Money(collectionSheetEntryDto.getCurrency(), "0.0") : totals[i];
                     builder.append("<td class=\"drawtablerow\">");
                     builder.append("<input name=\"center[" + i + "]\" type=\"text\" style=\"width:40px\"" + " value=\""
-                            + ConversionUtil.formatNumber(centerTotalMoney.toString()) + "\" size=\"6\" disabled>");
+                            + centerTotalMoney + "\" size=\"6\" disabled>");
                     builder.append("</td>");
                 }
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
@@ -702,7 +702,7 @@ public class BulkEntryDisplayHelper {
                     Money centerTotalMoney = totals[i] == null ? new Money(collectionSheetEntryDto.getCurrency(), "0.0") : totals[i];
                     builder.append("<td class=\"drawtablerow\">");
                     builder.append("<input name=\"center[" + i + "]\" type=\"text\" style=\"width:40px\"" + " value=\""
-                            + ConversionUtil.formatNumber(centerTotalMoney.toString()) + "\" size=\"6\" disabled>");
+                            + centerTotalMoney + "\" size=\"6\" disabled>");
                     builder.append("</td>");
                 }
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
@@ -711,7 +711,7 @@ public class BulkEntryDisplayHelper {
                         : totals[(2 * (loanProductsSize + savingsProductSize))];
                 builder.append("<td class=\"drawtablerow\">");
                 builder.append("<input name=\"center[" + 2 * (loanProductsSize + savingsProductSize)
-                        + "]\" type=\"text\" style=\"width:40px\"" + " value=\"" + ConversionUtil.formatNumber(centerTotalMoney.toString())
+                        + "]\" type=\"text\" style=\"width:40px\"" + " value=\"" + centerTotalMoney
                         + "\" size=\"6\" disabled>");
                 builder.append("</td>");
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
@@ -729,25 +729,25 @@ public class BulkEntryDisplayHelper {
             builder.append("<td height=\"30\" class=\"drawtablerow\">&nbsp;&nbsp;</td>");
 
             for (int i = 0; i < loanProductsSize + savingsProductSize; i++) {
-                Money totalMoney = totals[i] == null ? new Money(collectionSheetEntryDto.getCurrency(), "0") : totals[i];
+                Money totalMoney = totals[i] == null ? new Money(collectionSheetEntryDto.getCurrency(), "0.0") : totals[i];
                 builder.append("<td class=\"drawtablerow\">");
-                builder.append(ConversionUtil.formatNumber(totalMoney.toString()));
+                builder.append(totalMoney);
                 builder.append("</td>");
             }
             BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
             BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
             for (int i = loanProductsSize + savingsProductSize; i < 2 * (loanProductsSize + savingsProductSize); i++) {
-                Money totalMoney = totals[i] == null ? new Money(collectionSheetEntryDto.getCurrency(), "0") : totals[i];
+                Money totalMoney = totals[i] == null ? new Money(collectionSheetEntryDto.getCurrency(), "0.0") : totals[i];
                 builder.append("<td class=\"drawtablerow\">");
-                builder.append(ConversionUtil.formatNumber(totalMoney.toString()));
+                builder.append(totalMoney);
                 builder.append("</td>");
             }
             BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
             BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
-            Money totalMoney = totals[(2 * (loanProductsSize + savingsProductSize))] == null ?new Money(collectionSheetEntryDto.getCurrency(), "0")
+            Money totalMoney = totals[(2 * (loanProductsSize + savingsProductSize))] == null ?new Money(collectionSheetEntryDto.getCurrency(), "0.0")
                     : totals[(2 * (loanProductsSize + savingsProductSize))];
             builder.append("<td class=\"drawtablerow\">");
-            builder.append(ConversionUtil.formatNumber(totalMoney.toString()));
+            builder.append(totalMoney);
             builder.append("</td>");
             BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
             BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
@@ -842,28 +842,28 @@ public class BulkEntryDisplayHelper {
         } else {
             builder.append("<tr class=\"fontnormal\">");
             builder.append("<td class=\"fontnormal8pt\">" + dueCollections2 + "</td>");
-            builder.append("<td class=\"fontnormal8pt\">" + ConversionUtil.formatNumber(dueColl.toString()) + "</td>");
+            builder.append("<td class=\"fontnormal8pt\">" + dueColl + "</td>");
             builder.append("<td class=\"fontnormal8pt\">" + loanDisbursements + "</td>");
-            builder.append("<td colspan=\"3\">" + ConversionUtil.formatNumber(loanDisb.toString()) + "</td>");
+            builder.append("<td colspan=\"3\">" + loanDisb + "</td>");
             builder.append(" </tr>");
             builder.append("<tr class=\"fontnormal\">");
             builder.append("<td width=\"10%\" class=\"fontnormal8pt\">" + otherCollections + "</td>");
-            builder.append("<td width=\"9%\" class=\"fontnormal8pt\">" + ConversionUtil.formatNumber(otherColl.toString()) + "</td>");
+            builder.append("<td width=\"9%\" class=\"fontnormal8pt\">" + otherColl + "</td>");
             builder.append("<td width=\"11%\" class=\"fontnormal8pt\">" + withdrawals + "</td>");
-            builder.append("<td colspan=\"3\">" + ConversionUtil.formatNumber(withDrawals.toString()) + "</td>");
+            builder.append("<td colspan=\"3\">" + withDrawals + "</td>");
             builder.append(" </tr>");
 
             builder.append(" <tr class=\"fontnormal\">");
             builder.append("<td class=\"fontnormal8ptbold\">" + total + "</td>");
-            builder.append("<td class=\"fontnormal8ptbold\">" + ConversionUtil.formatNumber(totColl.toString()) + "</td>");
+            builder.append("<td class=\"fontnormal8ptbold\">" + totColl + "</td>");
             builder.append("<td class=\"fontnormal8ptbold\">" + total + "</td>");
-            builder.append("<td width=\"10%\" class=\"fontnormal8ptbold\">" + ConversionUtil.formatNumber(totIssue.toString()) + "</td>");
+            builder.append("<td width=\"10%\" class=\"fontnormal8ptbold\">" + totIssue + "</td>");
             builder.append("<td width=\"6%\" class=\"fontnormal8ptbold\">" + netCashStr + "</td>");
             if (Double.valueOf(netCash.toString()) < 0) {
-                builder.append("<td width=\"54%\" class=\"fontnormal8ptbold\">" + "<font color=\"#FF0000\">" + ConversionUtil.formatNumber(netCash.toString())
+                builder.append("<td width=\"54%\" class=\"fontnormal8ptbold\">" + "<font color=\"#FF0000\">" + netCash
                         + "</font></td>");
             } else {
-                builder.append("<td width=\"54%\" class=\"fontnormal8ptbold\">" + ConversionUtil.formatNumber(netCash.toString()) + "</td>");
+                builder.append("<td width=\"54%\" class=\"fontnormal8ptbold\">" + netCash + "</td>");
             }
             builder.append(" </tr>");
         }
