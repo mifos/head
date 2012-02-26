@@ -1316,11 +1316,10 @@ public class LoanBO extends AccountBO implements Loan {
     }
 
     @Override
-    protected void writeOff() throws AccountException {
+    protected void writeOff(Date transactionDate) throws AccountException {
         try {
             Short personnelId = this.getUserContext().getId();
             PersonnelBO currentUser = legacyPersonnelDao.getPersonnel(personnelId);
-            Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
             this.setUpdatedBy(personnelId);
             this.setUpdatedDate(transactionDate);
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, getEarlyClosureAmount(), null,
@@ -1344,12 +1343,11 @@ public class LoanBO extends AccountBO implements Loan {
     }
 
     @Override
-    protected void reschedule() throws AccountException {
+    protected void reschedule(Date transactionDate) throws AccountException {
         try {
             Short personnelId = this.getUserContext().getId();
             PersonnelBO currentUser = legacyPersonnelDao.getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
-            Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
             this.setUpdatedDate(transactionDate);
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, getEarlyClosureAmount(), null,
                     null, getPaymentTypeEntity(Short.valueOf("1")), transactionDate);

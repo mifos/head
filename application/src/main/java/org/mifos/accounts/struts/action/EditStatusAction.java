@@ -34,6 +34,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateFlagEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -52,10 +53,10 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
-import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.UserContext;
@@ -68,17 +69,25 @@ public class EditStatusAction extends BaseAction {
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        EditStatusActionForm editStatusActionForm1 = (EditStatusActionForm) form;
-        editStatusActionForm1.setSelectedItems(null);
-        editStatusActionForm1.setNotes(null);
-        editStatusActionForm1.setNewStatusId(null);
-        editStatusActionForm1.setFlagId(null);
-        editStatusActionForm1.setQuestionGroups(null);
+        EditStatusActionForm actionForm = (EditStatusActionForm) form;
+        actionForm.setSelectedItems(null);
+        actionForm.setNotes(null);
+        actionForm.setNewStatusId(null);
+        actionForm.setFlagId(null);
+        actionForm.setQuestionGroups(null);
+        actionForm.setTransactionDate(DateUtils.makeDateAsSentFromBrowser());
+
         request.getSession().removeAttribute(Constants.BUSINESS_KEY);
         UserContext userContext = getUserContext(request);
-        EditStatusActionForm actionForm = (EditStatusActionForm) form;
         Integer accountId = Integer.valueOf(actionForm.getAccountId());
         AccountBO accountBO = new AccountBusinessService().getAccount(accountId);
+
+        java.util.Date lastPaymentDate = new java.util.Date(0);
+        AccountPaymentEntity lastPayment = accountBO.findMostRecentNonzeroPaymentByPaymentDate();
+        if(lastPayment != null){
+            lastPaymentDate = lastPayment.getPaymentDate();
+        }
+        actionForm.setLastPaymentDate(lastPaymentDate);
 
         if (accountBO.isLoanAccount()) {
             // NOTE - not using dto values at present but available when ui is refactored away from jsp
@@ -134,6 +143,12 @@ public class EditStatusAction extends BaseAction {
 
         String newStatusId = editStatusActionForm.getNewStatusId();
 
+        String newStatusName = null;
+        if (StringUtils.isNotBlank(editStatusActionForm.getNewStatusId())) {
+            newStatusName = new AccountBusinessService().getStatusName(AccountState.fromShort(getShortValue(editStatusActionForm.getNewStatusId())), accountBO.getType());
+        }
+        SessionUtils.setAttribute(SavingsConstants.NEW_STATUS_NAME, newStatusName, request);
+
         initializeLoanQuestionnaire(accountBO.getGlobalAccountNum(), newStatusId);
         if (loanApproved(newStatusId) || loanClosed(newStatusId)) {
             return loanQuestionnaire.fetchAppliedQuestions(mapping, editStatusActionForm, request, ActionForwards.preview_success);
@@ -178,6 +193,8 @@ public class EditStatusAction extends BaseAction {
     @CloseSession
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
+        UserContext userContext = getUserContext(request);
         EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
 
         Integer accountId = Integer.valueOf(editStatusActionForm.getAccountId());
@@ -209,7 +226,7 @@ public class EditStatusAction extends BaseAction {
             	updateStatus.add(new AccountUpdateStatus(individual.getAccountId().longValue(), newStatusId, flagId, updateComment));
             }
                 
-            this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(updateStatus);
+            this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(updateStatus, editStatusActionForm.getTransactionDateValue(userContext.getPreferredLocale()));
             
             return mapping.findForward(ActionForwards.loan_detail_page.toString());
         } if (accountBO.isSavingsAccount()) {

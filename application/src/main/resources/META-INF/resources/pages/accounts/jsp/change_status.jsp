@@ -24,7 +24,8 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@taglib uri="/tags/mifos-html" prefix="mifos"%>
+<%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
+<%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
@@ -32,12 +33,23 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="ChangeStatus"></span>	
+	<span id="page.id" title="ChangeStatus"></span>
+		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<script language="javascript">
 			function goToCancelPage(form){
 				form.action="editStatusAction.do?method=cancel";
 				form.submit();
  			 }
+ 			function checkStatusForTransactionDate(i) {
+ 			    if (i==7 || i==8) {
+ 			        document.getElementById("statusChangeTransactionDateLabelDiv").style.display = "block";
+ 			        document.getElementById("statusChangeTransactionDateInputDiv").style.display = "block";
+ 			    }
+ 			    else {
+ 			        document.getElementById("statusChangeTransactionDateLabelDiv").style.display = "none";
+ 			        document.getElementById("statusChangeTransactionDateInputDiv").style.display = "none";
+ 			    }
+ 			}
 			function manageFlag(i) {
    				if(editStatusActionForm.flagId!=undefined){
 					if(i==15){
@@ -49,9 +61,10 @@ explanation of the license and how it is applied.
 						editStatusActionForm.flagId.disabled=true;
 					}
 				}
+				checkStatusForTransactionDate(i);
  			 }
 		</script>
-		<html-el:form action="editStatusAction.do?method=preview">
+		<html-el:form action="editStatusAction.do?method=preview" onsubmit="return validateMyForm(transactionDate,transactionDateFormat,transactionDateYY)">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -146,6 +159,18 @@ explanation of the license and how it is applied.
 										</tr>
 									</c:if>
 								</c:forEach>
+								<tr class="fontnormal">
+                                            <td width="2%">&nbsp;</td>
+                                            <td width="98%">
+                                                <div id="statusChangeTransactionDateLabelDiv"  style="display: none;">
+                                                    <mifos:mifoslabel name="accounts.date_of_trxn" mandatory="yes" bundle="accountsUIResources" isColonRequired="yes" />
+                                                </div>
+                                                &nbsp;
+                                                <div id="statusChangeTransactionDateInputDiv" style="display: none;">
+                                                    <date:datetag property="transactionDate" />
+                                                </div>
+                                            </td>
+                                       </tr>
 								<tr class="fontnormal">
 									<td align="center">&nbsp;</td>
 									<td>&nbsp;</td>
