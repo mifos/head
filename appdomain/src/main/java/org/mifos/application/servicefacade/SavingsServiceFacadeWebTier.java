@@ -1013,6 +1013,13 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         savingsAccount.updateDetails(userContext);
 
         List<SavingsTransactionHistoryDto> savingsTransactionHistoryViewList = new ArrayList<SavingsTransactionHistoryDto>();
+        
+//        try {
+//            //personnelDao.checkAccessPermission(userContext, client.getOfficeId(), client.getLoanOfficerId());
+//        	  
+//        } catch (AccountException e) {
+//            throw new MifosRuntimeException("Access denied!", e);
+//        }
         // Check for order-by clause in AccountBO.hbm.xml,
         // AccountPayment.hbm.xml and AccountTrxnEntity.hbm.xml for
         // accountPaymentSet ,
