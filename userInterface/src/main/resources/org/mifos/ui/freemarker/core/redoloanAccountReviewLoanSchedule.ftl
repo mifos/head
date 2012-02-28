@@ -83,6 +83,12 @@ $(document).ready(function() {
 	    <div class="attribute"><span class="standout">[@spring.message "reviewInstallments.disbursmentDate"/]</span></div>
 	    <div class="value">${loanScheduleReferenceData.disbursementDate?date?string.medium}</div>
 	</div>
+	<div class="row">
+        <div class="attribute"><span class="standout">[@spring.message "reviewInstallments.mode_of_payment"/]</span></div>
+        <div class="value">
+            [@lookup.fromNonLocalisedMap loanProductReferenceData.disbursalPaymentTypes loanAccountFormBean.disbursalPaymentTypeId?string /]
+        </div>
+    </div>
 
 [#if loanProductReferenceData.variableInstallmentsAllowed]
 	<div class="row">
@@ -170,6 +176,7 @@ $(document).ready(function() {
 			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.feesHeading" /]</th>
 			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.totalHeading" /]</th>
 			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.actualAmountPaid" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.modeOfPaymentHeading" /]</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -207,6 +214,7 @@ $(document).ready(function() {
 					<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
 					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.actualPaymentAmounts[ind]?c}" class="separatedNumber" /></td>
 				[/#if]
+				<td style="border-top: 1px solid grey;">[@form.singleSelectWithPrompt "cashFlowSummaryFormBean.actualPaymentTypes[${ind}]", loanProductReferenceData.repaymentPaymentTypes /]</td>
 			</tr>
 			[#assign ind = ind + 1]
 			[/#list]
@@ -244,6 +252,7 @@ $(document).ready(function() {
 					<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
 					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentAmounts[ind]?c}" class="separatedNumber"/></td>
 				[/#if]
+				<td style="border-top: 1px solid grey;">[@form.singleSelectWithPrompt "loanScheduleFormBean.actualPaymentTypes[${ind}]", loanProductReferenceData.repaymentPaymentTypes /]</td>
 			</tr>
 			[#assign ind = ind + 1]
 			[/#list]

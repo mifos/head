@@ -649,6 +649,24 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             ApplicationConfigurationDto appConfig = new ApplicationConfigurationDto(digitsAfterDecimalForInterest, digitsBeforeDecimalForInterest, digitsAfterDecimalForMonetaryAmounts, digitsBeforeDecimalForMonetaryAmounts);
 
+            Map<String, String> disbursalPaymentTypes = new LinkedHashMap<String, String>();
+            try {
+                for (PaymentTypeDto paymentTypeDto : accountService.getLoanDisbursementTypes()) {
+                    disbursalPaymentTypes.put(paymentTypeDto.getValue().toString(), paymentTypeDto.getName());
+                }
+            } catch (Exception e) {
+                throw new SystemException(e);
+            }
+            Map<String, String> repaymentpaymentTypes = new LinkedHashMap<String, String>();
+            try {
+                for (PaymentTypeDto paymentTypeDto : accountService.getLoanPaymentTypes()) {
+                    repaymentpaymentTypes.put(paymentTypeDto.getValue().toString(), paymentTypeDto.getName());
+                }
+            } catch (Exception e) {
+                throw new SystemException(e);
+            }
+
+
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, gracePeriodInInstallments, customerDetailDto, loanProductDtos,
                     interestTypeName, fundDtos, collateralOptions, purposeOfLoanOptions,
@@ -657,7 +675,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                     BigDecimal.valueOf(eligibleLoanAmount.getMaxLoanAmount()), BigDecimal.valueOf(eligibleLoanAmount.getMinLoanAmount()), defaultInterestRate, maxInterestRate, minInterestRate,
                     eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue(), nextPossibleDisbursementDate,
                     daysOfTheWeekOptions, weeksOfTheMonthOptions, variableInstallmentsAllowed, fixedRepaymentSchedule, minGapInDays, maxGapInDays, minInstallmentAmount, compareCashflowEnabled,
-                    isGlimEnabled, isGroup, clientDetails, appConfig, defaultPenalties);
+                    isGlimEnabled, isGroup, clientDetails, appConfig, defaultPenalties, disbursalPaymentTypes, repaymentpaymentTypes);
 
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);
@@ -1094,6 +1112,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 String receiptNumber = null;
                 Date receiptDate = null;
                 PaymentTypeEntity paymentType = new PaymentTypeEntity(PaymentTypes.CASH.getValue());
+                if (loanAccountInfo.getDisbursalPaymentTypeId() != null) {
+                    paymentType = new PaymentTypeEntity(loanAccountInfo.getDisbursalPaymentTypeId());
+                }
                 Date paymentDate = loanAccountInfo.getDisbursementDate().toDateMidnight().toDate();
                 AccountPaymentEntity disbursalPayment = new AccountPaymentEntity(loan, loan.getLoanAmount(),
                         receiptNumber, receiptDate, paymentType, paymentDate);
@@ -1120,10 +1141,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 transactionHelper.flushSession();
 
                 // 5. apply each payment
-                Short paymentId = PaymentTypes.CASH.getValue();
                 for (LoanPaymentDto loanPayment : backdatedLoanPayments) {
                     Money amountPaidToDate = new Money(loan.getCurrency(), loanPayment.getAmount());
-                    PaymentData paymentData = new PaymentData(amountPaidToDate, createdBy, paymentId, loanPayment
+                    PaymentData paymentData = new PaymentData(amountPaidToDate, createdBy, loanPayment.getPaymentTypeId(), loanPayment
                             .getPaymentDate().toDateMidnight().toDate());
                     loan.applyPayment(paymentData);
                     this.loanDao.save(loan);
@@ -2124,7 +2144,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             List<CreateAccountFeeDto> accountFees = new ArrayList<CreateAccountFeeDto>();
             CreateLoanAccount loanAccountInfo = new CreateLoanAccount(loanDetail.getClientId(), loanDetail.getLoanProductId().intValue(), loanDetail.getAccountStateId().intValue(),
                     loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount,
-                    interestRate, disbursementDate,
+                    interestRate, disbursementDate, null,
                     numberOfInstallments, minAllowedNumberOfInstallments, maxAllowedNumberOfInstallments,
                     graceDuration, sourceOfFundId, loanPurposeId, collateralTypeId, collateralNotes, externalId,
                     isRepaymentIndepOfMeetingEnabled, recurringSchedule, accountFees, new ArrayList<CreateAccountPenaltyDto>());

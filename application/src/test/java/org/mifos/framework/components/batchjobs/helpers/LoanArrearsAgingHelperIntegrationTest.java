@@ -180,7 +180,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         CreateLoanAccount createLoanAccount = new CreateLoanAccount(customer.getCustomerId(), loanProduct.getPrdOfferingId().intValue(), 
                 state.getValue().intValue(), 
                 loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount, 
-                interestRate, disbursementDate, numberOfInstallments, 
+                interestRate, disbursementDate, null, numberOfInstallments,
                 minAllowedNumberOfInstallments, maxAllowedNumberOfInstallments, 
                 graceDuration, sourceOfFundId, loanPurposeId, 
                 collateralTypeId, collateralNotes, externalId, 

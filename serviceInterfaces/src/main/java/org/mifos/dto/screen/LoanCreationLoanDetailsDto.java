@@ -59,6 +59,8 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 	private final Map<String, String> additionalFeeOptions;
 	private final Map<String, String> daysOfTheWeekOptions;
 	private final Map<String, String> weeksOfTheMonthOptions;
+    private final Map<String, String> disbursalPaymentTypes;
+    private final Map<String, String> repaymentPaymentTypes;
 
     private final List<FundDto> fundDtos;
     private final List<FeeDto> defaultFees;
@@ -97,7 +99,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
             LinkedHashMap<String, String> daysOfTheWeekOptions, LinkedHashMap<String, String> weeksOfTheMonthOptions, 
             boolean variableInstallmentsAllowed, boolean fixedRepaymentSchedule, Integer minGapInDays, Integer maxGapInDays, BigDecimal minInstallmentAmount, boolean compareCashflowEnabled,
             boolean isGlimEnabled, boolean isGroup, List<LoanAccountDetailsDto> clientDetails, ApplicationConfigurationDto appConfig,
-            List<PenaltyDto> defaultPenalties) {
+            List<PenaltyDto> defaultPenalties, Map<String, String> disbursalPaymentTypes, Map<String, String> repaymentPaymentTypes) {
         this.repaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
         this.loanOfferingMeetingDetail = loanOfferingMeetingDetail;
         this.customerMeetingDetail = customerMeetingDetail;
@@ -139,6 +141,8 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 		this.purposeOfLoanOptions = purposeOfLoanOptions;
 		this.defaultFeeOptions = defaultFeeOptions;
 		this.additionalFeeOptions = additionalFeeOptions;
+        this.disbursalPaymentTypes = disbursalPaymentTypes;
+        this.repaymentPaymentTypes = repaymentPaymentTypes;
     }
 
     public Integer getGracePeriodInInstallments() {
@@ -331,5 +335,13 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     
     public void setCompareCashflowEnabled(boolean compareCashflowEnabled) {
         this.compareCashflowEnabled = compareCashflowEnabled;
+    }
+
+    public Map<String, String> getDisbursalPaymentTypes() {
+        return disbursalPaymentTypes;
+    }
+
+    public Map<String, String> getRepaymentPaymentTypes() {
+        return repaymentPaymentTypes;
     }
 }
