@@ -27,6 +27,7 @@
                          "createLoanAccount.flowState.reviewAndSubmit"]]
 
 <span id="page.id" title="SchedulePreview"></span>
+[@i18n.formattingInfo /]
 <script>
 $(document).ready(function() {
 
@@ -198,13 +199,13 @@ $(document).ready(function() {
 						[#else]
 						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.installmentAmounts[ind]?c}" /></td>
 						[/#if]
-						<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.actualPaymentAmounts[ind]?c}" /</td>
+						<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.actualPaymentAmounts[ind]?c}" class="separatedNumber" /</td>
 					[#else]
 						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="0" /></td>
 					[/#if]
 				[#else]
 					<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
-					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.actualPaymentAmounts[ind]?c}" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.actualPaymentAmounts[ind]?c}" class="separatedNumber" /></td>
 				[/#if]
 			</tr>
 			[#assign ind = ind + 1]
@@ -235,13 +236,13 @@ $(document).ready(function() {
 						[#else]
 						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]?c}" /></td>
 						[/#if]
-						<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentAmounts[ind]?c}" /</td>
+						<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentAmounts[ind]?c}" class="separatedNumber" /</td>
 					[#else]
 						<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="0" /></td>
 					[/#if]
 				[#else]
 					<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
-					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentAmounts[ind]?c}" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentAmounts[ind]?c}" class="separatedNumber"/></td>
 				[/#if]
 			</tr>
 			[#assign ind = ind + 1]
