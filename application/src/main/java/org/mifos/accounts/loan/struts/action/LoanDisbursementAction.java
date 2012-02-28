@@ -226,6 +226,6 @@ public class LoanDisbursementAction extends BaseAction {
     }
 
     private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Disburse", "Loan",
-            ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch",
+            ActionForwards.preview_success, "clientsAndAccounts.ftl",
             new DefaultQuestionnaireServiceFacadeLocator());
 }

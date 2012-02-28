@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.struts.actionforms;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -30,13 +31,20 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+
+import static org.mifos.framework.util.helpers.DateUtils.dateFallsBeforeDate;
+import static org.mifos.framework.util.helpers.DateUtils.getDateAsSentFromBrowser;
 
 public class EditStatusActionForm extends BaseActionForm implements QuestionResponseCapturer{
 
@@ -64,17 +72,11 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
 
     private String input;
 
-    private String commentDate;
-
     private List<QuestionGroupDetail> questionGroups;
 
-    public String getCommentDate() {
-        return commentDate;
-    }
+    private String transactionDate;
 
-    public void setCommentDate(String commentDate) {
-        this.commentDate = commentDate;
-    }
+    private java.util.Date lastPaymentDate;
 
     public String getInput() {
         return input;
@@ -156,6 +158,21 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
         this.selectedItems = selectedItems;
     }
 
+    public String getTransactionDate() {
+        return transactionDate;
+    }
+
+    public void setTransactionDate(String transactionDate) {
+        this.transactionDate = transactionDate;
+    }
+
+    public Date getTransactionDateValue(Locale preferredLocale) throws InvalidDateException {
+        if (transactionDate == null) {
+            transactionDate = DateUtils.makeDateAsSentFromBrowser();
+        }
+        return new Date(DateUtils.getLocaleDate(preferredLocale, transactionDate).getTime());
+    }
+
     @Override
     public void reset(@SuppressWarnings("unused") ActionMapping mapping, HttpServletRequest request) {
         String methodCalled = request.getParameter(Methods.method.toString());
@@ -173,6 +190,7 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
         String methodCalled = request.getParameter(Methods.method.toString());
         if (null != methodCalled) {
             if ((Methods.preview.toString()).equals(methodCalled)) {
+                errors.add(super.validate(mapping, request));
                 handleStatusPreviewValidations(request, errors);
             } else if ((Methods.update.toString()).equals(methodCalled)) {
                 handleUpdateStatus(request, errors);
@@ -215,6 +233,7 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
             addError(errors, LoanConstants.MAX_LENGTH, LoanConstants.MAX_LENGTH, notesString, String
                     .valueOf(LoanConstants.COMMENT_LENGTH));
         }
+        validateTransactionDate(errors, resources);
         return errors;
     }
 
@@ -243,5 +262,62 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
     @Override
     public List<QuestionGroupDetail> getQuestionGroups() {
         return questionGroups;
+    }
+
+    private void validateTransactionDate(ActionErrors errors, ResourceBundle resources) {
+        String fieldName = "accounts.date_of_trxn";
+        ActionErrors validationErrors = validateDate(getTransactionDate(), resources.getString(fieldName));
+        if (null != validationErrors && !validationErrors.isEmpty()) {
+            errors.add(validationErrors);
+        }
+        validationErrors = validatePaymentDate(getTransactionDate(), resources.getString(fieldName));
+        if (null != validationErrors && !validationErrors.isEmpty()) {
+            errors.add(validationErrors);
+        }
+    }
+
+    protected ActionErrors validateDate(String date, String fieldName) {
+        ActionErrors errors = null;
+        java.sql.Date sqlDate = null;
+        if (date != null && !date.equals("")) {
+            try {
+                sqlDate = getDateAsSentFromBrowser(date);
+                if (DateUtils.whichDirection(sqlDate) > 0) {
+                    errors = new ActionErrors();
+                    errors.add(AccountConstants.ERROR_FUTUREDATE, new ActionMessage(AccountConstants.ERROR_FUTUREDATE,
+                            fieldName));
+                }
+            } catch (InvalidDateException ide) {
+                errors = new ActionErrors();
+                errors.add(AccountConstants.ERROR_INVALIDDATE, new ActionMessage(AccountConstants.ERROR_INVALIDDATE,
+                        fieldName));
+            }
+        } else {
+            errors = new ActionErrors();
+            errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
+                    fieldName));
+        }
+        return errors;
+    }
+
+    public ActionErrors validatePaymentDate(String transactionDate, String fieldName) {
+        ActionErrors errors = null;
+        try {
+            if (lastPaymentDate != null && dateFallsBeforeDate(getDateAsSentFromBrowser(transactionDate), lastPaymentDate)) {
+                errors = new ActionErrors();
+                errors.add(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
+                        new ActionMessage(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
+                                fieldName));
+            }
+        } catch (InvalidDateException ide) {
+            errors = new ActionErrors();
+            errors.add(AccountConstants.ERROR_INVALIDDATE, new ActionMessage(AccountConstants.ERROR_INVALIDDATE,
+                    fieldName));
+        }
+        return errors;
+    }
+
+    public void setLastPaymentDate(java.util.Date lastPaymentDate) {
+        this.lastPaymentDate = lastPaymentDate;
     }
 }

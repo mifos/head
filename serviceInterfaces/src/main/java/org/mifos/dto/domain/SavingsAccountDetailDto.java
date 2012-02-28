@@ -41,13 +41,16 @@ public class SavingsAccountDetailDto implements Serializable {
     private final String accountBalance;
     private final Date dueDate;
     private final String totalAmountDue;
+    private final String totalAmountDueForNextInstallment;
+    private final String totalAmountInArrears;
     private final SavingsPerformanceHistoryDto performanceHistory;
     private final String depositTypeName;
 
     public SavingsAccountDetailDto(SavingsProductDto productDetails, List<SavingsRecentActivityDto> recentActivity,
             List<CustomerNoteDto> recentNoteDtos, String recommendedOrMandatoryAmount, String globalAccountNum,
             Integer accountId, Short accountStateId, String accountStateName, String accountBalance, Date dueDate,
-            String totalAmountDue, SavingsPerformanceHistoryDto performanceHistory, String depositTypeName) {
+            String totalAmountDue, String totalAmountDueForNextInstallment, String totalAmountInArrears,
+            SavingsPerformanceHistoryDto performanceHistory, String depositTypeName) {
         super();
         this.productDetails = productDetails;
         this.recentActivity = recentActivity;
@@ -60,6 +63,8 @@ public class SavingsAccountDetailDto implements Serializable {
         this.accountBalance = accountBalance;
         this.dueDate = dueDate;
         this.totalAmountDue = totalAmountDue;
+        this.totalAmountDueForNextInstallment = totalAmountDueForNextInstallment;
+        this.totalAmountInArrears = totalAmountInArrears;
         this.performanceHistory = performanceHistory;
         this.depositTypeName = depositTypeName;
     }
@@ -106,6 +111,14 @@ public class SavingsAccountDetailDto implements Serializable {
 
     public String getTotalAmountDue() {
         return totalAmountDue;
+    }
+
+    public String getTotalAmountDueForNextInstallment() {
+        return totalAmountDueForNextInstallment;
+    }
+
+    public String getTotalAmountInArrears() {
+        return totalAmountInArrears;
     }
 
     public SavingsPerformanceHistoryDto getPerformanceHistory() {

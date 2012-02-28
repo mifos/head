@@ -340,7 +340,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     @Override
-    public String updateLoanAccountStatus(AccountUpdateStatus updateStatus) {
+    public String updateLoanAccountStatus(AccountUpdateStatus updateStatus, Date transactionDate) {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
         PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
@@ -352,7 +352,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             this.transactionHelper.beginAuditLoggingFor(loanAccount);
             AccountState newStatus = AccountState.fromShort(updateStatus.getNewStatusId());
 
-            loanAccount.changeStatus(newStatus, updateStatus.getFlagId(), updateStatus.getComment(), loggedInUser);
+            loanAccount.changeStatus(newStatus, updateStatus.getFlagId(), updateStatus.getComment(), loggedInUser, transactionDate);
             this.loanDao.save(loanAccount);
             this.transactionHelper.commitTransaction();
             return loanAccount.getGlobalAccountNum();
@@ -1441,8 +1441,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             BigDecimal interestDueForCurrentInstallment =
                     interestDueForNextInstallment(repayLoanInfoDto.getTotalRepaymentAmount(),
                     repayLoanInfoDto.getWaivedAmount(),loan,repayLoanInfoDto.isWaiveInterest());
-            loan.makeEarlyRepayment(earlyRepayAmount, repayLoanInfoDto.getReceiptNumber(),
-                    repayLoanInfoDto.getReceiptDate(), repayLoanInfoDto.getPaymentTypeId(), repayLoanInfoDto.getId(),
+            loan.makeEarlyRepayment(earlyRepayAmount, repayLoanInfoDto.getDateOfPayment(),
+                    repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(),
+                    repayLoanInfoDto.getPaymentTypeId(), repayLoanInfoDto.getId(),
                     repayLoanInfoDto.isWaiveInterest(), new Money(loan.getCurrency(), interestDueForCurrentInstallment));
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);
@@ -1927,11 +1928,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     @Override
-    public List<String> updateSeveralLoanAccountStatuses(List<AccountUpdateStatus> accountsForUpdate) {
+    public List<String> updateSeveralLoanAccountStatuses(List<AccountUpdateStatus> accountsForUpdate, Date transactionDate) {
 
         List<String> updatedAccountNumbers = new ArrayList<String>();
         for (AccountUpdateStatus accountUpdate : accountsForUpdate) {
-            String accountNumber = updateLoanAccountStatus(accountUpdate);
+            String accountNumber = updateLoanAccountStatus(accountUpdate, transactionDate);
             updatedAccountNumbers.add(accountNumber);
         }
 

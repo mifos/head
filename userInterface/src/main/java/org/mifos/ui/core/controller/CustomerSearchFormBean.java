@@ -44,6 +44,8 @@ public class CustomerSearchFormBean implements Serializable {
     private Short officeId = 0;
     
     private Map<String, String> offices;
+    
+    private String officeName;
 
     @Autowired
     private transient MifosBeanValidator validator;
@@ -82,6 +84,14 @@ public class CustomerSearchFormBean implements Serializable {
 
     public void setOffices(Map<String, String> offices) {
         this.offices = offices;
+    }
+    
+    public String getOfficeName() {
+        return officeName;
+    }
+
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
     }
 
     /**

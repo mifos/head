@@ -46,7 +46,7 @@
 		}  
  		function fun_createCancel(form)
 		{
-			form.action="custSearchAction.do?method=loadMainSearch";
+			form.action="clientsAndAccounts.ftl";
 			form.submit();
 		}
 		function fun_editCancel(form)

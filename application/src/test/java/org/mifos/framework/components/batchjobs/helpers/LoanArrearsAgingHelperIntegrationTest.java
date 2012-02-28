@@ -391,7 +391,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         Money totalAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "" + loanAmount
                 + totalInterest);
         String receiptNumber = "1";
-        loan.makeEarlyRepayment(totalAmount, receiptNumber, dateTime.toDate(), PaymentTypes.CASH.getValue().toString(),
+        loan.makeEarlyRepayment(totalAmount, dateTime.toDate(), receiptNumber, dateTime.toDate(), PaymentTypes.CASH.getValue().toString(),
                 loan.getPersonnel().getPersonnelId(), false, new Money(loan.getCurrency(), "0"));
 
         //jpw runLoanArrearsThenLoanArrearsAging();
@@ -425,7 +425,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         Money totalAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "" + loanAmount
                 + 0);
         String receiptNumber = "1";
-        loan.makeEarlyRepayment(totalAmount, receiptNumber, dateTime.toDate(), PaymentTypes.CASH.getValue().toString(),
+        loan.makeEarlyRepayment(totalAmount, dateTime.toDate(), receiptNumber, dateTime.toDate(), PaymentTypes.CASH.getValue().toString(),
                 loan.getPersonnel().getPersonnelId(), true, new Money(loan.getCurrency(), "0"));
 
         //jpw runLoanArrearsThenLoanArrearsAging();

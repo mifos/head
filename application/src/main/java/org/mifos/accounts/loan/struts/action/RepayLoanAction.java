@@ -33,6 +33,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.actionforms.RepayLoanActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -45,6 +46,7 @@ import org.mifos.dto.screen.RepayLoanInfoDto;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -61,13 +63,25 @@ public class RepayLoanAction extends BaseAction {
     public ActionForward loadRepayment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
                                        @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.info("Loading repay loan page");
-        clearActionForm(form);
+        RepayLoanActionForm actionForm = (RepayLoanActionForm) form;
+        actionForm.setReceiptNumber(null);
+        actionForm.setReceiptDate(null);
+        actionForm.setPaymentTypeId(null);
+        actionForm.setWaiverInterest(true);
+        actionForm.setDateOfPayment(DateUtils.makeDateAsSentFromBrowser());
         UserContext userContext = getUserContext(request);
 
         String globalAccountNum = request.getParameter("globalAccountNum");
         RepayLoanDto repayLoanDto = this.loanAccountServiceFacade.retrieveLoanRepaymentDetails(globalAccountNum);
 
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        java.util.Date lastPaymentDate = new java.util.Date(0);
+        AccountPaymentEntity lastPayment = loan.findMostRecentNonzeroPaymentByPaymentDate();
+        if(lastPayment != null){
+            lastPaymentDate = lastPayment.getPaymentDate();
+        }
+        actionForm.setLastPaymentDate(lastPaymentDate);
+
         SessionUtils.setAttribute(LoanConstants.WAIVER_INTEREST, repayLoanDto.shouldWaiverInterest(), request);
         SessionUtils.setAttribute(LoanConstants.WAIVER_INTEREST_SELECTED, repayLoanDto.shouldWaiverInterest(), request);
         SessionUtils.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, new Money(loan.getCurrency(), repayLoanDto.getEarlyRepaymentMoney()), request);
@@ -138,13 +152,5 @@ public class RepayLoanAction extends BaseAction {
             forward = ActionForwards.preview_failure.toString();
         }
         return mapping.findForward(forward);
-    }
-
-    private void clearActionForm(ActionForm form) {
-        RepayLoanActionForm actionForm = (RepayLoanActionForm) form;
-        actionForm.setReceiptNumber(null);
-        actionForm.setReceiptDate(null);
-        actionForm.setPaymentTypeId(null);
-        actionForm.setWaiverInterest(true);
     }
 }

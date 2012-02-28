@@ -38,7 +38,7 @@ public class SavingsProductController {
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
-
+    
     protected SavingsProductController() {
         // default contructor for spring autowiring
     }
@@ -46,6 +46,7 @@ public class SavingsProductController {
     public SavingsProductController(final AdminServiceFacade adminServiceFacade) {
         this.adminServiceFacade = adminServiceFacade;
     }
+
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView showAllSavingsProducts() {

@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="LoanRepayment"></span>
 		<script type="text/javascript" src="pages/application/loan/js/loanRepayment.js"></script>
 
-		<html-el:form method="post" action="/loanAccountAction.do">
+		<form method="get" action="viewLoanAccountDetails.ftl">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'originalScheduleIsAvailable')}"
@@ -136,12 +136,9 @@ explanation of the license and how it is applied.
                     </table>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:button styleId="loanRepayment.button.return" property="returnToAccountDetailsbutton"
-								onclick="LoanRepayment.submit(this.form,'get');"
-								styleClass="buttn" >
-								<mifos:mifoslabel name="loan.returnToAccountDetails"
-									bundle="loanUIResources" />
-							</html-el:button></td>
+							<td align="center"><input type="submit" id="loanRepayment.button.return" name="returnToAccountDetailsbutton"
+								class="buttn" value="<mifos:mifoslabel name="loan.returnToAccountDetails" bundle="loanUIResources" />">
+							</td>
 						</tr>
 					</table>
 
@@ -158,6 +155,6 @@ explanation of the license and how it is applied.
 		<html-el:hidden property="recordLoanOfficerId" value="${param.recordLoanOfficerId}"/>
 		<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}"/>
 		<html-el:hidden property="prdOfferingName" value="${BusinessKey.loanOffering.prdOfferingName}"/>
-	</html-el:form>
+	</form>
 	</tiles:put>
 </tiles:insert>

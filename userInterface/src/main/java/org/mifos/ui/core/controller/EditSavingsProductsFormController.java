@@ -24,6 +24,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.screen.SavingsProductFormDto;
@@ -49,7 +50,9 @@ public class EditSavingsProductsFormController {
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
-
+    @Autowired
+    private ConfigurationServiceFacade configurationServiceFacade;
+    
     protected EditSavingsProductsFormController(){
         //for spring autowiring
     }
@@ -61,7 +64,7 @@ public class EditSavingsProductsFormController {
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
         LazyBindingErrorProcessor errorProcessor = new LazyBindingErrorProcessor();
-        binder.setValidator(new SavingsProductFormValidator(errorProcessor));
+        binder.setValidator(new SavingsProductFormValidator(errorProcessor, configurationServiceFacade));
         binder.setBindingErrorProcessor(errorProcessor);
     }
 

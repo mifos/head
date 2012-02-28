@@ -578,12 +578,26 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     public void changeStatus(final AccountState newStatus, final Short flagId, final String comment, PersonnelBO loggedInUser) throws AccountException {
-        changeStatus(newStatus.getValue(), flagId, comment, loggedInUser);
+        changeStatus(newStatus.getValue(), flagId, comment, loggedInUser, getDateTimeService().getCurrentJavaDateTime());
+    }
+
+    public void changeStatus(final AccountState newStatus, final Short flagId, final String comment,
+                             final PersonnelBO loggedInUser, final Date transactionDate) throws AccountException {
+        changeStatus(newStatus.getValue(), flagId, comment, loggedInUser, transactionDate);
     }
 
     public final void changeStatus(final Short newStatusId, final Short flagId, final String comment, PersonnelBO loggedInUser)
             throws AccountException {
+        changeStatus(newStatusId, flagId, comment, loggedInUser, getDateTimeService().getCurrentJavaDateTime());
+    }
 
+    public final void changeStatus(final Short newStatusId, final Short flagId, final String comment,
+                                   final PersonnelBO loggedInUser, final Date argumentDate)
+            throws AccountException {
+        Date transactionDate = argumentDate;
+        if (transactionDate == null) {
+            transactionDate = getDateTimeService().getCurrentJavaDateTime();
+        }
         Short oldStatusId = this.getState().getValue();
         if (getUserContext() == null) {
             throw new IllegalStateException("userContext is not set for account.");
@@ -604,8 +618,7 @@ public class AccountBO extends AbstractBusinessObject {
 
             AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(this
                     .getAccountState(), accountStateEntity, loggedInUser, this);
-            AccountNotesEntity accountNotesEntity = new AccountNotesEntity(new DateTimeService()
-                    .getCurrentJavaSqlDate(), comment, loggedInUser, this);
+            AccountNotesEntity accountNotesEntity = new AccountNotesEntity(transactionDate, comment, loggedInUser, this);
             this.addAccountStatusChangeHistory(historyEntity);
             this.setAccountState(accountStateEntity);
             this.addAccountNotes(accountNotesEntity);
@@ -617,14 +630,14 @@ public class AccountBO extends AbstractBusinessObject {
                     || newStatusId.equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())
                     || newStatusId.equals(AccountState.SAVINGS_CANCELLED.getValue())
                     || newStatusId.equals(AccountState.CUSTOMER_ACCOUNT_INACTIVE.getValue())) {
-                this.setClosedDate(getDateTimeService().getCurrentJavaDateTime());
+                this.setClosedDate(transactionDate);
             }
             if (newStatusId.equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())) {
-                writeOff();
+                writeOff(transactionDate);
             }
 
             if (newStatusId.equals(AccountState.LOAN_CLOSED_RESCHEDULED.getValue())) {
-                reschedule();
+                reschedule(transactionDate);
             }
 
             if (newStatusId.equals(AccountState.SAVINGS_INACTIVE.getValue())) {
@@ -644,16 +657,18 @@ public class AccountBO extends AbstractBusinessObject {
 
     /**
      * used by subclasses
+     * @param transactionDate
      */
     @SuppressWarnings("unused")
-    protected void writeOff() throws AccountException {
+    protected void writeOff(Date transactionDate) throws AccountException {
     }
 
     /**
      * used by subclasses
+     * @param transactionDate
      */
     @SuppressWarnings("unused")
-    protected void reschedule() throws AccountException {
+    protected void reschedule(Date transactionDate) throws AccountException {
     }
 
     protected void updateClientPerformanceOnRescheduleLoan() {

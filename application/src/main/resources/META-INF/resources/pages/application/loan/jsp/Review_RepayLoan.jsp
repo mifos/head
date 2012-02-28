@@ -110,7 +110,7 @@ explanation of the license and how it is applied.
               				</tr>
               				<tr>
 								<td width="28%" align="right" class="fontnormalbold"><mifos:mifoslabel
-									name="loan.dateofpayment"  />:&nbsp;</td>
+									name="accounts.date_of_trxn"  />:&nbsp;</td>
 								<td width="72%" class="fontnormal">
 									<c:out value="${sessionScope.repayLoanActionForm.dateOfPayment}" />
 								</td>

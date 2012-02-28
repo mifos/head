@@ -194,7 +194,7 @@ explanation of the license and how it is applied.
 										              <c:when test="${ not empty LoanOfficerslist }">
 										                  <c:forEach items='${LoanOfficerslist}' var="loanOfficer">
 										                      <html-el:link styleId="branch_search_loanofficer.link.selectLoanOfficer"
-											                     action="custSearchAction.do?method=get&loanOfficerId=${loanOfficer.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
+											                     href="clientsAndAccounts.ftl?officeId=${custSearchActionForm.officeId}&loanOfficerId=${loanOfficer.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
 											                     <c:out value="${loanOfficer.displayName}" />
 										                      </html-el:link>
 										                      <br>

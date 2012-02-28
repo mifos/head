@@ -92,7 +92,7 @@ public class SavingsAction extends BaseAction {
 
     private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
     private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Savings",
-            ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator);
+            ActionForwards.preview_success, "clientsAndAccounts.ftl", questionnaireServiceFacadeLocator);
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("savingsAction");

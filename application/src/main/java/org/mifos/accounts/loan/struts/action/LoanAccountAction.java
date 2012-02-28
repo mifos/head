@@ -183,7 +183,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     QuestionnaireFlowAdapter getCreateLoanQuestionnaire() {
         return new QuestionnaireFlowAdapter("Create", "Loan", ActionForwards.schedulePreview_success,
-                "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator, questionGroupFilter);
+                "clientsAndAccounts.ftl", questionnaireServiceFacadeLocator, questionGroupFilter);
     }
 
     /**

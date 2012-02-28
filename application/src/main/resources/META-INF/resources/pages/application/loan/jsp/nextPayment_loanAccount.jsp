@@ -39,7 +39,7 @@ explanation of the license and how it is applied.
 						form.submit();
 					}
 	</script>
-		<html-el:form method="post" action="/loanAccountAction.do">			
+		<form method="get" action="viewLoanAccountDetails.ftl">			
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -239,9 +239,7 @@ explanation of the license and how it is applied.
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td>
-							<html-el:button styleId="nextPayment_loanAccount.button.back" property="returnToAccountDetailsbutton"	onclick="javascript:fun_return(this.form);"	styleClass="buttn" >
-								<mifos:mifoslabel name="loan.returnToAccountDetails" bundle="loanUIResources" />
-							</html-el:button>
+							<input type="submit" id="nextPayment_loanAccount.button.back" name="returnToAccountDetailsbutton"	class="buttn" value="<mifos:mifoslabel name="loan.returnToAccountDetails" bundle="loanUIResources" />"/>
 							</td>
 						</tr>
 					</table>
@@ -254,6 +252,6 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="accountType" value="${param.accountType}" />													
 			<html-el:hidden property="currentStatusId" value="${param.accountStateId}" />							
 			
-		</html-el:form>
+		</form>
 	</tiles:put>
 </tiles:insert>

@@ -39,7 +39,7 @@
 		<span class="fontnormal">
 			[#if savingsAccountDetailDto.accountStateId != AccountState.SAVINGS_CANCELLED.value && savingsAccountDetailDto.accountStateId != AccountState.SAVINGS_CLOSED.value ]
 				<a id="savingsaccountdetail.link.editAccountStatus" 
-				href="editStatusAction.do?method=load&accountId=${savingsAccountDetailDto}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+				href="editStatusAction.do?method=load&accountId=${savingsAccountDetailDto.accountId}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
 					[@spring.message "Savings.editAccountStatus" /]
 				</a>
 			[/#if]
@@ -64,7 +64,7 @@
 		 ( savingsAccountDetailDto.accountStateId == AccountStates.SAVINGS_ACC_APPROVED || savingsAccountDetailDto.accountStateId == AccountStates.SAVINGS_ACC_INACTIVE ) ]
 		<span class="fontnormal">
 			<a id="savingsaccountdetail.link.viewDepositDueDetails" 
-				href="savingsAction.do?method=getDepositDueDetails&globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+				href="viewSavingsAccountDepositDueDetails.ftl?globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
 				[@spring.message "Savings.viewDepositDueDetails" /]
 			</a>
 		</span><br/>

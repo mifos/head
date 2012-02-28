@@ -81,7 +81,7 @@ explanation of the license and how it is applied.
 						<tr>
 							<td class="fontnormal"><br>
 							<span class="fontnormalbold"> <c:out
-								value="${sessionScope.editStatusActionForm.commentDate}" />
+								value="${sessionScope.editStatusActionForm.transactionDate}" />
 							</span> <span class="fontnormal"><br>
 							<c:out value="${sessionScope.editStatusActionForm.notes}"/>&nbsp;-</span> 
 							<em><c:out

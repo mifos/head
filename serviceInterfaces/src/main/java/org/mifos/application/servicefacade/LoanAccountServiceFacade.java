@@ -77,7 +77,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     AccountStatusDto retrieveAccountStatuses(Long loanAccountId);
 
     @PreAuthorize("isFullyAuthenticated()")
-    String updateLoanAccountStatus(AccountUpdateStatus updateStatus);
+    String updateLoanAccountStatus(AccountUpdateStatus updateStatus, Date transactionDate);
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanAccountDetailDto retrieveLoanAccountNotes(Long loanAccountId);
@@ -182,7 +182,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     ChangeAccountStatusDto retrieveLoanOfficerDetailsForBranch(Short officeId);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_APPROVE_LOANS_IN_BULK')")
-    List<String> updateSeveralLoanAccountStatuses(List<AccountUpdateStatus> accountsForUpdate);
+    List<String> updateSeveralLoanAccountStatuses(List<AccountUpdateStatus> accountsForUpdate, Date transactionDate);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_REVERSE_LOAN_DISBURSAL')")
     List<LoanActivityDto> retrieveLoanPaymentsForReversal(String globalAccountNum);

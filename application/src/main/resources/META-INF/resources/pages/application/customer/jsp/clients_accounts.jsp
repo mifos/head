@@ -119,7 +119,7 @@ explanation of the license and how it is applied.
 										  <c:when test="${ not empty OfficesList }">
 							                 <c:forEach items="${OfficesList}" var="office">
 								                <html-el:link styleId="client_accounts.link.selectBranchOffice"
-                                                    action="custSearchAction.do?method=preview&officeId=${office.officeId}&currentFlowKey=${requestScope.currentFlowKey}">
+                                                    href="clientsAndAccounts.ftl?officeId=${office.officeId}&currentFlowKey=${requestScope.currentFlowKey}">
 									               <c:out value="${office.officeName}" />
 								                </html-el:link>
 								                <br>

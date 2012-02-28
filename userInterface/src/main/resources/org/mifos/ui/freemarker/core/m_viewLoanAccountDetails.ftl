@@ -85,7 +85,7 @@
 		</span><br/>
 		<span class="fontnormal"> 
 			<a id="loanaccountdetail.link.viewRepaymentSchedule"
-				href="loanAccountAction.do?method=getLoanRepaymentSchedule&input=reviewTransactionPage&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountType=${loanInformationDto.accountTypeId}&accountStateId=${loanInformationDto.accountStateId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&lastPaymentAction=${loanInformationDto.accountId}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+				href="viewLoanAccountRepaymentSchedule.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
 				[@spring.message "loan.view_schd" /]
 			</a>
 		</span><br/>
@@ -100,7 +100,7 @@
 		[#if loanInformationDto.accountStateId == 5 || loanInformationDto.accountStateId == 9 ]
 		<span class="fontnormal"> 
 			<a id="loanaccountdetail.link.viewInstallmentDetails"
-			href="loanAccountAction.do?method=getInstallmentDetails&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountType=${loanInformationDto.accountTypeId}&accountStateId=${loanInformationDto.accountStateId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&lastPaymentAction=${loanInformationDto.accountId}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+			href="viewLoanAccountNextInstallmentDetails.ftl?accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountType=${loanInformationDto.accountTypeId}&accountStateId=${loanInformationDto.accountStateId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&lastPaymentAction=${loanInformationDto.accountId}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
 				[@spring.message "loan.view_installment_details" /]
 			</a>
 		</span><br/>
