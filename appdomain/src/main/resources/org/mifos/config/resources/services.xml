@@ -114,8 +114,4 @@
     <bean id="configurationServiceFacade" class="org.mifos.config.servicefacade.ConfigurationServiceFacadeWebTier"/>
     
     <bean id="customerSearchServiceFacade" class="org.mifos.application.servicefacade.CustomerSearchServiceFacadeWebTier"/>
-
-    <bean id="customerPersistence" class="org.mifos.customers.persistence.CustomerPersistence"/>
-
-    <bean id="configurationPersistence" class="org.mifos.config.persistence.ConfigurationPersistence"/>
 </beans>
