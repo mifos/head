@@ -108,14 +108,21 @@ public class RepayLoanAction extends BaseAction {
         String globalAccountNum = request.getParameter("globalAccountNum");
 
         String forward = Constants.UPDATE_SUCCESS;
-        BigDecimal totalRepaymentAmount =((Money) SessionUtils.getAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request)).getAmount();
-        BigDecimal waivedAmount = ((Money) SessionUtils.getAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, request)).getAmount();
-        RepayLoanInfoDto repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
-                repayLoanActionForm.getAmount(), repayLoanActionForm.getReceiptNumber(),
-                receiptDate, repayLoanActionForm.getPaymentTypeId(), userContext.getId(),
-                repayLoanActionForm.isWaiverInterest(),
-                repayLoanActionForm.getDateOfPaymentValue(userContext.getPreferredLocale()),totalRepaymentAmount,waivedAmount);
-        this.loanAccountServiceFacade.makeEarlyRepayment(repayLoanInfoDto);
+        try {
+            BigDecimal totalRepaymentAmount =((Money) SessionUtils.getAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request)).getAmount();
+            BigDecimal waivedAmount = ((Money) SessionUtils.getAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, request)).getAmount();
+            RepayLoanInfoDto repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
+                    repayLoanActionForm.getAmount(), repayLoanActionForm.getReceiptNumber(),
+                    receiptDate, repayLoanActionForm.getPaymentTypeId(), userContext.getId(),
+                    repayLoanActionForm.isWaiverInterest(),
+                    repayLoanActionForm.getDateOfPaymentValue(userContext.getPreferredLocale()),totalRepaymentAmount,waivedAmount);
+            this.loanAccountServiceFacade.makeEarlyRepayment(repayLoanInfoDto);
+        } catch (BusinessRuleException e) {
+            ActionErrors actionErrors = new ActionErrors();
+            actionErrors.add("waiverInterest", new ActionMessage(e.getMessageKey()));
+            addErrors(request, actionErrors);
+            forward = Constants.UPDATE_FAILURE;
+        }
         SessionUtils.removeAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request);
         SessionUtils.removeAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, request);
         return mapping.findForward(forward);
@@ -143,9 +150,6 @@ public class RepayLoanAction extends BaseAction {
         String forward = null;
         if (method != null && method.equals("preview")) {
             forward = ActionForwards.preview_failure.toString();
-        }
-        else {
-            forward = ActionForwards.update_failure.toString();
         }
         return mapping.findForward(forward);
     }

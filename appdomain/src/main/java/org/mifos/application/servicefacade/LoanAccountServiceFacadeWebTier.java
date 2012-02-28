@@ -1451,10 +1451,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             throw new MifosRuntimeException(e.getMessage(), e);
         }
         monthClosingServiceFacade.validateTransactionDate(repayLoanInfoDto.getDateOfPayment());
-
-        if (!isTrxnDateValid(loan.getAccountId(), repayLoanInfoDto.getDateOfPayment())) {
-            throw new BusinessRuleException("errors.invalidTxndate");
-        }
         
         try {
             if (repayLoanInfoDto.isWaiveInterest() && !loan.isInterestWaived()) {
