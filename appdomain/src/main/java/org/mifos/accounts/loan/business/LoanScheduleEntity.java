@@ -319,10 +319,6 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
             chargeWaived = chargeWaived.add(((LoanFeeScheduleEntity) accountFeesActionDetailEntity).waiveCharges());
         }
-        setMiscPenalty(getMiscPenaltyPaid());
-        for (LoanPenaltyScheduleEntity entity: getLoanPenaltyScheduleEntities()) {
-            chargeWaived = chargeWaived.add(entity.waiveCharges());
-        }
         return chargeWaived;
     }
 
@@ -433,6 +429,10 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         Money chargeWaived = new Money(getCurrency());
         chargeWaived = chargeWaived.add(getMiscPenaltyDue());
         setMiscPenalty(getMiscPenaltyPaid());
+        setPenalty(getPenaltyPaid());
+        for (LoanPenaltyScheduleEntity loanPenaltyScheduleEntity : getLoanPenaltyScheduleEntities()) {
+            chargeWaived = chargeWaived.add(loanPenaltyScheduleEntity.waiveCharges());
+        }
         return chargeWaived;
     }
 
@@ -537,8 +537,20 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
     private Money payPenalty(final Money amount) {
         Money payable = min(amount, (getPenalty().subtract(getPenaltyPaid())));
+        Money balance = amount;
+        
         allocatePenalty(payable);
-        return amount.subtract(payable);
+        
+        for (LoanPenaltyScheduleEntity loanPenaltyScheduleEntity : getLoanPenaltyScheduleEntities()) {
+            balance = loanPenaltyScheduleEntity.payPenalty(balance);
+            Integer penaltyId = loanPenaltyScheduleEntity.getLoanPenaltyScheduleEntityId();
+            if (penaltyId == null) { // special workaround for MIFOS-4517
+                penaltyId = loanPenaltyScheduleEntity.hashCode();
+            }
+            Money penaltyAllocated = loanPenaltyScheduleEntity.getPenaltyAllocated();
+            paymentAllocation.allocateForPenalty(penaltyId, penaltyAllocated);
+        }
+        return balance;
     }
 
     private void allocatePenalty(Money payable) {
