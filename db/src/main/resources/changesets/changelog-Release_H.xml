@@ -55,6 +55,28 @@
      </changeSet>
      <changeSet id="MIFOS_5382_1" author="Lukasz Lewczynski" context="expansion">
         <sql endDelimiter=";">
+            SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                    where REFERENCED_TABLE_NAME="penalty" 
+                    and TABLE_NAME="loan_offering" and CONSTRAINT_SCHEMA=DATABASE());
+            SET @mifosquery = CONCAT("ALTER TABLE loan_offering DROP FOREIGN KEY ", @mifosfkname);
+            PREPARE stmt FROM @mifosquery;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+            
+            SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                    where REFERENCED_TABLE_NAME="penalty" 
+                    and TABLE_NAME="loan_penalty" and CONSTRAINT_SCHEMA=DATABASE());
+            SET @mifosquery = CONCAT("ALTER TABLE loan_penalty DROP FOREIGN KEY ", @mifosfkname);
+            PREPARE stmt FROM @mifosquery;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+            
+            DROP TABLE IF EXISTS penalty_category;
+            DROP TABLE IF EXISTS penalty_formula;
+            DROP TABLE IF EXISTS penalty_period;
+            DROP TABLE IF EXISTS penalty_frequency;
+            DROP TABLE IF EXISTS penalty;
+        
             CREATE TABLE penalty_category (
               category_id SMALLINT AUTO_INCREMENT NOT NULL,
               lookup_id INTEGER NOT NULL,
@@ -95,45 +117,69 @@
                   ON UPDATE NO ACTION
             ) ENGINE=InnoDB CHARACTER SET utf8;
             
-            ALTER TABLE penalty DROP FOREIGN KEY penalty_ibfk_1;
-            ALTER TABLE penalty DROP FOREIGN KEY penalty_ibfk_3;
-            ALTER TABLE penalty DROP INDEX lookup_id;
-            ALTER TABLE penalty DROP COLUMN lookup_id;
+            CREATE TABLE penalty (
+              penalty_id SMALLINT NOT NULL AUTO_INCREMENT,
+              global_penalty_num VARCHAR(100) DEFAULT NULL,
+              penalty_name VARCHAR(100) NOT NULL,
+              category_id SMALLINT NOT NULL,
+              period_type_id SMALLINT NOT NULL,
+              period_duration INTEGER DEFAULT NULL,
+              limit_min INTEGER NOT NULL,
+              limit_max INTEGER NOT NULL,
+              amount DECIMAL(21,4) DEFAULT NULL,
+              amount_currency_id SMALLINT DEFAULT NULL,
+              rate DECIMAL(13,10) DEFAULT NULL,
+              formula_id SMALLINT DEFAULT NULL,
+              penalty_frequency_id SMALLINT NOT NULL,
+              glcode_id SMALLINT NOT NULL,
+              office_id SMALLINT DEFAULT NULL,
+              created_date DATE NOT NULL,
+              created_by SMALLINT NOT NULL,
+              updated_date DATE DEFAULT NULL,
+              updated_by SMALLINT DEFAULT NULL,
+              version_no INTEGER NOT NULL,
+              discriminator VARCHAR(20) NOT NULL,
+              PRIMARY KEY (penalty_id),
+              FOREIGN KEY (category_id)
+                REFERENCES penalty_category(category_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+              FOREIGN KEY (glcode_id)
+                REFERENCES gl_code (glcode_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+              FOREIGN KEY (period_type_id)
+                REFERENCES penalty_period(period_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+              FOREIGN KEY (office_id)
+                REFERENCES office(office_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+              FOREIGN KEY (amount_currency_id)
+                REFERENCES currency(currency_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+              FOREIGN KEY (formula_id)
+                REFERENCES penalty_formula(formula_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+              FOREIGN KEY (penalty_frequency_id)
+                REFERENCES penalty_frequency(frequency_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+              FOREIGN KEY (created_by)
+                REFERENCES personnel(personnel_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+              FOREIGN KEY (updated_by)
+                REFERENCES personnel(personnel_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION
+            ) ENGINE=InnoDB CHARACTER SET utf8;
             
-            ALTER TABLE penalty ADD COLUMN penalty_name VARCHAR(100) NOT NULL AFTER global_penalty_num;
-            ALTER TABLE penalty ADD COLUMN period_duration INT NULL DEFAULT NULL AFTER penalty_type;
-            ALTER TABLE penalty ADD COLUMN limit_min INT NOT NULL AFTER period_duration;
-            ALTER TABLE penalty ADD COLUMN limit_max INT NOT NULL AFTER limit_min;
-            ALTER TABLE penalty ADD COLUMN penalty_frequency_id SMALLINT NOT NULL AFTER formula;
-            ALTER TABLE penalty ADD COLUMN amount DECIMAL(21,4) NULL DEFAULT NULL AFTER limit_max;
-            ALTER TABLE penalty ADD COLUMN amount_currency_id SMALLINT NULL DEFAULT NULL AFTER amount;
-            ALTER TABLE penalty ADD COLUMN created_date DATE NOT NULL AFTER penalty_frequency_id;
-            ALTER TABLE penalty ADD COLUMN created_by SMALLINT NOT NULL AFTER created_date;
-            ALTER TABLE penalty ADD COLUMN updated_date DATE AFTER created_by;
-            ALTER TABLE penalty ADD COLUMN updated_by SMALLINT AFTER updated_date;
-            ALTER TABLE penalty ADD COLUMN version_no INTEGER NOT NULL AFTER updated_by;
-            ALTER TABLE penalty ADD COLUMN discriminator VARCHAR(20) NOT NULL;
-            
-            ALTER TABLE penalty CHANGE COLUMN category_id category_id SMALLINT NOT NULL AFTER penalty_name;
-            ALTER TABLE penalty CHANGE COLUMN penalty_id penalty_id SMALLINT NOT NULL AUTO_INCREMENT;
-            ALTER TABLE penalty CHANGE COLUMN penalty_type period_type_id SMALLINT NOT NULL AFTER category_id;
-            ALTER TABLE penalty CHANGE COLUMN rate rate DECIMAL(13,10) NULL DEFAULT NULL AFTER amount_currency_id;
-            ALTER TABLE penalty CHANGE COLUMN formula formula_id SMALLINT NULL DEFAULT NULL AFTER rate;
-            ALTER TABLE penalty CHANGE COLUMN glcode_id glcode_id SMALLINT NOT NULL AFTER penalty_frequency_id;
-            ALTER TABLE penalty CHANGE COLUMN office_id office_id SMALLINT NULL DEFAULT NULL AFTER glcode_id;
-            
-            ALTER TABLE penalty ADD CONSTRAINT penalty_ibfk_1 FOREIGN KEY penalty_ibfk_1 (category_id) REFERENCES penalty_category (category_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
-            ALTER TABLE penalty ADD CONSTRAINT penalty_ibfk_3 FOREIGN KEY penalty_ibfk_3 (period_type_id) REFERENCES penalty_period (period_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
-            ALTER TABLE penalty ADD CONSTRAINT penalty_ibfk_5 FOREIGN KEY penalty_ibfk_5 (amount_currency_id) REFERENCES currency (currency_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
-            ALTER TABLE penalty ADD CONSTRAINT penalty_ibfk_6 FOREIGN KEY penalty_ibfk_6 (formula_id) REFERENCES penalty_formula (formula_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
-            ALTER TABLE penalty ADD CONSTRAINT penalty_ibfk_7 FOREIGN KEY penalty_ibfk_7 (penalty_frequency_id) REFERENCES penalty_frequency (frequency_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
-            ALTER TABLE penalty ADD CONSTRAINT penalty_ibfk_8 FOREIGN KEY penalty_ibfk_8 (created_by) REFERENCES personnel (personnel_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
-            ALTER TABLE penalty ADD CONSTRAINT penalty_ibfk_9 FOREIGN KEY penalty_ibfk_9 (updated_by) REFERENCES personnel (personnel_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
-            
-            ALTER TABLE penalty ADD INDEX period_type_id (period_type_id ASC);
-            ALTER TABLE penalty ADD INDEX amount_currency_id (amount_currency_id ASC);
-            ALTER TABLE penalty ADD INDEX formula_id (formula_id ASC);
-            ALTER TABLE penalty ADD INDEX penalty_frequency_id (penalty_frequency_id ASC);
+            ALTER TABLE loan_offering ADD CONSTRAINT loan_offering_penalty FOREIGN KEY (penalty_id) REFERENCES penalty(penalty_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+            ALTER TABLE loan_penalty ADD FOREIGN KEY(penalty_id) REFERENCES penalty(penalty_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
             
             INSERT INTO lookup_entity(entity_name, description) VALUES ('PenaltyCategory', 'This is mainly used in penalties to show the categories where this penalty is applicable');
             INSERT INTO lookup_entity(entity_name, description) VALUES ('PenaltyFormula', 'PenaltyFormula');
@@ -189,47 +235,55 @@
         </sql>
         <rollback>
             <sql endDelimiter=";">
-                ALTER TABLE penalty DROP FOREIGN KEY penalty_ibfk_1;
-                ALTER TABLE penalty DROP FOREIGN KEY penalty_ibfk_3;
-                ALTER TABLE penalty DROP FOREIGN KEY penalty_ibfk_5;
-                ALTER TABLE penalty DROP FOREIGN KEY penalty_ibfk_6;
-                ALTER TABLE penalty DROP FOREIGN KEY penalty_ibfk_7;
-                ALTER TABLE penalty DROP FOREIGN KEY penalty_ibfk_8;
-                ALTER TABLE penalty DROP FOREIGN KEY penalty_ibfk_9;
+                SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                        where REFERENCED_TABLE_NAME="penalty" 
+                        and TABLE_NAME="loan_offering" and CONSTRAINT_SCHEMA=DATABASE());
+                SET @mifosquery = CONCAT("ALTER TABLE loan_offering DROP FOREIGN KEY ", @mifosfkname);
+                PREPARE stmt FROM @mifosquery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+            
+                SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                        where REFERENCED_TABLE_NAME="penalty" 
+                        and TABLE_NAME="loan_penalty" and CONSTRAINT_SCHEMA=DATABASE());
+                SET @mifosquery = CONCAT("ALTER TABLE loan_penalty DROP FOREIGN KEY ", @mifosfkname);
+                PREPARE stmt FROM @mifosquery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+            
+                DROP TABLE IF EXISTS penalty;
                 
-                ALTER TABLE penalty DROP INDEX period_type_id;
-                ALTER TABLE penalty DROP INDEX amount_currency_id;
-                ALTER TABLE penalty DROP INDEX formula_id;
-                ALTER TABLE penalty DROP INDEX penalty_frequency_id;
+                CREATE TABLE penalty (
+                  penalty_id SMALLINT NOT NULL,
+                  global_penalty_num VARCHAR(100),
+                  penalty_type VARCHAR(100),
+                  office_id SMALLINT,
+                  category_id SMALLINT,
+                  glcode_id SMALLINT NOT NULL,
+                  lookup_id INTEGER,
+                  rate DECIMAL(13, 10) NOT NULL,
+                  formula VARCHAR(100),
+                  PRIMARY KEY (penalty_id),
+                  FOREIGN KEY (category_id)
+                    REFERENCES category_type(category_id)
+                      ON DELETE NO ACTION
+                      ON UPDATE NO ACTION,
+                  FOREIGN KEY (glcode_id)
+                    REFERENCES gl_code(glcode_id)
+                      ON DELETE NO ACTION
+                      ON UPDATE NO ACTION,
+                  FOREIGN KEY (lookup_id)
+                    REFERENCES lookup_value(lookup_id)
+                      ON DELETE NO ACTION
+                      ON UPDATE NO ACTION,
+                  FOREIGN KEY (office_id)
+                    REFERENCES office(office_id)
+                      ON DELETE NO ACTION
+                      ON UPDATE NO ACTION
+                ) ENGINE=InnoDB CHARACTER SET utf8;
                 
-                ALTER TABLE penalty DROP COLUMN penalty_name;
-                ALTER TABLE penalty DROP COLUMN period_duration;
-                ALTER TABLE penalty DROP COLUMN limit_min;
-                ALTER TABLE penalty DROP COLUMN limit_max;
-                ALTER TABLE penalty DROP COLUMN penalty_frequency_id;
-                ALTER TABLE penalty DROP COLUMN amount;
-                ALTER TABLE penalty DROP COLUMN amount_currency_id;
-                ALTER TABLE penalty DROP COLUMN created_date;
-                ALTER TABLE penalty DROP COLUMN created_by;
-                ALTER TABLE penalty DROP COLUMN updated_date;
-                ALTER TABLE penalty DROP COLUMN updated_by;
-                ALTER TABLE penalty DROP COLUMN version_no;
-                ALTER TABLE penalty DROP COLUMN discriminator;
-                
-                ALTER TABLE penalty CHANGE COLUMN penalty_id penalty_id SMALLINT NOT NULL;
-                ALTER TABLE penalty CHANGE COLUMN period_type_id penalty_type VARCHAR(100) AFTER global_penalty_num;
-                ALTER TABLE penalty CHANGE COLUMN office_id office_id SMALLINT NULL DEFAULT NULL AFTER penalty_type;
-                ALTER TABLE penalty CHANGE COLUMN category_id category_id SMALLINT AFTER office_id;
-                ALTER TABLE penalty CHANGE COLUMN glcode_id glcode_id SMALLINT NOT NULL AFTER category_id;
-                ALTER TABLE penalty CHANGE COLUMN rate rate DECIMAL(13,10) NOT NULL AFTER glcode_id;
-                ALTER TABLE penalty CHANGE COLUMN formula_id formula VARCHAR(100) NULL DEFAULT NULL AFTER rate;
-                
-                ALTER TABLE penalty ADD COLUMN lookup_id INTEGER NULL DEFAULT NULL AFTER glcode_id;
-                
-                ALTER TABLE penalty ADD CONSTRAINT penalty_ibfk_1 FOREIGN KEY penalty_ibfk_1 (category_id) REFERENCES category_type (category_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
-                ALTER TABLE penalty ADD CONSTRAINT penalty_ibfk_3 FOREIGN KEY penalty_ibfk_3 (lookup_id) REFERENCES lookup_value (lookup_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
-                
-                ALTER TABLE penalty ADD INDEX lookup_id (lookup_id ASC);
+                ALTER TABLE loan_offering ADD CONSTRAINT loan_offering_penalty FOREIGN KEY (penalty_id) REFERENCES penalty(penalty_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+                ALTER TABLE loan_penalty ADD FOREIGN KEY(penalty_id) REFERENCES penalty(penalty_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
                 
                 TRUNCATE TABLE penalty_category;
                 TRUNCATE TABLE penalty_formula;
@@ -252,11 +306,6 @@
                 FROM lookup_entity AS e
                 WHERE e.entity_name REGEXP 'Penalty*';
                 
-                ALTER TABLE penalty_category DROP FOREIGN KEY penalty_category_ibfk_1;
-                ALTER TABLE penalty_formula DROP FOREIGN KEY penalty_formula_ibfk_1;
-                ALTER TABLE penalty_frequency DROP FOREIGN KEY penalty_frequency_ibfk_1;
-                ALTER TABLE penalty_period DROP FOREIGN KEY penalty_period_ibfk_1;
-                
                 DROP TABLE IF EXISTS penalty_category;
                 DROP TABLE IF EXISTS penalty_formula;
                 DROP TABLE IF EXISTS penalty_period;
@@ -278,9 +327,7 @@
             
             ALTER TABLE penalty ADD COLUMN status_id SMALLINT NOT NULL AFTER penalty_frequency_id;
             
-            ALTER TABLE penalty ADD CONSTRAINT penalty_ibfk_10 FOREIGN KEY penalty_ibfk_10 (status_id) REFERENCES penalty_status (status_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
-            
-            ALTER TABLE penalty ADD INDEX status_id (status_id ASC);
+            ALTER TABLE penalty ADD FOREIGN KEY (status_id) REFERENCES penalty_status(status_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
             
             INSERT INTO lookup_entity(entity_name, description) VALUES ('PenaltyStatus', 'PenaltyStatus');
             
@@ -297,9 +344,13 @@
         </sql>
         <rollback>
             <sql endDelimiter=";">
-                ALTER TABLE penalty DROP FOREIGN KEY penalty_ibfk_10;
-                
-                ALTER TABLE penalty DROP INDEX status_id;
+                SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                    where REFERENCED_TABLE_NAME="penalty_status" 
+                    and TABLE_NAME="penalty" and CONSTRAINT_SCHEMA=DATABASE());
+                SET @mifosquery = CONCAT("ALTER TABLE penalty DROP FOREIGN KEY ", @mifosfkname);
+                PREPARE stmt FROM @mifosquery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
                 
                 ALTER TABLE penalty DROP COLUMN status_id;
                 
@@ -320,8 +371,6 @@
                 DELETE e
                 FROM lookup_entity AS e
                 WHERE e.entity_name LIKE 'PenaltyStatus';
-                
-                ALTER TABLE penalty_status DROP FOREIGN KEY penalty_status_ibfk_1;
                 
                 DROP TABLE IF EXISTS penalty_status;
             </sql>
@@ -396,10 +445,16 @@
     </changeSet>
     <changeSet id="MIFOS_5433_1" author="Lukasz Lewczynski" context="expansion">
         <sql endDelimiter=";">
-            ALTER TABLE penalty DROP FOREIGN KEY penalty_ibfk_3;
+            SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                    where REFERENCED_TABLE_NAME="penalty_period" 
+                    and TABLE_NAME="penalty" and CONSTRAINT_SCHEMA=DATABASE());
+            SET @mifosquery = CONCAT("ALTER TABLE penalty DROP FOREIGN KEY ", @mifosfkname);
+            PREPARE stmt FROM @mifosquery;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
             
             ALTER TABLE penalty CHANGE COLUMN period_type_id period_type_id SMALLINT(6) NULL DEFAULT NULL;
-            ALTER TABLE penalty ADD CONSTRAINT penalty_ibfk_3 FOREIGN KEY penalty_ibfk_3 (period_type_id) REFERENCES penalty_period (period_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+            ALTER TABLE penalty ADD FOREIGN KEY (period_type_id) REFERENCES penalty_period(period_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
         
             INSERT INTO lookup_value(entity_id, lookup_name) SELECT entity_id, 'PenaltyPeriod-None' FROM lookup_entity WHERE entity_name LIKE 'PenaltyPeriod';
 
@@ -409,13 +464,19 @@
         </sql>
          <rollback>
             <sql endDelimiter=";">
-                ALTER TABLE penalty DROP FOREIGN KEY penalty_ibfk_3;
-            
+                SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                        where REFERENCED_TABLE_NAME="penalty_period" 
+                        and TABLE_NAME="penalty" and CONSTRAINT_SCHEMA=DATABASE());
+                SET @mifosquery = CONCAT("ALTER TABLE penalty DROP FOREIGN KEY ", @mifosfkname);
+                PREPARE stmt FROM @mifosquery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+                
                 ALTER TABLE penalty CHANGE COLUMN period_type_id period_type_id SMALLINT(6) NOT NULL;
-                ALTER TABLE penalty ADD CONSTRAINT penalty_ibfk_3 FOREIGN KEY penalty_ibfk_3 (period_type_id) REFERENCES penalty_period (period_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+                ALTER TABLE penalty ADD FOREIGN KEY (period_type_id) REFERENCES penalty_period(period_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
                 
                 DELETE FROM lookup_value_locale WHERE lookup_id IN (SELECT lookup_id FROM lookup_value WHERE lookup_name LIKE 'PenaltyPeriod-None');
-            
+                
                 DELETE FROM penalty_period WHERE lookup_id IN (SELECT lookup_id FROM lookup_value WHERE lookup_name LIKE 'PenaltyPeriod-None');
                 
                 DELETE FROM lookup_value WHERE lookup_name LIKE 'PenaltyPeriod-None';
