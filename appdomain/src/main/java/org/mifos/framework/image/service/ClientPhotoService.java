@@ -14,6 +14,6 @@ public interface ClientPhotoService {
 
     boolean delete(Long clientId);
 
-    byte[] getData(String path);
+    byte[] getData(ClientPhoto clientPhoto);
 
 }

@@ -33,7 +33,7 @@ public class ClientPhotoServiceIntegrationTest extends MifosIntegrationTestCase 
         Assert.assertNotNull(imageInfo.getContentType());
         Assert.assertEquals(data.length(), imageInfo.getLength().intValue());
 
-        Assert.assertEquals(data, new String(clientPhotoService.getData(imageInfo.getPath())));
+        Assert.assertEquals(data, new String(clientPhotoService.getData(cp)));
 
 
         String otherData = "other test string";
@@ -44,7 +44,7 @@ public class ClientPhotoServiceIntegrationTest extends MifosIntegrationTestCase 
         Assert.assertNotNull(imageInfo.getContentType());
         Assert.assertEquals(otherData.length(), imageInfo.getLength().intValue());
 
-        Assert.assertEquals(otherData, new String(clientPhotoService.getData(imageInfo.getPath())));
+        Assert.assertEquals(otherData, new String(clientPhotoService.getData(cp)));
 
         Assert.assertTrue(clientPhotoService.delete(clientId));
     }

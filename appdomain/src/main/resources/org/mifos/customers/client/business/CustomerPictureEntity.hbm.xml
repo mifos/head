@@ -9,11 +9,6 @@
         <generator class="native"></generator>
     </id>
     <property column="picture"  name="picture"  type="blob"/>
-    <many-to-one name="customer" column="customer_id"
-            class="org.mifos.customers.business.CustomerBO" unique="true" access="field"/>
   </class>
 
-      <query name="Customer.getPicture">
-        <![CDATA[from org.mifos.customers.client.business.CustomerPictureEntity customerPicture where customerPicture.customer.customerId =:customerId]]>
-    </query>
 </hibernate-mapping>
