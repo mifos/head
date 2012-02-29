@@ -26,18 +26,15 @@ import java.util.Arrays;
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.admin.NewPenaltyPreviewPage;
 import org.mifos.test.acceptance.framework.admin.PenaltyFormParameters;
-import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
-import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
-import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.PenaltyHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.test.context.ContextConfiguration;
@@ -55,6 +52,7 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
     };
     
     private NavigationHelper navigationHelper;
+    private PenaltyHelper penaltyHelper;
     private DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService;
     
     @Override
@@ -63,6 +61,7 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         super.setUp();
         
         this.navigationHelper = new NavigationHelper(selenium);
+        this.penaltyHelper = new PenaltyHelper(selenium);
         this.dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
@@ -75,10 +74,11 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
     
     @Test(enabled = true)
     public void shouldCalculateOneTimePenaltyOnLoanAccount() throws Exception {
-        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[0], null, null, null, null, null);
+        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[0], PenaltyFormParameters.PERIOD_NONE, "",
+                PenaltyFormParameters.FREQUENCY_NONE, "0.1", "9,999,999,999");
         
         changeDateTime(04, 1);
-        verifyCalculatePenalty(accountId,
+        penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
                 new String[] { "1", "0", "1" },
                 new String[][] { { "0", "450" }, null /* Installments due */, { "1", "451" }, { "0", "450" }, { "0", "450" }, { "0", "450" },
                                  { "0", "450" }, { "0", "450" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" } },
@@ -90,10 +90,11 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
 
     @Test(enabled = true)
     public void shouldCalculateDailyAmountPenaltyOnLoanAccount() throws Exception {
-        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[1], null, null, PenaltyFormParameters.FREQUENCY_DAILY, null, null);
+        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[1], PenaltyFormParameters.PERIOD_NONE, "",
+                PenaltyFormParameters.FREQUENCY_DAILY, "0.1", "9,999,999,999");
         
         changeDateTime(04, 1);
-        verifyCalculatePenalty(accountId,
+        penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
                 new String[] { "129", "0", "129" },
                 new String[][] { { "0", "450" }, null /* Installments due */, { "39", "489" }, { "32", "482" }, { "25", "475" }, { "18", "468" },
                                  { "11", "461" }, { "4", "454" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" } },
@@ -105,10 +106,11 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
     
     @Test(enabled = true)
     public void shouldCalculateWeeklyAmountPenaltyOnLoanAccount() throws Exception {
-        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[2], null, null, PenaltyFormParameters.FREQUENCY_WEEKLY, null, null);
+        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[2], PenaltyFormParameters.PERIOD_NONE, "",
+                PenaltyFormParameters.FREQUENCY_WEEKLY, "0.1", "9,999,999,999");
         
         changeDateTime(04, 1);
-        verifyCalculatePenalty(accountId,
+        penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
                 new String[] { "21", "0", "21" },
                 new String[][] { { "0", "450" }, null /* Installments due */, { "6", "456" }, { "5", "455" }, { "4", "454" }, { "3", "453" },
                                  { "2", "452" }, { "1", "451" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" } },
@@ -120,10 +122,11 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
     
     @Test(enabled = true)
     public void shouldCalculateWeeklyAmountPenaltyWithPeriodInstallmentsOnLoanAccount() throws Exception {
-        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[3], PenaltyFormParameters.PERIOD_INSTALLMENTS, "1", PenaltyFormParameters.FREQUENCY_WEEKLY, null, null);
+        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[3], PenaltyFormParameters.PERIOD_INSTALLMENTS,
+                "1", PenaltyFormParameters.FREQUENCY_WEEKLY, "0.1", "9,999,999,999");
         
         changeDateTime(04, 1);
-        verifyCalculatePenalty(accountId,
+        penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
                 new String[] { "20", "0", "20" },
                 new String[][] { { "0", "450" }, null /* Installments due */, { "5", "455" }, { "5", "455" }, { "4", "454" }, { "3", "453" },
                                  { "2", "452" }, { "1", "451" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" } },
@@ -135,11 +138,11 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
     
     @Test(enabled = true)
     public void shouldCalculateWeeklyRatePenaltyWithOutstandingOnLoanAccount() throws Exception {
-        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[4], null, null,
-                PenaltyFormParameters.FREQUENCY_WEEKLY, "0.5", PenaltyFormParameters.FORMULA_OUTSTANDING_LOAN, null, null);
+        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[4], PenaltyFormParameters.PERIOD_NONE, "",
+                PenaltyFormParameters.FREQUENCY_WEEKLY, "0.5", PenaltyFormParameters.FORMULA_OUTSTANDING_LOAN, "0.1", "9,999,999,999");
         
         changeDateTime(03, 3);
-        verifyCalculatePenalty(accountId,
+        penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
                 new String[] { "61.1", "0", "61.1" },
                 new String[][] { { "0", "450" }, null /* Installments due */, { "40.6", "490.6" }, { "20.5", "470.5" }, null /* Future Installments */,
                                  { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
@@ -151,11 +154,11 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
     
     @Test(enabled = true)
     public void shouldCalculateWeeklyRatePenaltyWithOverdueOnLoanAccount() throws Exception {
-        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[5], null, null,
-                PenaltyFormParameters.FREQUENCY_WEEKLY, "1", PenaltyFormParameters.FORMULA_OVERDUE_AMOUNT, null, null);
+        final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[5], PenaltyFormParameters.PERIOD_NONE, "",
+                PenaltyFormParameters.FREQUENCY_WEEKLY, "1", PenaltyFormParameters.FORMULA_OVERDUE_AMOUNT, "0.1", "9,999,999,999");
         
         changeDateTime(03, 3);
-        verifyCalculatePenalty(accountId,
+        penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
                 new String[] { "13.5", "0", "13.5" },
                 new String[][] { { "0", "450" }, null /* Installments due */, { "9", "459" }, { "4.5", "454.5" }, null /* Future Installments */,
                                  { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
@@ -168,10 +171,10 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
     @Test(enabled = true)
     public void shouldCalculateWeeklyRatePenaltyWithPeriodOnLoanAccount() throws Exception {
         final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[6], PenaltyFormParameters.PERIOD_DAYS, "7",
-                PenaltyFormParameters.FREQUENCY_WEEKLY, "0.1", PenaltyFormParameters.FORMULA_OUTSTANDING_PRINCIPAL, null, null);
+                PenaltyFormParameters.FREQUENCY_WEEKLY, "0.1", PenaltyFormParameters.FORMULA_OUTSTANDING_PRINCIPAL, "0.1", "9,999,999,999");
         
         changeDateTime(03, 15);
-        verifyCalculatePenalty(accountId,
+        penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
                 new String[] { "22.5", "0", "22.5" },
                 new String[][] { { "0", "450" }, null /* Installments due */, { "9", "459" }, { "9", "459" }, { "4.5", "454.5" },
                 { "0", "450" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
@@ -183,11 +186,11 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
     
     @Test(enabled = true)
     public void shouldCalculateWeeklyRatePenaltyWithLimitsOnLoanAccount() throws Exception {
-        String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[7], null, null,
+        String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[7], PenaltyFormParameters.PERIOD_NONE, "",
                 PenaltyFormParameters.FREQUENCY_WEEKLY, "1", PenaltyFormParameters.FORMULA_OVERDUE_AMOUNT, "5", "10");
         
         changeDateTime(04, 1);
-        verifyCalculatePenalty(accountId,
+        penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
                 new String[] { "10", "0", "10" },
                 new String[][] { { "0", "450" }, null /* Installments due */, { "9.6", "459.6" }, { "0.4", "450.4" }, { "0", "450" }, { "0", "450" },
                                  { "0", "450" }, { "0", "450" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" } },
@@ -220,14 +223,14 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         
         String sumToString = StringUtil.formatNumber(sum.toString());
         
-        verifyCalculatePenalty(accountId,
+        penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
                 new String[] { sumToString, sumToString, "0" },
                 schedule,
                 null
         );
         
         changeDateTime(04, 5);
-        verifyCalculatePenalty(accountId,
+        penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
                 new String[] { sumToString, sumToString, "0" },
                 schedule,
                 null
@@ -239,7 +242,7 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         String penaltyName = name + StringUtil.getRandomString(4);
         
         changeDateTime(02, 15);
-        createAmountPenalty(penaltyName, period, duration, frequency, min, max);
+        penaltyHelper.createAmountPenalty(penaltyName, period, duration, frequency, min, max, "1");
         return createWeeklyLoanAccountWithPenalty(penaltyName);
     }
     
@@ -248,35 +251,10 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         String penaltyName = name + StringUtil.getRandomString(4);
         
         changeDateTime(02, 15);
-        createRatePenalty(penaltyName, period, duration, frequency, rate, formula, min, max);
+        penaltyHelper.createRatePenalty(penaltyName, period, duration, frequency, rate, formula, min, max);
         return createWeeklyLoanAccountWithPenalty(penaltyName);
     }
     
-    private void verifyCalculatePenalty(final String accountId, final String[] summaryPenalty,
-            final String[][] schedulePenalty, final String[] accountSummary) {
-        ViewRepaymentSchedulePage repaymentSchedulePage = navigationHelper.navigateToLoanAccountPage(accountId)
-                                                            .navigateToRepaymentSchedulePage();
-
-        for (int i = 0; i < schedulePenalty.length; ++i) {
-            if (schedulePenalty[i] != null) {
-                repaymentSchedulePage.verifyRepaymentScheduleTableRow(3 + i, 6, schedulePenalty[i][0]);
-                repaymentSchedulePage.verifyRepaymentScheduleTableRow(3 + i, 7, schedulePenalty[i][1]);
-            }
-        }
-        
-        LoanAccountPage loanAccountPage = repaymentSchedulePage.navigateToLoanAccountPage();
-        
-        if (accountSummary != null && accountSummary.length >= 3) {
-            loanAccountPage.verifyAccountSummary(accountSummary[0], accountSummary[1], accountSummary[2]);
-        }
-        
-        if (summaryPenalty != null && summaryPenalty.length >= 3) {
-            loanAccountPage.verifyPenaltyOriginal(summaryPenalty[0]);
-            loanAccountPage.verifyPenaltyPaid(summaryPenalty[1]);
-            loanAccountPage.verifyPenaltyBalance(summaryPenalty[2]);
-        }
-    }
-
     private String createWeeklyLoanAccountWithPenalty(final String penaltyName) throws Exception {
         final SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         formParameters.addPenalty(penaltyName);
@@ -288,30 +266,7 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         formParameters.setMaxInstallments("10");
         formParameters.setDefInstallments("10");
         
-        navigationHelper.navigateToAdminPage().verifyPage().defineLoanProduct(formParameters);
-        
-        final CreateLoanAccountSearchParameters searchParam = new CreateLoanAccountSearchParameters();
-        searchParam.setSearchString("Client - Veronica Abisya");
-        searchParam.setLoanProduct(formParameters.getOfferingName());
-        
-        LoanAccountPage loanAccountPage = navigationHelper.navigateToClientsAndAccountsPage().navigateToCreateLoanAccountUsingLeftMenu()
-            .searchAndNavigateToCreateLoanAccountPage(searchParam)
-            .navigateToReviewInstallmentsPage()
-            .clickPreviewAndGoToReviewLoanAccountPage()
-            .submitForApprovalAndNavigateToConfirmationPage()
-            .navigateToLoanAccountDetailsPage()
-            .changeAccountStatusToAccepted();
-        
-        final String accountId = loanAccountPage.getAccountId();
-        
-        final DisburseLoanParameters disburseParams = new DisburseLoanParameters();
-        disburseParams.setAmount("4500.0");
-        disburseParams.setDisbursalDateDD("15");
-        disburseParams.setDisbursalDateMM("2");
-        disburseParams.setDisbursalDateYYYY("2012");
-        disburseParams.setPaymentType(DisburseLoanParameters.CASH);
-        
-        loanAccountPage.disburseLoan(disburseParams);
+        LoanAccountPage loanAccountPage = penaltyHelper.createWeeklyLoanAccountWithPenalty(formParameters, "Client - Veronica Abisya");
         
         PaymentParameters formPayment = new PaymentParameters();
         formPayment.setTransactionDateDD("15");
@@ -324,51 +279,16 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
             .submitAndNavigateToApplyPaymentConfirmationPage(formPayment)
             .submitAndNavigateToLoanAccountDetailsPage();
         
-        verifyCalculatePenalty(accountId,
+        penaltyHelper.verifyCalculatePenaltyWithPayment(loanAccountPage.getAccountId(),
                 new String[] { "0", "0", "0" },
                 new String[][] { { "0", "450" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" },
                                  { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
                 new String[] { "0", "16/02/2012", "0" }
         );
         
-        return accountId;
+        return loanAccountPage.getAccountId();
     }
 
-    private void createAmountPenalty(final String name, final String period, final String duration,
-            final String frequency, final String min, final String max) throws Exception {
-        final PenaltyFormParameters param = createPenalty(name, period, duration, frequency, min, max);
-        param.setAmount("1");
-        
-        navigationHelper.navigateToAdminPage().navigateToDefineNewPenaltyPage()
-            .fillParameters(param).submitPageAndGotoPenaltyPreviewPage(NewPenaltyPreviewPage.class).submit();
-    }
-    
-    private void createRatePenalty(String name, String period, String duration, String frequency, String rate,
-            String formula, final String min, final String max) throws Exception {
-        final PenaltyFormParameters param = createPenalty(name, period, duration, frequency, min, max);
-        param.setRate(rate);
-        param.setFormula(formula);
-        
-        navigationHelper.navigateToAdminPage().navigateToDefineNewPenaltyPage()
-            .fillParameters(param).submitPageAndGotoPenaltyPreviewPage(NewPenaltyPreviewPage.class).submit();
-    }
-    
-    @SuppressWarnings("PMD.NPathComplexity")
-    private PenaltyFormParameters createPenalty(final String name, final String period, final String duration,
-            final String frequency, final String min, final String max) {
-        final PenaltyFormParameters param = new PenaltyFormParameters();
-        param.setName(name);
-        param.setApplies(PenaltyFormParameters.APPLIES_LOANS);
-        param.setPeriod(period == null ? PenaltyFormParameters.PERIOD_NONE : period);
-        param.setDuration(duration == null ? "" : duration);
-        param.setMin(min == null ? "0.1" : min);
-        param.setMax(max == null ? "9999999999" : max);
-        param.setFrequency(frequency == null ? PenaltyFormParameters.FREQUENCY_NONE : frequency);
-        param.setGlCode("31102");
-
-        return param;
-    }
-    
     private void changeDateTime(final int month, final int day) throws Exception {
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2012, month, day, 13, 0, 0, 0));
                                 

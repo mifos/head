@@ -40,6 +40,15 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         selenium.click("id=nextPayment_loanAccount.link.waiveFeeOverDue");
         waitForPageToLoad();
     }
+    
+    public void waiveOverdueInstallmentPenalty() {
+        selenium.click("id=nextPayment_loanAccount.link.waivePenaltyOverDue");
+        waitForPageToLoad();
+    }
+    
+    public boolean isWaiveOverdueInstallmentPenalty() {
+        return selenium.isElementPresent("id=nextPayment_loanAccount.link.waivePenaltyOverDue");
+    }
 
     public ApplyAdjustmentPage navigateToApplyAdjustment() {
         selenium.click("nextPayment_loanAccount.link.applyAdjustment");
