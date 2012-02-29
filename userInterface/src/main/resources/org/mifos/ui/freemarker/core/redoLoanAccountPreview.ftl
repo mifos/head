@@ -122,6 +122,12 @@
         <div class="value">${loanScheduleReferenceData.disbursementDate?date?string.medium}</div>
     </div>
     <div class="row">
+        <div class="attribute">[@spring.message "reviewInstallments.mode_of_payment"/]</div>
+        <div class="value">
+            [@lookup.fromNonLocalisedMap loanProductReferenceData.disbursalPaymentTypes loanAccountFormBean.disbursalPaymentTypeId?string /]
+        </div>
+    </div>
+    <div class="row">
         <div class="attribute">[@spring.message "createLoanAccount.graceDuration"/]</div>
         <div class="value">${loanAccountFormBean.graceDuration?string.number} <span>[@spring.message "createLoanAccount.allowedGraceInInstallments"/]</span></div>
     </div>
@@ -273,11 +279,12 @@
 			<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.interestHeading" /]</th>
 			<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.feesHeading" /]</th>
 			<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.totalHeading" /]</th>
+			<th style="border-top: 1px solid grey; width: 70px;">[@spring.message "reviewInstallments.modeOfPaymentHeading" /]</th>
 			<th style="border-top: 1px solid grey;">&nbsp;</th>
 			<th colspan="4" style="border-top: 1px solid grey; text-align: center;">[@spring.message "reviewInstallments.redo.runningBalanceHeading" /]</th>
 		</tr>
 		<tr>
-			<th colspan="8" style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.redo.paidInstallmentsHeading" /]</th>
+			<th colspan="9" style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.redo.paidInstallmentsHeading" /]</th>
 			<th style="border-top: 1px solid grey; ">[@spring.message "reviewInstallments.redo.principalHeading" /]</th>
 			<th style="border-top: 1px solid grey; ">[@spring.message "reviewInstallments.redo.interestHeading" /]</th>
 			<th style="border-top: 1px solid grey; ">[@spring.message "reviewInstallments.redo.feesHeading" /]</th>
@@ -295,6 +302,7 @@
 				<td style="border-top: 1px solid grey;">${row.installmentDetails.interest?string.number}</td>
 				<td style="border-top: 1px solid grey;">${row.installmentDetails.fees?string.number}</td>
 				<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
+				<td style="border-top: 1px solid grey;">[@lookup.fromNonLocalisedMap loanProductReferenceData.disbursalPaymentTypes row.paymentTypeId?string /]</td>
 				<th style="border-top: 1px solid grey;">&nbsp;</th>
 				<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
 				<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
@@ -312,6 +320,7 @@
 				<td style="border-top: 1px solid grey;">${row.installmentDetails.interest?string.number}</td>
 				<td style="border-top: 1px solid grey;">${row.installmentDetails.fees?string.number}</td>
 				<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
+				<td style="border-top: 1px solid grey;">[@lookup.fromNonLocalisedMap loanProductReferenceData.disbursalPaymentTypes row.paymentTypeId?string /]</td>
 				<th style="border-top: 1px solid grey;">&nbsp;</th>
 				<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
 				<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>

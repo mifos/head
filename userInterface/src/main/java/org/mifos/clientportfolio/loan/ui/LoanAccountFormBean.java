@@ -84,6 +84,7 @@ public class LoanAccountFormBean implements Serializable {
     private Number disbursementDateDD;
     private Number disbursementDateMM;
     private Number disbursementDateYY;
+    private Short disbursalPaymentTypeId;
     
     private Number graceDuration = Integer.valueOf(0);
     private Number maxGraceDuration = Integer.valueOf(0);
@@ -788,6 +789,14 @@ public class LoanAccountFormBean implements Serializable {
 	public void setDisbursementDateYY(Number disbursalDateYear) {
 		this.disbursementDateYY = disbursalDateYear;
 	}
+
+    public Short getDisbursalPaymentTypeId() {
+        return disbursalPaymentTypeId;
+    }
+
+    public void setDisbursalPaymentTypeId(Short disbursalPaymentTypeId) {
+        this.disbursalPaymentTypeId = disbursalPaymentTypeId;
+    }
 	
     public Number getMinAllowedAmount() {
         return minAllowedAmount;

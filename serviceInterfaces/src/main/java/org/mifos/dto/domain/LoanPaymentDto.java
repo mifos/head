@@ -24,19 +24,19 @@ import org.joda.time.LocalDate;
 
 public class LoanPaymentDto {
 
-    private final Long paymentTypeId;
+    private final Short paymentTypeId;
     private final LocalDate paymentDate;
     private final String amount;
     private final Short paidByUserId;
 
-    public LoanPaymentDto(String amount, LocalDate transactionDate, Long paymentTypeId, Short paidByUserId) {
+    public LoanPaymentDto(String amount, LocalDate transactionDate, Short paymentTypeId, Short paidByUserId) {
         this.amount = amount;
         this.paymentDate = transactionDate;
         this.paymentTypeId = paymentTypeId;
         this.paidByUserId = paidByUserId;
     }
 
-    public Long getPaymentTypeId() {
+    public Short getPaymentTypeId() {
         return this.paymentTypeId;
     }
 

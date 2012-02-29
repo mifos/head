@@ -116,7 +116,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
 
         collectionSheetServiceFacadeWebTier = new CollectionSheetServiceFacadeWebTier(officePersistence,
                 legacyMasterDao, personnelPersistence, customerPersistence, collectionSheetService, collectionSheetTranslator,
-                monthClosingServiceFacade);
+                monthClosingServiceFacade, null, null);
     }
 
     @Test

@@ -148,6 +148,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
@@ -1318,6 +1319,11 @@ public class LoanBO extends AccountBO implements Loan {
     @Override
     protected void writeOff(Date transactionDate) throws AccountException {
         try {
+            if (!isTrxnDateValid(transactionDate,
+                    new CustomerPersistence().getLastMeetingDateForCustomer(getCustomer().getCustomerId()),
+                    new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled())) {
+                throw new BusinessRuleException("errors.invalidTxndate");
+            }
             Short personnelId = this.getUserContext().getId();
             PersonnelBO currentUser = legacyPersonnelDao.getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
@@ -1345,6 +1351,11 @@ public class LoanBO extends AccountBO implements Loan {
     @Override
     protected void reschedule(Date transactionDate) throws AccountException {
         try {
+            if (!isTrxnDateValid(transactionDate,
+                    new CustomerPersistence().getLastMeetingDateForCustomer(getCustomer().getCustomerId()),
+                    new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled())) {
+                throw new BusinessRuleException("errors.invalidTxndate");
+            }
             Short personnelId = this.getUserContext().getId();
             PersonnelBO currentUser = legacyPersonnelDao.getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
@@ -2798,7 +2809,8 @@ public class LoanBO extends AccountBO implements Loan {
 
         addFeeTransactions(loanTrxnDetailEntity, loanSchedule.getAccountFeesActionDetails());
         accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-        loanSchedule.makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY_INTEREST, interestDue);
+        loanSchedule.makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY_INTEREST,
+                interestDue, accountPaymentEntity.getPaymentDate());
         setCalculatedInterestIfApplicable(loanTrxnDetailEntity, loanSchedule, interestDue);
         updatePaymentDetails(accountActionTypes, principal, interest, penalty, fees);
     }
@@ -2821,7 +2833,8 @@ public class LoanBO extends AccountBO implements Loan {
 
         addFeeTransactions(loanTrxnDetailEntity, loanSchedule.getAccountFeesActionDetails());
         accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-        loanSchedule.makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY, Money.zero(getCurrency()));
+        loanSchedule.makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY,
+                Money.zero(getCurrency()), accountPaymentEntity.getPaymentDate());
         getLoanSummary().decreaseBy(null, interestDue, null, null);
         setCalculatedInterestIfApplicable(loanTrxnDetailEntity, loanSchedule, Money.zero(getCurrency()));
         updatePaymentDetails(accountActionTypes, principal, null, penalty, fees);
@@ -2851,7 +2864,8 @@ public class LoanBO extends AccountBO implements Loan {
                     new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
 
             accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-            loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST, loanSchedule.getInterestDue());
+            loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST,
+                    loanSchedule.getInterestDue(), accountPaymentEntity.getPaymentDate());
             loanSummary.decreaseBy(null, interest, penalty, fees);
             updatePaymentDetails(accountActionTypes, principal, null, null, null);
         }
@@ -2874,7 +2888,8 @@ public class LoanBO extends AccountBO implements Loan {
                     new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
 
             accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-            loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST, loanSchedule.getInterestDue());
+            loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST,
+                    loanSchedule.getInterestDue(), accountPaymentEntity.getPaymentDate());
             loanSummary.decreaseBy(null, interest, penalty, fees);
             updatePaymentDetails(accountActionTypes, principal, null, null, null);
         }
@@ -3421,7 +3436,8 @@ public class LoanBO extends AccountBO implements Loan {
 	                    new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
 
 	            accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-	            loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST, loanSchedule.getInterestDue());
+	            loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST,
+                        loanSchedule.getInterestDue(), accountPaymentEntity.getPaymentDate());
 	            loanSummary.decreaseBy(null, interest, penalty, fees);
 	            updatePaymentDetails(accountActionTypes, principal, null, null, null);
         	}

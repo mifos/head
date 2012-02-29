@@ -260,7 +260,8 @@ public class LoanBOTest {
         assertThat(calculatedInterestOnPayment.getExtraInterestPaid(),is(extraInterestDue));
         assertThat(calculatedInterestOnPayment.getInterestDueTillPaid(),is(interestDue));
         assertThat(calculatedInterestOnPayment.getOriginalInterest(),is(interest));
-        Mockito.verify(loanScheduleEntity).makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY_INTEREST, interestDue);
+        Mockito.verify(loanScheduleEntity).makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY_INTEREST,
+                interestDue, accountPaymentEntity.getPaymentDate());
     }
 
     @Test
@@ -323,7 +324,8 @@ public class LoanBOTest {
         assertThat(calculatedInterestOnPayment.getExtraInterestPaid(),is(extraInterestDue));
         assertThat(calculatedInterestOnPayment.getInterestDueTillPaid(),is(interestDue));
         assertThat(calculatedInterestOnPayment.getOriginalInterest(),is(interest));
-        Mockito.verify(loanScheduleEntity).makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY, interestDue);
+        Mockito.verify(loanScheduleEntity).makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY,
+                interestDue, accountPaymentEntity.getPaymentDate());
     }
 
     private LoanScheduleEntity getLoanScheduleEntity(MifosCurrency currency, Date date, String principal, String interest, String installmentId, Money extraInterest) {

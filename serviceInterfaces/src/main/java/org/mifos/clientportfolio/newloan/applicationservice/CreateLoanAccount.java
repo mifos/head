@@ -37,6 +37,7 @@ public class CreateLoanAccount implements RecurringSchedule {
     private final BigDecimal loanAmount;
     private final Double interestRate;
     private final LocalDate disbursementDate;
+    private final Short disbursalPaymentTypeId;
     private final int numberOfInstallments;
     private final int graceDuration;
     private final Integer sourceOfFundId;
@@ -55,7 +56,7 @@ public class CreateLoanAccount implements RecurringSchedule {
 
     public CreateLoanAccount(Integer customerId, Integer productId, Integer accountState, BigDecimal loanAmount,
             BigDecimal minAllowedLoanAmount, BigDecimal maxAllowedLoanAmount, Double interestRate,
-            LocalDate disbursementDate, int numberOfInstallments, int minAllowedNumberOfInstallments,
+            LocalDate disbursementDate, Short disbursalPaymentTypeId, int numberOfInstallments, int minAllowedNumberOfInstallments,
             int maxAllowedNumberOfInstallments, int graceDuration, Integer sourceOfFundId, Integer loanPurposeId,
             Integer collateralTypeId, String collateralNotes, String externalId,
             boolean repaymentScheduleIndependentOfCustomerMeeting, RecurringSchedule recurringSchedule,
@@ -68,6 +69,7 @@ public class CreateLoanAccount implements RecurringSchedule {
         this.maxAllowedLoanAmount = maxAllowedLoanAmount;
         this.interestRate = interestRate;
         this.disbursementDate = disbursementDate;
+        this.disbursalPaymentTypeId = disbursalPaymentTypeId;
         this.numberOfInstallments = numberOfInstallments;
         this.minAllowedNumberOfInstallments = minAllowedNumberOfInstallments;
         this.maxAllowedNumberOfInstallments = maxAllowedNumberOfInstallments;
@@ -105,6 +107,10 @@ public class CreateLoanAccount implements RecurringSchedule {
 
     public LocalDate getDisbursementDate() {
         return disbursementDate;
+    }
+
+    public Short getDisbursalPaymentTypeId() {
+        return disbursalPaymentTypeId;
     }
 
     public int getNumberOfInstallments() {

@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
@@ -38,12 +41,16 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.api.CustomerLevel;
+import org.mifos.customers.business.CustomerAccountBO;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.PersonnelDto;
@@ -51,8 +58,10 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * Default implementation of {@link CollectionSheetServiceFacade}.
@@ -63,6 +72,8 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     private CustomerPersistence customerPersistence = new CustomerPersistence();
     private final CollectionSheetService collectionSheetService;
     private final CollectionSheetDtoTranslator collectionSheetTranslator;
+    private final PersonnelDao personnelDao;
+    private final CustomerDao customerDao;
 
     @Autowired
     private LegacyMasterDao legacyMasterDao;
@@ -75,16 +86,20 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
     @Autowired
     public CollectionSheetServiceFacadeWebTier(final CollectionSheetService collectionSheetService,
-            final CollectionSheetDtoTranslator collectionSheetTranslator) {
+            final CollectionSheetDtoTranslator collectionSheetTranslator, PersonnelDao personnelDao, CustomerDao customerDao) {
         this.collectionSheetService = collectionSheetService;
         this.collectionSheetTranslator = collectionSheetTranslator;
+        this.personnelDao = personnelDao;
+        this.customerDao = customerDao;
     }
 
     public CollectionSheetServiceFacadeWebTier(final OfficePersistence officePersistence,
             final LegacyMasterDao legacyMasterDao, final LegacyPersonnelDao personnelPersistence,
             final CustomerPersistence customerPersistence, final CollectionSheetService collectionSheetService,
             final CollectionSheetDtoTranslator collectionSheetTranslator,
-            final MonthClosingServiceFacade monthClosingServiceFacade) {
+            final MonthClosingServiceFacade monthClosingServiceFacade, 
+            final PersonnelDao personnelDao,
+            final CustomerDao customerDao) {
         this.officePersistence = officePersistence;
         this.legacyMasterDao = legacyMasterDao;
         this.legacyPersonnelDao = personnelPersistence;
@@ -92,6 +107,8 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         this.collectionSheetService = collectionSheetService;
         this.collectionSheetTranslator = collectionSheetTranslator;
         this.monthClosingServiceFacade = monthClosingServiceFacade;
+        this.personnelDao = personnelDao;
+        this.customerDao = customerDao;
     }
 
     @Override
@@ -229,6 +246,16 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     
     @Override
     public CollectionSheetDto getCollectionSheet(Integer customerId, LocalDate meetingDate) {
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+        CustomerBO customerBO = this.customerDao.findCustomerById(customerId);
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, customerBO.getOfficeId(), customerBO.getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
+        }
+    	
     	return collectionSheetService.retrieveCollectionSheet(customerId, meetingDate);
     }
 
@@ -260,6 +287,16 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
         final SaveCollectionSheetDto saveCollectionSheetDto = new SaveCollectionSheetFromLegacyAssembler()
                 .fromWebTierLegacyStructuretoSaveCollectionSheetDto(previousCollectionSheetEntryDto, userId);
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(user);
+        int customerId = saveCollectionSheetDto.getSaveCollectionSheetCustomers().get(0).getCustomerId();
+        CustomerBO customerBO = this.customerDao.findCustomerById(customerId);
+
+        try {
+            personnelDao.checkAccessPermission(userContext, customerBO.getOfficeId(), customerBO.getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
+        }
 
         monthClosingServiceFacade.validateTransactionDate(saveCollectionSheetDto.getTransactionDate().toDateMidnight().toDate());
 

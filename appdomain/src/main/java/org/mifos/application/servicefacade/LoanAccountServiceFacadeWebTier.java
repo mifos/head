@@ -267,6 +267,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private final LoanScheduleService loanScheduleService;
     private final HibernateTransactionHelper transactionHelper;
     private final MonthClosingServiceFacade monthClosingServiceFacade;
+    private final CustomerPersistence customerPersistence;
+    private final ConfigurationPersistence configurationPersistence;
 
     @Autowired
     private FeeDao feeDao;
@@ -297,7 +299,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                                            AccountService accountService, ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
                                            LoanBusinessService loanBusinessService, LoanScheduleService loanScheduleService,
                                            InstallmentsValidator installmentsValidator, HolidayServiceFacade holidayServiceFacade,
-                                           MonthClosingServiceFacade monthClosingServiceFacade) {
+                                           MonthClosingServiceFacade monthClosingServiceFacade,
+                                           CustomerPersistence customerPersistence, ConfigurationPersistence configurationPersistence) {
         this.officeDao = officeDao;
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
@@ -312,6 +315,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         this.holidayServiceFacade = holidayServiceFacade;
         this.transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
         this.monthClosingServiceFacade = monthClosingServiceFacade;
+        this.customerPersistence = customerPersistence;
+        this.configurationPersistence = configurationPersistence;
     }
 
     @Override
@@ -414,8 +419,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         final Date nextMeetingDate = customer.getCustomerAccount().getNextMeetingDate();
         final String recurMonth = customer.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter().toString();
         final boolean isGroup = customer.isGroup();
-        final boolean isGlimEnabled = new ConfigurationPersistence().isGlimEnabled();
-        final boolean isLsimEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+        final boolean isGlimEnabled = configurationPersistence.isGlimEnabled();
+        final boolean isLsimEnabled = configurationPersistence.isRepaymentIndepOfMeetingEnabled();
 
         List<PrdOfferingDto> loanProductDtos = retrieveActiveLoanProductsApplicableForCustomer(customer, isLsimEnabled);
 
@@ -622,7 +627,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             // GLIM specific
             final boolean isGroup = customer.isGroup();
-            final boolean isGlimEnabled = new ConfigurationPersistence().isGlimEnabled();
+            final boolean isGlimEnabled = configurationPersistence.isGlimEnabled();
 
             List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
 
@@ -649,6 +654,24 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             ApplicationConfigurationDto appConfig = new ApplicationConfigurationDto(digitsAfterDecimalForInterest, digitsBeforeDecimalForInterest, digitsAfterDecimalForMonetaryAmounts, digitsBeforeDecimalForMonetaryAmounts);
 
+            Map<String, String> disbursalPaymentTypes = new LinkedHashMap<String, String>();
+            try {
+                for (PaymentTypeDto paymentTypeDto : accountService.getLoanDisbursementTypes()) {
+                    disbursalPaymentTypes.put(paymentTypeDto.getValue().toString(), paymentTypeDto.getName());
+                }
+            } catch (Exception e) {
+                throw new SystemException(e);
+            }
+            Map<String, String> repaymentpaymentTypes = new LinkedHashMap<String, String>();
+            try {
+                for (PaymentTypeDto paymentTypeDto : accountService.getLoanPaymentTypes()) {
+                    repaymentpaymentTypes.put(paymentTypeDto.getValue().toString(), paymentTypeDto.getName());
+                }
+            } catch (Exception e) {
+                throw new SystemException(e);
+            }
+
+
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, gracePeriodInInstallments, customerDetailDto, loanProductDtos,
                     interestTypeName, fundDtos, collateralOptions, purposeOfLoanOptions,
@@ -657,7 +680,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                     BigDecimal.valueOf(eligibleLoanAmount.getMaxLoanAmount()), BigDecimal.valueOf(eligibleLoanAmount.getMinLoanAmount()), defaultInterestRate, maxInterestRate, minInterestRate,
                     eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue(), nextPossibleDisbursementDate,
                     daysOfTheWeekOptions, weeksOfTheMonthOptions, variableInstallmentsAllowed, fixedRepaymentSchedule, minGapInDays, maxGapInDays, minInstallmentAmount, compareCashflowEnabled,
-                    isGlimEnabled, isGroup, clientDetails, appConfig, defaultPenalties);
+                    isGlimEnabled, isGroup, clientDetails, appConfig, defaultPenalties, disbursalPaymentTypes, repaymentpaymentTypes);
 
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);
@@ -696,7 +719,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         CustomerBO customer = this.customerDao.findCustomerById(customerId);
         final boolean isGroup = customer.isGroup();
-        final boolean isGlimEnabled = new ConfigurationPersistence().isGlimEnabled();
+        final boolean isGlimEnabled = configurationPersistence.isGlimEnabled();
 
         List<LoanAccountDetailsDto> loanAccountDetailsView = new ArrayList<LoanAccountDetailsDto>();
 
@@ -1094,6 +1117,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 String receiptNumber = null;
                 Date receiptDate = null;
                 PaymentTypeEntity paymentType = new PaymentTypeEntity(PaymentTypes.CASH.getValue());
+                if (loanAccountInfo.getDisbursalPaymentTypeId() != null) {
+                    paymentType = new PaymentTypeEntity(loanAccountInfo.getDisbursalPaymentTypeId());
+                }
                 Date paymentDate = loanAccountInfo.getDisbursementDate().toDateMidnight().toDate();
                 AccountPaymentEntity disbursalPayment = new AccountPaymentEntity(loan, loan.getLoanAmount(),
                         receiptNumber, receiptDate, paymentType, paymentDate);
@@ -1120,10 +1146,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 transactionHelper.flushSession();
 
                 // 5. apply each payment
-                Short paymentId = PaymentTypes.CASH.getValue();
                 for (LoanPaymentDto loanPayment : backdatedLoanPayments) {
                     Money amountPaidToDate = new Money(loan.getCurrency(), loanPayment.getAmount());
-                    PaymentData paymentData = new PaymentData(amountPaidToDate, createdBy, paymentId, loanPayment
+                    PaymentData paymentData = new PaymentData(amountPaidToDate, createdBy, loanPayment.getPaymentTypeId(), loanPayment
                             .getPaymentDate().toDateMidnight().toDate());
                     loan.applyPayment(paymentData);
                     this.loanDao.save(loan);
@@ -1222,7 +1247,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private MeetingBO createNewMeetingForRepaymentDay(LocalDate disbursementDate, RecurringSchedule recurringSchedule, CustomerBO customer) {
         MeetingBO newMeetingForRepaymentDay = null;
 
-        final int minDaysInterval = new ConfigurationPersistence().getConfigurationValueInteger(
+        final int minDaysInterval = configurationPersistence.getConfigurationValueInteger(
                 MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY);
 
         final Date repaymentStartDate = disbursementDate.plusDays(minDaysInterval).toDateMidnight().toDateTime().toDate();
@@ -1276,7 +1301,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 currencyId = loan.getCurrency().getCurrencyId();
             }
 
-            boolean repaymentIndependentOfMeetingSchedule = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+            boolean repaymentIndependentOfMeetingSchedule = configurationPersistence.isRepaymentIndepOfMeetingEnabled();
 
             return new LoanDisbursalDto(loan.getAccountId(), proposedDate, loan.getLoanAmount().toString(), loan.getAmountTobePaidAtdisburtail().toString(),
                     backDatedTransactionsAllowed, repaymentIndependentOfMeetingSchedule, multiCurrencyEnabled, currencyId);
@@ -1409,8 +1434,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         try {
             LoanBO loan = this.loanDao.findById(loanAccountId);
 
-            Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(loan.getCustomer().getCustomerId());
-            boolean repaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+            Date meetingDate = customerPersistence.getLastMeetingDateForCustomer(loan.getCustomer().getCustomerId());
+            boolean repaymentIndependentOfMeetingEnabled = configurationPersistence.isRepaymentIndepOfMeetingEnabled();
             return loan.isTrxnDateValid(trxnDate, meetingDate, repaymentIndependentOfMeetingEnabled);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
@@ -1431,6 +1456,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             throw new MifosRuntimeException(e.getMessage(), e);
         }
         monthClosingServiceFacade.validateTransactionDate(repayLoanInfoDto.getDateOfPayment());
+
+        if (!isTrxnDateValid(loan.getAccountId(), repayLoanInfoDto.getDateOfPayment())) {
+            throw new BusinessRuleException("errors.invalidTxndate");
+        }
         
         try {
             if (repayLoanInfoDto.isWaiveInterest() && !loan.isInterestWaived()) {
@@ -2124,7 +2153,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             List<CreateAccountFeeDto> accountFees = new ArrayList<CreateAccountFeeDto>();
             CreateLoanAccount loanAccountInfo = new CreateLoanAccount(loanDetail.getClientId(), loanDetail.getLoanProductId().intValue(), loanDetail.getAccountStateId().intValue(),
                     loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount,
-                    interestRate, disbursementDate,
+                    interestRate, disbursementDate, null,
                     numberOfInstallments, minAllowedNumberOfInstallments, maxAllowedNumberOfInstallments,
                     graceDuration, sourceOfFundId, loanPurposeId, collateralTypeId, collateralNotes, externalId,
                     isRepaymentIndepOfMeetingEnabled, recurringSchedule, accountFees, new ArrayList<CreateAccountPenaltyDto>());
@@ -2250,7 +2279,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         try {
             List<CustomerSearchResultDto> pagedDetails = new ArrayList<CustomerSearchResultDto>();
 
-            QueryResult customerForSavings = new CustomerPersistence().searchGroupClient(customerSearchDto.getSearchTerm(), userContext.getId());
+            QueryResult customerForSavings = customerPersistence.searchGroupClient(customerSearchDto.getSearchTerm(), userContext.getId());
 
             int position = (customerSearchDto.getPage()-1) * customerSearchDto.getPageSize();
             List<AccountSearchResultsDto> pagedResults = customerForSavings.get(position, customerSearchDto.getPageSize());

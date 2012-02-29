@@ -60,6 +60,7 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
     private List<DateTime> actualPaymentDates = new ArrayList<DateTime>();
     private List<Number> installmentAmounts = new ArrayList<Number>();
     private List<Number> actualPaymentAmounts = new ArrayList<Number>();
+    private List<Short> actualPaymentTypes = new ArrayList<Short>();
 
     // variable installments only for validation purposes
     private boolean variableInstallmentsAllowed;
@@ -307,7 +308,8 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
                                 .getTotalInstallmentPaid().doubleValue());
                 this.loanRepaymentPaidInstallmentsWithRunningBalance.add(new LoanRepaymentRunningBalance(
                         installmentPaidDetails, installment.getTotalInstallmentPaid(), remainingPrincipal,
-                        remainingInterest, remainingFees, remainingTotalInstallment, installment.getLastPaymentDate()));
+                        remainingInterest, remainingFees, remainingTotalInstallment, installment.getLastPaymentDate(),
+                        this.actualPaymentTypes.get(installment.getInstallmentNumber() - 1)));
 
                 BigDecimal outstandingInstallmentPrincipal = BigDecimal.valueOf(installmentDetails.getPrincipal())
                         .subtract(installment.getPrincipalPaid());
@@ -331,7 +333,8 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
                         .getInstallmentNumber() - 1);
                 this.loanRepaymentPaidInstallmentsWithRunningBalance.add(new LoanRepaymentRunningBalance(
                         installmentDetails, installment.getTotalInstallmentPaid(), remainingPrincipal,
-                        remainingInterest, remainingFees, remainingTotalInstallment, installment.getLastPaymentDate()));
+                        remainingInterest, remainingFees, remainingTotalInstallment, installment.getLastPaymentDate(),
+                        this.actualPaymentTypes.get(installment.getInstallmentNumber() - 1)));
             }
         }
 
@@ -604,6 +607,14 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
     @Override
     public void setActualPaymentAmounts(List<Number> actualPaymentAmounts) {
         this.actualPaymentAmounts = actualPaymentAmounts;
+    }
+
+    public List<Short> getActualPaymentTypes() {
+        return actualPaymentTypes;
+    }
+
+    public void setActualPaymentTypes(List<Short> actualPaymentTypes) {
+        this.actualPaymentTypes = actualPaymentTypes;
     }
 
     public BigDecimal getTotalLoanInterest() {

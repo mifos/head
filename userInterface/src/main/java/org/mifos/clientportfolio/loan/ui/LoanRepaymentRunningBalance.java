@@ -38,13 +38,14 @@ public class LoanRepaymentRunningBalance implements Serializable {
     private LoanCreationInstallmentDto installmentDetails;
     private BigDecimal total;
     private Date paymentDate;
+    private Short paymentTypeId;
 
     public LoanRepaymentRunningBalance() {
         //
     }
     
     public LoanRepaymentRunningBalance(LoanCreationInstallmentDto installmentDetails, BigDecimal total, BigDecimal principal, BigDecimal interest, BigDecimal fees,
-            BigDecimal totalInstallment, LocalDate paymentDate) {
+            BigDecimal totalInstallment, LocalDate paymentDate, Short paymentTypeId) {
         this.installmentDetails = installmentDetails;
         this.total = total;
         this.principal = principal;
@@ -52,6 +53,7 @@ public class LoanRepaymentRunningBalance implements Serializable {
         this.fees = fees;
         this.totalInstallment = totalInstallment;
         this.paymentDate = paymentDate.toDateMidnight().toDate();
+        this.paymentTypeId = paymentTypeId;
     }
 
     public BigDecimal getPrincipal() {
@@ -108,5 +110,13 @@ public class LoanRepaymentRunningBalance implements Serializable {
 
     public void setPaymentDate(Date paymentDate) {
         this.paymentDate = paymentDate;
+    }
+
+    public Short getPaymentTypeId() {
+        return paymentTypeId;
+    }
+
+    public void setPaymentTypeId(Short paymentTypeId) {
+        this.paymentTypeId = paymentTypeId;
     }
 }

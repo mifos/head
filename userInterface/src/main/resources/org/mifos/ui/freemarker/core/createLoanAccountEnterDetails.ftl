@@ -174,7 +174,7 @@
     			[@spring.formHiddenInput "loanAccountFormBean.clientGlobalId[${index}]" /]
     		</td>
     		<td>&nbsp;</td>
-    		<td>[@form.input path="loanAccountFormBean.clientAmount[${index}]"  id="clientAmount[${index}]" attributes="class='amountfield'"/]</td>
+    		<td>[@form.input path="loanAccountFormBean.clientAmount[${index}]"  id="clientAmount[${index}]" attributes="class='amountfield separatedNumber' "/]</td>
     		<td>&nbsp;</td>
     		<td>[@form.singleSelectWithPrompt path="loanAccountFormBean.clientLoanPurposeId[${index}]" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" attributes="class=trigger"/]</td>
     	</tr>
@@ -214,6 +214,12 @@
         [@form.input path="loanAccountFormBean.disbursementDateMM" id="disbursementDateMM" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.mm"/]</span>
         [@form.input path="loanAccountFormBean.disbursementDateYY" id="disbursementDateYY" attributes="size=3 maxlength=4" /]<span>[@spring.message "datefield.yyyy"/]</span>
     </div>
+    [#if customerSearchFormBean.redoLoanAccount]
+    <div class="row">
+        [@form.label "disbursalpaymenttype" true ][@spring.message "reviewInstallments.mode_of_payment"/][/@form.label]
+        [@form.singleSelectWithPrompt "loanAccountFormBean.disbursalPaymentTypeId", loanProductReferenceData.disbursalPaymentTypes /]
+    </div>
+    [/#if]
     
     [#if loanProductReferenceData.repaymentIndependentOfMeetingEnabled]
     	[@form.label "weekly.repaymentFrequency" true ][@spring.message "createLoanAccount.repaymentDay"/][/@form.label]
