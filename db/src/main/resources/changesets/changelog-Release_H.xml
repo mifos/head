@@ -570,7 +570,7 @@
         </sql>
         <rollback>
             <sql endDelimiter=";">
-                ALTER TABLE image_info DROP COLUMN picture;
+                ALTER TABLE image_info DROP COLUMN customer_picture_entity;
                 ALTER TABLE image_info MODIFY COLUMN path varchar(255) NOT NULL;
                 ALTER TABLE customer_picture 
                     ADD COLUMN customer_id INTEGER NOT NULL,
