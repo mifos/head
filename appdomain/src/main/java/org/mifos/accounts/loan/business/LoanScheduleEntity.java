@@ -550,7 +550,8 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
             Money penaltyAllocated = loanPenaltyScheduleEntity.getPenaltyAllocated();
             paymentAllocation.allocateForPenalty(penaltyId, penaltyAllocated);
         }
-        return balance;
+        
+        return amount.subtract(payable);
     }
 
     private void allocatePenalty(Money payable) {
