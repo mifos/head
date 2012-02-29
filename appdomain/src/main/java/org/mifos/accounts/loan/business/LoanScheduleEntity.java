@@ -257,7 +257,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return overDueAmounts;
     }
 
-    void makeEarlyRepaymentEntries(String payFullOrPartial, Money interestDue) {
+    void makeEarlyRepaymentEntries(String payFullOrPartial, Money interestDue, Date paymentDate) {
         setPrincipalPaid(getPrincipalPaid().add(getPrincipalDue()));
         setExtraInterestPaid(getExtraInterestPaid().add(getExtraInterestDue()));
         if (payFullOrPartial.equals(LoanConstants.PAY_FEES_PENALTY_INTEREST)) {
@@ -270,12 +270,12 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
             setMiscFeePaid(getMiscFeePaid().add(getMiscFee()));
             setMiscPenaltyPaid(getMiscPenaltyPaid().add(getMiscPenalty()));
         }
-        makeRepaymentEntries(payFullOrPartial);
+        makeRepaymentEntries(payFullOrPartial, paymentDate);
     }
 
-    private void makeRepaymentEntries(String payFullOrPartial) {
+    private void makeRepaymentEntries(String payFullOrPartial, Date paymentDate) {
         setPaymentStatus(PaymentStatus.PAID);
-        setPaymentDate(new DateTimeService().getCurrentJavaSqlDate());
+        setPaymentDate(new java.sql.Date(paymentDate.getTime()));
         Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this.getAccountFeesActionDetails();
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet) {
             ((LoanFeeScheduleEntity) accountFeesActionDetailEntity).makeRepaymentEnteries(payFullOrPartial);
