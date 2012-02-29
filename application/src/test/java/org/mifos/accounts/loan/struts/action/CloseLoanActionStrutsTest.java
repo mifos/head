@@ -27,21 +27,26 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -59,9 +64,11 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
     protected CustomerBO group = null;
 
-    private Date currentDate = null;
+    private DateTime currentDate = null;
 
     private String flowKey;
+
+    private int lsim;
 
     @Override
     protected void setStrutsConfig() throws IOException {
@@ -71,6 +78,11 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Before
     public void setUp() throws Exception {
+        currentDate = new DateTime(2010, 12, 23, 12, 0, 0, 0);
+        new DateTimeService().setCurrentDateTime(currentDate);
+        ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+        lsim = configurationPersistence.getConfigurationValueInteger(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED);
+        configurationPersistence.updateConfigurationKeyValueInteger(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED, 1);
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -78,18 +90,19 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
         request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
         flowKey = createFlow(request, LoanDisbursementAction.class);
         setRequestPathInfo("/editStatusAction");
-        currentDate = new Date(System.currentTimeMillis());
     }
 
     @After
     public void tearDown() throws Exception {
+        new ConfigurationPersistence().updateConfigurationKeyValueInteger(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED, lsim);
+        new DateTimeService().resetToCurrentSystemDateTime();
         loanBO = null;
         group = null;
         center = null;
     }
 
     private LoanBO getLoanAccount() {
-        Date startDate = new Date(System.currentTimeMillis());
+        Date startDate = new DateTimeService().getCurrentJavaDateTime();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -101,6 +114,7 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
     @Test
     public void testRescheduleLoan() throws Exception {
         loanBO = getLoanAccount();
+        loanBO.approve(legacyPersonnelDao.getPersonnel(PersonnelConstants.TEST_USER), "approved", currentDate.toLocalDate());
         addRequestParameter("recordLoanOfficerId", "1");
         addRequestParameter("accountId", loanBO.getAccountId().toString());
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);

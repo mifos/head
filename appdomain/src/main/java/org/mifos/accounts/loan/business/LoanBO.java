@@ -148,6 +148,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
@@ -1318,6 +1319,11 @@ public class LoanBO extends AccountBO implements Loan {
     @Override
     protected void writeOff(Date transactionDate) throws AccountException {
         try {
+            if (!isTrxnDateValid(transactionDate,
+                    new CustomerPersistence().getLastMeetingDateForCustomer(getCustomer().getCustomerId()),
+                    new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled())) {
+                throw new BusinessRuleException("errors.invalidTxndate");
+            }
             Short personnelId = this.getUserContext().getId();
             PersonnelBO currentUser = legacyPersonnelDao.getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
@@ -1345,6 +1351,11 @@ public class LoanBO extends AccountBO implements Loan {
     @Override
     protected void reschedule(Date transactionDate) throws AccountException {
         try {
+            if (!isTrxnDateValid(transactionDate,
+                    new CustomerPersistence().getLastMeetingDateForCustomer(getCustomer().getCustomerId()),
+                    new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled())) {
+                throw new BusinessRuleException("errors.invalidTxndate");
+            }
             Short personnelId = this.getUserContext().getId();
             PersonnelBO currentUser = legacyPersonnelDao.getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
