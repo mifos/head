@@ -3505,7 +3505,7 @@ public class LoanBO extends AccountBO implements Loan {
                 throw new AccountException(AccountExceptionConstants.CANT_REMOVE_PENALTY_EXCEPTION);
             }
 
-            totalPenaltyAmount = updateAccountActionDateEntity(installmentIds, penaltyId);
+            totalPenaltyAmount = removePenaltyFromLoanScheduleEntity(installmentIds, penaltyId);
             updateAccountPenaltiesEntity(penaltyId);
 
             updateTotalPenaltyAmount(totalPenaltyAmount);

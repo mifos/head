@@ -780,6 +780,7 @@ public class ActivityMapper {
         ActionSecurity security = new ActionSecurity("accountAppAction");
         security.allow("removeFees", SecurityConstants.VIEW);
         security.allow("getTrxnHistory", SecurityConstants.VIEW);
+        security.allow("removePenalties", SecurityConstants.VIEW);
         return security;
     }
 
