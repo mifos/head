@@ -560,7 +560,25 @@
             <dropTable tableName="loan_penalty_schedule"/>
         </rollback>
     </changeSet>
-    <changeSet id="MIFOS_5426_4" author="Lukasz Lewczynski" context="expansion">
+    <changeSet id="MIFOS_5446_1" author="Pawel Gesek" context="expansion">
+        <sql endDelimiter=";">
+                ALTER TABLE image_info ADD COLUMN customer_picture_entity INTEGER REFERENCES customer_picture;
+                ALTER TABLE image_info MODIFY COLUMN path varchar(255) NULL DEFAULT NULL;
+                ALTER TABLE customer_picture 
+                    DROP FOREIGN KEY customer_picture_ibfk_1,
+                    DROP COLUMN customer_id;
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                ALTER TABLE image_info DROP COLUMN customer_picture_entity;
+                ALTER TABLE image_info MODIFY COLUMN path varchar(255) NOT NULL;
+                ALTER TABLE customer_picture 
+                    ADD COLUMN customer_id INTEGER NOT NULL,
+                    ADD FOREIGN KEY (customer_id) REFERENCES customer(customer_id);
+            </sql>
+        </rollback>
+    </changeSet>
+        <changeSet id="MIFOS_5426_4" author="Lukasz Lewczynski" context="expansion">
         <sql endDelimiter=";">
             ALTER TABLE loan_penalty_schedule ADD COLUMN last_applied DATE NOT NULL AFTER amount_paid_currency_id;
         </sql>

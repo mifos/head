@@ -778,7 +778,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         }
         String contentType = clientPhoto.getImageInfo().getContentType();
         Long contentLength = clientPhoto.getImageInfo().getLength();
-        byte[] out = clientPhotoService.getData(clientPhoto.getImageInfo().getPath());
+        byte[] out = clientPhotoService.getData(clientPhoto);
         return new ClientPhotoDto(contentType, contentLength, out);
     }
 

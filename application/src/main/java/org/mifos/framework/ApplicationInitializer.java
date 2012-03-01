@@ -63,6 +63,7 @@ import org.mifos.config.Localization;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.UserLocale;
 import org.mifos.config.business.Configuration;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
@@ -96,6 +97,9 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 public class ApplicationInitializer implements ServletContextListener, ServletRequestListener, HttpSessionListener {
 
+    private static final String IMAGESTORE_CONFIG_KEY = "GeneralConfig.ImageStorageType";
+    private static final String DB_CONFIG = "database";
+    
     private static Logger logger = LoggerFactory.getLogger(ApplicationInitializer.class);
 
     private static class DatabaseError {
@@ -221,7 +225,13 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         MoneyCompositeUserType.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
         AccountingRules.init(); // load the additional currencies
         Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
-        ImageStorageManager.initStorage();
+        
+        
+        final MifosConfigurationManager configuration = MifosConfigurationManager.getInstance();
+        final String imageStorageConfig = configuration.getString(IMAGESTORE_CONFIG_KEY);
+        if (imageStorageConfig == null || !imageStorageConfig.equals(DB_CONFIG)) {
+            ImageStorageManager.initStorage();
+        }
         DatabaseMigrator migrator = new DatabaseMigrator();
         initializeDBConnectionForHibernate(migrator);
 

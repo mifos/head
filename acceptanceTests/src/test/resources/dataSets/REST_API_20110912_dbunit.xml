@@ -60,6 +60,7 @@
   <DATABASECHANGELOG ID="MIFOS_5426_2" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-24 14:02:24.0" ORDEREXECUTED="256" EXECTYPE="EXECUTED" MD5SUM="3:bfb13d5be65b049f92b6056f84d6a75c" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5426_3" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-24 14:02:24.0" ORDEREXECUTED="257" EXECTYPE="EXECUTED" MD5SUM="3:1ba3e60d6e8916c9814bf2befd5eb460" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5433_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-15 14:59:45.0" ORDEREXECUTED="232" EXECTYPE="EXECUTED" MD5SUM="3:b32077bdab52d6cb9a4337ee44105586" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5446_1" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-29 20:51:08.0" ORDEREXECUTED="270" EXECTYPE="EXECUTED" MD5SUM="3:da9b46d48c36748f47566fc805e67bc8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
   <QRTZ_CALENDARS/>
@@ -832,7 +833,7 @@
   <customer_name_detail customer_name_id="2" customer_id="3" name_type="3" salutation="640" first_name="Client" middle_name="" last_name="REST API" second_last_name="" display_name="Client REST API"/>
   <customer_note comment_id="1" customer_id="2" field_officer_id="1" comment_date="2011-09-12" comment="Active"/>
   <customer_note comment_id="2" customer_id="3" field_officer_id="1" comment_date="2011-09-12" comment="Active"/>
-  <customer_picture picture_id="1" customer_id="3"/>
+  <customer_picture picture_id="1"/>
   <customer_position/>
   <customer_program/>
   <customer_schedule id="1" account_id="1" customer_id="1" action_date="2011-09-12" misc_fees="0.0000" misc_fees_currency_id="2" misc_fees_paid="0.0000" misc_fees_paid_currency_id="2" misc_penalty="0.0000" misc_penalty_currency_id="2" misc_penalty_paid="0.0000" misc_penalty_paid_currency_id="2" payment_status="0" installment_id="1" version_no="0" last_updated="1971-01-01 00:00:00.0"/>
