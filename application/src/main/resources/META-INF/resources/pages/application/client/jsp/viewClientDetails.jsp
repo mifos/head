@@ -162,7 +162,7 @@ explanation of the license and how it is applied.
 												cellpadding="0">
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewClientDetails.link.viewLoanAccount"
-														href="loanAccountAction.do?globalAccountNum=${loan.globalAccountNum}&customerId=${clientInformationDto.clientDisplay.customerId}&method=get&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+														href="viewLoanAccountDetails.ftl?globalAccountNum=${loan.globalAccountNum}&customerId=${clientInformationDto.clientDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 														<c:out value="${loan.prdOfferingName}" />, <mifos:mifoslabel name="client.acc" bundle="ClientUIResources" /><c:out
 															value="${loan.globalAccountNum}" />
 													</html-el:link> </span></td>
@@ -221,7 +221,7 @@ explanation of the license and how it is applied.
 												cellpadding="0">
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewClientDetails.link.viewSavingsAccount"
-														href="savingsAction.do?globalAccountNum=${savings.globalAccountNum}&method=get&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+														href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 														<c:out value="${savings.prdOfferingName}" />, <mifos:mifoslabel name="client.acc" bundle="ClientUIResources" /><c:out
 															value="${savings.globalAccountNum}" />
 													</html-el:link> </span></td>
@@ -806,7 +806,7 @@ explanation of the license and how it is applied.
                   <c:set var="questionnaireFor" scope="session" value="${clientInformationDto.clientDisplay.displayName}"/>
                   <c:remove var="urlMap" />
                   <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
-                  <c:set target="${urlMap}" property="${clientInformationDto.clientDisplay.branchName}" value="custSearchAction.do?method=getOfficeHomePage&officeId=${clientInformationDto.clientDisplay.branchId}"/>
+                  <c:set target="${urlMap}" property="${clientInformationDto.clientDisplay.branchName}" value="clientsAndAccounts.ftl?officeId=${clientInformationDto.clientDisplay.branchId}"/>
                   <c:set target="${urlMap}" property="${clientInformationDto.clientDisplay.displayName}" value="viewClientDetails.ftl?globalCustNum=${clientInformationDto.clientDisplay.globalCustNum}"/>
                   <a id="viewClientDetails.link.attachSurvey" href="questionnaire.ftl?source=Client&event=View&entityId=${clientInformationDto.clientDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=clientCustAction.do%3Fmethod%3Dget">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>

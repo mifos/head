@@ -200,7 +200,7 @@ explanation of the license and how it is applied.
 												cellpadding="0">
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewCenterDetails.link.savingsAccount"
-														href="savingsAction.do?globalAccountNum=${savings.globalAccountNum}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
+														href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
 														<c:out value="${savings.prdOfferingName}" />, <mifos:mifoslabel name="Center.acc" bundle="CenterUIResources" /><c:out
 															value="${savings.globalAccountNum}" />
 													</html-el:link> </span></td>

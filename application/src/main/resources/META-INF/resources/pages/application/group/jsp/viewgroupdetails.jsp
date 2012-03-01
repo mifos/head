@@ -206,7 +206,7 @@ explanation of the license and how it is applied.
 												cellpadding="0">
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewgroupdetails.link.viewLoanAccount"
-														href="loanAccountAction.do?globalAccountNum=${loan.globalAccountNum}&customerId=${groupInformationDto.groupDisplay.customerId}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
+														href="viewLoanAccountDetails.ftl?globalAccountNum=${loan.globalAccountNum}&customerId=${groupInformationDto.groupDisplay.customerId}&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
 														<c:out value="${loan.prdOfferingName}" />, <mifos:mifoslabel name="Group.acc" bundle="GroupUIResources" /><c:out
 															value="${loan.globalAccountNum}" />
 													</html-el:link> </span></td>
@@ -262,7 +262,7 @@ explanation of the license and how it is applied.
 												cellpadding="0">
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewgroupdetails.link.viewSavingsAccount"
-														href="savingsAction.do?globalAccountNum=${savings.globalAccountNum}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
+														href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
 														<c:out value="${savings.prdOfferingName}" />, <mifos:mifoslabel name="Group.acc" bundle="GroupUIResources" /><c:out
 															value="${savings.globalAccountNum}" />
 													</html-el:link> </span></td>
