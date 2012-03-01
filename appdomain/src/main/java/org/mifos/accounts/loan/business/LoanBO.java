@@ -51,12 +51,12 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountOverpaymentEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.AccountTypeEntity;
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
@@ -2251,7 +2251,7 @@ public class LoanBO extends AccountBO implements Loan {
     }
     
     public void applyPenalty(final PenaltyBO penalty, final Money charge,
-            final AccountActionDateEntity accountActionDateEntity, final AccountPenaltiesEntity penaltiesEntity) {
+            final AccountActionDateEntity accountActionDateEntity, final AccountPenaltiesEntity penaltiesEntity, final Date date) {
         LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
         loanScheduleEntity.setPenalty(loanScheduleEntity.getPenalty().add(charge));
         getLoanSummary().updateOriginalPenalty(charge);
@@ -2259,22 +2259,14 @@ public class LoanBO extends AccountBO implements Loan {
         addLoanActivity(new LoanActivityEntity(this, personnel, new Money(getCurrency()), new Money(getCurrency()),
                 new Money(getCurrency()), charge, getLoanSummary(), penalty.getPenaltyName() + " applied"));
         
-        List<LoanPenaltyScheduleEntity> list = new ArrayList<LoanPenaltyScheduleEntity>(loanScheduleEntity.getLoanPenaltyScheduleEntities());
-        LoanPenaltyScheduleEntity entity = null;
-        for(LoanPenaltyScheduleEntity item : list) {
-            if(item.getPenalty().getPenaltyId().equals(penalty.getPenaltyId())) {
-                entity = item;
-                break;
-            }
-        }
+        LoanPenaltyScheduleEntity entity = loanScheduleEntity.getPenaltyScheduleEntity(penalty.getPenaltyId());
         
         if(entity == null) {
-            loanScheduleEntity.addLoanPenaltySchedule(new LoanPenaltyScheduleEntity(loanScheduleEntity, penalty, penaltiesEntity, charge));
+            loanScheduleEntity.addLoanPenaltySchedule(new LoanPenaltyScheduleEntity(loanScheduleEntity, penalty, penaltiesEntity, charge, date));
         } else {
             entity.setPenaltyAmount(entity.getPenaltyAmount().add(charge));
+            entity.setLastApplied(date);
         }
-        
-        penaltiesEntity.setLastAppliedDate(new DateTimeService().getCurrentJavaDateTime());
     }
     
     private void applyMiscCharge(final Short chargeType, final Money charge,

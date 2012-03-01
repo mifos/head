@@ -21,6 +21,8 @@
             <column name="amount_paid_currency_id" />
             <column name="amount_paid" />
         </property>
+        
+        <property name="lastApplied" column="last_applied" access="field"/>
 
         <many-to-one name="accountPenalty" column="account_penalty_id" class="org.mifos.accounts.business.AccountPenaltiesEntity" access="field"/>
         <many-to-one name="loanSchedule" column="id" class="org.mifos.accounts.loan.business.LoanScheduleEntity" access="field"/>

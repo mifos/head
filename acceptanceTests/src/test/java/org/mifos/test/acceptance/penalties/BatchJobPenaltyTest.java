@@ -200,6 +200,27 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         verifyAfterRepayLoan(accountId, new String[] { "0", "9.6", "0.4", "0", "0", "0", "0", "0", "0", "0" });
     }
     
+    @Test(enabled = true)
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public void shouldNotCalculatePenaltyAfterManuallyRunBatchJob() throws Exception {
+        String accountId = setUpPenaltyAndLoanAccount("Penalty Correct", PenaltyFormParameters.PERIOD_NONE, "",
+                PenaltyFormParameters.FREQUENCY_DAILY, "0.1", "9,999,999,999");
+        
+        changeDateTime(03, 15);
+        
+        for(int i = 0; i < 2; ++i) {
+            penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
+                    new String[] { "42", "0", "42" },
+                    new String[][] { { "0", "450" }, null /* Installments due */, { "21", "471" }, { "14", "464" }, { "7", "457" },
+                    { "0", "450" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
+                    new String[] { "1,842", "15/03/2012", "1,392" }
+            );
+            
+            navigationHelper.navigateToAdminPage();
+            new BatchJobHelper(selenium).runSomeBatchJobs(Arrays.asList("ApplyPenaltyToLoanAccountsTaskJob"));
+        }
+    }
+    
     private void verifyAfterRepayLoan(final String accountId, final String[] penalties) throws Exception {
         RepayLoanParameters params = new RepayLoanParameters();
         params.setModeOfRepayment(RepayLoanParameters.CASH);
@@ -293,7 +314,6 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2012, month, day, 13, 0, 0, 0));
                                 
         navigationHelper.navigateToAdminPage();
-        
         new BatchJobHelper(selenium).runSomeBatchJobs(Arrays.asList("ApplyPenaltyToLoanAccountsTaskJob"));
     }
 

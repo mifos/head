@@ -33,10 +33,12 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.OverDueAmounts;
@@ -834,5 +836,19 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		this.principalPaid = this.principalPaid.add(accountPayment.getAmount());
 		this.principal = this.principal.add(accountPayment.getAmount());
 		this.getPaymentAllocation().allocateForPrincipal(accountPayment.getAmount());
+	}
+	
+	public LoanPenaltyScheduleEntity getPenaltyScheduleEntity(final Short penaltyId) {
+	    List<LoanPenaltyScheduleEntity> list = new ArrayList<LoanPenaltyScheduleEntity>(getLoanPenaltyScheduleEntities());
+        
+	    LoanPenaltyScheduleEntity entity = null;
+        for(LoanPenaltyScheduleEntity item : list) {
+            if(item.getPenalty().getPenaltyId().equals(penaltyId)) {
+                entity = item;
+                break;
+            }
+        }
+        
+        return entity;
 	}
 }

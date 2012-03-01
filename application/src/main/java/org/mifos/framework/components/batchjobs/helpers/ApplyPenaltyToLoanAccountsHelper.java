@@ -22,6 +22,7 @@ package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -88,16 +89,17 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
                                         || (penaltyEntity.isWeeklyTime() && days.getDays() % 7 != 1)) {
                                     continue;
                                 }
-                            } else {
-                                if (penaltyEntity.getLastAppliedDate() != null) {
-                                    continue;
-                                }
+                            }
+                            
+                            LoanPenaltyScheduleEntity penaltyScheduleEntity = entity.getPenaltyScheduleEntity(penaltyEntity.getPenalty().getPenaltyId());
+                            if(penaltyScheduleEntity != null && penaltyScheduleEntity.getLastApplied().equals(nowDT.toDate())) {
+                                continue;
                             }
                             
                             if (penaltyEntity.isAmountPenalty()) {
-                                addAmountPenalty(penaltyEntity, loanAccount, entity);
+                                addAmountPenalty(penaltyEntity, loanAccount, entity, nowDT.toDate());
                             } else {
-                                addRatePenalty(penaltyEntity, loanAccount, entity);
+                                addRatePenalty(penaltyEntity, loanAccount, entity, nowDT.toDate());
                             }
                         }
                     }
@@ -119,13 +121,13 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
         }
     }
 
-    private void addAmountPenalty(final AccountPenaltiesEntity penaltyEntity, final LoanBO loanAccount, final LoanScheduleEntity loanScheduleEntity) {
+    private void addAmountPenalty(final AccountPenaltiesEntity penaltyEntity, final LoanBO loanAccount, final LoanScheduleEntity loanScheduleEntity, final Date date) {
         final AmountPenaltyBO penalty = (AmountPenaltyBO) penaltyEntity.getPenalty();
         
         Money charge = verifyMinimum(penaltyEntity.getAccountPenaltyAmount(), penalty.getMinimumLimit());
         charge = verifyMaximum(loanAccount.getTotalPenalty(charge.getCurrency(), penalty.getPenaltyId()), charge, penalty.getMaximumLimit());
         
-        loanAccount.applyPenalty(penalty, charge, loanScheduleEntity, penaltyEntity);
+        loanAccount.applyPenalty(penalty, charge, loanScheduleEntity, penaltyEntity, date);
         
         try {
             StaticHibernateUtil.startTransaction();
@@ -137,7 +139,7 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
         }
     }
     
-    private void addRatePenalty(final AccountPenaltiesEntity penaltyEntity, final LoanBO loanAccount, final LoanScheduleEntity loanScheduleEntity) {
+    private void addRatePenalty(final AccountPenaltiesEntity penaltyEntity, final LoanBO loanAccount, final LoanScheduleEntity loanScheduleEntity, final Date date) {
         final RatePenaltyBO penalty = (RatePenaltyBO) penaltyEntity.getPenalty();
         final Double radio = penaltyEntity.getAccountPenaltyAmount().getAmount().doubleValue() / 100.0d;
         Money charge = null;
@@ -159,7 +161,7 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
         
         charge = verifyMaximum(totalPenalty, charge, penalty.getMaximumLimit());
         
-        loanAccount.applyPenalty(penalty, charge, loanScheduleEntity, penaltyEntity);
+        loanAccount.applyPenalty(penalty, charge, loanScheduleEntity, penaltyEntity, date);
         
         try {
             StaticHibernateUtil.startTransaction();

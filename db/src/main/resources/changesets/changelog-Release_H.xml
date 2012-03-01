@@ -560,4 +560,14 @@
             <dropTable tableName="loan_penalty_schedule"/>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_5426_4" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+            ALTER TABLE loan_penalty_schedule ADD COLUMN last_applied DATE NOT NULL AFTER amount_paid_currency_id;
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                ALTER TABLE loan_penalty_schedule DROP COLUMN last_applied;
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>
