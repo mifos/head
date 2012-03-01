@@ -90,7 +90,7 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
     public void testSavingsAccountLinkWithoutSelfLink() throws Exception {
         createInitialObjectsForSavings();
         String createdLink = TagGenerator.createHeaderLinks(savings, false, randomNum);
-        Assert.assertEquals(true, createdLink.contains("custSearchAction"));
+        Assert.assertEquals(true, createdLink.contains("clientsAndAccounts"));
         Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
         Assert.assertEquals(true, createdLink.contains("viewCenterDetails"));
         Assert.assertEquals(true, createdLink.contains("Center_Active_test"));
@@ -103,13 +103,13 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
     public void testSavingsAccountLinkWithSelfLink() throws Exception {
         createInitialObjectsForSavings();
         String createdLink = TagGenerator.createHeaderLinks(savings, true, randomNum);
-        Assert.assertEquals(true, createdLink.contains("custSearchAction"));
+        Assert.assertEquals(true, createdLink.contains("clientsAndAccounts"));
         Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
         Assert.assertEquals(true, createdLink.contains("viewCenterDetails"));
         Assert.assertEquals(true, createdLink.contains("Center_Active_test"));
         Assert.assertEquals(true, createdLink.contains("viewGroupDetails"));
         Assert.assertEquals(true, createdLink.contains("Group_Active_test"));
-        Assert.assertEquals(true, createdLink.contains("savingsAction"));
+        Assert.assertEquals(true, createdLink.contains("viewSavingsAccountDetails"));
     }
 
     @Test
