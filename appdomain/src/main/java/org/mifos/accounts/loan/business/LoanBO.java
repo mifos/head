@@ -917,6 +917,17 @@ public class LoanBO extends AccountBO implements Loan {
         }
         return totalFeeAmount;
     }
+    
+    public Money removePenaltyFromLoanScheduleEntity(final List<Short> intallmentIdList, final Short penaltyId) {
+        Money totalPenaltyAmount = new Money(getCurrency());
+        Set<AccountActionDateEntity> accountActionDateEntitySet = this.getAccountActionDates();
+        for (AccountActionDateEntity accountActionDateEntity : accountActionDateEntitySet) {
+            if (intallmentIdList.contains(accountActionDateEntity.getInstallmentId())) {
+                totalPenaltyAmount = totalPenaltyAmount.add(((LoanScheduleEntity) accountActionDateEntity).removePenalties(penaltyId));
+            }
+        }
+        return totalPenaltyAmount;
+    }
 
     protected boolean havePaymentsBeenMade() {
         for (AccountActionDateEntity accountActionDateEntity : getAllInstallments()) {
@@ -3483,4 +3494,51 @@ public class LoanBO extends AccountBO implements Loan {
 		
 		this.loanSummary.setOriginalInterest(getTotalInterestToBePaid());
 	}
+
+    public void removePenalty(Short penaltyId, Short personnelId) throws AccountException {
+        List<Short> installmentIds = getApplicableInstallmentIdsForRemovePenalties();
+        Money totalPenaltyAmount;
+        if (!installmentIds.isEmpty() && isPenaltyActive(penaltyId)) {
+
+            PenaltyBO penalty = getAccountPenaltyObject(penaltyId);
+            if (havePaymentsBeenMade() && penalty.doesPenaltyInvolveFractionalAmounts()) {
+                throw new AccountException(AccountExceptionConstants.CANT_REMOVE_PENALTY_EXCEPTION);
+            }
+
+            totalPenaltyAmount = updateAccountActionDateEntity(installmentIds, penaltyId);
+            updateAccountPenaltiesEntity(penaltyId);
+
+            updateTotalPenaltyAmount(totalPenaltyAmount);
+
+            String description = penalty.getPenaltyName() + " " + AccountConstants.PENALTIES_REMOVED;
+            updateAccountActivity(null, null, totalPenaltyAmount, null, personnelId, description);
+
+            try {
+                ApplicationContextProvider.getBean(LegacyAccountDao.class).createOrUpdate(this);
+            } catch (PersistenceException e) {
+                throw new AccountException(e);
+            }
+        }
+    }
+    
+    private List<Short> getApplicableInstallmentIdsForRemovePenalties() {
+        List<Short> installmentIdList = new ArrayList<Short>();
+        for (AccountActionDateEntity accountActionDateEntity : getApplicableIdsForFutureInstallments()) {
+            installmentIdList.add(accountActionDateEntity.getInstallmentId());
+        }
+        AccountActionDateEntity accountActionDateEntity = getDetailsOfNextInstallment();
+        if (accountActionDateEntity != null) {
+            installmentIdList.add(accountActionDateEntity.getInstallmentId());
+        }
+
+        return installmentIdList;
+    }
+    
+    private void updateAccountPenaltiesEntity(final Short penaltyId) {
+        AccountPenaltiesEntity accountPenalties = getAccountPenalty(penaltyId);
+        if (accountPenalties != null) {
+            accountPenalties.changePenaltyStatus(PenaltyStatus.INACTIVE, getDateTimeService().getCurrentJavaDateTime());
+            accountPenalties.setLastAppliedDate(null);
+        }
+    }
 }

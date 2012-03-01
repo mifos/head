@@ -22,9 +22,8 @@ package org.mifos.security.util;
 
 /**
  * This inteface will hold all the constants used related to the security
- *
- * NOTE: if a new activity is being added, the values in RoleTestUtil need to be
- * increased.
+ * 
+ * NOTE: if a new activity is being added, the values in RoleTestUtil need to be increased.
  */
 public interface SecurityConstants {
     String NOSUCHALGORITHM = "security.error.noSuchAlgorithm";
@@ -392,9 +391,8 @@ public interface SecurityConstants {
     short LOAN_CAN_APPLY_CHARGES = 131;
 
     /**
-     * What is this? It is the parent of
-     * {@link #CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS} but I'm not sure why it didn't
-     * have its own constant until now.
+     * What is this? It is the parent of {@link #CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS} but I'm not sure why it didn't have
+     * its own constant until now.
      */
     short BULK = 196;
 
@@ -449,15 +447,12 @@ public interface SecurityConstants {
     /**
      * This permission is used for multiple operations:
      * <ul>
-     * <li>listing all available admin documents. From the UI: "Admin->View
-     * admin documents"
-     * <li>running/executing an admin document when it shows up during a
-     * particular loan or savings account state
+     * <li>listing all available admin documents. From the UI: "Admin->View admin documents"
+     * <li>running/executing an admin document when it shows up during a particular loan or savings account state
      * </ul>
-     *
-     * This was done to fix the issue quickly and since the operations seem to
-     * have reasonable overlap.
-     *
+     * 
+     * This was done to fix the issue quickly and since the operations seem to have reasonable overlap.
+     * 
      */
     short CAN_VIEW_ADMIN_DOCUMENTS = 226;
 
@@ -489,4 +484,7 @@ public interface SecurityConstants {
     /** Question Groups */
     short CAN_MANAGE_QUESTION_GROUPS = 240;
     short CAN_ACTIVATE_QUESTION_GROUPS = 243;
+
+    /** Penalties */
+    short LOAN_REMOVE_PENALTY_TYPE_ATTACHED_TO_ACCOUNT = 249;
 }

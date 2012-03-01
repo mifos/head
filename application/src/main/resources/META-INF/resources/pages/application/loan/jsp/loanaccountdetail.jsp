@@ -555,7 +555,12 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                     <c:out value="${penaltySet.penaltyName}" />:
                                     <span class="fontnormal">
                                         <fmt:formatNumber value="${penaltySet.accountPenaltyAmount}" />&nbsp;
-                                        (<c:out value="${penaltySet.penaltyFrequencyName}"/>)
+                                        (<c:out value="${penaltySet.penaltyFrequencyName}"/>) &nbsp;
+                                        <html-el:link styleId="loanAccountDetail.link.removePenalty_${status.count}"
+                                            href="accountAppAction.do?method=removePenalties&penaltyId=${penaltySet.penaltyId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
+                                            <mifos:mifoslabel name="loan.remove" />
+                                        </html-el:link> 
+                                        <br>
                                     </span>
                                 </c:if>
                             </c:forEach>
@@ -571,6 +576,13 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                     </span>:
                                     <span class="fontnormal">
                                         <fmt:formatNumber value="${penaltySet.accountPenaltyAmount}" />&nbsp;
+                                        <!-- if account state is LOAN_PARTIAL_APPLICATION or LOAN_PENDING_APPROVAL then enable removal -->
+                                        <c:if test="${loanInformationDto.accountStateId == '1' || loanInformationDto.accountStateId == '2'}">
+                                            <html-el:link styleId="loanAccountDetail.link.removeOneTimePenalty_${status.count}"
+                                                href="accountAppAction.do?method=removePenalties&penaltyId=${penaltySet.penaltyId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
+                                                <mifos:mifoslabel name="loan.remove" />
+                                            </html-el:link> 
+                                        </c:if>
                                         <br>
                                     </span>
                                 </c:if>

@@ -47,6 +47,11 @@ public class RatePenaltyBO extends PenaltyBO {
         this.formula = null;
     }
     
+    @Override
+    public boolean doesPenaltyInvolveFractionalAmounts() {
+        return true;
+    }
+    
     public boolean isOutstandingPrincipalAmount() {
         return getFormula().getPenaltyFormula().getValue().equals(PenaltyFormula.OUTSTANDING_PRINCIPAL_AMOUNT.getValue());
     }

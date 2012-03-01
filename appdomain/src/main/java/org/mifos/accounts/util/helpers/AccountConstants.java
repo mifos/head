@@ -208,4 +208,6 @@ public interface AccountConstants {
 
     String NO_COMMENT = "";
     String ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT = "errors.payment.date.before.last.payment";
+    
+    String PENALTIES_REMOVED = "removed";
 }

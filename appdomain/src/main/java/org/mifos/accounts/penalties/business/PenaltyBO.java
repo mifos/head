@@ -225,6 +225,14 @@ public abstract class PenaltyBO extends AbstractBusinessObject {
         return new StringBuilder().append(this.penaltyId).append(" : ").append(this.penaltyName).toString();
     }
     
+    /**
+     * Returns true if any penalties applied to an installment might be an amount
+     * that exceeds the precision specified by initial or final rounding of
+     * amounts in an installment. This check is required temporarily in order to
+     * prevent re-rounding when a penalty is added after payments have been made.
+     */
+    public abstract boolean doesPenaltyInvolveFractionalAmounts();
+    
     protected void validateFields(String name, PenaltyCategoryEntity categoryEntity, PenaltyPeriodEntity periodEntity,
             Double min, Double max, PenaltyFrequencyEntity frequencyEntity, GLCodeEntity glCodeEntity) throws PenaltyException {
         validateName(name);

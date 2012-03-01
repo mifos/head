@@ -851,4 +851,30 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         
         return entity;
 	}
+	
+	Money removePenalties(Short penaltyId) {
+        Money penaltyAmount = null;
+        LoanPenaltyScheduleEntity objectToRemove = null;
+        Set<LoanPenaltyScheduleEntity> loanPenaltyScheduleEntitySet = this.getLoanPenaltyScheduleEntities();
+        for (LoanPenaltyScheduleEntity loanPenaltyScheduleEntity : loanPenaltyScheduleEntitySet) {
+            if (loanPenaltyScheduleEntity.getPenalty().getPenaltyId().equals(penaltyId)
+                    && (loanPenaltyScheduleEntity.getPenaltyAmountPaid() == null || loanPenaltyScheduleEntity
+                            .getPenaltyAmountPaid().isZero())) {
+                objectToRemove = loanPenaltyScheduleEntity;
+                penaltyAmount = objectToRemove.getPenaltyAmount();
+                break;
+            } else if (loanPenaltyScheduleEntity.getPenalty().getPenaltyId().equals(penaltyId)
+                    && loanPenaltyScheduleEntity.getPenaltyAmountPaid() != null
+                    && loanPenaltyScheduleEntity.getPenaltyAmountPaid().isGreaterThanZero()) {
+                penaltyAmount = loanPenaltyScheduleEntity.getPenaltyAmount().subtract(
+                        loanPenaltyScheduleEntity.getPenaltyAmountPaid());
+                loanPenaltyScheduleEntity.setPenaltyAmount(loanPenaltyScheduleEntity.getPenaltyAmountPaid());
+                break;
+            }
+        }
+        if (objectToRemove != null) {
+            this.removeLoanPenaltySchedule(objectToRemove);
+        }
+        return penaltyAmount;
+    }
 }
