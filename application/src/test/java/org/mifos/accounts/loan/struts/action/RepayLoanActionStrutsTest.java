@@ -20,11 +20,8 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import java.io.IOException;
-import java.util.Date;
-
 import junit.framework.Assert;
-
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,10 +34,13 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -56,9 +56,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 
 public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
@@ -70,6 +68,8 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
     private CustomerBO group = null;
     private UserContext userContext;
     private String flowKey;
+    
+    private int lsim;
 
     @Override
     protected void setStrutsConfig() throws IOException {
@@ -79,6 +79,11 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Before
     public void setUp() throws Exception {
+        DateTime date = new DateTime(2010, 12, 23, 12, 0, 0, 0);
+        new DateTimeService().setCurrentDateTime(date);
+        ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+        lsim = configurationPersistence.getConfigurationValueInteger(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED);
+        configurationPersistence.updateConfigurationKeyValueInteger(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED, 1);
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -86,12 +91,15 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
         flowKey = createFlow(request, RepayLoanAction.class);
         accountBO = getLoanAccount();
+        ((LoanBO) accountBO).approve(legacyPersonnelDao.getPersonnel(PersonnelConstants.TEST_USER), "approved", date.toLocalDate());
         StaticHibernateUtil.flushSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
     }
 
     @After
     public void tearDown() throws Exception {
+        new ConfigurationPersistence().updateConfigurationKeyValueInteger(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED, lsim);
+        new DateTimeService().resetToCurrentSystemDateTime();
         accountBO = null;
         group = null;
         center = null;
@@ -258,7 +266,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private AccountBO getLoanAccount() {
-        Date startDate = new Date(System.currentTimeMillis());
+        Date startDate = new DateTimeService().getCurrentJavaDateTime();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);

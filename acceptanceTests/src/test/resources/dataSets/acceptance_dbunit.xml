@@ -101,7 +101,10 @@
   <DATABASECHANGELOG ID="MIFOS_5383_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-06 11:32:33.0" ORDEREXECUTED="236" EXECTYPE="EXECUTED" MD5SUM="3:e3f2fdea6e47675516523f634130672c" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5425_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-09 14:42:02.0" ORDEREXECUTED="237" EXECTYPE="EXECUTED" MD5SUM="3:b28cb3448b7729cfbea082f33eeca853" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5426_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-17 15:12:58.0" ORDEREXECUTED="239" EXECTYPE="EXECUTED" MD5SUM="3:e864e501fd0636f5efecb104e370cdd4" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5426_2" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-24 14:03:19.0" ORDEREXECUTED="268" EXECTYPE="EXECUTED" MD5SUM="3:bfb13d5be65b049f92b6056f84d6a75c" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5426_3" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-24 14:03:19.0" ORDEREXECUTED="269" EXECTYPE="EXECUTED" MD5SUM="3:1ba3e60d6e8916c9814bf2befd5eb460" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5433_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-15 15:00:36.0" ORDEREXECUTED="238" EXECTYPE="EXECUTED" MD5SUM="3:b32077bdab52d6cb9a4337ee44105586" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5446_1" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-29 20:52:49.0" ORDEREXECUTED="278" EXECTYPE="EXECUTED" MD5SUM="3:da9b46d48c36748f47566fc805e67bc8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
   <QRTZ_CALENDARS/>
@@ -1562,28 +1565,28 @@
   <customer_note comment_id="29" customer_id="37" field_officer_id="1" comment_date="2011-03-14" comment="Ok"/>
   <customer_note comment_id="30" customer_id="39" field_officer_id="1" comment_date="2011-03-15" comment="asfdas"/>
   <customer_note comment_id="31" customer_id="40" field_officer_id="1" comment_date="2011-03-15" comment="asdf"/>
-  <customer_picture picture_id="1" customer_id="2"/>
-  <customer_picture picture_id="2" customer_id="3"/>
-  <customer_picture picture_id="3" customer_id="5"/>
-  <customer_picture picture_id="4" customer_id="6"/>
-  <customer_picture picture_id="5" customer_id="7"/>
-  <customer_picture picture_id="6" customer_id="8"/>
-  <customer_picture picture_id="7" customer_id="10"/>
-  <customer_picture picture_id="8" customer_id="12"/>
-  <customer_picture picture_id="9" customer_id="13"/>
-  <customer_picture picture_id="10" customer_id="14"/>
-  <customer_picture picture_id="11" customer_id="17"/>
-  <customer_picture picture_id="12" customer_id="18"/>
-  <customer_picture picture_id="13" customer_id="23"/>
-  <customer_picture picture_id="14" customer_id="24"/>
-  <customer_picture picture_id="15" customer_id="26"/>
-  <customer_picture picture_id="16" customer_id="28"/>
-  <customer_picture picture_id="17" customer_id="29"/>
-  <customer_picture picture_id="18" customer_id="30"/>
-  <customer_picture picture_id="19" customer_id="31"/>
-  <customer_picture picture_id="20" customer_id="33"/>
-  <customer_picture picture_id="21" customer_id="37"/>
-  <customer_picture picture_id="22" customer_id="40"/>
+  <customer_picture picture_id="1"/>
+  <customer_picture picture_id="2"/>
+  <customer_picture picture_id="3"/>
+  <customer_picture picture_id="4"/>
+  <customer_picture picture_id="5"/>
+  <customer_picture picture_id="6"/>
+  <customer_picture picture_id="7"/>
+  <customer_picture picture_id="8"/>
+  <customer_picture picture_id="9"/>
+  <customer_picture picture_id="10"/>
+  <customer_picture picture_id="11"/>
+  <customer_picture picture_id="12"/>
+  <customer_picture picture_id="13"/>
+  <customer_picture picture_id="14"/>
+  <customer_picture picture_id="15"/>
+  <customer_picture picture_id="16"/>
+  <customer_picture picture_id="17"/>
+  <customer_picture picture_id="18"/>
+  <customer_picture picture_id="19"/>
+  <customer_picture picture_id="20"/>
+  <customer_picture picture_id="21"/>
+  <customer_picture picture_id="22"/>
   <customer_position/>
   <customer_program/>
   <customer_schedule id="1" account_id="1" customer_id="1" action_date="2011-02-18" misc_fees="0.0000" misc_fees_currency_id="2" misc_fees_paid="0.0000" misc_fees_paid_currency_id="2" misc_penalty="0.0000" misc_penalty_currency_id="2" misc_penalty_paid="0.0000" misc_penalty_paid_currency_id="2" payment_status="0" installment_id="1" version_no="1" last_updated="1971-01-01 00:00:00.0"/>
@@ -2512,6 +2515,7 @@
   <loan_offering_fund loan_offering_fund_id="17" fund_id="2" prd_offering_id="14"/>
   <loan_offering_fund loan_offering_fund_id="18" fund_id="2" prd_offering_id="15"/>
   <loan_penalty/>
+  <loan_penalty_schedule/>
   <loan_perf_history id="1" account_id="10" no_of_payments="0" loan_maturity_date="2011-04-29"/>
   <loan_perf_history id="2" account_id="11" no_of_payments="0"/>
   <loan_perf_history id="3" account_id="12" no_of_payments="0" loan_maturity_date="2010-04-30"/>

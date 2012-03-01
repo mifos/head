@@ -190,26 +190,27 @@ public class SavingsProductFormValidator implements Validator {
         Short digsAfterDec = configurationServiceFacade.getAccountingConfiguration().getDigitsAfterDecimal();
         Short digsBeforeDec = configurationServiceFacade.getAccountingConfiguration().getDigitsBeforeDecimal();
         int dot = formBean.getMaxWithdrawalAmount().toString().lastIndexOf(".");
-        int length = formBean.getMaxWithdrawalAmount().toString().length();
-        
+        int max = digsAfterDec + digsBeforeDec + dot;
+        int withdrawalLength = formBean.getMaxWithdrawalAmount().toString().length();
+        int depositLength = formBean.getAmountForDeposit().toString().length();
         if (formBean.getMaxWithdrawalAmount().toString().lastIndexOf(0, dot) > digsBeforeDec) {
-			errors.reject("MaxDigits.savingProduct.amount");       	
+			errors.reject("MaxDigitsBefore.savingProduct.withdrawal" , new String [] {digsBeforeDec.toString()} , null);       	
         }
-        if (formBean.getMaxWithdrawalAmount().toString().lastIndexOf(dot, length) > digsAfterDec) {
-    		errors.reject("MaxDigits.savingProduct.amount");
+        if (formBean.getMaxWithdrawalAmount().toString().lastIndexOf(dot, withdrawalLength) > digsAfterDec) {
+    		errors.reject("MaxDigitsAfter.savingProduct.withdrawal" , new String [] {digsAfterDec.toString()} , null);
         }
-        if (length > (digsAfterDec +dot +digsBeforeDec)) {
-        	errors.reject("MaxDigits.savingProduct.amount");
+        if (withdrawalLength > max) {
+        	errors.reject("MaxDigitsNumber.savingProduct.withdrawal" , new String [] {String.valueOf(max)} , null);
         }
         
         if (formBean.getAmountForDeposit().toString().lastIndexOf(0, dot) > digsBeforeDec) {
-			errors.reject("MaxDigits.savingProduct.amount");       	
+			errors.reject("MaxDigitsBefore.savingProduct.deposit" , new String [] {digsBeforeDec.toString()} , null);       	
         }
-        if (formBean.getAmountForDeposit().toString().lastIndexOf(dot, length) > digsAfterDec) {
-    		errors.reject("MaxDigits.savingProduct.amount");
+        if (formBean.getAmountForDeposit().toString().lastIndexOf(dot, depositLength) > digsAfterDec) {
+    		errors.reject("MaxDigitsAfter.savingProduct.deposit" , new String [] {digsAfterDec.toString()} , null);
         }
-        if (formBean.getAmountForDeposit().toString().length() > (digsAfterDec +dot +digsBeforeDec)) {
-        	errors.reject("MaxDigits.savingProduct.amount");
+        if (depositLength > max) {
+        	errors.reject("MaxDigitsNumber.savingProduct.deposit" , new String [] {String.valueOf(max)} , null);
         }
 
          

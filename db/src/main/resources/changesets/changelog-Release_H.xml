@@ -508,4 +508,74 @@
             </sql>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_5426_2" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+            ALTER TABLE penalty CHANGE COLUMN limit_min limit_min DECIMAL(21,4) NOT NULL;
+            ALTER TABLE penalty CHANGE COLUMN limit_max limit_max DECIMAL(21,4) NOT NULL;
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                ALTER TABLE penalty CHANGE COLUMN limit_min limit_min INT NOT NULL;
+                ALTER TABLE penalty CHANGE COLUMN limit_max limit_max INT NOT NULL;
+            </sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="MIFOS_5426_3" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+            CREATE TABLE loan_penalty_schedule (
+              loan_penalties_schedule_id INTEGER AUTO_INCREMENT NOT NULL,
+              id INTEGER NOT NULL,
+              installment_id INTEGER NOT NULL,
+              penalty_id SMALLINT NOT NULL,
+              account_penalty_id INTEGER NOT NULL,
+              amount DECIMAL(21,4),
+              amount_currency_id SMALLINT,
+              amount_paid DECIMAL(21,4) NOT NULL,
+              amount_paid_currency_id SMALLINT NOT NULL,
+              version_no INTEGER NOT NULL,
+              PRIMARY KEY (loan_penalties_schedule_id),
+              FOREIGN KEY (id)
+                REFERENCES loan_schedule(id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+              FOREIGN KEY (amount_currency_id)
+                REFERENCES currency(currency_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+              FOREIGN KEY (amount_paid_currency_id)
+                REFERENCES currency(currency_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+              FOREIGN KEY (penalty_id)
+                REFERENCES penalty(penalty_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+              FOREIGN KEY (account_penalty_id)
+                REFERENCES account_penalties(account_penalty_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION
+            ) ENGINE=InnoDB CHARACTER SET utf8;
+        </sql>
+        <rollback>
+            <dropTable tableName="loan_penalty_schedule"/>
+        </rollback>
+    </changeSet>
+    <changeSet id="MIFOS_5446_1" author="Pawel Gesek" context="expansion">
+        <sql endDelimiter=";">
+                ALTER TABLE image_info ADD COLUMN customer_picture_entity INTEGER REFERENCES customer_picture;
+                ALTER TABLE image_info MODIFY COLUMN path varchar(255) NULL DEFAULT NULL;
+                ALTER TABLE customer_picture 
+                    DROP FOREIGN KEY customer_picture_ibfk_1,
+                    DROP COLUMN customer_id;
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                ALTER TABLE image_info DROP COLUMN customer_picture_entity;
+                ALTER TABLE image_info MODIFY COLUMN path varchar(255) NOT NULL;
+                ALTER TABLE customer_picture 
+                    ADD COLUMN customer_id INTEGER NOT NULL,
+                    ADD FOREIGN KEY (customer_id) REFERENCES customer(customer_id);
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

@@ -129,8 +129,8 @@ explanation of the license and how it is applied.
 							</html-el:link>
 						</c:if> <BR>
 						<span class="fontnormalbold"> <mifos:mifoslabel
-							name="accounts.total" isColonRequired="Yes"></mifos:mifoslabel> <c:out
-							value='${BusinessKey.totalAmountDue}'></c:out>
+							name="accounts.total" isColonRequired="Yes"></mifos:mifoslabel> <fmt:formatNumber
+							value='${BusinessKey.totalAmountDue.amount}'/>
 						</span></td>
 					</tr>
 				</table>

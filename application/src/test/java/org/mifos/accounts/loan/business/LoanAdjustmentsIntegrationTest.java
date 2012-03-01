@@ -319,7 +319,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         CreateLoanAccount createLoanAccount = new CreateLoanAccount(client.getCustomerId(), loanOffering.getPrdOfferingId().intValue(), 
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue().intValue(), 
                 loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount, 
-                interestRate, disbursementDate, numberOfInstallments, 
+                interestRate, disbursementDate, null, numberOfInstallments,
                 minAllowedNumberOfInstallments, maxAllowedNumberOfInstallments, 
                 graceDuration, sourceOfFundId, loanPurposeId, 
                 collateralTypeId, collateralNotes, externalId, 

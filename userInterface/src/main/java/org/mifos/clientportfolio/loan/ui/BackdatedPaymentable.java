@@ -55,4 +55,6 @@ public interface BackdatedPaymentable extends Serializable {
     void setApplicablePenalties(List<PenaltyDto> applicablePenalties);
 
     void setLoanAccountFormBean(LoanAccountFormBean loanAccountFormBean);
+
+    void setActualPaymentTypes(List<Short> actualPaymentTypes);
 }

@@ -1008,11 +1008,19 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
-
+        
         SavingsBO savingsAccount = this.savingsDao.findBySystemId(globalAccountNum);
+        CustomerBO customerBO = savingsAccount.getCustomer();
         savingsAccount.updateDetails(userContext);
 
+        try {
+            personnelDao.checkAccessPermission(userContext, customerBO.getOfficeId(), customerBO.getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
+        }
+        
         List<SavingsTransactionHistoryDto> savingsTransactionHistoryViewList = new ArrayList<SavingsTransactionHistoryDto>();
+        
         // Check for order-by clause in AccountBO.hbm.xml,
         // AccountPayment.hbm.xml and AccountTrxnEntity.hbm.xml for
         // accountPaymentSet ,

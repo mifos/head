@@ -148,6 +148,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
@@ -1318,6 +1319,11 @@ public class LoanBO extends AccountBO implements Loan {
     @Override
     protected void writeOff(Date transactionDate) throws AccountException {
         try {
+            if (!isTrxnDateValid(transactionDate,
+                    new CustomerPersistence().getLastMeetingDateForCustomer(getCustomer().getCustomerId()),
+                    new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled())) {
+                throw new BusinessRuleException("errors.invalidTxndate");
+            }
             Short personnelId = this.getUserContext().getId();
             PersonnelBO currentUser = legacyPersonnelDao.getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
@@ -1345,6 +1351,11 @@ public class LoanBO extends AccountBO implements Loan {
     @Override
     protected void reschedule(Date transactionDate) throws AccountException {
         try {
+            if (!isTrxnDateValid(transactionDate,
+                    new CustomerPersistence().getLastMeetingDateForCustomer(getCustomer().getCustomerId()),
+                    new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled())) {
+                throw new BusinessRuleException("errors.invalidTxndate");
+            }
             Short personnelId = this.getUserContext().getId();
             PersonnelBO currentUser = legacyPersonnelDao.getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
@@ -2239,14 +2250,31 @@ public class LoanBO extends AccountBO implements Loan {
         return !havePaymentsBeenMade() || MoneyUtils.isRoundedAmount(charge);
     }
     
-    public void applyPenalty(final String penaltyName, final Money charge,
-            final AccountActionDateEntity accountActionDateEntity) {
+    public void applyPenalty(final PenaltyBO penalty, final Money charge,
+            final AccountActionDateEntity accountActionDateEntity, final AccountPenaltiesEntity penaltiesEntity) {
         LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
         loanScheduleEntity.setPenalty(loanScheduleEntity.getPenalty().add(charge));
         getLoanSummary().updateOriginalPenalty(charge);
 
         addLoanActivity(new LoanActivityEntity(this, personnel, new Money(getCurrency()), new Money(getCurrency()),
-                new Money(getCurrency()), charge, getLoanSummary(), penaltyName + " applied"));
+                new Money(getCurrency()), charge, getLoanSummary(), penalty.getPenaltyName() + " applied"));
+        
+        List<LoanPenaltyScheduleEntity> list = new ArrayList<LoanPenaltyScheduleEntity>(loanScheduleEntity.getLoanPenaltyScheduleEntities());
+        LoanPenaltyScheduleEntity entity = null;
+        for(LoanPenaltyScheduleEntity item : list) {
+            if(item.getPenalty().getPenaltyId().equals(penalty.getPenaltyId())) {
+                entity = item;
+                break;
+            }
+        }
+        
+        if(entity == null) {
+            loanScheduleEntity.addLoanPenaltySchedule(new LoanPenaltyScheduleEntity(loanScheduleEntity, penalty, penaltiesEntity, charge));
+        } else {
+            entity.setPenaltyAmount(entity.getPenaltyAmount().add(charge));
+        }
+        
+        penaltiesEntity.setLastAppliedDate(new DateTimeService().getCurrentJavaDateTime());
     }
     
     private void applyMiscCharge(final Short chargeType, final Money charge,
@@ -2781,7 +2809,8 @@ public class LoanBO extends AccountBO implements Loan {
 
         addFeeTransactions(loanTrxnDetailEntity, loanSchedule.getAccountFeesActionDetails());
         accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-        loanSchedule.makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY_INTEREST, interestDue);
+        loanSchedule.makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY_INTEREST,
+                interestDue, accountPaymentEntity.getPaymentDate());
         setCalculatedInterestIfApplicable(loanTrxnDetailEntity, loanSchedule, interestDue);
         updatePaymentDetails(accountActionTypes, principal, interest, penalty, fees);
     }
@@ -2804,7 +2833,8 @@ public class LoanBO extends AccountBO implements Loan {
 
         addFeeTransactions(loanTrxnDetailEntity, loanSchedule.getAccountFeesActionDetails());
         accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-        loanSchedule.makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY, Money.zero(getCurrency()));
+        loanSchedule.makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY,
+                Money.zero(getCurrency()), accountPaymentEntity.getPaymentDate());
         getLoanSummary().decreaseBy(null, interestDue, null, null);
         setCalculatedInterestIfApplicable(loanTrxnDetailEntity, loanSchedule, Money.zero(getCurrency()));
         updatePaymentDetails(accountActionTypes, principal, null, penalty, fees);
@@ -2834,7 +2864,8 @@ public class LoanBO extends AccountBO implements Loan {
                     new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
 
             accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-            loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST, loanSchedule.getInterestDue());
+            loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST,
+                    loanSchedule.getInterestDue(), accountPaymentEntity.getPaymentDate());
             loanSummary.decreaseBy(null, interest, penalty, fees);
             updatePaymentDetails(accountActionTypes, principal, null, null, null);
         }
@@ -2857,7 +2888,8 @@ public class LoanBO extends AccountBO implements Loan {
                     new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
 
             accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-            loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST, loanSchedule.getInterestDue());
+            loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST,
+                    loanSchedule.getInterestDue(), accountPaymentEntity.getPaymentDate());
             loanSummary.decreaseBy(null, interest, penalty, fees);
             updatePaymentDetails(accountActionTypes, principal, null, null, null);
         }
@@ -3404,12 +3436,42 @@ public class LoanBO extends AccountBO implements Loan {
 	                    new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
 
 	            accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-	            loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST, loanSchedule.getInterestDue());
+	            loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST,
+                        loanSchedule.getInterestDue(), accountPaymentEntity.getPaymentDate());
 	            loanSummary.decreaseBy(null, interest, penalty, fees);
 	            updatePaymentDetails(accountActionTypes, principal, null, null, null);
         	}
         }
 
+    }
+    
+    public List<LoanScheduleEntity> getDetailsOfLateInstallmentsOn(LocalDate date) {
+        List<LoanScheduleEntity> lateInstallments = new ArrayList<LoanScheduleEntity>();
+
+        Set<AccountActionDateEntity> accountActionDates = getAccountActionDates();
+        
+        if (accountActionDates!= null && !accountActionDates.isEmpty()) {
+            for (AccountActionDateEntity accountAction : accountActionDates) {
+                if (!accountAction.isPaid() && accountAction.isBefore(date)) {
+                    lateInstallments.add((LoanScheduleEntity)accountAction);
+                }
+            }
+        }
+        return lateInstallments;
+    }
+    
+    public Money getTotalPenalty(final MifosCurrency currency, final Short penaltyId) {
+        Money cash = new Money(currency);
+        
+        for(LoanScheduleEntity installment : getLoanScheduleEntities()) {
+            for(LoanPenaltyScheduleEntity entity : installment.getLoanPenaltyScheduleEntities()) {
+                if(entity.getPenalty().getPenaltyId().equals(penaltyId)) {
+                    cash = cash.add(entity.getPenaltyAmount());
+                }
+            }
+        }
+        
+        return cash;
     }
 
 	public void rescheduleRemainingUnpaidInstallments(LoanSchedule loanSchedule, LocalDate asOf) {

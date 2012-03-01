@@ -72,6 +72,11 @@
             <key column="id" update="false" />
             <one-to-many class="org.mifos.accounts.loan.business.LoanFeeScheduleEntity" />
         </set>
+        
+        <set name="loanPenaltiesSchedule" cascade="all,delete-orphan" lazy="true" inverse="true" access="field">
+            <key column="id" update="false" />
+            <one-to-many class="org.mifos.accounts.loan.business.LoanPenaltyScheduleEntity" />
+        </set>
 
     </class>
 

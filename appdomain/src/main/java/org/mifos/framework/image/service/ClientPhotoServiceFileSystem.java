@@ -97,7 +97,12 @@ public class ClientPhotoServiceFileSystem implements ClientPhotoService {
     }
 
     @Override
-    public byte[] getData(String path) {
-        return ImageStorageManager.getData(path);
+    public byte[] getData(ClientPhoto clientPhoto) {
+        if (clientPhoto == null || clientPhoto.getImageInfo() == null) {
+            return new byte[0];
+        } else {
+            final String path = clientPhoto.getImageInfo().getPath();
+            return ImageStorageManager.getData(path);
+        }
     }
 }

@@ -312,6 +312,7 @@ public class LoanAccountController {
         List<DateTime> actualPaymentDates = new ArrayList<DateTime>();
         List<Number> installmentAmounts = new ArrayList<Number>();
         List<Number> actualPaymentAmounts = new ArrayList<Number>();
+        List<Short> actualPaymentTypes = new ArrayList<Short>();
 
         BigDecimal totalLoanInterest = BigDecimal.ZERO;
         BigDecimal totalLoanFees = BigDecimal.ZERO;
@@ -328,6 +329,7 @@ public class LoanAccountController {
             } else {
                 actualPaymentAmounts.add(Double.valueOf("0.0"));
             }
+            actualPaymentTypes.add(null);
         }
         loanScheduleFormBean.setInstallments(installments);
         loanScheduleFormBean.setVariableInstallments(loanSchedule.getInstallments());
@@ -335,6 +337,7 @@ public class LoanAccountController {
         if (resetActualPaymentDatesAndAmountsForRedoLoan) {
             loanScheduleFormBean.setActualPaymentDates(actualPaymentDates);
             loanScheduleFormBean.setActualPaymentAmounts(actualPaymentAmounts);
+            loanScheduleFormBean.setActualPaymentTypes(actualPaymentTypes);
         }
         
         loanScheduleFormBean.setLoanPrincipal(BigDecimal.valueOf(formBean.getAmount().doubleValue()));
@@ -570,7 +573,7 @@ public class LoanAccountController {
 
         CreateLoanAccount loanAccountDetails = new CreateLoanAccount(formBean.getCustomerId(),
                 formBean.getProductId(), accountState, loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount,
-                formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments().intValue(),
+                formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getDisbursalPaymentTypeId(), formBean.getNumberOfInstallments().intValue(),
                 formBean.getMinNumberOfInstallments().intValue(), formBean.getMaxNumberOfInstallments().intValue(),
                 formBean.getGraceDuration().intValue(), formBean.getFundId(),
                 formBean.getLoanPurposeId(), formBean.getCollateralTypeId(), formBean.getCollateralNotes(),
@@ -585,7 +588,8 @@ public class LoanAccountController {
         for (Number actualPaymentAmount : actualPaymentAmountDetails) {
             if (actualPaymentAmount.doubleValue() > 0) {
                 LocalDate transactionDate = new LocalDate(loanScheduleFormBean.getActualPaymentDates().get(index));
-                backdatedLoanPayments.add(new LoanPaymentDto(actualPaymentAmount.toString(), transactionDate, null, null));
+                backdatedLoanPayments.add(new LoanPaymentDto(actualPaymentAmount.toString(), transactionDate,
+                        loanScheduleFormBean.getActualPaymentTypes().get(index), null));
             }
             index++;
         }
@@ -633,7 +637,7 @@ public class LoanAccountController {
 
         CreateLoanAccount loanAccountDetails = new CreateLoanAccount(formBean.getCustomerId(),
                 formBean.getProductId(), accountState, loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount,
-                formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments().intValue(),
+                formBean.getInterestRate().doubleValue(), disbursementDate, null, formBean.getNumberOfInstallments().intValue(),
                 formBean.getMinNumberOfInstallments().intValue(), formBean.getMaxNumberOfInstallments().intValue(),
                 formBean.getGraceDuration().intValue(), formBean.getFundId(),
                 formBean.getLoanPurposeId(), formBean.getCollateralTypeId(), formBean.getCollateralNotes(),

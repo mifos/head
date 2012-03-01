@@ -76,7 +76,7 @@ public class RedoLoanAccountPreviewPage extends AbstractPage {
                 String value = installment[columnIndex];
                 int row = rowIndex + 1;
                 if (!value.equals("")) {
-                    int column = columnIndex + 8;
+                    int column = columnIndex + 9;
                     String actualCellValue = selenium.getText(scheduleTable + "//tr[" + row + "]/td[" + column + "]");
                     Assert.assertEquals(actualCellValue, value, "In Schedule Table for row " + row + " and column " + column + " expected value is " + value + " but the actual value is " + actualCellValue);
                 }

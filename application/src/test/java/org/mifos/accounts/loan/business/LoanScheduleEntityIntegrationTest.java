@@ -34,6 +34,7 @@ import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.util.helpers.OverDueAmounts;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCase {
@@ -172,7 +173,8 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
     public void testMakeEarlyRepaymentEnteriesForFeePayment() {
         for (AccountActionDateEntity accountAction : groupLoan.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
-            accountActionDateEntity.makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY_INTEREST, accountActionDateEntity.getInterestDue());
+            accountActionDateEntity.makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY_INTEREST,
+                    accountActionDateEntity.getInterestDue(), new DateTimeService().getCurrentJavaSqlDate());
             Assert.assertEquals(accountActionDateEntity.getPrincipal(), accountActionDateEntity.getPrincipalPaid());
             Assert.assertEquals(accountActionDateEntity.getInterest(), accountActionDateEntity.getInterestPaid());
             Assert.assertEquals(accountActionDateEntity.getPenalty(), accountActionDateEntity.getPenaltyPaid());
@@ -190,7 +192,8 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
             Money preRepaymentPenalty = accountActionDateEntity.getPenalty();
             Money preRepaymentMiscFee = accountActionDateEntity.getMiscFee();
 
-            accountActionDateEntity.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST, accountActionDateEntity.getInterestDue());
+            accountActionDateEntity.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST,
+                    accountActionDateEntity.getInterestDue(), new DateTimeService().getCurrentJavaSqlDate());
             Assert.assertEquals(accountActionDateEntity.getPrincipal(), accountActionDateEntity.getPrincipalPaid());
             Assert.assertEquals(accountActionDateEntity.getInterest(), preRepaymentInterest);
             Assert.assertEquals(accountActionDateEntity.getPenalty(), preRepaymentPenalty);

@@ -372,7 +372,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         ClientPhoto cp = cps.read(clientBO.getCustomerId().longValue());
         InputStream in = null;
         if(cp != null) {
-            in = new ByteArrayInputStream(cps.getData(cp.getImageInfo().getPath()));
+            in = new ByteArrayInputStream(cps.getData(cp));
             response.setContentType(cp.getImageInfo().getContentType());
         } else {
             in = ClientPhotoService.class.getResourceAsStream("/org/mifos/image/nopicture.png");

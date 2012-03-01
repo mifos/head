@@ -28,6 +28,7 @@ import java.sql.Date;
 import java.util.List;
 import junit.framework.Assert;
 
+import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -40,6 +41,7 @@ import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
@@ -54,6 +56,7 @@ import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.business.MifosConfigurationManager;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerAccountBO;
@@ -651,6 +654,10 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     public void testGetAllClosedAccounts() throws Exception {
         getCustomer();
         PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        clientAccount.approve(loggedInUser, "approved", new LocalDate());
+        ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+        int lsim = configurationPersistence.getConfigurationValueInteger(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED);
+        configurationPersistence.updateConfigurationKeyValueInteger(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED, 1);
         groupAccount.changeStatus(AccountState.LOAN_CANCELLED, AccountStateFlag.LOAN_WITHDRAW.getValue(),"WITHDRAW LOAN ACCOUNT", loggedInUser);
         clientAccount.changeStatus(AccountState.LOAN_CLOSED_WRITTEN_OFF, null, "WITHDRAW LOAN ACCOUNT", loggedInUser);
         clientSavingsAccount.changeStatus(AccountState.SAVINGS_CANCELLED, AccountStateFlag.SAVINGS_REJECTED.getValue(), "WITHDRAW LOAN ACCOUNT", loggedInUser);
@@ -659,6 +666,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         TestObjectFactory.updateObject(clientAccount);
         TestObjectFactory.updateObject(clientSavingsAccount);
         StaticHibernateUtil.flushSession();
+        new ConfigurationPersistence().updateConfigurationKeyValueInteger(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED, lsim);
         Assert.assertEquals(1, customerPersistence.getAllClosedAccount(client.getCustomerId(),
                 AccountTypes.LOAN_ACCOUNT.getValue()).size());
         Assert.assertEquals(1, customerPersistence.getAllClosedAccount(group.getCustomerId(),
