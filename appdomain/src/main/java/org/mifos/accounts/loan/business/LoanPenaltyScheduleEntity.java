@@ -24,6 +24,7 @@ import static org.mifos.framework.util.helpers.NumberUtils.min;
 
 import java.util.Date;
 
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.penalties.business.PenaltyBO;
@@ -161,6 +162,10 @@ public class LoanPenaltyScheduleEntity extends AbstractEntity implements Compara
 
     public void setLastApplied(final Date lastApplied) {
         this.lastApplied = lastApplied;
+    }
+    
+    public boolean isOn(LocalDate date) {
+        return new LocalDate(this.lastApplied).isEqual(date);
     }
     
 }

@@ -95,13 +95,13 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         
         changeDateTime(04, 1);
         penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
-                new String[] { "129", "0", "129" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "39", "489" }, { "32", "482" }, { "25", "475" }, { "18", "468" },
-                                 { "11", "461" }, { "4", "454" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" } },
-                new String[] { "3,279", "05/04/2012", "2,829" }
+                new String[] { "123", "0", "123" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "38", "488" }, { "31", "481" }, { "24", "474" }, { "17", "467" },
+                                 { "10", "460" }, { "3", "453" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" } },
+                new String[] { "3,273", "05/04/2012", "2,823" }
         );
         
-        verifyAfterRepayLoan(accountId, new String[] { "0", "39", "32", "25", "18", "11", "4", "0", "0", "0" });
+        verifyAfterRepayLoan(accountId, new String[] { "0", "38", "31", "24", "17", "10", "3", "0", "0", "0" });
     }
     
     @Test(enabled = true)

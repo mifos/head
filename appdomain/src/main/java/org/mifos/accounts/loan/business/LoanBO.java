@@ -2267,6 +2267,8 @@ public class LoanBO extends AccountBO implements Loan {
             entity.setPenaltyAmount(entity.getPenaltyAmount().add(charge));
             entity.setLastApplied(date);
         }
+        
+        penaltiesEntity.setLastAppliedDate(new DateTimeService().getCurrentJavaDateTime());
     }
     
     private void applyMiscCharge(final Short chargeType, final Money charge,
