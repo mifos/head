@@ -36,7 +36,8 @@ explanation of the license and how it is applied.
 	
 	<script>
 	function returnToDetails(){
-		loanAccountActionForm.action="loanAccountAction.do?method=cancelChangeLog";
+		loanAccountActionForm.action="viewLoanAccountDetails.ftl";
+		loanAccountActionForm.method="get";
 		loanAccountActionForm.submit();
 	}
 	</script>

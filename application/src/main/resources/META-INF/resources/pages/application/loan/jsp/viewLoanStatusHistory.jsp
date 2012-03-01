@@ -29,7 +29,8 @@ explanation of the license and how it is applied.
 <script language="javascript">
 	function fun_return(form)
 		{
-			form.action="loanAccountAction.do?method=get";
+			form.action="viewLoanAccountDetails.ftl";
+			form.method="get";
 			form.submit();
 		}
 </script>

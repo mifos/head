@@ -31,9 +31,13 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="viewstatuschangehistory"></span>
 	<SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>
+    <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" scope="session" />    
+	<form name="goBackToSavingsAccountDetails" method="get" action ="viewSavingsAccountDetails.ftl">
+		<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+	</form>   
+	
 		<html-el:form method="post" action="/savingsAction.do?method=editPreview" >
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>

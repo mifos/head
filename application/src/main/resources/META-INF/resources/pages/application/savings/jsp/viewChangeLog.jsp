@@ -35,7 +35,8 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="viewChangeLog"></span>
 	<script>
 	function returnToDetails(){
-		savingsActionForm.action="savingsAction.do?method=cancelChangeLog";
+		savingsActionForm.action="viewSavingsAccountDetails.ftl";
+		savingsActionForm.method="get";
 		savingsActionForm.submit();
 	}
 	</script>
