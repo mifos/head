@@ -71,7 +71,8 @@ public class ViewProductCategoriesTest extends UiTestCaseBase {
                 "Savings",
                 "Other"
         };
-        viewProductCategoriesPage.verifyProductCategories(expectedData);
+        viewProductCategoriesPage.verifyProductCategories(expectedData);        
+        viewProductCategoriesPage.navigateToViewProductCategoryDetails("Other");
     }
 
     private AdminPage loginAndGoToAdminPage() {

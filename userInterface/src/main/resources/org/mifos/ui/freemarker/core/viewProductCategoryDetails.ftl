@@ -19,7 +19,9 @@
 *  explanation of the license and how it is applied.
 --]
 
+[#include "layout.ftl"]
 [@adminLeftPaneLayout]
+<span id="page.id" title="view_product_category"></span>
   <div class=" content">
     <div class="width100prc">
           [@widget.crumbs breadcrumbs/]

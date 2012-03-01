@@ -17,33 +17,18 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.test.acceptance.framework.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class ViewProductCategoriesPage extends MifosPage {
-    public ViewProductCategoriesPage(Selenium selenium) {
+public class ViewProductCategoryDetailsPage extends MifosPage {
+	
+    public ViewProductCategoryDetailsPage(Selenium selenium) {
         super(selenium);
-        verifyPage("viewProductCategories");
+        verifyPage("view_product_category");
     }
 
-    public ViewProductCategoriesPage verifyPage() {
-        verifyPage("viewProductCategories");
-        return this;
-    }
-
-    public void verifyProductCategories(String[] expectedData) {
-        for (String expectedProductCategory : expectedData) {
-            Assert.assertTrue(selenium.isTextPresent(expectedProductCategory), "Expected Product: " + expectedProductCategory);
-        }
-    }
-    
-    public ViewProductCategoryDetailsPage navigateToViewProductCategoryDetails(String name) {
-        selenium.click("link="+name);
-        waitForPageToLoad();
-        return new ViewProductCategoryDetailsPage(selenium);
-    }
 }
