@@ -36,7 +36,8 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="ViewChangeLog"></span>
 	<script>
 	function returnToDetails(){
-		groupCustActionForm.action="groupCustAction.do?method=cancelChangeLog";
+		groupCustActionForm.action="viewGroupDetails.ftl";
+		groupCustActionForm.method="get";
 		groupCustActionForm.submit();
 	}
 	</script>
@@ -99,7 +100,7 @@ explanation of the license and how it is applied.
 				</tr>
 			</table>
 			<br>
-			
+			<html-el:hidden property="globalCustNum" value="${BusinessKey.globalCustNum}" />
 			<html-el:hidden property="entityType" value="${param.entityType}"/> 
 		</html-el:form>
 	</tiles:put>

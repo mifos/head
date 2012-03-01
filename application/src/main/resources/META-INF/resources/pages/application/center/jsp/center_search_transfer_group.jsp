@@ -34,14 +34,15 @@ explanation of the license and how it is applied.
 		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 <script language="javascript">
   function goToCancelPage(){
-	groupTransferActionForm.submit();
+  	goBackToViewGroupDetails.submit();
   }
 </script>
-<html-el:form method="post" action ="groupTransferAction.do?method=cancel">
-	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-</html-el:form>
-<html-el:form method="post" action ="centerCustAction.do?method=searchTransfer">
 <c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
+<form name="goBackToViewGroupDetails" method="get" action ="viewGroupDetails.ftl">
+	<input type="hidden" property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+	<input type="hidden" name='globalCustNum' value="${BusinessKey.globalCustNum}"/>
+</form>
+<html-el:form method="post" action ="centerCustAction.do?method=searchTransfer">
 <html-el:hidden property="input" value="CenterSearch_TransferGroup"/> 
 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 	<table width="95%" border="0" cellpadding="0" cellspacing="0">

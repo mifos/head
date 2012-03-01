@@ -663,7 +663,11 @@ explanation of the license and how it is applied.
 							</table>
 					</c:if>
 							<span class="paddingL10"> <br>
-								<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Create&source=Client&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+							  	<c:set value="${requestScope.backPageUrl}" var="backPageUrl"/>
+	                            <c:if test="${ empty requestScope.backPageUrl}">
+                            		<c:set value="viewClientDetails.ftl?globalCustNum=${clientInformationDto.clientDisplay.globalCustNum}" var="backPageUrl"/>
+                            	</c:if>
+								<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Create&source=Client&backPageUrl=${backPageUrl}">
 								    <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
 								</a> <br>
                                 <c:if test="${containsQGForCloseClient}">

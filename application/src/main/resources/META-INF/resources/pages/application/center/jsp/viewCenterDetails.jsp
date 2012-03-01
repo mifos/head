@@ -474,7 +474,11 @@ explanation of the license and how it is applied.
 							</c:if>
 							<span class="fontnormal">
 	                            <c:set var="questionnaireFor" scope="session" value="${centerInformationDto.centerDisplay.displayName}"/>
-	                            <a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${centerInformationDto.centerDisplay.customerId}&event=Create&source=Center&backPageUrl=centerCustAction.do?method%3Dget%26globalAccountNum%3D${client.globalCustNum}%26recordOfficeId%3D${centerInformationDto.centerDisplay.branchId}%26recordLoanOfficerId%3D${centerInformationDto.centerDisplay.loanOfficerId}">
+	                            <c:set value="${requestScope.backPageUrl}" var="backPageUrl"/>
+	                            <c:if test="${ empty requestScope.backPageUrl}">
+	                            	<c:set value="viewCenterDetails.ftl?globalCustNum=${centerInformationDto.centerDisplay.globalCustNum}" var="backPageUrl"/>
+	                            </c:if>
+	                            <a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${centerInformationDto.centerDisplay.customerId}&event=Create&source=Center&backPageUrl=${backPageUrl}">
 	                                <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
 	                            </a>
 	                            <br/>

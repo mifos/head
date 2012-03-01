@@ -84,15 +84,30 @@ function showMeetingFrequency(){
 		
 		}
 }
-function goToCancelPage(){
-	meetingActionForm.action="meetingAction.do?method=cancelUpdate";
-	meetingActionForm.submit();	
+function goToCancelPage(customerLevel){ 
+	switch(customerLevel){
+	case ${CustomerLevel.CLIENT.value}:
+		goBackToViewCustomerDetails.action="viewClientDetails.ftl";
+		break;
+	case ${CustomerLevel.GROUP.value}:
+		goBackToViewCustomerDetails.action="viewGroupDetails.ftl";
+		break;
+	case ${CustomerLevel.CENTER.value}:
+		goBackToViewCustomerDetails.action="viewCenterDetails.ftl";
+		break;
+	default:
+		goBackToViewCustomerDetails.action="clientsAndAccounts.ftl"
+	}
+	goBackToViewCustomerDetails.submit();	
  }
 
 </script>
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+		<form name="goBackToViewCustomerDetails" method="get">
+			<input type="hidden" name='globalCustNum' value="${BusinessKey.globalCustNum}"/>
+		</form>
 		<html-el:form action="meetingAction.do?method=update">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/> </span>
@@ -261,7 +276,7 @@ function goToCancelPage(){
 							<html-el:submit styleClass="buttn">
 								<mifos:mifoslabel name="meeting.button.save" bundle="MeetingResources"/>
 							</html-el:submit> &nbsp; 
-							<html-el:button	onclick="goToCancelPage();" property="cancelButton"
+							<html-el:button	onclick="goToCancelPage(${param.customerLevel});" property="cancelButton"
 								styleClass="cancelbuttn">
 								<mifos:mifoslabel name="office.button.cancel" bundle="OfficeResources"/>
 							</html-el:button>

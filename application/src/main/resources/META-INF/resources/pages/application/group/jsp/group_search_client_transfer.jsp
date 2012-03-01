@@ -33,22 +33,23 @@ explanation of the license and how it is applied.
 
 		<script language="javascript">
   function goToCancelPage(){
-	clientTransferActionForm.submit();
+	  goBackToViewClientDetails.submit();
   }
 </script>
 <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
+<c:set var="BusinessKey"
+	value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
-		<html-el:form method="post"
-			action="clientTransferAction.do?method=cancel">
+		<form name="goBackToViewClientDetails" method="get"
+			action="viewClientDetails.ftl">
+			<html-el:hidden property="globalCustNum" value="${BusinessKey.globalCustNum}" />
 			<html-el:hidden property="currentFlowKey"
 				value="${requestScope.currentFlowKey}" />
-		</html-el:form>
+		</form>
 
 		<html-el:form action="groupCustAction.do?method=search">
 			<html-el:hidden property="currentFlowKey"
 				value="${requestScope.currentFlowKey}" />
-			<c:set var="BusinessKey"
-				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt">

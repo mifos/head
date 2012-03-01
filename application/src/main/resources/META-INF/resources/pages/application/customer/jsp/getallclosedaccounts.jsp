@@ -34,12 +34,24 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="GetAllClosedAccounts"></span>
 		<script language="javascript">
-			function goToCancelPage(form){
-				form.action="custAction.do?method=getBackToDetailsPage";
+			function goToCancelPage(form, input){
+				switch(input){
+				case 'client':
+					form.action="viewClientDetails.ftl?";
+					break;
+				case 'group':
+					form.action="viewGroupDetails.ftl";
+					break;
+				case 'center':
+					form.action="viewCenterDetails.ftl?";
+					break;
+				default:
+					form.action="clientsAndAccounts.ftl";
+				}
 				form.submit();
  			 }
  	</script>
-		<html-el:form action="custAction.do" method="post">
+		<html-el:form action="custAction.do" method="get">
 			<c:set
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 				var="BusinessKey" />
@@ -184,7 +196,7 @@ explanation of the license and how it is applied.
 						<tr>
 							<td align="center"><html-el:button styleId="getallclosedaccounts.button.cancel" property="cancel"
 								styleClass="buttn"
-								onclick="goToCancelPage(this.form)">
+								onclick="goToCancelPage(this.form, '${sessionScope.custActionForm.input}')">
 								<mifos:mifoslabel name="client.butbachdetpage"
 									bundle="ClientUIResources" />
 							</html-el:button></td>

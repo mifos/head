@@ -604,7 +604,11 @@ explanation of the license and how it is applied.
 							<%--Historical data link--%>
 							<span class="fontnormal">
                             <c:set var="questionnaireFor" scope="session" value="${groupInformationDto.groupDisplay.displayName}"/>
-                            <a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${groupInformationDto.groupDisplay.customerId}&event=Create&source=Group&backPageUrl=groupCustAction.do?method%3Dget%26globalAccountNum%3D${client.globalCustNum}%26recordOfficeId%3D${groupInformationDto.groupDisplay.branchId}%26recordLoanOfficerId%3D${groupInformationDto.groupDisplay.loanOfficerId}">
+                            <c:set value="${requestScope.backPageUrl}" var="backPageUrl"/>
+                            <c:if test="${ empty requestScope.backPageUrl}">
+                            	<c:set value="viewGroupDetails.ftl?globalCustNum=${groupInformationDto.groupDisplay.globalCustNum}" var="backPageUrl"/>
+                            </c:if>
+                            <a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${groupInformationDto.groupDisplay.customerId}&event=Create&source=Group&backPageUrl=${backPageUrl}">
                                 <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
                             </a>
                             <br/>

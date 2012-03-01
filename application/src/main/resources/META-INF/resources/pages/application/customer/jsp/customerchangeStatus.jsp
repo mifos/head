@@ -32,8 +32,20 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="CustomerChangeStatus"></span>
 		<script language="javascript">
-			function goToCancelPage(form){
-				form.action="editCustomerStatusAction.do?method=cancelStatus";
+			function goToCancelPage(form, input){
+				switch(input){
+				case 'client':
+					form.action="viewClientDetails.ftl?";
+					break;
+				case 'group':
+					form.action="viewGroupDetails.ftl";
+					break;
+				case 'center':
+					form.action="viewCenterDetails.ftl?";
+					break;
+				default:
+					form.action="clientsAndAccounts.ftl";
+				}
 				form.submit();
  			 }
 			function manageFlag(i) {
@@ -53,7 +65,7 @@ explanation of the license and how it is applied.
 				}
  			 }
 		</script>
-		<html-el:form action="editCustomerStatusAction.do?method=previewStatus">
+		<html-el:form method="get" action="editCustomerStatusAction.do?method=previewStatus">
 			<c:set
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 				var="BusinessKey" />
@@ -179,7 +191,7 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="Customer.preview" />
 							</html-el:submit> &nbsp;&nbsp; <html-el:button styleId="customerchangeStatus.button.cancel" property="btn"
 								styleClass="cancelbuttn"
-								onclick="goToCancelPage(this.form)">
+								onclick="goToCancelPage(this.form, '${sessionScope.editCustomerStatusActionForm.input}')">
 								<mifos:mifoslabel name="Customer.cancel" />
 							</html-el:button></td>
 						</tr>
@@ -190,6 +202,7 @@ explanation of the license and how it is applied.
 				</tr>
 			</table>
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+			<html-el:hidden property="globalCustNum" value="${sessionScope.editCustomerStatusActionForm.globalAccountNum}" />
 		</html-el:form>
 		<script language="javascript">
 				if(editCustomerStatusActionForm.newStatusId.length != undefined){

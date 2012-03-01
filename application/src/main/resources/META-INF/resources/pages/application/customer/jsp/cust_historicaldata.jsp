@@ -33,7 +33,8 @@ explanation of the license and how it is applied.
 
 		<script language="javascript">
   function goToCancelPage(){
-	custHistoricalDataActionForm.action="custHistoricalDataAction.do?method=cancelHistoricalData";
+	custHistoricalDataActionForm.action="view" + custHistoricalDataActionForm.type.value + "Details.ftl";
+	custHistoricalDataActionForm.method="get";
 	custHistoricalDataActionForm.submit();
   }
 </script>
@@ -145,6 +146,7 @@ explanation of the license and how it is applied.
 			</table>
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<html-el:hidden property="globalCustNum" value="${BusinessKey.globalCustNum}" />
+			<html-el:hidden property="type" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

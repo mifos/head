@@ -41,14 +41,16 @@ explanation of the license and how it is applied.
                 <script language="javascript" src="pages/application/client/js/client.js"></script>
 		<script language="javascript">
 		function goToCancelPage(){
-			clientCustActionForm.action="clientCustAction.do?method=cancel";
-			clientCustActionForm.submit();
+			goBackToViewClientDetails.submit();
 		}
 		</script>
+	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
+			   var="BusinessKey" />
+	<form name="goBackToViewClientDetails" method="get" action ="viewClientDetails.ftl">
+		<input type="hidden" name='globalCustNum' value="${BusinessKey.globalCustNum}"/>
+	</form>
 	<html-el:form action="clientCustAction.do?method=previewEditPersonalInfo"
 			enctype="multipart/form-data" onsubmit="return chkForValidDates()">
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
-				   var="BusinessKey" />
 			<html-el:hidden property="input" value="editPersonalInfo" />
 			<html-el:hidden property="status" value="${BusinessKey.customerStatus.id}" />
 
