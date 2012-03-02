@@ -55,13 +55,16 @@
 		</div>
 		[#list customerHierarchy.clients as client]
 		<div>
+			<img src="pages/framework/images/trans.gif" width="5" height="5">
+		</div>
+		<div>
 			<div>
 				[#assign number = number + 1 /]
 				${number}.
 				[@spring.message "${ConfigurationConstants.CLIENT}" /]
 				<span class="headingblue">
 					<a href="viewClientDetails.ftl?globalCustNum=${client.clientGlobalCustNum}">
-						${client.clientName}: ${client.clientGlobalCustNum}
+						${client.clientName}: [@spring.message "ID" /] ${client.clientGlobalCustNum}
 					</a>
 				</span>
 			</div>
@@ -135,6 +138,9 @@
 		</div>
 		[/#list]
 		[#list customerHierarchy.groups as group]
+		<div>
+			<img src="pages/framework/images/trans.gif" width="5" height="5">
+		</div>
 		<div>
 			<div>
 				[#assign number = number + 1 /]
@@ -210,6 +216,9 @@
 		</div>
 		[/#list]
 		[#list customerHierarchy.centers as center]
+		<div>
+			<img src="pages/framework/images/trans.gif" width="5" height="5">
+		</div>
 		<div>
 			<div>
 				[#assign number = number + 1 /]

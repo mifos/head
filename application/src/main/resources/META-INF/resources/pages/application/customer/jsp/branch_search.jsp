@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="BranchStatus"></span>
 
-		<html-el:form action="custSearchAction.do">
+		<form action="searchResult.ftl">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 
 				<c:set var="Office"
@@ -93,8 +93,9 @@ explanation of the license and how it is applied.
 										<font class="fontnormalRedBold"><span id="branch_search.error.message"><html-el:errors
 											bundle="CustomerSearchUIResources" /></span> </font>
 										<tr class="fontnormal">
-											<td height="26" colspan="2"><html-el:text styleId="branch_search.input.search"
-												property="searchString" maxlength="200" /> <html-el:submit
+											<td height="26" colspan="2">
+												<input type="text" id="branch_search.input.search" name="searchString" maxlength="200" />
+												<html-el:submit
 												styleId="branch_search.button.search" styleClass="buttn">
 												<mifos:mifoslabel name="CustomerSearch.search" />
 											</html-el:submit></td>
@@ -165,6 +166,6 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="method" value="mainSearch" />
 			<html-el:hidden property="currentFlowKey"
 				value="${requestScope.currentFlowKey}" />
-		</html-el:form>
+		</form>
 	</tiles:put>
 </tiles:insert>

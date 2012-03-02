@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".homePage">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="Home"></span>
-		<html-el:form action="/custSearchAction.do">
+		<form action="searchResult.ftl">
 			
 				<table width="95%" border="0" cellpadding="0" cellspacing="0">
 					<tr>
@@ -107,7 +107,7 @@ explanation of the license and how it is applied.
 											<tr class="fontnormal">
 												<td>
 												
-													<html-el:text styleId="home.input.search" property="searchString" maxlength="200"/>
+													<input type="text" id="home.input.search" name="searchString" maxlength="200"/>
 													<c:choose>
 													<c:when test='${sessionScope.UserContext.officeLevelId==5}'>
 													<html-el:hidden property="officeId" value="${sessionScope.UserContext.branchId}"/> 
@@ -138,7 +138,7 @@ explanation of the license and how it is applied.
 				<html-el:hidden property="officeId" value="0"/>
 				<html-el:hidden property="method" value="mainSearch" />	
 				<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />				
-		</html-el:form>
+		</form>
 		<!-- task-list MIFOS-5177 -->
 		<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isLoanOfficer')}">
 			<html-el:form action="custSearchAction.do?method=getHomePage">

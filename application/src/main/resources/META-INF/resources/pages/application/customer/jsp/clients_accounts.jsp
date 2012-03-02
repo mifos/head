@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
     <span id="page.id" title="ClientsAccounts"></span>	
-		<html-el:form action="custSearchAction.do">
+		<form action="searchResult.ftl">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td align="left" valign="top" class="paddingL10">
@@ -83,15 +83,17 @@ explanation of the license and how it is applied.
 
 							<table border="0" cellpadding="4" cellspacing="0">
 								<tr>
-									<td><html-el:text styleId="clients_accounts.input.search" property="searchString" maxlength="200" /></td>
-									<td class="paddingleft05notop"><html-el:select
-										style="width:136px;" property="officeId">
-										<html-el:option value="0">
-											<mifos:mifoslabel name="CustomerSearch.all" /> <mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /><mifos:mifoslabel name="CustomerSearch.s" />
-										</html-el:option>
-										<html-el:options collection="OfficesList" property="officeId"
-											labelProperty="officeName" />
-									</html-el:select></td>
+									<td><input type="text" id="clients_accounts.input.search" name="searchString" maxlength="200" /></td>
+									<td class="paddingleft05notop">
+										<select name="officeId" style="width:136px;">
+											<option value="0" selected="selected">
+												<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /><mifos:mifoslabel name="CustomerSearch.s" />
+											</option>
+											<c:forEach items="${OfficesList}" var="office"> 
+												<option value="${office.officeId}">${office.officeName}</option>
+											</c:forEach>
+										</select>
+									</td>
 								</tr>
 								<tr>
 									<td>&nbsp;</td>
@@ -146,6 +148,6 @@ explanation of the license and how it is applied.
 			<br>
 		<html-el:hidden property="method" value="mainSearch" />	
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-		</html-el:form>
+		</form>
 	</tiles:put>
 </tiles:insert>
