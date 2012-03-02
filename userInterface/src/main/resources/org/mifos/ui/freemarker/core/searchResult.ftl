@@ -18,15 +18,11 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[@layout.header "mifos" /]
-[#assign mifostag=JspTaglibs["/tags/mifos-html"]]
+[#include "layout.ftl"]
 
-[@widget.topNavigationNoSecurityMobile currentTab="ClientsAndAccounts" /]
+[@clientLeftPane "ClientsAndAccounts"]
 <span id="page.id" title="MainSearchResults"></span>
 <div class="content">
-	<div class="error">
-		<span class="fontnormalRedBold"></span>
-	</div>
 	<div class="fontnormal">
 		<form method="POST" action="searchResult.ftl">
 			[@form.showAllErrors "customerSearch.*"/]
@@ -43,11 +39,12 @@
 			<input type="submit" value="Search" class="buttn"/>
 		</form>
 	</div>
+	<div class="blueline">
+	</div>
 	[#if customerHierarchy?has_content]
-	<div style="width: 325px">
+	<div>
 		[#assign number = pageSize*currentPage /]
-		<div class="blueline">
-		</div>
+		[#assign firstResultNumber = number + 1 /]
 		<div>
 			<span class="headingorange">
 				${customerHierarchy.size} [@spring.message "Customer.resultsFor" /] 
@@ -89,9 +86,9 @@
 				</span>
 				<span>
 				[#list client.savingsGlobalAccountNum as saving]
-					<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
-						${saving}
-					</a>
+					<span>
+						<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">Account # ${saving}</a>
+					</span>
 				[/#list]
 				</span>
 			</div>
@@ -103,9 +100,9 @@
 				</span>
 				<span>
 				[#list client.loanGlobalAccountNum as loan]
-					<a href="viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
-						${loan}
-					</a>
+					<span>
+						<a href="viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">Account # ${loan}</a>
+					</span>
 				[/#list]
 				</span>
 			</div>
@@ -170,9 +167,9 @@
 				</span>
 				<span>
 				[#list group.savingsGlobalAccountNum as saving]
-					<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&method=get&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
-						${saving}
-					</a>
+					<span>
+						<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&method=get&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">Account # ${saving}</a>
+					</span>
 				[/#list]
 				</span>
 			</div>
@@ -184,9 +181,9 @@
 				</span>
 				<span>
 				[#list group.loanGlobalAccountNum as loan]
-					<a href="viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
-						${loan}
-					</a>
+					<span>
+						<a href="viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">Account # ${loan}</a>
+					</span>
 				[/#list]
 				</span>
 			</div>
@@ -246,9 +243,9 @@
 				</span>
 				<span>
 				[#list center.savingsGlobalAccountNum as saving]
-					<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${center.branchId}&recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
-						${saving}
-					</a>
+					<span>
+					<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${center.branchId}&recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">${saving}</a>
+					</span>
 				[/#list]
 				</span>
 			</div>
@@ -283,7 +280,9 @@
 			[@spring.message "Previous" /]	
 		</span>
 		[/#if]
-		<span>
+		<span class="fontnormalbold">
+			[#assign arguments = ["${firstResultNumber}", "${number}", "${customerHierarchy.size}"]/]
+			[@spring.messageArgs "Results" arguments/] 
 		</span>
 		[#if isNextPageAvailable ]
 		<span class="fontnormalbold">
@@ -299,3 +298,4 @@
 	</div>
 	[/#if]
 </div>
+[/@clientLeftPane]

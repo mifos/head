@@ -32,6 +32,7 @@ import org.mifos.application.servicefacade.CustomerSearchServiceFacade;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.screen.CustomerHierarchyDto;
 import org.mifos.security.MifosUser;
+import org.mifos.ui.core.controller.util.helpers.SitePreferenceHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -57,6 +58,8 @@ public class SearchResultController {
     @Autowired
     private OfficeServiceFacade officeServiceFacade;
 
+    private final SitePreferenceHelper sitePreferenceHelper = new SitePreferenceHelper();
+    
     @ModelAttribute("customerSearch")
     public CustomerSearchFormBean populateForm() {
         return new CustomerSearchFormBean();
@@ -65,7 +68,9 @@ public class SearchResultController {
     @RequestMapping(method = { RequestMethod.POST, RequestMethod.GET })
     public ModelAndView showSearchResults(HttpServletRequest request, HttpServletResponse response,
             @ModelAttribute("customerSearch") @Valid CustomerSearchFormBean customerSearchFormBean, BindingResult result) {
-        ModelAndView modelAndView = new ModelAndView("m_searchResult");
+    	ModelAndView modelAndView = new ModelAndView();
+        sitePreferenceHelper.resolveSiteType(modelAndView, "searchResult", request);
+        
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CustomerHierarchyDto customerHierarchyDto = null;
 
