@@ -52,9 +52,12 @@ explanation of the license and how it is applied.
 		<SCRIPT SRC="pages/application/group/js/groupcommon.js"></SCRIPT>
 		<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+		<form name="goBackToViewGroupDetails" method="get" action ="viewGroupDetails.ftl">
+			<input type="hidden" name='globalCustNum' value="${BusinessKey.globalCustNum}"/>
+		</form>
 		<html-el:form action="groupCustAction.do?method=previewManage">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/> </span>
@@ -415,7 +418,7 @@ explanation of the license and how it is applied.
 					</td>
 				</tr>
 			</table>
-
+			
 			<html-el:hidden property="input" value="ManageGroup" />
 		</html-el:form>
 	</tiles:put>

@@ -73,9 +73,9 @@ public class AccountTagGenerator extends TagGenerator {
 
     private String getAction(AccountBO account) {
         if (account.getType() == AccountTypes.SAVINGS_ACCOUNT) {
-            return "savingsAction.do?method=get&globalAccountNum=";
+            return "viewSavingsAccountDetails.ftl?globalAccountNum=";
         } else if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
-            return "loanAccountAction.do?method=get&globalAccountNum=";
+            return "viewLoanAccountDetails.ftl?globalAccountNum=";
         }
         return "";
     }

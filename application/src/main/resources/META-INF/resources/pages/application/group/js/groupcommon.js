@@ -1,4 +1,8 @@
 function goToCancelPage(groupActionForm){
-	groupActionForm.action="groupCustAction.do?method=cancel";
-	groupActionForm.submit();
+	if (this.goBackToViewGroupDetails != null){
+		goBackToViewGroupDetails.submit();
+	} else {
+		groupActionForm.action="groupCustAction.do?method=cancel";
+		groupActionForm.submit();		
+	}
   }

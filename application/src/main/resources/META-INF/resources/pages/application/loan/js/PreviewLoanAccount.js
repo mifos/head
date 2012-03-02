@@ -17,10 +17,9 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- function fun_cancel(form)
+ function fun_cancel()
 {
-	form.action="loanAccountAction.do?method=cancel";
-	form.submit();
+	 goBackToLoanAccountDetails.submit();
 }
 function fnEdit(form) {		
 	form.action="loanAccountAction.do?method=managePrevious";

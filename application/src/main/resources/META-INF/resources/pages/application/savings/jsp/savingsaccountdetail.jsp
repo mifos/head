@@ -47,9 +47,13 @@ explanation of the license and how it is applied.
 			<c:set var="questionnaireFor" scope="session" value="${BusinessKey.savingsOffering.prdOfferingName}" />
             <c:remove var="urlMap" />
             <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
-            <c:set target="${urlMap}" property="${BusinessKey.office.officeName}" value="custSearchAction.do?method=getOfficeHomePage&officeId=${BusinessKey.office.officeId}"/>
+            <c:set target="${urlMap}" property="${BusinessKey.office.officeName}" value="clientsAndAccounts.ftl?officeId=${BusinessKey.office.officeId}"/>
             <c:set target="${urlMap}" property="${BusinessKey.customer.displayName}" value="viewClientDetails.ftl?globalCustNum=${BusinessKey.customer.globalCustNum}"/>
-            <c:set target="${urlMap}" property="${BusinessKey.savingsOffering.prdOfferingName}" value="savingsAction.do?method=get&globalAccountNum=${BusinessKey.globalAccountNum}"/>
+            <c:set target="${urlMap}" property="${BusinessKey.savingsOffering.prdOfferingName}" value="viewSavingsAccountDetails.ftl?globalAccountNum=${BusinessKey.globalAccountNum}"/>
+		 	<c:set value="${requestScope.backPageUrl}" var="backPageUrl"/>
+            <c:if test="${ empty requestScope.backPageUrl}">
+           		<c:set value="viewSavingsAccountDetails.ftl?globalAccountNum=${BusinessKey.globalAccountNum}" var="backPageUrl"/>
+            </c:if>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td width="70%" align="left" valign="top" class="paddingL15T15">
@@ -262,11 +266,11 @@ explanation of the license and how it is applied.
 							</tr>
 							<tr>
 								<td class="fontnormal">
-                            		<a id="savingsaccountdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${BusinessKey.accountId}&event=Create&source=Savings&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+                            		<a id="savingsaccountdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${BusinessKey.accountId}&event=Create&source=Savings&backPageUrl=${backPageUrl}">
                                 		<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
                             		</a> <br/>
 								    <c:if test="${containsQGForCloseSavings}">
-                                        <a id="savingsaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${BusinessKey.accountId}&event=Close&source=Savings&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+                                        <a id="savingsaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${BusinessKey.accountId}&event=Close&source=Savings&backPageUrl=${backPageUrl}">
                                         <mifos:mifoslabel name="Savings.ViewQuestionGroupForClosedSavingsResponsesLink" />
                                         </a> <br>
                                     </c:if>
@@ -395,7 +399,7 @@ explanation of the license and how it is applied.
 						              <tr>
 						                <td width="70%" class="paddingL10">
 						                  <span class="fontnormal8pt">
-						                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${BusinessKey.accountId}&instanceId=${questionGroupInstance.id}&event=View&source=Savings&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+						                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${BusinessKey.accountId}&instanceId=${questionGroupInstance.id}&event=View&source=Savings&backPageUrl=${backPageUrl}">
 						                      <c:out value="${questionGroupInstance.questionGroupTitle}"/>
 						                    </a>
 						                  </span>
@@ -413,7 +417,7 @@ explanation of the license and how it is applied.
             <tr>
               <td colspan="2" align="right" class="paddingleft05">
                 <span class="fontnormal8pt">
-                  <a href="questionnaire.ftl?source=Savings&event=View&entityId=${BusinessKey.accountId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+                  <a href="questionnaire.ftl?source=Savings&event=View&entityId=${BusinessKey.accountId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=${backPageUrl}">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a><br>
 				</span>

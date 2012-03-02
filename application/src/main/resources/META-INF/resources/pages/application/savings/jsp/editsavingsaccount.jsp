@@ -36,6 +36,11 @@ explanation of the license and how it is applied.
 	<mifos:NumberFormattingInfo />
 		<SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>
         <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+    
+    <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" scope="session" />    
+	<form name="goBackToSavingsAccountDetails" method="get" action ="viewSavingsAccountDetails.ftl">
+		<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+	</form>   
 	<html-el:form method="post" action="/savingsAction.do?method=editPreview" >
 
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -50,7 +55,6 @@ explanation of the license and how it is applied.
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td align="left" valign="top" class="paddingL15T15" >
-          <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" scope="session" />
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td width="83%" class="headingorange">
@@ -173,7 +177,7 @@ explanation of the license and how it is applied.
 						<mifos:mifoslabel name="loan.preview" />
 				  </html-el:submit>
 &nbsp;
-    			  <html-el:button property="cancelButton" onclick="javascript:fun_editCancel(this.form)" styleClass="cancelbuttn">
+    			  <html-el:button property="cancelButton" onclick="javascript:fun_editCancel()" styleClass="cancelbuttn">
 						<mifos:mifoslabel name="loan.cancel" />
 				  </html-el:button>
                 </td>

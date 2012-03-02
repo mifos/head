@@ -36,8 +36,18 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="ChangeStatus"></span>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<script language="javascript">
-			function goToCancelPage(form){
-				form.action="editStatusAction.do?method=cancel";
+			function goToCancelPage(form, input){
+				switch(input){
+				case 'loan':
+					form.action="viewLoanAccountDetails.ftl"
+					break;
+				case 'savings':
+					form.action="viewSavingsAccountDetails.ftl"
+					break;
+				default:
+					form.action="clientsAndAccounts.ftl";
+				}
+				form.method="get";
 				form.submit();
  			 }
  			function checkStatusForTransactionDate(i) {
@@ -201,7 +211,7 @@ explanation of the license and how it is applied.
                                     <mifos:mifoslabel name="accounts.preview" />
                                 </html-el:submit>
     							&nbsp;&nbsp;
-                                <html-el:button styleId="change_status.button.cancel" property="btn" styleClass="cancelbuttn" onclick="goToCancelPage(this.form)">
+                                <html-el:button styleId="change_status.button.cancel" property="btn" styleClass="cancelbuttn" onclick="goToCancelPage(this.form, '${sessionScope.editStatusActionForm.input}')">
                                     <mifos:mifoslabel name="accounts.cancel" />
                                 </html-el:button>
 							</td>

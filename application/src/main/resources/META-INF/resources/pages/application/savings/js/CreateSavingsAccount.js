@@ -49,10 +49,9 @@
 			form.action="clientsAndAccounts.ftl";
 			form.submit();
 		}
-		function fun_editCancel(form)
+		function fun_editCancel()
 		{
-			form.action="savingsAction.do?method=get";
-			form.submit();
+			goBackToSavingsAccountDetails.submit();
 		}		
 		function setAccountState(form, state){
 			disableButtons();

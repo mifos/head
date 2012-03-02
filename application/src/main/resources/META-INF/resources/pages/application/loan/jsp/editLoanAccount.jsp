@@ -103,9 +103,8 @@ explanation of the license and how it is applied.
 				func_disableSubmitBtn("approvedButton");
 				
 			}
-            function fun_cancel(form) {
-		    	form.action="loanAccountAction.do?method=cancel";
-				form.submit();
+            function fun_cancel() {
+            	goBackToLoanAccountDetails.submit();
             }
 
             function showMeetingFrequency(){
@@ -130,7 +129,10 @@ explanation of the license and how it is applied.
 
         <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
-		
+	    <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" scope="session" />    
+		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+		</form>   
 		<html-el:form action="/loanAccountAction.do?method=managePreview"
 			onsubmit="return (validateMyForm(disbursementDate,disbursementDateFormat,disbursementDateYY));">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
@@ -477,7 +479,7 @@ explanation of the license and how it is applied.
 								styleClass="buttn" >
 								<mifos:mifoslabel name="loan.preview" />
 							</html-el:submit> &nbsp; <html-el:button styleId="editLoanAccount.button.cancel" property="cancelButton"
-								onclick="javascript:fun_cancel(this.form)"
+								onclick="javascript:fun_cancel()"
 								styleClass="cancelbuttn" >
 								<mifos:mifoslabel name="loan.cancel" />
 							</html-el:button></td>

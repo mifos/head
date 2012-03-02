@@ -75,6 +75,10 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
             <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'containsQGForCloseLoan')}"
 			   var="containsQGForCloseLoan" />
 
+			<c:set value="${requestScope.backPageUrl}" var="backPageUrl"/>
+            <c:if test="${ empty requestScope.backPageUrl}">
+            	<c:set value="viewLoanAccountDetails.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}" var="backPageUrl"/>
+            </c:if>
 
 			<html-el:hidden property="currentFlowKey"
 				value="${requestScope.currentFlowKey}" />
@@ -604,15 +608,15 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                         <c:set var="questionnaireFor" scope="session" value="${loanInformationDto.prdOfferingName}"/>
                                         <c:remove var="urlMap" />
                                         <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
-                                        <c:set target="${urlMap}" property="${loanInformationDto.officeName}" value="custSearchAction.do?method=getOfficeHomePage&officeId=${loanInformationDto.officeId}"/>
+                                        <c:set target="${urlMap}" property="${loanInformationDto.officeName}" value="clientsAndAccounts.ftl?officeId=${loanInformationDto.officeId}"/>
                                         <c:set target="${urlMap}" property="${loanInformationDto.customerName}" value="viewClientDetails.ftl?globalCustNum=${loanInformationDto.globalCustNum}"/>
-                                        <c:set target="${urlMap}" property="${loanInformationDto.prdOfferingName}" value="loanAccountAction.do?method=get&globalAccountNum=${loanInformationDto.globalAccountNum}"/>
-							            <a id="loanaccountdetail.link.questionGroups" href="loanAccountAction.do?method=viewAndEditAdditionalInformation&creatorId=${sessionScope.UserContext.id}&entityId=${loanInformationDto.accountId}&event=Create&source=Loan&backPageUrl=loanAccountAction.do?method%3Dget%26globalAccountNum%3D${loanInformationDto.globalAccountNum}">
+                                        <c:set target="${urlMap}" property="${loanInformationDto.prdOfferingName}" value="viewLoanAccountDetails.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}"/>
+							            <a id="loanaccountdetail.link.questionGroups" href="loanAccountAction.do?method=viewAndEditAdditionalInformation&creatorId=${sessionScope.UserContext.id}&entityId=${loanInformationDto.accountId}&event=Create&source=Loan&backPageUrl=${backPageUrl}">
 							    			<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
 										</a>
 							            <br/>
                                         <c:if test="${containsQGForCloseLoan}">
-                                            <a id="loanaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${loanInformationDto.accountId}&event=Close&source=Loan&backPageUrl=loanAccountAction.do?method%3Dget%26globalAccountNum%3D${loanInformationDto.globalAccountNum}">
+                                            <a id="loanaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${loanInformationDto.accountId}&event=Close&source=Loan&backPageUrl=${backPageUrl}">
                                             <mifos:mifoslabel name="loan.ViewQuestionGroupForClosedLoanResponsesLink" />
                                             </a> <br>
                                         </c:if>
@@ -829,7 +833,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						              <tr>
 						                <td width="70%" class="paddingL10">
 						                  <span class="fontnormal8pt">
-						                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${loanInformationDto.accountId}&instanceId=${questionGroupInstance.id}&event=View&source=Loan&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+						                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${loanInformationDto.accountId}&instanceId=${questionGroupInstance.id}&event=View&source=Loan&backPageUrl=${backPageUrl}">
 						                      <c:out value="${questionGroupInstance.questionGroupTitle}"/>
 						                    </a>
 						                  </span>
@@ -847,7 +851,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<tr>
 								<td colspan="2" align="right" class="paddingleft05">
 								<span class="fontnormal8pt">
-									<a id="loanaccountdetail.link.attachSurvey" href="questionnaire.ftl?source=Loan&event=View&entityId=${loanInformationDto.accountId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+									<a id="loanaccountdetail.link.attachSurvey" href="questionnaire.ftl?source=Loan&event=View&entityId=${loanInformationDto.accountId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=${backPageUrl}">
 										<mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources" />
 									</a><br>
 								</span>

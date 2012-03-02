@@ -34,12 +34,13 @@ explanation of the license and how it is applied.
 		<span id="page.id" title="EditPreviewLoanAccount"></span>	
 		<SCRIPT SRC="pages/application/loan/js/PreviewLoanAccount.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
+	    <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" scope="session" />    
+		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+		</form> 
 		<html-el:form method="post" action="/loanAccountAction.do?method=update"
 			onsubmit="func_disableSubmitBtn('previewDetailsBtn')">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-			<c:set
-				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
-				var="BusinessKey" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanIndividualMonitoringIsEnabled')}"	
 																													var="loanIndividualMonitoringIsEnabled" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanaccountownerisagroup')}"
@@ -221,7 +222,7 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="loan.submit" />
 							</html-el:submit> &nbsp; <html-el:button styleId="editPreviewLoanAccount.button.cancel" property="cancelButton"
 								styleClass="cancelbuttn" 
-								onclick="javascript:fun_cancel(this.form)">
+								onclick="javascript:fun_cancel()">
 								<mifos:mifoslabel name="loan.cancel" />
 							</html-el:button></td>
 						</tr>

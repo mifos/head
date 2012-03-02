@@ -38,7 +38,7 @@ public class OfficeTagGenerator extends TagGenerator {
     protected StringBuilder build(AbstractBusinessObject obj, boolean selfLinkRequired, Object randomNum) {
         OfficeBO office = (OfficeBO) obj;
         StringBuilder strBuilder = new StringBuilder();
-        strBuilder.append("<a href=\"custSearchAction.do?method=getOfficeHomePage&officeId=");
+        strBuilder.append("<a href=\"clientsAndAccounts.ftl?officeId=");
         strBuilder.append(office.getOfficeId());
         strBuilder.append("&officeName=");
         strBuilder.append(MifosTagUtils.xmlEscape(office.getOfficeName()));

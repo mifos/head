@@ -115,7 +115,7 @@
 					[@spring.message "alsosee" /]:
 				</span>
 				<span>
-					<a href="custSearchAction.do?method=getOfficeHomePage&officeId=${client.branchId}&randomNUm=${Session.randomNUm}">
+					<a href="clientsAndAccounts.ftl?officeId=${client.branchId}&randomNUm=${Session.randomNUm}">
 						${client.branchName}
 					</a>
 					[#if client.centerGlobalCustNum?has_content]
@@ -196,7 +196,7 @@
 					[@spring.message "alsosee" /]:
 				</span>
 				<span>
-					<a href="custSearchAction.do?method=getOfficeHomePage&officeId=${group.branchId}&randomNUm=${Session.randomNUm}">
+					<a href="clientsAndAccounts.ftl?officeId=${group.branchId}&randomNUm=${Session.randomNUm}">
 						${group.branchName}
 					</a> 
 					[#if group.centerGlobalCustNum?has_content]
@@ -258,7 +258,7 @@
 					[@spring.message "alsosee" /]:
 				</span>
 				<span>
-					<a href="custSearchAction.do?method=getOfficeHomePage&officeId=${center.branchId}&randomNUm=${Session.randomNUm}">
+					<a href="clientsAndAccounts.ftl?officeId=${center.branchId}&randomNUm=${Session.randomNUm}">
 						${center.branchName}
 					</a>
 				</span>

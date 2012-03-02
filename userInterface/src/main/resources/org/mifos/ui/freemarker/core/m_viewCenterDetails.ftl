@@ -130,7 +130,7 @@
 				<div>
 					<span class="fontnormal"> 	
 				 		<a id="viewCenterDetails.link.savingsAccount"
-							href="savingsAction.do?globalAccountNum=${savings.globalAccountNum}&method=get&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
+							href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
 							${savings.prdOfferingName}, [@spring.message "Center.acc" /] ${savings.globalAccountNum}
 						</a> 
 					</span>

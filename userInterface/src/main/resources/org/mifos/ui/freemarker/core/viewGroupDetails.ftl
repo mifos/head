@@ -18,4 +18,4 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[@include_page path="groupCustAction.do?globalCustNum=${RequestParameters.globalCustNum}&method=get&recordOfficeId=${RequestParameters.recordOfficeId?if_exists}&recordLoanOfficerId=${RequestParameters.recordLoanOfficerId?if_exists}" /]
+[@include_page path="groupCustAction.do?globalCustNum=${RequestParameters.globalCustNum}&method=get&recordOfficeId=${RequestParameters.recordOfficeId?if_exists}&recordLoanOfficerId=${RequestParameters.recordLoanOfficerId?if_exists}&backPageUrl=${backPageUrl}" /]

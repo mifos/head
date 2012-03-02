@@ -1910,7 +1910,7 @@ public class LoanPrdActionForm extends BaseActionForm {
     // Intentionally made public to aid testing !!!
     void validateInterestTypeForGracePeriods(ActionErrors actionErrors, Locale locale) {
         Short gracePeriodTypeValue = getGracePeriodTypeValue();
-        if (!GraceType.isGraceTypeNONE(gracePeriodTypeValue)) {
+        if (!GraceType.isGraceTypeNONE(gracePeriodTypeValue) && StringUtils.isNotBlank(interestTypes)) {
             int interestTypeNum = Integer.parseInt(interestTypes);
             if (canConfigureVariableInstallments() || InterestType.isDecliningInterestPrincipalBalanceType(interestTypeNum)) {
                 addError(actionErrors, interestTypes, ProductDefinitionConstants.INVALID_INTEREST_TYPE_FOR_GRACE_PERIODS);

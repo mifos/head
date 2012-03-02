@@ -164,7 +164,7 @@
 					<div>
 						<span class="fontnormal"> 
 							<a id="viewgroupdetails.link.viewLoanAccount"
-								href="loanAccountAction.do?globalAccountNum=${loan.globalAccountNum}&customerId=${groupInformationDto.groupDisplay.customerId}&method=get&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
+								href="viewLoanAccountDetails.ftl?globalAccountNum=${loan.globalAccountNum}&customerId=${groupInformationDto.groupDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
 								${loan.prdOfferingName}, [@spring.message "Group.acc" /] ${loan.globalAccountNum}
 							</a> 
 						</span>
@@ -206,7 +206,7 @@
 				<div>
 					<span class="fontnormal"> 	
 				 		<a id="viewgroupdetails.link.viewSavingsAccount"
-							href="savingsAction.do?globalAccountNum=${savings.globalAccountNum}&method=get&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
+							href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
 							${savings.prdOfferingName}, [@spring.message "client.acc" /] ${savings.globalAccountNum}
 						</a> 
 					</span>

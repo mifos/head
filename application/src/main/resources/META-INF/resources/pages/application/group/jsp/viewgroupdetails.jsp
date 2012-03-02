@@ -206,7 +206,7 @@ explanation of the license and how it is applied.
 												cellpadding="0">
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewgroupdetails.link.viewLoanAccount"
-														href="loanAccountAction.do?globalAccountNum=${loan.globalAccountNum}&customerId=${groupInformationDto.groupDisplay.customerId}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
+														href="viewLoanAccountDetails.ftl?globalAccountNum=${loan.globalAccountNum}&customerId=${groupInformationDto.groupDisplay.customerId}&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
 														<c:out value="${loan.prdOfferingName}" />, <mifos:mifoslabel name="Group.acc" bundle="GroupUIResources" /><c:out
 															value="${loan.globalAccountNum}" />
 													</html-el:link> </span></td>
@@ -262,7 +262,7 @@ explanation of the license and how it is applied.
 												cellpadding="0">
 												<tr>
 													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewgroupdetails.link.viewSavingsAccount"
-														href="savingsAction.do?globalAccountNum=${savings.globalAccountNum}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
+														href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
 														<c:out value="${savings.prdOfferingName}" />, <mifos:mifoslabel name="Group.acc" bundle="GroupUIResources" /><c:out
 															value="${savings.globalAccountNum}" />
 													</html-el:link> </span></td>
@@ -604,7 +604,11 @@ explanation of the license and how it is applied.
 							<%--Historical data link--%>
 							<span class="fontnormal">
                             <c:set var="questionnaireFor" scope="session" value="${groupInformationDto.groupDisplay.displayName}"/>
-                            <a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${groupInformationDto.groupDisplay.customerId}&event=Create&source=Group&backPageUrl=groupCustAction.do?method%3Dget%26globalAccountNum%3D${client.globalCustNum}%26recordOfficeId%3D${groupInformationDto.groupDisplay.branchId}%26recordLoanOfficerId%3D${groupInformationDto.groupDisplay.loanOfficerId}">
+                            <c:set value="${requestScope.backPageUrl}" var="backPageUrl"/>
+                            <c:if test="${ empty requestScope.backPageUrl}">
+                            	<c:set value="viewGroupDetails.ftl?globalCustNum=${groupInformationDto.groupDisplay.globalCustNum}" var="backPageUrl"/>
+                            </c:if>
+                            <a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${groupInformationDto.groupDisplay.customerId}&event=Create&source=Group&backPageUrl=${backPageUrl}">
                                 <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
                             </a>
                             <br/>

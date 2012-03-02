@@ -41,8 +41,7 @@ explanation of the license and how it is applied.
 		window.open("schedulemeetingpopup.htm",null,"height=400,width=800,status=yes,scrollbars=yes,toolbar=no,menubar=no,location=no");
 	}
 	function goToCancelPage(){
-	centerCustActionForm.action="centerCustAction.do?method=cancel";
-	centerCustActionForm.submit();
+	goBackToViewCenterDetails.submit();
   }
   function chkForValidDates(){
 
@@ -79,11 +78,11 @@ explanation of the license and how it is applied.
 
 	  }
 	</script>
-
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+		<form name="goBackToViewCenterDetails" method="get" action ="viewCenterDetails.ftl">
+			<input type="hidden" name='globalCustNum' value="${BusinessKey.globalCustNum}"/>
+		</form>
 		<html-el:form action="centerCustAction.do?method=editPreview" onsubmit="return chkForValidDates()">
-		<c:set
-		value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
-		var="BusinessKey" />
 		<html-el:hidden property="input" value="manage" />
 				<table width="95%" border="0" cellpadding="0" cellspacing="0">
 					<tr>
