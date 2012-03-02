@@ -46,6 +46,7 @@ explanation of the license and how it is applied.
 				default:
 					form.action="clientsAndAccounts.ftl";
 				}
+				form.method="get";
 				form.submit();
  			 }
 			function manageFlag(i) {
@@ -65,7 +66,7 @@ explanation of the license and how it is applied.
 				}
  			 }
 		</script>
-		<html-el:form method="get" action="editCustomerStatusAction.do?method=previewStatus">
+		<html-el:form action="editCustomerStatusAction.do?method=previewStatus">
 			<c:set
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 				var="BusinessKey" />
