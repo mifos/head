@@ -39,6 +39,8 @@ public class PaymentAllocation {
     private Money miscPenaltyPaid;
 
     private Map<Integer, Money> feesPaid;
+    
+    private Map<Integer, Money> penaltiesPaid;
 
     private MifosCurrency currency;
 
@@ -51,6 +53,7 @@ public class PaymentAllocation {
         miscFeePaid = Money.zero(this.currency);
         miscPenaltyPaid = Money.zero(this.currency);
         feesPaid = new HashMap<Integer, Money>();
+        penaltiesPaid = new HashMap<Integer, Money>();
     }
 
     public void allocateForMiscPenalty(Money payable) {
@@ -59,6 +62,10 @@ public class PaymentAllocation {
 
     public void allocateForPenalty(Money payable) {
         this.penaltyPaid = payable;
+    }
+    
+    public void allocateForPenalty(Integer penaltyId, Money penaltyAmount) {
+        penaltiesPaid.put(penaltyId, penaltyAmount);
     }
 
     public void allocateForMiscFees(Money payable) {
@@ -111,7 +118,7 @@ public class PaymentAllocation {
 
     public Money getTotalPaid() {
         return interestPaid.add(extraInterestPaid).add(penaltyPaid).add(principalPaid).add(miscFeePaid).add(miscPenaltyPaid).
-                add(getTotalFeesPaid());
+                add(getTotalFeesPaid()).add(getTotalPenaltiesPaid());
     }
 
     public Money getTotalFeesPaid() {
@@ -120,6 +127,14 @@ public class PaymentAllocation {
             totalFeePaid = totalFeePaid.add(feePaid);
         }
         return totalFeePaid;
+    }
+    
+    public Money getTotalPenaltiesPaid() {
+        Money totalPenaltyPaid = Money.zero(currency);
+        for (Money penaltyPaid : penaltiesPaid.values()) {
+            totalPenaltyPaid = totalPenaltyPaid.add(penaltyPaid);
+        }
+        return totalPenaltyPaid;
     }
 
     boolean isFeeAllocated(Integer feeId) {

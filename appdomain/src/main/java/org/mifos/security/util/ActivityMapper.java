@@ -780,6 +780,7 @@ public class ActivityMapper {
         ActionSecurity security = new ActionSecurity("accountAppAction");
         security.allow("removeFees", SecurityConstants.VIEW);
         security.allow("getTrxnHistory", SecurityConstants.VIEW);
+        security.allow("removePenalties", SecurityConstants.VIEW);
         return security;
     }
 
@@ -1610,5 +1611,23 @@ public class ActivityMapper {
         return legacyRolesPermissionsDao.isActivityAllowed(
                 useContext,
                 new ActivityContext(SecurityConstants.CAN_EDIT_PHONE_NUMBER, officeId));
+    }
+
+    public Object isRemovePenaltiesPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,
+            UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
+        return legacyRolesPermissionsDao.isActivityAllowed(
+                userContext,
+                new ActivityContext(getActivityIdForRemovePenalties(accountTypes, customerLevel), recordOfficeId,
+                        recordLoanOfficerId));
+    }
+
+    private short getActivityIdForRemovePenalties(AccountTypes accountTypes, CustomerLevel customerLevel) {
+        short activityId = -1;
+        
+        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
+            activityId = SecurityConstants.LOAN_REMOVE_PENALTY_TYPE_ATTACHED_TO_ACCOUNT;
+        }
+        
+        return activityId;
     }
 }

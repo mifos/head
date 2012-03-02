@@ -30,6 +30,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.WaiveEnum;
@@ -87,6 +88,29 @@ public class AccountAppAction extends BaseAction {
 
         this.centerServiceFacade.removeAccountFee(accountId, feeId);
 
+        String fromPage = request.getParameter(CenterConstants.FROM_PAGE);
+        StringBuilder forward = new StringBuilder();
+        forward = forward.append(AccountConstants.REMOVE + "_" + fromPage + "_" + AccountConstants.CHARGES);
+        if (fromPage != null) {
+            return mapping.findForward(forward.toString());
+        }
+        return mapping.findForward(AccountConstants.REMOVE_SUCCESS);
+    }
+    
+    @CloseSession
+    @TransactionDemarcate(validateAndResetToken = true)
+    public ActionForward removePenalties(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        Integer accountId = getIntegerValue(request.getParameter("accountId"));
+        Short penaltyId = getShortValue(request.getParameter("penaltyId"));
+        
+        AccountBO accountBO = getAccountBusinessService().getAccount(accountId);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
+        
+        if (accountBO instanceof LoanBO) {
+            this.loanAccountServiceFacade.removeLoanPenalty(accountId, penaltyId);
+        }
+        
         String fromPage = request.getParameter(CenterConstants.FROM_PAGE);
         StringBuilder forward = new StringBuilder();
         forward = forward.append(AccountConstants.REMOVE + "_" + fromPage + "_" + AccountConstants.CHARGES);

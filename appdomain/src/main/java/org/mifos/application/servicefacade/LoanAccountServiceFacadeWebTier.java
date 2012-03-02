@@ -44,6 +44,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
@@ -55,6 +56,7 @@ import org.mifos.accounts.business.AccountStateFlagEntity;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.AccountPenaltiesEntity;
+import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -218,6 +220,7 @@ import org.mifos.dto.screen.LoanSummaryDto;
 import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -2668,5 +2671,51 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             throw new MifosRuntimeException(e);
         }
     }
-    
+
+    @Override
+    public void removeLoanPenalty(Integer loanId, Short penaltyId) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        try {
+            AccountBO account = new AccountBusinessService().getAccount(loanId);
+
+            if (account instanceof LoanBO) {
+                LoanBO loanAccount = (LoanBO) account;
+                List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(account.getAccountId());
+
+                if (individualLoans != null && individualLoans.size() > 0) {
+                    for (LoanBO individual : individualLoans) {
+                        individual.updateDetails(userContext);
+                        individual.removePenalty(penaltyId, userContext.getId());
+                        this.customerDao.save(individual);
+                    }
+                }
+
+                account.updateDetails(userContext);
+
+                if (account.getPersonnel() != null) {
+                    new AccountBusinessService().checkPermissionForRemovePenalties(account.getType(), account.getCustomer()
+                            .getLevel(), userContext, account.getOffice().getOfficeId(), account.getPersonnel()
+                            .getPersonnelId());
+                } else {
+                    new AccountBusinessService().checkPermissionForRemovePenalties(account.getType(), account.getCustomer()
+                            .getLevel(), userContext, account.getOffice().getOfficeId(), userContext.getId());
+                }
+
+                this.transactionHelper.startTransaction();
+                loanAccount.removePenalty(penaltyId, userContext.getId());
+                this.loanDao.save(loanAccount);
+                this.transactionHelper.commitTransaction();
+            }
+        } catch (ServiceException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } catch (AccountException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
+    }
 }

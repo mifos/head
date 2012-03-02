@@ -238,4 +238,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     void applyOverpaymentClear(String overpaymentId, BigDecimal overpaymentAmount);
     
     void putLoanBusinessKeyInSession(String globalAccountNum, HttpServletRequest request);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void removeLoanPenalty(Integer loanId, Short penaltyId);
 }

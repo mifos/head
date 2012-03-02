@@ -578,4 +578,41 @@
             </sql>
         </rollback>
     </changeSet>
+        <changeSet id="MIFOS_5426_4" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+            ALTER TABLE loan_penalty_schedule ADD COLUMN last_applied DATE NOT NULL AFTER amount_paid_currency_id;
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                ALTER TABLE loan_penalty_schedule DROP COLUMN last_applied;
+            </sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="MIFOS_5387_1" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+            INSERT INTO lookup_value(lookup_id, entity_id, lookup_name) VALUES
+                ((SELECT max(lv.lookup_id)+1 FROM lookup_value lv), 87, 'Permissions-CanRemovePenaltyAttachedToTheLoanAccount');
+            
+            INSERT INTO lookup_value_locale(locale_id, lookup_id, lookup_value) VALUES
+                (1,
+                (SELECT lookup_id FROM lookup_value WHERE entity_id=87 AND lookup_name='Permissions-CanRemovePenaltyAttachedToTheLoanAccount'), null);
+                
+            INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES
+                (249, 113,
+                (SELECT lookup_id FROM lookup_value WHERE entity_id=87 AND lookup_name='Permissions-CanRemovePenaltyAttachedToTheLoanAccount'),
+                (SELECT lookup_id FROM lookup_value WHERE entity_id=87 AND lookup_name='Permissions-CanRemovePenaltyAttachedToTheLoanAccount'));
+                
+            INSERT INTO roles_activity VALUES
+                (249, 1);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                DELETE FROM roles_activity WHERE activity_id = 249;
+                DELETE FROM activity WHERE activity_id = 249;
+                DELETE FROM lookup_value_locale where lookup_id =
+                    (SELECT lookup_id FROM lookup_value WHERE lookup_name='Permissions-CanRemovePenaltyAttachedToTheLoanAccount');
+                DELETE FROM lookup_value WHERE entity_id = 87 AND lookup_name = 'Permissions-CanRemovePenaltyAttachedToTheLoanAccount';
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

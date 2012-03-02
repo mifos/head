@@ -24,6 +24,7 @@ import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.penalties.exceptions.PenaltyException;
 import org.mifos.accounts.penalties.util.helpers.PenaltyConstants;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyUtils;
 import org.mifos.security.util.UserContext;
 
 public class AmountPenaltyBO extends PenaltyBO {
@@ -48,6 +49,11 @@ public class AmountPenaltyBO extends PenaltyBO {
 
     public void setAmount(Money amount) {
         this.amount = amount;
+    }
+    
+    @Override
+    public boolean doesPenaltyInvolveFractionalAmounts() {
+        return !MoneyUtils.isRoundedAmount(this.getAmount());
     }
     
     private void validateAmount(final Money amount) throws PenaltyException {
