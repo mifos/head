@@ -48,10 +48,11 @@ explanation of the license and how it is applied.
 				default:
 					form.action="clientsAndAccounts.ftl";
 				}
+				form.method="get";
 				form.submit();
  			 }
  	</script>
-		<html-el:form action="custAction.do" method="get">
+		<html-el:form action="custAction.do" method="post">
 			<c:set
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 				var="BusinessKey" />
