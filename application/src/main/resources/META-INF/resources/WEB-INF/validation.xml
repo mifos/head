@@ -361,20 +361,6 @@
         </form>
         <!-- Personnel Notes Action Ends-->
 
-        <!-- Account apply charges Action-->
-        <form name="/applyChargeAction">
-            <!-- Comment -->
-            <field property="charge" depends="required,validwhen">
-                <msg name="required" key="errors.mandatory" bundle="accountsUIResources" />
-                <arg0 key="account.amount" />
-                <msg name="validwhen" key="account.amount_zero" bundle="accountsUIResources" />
-                <var>
-                    <var-name>test</var-name>
-                    <var-value>(*this* > 0)</var-value>
-                </var>
-            </field>
-
-        </form>
         <!-- Personnel Notes Action Ends-->
 
         <!-- Account Trxn -->

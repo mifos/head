@@ -121,7 +121,7 @@ public class ApplyChargeActionForm extends BaseActionForm {
                     validateRate(errors, request);
                 }
                 validateAmount(errors, locale);
-                errors.add(super.validate(mapping, request));
+               
             }
         }
         if (!errors.isEmpty()) {
@@ -167,6 +167,11 @@ public class ApplyChargeActionForm extends BaseActionForm {
                         errors, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE,"");
             }
         }
+        
+        else {
+        	   addError(errors, AccountConstants.ACCOUNT_AMOUNT, "errors.mandatory", "amount");
+        }
+        	
         if (conversionResult != null && conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
                     lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE));
