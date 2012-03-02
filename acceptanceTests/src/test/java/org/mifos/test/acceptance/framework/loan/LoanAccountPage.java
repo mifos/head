@@ -62,6 +62,14 @@ public class LoanAccountPage extends MifosPage {
     public void verifyNoOneTimeFeeRemovalLinkExists(int feeIndex) {
         Assert.assertFalse(selenium.isElementPresent("id=loanAccountDetail.link.removeOneTimeFee_" + feeIndex));
     }
+    
+    public void verifyNoOneTimePenaltyRemovalLinkExists(int penaltyIndex) {
+        Assert.assertFalse(selenium.isElementPresent("id=loanAccountDetail.link.removeOneTimePenalty_" + penaltyIndex));
+    }
+    
+    public void verifyNoPenaltyRemovalLinkExists(int penaltyIndex) {
+        Assert.assertFalse(selenium.isElementPresent("id=loanAccountDetail.link.removePenalty_" + penaltyIndex));
+    }
 
     public void verifyLoanAmount(String amount) {
         Assert.assertEquals(getOriginalLoanAmount(), StringUtil.formatNumber(amount));
@@ -502,7 +510,18 @@ public class LoanAccountPage extends MifosPage {
         waitForPageToLoad();
         return this;
     }
-
+    
+    public LoanAccountPage removeOneTimePenalty(int penaltyIndex) {
+        selenium.click("loanAccountDetail.link.removeOneTimePenalty_" + penaltyIndex);
+        waitForPageToLoad();
+        return this;
+    }
+    
+    public LoanAccountPage removePenalty(int penaltyIndex) {
+        selenium.click("loanAccountDetail.link.removePenalty_" + penaltyIndex);
+        waitForPageToLoad();
+        return this;
+    }
 
     public ApplyAdjustmentPage navigateToApplyAdjustment() {
         selenium.click("loanaccountdetail.link.applyAdjustment");
@@ -521,7 +540,7 @@ public class LoanAccountPage extends MifosPage {
                 .submitAndNavigateToNextPage(statusParams)
                 .submitAndNavigateToLoanAccountPage();
     }
-
+    
     public LoanAccountPage changeAccountStatusToAccepted() {
         EditLoanAccountStatusParameters statusParams = new EditLoanAccountStatusParameters();
         statusParams.setStatus(EditLoanAccountStatusParameters.APPROVED);

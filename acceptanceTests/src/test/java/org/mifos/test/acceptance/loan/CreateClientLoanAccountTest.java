@@ -21,7 +21,6 @@
 package org.mifos.test.acceptance.loan;
 
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -80,8 +79,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
     private Random random;
     public static final String DATE = "Date";
@@ -108,9 +105,13 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "smoke"})
+    @Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "smoke", "no_db_unit"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newWeeklyClientLoanAccountWithQuestionGroups() throws Exception {
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011, 2, 1, 13, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
         String questionGroupTitle = "QG1" + random.nextInt(100);
         String question1 = "DT_" + random.nextInt(100);
         String question2 = "SS_" + random.nextInt(100);

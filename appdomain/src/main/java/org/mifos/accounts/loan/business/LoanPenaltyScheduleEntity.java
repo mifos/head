@@ -22,7 +22,9 @@ package org.mifos.accounts.loan.business;
 
 import static org.mifos.framework.util.helpers.NumberUtils.min;
 
-import org.mifos.accounts.business.AccountActionDateEntity;
+import java.util.Date;
+
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.penalties.business.PenaltyBO;
@@ -38,14 +40,15 @@ public class LoanPenaltyScheduleEntity extends AbstractEntity implements Compara
     private Money penaltyAmount;
     private Money penaltyAmountPaid;
     private Money penaltyAllocated;
+    private Date lastApplied;
     private int versionNo;
     
     public LoanPenaltyScheduleEntity() {
-        this(null, null, null, null);
+        this(null, null, null, null, null);
     }
     
     public LoanPenaltyScheduleEntity(final LoanScheduleEntity loanSchedule, final PenaltyBO penalty,
-            final AccountPenaltiesEntity accountPenalty, final Money penaltyAmount) {
+            final AccountPenaltiesEntity accountPenalty, final Money penaltyAmount, final Date lastApplied) {
         this.loanSchedule = loanSchedule;
         
         if(loanSchedule != null) {
@@ -58,6 +61,7 @@ public class LoanPenaltyScheduleEntity extends AbstractEntity implements Compara
         this.penalty = penalty;
         this.accountPenalty = accountPenalty;
         this.penaltyAmount = penaltyAmount;
+        this.lastApplied = lastApplied;
     }
     
     public LoanScheduleEntity getLoanSchedule() {
@@ -151,5 +155,18 @@ public class LoanPenaltyScheduleEntity extends AbstractEntity implements Compara
     public int getVersionNo() {
         return versionNo;
     }
+
+    public Date getLastApplied() {
+        return lastApplied;
+    }
+
+    public void setLastApplied(final Date lastApplied) {
+        this.lastApplied = lastApplied;
+    }
+    
+    public boolean isOn(LocalDate date) {
+        return new LocalDate(this.lastApplied).isEqual(date);
+    }
+    
 }
 

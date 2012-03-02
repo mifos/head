@@ -33,10 +33,12 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.OverDueAmounts;
@@ -319,10 +321,6 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
             chargeWaived = chargeWaived.add(((LoanFeeScheduleEntity) accountFeesActionDetailEntity).waiveCharges());
         }
-        setMiscPenalty(getMiscPenaltyPaid());
-        for (LoanPenaltyScheduleEntity entity: getLoanPenaltyScheduleEntities()) {
-            chargeWaived = chargeWaived.add(entity.waiveCharges());
-        }
         return chargeWaived;
     }
 
@@ -433,6 +431,10 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         Money chargeWaived = new Money(getCurrency());
         chargeWaived = chargeWaived.add(getMiscPenaltyDue());
         setMiscPenalty(getMiscPenaltyPaid());
+        setPenalty(getPenaltyPaid());
+        for (LoanPenaltyScheduleEntity loanPenaltyScheduleEntity : getLoanPenaltyScheduleEntities()) {
+            chargeWaived = chargeWaived.add(loanPenaltyScheduleEntity.waiveCharges());
+        }
         return chargeWaived;
     }
 
@@ -537,7 +539,20 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
     private Money payPenalty(final Money amount) {
         Money payable = min(amount, (getPenalty().subtract(getPenaltyPaid())));
+        Money balance = amount;
+        
         allocatePenalty(payable);
+        
+        for (LoanPenaltyScheduleEntity loanPenaltyScheduleEntity : getLoanPenaltyScheduleEntities()) {
+            balance = loanPenaltyScheduleEntity.payPenalty(balance);
+            Integer penaltyId = loanPenaltyScheduleEntity.getLoanPenaltyScheduleEntityId();
+            if (penaltyId == null) { // special workaround for MIFOS-4517
+                penaltyId = loanPenaltyScheduleEntity.hashCode();
+            }
+            Money penaltyAllocated = loanPenaltyScheduleEntity.getPenaltyAllocated();
+            paymentAllocation.allocateForPenalty(penaltyId, penaltyAllocated);
+        }
+        
         return amount.subtract(payable);
     }
 
@@ -822,4 +837,45 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		this.principal = this.principal.add(accountPayment.getAmount());
 		this.getPaymentAllocation().allocateForPrincipal(accountPayment.getAmount());
 	}
+	
+	public LoanPenaltyScheduleEntity getPenaltyScheduleEntity(final Short penaltyId) {
+	    List<LoanPenaltyScheduleEntity> list = new ArrayList<LoanPenaltyScheduleEntity>(getLoanPenaltyScheduleEntities());
+        
+	    LoanPenaltyScheduleEntity entity = null;
+        for(LoanPenaltyScheduleEntity item : list) {
+            if(item.getPenalty().getPenaltyId().equals(penaltyId)) {
+                entity = item;
+                break;
+            }
+        }
+        
+        return entity;
+	}
+	
+	Money removePenalties(Short penaltyId) {
+        Money penaltyAmount = null;
+        LoanPenaltyScheduleEntity objectToRemove = null;
+        Set<LoanPenaltyScheduleEntity> loanPenaltyScheduleEntitySet = this.getLoanPenaltyScheduleEntities();
+        for (LoanPenaltyScheduleEntity loanPenaltyScheduleEntity : loanPenaltyScheduleEntitySet) {
+            if (loanPenaltyScheduleEntity.getPenalty().getPenaltyId().equals(penaltyId)
+                    && (loanPenaltyScheduleEntity.getPenaltyAmountPaid() == null || loanPenaltyScheduleEntity
+                            .getPenaltyAmountPaid().isZero())) {
+                objectToRemove = loanPenaltyScheduleEntity;
+                penaltyAmount = objectToRemove.getPenaltyAmount();
+                break;
+            } else if (loanPenaltyScheduleEntity.getPenalty().getPenaltyId().equals(penaltyId)
+                    && loanPenaltyScheduleEntity.getPenaltyAmountPaid() != null
+                    && loanPenaltyScheduleEntity.getPenaltyAmountPaid().isGreaterThanZero()) {
+                penaltyAmount = loanPenaltyScheduleEntity.getPenaltyAmount().subtract(
+                        loanPenaltyScheduleEntity.getPenaltyAmountPaid());
+                loanPenaltyScheduleEntity.setPenaltyAmount(loanPenaltyScheduleEntity.getPenaltyAmountPaid());
+                break;
+            }
+        }
+        if (objectToRemove != null) {
+            this.removeLoanPenaltySchedule(objectToRemove);
+            penalty = penalty.subtract(penaltyAmount);
+        }
+        return penaltyAmount;
+    }
 }

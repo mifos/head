@@ -421,4 +421,10 @@ public class AccountBusinessService implements BusinessService {
             throw new ServiceException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
         }
     }
+
+    public Object checkPermissionForRemovePenalties(AccountTypes accountTypes, CustomerLevel customerLevel,
+            UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
+        return getActivityMapper().isRemovePenaltiesPermittedForAccounts(accountTypes, customerLevel, userContext,
+                recordOfficeId, recordLoanOfficerId);
+    }
 }
