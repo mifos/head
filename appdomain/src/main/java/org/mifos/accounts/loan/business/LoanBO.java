@@ -3523,9 +3523,10 @@ public class LoanBO extends AccountBO implements Loan {
     
     private List<Short> getApplicableInstallmentIdsForRemovePenalties() {
         List<Short> installmentIdList = new ArrayList<Short>();
-        for (AccountActionDateEntity accountActionDateEntity : getApplicableIdsForFutureInstallments()) {
+        for (AccountActionDateEntity accountActionDateEntity : getApplicableIdsForLateInstallments()) {
             installmentIdList.add(accountActionDateEntity.getInstallmentId());
         }
+        
         AccountActionDateEntity accountActionDateEntity = getDetailsOfNextInstallment();
         if (accountActionDateEntity != null) {
             installmentIdList.add(accountActionDateEntity.getInstallmentId());
@@ -3540,5 +3541,18 @@ public class LoanBO extends AccountBO implements Loan {
             accountPenalties.changePenaltyStatus(PenaltyStatus.INACTIVE, getDateTimeService().getCurrentJavaDateTime());
             accountPenalties.setLastAppliedDate(null);
         }
+    }
+    
+    private List<AccountActionDateEntity> getApplicableIdsForLateInstallments() {
+        List<AccountActionDateEntity> lateActionDateList = new ArrayList<AccountActionDateEntity>();
+        AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+        if (nextInstallment != null) {
+            for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
+                if (!accountActionDate.isPaid() && accountActionDate.getInstallmentId() < nextInstallment.getInstallmentId()) {
+                    lateActionDateList.add(accountActionDate);
+                }
+            }
+        }
+        return lateActionDateList;
     }
 }

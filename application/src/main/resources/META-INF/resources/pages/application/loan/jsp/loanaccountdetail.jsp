@@ -550,7 +550,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                 <mifos:mifoslabel name="loan.recurring_acc_penalties" />
                                 <br>
                             </span>
-                            <c:forEach items="${loanInformationDto.accountPenalties}" var="penaltySet">
+                            <c:forEach items="${loanInformationDto.accountPenalties}" var="penaltySet" varStatus="status">
                                 <c:if test="${penaltySet.penaltyFrequencyId != '1' && penaltySet.penaltyStatus != '2'}">
                                     <c:out value="${penaltySet.penaltyName}" />:
                                     <span class="fontnormal">

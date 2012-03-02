@@ -874,6 +874,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         }
         if (objectToRemove != null) {
             this.removeLoanPenaltySchedule(objectToRemove);
+            penalty = penalty.subtract(penaltyAmount);
         }
         return penaltyAmount;
     }

@@ -57,7 +57,7 @@ public class PenaltyHelper {
             .fillParameters(param).submitPageAndGotoPenaltyPreviewPage(NewPenaltyPreviewPage.class).submit();
     }
     
-    public LoanAccountPage createWeeklyLoanAccountWithPenalty(final SubmitFormParameters formParameters, final String clientName) throws Exception {
+    public LoanAccountPage createWeeklyLoanAccountWithPenalty(final SubmitFormParameters formParameters, final String clientName, final boolean disbursal) throws Exception {
         navigationHelper.navigateToAdminPage().verifyPage().defineLoanProduct(formParameters);
         
         final CreateLoanAccountSearchParameters searchParam = new CreateLoanAccountSearchParameters();
@@ -69,17 +69,20 @@ public class PenaltyHelper {
             .navigateToReviewInstallmentsPage()
             .clickPreviewAndGoToReviewLoanAccountPage()
             .submitForApprovalAndNavigateToConfirmationPage()
-            .navigateToLoanAccountDetailsPage()
-            .changeAccountStatusToAccepted();
+            .navigateToLoanAccountDetailsPage();
         
-        final DisburseLoanParameters disburseParams = new DisburseLoanParameters();
-        disburseParams.setAmount(formParameters.getDefaultLoanAmount());
-        disburseParams.setDisbursalDateDD("15");
-        disburseParams.setDisbursalDateMM("2");
-        disburseParams.setDisbursalDateYYYY("2012");
-        disburseParams.setPaymentType(DisburseLoanParameters.CASH);
-        
-        loanAccountPage.disburseLoan(disburseParams);
+        if (disbursal) {
+            loanAccountPage.changeAccountStatusToAccepted();
+            
+            final DisburseLoanParameters disburseParams = new DisburseLoanParameters();
+            disburseParams.setAmount(formParameters.getDefaultLoanAmount());
+            disburseParams.setDisbursalDateDD("15");
+            disburseParams.setDisbursalDateMM("2");
+            disburseParams.setDisbursalDateYYYY("2012");
+            disburseParams.setPaymentType(DisburseLoanParameters.CASH);
+
+            loanAccountPage.disburseLoan(disburseParams);
+        }
         
         return loanAccountPage;
     }

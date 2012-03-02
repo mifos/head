@@ -107,7 +107,7 @@ public class AccountAppAction extends BaseAction {
         AccountBO accountBO = getAccountBusinessService().getAccount(accountId);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
         
-        if(accountBO instanceof LoanBO) {
+        if (accountBO instanceof LoanBO) {
             this.loanAccountServiceFacade.removeLoanPenalty(accountId, penaltyId);
         }
         

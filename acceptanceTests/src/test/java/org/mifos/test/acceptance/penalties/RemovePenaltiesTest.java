@@ -26,6 +26,8 @@ import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.PenaltyFormParameters;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
@@ -67,21 +69,16 @@ public class RemovePenaltiesTest extends UiTestCaseBase {
     
     @Test(enabled = true)
     public void shouldWaivedPenaltyOverDueOnLoanAccount() throws Exception {
-        final String accountId = setUpPenaltyAndLoanAccount();
+        final String accountId = setUpPenaltyAndLoanAccount(true, PenaltyFormParameters.FREQUENCY_WEEKLY);
         
         navigationHelper.navigateToLoanAccountPage(accountId).navigateToViewInstallmentDetails().waiveOverdueInstallmentPenalty();
         
-        penaltyHelper.verifyCalculatePenaltyWithoutPayment(accountId,
-                new String[] { "0", "0", "0" },
-                new String[][] { { "0", "250" }, { "0", "250" }, { "0", "250" }, { "0", "250" }, { "0", "250" },
-                                 { "0", "250" }, { "0", "250" }, null /* Future Installments */, { "0", "250" }, { "0", "250" }, { "0", "250" } },
-                new String[] { "2,000", "05/04/2012", "1,750" }
-        );
+        verifyCalculatePenaltyWithoutPenalty(accountId);
     }
     
     @Test(enabled = true)
     public void shouldWaivedPenaltyOverDueOnLoanAccountAfterPayment() throws Exception {
-        final String accountId = setUpPenaltyAndLoanAccount();
+        final String accountId = setUpPenaltyAndLoanAccount(true, PenaltyFormParameters.FREQUENCY_WEEKLY);
         
         PaymentParameters param = new PaymentParameters();
         param.setAmount("285");
@@ -104,7 +101,7 @@ public class RemovePenaltiesTest extends UiTestCaseBase {
     
     @Test(enabled = true)
     public void shouldNotWaivedPenaltyOverDueOnLoanAccountAfterFullPayment() throws Exception {
-        final String accountId = setUpPenaltyAndLoanAccount();
+        final String accountId = setUpPenaltyAndLoanAccount(true, PenaltyFormParameters.FREQUENCY_WEEKLY);
         
         PaymentParameters param = new PaymentParameters();
         param.setAmount("1,890");
@@ -125,26 +122,70 @@ public class RemovePenaltiesTest extends UiTestCaseBase {
         );
     }
     
-    private String setUpPenaltyAndLoanAccount() throws Exception {
+    @Test(enabled = true)
+    public void shouldRemovePenaltyBeforeDisbursal() throws Exception {
+        final String accountId = setUpPenaltyAndLoanAccount(false, PenaltyFormParameters.FREQUENCY_NONE);
+        
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(accountId);
+        
+        loanAccountPage.removeOneTimePenalty(1);
+        loanAccountPage.verifyNoOneTimePenaltyRemovalLinkExists(1);
+        
+        final DisburseLoanParameters disburseParams = new DisburseLoanParameters();
+        disburseParams.setAmount(loanAccountPage.getOriginalTotalAmount());
+        disburseParams.setDisbursalDateDD("15");
+        disburseParams.setDisbursalDateMM("2");
+        disburseParams.setDisbursalDateYYYY("2012");
+        disburseParams.setPaymentType(DisburseLoanParameters.CASH);
+
+        loanAccountPage.changeAccountStatusToAccepted().disburseLoan(disburseParams);
+        
+        changeDateTime(04, 1);
+        verifyCalculatePenaltyWithoutPenalty(accountId);
+    }
+    
+    @Test(enabled = true)
+    public void shouldRemovePenaltyWithoutPayment() throws Exception {
+        final String accountId = setUpPenaltyAndLoanAccount(true, PenaltyFormParameters.FREQUENCY_WEEKLY);
+        
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(accountId);
+        loanAccountPage.removePenalty(1);
+        loanAccountPage.verifyNoOneTimePenaltyRemovalLinkExists(1);
+        
+        verifyCalculatePenaltyWithoutPenalty(accountId);
+    }
+    
+    private void verifyCalculatePenaltyWithoutPenalty(final String accountId) {
+        penaltyHelper.verifyCalculatePenaltyWithoutPayment(accountId,
+                new String[] { "0", "0", "0" },
+                new String[][] { { "0", "250" }, { "0", "250" }, { "0", "250" }, { "0", "250" }, { "0", "250" },
+                                 { "0", "250" }, { "0", "250" }, null /* Future Installments */, { "0", "250" }, { "0", "250" }, { "0", "250" } },
+                new String[] { "2,000", "05/04/2012", "1,750" }
+        );
+    }
+    
+    private String setUpPenaltyAndLoanAccount(final boolean disbursal, String frequency) throws Exception {
         changeDateTime(02, 15);
         String penaltyName = "Penalty Waive" + StringUtil.getRandomString(4);
         
-        penaltyHelper.createAmountPenalty(penaltyName, PenaltyFormParameters.PERIOD_NONE, "", PenaltyFormParameters.FREQUENCY_WEEKLY, "0.1", "9,999,999,999", "5");
+        penaltyHelper.createAmountPenalty(penaltyName, PenaltyFormParameters.PERIOD_NONE, "", frequency, "0.1", "9,999,999,999", "5");
         
-        String accountId = createWeeklyLoanAccountWithPenalty(penaltyName);
+        String accountId = createWeeklyLoanAccountWithPenalty(penaltyName, disbursal);
         
-        changeDateTime(04, 1);
-        penaltyHelper.verifyCalculatePenaltyWithoutPayment(accountId,
-                new String[] { "140", "0", "140" },
-                new String[][] { { "35", "285" }, { "30", "280" }, { "25", "275" }, { "20", "270" }, { "15", "265" },
-                                 { "10", "260" }, { "5", "255" }, null /* Future Installments */, { "0", "250" }, { "0", "250" }, { "0", "250" } },
-                new String[] { "2,140", "05/04/2012", "1,890" }
-        );
+        if(disbursal) {
+            changeDateTime(04, 1);
+            penaltyHelper.verifyCalculatePenaltyWithoutPayment(accountId,
+                    new String[] { "140", "0", "140" },
+                    new String[][] { { "35", "285" }, { "30", "280" }, { "25", "275" }, { "20", "270" }, { "15", "265" },
+                                     { "10", "260" }, { "5", "255" }, null /* Future Installments */, { "0", "250" }, { "0", "250" }, { "0", "250" } },
+                    new String[] { "2,140", "05/04/2012", "1,890" }
+            );
+        }
         
         return accountId;
     }
     
-    private String createWeeklyLoanAccountWithPenalty(final String penaltyName) throws Exception {
+    private String createWeeklyLoanAccountWithPenalty(final String penaltyName, final boolean disbursal) throws Exception {
         final SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         formParameters.addPenalty(penaltyName);
         formParameters.setInterestTypes(SubmitFormParameters.FLAT);
@@ -152,7 +193,7 @@ public class RemovePenaltiesTest extends UiTestCaseBase {
         formParameters.setDefaultInterestRate("0");
         formParameters.setDefInstallments("10");
         
-        return penaltyHelper.createWeeklyLoanAccountWithPenalty(formParameters, "Client - Veronica Abisya").getAccountId();
+        return penaltyHelper.createWeeklyLoanAccountWithPenalty(formParameters, "Client - Veronica Abisya", disbursal).getAccountId();
     }
     
     private void changeDateTime(final int month, final int day) throws Exception {

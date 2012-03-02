@@ -287,7 +287,7 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         formParameters.setMaxInstallments("10");
         formParameters.setDefInstallments("10");
         
-        LoanAccountPage loanAccountPage = penaltyHelper.createWeeklyLoanAccountWithPenalty(formParameters, "Client - Veronica Abisya");
+        LoanAccountPage loanAccountPage = penaltyHelper.createWeeklyLoanAccountWithPenalty(formParameters, "Client - Veronica Abisya", true);
         
         PaymentParameters formPayment = new PaymentParameters();
         formPayment.setTransactionDateDD("15");
