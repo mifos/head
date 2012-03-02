@@ -203,7 +203,7 @@ public class ClientTest extends UiTestCaseBase {
 
     }
     
-    @Test(singleThreaded = true, groups = {"smoke", "client", "acceptance", "ui"}, enabled=true)
+    @Test(singleThreaded = true, groups = {"smoke", "client", "acceptance", "ui", "no_db_unit"}, enabled=true)
     public void verifyErrorsMessages() {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         DefineHiddenMandatoryFieldsPage mandatoryFieldsPage = adminPage.navigateToDefineHiddenMandatoryFields();
@@ -236,7 +236,7 @@ public class ClientTest extends UiTestCaseBase {
         adminPage.logout();
     }
 
-    @Test(singleThreaded = true, groups = {"smoke", "client", "acceptance", "ui"}, enabled=true)
+    @Test(singleThreaded = true, groups = {"smoke", "client", "acceptance", "ui", "no_db_unit"}, enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-208
     public void createClientAndChangeStatusTest() throws Exception {

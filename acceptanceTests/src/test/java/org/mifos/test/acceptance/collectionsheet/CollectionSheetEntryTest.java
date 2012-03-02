@@ -44,7 +44,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups={"collectionsheet","acceptance","ui", "smoke"})
+@Test(singleThreaded = true, groups={"collectionsheet","acceptance","ui", "smoke", "db_unit"})
 public class CollectionSheetEntryTest extends UiTestCaseBase {
 
     private static final String FINANCIAL_TRXN = "FINANCIAL_TRXN";

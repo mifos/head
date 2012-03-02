@@ -83,6 +83,14 @@ public class CreateLoanAccountEntryPage extends MifosPage {
             responsePage.populateAnswers(responseParameters);
             responsePage.navigateToNextPage();
         }
+        else if ("Exception".equals(pageId)){
+            String stackTrace = selenium.getText("css=div.stackTrace pre");
+            Assert.fail("Expected page <???>, actual page <"+pageId+">!!! with exception stack  > " + stackTrace);
+        }
+        else if (getErrors().length() > 0) {
+            String errors = getErrors();
+            Assert.fail("Expected page <???>, actual page <"+pageId+">!!! with error message > " + errors);
+        }
     }
 
     private CreateLoanAccountConfirmationPage navigateToConfirmationPage() {

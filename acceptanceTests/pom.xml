@@ -374,7 +374,7 @@
                         </goals>
                         <configuration>
                             <groups>${test.group.no_db_unit}</groups>
-                            <excludedGroups>workInProgress</excludedGroups>
+                            <excludedGroups>db_unit,workInProgress</excludedGroups>
                             <skip>${maven.test.skip}</skip>
                             <failIfNoTests>false</failIfNoTests>
                             <reportsDirectory>${project.build.directory}/surefire-reports/integration/no_db_unit</reportsDirectory>
