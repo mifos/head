@@ -26,8 +26,11 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.validator.Validator;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -171,6 +174,8 @@ public abstract class BaseAction extends DispatchAction {
         configureServiceFacadeBeans();
         configureLegacyDaoBeans();
 
+        checkLocaleContext(request);
+
         if (MifosBatchJob.isBatchJobRunningThatRequiresExclusiveAccess()) {
             return logout(mapping, request);
         }
@@ -189,6 +194,26 @@ public abstract class BaseAction extends DispatchAction {
         // this postExecute(request, annotation, true);
         postExecute(request, annotation, isCloseSessionAnnotationPresent(form, request));
         return forward;
+    }
+
+    private void checkLocaleContext(HttpServletRequest request) {
+        // Legacy struts actions and UserContext uses this
+        // Eg. LoanPrdActionForm.validateInterestGLCode
+        UserContext userContext = (UserContext) request.getSession().getAttribute(Constants.USERCONTEXT);
+        if (userContext != null) {
+            Locale locale = personnelServiceFacade.getUserPreferredLocale();
+            userContext.setPreferredLocale(locale);
+            HttpSession session = request.getSession(false);
+            if(session != null) {
+                // Struts tags like html-el
+                session.setAttribute(Globals.LOCALE_KEY, locale);
+                // struts form validator xml rules
+                // see http://struts.apache.org/1.2.4/userGuide/dev_validator.html
+                session.setAttribute(Validator.LOCALE_PARAM,locale);
+             // reset the JSTL locale
+                Config.set(session, Config.FMT_LOCALE, locale);
+            }
+        }
     }
 
     private <T extends Object> T getBean(Class<T> clazz) {

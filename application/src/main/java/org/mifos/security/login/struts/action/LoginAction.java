@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.struts.Globals;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -195,7 +196,7 @@ public class LoginAction extends BaseAction {
     private void setUserContextInSession(UserContext userContext, HttpServletRequest request) {
         HttpSession hs = request.getSession(false);
         hs.setAttribute(Constants.USERCONTEXT, userContext);
-        hs.setAttribute("org.apache.struts.action.LOCALE", userContext.getCurrentLocale());
+        hs.setAttribute(Globals.LOCALE_KEY, userContext.getCurrentLocale());
     }
 
 //    private String getLoginForward(Short passwordChanged) {
