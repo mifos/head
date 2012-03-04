@@ -80,9 +80,9 @@ public class PageScroll {
         String previousStr = resource.getString("Previous");
         String nextStr = resource.getString("Next");
         String resultsStr = resource.getString("Results");
-        resultsStr = resultsStr.replaceFirst("%s1", new Integer(pageStart).toString());
-        resultsStr = resultsStr.replaceFirst("%s2", new Integer(pageEnd).toString());
-        resultsStr = resultsStr.replaceFirst("%s3", new Integer(size).toString());
+        resultsStr = resultsStr.replaceFirst("\\{0\\}", new Integer(pageStart).toString());
+        resultsStr = resultsStr.replaceFirst("\\{1\\}", new Integer(pageEnd).toString());
+        resultsStr = resultsStr.replaceFirst("\\{2\\}", new Integer(size).toString());
 
         if (prev) {
             result.append("<td width=\"20%\" class=\"fontnormalbold\">").append(
