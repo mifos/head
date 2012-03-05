@@ -64,9 +64,7 @@
 		
 		<br>
 		<span class="fontnormalbold">
-			[@spring.message "${ConfigurationConstants.GROUP}" /]
-			[@spring.message "Center.s" /]
-			[@spring.message "Center.Assigned" /]
+			[@spring.message "${ConfigurationConstants.GROUP}" /][@spring.message "Center.s" /] [@spring.message "Center.Assigned" /]
 		</span>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		[#if centerInformationDto.centerDisplay.customerStatusId != CustomerConstants.CENTER_INACTIVE_STATE ]

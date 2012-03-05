@@ -19,7 +19,7 @@
 *  explanation of the license and how it is applied.
 --]
 
-    <h3>[@spring.message "ClientLeftPane.clientsAndAccountsTasks" /]</h3>
+    <p class="leftpanehead">[@spring.message "ClientLeftPane.clientsAndAccountsTasks" /]</p>
     <ul class="side_nav">
         <li class="title">
             [@spring.message "ClientLeftPane.manageCollectionSheets" /]

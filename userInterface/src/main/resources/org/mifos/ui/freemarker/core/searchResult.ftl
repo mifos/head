@@ -62,7 +62,7 @@
 				[#assign number = number + 1 /]
 				${number}.
 				[@spring.message "${ConfigurationConstants.CLIENT}" /]
-				<span class="headingblue">
+				<span class="headingblue" style="font-size: 12px;">
 					<a href="viewClientDetails.ftl?globalCustNum=${client.clientGlobalCustNum}">
 						${client.clientName}: [@spring.message "ID" /] ${client.clientGlobalCustNum}
 					</a>
@@ -146,7 +146,7 @@
 				[#assign number = number + 1 /]
 				${number}.
 				[@spring.message "${ConfigurationConstants.GROUP}" /]
-				<span class="headingblue">
+				<span class="headingblue" style="font-size: 12px;">
 					<a href="viewGroupDetails.ftl?globalCustNum=${group.groupGlobalCustNum}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
 						${group.groupName}: ${group.groupGlobalCustNum}
 					</a>
@@ -224,7 +224,7 @@
 				[#assign number = number + 1 /]
 				${number}.
 				[@spring.message "${ConfigurationConstants.CENTER}" /]
-				<span class="headingblue">
+				<span class="headingblue" style="font-size: 12px;">
 					<a href="viewCenterDetails.ftl?globalCustNum=${center.centerGlobalCustNum}&recordOfficeId=${center.branchId}&
 							 recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomnum=${Session.randomNUm}">
 						${center.centerName}: ${center.centerGlobalCustNum}
