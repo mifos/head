@@ -50,17 +50,17 @@
     [@layout.footer/]
 [/#macro]
 
-[#macro clientLeftPane]
+[#macro clientLeftPane currentTab="Admin"]
     [@layout.header "title" /]
-    [@widget.topNavigationNoSecurity currentTab="Admin" /]
+    [@widget.topNavigationNoSecurity currentTab="${currentTab}" /]
     <div class="colmask leftmenu">
         <div class="colleft">
             <div class="col1wrap">
                 <div class="col1">
-                <div class="main_content">
+                	<div class="main_content">
                     [#nested]
-                </div>
-             </div>
+                	</div>
+             	</div>
             </div>
             <div class="col2">
                 <div class="side_bar">

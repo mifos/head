@@ -25,7 +25,7 @@
 </div>--]
  <div  class="sidebar ht550">
   <div>
-  <form name="custSearchActionForm" method="post" action="custSearchAction.do?method=loadAllBranches">
+  <form method="post" action="searchResult.ftl">
     <p class="orangetab">[@spring.message "admin.administrativeTasks" /]</p>
     <p class="leftpanelform fontnormal8ptbold">[@spring.message "admin.searchbynamesystemIDoraccountnumber"/]<br />
     <input type="text" class="t_box" name="searchString" maxlength="200" size="20" value="" style="margin-left:0px;margin-top:4px;">

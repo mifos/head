@@ -20,7 +20,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
-  <html-el:form action="custSearchAction.do?method=loadAllBranches">
+  <form action="searchResult.ftl">
         <tr>
           <td class="leftpanelinks">
 	<table width="90%" border="0" cellspacing="0" cellpadding="0">
@@ -36,7 +36,7 @@ explanation of the license and how it is applied.
               <tr>
                 <td width="100%" colspan="2">
                 
-                <html-el:text property="searchString" size="20" maxlength="200"/>
+                <input type="text" name="searchString" size="20" maxlength="200"/>
 				<c:choose>
 				<c:when test='${sessionScope.UserContext.officeLevelId==5}'>
 				<html-el:hidden property="officeId" value="${sessionScope.UserContext.branchId}"/> 
@@ -55,13 +55,11 @@ explanation of the license and how it is applied.
                 <td align="right">                
                 
                 
-                <html-el:submit property="searchButton" styleClass="buttn">
-                <mifos:mifoslabel name="framework.search" bundle="FrameworkUIResources"></mifos:mifoslabel>
-                </html-el:submit>
+                <input type="submit" name="searchButton" class="buttn" value="<mifos:mifoslabel name="framework.search" bundle="FrameworkUIResources"></mifos:mifoslabel>">
                 
                 </td>
               </tr>
             </table>            
             </td>
         </tr>
-</html-el:form>
+</form>
