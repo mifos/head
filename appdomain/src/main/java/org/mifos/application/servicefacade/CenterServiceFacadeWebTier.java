@@ -682,7 +682,18 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
+        
 
+        LoanBO loanAccount = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        CustomerBO customerBO = loanAccount.getCustomer();
+        loanAccount.updateDetails(userContext);
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, customerBO.getOfficeId(), customerBO.getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
+        }
+        
         try {
             AccountBO account = new AccountBusinessService().findBySystemId(globalAccountNum);
             account.updateDetails(userContext);
