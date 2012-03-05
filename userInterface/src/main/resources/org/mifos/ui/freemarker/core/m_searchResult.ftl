@@ -44,10 +44,9 @@
 		</form>
 	</div>
 	[#if customerHierarchy?has_content]
-	<div style="width: 325px">
+	<div>
 		[#assign number = pageSize*currentPage /]
-		<div class="blueline">
-		</div>
+		[#assign firstResultNumber = number + 1 /]
 		<div>
 			<span class="headingorange">
 				${customerHierarchy.size} [@spring.message "Customer.resultsFor" /] 
@@ -58,13 +57,16 @@
 		</div>
 		[#list customerHierarchy.clients as client]
 		<div>
+			<img src="pages/framework/images/trans.gif" width="5" height="5">
+		</div>
+		<div>
 			<div>
 				[#assign number = number + 1 /]
 				${number}.
 				[@spring.message "${ConfigurationConstants.CLIENT}" /]
-				<span class="headingblue">
+				<span class="headingblue" style="font-size: 12px;">
 					<a href="viewClientDetails.ftl?globalCustNum=${client.clientGlobalCustNum}">
-						${client.clientName}: ${client.clientGlobalCustNum}
+						${client.clientName}: [@spring.message "ID" /] ${client.clientGlobalCustNum}
 					</a>
 				</span>
 			</div>
@@ -89,9 +91,9 @@
 				</span>
 				<span>
 				[#list client.savingsGlobalAccountNum as saving]
-					<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
-						${saving}
-					</a>
+					<span>
+						<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">Account # ${saving}</a>
+					</span>
 				[/#list]
 				</span>
 			</div>
@@ -103,9 +105,9 @@
 				</span>
 				<span>
 				[#list client.loanGlobalAccountNum as loan]
-					<a href="viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
-						${loan}
-					</a>
+					<span>
+						<a href="viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">Account # ${loan}</a>
+					</span>
 				[/#list]
 				</span>
 			</div>
@@ -139,11 +141,14 @@
 		[/#list]
 		[#list customerHierarchy.groups as group]
 		<div>
+			<img src="pages/framework/images/trans.gif" width="5" height="5">
+		</div>
+		<div>
 			<div>
 				[#assign number = number + 1 /]
 				${number}.
 				[@spring.message "${ConfigurationConstants.GROUP}" /]
-				<span class="headingblue">
+				<span class="headingblue" style="font-size: 12px;">
 					<a href="viewGroupDetails.ftl?globalCustNum=${group.groupGlobalCustNum}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
 						${group.groupName}: ${group.groupGlobalCustNum}
 					</a>
@@ -170,9 +175,9 @@
 				</span>
 				<span>
 				[#list group.savingsGlobalAccountNum as saving]
-					<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&method=get&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
-						${saving}
-					</a>
+					<span>
+						<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&method=get&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">Account # ${saving}</a>
+					</span>
 				[/#list]
 				</span>
 			</div>
@@ -184,9 +189,9 @@
 				</span>
 				<span>
 				[#list group.loanGlobalAccountNum as loan]
-					<a href="viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
-						${loan}
-					</a>
+					<span>
+						<a href="viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">Account # ${loan}</a>
+					</span>
 				[/#list]
 				</span>
 			</div>
@@ -214,11 +219,14 @@
 		[/#list]
 		[#list customerHierarchy.centers as center]
 		<div>
+			<img src="pages/framework/images/trans.gif" width="5" height="5">
+		</div>
+		<div>
 			<div>
 				[#assign number = number + 1 /]
 				${number}.
 				[@spring.message "${ConfigurationConstants.CENTER}" /]
-				<span class="headingblue">
+				<span class="headingblue" style="font-size: 12px;">
 					<a href="viewCenterDetails.ftl?globalCustNum=${center.centerGlobalCustNum}&recordOfficeId=${center.branchId}&
 							 recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomnum=${Session.randomNUm}">
 						${center.centerName}: ${center.centerGlobalCustNum}
@@ -246,9 +254,9 @@
 				</span>
 				<span>
 				[#list center.savingsGlobalAccountNum as saving]
-					<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${center.branchId}&recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
-						${saving}
-					</a>
+					<span>
+					<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${center.branchId}&recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">${saving}</a>
+					</span>
 				[/#list]
 				</span>
 			</div>
@@ -268,6 +276,177 @@
 			<img src="pages/framework/images/trans.gif" width="10" height="10">
 		</div>
 		[/#list]
+		[#if customerHierarchy.loan?has_content]
+		<div>
+			<img src="pages/framework/images/trans.gif" width="5" height="5">
+		</div>
+		<div>
+			[#assign loan = customerHierarchy.loan /]
+			<div>
+				<span class="fontnormalbold">
+					[#assign number = number + 1 /]
+					${number}.
+					[@spring.message "${ConfigurationConstants.LOAN}" /]
+				</span>
+				<span class="headingblue" style="font-size: 12px;">
+					<a href="viewLoanAccountDetails.ftl?globalAccountNum=${loan.loanGlobalAccountNum}&recordOfficeId=${loan.branchId}&
+							 recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomnum=${Session.randomNUm}">
+						Account # ${loan.loanGlobalAccountNum}
+					</a>
+				</span>
+			</div>
+			<div>
+				<span class="fontnormalbold">
+					[@spring.message "accounts.status" /]
+				</span>
+				<span>
+					[@mifostag.MifosImage id="${loan.accountStatusId}" moduleName="org.mifos.accounts.util.resources.accountsImages" /]
+				</span>
+				<span class="fontnormalbold">
+					[@spring.message "client.LoanOff" /]
+				</span>
+				<span>
+					${loan.loanOfficerName?if_exists}
+				</span>
+			</div>
+			<div>
+				[#if loan.clientGlobalCustNum?has_content]
+				<span class="fontnormal">
+					[@spring.message "${ConfigurationConstants.CLIENT}" /]
+				</span>
+				<span>
+					<a href="viewClientDetails.ftl?globalCustNum=${loan.clientGlobalCustNum}&recordOfficeId=${loan.branchId}&recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+						${loan.clientName}: ${loan.clientGlobalCustNum}
+					</a>
+				</span>
+				[#elseif loan.groupGlobalCustNum?has_content]
+				<span class="fontnormal">
+					[@spring.message "${ConfigurationConstants.GROUP}" /]
+				</span>
+				<span>
+					<a href="viewGroupDetails.ftl?globalCustNum=${loan.groupGlobalCustNum}&recordOfficeId=${loan.branchId}&recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+						${loan.groupName}: ${loan.groupGlobalCustNum}
+					</a>
+				</span>
+				[/#if]
+			</div>
+			<div>
+				<span>
+					[@spring.message "alsosee" /]:
+				</span>
+				<span>
+					<a href="clientsAndAccounts.ftl?officeId=${loan.branchId}&randomNUm=${Session.randomNUm}">
+						${loan.branchName}
+					</a>
+				</span>
+				[#if loan.centerGlobalCustNum?has_content]
+				 /
+				<a href="viewCenterDetails.ftl?globalCustNum=${loan.centerGlobalCustNum}&recordOfficeId=${loan.branchId}&recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+					${loan.centerName}
+				</a>
+				[/#if]
+				[#if loan.groupGlobalCustNum?has_content && loan.clientGlobalCustNum?has_content]
+				 /
+				<a href="viewGroupDetails.ftl?globalCustNum=${loan.groupGlobalCustNum}&recordOfficeId=${loan.branchId}&recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+					${loan.groupName}
+				</a>
+				[/#if]
+			</div>	
+		</div>
+		<div>
+			<img src="pages/framework/images/trans.gif" width="10" height="10">
+		</div>
+		[/#if]
+		[#if customerHierarchy.savings?has_content]
+		<div>
+			<img src="pages/framework/images/trans.gif" width="5" height="5">
+		</div>
+		<div>
+			[#assign savings = customerHierarchy.savings /]
+			<div>
+				<span class="fontnormalbold">
+					[#assign number = number + 1 /]
+					${number}.
+					[@spring.message "${ConfigurationConstants.SAVINGS}.Savings" /]
+				</span>
+				<span class="headingblue" style="font-size: 12px;">
+					<a href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.savingsGlobalAccountNum}&recordOfficeId=${savings.branchId}&
+							 recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomnum=${Session.randomNUm}">
+						Account # ${savings.savingsGlobalAccountNum}
+					</a>
+				</span>
+			</div>
+			<div>
+				<span class="fontnormalbold">
+					[@spring.message "accounts.status" /]
+				</span>
+				<span>
+					[@mifostag.MifosImage id="${savings.accountStatusId}" moduleName="org.mifos.accounts.util.resources.accountsImages" /]
+				</span>
+				<span class="fontnormalbold">
+					[@spring.message "client.LoanOff" /]
+				</span>
+				<span>
+					${savings.loanOfficerName?if_exists}
+				</span>
+			</div>
+			<div>
+				[#if savings.clientGlobalCustNum?has_content]
+				<span class="fontnormal">
+					[@spring.message "${ConfigurationConstants.CLIENT}" /]:
+				</span>
+				<span>
+					<a href="viewClientDetails.ftl?globalCustNum=${savings.clientGlobalCustNum}&recordOfficeId=${savings.branchId}&recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+						${savings.clientName}: ${savings.clientGlobalCustNum}
+					</a>
+				</span>
+				[#elseif savings.groupGlobalCustNum?has_content]
+				<span class="fontnormal">
+					[@spring.message "${ConfigurationConstants.GROUP}" /]:
+				</span>
+				<span>
+					<a href="viewGroupDetails.ftl?globalCustNum=${savings.groupGlobalCustNum}&recordOfficeId=${savings.branchId}&recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+						${savings.groupName}: ${savings.groupGlobalCustNum}
+					</a>
+				</span>
+				[#elseif savings.centerGlobalCustNum?has_content]
+				<span class="fontnormal">
+					[@spring.message "${ConfigurationConstants.CENTER}" /]:
+				</span>
+				<span>
+					<a href="viewCenterDetails.ftl?globalCustNum=${savings.centerGlobalCustNum}&recordOfficeId=${savings.branchId}&recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+						${savings.centerName}: ${savings.centerGlobalCustNum}
+					</a>
+				</span>
+				[/#if]
+			</div>
+			<div>
+				<span>
+					[@spring.message "alsosee" /]:
+				</span>
+				<span>
+					<a href="clientsAndAccounts.ftl?officeId=${savings.branchId}&randomNUm=${Session.randomNUm}">
+						${savings.branchName}
+					</a>
+				</span>
+				[#if savings.centerGlobalCustNum?has_content && savings.groupGlobalCustNum?has_content]
+				 /
+				<a href="viewCenterDetails.ftl?globalCustNum=${savings.centerGlobalCustNum}&recordOfficeId=${savings.branchId}&recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+					${savings.centerName}
+				</a>
+				[/#if]
+				[#if savings.groupGlobalCustNum?has_content && savings.clientGlobalCustNum?has_content]
+				 /
+				<a href="viewGroupDetails.ftl?globalCustNum=${savings.groupGlobalCustNum}&recordOfficeId=${savings.branchId}&recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm}">
+					${savings.groupName}
+				</a>
+				[/#if]
+			</div>	
+		</div>
+		<div>
+			<img src="pages/framework/images/trans.gif" width="10" height="10">
+		</div>
+		[/#if]
 		<div class="blueline">
 		</div>
 	</div>

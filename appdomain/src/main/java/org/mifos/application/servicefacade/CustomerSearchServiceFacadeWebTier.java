@@ -13,6 +13,8 @@ import org.mifos.dto.screen.CenterSearchResultDto;
 import org.mifos.dto.screen.ClientSearchResultDto;
 import org.mifos.dto.screen.CustomerHierarchyDto;
 import org.mifos.dto.screen.GroupSearchResultDto;
+import org.mifos.dto.screen.LoanAccountSearchResultDto;
+import org.mifos.dto.screen.SavingsAccountSearchResultDto;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -65,9 +67,9 @@ public class CustomerSearchServiceFacadeWebTier implements
         } catch ( HibernateSearchException e ){
             throw new MifosRuntimeException(e);
         }
-        
+		/* FIXME: QueryResult.get returns CustomerSearchDto with messed up customers and accounts data.
+		 */
         for ( CustomerSearchDto customerSearchDto : resultList ){
-        	//client
         	if ( customerSearchDto.getCustomerType() == 1){
         		ClientSearchResultDto clientSearchResultDto = new ClientSearchResultDto();
         		clientSearchResultDto.setOfficeId(customerSearchDto.getOfficeId());
@@ -100,7 +102,7 @@ public class CustomerSearchServiceFacadeWebTier implements
         		clientSearchResultDto.setStatus(customerSearchDto.getStatus());
         		
         		customerHierarchyDto.getClients().add(clientSearchResultDto);
-        	} else if ( customerSearchDto.getCustomerType() == 2){ // Group
+        	} else if ( customerSearchDto.getCustomerType() == 2){ 
         		
         		GroupSearchResultDto groupSearchResultDto = new GroupSearchResultDto();
         		
@@ -132,7 +134,7 @@ public class CustomerSearchServiceFacadeWebTier implements
         		groupSearchResultDto.setStatus(customerSearchDto.getStatus());
         		
         		customerHierarchyDto.getGroups().add(groupSearchResultDto);
-        	} else if ( customerSearchDto.getCustomerType() == 3 ){ // Group
+        	} else if ( customerSearchDto.getCustomerType() == 3 ){ 
         		
         		CenterSearchResultDto centerSearchResultDto = new CenterSearchResultDto();
         		
@@ -156,6 +158,79 @@ public class CustomerSearchServiceFacadeWebTier implements
         		centerSearchResultDto.setStatus(customerSearchDto.getStatus());
         		
         		customerHierarchyDto.getCenters().add(centerSearchResultDto);
+        	} else if ( customerSearchDto.getLoanGlobalAccountNumber() != null && (customerSearchDto.getCustomerType() == 5 || customerSearchDto.getCustomerType() == 4) ) { 
+        		
+        		LoanAccountSearchResultDto loanAccountSearchResultDto = new LoanAccountSearchResultDto();
+        		
+        		loanAccountSearchResultDto.setLoanGlobalAccountNum(customerSearchDto.getLoanGlobalAccountNumber());
+        		
+        		loanAccountSearchResultDto.setOfficeId(customerSearchDto.getOfficeId());
+        		loanAccountSearchResultDto.setOfficeName(customerSearchDto.getOfficeName());
+        		
+        		loanAccountSearchResultDto.setBranchName(customerSearchDto.getBranchName());
+        		loanAccountSearchResultDto.setBranchId(customerSearchDto.getBranchGlobalNum());
+        		loanAccountSearchResultDto.setAccountStatusId(customerSearchDto.getCustomerStatus());
+        		
+        		loanAccountSearchResultDto.setLoanOfficerName(customerSearchDto.getLoanOfficerName());
+        		loanAccountSearchResultDto.setLoanOfficerId(customerSearchDto.getLoanOffcerGlobalNum());
+        		
+        		if ( customerSearchDto.getClientGlobalCustNum() != null){
+            		loanAccountSearchResultDto.setCenterName(customerSearchDto.getClientName());
+            		loanAccountSearchResultDto.setCenterGlobalCustNum(customerSearchDto.getClientGlobalCustNum());
+            		loanAccountSearchResultDto.setClientName(customerSearchDto.getCenterName());
+            		loanAccountSearchResultDto.setClientGlobalCustNum(customerSearchDto.getCenterGlobalCustNum());
+            		loanAccountSearchResultDto.setGroupName(customerSearchDto.getGroupName());
+            		loanAccountSearchResultDto.setGroupGlobalCustNum(customerSearchDto.getGroupGlobalCustNum());
+        		} else {
+            		loanAccountSearchResultDto.setClientName(customerSearchDto.getClientName());
+            		loanAccountSearchResultDto.setClientGlobalCustNum(customerSearchDto.getClientGlobalCustNum());
+            		loanAccountSearchResultDto.setGroupName(customerSearchDto.getCenterName());
+            		loanAccountSearchResultDto.setGroupGlobalCustNum(customerSearchDto.getCenterGlobalCustNum());
+            		loanAccountSearchResultDto.setCenterName(customerSearchDto.getGroupName());
+            		loanAccountSearchResultDto.setCenterGlobalCustNum(customerSearchDto.getGroupGlobalCustNum());
+        		}
+        		
+        		loanAccountSearchResultDto.setStatus(customerSearchDto.getStatus());
+        		
+        		customerHierarchyDto.setLoan(loanAccountSearchResultDto);
+        	} else if ( customerSearchDto.getLoanGlobalAccountNumber() != null || customerSearchDto.getCustomerType() == 6){
+        		
+        		SavingsAccountSearchResultDto savingsAccountSearchResultDto = new SavingsAccountSearchResultDto();
+        		
+        		savingsAccountSearchResultDto.setSavingsGlobalAccountNum(customerSearchDto.getLoanGlobalAccountNumber());
+        		
+        		savingsAccountSearchResultDto.setOfficeId(customerSearchDto.getOfficeId());
+        		savingsAccountSearchResultDto.setOfficeName(customerSearchDto.getOfficeName());
+        		
+        		savingsAccountSearchResultDto.setBranchName(customerSearchDto.getBranchName());
+        		savingsAccountSearchResultDto.setBranchId(customerSearchDto.getBranchGlobalNum());
+        		savingsAccountSearchResultDto.setAccountStatusId(customerSearchDto.getCustomerStatus());
+        		
+        		savingsAccountSearchResultDto.setLoanOfficerName(customerSearchDto.getLoanOfficerName());
+        		savingsAccountSearchResultDto.setLoanOfficerId(customerSearchDto.getLoanOffcerGlobalNum());
+        		
+        		if ( customerSearchDto.getClientGlobalCustNum() != null){
+            		savingsAccountSearchResultDto.setCenterName(customerSearchDto.getClientName());
+            		savingsAccountSearchResultDto.setCenterGlobalCustNum(customerSearchDto.getClientGlobalCustNum());
+            		savingsAccountSearchResultDto.setClientName(customerSearchDto.getCenterName());
+            		savingsAccountSearchResultDto.setClientGlobalCustNum(customerSearchDto.getCenterGlobalCustNum());
+            		savingsAccountSearchResultDto.setGroupName(customerSearchDto.getGroupName());
+            		savingsAccountSearchResultDto.setGroupGlobalCustNum(customerSearchDto.getGroupGlobalCustNum());
+        		} else if ( customerSearchDto.getGroupGlobalCustNum() != null ){
+            		savingsAccountSearchResultDto.setClientName(customerSearchDto.getClientName());
+            		savingsAccountSearchResultDto.setClientGlobalCustNum(customerSearchDto.getClientGlobalCustNum());
+            		savingsAccountSearchResultDto.setGroupName(customerSearchDto.getCenterName());
+            		savingsAccountSearchResultDto.setGroupGlobalCustNum(customerSearchDto.getCenterGlobalCustNum());
+            		savingsAccountSearchResultDto.setCenterName(customerSearchDto.getGroupName());
+            		savingsAccountSearchResultDto.setCenterGlobalCustNum(customerSearchDto.getGroupGlobalCustNum());
+        		} else {
+            		savingsAccountSearchResultDto.setCenterName(customerSearchDto.getCenterName());
+            		savingsAccountSearchResultDto.setCenterGlobalCustNum(customerSearchDto.getCenterGlobalCustNum());
+        		}
+        		
+        		savingsAccountSearchResultDto.setStatus(customerSearchDto.getStatus());
+        		
+        		customerHierarchyDto.setSavings(savingsAccountSearchResultDto);
         	}
         }
         

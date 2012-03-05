@@ -35,6 +35,8 @@ public class CustomerHierarchyDto implements Serializable {
 	private List<GroupSearchResultDto> groups = new ArrayList<GroupSearchResultDto>();
 	private List<CenterSearchResultDto> centers = new ArrayList<CenterSearchResultDto>();
 	
+	private LoanAccountSearchResultDto loan;
+	private SavingsAccountSearchResultDto savings;
 	
 	public List<ClientSearchResultDto> getClients() {
 		return clients;
@@ -59,6 +61,18 @@ public class CustomerHierarchyDto implements Serializable {
 	}
 	public void setSize(int size) {
 		this.size = size;
+	}
+	public LoanAccountSearchResultDto getLoan() {
+		return loan;
+	}
+	public void setLoan(LoanAccountSearchResultDto loan) {
+		this.loan = loan;
+	}
+	public SavingsAccountSearchResultDto getSavings() {
+		return savings;
+	}
+	public void setSavings(SavingsAccountSearchResultDto savings) {
+		this.savings = savings;
 	}
 	
 }

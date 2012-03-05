@@ -84,14 +84,14 @@ public class SearchResultsPage extends MifosPage {
     }
 
     public LoanAccountPage navigateToLoanAccountDetailPage(String loanId){
-      String xpath = "//a[contains(@href,'<loanId>')]";
+      String xpath = "//a[contains(@href,'globalAccountNum=<loanId>')]";
       selenium.click(xpath.replace("<loanId>", loanId));
       waitForPageToLoad();
       return new LoanAccountPage(selenium);
     }
 
     public SavingsAccountDetailPage navigateToSavingsAccountDetailPage(String savingsId){
-        String xpath = "//a[contains(@href,'<savingsId>')]";
+        String xpath = "//a[contains(@href,'globalAccountNum=<savingsId>')]";
         selenium.click(xpath.replace("<savingsId>", savingsId));
         waitForPageToLoad();
         return new SavingsAccountDetailPage(selenium);
