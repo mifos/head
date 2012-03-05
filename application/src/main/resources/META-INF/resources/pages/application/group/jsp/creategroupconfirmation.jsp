@@ -76,7 +76,7 @@ explanation of the license and how it is applied.
                         </c:otherwise>
                      </c:choose>
                    
-	           		<a id="creategroupconfirmation.link.viewGroupDetail" href="viewGroupDetails.ftl?globalCustNum=${sessionScope.groupCustActionForm.globalCustNum}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
+	           		<a id="creategroupconfirmation.link.viewGroupDetail" href="groupCustAction.do?method=get&globalCustNum=${sessionScope.groupCustActionForm.globalCustNum}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
 	                    <fmt:message key="Group.viewGroupDetail">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 						</fmt:message>
@@ -94,16 +94,28 @@ explanation of the license and how it is applied.
                             	<fmt:message key="Group.createaccount">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 								</fmt:message>
-                         <span class="fontnormal"><br>
-                            <html-el:link styleId="creategroupconfirmation.link.newSavingsAccount" href="createSavingsAccount.ftl?customerId=${sessionScope.groupCustActionForm.customerId}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
-                            	
+                         <span class="fontnormal">
+                           <c:url value="createSavingsAccount.ftl" var="createSavingsAccountMethodUrl" >
+                            <c:param name="customerId" value="${sessionScope.groupCustActionForm.customerId}" />
+                            <c:param name="recordOfficeId" value="${branchId}" />
+                            <c:param name="recordLoanOfficerId" value="${userId}" />
+                            <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+                           </c:url >
+                           <br>
+                            <html-el:link styleId="creategroupconfirmation.link.newSavingsAccount" href="${createSavingsAccountMethodUrl}">
                             	<fmt:message key="Group.createAnAccount">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
 								</fmt:message>
                              </html-el:link><br>                             
                              <c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoanAllowed') == true}">
+	                            <c:url value="createLoanAccount.ftl" var="createLoanAccountMethodUrl" >
+	                            	<c:param name="customerId" value="${sessionScope.groupCustActionForm.customerId}" />
+	                            	<c:param name="recordOfficeId" value="${branchId}" />
+	                            	<c:param name="recordLoanOfficerId" value="${userId}" />
+	                            	<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+	                            </c:url >
 	                            <html-el:link styleId="creategroupconfirmation.link.newLoanAccount"
-	                            	href="createLoanAccount.ftl?customerId=${sessionScope.groupCustActionForm.customerId}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
+	                            	href="${createLoanAccountMethodUrl}">
 	                            	<fmt:message key="Group.createAnAccount">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 								</fmt:message>

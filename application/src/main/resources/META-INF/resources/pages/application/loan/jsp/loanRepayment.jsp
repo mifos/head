@@ -109,6 +109,14 @@ explanation of the license and how it is applied.
 									</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								</c:if>
 								<c:if test="${param.lastPaymentAction != '10'}">
+										<c:url value="applyAdjustment.do" var="applyAdjustmentLoadAdjustmentMethodUrl" >
+											<c:param name="method" value="loadAdjustment" />
+											<c:param name="accountId" value="${param.accountId}" />
+											<c:param name="globalAccountNum" value="${param.globalAccountNum}" />
+											<c:param name="prdOfferingName" value="${param.prdOfferingName}" />
+											<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+											<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+										</c:url >	
 									<c:choose>
 										<c:when test="${BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9'}">
 											<html-el:link styleId="loanRepayment.link.applyAdjustment" href="applyAdjustment.do?method=loadAdjustment&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}"> 

@@ -112,7 +112,7 @@ explanation of the license and how it is applied.
 												&& (BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED ||
 												BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE)}">
 										<html-el:link styleId="savingsaccountdetail.link.viewDepositDueDetails" 
-											href="viewSavingsAccountDepositDueDetails.ftl?globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+											href="savingsAction.do?method=getDepositDueDetails&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 											<mifos:mifoslabel name="Savings.viewDepositDueDetails" />
 										</html-el:link>
 									</c:if>
@@ -157,7 +157,7 @@ explanation of the license and how it is applied.
 								<td width="65%" align="right" class="fontnormal">
 									&nbsp;
 									<html-el:link styleId="savingsaccountdetail.link.viewAllAccountActivity" 
-										href="viewSavingsAccountRecentActivity.ftl?globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+										href="savingsAction.do?method=getRecentActivity&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 										<mifos:mifoslabel name="Savings.viewAllAccountActivity" />
 									</html-el:link>
 								</td>
@@ -265,17 +265,31 @@ explanation of the license and how it is applied.
 								</td>
 							</tr>
 							<tr>
+                            	<c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaireMethodUrl" >
+                            		<c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+                            		<c:param name="entityId" value="${BusinessKey.accountId}" />
+                            		<c:param name="event" value="Create" />
+                            		<c:param name="source" value="Savings" />
+                            		<c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
+                            	</c:url >
 								<td class="fontnormal">
-                            		<a id="savingsaccountdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${BusinessKey.accountId}&event=Create&source=Savings&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
+                            		<a id="savingsaccountdetail.link.questionGroups" href="${viewAndEditQuestionnaireMethodUrl}">
                                 		<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
                             		</a> <br/>
+                                       <c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaireMethodUrl" >
+                                        <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+                                        <c:param name="entityId" value="${BusinessKey.accountId}" />
+                                        <c:param name="event" value="Close" />
+                                        <c:param name="source" value="Savings" />
+                                        <c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
+                                       </c:url >
 								    <c:if test="${containsQGForCloseSavings}">
-                                        <a id="savingsaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${BusinessKey.accountId}&event=Close&source=Savings&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
+                                        <a id="savingsaccountdetail.link.questionGroupsClose" href="${viewAndEditQuestionnaireMethodUrl}">
                                         <mifos:mifoslabel name="Savings.ViewQuestionGroupForClosedSavingsResponsesLink" />
                                         </a> <br>
                                     </c:if>
 									<html-el:link styleId="savingsaccountdetail.link.viewTransactionHistory" 
-										href="viewSavingsAccountTransactionHistory.ftl?globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+										href="savingsAction.do?method=getTransactionHistory&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 										<mifos:mifoslabel name="Savings.viewTransactionHistory" />
 									</html-el:link>
 									<br>
@@ -398,8 +412,16 @@ explanation of the license and how it is applied.
 						            <c:forEach items="${questionGroupInstances}" var="questionGroupInstance">
 						              <tr>
 						                <td width="70%" class="paddingL10">
+						                   <c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaireMethodUrl" >
+						                    <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+						                    <c:param name="entityId" value="${BusinessKey.accountId}" />
+						                    <c:param name="instanceId" value="${questionGroupInstance.id}" />
+						                    <c:param name="event" value="View" />
+						                    <c:param name="source" value="Savings" />
+						                    <c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
+						                   </c:url >
 						                  <span class="fontnormal8pt">
-						                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${BusinessKey.accountId}&instanceId=${questionGroupInstance.id}&event=View&source=Savings&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
+						                    <a id="${questionGroupInstance.id}" href="${viewAndEditQuestionnaireMethodUrl}">
 						                      <c:out value="${questionGroupInstance.questionGroupTitle}"/>
 						                    </a>
 						                  </span>
