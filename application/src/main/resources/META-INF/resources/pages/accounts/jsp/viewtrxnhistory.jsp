@@ -51,6 +51,9 @@ explanation of the license and how it is applied.
           <td class="bluetablehead05">
 			  <span class="fontnormal8pt">
 	          	<customtags:headerLink/>
+	          <c:url value="customerAccountAction.do" var="customerAccountActionLoadMethodUrl" >
+	          	<c:param name="method" value="load" />
+	          </c:url >
 	          	<c:choose>
 	          	<c:when test="${param.input == 'LoanDetails'}">
 	          	</c:when>

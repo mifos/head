@@ -599,8 +599,15 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							    			<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
 										</a>
 							            <br/>
+                                           <c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaireMethodUrl" >
+                                            <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+                                            <c:param name="entityId" value="${loanInformationDto.accountId}" />
+                                            <c:param name="event" value="Close" />
+                                            <c:param name="source" value="Loan" />
+                                            <c:param name="backPageUrl" value="loanAccountAction.do?method%3Dget%26globalAccountNum%3D${loanInformationDto.globalAccountNum}" />
+                                           </c:url >
                                         <c:if test="${containsQGForCloseLoan}">
-                                            <a id="loanaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${loanInformationDto.accountId}&event=Close&source=Loan&backPageUrl=loanAccountAction.do?method%3Dget%26globalAccountNum%3D${loanInformationDto.globalAccountNum}">
+                                            <a id="loanaccountdetail.link.questionGroupsClose" href="${viewAndEditQuestionnaireMethodUrl}">
                                             <mifos:mifoslabel name="loan.ViewQuestionGroupForClosedLoanResponsesLink" />
                                             </a> <br>
                                         </c:if>
@@ -646,8 +653,11 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 
 										<!--
 										// temporarily disable apply principal pre-payment link
+									<c:url value="customLoanRepayment.ftl" var="customLoanRepaymentMethodUrl" >
+										<c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}" />
+									</c:url >
 										<br/>
-										<a href="customLoanRepayment.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}">Apply Principal Pre-payment</a>
+										<a href="${customLoanRepaymentMethodUrl}">Apply Principal Pre-payment</a>
 										-->
 										<br/>
 									</c:if> 
@@ -657,7 +667,22 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 											<mifos:mifoslabel name="loan.apply_charges" />
 										</html-el:link>
 									</c:if><br>
-
+													<c:url value="applyAdjustment.do" var="applyAdjustmentLoadAdjustmentWhenObligationMetMethodUrl" >
+														<c:param name="method" value="loadAdjustmentWhenObligationMet" />
+														<c:param name="accountId" value="${loanInformationDto.accountId}" />
+														<c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}" />
+														<c:param name="prdOfferingName" value="${loanInformationDto.prdOfferingName}" />
+														<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+														<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+													</c:url >
+													<c:url value="applyAdjustment.do" var="applyAdjustmentLoadAdjustmentMethodUrl" >
+														<c:param name="method" value="loadAdjustment" />
+														<c:param name="accountId" value="${loanInformationDto.accountId}" />
+														<c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}" />
+														<c:param name="prdOfferingName" value="${loanInformationDto.prdOfferingName}" />
+														<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+														<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+													</c:url >
 									<c:choose>
 
 										<c:when
@@ -666,7 +691,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 
 												<c:if test="${loanInformationDto.accountStateId=='6'}">
 													<html-el:link styleId="loanaccountdetail.link.applyAdjustment"
-														href="applyAdjustment.do?method=loadAdjustmentWhenObligationMet&accountId=${loanInformationDto.accountId}&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+														href="${applyAdjustmentLoadAdjustmentWhenObligationMetMethodUrl}">
 														<mifos:mifoslabel name="loan.apply_adjustment" />
 													</html-el:link>
 												</c:if>
@@ -687,7 +712,6 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</c:choose> <c:choose>
 								<c:when
 									test="${loanInformationDto.accountStateId=='1' || loanInformationDto.accountStateId=='2' || loanInformationDto.accountStateId=='3' || loanInformationDto.accountStateId=='4'}">
-
 									<span class="fontnormal8pt"> <html-el:link styleId="loanaccountdetail.link.applyCharges"
 										href="applyChargeAction.do?method=load&accountId=${loanInformationDto.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 										<mifos:mifoslabel name="loan.apply_charges" />
@@ -783,8 +807,12 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						                  </span>
 						                </td>
 						                <td width="30%" align="left" class="paddingL10">
+						                     <c:url value="clearOverpayment.ftl" var="clearOverpaymentMethodUrl" >
+						                      <c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}" />
+						                      <c:param name="overpaymentId" value="${overpayment.overpaymentId}" />
+						                     </c:url >
 						                  <span class="fontnormal8pt">
-						                      <a href="clearOverpayment.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}&overpaymentId=${overpayment.overpaymentId}">
+						                      <a href="${clearOverpaymentMethodUrl}">
 						                          <mifos:mifoslabel name="loan.overpayments_clear" />
 						                      </a>
 						                  </span>
@@ -816,8 +844,16 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						            <c:forEach items="${questionGroupInstances}" var="questionGroupInstance">
 						              <tr>
 						                <td width="70%" class="paddingL10">
+						                   <c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaire.MethodUrl" >
+						                    <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+						                    <c:param name="entityId" value="${loanInformationDto.accountId}" />
+						                    <c:param name="instanceId" value="${questionGroupInstance.id}" />
+						                    <c:param name="event" value="View" />
+						                    <c:param name="source" value="Loan" />
+						                    <c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
+						                   </c:url >
 						                  <span class="fontnormal8pt">
-						                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${loanInformationDto.accountId}&instanceId=${questionGroupInstance.id}&event=View&source=Loan&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
+						                    <a id="${questionGroupInstance.id}" href="${viewAndEditQuestionnaireMethodUrl}">
 						                      <c:out value="${questionGroupInstance.questionGroupTitle}"/>
 						                    </a>
 						                  </span>

@@ -54,7 +54,10 @@ explanation of the license and how it is applied.
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
-
+						<c:url value="customerAccountAction.do" var="customerAccountActionLoadMethodUrl" >
+							<c:param name="method" value="load" />
+							<c:param name="globalCustNum" value="${param.globalCustNum}" />
+						</c:url >
 					<c:choose>
 						<c:when test="${param.input == 'loan'}">
 						</c:when>

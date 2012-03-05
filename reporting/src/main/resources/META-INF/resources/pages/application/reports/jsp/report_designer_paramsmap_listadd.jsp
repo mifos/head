@@ -135,8 +135,10 @@ function addMe(page)
 									 <c:forEach var="reportParamsMapRep" items="${sessionScope.listOfAllParametersForReportId}" varStatus="loop" begin='0'>			            	  			            	  	
             	  				  <tr>
 								      <td width="30%"><span class="fontnormal"><%=i++%>.</span><span class="fontnormalbold"><c:out value="${reportParamsMapRep.reportsParams.name}"/></span></td>
-							
-									  <td nowrap><a href="javascript:deleteMe('reportsParamsMapAction.do?method=deleteParamsMap',${reportParamsMapRep.mapId})">Delete</a></td>
+									 <c:url value="javascript:deleteMe('reportsParamsMapAction.do" var="javascript:deleteMe('reportsParamsMapActionDeleteParamsMap',)MethodUrl" >
+									  <c:param name="method" value="deleteParamsMap',${reportParamsMapRep.mapId})" />
+									 </c:url >
+									  <td nowrap><a href="${javascript:deleteMe('reportsParamsMapActionDeleteParamsMap',)MethodUrl}">Delete</a></td>
 									</tr>
 									
 									

@@ -240,8 +240,15 @@ explanation of the license and how it is applied.
 						<c:set var="questionnaireFor" scope="session" value="${personnelInformationDto.displayName}"/>
                         <c:remove var="urlMap" />
                         <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
+					<c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaireMethodUrl" >
+						<c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+						<c:param name="entityId" value="${personnelInformationDto.personnelId}" />
+						<c:param name="event" value="Create" />
+						<c:param name="source" value="Personnel" />
+						<c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
+					</c:url >
                         <c:set target="${urlMap}" property="${personnelInformationDto.displayName}" value="PersonAction.do?method=get&globalPersonnelNum=${personnelInformationDto.globalPersonnelNum}"/>
-						<a id="personnelDetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${personnelInformationDto.personnelId}&event=Create&source=Personnel&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
+						<a id="personnelDetail.link.questionGroups" href="${viewAndEditQuestionnaireMethodUrl}">
                         	<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
                         </a> 
 						<br/>

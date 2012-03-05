@@ -51,8 +51,13 @@ explanation of the license and how it is applied.
 							<td class="fontnormalbold">
 								<mifos:mifoslabel name="loan.plz_note" />
 								<span class="fontnormal"> <mifos:mifoslabel name="loan.new" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.accsWithFollowingIdCreated" isColonRequired="Yes" /> <br> <br> </span>
+							<c:url value="loanAccountAction.do" var="loanAccountActionMethodUrl" >
+								<c:param name="globalAccountNum" value="${loanGlobalNum}" />
+								<c:param name="method" value="get" />
+							</c:url >
 								<c:forEach var="loanGlobalNum" items="${requestScope.accountsList}" varStatus="status" >
-								<html-el:link href="loanAccountAction.do?globalAccountNum=${loanGlobalNum}&method=get" styleId="CreateMultipleLoanAccountsConfirm.link.account.${status.index}"><mifos:mifoslabel name="loan.accountNumber" />${loanGlobalNum}</html-el:link>
+
+								<html-el:link href="${loanAccountActionMethodUrl}" styleId="CreateMultipleLoanAccountsConfirm.link.account.${status.index}"><mifos:mifoslabel name="loan.accountNumber" />${loanGlobalNum}</html-el:link>
 								<br>
 								</c:forEach>
 								<br>

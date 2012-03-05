@@ -128,12 +128,25 @@ explanation of the license and how it is applied.
 						<c:if test="${clientInformationDto.clientDisplay.customerStatusId == 3}">
 							<tr align="right">
 								<td class="headingorange"><span class="fontnormal"><mifos:mifoslabel
-									name="client.AccountsLink" bundle="ClientUIResources"/>&nbsp; <html-el:link styleId="viewClientDetails.link.newLoanAccount"
-									href="createLoanAccount.ftl?customerId=${clientInformationDto.clientDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+									name="client.AccountsLink" bundle="ClientUIResources"/>&nbsp; 
+								<c:url value="createLoanAccount.ftl" var="createLoanAccountMethodUrl" >
+									<c:param name="customerId" value="${clientInformationDto.clientDisplay.customerId}" />
+									<c:param name="recordOfficeId" value="${UserContext.branchId}" />
+									<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
+								</c:url >
+								<html-el:link styleId="viewClientDetails.link.newLoanAccount"
+									href="${createLoanAccountMethodUrl}">
 
 									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-								</html-el:link> &nbsp;|&nbsp; <html-el:link styleId="viewClientDetails.link.newSavingsAccount"
-									href="createSavingsAccount.ftl?customerId=${clientInformationDto.clientDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								</html-el:link> &nbsp;|&nbsp; 
+								<c:url value="createSavingsAccount.ftl" var="createSavingsAccountMethodUrl" >
+									<c:param name="customerId" value="${clientInformationDto.clientDisplay.customerId}" />
+									<c:param name="recordOfficeId" value="${UserContext.branchId}" />
+									<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
+									<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+								</c:url >
+								<html-el:link styleId="viewClientDetails.link.newSavingsAccount"
+									href="${createSavingsAccountMethodUrl}">
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
 								</html-el:link> </span></td>
 							</tr>
@@ -161,8 +174,17 @@ explanation of the license and how it is applied.
 											<table width="100%" border="0" cellspacing="0"
 												cellpadding="0">
 												<tr>
-													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewClientDetails.link.viewLoanAccount"
-														href="loanAccountAction.do?globalAccountNum=${loan.globalAccountNum}&customerId=${clientInformationDto.clientDisplay.customerId}&method=get&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+													<td width="65%"><span class="fontnormal"> 
+													<c:url value="loanAccountAction.do" var="loanAccountActionMethodUrl" >
+														<c:param name="globalAccountNum" value="${loan.globalAccountNum}" />
+														<c:param name="customerId" value="${clientInformationDto.clientDisplay.customerId}" />
+														<c:param name="method" value="get" />
+														<c:param name="recordOfficeId" value="${UserContext.branchId}" />
+														<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
+														<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+													</c:url >
+													<html-el:link styleId="viewClientDetails.link.viewLoanAccount"
+														href="${loanAccountActionMethodUrl}">
 														<c:out value="${loan.prdOfferingName}" />, <mifos:mifoslabel name="client.acc" bundle="ClientUIResources" /><c:out
 															value="${loan.globalAccountNum}" />
 													</html-el:link> </span></td>
@@ -220,8 +242,16 @@ explanation of the license and how it is applied.
 											<table width="100%" border="0" cellspacing="0"
 												cellpadding="0">
 												<tr>
-													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewClientDetails.link.viewSavingsAccount"
-														href="savingsAction.do?globalAccountNum=${savings.globalAccountNum}&method=get&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+													<td width="65%"><span class="fontnormal"> 
+													<c:url value="savingsAction.do" var="savingsActionMethodUrl" >
+														<c:param name="globalAccountNum" value="${savings.globalAccountNum}" />
+														<c:param name="method" value="get" />
+														<c:param name="recordOfficeId" value="${UserContext.branchId}" />
+														<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
+														<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+													</c:url >
+													<html-el:link styleId="viewClientDetails.link.viewSavingsAccount"
+														href="${savingsActionMethodUrl}">
 														<c:out value="${savings.prdOfferingName}" />, <mifos:mifoslabel name="client.acc" bundle="ClientUIResources" /><c:out
 															value="${savings.globalAccountNum}" />
 													</html-el:link> </span></td>
@@ -662,12 +692,27 @@ explanation of the license and how it is applied.
 								</c:forEach>
 							</table>
 					</c:if>
-							<span class="paddingL10"> <br>
-								<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Create&source=Client&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
+							<span class="paddingL10"> 
+							<c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaireMethodUrl" >
+								<c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+								<c:param name="entityId" value="${clientInformationDto.clientDisplay.customerId}" />
+								<c:param name="event" value="Create" />
+								<c:param name="source" value="Client" />
+								<c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
+							</c:url >
+							<br>
+								<a id="viewClientDetails.link.questionGroups" href="${viewAndEditQuestionnaireMethodUrl}">
 								    <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
 								</a> <br>
+                                   <c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaireMethodUrl" >
+                                    <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+                                    <c:param name="entityId" value="${clientInformationDto.clientDisplay.customerId}" />
+                                    <c:param name="event" value="Close" />
+                                    <c:param name="source" value="Client" />
+                                    <c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
+                                   </c:url >
                                 <c:if test="${containsQGForCloseClient}">
-                                    <a id="viewClientDetails.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Close&source=Client&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
+                                    <a id="viewClientDetails.link.questionGroupsClose" href="${viewAndEditQuestionnaireMethodUrl}">
                                         <mifos:mifoslabel name="client.ViewQuestionGroupForClosedClientResponsesLink" bundle="ClientUIResources" />
                                     </a> <br>
                                 </c:if>
@@ -780,8 +825,16 @@ explanation of the license and how it is applied.
             <c:forEach items="${questionGroupInstances}" var="questionGroupInstance">
               <tr>
                 <td width="70%" class="paddingL10">
+                   <c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaireMethodUrl" >
+                    <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+                    <c:param name="entityId" value="${clientInformationDto.clientDisplay.customerId}" />
+                    <c:param name="instanceId" value="${questionGroupInstance.id}" />
+                    <c:param name="event" value="View" />
+                    <c:param name="source" value="Client" />
+                    <c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
+                   </c:url >
                   <span class="fontnormal8pt">
-                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&instanceId=${questionGroupInstance.id}&event=View&source=Client&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
+                    <a id="${questionGroupInstance.id}" href="${viewAndEditQuestionnaireMethodUrl}">
                       <c:out value="${questionGroupInstance.questionGroupTitle}"/>
                     </a>
                   </span>

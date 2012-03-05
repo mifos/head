@@ -129,12 +129,13 @@ function deleteMe(page,paramId)
 									  <c:out value="${reportParams.name}"/>
 									  </html-el:link>
 									  </span></td>
-									  <td nowrap><span class="fontnormal"><c:out value="${reportParams.description}"/></span></td>
-									  <td nowrap><a href="javascript:deleteMe('reportsParamsAction.do?method=deleteParams',${reportParams.parameterId})">Delete</a></td>
-									  
-					                </tr>
-									
-									
+									  <td nowrap><span class="fontnormal"><c:out value="${reportParams.description}"/></span>
+									 <c:url value="javascript:deleteMe('reportsParamsAction.do" var="javascript:deleteMe('reportsParamsActionDeleteParams',)MethodUrl" >
+									  <c:param name="method" value="deleteParams',${reportParams.parameterId})" />
+									 </c:url >
+									 </td>
+									  <td nowrap><a href="${javascript:deleteMe('reportsParamsActionDeleteParams',)MethodUrl}">Delete</a></td>
+					                </tr>									
 						 </c:forEach>
              
 				              </table>             

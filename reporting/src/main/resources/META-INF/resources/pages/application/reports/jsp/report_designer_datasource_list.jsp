@@ -129,9 +129,11 @@ function deleteMe(page,dsId)
 									  <c:out value="${reportDs.name}"/>
 									  </html-el:link>
 									  </span></td>
+									<c:url value="javascript:deleteMe('reportsDataSourceAction.do" var="javascript:deleteMe('reportsDataSourceActionDeleteDataSource',)MethodUrl" >
+									  <c:param name="method" value="deleteDataSource',${reportDs.datasourceId})" />
+									 </c:url >
 									 
-									  <td nowrap><a href="javascript:deleteMe('reportsDataSourceAction.do?method=deleteDataSource',${reportDs.datasourceId})">Delete</a></td>
-									  
+									  <td nowrap><a href="${javascript:deleteMe('reportsDataSourceActionDeleteDataSource',)MethodUrl}">Delete</a></td>
 					                </tr>
 									
 									

@@ -168,8 +168,13 @@ explanation of the license and how it is applied.
 								test="${statusID == CustomerConstants.CENTER_ACTIVE_STATE}">
 								<mifos:mifoslabel name="Center.AccountsLink"
 									/>&nbsp;
+								<c:url value="createSavingsAccount.ftl" var="createSavingsAccountMethodUrl" >
+									<c:param name="customerId" value="${centerInformationDto.centerDisplay.customerId}" />
+									<c:param name="recordOfficeId" value="${UserContext.branchId}" />
+									<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
+								</c:url >
 		               <html-el:link styleId="viewCenterDetails.link.newSavingsAccount"
-									href="createSavingsAccount.ftl?customerId=${centerInformationDto.centerDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+									href="${createSavingsAccountMethodUrl}">
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
 								</html-el:link></span> </c:if></td>
 						</tr>
@@ -199,8 +204,15 @@ explanation of the license and how it is applied.
 											<table width="100%" border="0" cellspacing="0"
 												cellpadding="0">
 												<tr>
-													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewCenterDetails.link.savingsAccount"
-														href="savingsAction.do?globalAccountNum=${savings.globalAccountNum}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
+													<td width="65%"><span class="fontnormal"> 
+													<c:url value="savingsAction.do" var="savingsActionMethodUrl" >
+														<c:param name="globalAccountNum" value="${savings.globalAccountNum}" />
+														<c:param name="method" value="get" />
+														<c:param name="recordOfficeId" value="${param.recordOfficeId}" />
+														<c:param name="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
+													</c:url >
+													<html-el:link styleId="viewCenterDetails.link.savingsAccount"
+														href="${savingsActionMethodUrl}">
 														<c:out value="${savings.prdOfferingName}" />, <mifos:mifoslabel name="Center.acc" bundle="CenterUIResources" /><c:out
 															value="${savings.globalAccountNum}" />
 													</html-el:link> </span></td>
@@ -473,8 +485,15 @@ explanation of the license and how it is applied.
 							</span>
 							</c:if>
 							<span class="fontnormal">
+	                           <c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaireMethodUrl" >
+	                            <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+	                            <c:param name="entityId" value="${centerInformationDto.centerDisplay.customerId}" />
+	                            <c:param name="event" value="Create" />
+	                            <c:param name="source" value="Center" />
+	                            <c:param name="backPageUrl" value="centerCustAction.do?method%3Dget%26globalAccountNum%3D${client.globalCustNum}%26recordOfficeId%3D${centerInformationDto.centerDisplay.branchId}%26recordLoanOfficerId%3D${centerInformationDto.centerDisplay.loanOfficerId}" />
+	                           </c:url >
 	                            <c:set var="questionnaireFor" scope="session" value="${centerInformationDto.centerDisplay.displayName}"/>
-	                            <a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${centerInformationDto.centerDisplay.customerId}&event=Create&source=Center&backPageUrl=centerCustAction.do?method%3Dget%26globalAccountNum%3D${client.globalCustNum}%26recordOfficeId%3D${centerInformationDto.centerDisplay.branchId}%26recordLoanOfficerId%3D${centerInformationDto.centerDisplay.loanOfficerId}">
+	                            <a id="groupdetail.link.questionGroups" href="${viewAndEditQuestionnaireMethodUrl}">
 	                                <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
 	                            </a>
 	                            <br/>
@@ -562,8 +581,16 @@ explanation of the license and how it is applied.
             <c:forEach items="${questionGroupInstances}" var="questionGroupInstance">
               <tr>
                 <td width="70%" class="paddingL10">
+                   <c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaireMethodUrl" >
+                    <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+                    <c:param name="entityId" value="${centerInformationDto.centerDisplay.customerId}" />
+                    <c:param name="instanceId" value="${questionGroupInstance.id}" />
+                    <c:param name="event" value="View" />
+                    <c:param name="source" value="Center" />
+                    <c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
+                   </c:url >
                   <span class="fontnormal8pt">
-                    <a id="${questionGroupInstance.id}" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${centerInformationDto.centerDisplay.customerId}&instanceId=${questionGroupInstance.id}&event=View&source=Center&backPageUrl=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget">
+                    <a id="${questionGroupInstance.id}" href="${viewAndEditQuestionnaireMethodUrl}">
                       <c:out value="${questionGroupInstance.questionGroupTitle}"/>
                     </a>
                   </span>

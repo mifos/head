@@ -28,6 +28,9 @@ explanation of the license and how it is applied.
         <tr>
           <td class="tablightorange"><a id="clientsAndAccountsHeader.link.home" href="home.ftl" >
 		<mifos:mifoslabel name="framework.home" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
+                 <c:url value="custSearchAction.do" var="custSearchActionLoadMainSearchMethodUrl" >
+                  <c:param name="method" value="loadMainSearch" />
+                 </c:url >
           <c:choose>
               <c:when test="${requestScope.perspective == 'redoLoan' || requestScope.perspective == 'UserChangeLog'}">
                   <td class="tablightorange"><a id="clientsAndAccountsHeader.link.clientsAndAccounts" href="custSearchAction.do?method=loadMainSearch"><mifos:mifoslabel
