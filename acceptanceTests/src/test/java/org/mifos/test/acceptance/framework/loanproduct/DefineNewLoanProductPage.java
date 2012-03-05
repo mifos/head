@@ -842,6 +842,12 @@ public class DefineNewLoanProductPage extends AbstractPage {
         return this;
     }
 
+    public DefineNewLoanProductPage fillGracePeriod (int gracePeriodtype, String gracePeriodDuration){
+      	selenium.select("gracePeriodType", "value=" + gracePeriodtype);
+    	selenium.type("gracePeriodDuration", gracePeriodDuration);
+        return this;
+    }
+    
     private DefineNewLoanProductPage selectVariableInstalmentAndWaitForLoad() {
         checkConfigureVariableInstalmentsCheckbox();
         waitForElementToPresent(minInstalmentAmountTextBox);

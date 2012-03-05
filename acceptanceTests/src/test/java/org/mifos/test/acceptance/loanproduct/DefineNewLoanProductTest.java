@@ -78,6 +78,12 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
                 verifyPage().
                 defineLoanProduct(formParameters);
     }
+    
+    public void verifyGracePeriodWithoutInterestType() {
+      	DefineNewLoanProductPage defineLoanProduct = new NavigationHelper(selenium).navigateToAdminPage().navigateToDefineLoanProduct();
+    	defineLoanProduct.fillGracePeriod(SubmitFormParameters.GRACE_ON_ALL_REPAYMENTS, "1");
+        defineLoanProduct.submitWithErrors().verifyPage();
+    }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createWeeklyLoanProductWithQuestionGroups() throws Exception {
