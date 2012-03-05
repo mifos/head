@@ -31,7 +31,7 @@
                 </div>
                 <p class="padding5topbottom"><span>[@spring.message "viewOfficeHierarchy.theofficehierarchycanhaveminimumtwoandmaximumfivelevels"/]</span></p>
             [@spring.bind "formBean" /]
-            [@spring.showErrors "<li>" /]
+            [@spring.showErrors "<li>" "fontnormalRedBold" /]
                 <p class="padding5topbottom"><span>[@spring.message "viewOfficeHierarchy.checkthelevelstobeincluded"/]. </span></p>
 
                 <div><span
