@@ -27,6 +27,7 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.rest.approval.service.RESTCallInterruptException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,11 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
     @Override
     protected ModelAndView doResolveException(HttpServletRequest request,  HttpServletResponse response, Object handler, Exception ex) {
         ModelAndView modelAndView = checkForAccessDenied(ex, request);
-
+        
+        if ( modelAndView == null ){
+        	modelAndView = checkForPageExpiredException(ex, request);
+        }
+        
         if (request.getRequestURI().endsWith("json")) {
             if (modelAndView == null && ex instanceof RESTCallInterruptException) {
                 // should move to explicit @ExceptionHandler(RESTCallInterruptException) controller method
@@ -99,4 +104,21 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
         return null;
     }
 
+    private ModelAndView checkForPageExpiredException(Exception ex, HttpServletRequest request){
+    	if ( ex instanceof PageExpiredException ){
+    		ModelAndView modelAndView = null;
+    		String viewName = determineViewName(ex, request);
+    		if (viewName != null){
+    			modelAndView = getModelAndView(viewName, ex, request);
+    		}
+    		return modelAndView;
+    	}
+    	
+        if (ex.getCause() != null && ex.getCause() instanceof Exception) {
+            return checkForPageExpiredException((Exception) ex.getCause(), request);
+        }
+    	
+    	return null;
+    }
+    
 }

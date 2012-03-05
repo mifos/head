@@ -41,6 +41,7 @@
 			<props>
 				<prop key="java.lang.Exception">uncaughtException</prop>
 				<prop key="org.springframework.security.access.AccessDeniedException">accessDenied</prop>
+				<prop key="org.mifos.framework.exceptions.PageExpiredException">pageExpired</prop>
 			</props>
 		</property>
 		<property name="exceptionAttribute" value="exception" />
