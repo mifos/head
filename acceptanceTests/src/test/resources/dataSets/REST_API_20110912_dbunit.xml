@@ -55,10 +55,12 @@
   <DATABASECHANGELOG ID="MIFOS_5382_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-01 19:04:07.0" ORDEREXECUTED="228" EXECTYPE="EXECUTED" MD5SUM="3:8087265e7debf6021ee1f88472a900a8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5382_2" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-02 13:47:43.0" ORDEREXECUTED="229" EXECTYPE="EXECUTED" MD5SUM="3:864b0fd522895b0aa7142d936ddc4bc4" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5383_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-06 11:31:41.0" ORDEREXECUTED="230" EXECTYPE="EXECUTED" MD5SUM="3:e3f2fdea6e47675516523f634130672c" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5387_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-06 09:49:24.0" ORDEREXECUTED="280" EXECTYPE="EXECUTED" MD5SUM="3:279db332783ae8930c3c0faefbfd1fb6" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5425_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-09 14:41:06.0" ORDEREXECUTED="231" EXECTYPE="EXECUTED" MD5SUM="3:b28cb3448b7729cfbea082f33eeca853" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5426_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-17 15:12:06.0" ORDEREXECUTED="233" EXECTYPE="EXECUTED" MD5SUM="3:e864e501fd0636f5efecb104e370cdd4" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5426_2" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-24 14:02:24.0" ORDEREXECUTED="256" EXECTYPE="EXECUTED" MD5SUM="3:bfb13d5be65b049f92b6056f84d6a75c" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5426_3" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-24 14:02:24.0" ORDEREXECUTED="257" EXECTYPE="EXECUTED" MD5SUM="3:1ba3e60d6e8916c9814bf2befd5eb460" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5426_4" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-06 09:49:24.0" ORDEREXECUTED="279" EXECTYPE="EXECUTED" MD5SUM="3:5e0d48f9733f0fec4a81806a4f0b1044" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5433_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-15 14:59:45.0" ORDEREXECUTED="232" EXECTYPE="EXECUTED" MD5SUM="3:b32077bdab52d6cb9a4337ee44105586" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5446_1" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-29 20:51:08.0" ORDEREXECUTED="270" EXECTYPE="EXECUTED" MD5SUM="3:da9b46d48c36748f47566fc805e67bc8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
@@ -363,6 +365,7 @@
   <activity activity_id="246" parent_id="196" activity_name_lookup_id="639" description_lookup_id="639"/>
   <activity activity_id="247" parent_id="196" activity_name_lookup_id="641" description_lookup_id="641"/>
   <activity activity_id="248" parent_id="1" activity_name_lookup_id="657" description_lookup_id="657"/>
+  <activity activity_id="249" parent_id="113" activity_name_lookup_id="658" description_lookup_id="658"/>
   <admin_document/>
   <admin_document_acc_state_mix/>
   <applied_upgrades upgrade_id="1277565300"/>
@@ -1802,6 +1805,7 @@
   <lookup_value lookup_id="655" entity_id="97" lookup_name="PenaltyStatus-InActive"/>
   <lookup_value lookup_id="656" entity_id="95" lookup_name="PenaltyPeriod-None"/>
   <lookup_value lookup_id="657" entity_id="87" lookup_name="Permissions-CanSetMonthClosingDate"/>
+  <lookup_value lookup_id="658" entity_id="87" lookup_name="Permissions-CanRemovePenaltyAttachedToTheLoanAccount"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -2199,6 +2203,7 @@
   <lookup_value_locale lookup_value_id="984" locale_id="1" lookup_id="655"/>
   <lookup_value_locale lookup_value_id="985" locale_id="1" lookup_id="656"/>
   <lookup_value_locale lookup_value_id="986" locale_id="1" lookup_id="657"/>
+  <lookup_value_locale lookup_value_id="987" locale_id="1" lookup_id="658"/>
   <max_min_interest_rate account_id="4" min_interest_rate="1.0000" max_interest_rate="1.0000"/>
   <max_min_interest_rate account_id="5" min_interest_rate="30.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="8" min_interest_rate="1.0000" max_interest_rate="1.0000"/>
@@ -2578,6 +2583,7 @@
   <roles_activity activity_id="246" role_id="1"/>
   <roles_activity activity_id="247" role_id="1"/>
   <roles_activity activity_id="248" role_id="1"/>
+  <roles_activity activity_id="249" role_id="1"/>
   <saving_schedule id="1" account_id="6" customer_id="3" action_date="2011-09-12" deposit="100.0000" deposit_currency_id="2" deposit_paid="10.0000" deposit_paid_currency_id="2" payment_status="1" installment_id="1" payment_date="2011-09-12" version_no="1"/>
   <saving_schedule id="2" account_id="6" customer_id="3" action_date="2011-09-19" deposit="100.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="2" version_no="0"/>
   <saving_schedule id="3" account_id="6" customer_id="3" action_date="2011-09-26" deposit="100.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="3" version_no="0"/>
