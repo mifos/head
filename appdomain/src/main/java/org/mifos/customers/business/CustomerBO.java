@@ -268,6 +268,10 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     public String getGlobalCustNum() {
         return this.globalCustNum;
     }
+    
+    public void setGlobalCustNum(String globalCustNum) {
+        this.globalCustNum = globalCustNum;
+    }
 
     public PersonnelBO getPersonnel() {
         return this.personnel;

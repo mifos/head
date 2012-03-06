@@ -21,6 +21,7 @@
 package org.mifos.dto.domain;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -30,9 +31,12 @@ import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
 
 @SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
-public class ClientCreationDetail {
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2", "SE_TRANSIENT_FIELD_NOT_RESTORED"}, 
+    justification="should disable at filter level and also for pmd - not important for us")
+public class ClientCreationDetail implements Serializable{
 
+    private static final long serialVersionUID = 824884718450478093L;
+	
     private final List<Short> selectedSavingProducts;
     private final String clientName;
     private final Short clientStatus;
@@ -47,7 +51,7 @@ public class ClientCreationDetail {
     private final Short groupFlag;
     private final ClientNameDetailDto clientNameDetailDto;
     private final ClientPersonalDetailDto clientPersonalDetailDto;
-    private final InputStream picture;
+    private final transient InputStream picture;
     private final List<ApplicableAccountFeeDto> feesToApply;
     private final String parentGroupId;
     private final List<ClientNameDetailDto> familyNames;

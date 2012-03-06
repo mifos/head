@@ -12,6 +12,9 @@
 
     <bean id="importTransactionsServiceFacade" class="org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacadeWebTier"/>
 
+    <bean id="importClientsServiceFacade" class="org.mifos.application.importexport.servicefacade.ImportClientsServiceFacadeWebTier" />
+    <bean id="xlsClientsImporter" class="org.mifos.application.importexport.xls.XlsClientsImporter" />
+	
     <bean id="loginServiceFacade" class="org.mifos.application.servicefacade.LoginServiceFacadeWebTier"/>
 
     <bean id="adminServiceFacade" class="org.mifos.application.servicefacade.AdminServiceFacadeWebTier"/>

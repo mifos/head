@@ -120,6 +120,11 @@ form.two-columns input.submit
     margin-left: 27.5em; 
 }
 
+form.two-columns input.disabledbuttn
+{
+    margin-left: 27.5em;
+}
+
 /* product summary */
 .product-summary 
 {

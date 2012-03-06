@@ -37,6 +37,7 @@
                 <value>classpath:org/mifos/config/localizedResources/FieldUIResources</value>
                 <value>classpath:org/mifos/config/localizedResources/accountsUIResources</value>
                 <value>classpath:org/mifos/config/localizedResources/Resources</value>
+                <value>classpath:org/mifos/config/localizedResources/adminUIResources</value>
             </list>
         </property>
         <property name="fileEncodings" value="UTF-8" />

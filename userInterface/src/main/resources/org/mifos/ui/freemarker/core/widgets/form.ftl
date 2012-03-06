@@ -140,6 +140,15 @@ Renders a cancel button.
     [/#if]
     <input id="${id}" type="submit" class="cancel" value="[@spring.message label /]" name="${name}" />
 [/#macro]
+[#--]]
+Renders a disabled submit button.
+
+    buttonLabel : The value shown on the button.
+--]
+[#macro disabledButton label="widget.form.buttonLabel.submit" id=""]
+	<input id="${id}" type="submit" class="disabledbuttn" value="[@spring.message label /]"
+		disabled="disabled" />
+[/#macro]
 
 [#-- 
 Render a group of checkboxes, using the given separator to separate them. 
