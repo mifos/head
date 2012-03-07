@@ -198,9 +198,22 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						test="${loanInformationDto.accountStateId == 5 || loanInformationDto.accountStateId == 9}">
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
+								 <c:url value="loanAccountAction.do" var="loanAccountActionMethodUrl">
+								 	<c:param name="method" value="getInstallmentDetails"/>
+								 	<c:param name="accountId" value="${loanInformationDto.accountId}"/>
+								 	<c:param name="prdOfferingName" value="${loanInformationDto.prdOfferingName}"/>
+								 	<c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}"/>
+								 	<c:param name="accountType" value="${loanInformationDto.accountTypeId}"/>
+								 	<c:param name="accountStateId" value="${loanInformationDto.accountStateId}"/>
+								 	<c:param name="recordOfficeId" value="${loanInformationDto.officeId}"/>
+								 	<c:param name="recordLoanOfficerId" value="${loanInformationDto.personnelId}"/>
+								 	<c:param name="lastPaymentAction" value="${loanInformationDto.accountId}"/>
+								 	<c:param name="randomNUm" value="${sessionScope.randomNUm}"/>
+								 	<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}"/>
+								 </c:url>
 								<td width="42%" align="right" class="fontnormal"><span
 									class="fontnormal"> <html-el:link styleId="loanaccountdetail.link.viewInstallmentDetails"
-									href="loanAccountAction.do?method=getInstallmentDetails&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountType=${loanInformationDto.accountTypeId}&accountStateId=${loanInformationDto.accountStateId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&lastPaymentAction=${loanInformationDto.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									href="${loanAccountActionMethodUrl}">
 									<mifos:mifoslabel name="loan.view_installment_details" />
 								</html-el:link> </span></td>
 							</tr>
@@ -281,10 +294,21 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									 || loanInformationDto.accountStateId == 6 || loanInformationDto.accountStateId == 7 || loanInformationDto.accountStateId == 8 || loanInformationDto.accountStateId == 9}">
 								<mifos:mifoslabel name="loan.recentActivity" />
 							</c:if></td>
+							<c:url value="loanAccountAction.do" var="loanAccountActionMethodUrl">
+								<c:param name="method" value="getAllActivity"/>
+								<c:param name="accountId" value="${loanInformationDto.accountId}"/>
+								<c:param name="prdOfferingName" value="${loanInformationDto.prdOfferingName}"/>
+								<c:param name="accountStateId" value="${loanInformationDto.accountStateId}"/>
+								<c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}"/>
+								<c:param name="lastPaymentAction" value="${loanInformationDto.accountId}"/>
+								<c:param name="accountType" value="${loanInformationDto.accountTypeId}"/>
+								<c:param name="randomNUm" value="${sessionScope.randomNUm}"/>
+								<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}"/>
+							</c:url>
 							<td width="65%" align="right" class="fontnormal">&nbsp; <c:if
 								test="${loanInformationDto.loanActivityDetails == true}">
 								<html-el:link styleId="loanaccountdetail.link.viewAccountActivity"
-									href="loanAccountAction.do?method=getAllActivity&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&accountStateId=${loanInformationDto.accountStateId}&globalAccountNum=${loanInformationDto.globalAccountNum}&lastPaymentAction=${loanInformationDto.accountId}&accountType=${loanInformationDto.accountTypeId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									href="${loanAccountActionMethodUrl}">
 									<mifos:mifoslabel name="loan.view_acc_activity" />
 								</html-el:link>
 							</c:if></td>

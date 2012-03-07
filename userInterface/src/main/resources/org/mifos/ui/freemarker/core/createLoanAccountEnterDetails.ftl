@@ -402,19 +402,19 @@
 			[@form.label "selectedFeeId0" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
 	    	[@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[0]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" id="selectedFeeId0" /]
 	    	<span style="margin-left: 10px;">[@spring.message "createLoanAccount.feeAmount" /]</span>
-	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[0]" id="selectedFeeId0Amount" attributes="style='margin-left: 20px;'"/]
+	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[0]" id="selectedFeeId0Amount" attributes="style='margin-left: 20px;' class='separatedNumber'"/]
 	    </div>
 	    <div class="row">
 			[@form.label "selectedFeeId1" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
 	    	[@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[1]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" id="selectedFeeId1" /]
 	    	<span style="margin-left: 10px;">[@spring.message "createLoanAccount.feeAmount" /]</span>
-	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[1]" id="selectedFeeId1Amount" attributes="style='margin-left: 20px;'"/]
+	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[1]" id="selectedFeeId1Amount" attributes="style='margin-left: 20px;' class='separatedNumber'"/]
 	    </div>
 	    <div class="row">
 			[@form.label "selectedFeeId2" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
 	    	[@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[2]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" id="selectedFeeId2" /]
 	    	<span style="margin-left: 10px;">[@spring.message "createLoanAccount.feeAmount" /]</span>
-	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[2]" id="selectedFeeId2Amount" attributes="style='margin-left: 20px;'"/]
+	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[2]" id="selectedFeeId2Amount" attributes="style='margin-left: 20px;' class='separatedNumber'"/]
 	    </div>
 	</div>
     </fieldset>
