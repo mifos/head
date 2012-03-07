@@ -111,7 +111,7 @@
 				<span class="fontnormal"> 
 					[@spring.message "Center.AccountsLink" /]
 					&nbsp; 
-          			<a id="viewCenterDetails.link.newSavingsAccount" href="createSavingsAccount.ftl?customerId=${centerInformationDto.centerDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+          			<a id="viewCenterDetails.link.newSavingsAccount" href="createSavingsAccount.ftl?customerId=${centerInformationDto.centerDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id?c}">
 						[@spring.message "${ConfigurationConstants.SAVINGS}.Savings" /]
 					</a> 
 				</span>
@@ -128,7 +128,7 @@
 				<div>
 					<span class="fontnormal"> 	
 				 		<a id="viewCenterDetails.link.savingsAccount"
-							href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
+							href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm}">
 							${savings.prdOfferingName}, [@spring.message "Center.acc" /] ${savings.globalAccountNum}
 						</a> 
 					</span>
@@ -335,7 +335,7 @@
 		[/#if]
 		<div>
 			<span class="fontnormal">
-	        	<a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${centerInformationDto.centerDisplay.customerId?c}&event=Create&source=Group&backPageUrl=${backPageUrl}%26recordOfficeId%3D${centerInformationDto.centerDisplay.branchId}%26recordLoanOfficerId%3D${centerInformationDto.centerDisplay.loanOfficerId}">
+	        	<a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${centerInformationDto.centerDisplay.customerId?c}&event=Create&source=Group&backPageUrl=${backPageUrl}%26recordOfficeId%3D${centerInformationDto.centerDisplay.branchId}%26recordLoanOfficerId%3D${centerInformationDto.centerDisplay.loanOfficerId}">
 	            	[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 	            </a>
 	            <br/>

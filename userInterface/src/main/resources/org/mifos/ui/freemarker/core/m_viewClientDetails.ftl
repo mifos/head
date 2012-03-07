@@ -112,10 +112,10 @@
 					<div class="headingorange">
 						<span class="fontnormal">
 							[@spring.message "client.AccountsLink" /]&nbsp; 
-							<a id="viewClientDetails.link.newLoanAccount" href="createLoanAccount.ftl?customerId=${clientInformationDto.clientDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+							<a id="viewClientDetails.link.newLoanAccount" href="createLoanAccount.ftl?customerId=${clientInformationDto.clientDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id?c}">
 								[@spring.message "${ConfigurationConstants.LOAN}" /]
 							</a> &nbsp;|&nbsp; 
-							<a id="viewClientDetails.link.newSavingsAccount" href="createSavingsAccount.ftl?customerId=${clientInformationDto.clientDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
+							<a id="viewClientDetails.link.newSavingsAccount" href="createSavingsAccount.ftl?customerId=${clientInformationDto.clientDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm}">
 								[@spring.message "${ConfigurationConstants.SAVINGS}.Savings" /]
 							</a> 
 						</span>
@@ -135,7 +135,7 @@
 					<div>
 						<span class="fontnormal"> 
 							<a id="viewClientDetails.link.viewLoanAccount"
-								href="viewLoanAccountDetails.ftl?globalAccountNum=${loan.globalAccountNum}&customerId=${clientInformationDto.clientDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
+								href="viewLoanAccountDetails.ftl?globalAccountNum=${loan.globalAccountNum}&customerId=${clientInformationDto.clientDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm}">
 								${loan.prdOfferingName}, [@spring.message "client.acc" /] ${loan.globalAccountNum}
 							</a> 
 						</span>
@@ -177,7 +177,7 @@
 				<div>
 					<span class="fontnormal"> 	
 				 		<a id="viewClientDetails.link.viewSavingsAccount"
-							href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
+							href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm}">
 							${savings.prdOfferingName}, [@spring.message "client.acc" /] ${savings.globalAccountNum}
 						</a> 
 					</span>
@@ -510,12 +510,12 @@
 					<img src="pages/framework/images/trans.gif" width="10" height="10">
 				</div>				
 				<div>
-					<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId?c}&event=Create&source=Client&backPageUrl=${backPageUrl}">
+					<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${clientInformationDto.clientDisplay.customerId?c}&event=Create&source=Client&backPageUrl=${backPageUrl}">
 				    	[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 					</a>
 					<br/>
 					[#if containsQGForCloseClient]		
-                    <a id="viewClientDetails.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId?c}&event=Close&source=Client&backPageUrl=${backPageUrl}">
+                    <a id="viewClientDetails.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${clientInformationDto.clientDisplay.customerId?c}&event=Close&source=Client&backPageUrl=${backPageUrl}">
                         [@spring.message "client.ViewQuestionGroupForClosedClientResponsesLink" /]
                     </a>
                     <br/>
