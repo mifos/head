@@ -56,7 +56,7 @@
 				</td>
 				<td align="right" class="drawtablerow">
 					[#if savingsAccountDetailDto.totalAmountDueForNextInstallment?number > 0]
-						<a href="savingsAction.do?method=waiveAmountDue&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+						<a href="savingsAction.do?method=waiveAmountDue&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm?c}">
 							[@spring.message "Savings.waive" /]
 						</a>
 					[#else]

@@ -115,7 +115,7 @@
 							<a id="viewClientDetails.link.newLoanAccount" href="createLoanAccount.ftl?customerId=${clientInformationDto.clientDisplay.customerId?c}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}">
 								[@spring.message "${ConfigurationConstants.LOAN}" /]
 							</a> &nbsp;|&nbsp; 
-							<a id="viewClientDetails.link.newSavingsAccount" href="createSavingsAccount.ftl?customerId=${clientInformationDto.clientDisplay.customerId?c}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm}">
+							<a id="viewClientDetails.link.newSavingsAccount" href="createSavingsAccount.ftl?customerId=${clientInformationDto.clientDisplay.customerId?c}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm?c}">
 								[@spring.message "${ConfigurationConstants.SAVINGS}.Savings" /]
 							</a> 
 						</span>
@@ -135,7 +135,7 @@
 					<div>
 						<span class="fontnormal"> 
 							<a id="viewClientDetails.link.viewLoanAccount"
-								href="viewLoanAccountDetails.ftl?globalAccountNum=${loan.globalAccountNum}&customerId=${clientInformationDto.clientDisplay.customerId?c}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm}">
+								href="viewLoanAccountDetails.ftl?globalAccountNum=${loan.globalAccountNum}&customerId=${clientInformationDto.clientDisplay.customerId?c}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm?c}">
 								${loan.prdOfferingName}, [@spring.message "client.acc" /] ${loan.globalAccountNum}
 							</a> 
 						</span>
@@ -177,7 +177,7 @@
 				<div>
 					<span class="fontnormal"> 	
 				 		<a id="viewClientDetails.link.viewSavingsAccount"
-							href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm}">
+							href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm?c}">
 							${savings.prdOfferingName}, [@spring.message "client.acc" /] ${savings.globalAccountNum}
 						</a> 
 					</span>
@@ -230,7 +230,7 @@
 			<div>
 				<span class="fontnormal">
 					[#if clientInformationDto.clientDisplay.customerStatusId !=1 && clientInformationDto.clientDisplay.customerStatusId !=2 ]
-						<a id="viewClientDetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${clientInformationDto.clientDisplay.customerId?c}&input=client&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+						<a id="viewClientDetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${clientInformationDto.clientDisplay.customerId?c}&input=client&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm?c}">
 	  						[@spring.message "client.ClosedAccountsLink" /]
 	  					</a>
 	  				[/#if]
@@ -248,7 +248,7 @@
 					[@spring.message "client.MFIInformationHeading" /]
 				</span>		
 				<span class="fontnormal">
-					<a id="viewClientDetails.link.editMfiInformation" href="clientCustAction.do?method=editMfiInfo&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+					<a id="viewClientDetails.link.editMfiInformation" href="clientCustAction.do?method=editMfiInfo&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm?c}">
 						[@spring.message "client.EditMfiInformationLink" /]
 					</a>
 				</span>
@@ -327,20 +327,20 @@
 				<span><!-- Editing group or branch membership based on whether client belongs to group or not -->
 					[#if clientInformationDto.clientDisplay.clientUnderGroup ]
 						<a id="viewClientDetails.link.editRemoveGroupMembership"
-							href="clientTransferAction.do?method=loadParents&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+							href="clientTransferAction.do?method=loadParents&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm?c}">
 							[#assign arguments = ["${springMacroRequestContext.getMessage(ConfigurationConstants.GROUP)}"]/]
 							[@spring.messageArgs "client.EditRemoveMembership" arguments /]
 						</a>
 						<br>
 					[#else]
 						<a id="viewClientDetails.link.editBranchOfficeMembership"
-							href="clientTransferAction.do?method=loadBranches&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+							href="clientTransferAction.do?method=loadBranches&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm?c}">
 							[#assign arguments = ["${springMacroRequestContext.getMessage(ConfigurationConstants.BRANCHOFFICE)}"]/]
 							[@spring.messageArgs "client.editMembership" arguments /]
 						</a>
 						<br>
 						<a id="viewClientDetails.link.editMeetingScheduleAddGroup"
-							href="meetingAction.do?method=edit&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}&customerLevel=${clientInformationDto.clientDisplay.customerLevelId}">
+							href="meetingAction.do?method=edit&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm?c}&customerLevel=${clientInformationDto.clientDisplay.customerLevelId}">
 							[@spring.message "client.EditMeetingLink" /]
 							[@spring.message "client.Separator" /]
 							[@spring.message "client.AddGroup" /]												
@@ -360,7 +360,7 @@
 						[@spring.message "client.PersonalInformationHeading" /]
 					</span>
 					<span class="fontnormal">
-						<a id="viewClientDetails.link.editPersonalInformation" href="clientCustAction.do?method=editPersonalInfo&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+						<a id="viewClientDetails.link.editPersonalInformation" href="clientCustAction.do?method=editPersonalInfo&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm?c}">
 							[@spring.message "client.EditPersonalInformationLink" /]
 						</a>
 					</span>
@@ -520,7 +520,7 @@
                     </a>
                     <br/>
                     [/#if]
-					<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=${clientInformationDto.clientDisplay.globalCustNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+					<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=${clientInformationDto.clientDisplay.globalCustNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm?c}">
 					    [@spring.message "client.HistoricalDataLink" /]
 					</a>
 					<br/>

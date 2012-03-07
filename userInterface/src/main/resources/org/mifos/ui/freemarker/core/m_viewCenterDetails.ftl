@@ -69,7 +69,7 @@
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		[#if centerInformationDto.centerDisplay.customerStatusId != CustomerConstants.CENTER_INACTIVE_STATE ]
 			<span class="fontnormal"> 
-				<a id="viewCenterDetails.link.add" href="groupCustAction.do?method=load&centerSystemId=${centerInformationDto.centerDisplay.globalCustNum}&parentOfficeId=${centerInformationDto.centerDisplay.branchId}&recordOfficeId=${centerInformationDto.centerDisplay.branchId}&recordLoanOfficerId=${centerInformationDto.centerDisplay.loanOfficerId}&randomNUm=${Session.randomNUm}">
+				<a id="viewCenterDetails.link.add" href="groupCustAction.do?method=load&centerSystemId=${centerInformationDto.centerDisplay.globalCustNum}&parentOfficeId=${centerInformationDto.centerDisplay.branchId}&recordOfficeId=${centerInformationDto.centerDisplay.branchId}&recordLoanOfficerId=${centerInformationDto.centerDisplay.loanOfficerId}&randomNUm=${Session.randomNUm?c}">
 					[@spring.message "Center.Add" /] [@spring.message "${ConfigurationConstants.GROUP}" /]
 				</a>
 			</span>
@@ -128,7 +128,7 @@
 				<div>
 					<span class="fontnormal"> 	
 				 		<a id="viewCenterDetails.link.savingsAccount"
-							href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm}">
+							href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm?c}">
 							${savings.prdOfferingName}, [@spring.message "Center.acc" /] ${savings.globalAccountNum}
 						</a> 
 					</span>
@@ -178,7 +178,7 @@
 			</div>			
 			<div>
 				<span class="fontnormal">
-					<a id="viewCenterDetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${centerInformationDto.centerDisplay.customerId?c}&input=center&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+					<a id="viewCenterDetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${centerInformationDto.centerDisplay.customerId?c}&input=center&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm?c}">
   						[@spring.message "Group.viewallclosedaccounts" /]
   					</a>
 	  			</span>
@@ -195,7 +195,7 @@
 					[@spring.message "${ConfigurationConstants.CENTER}" /] [@spring.message "Center.Information" /] 	
 				</span>
 				<span class="fontnormal">				
-					<a id="viewCenterDetails.link.editCenterDetails" href="centerCustAction.do?method=manage&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+					<a id="viewCenterDetails.link.editCenterDetails" href="centerCustAction.do?method=manage&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm?c}">
 						[@spring.message "Center.Edit" /] [@spring.message "${ConfigurationConstants.CENTER}" /] [@spring.message "Center.details" /] 					
 					</a>
 				</span>
@@ -250,7 +250,7 @@
 			</span>
 		</div>
 		<div class="fontnormal">
-			<a id="viewCenterDetails.link.meetings" href="meetingAction.do?method=edit&customerLevel=${centerInformationDto.centerDisplay.customerLevelId}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+			<a id="viewCenterDetails.link.meetings" href="meetingAction.do?method=edit&customerLevel=${centerInformationDto.centerDisplay.customerLevelId}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm?c}">
 				[@spring.message "Center.MeetingsLink" /] 	
 			</a>
 		</div>

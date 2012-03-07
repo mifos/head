@@ -72,7 +72,7 @@
 				<td align="right" class="drawtablerow">	${loanInstallmentDetailsDto.upcomingInstallmentDetails.fees?if_exists?number}</td>
 				<td align="right" class="drawtablerow">	&nbsp;
 				[#if loanInstallmentDetailsDto.upcomingInstallmentDetails.fees != '0.0' ]					 
-				<a id="nextPayment_loanAccount.link.waiveFeeDue" href="loanAccountAction.do?method=waiveChargeDue&prdOfferingName=${loanInformationDto.prdOfferingName}&accountId=${loanInformationDto.accountId?c}&WaiveType=fees&type=LoanAccount&input=LoanAccount&globalAccountNum=${loanInformationDto.globalAccountNum}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+				<a id="nextPayment_loanAccount.link.waiveFeeDue" href="loanAccountAction.do?method=waiveChargeDue&prdOfferingName=${loanInformationDto.prdOfferingName}&accountId=${loanInformationDto.accountId?c}&WaiveType=fees&type=LoanAccount&input=LoanAccount&globalAccountNum=${loanInformationDto.globalAccountNum}&randomNUm=${Session.randomNUm?c}&currentFlowKey=${Request.currentFlowKey}">
 					[@spring.message "loan.waive" /]
 				</a>
 				[/#if]
@@ -83,7 +83,7 @@
 				<td align="right" class="drawtablerow">${loanInstallmentDetailsDto.upcomingInstallmentDetails.penalty?if_exists?number}</td>
 				<td align="right" class="drawtablerow">&nbsp;
 				[#if loanInstallmentDetailsDto.upcomingInstallmentDetails.penalty != '0.0' ]						 
-				<a id="nextPayment_loanAccount.link.waivePenaltyDue" href="loanAccountAction.do?method=waiveChargeDue&accountId=${loanInformationDto.accountId?c}&WaiveType=penalty&type=LoanAccount&input=LoanAccount&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+				<a id="nextPayment_loanAccount.link.waivePenaltyDue" href="loanAccountAction.do?method=waiveChargeDue&accountId=${loanInformationDto.accountId?c}&WaiveType=penalty&type=LoanAccount&input=LoanAccount&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${Session.randomNUm?c}&currentFlowKey=${Request.currentFlowKey}">
 					[@spring.message "loan.waive" bundle="loanUIResources" /]
 				</a>
 				[/#if]
@@ -125,7 +125,7 @@
 				<td align="right" class="drawtablerow">${loanInstallmentDetailsDto.overDueInstallmentDetails.fees?if_exists?number}</td>
 				<td align="right" class="drawtablerow">&nbsp;
 				[#if loanInstallmentDetailsDto.overDueInstallmentDetails.fees != '0.0' ]	
-				<a id="nextPayment_loanAccount.link.waiveFeeOverDue" href="loanAccountAction.do?method=waiveChargeOverDue&accountId=${loanInformationDto.accountId?c}&WaiveType=fees&type=LoanAccount&input=LoanAccount&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+				<a id="nextPayment_loanAccount.link.waiveFeeOverDue" href="loanAccountAction.do?method=waiveChargeOverDue&accountId=${loanInformationDto.accountId?c}&WaiveType=fees&type=LoanAccount&input=LoanAccount&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${Session.randomNUm?c}&currentFlowKey=${Request.currentFlowKey}">
 					[@spring.message "loan.waive" /]
 				</a>
 				[/#if]
@@ -137,7 +137,7 @@
 				<td align="right" class="drawtablerow">${loanInstallmentDetailsDto.overDueInstallmentDetails.penalty?if_exists?number}</td>
 				<td align="right" class="drawtablerow">&nbsp;
 				[#if loanInstallmentDetailsDto.overDueInstallmentDetails.penalty != '0.0' ]
-				<a id="nextPayment_loanAccount.link.waivePenaltyOverDue" href="loanAccountAction.do?method=waiveChargeOverDue&accountId=${loanInformationDto.accountId?c}&WaiveType=penalty&type=LoanAccount&input=LoanAccount&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+				<a id="nextPayment_loanAccount.link.waivePenaltyOverDue" href="loanAccountAction.do?method=waiveChargeOverDue&accountId=${loanInformationDto.accountId?c}&WaiveType=penalty&type=LoanAccount&input=LoanAccount&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${Session.randomNUm?c}&currentFlowKey=${Request.currentFlowKey}">
 					[@spring.message "loan.waive" /]
 				</a>
 				[/#if]

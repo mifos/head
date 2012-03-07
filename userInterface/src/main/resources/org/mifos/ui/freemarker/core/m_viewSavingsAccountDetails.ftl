@@ -39,7 +39,7 @@
 		<span class="fontnormal">
 			[#if savingsAccountDetailDto.accountStateId != AccountState.SAVINGS_CANCELLED.value && savingsAccountDetailDto.accountStateId != AccountState.SAVINGS_CLOSED.value ]
 				<a id="savingsaccountdetail.link.editAccountStatus" 
-				href="editStatusAction.do?method=load&accountId=${savingsAccountDetailDto.accountId?c}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+				href="editStatusAction.do?method=load&accountId=${savingsAccountDetailDto.accountId?c}&randomNUm=${Session.randomNUm?c}&currentFlowKey=${Request.currentFlowKey}">
 					[@spring.message "Savings.editAccountStatus" /]
 				</a>
 			[/#if]
@@ -64,7 +64,7 @@
 		 ( savingsAccountDetailDto.accountStateId == AccountStates.SAVINGS_ACC_APPROVED || savingsAccountDetailDto.accountStateId == AccountStates.SAVINGS_ACC_INACTIVE ) ]
 		<span class="fontnormal">
 			<a id="savingsaccountdetail.link.viewDepositDueDetails" 
-				href="viewSavingsAccountDepositDueDetails.ftl?globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+				href="viewSavingsAccountDepositDueDetails.ftl?globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm?c}">
 				[@spring.message "Savings.viewDepositDueDetails" /]
 			</a>
 		</span><br/>
@@ -90,7 +90,7 @@
 		</span><br/>
 		<span class="fontnormal">
 			<a id="savingsaccountdetail.link.viewAllAccountActivity" 
-				href="viewSavingsAccountRecentActivity.ftl?globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+				href="viewSavingsAccountRecentActivity.ftl?globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm?c}">
 				[@spring.message "Savings.viewAllAccountActivity" /]
 			</a>
 		</span>
@@ -141,14 +141,14 @@
                 </a><br/>
             [/#if]
 			<a id="savingsaccountdetail.link.viewTransactionHistory" 
-				href="viewSavingsAccountTransactionHistory.ftl?globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+				href="viewSavingsAccountTransactionHistory.ftl?globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm?c}">
 				[@spring.message "Savings.viewTransactionHistory" /]
 			</a>
 			<br/>
 			<a id="savingsaccountdetail.link.viewChangeLog" href="savingsAction.do?method=loadChangeLog&entityType=Savings&entityId=${savingsAccountDetailDto.accountId?c}&currentFlowKey=${Request.currentFlowKey}">
 				[@spring.message "Savings.viewChangeLog" /]
 			</a><br/>
-			<a id="savingsaccountdetail.link.viewStatusHistory" href="savingsAction.do?method=getStatusHistory&globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+			<a id="savingsaccountdetail.link.viewStatusHistory" href="savingsAction.do?method=getStatusHistory&globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm?c}">
 				[@spring.message "Savings.viewStatusHistory" /]
 			</a> 
 		</span>
