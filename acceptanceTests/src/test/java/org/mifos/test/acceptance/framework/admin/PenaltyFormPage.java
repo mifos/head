@@ -31,9 +31,8 @@ import com.thoughtworks.selenium.Selenium;
 @SuppressWarnings("PMD.CyclomaticComplexity")
 public class PenaltyFormPage extends MifosPage {
 
-    public PenaltyFormPage(final Selenium selenium, final String name) {
+    public PenaltyFormPage(final Selenium selenium) {
         super(selenium);
-        verifyPage(name);
     }
     
     @SuppressWarnings("PMD.NPathComplexity")

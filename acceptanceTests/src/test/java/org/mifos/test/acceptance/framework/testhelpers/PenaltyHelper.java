@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
+import org.mifos.test.acceptance.framework.admin.EditPenaltyPreviewPage;
 import org.mifos.test.acceptance.framework.admin.NewPenaltyPreviewPage;
 import org.mifos.test.acceptance.framework.admin.PenaltyFormParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
@@ -45,6 +46,16 @@ public class PenaltyHelper {
         
         navigationHelper.navigateToAdminPage().navigateToDefineNewPenaltyPage()
             .fillParameters(param).submitPageAndGotoPenaltyPreviewPage(NewPenaltyPreviewPage.class).submit();
+    }
+    
+    public void editAmountPenalty(final String oldName, final String newName, final String period, final String duration,
+            final String frequency, final String min, final String max, final String amount) throws Exception {
+        final PenaltyFormParameters param = createPenalty(newName, period, duration, frequency, min, max);
+        param.setAmount(amount);
+        
+        navigationHelper.navigateToAdminPage().navigateToViewPenaltiesPage().navigateToViewPenaltyPage(oldName)
+            .navigateToEditPenaltyPage().fillParameters(param)
+            .submitPageAndGotoPenaltyPreviewPage(EditPenaltyPreviewPage.class).submit();
     }
     
     public void createRatePenalty(String name, String period, String duration, String frequency, String rate,
@@ -130,7 +141,6 @@ public class PenaltyHelper {
         }
     }
     
-    @SuppressWarnings("PMD.NPathComplexity")
     private PenaltyFormParameters createPenalty(final String name, final String period, final String duration,
             final String frequency, final String min, final String max) {
         final PenaltyFormParameters param = new PenaltyFormParameters();

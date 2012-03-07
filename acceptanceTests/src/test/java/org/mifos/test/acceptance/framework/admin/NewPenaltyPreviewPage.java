@@ -75,7 +75,7 @@ public class NewPenaltyPreviewPage extends MifosPage {
     public PenaltyFormPage navigateToEditPenaltyInformationPage() {
         selenium.click("EDIT");
         waitForPageToLoad();
-        return new PenaltyFormPage(selenium, "newPenalty");
+        return new PenaltyFormPage(selenium);
     }
 
     public AdminPage submit() {

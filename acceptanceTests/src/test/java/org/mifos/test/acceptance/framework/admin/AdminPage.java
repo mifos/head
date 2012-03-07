@@ -364,7 +364,7 @@ public class AdminPage extends MifosPage {
     public PenaltyFormPage navigateToDefineNewPenaltyPage() {
         selenium.click("admin.link.defineNewPenalty");
         waitForPageToLoad();
-        return new PenaltyFormPage(selenium, "newPenalty");
+        return new PenaltyFormPage(selenium);
     }
     
     public ViewPenaltiesPage navigateToViewPenaltiesPage() {

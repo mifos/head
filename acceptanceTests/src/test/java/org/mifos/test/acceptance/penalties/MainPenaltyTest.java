@@ -20,6 +20,9 @@
 
 package org.mifos.test.acceptance.penalties;
 
+import static org.mifos.test.acceptance.framework.admin.PenaltyFormParameters.FREQUENCY_NONE;
+import static org.mifos.test.acceptance.framework.admin.PenaltyFormParameters.PERIOD_NONE;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,8 +37,10 @@ import org.mifos.test.acceptance.framework.admin.PenaltyFormParameters;
 import org.mifos.test.acceptance.framework.admin.ViewPenaltiesPage;
 import org.mifos.test.acceptance.framework.admin.ViewPenaltyPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.PenaltyHelper;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -181,7 +186,39 @@ public class MainPenaltyTest extends UiTestCaseBase {
         penaltiesPage.verifyInActivePenaltyLabel(2);
         penaltiesPage.verifyInActivePenaltyLabel(4);
     }
-
+    
+    @Test(enabled = true)
+    public void checkPermissionsForPenalties() throws Exception {
+        String penaltyName = "Penalty Permission";
+        String accessDenied = "Access Denied";
+        String youAreNotAllowedToAccessThisPage = "You are not allowed to access this page.";
+        
+        navigationHelper.navigateToAdminPage().navigateToViewRolesPage()
+            .navigateToManageRolePage("Admin").disablePermission("0_6").submitAndGotoViewRolesPage();
+        
+        navigationHelper.navigateToAdminPage().navigateToDefineNewPenaltyPage();
+        Assert.assertTrue(selenium.isTextPresent(accessDenied));
+        Assert.assertTrue(selenium.isTextPresent(youAreNotAllowedToAccessThisPage));
+        
+        navigationHelper.navigateToAdminPage().navigateToViewPenaltiesPage().navigateToDefineNewPenaltyPage();
+        Assert.assertTrue(selenium.isTextPresent(accessDenied));
+        Assert.assertTrue(selenium.isTextPresent(youAreNotAllowedToAccessThisPage));
+        
+        navigationHelper.navigateToAdminPage().navigateToViewRolesPage()
+            .navigateToManageRolePage("Admin").enablePermission("0_6_0").submitAndGotoViewRolesPage();
+        
+        new PenaltyHelper(selenium).createAmountPenalty(penaltyName, PERIOD_NONE, "", FREQUENCY_NONE, "1", "999", "5");
+        
+        navigationHelper.navigateToAdminPage().navigateToViewPenaltiesPage()
+            .navigateToViewPenaltyPage(penaltyName).navigateToEditPenaltyPage();
+        Assert.assertTrue(selenium.isTextPresent(accessDenied));
+        Assert.assertTrue(selenium.isTextPresent(youAreNotAllowedToAccessThisPage));
+        
+        navigationHelper.navigateToAdminPage().navigateToViewRolesPage()
+        .navigateToManageRolePage("Admin").enablePermission("0_6_1").submitAndGotoViewRolesPage();
+        
+        new PenaltyHelper(selenium).editAmountPenalty(penaltyName, penaltyName, PERIOD_NONE, "", FREQUENCY_NONE, "1", "9999", "3");
+    }
     
     private List<String> createData(final PenaltyFormParameters param, final int i) {
         final List<String> data = new ArrayList<String>();
