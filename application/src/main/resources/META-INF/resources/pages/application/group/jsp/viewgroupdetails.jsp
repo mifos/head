@@ -635,7 +635,7 @@ explanation of the license and how it is applied.
                             <c:param name="entityId" value="${groupInformationDto.groupDisplay.customerId}" />
                             <c:param name="event" value="Create" />
                             <c:param name="source" value="Group" />
-                            <c:param name="backPageUrl" value="groupCustAction.do?method%3Dget%26globalAccountNum%3D${client.globalCustNum}%26recordOfficeId%3D${groupInformationDto.groupDisplay.branchId}%26recordLoanOfficerId%3D${groupInformationDto.groupDisplay.loanOfficerId}" />
+                            <c:param name="backPageUrl" value="groupCustAction.do?method=get&globalAccountNum=${client.globalCustNum}&recordOfficeId=${groupInformationDto.groupDisplay.branchId}&recordLoanOfficerId=${groupInformationDto.groupDisplay.loanOfficerId}" />
                            </c:url >
                             <c:set var="questionnaireFor" scope="session" value="${groupInformationDto.groupDisplay.displayName}"/>
                             <a id="groupdetail.link.questionGroups" href="${viewAndEditQuestionnaireMethodUrl}">
@@ -765,7 +765,7 @@ explanation of the license and how it is applied.
                     <c:param name="instanceId" value="${questionGroupInstance.id}" />
                     <c:param name="event" value="View" />
                     <c:param name="source" value="Group" />
-                    <c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
+                    <c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}&method=get" />
                    </c:url >
                   <span class="fontnormal8pt">
                     <a id="${questionGroupInstance.id}" href="${viewAndEditQuestionnaireMethodUrl}">
@@ -790,7 +790,7 @@ explanation of the license and how it is applied.
                   <c:remove var="urlMap" />
                   <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
                   <c:set target="${urlMap}" property="${groupInformationDto.groupDisplay.displayName}" value="groupCustAction.do?method=get&globalCustNum=${groupInformationDto.groupDisplay.globalCustNum}"/>
-                  <a id="viewgroupdetails.link.attachSurvey" href="questionnaire.ftl?source=Group&event=View&entityId=${groupInformationDto.groupDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=groupCustAction.do%3Fmethod%3Dget">
+                  <a id="viewgroupdetails.link.attachSurvey" href="questionnaire.ftl?source=Group&event=View&entityId=${groupInformationDto.groupDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=groupCustAction.do?method=get">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                 </span>

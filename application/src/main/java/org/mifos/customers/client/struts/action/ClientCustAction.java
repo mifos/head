@@ -574,7 +574,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         String loanOfficerId = request.getParameter("recordLoanOfficerId");
         String url = String.format("clientCustAction.do?globalCustNum=%s&recordOfficeId=%s&recordLoanOfficerId=%s",
                 clientBO.getGlobalCustNum(), officerId, loanOfficerId);
-        return URLEncoder.encode(url, "UTF-8");
+        return url;
     }
 
     @TransactionDemarcate(joinToken = true)

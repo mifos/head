@@ -328,7 +328,7 @@ public class CenterCustAction extends CustAction {
         String loanOfficerId = request.getParameter("recordLoanOfficerId");
         String url = String.format("centerCustAction.do?globalCustNum=%s&recordOfficeId=%s&recordLoanOfficerId=%s",
                 centerBO.getGlobalCustNum(), officerId, loanOfficerId);
-        return URLEncoder.encode(url, "UTF-8");
+        return url;
     }
 
     @TransactionDemarcate(conditionToken = true)

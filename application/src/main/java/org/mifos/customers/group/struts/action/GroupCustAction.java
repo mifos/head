@@ -299,7 +299,7 @@ public class GroupCustAction extends CustAction {
         String loanOfficerId = request.getParameter("recordLoanOfficerId");
         String url = String.format("groupCustAction.do?globalCustNum=%s&recordOfficeId=%s&recordLoanOfficerId=%s",
                 groupBO.getGlobalCustNum(), officerId, loanOfficerId);
-        return URLEncoder.encode(url, "UTF-8");
+        return url;
     }
 
     @TransactionDemarcate(joinToken = true)

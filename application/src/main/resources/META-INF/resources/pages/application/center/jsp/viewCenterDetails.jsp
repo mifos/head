@@ -489,7 +489,7 @@ explanation of the license and how it is applied.
 	                            <c:param name="entityId" value="${centerInformationDto.centerDisplay.customerId}" />
 	                            <c:param name="event" value="Create" />
 	                            <c:param name="source" value="Center" />
-	                            <c:param name="backPageUrl" value="centerCustAction.do?method%3Dget%26globalAccountNum%3D${client.globalCustNum}%26recordOfficeId%3D${centerInformationDto.centerDisplay.branchId}%26recordLoanOfficerId%3D${centerInformationDto.centerDisplay.loanOfficerId}" />
+	                            <c:param name="backPageUrl" value="centerCustAction.do?method=get&globalAccountNum=${client.globalCustNum}&recordOfficeId=${centerInformationDto.centerDisplay.branchId}&recordLoanOfficerId=${centerInformationDto.centerDisplay.loanOfficerId}" />
 	                           </c:url >
 	                            <c:set var="questionnaireFor" scope="session" value="${centerInformationDto.centerDisplay.displayName}"/>
 	                            <a id="groupdetail.link.questionGroups" href="${viewAndEditQuestionnaireMethodUrl}">
@@ -586,7 +586,7 @@ explanation of the license and how it is applied.
                     <c:param name="instanceId" value="${questionGroupInstance.id}" />
                     <c:param name="event" value="View" />
                     <c:param name="source" value="Center" />
-                    <c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
+                    <c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}&method=get" />
                    </c:url >
                   <span class="fontnormal8pt">
                     <a id="${questionGroupInstance.id}" href="${viewAndEditQuestionnaireMethodUrl}">
@@ -611,7 +611,7 @@ explanation of the license and how it is applied.
                   <c:remove var="urlMap" />
                   <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
                   <c:set target="${urlMap}" property="${centerInformationDto.centerDisplay.displayName}" value="centerCustAction.do?method=get&globalCustNum=${centerInformationDto.centerDisplay.globalCustNum}"/>
-                  <a id="viewCenterDetails.link.attachSurvey" href="questionnaire.ftl?source=Center&event=View&entityId=${centerInformationDto.centerDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=centerCustAction.do%3Fmethod%3Dget">
+                  <a id="viewCenterDetails.link.attachSurvey" href="questionnaire.ftl?source=Center&event=View&entityId=${centerInformationDto.centerDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=centerCustAction.do?method=get">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                 </span>
