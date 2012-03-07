@@ -111,7 +111,7 @@
 				<span class="fontnormal"> 
 					[@spring.message "Center.AccountsLink" /]
 					&nbsp; 
-          			<a id="viewCenterDetails.link.newSavingsAccount" href="createSavingsAccount.ftl?customerId=${centerInformationDto.centerDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id?c}">
+          			<a id="viewCenterDetails.link.newSavingsAccount" href="createSavingsAccount.ftl?customerId=${centerInformationDto.centerDisplay.customerId?c}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}">
 						[@spring.message "${ConfigurationConstants.SAVINGS}.Savings" /]
 					</a> 
 				</span>
@@ -128,7 +128,7 @@
 				<div>
 					<span class="fontnormal"> 	
 				 		<a id="viewCenterDetails.link.savingsAccount"
-							href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm}">
+							href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm}">
 							${savings.prdOfferingName}, [@spring.message "Center.acc" /] ${savings.globalAccountNum}
 						</a> 
 					</span>

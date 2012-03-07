@@ -110,7 +110,7 @@
 					[#else]
 						[#list groupInformationDto.clientsOtherThanClosedAndCancelled as client]
 							<a id="viewgroupdetails.link.client"
-								href="viewClientDetails.ftl?globalCustNum=${client.globalCustNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id?c}">
+								href="viewClientDetails.ftl?globalCustNum=${client.globalCustNum}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}">
 								${client.displayName}
 							</a>
 							<br/>
@@ -141,11 +141,11 @@
 					[@spring.message "Group.opennewaccount" /]
 					&nbsp; 
 					[#if isGroupLoanAllowed]
-					<a id="viewgroupdetails.link.newLoanAccount" href="createLoanAccount.ftl?customerId=${groupInformationDto.groupDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id?c}">
+					<a id="viewgroupdetails.link.newLoanAccount" href="createLoanAccount.ftl?customerId=${groupInformationDto.groupDisplay.customerId?c}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}">
 						[@spring.message "${ConfigurationConstants.LOAN}" /]
 					</a> &nbsp;|&nbsp;
           			[/#if] 
-          			<a id="viewgroupdetails.link.newSavingsAccount"	href="createSavingsAccount.ftl?customerId=${groupInformationDto.groupDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id?c}">
+          			<a id="viewgroupdetails.link.newSavingsAccount"	href="createSavingsAccount.ftl?customerId=${groupInformationDto.groupDisplay.customerId?c}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}">
 						[@spring.message "${ConfigurationConstants.SAVINGS}.Savings" /]
 					</a> 
 				</span>
@@ -164,7 +164,7 @@
 					<div>
 						<span class="fontnormal"> 
 							<a id="viewgroupdetails.link.viewLoanAccount"
-								href="viewLoanAccountDetails.ftl?globalAccountNum=${loan.globalAccountNum}&customerId=${groupInformationDto.groupDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm}">
+								href="viewLoanAccountDetails.ftl?globalAccountNum=${loan.globalAccountNum}&customerId=${groupInformationDto.groupDisplay.customerId?c}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm}">
 								${loan.prdOfferingName}, [@spring.message "Group.acc" /] ${loan.globalAccountNum}
 							</a> 
 						</span>
@@ -206,7 +206,7 @@
 				<div>
 					<span class="fontnormal"> 	
 				 		<a id="viewgroupdetails.link.viewSavingsAccount"
-							href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm}">
+							href="viewSavingsAccountDetails.ftl?globalAccountNum=${savings.globalAccountNum}&recordOfficeId=${UserContext.branchId?c}&recordLoanOfficerId=${UserContext.id?c}&randomNUm=${Session.randomNUm}">
 							${savings.prdOfferingName}, [@spring.message "client.acc" /] ${savings.globalAccountNum}
 						</a> 
 					</span>
