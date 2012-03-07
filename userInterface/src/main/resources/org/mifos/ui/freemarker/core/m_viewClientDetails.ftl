@@ -39,7 +39,7 @@
 			</span>
 			<span class="fontnormal"> <!-- Edit center status link --> 
 				[#if clientInformationDto.clientDisplay.customerStatusId != 6]
-				<a id="viewClientDetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=${clientInformationDto.clientDisplay.customerId}&input=client&currentFlowKey=${Request.currentFlowKey}">
+				<a id="viewClientDetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=${clientInformationDto.clientDisplay.customerId?c}&input=client&currentFlowKey=${Request.currentFlowKey}">
 					[#assign arguments = ["${ConfigurationConstants.CLIENT}"]/]
 					[@spring.messageArgs "client.editStatus" arguments/] 
 				</a>
@@ -93,7 +93,7 @@
 			[#if !isPhotoFieldHidden]
 			<td class="fontnormalbold">
 					<span class="fontnormal"> 
-							<a id="viewClientDetails.link.seePhoto" href="javascript:photopopup(${clientInformationDto.clientDisplay.customerId},
+							<a id="viewClientDetails.link.seePhoto" href="javascript:photopopup(${clientInformationDto.clientDisplay.customerId?c},
 								 '${clientInformationDto.clientDisplay.loanOfficerName}', '${Request.currentFlowKey}')">
 								[@spring.message "client.seephoto"/]
 							</a>
@@ -112,10 +112,10 @@
 					<div class="headingorange">
 						<span class="fontnormal">
 							[@spring.message "client.AccountsLink" /]&nbsp; 
-							<a id="viewClientDetails.link.newLoanAccount" href="createLoanAccount.ftl?customerId=${clientInformationDto.clientDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+							<a id="viewClientDetails.link.newLoanAccount" href="createLoanAccount.ftl?customerId=${clientInformationDto.clientDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 								[@spring.message "${ConfigurationConstants.LOAN}" /]
 							</a> &nbsp;|&nbsp; 
-							<a id="viewClientDetails.link.newSavingsAccount" href="createSavingsAccount.ftl?customerId=${clientInformationDto.clientDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
+							<a id="viewClientDetails.link.newSavingsAccount" href="createSavingsAccount.ftl?customerId=${clientInformationDto.clientDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
 								[@spring.message "${ConfigurationConstants.SAVINGS}.Savings" /]
 							</a> 
 						</span>
@@ -135,7 +135,7 @@
 					<div>
 						<span class="fontnormal"> 
 							<a id="viewClientDetails.link.viewLoanAccount"
-								href="viewLoanAccountDetails.ftl?globalAccountNum=${loan.globalAccountNum}&customerId=${clientInformationDto.clientDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
+								href="viewLoanAccountDetails.ftl?globalAccountNum=${loan.globalAccountNum}&customerId=${clientInformationDto.clientDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
 								${loan.prdOfferingName}, [@spring.message "client.acc" /] ${loan.globalAccountNum}
 							</a> 
 						</span>
@@ -230,7 +230,7 @@
 			<div>
 				<span class="fontnormal">
 					[#if clientInformationDto.clientDisplay.customerStatusId !=1 && clientInformationDto.clientDisplay.customerStatusId !=2 ]
-						<a id="viewClientDetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${clientInformationDto.clientDisplay.customerId}&input=client&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+						<a id="viewClientDetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${clientInformationDto.clientDisplay.customerId?c}&input=client&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
 	  						[@spring.message "client.ClosedAccountsLink" /]
 	  					</a>
 	  				[/#if]
@@ -510,12 +510,12 @@
 					<img src="pages/framework/images/trans.gif" width="10" height="10">
 				</div>				
 				<div>
-					<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Create&source=Client&backPageUrl=${backPageUrl}">
+					<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId?c}&event=Create&source=Client&backPageUrl=${backPageUrl}">
 				    	[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 					</a>
 					<br/>
 					[#if containsQGForCloseClient]		
-                    <a id="viewClientDetails.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Close&source=Client&backPageUrl=${backPageUrl}">
+                    <a id="viewClientDetails.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId?c}&event=Close&source=Client&backPageUrl=${backPageUrl}">
                         [@spring.message "client.ViewQuestionGroupForClosedClientResponsesLink" /]
                     </a>
                     <br/>
@@ -524,7 +524,7 @@
 					    [@spring.message "client.HistoricalDataLink" /]
 					</a>
 					<br/>
-					<a id="viewClientDetails.link.viewChangeLog" href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${clientInformationDto.clientDisplay.customerId}&currentFlowKey=${Request.currentFlowKey}">
+					<a id="viewClientDetails.link.viewChangeLog" href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${clientInformationDto.clientDisplay.customerId?c}&currentFlowKey=${Request.currentFlowKey}">
 						[@spring.message "client.ChangeLogLink" /]
 					</a>
 				</div>

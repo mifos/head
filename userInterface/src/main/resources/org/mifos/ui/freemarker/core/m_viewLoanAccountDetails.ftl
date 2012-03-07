@@ -223,7 +223,7 @@
 			<span class="fontnormal">
 				[#if loanInformationDto.accountStateId != 6 && loanInformationDto.accountStateId != 7 && loanInformationDto.accountStateId !=8 && loanInformationDto.accountStateId !=10 ]
 					<a id="loanaccountdetail.link.editAccountInformation"
-					href="loanAccountAction.do?method=manage&customerId=${loanInformationDto.customerId}&globalAccountNum=${loanInformationDto.globalAccountNum}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+					href="loanAccountAction.do?method=manage&customerId=${loanInformationDto.customerId?c}&globalAccountNum=${loanInformationDto.globalAccountNum}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
 						[@spring.message "loan.edit_acc_info" /]
 					</a>
 				[/#if]

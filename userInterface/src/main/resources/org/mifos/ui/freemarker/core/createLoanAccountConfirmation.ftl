@@ -42,8 +42,8 @@
 
 <div class="suggestion">[@spring.message "createLoanAccount.accountCreated.nextSteps" /]</div>
 <ul>
-    <li><a href="createSavingsAccount.ftl?customerId=${loanCreationProductDetailsDto.customerDetailDto.customerId}">[@spring.message "createLoanAccount.accountCreated.action.openNewSavingsAccount" /]</a></li>
-    <li><a href="createLoanAccount.ftl?customerId=${loanCreationProductDetailsDto.customerDetailDto.customerId}">[@spring.message "createLoanAccount.accountCreated.action.openNewLoanAccount" /]</a></li>
+    <li><a href="createSavingsAccount.ftl?customerId=${loanCreationProductDetailsDto.customerDetailDto.customerId?c}">[@spring.message "createLoanAccount.accountCreated.action.openNewSavingsAccount" /]</a></li>
+    <li><a href="createLoanAccount.ftl?customerId=${loanCreationProductDetailsDto.customerDetailDto.customerId?c}">[@spring.message "createLoanAccount.accountCreated.action.openNewLoanAccount" /]</a></li>
 </ul>
  
 [/@layout.webflow]

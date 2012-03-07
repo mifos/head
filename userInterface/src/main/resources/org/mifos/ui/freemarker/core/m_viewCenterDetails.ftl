@@ -32,7 +32,7 @@
 			${centerInformationDto.centerDisplay.displayName}
 		</span>
 		<span class="fontnormal"> <!-- Edit center status link --> 
-			<a id="viewCenterDetails.link.edit" href="editCustomerStatusAction.do?method=loadStatus&customerId=${centerInformationDto.centerDisplay.customerId}&input=center&currentFlowKey=${Request.currentFlowKey}">
+			<a id="viewCenterDetails.link.edit" href="editCustomerStatusAction.do?method=loadStatus&customerId=${centerInformationDto.centerDisplay.customerId?c}&input=center&currentFlowKey=${Request.currentFlowKey}">
 				[@spring.message "Center.Edit" /] [@spring.message "${ConfigurationConstants.CENTER}" /] [@spring.message "Center.Status1" /] 			
 			</a>
 		</span>
@@ -111,7 +111,7 @@
 				<span class="fontnormal"> 
 					[@spring.message "Center.AccountsLink" /]
 					&nbsp; 
-          			<a id="viewCenterDetails.link.newSavingsAccount" href="createSavingsAccount.ftl?customerId=${centerInformationDto.centerDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+          			<a id="viewCenterDetails.link.newSavingsAccount" href="createSavingsAccount.ftl?customerId=${centerInformationDto.centerDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 						[@spring.message "${ConfigurationConstants.SAVINGS}.Savings" /]
 					</a> 
 				</span>
@@ -178,7 +178,7 @@
 			</div>			
 			<div>
 				<span class="fontnormal">
-					<a id="viewCenterDetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${centerInformationDto.centerDisplay.customerId}&input=center&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+					<a id="viewCenterDetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${centerInformationDto.centerDisplay.customerId?c}&input=center&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
   						[@spring.message "Group.viewallclosedaccounts" /]
   					</a>
 	  			</span>
@@ -335,11 +335,11 @@
 		[/#if]
 		<div>
 			<span class="fontnormal">
-	        	<a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${centerInformationDto.centerDisplay.customerId}&event=Create&source=Group&backPageUrl=${backPageUrl}%26recordOfficeId%3D${centerInformationDto.centerDisplay.branchId}%26recordLoanOfficerId%3D${centerInformationDto.centerDisplay.loanOfficerId}">
+	        	<a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${centerInformationDto.centerDisplay.customerId?c}&event=Create&source=Group&backPageUrl=${backPageUrl}%26recordOfficeId%3D${centerInformationDto.centerDisplay.branchId}%26recordLoanOfficerId%3D${centerInformationDto.centerDisplay.loanOfficerId}">
 	            	[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 	            </a>
 	            <br/>
-				<a id="viewCenterDetails.link.viewChangeLog" href="centerCustAction.do?method=loadChangeLog&entityType=Center&entityId=${centerInformationDto.centerDisplay.customerId}&currentFlowKey=${Request.currentFlowKey}">
+				<a id="viewCenterDetails.link.viewChangeLog" href="centerCustAction.do?method=loadChangeLog&entityType=Center&entityId=${centerInformationDto.centerDisplay.customerId?c}&currentFlowKey=${Request.currentFlowKey}">
 					[@spring.message "Center.ChangeLogLink" /]
 				</a> 
 				<br/>

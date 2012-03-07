@@ -33,7 +33,7 @@
 		</span>
 		<span class="fontnormal"> <!-- Edit center status link --> 
 			[#if groupInformationDto.groupDisplay.customerStatusId != CustomerStatus.GROUP_CLOSED.value]
-			<a id="viewgroupdetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=${groupInformationDto.groupDisplay.customerId}&input=group&currentFlowKey=${Request.currentFlowKey}">
+			<a id="viewgroupdetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=${groupInformationDto.groupDisplay.customerId?c}&input=group&currentFlowKey=${Request.currentFlowKey}">
 				[#assign arguments = ["${ConfigurationConstants.GROUP}"]/]
 				[@spring.messageArgs "Group.editStatus" arguments/] 
 			</a>
@@ -84,7 +84,7 @@
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		[#if groupInformationDto.groupDisplay.customerStatusId != CustomerStatus.GROUP_CANCELLED.value && groupInformationDto.groupDisplay.customerStatusId != CustomerStatus.GROUP_CLOSED.value ]
 			<span class="fontnormal"> 
-				<a id="viewgroupdetails.link.add" href="clientCustAction.do?method=load&groupFlag=1&parentGroupId=${groupInformationDto.groupDisplay.customerId}&recordOfficeId=${groupInformationDto.groupDisplay.branchId}&recordLoanOfficerId=${groupInformationDto.groupDisplay.loanOfficerId}&randomNUm=${Session.randomNUm}">
+				<a id="viewgroupdetails.link.add" href="clientCustAction.do?method=load&groupFlag=1&parentGroupId=${groupInformationDto.groupDisplay.customerId?c}&recordOfficeId=${groupInformationDto.groupDisplay.branchId}&recordLoanOfficerId=${groupInformationDto.groupDisplay.loanOfficerId}&randomNUm=${Session.randomNUm}">
 	    			[#assign arguments = ["${ConfigurationConstants.CLIENT}"]/]
 					[@spring.messageArgs "Group.Add" arguments/] 
 				</a>
@@ -141,11 +141,11 @@
 					[@spring.message "Group.opennewaccount" /]
 					&nbsp; 
 					[#if isGroupLoanAllowed]
-					<a id="viewgroupdetails.link.newLoanAccount" href="createLoanAccount.ftl?customerId=${groupInformationDto.groupDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+					<a id="viewgroupdetails.link.newLoanAccount" href="createLoanAccount.ftl?customerId=${groupInformationDto.groupDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 						[@spring.message "${ConfigurationConstants.LOAN}" /]
 					</a> &nbsp;|&nbsp;
           			[/#if] 
-          			<a id="viewgroupdetails.link.newSavingsAccount"	href="createSavingsAccount.ftl?customerId=${groupInformationDto.groupDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+          			<a id="viewgroupdetails.link.newSavingsAccount"	href="createSavingsAccount.ftl?customerId=${groupInformationDto.groupDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 						[@spring.message "${ConfigurationConstants.SAVINGS}.Savings" /]
 					</a> 
 				</span>
@@ -164,7 +164,7 @@
 					<div>
 						<span class="fontnormal"> 
 							<a id="viewgroupdetails.link.viewLoanAccount"
-								href="viewLoanAccountDetails.ftl?globalAccountNum=${loan.globalAccountNum}&customerId=${groupInformationDto.groupDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
+								href="viewLoanAccountDetails.ftl?globalAccountNum=${loan.globalAccountNum}&customerId=${groupInformationDto.groupDisplay.customerId?c}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${Session.randomNUm}">
 								${loan.prdOfferingName}, [@spring.message "Group.acc" /] ${loan.globalAccountNum}
 							</a> 
 						</span>
@@ -258,7 +258,7 @@
 			<div>
 				<span class="fontnormal">
 					[#if groupInformationDto.groupDisplay.customerStatusId !=7 && groupInformationDto.groupDisplay.customerStatusId !=8 ]
-						<a id="viewgroupdetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${groupInformationDto.groupDisplay.customerId}&input=group&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+						<a id="viewgroupdetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${groupInformationDto.groupDisplay.customerId?c}&input=group&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
 	  						[@spring.message "Group.viewallclosedaccounts" /]
 	  					</a>
 	  				[/#if]
@@ -450,7 +450,7 @@
 					</div>
 					<div>
 						<span class="fontnormal">
-                        	<a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${groupInformationDto.groupDisplay.customerId}&event=Create&source=Group&backPageUrl=${backPageUrl}%26recordOfficeId%3D${groupInformationDto.groupDisplay.branchId}%26recordLoanOfficerId%3D${groupInformationDto.groupDisplay.loanOfficerId}">
+                        	<a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${groupInformationDto.groupDisplay.customerId?c}&event=Create&source=Group&backPageUrl=${backPageUrl}%26recordOfficeId%3D${groupInformationDto.groupDisplay.branchId}%26recordLoanOfficerId%3D${groupInformationDto.groupDisplay.loanOfficerId}">
                             	[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 	                        </a>
 	                        <br/>
@@ -458,7 +458,7 @@
 								[@spring.message "Group.viewhistoricaldata" /]
 							</a> 
 							<br/>
-							<a id="viewgroupdetails.link.viewChangeLog" href="groupCustAction.do?method=loadChangeLog&entityType=Group&entityId=${groupInformationDto.groupDisplay.customerId}&currentFlowKey=${Request.currentFlowKey}">
+							<a id="viewgroupdetails.link.viewChangeLog" href="groupCustAction.do?method=loadChangeLog&entityType=Group&entityId=${groupInformationDto.groupDisplay.customerId?c}&currentFlowKey=${Request.currentFlowKey}">
 								[@spring.message "Group.viewchangelog" /]
 							</a> 
 							<br/>
