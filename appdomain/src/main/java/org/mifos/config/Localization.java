@@ -52,7 +52,7 @@ public class Localization {
         readLoacaleSetting();
     }
 
-    public static final Localization getInstance() {
+    public static Localization getInstance() {
         if(localization == null) {
             localization = new Localization();
         }
