@@ -38,7 +38,7 @@
 		<span class="fontnormal">
 			[#if loanInformationDto.accountStateId != 6 && loanInformationDto.accountStateId != 7 && loanInformationDto.accountStateId !=8 && loanInformationDto.accountStateId !=10 ]
 				<a id="loanaccountdetail.link.editAccountStatus"
-				href="editStatusAction.do?method=load&accountId=${loanInformationDto.accountId}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+				href="editStatusAction.do?method=load&accountId=${loanInformationDto.accountId?c}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
 					[@spring.message "loan.edit_acc_status" /]
 				</a>
 			[/#if]
@@ -100,7 +100,7 @@
 		[#if loanInformationDto.accountStateId == 5 || loanInformationDto.accountStateId == 9 ]
 		<span class="fontnormal"> 
 			<a id="loanaccountdetail.link.viewInstallmentDetails"
-			href="viewLoanAccountNextInstallmentDetails.ftl?accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountType=${loanInformationDto.accountTypeId}&accountStateId=${loanInformationDto.accountStateId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&lastPaymentAction=${loanInformationDto.accountId}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+			href="viewLoanAccountNextInstallmentDetails.ftl?accountId=${loanInformationDto.accountId?c}&prdOfferingName=${loanInformationDto.prdOfferingName}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountType=${loanInformationDto.accountTypeId}&accountStateId=${loanInformationDto.accountStateId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&lastPaymentAction=${loanInformationDto.accountId}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
 				[@spring.message "loan.view_installment_details" /]
 			</a>
 		</span><br/>
@@ -204,7 +204,7 @@
 				[#if loanInformationDto.loanActivityDetails == true]
 					</span class="fontnormal">
 						<a id="loanaccountdetail.link.viewAccountActivity"
-							href="viewLoanAccountAllActivity.ftl?accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&accountStateId=${loanInformationDto.accountStateId}&globalAccountNum=${loanInformationDto.globalAccountNum}&lastPaymentAction=${loanInformationDto.accountId}&accountType=${loanInformationDto.accountTypeId}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+							href="viewLoanAccountAllActivity.ftl?accountId=${loanInformationDto.accountId?c}&prdOfferingName=${loanInformationDto.prdOfferingName}&accountStateId=${loanInformationDto.accountStateId}&globalAccountNum=${loanInformationDto.globalAccountNum}&lastPaymentAction=${loanInformationDto.accountId}&accountType=${loanInformationDto.accountTypeId}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
 						[@spring.message "loan.view_acc_activity" /]
 						</a>
 					</span><br/>
@@ -314,7 +314,7 @@
 						<span class="fontnormal">
 							${feesSet.feeName}: ${feesSet.accountFeeAmount?number}&nbsp;( [@spring.message "loan.periodicityTypeRate" /] ${feesSet.meetingRecurrence})
 							<a id="loanaccountdetail.link.removeFee"
-							href="accountAppAction.do?method=removeFees&feeId=${feesSet.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}&input=Loan">
+							href="accountAppAction.do?method=removeFees&feeId=${feesSet.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId?c}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}&input=Loan">
 								[@spring.message "loan.remove" /]
 							</a> 
 						</span><br/>
@@ -335,7 +335,7 @@
 						<!-- if account state is LOAN_PARTIAL_APPLICATION or LOAN_PENDING_APPROVAL then enable removal -->
 						[#if loanInformationDto.accountStateId == 1 || loanInformationDto.accountStateId == 2 ]					
 							<a id="loanAccountDetail.link.removeOneTimeFee_${status}"
-							href="accountAppAction.do?method=removeFees&feeId=${feesSet.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}&input=Loan">
+							href="accountAppAction.do?method=removeFees&feeId=${feesSet.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId?c}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}&input=Loan">
 								[@spring.message "loan.remove" /]
 							</a> 
 						[/#if] <br/>
@@ -378,12 +378,12 @@
 				[@spring.message "loan.more_details" /]
 			</span><br/>
 			<span class="fontnormal">
-	            <a id="loanaccountdetail.link.questionGroups" href="loanAccountAction.do?method=viewAndEditAdditionalInformation&creatorId=${Session.UserContext.id}&entityId=${loanInformationDto.accountId}&event=Create&source=Loan&backPageUrl=${backPageUrl}">
+	            <a id="loanaccountdetail.link.questionGroups" href="loanAccountAction.do?method=viewAndEditAdditionalInformation&creatorId=${Session.UserContext.id}&entityId=${loanInformationDto.accountId?c}&event=Create&source=Loan&backPageUrl=${backPageUrl}">
 	    			[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 				</a>
 	            <br/>
                 [#if containsQGForCloseLoan]
-	                <a id="loanaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${loanInformationDto.accountId}&event=Close&source=Loan&backPageUrl=${backPageUrl}">
+	                <a id="loanaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${loanInformationDto.accountId?c}&event=Close&source=Loan&backPageUrl=${backPageUrl}">
 	                	[@spring.message "loan.ViewQuestionGroupForClosedLoanResponsesLink" /]
 	                </a> <br/>
                 [/#if]
@@ -393,12 +393,12 @@
 	            </a>
 	            <br/>
 				<a id="loanaccountdetail.link.viewChangeLog"
-				href="loanAccountAction.do?method=loadChangeLog&entityType=Loan&entityId=${loanInformationDto.accountId}&currentFlowKey=${Request.currentFlowKey}">
+				href="loanAccountAction.do?method=loadChangeLog&entityType=Loan&entityId=${loanInformationDto.accountId?c}&currentFlowKey=${Request.currentFlowKey}">
 					[@spring.message "loan.view_change_log" /]
 				</a>
 				<br/>
 				<a id="loanaccountdetail.link.viewTransactionHistory"
-				href="viewLoanAccountTransactionHistory.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+				href="viewLoanAccountTransactionHistory.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId?c}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
 					[@spring.message "Center.TransactionHistory" /]
 				</a> 
 			</span>

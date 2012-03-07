@@ -39,7 +39,7 @@
 		<span class="fontnormal">
 			[#if savingsAccountDetailDto.accountStateId != AccountState.SAVINGS_CANCELLED.value && savingsAccountDetailDto.accountStateId != AccountState.SAVINGS_CLOSED.value ]
 				<a id="savingsaccountdetail.link.editAccountStatus" 
-				href="editStatusAction.do?method=load&accountId=${savingsAccountDetailDto.accountId}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
+				href="editStatusAction.do?method=load&accountId=${savingsAccountDetailDto.accountId?c}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}">
 					[@spring.message "Savings.editAccountStatus" /]
 				</a>
 			[/#if]
@@ -132,11 +132,11 @@
 			[@spring.message "Savings.moreAccountAndTransactionDetails" /]
 		</span><br/>		
 		<span class="fontnormal">
-			<a id="savingsaccountdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${savingsAccountDetailDto.accountId}&event=Create&source=Savings&backPageUrl=${backPageUrl}">
+			<a id="savingsaccountdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${savingsAccountDetailDto.accountId?c}&event=Create&source=Savings&backPageUrl=${backPageUrl}">
         		[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 			</a><br/>
 		    [#if containsQGForCloseSavings ]
-                <a id="savingsaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${savingsAccountDetailDto.accountId}&event=Close&source=Savings&backPageUrl=${backPageUrl}">
+                <a id="savingsaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id}&entityId=${savingsAccountDetailDto.accountId?c}&event=Close&source=Savings&backPageUrl=${backPageUrl}">
                 	[@spring.message "Savings.ViewQuestionGroupForClosedSavingsResponsesLink" /]
                 </a><br/>
             [/#if]
@@ -145,7 +145,7 @@
 				[@spring.message "Savings.viewTransactionHistory" /]
 			</a>
 			<br/>
-			<a id="savingsaccountdetail.link.viewChangeLog" href="savingsAction.do?method=loadChangeLog&entityType=Savings&entityId=${savingsAccountDetailDto.accountId}&currentFlowKey=${Request.currentFlowKey}">
+			<a id="savingsaccountdetail.link.viewChangeLog" href="savingsAction.do?method=loadChangeLog&entityType=Savings&entityId=${savingsAccountDetailDto.accountId?c}&currentFlowKey=${Request.currentFlowKey}">
 				[@spring.message "Savings.viewChangeLog" /]
 			</a><br/>
 			<a id="savingsaccountdetail.link.viewStatusHistory" href="savingsAction.do?method=getStatusHistory&globalAccountNum=${savingsAccountDetailDto.globalAccountNum}&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
