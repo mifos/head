@@ -137,21 +137,21 @@ public class Localization {
     private synchronized void setLocaleMap() {
         if (LOCALE_MAP.isEmpty()) {
             LOCALE_MAP.put((short) 1, Locale.UK);  // These were the options in personnel language list (pre Mifos 2.2)
-            LOCALE_MAP.put((short) 2, new Locale("is", "IS"));  // Icelandic
-            LOCALE_MAP.put((short) 3, SPANISH);  // Spanish
-            LOCALE_MAP.put((short) 4, Locale.FRANCE);  // French
-            LOCALE_MAP.put((short) 5, Locale.SIMPLIFIED_CHINESE);  // Chinese
-            LOCALE_MAP.put((short) 6, new Locale("sw", "KE"));  // Swahili
+            LOCALE_MAP.put((short) 2, new Locale("is", "IS")); // Icelandic
+            LOCALE_MAP.put((short) 3, SPANISH); // Spanish
+            LOCALE_MAP.put((short) 4, Locale.FRANCE); // French
+            LOCALE_MAP.put((short) 5, Locale.SIMPLIFIED_CHINESE); // Chinese
+            LOCALE_MAP.put((short) 6, new Locale("sw", "KE")); // Swahili
             LOCALE_MAP.put((short) 7, new Locale("ar", "DZ")); // Arabic
             LOCALE_MAP.put((short) 8, new Locale("pt", "AO")); // Portuguese
             LOCALE_MAP.put((short) 9, new Locale("km", "KH")); // Khmer
             LOCALE_MAP.put((short) 10, new Locale("lo", "LA")); // Lola
             LOCALE_MAP.put((short) 11, new Locale("hu", "HU")); // Hungarian
-            LOCALE_MAP.put((short) 12, new Locale("te", "IN")); // Tegulu
+            LOCALE_MAP.put((short) 12, new Locale("te", "IN")); // Telugu
             LOCALE_MAP.put((short) 13, new Locale("hi", "IN")); // Hindi
             LOCALE_MAP.put((short) 14, Locale.GERMAN);
-            LOCALE_MAP.put((short) 15, new Locale("ru")); // Georgian
-            LOCALE_MAP.put((short) 16, new Locale("ka")); // Russian
+            LOCALE_MAP.put((short) 15, new Locale("ru")); // Russian
+            LOCALE_MAP.put((short) 16, new Locale("ka")); // Georgian
             LOCALE_MAP.put((short) 17, new Locale("ta", "IN")); // Tamil
         }
     }
