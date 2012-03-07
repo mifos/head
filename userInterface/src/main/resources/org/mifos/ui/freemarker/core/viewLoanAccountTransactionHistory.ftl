@@ -18,4 +18,4 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[@include_page path="accountAppAction.do?method=getTrxnHistory&input=LoanDetails&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}" /]
+[@include_page path="accountAppAction.do?method=getTrxnHistory&input=LoanDetails&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId?c}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${Session.randomNUm?c}&currentFlowKey=${Request.currentFlowKey}" /]
