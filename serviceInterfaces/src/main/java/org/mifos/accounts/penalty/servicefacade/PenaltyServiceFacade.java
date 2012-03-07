@@ -30,10 +30,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface PenaltyServiceFacade {
     
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_DEFINE_PENALTY')")
     void createPenalty(PenaltyFormDto penaltyDto);
     
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_MODIFY_PENALTY')")
     void updatePenalty(PenaltyFormDto penaltyDto);
     
     @PreAuthorize("isFullyAuthenticated()")

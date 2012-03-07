@@ -637,13 +637,73 @@
                 delete from roles_activity where activity_id = 250 and role_id = 1;
 
                 delete from activity where activity_id = 250;
-                
+
                 delete from lookup_value_locale where lookup_id =
                     (select lookup_id from lookup_value
                     where lookup_name='Permissions-CanImportClients');
 
                 delete from lookup_value where entity_id = 87 and lookup_name =
                     'Permissions-CanImportClients';
+            </sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="MIFOS_5450_1" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+            INSERT INTO lookup_value(entity_id, lookup_name) VALUES (87, 'Permissions-Penalties');
+            INSERT INTO lookup_value(entity_id, lookup_name) VALUES (87, 'Permissions-CanDefineNewPenaltyType');
+            INSERT INTO lookup_value(entity_id, lookup_name) VALUES (87, 'Permissions-CanModifyPenaltyInformation');
+
+            INSERT INTO lookup_value_locale(locale_id, lookup_id) VALUES
+                (1, (SELECT lookup_id FROM lookup_value WHERE lookup_name='Permissions-Penalties'));
+            INSERT INTO lookup_value_locale(locale_id, lookup_id) VALUES
+                (1, (SELECT lookup_id FROM lookup_value WHERE lookup_name='Permissions-CanDefineNewPenaltyType'));
+            INSERT INTO lookup_value_locale(locale_id, lookup_id) VALUES
+                (1, (SELECT lookup_id FROM lookup_value WHERE lookup_name='Permissions-CanModifyPenaltyInformation'));
+
+            INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES
+                (251, 1,
+                (SELECT lookup_id FROM lookup_value WHERE lookup_name='Permissions-Penalties'),
+                (SELECT lookup_id FROM lookup_value WHERE lookup_name='Permissions-Penalties'));
+            INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES
+                (252, 251,
+                (SELECT lookup_id FROM lookup_value WHERE lookup_name='Permissions-CanDefineNewPenaltyType'),
+                (SELECT lookup_id FROM lookup_value WHERE lookup_name='Permissions-CanDefineNewPenaltyType'));
+            INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES
+                (253, 251,
+                (SELECT lookup_id FROM lookup_value WHERE lookup_name='Permissions-CanModifyPenaltyInformation'),
+                (SELECT lookup_id FROM lookup_value WHERE lookup_name='Permissions-CanModifyPenaltyInformation'));
+
+            INSERT INTO roles_activity(activity_id, role_id) VALUES (251, 1);
+            INSERT INTO roles_activity(activity_id, role_id) VALUES (252, 1);
+            INSERT INTO roles_activity(activity_id, role_id) VALUES (253, 1);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                DELETE FROM roles_activity WHERE activity_id = 253;
+                DELETE FROM roles_activity WHERE activity_id = 252;
+                DELETE FROM roles_activity WHERE activity_id = 251;
+
+                DELETE FROM activity WHERE activity_id = 253;
+                DELETE FROM activity WHERE activity_id = 252;
+                DELETE FROM activity WHERE activity_id = 251;
+
+                DELETE FROM lookup_value_locale
+                WHERE lookup_id = (SELECT lookup_id FROM lookup_value WHERE lookup_name='Permissions-Penalties');
+
+                DELETE FROM lookup_value_locale
+                WHERE lookup_id = (SELECT lookup_id FROM lookup_value WHERE lookup_name='Permissions-CanDefineNewPenaltyType');
+
+                DELETE FROM lookup_value_locale
+                WHERE lookup_id = (SELECT lookup_id FROM lookup_value WHERE lookup_name='Permissions-CanModifyPenaltyInformation');
+
+                DELETE FROM lookup_value
+                WHERE entity_id = 87 AND lookup_name = 'Permissions-Penalties';
+
+                DELETE FROM lookup_value
+                WHERE entity_id = 87 AND lookup_name = 'Permissions-CanDefineNewPenaltyType';
+
+                DELETE FROM lookup_value
+                WHERE entity_id = 87 AND lookup_name = 'Permissions-CanModifyPenaltyInformation';
             </sql>
         </rollback>
     </changeSet>
