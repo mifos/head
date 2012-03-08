@@ -64,6 +64,7 @@
   <DATABASECHANGELOG ID="MIFOS_5426_4" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-06 09:49:18.0" ORDEREXECUTED="277" EXECTYPE="EXECUTED" MD5SUM="3:5e0d48f9733f0fec4a81806a4f0b1044" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5433_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-15 14:59:38.0" ORDEREXECUTED="231" EXECTYPE="EXECUTED" MD5SUM="3:b32077bdab52d6cb9a4337ee44105586" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5446_1" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-29 20:52:25.0" ORDEREXECUTED="276" EXECTYPE="EXECUTED" MD5SUM="3:da9b46d48c36748f47566fc805e67bc8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5450_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-08 11:18:37.0" ORDEREXECUTED="283" EXECTYPE="EXECUTED" MD5SUM="3:0cfec9003f3dd9fa4d189f93b136b1e2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
   <QRTZ_CALENDARS/>
@@ -348,6 +349,9 @@
   <activity activity_id="248" parent_id="1" activity_name_lookup_id="734" description_lookup_id="734"/>
   <activity activity_id="249" parent_id="113" activity_name_lookup_id="735" description_lookup_id="735"/>
   <activity activity_id="250" parent_id="196" activity_name_lookup_id="736" description_lookup_id="736"/>
+  <activity activity_id="251" parent_id="1" activity_name_lookup_id="737" description_lookup_id="737"/>
+  <activity activity_id="252" parent_id="251" activity_name_lookup_id="738" description_lookup_id="738"/>
+  <activity activity_id="253" parent_id="251" activity_name_lookup_id="739" description_lookup_id="739"/>
   <admin_document/>
   <admin_document_acc_state_mix/>
   <applied_upgrades upgrade_id="1277565300"/>
@@ -2021,6 +2025,9 @@
   <lookup_value lookup_id="734" entity_id="87" lookup_name="Permissions-CanSetMonthClosingDate"/>
   <lookup_value lookup_id="735" entity_id="87" lookup_name="Permissions-CanRemovePenaltyAttachedToTheLoanAccount"/>
   <lookup_value lookup_id="736" entity_id="87" lookup_name="Permissions-CanImportClients"/>
+  <lookup_value lookup_id="737" entity_id="87" lookup_name="Permissions-Penalties"/>
+  <lookup_value lookup_id="738" entity_id="87" lookup_name="Permissions-CanDefineNewPenaltyType"/>
+  <lookup_value lookup_id="739" entity_id="87" lookup_name="Permissions-CanModifyPenaltyInformation"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -2587,6 +2594,9 @@
   <lookup_value_locale lookup_value_id="986" locale_id="1" lookup_id="734"/>
   <lookup_value_locale lookup_value_id="987" locale_id="1" lookup_id="735"/>
   <lookup_value_locale lookup_value_id="988" locale_id="1" lookup_id="736"/>
+  <lookup_value_locale lookup_value_id="989" locale_id="1" lookup_id="737"/>
+  <lookup_value_locale lookup_value_id="990" locale_id="1" lookup_id="738"/>
+  <lookup_value_locale lookup_value_id="991" locale_id="1" lookup_id="739"/>
   <max_min_interest_rate/>
   <max_min_loan_amount/>
   <max_min_no_of_install/>
@@ -2910,6 +2920,9 @@
   <roles_activity activity_id="248" role_id="1"/>
   <roles_activity activity_id="249" role_id="1"/>
   <roles_activity activity_id="250" role_id="1"/>
+  <roles_activity activity_id="251" role_id="1"/>
+  <roles_activity activity_id="252" role_id="1"/>
+  <roles_activity activity_id="253" role_id="1"/>
   <saving_schedule/>
   <savings_account/>
   <savings_activity_details/>

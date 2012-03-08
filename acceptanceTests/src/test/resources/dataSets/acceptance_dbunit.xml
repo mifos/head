@@ -108,6 +108,7 @@
   <DATABASECHANGELOG ID="MIFOS_5426_4" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-06 09:50:18.0" ORDEREXECUTED="291" EXECTYPE="EXECUTED" MD5SUM="3:5e0d48f9733f0fec4a81806a4f0b1044" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5433_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-15 15:00:36.0" ORDEREXECUTED="238" EXECTYPE="EXECUTED" MD5SUM="3:b32077bdab52d6cb9a4337ee44105586" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5446_1" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-29 20:52:49.0" ORDEREXECUTED="278" EXECTYPE="EXECUTED" MD5SUM="3:da9b46d48c36748f47566fc805e67bc8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5450_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-08 11:19:38.0" ORDEREXECUTED="290" EXECTYPE="EXECUTED" MD5SUM="3:0cfec9003f3dd9fa4d189f93b136b1e2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
   <QRTZ_CALENDARS/>
@@ -601,6 +602,9 @@
   <activity activity_id="248" parent_id="1" activity_name_lookup_id="656" description_lookup_id="656"/>
   <activity activity_id="249" parent_id="113" activity_name_lookup_id="657" description_lookup_id="657"/>
   <activity activity_id="250" parent_id="196" activity_name_lookup_id="658" description_lookup_id="658"/>
+  <activity activity_id="251" parent_id="1" activity_name_lookup_id="659" description_lookup_id="659"/>
+  <activity activity_id="252" parent_id="251" activity_name_lookup_id="660" description_lookup_id="660"/>
+  <activity activity_id="253" parent_id="251" activity_name_lookup_id="661" description_lookup_id="661"/>
   <admin_document/>
   <admin_document_acc_state_mix/>
   <applied_upgrades upgrade_id="1277565300"/>
@@ -3569,6 +3573,9 @@
   <lookup_value lookup_id="656" entity_id="87" lookup_name="Permissions-CanSetMonthClosingDate"/>
   <lookup_value lookup_id="657" entity_id="87" lookup_name="Permissions-CanRemovePenaltyAttachedToTheLoanAccount"/>
   <lookup_value lookup_id="658" entity_id="87" lookup_name="Permissions-CanImportClients"/>
+  <lookup_value lookup_id="659" entity_id="87" lookup_name="Permissions-Penalties"/>
+  <lookup_value lookup_id="660" entity_id="87" lookup_name="Permissions-CanDefineNewPenaltyType"/>
+  <lookup_value lookup_id="661" entity_id="87" lookup_name="Permissions-CanModifyPenaltyInformation"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -4135,6 +4142,9 @@
   <lookup_value_locale lookup_value_id="986" locale_id="1" lookup_id="656"/>
   <lookup_value_locale lookup_value_id="987" locale_id="1" lookup_id="657"/>
   <lookup_value_locale lookup_value_id="988" locale_id="1" lookup_id="658"/>
+  <lookup_value_locale lookup_value_id="989" locale_id="1" lookup_id="659"/>
+  <lookup_value_locale lookup_value_id="990" locale_id="1" lookup_id="660"/>
+  <lookup_value_locale lookup_value_id="991" locale_id="1" lookup_id="661"/>
   <max_min_interest_rate account_id="10" min_interest_rate="0.0000" max_interest_rate="0.0000"/>
   <max_min_interest_rate account_id="11" min_interest_rate="0.0000" max_interest_rate="0.0000"/>
   <max_min_interest_rate account_id="12" min_interest_rate="24.0000" max_interest_rate="24.0000"/>
@@ -5019,6 +5029,9 @@
   <roles_activity activity_id="248" role_id="1"/>
   <roles_activity activity_id="249" role_id="1"/>
   <roles_activity activity_id="250" role_id="1"/>
+  <roles_activity activity_id="251" role_id="1"/>
+  <roles_activity activity_id="252" role_id="1"/>
+  <roles_activity activity_id="253" role_id="1"/>
   <saving_schedule id="1" account_id="2" customer_id="5" action_date="2010-01-22" deposit="10.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="1" version_no="0"/>
   <saving_schedule id="2" account_id="2" customer_id="5" action_date="2010-01-29" deposit="10.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="2" version_no="0"/>
   <saving_schedule id="3" account_id="2" customer_id="5" action_date="2010-02-05" deposit="10.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="3" version_no="0"/>
