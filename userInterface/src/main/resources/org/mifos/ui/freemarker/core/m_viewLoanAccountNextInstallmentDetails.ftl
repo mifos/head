@@ -84,7 +84,7 @@
 				<td align="right" class="drawtablerow">&nbsp;
 				[#if loanInstallmentDetailsDto.upcomingInstallmentDetails.penalty != '0.0' ]						 
 				<a id="nextPayment_loanAccount.link.waivePenaltyDue" href="loanAccountAction.do?method=waiveChargeDue&accountId=${loanInformationDto.accountId?c}&WaiveType=penalty&type=LoanAccount&input=LoanAccount&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${Session.randomNUm?c}&currentFlowKey=${Request.currentFlowKey}">
-					[@spring.message "loan.waive" bundle="loanUIResources" /]
+					[@spring.message "loan.waive" /]
 				</a>
 				[/#if]
 				</td>

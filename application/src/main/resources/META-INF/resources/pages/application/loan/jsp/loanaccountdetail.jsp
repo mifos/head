@@ -198,8 +198,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						test="${loanInformationDto.accountStateId == 5 || loanInformationDto.accountStateId == 9}">
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
-								 <c:url value="loanAccountAction.do" var="loanAccountActionMethodUrl">
-								 	<c:param name="method" value="getInstallmentDetails"/>
+								 <c:url value="viewLoanAccountNextInstallmentDetails.ftl" var="viewLoanAccountNextInstallmentDetailsUrl">
 								 	<c:param name="accountId" value="${loanInformationDto.accountId}"/>
 								 	<c:param name="prdOfferingName" value="${loanInformationDto.prdOfferingName}"/>
 								 	<c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}"/>
@@ -213,7 +212,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								 </c:url>
 								<td width="42%" align="right" class="fontnormal"><span
 									class="fontnormal"> <html-el:link styleId="loanaccountdetail.link.viewInstallmentDetails"
-									href="${loanAccountActionMethodUrl}">
+									href="${viewLoanAccountNextInstallmentDetailsUrl}">
 									<mifos:mifoslabel name="loan.view_installment_details" />
 								</html-el:link> </span></td>
 							</tr>
