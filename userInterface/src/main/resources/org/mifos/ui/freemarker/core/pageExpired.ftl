@@ -23,6 +23,21 @@
 <span id="page.id" title="PageExpiredException"></span>
 <div class="content_panel">
     <p class="error">[@spring.message "system.pageExpiredException" /]</p>
+    <div class="span-8 last" style="text-align:left;">
+		<span class="fontnormalbold">
+			[@spring.message "system.toContinue"/][@spring.message "label.colon" /]
+		</span>
+		<table width="80%" border="0" cellspacing="0" cellpadding="3">
+			<tr class="fontnormal">
+				<td><img src="pages/framework/images/smallarrowleft.gif" width="11" height="11">
+					[@spring.message "CustomerSearch.searchontheleft"/]
+				</td>
+				<td><img src="pages/framework/images/smallarrowtop.gif" width="11" height="11">
+					[@spring.message "CustomerSearch.tabsattop"/]
+				</td>
+			</tr>
+		</table>
+	</div>
     <br/>
     <br/>
     <div class="stackTrace" style="display:none">
