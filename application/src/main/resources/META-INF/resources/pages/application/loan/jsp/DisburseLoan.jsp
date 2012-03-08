@@ -173,7 +173,7 @@ explanation of the license and how it is applied.
 							    <mifos:select property="paymentModeOfPayment"
 										style="width:136px;" disabled="${disablePaymentModeOfPayment}">
 										<c:forEach var="PT"
-											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}">
+											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'FeePaymentType')}">
 											<html-el:option value="${PT.id}">${PT.name}</html-el:option>
 										</c:forEach>
 									</mifos:select>

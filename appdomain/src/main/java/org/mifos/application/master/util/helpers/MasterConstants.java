@@ -50,6 +50,7 @@ public interface MasterConstants {
     String RECOMMENDED_AMOUNT_UNIT = "RecommendedAmtUnit";
     String ATTENDENCETYPES = "CustomerAttendanceType";
     String PAYMENT_TYPE = "PaymentType";
+    String FEE_PAYMENT_TYPE = "FeePaymentType";
     String LOAN_PURPOSES = "LoanPurposes";
     String OFFICER_TITLES = "Titles";
     short CUSTOMFIELD_NUMBER = 1;

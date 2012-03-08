@@ -99,8 +99,11 @@ public class LoanDisbursementAction extends BaseAction {
         SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED, repaymentIndependentOfMeetingScheduleValue, request);
         SessionUtils.setAttribute(AccountingRulesConstants.BACKDATED_TRANSACTIONS_ALLOWED, loanDisbursalDto.isBackDatedTransactionsAllowed(), request);
 
-        List<PaymentTypeEntity> paymentTypes = legacyAcceptedPaymentTypeDao.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.loan_disbursement.getValue());
-        SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, paymentTypes, request);
+        List<PaymentTypeEntity> disbursementTypes = legacyAcceptedPaymentTypeDao.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.loan_disbursement.getValue());
+        SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, disbursementTypes, request);
+        
+        List<PaymentTypeEntity> feesTypes = legacyAcceptedPaymentTypeDao.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.loan_repayment.getValue());
+        SessionUtils.setCollectionAttribute(MasterConstants.FEE_PAYMENT_TYPE, feesTypes, request);
 
         return mapping.findForward(Constants.LOAD_SUCCESS);
     }
