@@ -647,4 +647,16 @@
             </sql>
         </rollback>
     </changeSet>
+
+    <changeSet id="MIFOS_5193" author="Hugo Technologies" context="expansion">
+        <sql endDelimiter=";">
+            Insert into config_key_value(configuration_type,configuration_key, configuration_value) values (0,'prorate_Rule',0);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                Delete from config_key_value where configuration_key='prorate_Rule';
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

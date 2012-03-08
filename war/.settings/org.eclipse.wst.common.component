@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="mifos-war">
+        <wb-resource deploy-path="/" source-path="/targetEclipse/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <dependent-module archiveName="mifos-webapp-1.10-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mifos-webapp/mifos-webapp">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mifos-db-1.10-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mifos-db/mifos-db">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mifos-common-1.10-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mifos-common/mifos-common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mifos-domain-dto-1.10-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mifos-domain-dto/mifos-domain-dto">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mifos-accounting-1.10-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mifos-accounting/mifos-accounting">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mifos-serviceInterfaces-1.10-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mifos-serviceInterfaces/mifos-serviceInterfaces">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mifos-userInterface-1.10-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mifos-userInterface/mifos-userInterface">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mifos-questionnaire-1.10-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mifos-questionnaire/mifos-questionnaire">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mifos-cashflow-1.10-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mifos-cashflow/mifos-cashflow">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mifos-abstract-domain-1.10-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mifos-abstract-domain/mifos-abstract-domain">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mifos-organization-1.10-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mifos-organization/mifos-organization">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mifos-appdomain-1.10-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mifos-appdomain/mifos-appdomain">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mifos-reporting-1.10-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mifos-reporting/mifos-reporting">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mifos-rest-1.10-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mifos-rest/mifos-rest">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="mifos-TEMP-nonexec"/>
+        <property name="java-output-path" value="/mifos-war/targetEclipse/classes"/>
+    </wb-module>
+</project-modules>
