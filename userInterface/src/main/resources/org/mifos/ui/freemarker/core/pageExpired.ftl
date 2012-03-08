@@ -23,5 +23,12 @@
 <span id="page.id" title="PageExpiredException"></span>
 <div class="content_panel">
     <p class="error">[@spring.message "system.pageExpiredException" /]</p>
+    <br/>
+    <br/>
+    <div class="stackTrace" style="display:none">
+        [#if stackString??]
+            <pre>${stackString}</pre>
+        [/#if]
+    </div>
 </div>
 [/@adminLeftPaneLayout]
