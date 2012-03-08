@@ -175,16 +175,15 @@ explanation of the license and how it is applied.
 												cellpadding="0">
 												<tr>
 													<td width="65%"><span class="fontnormal"> 
-													<c:url value="loanAccountAction.do" var="loanAccountActionMethodUrl" >
+													<c:url value="viewLoanAccountDetails.ftl" var="viewLoanAccountDetailsUrl" >
 														<c:param name="globalAccountNum" value="${loan.globalAccountNum}" />
 														<c:param name="customerId" value="${clientInformationDto.clientDisplay.customerId}" />
-														<c:param name="method" value="get" />
 														<c:param name="recordOfficeId" value="${UserContext.branchId}" />
 														<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
 														<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
 													</c:url >
 													<html-el:link styleId="viewClientDetails.link.viewLoanAccount"
-														href="${loanAccountActionMethodUrl}">
+														href="${viewLoanAccountDetailsUrl}">
 														<c:out value="${loan.prdOfferingName}" />, <mifos:mifoslabel name="client.acc" bundle="ClientUIResources" /><c:out
 															value="${loan.globalAccountNum}" />
 													</html-el:link> </span></td>
@@ -243,15 +242,14 @@ explanation of the license and how it is applied.
 												cellpadding="0">
 												<tr>
 													<td width="65%"><span class="fontnormal"> 
-													<c:url value="savingsAction.do" var="savingsActionMethodUrl" >
+													<c:url value="viewSavingsAccountDetails.ftl" var="viewSavingsAccountDetailsUrl" >
 														<c:param name="globalAccountNum" value="${savings.globalAccountNum}" />
-														<c:param name="method" value="get" />
 														<c:param name="recordOfficeId" value="${UserContext.branchId}" />
 														<c:param name="recordLoanOfficerId" value="${UserContext.id}" />
 														<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
 													</c:url >
 													<html-el:link styleId="viewClientDetails.link.viewSavingsAccount"
-														href="${savingsActionMethodUrl}">
+														href="${viewSavingsAccountDetailsUrl}">
 														<c:out value="${savings.prdOfferingName}" />, <mifos:mifoslabel name="client.acc" bundle="ClientUIResources" /><c:out
 															value="${savings.globalAccountNum}" />
 													</html-el:link> </span></td>

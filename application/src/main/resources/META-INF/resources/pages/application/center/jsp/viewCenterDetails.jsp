@@ -205,14 +205,13 @@ explanation of the license and how it is applied.
 												cellpadding="0">
 												<tr>
 													<td width="65%"><span class="fontnormal"> 
-													<c:url value="savingsAction.do" var="savingsActionMethodUrl" >
+													<c:url value="viewSavingsAccountDetails.ftl" var="viewSavingsAccountDetailsUrl" >
 														<c:param name="globalAccountNum" value="${savings.globalAccountNum}" />
-														<c:param name="method" value="get" />
 														<c:param name="recordOfficeId" value="${param.recordOfficeId}" />
 														<c:param name="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
 													</c:url >
 													<html-el:link styleId="viewCenterDetails.link.savingsAccount"
-														href="${savingsActionMethodUrl}">
+														href="${viewSavingsAccountDetailsUrl}">
 														<c:out value="${savings.prdOfferingName}" />, <mifos:mifoslabel name="Center.acc" bundle="CenterUIResources" /><c:out
 															value="${savings.globalAccountNum}" />
 													</html-el:link> </span></td>
