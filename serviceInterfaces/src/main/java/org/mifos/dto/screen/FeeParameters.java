@@ -22,6 +22,8 @@ package org.mifos.dto.screen;
 
 import java.util.Map;
 
+import org.mifos.dto.domain.GLCodeDto;
+
 public class FeeParameters {
 
     private final Map<Short, String> categories;
@@ -29,11 +31,11 @@ public class FeeParameters {
     private final Map<Short, String> timesOfChargingCustomers;
     private final Map<Short, String> formulas;
     private final Map<Short, String> frequencies;
-    private final Map<Short, String> glCodes;
+    private final Map<Short, GLCodeDto> glCodes;
 
     public FeeParameters(Map<Short, String> categories, Map<Short, String> timesOfCharging,
             Map<Short, String> timesOfChargingCustomers, Map<Short, String> formulas, Map<Short, String> frequencies,
-            Map<Short, String> glCodes) {
+            Map<Short, GLCodeDto> glCodes) {
         this.categories = categories;
         this.timesOfCharging = timesOfCharging;
         this.timesOfChargingCustomers = timesOfChargingCustomers;
@@ -62,7 +64,7 @@ public class FeeParameters {
         return this.frequencies;
     }
 
-    public Map<Short, String> getGlCodes() {
+    public Map<Short, GLCodeDto> getGlCodes() {
         return this.glCodes;
     }
 }

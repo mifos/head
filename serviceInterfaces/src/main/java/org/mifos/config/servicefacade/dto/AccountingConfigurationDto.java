@@ -4,8 +4,17 @@ public class AccountingConfigurationDto {
 
     private Short digitsBeforeDecimal;
     private Short digitsAfterDecimal;
+    private int glCodeMode;
 
-    public Short getDigitsAfterDecimal() {
+    public int getGlCodeMode() {
+		return glCodeMode;
+	}
+
+	public void setGlCodeMode(int glCodeMode) {
+		this.glCodeMode = glCodeMode;
+	}
+
+	public Short getDigitsAfterDecimal() {
         return digitsAfterDecimal;
     }
 

@@ -32,6 +32,8 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 		<span id="page.id" title="feescreate"></span> 
 		<mifos:NumberFormattingInfo />
+					<c:set value="${sessionScope.GlNamesMode}" var="GlNamesMode"/>
+			
 		<script
 			src="pages/application/fees/js/Fees.js"></script> <html-el:form
 			action="/feeaction.do?method=preview" focus="feeName">
@@ -327,7 +329,20 @@ explanation of the license and how it is applied.
 										styleId="feescreate.label.glCode" property="glCode"
 										style="width:136px;">
 										<c:forEach items="${FeeParameters.glCodes}" var="glCode">
-											<html-el:option value="${glCode.key}">${glCode.value}</html-el:option>
+											<c:choose>
+												<c:when test="${GlNamesMode == 1}">
+												<html-el:option value="${glCode.key}">${glCode.value.glcode} - ${glCode.value.glname}</html-el:option>
+												</c:when>
+												<c:when test="${GlNamesMode == 2}">
+												<html-el:option value="${glCode.key}">${glCode.value.glname} (${glCode.value.glcode})</html-el:option>
+												</c:when>
+												<c:when test="${GlNamesMode == 3}">
+												<html-el:option value="${glCode.key}">${glCode.value.glname}</html-el:option>
+												</c:when>
+												<c:when test="${GlNamesMode == 4}">
+												<html-el:option value="${glCode.key}">${glCode.value.glcode}</html-el:option>
+												</c:when>
+											</c:choose>
 										</c:forEach>
 									</mifos:select></td>
 								</tr>

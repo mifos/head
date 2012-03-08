@@ -23,6 +23,7 @@ package org.mifos.ui.core.controller;
 import java.util.List;
 import java.util.Properties;
 
+import org.mifos.dto.domain.GLCodeDto;
 import org.mifos.dto.screen.PenaltyParametersDto;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
@@ -41,7 +42,7 @@ public class PenaltyFormValidator implements Validator {
     
     @Override
     public boolean supports(Class<?> clazz) {
-        return PenaltyFormBean.class.isAssignableFrom(clazz) || PenaltyParametersDto.class.isAssignableFrom(clazz);
+        return PenaltyFormBean.class.isAssignableFrom(clazz) || PenaltyParametersDto.class.isAssignableFrom(clazz) || GLCodeDto.class.isAssignableFrom(clazz) ;
     }
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "REC_CATCH_EXCEPTION"}, justification = "Using catch all to detect invalid dates.")

@@ -22,17 +22,19 @@ package org.mifos.dto.screen;
 
 import java.util.Map;
 
+import org.mifos.dto.domain.GLCodeDto;
+
 public class PenaltyParametersDto {
     private final Map<String, String> categoryType;
     private final Map<String, String> statusType;
     private final Map<String, String> periodType;
     private final Map<String, String> formulaType;
     private final Map<String, String> frequencyType;
-    private final Map<String, String> glCodes;
+    private final Map<String, GLCodeDto> glCodes;
     
     public PenaltyParametersDto(Map<String, String> categoryType, Map<String, String> statusType,
             Map<String, String> periodType, Map<String, String> formulaType, Map<String, String> frequencyType,
-            Map<String, String> glCodes) {
+            Map<String, GLCodeDto> glCodes) {
         this.categoryType = categoryType;
         this.statusType = statusType;
         this.periodType = periodType;
@@ -61,7 +63,7 @@ public class PenaltyParametersDto {
         return frequencyType;
     }
 
-    public Map<String, String> getGlCodes() {
+    public Map<String, GLCodeDto> getGlCodes() {
         return glCodes;
     }
     

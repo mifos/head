@@ -15,4 +15,11 @@ public class AccountingConfigurationServiceImpl implements AccountingConfigurati
         return AccountingRules.getDigitsAfterDecimal();
     }
 
+	@Override
+	public int getGlNameMode() {
+		return AccountingRules.getGlNamesMode();
+	}
+    
+    
+
 }

@@ -198,7 +198,20 @@ explanation of the license and how it is applied.
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.accounting" /> <br> <mifos:mifoslabel name="Fees.GLCode" /> </span>
 												<c:forEach items="${FeeParameters.glCodes}" var="glCodeList">
 													<c:if test="${glCodeList.key == sessionScope.feeactionform.glCode}">
-														<c:out value="${glCodeList.value}" />
+														<c:choose>
+															<c:when test="${GlNamesMode == 1}">
+															<c:out value="${glCodeList.value.glcode} - ${glCodeList.value.glname}" />
+															</c:when>
+															<c:when test="${GlNamesMode == 2}">
+															<c:out value="${glCodeList.value.glname} (${glCodeList.value.glcode})" />
+															</c:when>
+															<c:when test="${GlNamesMode == 3}">
+															<c:out value="${glCodeList.value.glname}" />
+															</c:when>
+															<c:when test="${GlNamesMode == 4}">
+															<c:out value="${glCodeList.value.glcode}" />
+															</c:when>
+														</c:choose>
 													</c:if>
 												</c:forEach>
 												<br>

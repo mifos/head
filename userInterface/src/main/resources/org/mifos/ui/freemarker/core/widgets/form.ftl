@@ -256,6 +256,31 @@ Renders a group of radio buttons.
     </select>
 [/#macro]
 
+[#macro formSingleSelectWithPromptGLCode path options selectPrompt glMode attributes=""]
+    [@spring.bind path/]
+    <select id="${spring.status.expression}" name="${spring.status.expression}" ${attributes}>
+        <option value="" [@spring.checkSelected ""/]>${selectPrompt}</option>
+        [#if options?is_hash]
+            [#list options?keys as value]
+	            [#if glMode == 1]
+	            	<option value="${value?html}"[@spring.checkSelected value/]>${options[value].glcode?html} - ${options[value].glname?html}</option>
+	            [#elseif glMode == 2]
+	            	<option value="${value?html}"[@spring.checkSelected value/]>${options[value].glname?html} (${options[value].glcode?html})</option>
+	            [#elseif glMode == 3]
+	            	<option value="${value?html}"[@spring.checkSelected value/]>${options[value].glname?html}</option>
+	            [#elseif glMode == 4]
+	            	<option value="${value?html}"[@spring.checkSelected value/]>${options[value].glcode?html}</option>
+	            [/#if]
+            [/#list]
+        [#else]
+            [#list options as value]
+            <option value="${value?html}"[@spring.checkSelected value/]>${value?html}</option>
+            [/#list]
+        [/#if]
+    </select>
+[/#macro]
+
+
 
 [#macro formMultiSelect path options attributes=""]
     [@spring.bind path/]

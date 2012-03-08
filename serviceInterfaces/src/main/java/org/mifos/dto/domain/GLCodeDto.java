@@ -28,8 +28,16 @@ public class GLCodeDto implements Serializable {
 
     private Short glcodeId;
     private String glcode;
+    private String glname;
+    
 
-    public Short getGlcodeId() {
+    public String getGlname() {
+		return glname;
+	}
+	public void setGlname(String glname) {
+		this.glname = glname;
+	}
+	public Short getGlcodeId() {
         return this.glcodeId;
     }
     public void setGlcodeId(Short glcodeId) {

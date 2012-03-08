@@ -74,6 +74,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.dto.domain.PenaltyDto;
 import org.mifos.framework.business.service.BusinessService;
@@ -506,6 +507,7 @@ public class LoanPrdAction extends BaseAction {
                 FinancialActionConstants.INTERESTPOSTING, FinancialConstants.CREDIT), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFEE, fees, request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDPENALTY, penalties, request);
+        SessionUtils.setAttribute("GlNamesMode", AccountingRules.getGlNamesMode(), request);
         setQuestionGroupsOnSession(request, getQuestionnaireServiceFacade(request));
         logger.debug("Load master data method of Loan Product Action called");
     }
@@ -540,7 +542,8 @@ public class LoanPrdAction extends BaseAction {
     private List<GLCodeEntity> getGLCodes(FinancialActionConstants financialAction, FinancialConstants debitCredit)
             throws Exception {
         logger.debug("getGLCodes method of Loan Product Action called");
-        return new FinancialBusinessService().getGLCodes(financialAction, debitCredit);
+        List<GLCodeEntity> glCodes = new FinancialBusinessService().getGLCodes(financialAction, debitCredit);
+		return glCodes;
     }
 
     @SuppressWarnings("unchecked")

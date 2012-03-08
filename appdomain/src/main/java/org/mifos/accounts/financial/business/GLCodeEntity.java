@@ -94,6 +94,7 @@ public class GLCodeEntity extends AbstractEntity {
         GLCodeDto glCodeDto = new GLCodeDto();
         glCodeDto.setGlcode(this.glcode);
         glCodeDto.setGlcodeId(this.glcodeId);
+        glCodeDto.setGlname(this.associatedCOA.getAccountName());
         return glCodeDto;
     }
 }

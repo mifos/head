@@ -114,8 +114,16 @@
 
                     <div class="span-21 last">
                         <div class="span-20">
-                            <span class="span-6 fontBold">[@spring.message "organizationPreferences.definenewpenalty.glcode" /]</span>
-                            <span class="span-4">${glCode}</span>
+                            <span class="span-6 fontBold">[@spring.message "organizationPreferences.definenewpenalty.glcode" /]</span>                            
+                           	[#if GLCodeMode == 1]
+                           		<span class="span-4">${glCode.glcode} - ${glCode.glname}</span>
+	                       	[#elseif GLCodeMode == 2]
+	                        	<span class="span-4">${glCode.glname} (${glCode.glcode})</span>
+	                       	[#elseif GLCodeMode == 3]
+	                        	<span class="span-4">${glCode.glname}</span>
+	                       	[#elseif GLCodeMode == 4]
+	                        	<span class="span-4">${glCode.glcode}</span>
+	                       	[/#if]
                             [@spring.bind "formBean.glCodeId"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
                         </div>
                         <div class="clear">&nbsp;</div>

@@ -53,6 +53,7 @@ import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.dto.domain.FeeCreateDto;
 import org.mifos.dto.domain.FeeUpdateRequest;
+import org.mifos.dto.domain.GLCodeDto;
 import org.mifos.dto.screen.FeeDetailsForLoadDto;
 import org.mifos.dto.screen.FeeDetailsForPreviewDto;
 import org.mifos.dto.screen.FeeParameters;
@@ -100,10 +101,10 @@ public class FeeServiceFacadeWebTier implements FeeServiceFacade {
         }
     }
 
-    private Map<Short, String> glCodesToMap(List<GLCodeEntity> glCodes) {
-        Map<Short, String> idCodeMap = new HashMap<Short, String>();
+    private Map<Short, GLCodeDto> glCodesToMap(List<GLCodeEntity> glCodes) {
+        Map<Short, GLCodeDto> idCodeMap = new HashMap<Short, GLCodeDto>();
         for (GLCodeEntity glCode : glCodes) {
-            idCodeMap.put(glCode.getGlcodeId(), glCode.getGlcode());
+            idCodeMap.put(glCode.getGlcodeId(), glCode.toDto());
         }
         return idCodeMap;
     }

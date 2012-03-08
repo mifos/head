@@ -184,7 +184,9 @@ public class AccountingRules {
     public static Double getMinRepaymentCapacity() {
         return MifosConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_REPAYMENT_CAPACITY);
     }
-
+    public static int getGlNamesMode() {
+    	return MifosConfigurationManager.getInstance().getInt(AccountingRulesConstants.GL_NAMES_MODE);
+    }
 
     public static Short getDigitsAfterDecimal() {
         return MifosConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL);

@@ -50,6 +50,7 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.dto.domain.GLCodeDto;
 import org.mifos.dto.domain.PenaltyDto;
 import org.mifos.dto.domain.PenaltyFormDto;
 import org.mifos.dto.screen.PenaltyParametersDto;
@@ -220,11 +221,11 @@ public class WebTierPenaltyServiceFacade implements PenaltyServiceFacade {
         return idNameMap;
     }
     
-    private Map<String, String> glCodesToMap(List<GLCodeEntity> glCodes) {
-        Map<String, String> idCodeMap = new HashMap<String, String>();
+    private Map<String, GLCodeDto> glCodesToMap(List<GLCodeEntity> glCodes) {
+        Map<String, GLCodeDto> idCodeMap = new HashMap<String, GLCodeDto>();
         
         for (GLCodeEntity glCode : glCodes) {
-            idCodeMap.put(Short.toString(glCode.getGlcodeId()), glCode.getGlcode());
+            idCodeMap.put(Short.toString(glCode.getGlcodeId()), glCode.toDto());
         }
         return idCodeMap;
     }

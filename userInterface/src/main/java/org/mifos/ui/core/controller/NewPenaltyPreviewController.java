@@ -22,6 +22,8 @@ package org.mifos.ui.core.controller;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.penalty.servicefacade.PenaltyServiceFacade;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
+import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
 import org.mifos.dto.domain.PenaltyFormDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,12 +48,18 @@ public class NewPenaltyPreviewController {
     @Autowired
     private PenaltyServiceFacade penaltyServiceFacade;
     
+    @Autowired
+    private ConfigurationServiceFacade configurationServiceFacade;
+    
+    private AccountingConfigurationDto configurationDto;
+    
     protected NewPenaltyPreviewController() {
         //spring autowiring
     }
     
-    public NewPenaltyPreviewController(PenaltyServiceFacade penaltyServiceFacade) {
+    public NewPenaltyPreviewController(PenaltyServiceFacade penaltyServiceFacade, ConfigurationServiceFacade configurationServiceFacade) {
         this.penaltyServiceFacade = penaltyServiceFacade;
+        this.configurationServiceFacade = configurationServiceFacade;
     }
     
     @RequestMapping(method = RequestMethod.POST)
@@ -62,10 +70,13 @@ public class NewPenaltyPreviewController {
 
         ModelAndView modelAndView = new ModelAndView(REDIRECT_TO_ADMIN_SCREEN);
 
+        configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
+        
         if (StringUtils.isNotBlank(edit)) {
             modelAndView = new ModelAndView("defineNewPenalty");
             modelAndView.addObject("formBean", formBean);
             modelAndView.addObject("param", this.penaltyServiceFacade.getPenaltyParameters());
+            modelAndView.addObject("GLCodeMode",  configurationDto.getGlCodeMode());
         } else if (StringUtils.isNotBlank(cancel)) {
             modelAndView = new ModelAndView(REDIRECT_TO_VIEW_PENALTIES);
             status.setComplete();

@@ -5,5 +5,7 @@ public interface AccountingConfigurationService {
     Short getDigitsBeforeDecimal();
 
     Short getDigitsAfterDecimal();
+    
+    int getGlNameMode();
 
 }

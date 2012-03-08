@@ -62,8 +62,9 @@ public class FeeAction extends BaseAction {
         request.getSession().setAttribute(FeeParameters.class.getSimpleName(), feeDetailsForLoad.getFeeParameters());
 
         request.getSession().setAttribute("currencies", AccountingRules.getCurrencies());
-
-
+        
+        request.getSession().setAttribute("GlNamesMode", AccountingRules.getGlNamesMode());
+        
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -120,7 +121,6 @@ public class FeeAction extends BaseAction {
         if (actionForm.getFeeRecurrenceTypeValue() != null) {
             feeRecurrence = actionForm.getFeeRecurrenceTypeValue().getValue();
         }
-
         FeeCreateDto feeCreateRequest = new FeeCreateDto(feeCategory, feeFrequency, actionForm.getGlCodeValue(), feePayment,
                 feeFormula, actionForm.getFeeName(), actionForm.isRateFee(), actionForm
                         .isCustomerDefaultFee(), actionForm.getRateValue(), actionForm.getCurrencyId(), actionForm

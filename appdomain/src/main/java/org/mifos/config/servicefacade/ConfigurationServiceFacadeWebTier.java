@@ -14,6 +14,7 @@ public class ConfigurationServiceFacadeWebTier implements ConfigurationServiceFa
         AccountingConfigurationDto dto = new AccountingConfigurationDto();
         dto.setDigitsBeforeDecimal(accountingConfigurationService.getDigitsBeforeDecimal());
         dto.setDigitsAfterDecimal(accountingConfigurationService.getDigitsAfterDecimal());
+        dto.setGlCodeMode(accountingConfigurationService.getGlNameMode());
         return dto;
     }
 

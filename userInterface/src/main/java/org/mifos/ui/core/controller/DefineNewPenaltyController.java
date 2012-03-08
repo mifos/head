@@ -26,6 +26,9 @@ import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.penalty.servicefacade.PenaltyServiceFacade;
 import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
+import org.mifos.config.AccountingRulesConstants;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
+import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
 import org.mifos.dto.screen.PenaltyParametersDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,16 +56,21 @@ public class DefineNewPenaltyController {
     @Autowired
     private ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade;
     
+    @Autowired
+    private ConfigurationServiceFacade configurationServiceFacade;
+    
     private PenaltyParametersDto parametersDto;
+    private AccountingConfigurationDto configurationDto;
     
     protected DefineNewPenaltyController() {
         //for spring autowiring
     }
 
     public DefineNewPenaltyController(final PenaltyServiceFacade penaltyServiceFacade,
-            final ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade) {
+            final ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade, final ConfigurationServiceFacade configurationServiceFacade) {
         this.penaltyServiceFacade = penaltyServiceFacade;
         this.viewOrganizationSettingsServiceFacade = viewOrganizationSettingsServiceFacade;
+        this.configurationServiceFacade = configurationServiceFacade;
     }
     
     @InitBinder
@@ -75,10 +83,11 @@ public class DefineNewPenaltyController {
         ModelAndView modelAndView = new ModelAndView("defineNewPenalty");
         PenaltyFormBean bean = new PenaltyFormBean();
         parametersDto = this.penaltyServiceFacade.getPenaltyParameters();
+        configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
         
         modelAndView.addObject("formBean", bean);
         modelAndView.addObject("param", parametersDto);
-        
+        modelAndView.addObject("GLCodeMode",  configurationDto.getGlCodeMode());
         return modelAndView;
     }
     
@@ -96,6 +105,8 @@ public class DefineNewPenaltyController {
                 modelAndView.setViewName("defineNewPenalty");
                 parametersDto = this.penaltyServiceFacade.getPenaltyParameters();
                 modelAndView.addObject("param", parametersDto);
+                configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
+                modelAndView.addObject("GLCodeMode",  configurationDto.getGlCodeMode());
             } else {
                 modelAndView.setViewName("newPenaltyPreview");
                 
@@ -104,6 +115,7 @@ public class DefineNewPenaltyController {
                 modelAndView.addObject("formula", this.parametersDto.getFormulaType().get(formBean.getFormulaId()));
                 modelAndView.addObject("frequency", this.parametersDto.getFrequencyType().get(formBean.getFrequencyId()));
                 modelAndView.addObject("glCode", this.parametersDto.getGlCodes().get(formBean.getGlCodeId()));
+                modelAndView.addObject("GLCodeMode",  configurationDto.getGlCodeMode());
             }
             
             modelAndView.addObject("formBean", formBean);
