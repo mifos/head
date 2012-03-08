@@ -66,6 +66,8 @@ public class ViewLoanAccountDetailsController {
 
         modelAndView.addObject("backPageUrl", UrlHelper.constructCurrentPageUrl(request));
         
+        loanAccountServiceFacade.putLoanBusinessKeyInSession(globalAccountNum, request);
+        
         return modelAndView;
     }
     
