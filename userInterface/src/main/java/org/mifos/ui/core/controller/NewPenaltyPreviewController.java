@@ -51,8 +51,6 @@ public class NewPenaltyPreviewController {
     @Autowired
     private ConfigurationServiceFacade configurationServiceFacade;
     
-    private AccountingConfigurationDto configurationDto;
-    
     protected NewPenaltyPreviewController() {
         //spring autowiring
     }
@@ -70,7 +68,7 @@ public class NewPenaltyPreviewController {
 
         ModelAndView modelAndView = new ModelAndView(REDIRECT_TO_ADMIN_SCREEN);
 
-        configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
+        AccountingConfigurationDto configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
         
         if (StringUtils.isNotBlank(edit)) {
             modelAndView = new ModelAndView("defineNewPenalty");

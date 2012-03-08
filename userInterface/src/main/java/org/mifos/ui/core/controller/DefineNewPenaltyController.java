@@ -26,7 +26,6 @@ import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.penalty.servicefacade.PenaltyServiceFacade;
 import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
-import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
 import org.mifos.dto.screen.PenaltyParametersDto;
