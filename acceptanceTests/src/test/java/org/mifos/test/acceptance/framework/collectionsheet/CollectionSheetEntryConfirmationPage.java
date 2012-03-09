@@ -38,7 +38,7 @@ public class CollectionSheetEntryConfirmationPage extends MifosPage {
     }
 
     public HomePage navigateToHomePage() {
-        selenium.click("id=clientsAndAccountsHeader.link.home");
+        selenium.click("id=header.link.home");
         waitForPageToLoad();
         HomePage homePage = new HomePage(selenium);
         homePage.verifyPage();

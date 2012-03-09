@@ -149,7 +149,7 @@ public class MifosPage extends AbstractPage {
             selenium.click("clientsAndAccountsHeader.link.clientsAndAccounts");
         }
         else {
-            selenium.click("homeheader.link.clientsAndAccounts");
+            selenium.click("header.link.clientsAndAccounts");
         }
         waitForPageToLoad();
         return new ClientsAndAccountsHomepage(selenium);
@@ -163,7 +163,7 @@ public class MifosPage extends AbstractPage {
         } else if(selenium.isElementPresent("clientsAndAccountsHeader.link.clientsAndAccounts")) {
         	clientsAndAccountsText = selenium.getText("clientsAndAccountsHeader.link.clientsAndAccounts");
         } else {
-        	clientsAndAccountsText = selenium.getText("homeheader.link.clientsAndAccounts");
+        	clientsAndAccountsText = selenium.getText("header.link.clientsAndAccounts");
         }
         return clientsAndAccountsText;
     }
@@ -178,7 +178,7 @@ public class MifosPage extends AbstractPage {
             selenium.click("clientsAndAccountsHeader.link.admin");
         }
         else {
-            selenium.click("homeheader.link.admin");
+            selenium.click("header.link.admin");
         }
         waitForPageToLoad();
         return new AdminPage(selenium);

@@ -91,7 +91,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     }
 
     public HomePage navigateToHomePage() {
-        selenium.click("id=clientsAndAccountsHeader.link.home");
+        selenium.click("id=header.link.home");
         waitForPageToLoad();
         return new HomePage(selenium);
     }

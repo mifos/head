@@ -397,7 +397,7 @@ public class ClientTest extends UiTestCaseBase {
         int numResults = searchResultsPage.countSearchResults();
         Assert.assertEquals(expectedNumberOfClients, numResults);
 
-        selenium.click("clientsAndAccountsHeader.link.home");
+        selenium.click("header.link.home");
         selenium.waitForPageToLoad("30000");
 
         return new HomePage(selenium);

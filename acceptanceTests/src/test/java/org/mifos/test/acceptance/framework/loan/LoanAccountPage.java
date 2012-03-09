@@ -285,7 +285,7 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public HomePage navigateToHomePage(){
-        selenium.click("id=clientsAndAccountsHeader.link.home");
+        selenium.click("id=header.link.home");
         waitForPageToLoad();
         return new HomePage(selenium);
     }
@@ -418,14 +418,14 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public ClientsAndAccountsHomepage navigateToClientsAndAccountsUsingHeaderTab() {
-        selenium.click("clientsAndAccountsHeader.link.clientsAndAccounts");
+        selenium.click("header.link.clientsAndAccounts");
         waitForPageToLoad();
         return new ClientsAndAccountsHomepage(selenium);
     }
 
     @Override
     public AdminPage navigateToAdminPageUsingHeaderTab() {
-        selenium.click("clientsAndAccountsHeader.link.admin");
+        selenium.click("header.link.admin");
         waitForPageToLoad();
         return new AdminPage(selenium);
     }

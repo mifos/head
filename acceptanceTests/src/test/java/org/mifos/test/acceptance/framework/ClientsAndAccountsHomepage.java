@@ -133,18 +133,18 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
     }
     
     public String getClientsAndAccountsAdminHeaderTab() {
-        return selenium.getText("clientsAndAccountsHeader.link.admin"); 
+        return selenium.getText("header.link.admin"); 
     }
     
     public String getClientsAndAccountsHeaderTab() {
-        return selenium.getText("clientsAndAccountsHeader.link.clientsAndAccounts"); 
+        return selenium.getText("header.link.clientsAndAccounts"); 
     }
     
     public String getClientsAndAccountsHomeHeaderTab() {
-        return selenium.getText("clientsAndAccountsHeader.link.home"); 
+        return selenium.getText("header.link.home"); 
     }
     
     public String getClientsAndAccountsReportsHeaderTab() {
-        return selenium.getText("clientsAndAccountsHeader.link.reports"); 
+        return selenium.getText("header.link.reports"); 
     }
 }

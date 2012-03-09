@@ -51,7 +51,7 @@ public class HomePage extends MifosPage {
     }
 
     public ClientsAndAccountsHomepage navigateToClientsAndAccountsUsingHeaderTab() {
-        selenium.click("homeheader.link.clientsAndAccounts");
+        selenium.click("header.link.clientsAndAccounts");
         waitForPageToLoad();
         return new ClientsAndAccountsHomepage(selenium);
     }
@@ -62,7 +62,7 @@ public class HomePage extends MifosPage {
     }
 
     public void tryNavigateToAdminPage() {
-        selenium.click("homeheader.link.admin");
+        selenium.click("header.link.admin");
         waitForPageToLoad();
     }
 
@@ -84,7 +84,7 @@ public class HomePage extends MifosPage {
     }
 
     public ReportsPage navigateToReportsPage() {
-        selenium.click("homeheader.link.reports");
+        selenium.click("header.link.reports");
         waitForPageToLoad();
         return new ReportsPage(selenium);
     }
