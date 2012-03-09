@@ -29,8 +29,10 @@ import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
+import org.mifos.accounts.business.PenaltiesTrxnDetailEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -61,11 +63,17 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
     private final Money miscPenaltyAmount;
 
     private final Set<FeesTrxnDetailEntity> feesTrxnDetails;
+    
+    private final Set<PenaltiesTrxnDetailEntity> penaltiesTrxnDetails;
 
     private CalculatedInterestOnPayment calculatedInterestOnPayment;
 
     public Set<FeesTrxnDetailEntity> getFeesTrxnDetails() {
         return feesTrxnDetails;
+    }
+    
+    public Set<PenaltiesTrxnDetailEntity> getPenaltiesTrxnDetails() {
+        return penaltiesTrxnDetails;
     }
 
     public Money getInterestAmount() {
@@ -87,6 +95,10 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
     public void addFeesTrxnDetail(FeesTrxnDetailEntity feesTrxn) {
         feesTrxnDetails.add(feesTrxn);
     }
+    
+    public void addPenaltiesTrxnDetail(PenaltiesTrxnDetailEntity penaltiesTrxn) {
+        penaltiesTrxnDetails.add(penaltiesTrxn);
+    }
 
     public Money getMiscPenaltyAmount() {
         return miscPenaltyAmount;
@@ -94,6 +106,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 
     protected LoanTrxnDetailEntity() {
         feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
+        penaltiesTrxnDetails = new HashSet<PenaltiesTrxnDetailEntity>();
         principalAmount = null;
         interestAmount = null;
         penaltyAmount = null;
@@ -104,7 +117,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
     public LoanTrxnDetailEntity(AccountPaymentEntity accountPayment, AccountActionTypes accountActionType,
             Short installmentId, Date dueDate, PersonnelBO personnel, Date actionDate, Money amount, String comments,
             AccountTrxnEntity relatedTrxn, Money principalAmount, Money interestAmount, Money penaltyAmount,
-            Money miscFeeAmount, Money miscPenaltyAmount, List<AccountFeesEntity> accountFees) {
+            Money miscFeeAmount, Money miscPenaltyAmount, List<AccountFeesEntity> accountFees, List<AccountPenaltiesEntity> accountPenalties) {
         super(accountPayment, accountActionType, installmentId, dueDate, personnel, null, actionDate, amount,
                 comments, relatedTrxn);
         this.principalAmount = principalAmount;
@@ -117,6 +130,14 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
             for (AccountFeesEntity accountFeesEntity : accountFees) {
                 addFeesTrxnDetail(new FeesTrxnDetailEntity(this, accountFeesEntity, accountFeesEntity
                         .getAccountFeeAmount()));
+            }
+        }
+        
+        penaltiesTrxnDetails = new HashSet<PenaltiesTrxnDetailEntity>();
+        if (accountPenalties != null && accountPenalties.size() > 0) {
+            for (AccountPenaltiesEntity accountPenaltiesEntity : accountPenalties) {
+                addPenaltiesTrxnDetail(new PenaltiesTrxnDetailEntity(this, accountPenaltiesEntity, accountPenaltiesEntity
+                        .getAccountPenaltyAmount()));
             }
         }
     }
@@ -144,6 +165,18 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
                 addFeesTrxnDetail(new FeesTrxnDetailEntity(this, accountFeesActionDetail.getAccountFee(), feePaid));
             }
         }
+        
+        penaltiesTrxnDetails = new HashSet<PenaltiesTrxnDetailEntity>();
+        for (LoanPenaltyScheduleEntity loanPenaltyScheduleEntity : loanScheduleEntity.getLoanPenaltyScheduleEntities()) {
+            Integer penaltyId = loanPenaltyScheduleEntity.getLoanPenaltyScheduleEntityId();
+            if (penaltyId == null) { // special workaround for MIFOS-4517
+                penaltyId = loanPenaltyScheduleEntity.hashCode();
+            }
+            if(paymentAllocation.isPenaltyAllocated(penaltyId)) {
+                Money penaltyPaid = paymentAllocation.getPenaltyPaid(penaltyId);
+                addPenaltiesTrxnDetail(new PenaltiesTrxnDetailEntity(this, loanPenaltyScheduleEntity.getAccountPenalty(), penaltyPaid));
+            }
+        }
     }
 
     @Override
@@ -163,7 +196,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
         reverseAccntTrxn = new LoanTrxnDetailEntity(getAccountPayment(),
                 getReverseTransctionActionType(), getInstallmentId(), getDueDate(), loggedInUser, getActionDate(), getAmount()
                 .negate(), comment, this, getPrincipalAmount().negate(), getInterestAmount().negate(),
-                getPenaltyAmount().negate(), getMiscFeeAmount().negate(), getMiscPenaltyAmount().negate(), null);
+                getPenaltyAmount().negate(), getMiscFeeAmount().negate(), getMiscPenaltyAmount().negate(), null, null);
         reverseAccntTrxn.setCalculatedInterestOnPayment(this.getCalculatedInterestOnPayment());
 
         if (null != getFeesTrxnDetails() && getFeesTrxnDetails().size() > 0) {
@@ -173,6 +206,14 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
                 reverseAccntTrxn.addFeesTrxnDetail(feeTrxnDetail.generateReverseTrxn(reverseAccntTrxn));
             }
             logger.debug("after generating reverse entries for fees");
+        }
+        
+        if (null != getPenaltiesTrxnDetails() && getPenaltiesTrxnDetails().size() > 0) {
+            logger.debug("Before generating reverse entries for penalties");
+            for (PenaltiesTrxnDetailEntity penaltyTrxnDetail : getPenaltiesTrxnDetails()) {
+                reverseAccntTrxn.addPenaltiesTrxnDetail(penaltyTrxnDetail.generateReverseTrxn(reverseAccntTrxn));
+            }
+            logger.debug("after generating reverse entries for penalties");
         }
 
         return reverseAccntTrxn;
@@ -193,6 +234,17 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
             for (FeesTrxnDetailEntity feesTrxn : feesTrxnDetails) {
                 if (feesTrxn.getAccountFees().getAccountFeeId().equals(accountFeeId)) {
                     return feesTrxn;
+                }
+            }
+        }
+        return null;
+    }
+    
+    public PenaltiesTrxnDetailEntity getPenaltiesTrxn(Integer accountPenaltyId) {
+        if (null != penaltiesTrxnDetails && penaltiesTrxnDetails.size() > 0) {
+            for (PenaltiesTrxnDetailEntity penaltiesTrxn : penaltiesTrxnDetails) {
+                if (penaltiesTrxn.getAccountPenalties().getLoanAccountPenaltyId().equals(accountPenaltyId)) {
+                    return penaltiesTrxn;
                 }
             }
         }
@@ -240,6 +292,13 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
         FeesTrxnDetailEntity feesTrxnDetailEntity = getFeesTrxn(accntFeesAction.getAccountFeeId());
         if (feesTrxnDetailEntity != null) {
             ((LoanFeeScheduleEntity) accntFeesAction).adjustFees(feesTrxnDetailEntity);
+        }
+    }
+    
+    void adjustPenalties(LoanPenaltyScheduleEntity loanPenaltyScheduleEntity) {
+        PenaltiesTrxnDetailEntity penaltiesTrxnDetailEntity = getPenaltiesTrxn(loanPenaltyScheduleEntity.getAccountPenaltyId());
+        if(penaltiesTrxnDetailEntity != null) {
+            loanPenaltyScheduleEntity.adjustPenalties(penaltiesTrxnDetailEntity);
         }
     }
 

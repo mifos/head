@@ -26,6 +26,8 @@ import java.util.Date;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountPenaltiesEntity;
+import org.mifos.accounts.business.FeesTrxnDetailEntity;
+import org.mifos.accounts.business.PenaltiesTrxnDetailEntity;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.framework.business.AbstractEntity;
@@ -166,6 +168,11 @@ public class LoanPenaltyScheduleEntity extends AbstractEntity implements Compara
     
     public boolean isOn(LocalDate date) {
         return new LocalDate(this.lastApplied).isEqual(date);
+    }
+
+    void adjustPenalties(PenaltiesTrxnDetailEntity penaltiesTrxnDetailEntity) {
+        Money penaltyAmntAdjusted = penaltiesTrxnDetailEntity.getPenaltyAmount();
+        setPenaltyAmountPaid(getPenaltyAmountPaid().add(penaltyAmntAdjusted));
     }
     
 }

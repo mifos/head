@@ -113,6 +113,7 @@
         <mapping resource="org/mifos/accounts/business/AccountNotesEntity.hbm.xml" />
         <mapping resource="org/mifos/accounts/business/AccountTrxnEntity.hbm.xml" />
         <mapping resource="org/mifos/accounts/business/FeesTrxnDetailEntity.hbm.xml" />
+        <mapping resource="org/mifos/accounts/business/PenaltiesTrxnDetailEntity.hbm.xml" />
         <mapping resource="org/mifos/accounts/loan/business/LoanSummaryEntity.hbm.xml" />
         <mapping resource="org/mifos/accounts/business/AccountStateFlagEntity.hbm.xml" />
         <mapping resource="org/mifos/accounts/business/AccountStateEntity.hbm.xml" />
