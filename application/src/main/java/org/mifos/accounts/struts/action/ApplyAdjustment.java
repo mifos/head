@@ -20,6 +20,9 @@
 
 package org.mifos.accounts.struts.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,6 +30,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AdjustablePaymentDto;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.struts.actionforms.ApplyAdjustmentActionForm;
 import org.mifos.core.MifosRuntimeException;
@@ -36,6 +41,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.UserContext;
@@ -46,6 +52,13 @@ import org.mifos.security.util.UserContext;
  */
 public class ApplyAdjustment extends BaseAction {
 
+    private static final String POSSIBLE_ADJUSTMENTS = "possibleAdjustments";
+    private static final String ADJUSTED_AMOUNT = "adjAmount";
+    
+    private static final String ADJ_TYPE_KEY = "adjustmentType";
+    private static final String ADJ_LAST = "adjustLast";
+    private static final String ADJ_SPECIFIC = "adjustSpec";
+    
     @Override
     protected BusinessService getService() throws ServiceException {
         return new AccountBusinessService();
@@ -58,10 +71,48 @@ public class ApplyAdjustment extends BaseAction {
         AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
         request.setAttribute("method", "loadAdjustment");
+        
+        if (request.getParameter(ADJ_TYPE_KEY) != null && request.getParameter(ADJ_TYPE_KEY).equals(ADJ_SPECIFIC)) {
+            Integer paymentId = appAdjustActionForm.getPaymentId();
+            AccountPaymentEntity payment = accnt.findPaymentById(paymentId);
+            
+            SessionUtils.setAttribute(ADJUSTED_AMOUNT, payment.getAmount().getAmount(), request);
+        } else {
+            appAdjustActionForm.setPaymentId(null);
+            SessionUtils.setAttribute(ADJUSTED_AMOUNT, accnt.getLastPmntAmntToBeAdjusted(), request);
+        }
+        
         return mapping.findForward("loadadjustment_success");
-
     }
 
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward listPossibleAdjustments(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+        AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+        
+        List<AccountPaymentEntity> payments = accnt.getAccountPayments();
+        ArrayList<AdjustablePaymentDto> adjustablePayments = new ArrayList<AdjustablePaymentDto>();
+        
+        int i = 1;
+        for (AccountPaymentEntity payment : payments) {
+            //ommit disbursal payment
+            if (!payment.getAmount().equals(Money.zero()) && i != payments.size()) {
+                AdjustablePaymentDto adjustablePaymentDto = new AdjustablePaymentDto(payment.getPaymentId(), payment.getAmount(), 
+                        payment.getPaymentType().getName(), payment.getPaymentDate(), payment.getReceiptDate(), payment.getReceiptNumber());
+                
+                adjustablePayments.add(adjustablePaymentDto);
+            }           
+            i++;
+        }
+        
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
+        SessionUtils.setAttribute(POSSIBLE_ADJUSTMENTS, adjustablePayments, request);
+        request.setAttribute("method", "loadAdjustment");   
+        
+        return mapping.findForward("loadadjustments_success");
+    }
+    
     /*
      * This method do the same thing as loadAdjustment, but added to allow
      * handling permission : can adjust payment when account is closed
@@ -75,6 +126,17 @@ public class ApplyAdjustment extends BaseAction {
         AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
         request.setAttribute("method", "loadAdjustmentWhenObligationMet");
+        
+        if (request.getParameter(ADJ_TYPE_KEY) != null && request.getParameter(ADJ_TYPE_KEY).equals(ADJ_SPECIFIC)) {
+            Integer paymentId = appAdjustActionForm.getPaymentId();
+            AccountPaymentEntity payment = accnt.findPaymentById(paymentId);
+            
+            SessionUtils.setAttribute(ADJUSTED_AMOUNT, payment.getAmount().getAmount(), request);
+        } else {
+            appAdjustActionForm.setPaymentId(null);
+            SessionUtils.setAttribute(ADJUSTED_AMOUNT, accnt.getLastPmntAmntToBeAdjusted(), request);
+        }
+        
         return mapping.findForward("loadadjustment_success");
 
     }
@@ -92,11 +154,18 @@ public class ApplyAdjustment extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.setAttribute("method", "applyAdjustment");
         ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+        Integer paymentId = appAdjustActionForm.getPaymentId();
+        
         checkVersionMismatchForAccountBO(request, appAdjustActionForm);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         try {
-            accountServiceFacade.applyAdjustment(appAdjustActionForm.getGlobalAccountNum(),
-                    appAdjustActionForm.getAdjustmentNote(), userContext.getId());
+            if (paymentId == null) {
+                accountServiceFacade.applyAdjustment(appAdjustActionForm.getGlobalAccountNum(),
+                        appAdjustActionForm.getAdjustmentNote(), userContext.getId());
+            } else {
+                accountServiceFacade.applyHistoricalAdjustment(appAdjustActionForm.getGlobalAccountNum(), paymentId,
+                        appAdjustActionForm.getAdjustmentNote(), userContext.getId());
+            }
         } catch (MifosRuntimeException e) {
             request.setAttribute("method", "previewAdjustment");
             throw (Exception) e.getCause();
@@ -125,6 +194,7 @@ public class ApplyAdjustment extends BaseAction {
      */
     private void resetActionFormFields(ApplyAdjustmentActionForm appAdjustActionForm) {
         appAdjustActionForm.setAdjustmentNote(null);
+        appAdjustActionForm.setPaymentId(null);
     }
 
     @Override

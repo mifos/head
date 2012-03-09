@@ -125,6 +125,7 @@
                 name="applyAdjustmentActionForm" parameter="method" validate="true"
                 input="/pages/accounts/jsp/applyadjustment.jsp" scope="session">
             <forward name="loadadjustment_success" path="/pages/accounts/jsp/applyadjustment.jsp"/>
+            <forward name="loadadjustments_success" path="/pages/accounts/jsp/listAdjustments.jsp"/>
             <forward name="loadAdjustment_failure" path="/pages/accounts/jsp/applyadjustment.jsp"/>
             <forward name="previewadj_success" path="/pages/accounts/jsp/applyadjustment.jsp"/>
             <forward name="canceladj_success" path="/loanAccountAction.do?method=get"/>

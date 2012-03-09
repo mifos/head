@@ -40,6 +40,16 @@ public class ApplyAdjustmentActionForm extends ValidatorActionForm {
 
     private boolean adjustcheckbox;
 
+    private Integer paymentId;
+    
+    public Integer getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(Integer paymentId) {
+        this.paymentId = paymentId;
+    }
+
     public String getInput() {
         return input;
     }

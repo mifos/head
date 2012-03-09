@@ -37,7 +37,9 @@ explanation of the license and how it is applied.
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<html-el:form method="post" action="applyAdjustment.do" onsubmit="return fn_submit();">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
-			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'adjAmount')}" var="adjAmount" />
+            
+            <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -45,6 +47,7 @@ explanation of the license and how it is applied.
 					</td>
 				</tr>
 			</table>
+            
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td width="70%" height="24" align="left" valign="top"
@@ -107,7 +110,7 @@ explanation of the license and how it is applied.
 								<c:choose>
 									<c:when test="${requestScope.method=='loadAdjustment'}">
 										<mifos:mifoslabel name="accounts.last_pmnt"/>:
-										<fmt:formatNumber value="${BusinessKey.lastPmntAmntToBeAdjusted}"/>
+										<fmt:formatNumber value="${adjAmount}"/>
 										<br><br>
 									</c:when>
 									<c:otherwise>
@@ -115,7 +118,7 @@ explanation of the license and how it is applied.
 											<mifos:mifoslabel name="accounts.amnt_tobe_adjusted" />:<br>
 										</td>
 										<td width="75%" class="fontnormal">	
-											<fmt:formatNumber value="${BusinessKey.lastPmntAmntToBeAdjusted}"/>
+											<fmt:formatNumber value="${adjAmount}"/>
 										</td>
 									</tr>	
 									</c:otherwise>
@@ -282,6 +285,7 @@ explanation of the license and how it is applied.
  			<html-el:hidden property="method" value="${requestScope.method}"/>
  			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>
  			<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/>
+            <html-el:hidden property="paymentId"/>
 </html-el:form>
 
 

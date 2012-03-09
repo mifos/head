@@ -55,4 +55,7 @@ public interface AccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void applyAdjustment(String globalAccountNum, String adjustmentNote, Short personnelId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    void applyHistoricalAdjustment(String globalAccountNum, Integer paymentId, String adjustmentNote, Short personnelId);
 }

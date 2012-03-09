@@ -20,10 +20,12 @@
 
 package org.mifos.accounts.servicefacade;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountBO;
@@ -42,6 +44,7 @@ import org.mifos.accounts.penalties.persistence.PenaltyDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.servicefacade.ListItem;
@@ -53,7 +56,9 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
+import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.ApplicableCharge;
+import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.dto.screen.AccountTypeCustomerLevelDto;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -375,4 +380,64 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return new UserContextFactory().create(user);
     }
+
+    @Override
+    public void applyHistoricalAdjustment(String globalAccountNum, Integer paymentId, String adjustmentNote,
+            Short personnelId) {        
+        try {            
+            AccountBO accountBO = accountBusinessService.findBySystemId(globalAccountNum);
+            accountBO.setUserContext(getUserContext());
+            checkPermissionForAdjustment(accountBO);
+            PersonnelBO personnelBO = personnelPersistence.findPersonnelById(personnelId);
+
+            AccountPaymentEntity accountPaymentEntity = accountBO.findPaymentById(paymentId);
+            if (accountPaymentEntity != null) {
+                monthClosingServiceFacade.validateTransactionDate(accountPaymentEntity.getPaymentDate());
+            }
+
+            transactionHelper.startTransaction();
+            
+            AccountPaymentEntity adjustedPayment = null;
+            Integer adjustedId;
+            List<PaymentData> paymentsToBeReapplied = new ArrayList<PaymentData>();
+            
+            do {
+                adjustedPayment = accountBO.getLastPmntToBeAdjusted();
+                              
+                if (adjustedPayment == null) {
+                    break;
+                }
+                adjustedId = adjustedPayment.getPaymentId();
+                if (!accountPaymentEntity.getPaymentId().equals(adjustedId)) {
+                    
+                    PersonnelBO paymentCreator = (adjustedPayment.getCreatedByUser() == null) ? personnelBO : adjustedPayment.getCreatedByUser();
+                    
+                    PaymentData paymentData = accountBO.createPaymentData(adjustedPayment.getAmount(), adjustedPayment.getPaymentDate(), 
+                            adjustedPayment.getReceiptNumber(), adjustedPayment.getReceiptDate(), adjustedPayment.getPaymentType().getId(), 
+                            paymentCreator);             
+                    paymentsToBeReapplied.add(paymentData);
+                }
+                
+                accountBO.adjustLastPayment(adjustmentNote, personnelBO);
+            } while (!accountPaymentEntity.getPaymentId().equals(adjustedId));
+            legacyAccountDao.createOrUpdate(accountBO);
+            
+            for (PaymentData paymentData : paymentsToBeReapplied) {
+                accountBO.applyPayment(paymentData);
+                legacyAccountDao.createOrUpdate(accountBO);
+            }
+            transactionHelper.commitTransaction();
+        } catch (ServiceException e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } catch (AccountException e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } catch (PersistenceException e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        }
+    }
+    
+    
 }
