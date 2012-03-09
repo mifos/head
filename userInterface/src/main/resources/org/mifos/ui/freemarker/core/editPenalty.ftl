@@ -144,7 +144,7 @@ function fnGracePeriod() {
                         <span class="red">* </span>[@spring.message "organizationPreferences.definenewpenalty.glcode"/]
                     </span>
                     <span class="span-5">
-                        &nbsp;[@form.formSingleSelectWithPrompt "formBean.glCodeId", param.glCodes, "--Select--" /]
+                        &nbsp;[@form.formSingleSelectWithPromptGLCode "formBean.glCodeId", param.glCodes, "--Select--", GlCodeMode/]
                     </span>
                 </div>
                 <div class="span-20 ">
