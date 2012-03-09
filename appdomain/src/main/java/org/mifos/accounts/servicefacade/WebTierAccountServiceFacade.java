@@ -20,12 +20,11 @@
 
 package org.mifos.accounts.servicefacade;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Stack;
 
-import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountBO;
@@ -56,9 +55,8 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
-import org.mifos.dto.domain.AccountReferenceDto;
+import org.mifos.dto.domain.AdjustedPaymentDto;
 import org.mifos.dto.domain.ApplicableCharge;
-import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.dto.screen.AccountTypeCustomerLevelDto;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -67,6 +65,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
@@ -163,6 +162,21 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         return paymentType.equals(Constants.LOAN);
     }
 
+    @Override
+    public List<ListItem<Short>> constructPaymentTypeListForLoanRepayment(Short localeId) {
+       try { 
+            List<PaymentTypeEntity> paymentTypeList = acceptedPaymentTypePersistence.getAcceptedPaymentTypesForATransaction(
+                    localeId, TrxnTypes.loan_repayment.getValue());
+            List<ListItem<Short>> listItems = new ArrayList<ListItem<Short>>();
+            for (PaymentTypeEntity paymentTypeEntity : paymentTypeList) {
+                listItems.add(new ListItem<Short>(paymentTypeEntity.getId(), paymentTypeEntity.getName()));
+            }
+            return listItems;
+       } catch (PersistenceException e) {
+           throw new MifosRuntimeException(e);
+       }
+    }
+    
     private List<ListItem<Short>> constructPaymentTypeList(String paymentType, Short localeId) {
 
         try {
@@ -383,7 +397,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
 
     @Override
     public void applyHistoricalAdjustment(String globalAccountNum, Integer paymentId, String adjustmentNote,
-            Short personnelId) {        
+            Short personnelId, AdjustedPaymentDto adjustedPaymentDto) {        
         try {            
             AccountBO accountBO = accountBusinessService.findBySystemId(globalAccountNum);
             accountBO.setUserContext(getUserContext());
@@ -399,7 +413,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             
             AccountPaymentEntity adjustedPayment = null;
             Integer adjustedId;
-            List<PaymentData> paymentsToBeReapplied = new ArrayList<PaymentData>();
+            Stack<PaymentData> paymentsToBeReapplied = new Stack<PaymentData>();
             
             do {
                 adjustedPayment = accountBO.getLastPmntToBeAdjusted();
@@ -415,17 +429,35 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                     PaymentData paymentData = accountBO.createPaymentData(adjustedPayment.getAmount(), adjustedPayment.getPaymentDate(), 
                             adjustedPayment.getReceiptNumber(), adjustedPayment.getReceiptDate(), adjustedPayment.getPaymentType().getId(), 
                             paymentCreator);             
-                    paymentsToBeReapplied.add(paymentData);
+                    paymentsToBeReapplied.push(paymentData);
                 }
                 
                 accountBO.adjustLastPayment(adjustmentNote, personnelBO);
+                legacyAccountDao.createOrUpdate(accountBO);
+                transactionHelper.flushSession();
             } while (!accountPaymentEntity.getPaymentId().equals(adjustedId));
-            legacyAccountDao.createOrUpdate(accountBO);
-            
-            for (PaymentData paymentData : paymentsToBeReapplied) {
+          
+            if (adjustedPaymentDto != null) {
+                //reapply adjusted payment
+                PersonnelBO paymentCreator = (accountPaymentEntity.getCreatedByUser() == null) ? personnelBO : accountPaymentEntity.getCreatedByUser();
+                Money amount = new Money(accountBO.getCurrency(), adjustedPaymentDto.getAmount());
+                
+                PaymentData paymentData = accountBO.createPaymentData(amount, adjustedPaymentDto.getPaymentDate(), 
+                        accountPaymentEntity.getReceiptNumber(), accountPaymentEntity.getReceiptDate(), adjustedPaymentDto.getPaymentType(), 
+                        paymentCreator);
+                
                 accountBO.applyPayment(paymentData);
                 legacyAccountDao.createOrUpdate(accountBO);
+                
             }
+            
+            while (!paymentsToBeReapplied.isEmpty()) {
+                PaymentData paymentData = paymentsToBeReapplied.pop();
+                accountBO.applyPayment(paymentData);
+                legacyAccountDao.createOrUpdate(accountBO);
+                transactionHelper.flushSession();
+            }
+            
             transactionHelper.commitTransaction();
         } catch (ServiceException e) {
             transactionHelper.rollbackTransaction();

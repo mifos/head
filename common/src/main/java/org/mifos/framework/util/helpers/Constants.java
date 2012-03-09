@@ -112,4 +112,7 @@ public interface Constants {
     String LOAN = "loan";
     String EMPTY_STRING = "";
     String ORIGINAL_SCHEDULE_AVAILABLE = "originalScheduleIsAvailable";
+    
+    String ADJUSTMENT_PAYMENT_TYPE = "adjustmentPaymentType";
+    
 }
