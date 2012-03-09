@@ -66,7 +66,7 @@
 				[@spring.message "${ConfigurationConstants.CLIENT}" /]
 				<span class="headingblue" style="font-size: 12px;">
 					<a href="viewClientDetails.ftl?globalCustNum=${client.clientGlobalCustNum}">
-						${client.clientName}: [@spring.message "ID" /] ${client.clientGlobalCustNum}
+						${client.clientName}[@spring.message "label.colon" /] [@spring.message "ID" /] ${client.clientGlobalCustNum}
 					</a>
 				</span>
 			</div>
@@ -150,7 +150,7 @@
 				[@spring.message "${ConfigurationConstants.GROUP}" /]
 				<span class="headingblue" style="font-size: 12px;">
 					<a href="viewGroupDetails.ftl?globalCustNum=${group.groupGlobalCustNum}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}">
-						${group.groupName}: ${group.groupGlobalCustNum}
+						${group.groupName}[@spring.message "label.colon" /] [@spring.message "ID" /] ${group.groupGlobalCustNum}
 					</a>
 				</span>
 			</div>
@@ -229,7 +229,7 @@
 				<span class="headingblue" style="font-size: 12px;">
 					<a href="viewCenterDetails.ftl?globalCustNum=${center.centerGlobalCustNum}&recordOfficeId=${center.branchId}&
 							 recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomnum=${Session.randomNUm?c}">
-						${center.centerName}: ${center.centerGlobalCustNum}
+						${center.centerName}[@spring.message "label.colon" /] [@spring.message "ID" /] ${center.centerGlobalCustNum}
 					</a>
 				</span>
 			</div>
