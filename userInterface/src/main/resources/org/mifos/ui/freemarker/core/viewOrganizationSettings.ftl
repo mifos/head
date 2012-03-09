@@ -42,6 +42,7 @@
             <div id="locale">
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.country"/]</span>:&nbsp;<span class="fontnormal">${properties.localeCountryCode}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.language"/]</span>:&nbsp;<span class="fontnormal">${properties.localeLanguageCode}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.direction"/]</span>:&nbsp;<span class="fontnormal">${properties.localeDirection}</span></div>
             </div>
         </p>
         <p class="span-24">
@@ -90,6 +91,7 @@
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maximumallowedagefornewclients"/]</span>:&nbsp;<span class="fontnormal">${properties.maximumAge}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.additionalfamilydetailsrequired"/]</span>:&nbsp;<span class="fontnormal">${properties.isFamilyDetailsRequired}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maximumnumberoffamilymembers"/]</span>:&nbsp;<span class="fontnormal">${properties.maximumNumberOfFamilyMembers}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.branchManagerRoleName"/]</span>:&nbsp;<span class="fontnormal">${properties.branchManagerRoleName}</span></div>
             </div>
         </p>
         <p class="span-24">
@@ -99,6 +101,7 @@
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.grouppendingapprovalstateenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.groupPendingState}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.loanpendingapprovalstateenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.loanPendingState}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.savingspendingapprovalstateenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.savingsPendingState}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.approvalRequired"/]</span>:&nbsp;<span class="fontnormal">${properties.approvalRequired}</span></div>
             </div>
         </p>
 
@@ -110,6 +113,18 @@
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.backdatedtransactionsallowed"/]</span>:&nbsp;<span class="fontnormal">${properties.backDatedTransactions}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.glim"/]</span>:&nbsp;<span class="fontnormal">${properties.glim}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.lsim"/]</span>:&nbsp;<span class="fontnormal">${properties.lsim}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maxPointsPerPPISurvey"/]</span>:&nbsp;<span class="fontnormal">${properties.maxPointsPerPPISurvey}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.batchSizeForBatchJobs"/]</span>:&nbsp;<span class="fontnormal">${properties.batchSizeForBatchJobs}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.recordCommittingSizeForBatchJobs"/]</span>:&nbsp;<span class="fontnormal">${properties.recordCommittingSizeForBatchJobs}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.outputIntervalForBatchJobs"/]</span>:&nbsp;<span class="fontnormal">${properties.outputIntervalForBatchJobs}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.allowDataPrefetchingWhenSavingCollectionSheets"/]</span>:&nbsp;<span class="fontnormal">${properties.allowDataPrefetchingWhenSavingCollectionSheets}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.shutdownCountdownNotificationThreshold"/]</span>:&nbsp;<span class="fontnormal">${properties.shutdownCountdownNotificationThreshold}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.disbursalMax"/]</span>:&nbsp;<span class="fontnormal">${properties.disbursalMax}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.imageStorageType"/]</span>:&nbsp;<span class="fontnormal">${properties.imageStorageType}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.uploadStorageDirectory"/]</span>:&nbsp;<span class="fontnormal">${properties.uploadStorageDirectory}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.uploadQGDirectory"/]</span>:&nbsp;<span class="fontnormal">${properties.uploadQGDirectory}</span></div>
+	          	<div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.imageStorageDirectory"/]</span>:&nbsp;<span class="fontnormal">${properties.imageStorageDirectory}</span></div>
+	          
 	            [#list pluginsPropsMap?keys as key]
 	                <div><span class="fontnormal">${key}</span>:&nbsp;<span class="fontnormal">${pluginsPropsMap[key]}</span></div>
 	            [/#list]

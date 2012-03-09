@@ -119,7 +119,7 @@ public class ImageStorageManager {
         return subPath;
     }
 
-    private static synchronized String getStorageLocation() {
+    public static synchronized String getStorageLocation() {
         if (location == null) {
             String pathConfig = MifosConfigurationManager.getInstance().getString(STORAGE_CONFIG_KEY);
             if (StringUtils.isBlank(pathConfig) || pathConfig.equals(ConfigurationLocator.LOCATOR_ENVIRONMENT_PROPERTY_NAME)) {

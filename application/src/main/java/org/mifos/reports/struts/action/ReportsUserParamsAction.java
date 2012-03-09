@@ -82,7 +82,7 @@ public class ReportsUserParamsAction extends BaseAction {
                 .getAdminDocumentName();
         String filename = legacyAdminDocumentDao.getAdminDocumentById((short) reportId)
                 .getAdminDocumentIdentifier();
-        File file = new File(BirtAdminDocumentUploadAction.getAdminDocumentStorageDirectory(), filename);
+        File file = new File(viewOrganizationSettingsServiceFacade.getAdminDocumentStorageDirectory(), filename);
 
         if (file.exists()) {
             filename = file.getAbsolutePath();
