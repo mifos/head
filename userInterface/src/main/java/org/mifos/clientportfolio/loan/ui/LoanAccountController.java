@@ -550,11 +550,23 @@ public class LoanAccountController {
     }
     
     public LoanCreationResultDto openLoanWithBackdatedPayments(LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean,
-            LoanAccountCashFlow loanAccountCashFlow, CashFlowSummaryFormBean cashFlowSummaryFormBean, LoanScheduleFormBean loanScheduleFormBean) {
+            LoanAccountCashFlow loanAccountCashFlow, CashFlowSummaryFormBean cashFlowSummaryFormBean, LoanScheduleFormBean loanScheduleFormBean, MessageContext messageContext) {
 
         LoanApplicationStateDto applicationState = loanAccountServiceFacade.retrieveLoanApplicationState();
 
-        return submitLoanWithBackdatedPaymentsApplication(applicationState.getPartialApplicationId(), formBean, loanAccountQuestionGroupFormBean, loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean);
+            try {
+            	return submitLoanWithBackdatedPaymentsApplication(applicationState.getPartialApplicationId(), formBean, loanAccountQuestionGroupFormBean, loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean);
+            }
+            catch (BusinessRuleException e) {
+                MessageBuilder builder = new MessageBuilder()
+                        .error()
+                        .codes(Arrays.asList(e.getMessageKey()).toArray(
+                                new String[1])).defaultText(e.getMessage())
+                        .args(e.getMessageValues());
+
+                messageContext.addMessage(builder.build());
+                throw e;
+            }
     }
     
     private LoanCreationResultDto submitLoanWithBackdatedPaymentsApplication(Integer accountState, LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean,
