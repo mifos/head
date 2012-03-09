@@ -853,7 +853,7 @@ public class LoanBO extends AccountBO implements Loan {
 
             FeeBO fee = getAccountFeesObject(feeId);
             if (havePaymentsBeenMade() && fee.doesFeeInvolveFractionalAmounts()) {
-                throw new AccountException(AccountExceptionConstants.CANT_APPLY_FEE_EXCEPTION);
+                throw new AccountException(AccountExceptionConstants.CANT_REMOVE_FEE_EXCEPTION);
             }
 
             if (fee.isTimeOfDisbursement()) {
