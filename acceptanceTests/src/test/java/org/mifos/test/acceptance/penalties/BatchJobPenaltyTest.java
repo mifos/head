@@ -85,7 +85,7 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
                 new String[] { "3,151", "05/04/2012", "2,701" }
         );
         
-        verifyAfterRepayLoan(accountId, new String[] { "0", "1", "0", "0", "0", "0", "0", "0", "0", "0" });
+        verifyAfterRepayLoan(accountId, new String[] { "0", "1", "0", "0", "0", "0", "0", "0", "0", "0" }, false);
     }
 
     @Test(enabled = true)
@@ -101,11 +101,11 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
                 new String[] { "3,273", "05/04/2012", "2,823" }
         );
         
-        verifyAfterRepayLoan(accountId, new String[] { "0", "38", "31", "24", "17", "10", "3", "0", "0", "0" });
+        verifyAfterRepayLoan(accountId, new String[] { "0", "38", "31", "24", "17", "10", "3", "0", "0", "0" }, false);
     }
     
     @Test(enabled = true)
-    public void shouldCalculateWeeklyAmountPenaltyOnLoanAccount() throws Exception {
+    public void shounldCalculateWeeklyAmountPenaltyOnLoanAccount() throws Exception {
         final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[2], PenaltyFormParameters.PERIOD_NONE, "",
                 PenaltyFormParameters.FREQUENCY_WEEKLY, "0.1", "9,999,999,999");
         
@@ -117,9 +117,20 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
                 new String[] { "3,171", "05/04/2012", "2,721" }
         );
         
-        verifyAfterRepayLoan(accountId, new String[] { "0", "6", "5", "4", "3", "2", "1", "0", "0", "0" });
+        verifyAfterRepayLoan(accountId, new String[] { "0", "6", "5", "4", "3", "2", "1", "0", "0", "0" }, false);
+        navigationHelper.navigateToLoanAccountPage(accountId).navigateToApplyAdjustment().submitAdjustment();
+        
+        penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
+                new String[] { "21", "0", "21" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "6", "456" }, { "5", "455" }, { "4", "454" }, { "3", "453" },
+                                 { "2", "452" }, { "1", "451" }, { "0", "450" }, null /* Future Installments */, { "0", "450" }, { "0", "450" } },
+                new String[] { "3,171", "05/04/2012", "2,721" }
+        );
+        
+        navigationHelper.navigateToLoanAccountPage(accountId).removePenalty(1);
+        verifyAfterRepayLoan(accountId, new String[] { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" }, true);
     }
-    
+
     @Test(enabled = true)
     public void shouldCalculateWeeklyAmountPenaltyWithPeriodInstallmentsOnLoanAccount() throws Exception {
         final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[3], PenaltyFormParameters.PERIOD_INSTALLMENTS,
@@ -133,7 +144,7 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
                 new String[] { "3,170", "05/04/2012", "2,720" }
         );
         
-        verifyAfterRepayLoan(accountId, new String[] { "0", "5", "5", "4", "3", "2", "1", "0", "0", "0" });
+        verifyAfterRepayLoan(accountId, new String[] { "0", "5", "5", "4", "3", "2", "1", "0", "0", "0" }, false);
     }
     
     @Test(enabled = true)
@@ -149,7 +160,7 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
                 new String[] { "1,411.1", "08/03/2012", "961.1" }
         );
         
-        verifyAfterRepayLoan(accountId, new String[] { "0", "40.6", "20.5", "0", "0", "0", "0", "0", "0", "0" });
+        verifyAfterRepayLoan(accountId, new String[] { "0", "40.6", "20.5", "0", "0", "0", "0", "0", "0", "0" }, false);
     }
     
     @Test(enabled = true)
@@ -165,7 +176,7 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
                 new String[] { "1,363.5", "08/03/2012", "913.5" }
         );
         
-        verifyAfterRepayLoan(accountId, new String[] { "0", "9", "4.5", "0", "0", "0", "0", "0", "0", "0" });
+        verifyAfterRepayLoan(accountId, new String[] { "0", "9", "4.5", "0", "0", "0", "0", "0", "0", "0" }, false);
     }
     
     @Test(enabled = true)
@@ -181,7 +192,7 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
                 new String[] { "1,822.5", "15/03/2012", "1,372.5" }
         );
         
-        verifyAfterRepayLoan(accountId, new String[] { "0", "9", "9", "4.5", "0", "0", "0", "0", "0", "0" });
+        verifyAfterRepayLoan(accountId, new String[] { "0", "9", "9", "4.5", "0", "0", "0", "0", "0", "0" }, false);
     }
     
     @Test(enabled = true)
@@ -197,7 +208,7 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
                 new String[] { "3,160", "05/04/2012", "2,710" }
         );
         
-        verifyAfterRepayLoan(accountId, new String[] { "0", "9.6", "0.4", "0", "0", "0", "0", "0", "0", "0" });
+        verifyAfterRepayLoan(accountId, new String[] { "0", "9.6", "0.4", "0", "0", "0", "0", "0", "0", "0" }, false);
     }
     
     @Test(enabled = true)
@@ -221,7 +232,7 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         }
     }
     
-    private void verifyAfterRepayLoan(final String accountId, final String[] penalties) throws Exception {
+    private void verifyAfterRepayLoan(final String accountId, final String[] penalties, final boolean secondTime) throws Exception {
         RepayLoanParameters params = new RepayLoanParameters();
         params.setModeOfRepayment(RepayLoanParameters.CASH);
         
@@ -250,7 +261,10 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
                 null
         );
         
-        changeDateTime(04, 5);
+        if(!secondTime) {
+            changeDateTime(04, 5);
+        }
+        
         penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
                 new String[] { sumToString, sumToString, "0" },
                 schedule,
