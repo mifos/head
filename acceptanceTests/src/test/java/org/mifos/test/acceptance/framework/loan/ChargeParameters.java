@@ -26,11 +26,13 @@ public class ChargeParameters {
 
     //private static final boolean IS_RATE_TYPE = true;
     private static final boolean IS_NOT_RATE_TYPE = false;
+    private static final boolean IS_NOT_PENALTY_TPE = false;
     private static final String CHARGE_TYPE_SEPARATOR = ":";
 
-    private String constructChargeType(int feeId, boolean isRateType) {
+    private String constructChargeType(boolean isPenaltyType, int feeId, boolean isRateType) {
         String isRateTypeString = isRateType ? "1" : "0";
-        return feeId + CHARGE_TYPE_SEPARATOR + isRateTypeString;
+        String isPenaltyTypeString = isPenaltyType ? "1" : "0";
+        return isPenaltyTypeString + CHARGE_TYPE_SEPARATOR + feeId + CHARGE_TYPE_SEPARATOR + isRateTypeString;
     }
 
 
@@ -57,9 +59,9 @@ public class ChargeParameters {
      */
     @SuppressWarnings("PMD.OnlyOneReturn")
     public String getTypeValue() {
-        if (MISC_FEES.equals(type)) { return constructChargeType(-1, IS_NOT_RATE_TYPE); }
-        if (MISC_PENALTY.equals(type)) { return constructChargeType(-2, IS_NOT_RATE_TYPE); }
+        if (MISC_FEES.equals(type)) { return constructChargeType(IS_NOT_PENALTY_TPE, -1, IS_NOT_RATE_TYPE); }
+        if (MISC_PENALTY.equals(type)) { return constructChargeType(IS_NOT_PENALTY_TPE, -2, IS_NOT_RATE_TYPE); }
 
-        return constructChargeType(0, IS_NOT_RATE_TYPE);
+        return constructChargeType(IS_NOT_PENALTY_TPE, 0, IS_NOT_RATE_TYPE);
     }
 }
