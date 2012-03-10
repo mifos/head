@@ -37,7 +37,7 @@ public class ApplyAdjustmentPage extends AbstractPage {
 
 
     public LoanAccountPage verifyAdjustment(String adjustmentAmount) {
-        Assert.assertTrue(selenium.isTextPresent("Last payment made: " + adjustmentAmount + " "));
+        Assert.assertTrue(selenium.isTextPresent("Amount to be adjusted: " + adjustmentAmount + " "));
         return fillAdjustmentFieldsAndSubmit(adjustmentAmount);
     }
 
@@ -75,7 +75,7 @@ public class ApplyAdjustmentPage extends AbstractPage {
     }
 
     public LoanAccountPage verifyAdjustment(String adjustmentAmount, String note) {
-        Assert.assertTrue(selenium.isTextPresent("Last payment made: " + adjustmentAmount + " "));
+        Assert.assertTrue(selenium.isTextPresent("Amount to be adjusted: " + adjustmentAmount + " "));
         selenium.click("applyadjustment.input.revertLastPayment");
         selenium.type("applyadjustment.input.note", note);
         selenium.click("applyadjustment.button.submit");
