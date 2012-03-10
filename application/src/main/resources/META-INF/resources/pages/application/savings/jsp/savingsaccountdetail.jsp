@@ -418,7 +418,7 @@ explanation of the license and how it is applied.
 						                    <c:param name="source" value="Savings" />
 						                   </c:url >
 						                  <span class="fontnormal8pt">
-						                    <a id="questionGroupInstance.id" href="${viewAndEditQuestionnaireQuestionMethodUrl}&backPageUrl=${backPageUrl}">
+						                    <a id="${questionGroupInstance.id}" href="${viewAndEditQuestionnaireQuestionMethodUrl}&backPageUrl=${backPageUrl}">
 						                      <c:out value="${questionGroupInstance.questionGroupTitle}"/>
 						                    </a>
 						                  </span>

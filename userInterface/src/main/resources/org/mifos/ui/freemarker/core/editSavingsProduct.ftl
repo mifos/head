@@ -240,12 +240,12 @@
           <div class=" prepend-2  span-21 last">
             <div class="span-20 "><span class="  span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.gLcodefordeposits" /]:</span>
                 <span class="span-4">
-                [@form.formSingleSelectWithPrompt "savingsProduct.selectedPrincipalGlCode", savingsProduct.principalGeneralLedgerOptions, "--selectone--", "disabled=disabled" /]
+                [@form.formSingleSelectWithPromptGLCode "savingsProduct.selectedPrincipalGlCode", savingsProduct.principalGeneralLedgerOptions, "--selectone--", GLCodeMode, "disabled=disabled" /]
                  </span>
             </div>
             <div class="span-20 "><span class="  span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.gLcodeforInterest" /]:</span>
                 <span class="span-4">
-                    [@form.formSingleSelectWithPrompt "savingsProduct.selectedInterestGlCode", savingsProduct.interestGeneralLedgerOptions, "--selectone--", "disabled=disabled" /]
+                    [@form.formSingleSelectWithPromptGLCode "savingsProduct.selectedInterestGlCode", savingsProduct.interestGeneralLedgerOptions, "--selectone--", GLCodeMode, "disabled=disabled" /]
                  </span>
             </div>
           </div>

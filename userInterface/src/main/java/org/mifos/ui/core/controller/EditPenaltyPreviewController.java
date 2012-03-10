@@ -22,6 +22,8 @@ package org.mifos.ui.core.controller;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.penalty.servicefacade.PenaltyServiceFacade;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
+import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
 import org.mifos.dto.domain.PenaltyFormDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,13 +45,16 @@ public class EditPenaltyPreviewController {
 
     @Autowired
     private PenaltyServiceFacade penaltyServiceFacade;
-
+    @Autowired
+    private ConfigurationServiceFacade configurationServiceFacade;
+    
     protected EditPenaltyPreviewController() {
         // spring auto wiring
     }
 
-    public EditPenaltyPreviewController(final PenaltyServiceFacade penaltyServiceFacade) {
+    public EditPenaltyPreviewController(final PenaltyServiceFacade penaltyServiceFacade, final ConfigurationServiceFacade configurationServiceFacade) {
         this.penaltyServiceFacade = penaltyServiceFacade;
+        this.configurationServiceFacade = configurationServiceFacade;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -57,6 +62,8 @@ public class EditPenaltyPreviewController {
             @RequestParam(value = CANCEL_PARAM, required = false) String cancel, PenaltyFormBean formBean,
             BindingResult result, SessionStatus status) {
         ModelAndView modelAndView = new ModelAndView();
+        AccountingConfigurationDto configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
+        modelAndView.addObject("GLCodeMode",  configurationDto.getGlCodeMode());
         
         if (StringUtils.isNotBlank(edit)) {
             modelAndView.setViewName("editPenalty");

@@ -60,6 +60,11 @@ public class GLCodeEntity extends AbstractEntity {
         this.glcode = glcode;
         associatedCOA = null;
     }
+    public GLCodeEntity(Short glcodeId, String glcode, COABO associatedCOA) {
+        this.glcodeId = glcodeId;
+        this.glcode = glcode;
+        this.associatedCOA = associatedCOA;
+    }
 
     public Short getGlcodeId() {
         return glcodeId;

@@ -28,11 +28,27 @@ public class ListElement implements Serializable {
 
     private Integer id;
     private String name;
+    private String glname;
 
-    public ListElement(Integer id, String name) {
+    public String getGlname() {
+		return glname;
+	}
+
+	public void setGlname(String glname) {
+		this.glname = glname;
+	}
+	
+	public ListElement(Integer id, String name) {
         super();
         this.id = id;
         this.name = name;
+    }
+	
+	public ListElement(Integer id, String name, String glname) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.glname = glname;
     }
 
     public Integer getId() {

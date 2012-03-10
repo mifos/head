@@ -29,6 +29,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.mifos.dto.domain.GLCodeDto;
 
 /**
  * @see SavingsProductFormValidator - manual validatior added to fix MIFOS-3915 (morzechowski@soldevelo.com)
@@ -75,8 +76,8 @@ public class SavingsProductFormBean {
     @NotEmpty
     private String selectedPrincipalGlCode;
 
-    private Map<String, String> interestGeneralLedgerOptions;
-    private Map<String, String> principalGeneralLedgerOptions;
+    private Map<String, GLCodeDto> interestGeneralLedgerOptions;
+    private Map<String, GLCodeDto> principalGeneralLedgerOptions;
 
     private boolean notUpdateable = false;
 
@@ -109,19 +110,19 @@ public class SavingsProductFormBean {
         return ("1").equals(this.selectedDepositType);
     }
 
-    public Map<String, String> getInterestGeneralLedgerOptions() {
+    public Map<String, GLCodeDto> getInterestGeneralLedgerOptions() {
         return this.interestGeneralLedgerOptions;
     }
 
-    public void setInterestGeneralLedgerOptions(Map<String, String> interestGeneralLedgerOptions) {
+    public void setInterestGeneralLedgerOptions(Map<String, GLCodeDto> interestGeneralLedgerOptions) {
         this.interestGeneralLedgerOptions = interestGeneralLedgerOptions;
     }
 
-    public Map<String, String> getPrincipalGeneralLedgerOptions() {
+    public Map<String, GLCodeDto> getPrincipalGeneralLedgerOptions() {
         return this.principalGeneralLedgerOptions;
     }
 
-    public void setPrincipalGeneralLedgerOptions(Map<String, String> principalGeneralLedgerOptions) {
+    public void setPrincipalGeneralLedgerOptions(Map<String, GLCodeDto> principalGeneralLedgerOptions) {
         this.principalGeneralLedgerOptions = principalGeneralLedgerOptions;
     }
 

@@ -989,13 +989,13 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
             List<ListElement> depositGlCodeOptions = new ArrayList<ListElement>();
             for (GLCodeEntity glCode : depositGlCodeList) {
-                depositGlCodeOptions.add(new ListElement(glCode.getGlcodeId().intValue(), glCode.getGlcode()));
+                depositGlCodeOptions.add(new ListElement(glCode.getGlcodeId().intValue(), glCode.getGlcode(), glCode.getAssociatedCOA().getAccountName()));
             }
 
             List<GLCodeEntity> interestGlCodeList = new FinancialBusinessService().getGLCodes(FinancialActionConstants.SAVINGS_INTERESTPOSTING, FinancialConstants.DEBIT);
             List<ListElement> interestGlCodes = new ArrayList<ListElement>();
             for (GLCodeEntity glCode : interestGlCodeList) {
-                interestGlCodes.add(new ListElement(glCode.getGlcodeId().intValue(), glCode.getGlcode()));
+                interestGlCodes.add(new ListElement(glCode.getGlcodeId().intValue(), glCode.getGlcode(), glCode.getAssociatedCOA().getAccountName()));
             }
 
             return new SavingsProductFormDto(productCategoryOptions, applicableForOptions, savingsTypeOptions, recommendedAmountTypeOptions, interestCalcTypeOptions, timePeriodOptions, depositGlCodeOptions, interestGlCodes, statusOptions);

@@ -150,12 +150,28 @@
                     <div class="span-20 ">
                                     <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.gLcodefordeposits" /]
                                         :&nbsp;</span>
-                        <span class="span-4">${depositGlCode}</span>
+                           	[#if GLCodeMode == 1]
+                           		<span class="span-4">${depositGlCode.glcode} - ${depositGlCode.glname}</span>
+	                       	[#elseif GLCodeMode == 2]
+	                        	<span class="span-4">${depositGlCode.glname} (${depositGlCode.glcode})</span>
+	                       	[#elseif GLCodeMode == 3]
+	                        	<span class="span-4">${depositGlCode.glname}</span>
+	                       	[#elseif GLCodeMode == 4]
+	                        	<span class="span-4">${depositGlCode.glcode}</span>
+	                       	[/#if]
                     </div>
                     <div class="span-20 ">
                                     <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.gLcodeforInterest" /]
                                         :&nbsp;</span>
-                        <span class="span-4">${interestGlCode}</span>
+                           	[#if GLCodeMode == 1]
+                           		<span class="span-4">${interestGlCode.glcode} - ${interestGlCode.glname}</span>
+	                       	[#elseif GLCodeMode == 2]
+	                        	<span class="span-4">${interestGlCode.glname} (${interestGlCode.glcode})</span>
+	                       	[#elseif GLCodeMode == 3]
+	                        	<span class="span-4">${interestGlCode.glname}</span>
+	                       	[#elseif GLCodeMode == 4]
+	                        	<span class="span-4">${interestGlCode.glcode}</span>
+	                       	[/#if]
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="span-20">

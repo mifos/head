@@ -98,6 +98,8 @@ public class EditPenaltyController {
             @ModelAttribute("formBean") @Valid PenaltyFormBean formBean, BindingResult result, SessionStatus status) {
         ModelAndView modelAndView = new ModelAndView(REDIRECT_TO_VIEW_PENALTY + formBean.getId());
         configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
+        modelAndView.addObject("GLCodeMode", configurationDto.getGlCodeMode());
+        
         if (StringUtils.isNotBlank(cancel)) {
             modelAndView.setViewName(REDIRECT_TO_VIEW_PENALTY + formBean.getId());
             status.setComplete();
@@ -107,7 +109,6 @@ public class EditPenaltyController {
                 
                 modelAndView.setViewName("editPenalty");
                 modelAndView.addObject("param", parametersDto);
-                modelAndView.addObject("GLCodeMode", configurationDto.getGlCodeMode());
             } else {
                 modelAndView.setViewName("penaltyPreview");
                 
@@ -116,7 +117,6 @@ public class EditPenaltyController {
                 modelAndView.addObject("frequency", this.parametersDto.getFrequencyType().get(formBean.getFrequencyId()));
                 modelAndView.addObject("glCode", this.parametersDto.getGlCodes().get(formBean.getGlCodeId()));
                 modelAndView.addObject("status", this.parametersDto.getStatusType().get(formBean.getStatusId()));
-                modelAndView.addObject("GLCodeMode", configurationDto.getGlCodeMode());
             }
             
             modelAndView.addObject("formBean", formBean);

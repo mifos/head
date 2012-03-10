@@ -200,12 +200,12 @@
           <div class=" prepend-2  span-21 last">
             <div class="span-20 "><span class="  span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.gLcodefordeposits" /]:</span>
                 <span class="span-4">
-                [@form.formSingleSelectWithPrompt "savingsProduct.selectedPrincipalGlCode", savingsProduct.principalGeneralLedgerOptions, "--Select--" /]
+                [@form.formSingleSelectWithPromptGLCode "savingsProduct.selectedPrincipalGlCode", savingsProduct.principalGeneralLedgerOptions, "--Select--" GLCodeMode/]
                  </span>
             </div>
             <div class="span-20 "><span class="  span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.gLcodeforInterest" /]:</span>
                 <span class="span-4">
-                    [@form.formSingleSelectWithPrompt "savingsProduct.selectedInterestGlCode", savingsProduct.interestGeneralLedgerOptions, "--Select--" /]
+                    [@form.formSingleSelectWithPromptGLCode "savingsProduct.selectedInterestGlCode", savingsProduct.interestGeneralLedgerOptions, "--Select--" GLCodeMode/]
                  </span>
             </div>
           </div>

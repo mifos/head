@@ -25,6 +25,7 @@ import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
+import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
 import org.mifos.dto.screen.SavingsProductFormDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,10 +38,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/defineSavingsProduct")
 @SessionAttributes("savingsProduct")
+
 public class DefineSavingsProductsFormController {
 
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
@@ -51,6 +54,8 @@ public class DefineSavingsProductsFormController {
     @Autowired
     private ConfigurationServiceFacade configurationServiceFacade;
     
+    private AccountingConfigurationDto configurationDto;
+    
     protected DefineSavingsProductsFormController() {
         //for spring autowiring
     }
@@ -60,18 +65,20 @@ public class DefineSavingsProductsFormController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    @ModelAttribute("savingsProduct")
-    public SavingsProductFormBean showPopulatedForm() {
-
+    public ModelAndView showPopulatedForm() {
+    	ModelAndView modelAndView = new ModelAndView("defineSavingsProduct");
         SavingsProductFormDto referenceData = this.adminServiceFacade.retrieveSavingsProductFormReferenceData();
         SavingsProductFormBean savingsProduct = new SavingsProductFormBeanAssembler().assembleReferenceData(referenceData);
 
+        configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
+        
         Double zero = Double.valueOf("0");
         savingsProduct.setAmountForDeposit(zero);
         savingsProduct.setMaxWithdrawalAmount(zero);
         savingsProduct.setMinBalanceRequiredForInterestCalculation("0");
-
-        return savingsProduct;
+        modelAndView.addObject("savingsProduct", savingsProduct);
+        modelAndView.addObject("GLCodeMode", configurationDto.getGlCodeMode());
+        return modelAndView;
     }
 
     @InitBinder
@@ -82,18 +89,18 @@ public class DefineSavingsProductsFormController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
+    public ModelAndView processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
                                     @ModelAttribute("savingsProduct") @Valid SavingsProductFormBean savingsProductFormBean, BindingResult result, SessionStatus status) {
-
-        String viewName = "redirect:/previewSavingsProducts.ftl?editFormview=defineSavingsProduct";
-
+    	ModelAndView modelAndView = new ModelAndView("redirect:/previewSavingsProducts.ftl?editFormview=defineSavingsProduct");
+    	configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
+    	modelAndView.addObject("GLCodeMode", configurationDto.getGlCodeMode());
         if (StringUtils.isNotBlank(cancel)) {
-            viewName = REDIRECT_TO_ADMIN_SCREEN;
-            status.setComplete();
+        	modelAndView.setViewName(REDIRECT_TO_ADMIN_SCREEN);
+        	status.setComplete();
         } else if (result.hasErrors()) {
-            viewName = "defineSavingsProduct";
+        	modelAndView.setViewName("defineSavingsProduct");
         }
 
-        return viewName;
+        return modelAndView;
     }
 }
