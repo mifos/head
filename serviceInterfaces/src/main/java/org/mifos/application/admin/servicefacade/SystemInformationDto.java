@@ -83,8 +83,10 @@ public class SystemInformationDto {
         this.osVersion = osVersion;
         this.releaseName = releaseName;
     }
+    
 
-    public String getApplicationServerInfo() {
+
+	public String getApplicationServerInfo() {
         return this.applicationServerInfo;
     }
     public String getApplicationVersion() {
