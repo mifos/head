@@ -210,8 +210,9 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
     public ApplyAdjustmentPage navigateToApplyAdjustment() {
         selenium.click("loanRepayment.link.applyAdjustment");
         waitForPageToLoad();
-        return new ApplyAdjustmentPage(selenium);
-
+        
+        ListAdjustmentsPage listAdjustmentsPage = new ListAdjustmentsPage(selenium);       
+        return listAdjustmentsPage.navigateToFirstAdjustment();
     }
 
     public void verifyScheduleNotContainDate(String date) {

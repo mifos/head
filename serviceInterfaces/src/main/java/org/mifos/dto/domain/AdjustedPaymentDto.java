@@ -31,10 +31,10 @@ public class AdjustedPaymentDto implements Serializable {
     private Short paymentType;
     
     public Date getPaymentDate() {
-        return paymentDate;
+        return (Date)paymentDate.clone();
     }
     public void setPaymentDate(Date paymentDate) {
-        this.paymentDate = paymentDate;
+        this.paymentDate = (Date)paymentDate.clone();
     }
     public String getAmount() {
         return amount;
@@ -51,7 +51,7 @@ public class AdjustedPaymentDto implements Serializable {
     
     public AdjustedPaymentDto(final String amount, final Date paymentDate, final Short paymentType) {
         this.amount = amount;
-        this.paymentDate = paymentDate;
+        this.paymentDate = (Date)paymentDate.clone();
         this.paymentType = paymentType;
     }
     

@@ -526,7 +526,9 @@ public class LoanAccountPage extends MifosPage {
     public ApplyAdjustmentPage navigateToApplyAdjustment() {
         selenium.click("loanaccountdetail.link.applyAdjustment");
         waitForPageToLoad();
-        return new ApplyAdjustmentPage(selenium);
+        
+        ListAdjustmentsPage listAdjustmentsPage = new ListAdjustmentsPage(selenium);       
+        return listAdjustmentsPage.navigateToFirstAdjustment();
     }
 
     public TransactionHistoryPage navigateToTransactionHistoryPage() {

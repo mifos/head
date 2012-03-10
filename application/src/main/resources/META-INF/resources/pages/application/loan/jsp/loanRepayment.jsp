@@ -119,7 +119,7 @@ explanation of the license and how it is applied.
 										</c:url >	
 									<c:choose>
 										<c:when test="${BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9'}">
-											<html-el:link styleId="loanRepayment.link.applyAdjustment" href="applyAdjustment.do?method=loadAdjustment&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}"> 
+											<html-el:link styleId="loanRepayment.link.applyAdjustment" href="applyAdjustment.do?method=listPossibleAdjustments&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}"> 
 												<mifos:mifoslabel name="loan.apply_adjustment" />
 											</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										</c:when>

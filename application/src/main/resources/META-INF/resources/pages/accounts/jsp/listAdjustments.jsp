@@ -54,124 +54,131 @@ explanation of the license and how it is applied.
                 </td>
             </tr>
         </table>
-
-        <table id="possibleAdjustments2" width="100%" cellspacing="0"
-            cellpadding="3" border="0">
-            <tbody>
-                <tr class="drawtablerowbold">
-                    <td width="8%" align="left"><b><mifos:mifoslabel
-                                name="accounts.date_of_trxn"
-                                bundle="accountsUIResources" /></b></td>
-                    <td width="8%" align="left"><b><mifos:mifoslabel
-                                name="Amount"
-                                bundle="accountsUIResources" /></b></td>
-                    <td width="8%" align="left"><b><mifos:mifoslabel
-                                name="accounts.mode_of_payment"
-                                bundle="accountsUIResources" /></b></td>
-                    <td width="8%" align="left"><b><mifos:mifoslabel
-                                name="accounts.receiptdate"
-                                bundle="accountsUIResources" /></b></td>
-                    <td width="8%" align="left"><b><mifos:mifoslabel
-                                name="accounts.receiptid"
-                                bundle="accountsUIResources" /></b></td>
-                    <td width="8%" align="left"><b><mifos:mifoslabel
-                                name="accounts.apply_adjustment"
-                                bundle="accountsUIResources" /></b></td>
-                </tr>
-                <c:forEach var="possibleAdjustment"
-                    items="${possibleAdjustments}">
-                    <tr>
-                        <td class="drawtablerow" align="left">${possibleAdjustment.paymentDate}</td>
-                        <td class="drawtablerow" align="left">${possibleAdjustment.amount}</td>
-                        <td class="drawtablerow" align="left">${possibleAdjustment.paymentType}</td>
-                        <td class="drawtablerow" align="left">
-                            <c:choose>
-                                <c:when test="${possibleAdjustment.receiptDate == null}">
-                                    -
-                                </c:when>
-                                <c:otherwise>
-                                    ${possibleAdjustment.receiptDate}
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td class="drawtablerow" align="left">
-                            <c:choose>
-                                <c:when test="${empty possibleAdjustment.receiptId}">
-                                    -
-                                </c:when>
-                                <c:otherwise>
-                                    ${possibleAdjustment.receiptId}
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td class="drawtablerow" align="left"><c:choose>
-                            <c:when
-                                test="${(loanInformationDto.accountStateId=='5' || loanInformationDto.accountStateId=='9' || loanInformationDto.accountStateId=='6') }">
-                                <c:url value="applyAdjustment.do"
-                                    var="applyAdjustmentLoadAdjustmentWhenObligationMetMethodUrl">
-                                    <c:param name="method"
-                                        value="loadAdjustmentWhenObligationMet" />
-                                    <c:param name="accountId"
-                                        value="${loanInformationDto.accountId}" />
-                                    <c:param name="globalAccountNum"
-                                        value="${loanInformationDto.globalAccountNum}" />
-                                    <c:param name="prdOfferingName"
-                                        value="${loanInformationDto.prdOfferingName}" />
-                                    <c:param name="randomNUm"
-                                        value="${sessionScope.randomNUm}" />
-                                    <c:param name="currentFlowKey"
-                                        value="${requestScope.currentFlowKey}" />
-                                    <c:param name="paymentId"
-                                        value="${possibleAdjustment.paymentId}" />
-                                    <c:param name="adjustmentType"
-                                        value="adjustSpec" />
-                                </c:url>
-                                <c:url value="applyAdjustment.do"
-                                    var="applyAdjustmentLoadAdjustmentMethodUrl">
-                                    <c:param name="method"
-                                        value="loadAdjustment" />
-                                    <c:param name="accountId"
-                                        value="${loanInformationDto.accountId}" />
-                                    <c:param name="globalAccountNum"
-                                        value="${loanInformationDto.globalAccountNum}" />
-                                    <c:param name="prdOfferingName"
-                                        value="${loanInformationDto.prdOfferingName}" />
-                                    <c:param name="randomNUm"
-                                        value="${sessionScope.randomNUm}" />
-                                    <c:param name="currentFlowKey"
-                                        value="${requestScope.currentFlowKey}" />
-                                    <c:param name="paymentId"
-                                        value="${possibleAdjustment.paymentId}" />
-                                    <c:param name="adjustmentType"
-                                        value="adjustSpec" />
-                                </c:url>
-                                <c:if
-                                    test="${loanInformationDto.accountId != '10'}">
-
-                                    <c:if
-                                        test="${loanInformationDto.accountStateId=='6'}">
-                                        <html-el:link
-                                            styleId="loanaccountdetail.link.applyAdjustment"
-                                            href="${applyAdjustmentLoadAdjustmentWhenObligationMetMethodUrl}">
-                                            <mifos:mifoslabel
-                                                name="loan.apply_adjustment" />
-                                        </html-el:link>
-                                    </c:if>
-                                    <c:if
-                                        test="${loanInformationDto.accountStateId!='6'}">
-                                        <html-el:link
-                                            styleId="loanaccountdetail.link.applyAdjustment"
-                                            href="${applyAdjustmentLoadAdjustmentMethodUrl}">
-                                            <mifos:mifoslabel
-                                                name="loan.apply_adjustment" />
-                                        </html-el:link>
-                                    </c:if>
-                                </c:if>
-                            </c:when>
-                        </c:choose></td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+        <c:choose>
+            <c:when test="${empty possibleAdjustments}">
+                <p><span class="fontnormal"><mifos:mifoslabel name="account.no_adjustments" bundle="accountsUIResources" /></span></p>
+            </c:when>
+            <c:otherwise>
+                <!--  Header text -->
+                <p><span class="heading">
+                        <c:out value="${param.prdOfferingName}" />&nbsp;#&nbsp;
+                        <c:out value="${param.globalAccountNum}" /> 
+                        &nbsp; - &nbsp; 
+                        <span class="headingorange"><mifos:mifoslabel name="accounts.list_adjustments" bundle="accountsUIResources" /></span>
+                </span></p>
+                <!-- Adjustments table --> 
+                <table id="possibleAdjustments2" width="100%" cellspacing="0"
+                    cellpadding="3" border="0">
+                    <tbody>
+                        <tr class="drawtablerowbold">
+                            <td width="8%" align="left"><b><mifos:mifoslabel
+                                        name="accounts.date_of_trxn"
+                                        bundle="accountsUIResources" /></b></td>
+                            <td width="8%" align="left"><b><mifos:mifoslabel
+                                        name="Amount"
+                                        bundle="accountsUIResources" /></b></td>
+                            <td width="8%" align="left"><b><mifos:mifoslabel
+                                        name="accounts.mode_of_payment"
+                                        bundle="accountsUIResources" /></b></td>
+                            <td width="8%" align="left"><b><mifos:mifoslabel
+                                        name="accounts.receiptdate"
+                                        bundle="accountsUIResources" /></b></td>
+                            <td width="8%" align="left"><b><mifos:mifoslabel
+                                        name="accounts.receiptid"
+                                        bundle="accountsUIResources" /></b></td>
+                            <td width="8%" align="left"><b><mifos:mifoslabel
+                                        name="accounts.apply_adjustment"
+                                        bundle="accountsUIResources" /></b></td>
+                        </tr>
+                        <c:forEach var="possibleAdjustment"
+                            items="${possibleAdjustments}">
+                            <tr>
+                                <td class="drawtablerow" align="left">${possibleAdjustment.paymentDate}</td>
+                                <td class="drawtablerow" align="left">${possibleAdjustment.amount}</td>
+                                <td class="drawtablerow" align="left">${possibleAdjustment.paymentType}</td>
+                                <td class="drawtablerow" align="left">
+                                    <c:choose>
+                                        <c:when test="${possibleAdjustment.receiptDate == null}">
+                                            -
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${possibleAdjustment.receiptDate}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td class="drawtablerow" align="left">
+                                    <c:choose>
+                                        <c:when test="${empty possibleAdjustment.receiptId}">
+                                            -
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${possibleAdjustment.receiptId}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td class="drawtablerow" align="left">
+                                    <c:url value="applyAdjustment.do"
+                                        var="applyAdjustmentLoadAdjustmentWhenObligationMetMethodUrl">
+                                        <c:param name="method"
+                                            value="loadAdjustmentWhenObligationMet" />
+                                        <c:param name="accountId"
+                                            value="${param.accountId}" />
+                                        <c:param name="globalAccountNum"
+                                            value="${param.globalAccountNum}"  />
+                                        <c:param name="prdOfferingName"
+                                            value="${param.prdOfferingName}" />
+                                        <c:param name="randomNUm"
+                                            value="${sessionScope.randomNUm}" />
+                                        <c:param name="currentFlowKey"
+                                            value="${requestScope.currentFlowKey}" />
+                                        <c:param name="paymentId"
+                                            value="${possibleAdjustment.paymentId}" />
+                                        <c:param name="adjustmentType"
+                                            value="adjustSpec" />
+                                    </c:url>
+                                    <c:url value="applyAdjustment.do"
+                                        var="applyAdjustmentLoadAdjustmentMethodUrl">
+                                        <c:param name="method"
+                                            value="loadAdjustment" />
+                                        <c:param name="accountId"
+                                            value="${param.accountId}" />
+                                        <c:param name="globalAccountNum"
+                                            value="${param.globalAccountNum}" />
+                                        <c:param name="prdOfferingName"
+                                            value="${param.prdOfferingName}" />
+                                        <c:param name="randomNUm"
+                                            value="${sessionScope.randomNUm}" />
+                                        <c:param name="currentFlowKey"
+                                            value="${requestScope.currentFlowKey}" />
+                                        <c:param name="paymentId"
+                                            value="${possibleAdjustment.paymentId}" />
+                                        <c:param name="adjustmentType"
+                                            value="adjustSpec" />
+                                    </c:url>
+                                    <c:choose>
+                                        <c:when test="${loanInformationDto == null || loanInformationDto.accountStateId != 6}">
+                                            <html-el:link
+                                                styleClass="listAdjustments.link.applyAdjustment"
+                                                href="${applyAdjustmentLoadAdjustmentMethodUrl}">
+                                                <mifos:mifoslabel
+                                                    name="loan.apply_adjustment" />
+                                            </html-el:link>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <html-el:link
+                                                styleClass="listAdjustments.link.applyAdjustment"
+                                                href="${applyAdjustmentLoadAdjustmentWhenObligationMetMethodUrl}">
+                                                <mifos:mifoslabel
+                                                    name="loan.apply_adjustment" />
+                                            </html-el:link>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </c:otherwise>
+        </c:choose>
     </tiles:put>
 </tiles:insert>

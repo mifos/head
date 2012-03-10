@@ -734,28 +734,13 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 
 										<c:when
 											test="${(loanInformationDto.accountStateId=='5' || loanInformationDto.accountStateId=='9' || loanInformationDto.accountStateId=='6') }">
-											<c:if test="${loanInformationDto.accountId != '10'}">
-
-												<c:if test="${loanInformationDto.accountStateId=='6'}">
-													<html-el:link styleId="loanaccountdetail.link.applyAdjustment"
-														href="${applyAdjustmentLoadAdjustmentWhenObligationMetMethodUrl}">
-														<mifos:mifoslabel name="loan.apply_adjustment" />
-													</html-el:link>
-												</c:if>
-												<c:if test="${loanInformationDto.accountStateId!='6'}">
-													<html-el:link styleId="loanaccountdetail.link.applyAdjustment"
-														href="${applyAdjustmentLoadAdjustmentMethodUrl}">
-														<mifos:mifoslabel name="loan.apply_adjustment" />
-													</html-el:link>
-                                                    <br />
-                                                    <html-el:link styleId="loanaccountdetail.link.listAdjustments"
+                                                <c:if test="${loanInformationDto.accountId != '10'}">
+                                                    <html-el:link styleId="loanaccountdetail.link.applyAdjustment"
                                                         href="applyAdjustment.do?method=listPossibleAdjustments&accountId=${loanInformationDto.accountId}&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-                                                        <mifos:mifoslabel name="loan.apply_adjustment" /> - TEST
+                                                        <mifos:mifoslabel name="loan.apply_adjustment" />
                                                     </html-el:link>
-												</c:if>
-
+                                                </c:if>
 												<br>
-											</c:if>
 										</c:when>
 									</c:choose> </span>
 

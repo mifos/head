@@ -8,7 +8,7 @@ function fn_submit(){
 	
 	if(document.getElementsByName("method")[0].value=='loadAdjustment'){
 
-		/*if(!document.getElementsByName("adjustcheckbox")[0].checked || trim(document.getElementsByName("adjustmentNote")[0].value)==''){
+/*		if(!document.getElementsByName("adjustcheckbox")[0].checked || trim(document.getElementsByName("adjustmentNote")[0].value)==''){
 		
 			return false;
 		}*/
@@ -23,11 +23,40 @@ function fn_submit(){
 		func_disableSubmitBtn("submit_btn");
 		return true;
 	}
-	
+}	
 function trim(str) {
 	return str.replace(/^\s*|\s*$/g,"");
 } 
 
+$(document).ready(function() {
+	if ($("applyadjustment\\.input\\.revertLastPayment").is(":checked")) {
+		disablePaymentDetails();
+	}
 	
+	$("#applyadjustment\\.input\\.revertLastPayment").click(function() {
+		if ($(this).is(":checked")) {
+			disablePaymentDetails();
+		} 
+		else {
+			enablePaymentDetails();
+		}
+	});
+});
 
+function disablePaymentDetails() {
+	$("#applyAdjustment\\.input\\.amount").attr("disabled", "disabled");
+	$("#applyAdjustment\\.input\\.paymentType").attr("disabled", "disabled");
+	$("#transactionDateDD").attr("disabled", "disabled");
+	$("#transactionDateMM").attr("disabled", "disabled");
+	$("#transactionDateYY").attr("disabled", "disabled");
+	
 }
+
+function enablePaymentDetails() {
+	$("#applyAdjustment\\.input\\.amount").removeAttr("disabled");
+	$("#applyAdjustment\\.input\\.paymentType").removeAttr("disabled");
+	$("#transactionDateDD").removeAttr("disabled", "disabled");
+	$("#transactionDateMM").removeAttr("disabled", "disabled");
+	$("#transactionDateYY").removeAttr("disabled", "disabled");
+}
+	

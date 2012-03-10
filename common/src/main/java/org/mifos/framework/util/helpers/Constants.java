@@ -115,4 +115,10 @@ public interface Constants {
     
     String ADJUSTMENT_PAYMENT_TYPE = "adjustmentPaymentType";
     
+    String POSSIBLE_ADJUSTMENTS = "possibleAdjustments";
+    String ADJUSTED_AMOUNT = "adjAmount";
+    
+    String ADJ_TYPE_KEY = "adjustmentType";
+    String ADJ_SPECIFIC = "adjustSpec";
+    
 }

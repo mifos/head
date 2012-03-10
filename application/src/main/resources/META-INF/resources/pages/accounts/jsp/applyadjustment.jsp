@@ -112,7 +112,7 @@ explanation of the license and how it is applied.
 								</c:choose>
 								<c:choose>
 									<c:when test="${requestScope.method=='loadAdjustment'}">
-										<mifos:mifoslabel name="accounts.last_pmnt"/>:
+										<mifos:mifoslabel name="accounts.amnt_tobe_adjusted"/>:
 										<fmt:formatNumber value="${adjAmount}"/>
 										<br><br>
 									</c:when>
@@ -153,7 +153,7 @@ explanation of the license and how it is applied.
                                             mandatory="yes" name="accounts.amount" isColonRequired="Yes" /></span></td>
                                         <td valign="top"  class="fontnormal">
                                             <html-el:text property="amount" styleClass="separatedNumber"
-                                                styleId="applypayment.input.amount"
+                                                styleId="applyAdjustment.input.amount"
                                                 name="applyAdjustmentActionForm" />
                                         </td>
                                     </tr>
@@ -167,7 +167,7 @@ explanation of the license and how it is applied.
                                             name="accounts.mode_of_payment" mandatory="yes" isColonRequired="Yes" /></td>
             
                                         <td class="fontnormal"><mifos:select
-                                            name="applyAdjustmentActionForm" styleId="applypayment.input.paymentType" property="paymentType">
+                                            name="applyAdjustmentActionForm" styleId="applyAdjustment.input.paymentType" property="paymentType">
                                             <c:forEach var="PT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
                                                 <html-el:option value="${PT.id}">${PT.displayValue}</html-el:option>
                                             </c:forEach>

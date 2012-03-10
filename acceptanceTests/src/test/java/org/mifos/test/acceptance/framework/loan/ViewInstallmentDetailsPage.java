@@ -53,7 +53,8 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
     public ApplyAdjustmentPage navigateToApplyAdjustment() {
         selenium.click("nextPayment_loanAccount.link.applyAdjustment");
         waitForPageToLoad();
-        return new ApplyAdjustmentPage(selenium);
-
+        
+        ListAdjustmentsPage listAdjustmentsPage = new ListAdjustmentsPage(selenium);       
+        return listAdjustmentsPage.navigateToFirstAdjustment();
     }
 }

@@ -80,7 +80,7 @@ explanation of the license and how it is applied.
 							</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							</c:if>
 							<c:if test="${param.lastPaymentAction != 10 && (param.accountStateId==5 || param.accountStateId==9)}">							
-							<html-el:link styleId="nextPayment_loanAccount.link.applyAdjustment" href="applyAdjustment.do?method=loadAdjustment&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+							<html-el:link styleId="nextPayment_loanAccount.link.applyAdjustment" href="applyAdjustment.do?method=listPossibleAdjustments&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="loan.apply_adjustment"	bundle="loanUIResources" />
 							</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							</c:if>
