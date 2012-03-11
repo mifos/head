@@ -30,6 +30,4 @@ public interface SystemInformationServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_VIEW_SYSTEM_INFO')")
     SystemInformationDto getSystemInformation(ServletContext context, Locale locale);
-    
-    String getServerInformation(ServletContext context, Locale locale);
 }

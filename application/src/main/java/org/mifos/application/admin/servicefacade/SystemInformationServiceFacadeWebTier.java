@@ -79,21 +79,4 @@ public class SystemInformationServiceFacadeWebTier implements SystemInformationS
             throw new MifosRuntimeException(e);
         }
     }
-
-	@Override
-	public String getServerInformation(ServletContext context,
-			Locale locale) {
-		
-		try {
-            DatabaseMetaData metaData = StaticHibernateUtil.getSessionTL().connection().getMetaData();
-            
-            final SystemInfo systemInfo = new SystemInfo(metaData, context, locale, true);
-            return  systemInfo.getApplicationServerInfo();
-
-        } catch (HibernateException e) {
-            throw new MifosRuntimeException(e);
-        } catch (SQLException e) {
-            throw new MifosRuntimeException(e);
-        }
-	}
 }
