@@ -634,7 +634,7 @@
         </sql>
         <rollback>
             <sql endDelimiter=";">
-                delete from roles_activity where activity_id = 250 and role_id = 1;
+                delete from roles_activity where activity_id = 250;
 
                 delete from activity where activity_id = 250;
 
