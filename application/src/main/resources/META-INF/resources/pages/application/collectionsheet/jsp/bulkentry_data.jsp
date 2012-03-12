@@ -32,6 +32,64 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="BulkEntryData"></span>
+	<script type="text/javascript">
+		//modified from http://jsbin.com/ahaxe
+		(function($){
+	        $.fn.autoGrowInput = function(o) {
+	            o = $.extend({
+	                maxWidth: 1000,
+	                minWidth: 0,
+	                comfortZone: 70
+	            }, o);
+	            
+	            this.filter('input:text').each(function(){
+	                
+	                var minWidth = o.minWidth || $(this).width(),
+	                    val = '',
+	                    input = $(this),
+	                    testSubject = $('<tester/>').css({
+	                        position: 'absolute',
+	                        top: -9999,
+	                        left: -9999,
+	                        width: 'auto',
+	                        fontSize: input.css('fontSize'),
+	                        fontFamily: input.css('fontFamily'),
+	                        fontWeight: input.css('fontWeight'),
+	                        letterSpacing: input.css('letterSpacing'),
+	                        whiteSpace: 'nowrap'
+	                    }),
+	                    check = function() {
+	                        
+	                        if (val === (val = input.val())) {return;}
+	                        
+	                        // Enter new content into testSubject
+	                        var escaped = val.replace(/&/g, '&amp;').replace(/\s/g,'&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+	                        testSubject.html(escaped);
+	                        
+	                        // Calculate new width + whether to change
+	                        var testerWidth = testSubject.width(),
+	                            newWidth = (testerWidth + o.comfortZone) >= minWidth ? testerWidth + o.comfortZone : minWidth,
+	                            currentWidth = input.width(),
+	                            isValidWidthChange = (newWidth < currentWidth && newWidth >= minWidth)
+	                                                 || (newWidth > minWidth && newWidth < o.maxWidth);
+	                        
+	                        // Animate width
+	                        if (isValidWidthChange) {
+	                            input.width(newWidth);
+	                        }
+	                        
+	                    };
+	                    
+	                testSubject.insertAfter(input);
+	                
+	                //$(this).bind('keyup keydown blur update', check);
+	                $('input[type=text]').bind('keyup keydown blur update change click', check); // update all text inputs 
+	                
+	            });
+	            return this;
+	        };
+	    })(jQuery);
+	</script>
 	<script language="javascript">
 		<!--
         // trap the return/enter key to prevent accidental form submission
@@ -42,6 +100,12 @@ explanation of the license and how it is applied.
                     e.preventDefault();
                 }
             });
+            
+            jQuery('input[type=text]').autoGrowInput({
+                comfortZone: 10,
+                minWidth: 40,
+                maxWidth: 100
+            });
         });
        
 		function fnSubmit(form, buttonSubmit) {
@@ -51,7 +115,7 @@ explanation of the license and how it is applied.
 				form.submit();
 			}
 		</script>
-
+		
 		<script SRC="pages/application/collectionsheet/js/BulkEntry.js"></script>
 
 		<html-el:form action="/collectionsheetaction">
