@@ -127,7 +127,7 @@ explanation of the license and how it is applied.
 								</tr>
 								<tr class="fontnormal">
 									<td align="right" valign="top"><mifos:mifoslabel
-										name="Fees.defaultfees" /></td>
+										name="Fees.defaultFees" /></td>
 									<td valign="top"><html-el:checkbox
 										property="customerDefaultFee" value="1" /></td>
 								</tr>
