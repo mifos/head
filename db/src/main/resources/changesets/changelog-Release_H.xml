@@ -572,6 +572,7 @@
             <sql endDelimiter=";">
                 ALTER TABLE image_info DROP COLUMN customer_picture_entity;
                 ALTER TABLE image_info MODIFY COLUMN path varchar(255) NOT NULL;
+                TRUNCATE TABLE customer_picture;
                 ALTER TABLE customer_picture 
                     ADD COLUMN customer_id INTEGER NOT NULL,
                     ADD FOREIGN KEY (customer_id) REFERENCES customer(customer_id);
