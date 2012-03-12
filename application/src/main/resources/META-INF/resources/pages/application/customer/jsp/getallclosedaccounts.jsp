@@ -113,7 +113,7 @@ explanation of the license and how it is applied.
 											</tr>
 										</table>
 										<span class="fontnormal"> <c:out value="Loan" /> <mifos:mifoslabel
-											name="client.amount" bundle="ClientUIResources" />: <fmt:formatNumber
+											name="client.Amount" bundle="ClientUIResources" /> <fmt:formatNumber
 											value="${closedAccount.loanAmount.amount}" /> <br>
 										<mifos:mifoslabel name="client.date"
 											bundle="ClientUIResources" />&nbsp;<c:out
