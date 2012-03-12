@@ -34,6 +34,14 @@ public class ViewPenaltiesPage extends MifosPage {
         verifyPage("viewPenalties");
     }
     
+    public int getLoanPenaltiesCount() {
+        return selenium.getXpathCount("//*[@id=\"loan.penalties\"]//a").intValue();
+    }
+    
+    public int getSavingPenaltiesCount() {
+        return selenium.getXpathCount("//*[@id=\"saving.penalties\"]//a").intValue();
+    }
+    
     public void verifyLoanPenaltiesCount(final int count) {
         Assert.assertEquals(selenium.getXpathCount("//*[@id=\"loan.penalties\"]//a"), count);
     }

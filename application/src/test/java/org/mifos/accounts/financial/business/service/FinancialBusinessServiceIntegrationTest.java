@@ -152,7 +152,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 TestObjectFactory.getPersonnel(PersonnelConstants.SYSTEM_USER), currentDate,
                 TestUtils.createMoney(630), "test for loan adjustment", null, TestUtils.createMoney(200), TestUtils
                         .createMoney(300), TestUtils.createMoney(), TestUtils.createMoney(10), TestUtils
-                        .createMoney(20), null);
+                        .createMoney(20), null, null);
 
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {
             LoanBOTestUtils.setFeeAmountPaid(accountFeesActionDetailEntity, TestUtils.createMoney(100));
@@ -190,7 +190,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                         .getActionDate(), personnel, new Date(System.currentTimeMillis()),
                 ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), "Loan Written Off", null,
                 ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), new Money(getCurrency()), new Money(
-                        getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
+                        getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null, null);
 
         accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
         AccountTestUtils.addAccountPayment(accountPaymentEntity, loan);
@@ -228,7 +228,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 accountActionDateEntity.getActionDate(), personnel, new Date(System.currentTimeMillis()),
                 ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), "Loan Rescheduled", null,
                 ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), new Money(getCurrency()), new Money(
-                        getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
+                        getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null, null);
 
         accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
         AccountTestUtils.addAccountPayment(accountPaymentEntity, loan);

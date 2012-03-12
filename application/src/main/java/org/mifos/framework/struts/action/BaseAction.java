@@ -114,6 +114,8 @@ import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsD
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
+
 
 public abstract class BaseAction extends DispatchAction {
 
@@ -153,6 +155,7 @@ public abstract class BaseAction extends DispatchAction {
     protected AuthenticationAuthorizationServiceFacade authenticationAuthorizationServiceFacade;
     protected ImportTransactionsServiceFacade importTransactionsServiceFacade;
     protected CheckListServiceFacade checkListServiceFacade;
+    protected ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade;
 
     protected LegacyMasterDao legacyMasterDao;
     protected LegacyAdminDocumentDao legacyAdminDocumentDao;
@@ -251,6 +254,8 @@ public abstract class BaseAction extends DispatchAction {
         this.authenticationAuthorizationServiceFacade = getBean(AuthenticationAuthorizationServiceFacade.class);
         this.importTransactionsServiceFacade = getBean(ImportTransactionsServiceFacade.class);
         this.checkListServiceFacade = getBean(CheckListServiceFacade.class);
+        this.viewOrganizationSettingsServiceFacade = getBean(ViewOrganizationSettingsServiceFacade.class);
+        
     }
 
     private void configureDaoBeans() {

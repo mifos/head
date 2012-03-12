@@ -20,6 +20,7 @@
 
 package org.mifos.application.admin.business.service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -42,12 +43,15 @@ import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.LocaleSetting;
 import org.mifos.config.ProcessFlowRules;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.business.service.ConfigurationBusinessService;
+import org.mifos.framework.image.service.ImageStorageManager;
 import org.mifos.framework.plugin.PluginManager;
+import org.mifos.framework.util.ConfigurationLocator;
 
 public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganizationSettingsServiceFacade {
     private static final String DELIMITER = ", ";
-
+    
     @Override
     public Properties getOrganizationSettings(HttpSession httpSession) {
         Properties orgSettings = new Properties();
@@ -59,7 +63,11 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         orgSettings.putAll(getClientRules());
         orgSettings.putAll(getProcessFlowRules());
         orgSettings.putAll(getMiscRules(httpSession));
-
+        orgSettings.putAll(getConfigurationContent());
+        orgSettings.putAll(getGeneralConfig());
+        orgSettings.putAll(getMpesa());
+        orgSettings.putAll(getRest());
+        
         return orgSettings;
     }
 
@@ -87,6 +95,7 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
 
         localeInfo.setProperty("localeCountryCode", configLocale.getCountryCode());
         localeInfo.setProperty("localeLanguageCode", configLocale.getLanguageCode());
+        localeInfo.setProperty("localeDirection", configLocale.getDirection());
 
         return localeInfo;
     }
@@ -176,7 +185,7 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         ConfigurationBusinessService cbs = new ConfigurationBusinessService();
         misc.setProperty("glim", booleanToYesNo(cbs.isGlimEnabled()));
         misc.setProperty("lsim", booleanToYesNo(cbs.isRepaymentIndepOfMeetingEnabled()));
-
+        
         return misc;
     }
 
@@ -228,5 +237,96 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
             }
         }
         return result;
+    }
+    
+    private Properties getConfigurationContent() {
+    	Properties configContent = new Properties();
+    	
+    	MifosConfigurationManager configuration = MifosConfigurationManager.getInstance();
+    	String branchMangerRoleName = configuration.getString("RolesAndPermissions.BranchManager.RoleName");
+    	
+    	configContent.put("branchManagerRoleName", branchMangerRoleName);
+    	
+    	return configContent;
+    }
+    
+    private Properties getMpesa() {
+    	Properties configContent = new Properties();
+    	
+    	MifosConfigurationManager configuration = MifosConfigurationManager.getInstance();
+    	String disbursalMax = configuration.getString("MPESA.DisbursalMax");
+    	
+    	configContent.put("disbursalMax", disbursalMax);
+    	
+    	return configContent;
+    }
+    
+    private Properties getRest() {
+    	Properties configContent = new Properties();
+    	
+    	MifosConfigurationManager configuration = MifosConfigurationManager.getInstance();
+    	String approvalRequired = configuration.getString("REST.approvalRequired");
+    	
+    	configContent.put("approvalRequired", approvalRequired);
+    	
+    	return configContent;
+    }
+    
+
+    public String getUploadStorageDirectory() {
+        String uploadsDir = MifosConfigurationManager.getInstance().getString("GeneralConfig.UploadStorageDirectory",
+                "$HOME/.mifos/uploads");
+        if (File.separatorChar == '\\') { // windows platform
+            uploadsDir = uploadsDir.replaceAll("/", "\\\\");
+        }
+        int id = uploadsDir.indexOf("$HOME");
+        if (id != -1) {
+            uploadsDir = uploadsDir.substring(0, id) + System.getProperty("user.home") + uploadsDir.substring(id + 5);
+        }
+        return uploadsDir;
+    }
+    
+    public String getAdminDocumentStorageDirectory() {
+    	
+        return getUploadStorageDirectory().endsWith(File.separator) ? getUploadStorageDirectory() + "adminReport"
+                : getUploadStorageDirectory() + File.separator + "adminReport";
+    }  
+    
+    public String getUploadQGDirectory() {
+    	
+        String uploadsQGDir = MifosConfigurationManager.getInstance().getString("GeneralConfig.UploadQGDirectory",
+                "file:$MIFOS_CONF/uploads/questionGroups");        
+        return uploadsQGDir;
+    }
+       
+    private Properties getGeneralConfig() {
+    	
+    	Properties configContent = new Properties();
+    	
+    	MifosConfigurationManager configuration = MifosConfigurationManager.getInstance();
+    	String maxPointsPerPPISurvey = configuration.getString("GeneralConfig.MaxPointsPerPPISurvey"); 
+    	String batchSizeForBatchJobs = configuration.getString("GeneralConfig.BatchSizeForBatchJobs"); 
+    	String recordCommittingSizeForBatchJobs = configuration.getString("GeneralConfig.RecordCommittingSizeForBatchJobs"); 
+    	String outputIntervalForBatchJobs = configuration.getString("GeneralConfig.OutputIntervalForBatchJobs"); 
+    	String allowDataPrefetchingWhenSavingCollectionSheets = configuration.getString("GeneralConfig.allowDataPrefetchingWhenSavingCollectionSheets"); 
+       	String shutdownCountdownNotificationThreshold = configuration.getString("GeneralConfig.ShutdownCountdownNotificationThreshold");
+    	String imageStorageType = configuration.getString("GeneralConfig.ImageStorageType"); 
+    	String uploadStorageDirectory = getUploadStorageDirectory();  	
+    	String uploadQGDirectory = new ConfigurationLocator().resolvePath(getUploadQGDirectory());
+    	String imageStorageDirectory = ImageStorageManager.getStorageLocation();
+
+    	
+    	configContent.put("maxPointsPerPPISurvey", maxPointsPerPPISurvey);
+    	configContent.put("batchSizeForBatchJobs", batchSizeForBatchJobs);
+    	configContent.put("recordCommittingSizeForBatchJobs", recordCommittingSizeForBatchJobs);
+    	configContent.put("outputIntervalForBatchJobs", outputIntervalForBatchJobs);
+    	configContent.put("allowDataPrefetchingWhenSavingCollectionSheets", allowDataPrefetchingWhenSavingCollectionSheets);
+    	configContent.put("shutdownCountdownNotificationThreshold", shutdownCountdownNotificationThreshold);
+    	configContent.put("imageStorageType", imageStorageType);
+    	configContent.put("uploadStorageDirectory", uploadStorageDirectory);
+    	configContent.put("uploadQGDirectory", uploadQGDirectory);
+    	configContent.put("imageStorageDirectory", imageStorageDirectory);
+    	
+    	return configContent;
     }
 }

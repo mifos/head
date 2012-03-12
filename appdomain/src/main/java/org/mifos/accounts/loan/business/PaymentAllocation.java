@@ -115,6 +115,10 @@ public class PaymentAllocation {
     public Money getFeePaid(Integer feeId) {
         return feesPaid.get(feeId);
     }
+    
+    public Money getPenaltyPaid(Integer penaltyId) {
+        return penaltiesPaid.get(penaltyId);
+    }
 
     public Money getTotalPaid() {
         return interestPaid.add(extraInterestPaid).add(penaltyPaid).add(principalPaid).add(miscFeePaid).add(miscPenaltyPaid).
@@ -139,6 +143,10 @@ public class PaymentAllocation {
 
     boolean isFeeAllocated(Integer feeId) {
         return getFeePaid(feeId) != null;
+    }
+    
+    boolean isPenaltyAllocated(Integer penaltyId) {
+        return getPenaltyPaid(penaltyId) != null;
     }
 
     Money getTotalPenaltyPaid() {

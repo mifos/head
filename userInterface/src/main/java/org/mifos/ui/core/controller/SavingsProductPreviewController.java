@@ -22,6 +22,9 @@ package org.mifos.ui.core.controller;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
+import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
+import org.mifos.dto.domain.GLCodeDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.service.BusinessRuleException;
@@ -47,7 +50,11 @@ public class SavingsProductPreviewController {
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
+    @Autowired
+    private ConfigurationServiceFacade configurationServiceFacade;
 
+    private AccountingConfigurationDto configurationDto;
+    
     public SavingsProductPreviewController(final AdminServiceFacade adminServiceFacade) {
         this.adminServiceFacade = adminServiceFacade;
     }
@@ -60,6 +67,9 @@ public class SavingsProductPreviewController {
     public ModelAndView showPopulatedForm(@ModelAttribute("savingsProduct") SavingsProductFormBean savingsProduct,
                                         @RequestParam(value = "editFormview", required = false) String editFormview) {
         ModelAndView modelAndView = new ModelAndView("previewSavingsProducts");
+        
+        configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
+        modelAndView.addObject("GLCodeMode", configurationDto.getGlCodeMode());
         modelAndView.addObject("savingsProduct", savingsProduct);
         modelAndView.addObject("editFormview", editFormview);
 
@@ -70,7 +80,10 @@ public class SavingsProductPreviewController {
 
     private void populateModelAndViewForPreview(SavingsProductFormBean savingsProduct, ModelAndView modelAndView) {
         GeneralProductBean bean = savingsProduct.getGeneralDetails();
-
+        
+        configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
+        modelAndView.addObject("GLCodeMode", configurationDto.getGlCodeMode());
+        
         new ProductModelAndViewPopulator().populateProductDetails(bean, modelAndView);
 
         String depositType = savingsProduct.getDepositTypeOptions().get(savingsProduct.getSelectedDepositType());
@@ -83,9 +96,11 @@ public class SavingsProductPreviewController {
         String interestCalculationUsed = savingsProduct.getInterestCaluclationOptions().get(savingsProduct.getSelectedInterestCalculation());
 
         String interestCalculationTimePeriod = savingsProduct.getFrequencyPeriodOptions().get(savingsProduct.getSelectedFequencyPeriod());
-        String depositGlCode = savingsProduct.getPrincipalGeneralLedgerOptions().get(savingsProduct.getSelectedPrincipalGlCode());
-        String interestGlCode = savingsProduct.getInterestGeneralLedgerOptions().get(savingsProduct.getSelectedInterestGlCode());
+        GLCodeDto depositGlCode = savingsProduct.getPrincipalGeneralLedgerOptions().get(savingsProduct.getSelectedPrincipalGlCode());
+        GLCodeDto interestGlCode = savingsProduct.getInterestGeneralLedgerOptions().get(savingsProduct.getSelectedInterestGlCode());
 
+
+        
         modelAndView.addObject("depositType", depositType);
         modelAndView.addObject("appliesTo", appliesTo);
         modelAndView.addObject("interestCalculationUsed", interestCalculationUsed);
@@ -119,7 +134,9 @@ public class SavingsProductPreviewController {
             BindingResult result) {
 
         ModelAndView modelAndView = new ModelAndView(REDIRECT_TO_ADMIN);
-
+        configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
+        modelAndView.addObject("GLCodeMode", configurationDto.getGlCodeMode());
+        
         if (StringUtils.isNotBlank(cancel)) {
             modelAndView.setViewName(REDIRECT_TO_ADMIN);
         } else if (StringUtils.isNotBlank(edit)) {
@@ -164,6 +181,9 @@ public class SavingsProductPreviewController {
         ObjectError error = new ObjectError("savingsProduct", new String[] { messageKey },
                 new Object[] {}, "Error: Problem persisting savings product.");
         result.addError(error);
+        
+        configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
+        modelAndView.addObject("GLCodeMode", configurationDto.getGlCodeMode());
         modelAndView.setViewName("previewSavingsProducts");
         modelAndView.addObject("savingsProduct", savingsProduct);
         modelAndView.addObject("editFormview", editFormview);

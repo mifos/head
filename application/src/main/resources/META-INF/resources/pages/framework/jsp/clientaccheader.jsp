@@ -26,26 +26,26 @@ explanation of the license and how it is applied.
   <tr>
     <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
         <tr>
-          <td class="tablightorange"><a id="clientsAndAccountsHeader.link.home" href="home.ftl" >
+          <td class="tablightorange"><a id="header.link.home" href="home.ftl" >
 		<mifos:mifoslabel name="framework.home" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
                  <c:url value="custSearchAction.do" var="custSearchActionLoadMainSearchMethodUrl" >
                   <c:param name="method" value="loadMainSearch" />
                  </c:url >
           <c:choose>
               <c:when test="${requestScope.perspective == 'redoLoan' || requestScope.perspective == 'UserChangeLog'}">
-                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.clientsAndAccounts" href="clientsAndAccounts.ftl"><mifos:mifoslabel
+                  <td class="tablightorange"><a id="header.link.clientsAndAccounts" href="clientsAndAccounts.ftl"><mifos:mifoslabel
 								name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.reports" href="reportsAction.do?method=load"><mifos:mifoslabel
+                  <td class="tablightorange"><a id="header.link.reports" href="reportsAction.do?method=load"><mifos:mifoslabel
 								name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-                  <td class="taborange"><a id="clientsAndAccountsHeader.link.admin" href="AdminAction.do?method=load" class="tabfontwhite"><mifos:mifoslabel
+                  <td class="taborange"><a id="header.link.admin" href="AdminAction.do?method=load" class="tabfontwhite"><mifos:mifoslabel
 								name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
               </c:when>
               <c:otherwise>
-                  <td class="taborange"><a id="clientsAndAccountsHeader.link.clientsAndAccounts" href="clientsAndAccounts.ftl" class="tabfontwhite"><mifos:mifoslabel
+                  <td class="taborange"><a id="header.link.clientsAndAccounts" href="clientsAndAccounts.ftl" class="tabfontwhite"><mifos:mifoslabel
 								name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.reports" href="reportsAction.do?method=load"><mifos:mifoslabel
+                  <td class="tablightorange"><a id="header.link.reports" href="reportsAction.do?method=load"><mifos:mifoslabel
 								name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.admin" href="AdminAction.do?method=load"><mifos:mifoslabel
+                  <td class="tablightorange"><a id="header.link.admin" href="AdminAction.do?method=load"><mifos:mifoslabel
 								name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
               </c:otherwise>
           </c:choose>

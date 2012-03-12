@@ -106,14 +106,15 @@ public class MainPenaltyTest extends UiTestCaseBase {
     @Test(enabled = true)
     public void verifyCreateAndEditPenalty() throws Exception {
         final PenaltyFormParameters param = new PenaltyFormParameters();
-        ViewPenaltiesPage penaltiesPage = null;
+        ViewPenaltiesPage penaltiesPage = navigationHelper.navigateToAdminPage().navigateToViewPenaltiesPage();
+        
+        int startLoanPenaltyCount = penaltiesPage.getLoanPenaltiesCount();
+        int startSavingsPenaltyCount = penaltiesPage.getSavingPenaltiesCount();
         
         for (int i = 0; i < 2; ++i) {
             category = "";
-            penaltiesPage = navigationHelper.navigateToAdminPage().navigateToViewPenaltiesPage();
-            
-            penaltiesPage.verifyLoanPenaltiesCount(0);
-            penaltiesPage.verifySavingPenaltiesCount(i);
+            penaltiesPage.verifyLoanPenaltiesCount(startLoanPenaltyCount);
+            penaltiesPage.verifySavingPenaltiesCount(startSavingsPenaltyCount + i);
 
             PenaltyFormPage newPenaltyPage = penaltiesPage.navigateToDefineNewPenaltyPage();
             
@@ -139,12 +140,12 @@ public class MainPenaltyTest extends UiTestCaseBase {
             ViewPenaltyPage penaltyPage = null;
 
             if (i == 0) {
-                penaltiesPage.verifyLoanPenaltiesCount(0);
-                penaltiesPage.verifySavingPenaltiesCount(1);
+                penaltiesPage.verifyLoanPenaltiesCount(startLoanPenaltyCount);
+                penaltiesPage.verifySavingPenaltiesCount(startSavingsPenaltyCount + 1);
                 penaltyPage = penaltiesPage.navigateToViewPenaltyPage(AMOUNT_PENALTY_NAME);
             } else if (i == 1) {
-                penaltiesPage.verifyLoanPenaltiesCount(1);
-                penaltiesPage.verifySavingPenaltiesCount(1);
+                penaltiesPage.verifyLoanPenaltiesCount(startLoanPenaltyCount + 1);
+                penaltiesPage.verifySavingPenaltiesCount(startSavingsPenaltyCount + 1);
                 penaltyPage = penaltiesPage.navigateToViewPenaltyPage(RATE_PENALTY_NAME);
             }
 
@@ -176,12 +177,14 @@ public class MainPenaltyTest extends UiTestCaseBase {
             }
             
             penaltyPage.verifyData(createData(param, i));
+            
+            penaltiesPage = navigationHelper.navigateToAdminPage().navigateToViewPenaltiesPage();
         }
 
         penaltiesPage = navigationHelper.navigateToAdminPage().navigateToViewPenaltiesPage();
         
-        penaltiesPage.verifyLoanPenaltiesCount(1);
-        penaltiesPage.verifySavingPenaltiesCount(1);
+        penaltiesPage.verifyLoanPenaltiesCount(startLoanPenaltyCount + 1);
+        penaltiesPage.verifySavingPenaltiesCount(startSavingsPenaltyCount + 1);
         
         penaltiesPage.verifyInActivePenaltyLabel(2);
         penaltiesPage.verifyInActivePenaltyLabel(4);

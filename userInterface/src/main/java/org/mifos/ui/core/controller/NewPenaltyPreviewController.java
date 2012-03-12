@@ -67,19 +67,19 @@ public class NewPenaltyPreviewController {
             BindingResult result, SessionStatus status) {
 
         ModelAndView modelAndView = new ModelAndView(REDIRECT_TO_ADMIN_SCREEN);
-
+        
         AccountingConfigurationDto configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
+        modelAndView.addObject("GLCodeMode",  configurationDto.getGlCodeMode());
         
         if (StringUtils.isNotBlank(edit)) {
-            modelAndView = new ModelAndView("defineNewPenalty");
+            modelAndView.setViewName("defineNewPenalty");
             modelAndView.addObject("formBean", formBean);
             modelAndView.addObject("param", this.penaltyServiceFacade.getPenaltyParameters());
-            modelAndView.addObject("GLCodeMode",  configurationDto.getGlCodeMode());
         } else if (StringUtils.isNotBlank(cancel)) {
-            modelAndView = new ModelAndView(REDIRECT_TO_VIEW_PENALTIES);
+            modelAndView.setViewName(REDIRECT_TO_VIEW_PENALTIES);
             status.setComplete();
         } else if (result.hasErrors()) {
-            modelAndView = new ModelAndView("newPenaltyPreview");
+            modelAndView.setViewName("newPenaltyPreview");
         } else {
             boolean ratePenalty = StringUtils.isBlank(formBean.getAmount());
             Short currencyId = null;

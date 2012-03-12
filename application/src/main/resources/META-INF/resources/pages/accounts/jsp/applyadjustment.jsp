@@ -29,6 +29,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="/tags/date" prefix="date"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -37,7 +38,11 @@ explanation of the license and how it is applied.
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<html-el:form method="post" action="applyAdjustment.do" onsubmit="return fn_submit();">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
-			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'adjAmount')}" var="adjAmount" />
+
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'adjustmentPaymentType')}" var="adjustmentPaymentType" />
+            
+            <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -45,6 +50,7 @@ explanation of the license and how it is applied.
 					</td>
 				</tr>
 			</table>
+            
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td width="70%" height="24" align="left" valign="top"
@@ -106,8 +112,8 @@ explanation of the license and how it is applied.
 								</c:choose>
 								<c:choose>
 									<c:when test="${requestScope.method=='loadAdjustment'}">
-										<mifos:mifoslabel name="accounts.last_pmnt"/>:
-										<fmt:formatNumber value="${BusinessKey.lastPmntAmntToBeAdjusted}"/>
+										<mifos:mifoslabel name="accounts.amnt_tobe_adjusted"/>:
+										<fmt:formatNumber value="${adjAmount}"/>
 										<br><br>
 									</c:when>
 									<c:otherwise>
@@ -115,7 +121,7 @@ explanation of the license and how it is applied.
 											<mifos:mifoslabel name="accounts.amnt_tobe_adjusted" />:<br>
 										</td>
 										<td width="75%" class="fontnormal">	
-											<fmt:formatNumber value="${BusinessKey.lastPmntAmntToBeAdjusted}"/>
+											<fmt:formatNumber value="${adjAmount}"/>
 										</td>
 									</tr>	
 									</c:otherwise>
@@ -124,7 +130,7 @@ explanation of the license and how it is applied.
 									<c:when test="${requestScope.method=='loadAdjustment' && sessionScope.applyAdjustmentActionForm.adjustcheckbox=='true'}">
 										<input id="applyadjustment.input.revertLastPayment" type="checkbox" name="adjustcheckbox" value="true" checked="true">
 										<span id="applyadjustment.label.revertLastPayment">
-										<mifos:mifoslabel name="accounts.chk_revert_last_pmnt" mandatory="yes"/></span>
+										<mifos:mifoslabel name="accounts.chk_revert_last_pmnt"/></span>
 										<br>
 										<br>
 									</td>
@@ -133,7 +139,7 @@ explanation of the license and how it is applied.
 									<c:when test="${requestScope.method=='loadAdjustment'&& sessionScope.applyAdjustmentActionForm.adjustcheckbox=='false'}">
 										<input id="applyadjustment.input.revertLastPayment" type="checkbox" name="adjustcheckbox" value="true" >
 										<span id="applyadjustment.label.revertLastPayment">
-										<mifos:mifoslabel name="accounts.chk_revert_last_pmnt" mandatory="yes"/></span>
+										<mifos:mifoslabel name="accounts.chk_revert_last_pmnt"/></span>
 										<br>
 										<br>
 								</td>
@@ -142,27 +148,83 @@ explanation of the license and how it is applied.
 								</c:choose>
 								<c:choose>
 									<c:when test="${requestScope.method=='loadAdjustment'}">
+                                    <tr>
+                                        <td align="right" class="fontnormal"><span id="applypayment.label.amount"><mifos:mifoslabel
+                                            mandatory="yes" name="accounts.amount" isColonRequired="Yes" /></span></td>
+                                        <td valign="top"  class="fontnormal">
+                                            <html-el:text property="amount" styleClass="separatedNumber"
+                                                styleId="applyAdjustment.input.amount"
+                                                name="applyAdjustmentActionForm" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right" class="fontnormal"><mifos:mifoslabel
+                                            mandatory="yes" isColonRequired="Yes" name="accounts.date_of_trxn" /></td>
+                                        <td class="fontnormal"><date:datetag renderstyle="simple" property="transactionDate" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fontnormal" align="right"><mifos:mifoslabel
+                                            name="accounts.mode_of_payment" mandatory="yes" isColonRequired="Yes" /></td>
+            
+                                        <td class="fontnormal"><mifos:select
+                                            name="applyAdjustmentActionForm" styleId="applyAdjustment.input.paymentType" property="paymentType">
+                                            <c:forEach var="PT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
+                                                <html-el:option value="${PT.id}">${PT.displayValue}</html-el:option>
+                                            </c:forEach>
+                                        </mifos:select></td>
+                                    </tr>
 									<tr>
-										<td width="5%" valign="top" align="right" class="fontnormal">
+										<td width="15%" valign="top" align="right" class="fontnormal">
 											<span id="applyadjustment.label.note"><mifos:mifoslabel 
 											name="accounts.notes" mandatory="yes"/></span>:
 											<br>
 			    			            </td>
-						                <td width="95%" class="fontnormal">
+						                <td width="85%" class="fontnormal">
 										<html-el:textarea styleId="applyadjustment.input.note"
 											property="adjustmentNote" cols="37" style="width:320px; height:110px;">
 										</html-el:textarea></td>
+                                    </tr>
+
 									</c:when>
-									<c:otherwise>
+                                    <c:otherwise>
+                                        <!-- Preview adjustment -->
 										<td valign="top" align="right" class="fontnormalbold">
 											<mifos:mifoslabel name="accounts.notes" />:
 											<br>
 			    			            </td>
 						                <td class="fontnormal">
 										<c:out value="${sessionScope.applyAdjustmentActionForm.adjustmentNote}"/></td>
+                                        <c:if test="${applyAdjustmentActionForm.adjustData == true}">
+                                            <!-- Amount  -->
+                                            <tr>
+                                                <td valign="top" align="right" class="fontnormalbold">
+                                                    <mifos:mifoslabel name="Amount" bundle="accountsUIResources" />:
+                                                </td>
+                                                <td class="fontnormal">
+                                                    <c:out value="${applyAdjustmentActionForm.amount}"/>
+                                                </td>
+                                            </tr>
+                                            <!-- Date  -->
+                                            <tr>
+                                                <td valign="top" align="right" class="fontnormalbold">
+                                                    <mifos:mifoslabel name="Date" bundle="accountsUIResources" />:
+                                                </td>
+                                                <td class="fontnormal">
+                                                    <c:out value="${applyAdjustmentActionForm.trxnDate}"/>
+                                                </td>
+                                            </tr>
+                                            <!-- Type  -->
+                                            <tr>
+                                                <td valign="top" align="right" class="fontnormalbold">
+                                                    <mifos:mifoslabel name="accounts.mode_of_payment" bundle="accountsUIResources" />:
+                                                </td>
+                                                <td class="fontnormal">
+                                                    <c:out value="${adjustmentPaymentType}"/>
+                                                </td>
+                                            </tr>
+                                        </c:if>
 									</c:otherwise>
 								</c:choose>
-							</tr>
 					</table>	
 					
 				<%--	<table width="93%" border="0" cellpadding="3" cellspacing="0">
@@ -282,6 +344,7 @@ explanation of the license and how it is applied.
  			<html-el:hidden property="method" value="${requestScope.method}"/>
  			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>
  			<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/>
+            <html-el:hidden property="paymentId"/>
 </html-el:form>
 
 

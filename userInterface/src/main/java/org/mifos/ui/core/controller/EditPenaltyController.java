@@ -26,6 +26,8 @@ import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.penalty.servicefacade.PenaltyServiceFacade;
 import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
+import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
 import org.mifos.dto.domain.PenaltyDto;
 import org.mifos.dto.screen.PenaltyParametersDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,16 +55,21 @@ public class EditPenaltyController {
     @Autowired
     private ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade;
     
+    @Autowired
+    private ConfigurationServiceFacade configurationServiceFacade;
+    
     private PenaltyParametersDto parametersDto;
+    private AccountingConfigurationDto configurationDto;
     
     protected EditPenaltyController() {
         //spring autowiring
     }
     
     public EditPenaltyController(final PenaltyServiceFacade penaltyServiceFacade,
-            final ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade) {
+            final ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade, final ConfigurationServiceFacade configurationServiceFacade) {
         this.penaltyServiceFacade = penaltyServiceFacade;
         this.viewOrganizationSettingsServiceFacade = viewOrganizationSettingsServiceFacade;
+        this.configurationServiceFacade = configurationServiceFacade;
     }
     
     @InitBinder
@@ -76,11 +83,12 @@ public class EditPenaltyController {
         
         PenaltyDto dto = this.penaltyServiceFacade.getPenalty(penaltyId);
         parametersDto = this.penaltyServiceFacade.getPenaltyParameters();
-        
+        configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
         PenaltyFormBean bean = new PenaltyFormBean(dto);
         
         modelAndView.addObject("formBean", bean);
         modelAndView.addObject("param", parametersDto);
+        modelAndView.addObject("GLCodeMode",configurationDto.getGlCodeMode());
         
         return modelAndView;
     }
@@ -89,6 +97,8 @@ public class EditPenaltyController {
     public ModelAndView showPreview(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
             @ModelAttribute("formBean") @Valid PenaltyFormBean formBean, BindingResult result, SessionStatus status) {
         ModelAndView modelAndView = new ModelAndView(REDIRECT_TO_VIEW_PENALTY + formBean.getId());
+        configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
+        modelAndView.addObject("GLCodeMode", configurationDto.getGlCodeMode());
         
         if (StringUtils.isNotBlank(cancel)) {
             modelAndView.setViewName(REDIRECT_TO_VIEW_PENALTY + formBean.getId());

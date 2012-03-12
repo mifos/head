@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.accounts.business.PenaltiesTrxnDetailEntity" table="penalty_trxn_detail">
+        <id name="penaltiesTrxnId" column="penalty_trxn_detail_id" type="integer" access="field">
+            <generator class="native" />
+        </id>
+        <property name="penaltyAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+            <column name="penalty_amount_currency_id" />
+            <column name="penalty_amount" />
+        </property>
+        <many-to-one name="accountPenalties" column="account_penalty_id" class="org.mifos.accounts.business.AccountPenaltiesEntity" not-null="true" access="field" />
+        <many-to-one name="accountTrxn" column="account_trxn_id" class="org.mifos.accounts.business.AccountTrxnEntity" not-null="true" access="field" />
+    </class>
+</hibernate-mapping>

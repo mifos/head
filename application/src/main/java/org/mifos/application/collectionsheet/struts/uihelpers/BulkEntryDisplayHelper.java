@@ -660,7 +660,7 @@ public class BulkEntryDisplayHelper {
                     Money groupTotalMoney = totals[i] == null ? new Money(collectionSheetEntryDto.getCurrency(), "0.0") : totals[i];
                     builder.append("<td class=\"drawtablerow\">");
                     builder.append("<input name=\"group[" + rows + "][" + i + "]\" type=\"text\" style=\"width:40px\""
-                            + " value=\"" + ConversionUtil.formatNumber(groupTotalMoney.toString()) + "\" size=\"6\" disabled>");
+                            + " value=\"" + groupTotalMoney + "\" size=\"6\" disabled>");
                     builder.append("</td>");
                 }
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
@@ -669,7 +669,7 @@ public class BulkEntryDisplayHelper {
                     Money groupTotalMoney = totals[i] == null ? new Money(collectionSheetEntryDto.getCurrency(), "0.0") : totals[i];
                     builder.append("<td class=\"drawtablerow\">");
                     builder.append("<input name=\"group[" + rows + "][" + i + "]\" type=\"text\" style=\"width:40px\""
-                            + " value=\"" + ConversionUtil.formatNumber(groupTotalMoney.toString()) + "\" size=\"6\" disabled>");
+                            + " value=\"" + groupTotalMoney + "\" size=\"6\" disabled>");
                     builder.append("</td>");
                 }
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
@@ -678,7 +678,7 @@ public class BulkEntryDisplayHelper {
                         : totals[(2 * (loanProductsSize + savingsProductSize))];
                 builder.append("<td class=\"drawtablerow\">");
                 builder.append("<input name=\"group[" + rows + "][" + 2 * (loanProductsSize + savingsProductSize)
-                        + "]\" type=\"text\" style=\"width:40px\"" + " value=\"" + ConversionUtil.formatNumber(groupTotalMoney.toString())
+                        + "]\" type=\"text\" style=\"width:40px\"" + " value=\"" + groupTotalMoney
                         + "\" size=\"6\" disabled>");
                 builder.append("</td>");
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
@@ -693,7 +693,7 @@ public class BulkEntryDisplayHelper {
                     Money centerTotalMoney = totals[i] == null ? new Money(collectionSheetEntryDto.getCurrency(), "0.0") : totals[i];
                     builder.append("<td class=\"drawtablerow\">");
                     builder.append("<input name=\"center[" + i + "]\" type=\"text\" style=\"width:40px\"" + " value=\""
-                            + ConversionUtil.formatNumber(centerTotalMoney.toString()) + "\" size=\"6\" disabled>");
+                            + centerTotalMoney + "\" size=\"6\" disabled>");
                     builder.append("</td>");
                 }
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
@@ -702,7 +702,7 @@ public class BulkEntryDisplayHelper {
                     Money centerTotalMoney = totals[i] == null ? new Money(collectionSheetEntryDto.getCurrency(), "0.0") : totals[i];
                     builder.append("<td class=\"drawtablerow\">");
                     builder.append("<input name=\"center[" + i + "]\" type=\"text\" style=\"width:40px\"" + " value=\""
-                            + ConversionUtil.formatNumber(centerTotalMoney.toString()) + "\" size=\"6\" disabled>");
+                            + centerTotalMoney + "\" size=\"6\" disabled>");
                     builder.append("</td>");
                 }
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
@@ -711,7 +711,7 @@ public class BulkEntryDisplayHelper {
                         : totals[(2 * (loanProductsSize + savingsProductSize))];
                 builder.append("<td class=\"drawtablerow\">");
                 builder.append("<input name=\"center[" + 2 * (loanProductsSize + savingsProductSize)
-                        + "]\" type=\"text\" style=\"width:40px\"" + " value=\"" + ConversionUtil.formatNumber(centerTotalMoney.toString())
+                        + "]\" type=\"text\" style=\"width:40px\"" + " value=\"" + centerTotalMoney
                         + "\" size=\"6\" disabled>");
                 builder.append("</td>");
                 BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);

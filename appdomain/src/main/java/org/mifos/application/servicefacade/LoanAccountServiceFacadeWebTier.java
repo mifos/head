@@ -1131,7 +1131,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
                 // refactoring of loan disbursal
                 if (customer.isDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProduct(loan.getLoanOffering())) {
-                    throw new AccountException("errors.cannotDisburseLoan.because.otherLoansAreActive");
+                    throw new BusinessRuleException("errors.cannotDisburseLoan.because.otherLoansAreActive");
                 }
 
                 try {

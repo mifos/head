@@ -572,6 +572,7 @@
             <sql endDelimiter=";">
                 ALTER TABLE image_info DROP COLUMN customer_picture_entity;
                 ALTER TABLE image_info MODIFY COLUMN path varchar(255) NOT NULL;
+                TRUNCATE TABLE customer_picture;
                 ALTER TABLE customer_picture 
                     ADD COLUMN customer_id INTEGER NOT NULL,
                     ADD FOREIGN KEY (customer_id) REFERENCES customer(customer_id);
@@ -634,7 +635,7 @@
         </sql>
         <rollback>
             <sql endDelimiter=";">
-                delete from roles_activity where activity_id = 250 and role_id = 1;
+                delete from roles_activity where activity_id = 250;
 
                 delete from activity where activity_id = 250;
 
@@ -707,7 +708,6 @@
             </sql>
         </rollback>
     </changeSet>
-
     <changeSet id="MIFOS_5193" author="Hugo Technologies" context="expansion">
         <sql endDelimiter=";">
             Insert into config_key_value(configuration_type,configuration_key, configuration_value) values (0,'prorate_Rule',0);
@@ -718,5 +718,35 @@
             </sql>
         </rollback>
     </changeSet>
-
+    <changeSet id="MIFOS_5458_1" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+            DROP TABLE IF EXISTS penalty_trxn_detail;
+            
+            CREATE TABLE penalty_trxn_detail (
+              penalty_trxn_detail_id INTEGER AUTO_INCREMENT NOT NULL,
+              account_trxn_id INTEGER NOT NULL,
+              account_penalty_id INTEGER,
+              penalty_amount_currency_id SMALLINT,
+              penalty_amount DECIMAl(21,4) NOT NULL,
+              PRIMARY KEY (penalty_trxn_detail_id),
+              FOREIGN KEY (account_penalty_id)
+                REFERENCES account_penalties(account_penalty_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION,
+              FOREIGN KEY (penalty_amount_currency_id)
+                REFERENCES currency(currency_id)
+                    ON DELETE NO ACTION
+                    ON UPDATE NO ACTION,
+              FOREIGN KEY (account_trxn_id)
+                REFERENCES account_trxn(account_trxn_id)
+                  ON DELETE NO ACTION
+                  ON UPDATE NO ACTION
+            ) ENGINE=InnoDB CHARACTER SET utf8;
+            
+            CREATE INDEX penalty_account_trxn_idx ON penalty_trxn_detail (account_trxn_id);
+        </sql>
+        <rollback>
+            <dropTable tableName="penalty_trxn_detail"/>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

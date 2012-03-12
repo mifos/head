@@ -20,6 +20,10 @@
 
 package org.mifos.accounts.struts.action;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,15 +31,23 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AdjustablePaymentDto;
 import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.struts.actionforms.ApplyAdjustmentActionForm;
+import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.servicefacade.ListItem;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.dto.domain.AdjustedPaymentDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.UserContext;
@@ -45,7 +57,7 @@ import org.mifos.security.util.UserContext;
  * with AccountAction once an AccountAction for M2 is done.
  */
 public class ApplyAdjustment extends BaseAction {
-
+   
     @Override
     protected BusinessService getService() throws ServiceException {
         return new AccountBusinessService();
@@ -58,10 +70,89 @@ public class ApplyAdjustment extends BaseAction {
         AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
         request.setAttribute("method", "loadAdjustment");
-        return mapping.findForward("loadadjustment_success");
+        
+        UserContext userContext = getUserContext(request);
+        SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, 
+                this.accountServiceFacade.constructPaymentTypeListForLoanRepayment(userContext.getLocaleId()), request);
+        
+        AccountPaymentEntity payment = null;
+        if (request.getParameter(Constants.ADJ_TYPE_KEY) != null && request.getParameter(Constants.ADJ_TYPE_KEY).equals(Constants.ADJ_SPECIFIC)) {
+            Integer paymentId = appAdjustActionForm.getPaymentId();
+            payment = accnt.findPaymentById(paymentId);
+                        
+            AccountPaymentEntity previous = null;
+            AccountPaymentEntity next = null;
+            boolean getPrevious = false;
+            for (AccountPaymentEntity p : accnt.getAccountPayments()) {
+                if (!p.getAmount().equals(Money.zero())) {
+                    if (getPrevious) {
+                        previous = p;
+                        break;
+                    }
+                    else if (p.getPaymentId().equals(payment.getPaymentId())) {
+                        getPrevious = true;
+                    } else { 
+                        next = p;
+                    }
+                }
+            }
+            
+            Date previousPaymentDate = (previous == null) ? null : previous.getPaymentDate();
+            Date nextPaymentDate = (next == null) ? null : next.getPaymentDate();
+            
+            appAdjustActionForm.setPreviousPaymentDate(previousPaymentDate);
+            appAdjustActionForm.setNextPaymentDate(nextPaymentDate);
+            
+            SessionUtils.setAttribute(Constants.ADJUSTED_AMOUNT, payment.getAmount().getAmount(), request);
+        } else {
+            payment = accnt.getLastPmntToBeAdjusted();
+            appAdjustActionForm.setPaymentId(null);
+            SessionUtils.setAttribute(Constants.ADJUSTED_AMOUNT, accnt.getLastPmntAmntToBeAdjusted(), request);
 
+        }
+        populateForm(appAdjustActionForm, payment);
+        return mapping.findForward("loadadjustment_success");
     }
 
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward listPossibleAdjustments(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+        AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+        
+        boolean decliningRecalculation = false;
+        if (accnt instanceof LoanBO) {
+            LoanBO loan = (LoanBO)accnt;
+            if (loan.getInterestType().getId().equals(InterestType.DECLINING_PB.getValue())) {
+                decliningRecalculation = true;
+            }
+        }
+        
+        List<AccountPaymentEntity> payments = accnt.getAccountPayments();
+        ArrayList<AdjustablePaymentDto> adjustablePayments = new ArrayList<AdjustablePaymentDto>();
+        
+        int i = 1;
+        for (AccountPaymentEntity payment : payments) {
+            //ommit disbursal payment
+            if (!payment.getAmount().equals(Money.zero()) && i != payments.size()) {
+                AdjustablePaymentDto adjustablePaymentDto = new AdjustablePaymentDto(payment.getPaymentId(), payment.getAmount(), 
+                        payment.getPaymentType().getName(), payment.getPaymentDate(), payment.getReceiptDate(), payment.getReceiptNumber());
+                
+                adjustablePayments.add(adjustablePaymentDto);
+                if (decliningRecalculation) {
+                    break; //only last payment
+                }
+            }           
+            i++;
+        }
+        
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
+        SessionUtils.setAttribute(Constants.POSSIBLE_ADJUSTMENTS, adjustablePayments, request);
+        request.setAttribute("method", "loadAdjustment");   
+        
+        return mapping.findForward("loadadjustments_success");
+    }
+    
     /*
      * This method do the same thing as loadAdjustment, but added to allow
      * handling permission : can adjust payment when account is closed
@@ -73,15 +164,43 @@ public class ApplyAdjustment extends BaseAction {
             HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
         AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+        
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
         request.setAttribute("method", "loadAdjustmentWhenObligationMet");
+        
+        AccountPaymentEntity payment = null;
+        if (request.getParameter(Constants.ADJ_TYPE_KEY) != null && request.getParameter(Constants.ADJ_TYPE_KEY).equals(Constants.ADJ_SPECIFIC)) {
+            Integer paymentId = appAdjustActionForm.getPaymentId();
+            payment = accnt.findPaymentById(paymentId);           
+            SessionUtils.setAttribute(Constants.ADJUSTED_AMOUNT, payment.getAmount().getAmount(), request);
+        } else {
+            payment = accnt.getLastPmntToBeAdjusted();
+            appAdjustActionForm.setPaymentId(null);
+            SessionUtils.setAttribute(Constants.ADJUSTED_AMOUNT, accnt.getLastPmntAmntToBeAdjusted(), request);
+        }
+        
+        populateForm(appAdjustActionForm, payment);
         return mapping.findForward("loadadjustment_success");
-
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previewAdjustment(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+        appAdjustActionForm.setAdjustData(!appAdjustActionForm.getAdjustcheckbox());
+        
+        if (appAdjustActionForm.isAdjustData()) {
+            @SuppressWarnings("unchecked")
+            List<ListItem<Short>> paymentTypes = (List<ListItem<Short>>)SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request);
+            
+            Short elementType = Short.valueOf(appAdjustActionForm.getPaymentType());          
+            for (ListItem<Short> item : paymentTypes) {
+                if (item.getId().equals(elementType)) {
+                    SessionUtils.setAttribute(Constants.ADJUSTMENT_PAYMENT_TYPE, item.getDisplayValue(), request);
+                }
+            }
+        }
+        
         request.setAttribute("method", "previewAdjustment");
         return mapping.findForward("previewadj_success");
     }
@@ -92,11 +211,19 @@ public class ApplyAdjustment extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.setAttribute("method", "applyAdjustment");
         ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+        Integer paymentId = appAdjustActionForm.getPaymentId();
+        
         checkVersionMismatchForAccountBO(request, appAdjustActionForm);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         try {
-            accountServiceFacade.applyAdjustment(appAdjustActionForm.getGlobalAccountNum(),
-                    appAdjustActionForm.getAdjustmentNote(), userContext.getId());
+            if (paymentId == null) {
+                accountServiceFacade.applyAdjustment(appAdjustActionForm.getGlobalAccountNum(),
+                        appAdjustActionForm.getAdjustmentNote(), userContext.getId());
+            } else {
+                AdjustedPaymentDto adjustedPaymentDto = appAdjustActionForm.getPaymentData();
+                accountServiceFacade.applyHistoricalAdjustment(appAdjustActionForm.getGlobalAccountNum(), paymentId,
+                        appAdjustActionForm.getAdjustmentNote(), userContext.getId(), adjustedPaymentDto);
+            }
         } catch (MifosRuntimeException e) {
             request.setAttribute("method", "previewAdjustment");
             throw (Exception) e.getCause();
@@ -125,6 +252,7 @@ public class ApplyAdjustment extends BaseAction {
      */
     private void resetActionFormFields(ApplyAdjustmentActionForm appAdjustActionForm) {
         appAdjustActionForm.setAdjustmentNote(null);
+        appAdjustActionForm.setPaymentId(null);
     }
 
     @Override
@@ -137,5 +265,13 @@ public class ApplyAdjustment extends BaseAction {
 
     private AccountBusinessService getBizService() {
         return new AccountBusinessService();
+    }
+    
+    private void populateForm(ApplyAdjustmentActionForm form, AccountPaymentEntity payment) {
+        if (payment != null) {
+            form.setPaymentType(String.valueOf(payment.getPaymentType().getId()));
+            form.setAmount(payment.getAmount().toString());
+            form.setTrxnDate(payment.getPaymentDate());
+        }
     }
 }

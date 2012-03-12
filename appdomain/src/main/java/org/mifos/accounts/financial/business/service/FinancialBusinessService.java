@@ -136,7 +136,8 @@ public class FinancialBusinessService implements BusinessService {
         }
 
         for (COABO chartOfAccounts : applicableCategory) {
-            glCodeList.add(chartOfAccounts.getAssociatedGlcode());
+        	GLCodeEntity codeEntity = new GLCodeEntity(chartOfAccounts.getAssociatedGlcode().getGlcodeId(), chartOfAccounts.getAssociatedGlcode().getGlcode(), chartOfAccounts.getAssociatedGlcode().getAssociatedCOA());
+            glCodeList.add(codeEntity);
         }
         return glCodeList;
     }

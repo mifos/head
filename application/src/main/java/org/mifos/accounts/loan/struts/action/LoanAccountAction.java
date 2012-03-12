@@ -414,7 +414,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         String loanOfficerId = request.getParameter("recordLoanOfficerId");
         String url = String.format("loanAccountAction.do?globalAccountNum=%s&customerId=%s&recordOfficeId=%s&recordLoanOfficerId=%s",
                 globalAccountNum, Integer.toString(loanBO.getAccountId()), officerId, loanOfficerId);
-        return URLEncoder.encode(url, "UTF-8");
+        return url;
     }
 
     @TransactionDemarcate(joinToken = true)

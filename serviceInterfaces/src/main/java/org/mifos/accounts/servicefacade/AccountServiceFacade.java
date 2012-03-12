@@ -23,7 +23,9 @@ package org.mifos.accounts.servicefacade;
 import java.util.Date;
 import java.util.List;
 
+import org.mifos.application.servicefacade.ListItem;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
+import org.mifos.dto.domain.AdjustedPaymentDto;
 import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.dto.screen.AccountTypeCustomerLevelDto;
@@ -55,4 +57,10 @@ public interface AccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void applyAdjustment(String globalAccountNum, String adjustmentNote, Short personnelId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    void applyHistoricalAdjustment(String globalAccountNum, Integer paymentId, String adjustmentNote, Short personnelId, AdjustedPaymentDto adjustedPaymentDto);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    List<ListItem<Short>> constructPaymentTypeListForLoanRepayment(Short localeId);
 }

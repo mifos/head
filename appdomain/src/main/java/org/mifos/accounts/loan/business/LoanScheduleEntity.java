@@ -818,6 +818,10 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     boolean hasFees() {
         return CollectionUtils.isNotEmpty(accountFeesActionDetails);
     }
+    
+    boolean hasPenalties() {
+        return CollectionUtils.isNotEmpty(loanPenaltiesSchedule);
+    }
 
     public void setPaymentAllocation(PaymentAllocation paymentAllocation) {
         this.paymentAllocation = paymentAllocation;
@@ -869,6 +873,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
                 penaltyAmount = loanPenaltyScheduleEntity.getPenaltyAmount().subtract(
                         loanPenaltyScheduleEntity.getPenaltyAmountPaid());
                 loanPenaltyScheduleEntity.setPenaltyAmount(loanPenaltyScheduleEntity.getPenaltyAmountPaid());
+                setPenalty(getPenaltyPaid());
                 break;
             }
         }

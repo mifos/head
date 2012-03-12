@@ -283,7 +283,7 @@ public class LoanScheduleEntityTest {
                 AccountActionTypes.LOAN_ADJUSTMENT, Short.valueOf("1"), paymentDate,
                 personnel, paymentDate,
                 makeMoney(280), "test for loan adjustment", null, makeMoney(-14.06),
-                makeMoney(-3.3), makeMoney(0), makeMoney(0), makeMoney(0), null);
+                makeMoney(-3.3), makeMoney(0), makeMoney(0), makeMoney(0), null, null);
         CalculatedInterestOnPayment interestOnPayment = new CalculatedInterestOnPayment();
         interestOnPayment.setExtraInterestPaid(makeMoney(0.8d));
         interestOnPayment.setOriginalInterest(makeMoney(14.96d));
@@ -312,7 +312,7 @@ public class LoanScheduleEntityTest {
                 AccountActionTypes.LOAN_ADJUSTMENT, Short.valueOf("1"), paymentDate,
                 personnel, paymentDate,
                 makeMoney(280), "test for loan adjustment", null, makeMoney(-14.06),
-                makeMoney(-2.5), makeMoney(0), makeMoney(0), makeMoney(0), null);
+                makeMoney(-2.5), makeMoney(0), makeMoney(0), makeMoney(0), null, null);
         loanScheduleEntity.setInterest(makeMoney(14.96d));
         loanScheduleEntity.setPrincipalPaid(makeMoney(14.06d));
         loanScheduleEntity.setInterestPaid(makeMoney(2.5d));
@@ -337,7 +337,7 @@ public class LoanScheduleEntityTest {
                 AccountActionTypes.LOAN_ADJUSTMENT, Short.valueOf("1"), paymentDate,
                 personnel, paymentDate,
                 makeMoney(280), "test for loan adjustment", null, makeMoney(-14.06),
-                makeMoney(-2.5), makeMoney(0), makeMoney(0), makeMoney(0), null);
+                makeMoney(-2.5), makeMoney(0), makeMoney(0), makeMoney(0), null, null);
         loanScheduleEntity.setInterest(makeMoney(14.96d));
         loanScheduleEntity.setPrincipalPaid(makeMoney(14.06d));
         loanScheduleEntity.setInterestPaid(makeMoney(2.5d));

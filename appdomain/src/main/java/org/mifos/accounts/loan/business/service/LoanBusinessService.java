@@ -378,7 +378,7 @@ public class LoanBusinessService implements BusinessService {
         applicableCharge.setFeeId(AccountConstants.MISC_PENALTY);
         applicableCharge.setFeeName("Misc Penalty");
         applicableCharge.setIsRateType(false);
-        applicableCharge.setIsPenaltyType(true);
+        applicableCharge.setIsPenaltyType(false);
         applicableChargeList.add(applicableCharge);
     }
     

@@ -788,6 +788,17 @@ public class AccountBO extends AbstractBusinessObject {
         }
         return accntPmnt;
     }
+    
+    public AccountPaymentEntity findPaymentById(final Integer paymentId) {
+        AccountPaymentEntity result = null;
+        for (AccountPaymentEntity payment : this.accountPayments) {
+            if (payment.getPaymentId().equals(paymentId)) {
+                result = payment;
+                break;
+            }
+        }
+        return result;
+    }
 
     public AccountActionDateEntity getAccountActionDate(final Short installmentId) {
         if (null != accountActionDates && accountActionDates.size() > 0) {

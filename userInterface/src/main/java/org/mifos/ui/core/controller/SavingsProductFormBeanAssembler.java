@@ -26,11 +26,13 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.mifos.dto.domain.GLCodeDto;
 import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.SavingsProductFormDto;
 
+@SuppressWarnings("PMD")
 public class SavingsProductFormBeanAssembler {
 
     private GeneralProductBeanAssembler productBeanAssembler = new GeneralProductBeanAssembler();
@@ -90,17 +92,23 @@ public class SavingsProductFormBeanAssembler {
     }
 
     private void populatePrincipalGlCodesDropdown(SavingsProductFormDto referenceData, SavingsProductFormBean formBean) {
-        Map<String, String> principalGeneralLedgerOptions = new LinkedHashMap<String, String>();
+        Map<String, GLCodeDto> principalGeneralLedgerOptions = new LinkedHashMap<String, GLCodeDto>();
         for (ListElement glCode : referenceData.getPrincipalGlCodes()) {
-            principalGeneralLedgerOptions.put(glCode.getId().toString(), glCode.getName());
+        	GLCodeDto codeDto = new GLCodeDto();
+        	codeDto.setGlcode(glCode.getName());
+        	codeDto.setGlname(glCode.getGlname());
+            principalGeneralLedgerOptions.put(glCode.getId().toString(), codeDto);
         }
         formBean.setPrincipalGeneralLedgerOptions(principalGeneralLedgerOptions);
     }
 
     private void populateInterestGlCodesDropdown(SavingsProductFormDto referenceData, SavingsProductFormBean formBean) {
-        Map<String, String> interestGeneralLedgerOptions = new LinkedHashMap<String, String>();
+        Map<String, GLCodeDto> interestGeneralLedgerOptions = new LinkedHashMap<String, GLCodeDto>();
         for (ListElement glCode : referenceData.getInterestGlCodes()) {
-            interestGeneralLedgerOptions.put(glCode.getId().toString(), glCode.getName());
+        	GLCodeDto codeDto = new GLCodeDto();
+        	codeDto.setGlcode(glCode.getName());
+        	codeDto.setGlname(glCode.getGlname());
+            interestGeneralLedgerOptions.put(glCode.getId().toString(), codeDto);
         }
         formBean.setInterestGeneralLedgerOptions(interestGeneralLedgerOptions);
     }

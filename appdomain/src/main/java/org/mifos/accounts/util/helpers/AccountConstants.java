@@ -148,6 +148,9 @@ public interface AccountConstants {
     String MAX_LENGTH = "errors.maximumlength";
     String APPLICABLE_CHARGE_LIST = "applicableChargeList";
 
+    String ERROR_ADJUSTMENT_PREVIOUS_DATE = "errors.adjustmentPreviousDate";
+    String ERROR_ADJUSTMENT_NEXT_DATE = "errors.adjustmentNextDate";
+    
     String NOT_SUPPORTED_GRACE_TYPE = "errors.not_supported_gracetype";
     String INTERESTDEDUCTED_PRINCIPALLAST = "errors.interestdedcuted_principallast";
     String PRINCIPALLASTPAYMENT_INVALIDGRACETYPE = "errors.principallast_invalidgrace";

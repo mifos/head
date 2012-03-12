@@ -83,10 +83,10 @@ public class AccountAppAction extends BaseAction {
         Integer accountId = getIntegerValue(request.getParameter("accountId"));
         Short feeId = getShortValue(request.getParameter("feeId"));
 
+        this.centerServiceFacade.removeAccountFee(accountId, feeId);
+
         AccountBO accountBO = getAccountBusinessService().getAccount(accountId);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
-
-        this.centerServiceFacade.removeAccountFee(accountId, feeId);
 
         String fromPage = request.getParameter(CenterConstants.FROM_PAGE);
         StringBuilder forward = new StringBuilder();

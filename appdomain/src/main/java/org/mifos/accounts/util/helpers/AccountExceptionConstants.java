@@ -35,6 +35,7 @@ public interface AccountExceptionConstants {
     String CHANGEINLOANMEETING = "exception.accounts.changeInLoanMeeting";
     String CANT_APPLY_FEE_EXCEPTION = "exception.accounts.cantapplyfee";
     String CANT_APPLY_CHARGE_EXCEPTION = "exception.accounts.cantapplycharge";
-    
+
+    String CANT_REMOVE_FEE_EXCEPTION = "exception.accounts.cantremovefee";
     String CANT_REMOVE_PENALTY_EXCEPTION = "exception.accounts.cantremovepenalty";
 }
