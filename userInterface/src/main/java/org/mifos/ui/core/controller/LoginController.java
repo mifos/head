@@ -20,6 +20,15 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
+import org.mifos.application.admin.servicefacade.SystemInformationServiceFacade;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.mobile.device.site.SitePreference;
@@ -27,8 +36,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/login")
@@ -38,7 +45,9 @@ public class LoginController {
     protected LoginController() {
         // default contructor for spring autowiring
     }
-
+    
+    @Autowired
+	private SystemInformationServiceFacade systemInformationServiceFacade;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView showForm(HttpServletRequest request,
@@ -48,8 +57,7 @@ public class LoginController {
         ServletContext context = request.getSession().getServletContext();
         Locale locale = request.getLocale();
         
-		String serverInfo = this.systemInformationServiceFacade
-				.getServerInformation(context, locale);
+		String serverInfo = this.systemInformationServiceFacade.getServerInformation(context, locale);
 		Pattern server_version = Pattern.compile("^jetty\\/7\\.3\\..*");
 		Matcher matcher = server_version.matcher(serverInfo);
 		Boolean isJetty = false;
