@@ -3,7 +3,8 @@
     "displayName":"mifos",
     "status":{
         "name":"Active",
-        "id":1
+        "id":1,
+        "glname":null
     },
     "userName":"mifos",
     "title":1,
@@ -13,7 +14,8 @@
     "officeId":1,
     "personnelRoles":[{
             "name":"Admin",
-            "id":1
+            "id":1,
+            "glname":null
         }
     ],
     "officeName":"Mifos HO ",

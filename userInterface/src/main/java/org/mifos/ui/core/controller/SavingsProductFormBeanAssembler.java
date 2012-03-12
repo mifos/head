@@ -32,6 +32,7 @@ import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.SavingsProductFormDto;
 
+@SuppressWarnings("PMD")
 public class SavingsProductFormBeanAssembler {
 
     private GeneralProductBeanAssembler productBeanAssembler = new GeneralProductBeanAssembler();
@@ -92,8 +93,8 @@ public class SavingsProductFormBeanAssembler {
 
     private void populatePrincipalGlCodesDropdown(SavingsProductFormDto referenceData, SavingsProductFormBean formBean) {
         Map<String, GLCodeDto> principalGeneralLedgerOptions = new LinkedHashMap<String, GLCodeDto>();
-        GLCodeDto codeDto = new GLCodeDto();
         for (ListElement glCode : referenceData.getPrincipalGlCodes()) {
+        	GLCodeDto codeDto = new GLCodeDto();
         	codeDto.setGlcode(glCode.getName());
         	codeDto.setGlname(glCode.getGlname());
             principalGeneralLedgerOptions.put(glCode.getId().toString(), codeDto);
@@ -103,8 +104,8 @@ public class SavingsProductFormBeanAssembler {
 
     private void populateInterestGlCodesDropdown(SavingsProductFormDto referenceData, SavingsProductFormBean formBean) {
         Map<String, GLCodeDto> interestGeneralLedgerOptions = new LinkedHashMap<String, GLCodeDto>();
-        GLCodeDto codeDto = new GLCodeDto();
         for (ListElement glCode : referenceData.getInterestGlCodes()) {
+        	GLCodeDto codeDto = new GLCodeDto();
         	codeDto.setGlcode(glCode.getName());
         	codeDto.setGlname(glCode.getGlname());
             interestGeneralLedgerOptions.put(glCode.getId().toString(), codeDto);
