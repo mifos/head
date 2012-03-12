@@ -39,14 +39,29 @@ public class LoginController {
         // default contructor for spring autowiring
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView showForm(HttpServletRequest request, SitePreference sitePreference) {
-        Device currentDevice = DeviceUtils.getCurrentDevice(request);
 
-        ModelAndView modelAndView = new ModelAndView("login");
-        if (currentDevice.isMobile()) {
-            modelAndView = new ModelAndView("m_login");
-        }
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView showForm(HttpServletRequest request,
+			SitePreference sitePreference) {
+		ModelAndView modelAndView = new ModelAndView("login");
+		Device currentDevice = DeviceUtils.getCurrentDevice(request);
+        ServletContext context = request.getSession().getServletContext();
+        Locale locale = request.getLocale();
+        
+		String serverInfo = this.systemInformationServiceFacade
+				.getServerInformation(context, locale);
+		Pattern server_version = Pattern.compile("^jetty\\/7\\.3\\..*");
+		Matcher matcher = server_version.matcher(serverInfo);
+		Boolean isJetty = false;
+		if (matcher.matches()) {
+			isJetty = true;
+		}
+		modelAndView.addObject("isJetty" ,isJetty);
+		
+		if (currentDevice.isMobile()) {
+			modelAndView = new ModelAndView("m_login");
+		}
+
 
         return modelAndView;
     }
