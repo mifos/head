@@ -65,9 +65,7 @@ explanation of the license and how it is applied.
 							<tr>
 								<td width="70%" class="headingorange">
 									<span class="heading"> <c:out value="${param.prdOfferingName}" />&nbsp;#&nbsp; <c:out value="${param.globalAccountNum}" /> &nbsp;-&nbsp; </span>
-									<fmt:message key="loan.repayLoan">
-										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
-									</fmt:message>
+										<mifos:mifoslabel name="loan.repayloan" />
 								</td>
 							</tr>
 							<tr>

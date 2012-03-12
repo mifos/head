@@ -204,9 +204,8 @@ explanation of the license and how it is applied.
 									<td width="30%" align="right" class="fontnormal">
 										<font color="#FF0000">*</font>
 										<span id="editLoanAccount.label.loanAmount">
-										<fmt:message key="loan.loanAmount">
-											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
-										</fmt:message></span>:&nbsp;</td>
+											<mifos:mifoslabel name="loan.loanamount" />
+										</span>:&nbsp;</td>
 									<td valign="top"><html-el:text 
 										styleId="editLoanAccount.input.loanAmount"
 										property="loanAmount"

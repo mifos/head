@@ -81,10 +81,7 @@ explanation of the license and how it is applied.
 							<c:out value="${loanDisbursementActionForm.prdOfferingName}" />&nbsp;#&nbsp;
 							<c:out value="${loanDisbursementActionForm.globalAccountNum}" />
 							&nbsp;-&nbsp; </span> 
-							<fmt:message key="loan.disburseLoan">
-								<fmt:param><mifos:mifoslabel
-									name="${ConfigurationConstants.LOAN}" /></fmt:param>
-							</fmt:message></td>
+							<mifos:mifoslabel name="loan.disburseloan" /></td>
 						</tr>
 						<tr>
 							<td class="fontnormal"><mifos:mifoslabel mandatory="Yes"
@@ -130,10 +127,8 @@ explanation of the license and how it is applied.
 						<tr>
 							<td width="29%" align="right" class="fontnormal">
 								<span id="DisburseLoan.label.disbursementAmount">
-								<fmt:message key="loan.loanAmount">
-									<fmt:param><mifos:mifoslabel
-										name="${ConfigurationConstants.LOAN}" /></fmt:param>
-								</fmt:message></span>:&nbsp;</td>
+									<mifos:mifoslabel name="loan.loanamount" />
+								</span>:&nbsp;</td>
 							<td width="71%"><html-el:text styleId="DisburseLoan.input.disbursementAmount"
 								property="loanAmount" name="loanDisbursementActionForm"
 								disabled="true" /></td>
