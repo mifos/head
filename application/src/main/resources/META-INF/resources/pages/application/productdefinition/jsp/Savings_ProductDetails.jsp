@@ -240,7 +240,7 @@ explanation of the license and how it is applied.
 														<c:if test="${glCode.glcodeId == BusinessKey.depositGLCode.glcodeId}">
 															<c:out value="${glCode.glcode}" />
 														</c:if>
-													</c:forEach> <br> <mifos:mifoslabel name="product.Glcodefor" bundle="ProductDefUIResources" /> 
+													</c:forEach> <br> <mifos:mifoslabel name="product.glCodeFor" bundle="ProductDefUIResources" /> 
 													<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" isColonRequired="yes"/>
 													
 													<c:forEach var="glCode"	items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}">
