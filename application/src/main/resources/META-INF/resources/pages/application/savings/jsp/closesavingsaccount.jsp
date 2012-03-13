@@ -133,8 +133,7 @@ explanation of the license and how it is applied.
 						  				BusinessKey.recommendedAmntUnit.id==RecommendedAmountUnit.PERINDIVIDUAL.value)}">
 								<tr>
 					                <td align="right" class="fontnormal">
-			            				<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" mandatory="yes"/>
-										<mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/>
+										<mifos:mifoslabel name="Savings.ClientName" isColonRequired="yes"/>
 									</td>
 					                <td>				  				
 							  			<mifos:select name="savingsClosureForm" property="customerId">

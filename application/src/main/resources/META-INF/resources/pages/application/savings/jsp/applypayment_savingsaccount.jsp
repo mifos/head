@@ -89,8 +89,7 @@ explanation of the license and how it is applied.
 				  		<c:when test="${BusinessKey.groupModelWithIndividualAccountability == true}">
 						<tr>
 			                <td align="right" class="fontnormal">
-	            				<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" mandatory="yes"/>
-								<mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/>
+								<mifos:mifoslabel name="Savings.ClientName" isColonRequired="yes"/>
 							</td>
 			                <td>				  				
 					  			<mifos:select name="savingsDepositWithdrawalForm" styleId="applypayment_savingsaccount.input.customerId" property="customerId" onchange="javascript:reLoad(this.form)">

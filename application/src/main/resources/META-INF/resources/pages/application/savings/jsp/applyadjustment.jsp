@@ -96,8 +96,8 @@ explanation of the license and how it is applied.
 						<html-el:text styleId="applyadjustment.input.amount" name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount" styleClass="separatedNumber" />
 					</c:if>
 				   	<c:if test="${isLastPaymentValid == 1}">
-                    &nbsp; <c:if test="${(!empty clientName) or (BusinessKey.customer.customerLevel.id!=1)}"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
-                  	<mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/></c:if>
+                    &nbsp; <c:if test="${(!empty clientName) or (BusinessKey.customer.customerLevel.id!=1)}">
+                  	<mifos:mifoslabel name="Savings.ClientName" isColonRequired="yes"/></c:if>
                   	<c:choose>
 	              		<c:when test="${!empty clientName}">
 							(<c:out value="${clientName}"/>)

@@ -87,8 +87,8 @@ explanation of the license and how it is applied.
                 <td width="81%" class="fontnormal">
                 <fmt:formatNumber value="${sessionScope.savingsApplyAdjustmentActionForm.lastPaymentAmount}"/>
                 <c:if test="${isLastPaymentValid == 1}">
-                &nbsp;  <c:if test="${(!empty clientName) or (BusinessKey.customer.customerLevel.id!=1)}"> <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/> 
-                  	<mifos:mifoslabel name="Savings.clientName"/>:</c:if>
+                &nbsp;  <c:if test="${(!empty clientName) or (BusinessKey.customer.customerLevel.id!=1)}">  
+                  	<mifos:mifoslabel name="Savings.ClientName"/>:</c:if>
                   	<c:choose>
 	              		<c:when test="${!empty clientName}">
 							(<c:out value="${clientName}"/>)
