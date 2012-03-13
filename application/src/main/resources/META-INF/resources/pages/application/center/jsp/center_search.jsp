@@ -125,7 +125,7 @@ explanation of the license and how it is applied.
                  	    <td align="right">
                  	    	<span id="center_search.label.search">
                  	    		<mifos:mifoslabel name="Center.CenterName"/>
-                 	    	</span>:</td>
+                 	    	</span></td>
 		                <td>
 		                  <html-el:text styleId="center_search.input.search" property="searchString" maxlength = "200"/>
 		                </td>
