@@ -46,7 +46,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(singleThreaded = true, groups = {"penalties", "acceptance", "ui"})
+@Test(singleThreaded = true, groups = {"penalties", "acceptance", "ui", "no_db_unit"})
 @SuppressWarnings("PMD")
 public class MainPenaltyTest extends UiTestCaseBase {
     private static final String EDIT_CATEGORY_SAVINGS = "Savings";
@@ -190,7 +190,7 @@ public class MainPenaltyTest extends UiTestCaseBase {
         penaltiesPage.verifyInActivePenaltyLabel(4);
     }
     
-    @Test(enabled = true)
+    @Test(enabled = true, dependsOnMethods={"verifyCreateAndEditPenalty"})
     public void checkPermissionsForPenalties() throws Exception {
         String penaltyName = "Penalty Permission";
         String accessDenied = "Access Denied";
