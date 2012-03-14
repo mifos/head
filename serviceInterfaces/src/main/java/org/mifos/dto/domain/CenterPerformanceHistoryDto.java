@@ -52,8 +52,28 @@ public class CenterPerformanceHistoryDto implements Serializable {
         return totalOutstandingPortfolio;
     }
 
+    public boolean isTotalOutstandingPortfolioInvalid() {
+        boolean invalidAmount = false;
+        try {
+            Double.parseDouble(this.totalOutstandingPortfolio);
+        } catch (NumberFormatException e) {
+            invalidAmount = true;
+        }
+        return invalidAmount;
+    }
+
     public String getTotalSavings() {
         return totalSavings;
+    }
+
+    public boolean isTotalSavingsInvalid() {
+        boolean invalidAmount = false;
+        try {
+            Double.parseDouble(this.totalSavings);
+        } catch (NumberFormatException e) {
+            invalidAmount = true;
+        }
+        return invalidAmount;
     }
 
     public String getPortfolioAtRisk() {

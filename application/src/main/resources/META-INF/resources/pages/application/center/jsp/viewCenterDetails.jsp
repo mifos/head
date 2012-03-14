@@ -541,14 +541,26 @@ explanation of the license and how it is applied.
 								name="Center.Total" bundle="CenterUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
 								name="Center.portfolio" bundle="CenterUIResources"
-								isColonRequired="yes" /> <fmt:formatNumber
-								value="${centerInformationDto.centerPerformanceHistory.totalOutstandingPortfolio}" /></span></td>
+								isColonRequired="yes" />
+                                <c:if test="${centerInformationDto.centerPerformanceHistory.totalOutstandingPortfolioInvalid}">
+                                    <c:out value="${centerInformationDto.centerPerformanceHistory.totalOutstandingPortfolio}" />
+                                </c:if>
+                                <c:if test="${!centerInformationDto.centerPerformanceHistory.totalOutstandingPortfolioInvalid}">
+                                    <fmt:formatNumber value="${centerInformationDto.centerPerformanceHistory.totalOutstandingPortfolio}" />
+                                </c:if>
+								</span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="Center.Total" bundle="CenterUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes" />
-							<fmt:formatNumber value="${centerInformationDto.centerPerformanceHistory.totalSavings}" /></span></td>
+                                <c:if test="${centerInformationDto.centerPerformanceHistory.totalSavingsInvalid}">
+                                    <c:out value="${centerInformationDto.centerPerformanceHistory.totalSavings}" />
+                                </c:if>
+                                <c:if test="${!centerInformationDto.centerPerformanceHistory.totalSavingsInvalid}">
+                                    <fmt:formatNumber value="${centerInformationDto.centerPerformanceHistory.totalSavings}" />
+                                </c:if>
+							</span></td>
 						</tr>
 
 					</table>
