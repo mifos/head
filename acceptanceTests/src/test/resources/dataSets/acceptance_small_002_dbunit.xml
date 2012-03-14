@@ -65,6 +65,7 @@
   <DATABASECHANGELOG ID="MIFOS_5433_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-15 15:00:43.0" ORDEREXECUTED="239" EXECTYPE="EXECUTED" MD5SUM="3:b32077bdab52d6cb9a4337ee44105586" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5446_1" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-29 20:51:01.0" ORDEREXECUTED="269" EXECTYPE="EXECUTED" MD5SUM="3:da9b46d48c36748f47566fc805e67bc8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5450_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-08 11:19:45.0" ORDEREXECUTED="291" EXECTYPE="EXECUTED" MD5SUM="3:0cfec9003f3dd9fa4d189f93b136b1e2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5458_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-13 18:00:28.0" ORDEREXECUTED="292" EXECTYPE="EXECUTED" MD5SUM="3:d52e183334a1d2419a7cdf05145fbb44" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
   <QRTZ_CALENDARS/>
@@ -3060,6 +3061,7 @@
   <penalty_period period_id="3" lookup_id="656"/>
   <penalty_status status_id="1" lookup_id="654"/>
   <penalty_status status_id="2" lookup_id="655"/>
+  <penalty_trxn_detail/>
   <personnel personnel_id="1" level_id="2" global_personnel_num="1" office_id="1" title="1" personnel_status="1" preferred_locale="1" max_child_count="1" password="aN44v0pkryZHuRsN2EocydyfG5DONJVVFmGwYQ==" login_name="mifos" password_changed="1" display_name="mifos" created_by="1" updated_by="1" last_login="2008-12-31" locked="0" no_of_tries="0" version_no="5"/>
   <personnel personnel_id="2" level_id="1" global_personnel_num="0002-00002" office_id="2" personnel_status="1" preferred_locale="1" password="WoviPj5kRhqMSRTf6GyrB9SpaNbZuu9Z0VYVaQ==" login_name="bagonza1228423252312" email_id="bagonza+1228423252312@example.com" password_changed="0" display_name="Bagonza Wilson" created_by="1" created_date="2008-12-04" locked="0" no_of_tries="0" version_no="1"/>
   <personnel personnel_id="3" level_id="1" global_personnel_num="0003-00003" office_id="3" personnel_status="1" preferred_locale="1" password="ycJ7RBeAwuME9TrG0WISphkW26i2KQrYSHLd8w==" login_name="bagonza1228423681546" email_id="john+1228423681546@example.com" password_changed="0" display_name="John Okoth" created_by="1" created_date="2008-12-04" locked="0" no_of_tries="0" version_no="1"/>
