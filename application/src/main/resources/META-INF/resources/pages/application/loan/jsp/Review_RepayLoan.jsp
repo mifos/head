@@ -34,17 +34,19 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="ReviewRepayLoan"></span>
 		<script>
-			function fun_return(form){
-					form.action="loanAccountAction.do?method=get";
-					form.submit();
+			function fun_return(){
+					goBackToLoanAccountDetails.submit();
 			}
 			function fun_edit(form){
 					form.action="repayLoanAction.do?method=previous";
 					form.submit();
 			}
 	</script>
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+		</form>
 		<html-el:form  action="repayLoanAction.do?method=makeRepayment">
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 				<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -176,7 +178,7 @@ explanation of the license and how it is applied.
 									<td align="center"><html-el:submit styleId="Review_RepayLoan.button.submit" styleClass="buttn">
 										<mifos:mifoslabel name="loan.submit" />
 									</html-el:submit> &nbsp; <html-el:button styleId="Review_RepayLoan.button.cancel" property="cancelButton" styleClass="cancelbuttn" 
-										onclick="javascript:fun_return(this.form)">
+										onclick="javascript:fun_return()">
 										<mifos:mifoslabel name="loan.cancel" />
 									</html-el:button></td>
 								</tr>
