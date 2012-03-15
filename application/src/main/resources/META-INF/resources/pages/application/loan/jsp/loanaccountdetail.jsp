@@ -734,13 +734,11 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 
 										<c:when
 											test="${(loanInformationDto.accountStateId=='5' || loanInformationDto.accountStateId=='9' || loanInformationDto.accountStateId=='6') }">
-                                                <c:if test="${loanInformationDto.accountId != '10'}">
-                                                    <html-el:link styleId="loanaccountdetail.link.applyAdjustment"
-                                                        href="applyAdjustment.do?method=listPossibleAdjustments&accountId=${loanInformationDto.accountId}&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-                                                        <mifos:mifoslabel name="loan.apply_adjustment" />
-                                                    </html-el:link>
-                                                </c:if>
-												<br>
+                                            <html-el:link styleId="loanaccountdetail.link.applyAdjustment"
+                                                href="applyAdjustment.do?method=listPossibleAdjustments&accountId=${loanInformationDto.accountId}&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+                                                <mifos:mifoslabel name="loan.apply_adjustment" />
+                                            </html-el:link>
+											<br>
 										</c:when>
 									</c:choose> </span>
 
