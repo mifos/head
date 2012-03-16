@@ -16,6 +16,7 @@
         "loanCycleNumber": 0,
         "lastLoanAmount": "0.0",
         "noOfActiveLoans": 2,
+        "delinquentPortfolioAmountInvalid":false,
         "delinquentPortfolioAmount": "0.0",
         "totalSavingsAmount": "105.0",
         "meetingsAttended": 0,
