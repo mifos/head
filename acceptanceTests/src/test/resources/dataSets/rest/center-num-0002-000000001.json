@@ -10,7 +10,9 @@
    "centerPerformanceHistory":{
       "numberOfGroups":1,
       "portfolioAtRisk":"0.2",
+      "totalSavingsInvalid":false,
       "totalSavings":"105.0",
+      "totalOutstandingPortfolioInvalid":false,
       "totalOutstandingPortfolio":"1100.0",
       "numberOfClients":1
    },
