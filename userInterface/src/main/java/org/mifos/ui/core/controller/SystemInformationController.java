@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.RequestContext;
 
 @Controller
 @RequestMapping("/systemInformation")
@@ -54,8 +55,8 @@ public class SystemInformationController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView viewSystemInformation(HttpServletRequest request) {
         ServletContext context = request.getSession().getServletContext();
-
-        Locale locale = request.getLocale();
+        RequestContext requestContext = new RequestContext(request);
+        Locale locale = requestContext.getLocale();
 
         SystemInformationDto systemInformationDto = systemInformationServiceFacade.getSystemInformation(context, locale);
 
