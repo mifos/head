@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <web-app
      xmlns="http://java.sun.com/xml/ns/j2ee"
      version="2.4"
@@ -178,8 +177,6 @@
         <servlet-name>EngineServlet</servlet-name>
         <servlet-class>org.eclipse.birt.report.servlet.BirtEngineServlet</servlet-class>
     </servlet>
-
-    @generated@
 
     <servlet-mapping>
         <servlet-name>ViewerServlet</servlet-name>
