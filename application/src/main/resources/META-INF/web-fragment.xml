@@ -3,9 +3,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
 	version="3.0">
 	
-	<name>Mifos Application Core</name>
-	
-
+	<name>Mifos_Application_Core</name>
     <description>Microfinance portfolio management Web frontend and batch processor.</description>
     <display-name>Mifos Web Application</display-name>
 
