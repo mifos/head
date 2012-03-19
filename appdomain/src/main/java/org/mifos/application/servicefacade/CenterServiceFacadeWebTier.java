@@ -683,21 +683,13 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
         
-
-        LoanBO loanAccount = this.loanDao.findByGlobalAccountNum(globalAccountNum);
-        CustomerBO customerBO = loanAccount.getCustomer();
-        loanAccount.updateDetails(userContext);
-        
-        try {
-            personnelDao.checkAccessPermission(userContext, customerBO.getOfficeId(), customerBO.getLoanOfficerId());
-        } catch (AccountException e) {
-            throw new MifosRuntimeException("Access denied!", e);
-        }
-        
         try {
             AccountBO account = new AccountBusinessService().findBySystemId(globalAccountNum);
+            CustomerBO customerBO = account.getCustomer();
             account.updateDetails(userContext);
 
+            personnelDao.checkAccessPermission(userContext, customerBO.getOfficeId(), customerBO.getLoanOfficerId());
+            
             List<TransactionHistoryDto> transactionHistories = account.getTransactionHistoryView();
             for (TransactionHistoryDto transactionHistoryDto : transactionHistories) {
                 transactionHistoryDto.setUserPrefferedPostedDate(DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), transactionHistoryDto.getPostedDate().toString()));
@@ -706,6 +698,8 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
             return transactionHistories;
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
         }
     }
 
