@@ -182,11 +182,27 @@
             <div class="fontBold black-subheading">[@spring.message "manageSavngsProducts.editsavingsproduct.accounting" /]</div>
             <div>
                 <span>[@spring.message "manageSavngsProducts.editsavingsproduct.gLcodefordeposits" /]</span>
-                <span>${savingsProductDetails.depositGlCodeValue}</span>
+                [#if GLCodeMode == 1]
+               		<span>${savingsProductDetails.depositGlCodeValue} - ${savingsProductDetails.depositGlCodeName}</span>
+               	[#elseif GLCodeMode == 2]
+                	<span>${savingsProductDetails.depositGlCodeName} (${savingsProductDetails.depositGlCodeValue})</span>
+               	[#elseif GLCodeMode == 3]
+                	<span>${savingsProductDetails.depositGlCodeName}</span>
+               	[#elseif GLCodeMode == 4]
+                	<span>${savingsProductDetails.depositGlCodeValue}</span>
+               	[/#if]
             </div>
             <div>
                 <span>[@spring.message "manageSavngsProducts.editsavingsproduct.gLcodeforInterest" /]</span>
-                <span>${savingsProductDetails.interestGlCodeValue}</span>
+                [#if GLCodeMode == 1]
+               		<span>${savingsProductDetails.interestGlCodeValue} - ${savingsProductDetails.interestGlCodeName}</span>
+               	[#elseif GLCodeMode == 2]
+                	<span>${savingsProductDetails.interestGlCodeName} (${savingsProductDetails.interestGlCodeValue})</span>
+               	[#elseif GLCodeMode == 3]
+                	<span>${savingsProductDetails.interestGlCodeName}</span>
+               	[#elseif GLCodeMode == 4]
+                	<span>${savingsProductDetails.interestGlCodeValue}</span>
+               	[/#if]
             </div>
             </p>
             <p class="span-24 ">

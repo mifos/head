@@ -445,6 +445,7 @@ public class LoanPrdAction extends BaseAction {
         loanPrdActionForm.clear();
         loanPrdActionForm.setPrdOfferingId(getStringValue(loanOffering.getPrdOfferingId()));
         request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
+        request.setAttribute("GlNamesMode", AccountingRules.getGlNamesMode());
         setSelectedQuestionGroupsOnSession(request, loanOffering, getQuestionnaireServiceFacade(request));
         logger.debug("get method of Loan Product Action called" + loanOffering.getPrdOfferingId());
         return mapping.findForward(ActionForwards.get_success.toString());
