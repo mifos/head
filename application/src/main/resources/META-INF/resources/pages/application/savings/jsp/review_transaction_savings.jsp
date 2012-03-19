@@ -32,9 +32,8 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="review_transaction_savings"></span>
 	<script language="javascript">
-		function funCancel(form){
-			form.action="savingsDepositWithdrawalAction.do?method=cancel";
-			form.submit();
+		function funCancel(){
+			goBackToSavingsAccountDetails.submit();
 		}
 		function funMakePayment(form){
 			func_disableSubmitBtn("submitButton");
@@ -56,9 +55,12 @@ explanation of the license and how it is applied.
 		}
 	</script>
 <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
+<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+<form name="goBackToSavingsAccountDetails" method="get" action ="viewSavingsAccountDetails.ftl">
+	<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+</form>   
 <html-el:form method="post" action="savingsDepositWithdrawalAction.do?method=makePayment" >
     <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 	<table width="95%" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td class="bluetablehead05">
@@ -200,7 +202,7 @@ explanation of the license and how it is applied.
 						<mifos:mifoslabel name="savings.Submit" bundle="SavingsUIResources"/>
 	  		    </html-el:button>
 &nbsp;
-		      <html-el:button property="cancelButton" styleId="review_transaction_savings.button.cancel" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
+		      <html-el:button property="cancelButton" styleId="review_transaction_savings.button.cancel" onclick="javascript:funCancel()" styleClass="cancelbuttn">
 						<mifos:mifoslabel name="savings.Cancel" bundle="SavingsUIResources"/>
 			   </html-el:button>
                 </td>

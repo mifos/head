@@ -1,7 +1,5 @@
-function fun_cancel(form){
-	form.method.value="cancelAdjustment";
-	form.action="applyAdjustment.do?method=cancelAdjustment";
-	form.submit();
+function fun_cancel(){
+	goBackToLoanAccountDetails.submit();
 }
 
 function fn_submit(){

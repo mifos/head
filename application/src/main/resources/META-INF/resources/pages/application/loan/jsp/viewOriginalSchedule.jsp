@@ -33,10 +33,17 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="ViewOriginalSchedule"></span>
 		<script type="text/javascript" src="pages/application/loan/js/loanRepayment.js"></script>
-
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+		<form name="goBackToLoanAccountRepaymentSchedule" method="get" action="viewLoanAccountRepaymentSchedule.ftl">
+			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+			<input type="hidden" name='randomNUm' value="${requestScope.randomNUm}"/>
+			<input type="hidden" name='currentFlowKey' value="${requestScope.currentFlowKey}"/>
+		</form>
+		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+		</form>
 		<html-el:form method="post" action="/loanAccountAction.do">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
         <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'disbursementDate')}" var="disbursementDate" />
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -98,13 +105,13 @@ explanation of the license and how it is applied.
                                 <c:choose>
                                     <c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'originalSchedule')}">
                                         <html-el:button styleId="loanRepayment.button.return" property="returnToRepaymentScheduleButton"
-                                            onclick="LoanRepayment.submit(this.form,'getLoanRepaymentSchedule&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}');" styleClass="buttn" >
+                                            onclick="goBackToLoanAccountRepaymentSchedule.submit();" styleClass="buttn" >
                                             <mifos:mifoslabel name="loan.returnToRepaymentSchedule" bundle="loanUIResources" />
                                         </html-el:button>
                                     </c:when>
                                     <c:otherwise>
                                         <html-el:button styleId="loanRepayment.button.return" property="returnToAccountDetailsbutton"
-                                            onclick="LoanRepayment.submit(this.form,'get');" styleClass="buttn" >
+                                            onclick="goBackToLoanAccountDetails.submit();" styleClass="buttn" >
                                             <mifos:mifoslabel name="loan.returnToAccountDetails" bundle="loanUIResources" />
                                         </html-el:button>
                                     </c:otherwise>

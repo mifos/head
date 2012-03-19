@@ -34,17 +34,19 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="applyadjustment"></span>
 	<mifos:NumberFormattingInfo /> 
+	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+	<form name="goBackToSavingsAccountDetails" method="get" action ="viewSavingsAccountDetails.ftl">
+		<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+	</form>   
 	<html-el:form action="/savingsApplyAdjustmentAction.do?method=preview" >
 	 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountAction')}" var="accountActionValue" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isLastPaymentValid')}" var="isLastPaymentValid" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientName')}" var="clientName" />
 
 	<script language="javascript">
-		function funCancel(form){
-			form.action="savingsApplyAdjustmentAction.do?method=cancel";
-			form.submit();
+		function funCancel(){
+			goBackToSavingsAccountDetails.submit();
 		}
 	</script>
    <table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -137,7 +139,7 @@ explanation of the license and how it is applied.
 						<mifos:mifoslabel name="Savings.reviewAdjustment" />
 	  		    </html-el:submit>
 &nbsp;
-			    <html-el:button styleId="applyadjustment.button.cancel" property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
+			    <html-el:button styleId="applyadjustment.button.cancel" property="cancelButton" onclick="javascript:funCancel()" styleClass="cancelbuttn">
 						<mifos:mifoslabel name="loan.cancel" />
 			    </html-el:button>
                 </td>

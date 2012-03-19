@@ -106,6 +106,8 @@ explanation of the license and how it is applied.
                 minWidth: 40,
                 maxWidth: 100
             });
+            
+            jQuery('input[type=text]').first().trigger('click'); // resize text inputs on page load (if necessary)
         });
        
 		function fnSubmit(form, buttonSubmit) {

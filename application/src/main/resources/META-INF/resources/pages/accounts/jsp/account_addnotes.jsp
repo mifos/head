@@ -34,10 +34,19 @@ explanation of the license and how it is applied.
 		<script language="javascript">
 
 function goToCancelPage(){
-	notesActionForm.action="notesAction.do?method=cancel";
-	notesActionForm.submit();
+	goBackToAccountDetails.submit();
   }
 </script>
+	<c:if test="${sessionScope.notesActionForm.accountTypeId == '1'}">
+		<form name="goBackToAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+			<input type="hidden" name='globalAccountNum' value="${sessionScope.notesActionForm.globalAccountNum}"/>
+		</form>  
+	</c:if>
+	<c:if test="${sessionScope.notesActionForm.accountTypeId == '2'}">
+		<form name="goBackToAccountDetails" method="get" action ="viewSavingsAccountDetails.ftl">
+			<input type="hidden" name='globalAccountNum' value="${sessionScope.notesActionForm.globalAccountNum}"/>
+		</form>  
+	</c:if>
 		<html-el:form
 			action="notesAction.do?method=preview&globalAccountNum=${sessionScope.notesActionForm.globalAccountNum}">
 
