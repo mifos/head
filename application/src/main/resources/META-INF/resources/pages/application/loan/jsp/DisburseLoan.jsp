@@ -39,10 +39,8 @@ explanation of the license and how it is applied.
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BackDatedTransactionsAllowed')}" var="allowBackDatedTransactions" />
 	<body onload="disableFields()">
 		<script>
-			function fun_return(form){
-				form.action="loanAccountAction.do";
-				form.method.value="get";
-				form.submit();
+			function fun_return(){
+				goBackToLoanAccountDetails.submit();
 			}
 			
 			function disableFields(){
@@ -59,7 +57,9 @@ explanation of the license and how it is applied.
 
         <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
-		
+		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+			<input type="hidden" name='globalAccountNum' value="${loanDisbursementActionForm.globalAccountNum}"/>
+		</form>
 		<html-el:form
 			action="loanDisbursementAction.do?method=preview&globalAccountNum=${loanDisbursementActionForm.globalAccountNum}"
 			onsubmit="return (validateMyForm(transactionDate,transactionDateFormat,transactionDateYY) && validateMyForm(receiptDate,receiptDateFormat,receiptDateYY))">
@@ -187,7 +187,7 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="loan.reviewtransaction" />
 							</html-el:submit> &nbsp; <html-el:button styleId="DisburseLoan.button.cancel" property="cancelButton"
 								styleClass="cancelbuttn"
-								onclick="javascript:fun_return(this.form)">
+								onclick="javascript:fun_return()">
 								<mifos:mifoslabel name="loan.cancel" />
 							</html-el:button></td>
 						</tr>

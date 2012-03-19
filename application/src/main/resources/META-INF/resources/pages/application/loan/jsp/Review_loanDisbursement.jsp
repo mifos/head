@@ -34,11 +34,9 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="ReviewLoanDisbursement"></span>
 
 		<script>
-			function fun_return(form)
+			function fun_return()
 					{
-						form.action="loanAccountAction.do";
-						form.method.value="get";
-						form.submit();
+						goBackToLoanAccountDetails.submit();
 					}
 					
 			function fun_edit(form)
@@ -48,6 +46,9 @@ explanation of the license and how it is applied.
 						form.submit();
 					}
 	</script>
+		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+			<input type="hidden" name='globalAccountNum' value="${loanDisbursementActionForm.globalAccountNum}"/>
+		</form>
 		<html-el:form action="loanDisbursementAction.do?method=update">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -199,7 +200,7 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="loan.submit" />
 							</html-el:submit> &nbsp; <html-el:button styleId="Review_loanDisbursement.button.cancel" property="cancelButton"
 								styleClass="cancelbuttn"
-								onclick="javascript:fun_return(this.form)">
+								onclick="javascript:fun_return()">
 								<mifos:mifoslabel name="loan.cancel" />
 							</html-el:button></td>
 						</tr>
