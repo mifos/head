@@ -43,7 +43,7 @@
 <div class="suggestion">[@spring.message "createSavingsAccount.accountCreated.nextSteps" /]</div>
 <ul>
     <li><a href="createSavingsAccount.ftl?customerId=${savingsAccountFormBean.customer.customerId?c}">[@spring.message "createSavingsAccount.accountCreated.action.openNewSavingsAccount" /]</a></li>
-    <li><a href="loanAccountAction.do?method=getPrdOfferings&customerId=${savingsAccountFormBean.customer.customerId?c}">[@spring.message "createSavingsAccount.accountCreated.action.openNewLoanAccount" /]</a></li>
+    <li><a href="createLoanAccount.ftl?customerId=${savingsAccountFormBean.customer.customerId?c}">[@spring.message "createSavingsAccount.accountCreated.action.openNewLoanAccount" /]</a></li>
 </ul>
  
 [/@layout.webflow]
