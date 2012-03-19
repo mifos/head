@@ -929,6 +929,11 @@ public class LoanTestHelper {
         LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
         loanAccountPage.removeOneTimeFee(feeIndex);
     }
+    
+    public void removePeriodicFee(int feeIndex) {
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
+        loanAccountPage.removePeriodicFee(feeIndex);
+    }
 
     public void verifyNoOneTimeFeesExist() {
         LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
@@ -938,6 +943,16 @@ public class LoanTestHelper {
     public void verifyNoOneTimeFeeRemovalLinkExists(int feeIndex) {
         LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
         loanAccountPage.verifyNoOneTimeFeeRemovalLinkExists(feeIndex);
+    }
+    
+    public void verifyNoPeriodicFeeRemovalLinkExists(int feeIndex) {
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
+        loanAccountPage.verifyNoPeriodicFeeRemovalLinkExists(feeIndex);
+    }
+    
+    public void verifyNoPeriodicFee(String expectedFee, int feeIndex) {
+    	LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
+    	loanAccountPage.verifyPeriodicFeeExists(expectedFee, feeIndex);
     }
 
     public CreateLoanAccountCashFlowPage navigateToCreateLoanAccountCashFlowPage(CreateLoanAccountSearchParameters searchParams) {
@@ -953,4 +968,12 @@ public class LoanTestHelper {
         loanAccountPage.verifyPenaltyOriginal(penalty);
         loanAccountPage.verifyTotalOriginalLoan(total);
     }
+    
+    public void verifyValidationErrorAppear() {
+    	LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
+    	loanAccountPage.verifyValidationErrorAppear();
+    	
+    }
+    
+    
 }

@@ -535,15 +535,16 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								<br>
 							</c:if>
                             <span class="fontnormalbold"> <mifos:mifoslabel name="loan.recurring_acc_fees" /><br>
-							</span> <c:forEach items="${loanInformationDto.accountFees}" var="feesSet">
+							</span> <c:forEach items="${loanInformationDto.accountFees}" var="feesSet" varStatus="status">
 								<c:if
 									test="${feesSet.feeFrequencyTypeId == '1' && feesSet.feeStatus != '2'}">
-									<c:out value="${feesSet.feeName}" />:
+								<span id="loanAccountDetail.text.periodicFeeName_<fmt:formatNumber value="${status.count}"/>">
+									<c:out value="${feesSet.feeName}" /></span>:
 										<span class="fontnormal"> <fmt:formatNumber
 										value="${feesSet.accountFeeAmount}" />&nbsp;( <mifos:mifoslabel
 										name="loan.periodicityTypeRate" /> <c:out
 										value="${feesSet.meetingRecurrence}" />)
-									<html-el:link styleId="loanaccountdetail.link.removeFee"
+									<html-el:link styleId="loanAccountDetail.link.removePeriodicFee_${status.count}"
 										href="accountAppAction.do?method=removeFees&feeId=${feesSet.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
 										<mifos:mifoslabel name="loan.remove" />
 									</html-el:link> <br>
@@ -578,7 +579,9 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                             </span>
                             <c:forEach items="${loanInformationDto.accountPenalties}" var="penaltySet" varStatus="status">
                                 <c:if test="${penaltySet.penaltyFrequencyId != '1' && penaltySet.penaltyStatus != '2'}">
-                                    <c:out value="${penaltySet.penaltyName}" />:
+                                    <span id="loanAccountDetail.text.periodicPenaltyName_<fmt:formatNumber value="${status.count}"/>">
+                                        <c:out value="${penaltySet.penaltyName}"/>
+                                    </span>:
                                     <span class="fontnormal">
                                         <fmt:formatNumber value="${penaltySet.accountPenaltyAmount}" />&nbsp;
                                         (<c:out value="${penaltySet.penaltyFrequencyName}"/>) &nbsp;

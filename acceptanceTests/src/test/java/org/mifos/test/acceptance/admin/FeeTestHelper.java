@@ -54,7 +54,23 @@ public class FeeTestHelper {
         feeParameters.setGlCode(31301);
         dataSetup.createFee(feeParameters);
         return feeName;
+    }    
+	
+    public String createPeriodicRateFee(String feeName, String feeType, int recurrenceType, int recurrenceInterval, double rate, String feeFormula) throws SQLException {
+        FeesCreatePage.SubmitFormParameters feeParameters = new FeesCreatePage.SubmitFormParameters();
+        feeParameters.setFeeRecurrenceType(recurrenceType);
+        feeParameters.setFeeName(feeName);
+        feeParameters.setFeeFrequencyType(FeesCreatePage.SubmitFormParameters.PERIODIC_FEE_FREQUENCY);
+        feeParameters.setRate(rate);
+        feeParameters.setFeeFormula(feeFormula);
+        feeParameters.setCategoryType(feeType);
+        feeParameters.setWeekRecurAfter(recurrenceInterval);
+        feeParameters.setGlCode(31301);
+        dataSetup.createFee(feeParameters);
+        return feeName;
     }
+    
+    
     
     public void defineFees(FeesCreatePage.SubmitFormParameters feeParameters) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();

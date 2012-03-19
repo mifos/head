@@ -54,6 +54,10 @@ public class LoanAccountPage extends MifosPage {
     public void verifyOneTimeFeeExists(String expectedFee, int feeIndex) {
         Assert.assertEquals(selenium.getText("loanAccountDetail.text.oneTimeFeeName_" + feeIndex), expectedFee);
     }
+    
+    public void verifyPeriodicFeeExists(String expectedFee, int feeIndex) {
+    	Assert.assertEquals(selenium.getText("loanAccountDetail.text.periodicFeeName_" + feeIndex), expectedFee);
+    }
 
     public void verifyNoOneTimeFeesExist() {
         Assert.assertFalse(selenium.isElementPresent("id=loanAccountDetail.text.oneTimeFeeName_1"));
@@ -61,6 +65,10 @@ public class LoanAccountPage extends MifosPage {
 
     public void verifyNoOneTimeFeeRemovalLinkExists(int feeIndex) {
         Assert.assertFalse(selenium.isElementPresent("id=loanAccountDetail.link.removeOneTimeFee_" + feeIndex));
+    }
+    
+    public void verifyNoPeriodicFeeRemovalLinkExists(int feeIndex) {
+        Assert.assertFalse(selenium.isElementPresent("loanAccountDetail.link.removePeriodicFee_" + feeIndex));
     }
     
     public void verifyNoOneTimePenaltyRemovalLinkExists(int penaltyIndex) {
@@ -511,6 +519,12 @@ public class LoanAccountPage extends MifosPage {
         return this;
     }
     
+    public LoanAccountPage removePeriodicFee(int feeIndex) {
+        selenium.click("loanAccountDetail.link.removePeriodicFee_" + feeIndex);
+        waitForPageToLoad();
+        return this;
+    }
+    
     public LoanAccountPage removeOneTimePenalty(int penaltyIndex) {
         selenium.click("loanAccountDetail.link.removeOneTimePenalty_" + penaltyIndex);
         waitForPageToLoad();
@@ -583,6 +597,11 @@ public class LoanAccountPage extends MifosPage {
     
     public void verifyDisbursalDate(String disbursalDate) {
         Assert.assertEquals(selenium.getText("loanaccountdetail.details.disbursaldate"), disbursalDate);
+    }
+    
+    public void verifyValidationErrorAppear() {
+    	String msg = "Removing this fee is currently not supported since it would require recalculating the loan schedule after payments have been made.";
+    	Assert.assertTrue(selenium.isTextPresent(msg), "not found: " + msg);
     }
     
 

@@ -47,6 +47,8 @@ public class FeesCreatePage extends AbstractPage {
         private String calcuateFeeAs;
         private int calculateType;
         public static final String LOAN = "Loans";
+        public static final String LOAN_AMOUNT = "Loan Amount";
+        
 
         public String getFeeFormula() {
             return this.feeFormula;
