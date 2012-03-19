@@ -305,7 +305,20 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     
     @Override
 	public CollectionSheetErrorsDto saveCollectionSheet(final SaveCollectionSheetDto saveCollectionSheet) {
+    	
+    	MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	final SaveCollectionSheetDto saveCollectionSheetDto = saveCollectionSheet;
+        
+        UserContext userContext = new UserContextFactory().create(user);
+        int customerId = saveCollectionSheetDto.getSaveCollectionSheetCustomers().get(0).getCustomerId();
+        CustomerBO customerBO = this.customerDao.findCustomerById(customerId);
 
+        try {
+            personnelDao.checkAccessPermission(userContext, customerBO.getOfficeId(), customerBO.getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
+        }
+        
         CollectionSheetErrorsDto collectionSheetErrorsDto = null;
         try {
             collectionSheetErrorsDto = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
