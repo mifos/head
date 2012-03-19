@@ -36,8 +36,11 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="ApplyAdjustment"></span>
 		<SCRIPT SRC="pages/accounts/js/applyadjustment.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+		</form>
 		<html-el:form method="post" action="applyAdjustment.do" onsubmit="return fn_submit();">
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'adjAmount')}" var="adjAmount" />
 
             <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'adjustmentPaymentType')}" var="adjustmentPaymentType" />
@@ -331,7 +334,7 @@ explanation of the license and how it is applied.
 								</c:choose>
 
 								 &nbsp; 
-								<html-el:button styleId="applyadjustment.button.cancel" styleClass="cancelbuttn" onclick="javascript:fun_cancel(this.form)" property="cancel">
+								<html-el:button styleId="applyadjustment.button.cancel" styleClass="cancelbuttn" onclick="javascript:fun_cancel()" property="cancel">
 									<mifos:mifoslabel name="accounts.cancel">
 									</mifos:mifoslabel>
 								</html-el:button></td>

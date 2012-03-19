@@ -36,10 +36,9 @@ explanation of the license and how it is applied.
 		<span id="page.id" title="RepayLoan"></span>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script>
-			function fun_return(form)
+			function fun_return()
 					{
-						form.action="loanAccountAction.do?method=get";
-						form.submit();
+						goBackToLoanAccountDetails.submit();
 					}
 		</script>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
@@ -47,7 +46,9 @@ explanation of the license and how it is applied.
 
 		<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
-		
+		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+			<input type="hidden" name='globalAccountNum' value="${param.globalAccountNum}"/>
+		</form>
 		<html-el:form action="repayLoanAction.do?method=preview&globalAccountNum=${param.globalAccountNum}"
 		    onsubmit="return validateMyForm(receiptDate,receiptDateFormat,receiptDateYY) && validateMyForm(dateOfPayment,dateOfPaymentFormat,dateOfPaymentYY)">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
@@ -178,7 +179,7 @@ explanation of the license and how it is applied.
 										<mifos:mifoslabel name="loan.reviewtransaction" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button styleId="RepayLoan.button.cancel" property="cancelButton" styleClass="cancelbuttn"  onclick="javascript:fun_return(this.form)">
+									<html-el:button styleId="RepayLoan.button.cancel" property="cancelButton" styleClass="cancelbuttn"  onclick="javascript:fun_return()">
 										<mifos:mifoslabel name="loan.cancel" />
 									</html-el:button>
 								</td>

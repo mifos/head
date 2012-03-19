@@ -119,7 +119,7 @@ explanation of the license and how it is applied.
 											test="${!empty groupInformationDto.groupDisplay and !empty groupInformationDto.groupDisplay.loanOfficerId}">
 											<c:forEach var="client" items="${groupInformationDto.clientsOtherThanClosedAndCancelled}">
 												<a id="viewgroupdetails.link.client"
-													href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}&recordOfficeId=${groupInformationDto.groupDisplay.branchId}&recordLoanOfficerId=${groupInformationDto.groupDisplay.loanOfficerId}">
+													href="viewClientDetails.ftl?globalCustNum=${client.globalCustNum}&recordOfficeId=${groupInformationDto.groupDisplay.branchId}&recordLoanOfficerId=${groupInformationDto.groupDisplay.loanOfficerId}">
 												<c:out value="${client.displayName}" /> <c:out
 													value="${customerfn:getClientPosition(groupInformationDto.customerPositions,client)}" />
 												<br>

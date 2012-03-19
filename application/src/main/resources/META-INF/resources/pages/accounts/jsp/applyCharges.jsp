@@ -37,10 +37,9 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="ApplyCharges"></span>
 	<mifos:NumberFormattingInfo />
 		<script>
-				function fun_cancel(form)
+				function fun_cancel()
 				{
-						form.action="applyChargeAction.do?method=cancel";
-						form.submit();
+					goBackToLoanAccountDetails.submit();
 				}
 
 				function fun_submit(){
@@ -106,8 +105,11 @@ explanation of the license and how it is applied.
 			}
 
 	</script>
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+		</form>
 		<html-el:form method="post" action="applyChargeAction.do?method=update" onsubmit="fun_submit()">
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<html-el:hidden property="selectedChargeFormula" value="" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -216,7 +218,7 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="accounts.submit"></mifos:mifoslabel>
 							</html-el:submit> &nbsp;
 							 <html-el:button styleId="applyCharges.button.cancel" property="btn"  styleClass="cancelbuttn"
-								onclick="javascript:fun_cancel(this.form)">
+								onclick="javascript:fun_cancel()">
 								<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
 							</html-el:button></td>
 						</tr>

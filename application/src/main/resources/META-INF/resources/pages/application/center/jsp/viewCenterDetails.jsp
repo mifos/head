@@ -137,7 +137,7 @@ explanation of the license and how it is applied.
 								<c:when test="${!empty centerInformationDto.groupsOtherThanClosedAndCancelled}">
 									<c:forEach var="group" items="${centerInformationDto.groupsOtherThanClosedAndCancelled}">
 										<span class="fontnormal"> <a id="viewCenterDetails.link.group"
-											href="groupCustAction.do?method=get&globalCustNum=${group.globalCustNum}&recordOfficeId=${centerInformationDto.centerDisplay.branchId}&recordLoanOfficerId=${centerInformationDto.centerDisplay.branchId}">
+											href="viewGroupDetails.ftl?globalCustNum=${group.globalCustNum}&recordOfficeId=${centerInformationDto.centerDisplay.branchId}&recordLoanOfficerId=${centerInformationDto.centerDisplay.branchId}">
 										<c:out value="${group.displayName}" /></a><br>
 										</span>
 									</c:forEach>

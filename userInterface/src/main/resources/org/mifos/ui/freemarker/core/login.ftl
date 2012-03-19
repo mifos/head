@@ -56,6 +56,13 @@
         <!--End of Right side div-->
       </form>
     </div>
+   	<div class="error">
+      <span id="login.error.message">
+      	[#if !isJetty]
+         	<span>[@spring.message "login.serverisnotjetty"/]</span><br/>
+        [/#if]
+        </span>
+    </div>
   <!--Main Login Ends-->
 <span id="chinese-info-on-login-page">
 [@spring.message "login.chinese.translation.attribution" /]

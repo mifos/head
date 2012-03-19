@@ -39,15 +39,17 @@ explanation of the license and how it is applied.
 			customerAccountActionForm.action="customerAccountAction.do?method=load";
 		customerAccountActionForm.submit();
 	}
-	function ViewLoanDetails(form){
-		form.action="loanAccountAction.do?method=get";
-		form.submit();
+	function ViewLoanDetails(){
+		goBackToLoanAccountDetails.submit();
 	}
 	function goToPrevious(form){
 		form.action="applyPaymentAction.do?method=previous";
 		form.submit()
 	}
 </SCRIPT>
+		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+			<input type="hidden" name='globalAccountNum' value="${param.globalAccountNum}"/>
+		</form>
 		<html-el:form method="post" action="/applyPaymentAction.do?method=applyPayment">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 
@@ -161,7 +163,7 @@ explanation of the license and how it is applied.
 					</html-el:submit> &nbsp; <c:choose>
 								<c:when test="${param.input == 'loan'}">
 									<html-el:button styleId="reviewapplypayment.button.cancel" styleClass="cancelbuttn" property="Cancel"
-										onclick="ViewLoanDetails(this.form)">
+										onclick="ViewLoanDetails()">
 										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
 									</html-el:button>
 
