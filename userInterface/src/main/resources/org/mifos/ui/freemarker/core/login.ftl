@@ -63,6 +63,7 @@
         [/#if]
         </span>
     </div>
+  </div>
   <!--Main Login Ends-->
 <span id="chinese-info-on-login-page">
 [@spring.message "login.chinese.translation.attribution" /]

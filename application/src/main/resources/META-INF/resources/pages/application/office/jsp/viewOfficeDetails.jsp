@@ -192,7 +192,7 @@ explanation of the license and how it is applied.
 									<c:param name="entityId" value="${officeDto.id}" />
 									<c:param name="event" value="Create" />
 									<c:param name="source" value="Office" />
-									<c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
+									<c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}&method=get" />
 								</c:url >
                                      <c:set target="${urlMap}" property="${officeDto.name}" value="offAction.do?method=get&officeId=${officeDto.id}"/>
 									<a id="officeDetail.link.questionGroups" href="${viewAndEditQuestionnaireMethodUrl}">
