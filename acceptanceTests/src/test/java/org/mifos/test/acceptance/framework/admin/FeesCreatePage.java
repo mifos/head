@@ -1,6 +1,8 @@
 package org.mifos.test.acceptance.framework.admin;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
+import org.mifos.test.acceptance.util.StringUtil;
+
 import com.thoughtworks.selenium.Selenium;
 
 public class FeesCreatePage extends AbstractPage {
@@ -168,6 +170,44 @@ public class FeesCreatePage extends AbstractPage {
 
         public void setCalculateType(int calculateType) {
             this.calculateType = calculateType;
+        }
+        
+        public String getGlCodeName() {
+            return Integer.toString(glCode);
+        }
+
+        public String getDefaultFeesName() {
+            if (defaultFees) {
+                return "Yes";
+            } else {
+                return "No";
+            }
+        }
+
+        public String getFeeAppliesToName() {
+            return categoryType;
+        }
+
+        public String getFrequencyName() {
+            if (feeFrequencyType == PERIODIC_FEE_FREQUENCY) {
+                return "Periodic";
+            } else {
+                return "One Time";
+            }
+        }
+
+        public String getAmountName() {
+            return StringUtil.formatNumber(Double.toString(amount));
+        }
+
+        public String getTimeOfChargeName() {
+            if (feeFrequencyType == ONETIME_FEE_FREQUENCY) {
+                return customerCharge;
+            } else if (feeRecurrenceType == MONTHLY_FEE_RECURRENCE) {
+                return "Recur every " + monthRecurAfter + " month(s)";
+            } else {
+                return "Recur every " + weekRecurAfter + " week(s)";
+            }
         }
     }
 
