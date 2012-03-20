@@ -87,8 +87,8 @@ public class FormParametersHelper {
         formParameters.setMaxInstallments("72");
         formParameters.setDefInstallments("60");
         formParameters.setGracePeriodType(DefineNewLoanProductPage.SubmitFormParameters.NONE);
-        formParameters.setInterestGLCode("31102");
-        formParameters.setPrincipalGLCode("1506");
+        formParameters.setInterestGLCode("31102 - Penalty");
+        formParameters.setPrincipalGLCode("1506 - Managed WFLoan");
         return formParameters;
     }
 
