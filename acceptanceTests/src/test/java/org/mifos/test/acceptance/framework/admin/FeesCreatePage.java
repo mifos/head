@@ -177,11 +177,13 @@ public class FeesCreatePage extends AbstractPage {
         }
 
         public String getDefaultFeesName() {
+            String result;
             if (defaultFees) {
-                return "Yes";
+                result = "Yes";
             } else {
-                return "No";
+                result = "No";
             }
+            return result;
         }
 
         public String getFeeAppliesToName() {
@@ -189,11 +191,13 @@ public class FeesCreatePage extends AbstractPage {
         }
 
         public String getFrequencyName() {
+            String result;
             if (feeFrequencyType == PERIODIC_FEE_FREQUENCY) {
-                return "Periodic";
+                result = "Periodic";
             } else {
-                return "One Time";
+                result = "One Time";
             }
+            return result;
         }
 
         public String getAmountName() {
@@ -201,13 +205,15 @@ public class FeesCreatePage extends AbstractPage {
         }
 
         public String getTimeOfChargeName() {
+            String result;
             if (feeFrequencyType == ONETIME_FEE_FREQUENCY) {
-                return customerCharge;
+                result = customerCharge;
             } else if (feeRecurrenceType == MONTHLY_FEE_RECURRENCE) {
-                return "Recur every " + monthRecurAfter + " month(s)";
+                result = "Recur every " + monthRecurAfter + " month(s)";
             } else {
-                return "Recur every " + weekRecurAfter + " week(s)";
+                result = "Recur every " + weekRecurAfter + " week(s)";
             }
+            return result;
         }
     }
 
