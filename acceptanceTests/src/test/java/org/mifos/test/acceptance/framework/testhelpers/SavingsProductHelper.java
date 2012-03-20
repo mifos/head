@@ -89,8 +89,8 @@ public class SavingsProductHelper {
         params.setNumberOfDaysOrMonthsForInterestCalculation("3");
         params.setFrequencyOfInterestPostings("6");
 
-        params.setGlCodeForDeposit("24101");
-        params.setGlCodeForInterest("41102");
+        params.setGlCodeForDeposit("24101 - Mandatory Savings Accounts");
+        params.setGlCodeForInterest("41102 - Interest on clients mandatory savings");
 
         return params;
     }
