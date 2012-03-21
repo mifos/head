@@ -37,26 +37,26 @@ public class PenaltyFormPage extends MifosPage {
     
     @SuppressWarnings("PMD.NPathComplexity")
     public PenaltyFormPage fillParameters(final PenaltyFormParameters parameters) {
-        typeText("name", parameters.getName());
+        selenium.type("name", parameters.getName());
 
         if (selenium.isElementPresent("categoryTypeId") && selenium.isVisible("categoryTypeId")) {
             selectIfNotEmpty("categoryTypeId", parameters.getApplies());
         }
 
         selectIfNotEmpty("periodTypeId", parameters.getPeriod());
-        typeText("duration", parameters.getDuration());
-        typeText("min", parameters.getMin());
-        typeText("max", parameters.getMax());
+        selenium.type("duration", parameters.getDuration());
+        selenium.type("min", parameters.getMin());
+        selenium.type("max", parameters.getMax());
 
         if (selenium.isElementPresent("amount")) {
-            typeText("amount", parameters.getAmount());
+            selenium.type("amount", parameters.getAmount());
         }
 
         if (selenium.isElementPresent("rate")) {
-            typeText("rate", "");
+            selenium.type("rate", "");
 
             if (StringUtils.hasText(parameters.getRate())) {
-                typeText("rate", parameters.getRate());
+                selenium.type("rate", parameters.getRate());
             }
         }
 
