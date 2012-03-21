@@ -57,16 +57,56 @@ public class GroupPerformanceHistoryDto implements Serializable {
         return this.avgLoanAmountForMember;
     }
 
+    public boolean isAvgLoanAmountForMemberInvalid() {
+        boolean invalidAmount = false;
+        try {
+            Double.parseDouble(this.avgLoanAmountForMember);
+        } catch (NumberFormatException e) {
+            invalidAmount = true;
+        }
+        return invalidAmount;
+    }
+
     public String getTotalOutStandingLoanAmount() {
         return this.totalOutStandingLoanAmount;
+    }
+
+    public boolean isTotalOutStandingLoanAmountInvalid() {
+        boolean invalidAmount = false;
+        try {
+            Double.parseDouble(this.totalOutStandingLoanAmount);
+        } catch (NumberFormatException e) {
+            invalidAmount = true;
+        }
+        return invalidAmount;
     }
 
     public String getPortfolioAtRisk() {
         return this.portfolioAtRisk;
     }
 
+    public boolean isPortfolioAtRiskInvalid() {
+        boolean invalidAmount = false;
+        try {
+            Double.parseDouble(this.portfolioAtRisk);
+        } catch (NumberFormatException e) {
+            invalidAmount = true;
+        }
+        return invalidAmount;
+    }
+
     public String getTotalSavingsAmount() {
         return this.totalSavingsAmount;
+    }
+
+    public boolean isTotalSavingsAmountInvalid() {
+        boolean invalidAmount = false;
+        try {
+            Double.parseDouble(this.totalSavingsAmount);
+        } catch (NumberFormatException e) {
+            invalidAmount = true;
+        }
+        return invalidAmount;
     }
 
     public List<LoanCycleCounter> getLoanCycleCounters() {

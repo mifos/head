@@ -639,7 +639,7 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
         UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
         Locale locale = userContext.getPreferredLocale();
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.PERSONNELUIRESOURCESPATH, locale);
-        String statusString = resources.getString("Personnel.status");
+        String statusString = resources.getString("Personnel.Status");
         if (StringUtils.isBlank(status)) {
             errors.add(PersonnelConstants.STATUS, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, statusString));
         }

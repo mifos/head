@@ -65,6 +65,16 @@ public class ClientPerformanceHistoryDto implements Serializable {
         return this.delinquentPortfolioAmount;
     }
 
+    public boolean isDelinquentPortfolioAmountInvalid() {
+        boolean invalidAmount = false;
+        try {
+            Double.parseDouble(this.delinquentPortfolioAmount);
+        } catch (NumberFormatException e) {
+            invalidAmount = true;
+        }
+        return invalidAmount;
+    }
+
     public String getTotalSavingsAmount() {
         return this.totalSavingsAmount;
     }

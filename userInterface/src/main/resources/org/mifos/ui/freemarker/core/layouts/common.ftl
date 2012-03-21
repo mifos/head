@@ -44,11 +44,14 @@
     <script type="text/javascript" src="pages/js/jquery/jquery.ui.datepicker.min.js"></script>
     <script type="text/javascript" src="pages/js/jquery/jquery-ui-i18n.js"></script>
     <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
+    <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.min-2.1.2.js"></script>
     <script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
     <script type="text/javascript" src="pages/js/jquery/jquery.validate.min.js"></script>
     <script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
     <script type="text/javascript" src="pages/js/lab.js"></script>
     <script type="text/javascript" src="pages/js/separator.js"></script>
+    <script type="text/javascript" src="pages/js/datejs/date.js"></script>
+    <!--[if IE]><script type="text/javascript" src="pages/js/jquery/jquery.bgiframe.js"></script><![endif]-->
     </head>
     <body>
 [/#macro]

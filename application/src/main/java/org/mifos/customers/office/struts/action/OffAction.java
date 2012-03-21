@@ -22,8 +22,6 @@ package org.mifos.customers.office.struts.action;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -206,14 +204,14 @@ public class OffAction extends BaseAction {
         setCurrentPageUrl(request, officeDto);
         return mapping.findForward(ActionForwards.get_success.toString());
     }
-    private void setCurrentPageUrl(HttpServletRequest request, OfficeDto officeDto) throws PageExpiredException, UnsupportedEncodingException {
+    private void setCurrentPageUrl(HttpServletRequest request, OfficeDto officeDto) throws PageExpiredException {
         SessionUtils.removeThenSetAttribute("currentPageUrl", constructCurrentPageUrl(officeDto), request);
     }
 
-    private String constructCurrentPageUrl(OfficeDto officeDto) throws UnsupportedEncodingException {
+    private String constructCurrentPageUrl(OfficeDto officeDto) {
         String url = String.format("offAction.do?officeId=%h",
                 officeDto.getId());
-        return URLEncoder.encode(url, "UTF-8");
+        return url;
     }
 
     @TransactionDemarcate(joinToken = true)

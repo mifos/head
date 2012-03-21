@@ -86,7 +86,7 @@ explanation of the license and how it is applied.
 							<td class="fontnormal"><br>
 							<mifos:mifoslabel name="savings.SelectStatus"
 								bundle="SavingsUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="savings.ClickContinue" bundle="SavingsUIResources"></mifos:mifoslabel>
+								name="savings.clickContinue" bundle="SavingsUIResources"></mifos:mifoslabel>
 							<mifos:mifoslabel name="savings.ClickCancel1"
 								bundle="SavingsUIResources"></mifos:mifoslabel>
 							<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"></mifos:mifoslabel>

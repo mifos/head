@@ -123,7 +123,7 @@ explanation of the license and how it is applied.
                          <table width="93%" border="0" cellpadding="3" cellspacing="0">
                 <tr>
                   <td class="headingorange"><span class="heading">
-                  	<fmt:message key="Group.createNew">
+                  	<fmt:message key="Group.createnew">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 					</fmt:message>
                   - </span>

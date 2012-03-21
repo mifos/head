@@ -124,9 +124,8 @@ explanation of the license and how it is applied.
 					 <tr class="fontnormal">
                  	    <td align="right">
                  	    	<span id="center_search.label.search">
-                 	    	<fmt:message key="Center.centerName">
-                 	    		<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/></fmt:param>
-                 	    	</fmt:message></span>:</td>
+                 	    		<mifos:mifoslabel name="Center.CenterName"/>
+                 	    	</span></td>
 		                <td>
 		                  <html-el:text styleId="center_search.input.search" property="searchString" maxlength = "200"/>
 		                </td>

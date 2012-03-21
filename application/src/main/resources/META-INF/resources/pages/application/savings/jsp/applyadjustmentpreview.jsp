@@ -30,17 +30,19 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
     <span id="page.id" title="applyadjustmentpreview"></span>
+   	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+   	<form name="goBackToSavingsAccountDetails" method="get" action ="viewSavingsAccountDetails.ftl">
+		<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+	</form>   
 	<html-el:form  action="savingsApplyAdjustmentAction?method=adjustLastUserAction">
 	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountAction')}" var="accountAction" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isLastPaymentValid')}" var="isLastPaymentValid" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientName')}" var="clientName" />
 	
 	<script language="javascript">
-		function funCancel(form){
-			form.action="savingsApplyAdjustmentAction.do?method=cancel";
-			form.submit();
+		function funCancel(){
+			goBackToSavingsAccountDetails.submit();
 		}
 		function fnEditApplyAdjustment(form){
 			form.action="savingsApplyAdjustmentAction.do?method=previous";
@@ -87,8 +89,8 @@ explanation of the license and how it is applied.
                 <td width="81%" class="fontnormal">
                 <fmt:formatNumber value="${sessionScope.savingsApplyAdjustmentActionForm.lastPaymentAmount}"/>
                 <c:if test="${isLastPaymentValid == 1}">
-                &nbsp;  <c:if test="${(!empty clientName) or (BusinessKey.customer.customerLevel.id!=1)}"> <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/> 
-                  	<mifos:mifoslabel name="Savings.clientName"/>:</c:if>
+                &nbsp;  <c:if test="${(!empty clientName) or (BusinessKey.customer.customerLevel.id!=1)}">  
+                  	<mifos:mifoslabel name="Savings.ClientName"/>:</c:if>
                   	<c:choose>
 	              		<c:when test="${!empty clientName}">
 							(<c:out value="${clientName}"/>)
@@ -132,7 +134,7 @@ explanation of the license and how it is applied.
 						<mifos:mifoslabel name="loan.submit" />
 	  		    </html-el:submit>
 &nbsp;
-				<html-el:button property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
+				<html-el:button property="cancelButton" onclick="javascript:funCancel()" styleClass="cancelbuttn">
 						<mifos:mifoslabel name="loan.cancel" />
 			    </html-el:button>
                 </td>

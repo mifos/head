@@ -761,8 +761,14 @@ explanation of the license and how it is applied.
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
 								name="client.DeliquentPortfolio" bundle="ClientUIResources" />
-							<span id="viewClientDetails.text.delinquentportfolio"><fmt:formatNumber
-								value="${clientInformationDto.clientPerformanceHistory.delinquentPortfolioAmount}" /></span></span></td>
+							<span id="viewClientDetails.text.delinquentportfolio">
+                                <c:if test="${clientInformationDto.clientPerformanceHistory.delinquentPortfolioAmountInvalid}">
+                                    <c:out value="${clientInformationDto.clientPerformanceHistory.delinquentPortfolioAmount}" />
+                                </c:if>
+                                <c:if test="${!clientInformationDto.clientPerformanceHistory.delinquentPortfolioAmountInvalid}">
+                                    <fmt:formatNumber value="${clientInformationDto.clientPerformanceHistory.delinquentPortfolioAmount}" />
+                                </c:if>
+							</span></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <fmt:message

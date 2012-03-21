@@ -17,10 +17,14 @@
    "customerPositions":null,
    "groupPerformanceHistory":{
       "lastGroupLoanAmount":"0.0",
+      "portfolioAtRiskInvalid":false,
       "portfolioAtRisk":"0.0",
+      "totalSavingsAmountInvalid":false,
       "totalSavingsAmount":"105.0",
+      "avgLoanAmountForMemberInvalid":false,
       "avgLoanAmountForMember":"550.0",
       "activeClientCount":"1",
+      "totalOutStandingLoanAmountInvalid":false,
       "totalOutStandingLoanAmount":"1100.0",
       "loanCycleCounters":[
 

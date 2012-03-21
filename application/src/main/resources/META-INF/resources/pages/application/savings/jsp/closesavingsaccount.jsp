@@ -33,14 +33,16 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="closesavingsaccount"></span>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<script language="javascript">
-		function funCancel(form){
-			form.action="savingsClosureAction.do?method=cancel";
-			form.submit();
+		function funCancel(){
+			goBackToSavingsAccountDetails.submit();
 		}
 	</script>
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+		<form name="goBackToSavingsAccountDetails" method="get" action ="viewSavingsAccountDetails.ftl">
+			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+		</form>  
 		<html-el:form method="post" action="/savingsClosureAction.do?method=preview">
 		 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountPayment')}" var="accountPayment" />
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -133,8 +135,7 @@ explanation of the license and how it is applied.
 						  				BusinessKey.recommendedAmntUnit.id==RecommendedAmountUnit.PERINDIVIDUAL.value)}">
 								<tr>
 					                <td align="right" class="fontnormal">
-			            				<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" mandatory="yes"/>
-										<mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/>
+										<mifos:mifoslabel name="Savings.ClientName" isColonRequired="yes"/>
 									</td>
 					                <td>				  				
 							  			<mifos:select name="savingsClosureForm" property="customerId">
@@ -180,7 +181,7 @@ explanation of the license and how it is applied.
 										<mifos:mifoslabel name="loan.preview" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button styleId="closesavingsaccount.button.cancel" property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
+									<html-el:button styleId="closesavingsaccount.button.cancel" property="cancelButton" onclick="javascript:funCancel()" styleClass="cancelbuttn">
 										<mifos:mifoslabel name="loan.cancel" />
 									</html-el:button>
 								</td>

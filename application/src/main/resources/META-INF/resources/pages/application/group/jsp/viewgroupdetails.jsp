@@ -119,7 +119,7 @@ explanation of the license and how it is applied.
 											test="${!empty groupInformationDto.groupDisplay and !empty groupInformationDto.groupDisplay.loanOfficerId}">
 											<c:forEach var="client" items="${groupInformationDto.clientsOtherThanClosedAndCancelled}">
 												<a id="viewgroupdetails.link.client"
-													href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}&recordOfficeId=${groupInformationDto.groupDisplay.branchId}&recordLoanOfficerId=${groupInformationDto.groupDisplay.loanOfficerId}">
+													href="viewClientDetails.ftl?globalCustNum=${client.globalCustNum}&recordOfficeId=${groupInformationDto.groupDisplay.branchId}&recordLoanOfficerId=${groupInformationDto.groupDisplay.loanOfficerId}">
 												<c:out value="${client.displayName}" /> <c:out
 													value="${customerfn:getClientPosition(groupInformationDto.customerPositions,client)}" />
 												<br>
@@ -693,8 +693,14 @@ explanation of the license and how it is applied.
 								<fmt:message key="Group.Avgindividual">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 					</fmt:message>   
-								<span id="viewgroupdetails.text.avgIndyvidualLoanSize"><fmt:formatNumber
-								value="${groupInformationDto.groupPerformanceHistory.avgLoanAmountForMember}" /></span></span></td>
+								<span id="viewgroupdetails.text.avgIndyvidualLoanSize">
+                                    <c:if test="${groupInformationDto.groupPerformanceHistory.avgLoanAmountForMemberInvalid}">
+                                        <c:out value="${groupInformationDto.groupPerformanceHistory.avgLoanAmountForMember}" />
+                                    </c:if>
+                                    <c:if test="${!groupInformationDto.groupPerformanceHistory.avgLoanAmountForMemberInvalid}">
+                                        <fmt:formatNumber value="${groupInformationDto.groupPerformanceHistory.avgLoanAmountForMember}" />
+                                    </c:if>
+								</span></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> 
@@ -702,20 +708,37 @@ explanation of the license and how it is applied.
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 					</fmt:message>    
 								
-								<span id="viewgroupdetails.text.totalLoanPortfolio"><fmt:formatNumber
-								value="${groupInformationDto.groupPerformanceHistory.totalOutStandingLoanAmount}" /></span></span></td>
+								<span id="viewgroupdetails.text.totalLoanPortfolio">
+                                    <c:if test="${groupInformationDto.groupPerformanceHistory.totalOutStandingLoanAmountInvalid}">
+                                        <c:out value="${groupInformationDto.groupPerformanceHistory.totalOutStandingLoanAmount}" />
+                                    </c:if>
+                                    <c:if test="${!groupInformationDto.groupPerformanceHistory.totalOutStandingLoanAmountInvalid}">
+                                        <fmt:formatNumber value="${groupInformationDto.groupPerformanceHistory.totalOutStandingLoanAmount}" />
+                                    </c:if>
+								</span></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-								name="Group.PortfolioAtRisk" bundle="GroupUIResources" /> <c:out
-								value="${groupInformationDto.groupPerformanceHistory.portfolioAtRisk}" /></span></td>
+								name="Group.PortfolioAtRisk" bundle="GroupUIResources" />
+                                <c:if test="${groupInformationDto.groupPerformanceHistory.portfolioAtRiskInvalid}">
+                                    <c:out value="${groupInformationDto.groupPerformanceHistory.portfolioAtRisk}" />
+                                </c:if>
+                                <c:if test="${!groupInformationDto.groupPerformanceHistory.portfolioAtRiskInvalid}">
+                                    <fmt:formatNumber value="${groupInformationDto.groupPerformanceHistory.portfolioAtRisk}" />
+                                </c:if>
+								</span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="Group.Total" bundle="GroupUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes" />
-							<fmt:formatNumber
-								value="${groupInformationDto.groupPerformanceHistory.totalSavingsAmount}" /></span></td>
+                                <c:if test="${groupInformationDto.groupPerformanceHistory.totalSavingsAmountInvalid}">
+                                    <c:out value="${groupInformationDto.groupPerformanceHistory.totalSavingsAmount}" />
+                                </c:if>
+                                <c:if test="${!groupInformationDto.groupPerformanceHistory.totalSavingsAmountInvalid}">
+                                    <fmt:formatNumber value="${groupInformationDto.groupPerformanceHistory.totalSavingsAmount}" />
+                                </c:if>
+							</span></td>
 						</tr>
 						<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoanAllowed') == true}">
 							<tr>

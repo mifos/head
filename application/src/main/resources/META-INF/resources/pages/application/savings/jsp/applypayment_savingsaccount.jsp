@@ -35,19 +35,20 @@ explanation of the license and how it is applied.
 	<mifos:NumberFormattingInfo /> 
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<script language="javascript">
-		function funCancel(form){
-			form.action="savingsDepositWithdrawalAction.do?method=cancel";
-			form.submit();
+		function funCancel(){
+			goBackToSavingsAccountDetails.submit();
 		}
 		function reLoad(form){
 			form.action="savingsDepositWithdrawalAction.do?method=reLoad";
 			form.submit();
 		}
 	</script>
-
+	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+	<form name="goBackToSavingsAccountDetails" method="get" action ="viewSavingsAccountDetails.ftl">
+		<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+	</form>   
 <html-el:form method="post" action="/savingsDepositWithdrawalAction.do?method=preview">
     <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isBackDatedTrxnAllowed')}" var="isBackDatedTrxnAllowed" />
 	 
    <table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -89,8 +90,7 @@ explanation of the license and how it is applied.
 				  		<c:when test="${BusinessKey.groupModelWithIndividualAccountability == true}">
 						<tr>
 			                <td align="right" class="fontnormal">
-	            				<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" mandatory="yes"/>
-								<mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/>
+								<mifos:mifoslabel name="Savings.ClientName" isColonRequired="yes"/>
 							</td>
 			                <td>				  				
 					  			<mifos:select name="savingsDepositWithdrawalForm" styleId="applypayment_savingsaccount.input.customerId" property="customerId" onchange="javascript:reLoad(this.form)">
@@ -189,7 +189,7 @@ explanation of the license and how it is applied.
 						<mifos:mifoslabel name="Savings.reviewTransaction" />
 					</html-el:submit>
                   &nbsp;
-                  <html-el:button styleId="applypayment_savingsaccount.button.cancel" property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
+                  <html-el:button styleId="applypayment_savingsaccount.button.cancel" property="cancelButton" onclick="javascript:funCancel()" styleClass="cancelbuttn">
 							<mifos:mifoslabel name="savings.Cancel" bundle="SavingsUIResources"/>
 				  </html-el:button>
                 </td>

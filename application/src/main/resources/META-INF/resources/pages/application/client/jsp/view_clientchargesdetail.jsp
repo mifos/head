@@ -232,8 +232,16 @@ explanation of the license and how it is applied.
 									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,recentActivities.activityDate)}" /></td>
 								<td width="35%" class="drawtablerow"><c:out
 									value="${recentActivities.description}" /></td>
-								<td width="27%" align="right" class="drawtablerow"><fmt:formatNumber
-									value="${recentActivities.amount}" /></td>
+								<td width="27%" align="right" class="drawtablerow">
+								<c:choose>
+									<c:when test="${recentActivities.amount == '-'}">
+										<c:out value="${recentActivities.amount}" />
+									</c:when>
+									<c:otherwise>
+										<fmt:formatNumber value="${recentActivities.amount}"/>
+									</c:otherwise>
+								</c:choose>
+								</td>
 								<td width="6%" class="drawtablerow">&nbsp;</td>
 								<td width="21%" class="drawtablerow"><c:out
 									value="${recentActivities.postedBy}" /></td>

@@ -845,7 +845,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         if (StringUtils.isBlank(getPrdOfferingId())) {
             Locale locale = userContext.getCurrentLocale();
             ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, locale);
-            String instanceName = resources.getString("loan.instanceName");
+            String instanceName = resources.getString("loan.instancename");
             addError(errors, LoanConstants.PRDOFFERINGID, LoanConstants.LOANOFFERINGNOTSELECTEDERROR, getLabel(
                     ConfigurationConstants.LOAN), instanceName);
         }
