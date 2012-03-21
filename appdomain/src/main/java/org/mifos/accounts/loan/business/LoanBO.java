@@ -2268,22 +2268,23 @@ public class LoanBO extends AccountBO implements Loan {
         return !havePaymentsBeenMade() || MoneyUtils.isRoundedAmount(charge);
     }
     
-    public void applyPenalty(final PenaltyBO penalty, final Money charge,
-            final AccountActionDateEntity accountActionDateEntity, final AccountPenaltiesEntity penaltiesEntity, final Date date) {
-        LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
+    public void applyPenalty(final Money charge, final int scheduleEntityId, final AccountPenaltiesEntity penaltiesEntity, final Date current) {
+        LoanScheduleEntity loanScheduleEntity = new ArrayList<LoanScheduleEntity>(getLoanScheduleEntities()).get(scheduleEntityId - 1);
+        PenaltyBO penalty = penaltiesEntity.getPenalty();
+        LoanPenaltyScheduleEntity entity = loanScheduleEntity.getPenaltyScheduleEntity(penalty.getPenaltyId());
+        Money money = new Money(getCurrency());
+
         loanScheduleEntity.setPenalty(loanScheduleEntity.getPenalty().add(charge));
+
         getLoanSummary().updateOriginalPenalty(charge);
 
-        addLoanActivity(new LoanActivityEntity(this, personnel, new Money(getCurrency()), new Money(getCurrency()),
-                new Money(getCurrency()), charge, getLoanSummary(), penalty.getPenaltyName() + " applied"));
-        
-        LoanPenaltyScheduleEntity entity = loanScheduleEntity.getPenaltyScheduleEntity(penalty.getPenaltyId());
-        
+        addLoanActivity(new LoanActivityEntity(this, personnel, money, money, money, charge, getLoanSummary(), penalty.getPenaltyName() + " applied"));
+
         if(entity == null) {
-            loanScheduleEntity.addLoanPenaltySchedule(new LoanPenaltyScheduleEntity(loanScheduleEntity, penalty, penaltiesEntity, charge, date));
+            loanScheduleEntity.addLoanPenaltySchedule(new LoanPenaltyScheduleEntity(loanScheduleEntity, penalty, penaltiesEntity, charge, current));
         } else {
             entity.setPenaltyAmount(entity.getPenaltyAmount().add(charge));
-            entity.setLastApplied(date);
+            entity.setLastApplied(current);
         }
         
         penaltiesEntity.setLastAppliedDate(new DateTimeService().getCurrentJavaDateTime());
