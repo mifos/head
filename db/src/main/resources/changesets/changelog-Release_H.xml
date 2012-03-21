@@ -491,6 +491,10 @@
                 ALTER TABLE penalty CHANGE COLUMN period_type_id period_type_id SMALLINT(6) NOT NULL;
                 ALTER TABLE penalty ADD FOREIGN KEY (period_type_id) REFERENCES penalty_period (period_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
                 
+                DELETE p
+                FROM penalty p, penalty_period pp, lookup_value lv
+                WHERE p.period_type_id = pp.period_id AND pp.lookup_id = lv.lookup_id AND lv.lookup_name LIKE 'PenaltyPeriod-None';
+                
                 DELETE FROM lookup_value_locale WHERE lookup_id IN (SELECT lookup_id FROM lookup_value WHERE lookup_name LIKE 'PenaltyPeriod-None');
             
                 DELETE FROM penalty_period WHERE lookup_id IN (SELECT lookup_id FROM lookup_value WHERE lookup_name LIKE 'PenaltyPeriod-None');
