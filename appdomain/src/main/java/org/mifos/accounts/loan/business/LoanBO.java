@@ -1655,7 +1655,7 @@ public class LoanBO extends AccountBO implements Loan {
 			PaymentData paymentData = new PaymentData(balance, personnel, PaymentTypes.CASH.getValue(), transactionDate);
 			AccountPaymentEntity accountPaymentEntity = prePayment(paymentData);
 
-			// updat
+			// update
     		
 			Money overpayment = balance;
 			
@@ -1675,9 +1675,9 @@ public class LoanBO extends AccountBO implements Loan {
 				this.loanSummary.updatePaymentDetails(paymentAllocation);
 			}
 			
-//			LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
-//			postPayment(paymentData, accountPaymentEntity, loanPaymentType);
-//			
+			LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
+			postPayment(paymentData, accountPaymentEntity, loanPaymentType);
+			
 			addAccountPayment(accountPaymentEntity);
 	        buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 		}
@@ -1705,12 +1705,14 @@ public class LoanBO extends AccountBO implements Loan {
 			balance = ((LoanScheduleEntity) upcomingInstallment).applyPayment(accountPaymentEntity, balance, personnel, transactionDate);
 		}
 
-		LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
-		postPayment(paymentData, accountPaymentEntity, loanPaymentType);
+		if (!accountPaymentEntity.getAccountTrxns().isEmpty()) {
+		    LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
+		    postPayment(paymentData, accountPaymentEntity, loanPaymentType);
+
+		    addAccountPayment(accountPaymentEntity);
+		    buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
+		}
 		
-		addAccountPayment(accountPaymentEntity);
-        buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
-        
         return balance;
 	}
 
