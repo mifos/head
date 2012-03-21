@@ -1577,7 +1577,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         String accountStateName = getAccountStateName(accountStateId);
         boolean disbursed = AccountState.isDisbursed(accountStateId);
         String gracePeriodTypeName = getGracePeriodTypeName(loan.getGracePeriodType().getId());
-        String interestTypeName = getInterestTypeName(loan.getInterestType().getId());
+        Short interestType = loan.getInterestType().getId();
+        String interestTypeName = getInterestTypeName(interestType);
         List<CustomerNoteDto> recentNoteDtos = new ArrayList<CustomerNoteDto>();
         List<AccountNotesEntity> recentNotes = loan.getRecentAccountNotes();
         for (AccountNotesEntity accountNotesEntity : recentNotes) {
@@ -1586,7 +1587,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, accountStateId,
                                      accountStateName, disbursed, accountFlagNames, loan.getDisbursementDate(), loan.isRedone(),
-                                     loan.getBusinessActivityId(), loan.getAccountId(),gracePeriodTypeName, interestTypeName,
+                                     loan.getBusinessActivityId(), loan.getAccountId(),gracePeriodTypeName, interestType, interestTypeName,
                                      loan.getCustomer().getCustomerId(), loan.getAccountType().getAccountTypeId(),
                                      loan.getOffice().getOfficeId(), loan.getPersonnel().getPersonnelId(), loan.getNextMeetingDate(),
                                      loan.getTotalAmountDue().toString(), loan.getTotalAmountInArrears().toString(), loanSummary,
