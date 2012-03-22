@@ -42,7 +42,7 @@ public class ApplyChargeActionForm extends BaseActionForm {
 
     private String accountId;
 
-    // chargeType is constructed in the jsp page applyCharges.jsp as "<feeId>:<isRateType>"
+    // chargeType is constructed in the jsp page applyCharges.jsp as "<isPenaltyType>:<feeId>:<isRateType>"
     // where <feeId> is the id of the fee that has been selected and
     // <isRateType> is "1" if the fee is a rate type (% of some amount) or "0" if it is
     // a simple amount (money value)
@@ -99,7 +99,15 @@ public class ApplyChargeActionForm extends BaseActionForm {
      */
     public boolean isRateType() {
         String[] values = getChargeType().split(":");
-        return values[1].equals("1");
+        return values[2].equals("1");
+    }
+    
+    /*
+     * Extract the <isPenaltyType> boolean value from the chargeType (see note above about chargeType)
+     */
+    public boolean isPenaltyType() {
+        String[] values = getChargeType().split(":");
+        return values[0].equals("1");
     }
 
     /*
@@ -107,7 +115,7 @@ public class ApplyChargeActionForm extends BaseActionForm {
      */
     public String getFeeId() {
         String[] values = getChargeType().split(":");
-        return values[0];
+        return values[1];
     }
 
     @Override

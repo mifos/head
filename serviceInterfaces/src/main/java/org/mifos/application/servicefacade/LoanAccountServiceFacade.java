@@ -38,6 +38,7 @@ import org.mifos.clientportfolio.newloan.applicationservice.VariableInstallments
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
+import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.dto.domain.CashFlowDto;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CreateLoanRequest;
@@ -241,4 +242,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
 
     @PreAuthorize("isFullyAuthenticated()")
     void removeLoanPenalty(Integer loanId, Short penaltyId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<ApplicableCharge> getApplicablePenalties(Integer accountId);
 }

@@ -28,6 +28,7 @@ import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentT
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -36,7 +37,10 @@ import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.penalties.business.PenaltyBO;
+import org.mifos.accounts.penalties.persistence.PenaltyDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
+import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -88,6 +92,9 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     
     @Autowired
     private FeeDao feeDao;
+    
+    @Autowired
+    private PenaltyDao penaltyDao;
 
     @Autowired
     public WebTierAccountServiceFacade(AccountService accountService, HibernateTransactionHelper transactionHelper,
@@ -227,7 +234,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     }
 
     @Override
-    public void applyCharge(Integer accountId, Short feeId, Double chargeAmount) {
+    public void applyCharge(Integer accountId, Short chargeId, Double chargeAmount, boolean isPenaltyType) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
@@ -242,15 +249,20 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                     for (LoanBO individual : individualLoans) {
                         individual.updateDetails(userContext);
 
-                        FeeBO fee = this.feeDao.findById(feeId);
-
-                        if (fee instanceof RateFeeBO) {
-                            individual.applyCharge(feeId, chargeAmount);
+                        if (isPenaltyType && !chargeId.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
+                            PenaltyBO penalty = this.penaltyDao.findPenaltyById(chargeId.intValue());
+                            individual.addAccountPenalty(new AccountPenaltiesEntity(individual, penalty, chargeAmount));
                         } else {
-                            Double radio = individual.getLoanAmount().getAmount().doubleValue()
-                                    / ((LoanBO) account).getLoanAmount().getAmount().doubleValue();
+                            FeeBO fee = this.feeDao.findById(chargeId);
 
-                            individual.applyCharge(feeId, chargeAmount * radio);
+                            if (fee instanceof RateFeeBO) {
+                                individual.applyCharge(chargeId, chargeAmount);
+                            } else {
+                                Double radio = individual.getLoanAmount().getAmount().doubleValue()
+                                        / ((LoanBO) account).getLoanAmount().getAmount().doubleValue();
+
+                                individual.applyCharge(chargeId, chargeAmount * radio);
+                            }
                         }
                     }
                 }
@@ -271,7 +283,14 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             }
 
             this.transactionHelper.startTransaction();
-            account.applyCharge(feeId, chargeAmount);
+            
+            if(isPenaltyType && account instanceof LoanBO) {
+                PenaltyBO penalty = this.penaltyDao.findPenaltyById(chargeId.intValue());
+                ((LoanBO) account).addAccountPenalty(new AccountPenaltiesEntity(account, penalty, chargeAmount));
+            } else {
+                account.applyCharge(chargeId, chargeAmount);
+            }
+            
             this.transactionHelper.commitTransaction();
         } catch (ServiceException e) {
             this.transactionHelper.rollbackTransaction();

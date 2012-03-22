@@ -39,6 +39,8 @@ public class ApplicableCharge implements Serializable {
     private String paymentType;
 
     private String isRateType;
+    
+    private String isPenaltyType;
 
     public ApplicableCharge() {
 
@@ -57,12 +59,22 @@ public class ApplicableCharge implements Serializable {
     public String getIsRateType() {
         return this.isRateType;
     }
+    
+    
 
     public void setIsRateType(boolean isRateType) {
         if (isRateType) {
             this.isRateType = "1";
         } else {
             this.isRateType = "0";
+        }
+    }
+    
+    public void setIsPenaltyType(boolean isPenaltyType) {
+        if (isPenaltyType) {
+            this.isPenaltyType = "1";
+        } else {
+            this.isPenaltyType = "0";
         }
     }
 
@@ -113,5 +125,10 @@ public class ApplicableCharge implements Serializable {
     public void setPaymentType(String paymentType) {
         this.paymentType = paymentType;
     }
+
+    public String getIsPenaltyType() {
+        return isPenaltyType;
+    }
+    
 
 }

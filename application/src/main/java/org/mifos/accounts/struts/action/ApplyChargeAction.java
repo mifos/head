@@ -30,6 +30,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.ApplyChargeActionForm;
@@ -62,6 +63,10 @@ public class ApplyChargeAction extends BaseAction {
 
         Integer accountId = Integer.valueOf(request.getParameter("accountId"));
         List<ApplicableCharge> applicableCharges = this.accountServiceFacade.getApplicableFees(accountId);
+        
+        if (this.loanDao.findById(accountId) != null) {
+            applicableCharges.addAll(this.loanAccountServiceFacade.getApplicablePenalties(accountId));
+        }
 
         SessionUtils.setCollectionAttribute(AccountConstants.APPLICABLE_CHARGE_LIST, applicableCharges, request);
 
@@ -79,7 +84,7 @@ public class ApplyChargeAction extends BaseAction {
         Double chargeAmount = getDoubleValue(request.getParameter("charge"));
 
         Integer accountId = Integer.valueOf(applyChargeActionForm.getAccountId());
-        this.accountServiceFacade.applyCharge(accountId, feeId, chargeAmount);
+        this.accountServiceFacade.applyCharge(accountId, feeId, chargeAmount, applyChargeActionForm.isPenaltyType());
 
         AccountTypeCustomerLevelDto accountTypeCustomerLevel = accountServiceFacade.getAccountTypeCustomerLevelDto(accountId);
 

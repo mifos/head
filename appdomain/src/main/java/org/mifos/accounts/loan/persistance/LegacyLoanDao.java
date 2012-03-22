@@ -42,9 +42,13 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
+import org.mifos.accounts.fees.util.helpers.FeeCategory;
+import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.penalties.business.PenaltyBO;
+import org.mifos.accounts.penalties.util.helpers.PenaltyStatus;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
@@ -438,5 +442,14 @@ public class LegacyLoanDao extends LegacyGenericDao {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("id", accountId);
         return executeNamedQuery(NamedQueryConstants.GET_ORIGINAL_SCHEDULE_BY_ACCOUNT_ID, queryParameters);
+    }
+
+    public List<PenaltyBO> getAllApplicablePenalties(Integer accountId) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("accountId", accountId);
+
+        queryParameters.put("active", PenaltyStatus.ACTIVE.getValue());
+        
+        return executeNamedQuery(NamedQueryConstants.GET_ALL_APPLICABLE_LOAN_PENALTY, queryParameters);
     }
 }

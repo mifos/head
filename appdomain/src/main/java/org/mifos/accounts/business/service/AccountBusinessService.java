@@ -247,6 +247,7 @@ public class AccountBusinessService implements BusinessService {
             ApplicableCharge applicableCharge = new ApplicableCharge();
             applicableCharge.setFeeId(fee.getFeeId().toString());
             applicableCharge.setFeeName(fee.getFeeName());
+            applicableCharge.setIsPenaltyType(false);
             if (fee.getFeeType().getValue().equals(RateAmountFlag.RATE.getValue())) {
                 applicableCharge.setAmountOrRate(new LocalizationConverter().getDoubleStringForInterest(((RateFeeBO) fee).getRate()));
                 applicableCharge.setFormula(((RateFeeBO) fee).getFeeFormula().getFormulaStringThatHasName());
@@ -321,11 +322,13 @@ public class AccountBusinessService implements BusinessService {
         applicableCharge.setFeeId(AccountConstants.MISC_FEES);
         applicableCharge.setFeeName("Misc Fees");
         applicableCharge.setIsRateType(false);
+        applicableCharge.setIsPenaltyType(false);
         applicableChargeList.add(applicableCharge);
         applicableCharge = new ApplicableCharge();
         applicableCharge.setFeeId(AccountConstants.MISC_PENALTY);
         applicableCharge.setFeeName("Misc Penalty");
         applicableCharge.setIsRateType(false);
+        applicableCharge.setIsPenaltyType(false);
         applicableChargeList.add(applicableCharge);
     }
 

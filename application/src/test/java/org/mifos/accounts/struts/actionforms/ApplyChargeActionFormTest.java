@@ -35,11 +35,12 @@ public class ApplyChargeActionFormTest {
     // for constructing the ChargeType member
     private static final String FEE_ID = "-1";
     private static final String IS_RATE_TYPE = "1";
+    private static final String IS_PENALTY_TYPE = "0";
     private static final String IS_NOT_RATE_TYPE = "0";
     private static final String CHARGE_TYPE_SEPARATOR = ":";
 
-    private String constructChargeType(String feeId, String isRateType) {
-        return feeId + CHARGE_TYPE_SEPARATOR + isRateType;
+    private String constructChargeType(String isPenaltyType, String feeId, String isRateType) {
+        return isPenaltyType + CHARGE_TYPE_SEPARATOR + feeId + CHARGE_TYPE_SEPARATOR + isRateType;
     }
 
     private Locale locale = TestUtils.ukLocale();
@@ -61,7 +62,7 @@ public class ApplyChargeActionFormTest {
     @Test
     public void testValidateValidRate() {
         form.setCharge("1.12345");
-        form.setChargeType(constructChargeType(FEE_ID, IS_RATE_TYPE));
+        form.setChargeType(constructChargeType(IS_PENALTY_TYPE, FEE_ID, IS_RATE_TYPE));
         form.validateAmount(errors, locale);
         assertEquals(0,errors.size());
     }
@@ -69,7 +70,7 @@ public class ApplyChargeActionFormTest {
     @Test
     public void testValidateInvalidRateWithTooMuchPrecision() {
         form.setCharge("1.123456");
-        form.setChargeType(constructChargeType(FEE_ID, IS_RATE_TYPE));
+        form.setChargeType(constructChargeType(IS_PENALTY_TYPE, FEE_ID, IS_RATE_TYPE));
         form.validateAmount(errors, locale);
         assertEquals(1,errors.size());
     }
@@ -77,7 +78,7 @@ public class ApplyChargeActionFormTest {
     @Test
     public void testValidateValidAmount() {
         form.setCharge("1.1");
-        form.setChargeType(constructChargeType(FEE_ID, IS_NOT_RATE_TYPE));
+        form.setChargeType(constructChargeType(IS_PENALTY_TYPE, FEE_ID, IS_NOT_RATE_TYPE));
         form.validateAmount(errors, locale);
         assertEquals(0,errors.size());
     }
@@ -85,7 +86,7 @@ public class ApplyChargeActionFormTest {
     @Test
     public void testValidateInvalidAmount() {
         form.setCharge("1.12345");
-        form.setChargeType(constructChargeType(FEE_ID, IS_NOT_RATE_TYPE));
+        form.setChargeType(constructChargeType(IS_PENALTY_TYPE, FEE_ID, IS_NOT_RATE_TYPE));
         form.validateAmount(errors, locale);
         assertEquals(1,errors.size());
     }

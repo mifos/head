@@ -39,7 +39,7 @@ public interface AccountServiceFacade {
     List<ApplicableCharge> getApplicableFees(Integer accountId);
 
     @PreAuthorize("isFullyAuthenticated()")
-    void applyCharge(Integer accountId, Short feeId, Double chargeAmount);
+    void applyCharge(Integer accountId, Short chargeId, Double chargeAmount, boolean isPenaltyType);
 
     @PreAuthorize("isFullyAuthenticated()")
     AccountTypeCustomerLevelDto getAccountTypeCustomerLevelDto(Integer accountId);

@@ -23,6 +23,7 @@ package org.mifos.accounts.loan.business.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,7 +38,11 @@ import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.penalties.business.AmountPenaltyBO;
+import org.mifos.accounts.penalties.business.PenaltyBO;
+import org.mifos.accounts.penalties.business.RatePenaltyBO;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.holiday.business.service.HolidayService;
@@ -47,10 +52,12 @@ import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.validations.Errors;
@@ -350,6 +357,85 @@ public class LoanBusinessService implements BusinessService {
                     errors.addError(LoanConstants.CANNOT_VIEW_REPAYMENT_SCHEDULE, new String[]{extraInterestDate.toString()});
                 }
             }
+        }
+    }
+
+    public List<ApplicableCharge> getAppllicablePenalties(Integer accountId, UserContext userContext) throws ServiceException {
+        List<ApplicableCharge> applicableChargeList = null;
+        try {
+            LoanBO loan = getlegacyLoanDao().getAccount(accountId);
+
+            applicableChargeList = getLoanApplicablePenalties(getlegacyLoanDao().getAllApplicablePenalties(accountId), userContext, loan);
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+        addMiscPenalty(applicableChargeList);
+        return applicableChargeList;
+    }
+    
+    private void addMiscPenalty(List<ApplicableCharge> applicableChargeList) {
+        for(int i = applicableChargeList.size() - 1; i >= 0 ; --i) {
+            if(applicableChargeList.get(i).getFeeId().equals(AccountConstants.MISC_PENALTY)) {
+                applicableChargeList.remove(i);
+                break;
+            }
+        }
+        
+        ApplicableCharge applicableCharge = new ApplicableCharge();
+        applicableCharge.setFeeId(AccountConstants.MISC_PENALTY);
+        applicableCharge.setFeeName("Misc Penalty");
+        applicableCharge.setIsRateType(false);
+        applicableCharge.setIsPenaltyType(true);
+        applicableChargeList.add(applicableCharge);
+    }
+    
+    private List<ApplicableCharge> getLoanApplicablePenalties(List<PenaltyBO> penaltyList, UserContext userContext, LoanBO loanBO) {
+        List<ApplicableCharge> applicableChargeList = new ArrayList<ApplicableCharge>();
+        
+        if (penaltyList != null && !penaltyList.isEmpty()) {
+            if(AccountingRules.isMultiCurrencyEnabled()){
+                filterBasedOnCurrencyOfLoan(penaltyList, loanBO);
+            }
+
+            populaleApplicableCharge(applicableChargeList, penaltyList, userContext);
+        }
+        return applicableChargeList;
+    }
+    
+    private void filterBasedOnCurrencyOfLoan(List<PenaltyBO> penaltyList, LoanBO loanBO) {
+        // remove penalties where the currency of penalty doesn't match the currency of loan.
+        for (Iterator<PenaltyBO> iter = penaltyList.iterator(); iter.hasNext();) {
+            PenaltyBO penalty = iter.next();
+            if (penalty instanceof AmountPenaltyBO) {
+                if (!((AmountPenaltyBO) penalty).getAmount().getCurrency().equals(loanBO.getCurrency())) {
+                    iter.remove();
+                }
+            }
+        }
+    }
+    
+    private void populaleApplicableCharge(List<ApplicableCharge> applicableChargeList, List<PenaltyBO> penaltyList,
+            UserContext userContext) {
+        for (PenaltyBO penalty : penaltyList) {
+            ApplicableCharge applicableCharge = new ApplicableCharge();
+            applicableCharge.setFeeId(penalty.getPenaltyId().toString());
+            applicableCharge.setFeeName(penalty.getPenaltyName());
+            applicableCharge.setIsPenaltyType(true);
+            if (penalty instanceof RatePenaltyBO) {
+                applicableCharge.setAmountOrRate(new LocalizationConverter().getDoubleStringForInterest(((RatePenaltyBO) penalty).getRate()));
+                applicableCharge.setFormula(((RatePenaltyBO) penalty).getFormula().getFormulaStringThatHasName());
+                applicableCharge.setIsRateType(true);
+            } else {
+                applicableCharge.setAmountOrRate(((AmountPenaltyBO) penalty).getAmount().toString());
+                applicableCharge.setIsRateType(false);
+            }
+            
+            if(!penalty.isOneTime()) {
+                applicableCharge.setPeriodicity("true");
+                applicableCharge.setFormula(penalty.getPenaltyFrequency().getName());
+            }
+            
+            applicableChargeList.add(applicableCharge);
         }
     }
 }

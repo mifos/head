@@ -169,6 +169,7 @@ import org.mifos.dto.domain.AccountFeeScheduleDto;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
+import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.dto.domain.ApplicationConfigurationDto;
 import org.mifos.dto.domain.CashFlowDto;
 import org.mifos.dto.domain.CenterCreation;
@@ -2716,6 +2717,26 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             throw new MifosRuntimeException(e);
         } finally {
             this.transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public List<ApplicableCharge> getApplicablePenalties(Integer accountId) {
+        try {
+            MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserContext userContext = toUserContext(user);
+
+            LoanBO loan = this.loanDao.findById(accountId);
+            
+            try {
+                personnelDao.checkAccessPermission(userContext, loan.getOfficeId(), loan.getCustomer().getLoanOfficerId());
+            } catch (AccountException e) {
+                throw new MifosRuntimeException(e.getMessage(), e);
+            }
+            
+            return loanBusinessService.getAppllicablePenalties(accountId, userContext);
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
         }
     }
 }

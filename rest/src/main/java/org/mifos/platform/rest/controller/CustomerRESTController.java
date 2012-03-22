@@ -59,7 +59,7 @@ public class CustomerRESTController {
 
 		Money totalDueBeforeCharge = customerBO.getCustomerAccount().getTotalAmountDue();
 
-    	this.accountServiceFacade.applyCharge(accountId, feeId, amount.doubleValue());
+    	this.accountServiceFacade.applyCharge(accountId, feeId, amount.doubleValue(), false);
 
     	DateTime today = new DateTime();
 

@@ -56,5 +56,12 @@
     <query name="penalty.getAllApplicablePenaltiesForLoanCreation">
         <![CDATA[from PenaltyBO penalty where penalty.status.id=:active and penalty.categoryType.id =:category]]>
     </query>
+    
+    <query name="penalty.getAllApplicablePenaltiesForLoan">
+        <![CDATA[from PenaltyBO as penalty where penalty.status.id=:active and penalty.categoryType.id in (1)
+        and penalty.penaltyId not in ( select ap.penalty.penaltyId from org.mifos.accounts.business.AccountPenaltiesEntity ap
+        where ap.account.accountId=:accountId and (ap.penaltyStatus=null or ap.penaltyStatus=:active))
+        ]]>
+    </query>
 
 </hibernate-mapping>

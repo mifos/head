@@ -337,7 +337,7 @@ public class LoanAccountRESTController {
 
 		String outstandingBeforeCharge = loan.getLoanSummary().getOutstandingBalance().toString();
 
-    	this.accountServiceFacade.applyCharge(accountId, feeId, amount.doubleValue());
+    	this.accountServiceFacade.applyCharge(accountId, feeId, amount.doubleValue(), false);
 
     	DateTime today = new DateTime();
 

@@ -81,7 +81,11 @@ explanation of the license and how it is applied.
 								span.style.display="block";
 								if ( formulaId != null  && periodicity != null && periodicity!="")
 								{
-				                    span.innerHTML = periodicity +"<br>"+formulaId;
+									if(periodicity=="true") {
+										span.innerHTML = formulaId;
+									} else {
+									    span.innerHTML = periodicity +"<br>"+formulaId;
+									}
 								}
 								else if ( formulaId != null  && periodicity == null || periodicity=="")
 								{
@@ -170,7 +174,7 @@ explanation of the license and how it is applied.
 							<td width="20%"  align="left" class="fontnormal">
 							<mifos:select styleId="applyCharges.input.type" property="chargeType" style="width:136px;" onchange="loadValues(this,1)">
 								<c:forEach var="applicableCharge" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'applicableChargeList')}" >
-									<html-el:option value="${applicableCharge.feeId}:${applicableCharge.isRateType}">${applicableCharge.feeName}</html-el:option>
+									<html-el:option value="${applicableCharge.isPenaltyType}:${applicableCharge.feeId}:${applicableCharge.isRateType}">${applicableCharge.feeName}</html-el:option>
 								</c:forEach>
 
 							</mifos:select>
