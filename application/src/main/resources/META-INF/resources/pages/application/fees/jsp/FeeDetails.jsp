@@ -32,7 +32,8 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="FeeDetails"></span>
-	
+		<c:set value="${requestScope.GlNamesMode}" var="GlNamesMode"/>
+		
 		<script src="pages/application/fees/js/Fees.js"></script>
 		<html-el:form action="/feeaction.do">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -147,7 +148,20 @@ explanation of the license and how it is applied.
 									<br>
 									<mifos:mifoslabel name="Fees.GLCode" bundle="FeesUIResources"></mifos:mifoslabel>
 
-									<c:out value="${feeModel.glCode}" />
+						 					<c:choose>											
+												<c:when test="${GlNamesMode == 1}">
+												<c:out value="${feeModel.glCode} - ${feeModel.name}" />
+												</c:when>
+												<c:when test="${GlNamesMode == 2}">
+												<c:out value="${feeModel.name} (${feeModel.glCode})" />
+												</c:when>
+												<c:when test="${GlNamesMode == 3}">
+												<c:out value="${feeModel.name}" />
+												</c:when>
+												<c:when test="${GlNamesMode == 4}">
+												<c:out value="${feeModel.glCode}" />
+												</c:when>
+											</c:choose> 
 								</td>
 								<td height="23" align="right" valign="top" class="fontnormalbold">
 									<span class="fontnormal"> <br> <br> </span>

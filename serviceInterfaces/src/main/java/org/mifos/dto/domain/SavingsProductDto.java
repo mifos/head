@@ -42,8 +42,10 @@ public class SavingsProductDto implements Serializable {
     private final BigDecimal minBalanceForInterestCalculation;
     private final Integer depositGlCode;
     private String depositGlCodeValue;
+    private String depositGlCodeName;
     private final Integer interestGlCode;
     private String interestGlCodeValue;
+    private String interestGlCodeName;
 
     /**
      * minimal legal constructor for create savings products request
@@ -69,7 +71,23 @@ public class SavingsProductDto implements Serializable {
         this.interestGlCode = interestGlCode;
     }
 
-    public ProductDetailsDto getProductDetails() {
+    public String getDepositGlCodeName() {
+		return depositGlCodeName;
+	}
+
+	public void setDepositGlCodeName(String depositGlCodeName) {
+		this.depositGlCodeName = depositGlCodeName;
+	}
+
+	public String getInterestGlCodeName() {
+		return interestGlCodeName;
+	}
+
+	public void setInterestGlCodeName(String interestGlCodeName) {
+		this.interestGlCodeName = interestGlCodeName;
+	}
+
+	public ProductDetailsDto getProductDetails() {
         return this.productDetails;
     }
 

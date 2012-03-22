@@ -211,8 +211,8 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
         formParameters.setMaxInstallments("10");
         formParameters.setDefInstallments("5");
         formParameters.setGracePeriodType(SubmitFormParameters.NONE);
-        formParameters.setInterestGLCode("31102");
-        formParameters.setPrincipalGLCode("1506");
+        formParameters.setInterestGLCode("31102 - Penalty");
+        formParameters.setPrincipalGLCode("1506 - Managed WFLoan");
         formParameters.setCurrencyId(Short.valueOf("1"));
         String fee="USDfee";
         formParameters.setAdditionalFee1(fee);

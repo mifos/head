@@ -21,22 +21,25 @@
 package org.mifos.ui.core.controller;
 
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
-import org.mifos.dto.domain.SavingsProductDto;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
+import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
-@Controller
 @RequestMapping("/viewEditSavingsProduct")
-@SessionAttributes("savingsProductDetails")
+@Controller
 public class ViewEditSavingsProductController {
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
+    
+    @Autowired
+    private ConfigurationServiceFacade configurationServiceFacade;
+    
 
     protected ViewEditSavingsProductController() {
         // default contructor for spring autowiring
@@ -46,10 +49,13 @@ public class ViewEditSavingsProductController {
         this.adminServiceFacade = adminServiceFacade;
     }
 
-    @ModelAttribute("savingsProductDetails")
     @RequestMapping(method = RequestMethod.GET)
-    public SavingsProductDto showSavingProductDetails(@RequestParam("productId") Integer productId) {
-
-        return adminServiceFacade.retrieveSavingsProductDetails(productId);
+    public ModelAndView showSavingProductDetails(@RequestParam("productId") Integer productId) {
+    	ModelAndView modelAndView = new ModelAndView("viewEditSavingsProduct");
+    	
+    	AccountingConfigurationDto configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
+    	modelAndView.addObject("GLCodeMode", configurationDto.getGlCodeMode());
+    	modelAndView.addObject("savingsProductDetails", adminServiceFacade.retrieveSavingsProductDetails(productId));
+        return modelAndView;
     }
 }

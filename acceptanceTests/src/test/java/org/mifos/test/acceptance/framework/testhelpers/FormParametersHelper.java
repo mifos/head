@@ -47,8 +47,8 @@ public class FormParametersHelper {
         formParameters.setMaxInstallments("52");
         formParameters.setDefInstallments("52");
         formParameters.setGracePeriodType(DefineNewLoanProductPage.SubmitFormParameters.NONE);
-        formParameters.setInterestGLCode("31102");
-        formParameters.setPrincipalGLCode("1506");
+        formParameters.setInterestGLCode("31102 - Penalty");
+        formParameters.setPrincipalGLCode("1506 - Managed WFLoan");
         return formParameters;
     }
 
@@ -87,8 +87,8 @@ public class FormParametersHelper {
         formParameters.setMaxInstallments("72");
         formParameters.setDefInstallments("60");
         formParameters.setGracePeriodType(DefineNewLoanProductPage.SubmitFormParameters.NONE);
-        formParameters.setInterestGLCode("31102");
-        formParameters.setPrincipalGLCode("1506");
+        formParameters.setInterestGLCode("31102 - Penalty");
+        formParameters.setPrincipalGLCode("1506 - Managed WFLoan");
         return formParameters;
     }
 
@@ -118,7 +118,7 @@ public class FormParametersHelper {
         formParameters.setFeeRecurrenceType(formParameters.MONTHLY_FEE_RECURRENCE);
         formParameters.setMonthRecurAfter(2);
         formParameters.setAmount(6);
-        formParameters.setGlCode(6201);
+        formParameters.setGlCode("6201 - Miscelleneous Income");
         return formParameters;
     }
 
@@ -137,7 +137,7 @@ public class FormParametersHelper {
         formParameters.setCustomerCharge("Upfront");
         formParameters.setAmount(10);
         formParameters.setCurrency(FeesCreatePage.SubmitFormParameters.USD);
-        formParameters.setGlCode(31301);
+        formParameters.setGlCode("31301 - Fees");
         return formParameters;
     }
 }

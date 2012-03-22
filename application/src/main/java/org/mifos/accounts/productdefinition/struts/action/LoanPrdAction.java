@@ -308,6 +308,7 @@ public class LoanPrdAction extends BaseAction {
         setSelectedQuestionGroupsOnSession(request, loanOffering, getQuestionnaireServiceFacade(request));
         setCurrencyOnSession(request, loanOffering);
         setRepaymentIndepOfMeetingEnabledFlag(request);
+        request.setAttribute("GlNamesMode", AccountingRules.getGlNamesMode());
         logger.debug("manage of Loan Product Action called" + prdOfferingId);
         return mapping.findForward(ActionForwards.manage_success.toString());
     }
@@ -356,6 +357,7 @@ public class LoanPrdAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward editPreview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+    	request.setAttribute("GlNamesMode", AccountingRules.getGlNamesMode());
         logger.debug("start editPreview of Loan Product Action ");
         return mapping.findForward(ActionForwards.editPreview_success.toString());
     }
@@ -363,6 +365,7 @@ public class LoanPrdAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward editPrevious(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+    	request.setAttribute("GlNamesMode", AccountingRules.getGlNamesMode());
         logger.debug("start editPrevious of Loan Product Action ");
         return mapping.findForward(ActionForwards.editPrevious_success.toString());
     }
@@ -371,6 +374,7 @@ public class LoanPrdAction extends BaseAction {
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward editCancel(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+    	request.setAttribute("GlNamesMode", AccountingRules.getGlNamesMode());
         logger.debug("start cancelCreate method of loan Product Action");
         return mapping.findForward(ActionForwards.editcancel_success.toString());
     }
@@ -445,6 +449,7 @@ public class LoanPrdAction extends BaseAction {
         loanPrdActionForm.clear();
         loanPrdActionForm.setPrdOfferingId(getStringValue(loanOffering.getPrdOfferingId()));
         request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
+        request.setAttribute("GlNamesMode", AccountingRules.getGlNamesMode());
         setSelectedQuestionGroupsOnSession(request, loanOffering, getQuestionnaireServiceFacade(request));
         logger.debug("get method of Loan Product Action called" + loanOffering.getPrdOfferingId());
         return mapping.findForward(ActionForwards.get_success.toString());
