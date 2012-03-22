@@ -141,7 +141,7 @@ explanation of the license and how it is applied.
 		</form>
 		<!-- task-list MIFOS-5177 -->
 		<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isLoanOfficer')}">
-			<html-el:form action="custSearchAction.do?method=getHomePage">
+			<form action="home.ftl">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td width="70%" height="24" align="left" valign="middle" class="paddingL10">
@@ -149,14 +149,23 @@ explanation of the license and how it is applied.
 							<tr>
 								<td class="fontnormalbold">		
 									<mifos:mifoslabel name="CustomerSearch.upcomingMeetings"/>:
-									<html-el:select property="selectedDateOption" onchange="this.form.submit();">
+									<select name="selectedDateOption" onchange="this.form.submit();">
 										<c:forEach var="date"
 											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'nearestDates')}">
-											<html-el:option value="${date}">
-												${date}
-											</html-el:option>
+											<c:choose> 
+												<c:when test="${date == custSearchActionForm.selectedDateOption}">
+													<option value="${date}" selected="selected">
+														${date}
+													</option>
+												</c:when>
+												<c:otherwise>
+													<option value="${date}">
+														${date}
+													</option>												
+												</c:otherwise>
+											</c:choose>	
 										</c:forEach>
-									</html-el:select>
+									</select>
 								</td>
 							<tr>
 						</table>
@@ -237,7 +246,7 @@ explanation of the license and how it is applied.
 					</c:choose>
 				</tr>
 			</table>
-			</html-el:form>
+			</form>
 		</c:if>
 	</tiles:put>
 </tiles:insert>
