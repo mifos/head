@@ -172,7 +172,7 @@ explanation of the license and how it is applied.
 									<tr class="fontnormal">
 										<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 										<td width="99%">
-											<a href="centerCustAction.do?method=get&globalCustNum=${center.globalCustNum}">
+											<a href="viewCenterDetails.ftl?globalCustNum=${center.globalCustNum}">
 												<c:out value="${center.displayName}" />
 											</a>
 										</td>
@@ -183,14 +183,14 @@ explanation of the license and how it is applied.
 											<ul>
 												<c:forEach var="group" items="${center.groups}">
 													<li class="fontnormal" style="margin-bottom:3px;">
-														<a href="groupCustAction.do?method=get&globalCustNum=${group.globalCustNum}">
+														<a href="viewGroupDetails.ftl?globalCustNum=${group.globalCustNum}">
 															<c:out value="${group.displayName}" />
 														</a>
 													</li>
 													<ul>
 														<c:forEach var="client" items="${group.clients}">
 															<li class="fontnormal" style="margin-bottom:3px;">
-																<a href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}">
+																<a href="viewClientDetails.ftl?globalCustNum=${client.globalCustNum}">
 																	<c:out value="${client.displayName}" />
 																</a>
 															</li>
@@ -211,7 +211,7 @@ explanation of the license and how it is applied.
 									<tr class="fontnormal">
 										<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 										<td width="99%">
-											<a href="groupCustAction.do?method=get&globalCustNum=${group.globalCustNum}">
+											<a href="viewGroupDetails.ftl?globalCustNum=${group.globalCustNum}">
 												<c:out value="${group.displayName}" />
 											</a>
 										</td>
@@ -222,7 +222,7 @@ explanation of the license and how it is applied.
 											<ul>
 												<c:forEach var="client" items="${group.clients}">
 													<li class="fontnormal" style="margin-bottom:3px;">
-														<a href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}">
+														<a href="viewClientDetails.ftl?globalCustNum=${client.globalCustNum}">
 															<c:out value="${client.displayName}" />
 														</a>
 													</li>

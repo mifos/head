@@ -129,7 +129,7 @@ explanation of the license and how it is applied.
 										<c:otherwise>
 											<c:forEach var="client" items="${groupInformationDto.clientsOtherThanClosedAndCancelled}">
 												<a id="viewgroupdetails.link.client"
-													href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+													href="viewClientDetails.ftl?globalCustNum=${client.globalCustNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 												<c:out value="${client.displayName}" /><%-- <c:out
 													value="${customerfn:getClientPositions(requestScope.customerPositions,client)}" />--%>
 												<br>
