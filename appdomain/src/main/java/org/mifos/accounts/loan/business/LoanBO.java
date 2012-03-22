@@ -3497,22 +3497,24 @@ public class LoanBO extends AccountBO implements Loan {
 
     public void removePenalty(Short penaltyId, Short personnelId) throws AccountException {
         List<Short> installmentIds = getApplicableInstallmentIdsForRemovePenalties();
-        Money totalPenaltyAmount;
-        if (!installmentIds.isEmpty() && isPenaltyActive(penaltyId)) {
-
+        Money totalPenaltyAmount = Money.zero();
+        
+        if (isPenaltyActive(penaltyId)) {
             PenaltyBO penalty = getAccountPenaltyObject(penaltyId);
-            if (havePaymentsBeenMade() && penalty.doesPenaltyInvolveFractionalAmounts()) {
-                throw new AccountException(AccountExceptionConstants.CANT_REMOVE_PENALTY_EXCEPTION);
+
+            if (!installmentIds.isEmpty()) {
+                if (havePaymentsBeenMade() && penalty.doesPenaltyInvolveFractionalAmounts()) {
+                    throw new AccountException(AccountExceptionConstants.CANT_REMOVE_PENALTY_EXCEPTION);
+                }
+
+                totalPenaltyAmount = totalPenaltyAmount.add(removePenaltyFromLoanScheduleEntity(installmentIds, penaltyId));
+                updateTotalPenaltyAmount(totalPenaltyAmount);
             }
-
-            totalPenaltyAmount = removePenaltyFromLoanScheduleEntity(installmentIds, penaltyId);
+            
             updateAccountPenaltiesEntity(penaltyId);
-
-            updateTotalPenaltyAmount(totalPenaltyAmount);
-
             String description = penalty.getPenaltyName() + " " + AccountConstants.PENALTIES_REMOVED;
             updateAccountActivity(null, null, totalPenaltyAmount, null, personnelId, description);
-
+            
             try {
                 ApplicationContextProvider.getBean(LegacyAccountDao.class).createOrUpdate(this);
             } catch (PersistenceException e) {
@@ -3552,6 +3554,8 @@ public class LoanBO extends AccountBO implements Loan {
                     lateActionDateList.add(accountActionDate);
                 }
             }
+        } else {
+            lateActionDateList.addAll(getAccountActionDates());
         }
         return lateActionDateList;
     }
