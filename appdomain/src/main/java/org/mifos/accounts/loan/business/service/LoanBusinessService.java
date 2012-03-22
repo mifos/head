@@ -374,13 +374,6 @@ public class LoanBusinessService implements BusinessService {
     }
     
     private void addMiscPenalty(List<ApplicableCharge> applicableChargeList) {
-        for(int i = applicableChargeList.size() - 1; i >= 0 ; --i) {
-            if(applicableChargeList.get(i).getFeeId().equals(AccountConstants.MISC_PENALTY)) {
-                applicableChargeList.remove(i);
-                break;
-            }
-        }
-        
         ApplicableCharge applicableCharge = new ApplicableCharge();
         applicableCharge.setFeeId(AccountConstants.MISC_PENALTY);
         applicableCharge.setFeeName("Misc Penalty");

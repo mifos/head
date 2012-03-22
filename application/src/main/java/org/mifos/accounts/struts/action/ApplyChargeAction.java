@@ -65,6 +65,13 @@ public class ApplyChargeAction extends BaseAction {
         List<ApplicableCharge> applicableCharges = this.accountServiceFacade.getApplicableFees(accountId);
         
         if (this.loanDao.findById(accountId) != null) {
+            for(int i = applicableCharges.size() - 1; i >= 0 ; --i) {
+                if(applicableCharges.get(i).getFeeId().equals(AccountConstants.MISC_PENALTY)) {
+                    applicableCharges.remove(i);
+                    break;
+                }
+            }
+            
             applicableCharges.addAll(this.loanAccountServiceFacade.getApplicablePenalties(accountId));
         }
 
