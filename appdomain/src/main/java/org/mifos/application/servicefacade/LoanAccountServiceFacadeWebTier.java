@@ -1749,21 +1749,20 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 	@Override
 	public void applyLoanRepayment(String globalAccountNumber,
 			LocalDate paymentDate, BigDecimal repaymentAmount) {
-		
-		try {
+	    MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	    UserContext userContext = toUserContext(user);
+	    try {
             this.transactionHelper.startTransaction();
             LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNumber);
-
-            Money outstandingOverpayment =  loan.applyNewPaymentMechanism(paymentDate, repaymentAmount);
+            PersonnelBO personnel = personnelDao.findPersonnelById((short)user.getUserId());
+            
+            Money outstandingOverpayment =  loan.applyNewPaymentMechanism(paymentDate, repaymentAmount, personnel);
             
             // 3. pay off principal of next installment and recalculate interest if 'over paid'
     		if (outstandingOverpayment.isGreaterThanZero()) {
 
-    			Money totalPrincipalDueNow = loan.getTotalPrincipalDue().subtract(outstandingOverpayment);
-    			
-    	        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	        UserContext userContext = toUserContext(user);
-
+    			Money totalPrincipalDueNow = loan.getTotalPrincipalDue().subtract(outstandingOverpayment); 
+    	        
     	        // assemble into domain entities
     	        LoanOfferingBO loanProduct = this.loanProductDao.findById(loan.getLoanOffering().getPrdOfferingId().intValue());
     	        CustomerBO customer = this.customerDao.findCustomerById(loan.getCustomer().getCustomerId());
@@ -1804,7 +1803,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     	        loan.rescheduleRemainingUnpaidInstallments(loanSchedule, paymentDate);
     	        
     	        
-    	        loan.recordOverpayment(outstandingOverpayment, paymentDate);
+    	        loan.recordOverpayment(outstandingOverpayment, paymentDate, personnel);
     		}
             
             this.loanDao.save(loan);
