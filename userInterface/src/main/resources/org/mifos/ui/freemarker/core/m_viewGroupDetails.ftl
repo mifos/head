@@ -283,9 +283,11 @@
 			</div>
 			<div>
 				<span class="fontnormal">	
-						[#assign arguments = ["${ConfigurationConstants.GROUP}"]/]
-						[@spring.messageArgs "Group.approvaldate" arguments /] 	
+					[#assign arguments = ["${ConfigurationConstants.GROUP}"]/]
+					[@spring.messageArgs "Group.approvaldate" arguments /]
+					[#if groupInformationDto.groupDisplay.customerActivationDate?? ] 	
 						${i18n.date_formatter(groupInformationDto.groupDisplay.customerActivationDate, "dd/MM/yyyy", Application.LocaleSetting.locale)}			
+					[/#if]
 				</span> <br/>
 				<span id="Group.ExternalId" class="fontnormal">
 					[@spring.message "Group.ExternalId" /]:

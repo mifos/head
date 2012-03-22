@@ -39,6 +39,7 @@ import org.apache.struts.action.ActionMessage;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.ClientRules;
@@ -297,7 +298,7 @@ public class CustSearchAction extends SearchAction {
         if ( form.getSelectedDateOption() != null ){
            selectedDate = formatter.parse(form.getSelectedDateOption());
         } else {
-           selectedDate = new Date();
+           selectedDate = new LocalDate().toDateMidnight().toDate();
         }
 
         hierarchy = personnelServiceFacade.getLoanOfficerCustomersHierarchyForDay(userId, new DateTime(selectedDate));

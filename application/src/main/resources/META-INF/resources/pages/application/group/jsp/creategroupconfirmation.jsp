@@ -76,7 +76,7 @@ explanation of the license and how it is applied.
                         </c:otherwise>
                      </c:choose>
                    
-	           		<a id="creategroupconfirmation.link.viewGroupDetail" href="groupCustAction.do?method=get&globalCustNum=${sessionScope.groupCustActionForm.globalCustNum}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
+	           		<a id="creategroupconfirmation.link.viewGroupDetail" href="viewGroupDetails.ftl?globalCustNum=${sessionScope.groupCustActionForm.globalCustNum}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
 	                    <fmt:message key="Group.viewGroupDetail">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 						</fmt:message>
