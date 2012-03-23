@@ -79,10 +79,10 @@ public class TransactionHistoryPage extends AbstractPage {
                 if(TYPE_LOAN_DISBURSEMENT.equals(getType(i))) {
                     continue;
                 }
-                if("11201".equals(glCode)) {
+                if("11201 - Bank Account 1".equals(glCode)) {
                     debitSum += Double.valueOf(debitValue);
                 }
-                else if("5001".equals(glCode) || "1505".equals(glCode)) {
+                else if("5001 - Interest".equals(glCode) || "1505 - WFLoan".equals(glCode)) {
                     debitSum -= Double.valueOf(debitValue);
                 }
                 String rowPaymentID = getPaymentID(i);
