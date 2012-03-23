@@ -75,7 +75,7 @@ public class TableTagParserTest {
                 columnDetails.setRowStyle("drawtablerowbold");
                 columnDetails.setAlign("Down");
                 columns[i].setColumnDetials(columnDetails);
-                columns[i].generateTableColumn(builder2, officeDetailsDto, locale, locale);
+                columns[i].generateTableColumn(builder2, officeDetailsDto, locale, locale, 0);
                Assert.assertEquals("<td class=\"drawtablerowbold\"   align=\"Down\" > </td>", builder2.toString());
 
             }
@@ -128,7 +128,7 @@ public class TableTagParserTest {
         List list = new ArrayList();
         list.add(createOfficeView());
         Locale locale = new Locale("en", "GB");
-        row.generateTableRows(stringBuilder, list, locale, locale);
+        row.generateTableRows(stringBuilder, list, locale, locale, 0);
        Assert.assertEquals("<tr><td class=\"drawtablerowbold\"   align=\"Down\" > </td></tr>", stringBuilder.toString());
 
     }

@@ -59,6 +59,11 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+        <attribute>
+        	<name>glMode</name>
+        	<required>false</required>
+        	<rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 	
 	<!-- Mifos Image tag.This is different from the one

@@ -68,14 +68,14 @@ public class Row {
     }
 
     @SuppressWarnings("unchecked")
-    public void generateTableRows(StringBuilder tableInfo, List obj, Locale locale, Locale mfiLocale) throws TableTagParseException {
+    public void generateTableRows(StringBuilder tableInfo, List obj, Locale locale, Locale mfiLocale, int glMode) throws TableTagParseException {
         Iterator it = obj.iterator();
         Column[] column = getColumn();
         while (it.hasNext()) {
             tableInfo.append("<tr>");
             Object objValue = it.next();
             for (Column element : column) {
-                element.generateTableColumn(tableInfo, objValue, locale, mfiLocale);
+                element.generateTableColumn(tableInfo, objValue, locale, mfiLocale, glMode);
             }
             tableInfo.append("</tr>");
         }
