@@ -187,7 +187,7 @@ explanation of the license and how it is applied.
 								<tr>
 									<td width="19%" class="drawtablerow"><mifos:mifoslabel name="Customer.miscpenalty" bundle="CustomerUIResources" /></td>
 									<td width="49%" align="right" class="drawtablerow"><fmt:formatNumber
-										value="${BusinessKey.upcomingInstallment.miscPenaltyDue.aomunt}" /></td>
+										value="${BusinessKey.upcomingInstallment.miscPenaltyDue.amount}" /></td>
 									<td width="32%" class="drawtablerow">&nbsp;</td>
 								</tr>
 						</c:if>
