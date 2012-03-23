@@ -1577,7 +1577,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         String accountStateName = getAccountStateName(accountStateId);
         boolean disbursed = AccountState.isDisbursed(accountStateId);
         String gracePeriodTypeName = getGracePeriodTypeName(loan.getGracePeriodType().getId());
-        String interestTypeName = getInterestTypeName(loan.getInterestType().getId());
+        Short interestType = loan.getInterestType().getId();
+        String interestTypeName = getInterestTypeName(interestType);
         List<CustomerNoteDto> recentNoteDtos = new ArrayList<CustomerNoteDto>();
         List<AccountNotesEntity> recentNotes = loan.getRecentAccountNotes();
         for (AccountNotesEntity accountNotesEntity : recentNotes) {
@@ -1586,7 +1587,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, accountStateId,
                                      accountStateName, disbursed, accountFlagNames, loan.getDisbursementDate(), loan.isRedone(),
-                                     loan.getBusinessActivityId(), loan.getAccountId(),gracePeriodTypeName, interestTypeName,
+                                     loan.getBusinessActivityId(), loan.getAccountId(),gracePeriodTypeName, interestType, interestTypeName,
                                      loan.getCustomer().getCustomerId(), loan.getAccountType().getAccountTypeId(),
                                      loan.getOffice().getOfficeId(), loan.getPersonnel().getPersonnelId(), loan.getNextMeetingDate(),
                                      loan.getTotalAmountDue().toString(), loan.getTotalAmountInArrears().toString(), loanSummary,
@@ -1747,22 +1748,22 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     
 	@Override
 	public void applyLoanRepayment(String globalAccountNumber,
-			LocalDate paymentDate, BigDecimal repaymentAmount) {
-		
-		try {
+			LocalDate paymentDate, BigDecimal repaymentAmount, String receiptId, LocalDate receiptDate, Short modeOfPayment) {
+	    MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	    UserContext userContext = toUserContext(user);
+	    try {
             this.transactionHelper.startTransaction();
             LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNumber);
-
-            Money outstandingOverpayment =  loan.applyNewPaymentMechanism(paymentDate, repaymentAmount);
+            PersonnelBO personnel = personnelDao.findPersonnelById((short)user.getUserId());
+            
+            Money outstandingOverpayment =  loan.applyNewPaymentMechanism(paymentDate, repaymentAmount, personnel, receiptId, receiptDate,
+                    modeOfPayment);
             
             // 3. pay off principal of next installment and recalculate interest if 'over paid'
     		if (outstandingOverpayment.isGreaterThanZero()) {
 
-    			Money totalPrincipalDueNow = loan.getTotalPrincipalDue().subtract(outstandingOverpayment);
-    			
-    	        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	        UserContext userContext = toUserContext(user);
-
+    			Money totalPrincipalDueNow = loan.getTotalPrincipalDue().subtract(outstandingOverpayment); 
+    	        
     	        // assemble into domain entities
     	        LoanOfferingBO loanProduct = this.loanProductDao.findById(loan.getLoanOffering().getPrdOfferingId().intValue());
     	        CustomerBO customer = this.customerDao.findCustomerById(loan.getCustomer().getCustomerId());
@@ -1803,7 +1804,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     	        loan.rescheduleRemainingUnpaidInstallments(loanSchedule, paymentDate);
     	        
     	        
-    	        loan.recordOverpayment(outstandingOverpayment, paymentDate);
+    	        loan.recordOverpayment(outstandingOverpayment, paymentDate, personnel, receiptId, receiptDate, modeOfPayment);
     		}
             
             this.loanDao.save(loan);

@@ -63,4 +63,7 @@ public interface AccountServiceFacade {
     
     @PreAuthorize("isFullyAuthenticated()")
     List<ListItem<Short>> constructPaymentTypeListForLoanRepayment(Short localeId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    Date retrieveLatPaymentDate(String globalAccountNum);
 }
