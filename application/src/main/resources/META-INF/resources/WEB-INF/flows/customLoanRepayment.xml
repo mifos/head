@@ -13,9 +13,16 @@
     <view-state id="enterLoanRepaymentDetails" view="enterLoanRepaymentDetails" model="loanRepaymentFormBean">
         <on-entry>
             <evaluate expression="loanRepaymentController.retrieveExpectedPayment(flowScope.loanAccountNumber, loanRepaymentFormBean)" />
+            <evaluate expression="loanRepaymentController.retrievePaymentTypes()" result="loanRepaymentFormBean.allowedPaymentTypes" />
         </on-entry>
-        <transition on="detailsEntered" to="submitPayment" bind="true" />
-        <transition on="cancel" to="cancel" />
+        <transition on="detailsEntered" to="reviewLoanRepaymentDetails" bind="true" validate="true" />
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate" />
+    </view-state>
+
+    <view-state id="reviewLoanRepaymentDetails" view="reviewLoanRepaymentDetails" model="loanRepaymentFormBean">
+        <transition on="submit" to="submitPayment" bind="true" validate="true" />
+        <transition on="back" to="enterLoanRepaymentDetails" />
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate" />
     </view-state>
 
     <action-state id="submitPayment">

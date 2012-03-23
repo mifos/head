@@ -105,7 +105,6 @@ import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
-import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -1646,13 +1645,21 @@ public class LoanBO extends AccountBO implements Loan {
         }
     }
     
-	public void recordOverpayment(Money balance, LocalDate paymentDate, PersonnelBO user) throws AccountException {
+	public void recordOverpayment(Money balance, LocalDate paymentDate, PersonnelBO user, String receiptId, LocalDate receiptDate,
+	        Short modeOfPayment) throws AccountException {
 		
 		if (balance.isGreaterThanZero()) {
 			
 			Date transactionDate = paymentDate.toDateMidnight().toDate();
 			
-			PaymentData paymentData = new PaymentData(balance, user, PaymentTypes.CASH.getValue(), transactionDate);
+			PaymentData paymentData = new PaymentData(balance, user, modeOfPayment, transactionDate);
+			if (receiptId != null) {
+			    paymentData.setReceiptNum(receiptId);
+			}
+			if (receiptDate != null) {
+			    paymentData.setReceiptDate(receiptDate.toDateMidnight().toDate());
+			}
+			
 			AccountPaymentEntity accountPaymentEntity = prePayment(paymentData);
 
 			// update
@@ -1683,15 +1690,25 @@ public class LoanBO extends AccountBO implements Loan {
 		}
 	}
 	
-	public Money applyNewPaymentMechanism(LocalDate paymentDate, BigDecimal repaymentAmount, PersonnelBO user) throws AccountException {
+	public Money applyNewPaymentMechanism(LocalDate paymentDate, BigDecimal repaymentAmount, PersonnelBO user, 
+	        String receiptId, LocalDate receiptDate, Short modeOfPayment) throws AccountException {
 		
 		Money totalAmount = new Money(getCurrency(), repaymentAmount);
 		Date transactionDate = paymentDate.toDateMidnight().toDate();
+
+		PaymentData paymentData = new PaymentData(totalAmount, user, modeOfPayment, transactionDate);
+		if (receiptId != null) {
+		    paymentData.setReceiptNum(receiptId);
+		}
+		if (receiptDate != null) {
+		    paymentData.setReceiptDate(receiptDate.toDateMidnight().toDate());
+		}
 		
-		PaymentData paymentData = new PaymentData(totalAmount, user, PaymentTypes.CASH.getValue(), transactionDate);
 		AccountPaymentEntity accountPaymentEntity = prePayment(paymentData);
 
 		Money balance = totalAmount;
+		
+		LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
 		
         // 1. pay off installments in arrears
 		List<AccountActionDateEntity> inArrears = getDetailsOfInstallmentsInArrearsOn(paymentDate);
@@ -1706,7 +1723,6 @@ public class LoanBO extends AccountBO implements Loan {
 		}
 
 		if (!accountPaymentEntity.getAccountTrxns().isEmpty()) {
-		    LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
 		    postPayment(paymentData, accountPaymentEntity, loanPaymentType);
 
 		    addAccountPayment(accountPaymentEntity);

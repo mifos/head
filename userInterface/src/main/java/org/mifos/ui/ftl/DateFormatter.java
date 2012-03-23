@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 
 import freemarker.template.TemplateMethodModelEx;
@@ -42,8 +43,8 @@ public class DateFormatter implements TemplateMethodModelEx {
      * @param args
      *            a list of arguments passed in from FTL in this order:
      *            <ul>
-     *            <li>date object to be formatted. It can be an instance of either java.util.Date or
-     *            org.joda.time.DateTime</li>
+     *            <li>date object to be formatted. It can be an instance of either java.util.Date,
+     *            org.joda.time.DateTime or org.joda.time.LocalDate</li>
      *            <li>pattern: date format pattern see {@link java.text.SimpleDateFormat}</li>
      *            <li>locale: an instance of java.util.Locale</li>
      *            </ul>
@@ -57,12 +58,16 @@ public class DateFormatter implements TemplateMethodModelEx {
         String pattern = (String) DeepUnwrap.unwrap((TemplateModel) args.get(1));
         Locale locale = (Locale) DeepUnwrap.unwrap((TemplateModel) args.get(2));
 
+        if (date instanceof LocalDate) {
+            date = ((LocalDate)date).toDateTimeAtStartOfDay();
+        }
+        
         String formatted = "";
         if (date instanceof DateTime) {
             formatted = DateTimeFormat.forPattern(pattern).withLocale(locale).print((DateTime) date);
         } else if (date instanceof Date) {
             formatted = new SimpleDateFormat(pattern, locale).format((Date) date);
-        } else {
+        } else if (date != null) {
             throw new IllegalArgumentException("Unsupported date type: " + date.getClass());
         }
         return formatted;

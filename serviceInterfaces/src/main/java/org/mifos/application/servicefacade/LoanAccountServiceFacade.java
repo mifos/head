@@ -165,7 +165,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     
     @PreAuthorize("isFullyAuthenticated()")
 	void applyLoanRepayment(String loanGlobalAccountNumber,
-			LocalDate paymentDate, BigDecimal repaymentAmount);
+			LocalDate paymentDate, BigDecimal repaymentAmount, String receiptId, LocalDate receiptDate, Short modeOfPayment);
 
     @PreAuthorize("isFullyAuthenticated()")
     List<LoanAccountDetailsDto> retrieveLoanAccountDetails(LoanInformationDto loanInformationDto);

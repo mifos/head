@@ -20,26 +20,49 @@
 --]
 
 [@layout.webflow currentTab="ClientsAndAccounts"
-                 currentState="createLoanAccount.flowState.reviewAndSubmit" 
-                 states=["createLoanAccount.flowState.reviewAndSubmit"]
+                 currentState="loan.paymentdetails" 
+                 states=["loan.paymentdetails", "accounts.review&submit"]
 ]
+ 
+<script type="text/javascript" src="pages/js/padDate.js"></script> 
                          
 <span id="page.id" title="ApplyLoanRepayment"></span>
 [@i18n.formattingInfo /]
+
+<h1># ${loanAccountNumber} - <span class="standout">[@spring.message "loan.apply_prepayment" /]</span></h1>
+<p>[@spring.message "accounts.asterisk" /]</p>
+<br/>
+
 [@form.errors "loanRepaymentFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
     <fieldset>
     <div class="row">
-        <label for="paymentDate">Date of Transaction:</label>
-        [@form.input path="loanRepaymentFormBean.paymentDate" id="paymentDate" attributes="" /]
+        <label for="paymentDateDD"><span class="mandatory">*</span>[@spring.message "accounts.date_of_trxn" /]:</label>
+        [@form.input path="loanRepaymentFormBean.paymentDateDD" id="paymentDateDD" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.dd"/]</span>
+        [@form.input path="loanRepaymentFormBean.paymentDateMM" id="paymentDateMM" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.mm"/]</span>
+        [@form.input path="loanRepaymentFormBean.paymentDateYY" id="paymentDateYY" attributes="size=3 maxlength=4" /]<span>[@spring.message "datefield.yyyy"/]</span>
     </div>
     <div class="row">
-        <label for="paymentAmount">Amount:</label>
+        <label for="paymentAmount"><span class="mandatory">*</span>[@spring.message "Amount" /]:</label>
         [@form.input path="loanRepaymentFormBean.paymentAmount" id="paymentAmount" attributes="class=separatedNumber" /]
+    </div>
+    <div class="row">
+        <label for="paymentType"><span class="mandatory">*</span>[@spring.message "accounts.mode_of_payment" /]:</label>
+        [@form.singleSelectWithPrompt path="loanRepaymentFormBean.paymentType" id="paymentType" options=loanRepaymentFormBean.allowedPaymentTypes /]
+    </div>
+    <div class="row">
+        <label for="receiptId">[@spring.message "loan.receiptId" /]:</label>
+        [@form.input path="loanRepaymentFormBean.receiptId" id="receiptId" /]
+    </div>
+    <div class="row">
+        <label for="receiptDateDD">[@spring.message "loan.receiptdate" /]:</label>
+        [@form.input path="loanRepaymentFormBean.receiptDateDD" id="receiptDateDD" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.dd"/]</span>
+        [@form.input path="loanRepaymentFormBean.receiptDateMM" id="receiptDateMM" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.mm"/]</span>
+        [@form.input path="loanRepaymentFormBean.receiptDateYY" id="receiptDateYY" attributes="size=3 maxlength=4" /]<span>[@spring.message "datefield.yyyy"/]</span>
     </div>
     </fieldset>
     <div class="row">
-        [@form.submitButton label="widget.form.buttonLabel.submit" id="cust_search_account.button.search" webflowEvent="detailsEntered" /]
+        [@form.submitButton label="widget.form.buttonLabel.submit" id="enterLoanRepaymentDetails.submit" webflowEvent="detailsEntered" /]
         [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>
 </form>

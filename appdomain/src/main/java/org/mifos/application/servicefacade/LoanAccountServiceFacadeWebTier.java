@@ -1748,7 +1748,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     
 	@Override
 	public void applyLoanRepayment(String globalAccountNumber,
-			LocalDate paymentDate, BigDecimal repaymentAmount) {
+			LocalDate paymentDate, BigDecimal repaymentAmount, String receiptId, LocalDate receiptDate, Short modeOfPayment) {
 	    MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	    UserContext userContext = toUserContext(user);
 	    try {
@@ -1756,7 +1756,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNumber);
             PersonnelBO personnel = personnelDao.findPersonnelById((short)user.getUserId());
             
-            Money outstandingOverpayment =  loan.applyNewPaymentMechanism(paymentDate, repaymentAmount, personnel);
+            Money outstandingOverpayment =  loan.applyNewPaymentMechanism(paymentDate, repaymentAmount, personnel, receiptId, receiptDate,
+                    modeOfPayment);
             
             // 3. pay off principal of next installment and recalculate interest if 'over paid'
     		if (outstandingOverpayment.isGreaterThanZero()) {
@@ -1803,7 +1804,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     	        loan.rescheduleRemainingUnpaidInstallments(loanSchedule, paymentDate);
     	        
     	        
-    	        loan.recordOverpayment(outstandingOverpayment, paymentDate, personnel);
+    	        loan.recordOverpayment(outstandingOverpayment, paymentDate, personnel, receiptId, receiptDate, modeOfPayment);
     		}
             
             this.loanDao.save(loan);

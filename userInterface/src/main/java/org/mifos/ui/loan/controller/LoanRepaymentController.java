@@ -22,24 +22,34 @@ package org.mifos.ui.loan.controller;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.joda.time.LocalDate;
+import org.mifos.accounts.servicefacade.AccountServiceFacade;
+import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.dto.screen.ExpectedPaymentDto;
+import org.mifos.security.MifosUser;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 @Controller(value="loanRepaymentController")
 public class LoanRepaymentController {
 
 	private final LoanAccountServiceFacade loanAccountServiceFacade;
-
+	private final AccountServiceFacade accountServiceFacade;
+	
 	@Autowired
-    public LoanRepaymentController(LoanAccountServiceFacade loanAccountServiceFacade) {
+    public LoanRepaymentController(LoanAccountServiceFacade loanAccountServiceFacade, AccountServiceFacade accountServiceFacade) {
 		this.loanAccountServiceFacade = loanAccountServiceFacade;
+		this.accountServiceFacade = accountServiceFacade;
     }
 	
 	// called by spring webflow
@@ -49,12 +59,22 @@ public class LoanRepaymentController {
 		
 		ExpectedPaymentDto result = this.loanAccountServiceFacade.retrieveExpectedPayment(loanGlobalAccountNumber, paymentDueAsOf);
 		
+		Date lastPaymentDate = this.accountServiceFacade.retrieveLatPaymentDate(loanGlobalAccountNumber);
+		LocalDate lastPaymentDateJoda =  null;
+		if (lastPaymentDate != null) {
+		    lastPaymentDateJoda = new LocalDate(lastPaymentDate);
+		}
+		
 		loanRepaymentFormBean.setGlobalAccountNumber(result.getGlobalAccountNumber());
+		loanRepaymentFormBean.setLastPaymentDate(lastPaymentDateJoda);
 		
-		Double amount = Double.valueOf(result.getAmount().doubleValue());
-		loanRepaymentFormBean.setPaymentAmount(BigDecimal.valueOf(amount));
-		loanRepaymentFormBean.setPaymentDate(paymentDueAsOf);
-		
+		if (loanRepaymentFormBean.getPaymentAmount().equals(BigDecimal.ZERO)) {
+		    Double amount = Double.valueOf(result.getAmount().doubleValue());
+    		loanRepaymentFormBean.setPaymentAmount(BigDecimal.valueOf(amount));
+    		loanRepaymentFormBean.setPaymentDate(paymentDueAsOf);
+		} else {
+		    loanRepaymentFormBean.setPaymentDate(new LocalDate());
+		}
 		return result;
 	}
 	
@@ -65,7 +85,8 @@ public class LoanRepaymentController {
 		try {
 			BigDecimal repaymentAmount = BigDecimal.valueOf(loanRepaymentFormBean.getPaymentAmount().doubleValue());
 			
-			this.loanAccountServiceFacade.applyLoanRepayment(loanGlobalAccountNumber, loanRepaymentFormBean.getPaymentDate(), repaymentAmount);
+			this.loanAccountServiceFacade.applyLoanRepayment(loanGlobalAccountNumber, loanRepaymentFormBean.getPaymentDate(), repaymentAmount,
+			        loanRepaymentFormBean.getReceiptId(), loanRepaymentFormBean.getReceiptDate(), loanRepaymentFormBean.getPaymentTypeId());
 			returnCode = "success";
 		} catch (BusinessRuleException e) {
 			MessageBuilder builder = new MessageBuilder()
@@ -81,5 +102,18 @@ public class LoanRepaymentController {
 		} 
 		
 		return returnCode;
+	}
+	
+	//called by spring webflow
+	public Map<String, String> retrievePaymentTypes() {
+	    MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	    List<ListItem<Short>> paymentTypes = this.accountServiceFacade.constructPaymentTypeListForLoanRepayment(user.getPreferredLocaleId());
+	    
+	    Map<String, String> result = new HashMap<String, String>();
+	    for (ListItem<Short> listItem : paymentTypes) {
+	        result.put(String.valueOf(listItem.getId()), listItem.getDisplayValue());
+	    }
+	    
+	    return result;
 	}
 }
