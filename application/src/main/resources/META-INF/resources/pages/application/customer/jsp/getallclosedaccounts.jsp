@@ -97,7 +97,7 @@ explanation of the license and how it is applied.
 										<table width="100%" border="0" cellspacing="0" cellpadding="0">
 											<tr>
 												<td width="50%"><span class="fontnormal"> <html-el:link styleId="getallclosedaccounts.link.viewLoanAccount"
-													href="loanAccountAction.do?method=get&globalAccountNum=${closedAccount.globalAccountNum}">
+													href="viewLoanAccountDetails.ftl?globalAccountNum=${closedAccount.globalAccountNum}">
 													<c:out
 														value="${closedAccount.loanOffering.prdOfferingName}" />,&nbsp;
 													<c:out value="Acct #" />
