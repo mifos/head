@@ -52,6 +52,7 @@ import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.LoanRepaymentScheduleItemDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
+import org.mifos.dto.domain.OriginalScheduleInfoDto;
 import org.mifos.dto.domain.OverpaymentDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
@@ -148,6 +149,9 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     @PreAuthorize("isFullyAuthenticated()")
     List<LoanRepaymentScheduleItemDto> retrieveLoanRepaymentSchedule(String globalAccountNum, Date viewDate);
 
+    @PreAuthorize("isFullyAuthenticated()")
+    OriginalScheduleInfoDto retrieveOriginalLoanSchedule(String globalAccountNum);
+    
     @PreAuthorize("isFullyAuthenticated()")
     boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate);
 

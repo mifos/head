@@ -76,6 +76,7 @@ import org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.MaxMinLoanAmount;
 import org.mifos.accounts.loan.business.MaxMinNoOfInstall;
+import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.business.RepaymentResultsHolder;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
@@ -192,12 +193,14 @@ import org.mifos.dto.domain.LoanRepaymentScheduleItemDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
+import org.mifos.dto.domain.OriginalScheduleInfoDto;
 import org.mifos.dto.domain.OverpaymentDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.PenaltyDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ProductDetailsDto;
+import org.mifos.dto.domain.RepaymentScheduleInstallmentDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.AccountFeesDto;
@@ -1396,8 +1399,31 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         return loanSchedule;
     }
+    
+    @Override
+	public OriginalScheduleInfoDto retrieveOriginalLoanSchedule(
+			String globalAccountNum) {
+    	LoanBO loanBO = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+    	Integer accountId = loanBO.getAccountId();
+    	try {
+            List<OriginalLoanScheduleEntity> loanScheduleEntities = loanBusinessService.retrieveOriginalLoanSchedule(accountId);
+            ArrayList<RepaymentScheduleInstallmentDto> repaymentScheduleInstallments = new ArrayList<RepaymentScheduleInstallmentDto>();
+            for (OriginalLoanScheduleEntity loanScheduleEntity : loanScheduleEntities) {
+            	RepaymentScheduleInstallment repaymentScheduleInstallment = loanScheduleEntity.toDto();
+            	RepaymentScheduleInstallmentDto installmentDto = new RepaymentScheduleInstallmentDto(repaymentScheduleInstallment.getInstallment(), 
+        			repaymentScheduleInstallment.getPrincipal().toString(), repaymentScheduleInstallment.getInterest().toString(), repaymentScheduleInstallment.getFees().toString(), 
+        			repaymentScheduleInstallment.getMiscFees().toString(), repaymentScheduleInstallment.getFeesWithMiscFee().toString(), repaymentScheduleInstallment.getMiscPenalty().toString(), 
+        			repaymentScheduleInstallment.getTotal(), repaymentScheduleInstallment.getDueDate());
+            	repaymentScheduleInstallments.add(installmentDto);
+            }
 
-    private AccountFeeScheduleDto convertToDto(AccountFeesActionDetailEntity feeEntity) {
+            return new OriginalScheduleInfoDto(loanBO.getLoanAmount().toString(),loanBO.getDisbursementDate(), repaymentScheduleInstallments);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+	}
+
+	private AccountFeeScheduleDto convertToDto(AccountFeesActionDetailEntity feeEntity) {
         return new AccountFeeScheduleDto(feeEntity.getFee().getFeeName(), feeEntity.getFeeAmount().toString(),
                 feeEntity.getFeeAmountPaid().toString(), feeEntity.getFeeAllocated().toString());
     }
@@ -1836,7 +1862,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                     && !EMPTY.equals(individualLoan.getLoanAmount().toString()) ? individualLoan.getLoanAmount()
                     .toString() : "0.0");
             loandetails.setLoanAccountId(individualLoan.getAccountId().toString());
-
+            loandetails.setLoanGlobalAccountNum(individualLoan.getGlobalAccountNum());
+            loandetails.setParentLoanGlobalAccountNum(individualLoan.getParentAccount().getGlobalAccountNum());
+            
             if (null != individualLoan.getBusinessActivityId()) {
                 loandetails.setBusinessActivity(individualLoan.getBusinessActivityId().toString());
                 for (ValueListElement busact : allLoanPurposes) {

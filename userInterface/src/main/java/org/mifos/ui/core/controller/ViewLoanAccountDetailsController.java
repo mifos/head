@@ -10,8 +10,11 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
+import org.mifos.dto.domain.OriginalScheduleInfoDto;
 import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -41,6 +44,9 @@ public class ViewLoanAccountDetailsController {
     @Autowired
     private QuestionnaireServiceFacade questionnaireServiceFacade;
     
+	@Autowired
+	private ConfigurationServiceFacade configurationServiceFacade;
+    
     private final SitePreferenceHelper sitePreferenceHelper = new SitePreferenceHelper();
     
     @RequestMapping(value = "/viewLoanAccountDetails", method=RequestMethod.GET)
@@ -64,6 +70,14 @@ public class ViewLoanAccountDetailsController {
         }
         request.getSession().setAttribute("recentAccountActivities", loanInformationDto.getRecentAccountActivity());
 
+        //for GLIM
+        if ( configurationServiceFacade.isGlimEnabled() && loanInformationDto.isGroup()) {
+            List<LoanAccountDetailsDto> loanAccountsDetails = loanAccountServiceFacade.retrieveLoanAccountDetails(loanInformationDto);
+            addEmptyBuisnessActivities(loanAccountsDetails);
+            modelAndView.addObject("loanAccountDetailsView");
+            request.setAttribute("loanAccountDetailsView", loanAccountsDetails);
+        }
+        
         modelAndView.addObject("backPageUrl", UrlHelper.constructCurrentPageUrl(request));
         
         loanAccountServiceFacade.putLoanBusinessKeyInSession(globalAccountNum, request);
@@ -140,9 +154,42 @@ public class ViewLoanAccountDetailsController {
         modelAndView.addObject("loanInformationDto", loanInformationDto);
         modelAndView.addObject("currentDate", new Date());
         
+        OriginalScheduleInfoDto originalScheduleInfoDto = loanAccountServiceFacade.retrieveOriginalLoanSchedule(globalAccountNum);
+        modelAndView.addObject("isOriginalScheduleAvailable", originalScheduleInfoDto.hasOriginalInstallments());
+        
         this.loanAccountServiceFacade.putLoanBusinessKeyInSession(globalAccountNum, request);
         
         return modelAndView;
+    }
+    
+    @RequestMapping(value = "/viewLoanAccountOriginalSchedule", method=RequestMethod.GET)
+    public ModelAndView showLoanAccountOriginalSchedule(HttpServletRequest request, HttpServletResponse response){
+    	ModelAndView modelAndView =new ModelAndView();
+        sitePreferenceHelper.resolveSiteType(modelAndView, "viewLoanAccountOriginalSchedule", request);
+        modelAndView.addObject("include_page", new IncludePage(request, response));
+        
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        
+        LoanInformationDto loanInformationDto = loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
+        modelAndView.addObject("loanInformationDto", loanInformationDto);
+        
+        OriginalScheduleInfoDto originalScheduleInfoDto = loanAccountServiceFacade.retrieveOriginalLoanSchedule(globalAccountNum);
+        modelAndView.addObject("originalScheduleInfoDto", originalScheduleInfoDto);
+        // for mifostabletag 
+        request.setAttribute("originalInstallments", originalScheduleInfoDto.getOriginalLoanScheduleInstallments());
+        
+        this.loanAccountServiceFacade.putLoanBusinessKeyInSession(globalAccountNum, request);
+        
+        return modelAndView;
+    }
+    
+    private void addEmptyBuisnessActivities(List<LoanAccountDetailsDto> loanAccountDetails) {
+        for (LoanAccountDetailsDto details : loanAccountDetails) {
+            if (details.getBusinessActivity() == null) {
+                details.setBusinessActivity("-");
+                details.setBusinessActivityName("-");
+            }
+        }
     }
     
 }

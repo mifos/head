@@ -21,9 +21,11 @@
     </column>
     <column label="Individual schedule" value="show" valueType="text" columnType="link">
          <columnDetails  rowStyle="drawtablerow" colWidth="11"/>
-         <linkDetails action="loanAccountAction.do">
-            <actionParam name="method" value="viewOriginalSchedule" valueType="text"/>
+         <linkDetails action="viewLoanAccountOriginalSchedule.ftl">
             <actionParam name="accountId" value="loanAccountId" valueType="method"/>
+            <actionParam name="globalAccountNum" value="loanGlobalAccountNum" valueType="method"/>
+            <actionParam name="parentLoanGlobalAccountNum" value="parentLoanGlobalAccountNum" valueType="method"/> 
+            <actionParam name="individual" value="" valueType="text"/>
             <actionParam name="randomNUm" valueType="inbuilt"/>
             <actionParam name="currentFlowKey" valueType="inbuilt"/>
          </linkDetails>
