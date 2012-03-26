@@ -51,7 +51,7 @@ explanation of the license and how it is applied.
 					<tr class="fontnormal">
 						<td valign="top">
 							<span class="fontnormal">
-								<html-el:link styleId="confirmation.link.viewLoanAccount" href="loanAccountAction.do?method=get&globalAccountNum=${account}&randomNUm=${sessionScope.randomNUm}">
+								<html-el:link styleId="confirmation.link.viewLoanAccount" href="viewLoanAccountDetails.ftl?globalAccountNum=${account}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="accountStatus.account" />
 									<c:out value="${account}" />
 								</html-el:link>

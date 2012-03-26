@@ -59,7 +59,7 @@ public class ViewCustomerDetailsController {
         boolean isPhotoFieldHidden = mandatoryHiddenFieldsDto.isHideSystemPhoto();
         modelAndView.addObject("isPhotoFieldHidden", isPhotoFieldHidden);
 
-        modelAndView.addObject("backPageUrl", UrlHelper.constructCurrentPageUrl(request));
+        modelAndView.addObject("currentPageUrl", UrlHelper.constructCurrentPageUrl(request));
 
         boolean containsQGForCloseClient = false;
         containsQGForCloseClient = questionnaireServiceFacade.getQuestionGroupInstances(clientInformationDto.getClientDisplay().getCustomerId(), "Close", "Client").size() > 0;
@@ -87,7 +87,7 @@ public class ViewCustomerDetailsController {
 	    boolean isCenterHierarchyExists = configurationServiceFacade.getBooleanConfig("ClientRules.CenterHierarchyExists");
         modelAndView.addObject("isCenterHierarchyExists", isCenterHierarchyExists );
 
-        modelAndView.addObject("backPageUrl", UrlHelper.constructCurrentPageUrl(request));
+        modelAndView.addObject("currentPageUrl", UrlHelper.constructCurrentPageUrl(request));
         
         groupServiceFacade.putGroupBusinessKeyInSession(groupSystemId, request);
         
@@ -105,7 +105,7 @@ public class ViewCustomerDetailsController {
 	    
 	    modelAndView.addObject("centerInformationDto", centerInformationDto);
 	    
-        modelAndView.addObject("backPageUrl", UrlHelper.constructCurrentPageUrl(request));
+        modelAndView.addObject("currentPageUrl", UrlHelper.constructCurrentPageUrl(request));
             
         centerServiceFacade.putCenterBusinessKeyInSession(centerSystemId, request);
         
