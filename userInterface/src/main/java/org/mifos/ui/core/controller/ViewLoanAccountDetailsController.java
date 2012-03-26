@@ -11,6 +11,7 @@ import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
+import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
@@ -115,7 +116,8 @@ public class ViewLoanAccountDetailsController {
         
         LoanInformationDto loanInformationDto = loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
         modelAndView.addObject("loanInformationDto", loanInformationDto);
-        
+        AccountingConfigurationDto configurationDto = this.configurationServiceFacade.getAccountingConfiguration();
+        modelAndView.addObject("GLCodeMode", configurationDto.getGlCodeMode());
         List<TransactionHistoryDto> transactionHistoryDto = this.centerServiceFacade.retrieveAccountTransactionHistory(globalAccountNum);
         
         request.setAttribute("trxnHistoryList", transactionHistoryDto);
