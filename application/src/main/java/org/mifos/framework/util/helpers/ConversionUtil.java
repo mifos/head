@@ -78,7 +78,7 @@ public class ConversionUtil {
         
         StringBuilder builder = new StringBuilder(num);
         if(num.length() > 3){
-        for(int i = num.length() - 3; i >= 0; i -= 4) {            
+        for(int i = num.length() - 3; i > 0; i -= 3) {            
         	builder = builder.insert(i, ',');
         	}
         }
