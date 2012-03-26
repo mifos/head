@@ -21,6 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
 <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
+<script src="pages/questionnaire/js/createQuestionGroup.js" type="text/javascript"></script>
 <script src="pages/questionnaire/js/createQuestion.js" type="text/javascript"></script>
 <span id="page.id" title="createQuestionGroup"></span>
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.addQuestionGroup":""}/]
