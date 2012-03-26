@@ -47,9 +47,6 @@ public class StringUtil {
                 if (i > 0 && builder.charAt(i-1) != ',') {
                 	builder = builder.insert(i, ',');
                 }
-                else if (i == 0) {
-                	builder = builder.insert(i, ',');
-                }
             }
         }
         
