@@ -151,7 +151,7 @@ explanation of the license and how it is applied.
 										<table width="100%" border="0" cellspacing="0" cellpadding="0">
 											<tr>
 												<td width="50%"><span class="fontnormal"> <html-el:link styleId="getallclosedaccounts.link.viewSavingsAccount"
-													href="savingsAction.do?method=get&globalAccountNum=${closedSavingsAccount.globalAccountNum}">
+													href="viewSavingsAccountDetails.ftl?globalAccountNum=${closedSavingsAccount.globalAccountNum}">
 													<c:out
 														value="${closedSavingsAccount.savingsOffering.prdOfferingName}" />,&nbsp;
 													<c:out value="Acct #" />

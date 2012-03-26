@@ -11,7 +11,7 @@ public class UrlHelper {
     
     private final static UrlPathHelper urlPathHelper = new UrlPathHelper();
 
-    public static String constructCurrentPageUrl(HttpServletRequest request){
+    public static String constructCurrentPageEncodedUrl(HttpServletRequest request){
         String originatingServletPath = urlPathHelper.getOriginatingServletPath(request);
         String originatingQueryString = urlPathHelper.getOriginatingQueryString(request);
         if ( originatingQueryString == null ){
@@ -26,6 +26,17 @@ public class UrlHelper {
         }
         
         return encodedUrl;
+    }
+    
+    public static String constructCurrentPageUrl(HttpServletRequest request){
+        String originatingServletPath = urlPathHelper.getOriginatingServletPath(request);
+        String originatingQueryString = urlPathHelper.getOriginatingQueryString(request);
+        if ( originatingQueryString == null ){
+            originatingQueryString = "";
+        }
+        StringBuilder url = new StringBuilder(originatingServletPath).append("?").append(originatingQueryString).deleteCharAt(originatingServletPath.indexOf('/'));
+
+        return url.toString();
     }
     
 }
