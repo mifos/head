@@ -21,6 +21,7 @@
 
 [@layout.header "mifos" /]
 [#assign mifostag=JspTaglibs["/tags/mifos-html"]]
+[#assign mifos=JspTaglibs["/tags/mifos-html"]]
 
 [@widget.topNavigationNoSecurityMobile currentTab="ClientsAndAccounts" /]
 
@@ -288,25 +289,29 @@
 					[#if groupInformationDto.groupDisplay.customerActivationDate?? ] 	
 						${i18n.date_formatter(groupInformationDto.groupDisplay.customerActivationDate, "dd/MM/yyyy", Application.LocaleSetting.locale)}			
 					[/#if]
-				</span> <br/>
-				<span id="Group.ExternalId" class="fontnormal">
-					[@spring.message "Group.ExternalId" /]:
+				</span>
+			</div>
+			<div id="Group.ExternalId">
+				<span class="fontnormal">
+					[@mifos.mifoslabel name="${ConfigurationConstants.EXTERNALID}" isColonRequired="Yes" keyhm="Group.ExternalId" isManadatoryIndicationNotRequired="yes" /]
 					${groupInformationDto.groupDisplay.externalId}
-				</span> <br/>
+				</span> 
+			</div>
+			<div>
 				<span class="fontnormal"> 
 					[@spring.message "Group.FormedBy" /]
 					${groupInformationDto.groupDisplay.customerFormedByDisplayName}
 				</span>
 			</div>
 			<br/>
-			<div id="Group.TrainedDate">
+			<div id="Group.Trained">
 				<span class="fontnormalbold">
-					[@spring.message "Group.trainingstatus" /]
+					[@mifos.mifoslabel name="Group.trainingstatus" bundle="GroupUIResources" keyhm="Group.Trained" isManadatoryIndicationNotRequired="yes" /]
 				</span> <br/>
 				<span class="fontnormal"> 
-					[@spring.message "Group.trainedon" /] 
+					[@mifos.mifoslabel name="Group.trainedon" bundle="GroupUIResources" keyhm="Group.Trained" isManadatoryIndicationNotRequired="yes"/]
 					[#if groupInformationDto.groupDisplay.trained ]
-						${groupInformationDto.groupDisplay.trainedDate}
+						${i18n.date_formatter(groupInformationDto.groupDisplay.trainedDate, "dd/MM/yyyy", Application.LocaleSetting.locale)}
 					[/#if] 
 				</span>
 			</div>
@@ -365,7 +370,7 @@
 			<div id="Group.PhoneNumber"> 
 				[#if groupInformationDto.address.phoneNumber?has_content ]
 					<span class="fontnormal">
-						[@spring.message "Group.telephone" /]
+						[@mifos.mifoslabel name="Group.telephone" bundle="GroupUIResources" keyhm="Group.PhoneNumber" isManadatoryIndicationNotRequired="yes" /]
 						${groupInformationDto.address.phoneNumber}
 					</span>
 				[/#if] 

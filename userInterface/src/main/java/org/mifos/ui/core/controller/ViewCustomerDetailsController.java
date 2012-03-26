@@ -3,11 +3,13 @@ package org.mifos.ui.core.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.ClientServiceFacade;
 import org.mifos.application.servicefacade.GroupServiceFacade;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.dto.domain.CenterInformationDto;
+import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.GroupInformationDto;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -30,6 +32,8 @@ public class ViewCustomerDetailsController {
 	GroupServiceFacade groupServiceFacade;
 	@Autowired
 	CenterServiceFacade centerServiceFacade;
+	@Autowired
+	AdminServiceFacade adminServiceFacade;
 
 	@Autowired
 	private ConfigurationServiceFacade configurationServiceFacade;
@@ -51,7 +55,8 @@ public class ViewCustomerDetailsController {
 
         modelAndView.addObject("clientInformationDto", clientInformationDto);
 
-        boolean isPhotoFieldHidden = Boolean.parseBoolean(configurationServiceFacade.getConfig("Client.Photo"));
+        MandatoryHiddenFieldsDto mandatoryHiddenFieldsDto = this.adminServiceFacade.retrieveHiddenMandatoryFields();
+        boolean isPhotoFieldHidden = mandatoryHiddenFieldsDto.isHideSystemPhoto();
         modelAndView.addObject("isPhotoFieldHidden", isPhotoFieldHidden);
 
         modelAndView.addObject("backPageUrl", UrlHelper.constructCurrentPageUrl(request));

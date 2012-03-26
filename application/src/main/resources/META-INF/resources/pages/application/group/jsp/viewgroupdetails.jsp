@@ -448,7 +448,7 @@ explanation of the license and how it is applied.
 							<span class="fontnormal"></span></td>
 						</tr>
 
-						<tr id="Group.TrainedDate">
+						<tr id="Group.Trained">
 							<td class="fontnormalbold"><mifos:mifoslabel
 								name="Group.trainingstatus" bundle="GroupUIResources"
                                 keyhm="Group.Trained"
