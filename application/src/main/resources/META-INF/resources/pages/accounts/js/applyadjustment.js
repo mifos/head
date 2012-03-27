@@ -2,6 +2,10 @@ function fun_cancel(){
 	goBackToLoanAccountDetails.submit();
 }
 
+function fun_back(){
+	goBackToAdjustmentDetails.submit();
+}
+
 function fn_submit(){
 	
 	if(document.getElementsByName("method")[0].value=='loadAdjustment'){
@@ -21,13 +25,14 @@ function fn_submit(){
 		func_disableSubmitBtn("submit_btn");
 		return true;
 	}
-}	
+}
+
 function trim(str) {
 	return str.replace(/^\s*|\s*$/g,"");
 } 
 
 $(document).ready(function() {
-	if ($("applyadjustment\\.input\\.revertLastPayment").is(":checked")) {
+	if ($("#applyadjustment\\.input\\.revertLastPayment").is(":checked")) {
 		disablePaymentDetails();
 	}
 	
