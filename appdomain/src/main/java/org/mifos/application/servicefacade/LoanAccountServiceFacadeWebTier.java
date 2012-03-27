@@ -121,6 +121,7 @@ import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.MeetingFactory;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -224,7 +225,6 @@ import org.mifos.dto.screen.LoanSummaryDto;
 import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -829,14 +829,19 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = createLoanSchedule.isRepaymentIndependentOfCustomerMeetingSchedule();
-
-        MeetingBO loanMeeting = customer.getCustomerMeetingValue();
+    
+        MeetingBO loanMeeting = null;
         if (loanScheduleIndependentOfCustomerMeetingEnabled) {
             loanMeeting = this.createNewMeetingForRepaymentDay(createLoanSchedule.getDisbursementDate(), createLoanSchedule, customer);
-
             if (loanProduct.isVariableInstallmentsAllowed()) {
                 loanMeeting.setMeetingStartDate(createLoanSchedule.getDisbursementDate().toDateMidnight().toDate());
             }
+        } else {
+            MeetingDto customerMeetingDto = customer.getCustomerMeetingValue().toDto();
+            loanMeeting = new MeetingFactory().create(customerMeetingDto);
+            
+            Short recurAfter = loanProduct.getLoanOfferingMeeting().getMeeting().getRecurAfter();
+            loanMeeting.getMeetingDetails().setRecurAfter(recurAfter);
         }
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
 
@@ -978,9 +983,15 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.isRepaymentScheduleIndependentOfCustomerMeeting();
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
 
-        MeetingBO repaymentDayMeeting = loanAccountDetail.getCustomer().getCustomerMeetingValue();
+        MeetingBO repaymentDayMeeting = null;
         if (loanScheduleIndependentOfCustomerMeetingEnabled) {
             repaymentDayMeeting = this.createNewMeetingForRepaymentDay(loanAccountInfo.getDisbursementDate(), loanAccountInfo, loanAccountDetail.getCustomer());
+        } else {
+            MeetingDto customerMeetingDto = customer.getCustomerMeetingValue().toDto();
+            repaymentDayMeeting = new MeetingFactory().create(customerMeetingDto);
+            
+            Short recurAfter = loanAccountDetail.getLoanProduct().getLoanOfferingMeeting().getMeeting().getRecurAfter();
+            repaymentDayMeeting.getMeetingDetails().setRecurAfter(recurAfter);
         }
 
         List<DateTime> loanScheduleDates = new ArrayList<DateTime>(loanScheduleInstallmentDates);
