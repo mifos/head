@@ -77,7 +77,7 @@ explanation of the license and how it is applied.
 													<c:if test="${!productFee.active}">
 														<img src="pages/framework/images/status_closedblack.gif" width="8" height="9">&nbsp;
 															<%--<mifos:mifoslabel name="Fees.inactive" bundle="FeesUIResources" />--%>
-														<c:out value="${productFee.feeStatus.name}" />z
+														<c:out value="${productFee.feeStatus.name}" />
 													</c:if>
 												</td>
 											</tr>
