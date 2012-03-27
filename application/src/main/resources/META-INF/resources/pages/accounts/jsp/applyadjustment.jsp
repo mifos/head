@@ -37,9 +37,16 @@ explanation of the license and how it is applied.
 		<SCRIPT SRC="pages/accounts/js/applyadjustment.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
-		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+		
+        <form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
 			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
 		</form>
+        <form name="goBackToAdjustmentDetails" method="post" action ="applyAdjustment.do?method=editAdjustment">
+            <input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+            <input type="hidden" name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+            <input type="hidden" name="isRevert" value="${sessionScope.applyAdjustmentActionForm.adjustcheckbox}" />
+        </form>
+        
 		<html-el:form method="post" action="applyAdjustment.do" onsubmit="return fn_submit();">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'adjAmount')}" var="adjAmount" />
 
@@ -226,7 +233,17 @@ explanation of the license and how it is applied.
                                                 </td>
                                             </tr>
                                         </c:if>
-									</c:otherwise>
+                                        <tr>
+                                            <td>
+                                                <c:if test="${requestScope.method !='loadAdjustmentWhenObligationMet'}">
+                                                    <html-el:button styleId="applyadjustment.button.edit" styleClass="cancelbuttn" 
+                                                        onclick="javascript:fun_back()" property="edit">
+                                                        <mifos:mifoslabel name="accounts.edit_adjustment" />
+                                                    </html-el:button>
+                                                </c:if>
+									        </td>
+                                        </tr>
+                                    </c:otherwise>
 								</c:choose>
 					</table>	
 					

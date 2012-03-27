@@ -63,6 +63,17 @@ public class ApplyAdjustment extends BaseAction {
         return new AccountBusinessService();
     }
 
+    @TransactionDemarcate(joinToken=true)
+    public ActionForward editAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+        boolean isRevert = Boolean.parseBoolean(request.getParameter(Constants.ADJUSTMENT_IS_REVERT));
+        appAdjustActionForm.setAdjustcheckbox(isRevert);
+        
+        request.setAttribute("method", "loadAdjustment");
+        return mapping.findForward("loadadjustment_success");
+    }
+    
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
@@ -108,7 +119,6 @@ public class ApplyAdjustment extends BaseAction {
             payment = accnt.getLastPmntToBeAdjusted();
             appAdjustActionForm.setPaymentId(null);
             SessionUtils.setAttribute(Constants.ADJUSTED_AMOUNT, accnt.getLastPmntAmntToBeAdjusted(), request);
-
         }
         populateForm(appAdjustActionForm, payment);
         return mapping.findForward("loadadjustment_success");
