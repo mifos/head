@@ -47,6 +47,7 @@
   <DATABASECHANGELOG ID="MIFOS_5164_1" AUTHOR="Udai Gupta" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-28 18:07:31.0" ORDEREXECUTED="218" EXECTYPE="EXECUTED" MD5SUM="3:ba7cceda2200329d1f21496cd2832067" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5164_2" AUTHOR="Udai Gupta" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-28 18:07:31.0" ORDEREXECUTED="219" EXECTYPE="EXECUTED" MD5SUM="3:7050ad7056dd89097b10de0cad2f2e5f" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5186_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-24 15:28:55.0" ORDEREXECUTED="178" EXECTYPE="EXECUTED" MD5SUM="3:257c6dbd69a28ceb9a8a866a405e23f2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_5193" AUTHOR="Hugo Technologies" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-28 22:39:54.0" ORDEREXECUTED="296" EXECTYPE="EXECUTED" MD5SUM="3:1a2cf948f862d89eb8fcc269b33657c2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5218_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-09 11:58:16.0" ORDEREXECUTED="188" EXECTYPE="EXECUTED" MD5SUM="3:a55cb7c0cd264ab9133926be13e0c714" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5359_1" AUTHOR="Michal Dudzinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-01-31 14:44:03.0" ORDEREXECUTED="218" EXECTYPE="EXECUTED" MD5SUM="3:8c408cc6b30629a54545806b2f771895" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5370_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-17 16:00:08.0" ORDEREXECUTED="248" EXECTYPE="EXECUTED" MD5SUM="3:ba16a0b76593f67399076254a19d8e94" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
@@ -2311,6 +2312,7 @@
   <config_key_value configuration_id="10" configuration_type="0" configuration_key="maxDaysBetweenDisbursalAndFirstRepaymentDay" configuration_value="365"/>
   <config_key_value configuration_id="11" configuration_type="0" configuration_key="AdministrativeDocumentsIsEnabled" configuration_value="1"/>
   <config_key_value configuration_id="12" configuration_type="0" configuration_key="MIFOS-4948" configuration_value="1"/>
+  <config_key_value configuration_id="16" configuration_type="0" configuration_key="prorate_Rule" configuration_value="0"/>
   <currency currency_id="1" currency_name="US Dollar" rounding_amount="1.000" currency_code="USD"/>
   <currency currency_id="2" currency_name="Indian Rupee" rounding_amount="1.000" currency_code="INR"/>
   <currency currency_id="3" currency_name="Euro" rounding_amount="1.000" currency_code="EUR"/>
