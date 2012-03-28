@@ -3488,14 +3488,14 @@ public class LoanBO extends AccountBO implements Loan {
 
     }
     
-    public List<LoanScheduleEntity> getDetailsOfLateInstallmentsOn(LocalDate date) {
+    public List<LoanScheduleEntity> getDetailsOfLateInstallmentsPeriod(final LocalDate after, final LocalDate before) {
         List<LoanScheduleEntity> lateInstallments = new ArrayList<LoanScheduleEntity>();
 
         Set<AccountActionDateEntity> accountActionDates = getAccountActionDates();
         
         if (accountActionDates!= null && !accountActionDates.isEmpty()) {
             for (AccountActionDateEntity accountAction : accountActionDates) {
-                if (!accountAction.isPaid() && accountAction.isBefore(date)) {
+                if (!accountAction.isPaid() && accountAction.isAfter(after) && accountAction.isBefore(before)) {
                     lateInstallments.add((LoanScheduleEntity)accountAction);
                 }
             }

@@ -832,4 +832,24 @@
             <dropTable tableName="penalty_trxn_detail"/>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_5521_1" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+            ALTER TABLE account_penalties ADD COLUMN created_date DATE;
+            
+            UPDATE account_penalties ap
+            LEFT JOIN loan_account la
+            ON (la.account_id = ap.account_id)
+            SET ap.created_date = la.disbursement_date
+            WHERE ap.last_applied_date IS NOT NULL;
+            
+            UPDATE account_penalties
+            SET created_date = CURRENT_DATE
+            WHERE last_applied_date IS NULL;
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                ALTER TABLE account_penalties DROP COLUMN created_date;
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>
