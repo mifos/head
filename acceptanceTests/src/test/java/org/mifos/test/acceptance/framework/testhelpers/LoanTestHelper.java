@@ -71,6 +71,7 @@ import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalChooseLoanInstancePage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalEntryPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
+import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalPreviewPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSchedulePreviewPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchResultsPage;
@@ -412,6 +413,24 @@ public class LoanTestHelper {
                 waivePenalty();
     }
 
+    public RedoLoanDisbursalPreviewPage redoLoanDisbursalWithoutNavigate(String clientName, String loanProduct,
+            RedoLoanDisbursalParameters paramsPastDate) {
+        RedoLoanDisbursalEntryPage dataEntryPage = submitAndNavigateToRedoLoanDisbursal(clientName, loanProduct);
+
+        RedoLoanDisbursalSchedulePreviewPage schedulePreviewPage = dataEntryPage
+                .submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(paramsPastDate);
+
+        return schedulePreviewPage.submitAndNavigateToRedoLoanDisbursalPreviewPage().submit();
+    }
+
+    private RedoLoanDisbursalEntryPage submitAndNavigateToRedoLoanDisbursal(String clientName, String loanProduct) {
+        RedoLoanDisbursalEntryPage dataEntryPage = navigationHelper.navigateToAdminPage().navigateToRedoLoanDisbursal()
+                .searchAndNavigateToRedoLoanDisbursalPage(clientName)
+                .navigateToRedoLoanDisbursalChooseLoanProductPage(clientName)
+                .submitAndNavigateToRedoLoanDisbursalEntryPage(loanProduct);
+        return dataEntryPage;
+    }
+
     /**
      * Redoes the loan disbursal.
      * @param clientName The name of the client.
@@ -422,12 +441,7 @@ public class LoanTestHelper {
      * @return LoanAccountPage
      */
     public LoanAccountPage redoLoanDisbursal(String clientName, String loanProduct, RedoLoanDisbursalParameters paramsPastDate, RedoLoanDisbursalParameters paramsCurrentDate, int amountPaid, boolean testForm) {
-        RedoLoanDisbursalEntryPage dataEntryPage = navigationHelper
-            .navigateToAdminPage()
-            .navigateToRedoLoanDisbursal()
-            .searchAndNavigateToRedoLoanDisbursalPage(clientName)
-            .navigateToRedoLoanDisbursalChooseLoanProductPage(clientName)
-            .submitAndNavigateToRedoLoanDisbursalEntryPage(loanProduct);
+        RedoLoanDisbursalEntryPage dataEntryPage = submitAndNavigateToRedoLoanDisbursal(clientName, loanProduct);
 
         if(paramsCurrentDate != null) { // tests current or future date if need to.
             dataEntryPage = dataEntryPage.submitInvalidDataAndReloadPageWithInputError(paramsCurrentDate);

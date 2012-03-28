@@ -26,6 +26,7 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
@@ -291,6 +292,49 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1,500", "2,500", "2200.0"}, null, new String[]{"10", "20", "15"});
     }
 
+    /**
+     * Verify redo Loan with cycle, when client has another Loan of the same product
+     * http://mifosforge.jira.com/browse/MIFOSTEST-1184
+     * 
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifySecondLoanWithCycle() throws Exception {
+        loanTestHelper.setApplicationTime(new DateTime(2009, 02, 25, 0, 0, 0, 0)).navigateBack();
+
+        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper
+                .getWeeklyLoanProductParameters();
+        productParams.setOfferingName("product1184");
+        productParams.setOfferingShortName("p1184");
+        productParams.setCalculateLoanAmount(SubmitFormParameters.BY_LOAN_CYCLE);
+        String[][] cycleLoanAmount = getAmountsByCycle();
+        productParams.setCycleLoanAmount(cycleLoanAmount);
+        productParams.setCalculateInstallments(SubmitFormParameters.BY_LOAN_CYCLE);
+        String[][] calculateInstallments = getInstallmentsByCycle();
+        productParams.setCycleInstallments(calculateInstallments);
+        CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
+        searchParams.setSearchString("Stu1233171716380 Client1233171716380");
+        searchParams.setLoanProduct("product1184");
+        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("25", "02", "2011");
+
+        loanProductTestHelper.defineNewLoanProduct(productParams);
+        loanTestHelper.setApplicationTime(new DateTime(2011, 02, 25, 0, 0, 0, 0)).navigateBack();
+        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams,
+                new String[] { "1,000", "5,000", "3000.0" }, null, new String[] { "26", "52", "52" });
+        loanAccountPage.disburseLoan(disburseParams);
+
+        RedoLoanDisbursalParameters paramsPastDate = RedoLoanDisbursalParameters.createObjectWithClearedParameters();
+        paramsPastDate.setDisbursalDateDD("18");
+        paramsPastDate.setDisbursalDateMM("02");
+        paramsPastDate.setDisbursalDateYYYY("2010");
+        paramsPastDate.setLoanAmount("3000");
+        paramsPastDate.setInterestRate("22");
+        paramsPastDate.setNumberOfInstallments("20");
+
+        loanTestHelper.redoLoanDisbursalWithoutNavigate("Stu1233171716380 Client1233171716380", "product1184",
+                paramsPastDate).verifySecondLoanWithCycleError();
+    }
+    
     private String[][] getInstallmentsFromLastAmount() {
         return new String[][]{
                 {"1000", "5", "10", "5"},

@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -32,8 +33,18 @@ public class RedoLoanDisbursalPreviewPage extends MifosPage {
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToLoanAccountConfirmationPage() {
+        this.submit();
+        return new CreateLoanAccountConfirmationPage(selenium);
+    }
+
+    public RedoLoanDisbursalPreviewPage submit() {
         selenium.click("createloanpreview.button.submitForApproval");
         waitForPageToLoad();
-        return new CreateLoanAccountConfirmationPage(selenium);
+        return this;
+    }
+
+    public void verifySecondLoanWithCycleError() {
+        Assert.assertTrue(selenium
+                .isTextPresent("This loan cannot be disbursed because the customer already has an active loan for this loan product."));
     }
 }
