@@ -65,9 +65,11 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
                 for (LoanBO loanAccount : loanAccounts) {
                     loanAccountId = loanAccount.getAccountId();
                     List<AccountPenaltiesEntity> penaltyEntities =new ArrayList<AccountPenaltiesEntity>(loanAccount.getAccountPenalties());
-                    List<LoanScheduleEntity> lateInstallments = loanAccount.getDetailsOfLateInstallmentsOn(currentLocalDate);
 
                     for (AccountPenaltiesEntity penaltyEntity : penaltyEntities) {
+                        List<LoanScheduleEntity> lateInstallments = loanAccount.getDetailsOfLateInstallmentsPeriod(
+                                new LocalDate(penaltyEntity.getCreatedDate()), currentLocalDate);
+                        
                         for (LoanScheduleEntity entity : lateInstallments) {
                             if (lateInstallments.get(0).getInstallmentId().equals(entity.getInstallmentId())
                                     && checkGracePeriod(lateInstallments, penaltyEntity)) {
