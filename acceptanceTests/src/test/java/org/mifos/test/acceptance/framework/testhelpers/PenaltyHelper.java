@@ -151,7 +151,7 @@ public class PenaltyHelper {
         param.setMin(min);
         param.setMax(max);
         param.setFrequency(frequency);
-        param.setGlCode("31102");
+        param.setGlCode("31102 - Penalty");
 
         return param;
     }

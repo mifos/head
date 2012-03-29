@@ -138,13 +138,13 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         
         changeDateTime(04, 1);
         penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
-                new String[] { "20", "0", "20" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "5", "455" }, { "5", "455" }, { "4", "454" }, { "3", "453" },
+                new String[] { "19", "0", "19" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "4", "454" }, { "5", "455" }, { "4", "454" }, { "3", "453" },
                                  { "2", "452" }, { "1", "451" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" } },
-                new String[] { "3,170", "05/04/2012", "2,720" }
+                new String[] { "3,169", "05/04/2012", "2,719" }
         );
         
-        verifyAfterRepayLoan(accountId, new String[] { "0", "5", "5", "4", "3", "2", "1", "0", "0", "0" }, false);
+        verifyAfterRepayLoan(accountId, new String[] { "0", "4", "5", "4", "3", "2", "1", "0", "0", "0" }, false);
     }
     
     @Test(enabled = true)
@@ -186,13 +186,13 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         
         changeDateTime(03, 15);
         penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
-                new String[] { "22.5", "0", "22.5" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "9", "459" }, { "9", "459" }, { "4.5", "454.5" },
+                new String[] { "18", "0", "18" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "4.5", "454.5" }, { "9", "459" }, { "4.5", "454.5" },
                 { "0", "450" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
-                new String[] { "1,822.5", "15/03/2012", "1,372.5" }
+                new String[] { "1,818", "15/03/2012", "1,368" }
         );
         
-        verifyAfterRepayLoan(accountId, new String[] { "0", "9", "9", "4.5", "0", "0", "0", "0", "0", "0" }, false);
+        verifyAfterRepayLoan(accountId, new String[] { "0", "4.5", "9", "4.5", "0", "0", "0", "0", "0", "0" }, false);
     }
     
     @Test(enabled = true)

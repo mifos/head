@@ -33,6 +33,7 @@ public class TransactionHistoryDto implements Serializable, Comparable<Transacti
     private Integer accountTrxnId;
     private String type;
     private String glcode;
+    private String glname;
     private String debit = "-";
     private String credit = "-";
     private String balance;
@@ -92,7 +93,15 @@ public class TransactionHistoryDto implements Serializable, Comparable<Transacti
         this.glcode = glcode;
     }
 
-    public Locale getLocale() {
+    public String getGlname() {
+		return glname;
+	}
+
+	public void setGlname(String glname) {
+		this.glname = glname;
+	}
+
+	public Locale getLocale() {
         return locale;
     }
 
@@ -156,12 +165,13 @@ public class TransactionHistoryDto implements Serializable, Comparable<Transacti
         return userPrefferedTransactionDate;
     }
 
-    public void setFinancialEnteries(Integer trxnId, Date trxnDate, String actionType, String glCode, String debit,
+    public void setFinancialEnteries(Integer trxnId, Date trxnDate, String actionType, String glCode, String glName, String debit,
             String credit, Date postedDate, String notes) {
         this.accountTrxnId = trxnId;
         this.transactionDate = trxnDate;
         this.type = actionType;
         this.glcode = glCode;
+        this.glname = glName;
         this.debit = debit;
         this.credit = credit;
         this.postedDate = postedDate;

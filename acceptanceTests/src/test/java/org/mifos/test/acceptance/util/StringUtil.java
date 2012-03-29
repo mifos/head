@@ -43,11 +43,8 @@ public class StringUtil {
         StringBuilder builder = new StringBuilder(num);
         
         if(num.length() > 3){
-            for(int i = num.length() - 3; i >= 0; i -= 4) {
+            for(int i = num.length() - 3; i >= 0; i -= 3) {
                 if (i > 0 && builder.charAt(i-1) != ',') {
-                	builder = builder.insert(i, ',');
-                }
-                else if (i == 0) {
                 	builder = builder.insert(i, ',');
                 }
             }

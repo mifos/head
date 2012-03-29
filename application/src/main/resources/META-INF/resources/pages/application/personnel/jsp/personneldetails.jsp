@@ -245,7 +245,7 @@ explanation of the license and how it is applied.
 						<c:param name="entityId" value="${personnelInformationDto.personnelId}" />
 						<c:param name="event" value="Create" />
 						<c:param name="source" value="Personnel" />
-						<c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}%26method%3Dget" />
+						<c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}&method=get" />
 					</c:url >
                         <c:set target="${urlMap}" property="${personnelInformationDto.displayName}" value="PersonAction.do?method=get&globalPersonnelNum=${personnelInformationDto.globalPersonnelNum}"/>
 						<a id="personnelDetail.link.questionGroups" href="${viewAndEditQuestionnaireMethodUrl}">

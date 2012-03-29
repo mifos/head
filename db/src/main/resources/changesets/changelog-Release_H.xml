@@ -491,6 +491,10 @@
                 ALTER TABLE penalty CHANGE COLUMN period_type_id period_type_id SMALLINT(6) NOT NULL;
                 ALTER TABLE penalty ADD FOREIGN KEY (period_type_id) REFERENCES penalty_period (period_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
                 
+                DELETE p
+                FROM penalty p, penalty_period pp, lookup_value lv
+                WHERE p.period_type_id = pp.period_id AND pp.lookup_id = lv.lookup_id AND lv.lookup_name LIKE 'PenaltyPeriod-None';
+                
                 DELETE FROM lookup_value_locale WHERE lookup_id IN (SELECT lookup_id FROM lookup_value WHERE lookup_name LIKE 'PenaltyPeriod-None');
             
                 DELETE FROM penalty_period WHERE lookup_id IN (SELECT lookup_id FROM lookup_value WHERE lookup_name LIKE 'PenaltyPeriod-None');
@@ -836,6 +840,26 @@
         </sql>
         <rollback>
             <dropTable tableName="penalty_trxn_detail"/>
+        </rollback>
+    </changeSet>
+    <changeSet id="MIFOS_5521_1" author="Lukasz Lewczynski" context="expansion">
+        <sql endDelimiter=";">
+            ALTER TABLE account_penalties ADD COLUMN created_date DATE;
+            
+            UPDATE account_penalties ap
+            LEFT JOIN loan_account la
+            ON (la.account_id = ap.account_id)
+            SET ap.created_date = la.disbursement_date
+            WHERE ap.last_applied_date IS NOT NULL;
+            
+            UPDATE account_penalties
+            SET created_date = CURRENT_DATE
+            WHERE last_applied_date IS NULL;
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                ALTER TABLE account_penalties DROP COLUMN created_date;
+            </sql>
         </rollback>
     </changeSet>
 </databaseChangeLog>

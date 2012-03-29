@@ -99,7 +99,16 @@
                 <div class="fontBold black-subheading">[@spring.message "organizationPreferences.definenewpenalty.accountingdetails" /]</div>
                 <div>
                     <span>[@spring.message "organizationPreferences.definenewpenalty.glcode" /]</span>
-                    <span>${penalty.glCodeDto.glcode}</span>
+                    
+                    [#if GLCodeMode == 1]
+                   		<span>${penalty.glCodeDto.glcode} - ${penalty.glCodeDto.glname}</span>
+                   	[#elseif GLCodeMode == 2]
+                    	<span>${penalty.glCodeDto.glname} (${penalty.glCodeDto.glcode})</span>
+                   	[#elseif GLCodeMode == 3]
+                    	<span>${penalty.glCodeDto.glname}</span>
+                   	[#elseif GLCodeMode == 4]
+                    	<span>${penalty.glCodeDto.glcode}</span>
+                   	[/#if]
                 </div>
                 <div>
                     <span>[@spring.message "organizationPreferences.viewPenalty.edit.status" /]</span>

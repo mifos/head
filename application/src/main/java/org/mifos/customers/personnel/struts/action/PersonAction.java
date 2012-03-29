@@ -501,8 +501,7 @@ public class PersonAction extends SearchAction {
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, personnelBO, request);
 
         String url = String.format("PersonAction.do?globalPersonnelNum=%s", personnelBO.getGlobalPersonnelNum());
-        String encodedUrl = URLEncoder.encode(url, "UTF-8");
-        SessionUtils.removeThenSetAttribute("currentPageUrl", encodedUrl, request);
+        SessionUtils.removeThenSetAttribute("currentPageUrl", url, request);
 
 
         List<ValueListElement> titles = this.customerDao.retrieveTitles();

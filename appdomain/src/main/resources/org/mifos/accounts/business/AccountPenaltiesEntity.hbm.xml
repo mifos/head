@@ -21,6 +21,7 @@
         <property name="penaltyStatus" column="penalty_status" type="short"/>
         <property name="statusChangeDate" column="status_change_date" type="date"/>
         <property name="lastAppliedDate" column="last_applied_date"/>
+        <property name="createdDate" column="created_date"/>
         
         <many-to-one name="account" column="account_id" class="org.mifos.accounts.business.AccountBO" lazy="false" access="field"/>
         <many-to-one name="penalty" column="penalty_id" class="org.mifos.accounts.penalties.business.PenaltyBO" unique="true" fetch="join" access="field"/>

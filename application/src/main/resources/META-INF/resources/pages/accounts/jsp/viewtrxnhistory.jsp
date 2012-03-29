@@ -32,6 +32,7 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="ViewTransactionHistory"></span>
+	<c:set value="${requestScope.GlNamesMode}" var="GlNamesMode"/>
 
 <SCRIPT >
 	function ViewDetails(){
@@ -98,7 +99,7 @@ explanation of the license and how it is applied.
             </table>
             <br>
 
-            <mifoscustom:mifostabletag source="trxnhistoryList" scope="session_flow" xmlFileName="TrxnHistory.xml" moduleName="org/mifos/accounts/util/resources" passLocale="true"/>
+            <mifoscustom:mifostabletag source="trxnhistoryList" scope="session_flow" xmlFileName="TrxnHistory.xml" moduleName="org/mifos/accounts/util/resources" passLocale="true" glMode="${GlNamesMode}"/>
             <br>
 
             <table width="95%" border="0" cellpadding="0" cellspacing="0">

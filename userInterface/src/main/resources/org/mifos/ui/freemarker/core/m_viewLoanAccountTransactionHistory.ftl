@@ -35,7 +35,7 @@
 		</span>
 	</div>
 	<div>
-		[@mifoscustom.mifostabletag source="trxnHistoryList" scope="request" xmlFileName="SavingsTrxnHistory.xml" moduleName="org/mifos/accounts/savings/util/resources" passLocale="true"/]
+		[@mifoscustom.mifostabletag source="trxnHistoryList" scope="request" xmlFileName="SavingsTrxnHistory.xml" moduleName="org/mifos/accounts/savings/util/resources" passLocale="true" glMode=GLCodeMode/]
 	</div>
 	<div>
 		<form action="viewLoanAccountDetails.ftl" method="get">

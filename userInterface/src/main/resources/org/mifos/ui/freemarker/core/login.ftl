@@ -59,7 +59,8 @@
    	<div class="error">
       <span id="login.error.message">
       	[#if !isJetty]
-         	<span>[@spring.message "login.serverisnotjetty"/]</span><br/>
+      		[#assign arguments = ["${serverInfo}"]/]
+         	<span>[@spring.messageArgs "login.serverisnotjetty" arguments  /]</span><br/>
         [/#if]
         </span>
     </div>

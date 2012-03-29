@@ -58,13 +58,14 @@ public class LoginController {
         Locale locale = request.getLocale();
         
 		String serverInfo = this.systemInformationServiceFacade.getServerInformation(context, locale);
-		Pattern server_version = Pattern.compile("^jetty\\/7\\.3\\..*");
+		Pattern server_version = Pattern.compile("^jetty\\/7\\..*");
 		Matcher matcher = server_version.matcher(serverInfo);
 		Boolean isJetty = false;
 		if (matcher.matches()) {
 			isJetty = true;
 		}
 		modelAndView.addObject("isJetty" ,isJetty);
+		modelAndView.addObject("serverInfo", serverInfo);
 		
 		if (currentDevice.isMobile()) {
 			modelAndView = new ModelAndView("m_login");

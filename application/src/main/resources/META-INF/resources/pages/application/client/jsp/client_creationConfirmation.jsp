@@ -75,10 +75,10 @@ explanation of the license and how it is applied.
 						</c:url >
 						<c:choose>
 						<c:when test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
-						<a id="client_creationConfirmation.link.viewClientDetailsLink" href="clientCustAction.do?method=get&globalCustNum=${sessionScope.clientCustActionForm.globalCustNum}&recordOfficeId=${sessionScope.clientCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.clientCustActionForm.loanOfficerId}">
+						<a id="client_creationConfirmation.link.viewClientDetailsLink" href="viewClientDetails.ftl?globalCustNum=${sessionScope.clientCustActionForm.globalCustNum}&recordOfficeId=${sessionScope.clientCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.clientCustActionForm.loanOfficerId}">
 						</c:when>
 						<c:otherwise>
-						<a id="client_creationConfirmation.link.viewClientDetailsLink" href="clientCustAction.do?method=get&globalCustNum=${sessionScope.clientCustActionForm.globalCustNum}&recordOfficeId=${sessionScope.clientCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.clientCustActionForm.loanOfficerId}">
+						<a id="client_creationConfirmation.link.viewClientDetailsLink" href="viewClientDetails.ftl?globalCustNum=${sessionScope.clientCustActionForm.globalCustNum}&recordOfficeId=${sessionScope.clientCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.clientCustActionForm.loanOfficerId}">
 						</c:otherwise>
 						</c:choose>
 

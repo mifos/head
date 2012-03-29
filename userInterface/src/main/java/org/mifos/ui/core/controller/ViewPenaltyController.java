@@ -21,6 +21,8 @@
 package org.mifos.ui.core.controller;
 
 import org.mifos.accounts.penalty.servicefacade.PenaltyServiceFacade;
+import org.mifos.config.servicefacade.ConfigurationServiceFacade;
+import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +38,9 @@ public class ViewPenaltyController {
     @Autowired
     private PenaltyServiceFacade penaltyServiceFacade;
     
+    @Autowired
+    private ConfigurationServiceFacade configurationServiceFacade;
+      
     protected ViewPenaltyController() {
         //for spring autowiring
     }
@@ -47,8 +52,10 @@ public class ViewPenaltyController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView showPenalty(@RequestParam Integer penaltyId) {
         ModelAndView modelAndView = new ModelAndView("viewPenalty");
+        AccountingConfigurationDto configurationDto= this.configurationServiceFacade.getAccountingConfiguration();
         
         modelAndView.addObject("penalty", this.penaltyServiceFacade.getPenalty(penaltyId));
+        modelAndView.addObject("GLCodeMode",  configurationDto.getGlCodeMode());
         
         return modelAndView;
     }

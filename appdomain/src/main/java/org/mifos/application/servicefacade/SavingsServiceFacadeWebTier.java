@@ -1044,6 +1044,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                     savingsTransactionHistoryDto.setAccountTrxnId(accountTrxnEntity.getAccountTrxnId());
                     savingsTransactionHistoryDto.setType(financialTransactionBO.getFinancialAction().getName());
                     savingsTransactionHistoryDto.setGlcode(financialTransactionBO.getGlcode().getGlcode());
+                    savingsTransactionHistoryDto.setGlname(financialTransactionBO.getGlcode().getAssociatedCOA().getAccountName());
                     if (financialTransactionBO.isDebitEntry()) {
                         savingsTransactionHistoryDto.setDebit(String.valueOf(removeSign(financialTransactionBO
                                 .getPostedAmount())));

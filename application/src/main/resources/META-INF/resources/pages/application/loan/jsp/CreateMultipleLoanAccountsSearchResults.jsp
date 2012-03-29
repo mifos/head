@@ -115,7 +115,7 @@ explanation of the license and how it is applied.
 															height="17"></td>
 														<td class="timelineboldgray"><mifos:mifoslabel
 																name="loan.search" /> <mifos:mifoslabel
-																name="${ConfigurationConstants.CLIENT}" /> <mifos:mifoslabel
+																name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel
 																name="loan.s" /></td>
 													</tr>
 												</table>
@@ -128,7 +128,7 @@ explanation of the license and how it is applied.
 															width="17" height="17"></td>
 														<td class="timelineboldorange"><mifos:mifoslabel
 																name="loan.Select" /> <mifos:mifoslabel
-																name="${ConfigurationConstants.CLIENT}" /> <mifos:mifoslabel
+																name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel
 																name="loan.s" /></td>
 													</tr>
 												</table>
@@ -150,14 +150,14 @@ explanation of the license and how it is applied.
 														name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
 														name="loan.accounts" /> - </span> <mifos:mifoslabel
 													name="loan.search" /> <mifos:mifoslabel
-													name="${ConfigurationConstants.CLIENT}" /> <mifos:mifoslabel
+													name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel
 													name="loan.s" /></td>
 										</tr>
 										<tr>
 											<td class="fontnormalbold"><span class="fontnormal"><mifos:mifoslabel
 														name="loan.enterDetailsSubmit" /> <mifos:mifoslabel
 														name="loan.clickCancelReturn" /> <mifos:mifoslabel
-														name="${ConfigurationConstants.CLIENT}" /> <mifos:mifoslabel
+														name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel
 														name="loan.s" /> &amp; <mifos:mifoslabel
 														name="loan.accwithoutsub" /></span> <br> <br> <mifos:mifoslabel
 													name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel

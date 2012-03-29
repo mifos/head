@@ -1,6 +1,7 @@
 package org.mifos.config.servicefacade;
 
 import org.mifos.config.business.MifosConfigurationManager;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.service.AccountingConfigurationService;
 import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,9 @@ public class ConfigurationServiceFacadeWebTier implements ConfigurationServiceFa
 
     private AccountingConfigurationService accountingConfigurationService;
 
+    @Autowired
+    private ConfigurationBusinessService configurationBusinessService;
+    
     @Override
     public AccountingConfigurationDto getAccountingConfiguration() {
         AccountingConfigurationDto dto = new AccountingConfigurationDto();
@@ -32,5 +36,10 @@ public class ConfigurationServiceFacadeWebTier implements ConfigurationServiceFa
     public void setAccountingConfigurationService(AccountingConfigurationService accountingConfigurationService) {
         this.accountingConfigurationService = accountingConfigurationService;
     }
+
+	@Override
+	public boolean isGlimEnabled() {
+		return configurationBusinessService.isGlimEnabled();
+	}
 
 }

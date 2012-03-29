@@ -9,8 +9,8 @@
     </column>
     <column label="Client Name" value="clientName" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="22"/>
-    </column>
-    <column label="Goverment ID" value="govermentId" valueType="method" columnType="text">
+    </column>		
+    <column label="Government ID" value="govermentId" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="10"/>
     </column>
     <column label="Loan amount" value="loanAmount" valueType="method" columnType="text">
@@ -21,9 +21,11 @@
     </column>
     <column label="Individual schedule" value="show" valueType="text" columnType="link">
          <columnDetails  rowStyle="drawtablerow" colWidth="11"/>
-         <linkDetails action="loanAccountAction.do">
-            <actionParam name="method" value="viewOriginalSchedule" valueType="text"/>
+         <linkDetails action="viewLoanAccountOriginalSchedule.ftl">
             <actionParam name="accountId" value="loanAccountId" valueType="method"/>
+            <actionParam name="globalAccountNum" value="loanGlobalAccountNum" valueType="method"/>
+            <actionParam name="parentLoanGlobalAccountNum" value="parentLoanGlobalAccountNum" valueType="method"/> 
+            <actionParam name="individual" value="" valueType="text"/>
             <actionParam name="randomNUm" valueType="inbuilt"/>
             <actionParam name="currentFlowKey" valueType="inbuilt"/>
          </linkDetails>

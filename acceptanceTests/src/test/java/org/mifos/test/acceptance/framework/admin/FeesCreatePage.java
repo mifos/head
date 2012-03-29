@@ -41,7 +41,7 @@ public class FeesCreatePage extends AbstractPage {
         private int monthRecurAfter;
         private double rate;
         private double amount;
-        private int glCode;
+        private String glCode;
         private String feeFormula;
         private int currency;
         private String calcuateFeeAs;
@@ -80,7 +80,7 @@ public class FeesCreatePage extends AbstractPage {
             return this.amount;
         }
 
-        public int getGlCode() {
+        public String getGlCode() {
             return this.glCode;
         }
 
@@ -108,7 +108,7 @@ public class FeesCreatePage extends AbstractPage {
             this.amount = amount;
         }
 
-        public void setGlCode(int glCode) {
+        public void setGlCode(String glCode) {
             this.glCode = glCode;
         }
 

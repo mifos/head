@@ -42,6 +42,7 @@ explanation of the license and how it is applied.
 			focus="prdOfferingName">
             <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}"
                 var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
+            <c:set value="${requestScope.GlNamesMode}" var="GlNamesMode"/>
 			<c:choose>
 				<c:when test="${param.prdOfferName == null}">
 					<c:set var="prdOfferName"
@@ -1199,7 +1200,20 @@ explanation of the license and how it is applied.
 										<c:forEach
 											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}"
 											var="glCodes">
-											<html-el:option value="${glCodes.glcodeId}">${glCodes.glcode}</html-el:option>
+											<c:choose>
+												<c:when test="${GlNamesMode == 1}">
+													<html-el:option value="${glCodes.glcodeId}">${glCodes.glcode} - ${glCodes.associatedCOA.accountName}</html-el:option>
+												</c:when>
+												<c:when test="${GlNamesMode == 2}">
+													<html-el:option value="${glCodes.glcodeId}">${glCodes.associatedCOA.accountName} (${glCodes.glcode})</html-el:option>
+												</c:when>
+												<c:when test="${GlNamesMode == 3}">
+													<html-el:option value="${glCodes.glcodeId}">${glCodes.associatedCOA.accountName}</html-el:option>
+												</c:when>
+												<c:when test="${GlNamesMode == 4}">
+													<html-el:option value="${glCodes.glcodeId}">${glCodes.glcode}</html-el:option>
+												</c:when>
+											</c:choose>
 										</c:forEach>
 									</mifos:select></td>
 								</tr>
@@ -1211,8 +1225,20 @@ explanation of the license and how it is applied.
 										<c:forEach
 											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'principalGLCodes')}"
 											var="glCodes">
-											<html-el:option value="${glCodes.glcodeId}">${glCodes.glcode}</html-el:option>
-										</c:forEach>
+											<c:choose>
+												<c:when test="${GlNamesMode == 1}">
+													<html-el:option value="${glCodes.glcodeId}">${glCodes.glcode} - ${glCodes.associatedCOA.accountName}</html-el:option>
+												</c:when>
+												<c:when test="${GlNamesMode == 2}">
+													<html-el:option value="${glCodes.glcodeId}">${glCodes.associatedCOA.accountName} (${glCodes.glcode})</html-el:option>
+												</c:when>
+												<c:when test="${GlNamesMode == 3}">
+													<html-el:option value="${glCodes.glcodeId}">${glCodes.associatedCOA.accountName}</html-el:option>
+												</c:when>
+												<c:when test="${GlNamesMode == 4}">
+													<html-el:option value="${glCodes.glcodeId}">${glCodes.glcode}</html-el:option>
+												</c:when>
+											</c:choose></c:forEach>
 									</mifos:select></td>
 								</tr>
 							</table>

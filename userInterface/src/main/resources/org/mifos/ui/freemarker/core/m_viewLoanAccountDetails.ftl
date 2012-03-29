@@ -274,24 +274,24 @@
 				[@spring.message "loan.source_fund" /]:&nbsp; ${loanInformationDto.fundName?if_exists}<br/>
 			</span>
 		</div>
-		[#--
+		[#-- GLIM Loan Account Details --]
 		<div>
 			[#if loanInformationDto.group == true ]
 				[#if loanAccountDetailsView?has_content ]
                     [#if loanInformationDto.disbursed ]
-						[@mifoscustom.mifostabletag source="loanAccountDetailsView" scope="session"
+						[@mifoscustom.mifostabletag source="loanAccountDetailsView" scope="request"
 						xmlFileName="LoanAccountDetails.xml" moduleName="org/mifos/accounts/loan/util/resources"
-						passLocale="true" randomNUm="${Session.randomNUm}"
+						passLocale="true" randomNUm="${Session.randomNUm?c}"
 						currentFlowKey="${Request.currentFlowKey}" /]
                     [#else]
-                        [@mifoscustom.mifostabletag source="loanAccountDetailsView" scope="session"
+                        [@mifoscustom.mifostabletag source="loanAccountDetailsView" scope="request"
                       	xmlFileName="LoanAccountDetails.xml" moduleName="org/mifos/accounts/loan/util/resources"
                       	passLocale="true"/]
                 	[/#if]
-				</#if>
-			</#if> 
+				[/#if]
+			[/#if] 
 		</div>
-		--]
+		[#-- --]
 		<div>
 			<img src="pages/framework/images/trans.gif" width="10" height="10">
 		</div>

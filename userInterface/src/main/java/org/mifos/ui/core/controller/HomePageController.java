@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
@@ -78,7 +79,7 @@ public class HomePageController {
         CustomerHierarchyDto hierarchy;
         List<String> nearestDates = new ArrayList<String>();
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", personnelServiceFacade.getUserPreferredLocale());
-        Date selectedDate = new Date();
+        Date selectedDate = new LocalDate().toDateMidnight().toDate();
         
         DateTime nextDate = new DateTime();
         for (int i = 0; i < 7; i++){

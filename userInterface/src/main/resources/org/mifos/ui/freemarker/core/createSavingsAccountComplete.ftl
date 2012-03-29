@@ -37,7 +37,7 @@
  [@spring.message "createSavingsAccount.accountCreated.searchInstruction" /]</p>
 <br/>
 
-<p><a id="createsavingsaccountconfirmation.link.viewSavingsAccount" href="savingsAction.do?method=get&globalAccountNum=${account.globalAccountNum}" class="standout">[@spring.message "createSavingsAccount.accountCreated.action.viewSavingsAccount" /]</a></p>
+<p><a id="createsavingsaccountconfirmation.link.viewSavingsAccount" href="viewSavingsAccountDetails.ftl?globalAccountNum=${account.globalAccountNum}" class="standout">[@spring.message "createSavingsAccount.accountCreated.action.viewSavingsAccount" /]</a></p>
 <br/>
 
 <div class="suggestion">[@spring.message "createSavingsAccount.accountCreated.nextSteps" /]</div>

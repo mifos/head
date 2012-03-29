@@ -114,11 +114,11 @@ public interface Constants {
     String ORIGINAL_SCHEDULE_AVAILABLE = "originalScheduleIsAvailable";
     
     String ADJUSTMENT_PAYMENT_TYPE = "adjustmentPaymentType";
+    String ADJUSTMENT_IS_REVERT = "isRevert";
     
     String POSSIBLE_ADJUSTMENTS = "possibleAdjustments";
     String ADJUSTED_AMOUNT = "adjAmount";
     
     String ADJ_TYPE_KEY = "adjustmentType";
     String ADJ_SPECIFIC = "adjustSpec";
-    
 }

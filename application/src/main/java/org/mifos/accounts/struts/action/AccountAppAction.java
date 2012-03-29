@@ -34,6 +34,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.WaiveEnum;
+import org.mifos.config.AccountingRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.dto.screen.TransactionHistoryDto;
@@ -72,7 +73,7 @@ public class AccountAppAction extends BaseAction {
 
         AccountBO accountBO = getAccountBusinessService().findBySystemId(globalAccountNum);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
-
+        request.setAttribute("GlNamesMode", AccountingRules.getGlNamesMode());
         return mapping.findForward("getTransactionHistory_success");
     }
 

@@ -56,6 +56,7 @@ import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
@@ -391,7 +392,7 @@ public class SavingsAction extends BaseAction {
         String globalAccountNum = request.getParameter("globalAccountNum");
 
         List<SavingsTransactionHistoryDto> savingsTransactionHistoryViewList = this.savingsServiceFacade.retrieveTransactionHistory(globalAccountNum);
-
+        request.setAttribute("GlNamesMode", AccountingRules.getGlNamesMode());
         SessionUtils.setCollectionAttribute(SavingsConstants.TRXN_HISTORY_LIST, savingsTransactionHistoryViewList, request);
         return mapping.findForward("getTransactionHistory_success");
     }

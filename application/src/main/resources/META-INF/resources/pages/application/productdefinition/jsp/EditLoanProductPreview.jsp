@@ -33,6 +33,7 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 		<span id="page.id" title="EditLoanProductPreview"></span>
+		<c:set value="${requestScope.GlNamesMode}" var="GlNamesMode"/>
 
 		<script language="javascript">
 		<!--
@@ -977,7 +978,20 @@ explanation of the license and how it is applied.
 								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}">
 								<c:if
 									test="${glCode.glcodeId == sessionScope.loanproductactionform.interestGLCode}">
-									<c:out value="${glCode.glcode}" />
+				 					<c:choose>											
+										<c:when test="${GlNamesMode == 1}">
+										<c:out value="${glCode.glcode} - ${glCode.associatedCOA.accountName}" />
+										</c:when>
+										<c:when test="${GlNamesMode == 2}">
+										<c:out value="${glCode.associatedCOA.accountName} (${glCode.glcode})" />
+										</c:when>
+										<c:when test="${GlNamesMode == 3}">
+										<c:out value="${glCode.associatedCOA.accountName}" />
+										</c:when>
+										<c:when test="${GlNamesMode == 4}">
+										<c:out value="${glCode.glcode}" />
+										</c:when>
+									</c:choose> 								
 								</c:if>
 							</c:forEach></span> <br>
 							<mifos:mifoslabel name="product.principal"
@@ -986,7 +1000,20 @@ explanation of the license and how it is applied.
 								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'principalGLCodes')}">
 								<c:if
 									test="${glCode.glcodeId == sessionScope.loanproductactionform.principalGLCode}">
-									<c:out value="${glCode.glcode}" />
+				 					<c:choose>											
+										<c:when test="${GlNamesMode == 1}">
+										<c:out value="${glCode.glcode} - ${glCode.associatedCOA.accountName}" />
+										</c:when>
+										<c:when test="${GlNamesMode == 2}">
+										<c:out value="${glCode.associatedCOA.accountName} (${glCode.glcode})" />
+										</c:when>
+										<c:when test="${GlNamesMode == 3}">
+										<c:out value="${glCode.associatedCOA.accountName}" />
+										</c:when>
+										<c:when test="${GlNamesMode == 4}">
+										<c:out value="${glCode.glcode}" />
+										</c:when>
+									</c:choose> 
 								</c:if>
 							</c:forEach></span> <br>
 							</td>

@@ -112,7 +112,7 @@ public class Column {
         tableInfo.append("</td>");
     }
 
-    public void generateTableColumn(StringBuilder tableInfo, Object obj, Locale locale, Locale mfiLocale) throws TableTagParseException {
+    public void generateTableColumn(StringBuilder tableInfo, Object obj, Locale locale, Locale mfiLocale, int glMode) throws TableTagParseException {
         tableInfo.append("<td class=\"" + getColumnDetails().getRowStyle() + "\"  ");
 
         tableInfo.append(" align=\"" + getColumnDetails().getAlign() + "\" ");
@@ -120,7 +120,7 @@ public class Column {
 
         if (getValueType().equalsIgnoreCase(TableTagConstants.METHOD)) {
             if (getColumnType().equalsIgnoreCase(TableTagConstants.TEXT)) {
-                getTableColumn(tableInfo, obj, locale, mfiLocale);
+                getTableColumn(tableInfo, obj, locale, mfiLocale, glMode);
             } else {
                 // Generate Link On Column
                 getTableColumnWithLink(tableInfo, obj, locale, mfiLocale);
@@ -139,7 +139,7 @@ public class Column {
 
     }
 
-    public void getTableColumn(StringBuilder tableInfo, Object obj, Locale locale, Locale mfiLocale) throws TableTagParseException {
+    public void getTableColumn(StringBuilder tableInfo, Object obj, Locale locale, Locale mfiLocale, int glMode) throws TableTagParseException {
         Method[] methods = obj.getClass().getMethods();
         for (Method method : methods) {
             if (method.getName().equalsIgnoreCase("get".concat(getValue()))) {
@@ -147,14 +147,33 @@ public class Column {
                 	String total = String.valueOf(method.invoke(obj, new Object[] {}));
                 	Pattern pattern = Pattern.compile("(total|debit|credi|installment|principal|interest|feesWithMiscFee|loanAmount|amount|runningBalance|feesWithMiscFee)");
                 	Matcher matcher = pattern.matcher(getValue());
-                	if(matcher.find()){
+                	Pattern isNumber = Pattern.compile("((\\d)+\\.(\\d)+)");
+                	Matcher numberMatcher = isNumber.matcher(total);
+                	if (matcher.find() || numberMatcher.find()) {
                     total = ConversionUtil.formatNumber(total);
                 	}
+                	if (getValue().equalsIgnoreCase("Glcode")) {
+                		Method declaredMethod = obj.getClass().getMethod("getGlname", null);
+                		String glName = String.valueOf(declaredMethod.invoke(obj, new Object[] {}));
+                		if (glMode == 1) {
+                			total = total + " - " + glName;
+                		}
+                		else if (glMode == 2) {
+                			total = glName + " (" + total + ")";
+                		}
+                		else if (glMode == 3) {
+                			total = glName;
+                		}
+                	}
                     tableInfo.append(total);
-                	                } catch (IllegalAccessException e) {
+                } catch (IllegalAccessException e) {
                     throw new TableTagParseException(e);
                 } catch (InvocationTargetException ex) {
                     throw new TableTagParseException(ex);
+                } catch (SecurityException e) {
+                	throw new TableTagParseException(e);
+                } catch (NoSuchMethodException e) {
+                	throw new TableTagParseException(e);
                 }
             }
             if (method.getName().equalsIgnoreCase("setLocale") && locale != null) {
@@ -184,7 +203,7 @@ public class Column {
         tableInfo.append("<a ");
         linkDetails.generateLink(tableInfo, obj);
         tableInfo.append(" >");
-        getTableColumn(tableInfo, obj, locale, mfiLocale);
+        getTableColumn(tableInfo, obj, locale, mfiLocale, 0);
         tableInfo.append("</a>");
     }
 

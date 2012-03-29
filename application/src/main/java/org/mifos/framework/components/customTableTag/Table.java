@@ -51,7 +51,7 @@ public class Table {
 
     @SuppressWarnings("unchecked")
     public void getTable(String id, StringBuilder tableInfo, List obj, Locale locale, Locale mfiLocale,
-                         PageContext pageContext, String bundle) throws TableTagParseException {
+                         PageContext pageContext, String bundle, int glMode) throws TableTagParseException {
         String totWidth = getRow().getTotWidth();
         tableInfo.append("<table id=\"");
         tableInfo.append(id);
@@ -68,7 +68,7 @@ public class Table {
         // End :: Generationg Header
 
         // Start :: Generating Rows
-        getRow().generateTableRows(tableInfo, obj, locale, mfiLocale);
+        getRow().generateTableRows(tableInfo, obj, locale, mfiLocale, glMode);
         // End :: Generating Rows
 
         // Genrate Last Line :: This line will have the same style as listed for

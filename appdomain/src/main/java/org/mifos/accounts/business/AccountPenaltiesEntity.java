@@ -23,13 +23,13 @@ package org.mifos.accounts.business;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.penalties.business.AmountPenaltyBO;
 import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.penalties.util.helpers.PenaltyPeriod;
 import org.mifos.accounts.penalties.util.helpers.PenaltyStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.business.AbstractEntity;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 
 public class AccountPenaltiesEntity extends AbstractEntity {
@@ -40,6 +40,7 @@ public class AccountPenaltiesEntity extends AbstractEntity {
     private Double penaltyAmount;
     private Integer calculativeCount = 0;
     private Short penaltyStatus;
+    private Date createdDate;
     private Date statusChangeDate;
     private Date lastAppliedDate;
     private int versionNo;
@@ -49,6 +50,7 @@ public class AccountPenaltiesEntity extends AbstractEntity {
         loanAccountPenaltyId = null;
         account = null;
         penalty = null;
+        createdDate = null;
     }
     
     public AccountPenaltiesEntity(final AccountBO account, final PenaltyBO penalty, final Double penaltyAmount) {
@@ -56,11 +58,12 @@ public class AccountPenaltiesEntity extends AbstractEntity {
         this.account = account;
         this.penalty = penalty;
         this.penaltyAmount = penaltyAmount;
+        this.createdDate = new DateTimeService().getCurrentJavaSqlDate();
         
         MifosCurrency currency = account == null ? Money.getDefaultCurrency() : account.getCurrency();
         this.accountPenaltyAmount = new Money(currency, String.valueOf(penaltyAmount));
     }
-    
+
     public AccountPenaltiesEntity(final AccountBO account, final PenaltyBO penalty, final Double penaltyAmount,
             final Short penaltyStatus, final Date statusChangeDate, final Date lastAppliedDate) {
         loanAccountPenaltyId = null;
@@ -71,6 +74,7 @@ public class AccountPenaltiesEntity extends AbstractEntity {
         this.penaltyStatus = penaltyStatus;
         this.statusChangeDate = statusChangeDate;
         this.lastAppliedDate = lastAppliedDate;
+        this.createdDate = new DateTimeService().getCurrentJavaSqlDate();
     }
 
     public AccountBO getAccount() {
@@ -157,6 +161,14 @@ public class AccountPenaltiesEntity extends AbstractEntity {
         this.lastAppliedDate = lastAppliedDate;
     }
     
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(final Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
     public void changePenaltyStatus(final PenaltyStatus status, final Date changeDate) {
         this.setPenaltyStatus(status);
         this.setStatusChangeDate(changeDate);

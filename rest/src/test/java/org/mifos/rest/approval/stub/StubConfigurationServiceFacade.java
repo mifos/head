@@ -23,4 +23,9 @@ public class StubConfigurationServiceFacade implements ConfigurationServiceFacad
         return Boolean.parseBoolean(RESTConfigKey.TRUE);
     }
 
+	@Override
+	public boolean isGlimEnabled() {
+		return Boolean.parseBoolean(RESTConfigKey.TRUE);
+	}
+
 }
