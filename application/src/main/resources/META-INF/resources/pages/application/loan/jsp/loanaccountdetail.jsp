@@ -925,7 +925,14 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<tr>
 								<td colspan="2" align="right" class="paddingleft05">
 								<span class="fontnormal8pt">
-									<a id="loanaccountdetail.link.attachSurvey" href="questionnaire.ftl?source=Loan&event=View&entityId=${loanInformationDto.accountId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=${backPageUrl}">
+				                  	<c:url value="questionnaire.ftl" var="questionnaireUrl" >
+					                    <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+					                    <c:param name="entityId" value="${loanInformationDto.accountId}" />
+					                    <c:param name="event" value="View" />
+					                    <c:param name="source" value="Loan" />
+					                    <c:param name="backPageUrl" value="${currentPageUrl}" />
+			                  	 	</c:url >
+									<a id="loanaccountdetail.link.attachSurvey" href="${questionnaireUrl}">
 										<mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources" />
 									</a><br>
 								</span>

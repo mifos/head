@@ -627,7 +627,14 @@ explanation of the license and how it is applied.
                   <c:remove var="urlMap" />
                   <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
                   <c:set target="${urlMap}" property="${centerInformationDto.centerDisplay.displayName}" value="centerCustAction.do?method=get&globalCustNum=${centerInformationDto.centerDisplay.globalCustNum}"/>
-                  <a id="viewCenterDetails.link.attachSurvey" href="questionnaire.ftl?source=Center&event=View&entityId=${centerInformationDto.centerDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=${currentPageUrl}">
+                  <c:url value="questionnaire.ftl" var="questionnaireUrl" >
+                    <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+                    <c:param name="entityId" value="${centerInformationDto.centerDisplay.customerId}" />
+                    <c:param name="event" value="View" />
+                    <c:param name="source" value="Center" />
+                    <c:param name="backPageUrl" value="${currentPageUrl}" />
+                  </c:url >
+                  <a id="viewCenterDetails.link.attachSurvey" href="${questionnaireUrl}">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                 </span>
