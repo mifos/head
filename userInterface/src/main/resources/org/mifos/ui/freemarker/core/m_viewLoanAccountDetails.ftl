@@ -297,7 +297,7 @@
 		</div>
         <div id="Loan.ExternalId">
             <span class="fontnormalbold">
-            	[@spring.message "accounts.externalId" /]:
+            	[@mifostag.mifoslabel name="accounts.externalId" keyhm="Loan.ExternalId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" /]
            		<span id="loanaccountdetail.text.externalid" class="fontnormal">${loanInformationDto.externalId?if_exists}
        		</span> 
         </div>
