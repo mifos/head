@@ -209,7 +209,7 @@ public class OffAction extends BaseAction {
     }
 
     private String constructCurrentPageUrl(OfficeDto officeDto) {
-        String url = String.format("offAction.do?officeId=%h",
+        String url = String.format("offAction.do?officeId=%s",
                 officeDto.getId());
         return url;
     }
