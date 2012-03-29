@@ -256,7 +256,7 @@
 			</div>
 			<div id="Client.ExternalId">
 				<span class="fontnormal">
-					[@mifos.mifoslabel name="Client.${ConfigurationConstants.EXTERNALID}" keyhm="Client.ExternalId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/]
+					[@mifos.mifoslabel name="${ConfigurationConstants.EXTERNALID}" keyhm="Client.ExternalId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/]
 					${clientInformationDto.clientDisplay.externalId?if_exists}
 				</span>
 			</div>
