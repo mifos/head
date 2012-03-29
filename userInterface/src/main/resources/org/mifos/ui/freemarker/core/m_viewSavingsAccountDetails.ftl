@@ -132,11 +132,11 @@
 			[@spring.message "Savings.moreAccountAndTransactionDetails" /]
 		</span><br/>		
 		<span class="fontnormal">
-			<a id="savingsaccountdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${savingsAccountDetailDto.accountId?c}&event=Create&source=Savings&backPageUrl=${backPageUrl}">
+			<a id="savingsaccountdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${savingsAccountDetailDto.accountId?c}&event=Create&source=Savings&backPageUrl=${currentPageUrl}">
         		[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 			</a><br/>
 		    [#if containsQGForCloseSavings ]
-                <a id="savingsaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${savingsAccountDetailDto.accountId?c}&event=Close&source=Savings&backPageUrl=${backPageUrl}">
+                <a id="savingsaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${savingsAccountDetailDto.accountId?c}&event=Close&source=Savings&backPageUrl=${currentPageUrl}">
                 	[@spring.message "Savings.ViewQuestionGroupForClosedSavingsResponsesLink" /]
                 </a><br/>
             [/#if]
