@@ -25,7 +25,7 @@ public class UrlHelper {
             encodedUrl = URLEncoder.encode(url.toString());
         }
         
-        return encodedUrl;
+        return removeSitePreferenceParameterFromUrl(encodedUrl);
     }
     
     public static String constructCurrentPageUrl(HttpServletRequest request){
@@ -36,7 +36,11 @@ public class UrlHelper {
         }
         StringBuilder url = new StringBuilder(originatingServletPath).append("?").append(originatingQueryString).deleteCharAt(originatingServletPath.indexOf('/'));
 
-        return url.toString();
+        return removeSitePreferenceParameterFromUrl(url.toString());
+    }
+    
+    private static String removeSitePreferenceParameterFromUrl(String url){
+        return url.replaceFirst("&site_preference=normal", "").replaceFirst("&site_preference=mobile", "");
     }
     
 }
