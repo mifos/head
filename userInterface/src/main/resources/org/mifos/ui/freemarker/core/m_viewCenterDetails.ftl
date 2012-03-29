@@ -340,7 +340,7 @@
 		[/#if]
 		<div>
 			<span class="fontnormal">
-	        	<a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${centerInformationDto.centerDisplay.customerId?c}&event=Create&source=Group&backPageUrl=${currentPageUrl}%26recordOfficeId%3D${centerInformationDto.centerDisplay.branchId}%26recordLoanOfficerId%3D${centerInformationDto.centerDisplay.loanOfficerId}">
+	        	<a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${centerInformationDto.centerDisplay.customerId?c}&event=Create&source=Group&backPageUrl=${currentPageUrl?url('UTF-8')}">
 	            	[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 	            </a>
 	            <br/>

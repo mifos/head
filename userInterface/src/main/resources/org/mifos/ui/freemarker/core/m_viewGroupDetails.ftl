@@ -457,7 +457,7 @@
 					</div>
 					<div>
 						<span class="fontnormal">
-                        	<a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${groupInformationDto.groupDisplay.customerId?c}&event=Create&source=Group&backPageUrl=${currentPageUrl}%26recordOfficeId%3D${groupInformationDto.groupDisplay.branchId}%26recordLoanOfficerId%3D${groupInformationDto.groupDisplay.loanOfficerId}">
+                        	<a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${groupInformationDto.groupDisplay.customerId?c}&event=Create&source=Group&backPageUrl=${currentPageUrl?url('UTF-8')}">
                             	[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 	                        </a>
 	                        <br/>

@@ -270,9 +270,10 @@ explanation of the license and how it is applied.
                             		<c:param name="entityId" value="${BusinessKey.accountId}" />
                             		<c:param name="event" value="Create" />
                             		<c:param name="source" value="Savings" />
+                            		<c:param name="backPageUrl" value="${backPageUrl}" />
                             	</c:url >
 								<td class="fontnormal">
-                            		<a id="savingsaccountdetail.link.questionGroups" href="${viewAndEditQuestionnaireMethodUrl}&backPageUrl=${backPageUrl}">
+                            		<a id="savingsaccountdetail.link.questionGroups" href="${viewAndEditQuestionnaireMethodUrl}">
                                 		<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
                             		</a> <br/>
                                        <c:url value="viewAndEditQuestionnaire.ftl" var="viewQuestionGroupForClosedSavingsResponsesLinkMethodUrl" >
@@ -280,9 +281,10 @@ explanation of the license and how it is applied.
                                         <c:param name="entityId" value="${BusinessKey.accountId}" />
                                         <c:param name="event" value="Close" />
                                         <c:param name="source" value="Savings" />
+                                        <c:param name="backPageUrl" value="${backPageUrl}" />
                                        </c:url >
 								    <c:if test="${containsQGForCloseSavings}">
-                                        <a id="savingsaccountdetail.link.questionGroupsClose" href="${viewQuestionGroupForClosedSavingsResponsesLinkMethodUrl}&backPageUrl${backPageUrl}">
+                                        <a id="savingsaccountdetail.link.questionGroupsClose" href="${viewQuestionGroupForClosedSavingsResponsesLinkMethodUrl}">
                                         <mifos:mifoslabel name="Savings.ViewQuestionGroupForClosedSavingsResponsesLink" />
                                         </a> <br>
                                     </c:if>
@@ -416,9 +418,10 @@ explanation of the license and how it is applied.
 						                    <c:param name="instanceId" value="${questionGroupInstance.id}" />
 						                    <c:param name="event" value="View" />
 						                    <c:param name="source" value="Savings" />
+						                    <c:param name="backPageUrl" value="${backPageUrl}" />
 						                   </c:url >
 						                  <span class="fontnormal8pt">
-						                    <a id="${questionGroupInstance.id}" href="${viewAndEditQuestionnaireQuestionMethodUrl}&backPageUrl=${backPageUrl}">
+						                    <a id="${questionGroupInstance.id}" href="${viewAndEditQuestionnaireQuestionMethodUrl}">
 						                      <c:out value="${questionGroupInstance.questionGroupTitle}"/>
 						                    </a>
 						                  </span>
@@ -441,8 +444,9 @@ explanation of the license and how it is applied.
                 	 <c:param name="event" value="View"/>
                 	 <c:param name="entityId" value="${BusinessKey.accountId}"/>
                 	 <c:param name="creatorId" value="${sessionScope.UserContext.id}"/>
+                	 <c:param name="backPageUrl" value="${backPageUrl}" />
                 	</c:url>
-                  <a href="${questionnaireAttachASurveyMethodUrl}&backPageUrl=${backPageUrl}">
+                  <a href="${questionnaireAttachASurveyMethodUrl}">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a><br>
 				</span>
