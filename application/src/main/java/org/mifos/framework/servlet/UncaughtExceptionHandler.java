@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+import org.springframework.webflow.execution.repository.FlowExecutionRestorationFailureException;
 
 public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
 
@@ -105,7 +106,7 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
     }
 
     private ModelAndView checkForPageExpiredException(Exception ex, HttpServletRequest request){
-    	if ( ex instanceof PageExpiredException ){
+    	if ( ex instanceof PageExpiredException || ex instanceof FlowExecutionRestorationFailureException){
     		ModelAndView modelAndView = null;
     		String viewName = determineViewName(ex, request);
     		if (viewName != null){
