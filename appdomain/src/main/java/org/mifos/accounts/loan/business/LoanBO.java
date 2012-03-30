@@ -1606,6 +1606,10 @@ public class LoanBO extends AccountBO implements Loan {
     public void updateLoan(final Money loanAmount, final Integer businessActivityId) throws AccountException {
         setLoanAmount(loanAmount);
         setBusinessActivityId(businessActivityId);
+        
+        boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+        regeneratePaymentSchedule(isRepaymentIndepOfMeetingEnabled, getLoanMeeting());
+        
         update();
     }
 
