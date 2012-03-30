@@ -68,6 +68,7 @@ public class LoanInformationDto implements Serializable {
     private final Short gracePeriodDuration;
     private final String fundName;
     private final Integer collateralTypeId;
+    private final String collateralTypeName;
     private final String collateralNote;
     private final String externalId;
     private final Set<AccountFeesDto> accountFees;
@@ -90,7 +91,7 @@ public class LoanInformationDto implements Serializable {
                               String totalAmountInArrears, LoanSummaryDto loanSummary, boolean loanActivityDetails, Double interestRate,
                               boolean interestDeductedAtDisbursement, Short recurAfter, Short recurrenceId, boolean prinDueLastInst,
                               Short noOfInstallments, Short minNoOfInstall, Short maxNoOfInstall, Short gracePeriodDuration, String fundName,
-                              Integer collateralTypeId, String collateralNote, String externalId,
+                              Integer collateralTypeId, String collateralTypeName, String collateralNote, String externalId,
                               Set<AccountFeesDto> accountFees, Date createdDate, LoanPerformanceHistoryDto performanceHistory, boolean group,
                               List<LoanActivityDto> recentAccountActivities, final Boolean activeSurveys, final List<SurveyDto> accountSurveys,
                               String customerName, String globalCustNum, String officeName, List<CustomerNoteDto> recentNoteDtos,
@@ -129,6 +130,7 @@ public class LoanInformationDto implements Serializable {
         this.gracePeriodDuration = gracePeriodDuration;
         this.fundName = fundName;
         this.collateralTypeId = collateralTypeId;
+        this.collateralTypeName = collateralTypeName;
         this.collateralNote = collateralNote;
         this.externalId = externalId;
         this.accountFees = accountFees;
@@ -275,7 +277,11 @@ public class LoanInformationDto implements Serializable {
         return this.collateralTypeId;
     }
 
-    public String getCollateralNote() {
+    public String getCollateralTypeName() {
+		return collateralTypeName;
+	}
+
+	public String getCollateralNote() {
         return this.collateralNote;
     }
 
