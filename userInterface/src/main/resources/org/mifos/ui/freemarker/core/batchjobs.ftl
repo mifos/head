@@ -28,6 +28,7 @@
 [#assign neverExecutedYet][@spring.message "systemAdministration.batchjobs.neverExecutedYet"/][/#assign]
 
 [#include "layout.ftl"]
+[@adminLeftPaneLayout]
 
 <script type="text/javascript">
 
@@ -42,7 +43,6 @@
 
 </script>
 
-[@adminLeftPaneLayout]
 <!--  Main Content Begins-->
 <div class=" content">
     <form method="post" name="batchjobs" action="batchjobs.ftl">
