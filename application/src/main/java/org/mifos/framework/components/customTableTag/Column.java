@@ -147,7 +147,7 @@ public class Column {
                 	String total = String.valueOf(method.invoke(obj, new Object[] {}));
                 	Pattern pattern = Pattern.compile("(total|debit|credi|installment|principal|interest|feesWithMiscFee|loanAmount|amount|runningBalance|feesWithMiscFee)");
                 	Matcher matcher = pattern.matcher(getValue());
-                	Pattern isNumber = Pattern.compile("((\\d)+\\.(\\d)+)");
+                	Pattern isNumber = Pattern.compile("^((\\d)+(\\.(\\d)+))?$");
                 	Matcher numberMatcher = isNumber.matcher(total);
                 	if (matcher.find() || numberMatcher.find()) {
                     total = ConversionUtil.formatNumber(total);
