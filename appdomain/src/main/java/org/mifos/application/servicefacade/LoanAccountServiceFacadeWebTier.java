@@ -1630,6 +1630,16 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             recentNoteDtos.add(new CustomerNoteDto(accountNotesEntity.getCommentDate(), accountNotesEntity.getComment(), accountNotesEntity.getPersonnelName()));
         }
 
+        CustomValueDto customValueDto = legacyMasterDao.getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
+        List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
+        String collateralTypeName = null;
+        for (CustomValueListElementDto collateralType : collateralTypes) {
+            if ( collateralType.getId() == loan.getCollateralTypeId() ){
+            	collateralTypeName = collateralType.getName();
+            	break;
+            }
+        }
+        
         return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, accountStateId,
                                      accountStateName, disbursed, accountFlagNames, loan.getDisbursementDate(), loan.isRedone(),
                                      loan.getBusinessActivityId(), loan.getAccountId(),gracePeriodTypeName, interestType, interestTypeName,
@@ -1642,7 +1652,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                                      loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId(),
                                      loan.getLoanOffering().isPrinDueLastInst(), loan.getNoOfInstallments(),
                                      loan.getMaxMinNoOfInstall().getMinNoOfInstall(), loan.getMaxMinNoOfInstall().getMaxNoOfInstall(),
-                                     loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), loan.getCollateralNote(),loan.getExternalId(),
+                                     loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), collateralTypeName, loan.getCollateralNote(),loan.getExternalId(),
                                      accountFeesDtos, loan.getCreatedDate(), loanPerformanceHistory,
                                      loan.getCustomer().isGroup(), getRecentActivityView(globalAccountNum), activeSurveys, accountSurveys,
                                      loan.getCustomer().getDisplayName(), loan.getCustomer().getGlobalCustNum(), loan.getOffice().getOfficeName(), recentNoteDtos,
