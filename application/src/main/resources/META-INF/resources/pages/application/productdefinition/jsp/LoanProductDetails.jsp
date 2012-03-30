@@ -529,13 +529,13 @@ explanation of the license and how it is applied.
 												<c:out value="${loanPrd.interestGLcode.glcode} - ${loanPrd.interestGLcode.associatedCOA.accountName}" />
 												</c:when>
 												<c:when test="${GlNamesMode == 2}">
-												<c:out value="${loanPrd.interestGLcode.associatedCOA.accountName} (${loanPrd.interestGLcode.glCode})" />
+												<c:out value="${loanPrd.interestGLcode.associatedCOA.accountName} (${loanPrd.interestGLcode.glcode})" />
 												</c:when>
 												<c:when test="${GlNamesMode == 3}">
 												<c:out value="${loanPrd.interestGLcode.associatedCOA.accountName}" />
 												</c:when>
 												<c:when test="${GlNamesMode == 4}">
-												<c:out value="${loanPrd.interestGLcode.glCode}" />
+												<c:out value="${loanPrd.interestGLcode.glcode}" />
 												</c:when>
 											</c:choose> 
 												 <br><mifos:mifoslabel name="product.principal" bundle="ProductDefUIResources" isColonRequired="yes"/> 
@@ -544,13 +544,13 @@ explanation of the license and how it is applied.
 												<c:out value="${loanPrd.principalGLcode.glcode} - ${loanPrd.principalGLcode.associatedCOA.accountName}" />
 												</c:when>
 												<c:when test="${GlNamesMode == 2}">
-												<c:out value="${loanPrd.principalGLcode.associatedCOA.accountName} (${loanPrd.principalGLcode.glCode})" />
+												<c:out value="${loanPrd.principalGLcode.associatedCOA.accountName} (${loanPrd.principalGLcode.glcode})" />
 												</c:when>
 												<c:when test="${GlNamesMode == 3}">
 												<c:out value="${loanPrd.principalGLcode.associatedCOA.accountName}" />
 												</c:when>
 												<c:when test="${GlNamesMode == 4}">
-												<c:out value="${loanPrd.principalGLcode.glCode}" />
+												<c:out value="${loanPrd.principalGLcode.glcode}" />
 												</c:when>
 											</c:choose> 
 												<br> </span>
