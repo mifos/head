@@ -32,7 +32,7 @@
 [@widget.topNavigationNoSecurityMobile currentTab="ClientsAndAccounts" /]
 
 <span id="page.id" title="ViewClientDetails"></span>
-<div class="content">
+<div class="content" style="width: 350px">
 	<form action="/mifos/clientCustAction.do">
 		<div class="headingorange">
 			<span id="viewClientDetails.heading">
@@ -508,7 +508,75 @@
 				[/#if]			
 				<div>
 					<img src="pages/framework/images/trans.gif" width="10" height="10">
-				</div>				
+				</div>
+				<!-- Family Details -->
+				[#if clientInformationDto.clientDisplay.areFamilyDetailsRequired ]
+				<div>
+					<span class="headingorange">
+						[@spring.message "client.FamilyInformationLabel" /]
+					</span>
+					<span class="fontnormal">
+						<a id="viewClientDetails.link.editFamilyInformation" href="clientCustAction.do?method=editFamilyInfo&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+							[@spring.message "client.EditFamilyInformationLink" /]
+						</a>
+					</span>
+				</div>
+				<div>
+					<table>
+						<tr class="fontnormal">
+							<td>
+								<span class="fontnormalbold">
+									[@spring.message "client.FamilyRelationship"/]
+								</span>
+							</td>
+							<td class="paddingL10">
+								<span class="fontnormalbold">
+									[@spring.message "client.FamilyDisplayName"/]
+							   	</span>
+							</td>									
+							<td class="paddingL10">
+								<span class="fontnormalbold">
+									[@spring.message "client.FamilyDateOfBirth"/]
+								</span>
+							</td>
+							<td class="paddingL10">
+								<span class="fontnormalbold">
+									[@spring.message "client.FamilyGender"/]
+								</span>
+							</td>
+							<td class="paddingL10">
+								<span class="fontnormalbold">
+									[@spring.message "client.FamilyLivingStatus"/]
+								</span>
+							</td>
+						</tr>	
+						[#list clientInformationDto.clientDisplay.familyDetails as familyDetails]
+						<tr class="fontnormal">
+							<td>
+								${familyDetails.relationship?if_exists}
+							</td>
+							<td class="paddingL10"> 
+								<span id="displayName"> 
+									${familyDetails.displayName?if_exists}
+								</span>	   
+							</td>		
+							<td class="paddingL10">
+								${familyDetails.dateOfBirthForBrowser?if_exists}
+							</td>
+							<td class="paddingL10">
+								${familyDetails.gender?if_exists}
+							</td>
+							<td class="paddingL10">
+								${familyDetails.livingStatus?if_exists}
+							</td>
+						</tr>
+						[/#list]
+					</table>
+				</div>
+				[/#if]	
+				<div>
+					<img src="pages/framework/images/trans.gif" width="10" height="10">
+				</div>					
 				<div>
 					<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${clientInformationDto.clientDisplay.customerId?c}&event=Create&source=Client&backPageUrl=${currentPageUrl?url('UTF-8')}">
 				    	[@spring.message "client.ViewQuestionGroupResponsesLink" /]
