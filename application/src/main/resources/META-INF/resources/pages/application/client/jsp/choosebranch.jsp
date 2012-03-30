@@ -37,14 +37,16 @@ explanation of the license and how it is applied.
 		<script language="javascript">
   
    function goToCancelPage(){
-	clientTransferActionForm.action="clientTransferAction.do?method=cancel";
-	clientTransferActionForm.submit();
+	   goBackToClientDetails.submit();
   }
 </script>
+		<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
+		<form name="goBackToClientDetails" method="get" action ="viewClientDetails.ftl">
+			<input type="hidden" name='globalCustNum' value="${BusinessKey.globalCustNum}"/>
+		</form>  
 		<html-el:form
 			action="clientTransferAction.do?method=previewBranchTransfer">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-			<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">

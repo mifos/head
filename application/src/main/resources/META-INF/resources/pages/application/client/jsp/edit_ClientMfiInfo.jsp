@@ -38,14 +38,15 @@ explanation of the license and how it is applied.
 		<script>
 
 	function goToCancelPage(){
-	clientCustActionForm.action="clientCustAction.do?method=cancel";
-	clientCustActionForm.submit();
+	goBackToClientDetails.submit();
   }
 	</script>
-
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
+	   	var="BusinessKey" />
+		<form name="goBackToClientDetails" method="get" action ="viewClientDetails.ftl">
+			<input type="hidden" name='globalCustNum' value="${BusinessKey.globalCustNum}"/>
+		</form> 
 		<html-el:form action="clientCustAction.do?method=previewEditMfiInfo">
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
-				   var="BusinessKey" />
 			<html-el:hidden property="input" value="editMfiInfo" />
 			<%-- <td align="left" valign="top" bgcolor="#FFFFFF" class="paddingleftmain"> --%>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
