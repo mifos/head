@@ -332,7 +332,7 @@ public class LoanBusinessService implements BusinessService {
         for (LoanScheduleEntity loanScheduleEntity : loanScheduleEntities) {
                    originalLoanScheduleEntities.add(new OriginalLoanScheduleEntity(loanScheduleEntity));
         }
-        legacyLoanDao.saveOriginalSchedule(originalLoanScheduleEntities);
+        this.getlegacyLoanDao().saveOriginalSchedule(originalLoanScheduleEntities);
     }
 
     public List<OriginalLoanScheduleEntity> retrieveOriginalLoanSchedule(Integer accountId) throws PersistenceException {

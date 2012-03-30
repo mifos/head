@@ -1078,6 +1078,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             
             checkScheduleForMembers(loanSchedule, loan, individualMembersOfGroupLoan, radio);
 
+            List<LoanBO> memberLoans = new ArrayList<LoanBO>(); //for original schedule persisting
             for (GroupMemberLoanDetail groupMemberAccount : individualMembersOfGroupLoan) {
 
                 LoanBO memberLoan = LoanBO.openGroupMemberLoanAccount(loan, loanAccountDetail.getLoanProduct(), groupMemberAccount.getMember(), repaymentDayMeeting, groupMemberAccount.getMemberSchedule(), groupMemberAccount.getMemberOverridenDetail(), configuration,
@@ -1097,6 +1098,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 }
                 this.loanDao.save(memberLoan);
                 transactionHelper.flushSession();
+                
+                memberLoans.add(memberLoan);
             }
 
             // save question groups
@@ -1143,6 +1146,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                         receiptNumber, receiptDate, paymentType, paymentDate);
                 disbursalPayment.setCreatedByUser(createdBy);
 
+                this.loanBusinessService.persistOriginalSchedule(loan);
+                for(LoanBO memberLoan : memberLoans) {
+                    this.loanBusinessService.persistOriginalSchedule(memberLoan);
+                }
+                
                 // refactoring of loan disbursal
                 if (customer.isDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProduct(loan.getLoanOffering())) {
                     throw new BusinessRuleException("errors.cannotDisburseLoan.because.otherLoansAreActive");
