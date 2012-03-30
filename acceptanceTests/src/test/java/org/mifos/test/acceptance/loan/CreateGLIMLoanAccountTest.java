@@ -37,6 +37,7 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameter
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
+import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.ViewOriginalSchedulePage;
@@ -290,11 +291,13 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountPreviewPage.submitForApprovalAndNavigateToConfirmationPage();
         LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
                 
-        loanAccountPage.verifyGLIMPurpose("0012-Sheep Purchase", 1);
-        loanAccountPage.verifyGLIMPurpose("-", 2);
-        loanAccountPage.verifyGLIMPurpose("-", 3);
+        String[] purposes = {"0012-Sheep Purchase", "-", "-"};
+        loanAccountPage.verifyGLIMPurpose(purposes);
         
         loanAccountPage.verifyGLIMIndividualScheduleLinks(3, true);
+        
+        EditPreviewLoanAccountPage previewLoanAccountPage = loanAccountPage.navigateToEditAccountInformation().submitAndNavigateToAccountInformationPreviewPage();
+        previewLoanAccountPage.verifyGLIMPurpose(purposes);
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
