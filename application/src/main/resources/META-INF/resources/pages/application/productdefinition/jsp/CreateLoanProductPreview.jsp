@@ -53,6 +53,7 @@ explanation of the license and how it is applied.
 
 		<html-el:form action="/loanproductaction"
 			onsubmit="func_disableSubmitBtn();">
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'GlNamesMode')}" var="GlNamesMode"/>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
