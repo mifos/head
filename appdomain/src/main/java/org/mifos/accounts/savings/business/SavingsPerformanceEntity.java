@@ -159,6 +159,13 @@ public class SavingsPerformanceEntity extends AbstractEntity {
         }
         totalInterestEarned = totalInterestEarned.add(totalAmount);
     }
+    
+    void substractFromTotalInterestDetails(Money amount) {
+        if (totalInterestEarned == null) {
+            totalInterestEarned = new Money(savings.getCurrency());
+        }
+        totalInterestEarned = totalInterestEarned.subtract(amount);
+    }
 
     void addMissedDeposits(int missedDeposits) {
         if (this.missedDeposits == null) {

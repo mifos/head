@@ -230,6 +230,10 @@ public abstract class AccountTrxnEntity extends AbstractEntity {
         return this.accountActionEntity.isSavingsWithdrawal();
     }
 
+    public boolean isSavingsInterestPosting() {
+        return this.accountActionEntity.isSavingsInterestPosting();
+    }
+    
     public boolean isTrxnForReversalOfLoanDisbursal() {
         return getAccountActionEntity().getId().equals(
                 AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL.getValue());

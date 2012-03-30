@@ -220,4 +220,15 @@ public class AccountPaymentEntity extends AbstractEntity {
         }
         return savingsWithdrawal;
     }
+    
+    public boolean isSavingsInterestPosting() {
+        boolean savingsInterestPosting = false;
+        for (AccountTrxnEntity trxn : this.accountTrxns) {
+            if (trxn.isSavingsInterestPosting()) {
+                savingsInterestPosting = true;
+                break;
+            }
+        }
+        return savingsInterestPosting;
+    }
 }

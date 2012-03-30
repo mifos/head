@@ -19,6 +19,7 @@
  */
 package org.mifos.accounts.savings.persistence;
 
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -66,4 +67,6 @@ public interface SavingsDao {
     NotesSearchResultsDto searchNotes(NoteSearchDto noteSearch);
 
     void save(List<SavingsBO> savingsAccounts);
+    
+    void prepareForInterestRecalculation(SavingsBO savingsAccount, Date fromDate);
 }
