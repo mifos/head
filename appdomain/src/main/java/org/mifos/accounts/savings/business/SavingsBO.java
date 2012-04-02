@@ -1036,6 +1036,27 @@ public class SavingsBO extends AccountBO {
         return accountActionTypes;
     }
 
+    public AccountPaymentEntity findMostRecentDepositOrWithdrawalByDate() {
+        AccountPaymentEntity mostRecentPayment = null; 
+        if (!this.accountPayments.isEmpty()) {
+            for (AccountPaymentEntity accountPaymentEntity : this.accountPayments) {
+                if (mostRecentPayment == null && accountPaymentEntity.isSavingsDepositOrWithdrawal()) {
+                    mostRecentPayment = accountPaymentEntity;
+                } else if (mostRecentPayment != null) {
+                    LocalDate paymentDate = new LocalDate(accountPaymentEntity.getPaymentDate());
+                    if ((paymentDate.isAfter(new LocalDate(mostRecentPayment.getPaymentDate())) && paymentDate.isBefore(new LocalDate().plusDays(1))) ||
+                            (paymentDate.isEqual(new LocalDate(mostRecentPayment.getPaymentDate())) &&
+                                    accountPaymentEntity.getPaymentId() != null && mostRecentPayment.getPaymentId() != null &&
+                                    accountPaymentEntity.getPaymentId() > mostRecentPayment.getPaymentId())
+                                    && accountPaymentEntity.isSavingsDepositOrWithdrawal()) {
+                        mostRecentPayment = accountPaymentEntity;
+                    }
+                }
+            }
+        }
+        return mostRecentPayment;
+    }
+    
     private List<AccountActionDateEntity> getAccountActions(final Date dueDate, final Integer customerId) {
         List<AccountActionDateEntity> accountActions = new ArrayList<AccountActionDateEntity>();
         for (AccountActionDateEntity accountAction : getAccountActionDates()) {
@@ -1666,12 +1687,15 @@ public class SavingsBO extends AccountBO {
             if (transactionLocalDate.isBefore(currentPostingPeriodStartDate)) {
                 return false;
             }
+            
+            LocalDate activationDate = new LocalDate(this.activationDate);
+            
             if (lastMeetingDate != null) {
                 LocalDate meetingDate = new LocalDate(lastMeetingDate);
-                return transactionLocalDate.isAfter(meetingDate) || transactionLocalDate.isEqual(meetingDate);
+                return (transactionLocalDate.isAfter(meetingDate) || transactionLocalDate.isEqual(meetingDate))
+                        && (transactionLocalDate.isAfter(activationDate) || transactionLocalDate.isEqual(activationDate));
             }
 
-            LocalDate activationDate = new LocalDate(this.activationDate);
             return (transactionLocalDate.isAfter(activationDate) || transactionLocalDate.isEqual(activationDate))
                     && (transactionLocalDate.isBefore(today) || transactionLocalDate.isEqual(today));
         }

@@ -20,6 +20,10 @@
 
 package org.mifos.accounts.savings.struts.actionforms;
 
+import static org.mifos.framework.util.helpers.DateUtils.dateFallsBeforeDate;
+import static org.mifos.framework.util.helpers.DateUtils.getDateAsSentFromBrowser;
+
+import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -56,6 +60,8 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
 
     String amount;
 
+    Date lastTrxnDate;
+    
     public SavingsDepositWithdrawalActionForm() {
     }
 
@@ -115,6 +121,14 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
         this.trxnTypeId = trxnTypeId;
     }
 
+    public Date getLastTrxnDate() {
+        return lastTrxnDate;
+    }
+
+    public void setLastTrxnDate(Date lastTrxnDate) {
+        this.lastTrxnDate = lastTrxnDate;
+    }
+
     @Override
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String method = request.getParameter("method");
@@ -156,7 +170,12 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
             if (dateError != null && !dateError.isEmpty()) {
                 errors.add(dateError);
             }
-
+            
+            dateError = validateTrxnDate(this.trxnDate, resources.getString("Savings.dateOfTrxn"));
+            if (dateError != null && !dateError.isEmpty()) {
+                errors.add(dateError);
+            }
+            
             if (this.getReceiptDate() != null && !this.getReceiptDate().equals("")) {
                 dateError = validateDate(getReceiptDate(), resources.getString("Savings.receiptDate"), userContext);
                 if (dateError != null && !dateError.isEmpty()) {
@@ -197,6 +216,21 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
             errors = new ActionErrors();
             errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                             fieldName));
+        }
+        return errors;
+    }
+    
+    private ActionErrors validateTrxnDate(String date, String fieldName) {
+        ActionErrors errors = new ActionErrors();
+        try {
+            if (lastTrxnDate != null && dateFallsBeforeDate(getDateAsSentFromBrowser(date), lastTrxnDate)) {
+                errors = new ActionErrors();
+                errors.add(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
+                        new ActionMessage(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
+                                fieldName));
+            }
+        } catch (InvalidDateException e) {
+            //date format was already validated
         }
         return errors;
     }
