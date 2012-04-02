@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.mifos.accounts.fees.business.FeeStatusEntity;
 import org.mifos.accounts.fees.struts.actionforms.FeeActionForm;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
@@ -182,6 +184,18 @@ public class FeeAction extends BaseAction {
 
         Short feeId = ((FeeActionForm) form).getFeeIdValue();
         FeeDto feeDto = this.feeDao.findDtoById(feeId);
+        
+		Short appliedFeeId = this.feeDao.findFeeAppliedToLoan(feeId);
+		boolean isInProducts = appliedFeeId == null ? true : false;
+        ActionMessages messages = new ActionMessages();
+        
+    	if (!isInProducts) {
+    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemoved"));
+    	}
+    	else {
+    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemovedFromPrd"));
+    	}
+		saveErrors(request, messages);
 
         request.getSession().setAttribute("feeModel", feeDto);
         return mapping.findForward(ActionForwards.editPreview_success.toString());
@@ -204,15 +218,26 @@ public class FeeAction extends BaseAction {
         FeeActionForm feeActionForm = (FeeActionForm) form;
 
         FeeStatus feeStatus = feeActionForm.getFeeStatusValue();
+        String forward = "";
         Short feeStatusValue = null;
+        
         if (feeStatus != null) {
             feeStatusValue = feeStatus.getValue();
         }
         FeeUpdateRequest feeUpdateRequest = new FeeUpdateRequest(Short.valueOf(feeActionForm.getFeeId()), feeActionForm.getCurrencyId(),
                 feeActionForm.getAmount(), feeStatusValue, feeActionForm.getRateValue());
-
-        this.feeServiceFacade.updateFee(feeUpdateRequest);
-        return mapping.findForward(ActionForwards.update_success.toString());
+        
+        if (feeActionForm.isToRemove()) {
+        	this.feeServiceFacade.updateFee(feeUpdateRequest);
+        	this.feeServiceFacade.removeFee(feeUpdateRequest);
+        	forward = ActionForwards.viewAll_success.toString();
+        }
+        else {
+        	this.feeServiceFacade.updateFee(feeUpdateRequest);
+        	forward = ActionForwards.update_success.toString();
+        }
+        
+        return mapping.findForward(forward);
     }
 
     @TransactionDemarcate(saveToken = true)

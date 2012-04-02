@@ -189,4 +189,18 @@ public class FeeServiceImpl implements FeeService {
             hibernateTransactionHelper.closeSession();
         }
     }
+
+	@Override
+	public void remove(FeeBO fee, boolean isInProducts) {
+		try {
+            hibernateTransactionHelper.startTransaction();
+            this.feeDao.remove(fee, isInProducts);
+            hibernateTransactionHelper.commitTransaction();
+        } catch (Exception e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            hibernateTransactionHelper.closeSession();
+        }
+	}
 }

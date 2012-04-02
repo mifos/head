@@ -195,4 +195,28 @@ public class FeeDaoHibernate implements FeeDao {
     public <T> T initializeAndUnproxy(T var) {
         return genericDao.initializeAndUnproxy(var);
     }
+
+	@Override
+	public void remove(FeeBO fee, boolean isInProducts) {
+		if (!isInProducts) {	
+	        Map<String, Object> queryParameters = new HashMap<String, Object>();
+	        queryParameters.put("FEEID", fee.getFeeId());
+			this.genericDao.executeNamedQueryDelete("deleteFeeFromPrd_Offering_Fees", queryParameters);
+		}
+		this.genericDao.delete(fee);
+	}
+
+	@Override
+	public Short findFeeAppliedToLoan(Short feeId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("FEEID", feeId);        
+        return (Short) this.genericDao.executeUniqueResultNamedQuery("findFeeAppliedToLoan", queryParameters);
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Short> getAllAtachedFeesToLoanAcounts() {
+		return (List<Short>) this.genericDao.executeNamedQuery("getAllAtachedFeesToLoans", null);
+	}
 }

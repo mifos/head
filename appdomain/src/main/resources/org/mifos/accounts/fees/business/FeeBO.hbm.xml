@@ -75,5 +75,13 @@
     <query name="getAllApplicableFeesForLoanCreation">
         <![CDATA[from FeeBO as fees where fees.feeStatus.id=:active and fees.categoryType.id =:category]]>
     </query>
+    <sql-query name="findFeeAppliedToLoan">
+    	<return-scalar column="fee_id" type="short"/>
+    	<![CDATA[select fee_id from prd_offering_fees where fee_id=:FEEID]]>
+    </sql-query>
+   	<sql-query name="getAllAtachedFeesToLoans">
+   	<return-scalar column="fee_id" type="short"/>
+   		<![CDATA[select distinct fee_id from account_fees]]>
+   	</sql-query>
 
 </hibernate-mapping>
