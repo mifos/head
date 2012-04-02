@@ -252,10 +252,10 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         savingsAccountHelper.changeStatus(savingsId2, editAccountStatusParameters);
 
         depositParams = new DepositWithdrawalSavingsParameters();
-
+        targetTime = new DateTime(2011,2,15,13,0,0,0);
+        
         depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId2, DepositWithdrawalSavingsParameters.DEPOSIT, "100000.0");
 
-        targetTime = new DateTime(2011,2,15,13,0,0,0);
         depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId2, DepositWithdrawalSavingsParameters.DEPOSIT, "100000.0");
 
         depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId2, DepositWithdrawalSavingsParameters.WITHDRAWAL, "100000.0");
@@ -271,7 +271,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"48.6");
 
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId2);
-        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"48.6");
+        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"35.1");
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-624
@@ -310,7 +310,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
     public void restrictionsSavingsTransactions() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011,2,25,13,0,0,0);
+        DateTime targetTime = new DateTime(2011,2,1,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         //When
