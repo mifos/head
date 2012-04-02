@@ -11,7 +11,7 @@ public class UrlHelper {
     
     private final static UrlPathHelper urlPathHelper = new UrlPathHelper();
 
-    public static String constructCurrentPageUrl(HttpServletRequest request){
+    public static String constructCurrentPageEncodedUrl(HttpServletRequest request){
         String originatingServletPath = urlPathHelper.getOriginatingServletPath(request);
         String originatingQueryString = urlPathHelper.getOriginatingQueryString(request);
         if ( originatingQueryString == null ){
@@ -25,7 +25,22 @@ public class UrlHelper {
             encodedUrl = URLEncoder.encode(url.toString());
         }
         
-        return encodedUrl;
+        return removeSitePreferenceParameterFromUrl(encodedUrl);
+    }
+    
+    public static String constructCurrentPageUrl(HttpServletRequest request){
+        String originatingServletPath = urlPathHelper.getOriginatingServletPath(request);
+        String originatingQueryString = urlPathHelper.getOriginatingQueryString(request);
+        if ( originatingQueryString == null ){
+            originatingQueryString = "";
+        }
+        StringBuilder url = new StringBuilder(originatingServletPath).append("?").append(originatingQueryString).deleteCharAt(originatingServletPath.indexOf('/'));
+
+        return removeSitePreferenceParameterFromUrl(url.toString());
+    }
+    
+    private static String removeSitePreferenceParameterFromUrl(String url){
+        return url.replaceFirst("&site_preference=normal", "").replaceFirst("&site_preference=mobile", "");
     }
     
 }

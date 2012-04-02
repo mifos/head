@@ -39,7 +39,7 @@ public class DefineAndViewFeesTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createPeriodicFees() throws Exception {
-        SubmitFormParameters feeParameters = feeTestHelper.getFeeParameters(StringUtil.getRandomString(5), "Group", false, SubmitFormParameters.PERIODIC_FEE_FREQUENCY, 6, 6201);
+        SubmitFormParameters feeParameters = feeTestHelper.getFeeParameters(StringUtil.getRandomString(5), "Group", false, SubmitFormParameters.PERIODIC_FEE_FREQUENCY, 6, "6201 - Miscelleneous Income");
         feeParameters.setFeeFrequencyType(feeParameters.PERIODIC_FEE_FREQUENCY);
         feeParameters.setFeeRecurrenceType(feeParameters.MONTHLY_FEE_RECURRENCE);
         feeParameters.setMonthRecurAfter(2);
@@ -48,13 +48,13 @@ public class DefineAndViewFeesTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createOneTimeFees() {
-        SubmitFormParameters feeParameters = feeTestHelper.getFeeParameters(StringUtil.getRandomString(5), "All Customers", false, SubmitFormParameters.ONETIME_FEE_FREQUENCY, 20, 31301);
+        SubmitFormParameters feeParameters = feeTestHelper.getFeeParameters(StringUtil.getRandomString(5), "All Customers", false, SubmitFormParameters.ONETIME_FEE_FREQUENCY, 20, "31301 - Fees");
         feeParameters.setCustomerCharge("Upfront");
         feeTestHelper.defineFees(feeParameters);
     }
 
     private void defineFee(String feeName, String categoryType) {
-        SubmitFormParameters feeParameters = feeTestHelper.getFeeParameters(feeName, categoryType, false, SubmitFormParameters.ONETIME_FEE_FREQUENCY, 20, 31301);
+        SubmitFormParameters feeParameters = feeTestHelper.getFeeParameters(feeName, categoryType, false, SubmitFormParameters.ONETIME_FEE_FREQUENCY, 20, "31301 - Fees");
         feeParameters.setCustomerCharge("Upfront");
         feeTestHelper.defineFees(feeParameters);
     }

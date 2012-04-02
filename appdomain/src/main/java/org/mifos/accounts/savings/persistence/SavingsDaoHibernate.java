@@ -34,6 +34,8 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountNotesEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.savings.business.SavingsActivityEntity;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -310,5 +312,22 @@ public class SavingsDaoHibernate implements SavingsDao {
         NotesSearchResultsDto resultsDto = new NotesSearchResultsDto(searchDetails, pageDtoResults);
 
         return resultsDto;
+    }
+
+    @Override
+    public void prepareForInterestRecalculation(SavingsBO savingsAccount, Date fromDate) {
+        List<AccountPaymentEntity> paymentsForRemoval = 
+                savingsAccount.getInterestPostingPaymentsForRemoval(fromDate);
+        this.save(savingsAccount);
+        
+        for (AccountPaymentEntity payment : paymentsForRemoval) {
+            this.baseDao.delete(payment);
+        }
+        
+        List<SavingsActivityEntity> activitesForRemoval =
+                savingsAccount.getInterestPostingActivitesForRemoval(fromDate);
+        for (SavingsActivityEntity activity : activitesForRemoval) {
+            this.baseDao.delete(activity);
+        }
     }
 }

@@ -47,6 +47,7 @@
   <DATABASECHANGELOG ID="MIFOS_5164_1" AUTHOR="Udai Gupta" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-28 18:06:09.0" ORDEREXECUTED="197" EXECTYPE="EXECUTED" MD5SUM="3:ba7cceda2200329d1f21496cd2832067" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5164_2" AUTHOR="Udai Gupta" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-28 18:06:09.0" ORDEREXECUTED="198" EXECTYPE="EXECUTED" MD5SUM="3:7050ad7056dd89097b10de0cad2f2e5f" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5186_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-11-24 15:29:40.0" ORDEREXECUTED="185" EXECTYPE="EXECUTED" MD5SUM="3:257c6dbd69a28ceb9a8a866a405e23f2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
+  <DATABASECHANGELOG ID="MIFOS_5193" AUTHOR="Hugo Technologies" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-28 22:38:16.0" ORDEREXECUTED="293" EXECTYPE="EXECUTED" MD5SUM="3:1a2cf948f862d89eb8fcc269b33657c2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5218_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-12-09 11:57:44.0" ORDEREXECUTED="184" EXECTYPE="EXECUTED" MD5SUM="3:a55cb7c0cd264ab9133926be13e0c714" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_5359_1" AUTHOR="Michal Dudzinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-01-31 14:40:00.0" ORDEREXECUTED="206" EXECTYPE="EXECUTED" MD5SUM="3:8c408cc6b30629a54545806b2f771895" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5370_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-17 15:59:07.0" ORDEREXECUTED="241" EXECTYPE="EXECUTED" MD5SUM="3:ba16a0b76593f67399076254a19d8e94" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
@@ -66,6 +67,7 @@
   <DATABASECHANGELOG ID="MIFOS_5446_1" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-29 20:51:08.0" ORDEREXECUTED="270" EXECTYPE="EXECUTED" MD5SUM="3:da9b46d48c36748f47566fc805e67bc8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5450_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-08 11:18:43.0" ORDEREXECUTED="284" EXECTYPE="EXECUTED" MD5SUM="3:0cfec9003f3dd9fa4d189f93b136b1e2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5458_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-13 17:59:28.0" ORDEREXECUTED="285" EXECTYPE="EXECUTED" MD5SUM="3:d52e183334a1d2419a7cdf05145fbb44" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5521_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-29 13:13:49.0" ORDEREXECUTED="304" EXECTYPE="EXECUTED" MD5SUM="3:60252201a85395f0b48a2f090a9fc456" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
   <QRTZ_CALENDARS/>
@@ -626,6 +628,7 @@
   <config_key_value configuration_id="10" configuration_type="0" configuration_key="maxDaysBetweenDisbursalAndFirstRepaymentDay" configuration_value="365"/>
   <config_key_value configuration_id="11" configuration_type="0" configuration_key="AdministrativeDocumentsIsEnabled" configuration_value="1"/>
   <config_key_value configuration_id="12" configuration_type="0" configuration_key="MIFOS-4948" configuration_value="1"/>
+  <config_key_value configuration_id="16" configuration_type="0" configuration_key="prorate_Rule" configuration_value="0"/>
   <currency currency_id="1" currency_name="US Dollar" rounding_amount="1.000" currency_code="USD"/>
   <currency currency_id="2" currency_name="Indian Rupee" rounding_amount="1.000" currency_code="INR"/>
   <currency currency_id="3" currency_name="Euro" rounding_amount="1.000" currency_code="EUR"/>

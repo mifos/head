@@ -34,7 +34,6 @@ explanation of the license and how it is applied.
 	<form method="get" action="viewSavingsAccountDetails.ftl" >
 	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
-
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td class="bluetablehead05">
@@ -59,7 +58,7 @@ explanation of the license and how it is applied.
             </table>
             <br>
     <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'trxnhistoryList')}" var="trxnhistoryList" scope="session" />
-            <mifoscustom:mifostabletag source="trxnhistoryList" scope="session" xmlFileName="SavingsTrxnHistory.xml" moduleName="org/mifos/accounts/savings/util/resources" passLocale="true"/>
+            <mifoscustom:mifostabletag source="trxnhistoryList" scope="session" xmlFileName="SavingsTrxnHistory.xml" moduleName="org/mifos/accounts/savings/util/resources" passLocale="true" glMode="${requestScope.GlNamesMode}"/>
             <br>
             
             <table width="95%" border="0" cellpadding="0" cellspacing="0">

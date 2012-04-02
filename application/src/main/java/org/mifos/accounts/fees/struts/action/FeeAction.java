@@ -156,6 +156,7 @@ public class FeeAction extends BaseAction {
         Short feeId = ((FeeActionForm) form).getFeeIdValue();
         FeeDto feeDto = this.feeDao.findDtoById(feeId);
         request.setAttribute("feeModel", feeDto);
+        request.setAttribute("GlNamesMode", AccountingRules.getGlNamesMode());
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 

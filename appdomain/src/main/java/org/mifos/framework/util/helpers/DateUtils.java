@@ -751,4 +751,8 @@ public class DateUtils {
         dateFormat.setLenient(false);
         return dateFormat.format(date);
     }
+    
+    public static boolean isPastDate(Date date) {
+        return whichDirection(date) < 0;
+    }
 }

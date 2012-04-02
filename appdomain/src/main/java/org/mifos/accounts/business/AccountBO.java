@@ -1656,7 +1656,7 @@ public class AccountBO extends AbstractBusinessObject {
         }
 
         transactionHistory.setFinancialEnteries(financialTrxn.getTrxnId(), financialTrxn.getActionDate(), financialTrxn
-                .getFinancialAction().getName(), financialTrxn.getGlcode().getGlcode(), debit, credit, financialTrxn
+                .getFinancialAction().getName(), financialTrxn.getGlcode().getGlcode(), financialTrxn.getGlcode().getAssociatedCOA().getAccountName(), debit, credit, financialTrxn
                 .getPostedDate(), notes);
 
     }

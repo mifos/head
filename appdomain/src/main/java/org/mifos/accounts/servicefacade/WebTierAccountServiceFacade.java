@@ -143,6 +143,15 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         }
     }
 
+    public Date retrieveLatPaymentDate(String globalAccountNum) {
+        try {
+            AccountBO account = accountBusinessService.findBySystemId(globalAccountNum);
+            return getLastPaymentDate(account);
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+    
     private Date getLastPaymentDate(AccountBO account) {
         Date lastPaymentDate = new Date(0);
         AccountPaymentEntity lastPayment = account.findMostRecentNonzeroPaymentByPaymentDate();

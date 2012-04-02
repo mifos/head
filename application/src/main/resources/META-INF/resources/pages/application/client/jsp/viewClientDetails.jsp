@@ -45,6 +45,10 @@ explanation of the license and how it is applied.
 </script>
 
 		<html-el:form action="clientCustAction.do">
+		<c:set value="${requestScope.currentPageUrl}" var="currentPageUrl"/>
+		<c:if test="${currentPageUrl == null}">
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}&method=get" var="currentPageUrl"/>
+		</c:if>
 		<!-- The new way to send data is using a data transfer object -->
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientInformationDto')}"
 			   var="clientInformationDto" />
@@ -696,7 +700,7 @@ explanation of the license and how it is applied.
 								<c:param name="entityId" value="${clientInformationDto.clientDisplay.customerId}" />
 								<c:param name="event" value="Create" />
 								<c:param name="source" value="Client" />
-								<c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}&method=get" />
+								<c:param name="backPageUrl" value="${currentPageUrl}" />
 							</c:url >
 							<br>
 								<a id="viewClientDetails.link.questionGroups" href="${viewAndEditQuestionnaireMethodUrl}">
@@ -707,7 +711,7 @@ explanation of the license and how it is applied.
                                     <c:param name="entityId" value="${clientInformationDto.clientDisplay.customerId}" />
                                     <c:param name="event" value="Close" />
                                     <c:param name="source" value="Client" />
-                                    <c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}&method=get" />
+                                    <c:param name="backPageUrl" value="${currentPageUrl}" />
                                    </c:url >
                                 <c:if test="${containsQGForCloseClient}">
                                     <a id="viewClientDetails.link.questionGroupsClose" href="${viewAndEditQuestionnaireMethodUrl}">
@@ -835,7 +839,7 @@ explanation of the license and how it is applied.
                     <c:param name="instanceId" value="${questionGroupInstance.id}" />
                     <c:param name="event" value="View" />
                     <c:param name="source" value="Client" />
-                    <c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}&method=get" />
+                    <c:param name="backPageUrl" value="${currentPageUrl}" />
                    </c:url >
                   <span class="fontnormal8pt">
                     <a id="${questionGroupInstance.id}" href="${viewAndEditQuestionnaireMethodUrl}">
@@ -861,7 +865,14 @@ explanation of the license and how it is applied.
                   <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
                   <c:set target="${urlMap}" property="${clientInformationDto.clientDisplay.branchName}" value="custSearchAction.do?method=getOfficeHomePage&officeId=${clientInformationDto.clientDisplay.branchId}"/>
                   <c:set target="${urlMap}" property="${clientInformationDto.clientDisplay.displayName}" value="clientCustAction.do?method=get&globalCustNum=${clientInformationDto.clientDisplay.globalCustNum}"/>
-                  <a id="viewClientDetails.link.attachSurvey" href="questionnaire.ftl?source=Client&event=View&entityId=${clientInformationDto.clientDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=clientCustAction.do?method=get">
+                  <c:url value="questionnaire.ftl" var="questionnaireUrl" >
+                    <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+                    <c:param name="entityId" value="${clientInformationDto.clientDisplay.customerId}" />
+                    <c:param name="event" value="View" />
+                    <c:param name="source" value="Client" />
+                    <c:param name="backPageUrl" value="${currentPageUrl}" />
+                   </c:url >
+                  <a id="viewClientDetails.link.attachSurvey" href="${questionnaireUrl}">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                 </span>

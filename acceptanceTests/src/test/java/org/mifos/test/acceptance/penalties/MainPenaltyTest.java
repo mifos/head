@@ -256,7 +256,7 @@ public class MainPenaltyTest extends UiTestCaseBase {
     private MifosPage fillFormAndGotoPreviewPage(final PenaltyFormPage penaltyFormPage, final PenaltyFormParameters parameters,
             final int i, final boolean isCreatePage) throws Exception {
         parameters.setFrequency(PenaltyFormParameters.FREQUENCY_DAILY);
-        parameters.setGlCode("31102");
+        parameters.setGlCode("31102 - Penalty");
         parameters.setDuration("1");
         parameters.setMax("15");
         parameters.setMin("1");

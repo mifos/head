@@ -701,15 +701,17 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 											<mifos:mifoslabel name="loan.apply_payment" />
 										</html-el:link>
 
-										<!--
-										// temporarily disable apply principal pre-payment link
-									<c:url value="customLoanRepayment.ftl" var="customLoanRepaymentMethodUrl" >
-										<c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}" />
-									</c:url >
-										<br/>
-										<a href="${customLoanRepaymentMethodUrl}">Apply Principal Pre-payment</a>
-										-->
-										<br/>
+                                        <c:if test="${loanInformationDto.interestType == 2 || loanInformationDto.interestType == 4}">
+        									<c:url value="customLoanRepayment.ftl" var="customLoanRepaymentMethodUrl" >
+        										<c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}" />
+        									</c:url >
+        									<br/>
+        									<html-el:link styleId="loanaccountdetail.link.applyPrincipalPrePayment"
+                                                href="${customLoanRepaymentMethodUrl}">
+                                                    <mifos:mifoslabel name="loan.apply_prepayment" />
+                                                </html-el:link>
+                                        </c:if>
+                                        <br/>
 									</c:if> 
 									<c:if test="${loanInformationDto.accountStateId!='6' && loanInformationDto.accountStateId!='7'}">
 										<html-el:link styleId="loanaccountdetail.link.applyCharges"
@@ -926,7 +928,14 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<tr>
 								<td colspan="2" align="right" class="paddingleft05">
 								<span class="fontnormal8pt">
-									<a id="loanaccountdetail.link.attachSurvey" href="questionnaire.ftl?source=Loan&event=View&entityId=${loanInformationDto.accountId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=${backPageUrl}">
+				                  	<c:url value="questionnaire.ftl" var="questionnaireUrl" >
+					                    <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+					                    <c:param name="entityId" value="${loanInformationDto.accountId}" />
+					                    <c:param name="event" value="View" />
+					                    <c:param name="source" value="Loan" />
+					                    <c:param name="backPageUrl" value="${currentPageUrl}" />
+			                  	 	</c:url >
+									<a id="loanaccountdetail.link.attachSurvey" href="${questionnaireUrl}">
 										<mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources" />
 									</a><br>
 								</span>

@@ -38,6 +38,7 @@ explanation of the license and how it is applied.
 			<c:set var="loanPrd" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
 			<c:set var="loanAmountType" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAmountType')}" />
 			<c:set var="installType" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'installType')}" />
+			<c:set value="${requestScope.GlNamesMode}" var="GlNamesMode"/>
 			<tr>
 				<td class="bluetablehead05">
 					<span class="fontnormal8pt"> <html-el:link href="loanproductaction.do?method=cancelCreate&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
@@ -522,8 +523,37 @@ explanation of the license and how it is applied.
 											<span class="fontnormal"> <mifos:mifoslabel name="product.srcfunds" bundle="ProductDefUIResources" isColonRequired="yes"/> <br> <c:forEach items="${loanPrd.loanOfferingFunds}" var="loanOffeingFund">
 													<c:out value="${loanOffeingFund.fund.fundName}" />
 													<br>
-												</c:forEach> <br> <mifos:mifoslabel name="product.productglcode" bundle="ProductDefUIResources" isColonRequired="yes"/><br> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out
-													value="${loanPrd.interestGLcode.glcode}" /> <br> <mifos:mifoslabel name="product.principal" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.principalGLcode.glcode}" /> <br> </span>
+												</c:forEach> <br> <mifos:mifoslabel name="product.productglcode" bundle="ProductDefUIResources" isColonRequired="yes"/><br> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" isColonRequired="yes"/> 
+						 					<c:choose>											
+												<c:when test="${GlNamesMode == 1}">
+												<c:out value="${loanPrd.interestGLcode.glcode} - ${loanPrd.interestGLcode.associatedCOA.accountName}" />
+												</c:when>
+												<c:when test="${GlNamesMode == 2}">
+												<c:out value="${loanPrd.interestGLcode.associatedCOA.accountName} (${loanPrd.interestGLcode.glcode})" />
+												</c:when>
+												<c:when test="${GlNamesMode == 3}">
+												<c:out value="${loanPrd.interestGLcode.associatedCOA.accountName}" />
+												</c:when>
+												<c:when test="${GlNamesMode == 4}">
+												<c:out value="${loanPrd.interestGLcode.glcode}" />
+												</c:when>
+											</c:choose> 
+												 <br><mifos:mifoslabel name="product.principal" bundle="ProductDefUIResources" isColonRequired="yes"/> 
+						 					<c:choose>											
+												<c:when test="${GlNamesMode == 1}">
+												<c:out value="${loanPrd.principalGLcode.glcode} - ${loanPrd.principalGLcode.associatedCOA.accountName}" />
+												</c:when>
+												<c:when test="${GlNamesMode == 2}">
+												<c:out value="${loanPrd.principalGLcode.associatedCOA.accountName} (${loanPrd.principalGLcode.glcode})" />
+												</c:when>
+												<c:when test="${GlNamesMode == 3}">
+												<c:out value="${loanPrd.principalGLcode.associatedCOA.accountName}" />
+												</c:when>
+												<c:when test="${GlNamesMode == 4}">
+												<c:out value="${loanPrd.principalGLcode.glcode}" />
+												</c:when>
+											</c:choose> 
+												<br> </span>
 											<br>
 											<br>
 											<span class="fontnormal"> <html-el:link styleId="loanproductdetails.link.viewChangeLog" 

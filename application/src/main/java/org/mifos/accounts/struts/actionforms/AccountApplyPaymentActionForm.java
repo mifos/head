@@ -176,9 +176,8 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         if (null != validationErrors && !validationErrors.isEmpty()) {
             errors.add(validationErrors);
         }
+        if (null != getTransactionDate()){
         validationErrors = validatePaymentDate(getTransactionDate(), resources.getString(fieldName));
-        if (null != validationErrors && !validationErrors.isEmpty()) {
-            errors.add(validationErrors);
         }
     }
     //exposed for testing

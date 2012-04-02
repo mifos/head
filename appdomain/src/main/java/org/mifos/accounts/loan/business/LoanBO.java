@@ -105,7 +105,6 @@ import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
-import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -1607,6 +1606,10 @@ public class LoanBO extends AccountBO implements Loan {
     public void updateLoan(final Money loanAmount, final Integer businessActivityId) throws AccountException {
         setLoanAmount(loanAmount);
         setBusinessActivityId(businessActivityId);
+        
+        boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+        regeneratePaymentSchedule(isRepaymentIndepOfMeetingEnabled, getLoanMeeting());
+        
         update();
     }
 
@@ -1646,16 +1649,24 @@ public class LoanBO extends AccountBO implements Loan {
         }
     }
     
-	public void recordOverpayment(Money balance, LocalDate paymentDate) throws AccountException {
+	public void recordOverpayment(Money balance, LocalDate paymentDate, PersonnelBO user, String receiptId, LocalDate receiptDate,
+	        Short modeOfPayment) throws AccountException {
 		
 		if (balance.isGreaterThanZero()) {
 			
 			Date transactionDate = paymentDate.toDateMidnight().toDate();
 			
-			PaymentData paymentData = new PaymentData(balance, personnel, PaymentTypes.CASH.getValue(), transactionDate);
+			PaymentData paymentData = new PaymentData(balance, user, modeOfPayment, transactionDate);
+			if (receiptId != null) {
+			    paymentData.setReceiptNum(receiptId);
+			}
+			if (receiptDate != null) {
+			    paymentData.setReceiptDate(receiptDate.toDateMidnight().toDate());
+			}
+			
 			AccountPaymentEntity accountPaymentEntity = prePayment(paymentData);
 
-			// updat
+			// update
     		
 			Money overpayment = balance;
 			
@@ -1663,9 +1674,9 @@ public class LoanBO extends AccountBO implements Loan {
 			
 			if (!paidInstallments.isEmpty()) {
 				LoanScheduleEntity lastFullyPaidInstallment = (LoanScheduleEntity) paidInstallments.get(paidInstallments.size()-1);
-				lastFullyPaidInstallment.updatePrincipalPaidby(accountPaymentEntity, personnel);
+				lastFullyPaidInstallment.updatePrincipalPaidby(accountPaymentEntity, user);
 				
-				LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, lastFullyPaidInstallment, personnel, transactionDate,
+				LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, lastFullyPaidInstallment, user, transactionDate,
 		                AccountActionTypes.LOAN_REPAYMENT, AccountConstants.PAYMENT_RCVD, legacyLoanDao);
 				accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
 				
@@ -1675,42 +1686,53 @@ public class LoanBO extends AccountBO implements Loan {
 				this.loanSummary.updatePaymentDetails(paymentAllocation);
 			}
 			
-//			LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
-//			postPayment(paymentData, accountPaymentEntity, loanPaymentType);
-//			
+			LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
+			postPayment(paymentData, accountPaymentEntity, loanPaymentType);
+			
 			addAccountPayment(accountPaymentEntity);
 	        buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 		}
 	}
 	
-	public Money applyNewPaymentMechanism(LocalDate paymentDate, BigDecimal repaymentAmount) throws AccountException {
+	public Money applyNewPaymentMechanism(LocalDate paymentDate, BigDecimal repaymentAmount, PersonnelBO user, 
+	        String receiptId, LocalDate receiptDate, Short modeOfPayment) throws AccountException {
 		
 		Money totalAmount = new Money(getCurrency(), repaymentAmount);
 		Date transactionDate = paymentDate.toDateMidnight().toDate();
+
+		PaymentData paymentData = new PaymentData(totalAmount, user, modeOfPayment, transactionDate);
+		if (receiptId != null) {
+		    paymentData.setReceiptNum(receiptId);
+		}
+		if (receiptDate != null) {
+		    paymentData.setReceiptDate(receiptDate.toDateMidnight().toDate());
+		}
 		
-		PaymentData paymentData = new PaymentData(totalAmount, personnel, PaymentTypes.CASH.getValue(), transactionDate);
 		AccountPaymentEntity accountPaymentEntity = prePayment(paymentData);
 
 		Money balance = totalAmount;
 		
+		LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
+		
         // 1. pay off installments in arrears
 		List<AccountActionDateEntity> inArrears = getDetailsOfInstallmentsInArrearsOn(paymentDate);
 		for (AccountActionDateEntity accountActionDate : inArrears) {
-            balance = ((LoanScheduleEntity) accountActionDate).applyPayment(accountPaymentEntity, balance, personnel, transactionDate);
+            balance = ((LoanScheduleEntity) accountActionDate).applyPayment(accountPaymentEntity, balance, user, transactionDate);
         }
 
         // 2. pay off due installment (normal way)
 		if (balance.isGreaterThanZero()) {
 			AccountActionDateEntity upcomingInstallment = getDetailsOfNextInstallmentOn(paymentDate);
-			balance = ((LoanScheduleEntity) upcomingInstallment).applyPayment(accountPaymentEntity, balance, personnel, transactionDate);
+			balance = ((LoanScheduleEntity) upcomingInstallment).applyPayment(accountPaymentEntity, balance, user, transactionDate);
 		}
 
-		LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
-		postPayment(paymentData, accountPaymentEntity, loanPaymentType);
+		if (!accountPaymentEntity.getAccountTrxns().isEmpty()) {
+		    postPayment(paymentData, accountPaymentEntity, loanPaymentType);
+
+		    addAccountPayment(accountPaymentEntity);
+		    buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
+		}
 		
-		addAccountPayment(accountPaymentEntity);
-        buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
-        
         return balance;
 	}
 
@@ -2268,22 +2290,23 @@ public class LoanBO extends AccountBO implements Loan {
         return !havePaymentsBeenMade() || MoneyUtils.isRoundedAmount(charge);
     }
     
-    public void applyPenalty(final PenaltyBO penalty, final Money charge,
-            final AccountActionDateEntity accountActionDateEntity, final AccountPenaltiesEntity penaltiesEntity, final Date date) {
-        LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
+    public void applyPenalty(final Money charge, final int scheduleEntityId, final AccountPenaltiesEntity penaltiesEntity, final Date current) {
+        LoanScheduleEntity loanScheduleEntity = new ArrayList<LoanScheduleEntity>(getLoanScheduleEntities()).get(scheduleEntityId - 1);
+        PenaltyBO penalty = penaltiesEntity.getPenalty();
+        LoanPenaltyScheduleEntity entity = loanScheduleEntity.getPenaltyScheduleEntity(penalty.getPenaltyId());
+        Money money = new Money(getCurrency());
+
         loanScheduleEntity.setPenalty(loanScheduleEntity.getPenalty().add(charge));
+
         getLoanSummary().updateOriginalPenalty(charge);
 
-        addLoanActivity(new LoanActivityEntity(this, personnel, new Money(getCurrency()), new Money(getCurrency()),
-                new Money(getCurrency()), charge, getLoanSummary(), penalty.getPenaltyName() + " applied"));
-        
-        LoanPenaltyScheduleEntity entity = loanScheduleEntity.getPenaltyScheduleEntity(penalty.getPenaltyId());
-        
+        addLoanActivity(new LoanActivityEntity(this, personnel, money, money, money, charge, getLoanSummary(), penalty.getPenaltyName() + " applied"));
+
         if(entity == null) {
-            loanScheduleEntity.addLoanPenaltySchedule(new LoanPenaltyScheduleEntity(loanScheduleEntity, penalty, penaltiesEntity, charge, date));
+            loanScheduleEntity.addLoanPenaltySchedule(new LoanPenaltyScheduleEntity(loanScheduleEntity, penalty, penaltiesEntity, charge, current));
         } else {
             entity.setPenaltyAmount(entity.getPenaltyAmount().add(charge));
-            entity.setLastApplied(date);
+            entity.setLastApplied(current);
         }
         
         penaltiesEntity.setLastAppliedDate(new DateTimeService().getCurrentJavaDateTime());
@@ -3469,14 +3492,14 @@ public class LoanBO extends AccountBO implements Loan {
 
     }
     
-    public List<LoanScheduleEntity> getDetailsOfLateInstallmentsOn(LocalDate date) {
+    public List<LoanScheduleEntity> getDetailsOfLateInstallmentsPeriod(final LocalDate after, final LocalDate before) {
         List<LoanScheduleEntity> lateInstallments = new ArrayList<LoanScheduleEntity>();
 
         Set<AccountActionDateEntity> accountActionDates = getAccountActionDates();
         
         if (accountActionDates!= null && !accountActionDates.isEmpty()) {
             for (AccountActionDateEntity accountAction : accountActionDates) {
-                if (!accountAction.isPaid() && accountAction.isBefore(date)) {
+                if (!accountAction.isPaid() && accountAction.isAfter(after) && accountAction.isBefore(before)) {
                     lateInstallments.add((LoanScheduleEntity)accountAction);
                 }
             }

@@ -26,7 +26,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
-import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountPenaltiesEntity;
@@ -34,7 +33,6 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanPenaltyScheduleEntity;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.penalties.business.AmountPenaltyBO;
-import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.penalties.business.RatePenaltyBO;
 import org.mifos.accounts.penalties.util.helpers.PenaltyPeriod;
 import org.mifos.application.NamedQueryConstants;
@@ -45,18 +43,17 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 
 public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
+    private LocalDate currentLocalDate;
+    private Date currentDate;
+
     @Override
     public void execute(final long timeInMillis) throws BatchJobException {
-        DateTime nowDT = new DateTime(timeInMillis);
-        LocalDate nowLD = nowDT.toLocalDate();
+        setCurrentDates(timeInMillis);
         List<String> errorList = new ArrayList<String>();
-        List<LoanBO> loanAccounts = null;
+        List<LoanBO> loanAccounts;
 
         try {
-            Query select = StaticHibernateUtil.getSessionTL().getNamedQuery(NamedQueryConstants.GET_ALL_LOAN_ACCOUNTS_WITH_PENALTIES);
-            select.setDate("currentDate", nowDT.toDate());
-            
-            loanAccounts =  new ArrayList<LoanBO>(castList(LoanBO.class, select.list()));
+            loanAccounts = getLoanAccounts();
         } catch (Exception e) {
             throw new BatchJobException(e);
         }
@@ -67,55 +64,42 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
             try {
                 for (LoanBO loanAccount : loanAccounts) {
                     loanAccountId = loanAccount.getAccountId();
-                    final List<AccountPenaltiesEntity> penaltyEntities = new ArrayList<AccountPenaltiesEntity>(loanAccount.getAccountPenalties());
-                    final List<LoanScheduleEntity> lateInstallments = loanAccount.getDetailsOfLateInstallmentsOn(nowLD);
-                    
+                    List<AccountPenaltiesEntity> penaltyEntities =new ArrayList<AccountPenaltiesEntity>(loanAccount.getAccountPenalties());
+
                     for (AccountPenaltiesEntity penaltyEntity : penaltyEntities) {
-                        if(penaltyEntity.hasPeriodType()) {
-                            Days days = Days.daysBetween(new LocalDate(lateInstallments.get(0).getActionDate().getTime()), nowLD);
-                            PenaltyPeriod penaltyPeriod = penaltyEntity.getPenalty().getPeriodType().getPenaltyPeriod();
-                            Integer duration = penaltyEntity.getPenalty().getPeriodDuration();
+                        List<LoanScheduleEntity> lateInstallments = loanAccount.getDetailsOfLateInstallmentsPeriod(
+                                new LocalDate(penaltyEntity.getCreatedDate()), currentLocalDate);
                         
-                            if((penaltyPeriod == PenaltyPeriod.DAYS && days.getDays() < duration)
-                                    || (penaltyPeriod == PenaltyPeriod.INSTALLMENTS && lateInstallments.size() - 1 < duration)) {
-                                continue;
-                            }
-                        }
-                        
-                        for(LoanScheduleEntity entity : lateInstallments) {
-                            Days days = Days.daysBetween(new LocalDate(entity.getActionDate().getTime()), nowLD);
-                            LoanPenaltyScheduleEntity penaltyScheduleEntity = entity.getPenaltyScheduleEntity(penaltyEntity.getPenalty().getPenaltyId());
-                        
-                            if (!penaltyEntity.isOneTime()) {
-                                if ((penaltyEntity.isMonthlyTime() && days.getDays() % 31 != 1)
-                                        || (penaltyEntity.isWeeklyTime() && days.getDays() % 7 != 1)) {
-                                    continue;
-                                }
-                            } else {
-                                if(penaltyEntity.getLastAppliedDate() != null) {
-                                    continue;
-                                }
-                            }
-                            
-                            if (penaltyScheduleEntity != null && penaltyScheduleEntity.isOn(nowLD)) {
+                        for (LoanScheduleEntity entity : lateInstallments) {
+                            if (lateInstallments.get(0).getInstallmentId().equals(entity.getInstallmentId())
+                                    && checkGracePeriod(lateInstallments, penaltyEntity)) {
                                 continue;
                             }
                             
+                            LoanPenaltyScheduleEntity penaltySchedule = entity.getPenaltyScheduleEntity(penaltyEntity.getPenalty().getPenaltyId());
+
+                            if (checkPeriod(penaltyEntity, new LocalDate(entity.getActionDate().getTime()))
+                                    || (penaltySchedule != null && penaltySchedule.isOn(currentLocalDate))) {
+                                continue;
+                            }
+
                             if (penaltyEntity.isAmountPenalty()) {
-                                addAmountPenalty(penaltyEntity, loanAccount, entity, nowDT.toDate());
+                                addAmountPenalty(penaltyEntity, loanAccount, entity);
                             } else {
-                                addRatePenalty(penaltyEntity, loanAccount, entity, nowDT.toDate());
+                                addRatePenalty(penaltyEntity, loanAccount, entity);
                             }
                         }
                     }
                 }
             } catch (Exception e) {
-                getLogger().error(
-                        "ApplyPenaltyToLoanAccountsTask execute failed with exception " + e.getClass().getName() + ": "
-                                + e.getMessage() + " at loan account " + loanAccountId.toString(), e);
+                if (loanAccountId != null) {
+                    getLogger().error(String.format("ApplyPenaltyToLoanAccountsTask execute failed with exception %s: %s at loan account %s",
+                                    e.getClass().getName(), e.getMessage(), loanAccountId.toString()), e);
+
+                    errorList.add(loanAccountId.toString());
+                }
 
                 StaticHibernateUtil.rollbackTransaction();
-                errorList.add(loanAccountId.toString());
             } finally {
                 StaticHibernateUtil.closeSession();
             }
@@ -126,48 +110,59 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
         }
     }
 
-    private void addAmountPenalty(final AccountPenaltiesEntity penaltyEntity, final LoanBO loanAccount, final LoanScheduleEntity loanScheduleEntity, final Date date) {
-        final AmountPenaltyBO penalty = (AmountPenaltyBO) penaltyEntity.getPenalty();
-        
-        Money charge = verifyMinimum(penaltyEntity.getAccountPenaltyAmount(), penalty.getMinimumLimit());
-        charge = verifyMaximum(loanAccount.getTotalPenalty(charge.getCurrency(), penalty.getPenaltyId()), charge, penalty.getMaximumLimit());
-        
-        tryApplyPenalty(penaltyEntity, loanAccount, loanScheduleEntity, date, penalty, charge);
-        
-        try {
-            StaticHibernateUtil.startTransaction();
-            StaticHibernateUtil.getSessionTL().update(loanAccount);
-            StaticHibernateUtil.commitTransaction();
-        } catch (Exception e) {
-            getLogger().error(e.getMessage());
-            StaticHibernateUtil.rollbackTransaction();
+    private boolean checkPeriod(AccountPenaltiesEntity penaltyEntity, LocalDate installmentDate) {
+        int days = Days.daysBetween(installmentDate, currentLocalDate).getDays();
+        boolean check = false;
+        boolean oneTime = penaltyEntity.isOneTime();
+
+        if (oneTime && penaltyEntity.getLastAppliedDate() != null) {
+            check = true;
+        } else if (!oneTime && ((penaltyEntity.isMonthlyTime() && days % 31 != 1) || penaltyEntity.isWeeklyTime() && days % 7 != 1)) {
+            check = true;
         }
+
+        return check;
     }
-    
-    private void addRatePenalty(final AccountPenaltiesEntity penaltyEntity, final LoanBO loanAccount, final LoanScheduleEntity loanScheduleEntity, final Date date) {
-        final RatePenaltyBO penalty = (RatePenaltyBO) penaltyEntity.getPenalty();
-        final Double radio = penaltyEntity.getAccountPenaltyAmount().getAmount().doubleValue() / 100.0d;
-        Money charge = null;
-        
-        if(penalty.isOutstandingPrincipalAmount()) {
-            charge = loanAccount.getLoanSummary().getOriginalPrincipal().multiply(radio);
-        } else if(penalty.isOutstandingLoanAmount()) {
-            charge = loanAccount.getLoanSummary().getOutstandingBalance().multiply(radio);
-        } else if(penalty.isOverdueAmountDue()) {
-            charge = loanScheduleEntity.getTotalDue().multiply(radio);
-        } else if(penalty.isOverduePrincipal()) {
-            charge = loanScheduleEntity.getPrincipalDue().multiply(radio);
+
+    private boolean checkGracePeriod(final List<LoanScheduleEntity> lateInstallments,
+            final AccountPenaltiesEntity penaltyEntity) {
+        boolean check = false;
+
+        if (penaltyEntity.hasPeriodType()) {
+            int days = Days.daysBetween(new LocalDate(lateInstallments.get(0).getActionDate().getTime()), currentLocalDate).getDays();
+            PenaltyPeriod penaltyPeriod = penaltyEntity.getPenalty().getPeriodType().getPenaltyPeriod();
+            int duration = penaltyEntity.getPenalty().getPeriodDuration();
+
+            switch (penaltyPeriod) {
+            case DAYS:
+                check = days - 1 <= duration;
+                break;
+            case INSTALLMENTS:
+                if(lateInstallments.size() - 1 < duration) {
+                    check = true;
+                } else if (lateInstallments.size() -1 == duration) {
+                    check = lateInstallments.get(duration).isOn(currentLocalDate.minusDays(1));
+                } else {
+                    check = false;
+                }
+                break;
+            }
         }
-        Money totalPenalty = loanAccount.getTotalPenalty(charge.getCurrency(), penalty.getPenaltyId());
-        
-        if(totalPenalty.isZero()) {
-            charge = verifyMinimum(charge, penalty.getMinimumLimit());
+
+        return check;
+    }
+
+    private void addAmountPenalty(final AccountPenaltiesEntity penaltyEntity, final LoanBO loanAccount,
+            final LoanScheduleEntity loanScheduleEntity) {
+        AmountPenaltyBO penalty = (AmountPenaltyBO) penaltyEntity.getPenalty();
+        Money accountPenaltyAmount = penaltyEntity.getAccountPenaltyAmount();
+        Money charge = verifyLimits(loanAccount.getTotalPenalty(accountPenaltyAmount.getCurrency(), penalty.getPenaltyId()),
+                accountPenaltyAmount, penalty.getMinimumLimit(), penalty.getMaximumLimit());
+
+        if (charge != null && charge.isGreaterThanZero()) {
+            loanAccount.applyPenalty(charge, loanScheduleEntity.getInstallmentId(), penaltyEntity, currentDate);
         }
-        
-        charge = verifyMaximum(totalPenalty, charge, penalty.getMaximumLimit());
-        
-        tryApplyPenalty(penaltyEntity, loanAccount, loanScheduleEntity, date, penalty, charge);
-        
+
         try {
             StaticHibernateUtil.startTransaction();
             StaticHibernateUtil.getSessionTL().update(loanAccount);
@@ -178,33 +173,59 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
         }
     }
 
-    // Penalty will be applied only if the charge is not null and is greater than zero
-    private void tryApplyPenalty(final AccountPenaltiesEntity penaltyEntity, final LoanBO loanAccount,
-            final LoanScheduleEntity loanScheduleEntity, final Date date, final PenaltyBO penalty, final Money charge) {
-        
-        if (charge != null && charge.isGreaterThanZero()) {
-            loanAccount.applyPenalty(penalty, charge, loanScheduleEntity, penaltyEntity, date);
+    private void addRatePenalty(final AccountPenaltiesEntity penaltyEntity, final LoanBO loanAccount,
+            final LoanScheduleEntity loanScheduleEntity) {
+        RatePenaltyBO penalty = (RatePenaltyBO) penaltyEntity.getPenalty();
+        Double radio = penaltyEntity.getAccountPenaltyAmount().getAmount().doubleValue() / 100.0d;
+        Money charge = null;
+
+        if (penalty.isOutstandingPrincipalAmount()) {
+            charge = loanAccount.getLoanSummary().getOriginalPrincipal().multiply(radio);
+        } else if (penalty.isOutstandingLoanAmount()) {
+            charge = loanAccount.getLoanSummary().getOutstandingBalance().multiply(radio);
+        } else if (penalty.isOverdueAmountDue()) {
+            charge = loanScheduleEntity.getTotalDue().multiply(radio);
+        } else if (penalty.isOverduePrincipal()) {
+            charge = loanScheduleEntity.getPrincipalDue().multiply(radio);
+        } else {
+            charge = Money.zero();
+        }
+
+        Money totalPenalty = loanAccount.getTotalPenalty(charge.getCurrency(), penalty.getPenaltyId());
+        charge = verifyLimits(totalPenalty, charge, penalty.getMinimumLimit(), penalty.getMaximumLimit());
+
+        if (charge.isGreaterThanZero()) {
+            loanAccount.applyPenalty(charge, loanScheduleEntity.getInstallmentId(), penaltyEntity, currentDate);
+        }
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            StaticHibernateUtil.getSessionTL().update(loanAccount);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            getLogger().error(e.getMessage());
+            StaticHibernateUtil.rollbackTransaction();
         }
     }
-    
-    private Money verifyMinimum(final Money charge, final Double minimum) {
+
+    private Money verifyLimits(final Money total, final Money charge, final Double min, final double max) {
         Money cash = charge;
+        boolean zero = total.isZero();
         
-        if(charge.getAmount().doubleValue() < minimum) {
-            cash = new Money(charge.getCurrency(), minimum);
+        if (zero && charge.getAmount().doubleValue() < min) {
+            cash = new Money(charge.getCurrency(), min);
+        } else if (!zero && total.add(charge).getAmount().doubleValue() > max) {
+            cash = new Money(charge.getCurrency(), max - total.getAmount().doubleValue());
         }
         
         return cash;
     }
-    
-    private Money verifyMaximum(final Money totalPenalty, final Money charge, final Double maximum) {
-        Money cash = charge;
-        
-        if(totalPenalty.add(charge).getAmount().doubleValue() > maximum) {
-            cash = new Money(totalPenalty.getCurrency(), maximum - totalPenalty.getAmount().doubleValue());
-        }
-        
-        return cash;
+
+    private List<LoanBO> getLoanAccounts() {
+        Query select = StaticHibernateUtil.getSessionTL().getNamedQuery(NamedQueryConstants.GET_ALL_LOAN_ACCOUNTS_WITH_PENALTIES);
+        select.setDate("currentDate", currentDate);
+
+        return castList(LoanBO.class, select.list());
     }
 
     private <T> List<T> castList(final Class<? extends T> clazz, final Collection<?> collection) {
@@ -215,6 +236,11 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
         }
 
         return results;
+    }
+
+    private void setCurrentDates(long time) {
+        currentLocalDate = new LocalDate(time);
+        currentDate = new Date(time);
     }
 
 }

@@ -21,6 +21,7 @@
 
 [@layout.header "mifos" /]
 [#assign mifostag=JspTaglibs["/tags/mifos-html"]]
+[#assign mifos=JspTaglibs["/tags/mifos-html"]]
 
 [@widget.topNavigationNoSecurityMobile currentTab="ClientsAndAccounts" /]
 
@@ -283,28 +284,34 @@
 			</div>
 			<div>
 				<span class="fontnormal">	
-						[#assign arguments = ["${ConfigurationConstants.GROUP}"]/]
-						[@spring.messageArgs "Group.approvaldate" arguments /] 	
+					[#assign arguments = ["${ConfigurationConstants.GROUP}"]/]
+					[@spring.messageArgs "Group.approvaldate" arguments /]
+					[#if groupInformationDto.groupDisplay.customerActivationDate?? ] 	
 						${i18n.date_formatter(groupInformationDto.groupDisplay.customerActivationDate, "dd/MM/yyyy", Application.LocaleSetting.locale)}			
-				</span> <br/>
-				<span id="Group.ExternalId" class="fontnormal">
-					[@spring.message "Group.ExternalId" /]:
+					[/#if]
+				</span>
+			</div>
+			<div id="Group.ExternalId">
+				<span class="fontnormal">
+					[@mifos.mifoslabel name="${ConfigurationConstants.EXTERNALID}" isColonRequired="Yes" keyhm="Group.ExternalId" isManadatoryIndicationNotRequired="yes" /]
 					${groupInformationDto.groupDisplay.externalId}
-				</span> <br/>
+				</span> 
+			</div>
+			<div>
 				<span class="fontnormal"> 
 					[@spring.message "Group.FormedBy" /]
 					${groupInformationDto.groupDisplay.customerFormedByDisplayName}
 				</span>
 			</div>
 			<br/>
-			<div id="Group.TrainedDate">
+			<div id="Group.Trained">
 				<span class="fontnormalbold">
-					[@spring.message "Group.trainingstatus" /]
+					[@mifos.mifoslabel name="Group.trainingstatus" bundle="GroupUIResources" keyhm="Group.Trained" isManadatoryIndicationNotRequired="yes" /]
 				</span> <br/>
 				<span class="fontnormal"> 
-					[@spring.message "Group.trainedon" /] 
+					[@mifos.mifoslabel name="Group.trainedon" bundle="GroupUIResources" keyhm="Group.Trained" isManadatoryIndicationNotRequired="yes"/]
 					[#if groupInformationDto.groupDisplay.trained ]
-						${groupInformationDto.groupDisplay.trainedDate}
+						${i18n.date_formatter(groupInformationDto.groupDisplay.trainedDate, "dd/MM/yyyy", Application.LocaleSetting.locale)}
 					[/#if] 
 				</span>
 			</div>
@@ -363,7 +370,7 @@
 			<div id="Group.PhoneNumber"> 
 				[#if groupInformationDto.address.phoneNumber?has_content ]
 					<span class="fontnormal">
-						[@spring.message "Group.telephone" /]
+						[@mifos.mifoslabel name="Group.telephone" bundle="GroupUIResources" keyhm="Group.PhoneNumber" isManadatoryIndicationNotRequired="yes" /]
 						${groupInformationDto.address.phoneNumber}
 					</span>
 				[/#if] 
@@ -450,7 +457,7 @@
 					</div>
 					<div>
 						<span class="fontnormal">
-                        	<a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${groupInformationDto.groupDisplay.customerId?c}&event=Create&source=Group&backPageUrl=${backPageUrl}%26recordOfficeId%3D${groupInformationDto.groupDisplay.branchId}%26recordLoanOfficerId%3D${groupInformationDto.groupDisplay.loanOfficerId}">
+                        	<a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${groupInformationDto.groupDisplay.customerId?c}&event=Create&source=Group&backPageUrl=${currentPageUrl?url('UTF-8')}">
                             	[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 	                        </a>
 	                        <br/>

@@ -33,4 +33,17 @@ public class DateValidator {
         }
         return isValid;
     }
+    
+    public boolean formsValidDate(String dayOfMonth, String monthOfYear, String year) {
+        boolean isValid = true;
+        try {
+            int dom = Integer.parseInt(dayOfMonth);
+            int moy = Integer.parseInt(monthOfYear);
+            int y = Integer.parseInt(year);
+            isValid = formsValidDate(dom, moy, y);
+        } catch (NumberFormatException e) {
+            isValid = false;
+        }
+        return isValid;
+    }
 }

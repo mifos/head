@@ -21,6 +21,7 @@
 
 [@layout.header "mifos" /]
 [#assign mifostag=JspTaglibs["/tags/mifos-html"]]
+[#assign mifos=JspTaglibs["/tags/mifos-html"]]
 
 <script language="javascript">
 	function photopopup(custId , custName, currentFlow){
@@ -31,7 +32,7 @@
 [@widget.topNavigationNoSecurityMobile currentTab="ClientsAndAccounts" /]
 
 <span id="page.id" title="ViewClientDetails"></span>
-<div class="content">
+<div class="content" style="width: 350px">
 	<form action="/mifos/clientCustAction.do">
 		<div class="headingorange">
 			<span id="viewClientDetails.heading">
@@ -84,7 +85,7 @@
 		<div id="Client.BusinessActivities">
 			<div class="fontnormalbold">
 				<span class="fontnormal"> 
-					[@spring.message "client.BusinessActivities" /]
+					[@mifos.mifoslabel name="client.BusinessActivities" bundle="ClientUIResources" keyhm="Client.BusinessActivities" isManadatoryIndicationNotRequired="yes" /]
 					${clientInformationDto.clientDisplay.businessActivities?if_exists}
 				</span><br>
 			</div>
@@ -254,9 +255,9 @@
 				</span>
 			</div>
 			<div id="Client.ExternalId">
-				<span class="fontnormal"> 
-					[@spring.message "Client.${ConfigurationConstants.EXTERNALID}" /]:
-					${clientInformationDto.clientDisplay.externalId}
+				<span class="fontnormal">
+					[@mifos.mifoslabel name="${ConfigurationConstants.EXTERNALID}" keyhm="Client.ExternalId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/]
+					${clientInformationDto.clientDisplay.externalId?if_exists}
 				</span>
 			</div>
 			<div>
@@ -275,7 +276,6 @@
 					 ${clientInformationDto.clientDisplay.customerFormedByDisplayName}
 				</span><br>
 				<br>
-				</td>
 			</div>
 			<div id="Client.TrainedDate">
 				<span class="fontnormalbold">
@@ -283,8 +283,8 @@
 					<br>
 				</span>
 				<!-- If the training status is set then the date is displayed -->
-				<span class="fontnormal"> 
-					[@spring.message "client.TrainedOn" /]
+				<span class="fontnormal">
+					[@mifos.mifoslabel name="client.TrainedOn" bundle="ClientUIResources" keyhm="Client.TrainedDate" isManadatoryIndicationNotRequired="yes"/]
 					[#if clientInformationDto.clientDisplay.trainedDate?has_content ]
 						${i18n.date_formatter(clientInformationDto.clientDisplay.trainedDate, "dd/MM/yyyy", Application.LocaleSetting.locale)}
 					[/#if]
@@ -376,7 +376,7 @@
 				</div>
 				<div id="Client.GovernmentId">
 					<span class="fontnormal">
-						[@spring.message "Client.${ConfigurationConstants.GOVERNMENT_ID}" /]:
+						[@mifos.mifoslabel name="${ConfigurationConstants.GOVERNMENT_ID}" keyhm="Client.${ConfigurationConstants.GOVERNMENT_ID}" isColonRequired="yes" /]
 						${clientInformationDto.clientDisplay.governmentId}<br>
 					</span>
 				</div>
@@ -402,28 +402,28 @@
 				[/#if]
 				<div id="Client.Ethnicity">
 					<span class="fontnormal">
-						[@spring.message "Client.${ConfigurationConstants.ETHNICITY}" /]:
+						[@mifos.mifoslabel name="${ConfigurationConstants.ETHNICITY}" keyhm="Client.Ethnicity" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/]
 						${clientInformationDto.clientDisplay.ethnicity?if_exists}
 						<br>
 					</span>
 				</div>
 				<div id="Client.EducationLevel">
 					<span class="fontnormal">
-						[@spring.message "client.EducationLevel" /]
+						[@mifos.mifoslabel name="client.EducationLevel" bundle="ClientUIResources" keyhm="Client.EducationLevel" isManadatoryIndicationNotRequired="yes"/]
 						${clientInformationDto.clientDisplay.educationLevel?if_exists}
 						<br>
 					</span>
 				</div>
 				<div id="Client.PovertyStatus">
 					<span class="fontnormal">
-						[@spring.message "client.PovertyStatus" /]
+						[@mifos.mifoslabel name="client.PovertyStatus" bundle="ClientUIResources" keyhm="Client.PovertyStatus" isManadatoryIndicationNotRequired="yes"/]
 						${clientInformationDto.clientDisplay.povertyStatus?if_exists}
 						<br>
 					</span>
 				</div>
 				<div id="Client.Citizenship">
 					<span class="fontnormal">
-						[@spring.message "Client.${ConfigurationConstants.CITIZENSHIP}" /]:
+						[@mifos.mifoslabel name="${ConfigurationConstants.CITIZENSHIP}" keyhm="Client.Citizenship" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/]
 						${clientInformationDto.clientDisplay.citizenship?if_exists}
 						<br>
 					</span>
@@ -431,9 +431,9 @@
 				<div id="Client.Handicapped">
 					<span class="fontnormal">
 					[#if clientInformationDto.clientDisplay.handicapped?has_content]
-						[@spring.message "${ConfigurationConstants.HANDICAPPED}" /]
+						[@mifos.mifoslabel name="${ConfigurationConstants.HANDICAPPED}" keyhm="Client.Handicapped" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/]
 						<span id="viewClientDetails.text.handicapped">
-							${clientInformationDto.clientDisplay.handicapped}
+							${clientInformationDto.clientDisplay.handicapped?if_exists}
 						</span>
 					[/#if]
 					</span>
@@ -448,7 +448,7 @@
 				<div id="Client.Address">
 					<span class="fontnormalbold">
 						<br>
-						[@spring.message "client.Address" /]
+						[@mifos.mifoslabel name="client.Address" bundle="ClientUIResources" keyhm="Client.Address" isManadatoryIndicationNotRequired="yes" /]
 					 	<span class="fontnormal">
 					 		<br>
 					 	</span> 
@@ -499,7 +499,7 @@
 					<span class="fontnormal">
 						[#if clientInformationDto.address.phoneNumber?has_content ]
 							<br>
-							[@spring.message "client.Telephone" /]
+							[@mifos.mifoslabel name="client.Telephone" bundle="ClientUIResources" keyhm="Client.PhoneNumber" isManadatoryIndicationNotRequired="yes"/]
 							${clientInformationDto.address.phoneNumber}
 						[/#if]
 					</span> 
@@ -508,14 +508,82 @@
 				[/#if]			
 				<div>
 					<img src="pages/framework/images/trans.gif" width="10" height="10">
-				</div>				
+				</div>
+				<!-- Family Details -->
+				[#if clientInformationDto.clientDisplay.areFamilyDetailsRequired ]
 				<div>
-					<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${clientInformationDto.clientDisplay.customerId?c}&event=Create&source=Client&backPageUrl=${backPageUrl}">
+					<span class="headingorange">
+						[@spring.message "client.FamilyInformationLabel" /]
+					</span>
+					<span class="fontnormal">
+						<a id="viewClientDetails.link.editFamilyInformation" href="clientCustAction.do?method=editFamilyInfo&currentFlowKey=${Request.currentFlowKey}&randomNUm=${Session.randomNUm}">
+							[@spring.message "client.EditFamilyInformationLink" /]
+						</a>
+					</span>
+				</div>
+				<div>
+					<table>
+						<tr class="fontnormal">
+							<td>
+								<span class="fontnormalbold">
+									[@spring.message "client.FamilyRelationship"/]
+								</span>
+							</td>
+							<td class="paddingL10">
+								<span class="fontnormalbold">
+									[@spring.message "client.FamilyDisplayName"/]
+							   	</span>
+							</td>									
+							<td class="paddingL10">
+								<span class="fontnormalbold">
+									[@spring.message "client.FamilyDateOfBirth"/]
+								</span>
+							</td>
+							<td class="paddingL10">
+								<span class="fontnormalbold">
+									[@spring.message "client.FamilyGender"/]
+								</span>
+							</td>
+							<td class="paddingL10">
+								<span class="fontnormalbold">
+									[@spring.message "client.FamilyLivingStatus"/]
+								</span>
+							</td>
+						</tr>	
+						[#list clientInformationDto.clientDisplay.familyDetails as familyDetails]
+						<tr class="fontnormal">
+							<td>
+								${familyDetails.relationship?if_exists}
+							</td>
+							<td class="paddingL10"> 
+								<span id="displayName"> 
+									${familyDetails.displayName?if_exists}
+								</span>	   
+							</td>		
+							<td class="paddingL10">
+								${familyDetails.dateOfBirthForBrowser?if_exists}
+							</td>
+							<td class="paddingL10">
+								${familyDetails.gender?if_exists}
+							</td>
+							<td class="paddingL10">
+								${familyDetails.livingStatus?if_exists}
+							</td>
+						</tr>
+						[/#list]
+					</table>
+				</div>
+				[/#if]	
+				<div>
+					<img src="pages/framework/images/trans.gif" width="10" height="10">
+				</div>					
+				<div>
+					<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${clientInformationDto.clientDisplay.customerId?c}&event=Create&source=Client&backPageUrl=${currentPageUrl?url('UTF-8')}">
 				    	[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 					</a>
 					<br/>
 					[#if containsQGForCloseClient]		
-                    <a id="viewClientDetails.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${clientInformationDto.clientDisplay.customerId?c}&event=Close&source=Client&backPageUrl=${backPageUrl}">
+                    <a id="viewClientDetails.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${clientInformationDto.clientDisplay.customerId?c}&event=Close&source=Client&backPageUrl=${currentPageUrl?url('UTF-8')}">
                         [@spring.message "client.ViewQuestionGroupForClosedClientResponsesLink" /]
                     </a>
                     <br/>

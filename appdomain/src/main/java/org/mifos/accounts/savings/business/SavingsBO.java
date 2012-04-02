@@ -23,6 +23,7 @@ package org.mifos.accounts.savings.business;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -1650,6 +1651,11 @@ public class SavingsBO extends AccountBO {
 
         if (AccountingRules.isBackDatedTxnAllowed()) {
 
+            if (repaymentIndependentOfMeetingEnabled) {
+                Date activationDate = this.getActivationDate();
+                return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(activationDate)) >= 0;
+            }
+            
             InterestScheduledEvent postingEvent = new SavingsInterestScheduledEventFactory()
                     .createScheduledEventFrom(this.getInterestPostingMeeting());
             LocalDate nextPostingDate = new LocalDate(this.nextIntPostDate);
@@ -1829,4 +1835,52 @@ public class SavingsBO extends AccountBO {
     public void setSavingsPaymentStrategy(SavingsPaymentStrategy savingsPaymentStrategy) {
         this.savingsPaymentStrategy = savingsPaymentStrategy;
     }
+    
+    public List<AccountPaymentEntity> getInterestPostingPaymentsForRemoval(Date fromDate) {
+        
+        List<AccountPaymentEntity> paymentsForRemoval = new ArrayList<AccountPaymentEntity>();
+        
+        Iterator<AccountPaymentEntity> paymentIter = this.accountPayments.iterator();
+        while (paymentIter.hasNext()) {
+            AccountPaymentEntity payment = paymentIter.next();
+            Date paymentDate = payment.getPaymentDate();
+            if (payment.isSavingsInterestPosting() && DateUtils.dateFallsOnOrBeforeDate(fromDate, paymentDate)) {
+                this.nextIntPostDate = paymentDate;
+                this.savingsBalance = this.savingsBalance.subtract(payment.getAmount());
+                this.savingsPerformance.substractFromTotalInterestDetails(payment.getAmount());
+                
+                paymentsForRemoval.add(payment);
+                paymentIter.remove();
+            }
+        }
+        return paymentsForRemoval;
+    }
+    
+    public List<SavingsActivityEntity> getInterestPostingActivitesForRemoval(Date fromDate) {
+        
+        List<SavingsActivityEntity> activitesForRemoval = new ArrayList<SavingsActivityEntity>();
+        
+        Iterator<SavingsActivityEntity> activityIter = this.savingsActivityDetails.iterator();
+        while (activityIter.hasNext()) {
+            SavingsActivityEntity activity = activityIter.next();
+            Date activityDate = activity.getTrxnCreatedDate();
+            if (activity.getActivity().isSavingsInterestPosting() && DateUtils.dateFallsOnOrBeforeDate(fromDate, activityDate)) {
+                activitesForRemoval.add(activity);
+                activityIter.remove();
+            }
+        }
+        
+        return activitesForRemoval;
+    }
+    
+    public int countInterestPostingsForRecalculation(Date fromDate) {
+        int postingsForRecalculation = 0;
+        for (AccountPaymentEntity payment : this.accountPayments) {
+            if (payment.isSavingsInterestPosting() && DateUtils.dateFallsOnOrBeforeDate(fromDate, payment.getPaymentDate())) {
+                postingsForRecalculation++;
+            }
+        }
+        return postingsForRecalculation;
+    }
+    
 }

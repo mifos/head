@@ -45,7 +45,11 @@ explanation of the license and how it is applied.
 </script>
 
 		<html-el:form action="centerCustAction.do">
-  		   <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'centerInformationDto')}"
+			<c:set value="${requestScope.currentPageUrl}" var="currentPageUrl"/>
+			<c:if test="${currentPageUrl == null}">
+				<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}&method=get" var="currentPageUrl"/>
+			</c:if>
+  		   	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'centerInformationDto')}"
 				   var="centerInformationDto" />
 			<html-el:hidden property="input" value="CenterDetails}" />
 			<!-- Hidden properties set for customer id, version, system id and version number -->
@@ -489,7 +493,7 @@ explanation of the license and how it is applied.
 	                            <c:param name="entityId" value="${centerInformationDto.centerDisplay.customerId}" />
 	                            <c:param name="event" value="Create" />
 	                            <c:param name="source" value="Center" />
-	                            <c:param name="backPageUrl" value="centerCustAction.do?method=get&globalAccountNum=${client.globalCustNum}&recordOfficeId=${centerInformationDto.centerDisplay.branchId}&recordLoanOfficerId=${centerInformationDto.centerDisplay.loanOfficerId}" />
+	                            <c:param name="backPageUrl" value="${currentPageUrl}" />
 	                           </c:url >
 	                            <c:set var="questionnaireFor" scope="session" value="${centerInformationDto.centerDisplay.displayName}"/>
 	                            <a id="groupdetail.link.questionGroups" href="${viewAndEditQuestionnaireMethodUrl}">
@@ -598,7 +602,7 @@ explanation of the license and how it is applied.
                     <c:param name="instanceId" value="${questionGroupInstance.id}" />
                     <c:param name="event" value="View" />
                     <c:param name="source" value="Center" />
-                    <c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}&method=get" />
+                    <c:param name="backPageUrl" value="${currentPageUrl}" />
                    </c:url >
                   <span class="fontnormal8pt">
                     <a id="${questionGroupInstance.id}" href="${viewAndEditQuestionnaireMethodUrl}">
@@ -623,7 +627,14 @@ explanation of the license and how it is applied.
                   <c:remove var="urlMap" />
                   <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
                   <c:set target="${urlMap}" property="${centerInformationDto.centerDisplay.displayName}" value="centerCustAction.do?method=get&globalCustNum=${centerInformationDto.centerDisplay.globalCustNum}"/>
-                  <a id="viewCenterDetails.link.attachSurvey" href="questionnaire.ftl?source=Center&event=View&entityId=${centerInformationDto.centerDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=centerCustAction.do?method=get">
+                  <c:url value="questionnaire.ftl" var="questionnaireUrl" >
+                    <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+                    <c:param name="entityId" value="${centerInformationDto.centerDisplay.customerId}" />
+                    <c:param name="event" value="View" />
+                    <c:param name="source" value="Center" />
+                    <c:param name="backPageUrl" value="${currentPageUrl}" />
+                  </c:url >
+                  <a id="viewCenterDetails.link.attachSurvey" href="${questionnaireUrl}">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                 </span>

@@ -274,30 +274,62 @@
 				[@spring.message "loan.source_fund" /]:&nbsp; ${loanInformationDto.fundName?if_exists}<br/>
 			</span>
 		</div>
-		[#--
+		[#-- GLIM Loan Account Details --]
 		<div>
 			[#if loanInformationDto.group == true ]
 				[#if loanAccountDetailsView?has_content ]
                     [#if loanInformationDto.disbursed ]
-						[@mifoscustom.mifostabletag source="loanAccountDetailsView" scope="session"
+						[@mifoscustom.mifostabletag source="loanAccountDetailsView" scope="request"
 						xmlFileName="LoanAccountDetails.xml" moduleName="org/mifos/accounts/loan/util/resources"
-						passLocale="true" randomNUm="${Session.randomNUm}"
+						passLocale="true" randomNUm="${Session.randomNUm?c}"
 						currentFlowKey="${Request.currentFlowKey}" /]
                     [#else]
-                        [@mifoscustom.mifostabletag source="loanAccountDetailsView" scope="session"
+                        [@mifoscustom.mifostabletag source="loanAccountDetailsView" scope="request"
                       	xmlFileName="LoanAccountDetails.xml" moduleName="org/mifos/accounts/loan/util/resources"
                       	passLocale="true"/]
                 	[/#if]
-				</#if>
-			</#if> 
+				[/#if]
+			[/#if] 
 		</div>
-		--]
+		[#-- --]
+		<div>
+			<img src="pages/framework/images/trans.gif" width="10" height="10">
+		</div>
+		<div>
+			<div id="collateral">
+				<span class="fontnormalbold">
+					[@spring.message "loan.collateralDetails" /]
+				</span>
+			</div>
+			<div id="Loan.CollateralType">
+				<span class="fontnormal">
+					[@mifostag.mifoslabel name="loan.collateral_type" keyhm="Loan.CollateralType" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/]&nbsp;
+					<span id="loanaccountdetail.text.collateraltype">
+						${loanInformationDto.collateralTypeName?if_exists}
+					</span>
+				</span>
+			</div>
+			<div id="Loan.CollateralNotes">
+				<span class="fontnormal">
+					[@mifostag.mifoslabel name="loan.collateral_notes" keyhm="Loan.CollateralNotes" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/]
+				</span><br/>
+				<span id="loanaccountdetail.text.collateralnote">
+					${loanInformationDto.collateralNote?if_exists}
+				</span>
+	            <br /></td>
+			</div>
+			<script type="text/javascript">
+				if(document.getElementById("Loan.CollateralType").style.display=="none" &&
+					document.getElementById("Loan.CollateralNotes").style.display=="none")
+						document.getElementById("collateral").style.display="none";
+			</script>
+		</div>
 		<div>
 			<img src="pages/framework/images/trans.gif" width="10" height="10">
 		</div>
         <div id="Loan.ExternalId">
             <span class="fontnormalbold">
-            	[@spring.message "accounts.externalId" /]:
+            	[@mifostag.mifoslabel name="accounts.externalId" keyhm="Loan.ExternalId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" /]
            		<span id="loanaccountdetail.text.externalid" class="fontnormal">${loanInformationDto.externalId?if_exists}
        		</span> 
         </div>
@@ -347,29 +379,42 @@
                 [@spring.message "loan.recurring_acc_penalties" /]
                 <br/>
             </span>
+            [#assign count = 1 /]
             [#list loanInformationDto.accountPenalties as penaltySet ]
-                [#if (penaltySet.penaltyFrequencyId?has_content && penaltySet.penaltyStatus?has_content) && penaltySet.penaltyFrequencyId != 1 && penaltySet.penaltyStatus != 2]
+                [#if penaltySet.penaltyFrequencyId != 1 && ( !penaltySet.penaltyStatus?? || ( penaltySet.penaltyStatus?? && penaltySet.penaltyStatus != 2 ) )]
                     ${penaltySet.penaltyName}:
                     <span class="fontnormal">
                         ${penaltySet.accountPenaltyAmount?number}&nbsp; (${penaltySet.penaltyFrequencyName})
+                        <a id="loanAccountDetail.link.removePenalty_${count}"
+                        href="accountAppAction.do?method=removePenalties&penaltyId=${penaltySet.penaltyId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}&input=Loan">
+                            [@spring.message "loan.remove" /]
+                        </a> 
                     </span>
                 [/#if]
+                [#assign count = count + 1 /] 
             [/#list]
             <br/>
             <span class="fontnormalbold">
                 [@spring.message "loan.one_time_acc_penalties" /]
             </span><br/>
-            [#assign status = 0 /]
+            [#assign count = 1 /]
             [#list loanInformationDto.accountPenalties as penaltySet]
-            	[#if (penaltySet.penaltyFrequencyId?has_content && penaltySet.penaltyStatus?has_content) && penaltySet.penaltyFrequencyId == 1 && penaltySet.penaltyStatus != 2 ]
+            	[#if penaltySet.penaltyFrequencyId == 1 && ( !penaltySet.penaltyStatus?? || ( penaltySet.penaltyStatus?? && penaltySet.penaltyStatus != 2 ) )]
                     <span id="loanAccountDetail.text.oneTimePenaltyName_${status?number}"/>
                         ${penaltySet.penaltyName}
                     </span>:
                     <span class="fontnormal">
                         ${penaltySet.accountPenaltyAmount?number}&nbsp;
+                        <!-- if account state is LOAN_PARTIAL_APPLICATION or LOAN_PENDING_APPROVAL then enable removal -->
+                        [#if loanInformationDto.accountStateId == 1 || loanInformationDto.accountStateId == 2]
+                            <a id="loanAccountDetail.link.removeOneTimePenalty_${count}"
+                            href="accountAppAction.do?method=removePenalties&penaltyId=${penaltySet.penaltyId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${Session.randomNUm}&currentFlowKey=${Request.currentFlowKey}&input=Loan">
+                                [@spring.message "loan.remove" /]
+                            </a> 
+                        [/#if]
                     </span><br/>
                 [/#if]
-				[#assign status = status + 1 /] 
+				[#assign count = count + 1 /] 
             [/#list]
             <br/>
 		</div>
@@ -378,12 +423,12 @@
 				[@spring.message "loan.more_details" /]
 			</span><br/>
 			<span class="fontnormal">
-	            <a id="loanaccountdetail.link.questionGroups" href="loanAccountAction.do?method=viewAndEditAdditionalInformation&creatorId=${Session.UserContext.id?c}&entityId=${loanInformationDto.accountId?c}&event=Create&source=Loan&backPageUrl=${backPageUrl}">
+	            <a id="loanaccountdetail.link.questionGroups" href="loanAccountAction.do?method=viewAndEditAdditionalInformation&creatorId=${Session.UserContext.id?c}&entityId=${loanInformationDto.accountId?c}&event=Create&source=Loan&backPageUrl=${currentPageUrl?url('UTF-8')}">
 	    			[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 				</a>
 	            <br/>
                 [#if containsQGForCloseLoan]
-	                <a id="loanaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${loanInformationDto.accountId?c}&event=Close&source=Loan&backPageUrl=${backPageUrl}">
+	                <a id="loanaccountdetail.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${loanInformationDto.accountId?c}&event=Close&source=Loan&backPageUrl=${currentPageUrl?url('UTF-8')}">
 	                	[@spring.message "loan.ViewQuestionGroupForClosedLoanResponsesLink" /]
 	                </a> <br/>
                 [/#if]

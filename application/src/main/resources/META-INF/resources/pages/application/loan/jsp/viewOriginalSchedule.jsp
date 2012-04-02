@@ -40,7 +40,7 @@ explanation of the license and how it is applied.
 			<input type="hidden" name='currentFlowKey' value="${requestScope.currentFlowKey}"/>
 		</form>
 		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
-			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
+			<input type="hidden" name='globalAccountNum' value="${param.parentLoanGlobalAccountNum}"/>
 		</form>
 		<html-el:form method="post" action="/loanAccountAction.do">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

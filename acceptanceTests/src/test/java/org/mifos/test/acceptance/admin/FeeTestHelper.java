@@ -25,7 +25,7 @@ public class FeeTestHelper {
         feeParameters.setCustomerCharge(payWhen);
         feeParameters.setRate(rateAmount);
         feeParameters.setFeeFormula(baseRate);
-        feeParameters.setGlCode(31301);
+        feeParameters.setGlCode("31301 -Fees");
         dataSetup.createFee(feeParameters);
         return feeName;
     }
@@ -38,7 +38,7 @@ public class FeeTestHelper {
         feeParameters.setCustomerCharge(payWhen);
         feeParameters.setAmount(amount);
         feeParameters.setFeeFormula(null);
-        feeParameters.setGlCode(31301);
+        feeParameters.setGlCode("31301 - Fees");
         dataSetup.createFee(feeParameters);
         return feeName;
     }
@@ -51,7 +51,7 @@ public class FeeTestHelper {
         feeParameters.setAmount(amount);
         feeParameters.setCategoryType(feeType);
         feeParameters.setWeekRecurAfter(recurrenceInterval);
-        feeParameters.setGlCode(31301);
+        feeParameters.setGlCode("31301 - Fees");
         dataSetup.createFee(feeParameters);
         return feeName;
     }    
@@ -78,7 +78,7 @@ public class FeeTestHelper {
     }
 
     public FeesCreatePage.SubmitFormParameters getFeeParameters(String feeName, String categoryType, boolean defaultFees,
-                                                                int frequencyType, int amount, int glCode) {
+                                                                int frequencyType, int amount, String glCode) {
         FeesCreatePage.SubmitFormParameters formParameters = new FeesCreatePage.SubmitFormParameters();
         formParameters.setFeeName(feeName);
         formParameters.setCategoryType(categoryType);

@@ -21,6 +21,7 @@
 
 [@layout.header "mifos" /]
 [#assign mifostag=JspTaglibs["/tags/mifos-html"]]
+[#assign mifos=JspTaglibs["/tags/mifos-html"]]
 
 [@widget.topNavigationNoSecurityMobile currentTab="ClientsAndAccounts" /]
 
@@ -204,15 +205,19 @@
 				<span class="fontnormal">	
 					[@spring.message "Center.MfiJoiningDate" /]: 	
 					${i18n.date_formatter(centerInformationDto.centerDisplay.mfiJoiningDate, "dd/MM/yyyy", Application.LocaleSetting.locale)}			
-				</span> <br/>
+				</span>
+			</div>
+			<div>
 				<span class="fontnormal">
-					[@spring.message "Center.CenterStartDate" /]:
+					[@spring.message "${ConfigurationConstants.CENTER}"/] [@spring.message "Center.CenterStartDate" /]:
 					${i18n.date_formatter(centerInformationDto.centerDisplay.createdDate, "dd/MM/yyyy", Application.LocaleSetting.locale)}			
-				</span> <br/>
-				<span id="Center.ExternalId" class="fontnormal">
-					[@spring.message "Center.ExternalId" /]
+				</span>
+			</div>
+			<div id="Center.ExternalId" />
+				<span class="fontnormal">
+					[@mifos.mifoslabel name="${ConfigurationConstants.EXTERNALID}" bundle="CenterUIResources" keyhm="Center.ExternalId" isManadatoryIndicationNotRequired="yes" isColonRequired="yes"/]
 					${centerInformationDto.centerDisplay.externalId}
-				</span> <br/>
+				</span> 
 			</div>
 		</div>
 		<div>
@@ -335,7 +340,7 @@
 		[/#if]
 		<div>
 			<span class="fontnormal">
-	        	<a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${centerInformationDto.centerDisplay.customerId?c}&event=Create&source=Group&backPageUrl=${backPageUrl}%26recordOfficeId%3D${centerInformationDto.centerDisplay.branchId}%26recordLoanOfficerId%3D${centerInformationDto.centerDisplay.loanOfficerId}">
+	        	<a id="groupdetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${Session.UserContext.id?c}&entityId=${centerInformationDto.centerDisplay.customerId?c}&event=Create&source=Group&backPageUrl=${currentPageUrl?url('UTF-8')}">
 	            	[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 	            </a>
 	            <br/>

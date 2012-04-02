@@ -37,8 +37,7 @@ explanation of the license and how it is applied.
 
  
   function goToCancelPage(){
-	clientCustActionForm.action="clientCustAction.do?method=cancel";
-	clientCustActionForm.submit();
+  	goBackToClientDetails.submit();
   }
 
   function goToPreviewPage(){
@@ -79,11 +78,14 @@ explanation of the license and how it is applied.
 		}
 	
 </script>
+<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
+	   var="BusinessKey" />
+<form name="goBackToClientDetails" method="get" action ="viewClientDetails.ftl">
+	<input type="hidden" name='globalCustNum' value="${BusinessKey.globalCustNum}"/>
+</form> 
 <html-el:form action="clientCustAction.do?method=previewEditPersonalInfo"
 			enctype="multipart/form-data" onsubmit="return chkForValidDates()">
 						<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist')}" var="CenterHierarchyExist" />
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
-				   var="BusinessKey" />
 			<html-el:hidden property="input" value="editFamilyInfo" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>

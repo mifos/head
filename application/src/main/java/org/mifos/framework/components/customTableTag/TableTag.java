@@ -60,7 +60,9 @@ public class TableTag extends BodyTagSupport {
     private String randomNUm = null;
     
     private String currentFlowKey = null;
-
+    
+    private int glMode = 0;
+    
     // FIXME: now unused and should be able to be deleted
     private String rootName;
 
@@ -128,7 +130,15 @@ public class TableTag extends BodyTagSupport {
         this.currentFlowKey = currentFlowKey;
     }
 
-    @SuppressWarnings("unchecked")
+    public int getGlMode() {
+		return glMode;
+	}
+
+	public void setGlMode(int glMode) {
+		this.glMode = glMode;
+	}
+
+	@SuppressWarnings("unchecked")
     @Override
     public int doStartTag() throws JspException {
         try {
@@ -197,7 +207,7 @@ public class TableTag extends BodyTagSupport {
             }
 
             table.getTable(source, tableInfo, obj, locale, mfiLocale, pageContext,
-                    getResourcebundleName());
+                    getResourcebundleName(), glMode);
 
         } catch (TableTagParseException ex) {
             throw new JspException(ex);

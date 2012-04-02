@@ -36,6 +36,10 @@ explanation of the license and how it is applied.
 	<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 		<html-el:form action="groupCustAction.do">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+			<c:set value="${requestScope.currentPageUrl}" var="currentPageUrl"/>
+			<c:if test="${currentPageUrl == null}">
+				<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}&method=get" var="currentPageUrl"/>
+			</c:if>
 			<c:set 
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groupInformationDto')}"
 			   	var="groupInformationDto" />			
@@ -129,7 +133,7 @@ explanation of the license and how it is applied.
 										<c:otherwise>
 											<c:forEach var="client" items="${groupInformationDto.clientsOtherThanClosedAndCancelled}">
 												<a id="viewgroupdetails.link.client"
-													href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+													href="viewClientDetails.ftl?globalCustNum=${client.globalCustNum}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 												<c:out value="${client.displayName}" /><%-- <c:out
 													value="${customerfn:getClientPositions(requestScope.customerPositions,client)}" />--%>
 												<br>
@@ -448,7 +452,7 @@ explanation of the license and how it is applied.
 							<span class="fontnormal"></span></td>
 						</tr>
 
-						<tr id="Group.TrainedDate">
+						<tr id="Group.Trained">
 							<td class="fontnormalbold"><mifos:mifoslabel
 								name="Group.trainingstatus" bundle="GroupUIResources"
                                 keyhm="Group.Trained"
@@ -635,7 +639,7 @@ explanation of the license and how it is applied.
                             <c:param name="entityId" value="${groupInformationDto.groupDisplay.customerId}" />
                             <c:param name="event" value="Create" />
                             <c:param name="source" value="Group" />
-                            <c:param name="backPageUrl" value="groupCustAction.do?method=get&globalAccountNum=${client.globalCustNum}&recordOfficeId=${groupInformationDto.groupDisplay.branchId}&recordLoanOfficerId=${groupInformationDto.groupDisplay.loanOfficerId}" />
+                            <c:param name="backPageUrl" value="${currentPageUrl}" />
                            </c:url >
                             <c:set var="questionnaireFor" scope="session" value="${groupInformationDto.groupDisplay.displayName}"/>
                             <a id="groupdetail.link.questionGroups" href="${viewAndEditQuestionnaireMethodUrl}">
@@ -788,7 +792,7 @@ explanation of the license and how it is applied.
                     <c:param name="instanceId" value="${questionGroupInstance.id}" />
                     <c:param name="event" value="View" />
                     <c:param name="source" value="Group" />
-                    <c:param name="backPageUrl" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}&method=get" />
+                    <c:param name="backPageUrl" value="${currentPageUrl}" />
                    </c:url >
                   <span class="fontnormal8pt">
                     <a id="${questionGroupInstance.id}" href="${viewAndEditQuestionnaireMethodUrl}">
@@ -813,7 +817,14 @@ explanation of the license and how it is applied.
                   <c:remove var="urlMap" />
                   <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
                   <c:set target="${urlMap}" property="${groupInformationDto.groupDisplay.displayName}" value="groupCustAction.do?method=get&globalCustNum=${groupInformationDto.groupDisplay.globalCustNum}"/>
-                  <a id="viewgroupdetails.link.attachSurvey" href="questionnaire.ftl?source=Group&event=View&entityId=${groupInformationDto.groupDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=groupCustAction.do?method=get">
+                  <c:url value="questionnaire.ftl" var="questionnaireUrl" >
+                    <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+                    <c:param name="entityId" value="${groupInformationDto.groupDisplay.customerId}" />
+                    <c:param name="event" value="View" />
+                    <c:param name="source" value="Group" />
+                    <c:param name="backPageUrl" value="${currentPageUrl}" />
+                  </c:url >
+                  <a id="viewgroupdetails.link.attachSurvey" href="${questionnaireUrl}">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                 </span>

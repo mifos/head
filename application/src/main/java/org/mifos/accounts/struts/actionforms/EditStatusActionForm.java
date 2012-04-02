@@ -302,17 +302,19 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
 
     public ActionErrors validatePaymentDate(String transactionDate, String fieldName) {
         ActionErrors errors = null;
-        try {
-            if (lastPaymentDate != null && dateFallsBeforeDate(getDateAsSentFromBrowser(transactionDate), lastPaymentDate)) {
-                errors = new ActionErrors();
-                errors.add(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
-                        new ActionMessage(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
-                                fieldName));
-            }
-        } catch (InvalidDateException ide) {
-            errors = new ActionErrors();
-            errors.add(AccountConstants.ERROR_INVALIDDATE, new ActionMessage(AccountConstants.ERROR_INVALIDDATE,
-                    fieldName));
+        if (transactionDate != null && !transactionDate.equals("")) {
+	        try {
+	            if (lastPaymentDate != null && dateFallsBeforeDate(getDateAsSentFromBrowser(transactionDate), lastPaymentDate)) {
+	                errors = new ActionErrors();
+	                errors.add(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
+	                        new ActionMessage(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
+	                                fieldName));
+	            }
+	        } catch (InvalidDateException ide) {
+	            errors = new ActionErrors();
+	            errors.add(AccountConstants.ERROR_INVALIDDATE, new ActionMessage(AccountConstants.ERROR_INVALIDDATE,
+	                    fieldName));
+	        }
         }
         return errors;
     }

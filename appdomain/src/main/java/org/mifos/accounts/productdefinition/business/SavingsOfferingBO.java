@@ -389,6 +389,8 @@ public class SavingsOfferingBO extends PrdOfferingBO {
                 this.minAmntForInt.getAmount(), this.depositGLCode.getGlcodeId().intValue(), this.interestGLCode.getGlcodeId().intValue());
         savingsProductDto.setDepositGlCodeValue(this.depositGLCode.getGlcode());
         savingsProductDto.setInterestGlCodeValue(this.interestGLCode.getGlcode());
+        savingsProductDto.setDepositGlCodeName(this.depositGLCode.getAssociatedCOA().getAccountName());
+        savingsProductDto.setInterestGlCodeName(this.interestGLCode.getAssociatedCOA().getAccountName());
 
         return savingsProductDto;
     }

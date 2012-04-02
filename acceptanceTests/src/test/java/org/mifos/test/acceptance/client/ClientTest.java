@@ -307,7 +307,7 @@ public class ClientTest extends UiTestCaseBase {
             params.setWeekRecurAfter(1);
         }
         params.setAmount(amount);
-        params.setGlCode(31301);
+        params.setGlCode("31301 - Fees");
         
         feeTestHelper.defineFees(params);
     }

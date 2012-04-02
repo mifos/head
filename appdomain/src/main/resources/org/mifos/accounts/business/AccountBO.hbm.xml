@@ -573,7 +573,8 @@ having max(cs.installment_id) > max(cfs.installment_id)
             select distinct loan
             from org.mifos.accounts.loan.business.LoanBO loan
             join loan.accountActionDates a
-            where size(loan.loanAccountPenalties) > 0 and a.paymentStatus = 0 and a.actionDate < :currentDate
+            where size(loan.loanAccountPenalties) > 0 and loan.accountState.id in (4,5,9)
+            and a.paymentStatus = 0 and a.actionDate < :currentDate
         ]]>
     </query>
 

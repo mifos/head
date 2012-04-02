@@ -37,7 +37,7 @@
  [@spring.message "createLoanAccount.accountCreated.searchInstruction" /]</p>
 <br/>
 
-<p><a id="CreateLoanAccountConfirmation.link.viewLoanDetails" href="loanAccountAction.do?method=get&globalAccountNum=${loanCreationResultDto.globalAccountNum}" class="standout">[@spring.message "createLoanAccount.accountCreated.action.viewSavingsAccount" /]</a></p>
+<p><a id="CreateLoanAccountConfirmation.link.viewLoanDetails" href="viewLoanAccountDetails.ftl?globalAccountNum=${loanCreationResultDto.globalAccountNum}" class="standout">[@spring.message "createLoanAccount.accountCreated.action.viewSavingsAccount" /]</a></p>
 <br/>
 
 <div class="suggestion">[@spring.message "createLoanAccount.accountCreated.nextSteps" /]</div>

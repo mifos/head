@@ -36,6 +36,14 @@
 		</span>
 	</div>
 	<div>
+    	[#if isOriginalScheduleAvailable ]
+            <a id="loanRepayment.link.original_schedule"
+            href="viewLoanAccountOriginalSchedule.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&randomNUm=${Session.randomNUm?c}&currentFlowKey=${Request.currentFlowKey}">
+               [@spring.message "loan.view_original_schedule" /]
+            </a>
+		[/#if]
+	</div>
+	<div>
 		[@loanfn.getLoanRepaymentTable /]
 	</div>
 	<div>

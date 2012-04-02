@@ -141,7 +141,7 @@ explanation of the license and how it is applied.
 		</form>
 		<!-- task-list MIFOS-5177 -->
 		<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isLoanOfficer')}">
-			<html-el:form action="custSearchAction.do?method=getHomePage">
+			<form action="home.ftl">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td width="70%" height="24" align="left" valign="middle" class="paddingL10">
@@ -149,14 +149,23 @@ explanation of the license and how it is applied.
 							<tr>
 								<td class="fontnormalbold">		
 									<mifos:mifoslabel name="CustomerSearch.upcomingMeetings"/>:
-									<html-el:select property="selectedDateOption" onchange="this.form.submit();">
+									<select name="selectedDateOption" onchange="this.form.submit();">
 										<c:forEach var="date"
 											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'nearestDates')}">
-											<html-el:option value="${date}">
-												${date}
-											</html-el:option>
+											<c:choose> 
+												<c:when test="${date == custSearchActionForm.selectedDateOption}">
+													<option value="${date}" selected="selected">
+														${date}
+													</option>
+												</c:when>
+												<c:otherwise>
+													<option value="${date}">
+														${date}
+													</option>												
+												</c:otherwise>
+											</c:choose>	
 										</c:forEach>
-									</html-el:select>
+									</select>
 								</td>
 							<tr>
 						</table>
@@ -172,7 +181,7 @@ explanation of the license and how it is applied.
 									<tr class="fontnormal">
 										<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 										<td width="99%">
-											<a href="centerCustAction.do?method=get&globalCustNum=${center.globalCustNum}">
+											<a href="viewCenterDetails.ftl?globalCustNum=${center.globalCustNum}">
 												<c:out value="${center.displayName}" />
 											</a>
 										</td>
@@ -183,14 +192,14 @@ explanation of the license and how it is applied.
 											<ul>
 												<c:forEach var="group" items="${center.groups}">
 													<li class="fontnormal" style="margin-bottom:3px;">
-														<a href="groupCustAction.do?method=get&globalCustNum=${group.globalCustNum}">
+														<a href="viewGroupDetails.ftl?globalCustNum=${group.globalCustNum}">
 															<c:out value="${group.displayName}" />
 														</a>
 													</li>
 													<ul>
 														<c:forEach var="client" items="${group.clients}">
 															<li class="fontnormal" style="margin-bottom:3px;">
-																<a href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}">
+																<a href="viewClientDetails.ftl?globalCustNum=${client.globalCustNum}">
 																	<c:out value="${client.displayName}" />
 																</a>
 															</li>
@@ -211,7 +220,7 @@ explanation of the license and how it is applied.
 									<tr class="fontnormal">
 										<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 										<td width="99%">
-											<a href="groupCustAction.do?method=get&globalCustNum=${group.globalCustNum}">
+											<a href="viewGroupDetails.ftl?globalCustNum=${group.globalCustNum}">
 												<c:out value="${group.displayName}" />
 											</a>
 										</td>
@@ -222,7 +231,7 @@ explanation of the license and how it is applied.
 											<ul>
 												<c:forEach var="client" items="${group.clients}">
 													<li class="fontnormal" style="margin-bottom:3px;">
-														<a href="clientCustAction.do?method=get&globalCustNum=${client.globalCustNum}">
+														<a href="viewClientDetails.ftl?globalCustNum=${client.globalCustNum}">
 															<c:out value="${client.displayName}" />
 														</a>
 													</li>
@@ -237,7 +246,7 @@ explanation of the license and how it is applied.
 					</c:choose>
 				</tr>
 			</table>
-			</html-el:form>
+			</form>
 		</c:if>
 	</tiles:put>
 </tiles:insert>

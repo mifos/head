@@ -97,4 +97,8 @@ public class AccountActionEntity extends AbstractEntity {
     public boolean isSavingsWithdrawal() {
         return AccountActionTypes.SAVINGS_WITHDRAWAL.getValue().equals(this.id);
     }
+    
+    public boolean isSavingsInterestPosting() {
+        return AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue().equals(this.id);
+    }
 }
