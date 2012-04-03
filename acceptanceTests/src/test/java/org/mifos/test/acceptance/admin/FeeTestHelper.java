@@ -65,7 +65,7 @@ public class FeeTestHelper {
         feeParameters.setFeeFormula(feeFormula);
         feeParameters.setCategoryType(feeType);
         feeParameters.setWeekRecurAfter(recurrenceInterval);
-        feeParameters.setGlCode(31301);
+        feeParameters.setGlCode("31301 - Fees");
         dataSetup.createFee(feeParameters);
         return feeName;
     }

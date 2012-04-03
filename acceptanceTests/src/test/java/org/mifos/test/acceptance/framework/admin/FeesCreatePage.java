@@ -173,7 +173,7 @@ public class FeesCreatePage extends AbstractPage {
         }
         
         public String getGlCodeName() {
-            return Integer.toString(glCode);
+            return glCode;
         }
 
         public String getDefaultFeesName() {
