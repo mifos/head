@@ -192,7 +192,7 @@ public class FeeAction extends BaseAction {
     	if (!isInProducts) {
     		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemoved"));
     	}
-    	else {
+    	else if (isInProducts) {
     		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemovedFromPrd"));
     	}
 		saveErrors(request, messages);

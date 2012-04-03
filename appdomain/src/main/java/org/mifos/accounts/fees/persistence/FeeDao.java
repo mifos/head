@@ -74,5 +74,5 @@ public interface FeeDao {
     
     List<Short> getAllAtachedFeesToLoanAcounts();
     
-    void remove(FeeBO fee, boolean isInProducts);
+    void remove(FeeBO fee, boolean isInProducts, boolean isFeeAppliedToLoan);
 }

@@ -401,4 +401,7 @@
 	<sql-query name="deleteFeeFromPrd_Offering_Fees">
 		<![CDATA[delete prd_fees from prd_offering as prd_off, prd_offering_fees as prd_fees where prd_fees.prd_offering_id=prd_off.prd_offering_id and prd_fees.fee_id=:FEEID]]>  
    	</sql-query>
+	<sql-query name="deleteFeeFromPrd">
+		<![CDATA[delete loan_fee,acc_fee from account_fees as acc_fee,loan_fee_schedule as loan_fee where acc_fee.account_fee_id=loan_fee.account_fee_id and loan_fee.fee_id=:FEEID]]>
+	</sql-query>
 </hibernate-mapping>
