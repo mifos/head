@@ -181,8 +181,7 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward editPreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-    	FeeActionForm feeActionForm = (FeeActionForm) form;
-    	
+
         Short feeId = ((FeeActionForm) form).getFeeIdValue();
         FeeDto feeDto = this.feeDao.findDtoById(feeId);
         
@@ -191,10 +190,8 @@ public class FeeAction extends BaseAction {
 		List<Short> feesAppliedLoanAccountList = this.feeDao.getAllAtachedFeesToLoanAcounts();
 		boolean isFeeAppliedToLoan = feesAppliedLoanAccountList.contains(feeId);
         ActionMessages messages = new ActionMessages();
-        if (feeActionForm.getFeeStatus().equals("2")) {
-        	feeActionForm.setToRemove(true);
-        }
-        if (feeActionForm.isToRemove()) {
+        
+        if (((FeeActionForm) form).isToRemove()) {
 	    	if (!isInProducts && !isFeeAppliedToLoan) {
 	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemoved"));
 	    	}
@@ -214,6 +211,7 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward editPrevious(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
         Short feeId = ((FeeActionForm) form).getFeeIdValue();
         FeeDto feeDto = this.feeDao.findDtoById(feeId);
 
@@ -236,21 +234,15 @@ public class FeeAction extends BaseAction {
         FeeUpdateRequest feeUpdateRequest = new FeeUpdateRequest(Short.valueOf(feeActionForm.getFeeId()), feeActionForm.getCurrencyId(),
                 feeActionForm.getAmount(), feeStatusValue, feeActionForm.getRateValue());
         
-        if (feeActionForm.isToRemove() && feeUpdateRequest.getFeeStatusValue() == 2) {
+        if (feeActionForm.isToRemove()) {
         	this.feeServiceFacade.updateFee(feeUpdateRequest);
         	this.feeServiceFacade.removeFee(feeUpdateRequest);
         	forward = ActionForwards.remove_success.toString();
             List<FeeDto> customerFees = this.feeDao.retrieveAllCustomerFees();
             List<FeeDto> productFees = this.feeDao.retrieveAllProductFees();
-            
+
             SessionUtils.setCollectionAttribute(FeeConstants.CUSTOMER_FEES, customerFees, request);
             SessionUtils.setCollectionAttribute(FeeConstants.PRODUCT_FEES, productFees, request);
-        }
-        else if (feeActionForm.isToRemove() && feeUpdateRequest.getFeeStatusValue() == 1) {
-        	ActionMessages errors = new ActionMessages();
-        	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeCantBeRemove"));
-        	saveErrors(request, errors);
-        	forward = ActionForwards.update_failure.toString();
         }
         else {
         	this.feeServiceFacade.updateFee(feeUpdateRequest);
