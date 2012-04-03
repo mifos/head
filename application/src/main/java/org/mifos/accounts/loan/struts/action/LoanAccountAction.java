@@ -377,7 +377,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private void addEmptyBuisnessActivities(List<LoanAccountDetailsDto> loanAccountDetails) {
         for (LoanAccountDetailsDto details : loanAccountDetails) {
-            if (details.getBusinessActivity() == null) {
+            if (details.getBusinessActivity() == null || details.getBusinessActivity().equals("")) {
                 details.setBusinessActivity("-");
                 details.setBusinessActivityName("-");
             }
@@ -758,6 +758,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanAccountActionForm loanAccountForm = (LoanAccountActionForm) form;
         if (isGlimEnabled()) {
             performGlimSpecificOnManagePreview(request, loanAccountForm);
+            addEmptyBuisnessActivities(loanAccountForm.getClientDetails());
         }
         if (null != getFund(loanAccountForm)) {
             request.setAttribute("sourceOfFunds", getFund(loanAccountForm).getFundName());
