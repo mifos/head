@@ -22,6 +22,7 @@ package org.mifos.accounts.business;
 
 import static org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
 import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
+import static org.mifos.accounts.util.helpers.AccountConstants.MONTH_CLOSING_DAY_CONFIG_KEY;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -72,6 +73,8 @@ import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.clientportfolio.newloan.domain.CreationDetail;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.config.business.ConfigurationKeyValue;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerMeetingEntity;
@@ -126,8 +129,22 @@ public class AccountBO extends AbstractBusinessObject {
     private LegacyMasterDao legacyMasterDao = null;
     private DateTimeService dateTimeService = null;
     private FinancialBusinessService financialBusinessService = null;
+    
+    private ConfigurationPersistence configurationPersistence;
+    
+    public ConfigurationPersistence getConfigurationPersistence() {
+		if ( configurationPersistence == null ){
+			configurationPersistence = ApplicationContextProvider.getBean(ConfigurationPersistence.class);
+		}
+    	return configurationPersistence;
+	}
 
-    public FinancialBusinessService getFinancialBusinessService() {
+	public void setConfigurationPersistence(
+			ConfigurationPersistence configurationPersistence) {
+		this.configurationPersistence = configurationPersistence;
+	}
+
+	public FinancialBusinessService getFinancialBusinessService() {
         if (null == financialBusinessService) {
             financialBusinessService = new FinancialBusinessService();
         }
@@ -1125,12 +1142,28 @@ public class AccountBO extends AbstractBusinessObject {
             }
             return false;
     }
+    
+    private boolean isTrxnDateAfterMonthClosingDate(final Date trxnDate){
+        ConfigurationKeyValue configurationKeyValue = getConfigurationPersistence().getConfigurationKeyValue(MONTH_CLOSING_DAY_CONFIG_KEY);
+
+        if (configurationKeyValue != null) {
+        	Date monthClosingDay = DateUtils.getDateAsRetrievedFromDb(configurationKeyValue.getValue());
+            return monthClosingDay.compareTo(DateUtils.getDateWithoutTimeStamp(trxnDate)) < 0;
+        }
+        
+        return true;
+    }
 
     public boolean isTrxnDateValid(final Date trxnDate, Date lastCustomerMeetingDate, boolean repaymentIndependentOfMeetingEnabled) {
-        if (AccountingRules.isBackDatedTxnAllowed()) {
-            return isTrxnDateBeforePreviousMeetingDateAllowed(trxnDate, lastCustomerMeetingDate, repaymentIndependentOfMeetingEnabled);
+        boolean isTrxnDateAfterMonthClosingDay = true;
+    	
+    	if (getConfigurationPersistence().isMonthClosingDaySet()){
+        	isTrxnDateAfterMonthClosingDay = isTrxnDateAfterMonthClosingDate(trxnDate);
         }
-        return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
+    	if (AccountingRules.isBackDatedTxnAllowed()) {
+            return isTrxnDateAfterMonthClosingDay && isTrxnDateBeforePreviousMeetingDateAllowed(trxnDate, lastCustomerMeetingDate, repaymentIndependentOfMeetingEnabled);
+        }
+        return isTrxnDateAfterMonthClosingDay && trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
     }
 
     public List<AccountNotesEntity> getRecentAccountNotes() {

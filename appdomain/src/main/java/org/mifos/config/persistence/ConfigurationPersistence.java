@@ -21,6 +21,7 @@
 package org.mifos.config.persistence;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED;
+import static org.mifos.accounts.util.helpers.AccountConstants.MONTH_CLOSING_DAY_CONFIG_KEY;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -147,7 +148,11 @@ public class ConfigurationPersistence extends LegacyGenericDao {
     public boolean isGlimEnabled() {
         return (getConfigurationValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED) == LoanConstants.GLIM_ENABLED_VALUE);
     }
-
+    
+    public boolean isMonthClosingDaySet(){
+    	return getConfigurationKeyValue(MONTH_CLOSING_DAY_CONFIG_KEY) != null; 
+    }
+    
     public void createOrUpdateConfigurationKeyValueString(String key, String value) throws PersistenceException {
         ConfigurationKeyValue keyValue = getConfigurationKeyValue(key);
 
