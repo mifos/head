@@ -189,6 +189,7 @@ public class ApplyAdjustment extends BaseAction {
             SessionUtils.setAttribute(Constants.ADJUSTED_AMOUNT, accnt.getLastPmntAmntToBeAdjusted(), request);
         }
         
+        appAdjustActionForm.setAdjustData(false);
         populateForm(appAdjustActionForm, payment);
         return mapping.findForward("loadadjustment_success");
     }
