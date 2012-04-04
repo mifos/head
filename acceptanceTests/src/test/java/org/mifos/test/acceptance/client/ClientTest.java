@@ -350,7 +350,8 @@ public class ClientTest extends UiTestCaseBase {
         parameters2.setDateOfBirthDD("01");
         viewDetailsPage = editPersonalInfoPage.submitAndNavigateToViewDetailsPage(parameters2);
         viewDetailsPage.verifySpouseFather("FatherFirstnameTest FatherLastNameTest");
-
+        ClientNotesPage seeAllNotes = viewDetailsPage.navigateToAllNotesPage();
+        seeAllNotes.verifySeeAllNotesTitle("client1 lastname");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
