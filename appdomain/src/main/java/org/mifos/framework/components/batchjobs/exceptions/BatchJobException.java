@@ -64,9 +64,13 @@ public class BatchJobException extends ApplicationException {
         } else {
             errorMessage = this.getMessage();
         }
-        if (errorMessage.length() > 500) {
+        
+        if (errorMessage == null) {
+            return "Unkown error";
+        } else if (errorMessage.length() > 500) {
             return errorMessage.substring(0, 499);
         }
+        
         return errorMessage;
     }
 }
