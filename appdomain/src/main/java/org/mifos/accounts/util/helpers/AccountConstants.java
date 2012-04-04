@@ -85,6 +85,8 @@ public interface AccountConstants {
      */
     String ACCOUNT_PAYMENT_KEY = "accountPayment";
 
+    String MONTH_CLOSING_DAY_CONFIG_KEY = "MonthClosingDay";
+    
     String NO_TRANSACTION_POSSIBLE = "error.noTransactionPossible";
 
     String SEARCH_STRING = "searchString";
