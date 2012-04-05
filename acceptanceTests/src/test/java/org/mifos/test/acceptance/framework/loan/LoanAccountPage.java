@@ -98,6 +98,12 @@ public class LoanAccountPage extends MifosPage {
     public void verifyGLIMPurpose(String purpose, int index) {
         Assert.assertEquals(selenium.getText("xpath=//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + (index+1) + "]/td[5]"), purpose);
     }
+
+    public void verifyGLIMPurpose(String[] purpose) {
+        for (int i = 0; i < purpose.length; i++){
+            verifyGLIMPurpose(purpose[i], i + 1);
+        }
+    }    
     
     public void verifyGLIMIndividualScheduleLinks(int clientCount, boolean hidden) {
         Assert.assertEquals(selenium.getXpathCount("//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[1]/td").intValue() == 5, hidden);

@@ -949,6 +949,8 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.setTrained(mfiInfoDto.getClientDetail().getTrainedAsString());
         actionForm.setTrainedDate(mfiInfoDto.getClientDetail().getTrainedDate());
 
+        actionForm.setDateOfBirth(clientFromSession.getDateOfBirth());
+
         ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, client, request);
 

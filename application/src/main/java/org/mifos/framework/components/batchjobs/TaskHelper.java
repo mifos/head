@@ -57,6 +57,7 @@ public abstract class TaskHelper implements Tasklet {
             execute(scheduledFireTime.getTime());
         }
         catch (BatchJobException ex) {
+            logger.error("Exception during task execution", ex);
             contribution.setExitStatus(ExitStatus.FAILED.addExitDescription(ex.getErrorMessage()));
         }
         return RepeatStatus.FINISHED;

@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionMapping;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountActionEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -107,6 +108,11 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         SessionUtils.setCollectionAttribute(AccountConstants.TRXN_TYPES, trxnTypes, request);
 
         SessionUtils.setAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED, depositWithdrawalReferenceDto.isBackDatedTransactionsAllowed(), request);
+
+        AccountPaymentEntity lastPayment = savings.findMostRecentDepositOrWithdrawalByDate();
+        if (lastPayment != null) {
+            actionForm.setLastTrxnDate(lastPayment.getPaymentDate());
+        }
 
         actionForm.setTrxnDate(DateUtils.getCurrentDate(uc.getPreferredLocale()));
         return mapping.findForward(ActionForwards.load_success.toString());
@@ -234,6 +240,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         actionForm.setTrxnTypeId(null);
         actionForm.setCustomerId(null);
         actionForm.setAmount(Constants.EMPTY_STRING);
+        actionForm.setLastTrxnDate(null);
     }
 
     @TransactionDemarcate(joinToken = true)

@@ -43,4 +43,14 @@ public class EditPreviewLoanAccountPage extends MifosPage {
     public void verifyErrorInForm(String error) {
         Assert.assertTrue(selenium.isTextPresent(error));
     }
+    
+    public void verifyGLIMPurpose(String purpose, int index) {
+        Assert.assertEquals(selenium.getText("xpath=//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + (index+1) + "]/td[5]"), purpose);
+    }
+
+    public void verifyGLIMPurpose(String[] purpose) {
+        for (int i = 0; i < purpose.length; i++){
+            verifyGLIMPurpose(purpose[i], i + 1);
+        }
+    } 
 }

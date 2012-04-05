@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.mifos.accounts.fees.business.FeeStatusEntity;
 import org.mifos.accounts.fees.struts.actionforms.FeeActionForm;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
@@ -182,6 +184,25 @@ public class FeeAction extends BaseAction {
 
         Short feeId = ((FeeActionForm) form).getFeeIdValue();
         FeeDto feeDto = this.feeDao.findDtoById(feeId);
+        
+		Short appliedFeeId = this.feeDao.findFeeAppliedToLoan(feeId);
+		boolean isInProducts = appliedFeeId == null ? true : false;
+		List<Short> feesAppliedLoanAccountList = this.feeDao.getAllAtachedFeesToLoanAcounts();
+		boolean isFeeAppliedToLoan = feesAppliedLoanAccountList.contains(feeId);
+        ActionMessages messages = new ActionMessages();
+        
+        if (((FeeActionForm) form).isToRemove()) {
+	    	if (!isInProducts && !isFeeAppliedToLoan) {
+	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemoved"));
+	    	}
+	    	else if (isFeeAppliedToLoan) {
+	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemovedFromPrd"));
+	    	}
+	    	else {
+	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeNotUsedRemove"));
+	    	}
+        }
+		saveErrors(request, messages);
 
         request.getSession().setAttribute("feeModel", feeDto);
         return mapping.findForward(ActionForwards.editPreview_success.toString());
@@ -202,17 +223,33 @@ public class FeeAction extends BaseAction {
     public ActionForward update(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         FeeActionForm feeActionForm = (FeeActionForm) form;
-
+        
         FeeStatus feeStatus = feeActionForm.getFeeStatusValue();
+        String forward = "";
         Short feeStatusValue = null;
+        
         if (feeStatus != null) {
             feeStatusValue = feeStatus.getValue();
         }
         FeeUpdateRequest feeUpdateRequest = new FeeUpdateRequest(Short.valueOf(feeActionForm.getFeeId()), feeActionForm.getCurrencyId(),
                 feeActionForm.getAmount(), feeStatusValue, feeActionForm.getRateValue());
+        
+        if (feeActionForm.isToRemove()) {
+        	this.feeServiceFacade.updateFee(feeUpdateRequest);
+        	this.feeServiceFacade.removeFee(feeUpdateRequest);
+        	forward = ActionForwards.remove_success.toString();
+            List<FeeDto> customerFees = this.feeDao.retrieveAllCustomerFees();
+            List<FeeDto> productFees = this.feeDao.retrieveAllProductFees();
 
-        this.feeServiceFacade.updateFee(feeUpdateRequest);
-        return mapping.findForward(ActionForwards.update_success.toString());
+            SessionUtils.setCollectionAttribute(FeeConstants.CUSTOMER_FEES, customerFees, request);
+            SessionUtils.setCollectionAttribute(FeeConstants.PRODUCT_FEES, productFees, request);
+        }
+        else {
+        	this.feeServiceFacade.updateFee(feeUpdateRequest);
+        	forward = ActionForwards.update_success.toString();
+        }
+        
+        return mapping.findForward(forward);
     }
 
     @TransactionDemarcate(saveToken = true)

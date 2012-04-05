@@ -1587,9 +1587,13 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
         ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
+        
+        Calendar dob = new GregorianCalendar();
+        dob.set(Calendar.YEAR, 1970);
+        
         client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                 .fromInt(new Short("1")), null, null, new Address(), getCustomFields(), null, null, personnel, office,
-                meeting, personnel, new java.util.Date(), null, null, null, YesNoFlag.NO.getValue(),
+                meeting, personnel, dob.getTime(), null, null, null, YesNoFlag.NO.getValue(),
                 clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
         legacyClientDao.saveClient(client);
         StaticHibernateUtil.flushAndClearSession();

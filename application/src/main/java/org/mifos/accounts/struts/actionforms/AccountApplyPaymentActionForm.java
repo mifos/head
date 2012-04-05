@@ -177,7 +177,10 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
             errors.add(validationErrors);
         }
         if (null != getTransactionDate()){
-        validationErrors = validatePaymentDate(getTransactionDate(), resources.getString(fieldName));
+            validationErrors = validatePaymentDate(getTransactionDate(), resources.getString(fieldName));
+            if (validationErrors != null && !validationErrors.isEmpty()) {
+                errors.add(validationErrors);
+            }
         }
     }
     //exposed for testing
@@ -191,9 +194,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
                                 fieldName));
             }
         } catch (InvalidDateException ide) {
-            errors = new ActionErrors();
-            errors.add(AccountConstants.ERROR_INVALIDDATE, new ActionMessage(AccountConstants.ERROR_INVALIDDATE,
-                    fieldName));
+            errors = new ActionErrors(); //dont add a message, since it was already added in validateDate()
         }
         return errors;
     }

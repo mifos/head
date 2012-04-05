@@ -699,6 +699,23 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
     }
 
     @Override
+    protected void validateTrained(HttpServletRequest request, ActionErrors errors) {
+        super.validateTrained(request, errors);
+        try {
+            Locale locale = getUserContext(request).getPreferredLocale();
+            Date trainedDate = getTrainedDateValue(locale);
+            Date dob = getDateFromString(getDateOfBirth(), locale);
+
+            if (trainedDate != null && dob != null && DateUtils.dateFallsBeforeDate(trainedDate, dob)) {
+                errors.add(CustomerConstants.TRAINED_DATE_BEFORE_DOB, new ActionMessage(
+                        CustomerConstants.TRAINED_DATE_BEFORE_DOB, getDateOfBirth()));
+            }
+        } catch (InvalidDateException ex) {
+            //already validated in super
+        }
+    }
+
+    @Override
     protected MeetingBO getCustomerMeeting(HttpServletRequest request) throws ApplicationException {
 
         if (groupFlag.equals(ClientConstants.YES) && this.parentCustomerMeeting != null) {
@@ -730,17 +747,35 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
 
     public void setDateOfBirth(String receiptDate) throws InvalidDateException {
         if (StringUtils.isBlank(receiptDate)) {
-            dateOfBirthDD = null;
-            dateOfBirthMM = null;
-            dateOfBirthYY = null;
+            clearDateFields();
         } else {
             Calendar cal = new GregorianCalendar();
             java.sql.Date date = DateUtils.getDateAsSentFromBrowser(receiptDate);
             cal.setTime(date);
-            dateOfBirthDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
-            dateOfBirthMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
-            dateOfBirthYY = Integer.toString(cal.get(Calendar.YEAR));
+            populateDateFieldsFromCalendar(cal);
         }
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        if (dateOfBirth == null) {
+            clearDateFields();
+        } else {
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(dateOfBirth);
+            populateDateFieldsFromCalendar(cal);
+        }
+    }
+
+    private void clearDateFields() {
+        dateOfBirthDD = null;
+        dateOfBirthMM = null;
+        dateOfBirthYY = null;
+    }
+
+    private void populateDateFieldsFromCalendar(Calendar calendar) {
+        dateOfBirthDD = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
+        dateOfBirthMM = Integer.toString(calendar.get(Calendar.MONTH) + 1);
+        dateOfBirthYY = Integer.toString(calendar.get(Calendar.YEAR));
     }
 
     public String getDateOfBirthDD() {

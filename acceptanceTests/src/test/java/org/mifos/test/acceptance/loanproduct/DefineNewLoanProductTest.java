@@ -126,6 +126,8 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         DefineNewLoanProductPreviewPage previewPage = newLoanProductPage.submitAndGotoNewLoanProductPreviewPage();
         //Then
         Assert.assertTrue(selenium.isTextPresent("Can waive interest on repay loan: Yes"));
+        Assert.assertTrue(selenium.isTextPresent("Interest: 31102"));
+        Assert.assertTrue(selenium.isTextPresent("Principal: 1506"));
         //When
         LoanProductDetailsPage loanProductDetailsPage = previewPage.submit().navigateToViewLoanDetailsPage();
         //Then
