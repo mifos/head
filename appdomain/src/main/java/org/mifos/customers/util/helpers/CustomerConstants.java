@@ -222,6 +222,7 @@ public interface CustomerConstants {
     String INVALID_PARENT = "errors.Customer.invalidParent";
     String INVALID_TRAINED_OR_TRAINEDDATE = "errors.Customer.invalidTrainedOrTrainedDate";
     String INVALID_TRAINED_DATE = "errors.InvalidTrainedDate";
+    String TRAINED_DATE_BEFORE_DOB = "errors.trainedBeforeDob";
     String INVALID_MFI_JOINING_DATE = "errors.InvalidMfiJoiningDate";
 
     String TRANSITION_CONFIG_FILE_PATH_CENTER = "org/mifos/framework/util/resources/stateMachine/StateMachine_center.xml";
