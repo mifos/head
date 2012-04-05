@@ -57,10 +57,12 @@ explanation of the license and how it is applied.
 		//The amount text box
 		var amountField = document.getElementsByName(textBox)[0];
 		//If no fee is selected then the amount field displays nothing
-		if(comboBox.selectedIndex==0)
+		if(comboBox.selectedIndex==0){
 			amountField.value = "";
-		else{
+			amountField.disabled = true;
+		} else{
 			var indexSelectedFee = comboBox.selectedIndex-1;
+			amountField.disabled = false;
 			if (clientCustActionForm.selectedFeeAmntList[indexSelectedFee]!= undefined){
 				//obtaining the fee amount for a particular fee
 				var amount=clientCustActionForm.selectedFeeAmntList[indexSelectedFee].value;
@@ -77,6 +79,18 @@ explanation of the license and how it is applied.
 	    clientCustActionForm.action="clientCustAction.do?method=loadMeeting";
 	    clientCustActionForm.submit();
     }
+	
+	// http://mifosforge.jira.com/browse/MIFOS-5545
+	window.onload = function(){
+		for ( var i = 0; i < 3; i++){
+			amountField = document.getElementsByName("selectedFee["+i+"].amount")[0];
+			selectedFee = document.getElementsByName("selectedFee["+i+"].feeId")[0];
+			if ( !amountField.value || amountField.value.length === 0 || selectedFee.selectedIndex === 0 ){
+				amountField.disabled=true;
+				amountField.value="";
+			}
+		}
+	}
 </script>
 		<html-el:form action="clientCustAction.do?method=preview">
 			<!-- Hidden varaibles for the locale and for the input page -->
