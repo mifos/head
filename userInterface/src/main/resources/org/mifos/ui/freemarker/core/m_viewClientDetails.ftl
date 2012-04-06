@@ -79,7 +79,7 @@
 			<!-- Loan Officer of the client --> 
 			<span class="fontnormal"> 
 				[@spring.message "client.LoanOff" /]
-				${clientInformationDto.clientDisplay.loanOfficerName}
+				${clientInformationDto.clientDisplay.loanOfficerName?if_exists}
 			</span><br>
 		</div>
 		<div id="Client.BusinessActivities">
@@ -95,7 +95,7 @@
 			<td class="fontnormalbold">
 					<span class="fontnormal"> 
 							<a id="viewClientDetails.link.seePhoto" href="javascript:photopopup(${clientInformationDto.clientDisplay.customerId?c},
-								 '${clientInformationDto.clientDisplay.loanOfficerName}', '${Request.currentFlowKey}')">
+								 '${clientInformationDto.clientDisplay.loanOfficerName?if_exists}', '${Request.currentFlowKey}')">
 								[@spring.message "client.seephoto"/]
 							</a>
 					</span><br>
@@ -305,16 +305,20 @@
 						[@spring.messageArgs "client.GroupMembershipDetails" arguments /]
 					[/#if]<br>
 					<span class="fontnormalRed"> 
-						[@spring.message "client.MeetingsHeading" /]&nbsp;
+						[@spring.message "client.MeetingsHeading" /]:&nbsp;
+						[#if clientInformationDto.customerMeeting??]
 						<span id="viewClientDetails.text.meetingSchedule">
-							${clientInformationDto.customerMeeting.meetingSchedule}
+							${clientInformationDto.customerMeeting.meetingSchedule?if_exists}
 						</span>
+						[/#if]
 					</span>
 					<span class="fontnormal">
 						<br>
 					</span>
 					<span class="fontnormal"> 
-						${clientInformationDto.customerMeeting.meetingPlace?if_exists}<br>
+						[#if clientInformationDto.customerMeeting??]
+							${clientInformationDto.customerMeeting.meetingPlace?if_exists}<br>
+						[/#if]
 						[#if clientInformationDto.clientDisplay.clientUnderGroup]
 							<span id="viewClientDetails.text.groupMembership">
 								${clientInformationDto.clientDisplay.parentCustomerDisplayName}
