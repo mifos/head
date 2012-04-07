@@ -26,6 +26,7 @@ import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.security.util.UserContext;
+import org.springframework.context.MessageSource;
 
 public class MeetingHelper {
 
@@ -53,8 +54,7 @@ public class MeetingHelper {
             args[1] = meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay().getName();
             args[2] = meeting.getMeetingDetails().getRecurAfter();
         }
-        return SearchUtils.getMessageWithSubstitution(FilePaths.MEETING_RESOURCE, userContext.getPreferredLocale(),
-                key, args);
+        return ApplicationContextProvider.getBean(MessageSource.class).getMessage(key, args, userContext.getPreferredLocale());
     }
 
     public String getMessageWithFrequency(MeetingBO meeting, UserContext userContext) {
@@ -67,8 +67,7 @@ public class MeetingHelper {
         }
         args[0] = meeting.getMeetingDetails().getRecurAfter();
 
-        return SearchUtils.getMessageWithSubstitution(FilePaths.MEETING_RESOURCE, userContext.getPreferredLocale(),
-                key, args);
+        return ApplicationContextProvider.getBean(MessageSource.class).getMessage(key, args, userContext.getPreferredLocale());
     }
 
     public String getDetailMessageWithFrequency(MeetingBO meeting, UserContext userContext) {
@@ -81,7 +80,6 @@ public class MeetingHelper {
         }
         args[0] = meeting.getMeetingDetails().getRecurAfter();
 
-        return SearchUtils.getMessageWithSubstitution(FilePaths.MEETING_RESOURCE, userContext.getPreferredLocale(),
-                key, args);
+        return ApplicationContextProvider.getBean(MessageSource.class).getMessage(key, args, userContext.getPreferredLocale());
     }
 }

@@ -370,20 +370,18 @@ public class FeeActionForm extends BaseActionForm {
     }
 
     protected void validateAmount(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateAmount(getAmount(), FeeConstants.AMOUNT, errors, locale,
-                FilePaths.FEE_UI_RESOURCE_PROPERTYFILE);
+        DoubleConversionResult conversionResult = validateAmount(getAmount(), FeeConstants.AMOUNT, errors);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                    lookupLocalizedPropertyValue(FeeConstants.AMOUNT, locale, FilePaths.FEE_UI_RESOURCE_PROPERTYFILE));
+                    lookupLocalizedPropertyValue(FeeConstants.AMOUNT));
         }
     }
 
     protected void validateRate(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateInterest(getRate(), FeeConstants.RATE, errors, locale,
-                FilePaths.FEE_UI_RESOURCE_PROPERTYFILE);
+        DoubleConversionResult conversionResult = validateInterest(getRate(), FeeConstants.RATE, errors);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, FeeConstants.RATE, FeeConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                    lookupLocalizedPropertyValue(FeeConstants.RATE, locale, FilePaths.FEE_UI_RESOURCE_PROPERTYFILE));
+                    lookupLocalizedPropertyValue(FeeConstants.RATE));
         }
     }
 

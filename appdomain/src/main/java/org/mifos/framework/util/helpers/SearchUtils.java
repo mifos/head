@@ -20,10 +20,6 @@
 
 package org.mifos.framework.util.helpers;
 
-import java.text.MessageFormat;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import org.apache.commons.lang.WordUtils;
 import org.mifos.framework.util.DateTimeService;
 
@@ -31,16 +27,6 @@ public class SearchUtils {
     private static final short LookUpNameLength = 100;
 
     public SearchUtils() {
-    }
-
-    public static String getMessageWithSubstitution(String bundleName, Locale userLocale, String key, Object[] args) {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle(bundleName, userLocale);
-        String label = resourceBundle.getString(key);
-        if (args != null) {
-            MessageFormat formatter = new MessageFormat(label);
-            label = formatter.format(args);
-        }
-        return label;
     }
 
     public static String normalizeSearchString(String searchString) {

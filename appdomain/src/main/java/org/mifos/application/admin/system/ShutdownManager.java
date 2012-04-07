@@ -23,18 +23,22 @@ package org.mifos.application.admin.system;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 
+import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.LocaleSetting;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
 
 public class ShutdownManager implements Serializable {
 
@@ -44,9 +48,8 @@ public class ShutdownManager implements Serializable {
     private final Map<String, HttpSession> activeSessions = new HashMap<String, HttpSession>();
 
     public synchronized String getStatus() {
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.ADMIN_UI_PROPERTY_FILE, new LocaleSetting().getLocale());
         if (isShutdownInProgress()) {
-            String inProgressString = resources.getString("admin.shutdown.status.inprogress");
+            String inProgressString = getLocalizedMessage("admin.shutdown.status.inprogress");
             long timeLeft = shutdownTime - System.currentTimeMillis();
             if (timeLeft < 1) {
                 timeLeft = 1;
@@ -62,7 +65,12 @@ public class ShutdownManager implements Serializable {
             inProgressString = inProgressString.replace("{2}", Long.toString(seconds));
             return inProgressString;
         }
-        return resources.getString("admin.shutdown.status.none");
+        return getLocalizedMessage("admin.shutdown.status.none");
+    }
+    
+    protected String getLocalizedMessage(String key) {
+    	Locale locale = ApplicationContextProvider.getBean(PersonnelServiceFacade.class).getUserPreferredLocale();
+        return ApplicationContextProvider.getBean(MessageSource.class).getMessage(key, null, locale);
     }
 
     public synchronized boolean isShutdownInProgress() {

@@ -33,6 +33,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
+import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -51,6 +52,7 @@ import org.mifos.framework.util.helpers.FormUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.context.MessageSource;
 
 public class BaseActionForm extends ValidatorActionForm {
 
@@ -91,8 +93,8 @@ public class BaseActionForm extends ValidatorActionForm {
 
     }
 
-    protected String getConversionErrorText(ConversionError error, Locale locale) {
-        return error.toLocalizedMessage(locale, null);
+    protected String getConversionErrorText(ConversionError error) {
+        return error.toLocalizedMessage(null);
     }
 
 
@@ -177,35 +179,37 @@ public class BaseActionForm extends ValidatorActionForm {
     }
 
     protected DoubleConversionResult validateAmount(String amountString, MifosCurrency currency,
-                                                    String fieldPropertyKey, ActionErrors errors, Locale locale, String propertyfileName, String installmentNo) {
-        String fieldName = lookupLocalizedPropertyValue(fieldPropertyKey, locale, propertyfileName);
+                                                    String fieldPropertyKey, ActionErrors errors, String installmentNo) {
+        String fieldName = lookupLocalizedPropertyValue(fieldPropertyKey);
         DoubleConversionResult conversionResult = parseDoubleForMoney(amountString, currency);
         for (ConversionError error : conversionResult.getErrors()) {
-            String errorText = error.toLocalizedMessage(locale, currency);
+            String errorText = error.toLocalizedMessage(currency);
             addError(errors, fieldPropertyKey, "errors.generic", fieldName, errorText);
         }
         return conversionResult;
     }
 
-    protected DoubleConversionResult validateAmount(String amountString, String fieldPropertyKey, ActionErrors errors,
-                                                    Locale locale, String propertyfileName) {
-        return validateAmount(amountString, null, fieldPropertyKey, errors, locale, propertyfileName, "");
+    protected DoubleConversionResult validateAmount(String amountString, String fieldPropertyKey, ActionErrors errors) {
+        return validateAmount(amountString, null, fieldPropertyKey, errors, "");
     }
 
     protected DoubleConversionResult validateInterest(String interestString, String fieldPropertyKey,
-            ActionErrors errors, Locale locale, String propertyfileName) {
-        String fieldName = lookupLocalizedPropertyValue(fieldPropertyKey, locale, propertyfileName);
+            ActionErrors errors) {
+        String fieldName = lookupLocalizedPropertyValue(fieldPropertyKey);
         DoubleConversionResult conversionResult = parseDoubleForInterest(interestString);
         for (ConversionError error : conversionResult.getErrors()) {
-            addError(errors, fieldPropertyKey, "errors.generic", fieldName, getConversionErrorText(error, locale));
+            addError(errors, fieldPropertyKey, "errors.generic", fieldName, getConversionErrorText(error));
         }
         return conversionResult;
     }
 
-    protected String lookupLocalizedPropertyValue(String key, Locale locale, String propertyFile) {
-        ResourceBundle resources = ResourceBundle.getBundle(propertyFile, locale);
-        String errorText = resources.getString(key);
-        return errorText;
+    protected String lookupLocalizedPropertyValue(String key) {
+        return getLocalizedMessage(key);
+    }
+    
+    protected String getLocalizedMessage(String key) {
+    	Locale locale = ApplicationContextProvider.getBean(PersonnelServiceFacade.class).getUserPreferredLocale();
+        return ApplicationContextProvider.getBean(MessageSource.class).getMessage(key, null, locale);
     }
 
     protected DoubleConversionResult parseDoubleForInterest(String doubleString) {
