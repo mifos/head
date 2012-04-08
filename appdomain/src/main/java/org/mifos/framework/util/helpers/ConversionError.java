@@ -23,6 +23,7 @@ package org.mifos.framework.util.helpers;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -112,8 +113,18 @@ public enum ConversionError {
     NOT_ALL_NUMBER, CONVERSION_ERROR, NO_ERROR;
 
     public String toLocalizedMessage(MifosCurrency currency) {
-    	Locale locale = ApplicationContextProvider.getBean(PersonnelServiceFacade.class).getUserPreferredLocale();
-        return ApplicationContextProvider.getBean(MessageSource.class).getMessage(this.name(), null, locale);
+    	// nothing found so return the key
+    	String message = this.name();
+    	PersonnelServiceFacade personnelServiceFacade = ApplicationContextProvider.getBean(PersonnelServiceFacade.class);
+    	MessageSource messageSource = ApplicationContextProvider.getBean(MessageSource.class);
+    	if(personnelServiceFacade != null) {
+    		String value = messageSource.getMessage(this.name(), null, personnelServiceFacade.getUserPreferredLocale());
+    		if(StringUtils.isNotEmpty(message)) {
+    			message = value;
+    		}
+    	}
+        return message;
+
     }
 
 }
