@@ -208,8 +208,17 @@ public class BaseActionForm extends ValidatorActionForm {
     }
     
     protected String getLocalizedMessage(String key) {
-    	Locale locale = ApplicationContextProvider.getBean(PersonnelServiceFacade.class).getUserPreferredLocale();
-        return ApplicationContextProvider.getBean(MessageSource.class).getMessage(key, null, locale);
+    	// nothing found so return the key
+    	String message = key;
+    	PersonnelServiceFacade personnelServiceFacade = ApplicationContextProvider.getBean(PersonnelServiceFacade.class);
+    	MessageSource messageSource = ApplicationContextProvider.getBean(MessageSource.class);
+    	if(personnelServiceFacade != null) {
+    		String value = messageSource.getMessage(key, null, personnelServiceFacade.getUserPreferredLocale());
+    		if(StringUtils.isNotEmpty(message)) {
+    			message = value;
+    		}
+    	}
+        return message;
     }
 
     protected DoubleConversionResult parseDoubleForInterest(String doubleString) {
