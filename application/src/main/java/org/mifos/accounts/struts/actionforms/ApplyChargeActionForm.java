@@ -159,7 +159,7 @@ public class ApplyChargeActionForm extends BaseActionForm {
 
         if(StringUtils.isBlank(getChargeType())){
             addError(errors, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE, "errors.mandatoryselect",
-                    lookupLocalizedPropertyValue("account.chargetype",locale,FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE));
+                    lookupLocalizedPropertyValue("account.chargetype"));
             return;
         }
 
@@ -168,11 +168,10 @@ public class ApplyChargeActionForm extends BaseActionForm {
 
         if (!StringUtils.isBlank(chargeAmount)) {
             if (isRateType()) {
-                conversionResult = validateInterest(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors, locale,
-                    FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
+                conversionResult = validateInterest(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors);
             } else {
                 conversionResult = validateAmount(getCharge(), getChargeCurrency(), AccountConstants.ACCOUNT_AMOUNT,
-                        errors, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE,"");
+                        errors,"");
             }
         }
         
@@ -182,7 +181,7 @@ public class ApplyChargeActionForm extends BaseActionForm {
         	
         if (conversionResult != null && conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                    lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE));
+                    lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT));
         }
     }
 

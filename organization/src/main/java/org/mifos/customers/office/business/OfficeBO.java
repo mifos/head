@@ -343,6 +343,8 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         }
     }
 
+    //FIXME this is definitely not the place to resolve locale of errors
+    // no information related to localization should be available at this layer
     private String getLocaleString(final String key) {
         final String LOCALIZED_RESOURCE_PATH = "org/mifos/config/localizedResources/";
         final String OFFICERESOURCEPATH = LOCALIZED_RESOURCE_PATH + "OfficeUIResources";

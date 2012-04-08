@@ -72,7 +72,7 @@ public class InstallmentFormatValidatorImpl implements InstallmentFormatValidato
     private void processConversionErrors(RepaymentScheduleInstallment installment, String identifier,
                                          List<ConversionError> conversionErrors, List<ErrorEntry> errorEntries) {
         for (ConversionError error : conversionErrors) {
-            String errorText = error.toLocalizedMessage(Locale.UK, installment.getCurrency());
+            String errorText = error.toLocalizedMessage(installment.getCurrency());
             errorEntries.add(new ErrorEntry(INSTALLMENT_TOTAL_AMOUNT_INVALID, identifier, errorText));
         }
     }

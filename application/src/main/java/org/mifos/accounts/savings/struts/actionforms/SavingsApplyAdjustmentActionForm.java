@@ -40,7 +40,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
@@ -132,8 +131,7 @@ public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
     }
 
     private void validateAmount(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateAmount(getLastPaymentAmount(), SavingsConstants.AMOUNT, errors, locale,
-                FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE);
+        DoubleConversionResult conversionResult = validateAmount(getLastPaymentAmount(), SavingsConstants.AMOUNT, errors);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             //commented off for [MIFOS-2958]
             /*addError(errors, SavingsConstants.AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
