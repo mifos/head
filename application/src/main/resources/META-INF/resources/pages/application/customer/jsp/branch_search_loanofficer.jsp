@@ -172,11 +172,9 @@ explanation of the license and how it is applied.
 										<tr class="fontnormal">
 											<td width="100%" colspan="2" class="bglightblue"><span
 												class="heading"> <mifos:mifoslabel
-												name="CustomerSearch.selectLoanOfficer" /></span></td>
-										</tr>
-                                        <tr>
-                                            <td>
-                                                <c:choose>
+												name="CustomerSearch.selectLoanOfficer" /></span>
+											<!--  officeID hidden form element -->
+											 <c:choose>
 										          <c:when test='${sessionScope.UserContext.officeLevelId==5}'>
 											         <html-el:hidden property="officeId"
 												        value="${sessionScope.UserContext.branchId}" />
@@ -184,9 +182,9 @@ explanation of the license and how it is applied.
 										          <c:otherwise>
 											         <html-el:hidden property="officeId" value="0" />
 										          </c:otherwise>
-									           </c:choose>
-                                            </td>
-                                        </tr>
+									         </c:choose>
+											</td>
+										</tr>
                                         <tr class="fontnormal">
                                             <td style="border: 1px solid #CECECE; height:100px; width:100%; padding:6px; margin-top:5px;">
                                                 <span class="fontnormal">
