@@ -190,11 +190,10 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
     protected void validateLoanAmounts(ActionErrors errors, Locale locale, List<MultipleLoanCreationDto> clientDetails) {
         for (MultipleLoanCreationDto clientDetail : clientDetails) {
             DoubleConversionResult conversionResult = validateAmount(clientDetail.getLoanAmount(),
-                    LoanConstants.LOAN_AMOUNT_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+                    LoanConstants.LOAN_AMOUNT_KEY, errors);
             if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
                 addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                        lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale,
-                                FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+                        lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY));
             }
         }
     }

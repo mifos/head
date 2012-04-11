@@ -281,11 +281,10 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
         if (getCurrencyId() != null && AccountingRules.isMultiCurrencyEnabled()) {
             currency = AccountingRules.getCurrencyByCurrencyId(getCurrencyId());
         }
-        DoubleConversionResult conversionResult = validateAmount(getAmount(), currency , AccountConstants.ACCOUNT_AMOUNT, errors, locale,
-                FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE, "");
+        DoubleConversionResult conversionResult = validateAmount(getAmount(), currency , AccountConstants.ACCOUNT_AMOUNT, errors, "");
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                    lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE));
+                    lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT));
         }
     }
     

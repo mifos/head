@@ -28,6 +28,8 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.struts.Globals;
 import org.apache.strutsel.taglib.html.ELHtmlTag;
+import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.LocaleSetting;
 
 /**
@@ -51,14 +53,13 @@ public class MifosInternationalizedHtmlTag extends ELHtmlTag {
     protected String renderHtmlStartElement() {
         StringBuffer sb = new StringBuffer("<html");
 
-        String languageCode = null;
-        String countryCode = "";
-        String direction = null;
-
+        Locale locale = ApplicationContextProvider.getBean(PersonnelServiceFacade.class).getUserPreferredLocale();
+        
+        String languageCode = locale.getLanguage();
+        String countryCode = locale.getCountry();
+        
         LocaleSetting configLocale = new LocaleSetting();
-        countryCode = configLocale.getCountryCode();
-        languageCode = configLocale.getLanguageCode();
-        direction = configLocale.getDirection();
+        String direction = configLocale.getDirection();
         setLocaleIntoHttpSession(languageCode, countryCode);
 
         boolean validLanguage = ((languageCode != null) && (languageCode.length() > 0));

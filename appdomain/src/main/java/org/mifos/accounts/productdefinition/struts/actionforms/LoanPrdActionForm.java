@@ -1875,20 +1875,17 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     private void validateForPreview(HttpServletRequest request, ActionErrors errors, Locale locale) {
         logger.debug("start validateForPreview method of Loan Product Action form method :" + prdOfferingName);
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE,
-                locale);
-        String sameForAllLoans = resources.getString(ProductDefinitionConstants.SAMEFORALLLOANS);
-        String forByLastLoanAtRow = resources.getString(ProductDefinitionConstants.FORBYLASTLOANATROW);
-        String forByLoanCycleAtRow = resources.getString(ProductDefinitionConstants.FORBYLOANCYCLEATROW);
-        String forNumberOfLastLoanInstallmentAtRow = resources
-                .getString(ProductDefinitionConstants.FORNUMBEROFLASTLOLANINSTALLMENTATROW);
-        String rateType = resources.getString("product.ratetype");
+        String sameForAllLoans = getLocalizedMessage(ProductDefinitionConstants.SAMEFORALLLOANS);
+        String forByLastLoanAtRow = getLocalizedMessage(ProductDefinitionConstants.FORBYLASTLOANATROW);
+        String forByLoanCycleAtRow = getLocalizedMessage(ProductDefinitionConstants.FORBYLOANCYCLEATROW);
+        String forNumberOfLastLoanInstallmentAtRow = getLocalizedMessage(ProductDefinitionConstants.FORNUMBEROFLASTLOLANINSTALLMENTATROW);
+        String rateType = getLocalizedMessage("product.ratetype");
 
         validateStartDate(request, errors);
         validateEndDate(request, errors);
         validateLoanAmount(errors, locale, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow);
         validateLoanInstallments(errors, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow,
-                forNumberOfLastLoanInstallmentAtRow, resources);
+                forNumberOfLastLoanInstallmentAtRow);
         if (StringUtils.isBlank(getInterestTypes())) {
             addError(errors, "interestTypes", ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
                     ConfigurationConstants.INTEREST), rateType);
@@ -1941,20 +1938,18 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     private void validateForEditPreview(HttpServletRequest request, ActionErrors errors, Locale locale) {
         logger.debug("start validateForEditPreview method of Loan Product Action form method :" + prdOfferingName);
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE,
-                locale);
-        String sameForAllLoans = resources.getString(ProductDefinitionConstants.SAMEFORALLLOANS);
-        String forByLastLoanAtRow = resources.getString(ProductDefinitionConstants.FORBYLASTLOANATROW);
-        String forByLoanCycleAtRow = resources.getString(ProductDefinitionConstants.FORBYLOANCYCLEATROW);
-        String forNumberOfLastLoanInstallmentAtRow = resources
-                .getString(ProductDefinitionConstants.FORNUMBEROFLASTLOLANINSTALLMENTATROW);
-        String rateType = resources.getString("product.ratetype");
-        String status = resources.getString("product.status");
+
+        String sameForAllLoans = getLocalizedMessage(ProductDefinitionConstants.SAMEFORALLLOANS);
+        String forByLastLoanAtRow = getLocalizedMessage(ProductDefinitionConstants.FORBYLASTLOANATROW);
+        String forByLoanCycleAtRow = getLocalizedMessage(ProductDefinitionConstants.FORBYLOANCYCLEATROW);
+        String forNumberOfLastLoanInstallmentAtRow = getLocalizedMessage(ProductDefinitionConstants.FORNUMBEROFLASTLOLANINSTALLMENTATROW);
+        String rateType = getLocalizedMessage("product.ratetype");
+        String status = getLocalizedMessage("product.status");
         validateStartDateForEditPreview(request, errors);
         validateEndDate(request, errors);
         validateLoanAmount(errors, locale, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow);
         validateLoanInstallments(errors, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow,
-                forNumberOfLastLoanInstallmentAtRow, resources);
+                forNumberOfLastLoanInstallmentAtRow);
         if (StringUtils.isBlank(getInterestTypes())) {
             addError(errors, "interestTypes", ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
                     ConfigurationConstants.INTEREST), rateType);
@@ -2277,13 +2272,9 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     private void validateInterestGLCode(HttpServletRequest request, ActionErrors errors) {
         if (StringUtils.isBlank(getInterestGLCode())) {
-            UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
-            Locale locale = userContext.getPreferredLocale();
-            ResourceBundle resources = ResourceBundle.getBundle(FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE,
-                    locale);
-            String glCodeFor = resources.getString("product.glCodeFor");
+            String glCodeFor = getLocalizedMessage("product.glCodeFor");
             addError(errors, ProductDefinitionConstants.INTERESTGLCODE, ProductDefinitionConstants.ERROR_SELECT,
-                    glCodeFor + getLabel(ConfigurationConstants.INTEREST));
+                    glCodeFor +" "+ getLabel(ConfigurationConstants.INTEREST));
         }
     }
 
@@ -2313,7 +2304,7 @@ public class LoanPrdActionForm extends BaseActionForm {
             if (calctype == ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN) {
                 // same for all loans
                 validateMinMaxDefLoanAmounts(errors, getMaxLoanAmount(), getMinLoanAmount(), getDefaultLoanAmount(),
-                        sameForAllLoans, "", locale);
+                        sameForAllLoans, "");
 
             } else if (calctype == ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN) {
                 // by last loan amount
@@ -2324,8 +2315,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 minLoanAmt = getLastLoanMinLoanAmt1();
                 maxLoanAmt = getLastLoanMaxLoanAmt1();
                 defLoanAmt = getLastLoanDefaultLoanAmt1();
-                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLastLoanAtRow, "1",
-                        locale);
+                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLastLoanAtRow, "1");
 
                 // Second Row
                 startRange = getStartRangeLoanAmt2();
@@ -2334,8 +2324,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 minLoanAmt = getLastLoanMinLoanAmt2();
                 maxLoanAmt = getLastLoanMaxLoanAmt2();
                 defLoanAmt = getLastLoanDefaultLoanAmt2();
-                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLastLoanAtRow, "2",
-                        locale);
+                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLastLoanAtRow, "2");
 
                 // Third Row
                 startRange = getStartRangeLoanAmt3();
@@ -2345,8 +2334,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 minLoanAmt = getLastLoanMinLoanAmt3();
                 maxLoanAmt = getLastLoanMaxLoanAmt3();
                 defLoanAmt = getLastLoanDefaultLoanAmt3();
-                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLastLoanAtRow, "3",
-                        locale);
+                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLastLoanAtRow, "3");
 
                 // Fourth Row
                 startRange = getStartRangeLoanAmt4();
@@ -2356,8 +2344,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 minLoanAmt = getLastLoanMinLoanAmt4();
                 maxLoanAmt = getLastLoanMaxLoanAmt4();
                 defLoanAmt = getLastLoanDefaultLoanAmt4();
-                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLastLoanAtRow, "4",
-                        locale);
+                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLastLoanAtRow, "4");
 
                 // Fifth Row
                 startRange = getStartRangeLoanAmt5();
@@ -2367,8 +2354,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 minLoanAmt = getLastLoanMinLoanAmt5();
                 maxLoanAmt = getLastLoanMaxLoanAmt5();
                 defLoanAmt = getLastLoanDefaultLoanAmt5();
-                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLastLoanAtRow, "5",
-                        locale);
+                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLastLoanAtRow, "5");
 
                 // Six Row
                 startRange = getStartRangeLoanAmt6();
@@ -2378,8 +2364,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 minLoanAmt = getLastLoanMinLoanAmt6();
                 maxLoanAmt = getLastLoanMaxLoanAmt6();
                 defLoanAmt = getLastLoanDefaultLoanAmt6();
-                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLastLoanAtRow, "6",
-                        locale);
+                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLastLoanAtRow, "6");
 
             } else if (calctype == ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE) {
                 // by loan cycle
@@ -2387,43 +2372,37 @@ public class LoanPrdActionForm extends BaseActionForm {
                 minLoanAmt = getCycleLoanMinLoanAmt1();
                 maxLoanAmt = getCycleLoanMaxLoanAmt1();
                 defLoanAmt = getCycleLoanDefaultLoanAmt1();
-                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "1",
-                        locale);
+                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "1");
 
                 // second row
                 minLoanAmt = getCycleLoanMinLoanAmt2();
                 maxLoanAmt = getCycleLoanMaxLoanAmt2();
                 defLoanAmt = getCycleLoanDefaultLoanAmt2();
-                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "2",
-                        locale);
+                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "2");
 
                 // third row
                 minLoanAmt = getCycleLoanMinLoanAmt3();
                 maxLoanAmt = getCycleLoanMaxLoanAmt3();
                 defLoanAmt = getCycleLoanDefaultLoanAmt3();
-                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "3",
-                        locale);
+                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "3");
 
                 // fourth row
                 minLoanAmt = getCycleLoanMinLoanAmt4();
                 maxLoanAmt = getCycleLoanMaxLoanAmt4();
                 defLoanAmt = getCycleLoanDefaultLoanAmt4();
-                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "4",
-                        locale);
+                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "4");
 
                 // fifth row
                 minLoanAmt = getCycleLoanMinLoanAmt5();
                 maxLoanAmt = getCycleLoanMaxLoanAmt5();
                 defLoanAmt = getCycleLoanDefaultLoanAmt5();
-                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "5",
-                        locale);
+                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "5");
 
                 // six row(>5)
                 minLoanAmt = getCycleLoanMinLoanAmt6();
                 maxLoanAmt = getCycleLoanMaxLoanAmt6();
                 defLoanAmt = getCycleLoanDefaultLoanAmt6();
-                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "6",
-                        locale);
+                validateMinMaxDefLoanAmounts(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "6");
             }
         }
     }
@@ -2500,12 +2479,10 @@ public class LoanPrdActionForm extends BaseActionForm {
         Double minInterest = null;
         Double defInterest = null;
         String label = getLabel(ConfigurationConstants.INTEREST);
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE,
-                locale);
-        String prdrate = resources.getString("product.prdrate");
-        String min = resources.getString("product.min");
-        String max = resources.getString("product.max");
-        String defaultString = resources.getString("product.default");
+        String prdrate = getLocalizedMessage("product.prdrate");
+        String min = getLocalizedMessage("product.min");
+        String max = getLocalizedMessage("product.max");
+        String defaultString = getLocalizedMessage("product.default");
         if (!StringUtils.isNotBlank(minInterestRate)) {
             addError(errors, "minInterestRate", ProductDefinitionConstants.ERRORSENTERCONFIG, min, label, prdrate);
         } else {
@@ -2515,7 +2492,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 for (int i = 0; i < errorList.size(); i++) {
                     addError(errors, ProductDefinitionConstants.ERRORMININTERESTINVALIDFORMAT,
                             ProductDefinitionConstants.ERRORMININTERESTINVALIDFORMAT, getConversionErrorText(errorList
-                                    .get(i), locale));
+                                    .get(i)));
                 }
             } else {
                 minInterest = minInterestResult.getDoubleValue();
@@ -2530,7 +2507,7 @@ public class LoanPrdActionForm extends BaseActionForm {
             if (errorList.size() > 0) {
                 for (ConversionError anErrorList : errorList) {
                     addError(errors, ProductDefinitionConstants.ERRORMAXINTERESTINVALIDFORMAT,
-                            ProductDefinitionConstants.ERRORMAXINTERESTINVALIDFORMAT, getConversionErrorText(anErrorList, locale));
+                            ProductDefinitionConstants.ERRORMAXINTERESTINVALIDFORMAT, getConversionErrorText(anErrorList));
                 }
             } else {
                 maxInterest = maxInterestResult.getDoubleValue();
@@ -2547,7 +2524,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 for (int i = 0; i < errorList.size(); i++) {
                     addError(errors, ProductDefinitionConstants.ERRORDEFINTERESTINVALIDFORMAT,
                             ProductDefinitionConstants.ERRORDEFINTERESTINVALIDFORMAT, getConversionErrorText(errorList
-                                    .get(i), locale));
+                                    .get(i)));
                 }
             } else {
                 defInterest = defInterestResult.getDoubleValue();
@@ -2605,7 +2582,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 if (errorList.size() > 0) {
                     for (ConversionError anErrorList : errorList) {
                         addError(actionErrors, ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID_FORMAT,
-                                ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID_FORMAT, getConversionErrorText(anErrorList, locale));
+                                ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID_FORMAT, getConversionErrorText(anErrorList));
                     }
                 } else {
                     cashFlowThreshold = cashFlowThresholdResult.getDoubleValue();
@@ -2675,7 +2652,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 if (errorList.size() > 0) {
                     for (ConversionError anErrorList : errorList) {
                         addError(actionErrors, ProductDefinitionConstants.INDEBTEDNESS_RATIO_INVALID_FORMAT,
-                                ProductDefinitionConstants.INDEBTEDNESS_RATIO_INVALID_FORMAT, getConversionErrorText(anErrorList, locale));
+                                ProductDefinitionConstants.INDEBTEDNESS_RATIO_INVALID_FORMAT, getConversionErrorText(anErrorList));
                     }
                 } else {
                     indebtednessRatio = indebtednessRatioResult.getDoubleValue();
@@ -2699,7 +2676,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 if (errorList.size() > 0) {
                     for (ConversionError anErrorList : errorList) {
                         addError(actionErrors, ProductDefinitionConstants.REPAYMENT_CAPACITY_INVALID_FORMAT,
-                                ProductDefinitionConstants.REPAYMENT_CAPACITY_INVALID_FORMAT, getConversionErrorText(anErrorList, locale));
+                                ProductDefinitionConstants.REPAYMENT_CAPACITY_INVALID_FORMAT, getConversionErrorText(anErrorList));
                     }
                 } else {
                     repaymentCapacity = repaymentCapacityResult.getDoubleValue();
@@ -2715,7 +2692,7 @@ public class LoanPrdActionForm extends BaseActionForm {
     }
 
     private void validateMinMaxDefLoanAmounts(ActionErrors errors, String maxLoanAmountStr, String minLoanAmountStr,
-            String defLoanAmountStr, String error, String rownum, Locale locale) {
+            String defLoanAmountStr, String error, String rownum) {
 
         DoubleConversionResult minLoanResult = null;
         DoubleConversionResult maxLoanResult = null;
@@ -2735,7 +2712,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 for (int i = 0; i < errorList.size(); i++) {
                     addError(errors, ProductDefinitionConstants.ERRORMINIMUMLOANAMOUNTINVALIDFORMAT,
                             ProductDefinitionConstants.ERRORMINIMUMLOANAMOUNTINVALIDFORMAT, error, rownum,
-                            getConversionErrorText(errorList.get(i), locale));
+                            getConversionErrorText(errorList.get(i)));
                 }
             } else {
                 minLoanAmt = minLoanResult.getDoubleValue();
@@ -2752,7 +2729,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 for (int i = 0; i < errorList.size(); i++) {
                     addError(errors, ProductDefinitionConstants.ERRORMAXIMUMLOANAMOUNTINVALIDFORMAT,
                             ProductDefinitionConstants.ERRORMAXIMUMLOANAMOUNTINVALIDFORMAT, error, rownum,
-                            getConversionErrorText(errorList.get(i), locale));
+                            getConversionErrorText(errorList.get(i)));
                 }
             } else {
                 maxLoanAmt = maxLoanResult.getDoubleValue();
@@ -2769,7 +2746,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 for (int i = 0; i < errorList.size(); i++) {
                     addError(errors, ProductDefinitionConstants.ERRORDEFAULTLOANAMOUNTINVALIDFORMAT,
                             ProductDefinitionConstants.ERRORDEFAULTLOANAMOUNTINVALIDFORMAT, error, rownum,
-                            getConversionErrorText(errorList.get(i), locale));
+                            getConversionErrorText(errorList.get(i)));
                 }
             } else {
                 defLoanAmt = defaultLoanResult.getDoubleValue();
@@ -2794,7 +2771,7 @@ public class LoanPrdActionForm extends BaseActionForm {
     }
 
     private void validateLoanInstallments(ActionErrors errors, String sameForAllLoans, String forByLastLoanAtRow,
-            String forByLoanCycleAtRow, String forNumberOfLastLoanInstallmentAtRow, ResourceBundle resources) {
+            String forByLoanCycleAtRow, String forNumberOfLastLoanInstallmentAtRow) {
         String minLoanAmt;
         String maxLoanAmt;
         String defLoanAmt;
@@ -2816,8 +2793,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                         : getMaxNoInstallments();
                 defLoanAmt = (getDefNoInstallments() == null || getDefNoInstallments().equals("")) ? null
                         : getDefNoInstallments();
-                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, sameForAllLoans, "",
-                        resources);
+                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, sameForAllLoans, "");
             } else if (calcinsttype == ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN) {
                 // number of installments by last loan amount
                 // first row
@@ -2829,7 +2805,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 maxLoanAmt = getMaxLoanInstallment1();
                 defLoanAmt = getDefLoanInstallment1();
                 validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt,
-                        forNumberOfLastLoanInstallmentAtRow, "1", resources);
+                        forNumberOfLastLoanInstallmentAtRow, "1");
 
                 // second row
                 startRange = getStartInstallmentRange2();
@@ -2840,7 +2816,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 maxLoanAmt = getMaxLoanInstallment2();
                 defLoanAmt = getDefLoanInstallment2();
                 validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt,
-                        forNumberOfLastLoanInstallmentAtRow, "2", resources);
+                        forNumberOfLastLoanInstallmentAtRow, "2");
 
                 // third row
                 startRange = getStartInstallmentRange3();
@@ -2851,7 +2827,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 maxLoanAmt = getMaxLoanInstallment3();
                 defLoanAmt = getDefLoanInstallment3();
                 validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt,
-                        forNumberOfLastLoanInstallmentAtRow, "3", resources);
+                        forNumberOfLastLoanInstallmentAtRow, "3");
 
                 // four row
                 startRange = getStartInstallmentRange4();
@@ -2862,7 +2838,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 maxLoanAmt = getMaxLoanInstallment4();
                 defLoanAmt = getDefLoanInstallment4();
                 validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt,
-                        forNumberOfLastLoanInstallmentAtRow, "4", resources);
+                        forNumberOfLastLoanInstallmentAtRow, "4");
 
                 // fifth row
                 startRange = getStartInstallmentRange5();
@@ -2873,7 +2849,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 maxLoanAmt = getMaxLoanInstallment5();
                 defLoanAmt = getDefLoanInstallment5();
                 validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt,
-                        forNumberOfLastLoanInstallmentAtRow, "5", resources);
+                        forNumberOfLastLoanInstallmentAtRow, "5");
 
                 // six row
                 startRange = getStartInstallmentRange6();
@@ -2884,7 +2860,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 maxLoanAmt = getMaxLoanInstallment6();
                 defLoanAmt = getDefLoanInstallment6();
                 validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt,
-                        forNumberOfLastLoanInstallmentAtRow, "6", resources);
+                        forNumberOfLastLoanInstallmentAtRow, "6");
 
             } else if (calcinsttype == ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE) {
                 // by loan cycle
@@ -2892,50 +2868,44 @@ public class LoanPrdActionForm extends BaseActionForm {
                 minLoanAmt = getMinCycleInstallment1();
                 maxLoanAmt = getMaxCycleInstallment1();
                 defLoanAmt = getDefCycleInstallment1();
-                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "1",
-                        resources);
+                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "1");
 
                 // Second row
                 minLoanAmt = getMinCycleInstallment2();
                 maxLoanAmt = getMaxCycleInstallment2();
                 defLoanAmt = getDefCycleInstallment2();
-                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "2",
-                        resources);
+                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "2");
 
                 // third row
                 minLoanAmt = getMinCycleInstallment3();
                 maxLoanAmt = getMaxCycleInstallment3();
                 defLoanAmt = getDefCycleInstallment3();
-                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "3",
-                        resources);
+                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "3");
 
                 // fourth row
                 minLoanAmt = getMinCycleInstallment4();
                 maxLoanAmt = getMaxCycleInstallment4();
                 defLoanAmt = getDefCycleInstallment4();
-                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "4",
-                        resources);
+                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "4");
 
                 // fifth row
                 minLoanAmt = getMinCycleInstallment5();
                 maxLoanAmt = getMaxCycleInstallment5();
                 defLoanAmt = getDefCycleInstallment5();
-                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "5",
-                        resources);
+                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "5");
 
                 // six row
                 minLoanAmt = getMinCycleInstallment6();
                 maxLoanAmt = getMaxCycleInstallment6();
                 defLoanAmt = getDefCycleInstallment6();
-                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "6",
-                        resources);
+                validateMinMaxDefInstallments(errors, maxLoanAmt, minLoanAmt, defLoanAmt, forByLoanCycleAtRow, "6");
             }
         }
 
     }
 
     private void validateMinMaxDefInstallments(ActionErrors errors, String maxinst, String mininst, String definst,
-            String error, String rownum, ResourceBundle resources) {
+            String error, String rownum) {
 
         String maxNoOfInstall = maxinst == null ? null : maxinst.toString();
         String minNoOfInstall = mininst == null ? null : mininst.toString();
@@ -2955,11 +2925,11 @@ public class LoanPrdActionForm extends BaseActionForm {
         }
 
         Short defaultInstallmentsNo = getInstallmentsValue(errors, defNoOfInstall,
-                resources.getString(ProductDefinitionConstants.DEFAULTNOOFINSTALLMENTS));
+                getLocalizedMessage(ProductDefinitionConstants.DEFAULTNOOFINSTALLMENTS));
         Short minimumInstallmentsNo = getInstallmentsValue(errors, minNoOfInstall,
-                resources.getString(ProductDefinitionConstants.MINIMUMNOOFINSTALLMENTS));
+                getLocalizedMessage(ProductDefinitionConstants.MINIMUMNOOFINSTALLMENTS));
         Short maximumInstallmentsNo = getInstallmentsValue(errors, maxNoOfInstall,
-                resources.getString(ProductDefinitionConstants.MAXIMUMNOOFINSTALLMENTS));
+                getLocalizedMessage(ProductDefinitionConstants.MAXIMUMNOOFINSTALLMENTS));
 
         if (defaultInstallmentsNo != null && minimumInstallmentsNo != null && maximumInstallmentsNo != null) {
             if (minimumInstallmentsNo > maximumInstallmentsNo) {
@@ -3079,7 +3049,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                 for (ConversionError error : errorList) {
                     addError(actionErrors, "minimumInstallmentAmount",
                             ProductDefinitionConstants.VARIABLE_INSTALLMENT_MIN_AMOUNT_INVALID_FORMAT,
-                            getConversionErrorText(error, locale));
+                            getConversionErrorText(error));
                 }
             }
         }

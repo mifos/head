@@ -23,43 +23,47 @@ package org.mifos.framework.util.helpers;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.StringUtils;
+import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
+import org.springframework.context.MessageSource;
 
 public enum ConversionError {
 
     EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY {
         @Override
-        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
-            String errorText = super.toLocalizedMessage(locale, currency);
+        public String toLocalizedMessage(MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(currency);
             return errorText.replaceFirst("%s", AccountingRules.getDigitsBeforeDecimal().toString());
         }},
 
     EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY {
         @Override
-        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
-            String errorText = super.toLocalizedMessage(locale, currency);
+        public String toLocalizedMessage(MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(currency);
             return errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimal(currency).toString());
         }},
 
     EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST {
         @Override
-        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
-            String errorText = super.toLocalizedMessage(locale, currency);
+        public String toLocalizedMessage(MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(currency);
             return errorText.replaceFirst("%s", AccountingRules.getDigitsBeforeDecimalForInterest().toString());
         }},
 
     EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST {
         @Override
-        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
-            String errorText = super.toLocalizedMessage(locale, currency);
+        public String toLocalizedMessage(MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(currency);
             return errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimalForInterest().toString());
         }},
 
     INTEREST_OUT_OF_RANGE {
         @Override
-        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
-            String errorText = super.toLocalizedMessage(locale, currency);
+        public String toLocalizedMessage(MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(currency);
             errorText = errorText.replaceFirst("%s1", AccountingRules.getMinInterest().toString());
             errorText = errorText.replaceFirst("%s2", AccountingRules.getMaxInterest().toString());
             return errorText;
@@ -67,8 +71,8 @@ public enum ConversionError {
 
     CASH_FLOW_THRESHOLD_OUT_OF_RANGE {
         @Override
-        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
-            String errorText = super.toLocalizedMessage(locale, currency);
+        public String toLocalizedMessage(MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(currency);
             errorText = errorText.replaceFirst("%s1", AccountingRules.getMinCashFlowThreshold().toString());
             errorText = errorText.replaceFirst("%s2", AccountingRules.getMaxCashFlowThreshold().toString());
             return errorText;
@@ -76,8 +80,8 @@ public enum ConversionError {
 
     INDEBTEDNESS_RATIO_OUT_OF_RANGE {
         @Override
-        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
-            String errorText = super.toLocalizedMessage(locale, currency);
+        public String toLocalizedMessage(MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(currency);
             errorText = errorText.replaceFirst("%s1", AccountingRules.getMinIndebtednessRatio().toString());
             errorText = errorText.replaceFirst("%s2", AccountingRules.getMaxIndebtednessRatio().toString());
             return errorText;
@@ -85,8 +89,8 @@ public enum ConversionError {
 
     REPAYMENT_CAPACITY_OUT_OF_RANGE {
         @Override
-        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
-            String errorText = super.toLocalizedMessage(locale, currency);
+        public String toLocalizedMessage(MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(currency);
             errorText = errorText.replaceFirst("%s1", AccountingRules.getMinRepaymentCapacity().toString());
             errorText = errorText.replaceFirst("%s2", AccountingRules.getMaxRepaymentCapacity().toString());
             return errorText;
@@ -94,23 +98,33 @@ public enum ConversionError {
 
     EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_VALIDATION {
         @Override
-        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
-            String errorText = super.toLocalizedMessage(locale, currency);
+        public String toLocalizedMessage(MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(currency);
             return errorText.replaceFirst("%s", AccountingRules.getDigitsBeforeDecimalForCashFlowValidations().toString());
         }},
 
     EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_VALIDATION {
         @Override
-        public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
-            String errorText = super.toLocalizedMessage(locale, currency);
+        public String toLocalizedMessage(MifosCurrency currency) {
+            String errorText = super.toLocalizedMessage(currency);
             return errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimalForCashFlowValidations().toString());
         }},
 
     NOT_ALL_NUMBER, CONVERSION_ERROR, NO_ERROR;
 
-    public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.UI_RESOURCE_PROPERTYFILE, locale);
-        return resources.getString(this.name());
+    public String toLocalizedMessage(MifosCurrency currency) {
+    	// nothing found so return the key
+    	String message = this.name();
+    	PersonnelServiceFacade personnelServiceFacade = ApplicationContextProvider.getBean(PersonnelServiceFacade.class);
+    	MessageSource messageSource = ApplicationContextProvider.getBean(MessageSource.class);
+    	if(personnelServiceFacade != null) {
+    		String value = messageSource.getMessage(this.name(), null, personnelServiceFacade.getUserPreferredLocale());
+    		if(StringUtils.isNotEmpty(message)) {
+    			message = value;
+    		}
+    	}
+        return message;
+
     }
 
 }

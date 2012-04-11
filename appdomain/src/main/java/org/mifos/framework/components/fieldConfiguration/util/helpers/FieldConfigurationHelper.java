@@ -20,14 +20,14 @@
 
 package org.mifos.framework.components.fieldConfiguration.util.helpers;
 
-import java.util.MissingResourceException;
-import java.util.PropertyResourceBundle;
-
+import java.util.Locale;
+import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.exceptions.ConfigurationException;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.util.UserContext;
+import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 
 public class FieldConfigurationHelper {
 
@@ -37,10 +37,10 @@ public class FieldConfigurationHelper {
             if (configuredLabel != null) {
                 return configuredLabel;
             }
-            PropertyResourceBundle propertyString = (PropertyResourceBundle) PropertyResourceBundle.getBundle(
-                    FilePaths.FIELD_CONF_PROPERTYFILE, userContext.getPreferredLocale());
-            return propertyString.getString(fieldName);
-        } catch (MissingResourceException e) {
+
+        	Locale locale = ApplicationContextProvider.getBean(PersonnelServiceFacade.class).getUserPreferredLocale();
+            return ApplicationContextProvider.getBean(MessageSource.class).getMessage(fieldName, null, locale);
+        } catch (NoSuchMessageException e) {
             /*
              * I think the theory here is that it is better to show the user
              * something, than just make it an internal error. Not sure whether

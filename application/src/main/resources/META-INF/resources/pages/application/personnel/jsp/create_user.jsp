@@ -314,7 +314,7 @@ explanation of the license and how it is applied.
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="Personnel.Roles" /></td>
 									<td>
-									<c:set var="rolelist" scope="request" value="${definePersonnelDto.rolesList}"/> 
+									<c:set var="rolelist" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'rolesList')}"/> 
 									<c:set var="personnelRolesList" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personnelRolesList')}"/> 
 									<mifos:MifosSelect property="personnelRoles"
 										input="rolelist" output="personnelRolesList" property1="id"
