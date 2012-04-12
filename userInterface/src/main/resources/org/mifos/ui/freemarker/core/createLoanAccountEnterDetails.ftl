@@ -434,15 +434,24 @@ $(document).ready(function() {
         $(this).closest('form').submit();
     });
     
+    $('#selectedFeeId0Amount, #selectedFeeId1Amount, #selectedFeeId2Amount').each(function(index){
+    	if ( $(this).val() === "" || !$(this).val() || !$('#selectedFeeId'+index).attr('selectedIndex') ){
+			$(this).attr('disabled', true);
+			$(this).val("");    	
+    	}
+    });
+    
     $('#selectedFeeId0').change(function(e) {
           $("#selectedFeeId0 option:selected").each(function () {
           		var selectedValue = $(this).val();
                 if (selectedValue == null || selectedValue == "") {
           			$('#selectedFeeId0Amount').val("");
+          			$('#selectedFeeId0Amount').attr('disabled', true);
           		} else {
 	                var hiddenField = "#hiddenFeeAmount" + selectedValue;
 	                var hiddenValue = $(hiddenField).val();
 	                $('#selectedFeeId0Amount').val(hiddenValue);
+	          		$('#selectedFeeId0Amount').attr('disabled', false);
                 }
            });
     });
@@ -452,10 +461,12 @@ $(document).ready(function() {
           		var selectedValue = $(this).val();
                 if (selectedValue == null || selectedValue == "") {
           			$('#selectedFeeId1Amount').val("");
+          			$('#selectedFeeId1Amount').attr('disabled', true);
           		} else {
 	                var hiddenField = "#hiddenFeeAmount" + selectedValue;
 	                var hiddenValue = $(hiddenField).val();
 	                $('#selectedFeeId1Amount').val(hiddenValue);
+	                $('#selectedFeeId1Amount').attr('disabled', false);
                 }
            });
     });
@@ -465,10 +476,12 @@ $(document).ready(function() {
           		var selectedValue = $(this).val();
                 if (selectedValue == null || selectedValue == "") {
           			$('#selectedFeeId2Amount').val("");
+          			$('#selectedFeeId2Amount').attr('disabled', true);
           		} else {
 	                var hiddenField = "#hiddenFeeAmount" + selectedValue;
 	                var hiddenValue = $(hiddenField).val();
 	                $('#selectedFeeId2Amount').val(hiddenValue);
+	                $('#selectedFeeId2Amount').attr('disabled', false);
                 }
            });
     });
