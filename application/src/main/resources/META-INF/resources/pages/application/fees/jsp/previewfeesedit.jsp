@@ -101,12 +101,9 @@ explanation of the license and how it is applied.
 										</c:if>
 									</c:forEach>
 									<br>
-									<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.remove" /> </span>
-										<c:out value="${sessionScope.feeactionform.toRemove}"/>
-									<span class="fontnormal"> </span>
-									<br>
 									<br>
 
+									<span class="fontnormal"> </span>
 
 									<html-el:button property="editBtn" styleClass="insidebuttn" onclick="javascript:fnOnEditPreviousFeeInformation(feeactionform)">
 										<mifos:mifoslabel name="Fees.edit" />

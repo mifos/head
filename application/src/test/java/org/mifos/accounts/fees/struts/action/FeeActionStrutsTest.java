@@ -635,8 +635,11 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyNoActionErrors();
-        verifyForward(ActionForwards.remove_success.toString());
+        verifyForward(ActionForwards.update_success.toString());
 
+        fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
+        Assert.assertFalse(fee.isActive());
+        Assert.assertEquals(new Money(getCurrency(), "200.0"), ((AmountFeeBO) fee).getFeeAmount());
     }
 
     @Test
