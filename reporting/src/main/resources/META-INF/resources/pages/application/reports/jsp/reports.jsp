@@ -91,8 +91,15 @@ explanation of the license and how it is applied.
 								  	<tr class="fontnormal">
 					                  <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 					                  <td width="97%">
-						                  <a href="reportsUserParamsAction.do?method=loadAddList&reportId=${report.reportId}" />
+                                     <%
+                                        if(((ReportsBO)pageContext.getAttribute("report")).getReportsJasperMap().getReportJasper().endsWith(".prpt")) {
+                                     %>
+                                          <a href="viewPentahoReport.ftl?reportId=${report.reportId}" />
 						                  <c:out value="${report.reportName}" />
+                                      <% } else { %>
+                                          <a href="reportsUserParamsAction.do?method=loadAddList&reportId=${report.reportId}" />
+                                          <c:out value="${report.reportName}" />
+                                      <% } %>
 					                  </td>
 					                </tr>
 				                </table>
@@ -121,9 +128,16 @@ explanation of the license and how it is applied.
 					                <tr class="fontnormal">
 					                  <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 					                  <td width="97%">
-						                  <a href="reportsUserParamsAction.do?method=loadAddList&reportId=${report.reportId}" />
+                                     <%
+                                        if(((ReportsBO)pageContext.getAttribute("report")).getReportsJasperMap().getReportJasper().endsWith(".prpt")) {
+                                     %>
+						                  <a href="viewPentahoReport.ftl?reportId=${report.reportId}" />
 						                  <c:out value="${report.reportName}" />
-					                  </td>
+					                  <% } else { %>
+                                          <a href="reportsUserParamsAction.do?method=loadAddList&reportId=${report.reportId}" />
+                                          <c:out value="${report.reportName}" />
+                                      <% } %>
+                                      </td>
 					                </tr>
 				                </table>
 				                <% } %>

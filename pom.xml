@@ -727,6 +727,36 @@
                 <artifactId>poi</artifactId>
                 <version>3.6</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>3.6</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.xmlbeans</groupId>
+                <artifactId>xmlbeans</artifactId>
+                <version>2.3.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lowagie</groupId>
+                <artifactId>itext</artifactId>
+                <version>2.1.7</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lowagie</groupId>
+                <artifactId>itext-rtf</artifactId>
+                <version>2.1.7</version>
+            </dependency>
+            <dependency>
+                <groupId>org.beanshell</groupId>
+                <artifactId>bsh</artifactId>
+                <version>1.3.0</version>
+            </dependency>
+            <dependency>
+                <groupId>bsf</groupId>
+                <artifactId>bsf</artifactId>
+                <version>2.4.0</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
@@ -744,6 +774,77 @@
                 </exclusions>
             </dependency>
 
+            <!--  Pentaho dependencies -->
+            <dependency>
+                <groupId>pentaho-reporting-engine</groupId>
+                <artifactId>pentaho-reporting-engine-classic-extensions</artifactId>
+                <version>3.8.3-GA</version>
+            </dependency>
+            <dependency>
+                <groupId>pentaho-report-designer</groupId>
+                <artifactId>pentaho-reporting-engine-wizard-xul</artifactId>
+                <version>3.8.0-GA</version>
+            </dependency>
+            <dependency>
+                <groupId>pentaho-reporting-engine</groupId>
+                <artifactId>pentaho-reporting-engine-classic-core</artifactId>
+                <version>3.8.3-GA</version>
+            </dependency>
+            <dependency>
+                <groupId>pentaho-reporting-engine</groupId>
+                <artifactId>pentaho-reporting-engine-wizard-core</artifactId>
+                <version>3.8.3-GA</version>
+            </dependency>
+            <dependency>
+                <groupId>pentaho-library</groupId>
+                <artifactId>libloader</artifactId>
+                <version>1.2.3</version>
+            </dependency>
+            <dependency>
+                <groupId>pentaho-library</groupId>
+                <artifactId>libbase</artifactId>
+                <version>1.2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>pentaho-library</groupId>
+                <artifactId>libserializer</artifactId>
+                <version>1.2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>pentaho-library</groupId>
+                <artifactId>libformula</artifactId>
+                <version>1.2.3</version>
+            </dependency>
+            <dependency>
+                <groupId>pentaho-library</groupId>
+                <artifactId>libxml</artifactId>
+                <version>1.2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>pentaho-library</groupId>
+                <artifactId>libsparkline</artifactId>
+                <version>1.2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>pentaho-library</groupId>
+                <artifactId>librepository</artifactId>
+                <version>1.2.3</version>
+            </dependency>
+            <dependency>
+                <groupId>pentaho-library</groupId>
+                <artifactId>libformat</artifactId>
+                <version>1.2.4</version>
+            </dependency>
+            <dependency>
+                <groupId>pentaho-library</groupId>
+                <artifactId>libfonts</artifactId>
+                <version>1.2.3</version>
+            </dependency>
+            <dependency>
+                <groupId>pentaho-library</groupId>
+                <artifactId>libdocbundle</artifactId>
+                <version>1.2.3</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

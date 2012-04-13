@@ -18,16 +18,8 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-
-[#--
-Add all layouts here. Spring is configured to auto load this file, and by extension, all the layouts defined here. 
---]
-[#include "common.ftl" /]
-[#include "webflow.ftl" /]
-[#include "basic.ftl" /]
-[#include "legacy.ftl" /]
-[#include "reports.ftl" /]
-
-[#--
-[#include "admin.ftl" /]
---]
+<div  class="sidebar ht550">
+  <div>
+    <p class="orangetab">[@spring.message "tab.Reports" /]</p>
+  </div>
+</div>

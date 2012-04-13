@@ -20,25 +20,22 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.LinkedList;
 import java.util.List;
 
-public class AdminBreadcrumbBuilder extends BreadcrumbBuilder {
-
-	private String adminPageLink = "AdminAction.do?method=load";
+public class BreadcrumbBuilder {
     
-    public AdminBreadcrumbBuilder withAdminLink(String adminLink) {
-    	adminPageLink = adminLink;
-    	return this;
+    protected final List<BreadCrumbsLinks> breadcrumbs = new LinkedList<BreadCrumbsLinks>();
+    
+    public BreadcrumbBuilder withLink(String message, String link) {
+        BreadCrumbsLinks breadCrumb = new BreadCrumbsLinks();
+        breadCrumb.setMessage(message);
+        breadCrumb.setLink(link);
+        breadcrumbs.add(breadCrumb);
+        return this;
     }
-
-    @Override
+    
     public List<BreadCrumbsLinks> build() {
-
-        BreadCrumbsLinks root = new BreadCrumbsLinks();
-        root.setMessage("admin");
-        root.setLink(adminPageLink);
-
-        breadcrumbs.add(0, root);
         return breadcrumbs;
     }
 }

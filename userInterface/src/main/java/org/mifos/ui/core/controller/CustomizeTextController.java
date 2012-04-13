@@ -45,24 +45,21 @@ public class CustomizeTextController {
     }
 
     public List<BreadCrumbsLinks> showBreadCrumbsForView() {
-        return new AdminBreadcrumbBuilder().withLink("customizeTextView.customizedTextList", "unused")
-        	.withAdminLink("done")
+        return new AdminBreadcrumbBuilder().withAdminLink("done").withLink("customizeTextView.customizedTextList", "unused")
         	.build();
     }    
     
     public List<BreadCrumbsLinks> showBreadCrumbsForAdd() {
-        return new AdminBreadcrumbBuilder()
+        return new AdminBreadcrumbBuilder().withAdminLink("done")
         .withLink("customizeTextView.customizedTextList", "cancel")
         .withLink("customizeTextAdd.title", "unused")
-    	.withAdminLink("done")
     	.build();
    }
 
     public List<BreadCrumbsLinks> showBreadCrumbsForEdit() {
-        return new AdminBreadcrumbBuilder()
+        return new AdminBreadcrumbBuilder().withAdminLink("done")
         .withLink("customizeTextView.customizedTextList", "cancel")
         .withLink("customizeTextEdit.title", "unused")
-    	.withAdminLink("done")
     	.build();    }
     
     public Map<String,String> retrieveCustomMessages() {

@@ -19,15 +19,24 @@
 *  explanation of the license and how it is applied.
 --]
 
-[#--
-Add all layouts here. Spring is configured to auto load this file, and by extension, all the layouts defined here. 
---]
-[#include "common.ftl" /]
-[#include "webflow.ftl" /]
-[#include "basic.ftl" /]
-[#include "legacy.ftl" /]
-[#include "reports.ftl" /]
-
-[#--
-[#include "admin.ftl" /]
---]
+[#macro reportsLeftPaneLayout]
+    [@layout.header "title" /]
+    [@widget.topNavigationNoSecurity currentTab="Reports" /]
+    <div class="colmask leftmenu">
+        <div class="colleft">
+            <div class="col1wrap">
+                <div class="col1">
+                <div class="main_content">
+                    [#nested]
+                </div>
+             </div>
+            </div>
+            <div class="col2">
+                <div>
+                    [#include "/reportsLeftPane.ftl" /]
+                </div>
+            </div>
+        </div>
+    </div>
+    [@layout.footer/]
+[/#macro]

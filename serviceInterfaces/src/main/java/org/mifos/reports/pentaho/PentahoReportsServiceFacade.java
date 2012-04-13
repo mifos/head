@@ -17,28 +17,23 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+package org.mifos.reports.pentaho;
 
-package org.mifos.ui.core.controller;
+import java.util.Map;
 
-import java.util.List;
+import org.springframework.security.access.prepost.PreAuthorize;
 
-public class AdminBreadcrumbBuilder extends BreadcrumbBuilder {
+public interface PentahoReportsServiceFacade {
 
-	private String adminPageLink = "AdminAction.do?method=load";
+    @PreAuthorize("isFullyAuthenticated()")
+    PentahoReport getReport(String reportName, Integer outputTypeId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    PentahoReport getReport(Integer reportId, Integer outputTypeId);
     
-    public AdminBreadcrumbBuilder withAdminLink(String adminLink) {
-    	adminPageLink = adminLink;
-    	return this;
-    }
-
-    @Override
-    public List<BreadCrumbsLinks> build() {
-
-        BreadCrumbsLinks root = new BreadCrumbsLinks();
-        root.setMessage("admin");
-        root.setLink(adminPageLink);
-
-        breadcrumbs.add(0, root);
-        return breadcrumbs;
-    }
+    @PreAuthorize("isFullyAuthenticated()")
+    String getReportName(Integer reportId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    Map<String, String> getReportOutputTypes();
 }
