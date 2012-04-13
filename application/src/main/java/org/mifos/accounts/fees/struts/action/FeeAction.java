@@ -189,14 +189,12 @@ public class FeeAction extends BaseAction {
 		boolean isInProducts = appliedFeeId == null ? true : false;
         ActionMessages messages = new ActionMessages();
         
-        if (((FeeActionForm) form).isToRemove()) {
-	    	if (!isInProducts) {
-	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemoved"));
-	    	}
-	    	else if (isInProducts) {
-	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemovedFromPrd"));
-	    	}
-        }
+    	if (!isInProducts) {
+    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemoved"));
+    	}
+    	else if (isInProducts) {
+    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemovedFromPrd"));
+    	}
 		saveErrors(request, messages);
 
         request.getSession().setAttribute("feeModel", feeDto);
@@ -218,7 +216,7 @@ public class FeeAction extends BaseAction {
     public ActionForward update(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         FeeActionForm feeActionForm = (FeeActionForm) form;
-        
+
         FeeStatus feeStatus = feeActionForm.getFeeStatusValue();
         String forward = "";
         Short feeStatusValue = null;
@@ -232,12 +230,7 @@ public class FeeAction extends BaseAction {
         if (feeActionForm.isToRemove()) {
         	this.feeServiceFacade.updateFee(feeUpdateRequest);
         	this.feeServiceFacade.removeFee(feeUpdateRequest);
-        	forward = ActionForwards.remove_success.toString();
-            List<FeeDto> customerFees = this.feeDao.retrieveAllCustomerFees();
-            List<FeeDto> productFees = this.feeDao.retrieveAllProductFees();
-
-            SessionUtils.setCollectionAttribute(FeeConstants.CUSTOMER_FEES, customerFees, request);
-            SessionUtils.setCollectionAttribute(FeeConstants.PRODUCT_FEES, productFees, request);
+        	forward = ActionForwards.viewAll_success.toString();
         }
         else {
         	this.feeServiceFacade.updateFee(feeUpdateRequest);
