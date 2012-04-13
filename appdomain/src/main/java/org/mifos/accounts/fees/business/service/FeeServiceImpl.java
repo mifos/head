@@ -191,10 +191,10 @@ public class FeeServiceImpl implements FeeService {
     }
 
 	@Override
-	public void remove(FeeBO fee, boolean isInProducts, boolean isFeeAppliedToLoan) {
+	public void remove(FeeBO fee, boolean isInProducts) {
 		try {
             hibernateTransactionHelper.startTransaction();
-            this.feeDao.remove(fee, isInProducts, isFeeAppliedToLoan);
+            this.feeDao.remove(fee, isInProducts);
             hibernateTransactionHelper.commitTransaction();
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();

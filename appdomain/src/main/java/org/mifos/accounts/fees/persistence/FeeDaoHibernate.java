@@ -197,22 +197,13 @@ public class FeeDaoHibernate implements FeeDao {
     }
 
 	@Override
-	public void remove(FeeBO fee, boolean isInProducts, boolean isFeeAppliedToLoan) {
-		if (isInProducts && !isFeeAppliedToLoan) {	
+	public void remove(FeeBO fee, boolean isInProducts) {
+		if (!isInProducts) {	
 	        Map<String, Object> queryParameters = new HashMap<String, Object>();
 	        queryParameters.put("FEEID", fee.getFeeId());
 			this.genericDao.executeNamedQueryDelete("deleteFeeFromPrd_Offering_Fees", queryParameters);
-			this.genericDao.delete(fee);
 		}
-		else if (!isInProducts && isFeeAppliedToLoan) {
-			 Map<String, Object> queryParameters = new HashMap<String, Object>();
-			 queryParameters.put("FEEID", fee.getFeeId());
-			 this.genericDao.executeNamedQueryDelete("deleteFeeFromPrd_Offering_Fees", queryParameters);
-			 this.genericDao.executeNamedQueryDelete("deleteFeeFromPrd", queryParameters);
-		}
-		else {
-			this.genericDao.delete(fee);
-		}
+		this.genericDao.delete(fee);
 	}
 
 	@Override

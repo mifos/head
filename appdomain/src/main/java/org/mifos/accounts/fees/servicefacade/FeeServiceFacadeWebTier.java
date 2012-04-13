@@ -206,8 +206,12 @@ public class FeeServiceFacadeWebTier implements FeeServiceFacade {
 		boolean isInProducts = appliedFeeId == null ? true : false;
 		List<Short> feesAppliedLoanAccountList = this.feeDao.getAllAtachedFeesToLoanAcounts();
 		boolean isFeeAppliedToLoan = feesAppliedLoanAccountList.contains(feeToRemove.getFeeId());
-		if  (!feeToRemove.isActive()) { 	
-			this.feeService.remove(feeToRemove, isInProducts, isFeeAppliedToLoan);
+		if (!isFeeAppliedToLoan && !feeToRemove.isActive()) { 	
+			this.feeService.remove(feeToRemove, isInProducts);
 		} 
+		else if (isFeeAppliedToLoan && !feeToRemove.isActive()) {
+			//TODO
+		}
+		
 	}
 }

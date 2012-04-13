@@ -74,6 +74,14 @@ explanation of the license and how it is applied.
 								</td>
 							</tr>
 							<tr>
+								<td class="fontnormalbold">
+									<font class="fontnormalRedBold"><html-el:messages id="msg" message="false">
+										<c:out value="${msg}"/>
+									</html-el:messages>
+									</font>
+								</td>
+							</tr>
+							<tr>
 								<td width="100%" height="23" class="fontnormal">
 									<span class="fontnormalbold"> <c:choose>
 											<c:when test="${feeModel.rateBasedFee}">
