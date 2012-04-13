@@ -124,6 +124,4 @@
     <bean id="configurationPersistence" class="org.mifos.config.persistence.ConfigurationPersistence"/>
     
     <bean id="configurationBusinessService" class="org.mifos.config.business.service.ConfigurationBusinessService"/>
-
-    <bean id="pentahoReportsService" class="org.mifos.reports.pentaho.service.PentahoReportsServiceImpl"/>
 </beans>
