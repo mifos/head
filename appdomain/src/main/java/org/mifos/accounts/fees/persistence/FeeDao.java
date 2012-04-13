@@ -68,11 +68,5 @@ public interface FeeDao {
 
     FeePaymentEntity findFeePaymentEntityByType(FeePayment feePaymentType);
     
-    <T> T initializeAndUnproxy(T var); 
-    
-    Short findFeeAppliedToLoan(Short feeId);
-    
-    List<Short> getAllAtachedFeesToLoanAcounts();
-    
-    void remove(FeeBO fee, boolean isInProducts);
+    <T> T initializeAndUnproxy(T var);     
 }

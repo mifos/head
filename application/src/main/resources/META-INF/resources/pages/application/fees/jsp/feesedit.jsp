@@ -112,14 +112,6 @@ explanation of the license and how it is applied.
 									</mifos:select>
 								</td>
 							</tr>
-							<tr class="fontnormal">
-								<td align="right">
-									<mifos:mifoslabel name="Fees.remove"/>
-								</td>
-								<td valign="top">
-									<html-el:checkbox property="toRemove" ></html-el:checkbox>
-								</td>
-							</tr>
 						</table>
 						<table width="95%" border="0" cellpadding="0" cellspacing="0">
 							<tr>

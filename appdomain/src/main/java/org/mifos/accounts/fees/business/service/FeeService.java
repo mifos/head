@@ -31,7 +31,5 @@ public interface FeeService {
     FeeBO create(FeeCreateRequest feeCreateRequest, UserContext userContext) throws ApplicationException;
 
     void update(FeeUpdateRequest feeUpdateRequest, UserContext userContext) throws ApplicationException;
-    
-    void remove(FeeBO fee, boolean isFeeAppliedToLoan);
 
 }
