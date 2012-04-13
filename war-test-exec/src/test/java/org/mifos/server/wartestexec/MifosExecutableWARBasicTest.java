@@ -29,6 +29,8 @@ import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -47,21 +49,27 @@ public class MifosExecutableWARBasicTest {
 		final File warFile = new File("target/dependency/mifos.war");
         assertTrue(warFile.toString() + " does not exist", warFile.exists());
 
-        String jvmArguments = "-Xmx512m -XX:MaxPermSize=256m";
-        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-            jvmArguments = jvmArguments + " -d32";
-        }
-
         int httpPort = 4847;
         Long timeOut = 5 * 60 * 1000L; // Give it max. 5 min to start-up
-
 
         // Could have used http://commons.apache.org/exec/ instead here, but this seemed easier:
 
         long startTime = System.currentTimeMillis();
         final String execWARFilePath = warFile.getAbsolutePath();
         final String port = Integer.toString(httpPort);
-        final ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", execWARFilePath, port);
+
+        List<String> args = new ArrayList<String>();
+        args.add("java");
+        args.add("-jar");
+        args.add("-Xmx512M");
+        args.add("-XX:MaxPermSize=256m");
+        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+            args.add("-d32");
+        }
+        args.add(execWARFilePath);
+        args.add(port);
+
+        final ProcessBuilder processBuilder = new ProcessBuilder(args);
         processBuilder.redirectErrorStream(true);
         Process p = processBuilder.start();
 

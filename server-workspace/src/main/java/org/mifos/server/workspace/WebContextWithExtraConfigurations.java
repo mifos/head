@@ -20,6 +20,10 @@
 
 package org.mifos.server.workspace;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 
@@ -51,10 +55,12 @@ public class WebContextWithExtraConfigurations extends WebAppContext {
 
     public void addConfiguration(Configuration configuration) throws Exception {
         loadConfigurations(); // Force loading of default configurations
+
         final Configuration[] configs = getConfigurations();
-        final Configuration[] newConfig = new Configuration[configs.length + 1];
-        newConfig[configs.length] = configuration;
-        setConfigurations(newConfig);
+        List<Configuration> confs = new ArrayList<Configuration>(Arrays.asList(configs));
+        confs.add(configuration);
+
+        setConfigurations(confs.toArray(new Configuration[confs.size()]));
     }
 
 }

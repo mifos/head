@@ -29,6 +29,8 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.jetty.plus.webapp.EnvConfiguration;
+import org.eclipse.jetty.plus.webapp.PlusConfiguration;
 import org.eclipse.jetty.util.IO;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
@@ -73,6 +75,10 @@ public class WorkspaceServerLauncher extends AbstractServerLauncher {
         webAppContext.replaceConfiguration(MetaInfConfiguration.class, new MetaInfFolderConfiguration());
         webAppContext.replaceConfiguration(FragmentConfiguration.class, new FragmentFolderConfiguration());
         webAppContext.replaceConfiguration(WebInfConfiguration.class, new WebInfFolderExtendedConfiguration());
+
+        //For JNDI
+        webAppContext.addConfiguration(new PlusConfiguration());
+        webAppContext.addConfiguration(new EnvConfiguration());
 
         // This will make EVERYTHING on the classpath be
         // scanned for META-INF/resources and web-fragment.xml - great for dev!

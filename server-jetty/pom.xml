@@ -33,6 +33,12 @@
             <artifactId>jsp-2.1-glassfish</artifactId>
             <version>2.1.v20100127</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-plus</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+
 
         <!-- Selenium 2.0 (WebDriver)
         <dependency>

@@ -34,6 +34,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Timer;
 
+import javax.naming.InitialContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -41,6 +42,7 @@ import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+import javax.sql.DataSource;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -194,10 +196,12 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             System.setProperty("org.terracotta.quartz.skipUpdateCheck", "true");
 
             synchronized (ApplicationInitializer.class) {
+                ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
                 if (servletContext != null) {
-                    dbUpgrade(WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext));
+                    dbUpgrade(applicationContext);
 
                 }
+                initJNDIforPentaho(applicationContext);
                 setAttributesOnContext(servletContext);
             }
         } catch (Exception e) {
@@ -562,6 +566,34 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             logger.warn("failed mysql timer cancellation", e);
         } catch (NullPointerException e) {
             logger.info("No mysql timer cancellation required"); // Expected exception, do not log NPE causee
+        }
+    }
+
+    private void initJNDIforPentaho(ApplicationContext applicationContext) {
+        try {
+            InitialContext ic = new InitialContext();
+
+            //check if ds is already bound
+            boolean dataSourceBound = true;
+            try {
+                DataSource datasource = (DataSource)ic.lookup("jdbc/SourceDB");
+                if (datasource == null) {
+                    dataSourceBound = true;
+                }
+            } catch (Exception ex) {
+                dataSourceBound = false;
+            }
+
+            if (!dataSourceBound) {
+                Object dataSource = applicationContext.getBean("dataSource");
+                ic.createSubcontext("jdbc");
+                ic.bind("jdbc/SourceDB", dataSource);
+                logger.info("Bound datasource to jdbc/SourceDB");
+            } else {
+                logger.info("jdbc/SourceDB is already bound");
+            }
+        } catch (Exception ex) {
+            logger.error("Unable to bind dataSource to JNDI");
         }
     }
 
