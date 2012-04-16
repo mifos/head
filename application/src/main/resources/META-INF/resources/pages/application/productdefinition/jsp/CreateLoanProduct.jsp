@@ -32,6 +32,8 @@ explanation of the license and how it is applied.
 <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}' />
 <fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources" />
 
+<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="pages/js/singleitem.js"></script>
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
@@ -40,11 +42,9 @@ explanation of the license and how it is applied.
         
 		<script src="pages/framework/js/date.js"></script>
 		<script src="pages/framework/js/func.js"></script>
-		<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 		<script type="text/javascript" src="pages/application/loan/js/CreateLoanProduct.js"></script>
-		
 		<script type="text/javascript" src="pages/js/separator.js"></script>
-		
+
 		<html-el:form action="/loanproductaction"
 			onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
 				validateMyForm(endDate,endDateFormat,endDateYY))"
@@ -52,7 +52,6 @@ explanation of the license and how it is applied.
             <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}"
                 var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
             <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'GlNamesMode')}" var="GlNamesMode"/>
-
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
