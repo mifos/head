@@ -19,21 +19,26 @@
  */
 package org.mifos.reports.pentaho;
 
+import java.util.List;
 import java.util.Map;
 
+import org.mifos.reports.pentaho.params.AbstractPentahoParameter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface PentahoReportsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
-    PentahoReport getReport(String reportName, Integer outputTypeId);
+    PentahoReport getReport(String reportFileName, Integer outputTypeId, Map<String, AbstractPentahoParameter> params);
 
     @PreAuthorize("isFullyAuthenticated()")
-    PentahoReport getReport(Integer reportId, Integer outputTypeId);
-    
+    PentahoReport getReport(Integer reportId, Integer outputTypeId, Map<String, AbstractPentahoParameter> params);
+
     @PreAuthorize("isFullyAuthenticated()")
     String getReportName(Integer reportId);
-    
+
     @PreAuthorize("isFullyAuthenticated()")
     Map<String, String> getReportOutputTypes();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<AbstractPentahoParameter> getParametersForReport(Integer reportId);
 }

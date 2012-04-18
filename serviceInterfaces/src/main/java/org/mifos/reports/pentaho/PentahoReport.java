@@ -26,7 +26,7 @@ public class PentahoReport {
     private String contentType;
     private byte[] content;
     private String name;
-    private String fileExtenstion;
+    private String fileExtension;
 
     public String getContentType() {
         return contentType;
@@ -52,12 +52,12 @@ public class PentahoReport {
         this.name = name;
     }
 
-    public String getFileExtenstion() {
-        return fileExtenstion;
+    public String getFileExtension() {
+        return fileExtension;
     }
 
-    public void setFileExtenstion(String fileExtenstion) {
-        this.fileExtenstion = fileExtenstion;
+    public void setFileExtension(String fileExtension) {
+        this.fileExtension = fileExtension;
     }
 
     public int getContentSize() {
@@ -65,6 +65,6 @@ public class PentahoReport {
     }
 
     public String getFilename() {
-        return name + "." + fileExtenstion;
+        return name + "." + fileExtension;
     }
 }

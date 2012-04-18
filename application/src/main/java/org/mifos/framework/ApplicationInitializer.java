@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.Timer;
 
 import javax.naming.InitialContext;
+import javax.naming.NameAlreadyBoundException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -577,7 +578,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             boolean dataSourceBound = true;
             try {
                 DataSource datasource = (DataSource)ic.lookup("jdbc/SourceDB");
-                if (datasource == null) {
+                if (datasource != null) {
                     dataSourceBound = true;
                 }
             } catch (Exception ex) {
@@ -586,7 +587,13 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
             if (!dataSourceBound) {
                 Object dataSource = applicationContext.getBean("dataSource");
-                ic.createSubcontext("jdbc");
+
+                try {
+                    ic.createSubcontext("jdbc");
+                } catch (NameAlreadyBoundException ex) {
+                    logger.info("Subcontext jdbc was already bound");
+                }
+
                 ic.bind("jdbc/SourceDB", dataSource);
                 logger.info("Bound datasource to jdbc/SourceDB");
             } else {

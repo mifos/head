@@ -29,24 +29,24 @@ import org.mifos.core.MifosRuntimeException;
 
 public class PentahoReportLocator {
 
-    public static URL getURLForReport(String reportName) {
-        if (StringUtils.isBlank(reportName)) {
+    public static URL getURLForReport(String reportFileName) {
+        if (StringUtils.isBlank(reportFileName)) {
             throw new IllegalArgumentException("Report name not specified");
         }
 
-        URL url = getReportURLFromClasspath(reportName);
+        URL url = getReportURLFromUploads(reportFileName);
         if (url == null) {
-            url = getReportURLFromUplods(reportName);
+            url = getReportURLFromClasspath(reportFileName);
         }
         return url;
     }
 
-    private static URL getReportURLFromClasspath(String reportName) {
-        String reportPath = "pentaho/" + reportName;
+    public static URL getReportURLFromClasspath(String reportFileName) {
+        String reportPath = "pentaho/" + reportFileName;
         return getClassLoader().getResource(reportPath);
     }
 
-    private static URL getReportURLFromUplods(String reportName) {
+    public static URL getReportURLFromUploads(String reportName) {
         String reportPath = getPathToUploadedReport(reportName);
         try {
             URL url = new URL(reportPath);
@@ -56,7 +56,7 @@ public class PentahoReportLocator {
         }
     }
 
-    private static String getPathToUploadedReport(String reportName) {
+    private static String getPathToUploadedReport(String reportFileName) {
         String uploadsDir = MifosConfigurationManager.getInstance().getString("GeneralConfig.UploadStorageDirectory",
                 "$HOME/.mifos/uploads");
         if (File.separatorChar == '\\') { // windows platform
@@ -71,7 +71,7 @@ public class PentahoReportLocator {
             sb.append(File.separator);
         }
 
-        sb.append("report").append(File.separator).append(reportName);
+        sb.append("report").append(File.separator).append(reportFileName);
 
         return sb.toString();
     }

@@ -89,7 +89,7 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
                 }
             }
             if (methodFromRequest.equals(Methods.editpreview.toString())) {
-                if (file != null && !isFileNameInvalid(file.getFileName())) {
+                if (file != null && isFileNameInvalid(file.getFileName())) {
                     errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(ReportsConstants.ERROR_FILE));
                 }
             }

@@ -21,18 +21,19 @@ package org.mifos.reports.pentaho.util;
 
 public enum PentahoOutputType {
 
-    PDF(0, "PDF", "application/pdf", ".pdf"), XLS(1, "XLS", "application/vnd.ms-excel", ".xls") , RTF(2, "RTF", "application/rtf", ".rtf") ;
-    
+    PDF(0, "PDF", "application/pdf", ".pdf"), XLS(1, "XLS", "application/vnd.ms-excel", ".xls"), RTF(2, "RTF",
+            "application/rtf", ".rtf");
+
     private final Integer id;
     private final String displayName;
     private final String contentType;
-    private final String fileExtenstion;
+    private final String fileExtension;
 
-    private PentahoOutputType(Integer id, String displayName, String contentType, String fileExtenstion) {
+    private PentahoOutputType(Integer id, String displayName, String contentType, String fileExtension) {
         this.id = id;
         this.displayName = displayName;
         this.contentType = contentType;
-        this.fileExtenstion = fileExtenstion;
+        this.fileExtension = fileExtension;
     }
 
     public Integer getId() {
@@ -46,13 +47,13 @@ public enum PentahoOutputType {
     public String getContentType() {
         return contentType;
     }
-    
-    public String getFileExtenstion() {
-        return fileExtenstion;
+
+    public String getFileExtension() {
+        return fileExtension;
     }
 
     public static PentahoOutputType findById(Integer id) {
-        PentahoOutputType result = PentahoOutputType.PDF;
+        PentahoOutputType result = null;
         for (PentahoOutputType val : PentahoOutputType.values()) {
             if (id.equals(val.getId())) {
                 result = val;

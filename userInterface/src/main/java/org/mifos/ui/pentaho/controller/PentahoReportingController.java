@@ -21,6 +21,7 @@ package org.mifos.ui.pentaho.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,21 +29,22 @@ import javax.validation.Valid;
 
 import org.mifos.reports.pentaho.PentahoReport;
 import org.mifos.reports.pentaho.PentahoReportsServiceFacade;
+import org.mifos.reports.pentaho.params.AbstractPentahoParameter;
 import org.mifos.ui.core.controller.BreadCrumbsLinks;
 import org.mifos.ui.core.controller.BreadcrumbBuilder;
-import org.mifos.ui.core.controller.PentahoReportFormBean;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class PentahoReportingController {
 
     private static final String REPORT_ID_PARAM = "reportId";
-    
+
     private PentahoReportsServiceFacade pentahoReportsService;
 
     @Autowired
@@ -52,11 +54,13 @@ public class PentahoReportingController {
 
     @RequestMapping(value = "/execPentahoReport.ftl", method = RequestMethod.POST)
     public void executeReport(final HttpServletRequest request, HttpServletResponse response,
-            @Valid @ModelAttribute("formBean") PentahoReportFormBean formBean) throws IOException {
-        Integer reportId = formBean.getReportId();
-        Integer outputType = Integer.parseInt(formBean.getOutputType());
-        
-        PentahoReport report = this.pentahoReportsService.getReport(reportId, outputType);
+            @Valid @ModelAttribute("pentahoReportFormBean") PentahoReportFormBean pentahoReportFormBean)
+            throws IOException {
+        Integer reportId = pentahoReportFormBean.getReportId();
+        Integer outputType = Integer.parseInt(pentahoReportFormBean.getOutputType());
+        Map<String, AbstractPentahoParameter> reportParams = pentahoReportFormBean.getAllParameteres();
+
+        PentahoReport report = this.pentahoReportsService.getReport(reportId, outputType, reportParams);
 
         response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getFilename() + "\"");
         response.setContentType(report.getContentType());
@@ -64,35 +68,41 @@ public class PentahoReportingController {
 
         response.getOutputStream().write(report.getContent());
     }
-    
+
     @RequestMapping(value = "/viewPentahoReport.ftl", method = RequestMethod.GET)
-    public void loadReport(final HttpServletRequest request) {
-        //do nothing, model attributes exposed via other methods
+    public ModelAndView loadReport(@RequestParam(value = REPORT_ID_PARAM, required = true) Integer reportId) {
+        ModelAndView mav = new ModelAndView();
+
+        PentahoReportFormBean formBean = createFormBean(reportId);
+        List<AbstractPentahoParameter> params = this.pentahoReportsService.getParametersForReport(reportId);
+        formBean.setReportParameters(params);
+
+        mav.getModel().put("pentahoReportFormBean", formBean);
+
+        return mav;
     }
-    
+
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> getBreadCrumbs(HttpServletRequest request) {
         Integer reportId = getReportId(request);
         String reportName = this.pentahoReportsService.getReportName(reportId);
         return new BreadcrumbBuilder().withLink("tab.Reports", "reportsAction.do?method=load")
-                .withLink(reportName, "viewPentahoReport.ftl?reportId=" + reportId)
-                .build();
+                .withLink(reportName, "viewPentahoReport.ftl?reportId=" + reportId).build();
     }
-    
+
     @ModelAttribute("reportName")
     public String getReportName(HttpServletRequest request) {
         return this.pentahoReportsService.getReportName(getReportId(request));
     }
-    
-    @ModelAttribute("pentahoReportFormBean")
-    public PentahoReportFormBean getFormBean(HttpServletRequest request) {
+
+    private PentahoReportFormBean createFormBean(Integer reportId) {
         PentahoReportFormBean form = new PentahoReportFormBean();
         form.setAllowedOutputTypes(this.pentahoReportsService.getReportOutputTypes());
-        form.setReportId(getReportId(request));
+        form.setReportId(reportId);
         form.setOutputType("0");
         return form;
     }
-    
+
     private Integer getReportId(HttpServletRequest request) {
         return Integer.parseInt(request.getParameter(REPORT_ID_PARAM));
     }
