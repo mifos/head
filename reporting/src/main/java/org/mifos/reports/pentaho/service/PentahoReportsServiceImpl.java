@@ -66,8 +66,6 @@ import org.pentaho.reporting.engine.classic.core.util.ReportParameterValues;
 import org.pentaho.reporting.libraries.resourceloader.Resource;
 import org.pentaho.reporting.libraries.resourceloader.ResourceManager;
 
-import org.apache.commons.lang.StringUtils;
-
 public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
 
     private final static Logger logger = LoggerFactory.getLogger(PentahoReportsServiceImpl.class);
@@ -77,15 +75,9 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
 
     @Override
     public PentahoReport getReport(Integer reportId, Integer outputTypeId, Map<String, AbstractPentahoParameter> params) {
-        String filename = getReportFilename(reportId);
-        return getReport(filename, outputTypeId, params);
-    }
-
-    @Override
-    public PentahoReport getReport(String reportFileName, Integer outputTypeId,
-            Map<String, AbstractPentahoParameter> params) {
         ByteArrayOutputStream baos = null;
         try {
+            String reportFileName = getReportFilename(reportId);
             // load report definition
             ResourceManager manager = new ResourceManager();
             manager.registerDefaults();
@@ -135,12 +127,7 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
                 result.setContentType(outputType.getContentType());
                 result.setFileExtension(outputType.getFileExtension());
 
-                // report name
-                if (StringUtils.isBlank(report.getName())) {
-                    result.setName(reportFileName.replace(".prpt", ""));
-                } else {
-                    result.setName(report.getName());
-                }
+                result.setName(getReportName(reportId));
                 result.setContent(baos.toByteArray());
             }
             return result;

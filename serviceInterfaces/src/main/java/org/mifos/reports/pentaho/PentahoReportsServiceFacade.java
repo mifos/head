@@ -28,9 +28,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface PentahoReportsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
-    PentahoReport getReport(String reportFileName, Integer outputTypeId, Map<String, AbstractPentahoParameter> params);
-
-    @PreAuthorize("isFullyAuthenticated()")
     PentahoReport getReport(Integer reportId, Integer outputTypeId, Map<String, AbstractPentahoParameter> params);
 
     @PreAuthorize("isFullyAuthenticated()")

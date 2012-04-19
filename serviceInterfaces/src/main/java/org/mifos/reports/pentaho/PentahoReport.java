@@ -67,7 +67,7 @@ public class PentahoReport {
     }
 
     public String getFilename() {
-        return name + "." + fileExtension;
+        return name + fileExtension;
     }
 
     public List<PentahoValidationError> getErrors() {
