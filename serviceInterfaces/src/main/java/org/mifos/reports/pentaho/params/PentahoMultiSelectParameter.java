@@ -19,20 +19,48 @@
  */
 package org.mifos.reports.pentaho.params;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class PentahoMultiSelectParameter extends AbstractPentahoParameter {
 
-    private String inputValue;
+    private List<String> selectedValues = new ArrayList<String>();
+    private List<String> possibleValues = new ArrayList<String>();
+    private Map<String, String> possibleValuesOptions = new HashMap<String, String>();
+    private Map<String, String> selectedValuesOptions = new HashMap<String, String>();
 
-    public String getInputValue() {
-        return inputValue;
+    public List<String> getSelectedValues() {
+        return selectedValues;
     }
 
-    public void setInputValue(String inputValue) {
-        this.inputValue = inputValue;
+    public void setSelectedValues(List<String> selectedValues) {
+        this.selectedValues = selectedValues;
     }
 
-    public String[] getSelectedValues() {
-        return (this.inputValue == null) ? new String[0] : this.inputValue.split(",");
+    public List<String> getPossibleValues() {
+        return possibleValues;
+    }
+
+    public void setPossibleValues(List<String> possibleValues) {
+        this.possibleValues = possibleValues;
+    }
+
+    public Map<String, String> getPossibleValuesOptions() {
+        return possibleValuesOptions;
+    }
+
+    public void setPossibleValuesOptions(Map<String, String> possibleValuesOptions) {
+        this.possibleValuesOptions = possibleValuesOptions;
+    }
+
+    public Map<String, String> getSelectedValuesOptions() {
+        return selectedValuesOptions;
+    }
+
+    public void setSelectedValuesOptions(Map<String, String> selectedValuesOptions) {
+        this.selectedValuesOptions = selectedValuesOptions;
     }
 
     @Override

@@ -19,19 +19,60 @@
  */
 package org.mifos.reports.pentaho.util;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.joda.time.LocalDate;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.reports.pentaho.params.PentahoDateParameter;
 import org.mifos.reports.pentaho.params.PentahoMultiSelectParameter;
 import org.mifos.reports.pentaho.params.PentahoInputParameter;
 import org.mifos.reports.pentaho.params.AbstractPentahoParameter;
 import org.mifos.reports.pentaho.params.PentahoSingleSelectParameter;
+import org.pentaho.reporting.engine.classic.core.MasterReport;
+import org.pentaho.reporting.engine.classic.core.ReportDataFactoryException;
 import org.pentaho.reporting.engine.classic.core.parameters.DefaultListParameter;
+import org.pentaho.reporting.engine.classic.core.parameters.DefaultParameterContext;
+import org.pentaho.reporting.engine.classic.core.parameters.ListParameter;
+import org.pentaho.reporting.engine.classic.core.parameters.ParameterContext;
 import org.pentaho.reporting.engine.classic.core.parameters.ParameterDefinitionEntry;
+import org.pentaho.reporting.engine.classic.core.parameters.ParameterValues;
 import org.pentaho.reporting.engine.classic.core.parameters.PlainParameter;
+import org.pentaho.reporting.engine.classic.core.parameters.ReportParameterDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PentahoParamParser {
+
+    private final static Logger logger = LoggerFactory.getLogger(PentahoParamParser.class);
+
+    public List<AbstractPentahoParameter> parseReportParams(MasterReport report) {
+        ParameterContext paramContext = null;
+        try {
+            paramContext = new DefaultParameterContext(report);
+            ReportParameterDefinition paramDefinition = report.getParameterDefinition();
+
+            List<AbstractPentahoParameter> result = new ArrayList<AbstractPentahoParameter>();
+            for (ParameterDefinitionEntry paramDefEntry : paramDefinition.getParameterDefinitions()) {
+                result.add(parseParam(paramDefEntry, paramContext));
+            }
+
+            return result;
+        } catch (Exception ex) {
+            throw new MifosRuntimeException(ex);
+        } finally {
+            if (paramContext != null) {
+                try {
+                    paramContext.close();
+                } catch (ReportDataFactoryException ex) {
+                    logger.error("Exception while closing parameter context", ex);
+                }
+            }
+        }
+    }
 
     public Object parseParamValue(AbstractPentahoParameter param, ParameterDefinitionEntry paramDefEntry)
             throws ReflectionException {
@@ -51,20 +92,20 @@ public class PentahoParamParser {
             result = ReflectionUtil.parseStringToClass(singleSelectParam.getSelectedValue(), clazz);
         } else if (param instanceof PentahoMultiSelectParameter) {
             PentahoMultiSelectParameter multiSelectParam = (PentahoMultiSelectParameter) param;
-            String[] selectedValues = multiSelectParam.getSelectedValues();
             Class<?> componentType = (clazz.isArray()) ? clazz.getComponentType() : clazz;
-            result = ReflectionUtil.parseStringsToClass(selectedValues, componentType);
+            result = ReflectionUtil.parseStringsToClass(multiSelectParam.getSelectedValues(), componentType);
         }
 
         return result;
     }
 
-    public AbstractPentahoParameter parseParam(ParameterDefinitionEntry paramDefEntry) {
+    private AbstractPentahoParameter parseParam(ParameterDefinitionEntry paramDefEntry, ParameterContext paramContext)
+            throws ReportDataFactoryException {
         AbstractPentahoParameter result = null;
         if (paramDefEntry instanceof PlainParameter) {
-            result = parsePlainParameter(paramDefEntry);
-        } else if (paramDefEntry instanceof DefaultListParameter) {
-            result = parseListParameter(paramDefEntry);
+            result = parsePlainParameter((PlainParameter) paramDefEntry);
+        } else if (paramDefEntry instanceof ListParameter) {
+            result = parseListParameter((ListParameter) paramDefEntry, paramContext);
         } else {
             return null;
         }
@@ -74,7 +115,7 @@ public class PentahoParamParser {
         return result;
     }
 
-    private AbstractPentahoParameter parsePlainParameter(ParameterDefinitionEntry paramDefEntry) {
+    private AbstractPentahoParameter parsePlainParameter(PlainParameter paramDefEntry) {
         AbstractPentahoParameter result = null;
 
         if (Date.class.isAssignableFrom(paramDefEntry.getValueType())) {
@@ -82,69 +123,75 @@ public class PentahoParamParser {
         } else {
             result = parseInputParameter(paramDefEntry);
         }
-
         return result;
     }
 
-    private PentahoDateParameter parseDateParameter(ParameterDefinitionEntry paramDefEntry) {
+    private PentahoDateParameter parseDateParameter(PlainParameter paramDefEntry) {
         PentahoDateParameter result = new PentahoDateParameter();
 
-        Date defaultValue = null;
-        if (paramDefEntry instanceof PlainParameter) {
-            PlainParameter plainParam = (PlainParameter) paramDefEntry;
-            defaultValue = (Date) plainParam.getDefaultValue();
-        } else if (paramDefEntry instanceof DefaultListParameter) {
-            DefaultListParameter listParam = (DefaultListParameter) paramDefEntry;
-            defaultValue = (Date) listParam.getDefaultValue();
-        }
-
+        Date defaultValue = (Date) paramDefEntry.getDefaultValue();
         if (defaultValue != null) {
             result.setDate(new LocalDate(defaultValue));
         }
         return result;
     }
 
-    private PentahoInputParameter parseInputParameter(ParameterDefinitionEntry paramDefEntry) {
+    private PentahoInputParameter parseInputParameter(PlainParameter paramDefEntry) {
         PentahoInputParameter result = new PentahoInputParameter();
-        String defaultValue = null;
-        if (paramDefEntry instanceof PlainParameter) {
-            PlainParameter plainParam = (PlainParameter) paramDefEntry;
-            defaultValue = String.valueOf(plainParam.getDefaultValue());
-        } else if (paramDefEntry instanceof DefaultListParameter) {
-            DefaultListParameter listParam = (DefaultListParameter) paramDefEntry;
-            defaultValue = String.valueOf(listParam.getDefaultValue());
-        }
+
+        String defaultValue = String.valueOf(paramDefEntry.getDefaultValue());
         result.setValue(defaultValue);
 
         return result;
     }
 
-    private AbstractPentahoParameter parseListParameter(ParameterDefinitionEntry paramDefEntry) {
+    private AbstractPentahoParameter parseListParameter(ListParameter paramDefEntry, ParameterContext paramContext)
+            throws ReportDataFactoryException {
         DefaultListParameter listParam = (DefaultListParameter) paramDefEntry;
         AbstractPentahoParameter result;
         if (listParam.isAllowMultiSelection()) {
-            result = parseMultiListParameter(paramDefEntry);
+            result = parseMultiListParameter(paramDefEntry, paramContext);
         } else {
-            result = parseSingleListParameter(paramDefEntry);
+            result = parseSingleListParameter(paramDefEntry, paramContext);
         }
         return result;
     }
 
-    private AbstractPentahoParameter parseSingleListParameter(ParameterDefinitionEntry paramDefEntry) {
-        AbstractPentahoParameter result;
-        if (paramDefEntry.getValueType().equals(Date.class)) {
-            result = parseDateParameter(paramDefEntry);
-        } else {
-            result = parseInputParameter(paramDefEntry);
+    private PentahoSingleSelectParameter parseSingleListParameter(ListParameter paramDefEntry,
+            ParameterContext paramContext) throws ReportDataFactoryException {
+        PentahoSingleSelectParameter result = new PentahoSingleSelectParameter();
+
+        Map<String, String> possibleValues = getPossibleValuesForParam(paramDefEntry, paramContext);
+        result.setPossibleValues(possibleValues);
+
+        Object defaultVal = paramDefEntry.getDefaultValue(paramContext);
+        if (defaultVal != null && possibleValues.containsKey(String.valueOf(defaultVal))) {
+            result.setSelectedValue(String.valueOf(defaultVal));
         }
+
         return result;
     }
 
-    private AbstractPentahoParameter parseMultiListParameter(ParameterDefinitionEntry paramDefEntry) {
-        AbstractPentahoParameter result;
+    private PentahoMultiSelectParameter parseMultiListParameter(ListParameter paramDefEntry,
+            ParameterContext paramContext) throws ReportDataFactoryException {
+        PentahoMultiSelectParameter result = new PentahoMultiSelectParameter();
 
-        result = new PentahoMultiSelectParameter();
+        Map<String, String> possibleValues = getPossibleValuesForParam(paramDefEntry, paramContext);
+        result.setPossibleValuesOptions(possibleValues);
 
+        return result;
+    }
+
+    private Map<String, String> getPossibleValuesForParam(ListParameter paramDefEntry, ParameterContext paramContext)
+            throws ReportDataFactoryException {
+        ParameterValues paramValues = paramDefEntry.getValues(paramContext);
+        Map<String, String> result = new HashMap<String, String>();
+
+        for (int i = 0; i < paramValues.getRowCount(); i++) {
+            String key = String.valueOf(paramValues.getKeyValue(i));
+            String value = String.valueOf(paramValues.getTextValue(i));
+            result.put(key, value);
+        }
         return result;
     }
 }

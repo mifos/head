@@ -21,7 +21,9 @@ package org.mifos.reports.pentaho.util;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class ReflectionUtil {
 
@@ -38,16 +40,24 @@ public class ReflectionUtil {
         return val;
     }
 
-    public static Object parseStringsToClass(String[] strings, Class<?> clazz) throws ReflectionException {
+    public static Object parseStringsToClass(List<String> strings, Class<?> clazz) throws ReflectionException {
         Object array = null;
         if (strings != null) {
-            array = Array.newInstance(clazz, strings.length);
-            for (int i = 0; i < strings.length; i++) {
-                Object val = parseStringToClass(strings[i], clazz);
+            array = Array.newInstance(clazz, strings.size());
+            for (int i = 0; i < strings.size(); i++) {
+                Object val = parseStringToClass(strings.get(i), clazz);
                 Array.set(array, i, val);
             }
         }
         return array;
+    }
+
+    public static Object parseStringsToClass(String[] strings, Class<?> clazz) throws ReflectionException {
+        Object val = null;
+        if (strings != null) {
+            val = parseStringsToClass(Arrays.asList(strings), clazz);
+        }
+        return val;
     }
 
     public static Object parseDateToClass(Date date, Class<?> clazz) throws ReflectionException {

@@ -117,13 +117,13 @@ Renders a submit button.
     buttonLabel : The value shown on the button.
     webflowEvent: If this button is part of a form that drives webflow, you may specify the event Id here.
 --]
-[#macro submitButton label="widget.form.buttonLabel.submit" id="" webflowEvent=""]
+[#macro submitButton label="widget.form.buttonLabel.submit" id="" webflowEvent="" attributes=""]
     [#if webflowEvent?length == 0]
         [#assign name="" /]
     [#else]
         [#assign name="_eventId_${webflowEvent}" /]
     [/#if]
-    <input id="${id}" type="submit" class="submit" value="[@spring.message label /]" name="${name}" />
+    <input id="${id}" type="submit" class="submit" value="[@spring.message label /]" name="${name}" ${attributes} />
 [/#macro]
 
 [#-- 

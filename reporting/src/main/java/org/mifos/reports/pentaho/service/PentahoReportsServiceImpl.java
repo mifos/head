@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +71,8 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
     }
 
     @Override
-    public PentahoReport getReport(String reportFileName, Integer outputTypeId, Map<String, AbstractPentahoParameter> params) {
+    public PentahoReport getReport(String reportFileName, Integer outputTypeId,
+            Map<String, AbstractPentahoParameter> params) {
         ByteArrayOutputStream baos = null;
         try {
             // load report definition
@@ -152,20 +152,10 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
 
     @Override
     public List<AbstractPentahoParameter> getParametersForReport(Integer reportId) {
-        List<AbstractPentahoParameter> result = new ArrayList<AbstractPentahoParameter>();
-
         String reportName = getReportFilename(reportId);
         MasterReport report = loadReport(reportName);
 
-        ReportParameterDefinition paramsDefinition = report.getParameterDefinition();
-        for (ParameterDefinitionEntry paramDefEntry : paramsDefinition.getParameterDefinitions()) {
-            AbstractPentahoParameter param = paramParser.parseParam(paramDefEntry);
-            if (param != null) {
-                result.add(param);
-            }
-        }
-
-        return result;
+        return paramParser.parseReportParams(report);
     }
 
     private MasterReport loadReport(String reportName) {

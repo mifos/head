@@ -18,7 +18,70 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
+
 [@layout.reportsLeftPaneLayout]
+	
+	<script type="text/javascript" src="pages/js/jquery/jquery.regexSelector.js"></script>
+	<script type="text/javascript">
+
+	function addOption(root, text, value)
+	{
+	  var newOpt = new Option(text, value);
+	  var rootLength = root.length;
+	  root.options[rootLength] = newOpt;
+	}
+	
+	function deleteOption(root, index)
+	{
+	  var rootLength= root.length;
+	  if(rootLength>0)
+	  {
+	    root.options[index] = null;
+	  }
+	}
+
+	function moveOptions(rootId, destinationId)
+	{
+	  rootId = rootId.replace(/([\[\]\.])/g, "\\$1");
+	  destinationId = destinationId.replace(/([\[\]\.])/g, "\\$1");
+
+	  var root = $(rootId).get(0);
+	  var destination = $(destinationId).get(0);	
+	
+	  var rootLength= root.length;
+	  var rootText = new Array();
+	  var rootValues = new Array();
+	  var rootCount = 0;
+	
+	  var i;
+	  for(i=rootLength-1; i>=0; i--)
+	  {
+	    if(root.options[i].selected)
+	    {
+	      rootText[rootCount] = root.options[i].text;
+	      rootValues[rootCount] = root.options[i].value;
+	      deleteOption(root, i);
+	      rootCount++;
+	    }
+	  }
+	  for(i=rootCount-1; i>=0; i--)
+	  {
+	    addOption(destination, rootText[i], rootValues[i]);
+	  }
+	}
+	
+	function selectAllOptions()
+	{
+	    $(":regex(id, reportMultiSelectParams\\[[0-9]+\\]\\.selectedValues)").each(function() {
+	        var selLength = this.length;
+	        this.multiple=true;
+	        for(i=selLength-1; i>=0; i--)
+	        {
+	            this.options[i].selected=true;
+	        }
+	    });
+	}
+	</script>
 	
 	[@widget.crumbs breadcrumbs /]
 	
@@ -73,11 +136,12 @@
 	    		<div class="row">
 	    		 	[@form.input path="${item}.paramName" id="${param.paramName}_paramName" fieldType="hidden" /]
 	    		 	[@form.input path="${item}.mandatory" id="${param.paramName}_mandatory," fieldType="hidden" /]
-	    		 	<label for="${param.paramName}_value">
+	    		 	<label for="${param.paramName}_slectedValue">
 	    		 	    [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]
 	    		 		${param.paramName}:
 	    		 	</label>
-			        [@form.input path="${item}.selectedValue" id="${param.paramName}_value" /]
+			        [@form.singleSelectWithPrompt path="${item}.selectedValue" id="${param.paramName}_selectedValue" 
+			        	options=param.possibleValues /]
 	    		</div>
 		    [/#list]
 		    
@@ -86,16 +150,27 @@
 	    		<div class="row">
 	    		 	[@form.input path="${item}.paramName" id="${param.paramName}_paramName" fieldType="hidden" /]
 	    		 	[@form.input path="${item}.mandatory" id="${param.paramName}_mandatory," fieldType="hidden" /]
-	    		 	<label for="${param.paramName}_value">
-	    		 	    [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]
-	    		 		${param.paramName}:
-	    		 	</label>
-			        [@form.input path="${item}.inputValue" id="${param.paramName}_value" /]
+	    		 	<div style="display: inline-block; vertical-align: top"> 
+                        [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.paramName}:
+                    </div>
+                    <div style="display: inline-block; vertical-align: top"> 
+                        [@spring.formMultiSelect "${item}.possibleValues", param.possibleValuesOptions, "class=listSize" /]
+                    </div>
+                    <div style="display: inline-block; vertical-align: top"> 
+                        <br />
+                        <input class="buttn2" name="add" style="width:80px;" type="button" id="roles.button.add"  value="[@spring.message "add"/] >>" 
+                        	onclick="moveOptions('#reportMultiSelectParams[${param_index}].possibleValues', '#reportMultiSelectParams[${param_index}].selectedValues');" />
+                       	<br />
+                        <input class="buttn2" name="remove" type="button" style="width:80px;" value="<< [@spring.message "remove"/]" 
+                        	onclick="moveOptions('#reportMultiSelectParams[${param_index}].selectedValues', '#reportMultiSelectParams[${param_index}].possibleValues');" />
+                    </div>
+                    <div style="display: inline-block; vertical-align: top">     
+                        [@spring.formMultiSelect "${item}.selectedValues", param.selectedValuesOptions, "class=listSize" /]
+                    </div>
 	    		</div>
 		    [/#list]
-		    
 		    <div class="row">
-		    	[@form.submitButton label="widget.form.buttonLabel.submit" id="input.submit" /]
+		    	[@form.submitButton label="widget.form.buttonLabel.submit" id="input.submit" attributes="onClick='selectAllOptions();'" /]
 		    </div>
 		</form>
 	</div>
