@@ -34,6 +34,7 @@ import org.mifos.reports.pentaho.params.AbstractPentahoParameter;
 import org.mifos.ui.core.controller.BreadCrumbsLinks;
 import org.mifos.ui.core.controller.BreadcrumbBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -67,6 +68,10 @@ public class PentahoReportingController {
     public ModelAndView executeReport(final HttpServletRequest request, HttpServletResponse response,
             @Valid @ModelAttribute("pentahoReportFormBean") PentahoReportFormBean pentahoReportFormBean,
             BindingResult bindingResult) throws IOException {
+        if (!this.pentahoReportsService.checkAccessToReport(pentahoReportFormBean.getReportId())) {
+            throw new AccessDeniedException("Access denied");
+        }
+
         ModelAndView mav = null;
         Integer reportId = pentahoReportFormBean.getReportId();
         if (bindingResult.hasErrors()) {
@@ -98,6 +103,9 @@ public class PentahoReportingController {
     @RequestMapping(value = "/viewPentahoReport.ftl")
     public void loadReport(@RequestParam(value = REPORT_ID_PARAM, required = true) Integer reportId,
             @ModelAttribute("pentahoReportFormBean") PentahoReportFormBean formBean) {
+        if (!this.pentahoReportsService.checkAccessToReport(reportId)) {
+            throw new AccessDeniedException("Access denied");
+        }
         initFormBean(formBean, reportId);
     }
 

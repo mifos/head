@@ -39,4 +39,7 @@ public interface RolesPermissionServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void deleteRole(Integer versionNo, Short roleId) throws Exception;
+
+    @PreAuthorize("isFullyAuthenticated()")
+    boolean hasUserAccessForActivity(Short activityID) throws Exception;
 }

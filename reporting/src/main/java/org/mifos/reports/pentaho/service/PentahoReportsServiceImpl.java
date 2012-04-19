@@ -31,8 +31,10 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.business.ReportsJasperMap;
 import org.mifos.reports.pentaho.PentahoReport;
 import org.mifos.reports.pentaho.PentahoReportsServiceFacade;
@@ -45,6 +47,8 @@ import org.mifos.reports.pentaho.util.ReflectionException;
 import org.mifos.reports.persistence.ReportsPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 
 import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
@@ -72,10 +76,21 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
 
     private final ReportsPersistence reportsPersistence = new ReportsPersistence();
     private PentahoParamParser paramParser = new PentahoParamParser();
+    private RolesPermissionServiceFacade rolesPermissionService;
+
+    @Autowired
+    public void setRolesPermissionService(RolesPermissionServiceFacade rolesPermissionService) {
+        this.rolesPermissionService = rolesPermissionService;
+    }
 
     @Override
     public PentahoReport getReport(Integer reportId, Integer outputTypeId, Map<String, AbstractPentahoParameter> params) {
         ByteArrayOutputStream baos = null;
+
+        if (!checkAccessToReport(reportId)) {
+            throw new AccessDeniedException("Access denied");
+        }
+
         try {
             String reportFileName = getReportFilename(reportId);
             // load report definition
@@ -169,6 +184,10 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
 
     @Override
     public List<AbstractPentahoParameter> getParametersForReport(Integer reportId) {
+        if (!checkAccessToReport(reportId)) {
+            throw new AccessDeniedException("Access denied");
+        }
+
         String reportName = getReportFilename(reportId);
         MasterReport report = loadReport(reportName);
 
@@ -239,5 +258,20 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
                 errors.add(error);
             }
         }
+    }
+
+    @Override
+    public boolean checkAccessToReport(Integer reportId) {
+        ReportsBO report = this.reportsPersistence.getReport(reportId.shortValue());
+        boolean result = false;
+        if (report != null) {
+            Short activityID = report.getActivityId();
+            try {
+                result = this.rolesPermissionService.hasUserAccessForActivity(activityID);
+            } catch (Exception ex) {
+                result = false;
+            }
+        }
+        return result;
     }
 }

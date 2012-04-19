@@ -187,4 +187,21 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
         return (null != count && count > 0) ? true : false;
     }
 
+    @Override
+    public boolean hasUserAccessForActivity(Short activityID) throws Exception {
+        boolean result = false;
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            for (Short roleId : mifosUser.getRoleIds()) {
+                RoleBO role = legacyRolesPermissionsDao.getRole(roleId);
+                if (role.getActivityIds().contains(activityID)) {
+                    result = true;
+                    break;
+                }
+            }
+        } catch (PersistenceException e) {
+            throw new RolesPermissionException(e);
+        }
+        return result;
+    }
 }

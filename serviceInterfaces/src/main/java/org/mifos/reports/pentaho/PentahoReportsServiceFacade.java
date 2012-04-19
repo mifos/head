@@ -38,4 +38,7 @@ public interface PentahoReportsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     List<AbstractPentahoParameter> getParametersForReport(Integer reportId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    boolean checkAccessToReport(Integer reportId);
 }
