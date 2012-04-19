@@ -22,56 +22,46 @@ package org.mifos.reports.pentaho.params;
 import org.joda.time.LocalDate;
 
 public class PentahoDateParameter extends AbstractPentahoParameter {
-    private Integer dateDD;
-    private Integer dateMM;
-    private Integer dateYY;
+    private String dateDD;
+    private String dateMM;
+    private String dateYY;
 
-    public Integer getDateDD() {
+    public String getDateDD() {
         return dateDD;
     }
 
-    public void setDateDD(Integer dateDD) {
+    public void setDateDD(String dateDD) {
         this.dateDD = dateDD;
     }
 
-    public Integer getDateMM() {
+    public String getDateMM() {
         return dateMM;
     }
 
-    public void setDateMM(Integer dateMM) {
+    public void setDateMM(String dateMM) {
         this.dateMM = dateMM;
     }
 
-    public Integer getDateYY() {
+    public String getDateYY() {
         return dateYY;
     }
 
-    public void setDateYY(Integer dateYY) {
+    public void setDateYY(String dateYY) {
         this.dateYY = dateYY;
     }
 
     public LocalDate getDate() {
-        LocalDate result = null;
-        if (dateDD != null && dateMM != null && dateYY != null) {
-            result = new LocalDate(dateYY, dateMM, dateDD);
-        }
-        return result;
+        Integer day = Integer.parseInt(dateDD);
+        Integer month = Integer.parseInt(dateMM);
+        Integer year = Integer.parseInt(dateYY);
+
+        return new LocalDate(year, month, day);
     }
 
     public void setDate(LocalDate date) {
-        this.dateDD = date.getDayOfMonth();
-        this.dateMM = date.getMonthOfYear();
-        this.dateYY = date.getYear();
-    }
-
-    public boolean isdDateValid() {
-        boolean result = true;
-        try {
-            getDate();
-        } catch (Exception ex) {
-            result = false;
-        }
-        return result;
+        this.dateDD = String.valueOf(date.getDayOfMonth());
+        this.dateMM = String.valueOf(date.getMonthOfYear());
+        this.dateYY = String.valueOf(date.getYear());
     }
 
     @Override

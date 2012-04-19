@@ -29,11 +29,17 @@ import javax.validation.Valid;
 
 import org.mifos.reports.pentaho.PentahoReport;
 import org.mifos.reports.pentaho.PentahoReportsServiceFacade;
+import org.mifos.reports.pentaho.PentahoValidationError;
 import org.mifos.reports.pentaho.params.AbstractPentahoParameter;
 import org.mifos.ui.core.controller.BreadCrumbsLinks;
 import org.mifos.ui.core.controller.BreadcrumbBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,39 +53,52 @@ public class PentahoReportingController {
 
     private PentahoReportsServiceFacade pentahoReportsService;
 
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(new PentahoReportFormValidator());
+    }
+
     @Autowired
     public void setPentahoReportsService(PentahoReportsServiceFacade pentahoReportsService) {
         this.pentahoReportsService = pentahoReportsService;
     }
 
     @RequestMapping(value = "/execPentahoReport.ftl", method = RequestMethod.POST)
-    public void executeReport(final HttpServletRequest request, HttpServletResponse response,
-            @Valid @ModelAttribute("pentahoReportFormBean") PentahoReportFormBean pentahoReportFormBean)
-            throws IOException {
+    public ModelAndView executeReport(final HttpServletRequest request, HttpServletResponse response,
+            @Valid @ModelAttribute("pentahoReportFormBean") PentahoReportFormBean pentahoReportFormBean,
+            BindingResult bindingResult) throws IOException {
+        ModelAndView mav = null;
         Integer reportId = pentahoReportFormBean.getReportId();
-        Integer outputType = Integer.parseInt(pentahoReportFormBean.getOutputType());
-        Map<String, AbstractPentahoParameter> reportParams = pentahoReportFormBean.getAllParameteres();
+        if (bindingResult.hasErrors()) {
+            mav = new ModelAndView("viewPentahoReport");
+            initFormBean(pentahoReportFormBean, reportId);
+        } else {
+            Integer outputType = Integer.parseInt(pentahoReportFormBean.getOutputType());
+            Map<String, AbstractPentahoParameter> reportParams = pentahoReportFormBean.getAllParameteres();
 
-        PentahoReport report = this.pentahoReportsService.getReport(reportId, outputType, reportParams);
+            PentahoReport report = this.pentahoReportsService.getReport(reportId, outputType, reportParams);
 
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getFilename() + "\"");
-        response.setContentType(report.getContentType());
-        response.setContentLength(report.getContentSize());
+            if (report.isInError()) {
+                for (PentahoValidationError error : report.getErrors()) {
+                    addErrorToBindingResult(error, bindingResult);
+                }
+                mav = new ModelAndView("viewPentahoReport");
+                initFormBean(pentahoReportFormBean, reportId);
+            } else {
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getFilename() + "\"");
+                response.setContentType(report.getContentType());
+                response.setContentLength(report.getContentSize());
 
-        response.getOutputStream().write(report.getContent());
+                response.getOutputStream().write(report.getContent());
+            }
+        }
+        return mav;
     }
 
-    @RequestMapping(value = "/viewPentahoReport.ftl", method = RequestMethod.GET)
-    public ModelAndView loadReport(@RequestParam(value = REPORT_ID_PARAM, required = true) Integer reportId) {
-        ModelAndView mav = new ModelAndView();
-
-        PentahoReportFormBean formBean = createFormBean(reportId);
-        List<AbstractPentahoParameter> params = this.pentahoReportsService.getParametersForReport(reportId);
-        formBean.setReportParameters(params);
-
-        mav.getModel().put("pentahoReportFormBean", formBean);
-
-        return mav;
+    @RequestMapping(value = "/viewPentahoReport.ftl")
+    public void loadReport(@RequestParam(value = REPORT_ID_PARAM, required = true) Integer reportId,
+            @ModelAttribute("pentahoReportFormBean") PentahoReportFormBean formBean) {
+        initFormBean(formBean, reportId);
     }
 
     @ModelAttribute("breadcrumbs")
@@ -95,12 +114,26 @@ public class PentahoReportingController {
         return this.pentahoReportsService.getReportName(getReportId(request));
     }
 
-    private PentahoReportFormBean createFormBean(Integer reportId) {
-        PentahoReportFormBean form = new PentahoReportFormBean();
+    private void initFormBean(PentahoReportFormBean form, Integer reportId) {
         form.setAllowedOutputTypes(this.pentahoReportsService.getReportOutputTypes());
         form.setReportId(reportId);
-        form.setOutputType("0");
-        return form;
+        if (form.getOutputType() == null) {
+            form.setOutputType("0");
+        }
+
+        List<AbstractPentahoParameter> params = this.pentahoReportsService.getParametersForReport(reportId);
+        form.setReportParameters(params);
+    }
+
+    private void addErrorToBindingResult(PentahoValidationError validationError, BindingResult bindingResult) {
+        ObjectError error;
+        if (validationError.isFieldError()) {
+            error = new FieldError("pentahoReportFormBean", validationError.getParamName(),
+                    validationError.getParamName() + ": " + validationError.getErrorMessage());
+        } else {
+            error = new ObjectError("pentahoReportFormBean", validationError.getErrorMessage());
+        }
+        bindingResult.addError(error);
     }
 
     private Integer getReportId(HttpServletRequest request) {

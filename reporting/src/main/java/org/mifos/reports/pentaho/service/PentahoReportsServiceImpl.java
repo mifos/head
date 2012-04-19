@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.reports.business.ReportsJasperMap;
 import org.mifos.reports.pentaho.PentahoReport;
 import org.mifos.reports.pentaho.PentahoReportsServiceFacade;
+import org.mifos.reports.pentaho.PentahoValidationError;
 import org.mifos.reports.pentaho.params.AbstractPentahoParameter;
 import org.mifos.reports.pentaho.util.PentahoOutputType;
 import org.mifos.reports.pentaho.util.PentahoParamParser;
@@ -46,11 +48,17 @@ import org.slf4j.LoggerFactory;
 
 import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
+import org.pentaho.reporting.engine.classic.core.ReportProcessingException;
 import org.pentaho.reporting.engine.classic.core.modules.output.pageable.pdf.PdfReportUtil;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.rtf.RTFReportUtil;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.xls.ExcelReportUtil;
+import org.pentaho.reporting.engine.classic.core.parameters.DefaultParameterContext;
+import org.pentaho.reporting.engine.classic.core.parameters.ParameterContext;
 import org.pentaho.reporting.engine.classic.core.parameters.ParameterDefinitionEntry;
 import org.pentaho.reporting.engine.classic.core.parameters.ReportParameterDefinition;
+import org.pentaho.reporting.engine.classic.core.parameters.ReportParameterValidator;
+import org.pentaho.reporting.engine.classic.core.parameters.ValidationMessage;
+import org.pentaho.reporting.engine.classic.core.parameters.ValidationResult;
 import org.pentaho.reporting.engine.classic.core.util.ReportParameterValues;
 import org.pentaho.reporting.libraries.resourceloader.Resource;
 import org.pentaho.reporting.libraries.resourceloader.ResourceManager;
@@ -83,37 +91,48 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
 
             Resource res = manager.createDirectly(url, MasterReport.class);
             MasterReport report = (MasterReport) res.getResource();
-            addParametersToReport(report, params);
 
             PentahoReport result = new PentahoReport();
-            baos = new ByteArrayOutputStream();
 
-            PentahoOutputType outputType = PentahoOutputType.findById(outputTypeId);
-            switch (outputType) {
-            case XLS:
-                ExcelReportUtil.createXLS(report, baos);
-                break;
-            case RTF:
-                RTFReportUtil.createRTF(report, baos);
-                break;
-            default: // PDF
-                PdfReportUtil.createPDF(report, baos);
-                break;
+            List<PentahoValidationError> errors = new ArrayList<PentahoValidationError>();
+            try {
+                addParametersToReport(report, params);
+                validate(report, errors);
+            } catch (ReflectionException ex) {
+                errors.add(new PentahoValidationError(ex.getMessage()));
             }
 
-            result.setContentType(outputType.getContentType());
-            result.setFileExtension(outputType.getFileExtension());
+            result.setErrors(errors);
 
-            // report name
-            if (StringUtils.isBlank(report.getName())) {
-                result.setName(reportFileName.replace(".prpt", ""));
-            } else {
-                result.setName(report.getName());
+            if (errors.isEmpty()) {
+                baos = new ByteArrayOutputStream();
+
+                PentahoOutputType outputType = PentahoOutputType.findById(outputTypeId);
+                switch (outputType) {
+                case XLS:
+                    ExcelReportUtil.createXLS(report, baos);
+                    break;
+                case RTF:
+                    RTFReportUtil.createRTF(report, baos);
+                    break;
+                default: // PDF
+                    PdfReportUtil.createPDF(report, baos);
+                    break;
+                }
+
+                result.setContentType(outputType.getContentType());
+                result.setFileExtension(outputType.getFileExtension());
+
+                // report name
+                if (StringUtils.isBlank(report.getName())) {
+                    result.setName(reportFileName.replace(".prpt", ""));
+                } else {
+                    result.setName(report.getName());
+                }
+
+                result.setContent(baos.toByteArray());
             }
-
-            result.setContent(baos.toByteArray());
             return result;
-
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
         } finally {
@@ -201,6 +220,26 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
         } catch (PersistenceException ex) {
             logger.error("Reports persistence exception", ex);
             throw new MifosRuntimeException(ex);
+        }
+    }
+
+    private void validate(MasterReport report, List<PentahoValidationError> errors) throws ReportProcessingException {
+        ReportParameterDefinition paramDefinition = report.getParameterDefinition();
+        ReportParameterValidator validator = paramDefinition.getValidator();
+        ParameterContext paramContext = new DefaultParameterContext(report);
+
+        ValidationResult validationResult = validator.validate(null, paramDefinition, paramContext);
+        for (ValidationMessage msg : validationResult.getErrors()) {
+            PentahoValidationError error = new PentahoValidationError(msg.getMessage());
+            errors.add(error);
+        }
+
+        String[] properties = validationResult.getProperties();
+        for (String prop : properties) {
+            for (ValidationMessage msg : validationResult.getErrors(prop)) {
+                PentahoValidationError error = new PentahoValidationError(prop, msg.getMessage());
+                errors.add(error);
+            }
         }
     }
 }

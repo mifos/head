@@ -38,6 +38,7 @@ public class PentahoReportFormBean implements Serializable {
     private Integer reportId;
     private String outputType;
     private Map<String, String> allowedOutputTypes;
+    private boolean inError = false;
 
     private List<PentahoDateParameter> reportDateParams = new ArrayList<PentahoDateParameter>();
     private List<PentahoInputParameter> reportInputParams = new ArrayList<PentahoInputParameter>();
@@ -100,20 +101,37 @@ public class PentahoReportFormBean implements Serializable {
         this.reportMultiSelectParams = reportMultiSelectParams;
     }
 
+    public boolean isInError() {
+        return inError;
+    }
+
+    public void setInError(boolean inError) {
+        this.inError = inError;
+    }
+
     public void setReportParameters(List<AbstractPentahoParameter> params) {
-        this.reportDateParams.clear();
-        this.reportInputParams.clear();
-        this.reportSingleSelectParams.clear();
-        this.reportMultiSelectParams.clear();
+        Map<String, AbstractPentahoParameter> formParams = getAllParameteres();
         for (AbstractPentahoParameter param : params) {
-            if (param instanceof PentahoDateParameter) {
-                this.reportDateParams.add((PentahoDateParameter) param);
-            } else if (param instanceof PentahoInputParameter) {
-                this.reportInputParams.add((PentahoInputParameter) param);
-            } else if (param instanceof PentahoSingleSelectParameter) {
-                this.reportSingleSelectParams.add((PentahoSingleSelectParameter) param);
-            } else if (param instanceof PentahoMultiSelectParameter) {
-                this.reportMultiSelectParams.add((PentahoMultiSelectParameter) param);
+            String paramName = param.getParamName();
+            if (formParams.containsKey(paramName)) {
+                if (param instanceof PentahoSingleSelectParameter) {
+                    PentahoSingleSelectParameter singleSelectParam = (PentahoSingleSelectParameter) param;
+                    PentahoSingleSelectParameter singleSelectFormParam = (PentahoSingleSelectParameter) formParams
+                            .get(paramName);
+                    singleSelectFormParam.setPossibleValues(singleSelectParam.getPossibleValues());
+                } else if (param instanceof PentahoMultiSelectParameter) {
+                    PentahoMultiSelectParameter multiSelectParam = (PentahoMultiSelectParameter) param;
+                    PentahoMultiSelectParameter multiSelectFormParam = (PentahoMultiSelectParameter) formParams
+                            .get(paramName);
+                    multiSelectFormParam.setPossibleValuesOptions(multiSelectParam.getPossibleValuesOptions());
+                    for (String val : multiSelectFormParam.getSelectedValues()) {
+                        String text = multiSelectFormParam.getPossibleValuesOptions().get(val);
+                        multiSelectFormParam.getPossibleValuesOptions().remove(val);
+                        multiSelectFormParam.getSelectedValuesOptions().put(val, text);
+                    }
+                }
+            } else {
+                addParameter(param);
             }
         }
     }
@@ -132,5 +150,17 @@ public class PentahoReportFormBean implements Serializable {
         }
 
         return result;
+    }
+
+    public void addParameter(AbstractPentahoParameter param) {
+        if (param instanceof PentahoDateParameter) {
+            this.reportDateParams.add((PentahoDateParameter) param);
+        } else if (param instanceof PentahoInputParameter) {
+            this.reportInputParams.add((PentahoInputParameter) param);
+        } else if (param instanceof PentahoSingleSelectParameter) {
+            this.reportSingleSelectParams.add((PentahoSingleSelectParameter) param);
+        } else if (param instanceof PentahoMultiSelectParameter) {
+            this.reportMultiSelectParams.add((PentahoMultiSelectParameter) param);
+        }
     }
 }

@@ -20,6 +20,7 @@
 package org.mifos.reports.pentaho;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class PentahoReport {
 
@@ -27,6 +28,7 @@ public class PentahoReport {
     private byte[] content;
     private String name;
     private String fileExtension;
+    private List<PentahoValidationError> errors;
 
     public String getContentType() {
         return contentType;
@@ -66,5 +68,17 @@ public class PentahoReport {
 
     public String getFilename() {
         return name + "." + fileExtension;
+    }
+
+    public List<PentahoValidationError> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(List<PentahoValidationError> errors) {
+        this.errors = errors;
+    }
+
+    public boolean isInError() {
+        return !(errors == null || errors.isEmpty());
     }
 }
