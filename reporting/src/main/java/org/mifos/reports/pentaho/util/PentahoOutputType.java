@@ -21,8 +21,12 @@ package org.mifos.reports.pentaho.util;
 
 public enum PentahoOutputType {
 
-    PDF(0, "PDF", "application/pdf", ".pdf"), XLS(1, "XLS", "application/vnd.ms-excel", ".xls"), RTF(2, "RTF",
-            "application/rtf", ".rtf");
+    PDF(0, "PDF", "application/pdf", ".pdf"),
+    XLS(1, "XLS", "application/vnd.ms-excel", ".xls"),
+    RTF(2, "RTF", "application/rtf", ".rtf"),
+    HTML(3, "HTML", "text/html", ".html"),
+    XML(4, "XML", "text/xml", ".xml"),
+    CSV(5, "CSV", "text/csv", ".csv");
 
     private final Integer id;
     private final String displayName;

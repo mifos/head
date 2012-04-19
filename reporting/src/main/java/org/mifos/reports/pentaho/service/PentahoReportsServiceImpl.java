@@ -50,8 +50,11 @@ import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.ReportProcessingException;
 import org.pentaho.reporting.engine.classic.core.modules.output.pageable.pdf.PdfReportUtil;
+import org.pentaho.reporting.engine.classic.core.modules.output.table.csv.CSVReportUtil;
+import org.pentaho.reporting.engine.classic.core.modules.output.table.html.HtmlReportUtil;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.rtf.RTFReportUtil;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.xls.ExcelReportUtil;
+import org.pentaho.reporting.engine.classic.core.modules.output.table.xml.XmlTableReportUtil;
 import org.pentaho.reporting.engine.classic.core.parameters.DefaultParameterContext;
 import org.pentaho.reporting.engine.classic.core.parameters.ParameterContext;
 import org.pentaho.reporting.engine.classic.core.parameters.ParameterDefinitionEntry;
@@ -106,14 +109,23 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
 
             if (errors.isEmpty()) {
                 baos = new ByteArrayOutputStream();
-
                 PentahoOutputType outputType = PentahoOutputType.findById(outputTypeId);
+
                 switch (outputType) {
                 case XLS:
                     ExcelReportUtil.createXLS(report, baos);
                     break;
                 case RTF:
                     RTFReportUtil.createRTF(report, baos);
+                    break;
+                case HTML:
+                    HtmlReportUtil.createStreamHTML(report, baos);
+                    break;
+                case CSV:
+                    CSVReportUtil.createCSV(report, baos, "UTF-8");
+                    break;
+                case XML:
+                    XmlTableReportUtil.createFlowXML(report, baos);
                     break;
                 default: // PDF
                     PdfReportUtil.createPDF(report, baos);
@@ -129,7 +141,6 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
                 } else {
                     result.setName(report.getName());
                 }
-
                 result.setContent(baos.toByteArray());
             }
             return result;
