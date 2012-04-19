@@ -728,7 +728,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 														<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
 													</c:url >
 													<c:url value="applyAdjustment.do" var="applyAdjustmentLoadAdjustmentMethodUrl" >
-														<c:param name="method" value="loadAdjustment" />
+														<c:param name="method" value="listPossibleAdjustments" />
 														<c:param name="accountId" value="${loanInformationDto.accountId}" />
 														<c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}" />
 														<c:param name="prdOfferingName" value="${loanInformationDto.prdOfferingName}" />
@@ -740,7 +740,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 										<c:when
 											test="${(loanInformationDto.accountStateId=='5' || loanInformationDto.accountStateId=='9' || loanInformationDto.accountStateId=='6') }">
                                             <html-el:link styleId="loanaccountdetail.link.applyAdjustment"
-                                                href="applyAdjustment.do?method=listPossibleAdjustments&accountId=${loanInformationDto.accountId}&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+                                                href="${applyAdjustmentLoadAdjustmentMethodUrl}">
                                                 <mifos:mifoslabel name="loan.apply_adjustment" />
                                             </html-el:link>
 											<br>
