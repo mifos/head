@@ -243,9 +243,6 @@ Renders a group of radio buttons.
 [#macro formSingleSelectWithPrompt path options selectPrompt attributes=""]
     [@spring.bind path/]
     <select id="${spring.status.expression}" name="${spring.status.expression}" ${attributes}>
-    	[#if options?size > 1]
-        <option value="" [@spring.checkSelected ""/]>${selectPrompt}</option>
-        [/#if]
         [#if options?is_hash]
             [#list options?keys as value]
             <option value="${value?html}"[@spring.checkSelected value/]>${options[value]?html}</option>
@@ -255,15 +252,17 @@ Renders a group of radio buttons.
             <option value="${value?html}"[@spring.checkSelected value/]>${value?html}</option>
             [/#list]
         [/#if]
+    	[#if options?size == 1]
+        	<option value="" >${selectPrompt}</option>
+        [#else]
+        	<option value="" [@spring.checkSelected ""/]>${selectPrompt}</option>
+        [/#if]
     </select>
 [/#macro]
 
 [#macro formSingleSelectWithPromptGLCode path options selectPrompt glMode attributes=""]
     [@spring.bind path/]
     <select id="${spring.status.expression}" name="${spring.status.expression}" ${attributes}>
-    	[#if options?size > 1]
-        <option value="" [@spring.checkSelected ""/]>${selectPrompt}</option>
-        [/#if]
         [#if options?is_hash]
             [#list options?keys as value]
 	            [#if glMode == 1]
@@ -280,6 +279,11 @@ Renders a group of radio buttons.
             [#list options as value]
             <option value="${value?html}"[@spring.checkSelected value/]>${value?html}</option>
             [/#list]
+        [/#if]
+    	[#if options?size == 1]
+        	<option value="">${selectPrompt}</option>
+        [#else]
+        	<option value="" [@spring.checkSelected ""/]>${selectPrompt}</option>
         [/#if]
     </select>
 [/#macro]

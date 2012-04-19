@@ -42,7 +42,6 @@ public class CreateLoanAccountsSearchPage extends AbstractPage {
         verifyInformationMessage("Enter details and click Search.");
         
         selectBranch(formParameters.getBranch());
-        selectOfficer(formParameters.getLoanOfficer());
         selectCenter(formParameters.getCenter());
         selenium.select("id=createMultipleLoanAccounts.select.loanProduct", "label="+ formParameters.getLoanProduct());
         selenium.click ("id=createMultipleLoanAccounts.button.submit");
@@ -76,8 +75,12 @@ public class CreateLoanAccountsSearchPage extends AbstractPage {
 
     public void selectBranchOfficerAndCenter(String branch, String officer, String center) {
         selectBranch(branch);
+        if(selenium.getSelectedLabel("loanOfficerId").equalsIgnoreCase("--Select--")) {
         selectOfficer(officer);
+        }
+        if(selenium.getSelectedLabel("centerId").equalsIgnoreCase("--Select--")) {
         selectCenter(center);
+        }
     }
 
     public void verifyBranchNotInSelectOptions(String branch) {

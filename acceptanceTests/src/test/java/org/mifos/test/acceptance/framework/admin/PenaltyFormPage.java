@@ -42,8 +42,9 @@ public class PenaltyFormPage extends MifosPage {
         if (selenium.isElementPresent("categoryTypeId") && selenium.isVisible("categoryTypeId")) {
             selectIfNotEmpty("categoryTypeId", parameters.getApplies());
         }
-
+        
         selectIfNotEmpty("periodTypeId", parameters.getPeriod());
+        
         selenium.type("duration", parameters.getDuration());
         selenium.type("min", parameters.getMin());
         selenium.type("max", parameters.getMax());
@@ -64,10 +65,11 @@ public class PenaltyFormPage extends MifosPage {
                 && StringUtils.hasText(parameters.getFormula())) {
             selectIfNotEmpty("formulaId", parameters.getFormula());
         }
-
         selectIfNotEmpty("frequencyId", parameters.getFrequency());
-        selectIfNotEmpty("glCodeId", parameters.getGlCode());
 
+        if (selenium.getSelectedLabel("glCodeId").equalsIgnoreCase("--Select--")) {
+        selectIfNotEmpty("glCodeId", parameters.getGlCode());
+        }
         if (selenium.isElementPresent("statusId") && selenium.isVisible("statusId")) {
             selectIfNotEmpty("statusId", parameters.getStatus());
         }

@@ -303,22 +303,22 @@ public class MainPenaltyTest extends UiTestCaseBase {
         penaltyFormPage.fillParameters(parameters).submitPageToDisplayErrors();
         
         penaltyFormPage.verifyErrors(new String[] { this.errors.get("name"),
-                this.errors.get("glcode"), this.errors.get("minGreaterMax"), this.errors.get("frequency"),
+                this.errors.get("minGreaterMax"), this.errors.get("frequency"),
                 this.errors.get("beforeDecimalDuration"), this.errors.get("formula") });
     }
 
     private void verifyErrorsForLoanPenaltyWithIncorrectRate(final PenaltyFormPage penaltyFormPage,
             final PenaltyFormParameters parameters) {
         final String[] selectedErrors1 = new String[] { this.errors.get("name"),
-                this.errors.get("glcode"), this.errors.get("minGreaterMax"), this.errors.get("frequency"),
+                this.errors.get("minGreaterMax"), this.errors.get("frequency"),
                 this.errors.get("beforeDecimalDuration"), this.errors.get("invalidRate") };
         
         final String[] selectedErrors2 = new String[] { this.errors.get("name"),
-                this.errors.get("glcode"), this.errors.get("minGreaterMax"), this.errors.get("frequency"),
+                this.errors.get("minGreaterMax"), this.errors.get("frequency"),
                 this.errors.get("beforeDecimalDuration"), this.errors.get("beforeDecimalRate") };
         
         final String[] selectedErrors3 = new String[] { this.errors.get("name"),
-                this.errors.get("glcode"), this.errors.get("minGreaterMax"), this.errors.get("frequency"),
+                this.errors.get("minGreaterMax"), this.errors.get("frequency"),
                 this.errors.get("beforeDecimalDuration"), this.errors.get("afterDecimalRate") };
 
         parameters.setFormula(PenaltyFormParameters.FORMULA_OVERDUE_AMOUNT);
@@ -354,11 +354,11 @@ public class MainPenaltyTest extends UiTestCaseBase {
         
         if (category.equalsIgnoreCase(EDIT_CATEGORY_SAVINGS)) {
             penaltyFormPage.verifyErrors(new String[] { this.errors.get("name"),
-                    this.errors.get("glcode"), this.errors.get("frequency"), this.errors.get("beforeDecimalDuration"),
+                    this.errors.get("frequency"), this.errors.get("beforeDecimalDuration"),
                     this.errors.get("minGreaterMax"), this.errors.get("amount") });
         } else {
             penaltyFormPage.verifyErrors(new String[] { this.errors.get("name"),
-                    this.errors.get("glcode"), this.errors.get("frequency"), this.errors.get("beforeDecimalDuration"),
+                    this.errors.get("frequency"), this.errors.get("beforeDecimalDuration"),
                     this.errors.get("minGreaterMax"), this.errors.get("rateOrAmount") });
         }
     }
@@ -372,17 +372,17 @@ public class MainPenaltyTest extends UiTestCaseBase {
         
         if (isCreatePage) {
             penaltyFormPage.verifyErrors(new String[] { this.errors.get("applies"), this.errors.get("name"),
-                            this.errors.get("glcode"), this.errors.get("afterDecimalAmount"),
+                            this.errors.get("afterDecimalAmount"),
                             this.errors.get("frequency"), this.errors.get("beforeDecimalDuration"),
                             this.errors.get("minGreaterMax") });
         } else {
             if (category.equalsIgnoreCase(EDIT_CATEGORY_SAVINGS)) {
                 penaltyFormPage.verifyErrors(new String[] { this.errors.get("name"),
-                        this.errors.get("glcode"), this.errors.get("afterDecimalAmount"), this.errors.get("frequency"),
+                        this.errors.get("afterDecimalAmount"), this.errors.get("frequency"),
                         this.errors.get("beforeDecimalDuration"), this.errors.get("minGreaterMax") });
             } else {
                 penaltyFormPage.verifyErrors(new String[] { this.errors.get("name"),
-                        this.errors.get("glcode"), this.errors.get("frequency"), this.errors.get("beforeDecimalDuration"),
+                        this.errors.get("frequency"), this.errors.get("beforeDecimalDuration"),
                         this.errors.get("minGreaterMax") });
             }
         }
@@ -391,45 +391,45 @@ public class MainPenaltyTest extends UiTestCaseBase {
     private void verifyErrorsWithIncorrectValue(final PenaltyFormPage penaltyFormPage, final PenaltyFormParameters parameters,
             final boolean isCreatePage) {
         final String[] selectedErrorsCreate1 = new String[] { this.errors.get("applies"), this.errors.get("name"),
-                this.errors.get("glcode"), this.errors.get("invalidMin"),
+                this.errors.get("invalidMin"),
                 this.errors.get("invalidMax"), this.errors.get("invalidAmount"), this.errors.get("frequency"),
                 this.errors.get("invalidDuration") };
         
         final String[] selectedErrorsCreate2 = new String[] { this.errors.get("applies"), this.errors.get("name"),
-                this.errors.get("glcode"), this.errors.get("beforeDecimalMin"),
+                this.errors.get("beforeDecimalMin"),
                 this.errors.get("beforeDecimalMax"), this.errors.get("beforeDecimalAmount"), this.errors.get("frequency"),
                 this.errors.get("beforeDecimalDuration") };
         
         final String[] selectedErrorsCreate3 = new String[] { this.errors.get("applies"), this.errors.get("name"),
-                this.errors.get("glcode"), this.errors.get("afterDecimalMin"),
+                this.errors.get("afterDecimalMin"),
                 this.errors.get("afterDecimalMax"), this.errors.get("afterDecimalAmount"), this.errors.get("frequency"),
                 this.errors.get("beforeDecimalDuration") };
 
         final String[] selectedErrorsSaving1 = new String[] { this.errors.get("name"),
-                this.errors.get("glcode"), this.errors.get("invalidMin"), this.errors.get("invalidMax"),
+                this.errors.get("invalidMin"), this.errors.get("invalidMax"),
                 this.errors.get("invalidAmount"), this.errors.get("frequency"),
                 this.errors.get("invalidDuration") };
         
         final String[] selectedErrorsSaving2 = new String[] { this.errors.get("name"),
-                this.errors.get("glcode"), this.errors.get("beforeDecimalMin"), this.errors.get("beforeDecimalMax"),
+                this.errors.get("beforeDecimalMin"), this.errors.get("beforeDecimalMax"),
                 this.errors.get("beforeDecimalAmount"), this.errors.get("frequency"),
                 this.errors.get("beforeDecimalDuration") };
         
         final String[] selectedErrorsSaving3 = new String[] { this.errors.get("name"),
-                this.errors.get("glcode"), this.errors.get("afterDecimalMin"), this.errors.get("afterDecimalMax"),
+                this.errors.get("afterDecimalMin"), this.errors.get("afterDecimalMax"),
                 this.errors.get("afterDecimalAmount"), this.errors.get("frequency"),
                 this.errors.get("beforeDecimalDuration") };
 
         final String[] selectedErrorsLoan1 = new String[] { this.errors.get("name"),
-                this.errors.get("glcode"), this.errors.get("invalidMin"), this.errors.get("invalidMax"),
+                this.errors.get("invalidMin"), this.errors.get("invalidMax"),
                 this.errors.get("frequency"), this.errors.get("invalidDuration") };
         
         final String[] selectedErrorsLoan2 = new String[] { this.errors.get("name"),
-                this.errors.get("glcode"), this.errors.get("beforeDecimalMin"), this.errors.get("beforeDecimalMax"),
+                this.errors.get("beforeDecimalMin"), this.errors.get("beforeDecimalMax"),
                 this.errors.get("frequency"), this.errors.get("beforeDecimalDuration") };
         
         final String[] selectedErrorsLoan3 = new String[] { this.errors.get("name"),
-                this.errors.get("glcode"), this.errors.get("afterDecimalMin"), this.errors.get("afterDecimalMax"),
+                this.errors.get("afterDecimalMin"), this.errors.get("afterDecimalMax"),
                 this.errors.get("frequency"), this.errors.get("beforeDecimalDuration") };
         
         for (int k = 0; k < 4; ++k) {
@@ -498,16 +498,16 @@ public class MainPenaltyTest extends UiTestCaseBase {
         
         if (isCreatePage) {
             penaltyFormPage.verifyErrors(new String[] { this.errors.get("applies"), this.errors.get("name"),
-                    this.errors.get("glcode"), this.errors.get("min"),
+                    this.errors.get("min"),
                     this.errors.get("max"), this.errors.get("amount"), this.errors.get("frequency") });
         } else {
             if (category.equalsIgnoreCase(EDIT_CATEGORY_SAVINGS)) {
                 penaltyFormPage.verifyErrors(new String[] { this.errors.get("name"),
-                        this.errors.get("glcode"), this.errors.get("min"), this.errors.get("max"),
+                        this.errors.get("min"), this.errors.get("max"),
                         this.errors.get("amount"), this.errors.get("frequency") });
             } else {
                 penaltyFormPage.verifyErrors(new String[] { this.errors.get("name"),
-                        this.errors.get("glcode"), this.errors.get("min"), this.errors.get("max"),
+                        this.errors.get("min"), this.errors.get("max"),
                         this.errors.get("rateOrAmount"), this.errors.get("frequency") });
             }
         }
@@ -519,16 +519,16 @@ public class MainPenaltyTest extends UiTestCaseBase {
         
         if (isCreatePage) {
             penaltyFormPage.verifyErrors(new String[] { this.errors.get("applies"), this.errors.get("name"),
-                    this.errors.get("glcode"), this.errors.get("min"),
+                    this.errors.get("min"),
                     this.errors.get("max"), this.errors.get("amount") });
         } else {
             if (category.equalsIgnoreCase(EDIT_CATEGORY_SAVINGS)) {
                 penaltyFormPage.verifyErrors(new String[] { this.errors.get("name"),
-                        this.errors.get("glcode"), this.errors.get("min"), this.errors.get("max"),
+                        this.errors.get("min"), this.errors.get("max"),
                         this.errors.get("amount") });
             } else {
                 penaltyFormPage.verifyErrors(new String[] { this.errors.get("name"),
-                        this.errors.get("glcode"), this.errors.get("min"), this.errors.get("max"),
+                        this.errors.get("min"), this.errors.get("max"),
                         this.errors.get("rateOrAmount") });
             }
         }

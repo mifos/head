@@ -27,6 +27,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="pages/js/singleitem.js"></script>
 <script type="text/javascript" src="pages/js/separator.js"></script>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">

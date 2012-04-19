@@ -25,6 +25,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
 
+@SuppressWarnings("PMD.CyclomaticComplexity")
 public class CollectionSheetEntrySelectPage extends MifosPage {
 
     private static final String RECEIPT_INPUT_ID = "bulkentry.input.receiptId";
@@ -192,30 +193,36 @@ public class CollectionSheetEntrySelectPage extends MifosPage {
     }
 
     private void fillOutDropDownMenus(SubmitFormParameters parameters, boolean waitForPageToLoad) {
+    	if (selenium.getSelectedLabel("officeId").equalsIgnoreCase("--Select--")) {
         selenium.select("officeId", "label=" + parameters.getBranch());
         waitForPageToLoadIfNecessary(waitForPageToLoad);
+    	}
+    	if (selenium.getSelectedLabel("officeId").equalsIgnoreCase("--Select--")) {
         selenium.select("loanOfficerId", "label=" + parameters.getLoanOfficer());
         waitForPageToLoadIfNecessary(waitForPageToLoad);
+    	}
+    	if (selenium.getSelectedLabel("officeId").equalsIgnoreCase("--Select--")) {
         selenium.select("customerId", "label=" + parameters.getCenter());
         waitForPageToLoadIfNecessary(waitForPageToLoad);
+    	}
     }
-
+    @SuppressWarnings("PMD.NPathComplexity")
     public void fillOutDropDownMenusWithGivenInput(SubmitFormParameters parameters) {
-        if (parameters.getBranch() != null) {
+        if (selenium.getSelectedLabel("officeId").equalsIgnoreCase("--Select--") && parameters.getBranch() != null) {
             selenium.select("officeId", "label=" + parameters.getBranch());
             waitForPageToLoadIfNecessary(true);
-        }
-        if (parameters.getLoanOfficer() != null) {
+    	}
+        if (selenium.getSelectedLabel("officeId").equalsIgnoreCase("--Select--") && parameters.getLoanOfficer() != null) {
             selenium.select("loanOfficerId", "label=" + parameters.getLoanOfficer());
             waitForPageToLoadIfNecessary(true);
         }
-        if (parameters.getCenter() != null) {
+        if (selenium.getSelectedLabel("officeId").equalsIgnoreCase("--Select--") && parameters.getCenter() != null) {
             selenium.select("customerId", "label=" + parameters.getCenter());
             waitForPageToLoadIfNecessary(true);
         }
-        if (parameters.getPaymentMode() != null) {
+        if (selenium.getSelectedLabel("officeId").equalsIgnoreCase("--Select--") && parameters.getPaymentMode() != null) {
             selenium.select("paymentId", "value=" + parameters.getPaymentModeValue());
-        }
+    	}
     }
 
     private void waitForPageToLoadIfNecessary(boolean waitForPageToLoad) {
