@@ -30,7 +30,8 @@ public class CustomerHierarchyDto implements Serializable {
     private static final long serialVersionUID = 7475645034919589243L;
 
     private int size;
-	
+	private int searchResultSize;
+    
 	private List<ClientSearchResultDto> clients = new ArrayList<ClientSearchResultDto>();
 	private List<GroupSearchResultDto> groups = new ArrayList<GroupSearchResultDto>();
 	private List<CenterSearchResultDto> centers = new ArrayList<CenterSearchResultDto>();
@@ -61,6 +62,12 @@ public class CustomerHierarchyDto implements Serializable {
 	}
 	public void setSize(int size) {
 		this.size = size;
+	}
+	public int getSearchResultSize() {
+		return searchResultSize;
+	}
+	public void setSearchResultSize(int searchResultSize) {
+		this.searchResultSize = searchResultSize;
 	}
 	public LoanAccountSearchResultDto getLoan() {
 		return loan;

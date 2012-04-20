@@ -64,6 +64,7 @@ public class CustomerSearchServiceFacadeWebTier implements
         try {
             resultList = searchResult.get(pageNumber, pageSize);
             customerHierarchyDto.setSize(searchResult.getSize());
+            customerHierarchyDto.setSearchResultSize(resultList.size());
         } catch ( HibernateSearchException e ){
             throw new MifosRuntimeException(e);
         }

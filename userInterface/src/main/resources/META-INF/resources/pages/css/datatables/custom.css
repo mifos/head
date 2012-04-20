@@ -13,12 +13,14 @@ table {
 }
 
 tr.even td {
+	vertical-align: top;
     background: white;
     height: 20pt;
     border-bottom:1px #D7DEEE solid;
 }
 
 tr.odd td {
+	vertical-align: top;
     background: white;
     height: 20pt;
     border-bottom:1px #D7DEEE solid;

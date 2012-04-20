@@ -56,3 +56,41 @@ $(document).ready(function() {
 });
 </script>
 [/#macro]
+
+<!-- http://mifosforge.jira.com/browse/MIFOS-5457 -->
+[#macro mainCustomerSearchResultDataTable]
+<!-- Datatable -->
+<style type="text/css" title="currentStyle">
+	@import "pages/css/datatables/custom.css";
+    @import "pages/css/datatables/table_jui.css";
+</style>
+<script src="pages/js/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    var languageOptions = {
+        "sUrl": "jqueryDatatableMessages.ftl"
+        };
+    var options = {
+       	"bPaginate": true,
+        "bLengthChange": true,
+        "bProcessing": true,
+        "bInfo": true,
+        "bAutoWidth": true,
+        "sPaginationType": "full_numbers",
+        "bStateSave": true,
+        "bServerSide": true,
+		"sAjaxSource": "searchResultAjaxData.ftl",
+		"oLanguage": languageOptions,
+        "fnServerParams": function ( aoData ) {
+            aoData.push( { "name": "searchString", "value": $('input[name="searchString"]').val() } );
+            aoData.push( { "name": "officeId", "value": $('select[name="officeId"] option:selected').val() } );
+        },
+        "fnDrawCallback": function(){
+        	$(".sorting_1").removeClass("sorting_1"); [#-- remove unnecessary class added by firefox  --]
+        },
+        "sDom": '<ipl>rt<lip>'
+    };
+    $('#mainCustomerSearchResultDataTable').dataTable(options);
+});
+</script>
+[/#macro]

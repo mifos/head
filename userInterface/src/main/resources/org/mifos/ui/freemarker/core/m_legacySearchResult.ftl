@@ -24,9 +24,6 @@
 [@widget.topNavigationNoSecurityMobile currentTab="ClientsAndAccounts" /]
 <span id="page.id" title="MainSearchResults"></span>
 <div class="content">
-	<div class="error">
-		<span class="fontnormalRedBold"></span>
-	</div>
 	<div class="fontnormal">
 		<form method="POST" action="searchResult.ftl">
 			[@form.showAllErrors "customerSearch.*"/]

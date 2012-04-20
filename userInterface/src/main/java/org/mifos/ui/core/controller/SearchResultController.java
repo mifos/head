@@ -42,15 +42,15 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 @SuppressWarnings("PMD")
 @Controller
-@RequestMapping("/searchResult")
 @SessionAttributes("customerSearch")
 public class SearchResultController {
-    private static final int pageSize = 10;
+    private static final int PAGE_SIZE = 10;
 
     @Autowired
     private CustomerSearchServiceFacade customerSearchServiceFacade;
@@ -65,11 +65,11 @@ public class SearchResultController {
         return new CustomerSearchFormBean();
     }
 
-    @RequestMapping(method = { RequestMethod.POST, RequestMethod.GET })
-    public ModelAndView showSearchResults(HttpServletRequest request, HttpServletResponse response,
+    @RequestMapping(value = "/legacySearchResult", method = { RequestMethod.POST, RequestMethod.GET })
+    public ModelAndView legacyShowSearchResults(HttpServletRequest request,
             @ModelAttribute("customerSearch") @Valid CustomerSearchFormBean customerSearchFormBean, BindingResult result) {
     	ModelAndView modelAndView = new ModelAndView();
-        sitePreferenceHelper.resolveSiteType(modelAndView, "searchResult", request);
+        sitePreferenceHelper.resolveSiteType(modelAndView, "legacySearchResult", request);
         
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CustomerHierarchyDto customerHierarchyDto = null;
@@ -93,28 +93,79 @@ public class SearchResultController {
         modelAndView.addObject("customerSearch", customerSearchFormBean);
 
         customerHierarchyDto = customerSearchServiceFacade.search(customerSearchFormBean.getSearchString(),
-                customerSearchFormBean.getOfficeId(), currentPage * this.pageSize, this.pageSize);
+                customerSearchFormBean.getOfficeId(), currentPage * PAGE_SIZE, PAGE_SIZE);
 
         boolean prevPageAvailable = false;
         if (currentPage > 0) {
             prevPageAvailable = true;
         }
         boolean nextPageAvailable = false;
-        if (customerHierarchyDto.getSize() / this.pageSize > 0
-                && customerHierarchyDto.getSize() / this.pageSize >= currentPage + 1) {
+        if (customerHierarchyDto.getSize() / PAGE_SIZE > 0
+                && customerHierarchyDto.getSize() / PAGE_SIZE >= currentPage + 1) {
             nextPageAvailable = true;
         }
 
         modelAndView.addObject("isPrevPageAvailable", prevPageAvailable);
         modelAndView.addObject("isNextPageAvailable", nextPageAvailable);
         modelAndView.addObject("currentPage", currentPage);
-        modelAndView.addObject("pageSize", this.pageSize);
+        modelAndView.addObject("pageSize", PAGE_SIZE);
 
         modelAndView.addObject("customerHierarchy", customerHierarchyDto);
 
         return modelAndView;
     }
+    
+    @RequestMapping(value = "/searchResult", method = { RequestMethod.POST, RequestMethod.GET } )
+    public ModelAndView showSearchResults(HttpServletRequest request, @ModelAttribute("customerSearch") @Valid CustomerSearchFormBean customerSearchFormBean, 
+    		BindingResult result){
+    	ModelAndView modelAndView = new ModelAndView();
+        sitePreferenceHelper.resolveSiteType(modelAndView, "searchResult", request);
+        
+        // mobile search result view doesn't use ajax search
+		if (sitePreferenceHelper.isMobile(request)) {
+			return legacyShowSearchResults(request, customerSearchFormBean, result);
+		}
+        
+    	if (result.hasErrors()) {
+    		return modelAndView;
+        }
 
+    	MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		List<OfficeDto> officeDtoList = officeServiceFacade.retrieveActiveBranchesUnderUser((short) user.getUserId());
+		
+		Map<String, String> officesMap = new HashMap<String, String>();
+		for (OfficeDto officeDto : officeDtoList) {
+			officesMap.put(officeDto.getId().toString(), officeDto.getName());
+		}
+		customerSearchFormBean.setOffices(officesMap);
+        
+		modelAndView.addObject("customerSearch", customerSearchFormBean);
+		
+    	return modelAndView;
+    }
+    
+    @RequestMapping(value = "/searchResultAjaxData", method = RequestMethod.GET )
+    public ModelAndView getSearchResultAjaxData(HttpServletResponse response, @ModelAttribute("customerSearch") CustomerSearchFormBean customerSearchFormBean, 
+    		@RequestParam(required=false) String sEcho, @RequestParam Integer iDisplayStart, @RequestParam Integer iDisplayLength){
+    	ModelAndView modelAndView = new ModelAndView("searchResultAjaxData");
+    	
+    	CustomerHierarchyDto customerHierarchyDto = new CustomerHierarchyDto();
+    	
+    	if ( customerSearchFormBean.getSearchString() != null && !customerSearchFormBean.getSearchString().isEmpty() ){
+    		customerHierarchyDto = customerSearchServiceFacade.search(customerSearchFormBean.getSearchString(),
+                    customerSearchFormBean.getOfficeId(), iDisplayStart, iDisplayLength);
+    	}
+    	
+    	if ( sEcho != null ){
+    		modelAndView.addObject("sEcho", sEcho);    		
+    	}
+    	modelAndView.addObject("customerHierarchy", customerHierarchyDto);
+    	modelAndView.addObject("iDisplayStart", iDisplayStart);
+    	modelAndView.addObject("iDisplayLength", iDisplayLength);
+    	
+    	return modelAndView;
+    }
+    
     @InitBinder("customerSearch")
     protected void initBinder(WebDataBinder binder) {
         binder.setValidator(new CustomerSearchFormValidator());

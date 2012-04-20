@@ -65,6 +65,12 @@ public class SitePreferenceHelper extends CookieGenerator{
         String url = UrlHelper.constructCurrentPageUrl(request);
         request.setAttribute("currentPageUrl", url);
     }
+    
+    public boolean isMobile(HttpServletRequest request){
+    	SitePreference sitePreference = SitePreferenceUtils.getCurrentSitePreference(request);
+        
+    	return sitePreference.isMobile();
+    }
 
     public void setSitePreferenceCookie(Integer userId, HttpServletResponse response) {
         SitePreferenceType sitePreferenceType = personnelServiceFacade.retrieveSitePreference(userId);
