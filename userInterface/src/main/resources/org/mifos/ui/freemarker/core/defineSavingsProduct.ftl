@@ -32,7 +32,7 @@
     });
 
     function fnCheckAppliesTo() {
-        if(document.getElementById("generalDetails.selectedApplicableFor").selectedIndex==2) {
+        if(document.getElementById("generalDetails.selectedApplicableFor").selectedIndex==1) {
             document.getElementById("selectedGroupSavingsApproach").disabled=false;
         }
         else {
