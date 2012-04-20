@@ -41,8 +41,15 @@ public class CreateLoanAccountsSearchPage extends AbstractPage {
     public CreateLoanAccountsEntryPage searchAndNavigateToCreateMultipleLoanAccountsEntryPage(CreateMultipleLoanAccountSelectParameters formParameters) {
         verifyInformationMessage("Enter details and click Search.");
         
+        if (selenium.getSelectedLabel("branchOfficeId").equalsIgnoreCase("--Select--")) {
         selectBranch(formParameters.getBranch());
+        }
+        if (selenium.getSelectedLabel("loanOfficerId").equalsIgnoreCase("--Select--")) {
+        selectOfficer(formParameters.getLoanOfficer());
+    	}
+        if (selenium.getSelectedLabel("centerId").equalsIgnoreCase("--Select--")) {
         selectCenter(formParameters.getCenter());
+		}	
         selenium.select("id=createMultipleLoanAccounts.select.loanProduct", "label="+ formParameters.getLoanProduct());
         selenium.click ("id=createMultipleLoanAccounts.button.submit");
         waitForPageToLoad();
