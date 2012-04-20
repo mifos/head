@@ -168,6 +168,7 @@
 		    [/#list]
 		    <div class="row">
 		    	[@form.submitButton label="widget.form.buttonLabel.submit" id="input.submit" attributes="onClick='selectAllOptions();'" /]
+		    	<input id="input.cancel" type="submit" class="cancel" value="[@spring.message "widget.form.buttonLabel.cancel" /]" name="CANCEL" />
 		    </div>
 		</form>
 	</div>

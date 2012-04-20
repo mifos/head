@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.reports.pentaho.PentahoReport;
 import org.mifos.reports.pentaho.PentahoReportsServiceFacade;
 import org.mifos.reports.pentaho.PentahoValidationError;
@@ -51,6 +52,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class PentahoReportingController {
 
     private static final String REPORT_ID_PARAM = "reportId";
+    private static final String CANCEL_PARAM = "CANCEL";
+    private static final String REPORTS_MAIN_URL = "reportsAction.do?method=load";
 
     private PentahoReportsServiceFacade pentahoReportsService;
 
@@ -66,6 +69,7 @@ public class PentahoReportingController {
 
     @RequestMapping(value = "/execPentahoReport.ftl", method = RequestMethod.POST)
     public ModelAndView executeReport(final HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(value = CANCEL_PARAM, required = false) String cancel,
             @Valid @ModelAttribute("pentahoReportFormBean") PentahoReportFormBean pentahoReportFormBean,
             BindingResult bindingResult) throws IOException {
         if (!this.pentahoReportsService.checkAccessToReport(pentahoReportFormBean.getReportId())) {
@@ -74,7 +78,9 @@ public class PentahoReportingController {
 
         ModelAndView mav = null;
         Integer reportId = pentahoReportFormBean.getReportId();
-        if (bindingResult.hasErrors()) {
+        if (StringUtils.isNotBlank(cancel)) {
+            mav = new ModelAndView("redirect:" + REPORTS_MAIN_URL);
+        } else if (bindingResult.hasErrors()) {
             mav = new ModelAndView("viewPentahoReport");
             initFormBean(pentahoReportFormBean, reportId);
         } else {
@@ -113,7 +119,7 @@ public class PentahoReportingController {
     public List<BreadCrumbsLinks> getBreadCrumbs(HttpServletRequest request) {
         Integer reportId = getReportId(request);
         String reportName = this.pentahoReportsService.getReportName(reportId);
-        return new BreadcrumbBuilder().withLink("tab.Reports", "reportsAction.do?method=load")
+        return new BreadcrumbBuilder().withLink("tab.Reports", REPORTS_MAIN_URL)
                 .withLink(reportName, "viewPentahoReport.ftl?reportId=" + reportId).build();
     }
 
