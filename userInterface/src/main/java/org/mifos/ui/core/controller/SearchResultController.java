@@ -141,6 +141,16 @@ public class SearchResultController {
     		return modelAndView;
         }
 		
+    	CustomerHierarchyDto customerHierarchyDto = new CustomerHierarchyDto();
+    	
+    	if ( customerSearchFormBean.getSearchString() != null && !customerSearchFormBean.getSearchString().isEmpty() ){
+    		customerHierarchyDto = customerSearchServiceFacade.search(customerSearchFormBean.getSearchString(),
+                    customerSearchFormBean.getOfficeId(), 0, 10);
+    	}
+    	
+    	modelAndView.addObject("customerHierarchy", customerHierarchyDto);
+    	modelAndView.addObject("startIndex", 0);
+    	
     	return modelAndView;
     }
     

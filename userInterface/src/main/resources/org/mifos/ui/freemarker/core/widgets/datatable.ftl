@@ -58,7 +58,7 @@ $(document).ready(function() {
 [/#macro]
 
 <!-- http://mifosforge.jira.com/browse/MIFOS-5457 -->
-[#macro mainCustomerSearchResultDataTable]
+[#macro mainCustomerSearchResultDataTable deferLoadingDataSize]
 <!-- Datatable -->
 <style type="text/css" title="currentStyle">
 	@import "pages/css/datatables/custom.css";
@@ -77,7 +77,6 @@ $(document).ready(function() {
         "bInfo": true,
         "bAutoWidth": true,
         "sPaginationType": "full_numbers",
-        "bStateSave": true,
         "bServerSide": true,
 		"sAjaxSource": "searchResultAjaxData.ftl",
 		"oLanguage": languageOptions,
@@ -88,6 +87,9 @@ $(document).ready(function() {
         "fnDrawCallback": function(){
         	$(".sorting_1").removeClass("sorting_1"); [#-- remove unnecessary class added by firefox  --]
         },
+        [#if deferLoadingDataSize??]
+        	"iDeferLoading": ${deferLoadingDataSize},
+        [/#if]
         "sDom": '<ipl>rt<lip>'
     };
     $('#mainCustomerSearchResultDataTable').dataTable(options);
