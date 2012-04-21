@@ -125,10 +125,6 @@ public class SearchResultController {
 		if (sitePreferenceHelper.isMobile(request)) {
 			return legacyShowSearchResults(request, customerSearchFormBean, result);
 		}
-        
-    	if (result.hasErrors()) {
-    		return modelAndView;
-        }
 
     	MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		List<OfficeDto> officeDtoList = officeServiceFacade.retrieveActiveBranchesUnderUser((short) user.getUserId());
@@ -140,6 +136,10 @@ public class SearchResultController {
 		customerSearchFormBean.setOffices(officesMap);
         
 		modelAndView.addObject("customerSearch", customerSearchFormBean);
+	
+    	if (result.hasErrors()) {
+    		return modelAndView;
+        }
 		
     	return modelAndView;
     }
