@@ -74,7 +74,7 @@
 						<span>
 						[#list client.savingsGlobalAccountNum as saving]
 							<span>
-								<a href='viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>Account # ${saving}</a>
+								<a href='viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${saving}</a>
 							</span>
 						[/#list]
 						</span>
@@ -88,7 +88,7 @@
 						<span>
 						[#list client.loanGlobalAccountNum as loan]
 							<span>
-								<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>Account # ${loan}</a>
+								<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${loan}</a>
 							</span>
 						[/#list]
 						</span>
@@ -99,18 +99,18 @@
 							[@spring.message 'alsosee' /]:
 						</span>
 						<span>
-							<a href='clientsAndAccounts.ftl?officeId=${client.branchId}&randomNUm=${Session.randomNUm?c}'>
+							<a href='clientsAndAccounts.ftl?officeId=${client.branchId}&randomNUm=${Session.randomNUm?if_exists?c}'>
 								${client.branchName}
 							</a>
 							[#if client.centerGlobalCustNum?has_content]
 							 /
-							<a href='viewCenterDetails.ftl?globalCustNum=${client.centerGlobalCustNum}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>
+							<a href='viewCenterDetails.ftl?globalCustNum=${client.centerGlobalCustNum}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
 								${client.centerName}
 							</a>
 							[/#if]
 							[#if client.groupGlobalCustNum?has_content]
 							 /
-							<a href='viewGroupDetails.ftl?globalCustNum=${client.groupGlobalCustNum}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>
+							<a href='viewGroupDetails.ftl?globalCustNum=${client.groupGlobalCustNum}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
 								${client.groupName}
 							</a>
 							[/#if]
@@ -131,7 +131,7 @@
 					<div>
 						[@spring.message '${ConfigurationConstants.GROUP}' /]
 						<span class='headingblue' style='font-size: 12px;'>
-							<a href='viewGroupDetails.ftl?globalCustNum=${group.groupGlobalCustNum}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>
+							<a href='viewGroupDetails.ftl?globalCustNum=${group.groupGlobalCustNum}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
 								${group.groupName}[@spring.message 'label.colon' /] [@spring.message 'ID' /] ${group.groupGlobalCustNum}
 							</a>
 						</span>
@@ -158,7 +158,7 @@
 						<span>
 						[#list group.savingsGlobalAccountNum as saving]
 							<span>
-								<a href='viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&method=get&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>Account # ${saving}</a>
+								<a href='viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&method=get&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${saving}</a>
 							</span>
 						[/#list]
 						</span>
@@ -172,7 +172,7 @@
 						<span>
 						[#list group.loanGlobalAccountNum as loan]
 							<span>
-								<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>Account # ${loan}</a>
+								<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${loan}</a>
 							</span>
 						[/#list]
 						</span>
@@ -183,12 +183,12 @@
 							[@spring.message 'alsosee' /]:
 						</span>
 						<span>
-							<a href='clientsAndAccounts.ftl?officeId=${group.branchId}&randomNUm=${Session.randomNUm?c}'>
+							<a href='clientsAndAccounts.ftl?officeId=${group.branchId}&randomNUm=${Session.randomNUm?if_exists?c}'>
 								${group.branchName}
 							</a> 
 							[#if group.centerGlobalCustNum?has_content]
 							 /
-							<a href='viewCenterDetails.ftl?globalCustNum=${group.centerGlobalCustNum}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>
+							<a href='viewCenterDetails.ftl?globalCustNum=${group.centerGlobalCustNum}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
 								${group.centerName}
 							</a>
 							[/#if]
@@ -210,7 +210,7 @@
 						[@spring.message '${ConfigurationConstants.CENTER}' /]
 						<span class='headingblue' style='font-size: 12px;'>
 							<a href='viewCenterDetails.ftl?globalCustNum=${center.centerGlobalCustNum}&recordOfficeId=${center.branchId}&
-									 recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomnum=${Session.randomNUm?c}'>
+									 recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomnum=${Session.randomNUm?if_exists?c}'>
 								${center.centerName}[@spring.message 'label.colon' /] [@spring.message 'ID' /] ${center.centerGlobalCustNum}
 							</a>
 						</span>
@@ -237,7 +237,7 @@
 						<span>
 						[#list center.savingsGlobalAccountNum as saving]
 							<span>
-							<a href='viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${center.branchId}&recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>${saving}</a>
+							<a href='viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${center.branchId}&recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>${saving}</a>
 							</span>
 						[/#list]
 						</span>
@@ -248,7 +248,7 @@
 							[@spring.message 'alsosee' /]:
 						</span>
 						<span>
-							<a href='clientsAndAccounts.ftl?officeId=${center.branchId}&randomNUm=${Session.randomNUm?c}'>
+							<a href='clientsAndAccounts.ftl?officeId=${center.branchId}&randomNUm=${Session.randomNUm?if_exists?c}'>
 								${center.branchName}
 							</a>
 						</span>
@@ -272,7 +272,7 @@
 						</span>
 						<span class='headingblue' style='font-size: 12px;'>
 							<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan.loanGlobalAccountNum}&recordOfficeId=${loan.branchId}&
-									 recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomnum=${Session.randomNUm?c}'>
+									 recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomnum=${Session.randomNUm?if_exists?c}'>
 								Account # ${loan.loanGlobalAccountNum}
 							</a>
 						</span>
@@ -297,7 +297,7 @@
 							[@spring.message '${ConfigurationConstants.CLIENT}' /]
 						</span>
 						<span>
-							<a href='viewClientDetails.ftl?globalCustNum=${loan.clientGlobalCustNum}&recordOfficeId=${loan.branchId}&recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>
+							<a href='viewClientDetails.ftl?globalCustNum=${loan.clientGlobalCustNum}&recordOfficeId=${loan.branchId}&recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
 								${loan.clientName}: ${loan.clientGlobalCustNum}
 							</a>
 						</span>
@@ -306,7 +306,7 @@
 							[@spring.message '${ConfigurationConstants.GROUP}' /]
 						</span>
 						<span>
-							<a href='viewGroupDetails.ftl?globalCustNum=${loan.groupGlobalCustNum}&recordOfficeId=${loan.branchId}&recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>
+							<a href='viewGroupDetails.ftl?globalCustNum=${loan.groupGlobalCustNum}&recordOfficeId=${loan.branchId}&recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
 								${loan.groupName}: ${loan.groupGlobalCustNum}
 							</a>
 						</span>
@@ -317,19 +317,19 @@
 							[@spring.message 'alsosee' /]:
 						</span>
 						<span>
-							<a href='clientsAndAccounts.ftl?officeId=${loan.branchId}&randomNUm=${Session.randomNUm?c}'>
+							<a href='clientsAndAccounts.ftl?officeId=${loan.branchId}&randomNUm=${Session.randomNUm?if_exists?c}'>
 								${loan.branchName}
 							</a>
 						</span>
 						[#if loan.centerGlobalCustNum?has_content]
 						 /
-						<a href='viewCenterDetails.ftl?globalCustNum=${loan.centerGlobalCustNum}&recordOfficeId=${loan.branchId}&recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>
+						<a href='viewCenterDetails.ftl?globalCustNum=${loan.centerGlobalCustNum}&recordOfficeId=${loan.branchId}&recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
 							${loan.centerName}
 						</a>
 						[/#if]
 						[#if loan.groupGlobalCustNum?has_content && loan.clientGlobalCustNum?has_content]
 						 /
-						<a href='viewGroupDetails.ftl?globalCustNum=${loan.groupGlobalCustNum}&recordOfficeId=${loan.branchId}&recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>
+						<a href='viewGroupDetails.ftl?globalCustNum=${loan.groupGlobalCustNum}&recordOfficeId=${loan.branchId}&recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
 							${loan.groupName}
 						</a>
 						[/#if]
@@ -353,7 +353,7 @@
 						</span>
 						<span class='headingblue' style='font-size: 12px;'>
 							<a href='viewSavingsAccountDetails.ftl?globalAccountNum=${savings.savingsGlobalAccountNum}&recordOfficeId=${savings.branchId}&
-									 recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomnum=${Session.randomNUm?c}'>
+									 recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomnum=${Session.randomNUm?if_exists?c}'>
 								Account # ${savings.savingsGlobalAccountNum}
 							</a>
 						</span>
@@ -378,7 +378,7 @@
 							[@spring.message '${ConfigurationConstants.CLIENT}' /]:
 						</span>
 						<span>
-							<a href='viewClientDetails.ftl?globalCustNum=${savings.clientGlobalCustNum}&recordOfficeId=${savings.branchId}&recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>
+							<a href='viewClientDetails.ftl?globalCustNum=${savings.clientGlobalCustNum}&recordOfficeId=${savings.branchId}&recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
 								${savings.clientName}: ${savings.clientGlobalCustNum}
 							</a>
 						</span>
@@ -387,7 +387,7 @@
 							[@spring.message '${ConfigurationConstants.GROUP}' /]:
 						</span>
 						<span>
-							<a href='viewGroupDetails.ftl?globalCustNum=${savings.groupGlobalCustNum}&recordOfficeId=${savings.branchId}&recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>
+							<a href='viewGroupDetails.ftl?globalCustNum=${savings.groupGlobalCustNum}&recordOfficeId=${savings.branchId}&recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
 								${savings.groupName}: ${savings.groupGlobalCustNum}
 							</a>
 						</span>
@@ -396,7 +396,7 @@
 							[@spring.message '${ConfigurationConstants.CENTER}' /]:
 						</span>
 						<span>
-							<a href='viewCenterDetails.ftl?globalCustNum=${savings.centerGlobalCustNum}&recordOfficeId=${savings.branchId}&recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>
+							<a href='viewCenterDetails.ftl?globalCustNum=${savings.centerGlobalCustNum}&recordOfficeId=${savings.branchId}&recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
 								${savings.centerName}: ${savings.centerGlobalCustNum}
 							</a>
 						</span>
@@ -407,19 +407,19 @@
 							[@spring.message 'alsosee' /]:
 						</span>
 						<span>
-							<a href='clientsAndAccounts.ftl?officeId=${savings.branchId}&randomNUm=${Session.randomNUm?c}'>
+							<a href='clientsAndAccounts.ftl?officeId=${savings.branchId}&randomNUm=${Session.randomNUm?if_exists?c}'>
 								${savings.branchName}
 							</a>
 						</span>
 						[#if savings.centerGlobalCustNum?has_content && savings.groupGlobalCustNum?has_content]
 						 /
-						<a href='viewCenterDetails.ftl?globalCustNum=${savings.centerGlobalCustNum}&recordOfficeId=${savings.branchId}&recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>
+						<a href='viewCenterDetails.ftl?globalCustNum=${savings.centerGlobalCustNum}&recordOfficeId=${savings.branchId}&recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
 							${savings.centerName}
 						</a>
 						[/#if]
 						[#if savings.groupGlobalCustNum?has_content && savings.clientGlobalCustNum?has_content]
 						 /
-						<a href='viewGroupDetails.ftl?globalCustNum=${savings.groupGlobalCustNum}&recordOfficeId=${savings.branchId}&recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?c}'>
+						<a href='viewGroupDetails.ftl?globalCustNum=${savings.groupGlobalCustNum}&recordOfficeId=${savings.branchId}&recordLoanOfficerId=${savings.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
 							${savings.groupName}
 						</a>
 						[/#if]
