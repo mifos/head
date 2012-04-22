@@ -22,9 +22,6 @@ package org.mifos.application.collectionsheet.struts.actionforms;
 
 import java.sql.Date;
 import java.util.Calendar;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -40,7 +37,6 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
@@ -228,10 +224,9 @@ public class BulkEntryActionForm extends BaseActionForm {
         return errors;
     }
 
-    private ActionErrors receiptDateValidate(ActionErrors errors, Locale locale) {
+    private ActionErrors receiptDateValidate(ActionErrors errors) {
         if (StringUtils.isNotBlank(getReceiptDate()) && !DateUtils.isValidDate(getReceiptDate())) {
-            ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
-            String rcptdate = resources.getString(CollectionSheetEntryConstants.RECEIPTDATE);
+            String rcptdate = getLocalizedMessage(CollectionSheetEntryConstants.RECEIPTDATE);
             errors.add(CollectionSheetEntryConstants.INVALID_RECEIPT_DATE, new ActionMessage(
                     CollectionSheetEntryConstants.INVALID_RECEIPT_DATE, rcptdate));
         }
@@ -239,12 +234,10 @@ public class BulkEntryActionForm extends BaseActionForm {
     }
 
     private ActionErrors mandatoryCheck(Date meetingDate, UserContext userContext, short isCenterHierarchyExists) {
-        Locale locale = userContext.getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
-        String loanOfficer = resources.getString(CollectionSheetEntryConstants.LOANOFFICERS);
-        String modeOfPayment = resources.getString(CollectionSheetEntryConstants.MODE_OF_PAYMENT);
-        String dateOfTransaction = resources.getString(CollectionSheetEntryConstants.DATEOFTRXN);
-        ActionErrors errors = receiptDateValidate(new ActionErrors(), locale);
+        String loanOfficer = getLocalizedMessage(CollectionSheetEntryConstants.LOANOFFICERS);
+        String modeOfPayment = getLocalizedMessage(CollectionSheetEntryConstants.MODE_OF_PAYMENT);
+        String dateOfTransaction = getLocalizedMessage(CollectionSheetEntryConstants.DATEOFTRXN);
+        ActionErrors errors = receiptDateValidate(new ActionErrors());
         java.sql.Date currentDate = null;
         try {
             currentDate = DateUtils.getLocaleDate(userContext.getPreferredLocale(), DateUtils

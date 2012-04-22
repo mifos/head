@@ -21,9 +21,6 @@
 package org.mifos.accounts.loan.struts.actionforms;
 
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -36,7 +33,6 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 
 public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm implements QuestionResponseCapturer{
@@ -68,7 +64,7 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm im
         String method = request.getParameter(MethodNameConstants.METHOD);
         if (isPreviewMethod(method) && getPaymentAmountGreaterThanZero()
                 && StringUtils.isBlank(paymentModeOfPayment)) {
-            String errorMessage = getResourceBundleForLocale(getUserLocale(request)).getString("loan.paymentid");
+            String errorMessage = this.getLocalizedMessage("loan.paymentid");
             errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                     errorMessage));
         }
@@ -78,10 +74,6 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm im
             request.setAttribute("methodCalled", method);
         }
         return errors;
-    }
-
-    private ResourceBundle getResourceBundleForLocale(Locale userLocale) {
-        return ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, userLocale);
     }
 
     private boolean isPreviewMethod(String methodName) {

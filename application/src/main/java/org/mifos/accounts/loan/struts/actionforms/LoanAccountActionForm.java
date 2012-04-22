@@ -37,8 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -96,13 +94,11 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ExceptionConstants;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.util.Transformer;
-import org.mifos.security.util.UserContext;
 
 public class LoanAccountActionForm extends BaseActionForm implements QuestionResponseCapturer, CashFlowCaptor {
     public LoanAccountActionForm() {
@@ -677,16 +673,15 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String method = request.getParameter(Methods.method.toString());
         ActionErrors errors = new ActionErrors();
-        UserContext userContext = getUserContext(request);
         if (null == request.getAttribute(Constants.CURRENTFLOWKEY)) {
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
         }
 
         try {
             if (method.equals(Methods.getPrdOfferings.toString())) {
-                checkValidationForGetPrdOfferings(errors, userContext);
+                checkValidationForGetPrdOfferings(errors);
             } else if (method.equals(Methods.load.toString())) {
-                checkValidationForLoad(errors, userContext);
+                checkValidationForLoad(errors);
             } else if (method.equals(Methods.schedulePreview.toString())) {
                 checkValidationForSchedulePreview(errors, getCurrencyFromLoanOffering(request), request);
             } else if (method.equals(Methods.managePreview.toString())) {
@@ -714,7 +709,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         if (conversionResult.getErrors().size() == 0) {
             if (loanAmountValue <= 0.0) {
                 addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                        lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY));
+                        getLocalizedMessage(LoanConstants.LOAN_AMOUNT_KEY));
             } else {
                 this.loanAmountValue = new Money(currency, loanAmountValue);
             }
@@ -726,7 +721,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                 LoanConstants.LOAN_INTEREST_RATE_KEY, errors);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() >= 0.0)) {
             addError(errors, LoanConstants.LOAN_INTEREST_RATE_KEY, LoanConstants.ERRORS_MUST_NOT_BE_NEGATIVE,
-                    lookupLocalizedPropertyValue(LoanConstants.LOAN_INTEREST_RATE_KEY));
+                    getLocalizedMessage(LoanConstants.LOAN_INTEREST_RATE_KEY));
         }
     }
 
@@ -738,7 +733,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                 if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
                     addError(errors, LoanConstants.LOAN_DEFAULT_FEE_KEY,
                             LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                            lookupLocalizedPropertyValue(LoanConstants.LOAN_DEFAULT_FEE_KEY));
+                            getLocalizedMessage(LoanConstants.LOAN_DEFAULT_FEE_KEY));
                 }
             } else {
                 DoubleConversionResult conversionResult = validateInterest(defaultFee.getAmount(),
@@ -746,7 +741,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                 if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
                     addError(errors, LoanConstants.LOAN_DEFAULT_FEE_KEY,
                             LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                            lookupLocalizedPropertyValue(LoanConstants.LOAN_DEFAULT_FEE_KEY));
+                            getLocalizedMessage(LoanConstants.LOAN_DEFAULT_FEE_KEY));
                 }
             }
         }
@@ -808,7 +803,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         boolean result = true;
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, LoanConstants.LOAN_ADDITIONAL_FEE_KEY,
-                    LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, lookupLocalizedPropertyValue(
+                    LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, getLocalizedMessage(
                             LoanConstants.LOAN_ADDITIONAL_FEE_KEY));
             result = false;
         }
@@ -825,7 +820,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     // TODO: use localized strings for error messages rather than hardcoded
-    private void checkValidationForGetPrdOfferings(ActionErrors errors, UserContext userContext) {
+    private void checkValidationForGetPrdOfferings(ActionErrors errors) {
         if (StringUtils.isBlank(getCustomerId())) {
             addError(errors, LoanConstants.CUSTOMER, LoanConstants.CUSTOMERNOTSELECTEDERROR, getLabel(
                     ConfigurationConstants.CLIENT), getLabel(ConfigurationConstants.GROUP));
@@ -833,12 +828,10 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     // TODO: use localized strings for error messages rather than hardcoded
-    private void checkValidationForLoad(ActionErrors errors, UserContext userContext) {
-        checkValidationForGetPrdOfferings(errors, userContext);
+    private void checkValidationForLoad(ActionErrors errors) {
+        checkValidationForGetPrdOfferings(errors);
         if (StringUtils.isBlank(getPrdOfferingId())) {
-            Locale locale = userContext.getCurrentLocale();
-            ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, locale);
-            String instanceName = resources.getString("loan.instancename");
+            String instanceName = this.getLocalizedMessage("loan.instancename");
             addError(errors, LoanConstants.PRDOFFERINGID, LoanConstants.LOANOFFERINGNOTSELECTEDERROR, getLabel(
                     ConfigurationConstants.LOAN), instanceName);
         }
@@ -878,8 +871,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     private void validateCollateralNotes(ActionErrors errors, Locale userLocale) {
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, userLocale);
-        String note = resources.getString("loan.collateral_notes");
+        String note = getLocalizedMessage("loan.collateral_notes");
         String collateralNote = getCollateralNote();
         if (collateralNote != null && collateralNote.length() > 500) {
             addError(errors, LoanConstants.NOTE, LoanConstants.MAX_LENGTH, note, String
@@ -1049,34 +1041,32 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     private void checkValidationForPreviewBefore(ActionErrors errors, HttpServletRequest request)
             throws ApplicationException {
-        Locale locale = getUserContext(request).getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, locale);
         LoanOfferingBO loanOffering = (LoanOfferingBO) SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request);
 
         if (!(configService.isGlimEnabled() && getCustomer(request).isGroup())) {
-            checkForMinMax(errors, loanAmount, amountRange, resources.getString("loan.amount"));
+            checkForMinMax(errors, loanAmount, amountRange, this.getLocalizedMessage("loan.amount"));
         }
         checkForMinMax(errors, interestRate, maxInterestRate, minInterestRate,
-                resources.getString("loan.interestRate"));
-        checkForMinMax(errors, noOfInstallments, installmentRange, resources.getString("loan.noOfInstallments"));
+                this.getLocalizedMessage("loan.interestRate"));
+        checkForMinMax(errors, noOfInstallments, installmentRange, this.getLocalizedMessage("loan.noOfInstallments"));
         if (StringUtils.isBlank(getDisbursementDate())) {
-            addError(errors, "Proposed/Actual disbursal date", "errors.validandmandatory", resources
-                    .getString("loan.disbursalDate"));
+            addError(errors, "Proposed/Actual disbursal date", "errors.validandmandatory",
+                    this.getLocalizedMessage("loan.disbursalDate"));
         }
         // Check for invalid data format
         try {
-            DateUtils.getLocaleDate(locale, getDisbursementDate());
+            DateUtils.getLocaleDate(Locale.ENGLISH, getDisbursementDate());
         } catch (InvalidDateException ide) {
             addError(errors, "Proposed/Actual disbursal date",
-                    LoanExceptionConstants.ERROR_INVALID_DISBURSEMENT_DATE_FORMAT, resources
-                            .getString("loan.disbursalDate"));
+                    LoanExceptionConstants.ERROR_INVALID_DISBURSEMENT_DATE_FORMAT,
+                    this.getLocalizedMessage("loan.disbursalDate"));
         }
         if (isInterestDedAtDisbValue()) {
             setGracePeriodDuration("0");
         }
         if (((!isInterestDedAtDisbValue()) && StringUtils.isBlank(getGracePeriodDuration()))
                 || (getDoubleValue(getGracePeriodDuration()) != null && getDoubleValue(getNoOfInstallments()) != null && getDoubleValue(getGracePeriodDuration()) >= getDoubleValue(getNoOfInstallments()))) {
-            String gracePeriodForRepayments = resources.getString("loan.grace_period");
+            String gracePeriodForRepayments = this.getLocalizedMessage("loan.grace_period");
             String noInst = StringUtils.isBlank(getNoOfInstallments()) ? getStringValue(installmentRange
                     .getMaxNoOfInstall()) : getNoOfInstallments();
             addError(errors, LoanConstants.GRACEPERIODDURATION, LoanConstants.GRACEPERIODERROR,
@@ -1285,7 +1275,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                         LoanConstants.LOAN_AMOUNT_KEY, errors, "");
                 if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
                     addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                            lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY));
+                            getLocalizedMessage(LoanConstants.LOAN_AMOUNT_KEY));
                 }
             } else {
                 if (!listDetail.isEmpty()) {
@@ -1438,7 +1428,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         DoubleConversionResult conversionResult = validateAmount(bean.getAmount(), currency, LoanConstants.LOAN_AMOUNT_KEY, errors, " "+ installmentNo);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                    lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY), installmentNo);
+                    getLocalizedMessage(LoanConstants.LOAN_AMOUNT_KEY), installmentNo);
         }
     }
 

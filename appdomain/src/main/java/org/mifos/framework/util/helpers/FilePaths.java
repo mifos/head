@@ -110,8 +110,7 @@ public interface FilePaths {
     public final String MEETING_RESOURCE = LOCALIZED_RESOURCE_PATH + "Meeting";
     // "org/mifos/customers/office/util/resources/OfficeUIResources"
     public static final String OFFICERESOURCEPATH = LOCALIZED_RESOURCE_PATH + "OfficeUIResources";
-    // "org/mifos/customers/personnel/util/resources/PersonnelUIResources"
-    public static final String PERSONNELUIRESOURCESPATH = LOCALIZED_RESOURCE_PATH + "PersonnelUIResources";
+
     // "org/mifos/customers/personnel/util/resources/PersonnelUIResources"
     public static final String FUND_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "FundUIResources";
     // "org.mifos.accounts.productdefinition.util.resources.ProductDefinitionResources"

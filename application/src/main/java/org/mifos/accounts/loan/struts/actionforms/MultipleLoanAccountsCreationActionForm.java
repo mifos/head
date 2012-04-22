@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.Closure;
@@ -50,7 +48,6 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ExceptionConstants;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.util.UserContext;
@@ -193,7 +190,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
                     LoanConstants.LOAN_AMOUNT_KEY, errors);
             if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
                 addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                        lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY));
+                        getLocalizedMessage(LoanConstants.LOAN_AMOUNT_KEY));
             }
         }
     }
@@ -207,19 +204,17 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
                     ConfigurationConstants.CLIENT));
             return;
         }
-        Locale locale = getUserContext(request).getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, locale);
         for (MultipleLoanCreationDto clientDetail : applicableClientDetails) {
             try {
                 if (!clientDetail.isLoanAmountInRange()) {
-                    addError(errors, LoanConstants.LOANAMOUNT, LoanExceptionConstants.INVALIDMINMAX, resources
-                            .getString("loan.loanAmountFor")
+                    addError(errors, LoanConstants.LOANAMOUNT, LoanExceptionConstants.INVALIDMINMAX,
+                            this.getLocalizedMessage("loan.loanAmountFor")
                             + clientDetail.getClientName(), clientDetail.getMinLoanAmount().toString(), clientDetail
                             .getMaxLoanAmount().toString());
                 }
             } catch (NumberFormatException nfe) {
-                addError(errors, LoanConstants.LOANAMOUNT, LoanExceptionConstants.INVALIDMINMAX, resources
-                        .getString("loan.loanAmountFor")
+                addError(errors, LoanConstants.LOANAMOUNT, LoanExceptionConstants.INVALIDMINMAX,
+                        this.getLocalizedMessage("loan.loanAmountFor")
                         + clientDetail.getClientName(), clientDetail.getMinLoanAmount().toString(), clientDetail
                         .getMaxLoanAmount().toString());
             }

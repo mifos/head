@@ -21,8 +21,6 @@
 package org.mifos.accounts.loan.struts.actionforms;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -32,7 +30,6 @@ import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,8 +87,7 @@ public class ReverseLoanDisbursalActionForm extends BaseActionForm {
     }
 
     private void checkValidationForPreview(ActionErrors errors, Locale userLocale) {
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, userLocale);
-        String note = resources.getString("loan.note");
+        String note = this.getLocalizedMessage("loan.note");
         if (StringUtils.isBlank(getNote())) {
             addError(errors, LoanConstants.NOTE, LoanConstants.MANDATORY, note);
         } else if (getNote().length() > 500) {

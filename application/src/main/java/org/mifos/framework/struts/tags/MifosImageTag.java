@@ -21,16 +21,11 @@
 package org.mifos.framework.struts.tags;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import org.mifos.config.Localization;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.security.util.UserContext;
 
 /**
  * Custom tag for input fields of type "img". The tag selects properties file
@@ -70,8 +65,8 @@ public class MifosImageTag extends TagSupport {
         return this.moduleName;
     }
 
-    private ResourceBundle getResourceBundle(Locale locale) {
-        return ResourceBundle.getBundle(getModuleName(), locale);
+    private ResourceBundle getResourceBundle() {
+        return ResourceBundle.getBundle(getModuleName());
     }
 
     /**
@@ -82,9 +77,7 @@ public class MifosImageTag extends TagSupport {
     @Override
     public int doStartTag() throws JspException {
         JspWriter out = pageContext.getOut();
-        UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USER_CONTEXT_KEY);
-        Locale locale = userContext.getPreferredLocale();
-        ResourceBundle resource = getResourceBundle(locale);
+        ResourceBundle resource = getResourceBundle();
         path = resource.getString(getId());
         try {
             out.println(render());
@@ -98,8 +91,7 @@ public class MifosImageTag extends TagSupport {
     }
 
     public String render() {
-        Locale locale = Localization.getInstance().getConfiguredLocale();
-        ResourceBundle resource = getResourceBundle(locale);
+        ResourceBundle resource = getResourceBundle();
         path = resource.getString(getId());
         XmlBuilder html = new XmlBuilder();
         html.startTag("html");

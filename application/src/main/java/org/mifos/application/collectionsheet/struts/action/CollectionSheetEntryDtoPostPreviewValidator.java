@@ -21,8 +21,6 @@ package org.mifos.application.collectionsheet.struts.action;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
@@ -31,9 +29,9 @@ import org.mifos.accounts.loan.util.helpers.LoanAccountsProductDto;
 import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.framework.util.LocalizationConverter;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 
 /**
@@ -51,8 +49,7 @@ public class CollectionSheetEntryDtoPostPreviewValidator {
             final Locale locale) {
         List<CollectionSheetEntryDto> children = parent.getCollectionSheetEntryChildren();
 
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
-        String acCollections = resources.getString(CollectionSheetEntryConstants.AC_COLLECTION);
+        String acCollections = MessageLookup.getLocalizedMessage(CollectionSheetEntryConstants.AC_COLLECTION);
         if (null != children) {
             for (CollectionSheetEntryDto collectionSheetEntryDto : children) {
                 validatePopulatedData(collectionSheetEntryDto, errors, locale);

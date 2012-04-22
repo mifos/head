@@ -159,7 +159,7 @@ public class ApplyChargeActionForm extends BaseActionForm {
 
         if(StringUtils.isBlank(getChargeType())){
             addError(errors, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE, "errors.mandatoryselect",
-                    lookupLocalizedPropertyValue("account.chargetype"));
+                    getLocalizedMessage("account.chargetype"));
             return;
         }
 
@@ -181,7 +181,7 @@ public class ApplyChargeActionForm extends BaseActionForm {
         	
         if (conversionResult != null && conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                    lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT));
+                    getLocalizedMessage(AccountConstants.ACCOUNT_AMOUNT));
         }
     }
 

@@ -26,8 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
@@ -35,7 +33,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.mifos.accounts.loan.util.helpers.RequestConstants;
-import org.mifos.config.Localization;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -232,22 +230,20 @@ public class TableTag extends BodyTagSupport {
     }
 
     XmlBuilder noResults(String officeName, String officeId, String searchString) {
-        Locale locale = Localization.getInstance().getConfiguredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
         XmlBuilder html = new XmlBuilder();
         html.startTag("table", "width", "96%", "border", "0", "cellpadding", "0", "cellspacing", "0");
         html.startTag("tr", "class", "fontnormal");
         html.startTag("td", "colspan", "2", "valign", "top");
         html.singleTag("br");
         html.startTag("span", "class", "headingorange");
-        html.text(resources.getString("Customer.noResultsFoundFor") + " ");
+        html.text(MessageLookup.getLocalizedMessage("Customer.noResultsFoundFor") + " ");
         html.startTag("span", "class", "heading");
         html.text(searchString);
         html.text(" ");
         html.endTag("span");
-        String inString = resources.getString("Customer.in");
+        String inString = MessageLookup.getLocalizedMessage("Customer.in");
         if (officeId.equals(ALL_BRANCHES)) {
-            renderInClause(html, resources.getString("Customer.allBranches"), inString);
+            renderInClause(html, MessageLookup.getLocalizedMessage("Customer.allBranches"), inString);
         } else {
             renderInClause(html, officeName, inString);
         }
@@ -282,10 +278,6 @@ public class TableTag extends BodyTagSupport {
 
     private void createStartTable(StringBuilder result, boolean headingRequired, boolean topBlueLineRequired)
             throws PageExpiredException {
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
-        Locale locale = userContext.getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
         if (headingRequired) {
             String searchString = (String) SessionUtils.getAttribute(Constants.SEARCH_STRING,
                     (HttpServletRequest) pageContext.getRequest());
@@ -293,17 +285,17 @@ public class TableTag extends BodyTagSupport {
                     (HttpServletRequest) pageContext.getRequest());
             result.append("<table width=\"96%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">").append(
                     "<tr class=\"fontnormal\"><td colspan=\"2\" valign=\"top\"><span class=\"headingorange\">").append(
-                    size + " " + resources.getString("Customer.resultsFor") + " </span>");
+                    size + " " + MessageLookup.getLocalizedMessage("Customer.resultsFor") + " </span>");
             result.append("<span class=\"heading\">" + MifosTagUtils.xmlEscape(searchString) + " </span>");
             String officeId = (String) SessionUtils.getAttribute(Constants.BRANCH_ID, (HttpServletRequest) pageContext
                     .getRequest());
             if (officeId != null && officeId.equals("0")) {
-                result.append("<span class=\"headingorange\">" + resources.getString("Customer.in")
-                        + "</span> <span class=\"heading\">" + resources.getString("Customer.allBranches") + "</span>");
+                result.append("<span class=\"headingorange\">" + MessageLookup.getLocalizedMessage("Customer.in")
+                        + "</span> <span class=\"heading\">" + MessageLookup.getLocalizedMessage("Customer.allBranches") + "</span>");
             }
 
             else {
-                result.append("<span class=\"headingorange\">" + resources.getString("Customer.in")
+                result.append("<span class=\"headingorange\">" + MessageLookup.getLocalizedMessage("Customer.in")
                         + "</span> <span class=\"heading\">" + MifosTagUtils.xmlEscape(officeName) + "</span>");
             }
 
@@ -371,7 +363,6 @@ public class TableTag extends BodyTagSupport {
 
         String action = (String) SessionUtils.getAttribute("action", pageContext.getSession());
         String forwardkey = (String) SessionUtils.getAttribute("forwardkey", pageContext.getSession());
-        ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE);
         if (null == action || null == forwardkey) {
             Path pathVar = table.findPath(key);
             action = pathVar.getAction();
@@ -379,13 +370,13 @@ public class TableTag extends BodyTagSupport {
             if (action != null) {
                 SessionUtils.setRemovableAttribute("action", action, TableTagConstants.PATH, pageContext.getSession());
             } else {
-                throw new JspException(resource.getString(TableTagConstants.NOACTION_ERROR));
+                throw new JspException(MessageLookup.getLocalizedMessage(TableTagConstants.NOACTION_ERROR));
             }
             if (forwardkey != null) {
                 SessionUtils.setRemovableAttribute("forwardkey", forwardkey, TableTagConstants.PATH, pageContext
                         .getSession());
             } else {
-                throw new JspException(resource.getString(TableTagConstants.NOFWDKEY_ERROR));
+                throw new JspException(MessageLookup.getLocalizedMessage(TableTagConstants.NOFWDKEY_ERROR));
             }
         }
 
@@ -417,8 +408,6 @@ public class TableTag extends BodyTagSupport {
     private void getTableData(List list) throws TableTagException, TableTagParseException, JspException,
             TableTagTypeParserException, IOException, PageExpiredException {
         Locale locale = getLocale();
-        ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE);
-
         String currentPage = ((HttpServletRequest) pageContext.getRequest()).getParameter("current");
         Integer currentValue = null;
         if (currentPage != null && !currentPage.equals("")) {
@@ -431,7 +420,7 @@ public class TableTag extends BodyTagSupport {
         } else if (type.equalsIgnoreCase("multiple")) {
             getMultipleData(list, locale, currentValue);
         } else {
-            throw new TableTagException(resource.getString(TableTagConstants.WRONGTYPE_ERROR));
+            throw new TableTagException(MessageLookup.getLocalizedMessage(TableTagConstants.WRONGTYPE_ERROR));
         }
     }
 
@@ -439,7 +428,6 @@ public class TableTag extends BodyTagSupport {
             TableTagException, JspException, IOException, PageExpiredException {
         String xmlFilePath = getSingleFile();
         Table table = helperCache(xmlFilePath, name);
-        ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE);
         if (table != null) {
             StringBuilder result = new StringBuilder();
             JspWriter out = pageContext.getOut();
@@ -449,7 +437,7 @@ public class TableTag extends BodyTagSupport {
             out.write(result.toString());
             displayData(list, table, locale, currentValue);
         } else {
-            throw new JspException(resource.getString(TableTagConstants.TABLENOTFOUND_ERROR));
+            throw new JspException(MessageLookup.getLocalizedMessage(TableTagConstants.TABLENOTFOUND_ERROR));
         }
     }
 
@@ -458,7 +446,6 @@ public class TableTag extends BodyTagSupport {
         StringBuilder result = new StringBuilder();
         JspWriter out = pageContext.getOut();
         createStartTable(result, true, false);
-        ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE, locale);
 
         out.write(result.toString());
         int number = ((currentValue - 1) * pageSize);
@@ -467,7 +454,7 @@ public class TableTag extends BodyTagSupport {
             if (table != null) {
                 displayDataMultiple(object, table, ++number, locale);
             } else {
-                throw new JspException(resource.getString(TableTagConstants.TABLENOTFOUND_ERROR));
+                throw new JspException(MessageLookup.getLocalizedMessage(TableTagConstants.TABLENOTFOUND_ERROR));
             }
         }
         result = new StringBuilder();

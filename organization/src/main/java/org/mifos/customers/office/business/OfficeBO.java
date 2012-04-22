@@ -322,34 +322,25 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     private void verifyFields(final String officeName, final String shortName, final OfficeBO parentOffice) throws OfficeValidationException {
 
         if (StringUtils.isBlank(officeName)) {
-            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD, new Object[]{getLocaleString(OfficeConstants.OFFICE_NAME)});
+            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD, new Object[]{OfficeConstants.OFFICE_NAME});
         }
 
         if (StringUtils.isBlank(shortName)) {
-            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD, new Object[]{getLocaleString(OfficeConstants.OFFICESHORTNAME)});
+            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD, new Object[]{OfficeConstants.OFFICESHORTNAME});
         }
 
         if (parentOffice == null) {
-            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD, new Object[]{getLocaleString(OfficeConstants.PARENTOFFICE)});
+            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD, new Object[]{OfficeConstants.PARENTOFFICE});
         }
     }
 
     private void verifyFieldsNoDatabase(final OfficeLevel level, final OperationMode operationMode) throws OfficeValidationException {
         if (level == null) {
-            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD, new Object[]{getLocaleString(OfficeConstants.OFFICELEVEL)});
+            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD, new Object[]{OfficeConstants.OFFICELEVEL});
         }
         if (operationMode == null) {
-            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD, new Object[]{getLocaleString(OfficeConstants.OFFICEOPERATIONMODE)});
+            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD, new Object[]{OfficeConstants.OFFICEOPERATIONMODE});
         }
-    }
-
-    //FIXME this is definitely not the place to resolve locale of errors
-    // no information related to localization should be available at this layer
-    private String getLocaleString(final String key) {
-        final String LOCALIZED_RESOURCE_PATH = "org/mifos/config/localizedResources/";
-        final String OFFICERESOURCEPATH = LOCALIZED_RESOURCE_PATH + "OfficeUIResources";
-        ResourceBundle resourceBundle = ResourceBundle.getBundle(OFFICERESOURCEPATH, userContext.getPreferredLocale());
-        return resourceBundle.getString(key);
     }
 
     public boolean isActive() {
@@ -564,7 +555,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     public boolean isNotBranch() {
         return !isBranch();
     }
-    
+
     public boolean isBranch() {
         return OfficeLevel.BRANCHOFFICE.getValue().equals(this.level.getId());
     }

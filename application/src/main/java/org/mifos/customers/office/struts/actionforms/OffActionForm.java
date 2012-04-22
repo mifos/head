@@ -22,9 +22,6 @@ package org.mifos.customers.office.struts.actionforms;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -46,7 +43,6 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.util.UserContext;
@@ -56,8 +52,6 @@ public class OffActionForm extends BaseActionForm implements QuestionResponseCap
     private String globalOfficeNum;
 
     private String input;
-
-    private ResourceBundle resourceBundle = null;
 
     private String officeId;
 
@@ -198,20 +192,7 @@ public class OffActionForm extends BaseActionForm implements QuestionResponseCap
     }
 
     private String getLocaleString(String key, UserContext userContext) {
-
-        if (resourceBundle == null) {
-            try {
-
-                resourceBundle = ResourceBundle.getBundle(FilePaths.OFFICERESOURCEPATH, userContext
-                        .getPreferredLocale());
-            } catch (MissingResourceException e) {
-
-                resourceBundle = ResourceBundle.getBundle(FilePaths.OFFICERESOURCEPATH, userContext
-                        .getPreferredLocale());
-
-            }
-        }
-        return resourceBundle.getString(key);
+        return getLocalizedMessage(key);
 
     }
 

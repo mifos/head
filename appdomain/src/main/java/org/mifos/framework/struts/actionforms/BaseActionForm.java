@@ -24,8 +24,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -180,7 +178,7 @@ public class BaseActionForm extends ValidatorActionForm {
 
     protected DoubleConversionResult validateAmount(String amountString, MifosCurrency currency,
                                                     String fieldPropertyKey, ActionErrors errors, String installmentNo) {
-        String fieldName = lookupLocalizedPropertyValue(fieldPropertyKey);
+        String fieldName = getLocalizedMessage(fieldPropertyKey);
         DoubleConversionResult conversionResult = parseDoubleForMoney(amountString, currency);
         for (ConversionError error : conversionResult.getErrors()) {
             String errorText = error.toLocalizedMessage(currency);
@@ -195,7 +193,7 @@ public class BaseActionForm extends ValidatorActionForm {
 
     protected DoubleConversionResult validateInterest(String interestString, String fieldPropertyKey,
             ActionErrors errors) {
-        String fieldName = lookupLocalizedPropertyValue(fieldPropertyKey);
+        String fieldName = getLocalizedMessage(fieldPropertyKey);
         DoubleConversionResult conversionResult = parseDoubleForInterest(interestString);
         for (ConversionError error : conversionResult.getErrors()) {
             addError(errors, fieldPropertyKey, "errors.generic", fieldName, getConversionErrorText(error));
@@ -203,10 +201,6 @@ public class BaseActionForm extends ValidatorActionForm {
         return conversionResult;
     }
 
-    protected String lookupLocalizedPropertyValue(String key) {
-        return getLocalizedMessage(key);
-    }
-    
     protected String getLocalizedMessage(String key) {
     	// nothing found so return the key
     	String message = key;

@@ -22,12 +22,12 @@ package org.mifos.framework.struts.tags;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.dom4j.DocumentException;
+import org.junit.Test;
 
-public class MifosImageTagTest extends TestCase {
+public class MifosImageTagTest {
 
+    @Test
     public void testRender() throws DocumentException {
         MifosImageTag mifosImageTag = new MifosImageTag();
         String path = "org.mifos.customers.util.resources.customerImages";

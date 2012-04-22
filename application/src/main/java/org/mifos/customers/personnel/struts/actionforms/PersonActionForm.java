@@ -25,9 +25,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -53,12 +50,9 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.util.UserContext;
 
 public class PersonActionForm extends BaseActionForm implements QuestionResponseCapturer{
 
@@ -505,10 +499,8 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
 
         // if password and confirm passowrd entries are made of only spaces,
         // throw an exception
-        UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
-        Locale locale = userContext.getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.PERSONNELUIRESOURCESPATH, locale);
-        String password = resources.getString("Personnel.passwordLowerCase");
+
+        String password = getLocalizedMessage("Personnel.passwordLowerCase");
         if (userPassword != null && passwordRepeat != null && userPassword.length() == passwordRepeat.length()
                 && userPassword.length() != 0 && userPassword.trim().equals("")) {
             errors.add(PersonnelConstants.PASSWORD_MASK, new ActionMessage(PersonnelConstants.PASSWORD_MASK, password));
@@ -636,10 +628,7 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
     }
 
     private void validateStatus(ActionErrors errors, HttpServletRequest request) {
-        UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
-        Locale locale = userContext.getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.PERSONNELUIRESOURCESPATH, locale);
-        String statusString = resources.getString("Personnel.Status");
+        String statusString = this.getLocalizedMessage("Personnel.Status");
         if (StringUtils.isBlank(status)) {
             errors.add(PersonnelConstants.STATUS, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, statusString));
         }
@@ -647,10 +636,7 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
     }
 
     private void validateOffice(ActionErrors errors, HttpServletRequest request) {
-        UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
-        Locale locale = userContext.getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.PERSONNELUIRESOURCESPATH, locale);
-        String office = resources.getString("Personnel.OfficeLabel");
+        String office = this.getLocalizedMessage("Personnel.OfficeLabel");
         if (StringUtils.isBlank(officeId)) {
             errors.add(PersonnelConstants.OFFICE, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, office));
         }

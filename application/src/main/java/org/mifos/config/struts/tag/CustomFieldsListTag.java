@@ -20,9 +20,6 @@
 
 package org.mifos.config.struts.tag;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
@@ -35,7 +32,6 @@ import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -73,8 +69,6 @@ public class CustomFieldsListTag extends BodyTagSupport { // SimpleTagSupport {
     }
 
     public XmlBuilder getRow(CustomFieldDefinitionEntity customField, UserContext userContext, int index) {
-        Locale locale = userContext.getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CONFIGURATION_UI_RESOURCE_PROPERTYFILE, locale);
         XmlBuilder html = new XmlBuilder();
         String url = (actionName + "?method=" + methodName + "&customFieldIdStr=" + customField.getFieldId()
                 + "&currentFlowKey=" + flowKey);
