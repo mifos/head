@@ -23,6 +23,8 @@ package org.mifos.application.admin.servicefacade;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.joda.time.DateTime;
 import org.mifos.config.SitePreferenceType;
 import org.mifos.dto.domain.AddressDto;
@@ -73,7 +75,7 @@ public interface PersonnelServiceFacade {
     void unLockUserAccount(String globalAccountNum);
 
     @PreAuthorize("isFullyAuthenticated()")
-    Short changeUserLocale(Short id);
+    Short changeUserLocale(Short id, HttpServletRequest request);
 
     Locale getUserPreferredLocale();
 
@@ -86,4 +88,6 @@ public interface PersonnelServiceFacade {
     List<PersonnelDto> retrieveActiveLoanOfficersUnderOffice(Short officeId);
 
     SitePreferenceType retrieveSitePreference(Integer userId);
+
+    Locale getUserPreferredLocale(HttpServletRequest request);
 }

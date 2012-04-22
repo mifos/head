@@ -22,7 +22,6 @@ package org.mifos.customers.office.struts.tag;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -30,6 +29,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -38,7 +38,6 @@ import org.mifos.dto.domain.OfficeHierarchyDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.util.UserContext;
 
 public class OfficeListTag extends BodyTagSupport {
@@ -171,13 +170,12 @@ public class OfficeListTag extends BodyTagSupport {
 
         html.singleTag("br");
         if (officeList == null) {
-            ResourceBundle resources = ResourceBundle.getBundle(FilePaths.OFFICERESOURCEPATH, preferredUserLocale);
             html.startTag("span", "class", "fontnormal");
-            html.text(resources.getString("Office.labelNo"));
+            html.text(MessageLookup.getLocalizedMessage("Office.labelNo"));
             html.text(" ");
             html.text(branchName.toLowerCase());
             html.text(" ");
-            html.text(resources.getString("Office.labelPresent"));
+            html.text(MessageLookup.getLocalizedMessage("Office.labelPresent"));
             html.endTag("span");
         } else {
             for (int i = 0; i < officeList.size(); i++) {

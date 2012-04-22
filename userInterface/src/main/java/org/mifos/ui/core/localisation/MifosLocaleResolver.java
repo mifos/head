@@ -36,8 +36,8 @@ public class MifosLocaleResolver extends AbstractLocaleResolver {
 
     @Override
     public Locale resolveLocale(@SuppressWarnings("unused") HttpServletRequest request) {
-        setDefaultLocale(personnelServiceFacade.getUserPreferredLocale());
-        return personnelServiceFacade.getUserPreferredLocale();
+        setDefaultLocale(personnelServiceFacade.getUserPreferredLocale(request));
+        return getDefaultLocale();
     }
 
     @Override

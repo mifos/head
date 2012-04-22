@@ -357,7 +357,7 @@ public class FeeActionForm extends BaseActionForm {
         DoubleConversionResult conversionResult = validateAmount(getAmount(), FeeConstants.AMOUNT, errors);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                    lookupLocalizedPropertyValue(FeeConstants.AMOUNT));
+                    getLocalizedMessage(FeeConstants.AMOUNT));
         }
     }
 
@@ -365,7 +365,7 @@ public class FeeActionForm extends BaseActionForm {
         DoubleConversionResult conversionResult = validateInterest(getRate(), FeeConstants.RATE, errors);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, FeeConstants.RATE, FeeConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                    lookupLocalizedPropertyValue(FeeConstants.RATE));
+                    getLocalizedMessage(FeeConstants.RATE));
         }
     }
 

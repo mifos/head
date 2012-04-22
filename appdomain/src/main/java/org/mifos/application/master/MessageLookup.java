@@ -36,6 +36,7 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.Localization;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.config.exceptions.ConfigurationException;
@@ -254,6 +255,20 @@ public class MessageLookup implements MessageSourceAware, FactoryBean<MessageLoo
 
     private Short getLocaleId() {
         return Localization.getInstance().getLocaleId(personnelServiceFacade.getUserPreferredLocale());
+    }
+
+    public static String getLocalizedMessage(String key) {
+        // nothing found so return the key
+        String message = key;
+        PersonnelServiceFacade personnelServiceFacade = ApplicationContextProvider.getBean(PersonnelServiceFacade.class);
+        MessageSource messageSource = ApplicationContextProvider.getBean(MessageSource.class);
+        if(personnelServiceFacade != null) {
+            String value = messageSource.getMessage(key, null, personnelServiceFacade.getUserPreferredLocale());
+            if(StringUtils.isNotEmpty(message)) {
+                message = value;
+            }
+        }
+        return message;
     }
 
     /**

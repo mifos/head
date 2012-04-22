@@ -23,10 +23,10 @@ package org.mifos.accounts.struts.actionforms;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 
-public class AccountAppActionForm extends ValidatorActionForm {
+public class AccountAppActionForm extends BaseActionForm {
     private String accountId;
 
     private String customerId;

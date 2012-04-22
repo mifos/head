@@ -25,10 +25,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.ResourceBundle;
-
 import javax.servlet.jsp.PageContext;
 
+import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.core.io.ClassPathResource;
@@ -104,17 +103,16 @@ public class Text {
         }
 
         Properties filePaths = getNonLocalizedFileLookupDatabase();
-        ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE, locale);
         if (customerType != null && (customerType.toString().equals("4") || customerType.toString().equals("5"))) {
-            textValue = resource.getString("loanaccount_stateid_" + name);
+            textValue = MessageLookup.getLocalizedMessage("loanaccount_stateid_" + name);
             imagePath = filePaths.getProperty("loanaccount_imageid_" + name);
         } else if (customerType != null
                 && (customerType.toString().equals("6") || customerType.toString().equals("7") || customerType
                         .toString().equals("8"))) {
-            textValue = resource.getString("savings_stateid_" + name);
+            textValue = MessageLookup.getLocalizedMessage("savings_stateid_" + name);
             imagePath = filePaths.getProperty("savings_imageid_" + name);
         } else {
-            textValue = resource.getString("value_" + name);
+            textValue = MessageLookup.getLocalizedMessage("value_" + name);
             imagePath = filePaths.getProperty("image_" + name);
         }
         stringbuilder.append("<span class=\"fontnormal\">").append("&nbsp;").append("<img src=").append(imagePath)

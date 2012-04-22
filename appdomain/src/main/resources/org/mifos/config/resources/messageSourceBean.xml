@@ -41,6 +41,11 @@
                 <value>classpath:org/mifos/config/localizedResources/Resources</value>
                 <value>classpath:org/mifos/config/localizedResources/adminUIResources</value>
                 <value>classpath:org/mifos/config/localizedResources/Meeting</value>
+                <value>classpath:org/mifos/config/localizedResources/PersonnelUIResources</value>
+                <value>classpath:org/mifos/config/localizedResources/BulkEntryUIResources</value>
+                <value>classpath:org/mifos/config/localizedResources/OfficeUIResources</value>
+                <value>classpath:org/mifos/config/localizedResources/ConfigurationUIResources</value>
+                <value>classpath:org/mifos/config/localizedResources/CheckListUIResources</value>
             </list>
         </property>
         <property name="fileEncodings" value="UTF-8" />
