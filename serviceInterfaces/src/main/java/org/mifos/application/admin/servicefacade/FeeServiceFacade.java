@@ -39,7 +39,4 @@ public interface FeeServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_MODIFY_FEE')")
     void updateFee(FeeUpdateRequest feeUpdateRequest);
-    
-    @PreAuthorize("isFullyAuthenticated()")
-    void removeFee(FeeUpdateRequest feeUpdateRequest);
 }

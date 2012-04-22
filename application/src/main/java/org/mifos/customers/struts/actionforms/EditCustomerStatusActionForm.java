@@ -21,9 +21,6 @@
 package org.mifos.customers.struts.actionforms;
 
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -36,10 +33,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-import org.mifos.security.login.util.helpers.LoginConstants;
-import org.mifos.security.util.UserContext;
 
 public class EditCustomerStatusActionForm extends BaseActionForm implements QuestionResponseCapturer {
 
@@ -224,22 +218,19 @@ public class EditCustomerStatusActionForm extends BaseActionForm implements Ques
     }
 
     private ActionErrors handleStatusPreviewValidations(HttpServletRequest request, ActionErrors errors) {
-        UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
-        Locale locale = userContext.getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
         if (newStatusId == null) {
             errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT,
-                    resources.getString("Customer.status")));
+                    this.getLocalizedMessage("Customer.status")));
         } else if (isNewStatusHasFlag() && StringUtils.isBlank(flagId)) {
             errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT,
-                    resources.getString("Customer.flag")));
+                    this.getLocalizedMessage("Customer.flag")));
         }
         if (StringUtils.isBlank(notes)) {
             errors.add(CustomerConstants.MANDATORY_TEXTBOX, new ActionMessage(CustomerConstants.MANDATORY_TEXTBOX,
-                    resources.getString("Customer.notes")));
+                    this.getLocalizedMessage("Customer.notes")));
         } else if (notes.length() > CustomerConstants.COMMENT_LENGTH) {
-            errors.add(CustomerConstants.MAXIMUM_LENGTH, new ActionMessage(CustomerConstants.MAXIMUM_LENGTH, resources
-                    .getString("Customer.notes"), CustomerConstants.COMMENT_LENGTH));
+            errors.add(CustomerConstants.MAXIMUM_LENGTH, new ActionMessage(CustomerConstants.MAXIMUM_LENGTH,
+                    this.getLocalizedMessage("Customer.notes"), CustomerConstants.COMMENT_LENGTH));
         }
         return errors;
     }

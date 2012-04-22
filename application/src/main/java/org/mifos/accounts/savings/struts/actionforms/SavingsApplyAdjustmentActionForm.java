@@ -135,7 +135,7 @@ public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             //commented off for [MIFOS-2958]
             /*addError(errors, SavingsConstants.AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                    lookupLocalizedPropertyValue(SavingsConstants.AMOUNT, locale, FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE));*/
+                    getLocalizedMessage(SavingsConstants.AMOUNT, locale, FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE));*/
         }
     }
 }

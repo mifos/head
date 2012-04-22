@@ -27,8 +27,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -45,7 +43,6 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 
@@ -65,25 +62,25 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
     private boolean adjustcheckbox;
 
     private Integer paymentId;
-    
+
     private String amount;
-    
+
     private String paymentType;
-    
+
     private Short currencyId;
-    
+
     private String transactionDateDD;
 
     private String transactionDateMM;
 
     private String transactionDateYY;
-    
+
     private boolean adjustData;
-    
+
     private Date previousPaymentDate;
-    
+
     private Date nextPaymentDate;
-    
+
     public Date getPreviousPaymentDate() {
         return previousPaymentDate;
     }
@@ -156,7 +153,7 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
         this.adjustcheckbox = adjustcheckbox;
 
     }
-    
+
     public String getAmount() {
         return amount;
     }
@@ -197,11 +194,6 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
         this.transactionDateYY = transactionDateYY;
     }
 
-    ResourceBundle getResourceBundle(Locale userLocale) {
-        return ResourceBundle.getBundle(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE,
-                userLocale);
-    }
-    
     protected Locale getUserLocale(HttpServletRequest request) {
         Locale locale = null;
         HttpSession session = request.getSession();
@@ -214,7 +206,7 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
         }
         return locale;
     }
-    
+
     public String getTransactionDate() {
         if (StringUtils.isNotBlank(transactionDateDD) && StringUtils.isNotBlank(transactionDateMM)
                 && StringUtils.isNotBlank(transactionDateYY)) {
@@ -234,7 +226,7 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
         }
         return null;
     }
-    
+
     @Override
     public void reset(ActionMapping actionMapping, HttpServletRequest request) {
         this.adjustcheckbox = false;
@@ -254,11 +246,9 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
                 actionErrors.add("", new ActionMessage("errors.mandatorycheckbox"));
             }*/
             if (!adjustcheckbox) {
-                Locale userLocale = getUserLocale(request);
-                ResourceBundle resources = getResourceBundle(userLocale);
-                validateAmount(actionErrors, userLocale);
-                validatePaymentType(actionErrors, resources);
-                validateTransactionDate(actionErrors, resources);
+                validateAmount(actionErrors);
+                validatePaymentType(actionErrors);
+                validateTransactionDate(actionErrors);
             }
             if (adjustmentNote == null || adjustmentNote.trim() == "") {
                 request.setAttribute("method", "loadAdjustment");
@@ -274,9 +264,9 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
         }
         return actionErrors;
     }
-    
-    
-    protected void validateAmount(ActionErrors errors, Locale locale) {
+
+
+    protected void validateAmount(ActionErrors errors) {
         MifosCurrency currency = null;
         if (getCurrencyId() != null && AccountingRules.isMultiCurrencyEnabled()) {
             currency = AccountingRules.getCurrencyByCurrencyId(getCurrencyId());
@@ -284,26 +274,26 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
         DoubleConversionResult conversionResult = validateAmount(getAmount(), currency , AccountConstants.ACCOUNT_AMOUNT, errors, "");
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                    lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT));
+                    getLocalizedMessage(AccountConstants.ACCOUNT_AMOUNT));
         }
     }
-    
-    private void validateTransactionDate(ActionErrors errors, ResourceBundle resources) {
+
+    private void validateTransactionDate(ActionErrors errors) {
         String fieldName = "accounts.date_of_trxn";
-        ActionErrors validationErrors = validateDate(getTransactionDate(), resources.getString(fieldName));
+        ActionErrors validationErrors = validateDate(getTransactionDate(), getLocalizedMessage(fieldName));
 
         if (null != validationErrors && !validationErrors.isEmpty()) {
             errors.add(validationErrors);
         }
     }
 
-    private void validatePaymentType(ActionErrors errors, ResourceBundle resources) {
+    private void validatePaymentType(ActionErrors errors) {
         if (StringUtils.isEmpty(getPaymentType())) {
             errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
-                    resources.getString("accounts.mode_of_payment")));
+                    getLocalizedMessage("accounts.mode_of_payment")));
         }
     }
-    
+
     protected ActionErrors validateDate(String date, String fieldName) {
         ActionErrors errors = null;
         java.sql.Date sqlDate = null;
@@ -333,14 +323,14 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
             errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                             fieldName));
         }
-            
+
         return errors;
     }
-    
+
     public Date getTrxnDate() throws InvalidDateException {
         return getDateAsSentFromBrowser(getTransactionDate());
     }
-    
+
     public void setTrxnDate(Date date) {
         if (date == null) {
             transactionDateDD = null;
@@ -354,7 +344,7 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
             transactionDateYY = Integer.toString(cal.get(Calendar.YEAR));
         }
     }
-    
+
     public AdjustedPaymentDto getPaymentData() throws InvalidDateException {
         AdjustedPaymentDto adjustedPaymentDto = null;
         if (adjustData) {

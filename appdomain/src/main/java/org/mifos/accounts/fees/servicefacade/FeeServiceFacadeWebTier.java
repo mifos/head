@@ -198,16 +198,4 @@ public class FeeServiceFacadeWebTier implements FeeServiceFacade {
         }
         return currency;
     }
-
-	@Override
-	public void removeFee(FeeUpdateRequest feeUpdateRequest) {
-		FeeBO feeToRemove = this.feeDao.findById(feeUpdateRequest.getFeeId());
-		Short appliedFeeId = this.feeDao.findFeeAppliedToLoan(feeUpdateRequest.getFeeId());
-		boolean isInProducts = appliedFeeId == null ? true : false;
-		List<Short> feesAppliedLoanAccountList = this.feeDao.getAllAtachedFeesToLoanAcounts();
-		boolean isFeeAppliedToLoan = feesAppliedLoanAccountList.contains(feeToRemove.getFeeId());
-		if  (!feeToRemove.isActive()) { 	
-			this.feeService.remove(feeToRemove, isInProducts, isFeeAppliedToLoan);
-		} 
-	}
 }

@@ -21,10 +21,8 @@
 package org.mifos.framework.components.tabletag;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
-
 import org.mifos.accounts.loan.util.helpers.RequestConstants;
-import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.application.master.MessageLookup;
 
 /**
  * This class renders the page scroll property of the page like previous and
@@ -55,7 +53,6 @@ public class PageScroll {
     protected static String getPages(int current, int pageSize, int size, String action, String currentFlowKey,
             Locale locale, String perspective) {
         StringBuilder result = new StringBuilder();
-        ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE, locale);
         // to check the onClick status of the prev and next whether that is
         // disable or not
         boolean prev = (current > 1) ? true : false;
@@ -77,16 +74,16 @@ public class PageScroll {
          * allowed then disable the respective link.
          */
 
-        String previousStr = resource.getString("Previous");
-        String nextStr = resource.getString("Next");
-        String resultsStr = resource.getString("Results");
+        String previousStr = MessageLookup.getLocalizedMessage("Previous");
+        String nextStr = MessageLookup.getLocalizedMessage("Next");
+        String resultsStr = MessageLookup.getLocalizedMessage("Results");
         resultsStr = resultsStr.replaceFirst("\\{0\\}", new Integer(pageStart).toString());
         resultsStr = resultsStr.replaceFirst("\\{1\\}", new Integer(pageEnd).toString());
         resultsStr = resultsStr.replaceFirst("\\{2\\}", new Integer(size).toString());
 
         if (prev) {
             result.append("<td width=\"20%\" class=\"fontnormalbold\">").append(
-                    getAnchor(action, resource.getString("Previous"), "searchPrev", currentFlowKey, current - 1,
+                    getAnchor(action, MessageLookup.getLocalizedMessage("Previous"), "searchPrev", currentFlowKey, current - 1,
                             perspective)).append("</td>");
         } else {
             result.append("<td width=\"20%\" class=\"fontnormalboldgray\">" + previousStr + "</td>");

@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -87,6 +89,7 @@ import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.MifosUser;
+import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.UserContext;
@@ -601,11 +604,24 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
     @Override
     public Locale getUserPreferredLocale() {
+        return getUserPreferredLocale(null);
+    }
+
+    @Override
+    public Locale getUserPreferredLocale(@SuppressWarnings("unused") HttpServletRequest request) {
         if(SecurityContextHolder.getContext() != null) {
             if(SecurityContextHolder.getContext().getAuthentication() != null) {
                 if(SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null) {
                     MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
                     return Localization.getInstance().getLocaleById(user.getPreferredLocaleId());
+                }
+            } else {
+                if (request != null) {
+                    try {
+                        UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+                        return Localization.getInstance().getLocaleById(userContext.getLocaleId());
+                    } catch (Exception e) { /* do nothing and return system default locale */
+                    }
                 }
             }
         }
@@ -613,19 +629,20 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     }
 
     @Override
-    public Short changeUserLocale(Short id) {
+    public Short changeUserLocale(Short id, HttpServletRequest request) {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (id != null) {
             Short newLocaleId = id;
             assert Localization.getInstance().getLocaleById(newLocaleId) != null;
             user.setPreferredLocaleId(newLocaleId);
-
             try {
                 this.transactionHelper.startTransaction();
                 PersonnelBO p = this.personnelDao.findPersonnelById((short) user.getUserId());
                 p.setPreferredLocale(newLocaleId);
                 this.personnelDao.update(p);
                 this.transactionHelper.commitTransaction();
+                UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+                userContext.setLocaleId(newLocaleId);
             } catch (Exception e) {
                 this.transactionHelper.rollbackTransaction();
                 throw new MifosRuntimeException(e);

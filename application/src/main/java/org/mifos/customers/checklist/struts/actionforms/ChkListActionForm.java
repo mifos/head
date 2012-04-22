@@ -22,9 +22,6 @@ package org.mifos.customers.checklist.struts.actionforms;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -35,9 +32,7 @@ import org.mifos.customers.checklist.util.helpers.CheckListConstants;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.security.util.UserContext;
 
 public class ChkListActionForm extends BaseActionForm {
 
@@ -184,17 +179,14 @@ public class ChkListActionForm extends BaseActionForm {
 
     @Override
     public ActionErrors validate(ActionMapping mappping, HttpServletRequest request) {
-        UserContext userContext = getUserContext(request);
-        Locale locale = userContext.getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CHECKLIST_RESOURCE, locale);
-        String checklistStatus = resources.getString(CheckListConstants.CHECKLIST_STATUS_RESOURCE);
+        String checklistStatus = getLocalizedMessage(CheckListConstants.CHECKLIST_STATUS_RESOURCE);
         ActionErrors errors = new ActionErrors();
         String method = request.getParameter("method");
         if (method.equals(Methods.preview.toString())) {
-            errors = validateFields(locale);
+            errors = validateFields();
         }
         if (method.equals(Methods.managePreview.toString())) {
-            errors = validateFields(locale);
+            errors = validateFields();
             if (StringUtils.isBlank(getChecklistStatus())) {
                 addError(errors, "checklistStatus", CheckListConstants.MANDATORY, checklistStatus);
             }
@@ -205,14 +197,12 @@ public class ChkListActionForm extends BaseActionForm {
         return errors;
     }
 
-    private ActionErrors validateFields(Locale locale) {
-
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CHECKLIST_RESOURCE, locale);
-        String checklistName = resources.getString(CheckListConstants.CHECKLIST_NAME_RESOURCE);
-        String itemsStr = resources.getString(CheckListConstants.CHECKLIST_ITEMS_RESOURCE);
-        String type = resources.getString(CheckListConstants.CHECKLIST_TYPE_RESOURCE);
-        String state = resources.getString(CheckListConstants.CHECKLIST_DISPLAY_STATUS_RESOURCE);
-        String details = resources.getString(CheckListConstants.CHECKLIST_DETAIL_RESOURCE);
+    private ActionErrors validateFields() {
+        String checklistName = getLocalizedMessage(CheckListConstants.CHECKLIST_NAME_RESOURCE);
+        String itemsStr = getLocalizedMessage(CheckListConstants.CHECKLIST_ITEMS_RESOURCE);
+        String type = getLocalizedMessage(CheckListConstants.CHECKLIST_TYPE_RESOURCE);
+        String state = getLocalizedMessage(CheckListConstants.CHECKLIST_DISPLAY_STATUS_RESOURCE);
+        String details = getLocalizedMessage(CheckListConstants.CHECKLIST_DETAIL_RESOURCE);
         ActionErrors errors = new ActionErrors();
         if (StringUtils.isBlank(getChecklistName())) {
             addError(errors, "checklistName", CheckListConstants.MANDATORY, checklistName);

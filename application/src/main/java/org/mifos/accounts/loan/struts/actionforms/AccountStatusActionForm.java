@@ -22,9 +22,6 @@ package org.mifos.accounts.loan.struts.actionforms;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -33,7 +30,6 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.util.helpers.FilePaths;
 
 public class AccountStatusActionForm extends BaseActionForm {
     private String personnelId;
@@ -157,14 +153,12 @@ public class AccountStatusActionForm extends BaseActionForm {
     @Override
     // TODO: use localized strings for error messages rather than hardcoded
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-        Locale locale = getUserContext(request).getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, locale);
         ActionErrors errors = new ActionErrors();
         String method = request.getParameter("method");
         if (method.equals(Methods.searchResults.toString())) {
-            String branch = resources.getString("loan.branch");
-            String loanOfficer = resources.getString("loan.loanOfficer");
-            String currentStatus = resources.getString("loan.currentStatus");
+            String branch = this.getLocalizedMessage("loan.branch");
+            String loanOfficer = this.getLocalizedMessage("loan.loanOfficer");
+            String currentStatus = this.getLocalizedMessage("loan.currentStatus");
             if (StringUtils.isBlank(getOfficeId())) {
                 addError(errors, "officeId", "errors.mandatoryselect", branch);
             }
@@ -176,9 +170,9 @@ public class AccountStatusActionForm extends BaseActionForm {
             }
         }
         if (method.equals(Methods.update.toString())) {
-            String account = resources.getString("loan.account");
-            String notes = resources.getString("loan.notes");
-            String note = resources.getString("loan.note");
+            String account = this.getLocalizedMessage("loan.account");
+            String notes = this.getLocalizedMessage("loan.notes");
+            String note = this.getLocalizedMessage("loan.note");
             if (getApplicableAccountRecords().size() == 0) {
                 addError(errors, "records", LoanExceptionConstants.SELECT_ATLEAST_ONE_RECORD, account);
             }

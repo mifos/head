@@ -22,8 +22,6 @@ package org.mifos.accounts.loan.struts.actionforms;
 
 import java.sql.Date;
 import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -35,7 +33,6 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 
@@ -109,12 +106,10 @@ public class RepayLoanActionForm extends BaseActionForm {
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String method = request.getParameter("method");
         ActionErrors errors = new ActionErrors();
-        Locale userLocale = getUserLocale(request);
-        ResourceBundle resources = getResourceBundle(userLocale);
         if (!method.equals("loadRepayment") && !method.equals("makeRepayment") && !method.equals("validate")
                 && !method.equals("previous") && !method.equals("cancel")) {
             errors.add(super.validate(mapping, request));
-            validateDateOfPayment(errors, resources);
+            validateDateOfPayment(errors);
         }
 
         if (!errors.isEmpty()) {
@@ -154,18 +149,13 @@ public class RepayLoanActionForm extends BaseActionForm {
         return locale;
     }
 
-    ResourceBundle getResourceBundle(Locale userLocale) {
-        return ResourceBundle.getBundle(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE,
-                userLocale);
-    }
-
-    private void validateDateOfPayment(ActionErrors errors, ResourceBundle resources) {
+    private void validateDateOfPayment(ActionErrors errors) {
         String fieldName = "accounts.date_of_trxn";
-        ActionErrors validationErrors = validateDate(getDateOfPayment(), resources.getString(fieldName));
+        ActionErrors validationErrors = validateDate(getDateOfPayment(), getLocalizedMessage(fieldName));
         if (null != validationErrors && !validationErrors.isEmpty()) {
             errors.add(validationErrors);
         }
-        validationErrors = validatePaymentDate(getDateOfPayment(), resources.getString(fieldName));
+        validationErrors = validatePaymentDate(getDateOfPayment(), getLocalizedMessage(fieldName));
         if (null != validationErrors && !validationErrors.isEmpty()) {
             errors.add(validationErrors);
         }

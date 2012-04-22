@@ -114,6 +114,7 @@ import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsD
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
 import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
 
 
@@ -255,7 +256,7 @@ public abstract class BaseAction extends DispatchAction {
         this.importTransactionsServiceFacade = getBean(ImportTransactionsServiceFacade.class);
         this.checkListServiceFacade = getBean(CheckListServiceFacade.class);
         this.viewOrganizationSettingsServiceFacade = getBean(ViewOrganizationSettingsServiceFacade.class);
-        
+
     }
 
     private void configureDaoBeans() {
@@ -289,6 +290,19 @@ public abstract class BaseAction extends DispatchAction {
                 logger.debug("Value object conversion exception while validating BusinessObject: " + new LogUtils().getStackTrace(e));
             }
         }
+    }
+
+    protected String getLocalizedMessage(String key) {
+        // nothing found so return the key
+        String message = key;
+        MessageSource messageSource = ApplicationContextProvider.getBean(MessageSource.class);
+        if(personnelServiceFacade != null) {
+            String value = messageSource.getMessage(key, null, personnelServiceFacade.getUserPreferredLocale());
+            if(StringUtils.isNotEmpty(message)) {
+                message = value;
+            }
+        }
+        return message;
     }
 
     @SuppressWarnings("unchecked")

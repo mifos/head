@@ -28,7 +28,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
-import org.hibernate.envers.synchronization.work.AddWorkUnit;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
@@ -75,8 +74,6 @@ public class FeeActionForm extends BaseActionForm {
     private String monthRecurAfter;
 
     private String feeStatus;
-    
-    private boolean toRemove = false; 
 
     public String getFeeId() {
         return feeId;
@@ -257,7 +254,7 @@ public class FeeActionForm extends BaseActionForm {
         return getShortValue(weekRecurAfter);
     }
 
-	public boolean isCategoryLoan() {
+    public boolean isCategoryLoan() {
         return FeeCategory.LOAN.getValue().equals(Short.valueOf(categoryType));
     }
 
@@ -265,15 +262,7 @@ public class FeeActionForm extends BaseActionForm {
         return StringUtils.isNotBlank(rate) && StringUtils.isNotBlank(feeFormula);
     }
 
-    public boolean isToRemove() {
-		return toRemove;
-	}
-
-	public void setToRemove(boolean toRemove) {
-		this.toRemove = toRemove;
-	}
-
-	@Override
+    @Override
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         super.reset(mapping, request);
         String method = request.getParameter(Methods.method.toString());
@@ -284,10 +273,7 @@ public class FeeActionForm extends BaseActionForm {
             amount = null;
             rate = null;
         }
-        if (method.equals("editPrevious") || method.equals("manage")) {
-        	toRemove = false;
-        }
-	}
+    }
 
     @Override
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
@@ -361,11 +347,9 @@ public class FeeActionForm extends BaseActionForm {
         } else {
             validateAmount(errors, locale);
         }
+
         if (getFeeStatusValue() == null) {
             addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_SELECT_STATUS);
-        }
-        if(isToRemove() && feeStatus.equalsIgnoreCase("1")) {
-        	addError(errors, FeeConstants.REMOVE_ACTIVE, FeeConstants.REMOVE_ACTIVE);
         }
     }
 
@@ -373,7 +357,7 @@ public class FeeActionForm extends BaseActionForm {
         DoubleConversionResult conversionResult = validateAmount(getAmount(), FeeConstants.AMOUNT, errors);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                    lookupLocalizedPropertyValue(FeeConstants.AMOUNT));
+                    getLocalizedMessage(FeeConstants.AMOUNT));
         }
     }
 
@@ -381,7 +365,7 @@ public class FeeActionForm extends BaseActionForm {
         DoubleConversionResult conversionResult = validateInterest(getRate(), FeeConstants.RATE, errors);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, FeeConstants.RATE, FeeConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                    lookupLocalizedPropertyValue(FeeConstants.RATE));
+                    getLocalizedMessage(FeeConstants.RATE));
         }
     }
 
@@ -415,7 +399,6 @@ public class FeeActionForm extends BaseActionForm {
         weekRecurAfter = null;
         monthRecurAfter = null;
         feeStatus = null;
-        toRemove = false;
     }
 
 }

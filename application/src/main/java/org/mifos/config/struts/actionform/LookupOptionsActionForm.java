@@ -22,8 +22,6 @@ package org.mifos.config.struts.actionform;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -34,7 +32,6 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
@@ -620,33 +617,31 @@ public class LookupOptionsActionForm extends BaseActionForm {
     }
 
     private String getEntityType(String entity, HttpServletRequest request) {
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CONFIGURATION_UI_RESOURCE_PROPERTYFILE,
-                getUserLocale(request));
         String entityType = null;
         if (entity.equals(ConfigurationConstants.CONFIG_SALUTATION)) {
-            entityType = resources.getString("configuration.salutation");
+            entityType = getLocalizedMessage("configuration.salutation");
         } else if (entity.equals(ConfigurationConstants.CONFIG_CITIZENSHIP)) {
-            entityType = resources.getString("configuration.citizenship");
+            entityType = getLocalizedMessage("configuration.citizenship");
         } else if (entity.equals(ConfigurationConstants.CONFIG_COLLATERAL_TYPE)) {
-            entityType = resources.getString("configuration.collateraltype");
+            entityType = getLocalizedMessage("configuration.collateraltype");
         } else if (entity.equals(ConfigurationConstants.CONFIG_PAYMENT_TYPE)) {
-            entityType = resources.getString("configuration.paymentmodes");
+            entityType = getLocalizedMessage("configuration.paymentmodes");
         } else if (entity.equals(ConfigurationConstants.CONFIG_EDUCATION_LEVEL)) {
-            entityType = resources.getString("configuration.educationlevel");
+            entityType = getLocalizedMessage("configuration.educationlevel");
         } else if (entity.equals(ConfigurationConstants.CONFIG_ETHNICITY)) {
-            entityType = resources.getString("configuration.ethnicity");
+            entityType = getLocalizedMessage("configuration.ethnicity");
         } else if (entity.equals(ConfigurationConstants.CONFIG_HANDICAPPED)) {
-            entityType = resources.getString("configuration.handicapped");
+            entityType = getLocalizedMessage("configuration.handicapped");
         } else if (entity.equals(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY)) {
-            entityType = resources.getString("configuration.businessactivity");
+            entityType = getLocalizedMessage("configuration.businessactivity");
         } else if (entity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE)) {
-            entityType = resources.getString("configuration.purposeofloan");
+            entityType = getLocalizedMessage("configuration.purposeofloan");
         } else if (entity.equals(ConfigurationConstants.CONFIG_MARITAL_STATUS)) {
-            entityType = resources.getString("configuration.maritalstatus");
+            entityType = getLocalizedMessage("configuration.maritalstatus");
         } else if (entity.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE)) {
-            entityType = resources.getString("configuration.officertitle");
+            entityType = getLocalizedMessage("configuration.officertitle");
         } else if (entity.equals(ConfigurationConstants.CONFIG_PERSONNEL_TITLE)) {
-            entityType = resources.getString("configuration.usertitle");
+            entityType = getLocalizedMessage("configuration.usertitle");
         } else {
             entityType = "";
         }

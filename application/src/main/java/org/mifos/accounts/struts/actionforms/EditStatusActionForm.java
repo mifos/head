@@ -23,8 +23,6 @@ package org.mifos.accounts.struts.actionforms;
 import java.sql.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -40,7 +38,6 @@ import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 
 import static org.mifos.framework.util.helpers.DateUtils.dateFallsBeforeDate;
@@ -217,11 +214,9 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
     }
 
     private ActionErrors handleStatusPreviewValidations(HttpServletRequest request, ActionErrors errors) {
-        Locale locale = getUserContext(request).getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE, locale);
-        String notesString = resources.getString("Account.Notes");
-        String status = resources.getString("accounts.status");
-        String flag = resources.getString("accounts.flag");
+        String notesString = getLocalizedMessage("Account.Notes");
+        String status = getLocalizedMessage("accounts.status");
+        String flag = getLocalizedMessage("accounts.flag");
         if (newStatusId == null) {
             addError(errors, LoanConstants.MANDATORY, LoanConstants.MANDATORY, status);
         } else if (isNewStatusHasFlag() && StringUtils.isBlank(flagId)) {
@@ -233,7 +228,7 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
             addError(errors, LoanConstants.MAX_LENGTH, LoanConstants.MAX_LENGTH, notesString, String
                     .valueOf(LoanConstants.COMMENT_LENGTH));
         }
-        validateTransactionDate(errors, resources);
+        validateTransactionDate(errors);
         return errors;
     }
 
@@ -264,13 +259,13 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
         return questionGroups;
     }
 
-    private void validateTransactionDate(ActionErrors errors, ResourceBundle resources) {
+    private void validateTransactionDate(ActionErrors errors) {
         String fieldName = "accounts.date_of_trxn";
-        ActionErrors validationErrors = validateDate(getTransactionDate(), resources.getString(fieldName));
+        ActionErrors validationErrors = validateDate(getTransactionDate(), getLocalizedMessage(fieldName));
         if (null != validationErrors && !validationErrors.isEmpty()) {
             errors.add(validationErrors);
         }
-        validationErrors = validatePaymentDate(getTransactionDate(), resources.getString(fieldName));
+        validationErrors = validatePaymentDate(getTransactionDate(), getLocalizedMessage(fieldName));
         if (null != validationErrors && !validationErrors.isEmpty()) {
             errors.add(validationErrors);
         }

@@ -27,8 +27,6 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -48,7 +46,6 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 
@@ -122,16 +119,14 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String methodCalled = request.getParameter(MethodNameConstants.METHOD);
         ActionErrors errors = new ActionErrors();
-        Locale userLocale = getUserLocale(request);
-        ResourceBundle resources = getResourceBundle(userLocale);
 
         if (methodCalled != null && methodCalled.equals("preview")) {
-            validateTransactionDate(errors, resources);
-            validatePaymentType(errors, resources);
-            validateReceiptDate(errors, resources);
+            validateTransactionDate(errors);
+            validatePaymentType(errors);
+            validateReceiptDate(errors);
             String accountType = (String) request.getSession().getAttribute(Constants.ACCOUNT_TYPE);
-            validateAccountType(errors, resources, accountType);
-            validateAmount(errors, userLocale);
+            validateAccountType(errors, accountType);
+            validateAmount(errors);
         }
         if (!errors.isEmpty()) {
             request.setAttribute(Globals.ERROR_KEY, errors);
@@ -140,44 +135,39 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         return errors;
     }
 
-    ResourceBundle getResourceBundle(Locale userLocale) {
-        return ResourceBundle.getBundle(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE,
-                userLocale);
-    }
-
-    private void validateAccountType(ActionErrors errors, ResourceBundle resources, String accountType) {
+    private void validateAccountType(ActionErrors errors, String accountType) {
         if (accountType != null && accountType.equals(AccountTypeDto.LOAN_ACCOUNT.name())) {
             if (getAmount() == null || getAmount().equals("")) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
-                        resources.getString("accounts.amt")));
+                        getLocalizedMessage("accounts.amt")));
             }
         }
     }
 
-    private void validatePaymentType(ActionErrors errors, ResourceBundle resources) {
+    private void validatePaymentType(ActionErrors errors) {
         if (StringUtils.isEmpty(getPaymentTypeId())) {
             errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
-                    resources.getString("accounts.mode_of_payment")));
+                    getLocalizedMessage("accounts.mode_of_payment")));
         }
     }
 
-    private void validateReceiptDate(ActionErrors errors, ResourceBundle resources) {
+    private void validateReceiptDate(ActionErrors errors) {
         if (getReceiptDate() != null && !getReceiptDate().equals("")) {
-            ActionErrors validationErrors = validateDate(getReceiptDate(), resources.getString("accounts.receiptdate"));
+            ActionErrors validationErrors = validateDate(getReceiptDate(), getLocalizedMessage("accounts.receiptdate"));
             if (null != validationErrors && !validationErrors.isEmpty()) {
                 errors.add(validationErrors);
             }
         }
     }
 
-    private void validateTransactionDate(ActionErrors errors, ResourceBundle resources) {
+    private void validateTransactionDate(ActionErrors errors) {
         String fieldName = "accounts.date_of_trxn";
-        ActionErrors validationErrors = validateDate(getTransactionDate(), resources.getString(fieldName));
+        ActionErrors validationErrors = validateDate(getTransactionDate(), getLocalizedMessage(fieldName));
         if (null != validationErrors && !validationErrors.isEmpty()) {
             errors.add(validationErrors);
         }
         if (null != getTransactionDate()){
-            validationErrors = validatePaymentDate(getTransactionDate(), resources.getString(fieldName));
+            validationErrors = validatePaymentDate(getTransactionDate(), getLocalizedMessage(fieldName));
             if (validationErrors != null && !validationErrors.isEmpty()) {
                 errors.add(validationErrors);
             }
@@ -236,7 +226,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         return locale;
     }
 
-    protected void validateAmount(ActionErrors errors, Locale locale) {
+    protected void validateAmount(ActionErrors errors) {
         MifosCurrency currency = null;
         if (getCurrencyId() != null && AccountingRules.isMultiCurrencyEnabled()) {
             currency = AccountingRules.getCurrencyByCurrencyId(getCurrencyId());
@@ -244,7 +234,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         DoubleConversionResult conversionResult = validateAmount(getAmount(), currency , AccountConstants.ACCOUNT_AMOUNT, errors, "");
         if (amountCannotBeZero() && conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                    lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT));
+                    getLocalizedMessage(AccountConstants.ACCOUNT_AMOUNT));
         }
     }
 

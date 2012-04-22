@@ -30,7 +30,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,7 +65,6 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.login.util.helpers.LoginConstants;
@@ -326,18 +324,15 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
     @Override
     protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException {
         ActionErrors errors = new ActionErrors();
-        UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
-        Locale locale = userContext.getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
         if ((method.equals(Methods.previewPersonalInfo.toString()) || method.equals(Methods.next.toString()) || method
                 .equals(Methods.previewEditPersonalInfo.toString()))
                 && (ClientConstants.INPUT_PERSONAL_INFO.equals(input) || ClientConstants.INPUT_EDIT_PERSONAL_INFO
                 .equals(input))) {
-            validateClientNames(errors, resources);
-            validateDateOfBirth(errors, resources);
-            validateGender(errors, resources);
+            validateClientNames(errors);
+            validateDateOfBirth(errors);
+            validateGender(errors);
             if (!ClientRules.isFamilyDetailsRequired()) {
-                validateSpouseNames(errors, resources, request);
+                validateSpouseNames(errors, request);
             }
             checkForMandatoryFields(EntityType.CLIENT.getValue(), errors, request);
             validateCustomFieldsForCustomers(request, errors);
@@ -421,30 +416,30 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
         this.customerPicture = null;
     }
 
-    private void validateGender(ActionErrors errors, ResourceBundle resources) {
+    private void validateGender(ActionErrors errors) {
         if (clientPersonalDetailDto.getGender() == null) {
-            errors.add(CustomerConstants.GENDER, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
-                    .getString("Customer.Gender")));
+            errors.add(CustomerConstants.GENDER, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
+                    getLocalizedMessage("Customer.Gender")));
         }
     }
 
-    private void validateClientNames(ActionErrors errors, ResourceBundle resources) {
+    private void validateClientNames(ActionErrors errors) {
         if (clientName.getSalutation() == null) {
-            errors.add(CustomerConstants.SALUTATION, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
-                    .getString("Customer.Salutation")));
+            errors.add(CustomerConstants.SALUTATION, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
+                    getLocalizedMessage("Customer.Salutation")));
         }
         if (StringUtils.isBlank(clientName.getFirstName())) {
-            errors.add(CustomerConstants.FIRST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
-                    .getString("Customer.FirstName")));
+            errors.add(CustomerConstants.FIRST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
+                    getLocalizedMessage("Customer.FirstName")));
         }
         if (StringUtils.isBlank(clientName.getLastName())) {
-            errors.add(CustomerConstants.LAST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
-                    .getString("Customer.LastName")));
+            errors.add(CustomerConstants.LAST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
+                    getLocalizedMessage("Customer.LastName")));
         }
     }
 
     @SuppressWarnings({"unchecked"})
-    private void validateSpouseNames(ActionErrors errors, ResourceBundle resources, HttpServletRequest request) {
+    private void validateSpouseNames(ActionErrors errors, HttpServletRequest request) {
         boolean mandatorySpouseType = false;
         Map<Short, List<FieldConfigurationEntity>> entityMandatoryFieldMap = (Map<Short, List<FieldConfigurationEntity>>) request
                 .getSession().getServletContext().getAttribute(Constants.FIELD_CONFIGURATION);
@@ -476,32 +471,24 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
         if (spouseName.getNameType() == null && (mandatorySpouseType ||
                 !StringUtils.isBlank(spouseName.getFirstName()) || !StringUtils.isBlank(spouseName.getMiddleName()) ||
                 !StringUtils.isBlank(spouseName.getSecondLastName()) || !StringUtils.isBlank(spouseName.getLastName()))) {
-            errors.add(CustomerConstants.SPOUSE_TYPE, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
-                    .getString("Customer.SpouseType")));
+            errors.add(CustomerConstants.SPOUSE_TYPE, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
+                    getLocalizedMessage("Customer.SpouseType")));
         }
         if (mandatorySpouseType && StringUtils.isBlank(spouseName.getFirstName())) {
             errors.add(CustomerConstants.SPOUSE_FIRST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
-                    resources.getString("Customer.SpouseFirstName")));
+                    getLocalizedMessage("Customer.SpouseFirstName")));
         }
         if (mandatorySpouseType && StringUtils.isBlank(spouseName.getLastName())) {
             errors.add(CustomerConstants.SPOUSE_LAST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
-                    resources.getString("Customer.SpouseLastName")));
+                    getLocalizedMessage("Customer.SpouseLastName")));
         }
     }
 
     void validateDateOfBirth(ActionErrors errors) {
-        validateDateOfBirth(errors, null);
-    }
-
-    void validateDateOfBirth(ActionErrors errors, ResourceBundle resources) {
         if (StringUtils.isBlank(getDateOfBirth())) {
-            if (resources == null) {
                 errors.add(CustomerConstants.DOB, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
-                        CustomerConstants.DOB));
-            } else {
-                errors.add(CustomerConstants.DOB, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
-                        .getString("Customer.DateOfBirth")));
-            }
+                        getLocalizedMessage("Customer.DateOfBirth")));
+
         } else if (!isValid(getDateOfBirthDD()) || !isValid(getDateOfBirthMM()) || !isValid(getDateOfBirthYY())) {
             errors.add(ClientConstants.INVALID_DOB_EXCEPTION, new ActionMessage(ClientConstants.INVALID_DOB_EXCEPTION));
         } else {

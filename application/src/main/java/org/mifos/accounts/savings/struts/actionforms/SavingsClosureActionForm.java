@@ -20,7 +20,6 @@
 
 package org.mifos.accounts.savings.struts.actionforms;
 
-import java.util.ResourceBundle;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,18 +29,14 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
-import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.security.util.UserContext;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 
-public class SavingsClosureActionForm extends ValidatorActionForm implements QuestionResponseCapturer {
+public class SavingsClosureActionForm extends BaseActionForm implements QuestionResponseCapturer {
 
     private String receiptId;
     private String receiptDate;
@@ -121,23 +116,19 @@ public class SavingsClosureActionForm extends ValidatorActionForm implements Que
         if (method.equals("load") || method.equals("previous") || method.equals("validate") || method.equals("close")
                 || method.equals("cancel")) {
         } else {
-            UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
-                    .getSession());
-            ResourceBundle resources = ResourceBundle.getBundle(FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE, userContext
-                    .getPreferredLocale());
 
             String amount = getAmount();
             if (!("0.0".equals(amount))) {
                 if (StringUtils.isNotBlank(amount)) {
                     if (StringUtils.isBlank(getPaymentTypeId())) {
                         errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(
-                                AccountConstants.ERROR_MANDATORY, resources.getString("Savings.paymentType")));
+                                AccountConstants.ERROR_MANDATORY, getLocalizedMessage("Savings.paymentType")));
                     }
                 }
             }
 
             if (this.getReceiptDate() != null && !this.getReceiptDate().equals("")) {
-                ActionErrors dateError = validateDate(this.getReceiptDate(), resources.getString("Savings.receiptDate"));
+                ActionErrors dateError = validateDate(this.getReceiptDate(), getLocalizedMessage("Savings.receiptDate"));
                 if (dateError != null && !dateError.isEmpty()) {
                     errors.add(dateError);
                 }
@@ -145,12 +136,12 @@ public class SavingsClosureActionForm extends ValidatorActionForm implements Que
 
             if (StringUtils.isBlank(getCustomerId())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
-                        resources.getString("Savings.ClientName")));
+                        getLocalizedMessage("Savings.ClientName")));
             }
 
             if (StringUtils.isBlank(getNotes())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
-                        resources.getString("Savings.notes")));
+                        getLocalizedMessage("Savings.notes")));
             }
         }
 

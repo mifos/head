@@ -21,8 +21,6 @@
 package org.mifos.config.struts.action;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -44,7 +42,6 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.config.util.helpers.LookupOptionData;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
@@ -58,51 +55,45 @@ public class LookupOptionsAction extends BaseAction {
     private static final Logger logger = LoggerFactory.getLogger(LookupOptionsAction.class);
 
     private void setLookupType(String configurationEntity, HttpServletRequest request) {
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CONFIGURATION_UI_RESOURCE_PROPERTYFILE,
-                getUserLocale(request));
-        UserContext userContext = getUserContext(request);
 
         if (configurationEntity.equals(ConfigurationConstants.CONFIG_SALUTATION)) {
-            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.salutation"));
+            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, getLocalizedMessage("configuration.salutation"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_SALUTATION);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_PERSONNEL_TITLE)) {
-            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.usertitle"));
+            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, getLocalizedMessage("configuration.usertitle"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_PERSONNEL_TITLE);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_MARITAL_STATUS)) {
-            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.maritalstatus"));
+            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, getLocalizedMessage("configuration.maritalstatus"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_MARITAL_STATUS);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_ETHNICITY)) {
             String label = ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.ETHNICITY);
             request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, label);
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_ETHNICITY);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_EDUCATION_LEVEL)) {
-            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources
-                    .getString("configuration.educationlevel"));
+            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, getLocalizedMessage("configuration.educationlevel"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_EDUCATION_LEVEL);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_CITIZENSHIP)) {
             String label = ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.CITIZENSHIP);
             request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, label);
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_CITIZENSHIP);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY)) {
-            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources
-                    .getString("configuration.businessactivity"));
+            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, getLocalizedMessage("configuration.businessactivity"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE)) {
-            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.purposeofloan"));
+            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, getLocalizedMessage("configuration.purposeofloan"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_LOAN_PURPOSE);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_COLLATERAL_TYPE)) {
-            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources
-                    .getString("configuration.collateraltype"));
+            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, getLocalizedMessage("configuration.collateraltype"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_COLLATERAL_TYPE);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_HANDICAPPED)) {
             String label = ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.HANDICAPPED);
             request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, label);
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_HANDICAPPED);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE)) {
-            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.officertitle"));
+            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, getLocalizedMessage("configuration.officertitle"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_OFFICER_TITLE);
         } else if (configurationEntity.equals(ConfigurationConstants.CONFIG_PAYMENT_TYPE)) {
-            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.paymentmodes"));
+            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, getLocalizedMessage("configuration.paymentmodes"));
             request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_PAYMENT_TYPE);
         }
     }

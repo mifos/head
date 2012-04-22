@@ -20,9 +20,6 @@
 
 package org.mifos.accounts.struts.actionforms;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.Globals;
@@ -34,7 +31,6 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.FilePaths;
 
 public class NotesActionForm extends BaseActionForm {
 
@@ -110,9 +106,7 @@ public class NotesActionForm extends BaseActionForm {
     }
 
     private ActionErrors handlePreviewValidations(HttpServletRequest request, ActionErrors errors) {
-        Locale locale = getUserContext(request).getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE, locale);
-        String notes = resources.getString("Account.Notes");
+        String notes = getLocalizedMessage("Account.Notes");
         if (ValidateMethods.isNullOrBlank(getComment())) {
             if (null == errors) {
                 errors = new ActionErrors();

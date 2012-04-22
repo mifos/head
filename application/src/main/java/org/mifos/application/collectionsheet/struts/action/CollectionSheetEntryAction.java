@@ -23,8 +23,6 @@ package org.mifos.application.collectionsheet.struts.action;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -61,7 +59,6 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.UserContext;
@@ -315,14 +312,11 @@ public class CollectionSheetEntryAction extends BaseAction {
 
     private void setErrorMessagesIfErrorsExist(final HttpServletRequest request,
             final CollectionSheetErrorsDto collectionSheetErrors) {
-        final UserContext userContext = getUserContext(request);
-        final ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, userContext
-                .getPreferredLocale());
-        final String savingsWithdrawal = resources.getString(CollectionSheetEntryConstants.SAVING_WITHDRAWAL);
-        final String savingsDeposit = resources.getString(CollectionSheetEntryConstants.SAVING_DEPOSIT);
-        final String loanDisbursement = resources.getString(CollectionSheetEntryConstants.LOAN_DISBURSEMENT);
-        final String loanRepayment = resources.getString(CollectionSheetEntryConstants.LOAN_REPAYMENT);
-        final String acCollection = resources.getString(CollectionSheetEntryConstants.AC_COLLECTION);
+        final String savingsWithdrawal = getLocalizedMessage(CollectionSheetEntryConstants.SAVING_WITHDRAWAL);
+        final String savingsDeposit = getLocalizedMessage(CollectionSheetEntryConstants.SAVING_DEPOSIT);
+        final String loanDisbursement = getLocalizedMessage(CollectionSheetEntryConstants.LOAN_DISBURSEMENT);
+        final String loanRepayment = getLocalizedMessage(CollectionSheetEntryConstants.LOAN_REPAYMENT);
+        final String acCollection = getLocalizedMessage(CollectionSheetEntryConstants.AC_COLLECTION);
 
         final StringBuilder builder = new StringBuilder();
         final ActionErrors actionErrors = new ActionErrors();

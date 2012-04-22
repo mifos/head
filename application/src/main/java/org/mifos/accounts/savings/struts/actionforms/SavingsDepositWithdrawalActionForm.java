@@ -25,8 +25,6 @@ import static org.mifos.framework.util.helpers.DateUtils.getDateAsSentFromBrowse
 
 import java.util.Date;
 import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -38,12 +36,8 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
-import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.security.util.UserContext;
 
 public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
     String trxnTypeId;
@@ -61,7 +55,7 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
     String amount;
 
     Date lastTrxnDate;
-    
+
     public SavingsDepositWithdrawalActionForm() {
     }
 
@@ -133,22 +127,18 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String method = request.getParameter("method");
         ActionErrors errors = null;
-        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
-                .getSession());
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE, userContext
-                .getPreferredLocale());
 
         if (method != null && method.equals(Methods.preview.toString())) {
             errors = new ActionErrors();
 
             if (StringUtils.isBlank(getTrxnTypeId())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
-                        resources.getString("Savings.paymentType")));
+                        getLocalizedMessage("Savings.paymentType")));
             }
 
             if (StringUtils.isBlank(getAmount())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
-                        resources.getString("Savings.amount")));
+                        getLocalizedMessage("Savings.amount")));
             }
 
             if(StringUtils.isNotBlank(getAmount())) {
@@ -156,34 +146,34 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
                 DoubleConversionResult conversionResult = validateAmount(getAmount(), AccountConstants.ACCOUNT_AMOUNT, errors);
                 if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
                     addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                            lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT));
+                            getLocalizedMessage(AccountConstants.ACCOUNT_AMOUNT));
                 }
             }
 
             if (StringUtils.isBlank(getPaymentTypeId())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
-                        resources.getString("Savings.modeOfPayment")));
+                        getLocalizedMessage("Savings.modeOfPayment")));
             }
 
-            ActionErrors dateError = validateDate(this.trxnDate, resources.getString("Savings.dateOfTrxn"), userContext);
+            ActionErrors dateError = validateDate(this.trxnDate, getLocalizedMessage("Savings.dateOfTrxn"));
             if (dateError != null && !dateError.isEmpty()) {
                 errors.add(dateError);
             }
-            
-            dateError = validateTrxnDate(this.trxnDate, resources.getString("Savings.dateOfTrxn"));
+
+            dateError = validateTrxnDate(this.trxnDate, getLocalizedMessage("Savings.dateOfTrxn"));
             if (dateError != null && !dateError.isEmpty()) {
                 errors.add(dateError);
             }
-            
+
             if (this.getReceiptDate() != null && !this.getReceiptDate().equals("")) {
-                dateError = validateDate(getReceiptDate(), resources.getString("Savings.receiptDate"), userContext);
+                dateError = validateDate(getReceiptDate(), getLocalizedMessage("Savings.receiptDate"));
                 if (dateError != null && !dateError.isEmpty()) {
                     errors.add(dateError);
                 }
             }
             if (StringUtils.isBlank(getCustomerId())) {
                 errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
-                        resources.getString("Savings.ClientName")));
+                        getLocalizedMessage("Savings.ClientName")));
             }
         }
 
@@ -195,7 +185,7 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
         return errors;
     }
 
-    private ActionErrors validateDate(String date, String fieldName, UserContext userContext) {
+    private ActionErrors validateDate(String date, String fieldName) {
         ActionErrors errors = null;
         java.sql.Date sqlDate = null;
         if (date != null && !date.equals("")) {
@@ -218,7 +208,7 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
         }
         return errors;
     }
-    
+
     private ActionErrors validateTrxnDate(String date, String fieldName) {
         ActionErrors errors = new ActionErrors();
         try {

@@ -150,13 +150,13 @@ explanation of the license and how it is applied.
 
 						 					<c:choose>											
 												<c:when test="${GlNamesMode == 1}">
-												<c:out value="${feeModel.glCode} - ${feeModel.glCodeDto.glname}" />
+												<c:out value="${feeModel.glCode} - ${feeModel.name}" />
 												</c:when>
 												<c:when test="${GlNamesMode == 2}">
-												<c:out value="${feeModel.glCodeDto.glname} (${feeModel.glCode})" />
+												<c:out value="${feeModel.name} (${feeModel.glCode})" />
 												</c:when>
 												<c:when test="${GlNamesMode == 3}">
-												<c:out value="${feeModel.glCodeDto.glname}" />
+												<c:out value="${feeModel.name}" />
 												</c:when>
 												<c:when test="${GlNamesMode == 4}">
 												<c:out value="${feeModel.glCode}" />

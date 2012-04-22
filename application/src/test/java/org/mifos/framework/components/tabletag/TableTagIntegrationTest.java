@@ -29,19 +29,21 @@ import java.util.Locale;
 import javax.servlet.jsp.JspException;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RequestConstants;
 import org.mifos.config.Localization;
 import org.mifos.customers.business.CustomerSearchDto;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.exceptions.TableTagTypeParserException;
 import org.mifos.framework.util.helpers.SearchObject;
 
-public class TableTagTest extends TestCase {
+public class TableTagIntegrationTest extends MifosIntegrationTestCase {
 
+    @Test
     public void testNoResults() throws Exception {
         String html = new TableTag("single").noResults("default-office", TableTag.ALL_BRANCHES, "Rock&Roll")
                 .getOutput();
@@ -53,6 +55,7 @@ public class TableTagTest extends TestCase {
         assertWellFormedFragment(html);
     }
 
+    @Test
     public void testNoResultsMultiple() throws Exception {
         SearchObject searchObject = new SearchObject();
         searchObject.addToSearchNodeMap("dummy-search-term-key", "Rock");
@@ -66,6 +69,7 @@ public class TableTagTest extends TestCase {
         assertWellFormedFragment(html);
     }
 
+    @Test
     public void testNoResultsNotAllBranches() throws Exception {
         SearchObject searchObject = new SearchObject();
         searchObject.addToSearchNodeMap("dummy-search-term-key", "Rock");
@@ -78,6 +82,7 @@ public class TableTagTest extends TestCase {
         assertWellFormedFragment(html);
     }
 
+    @Test
     public void testCreateEndTable() {
         StringBuilder stringBuilder = new StringBuilder();
         new TableTag("single").createEndTable(stringBuilder, true);
@@ -88,23 +93,25 @@ public class TableTagTest extends TestCase {
                 stringBuilder.toString());
     }
 
+    @Test
     public void testGetSingleFileFailure() throws Exception {
         try {
             new TableTag("single").getSingleFile();
-            fail();
+            Assert.fail();
         } catch (JspException e) {
-            assertTrue(true);
+            Assert.assertTrue(true);
         }
     }
 
+    @Test
     public void testGetSingleFile() throws Exception {
         TableTag tableTag = new TableTag("single");
         tableTag.setName("viewUsers");
         Assert.assertEquals("org/mifos/framework/util/resources/tabletag/viewUsers.xml", tableTag.getSingleFile());
     }
 
+    @Test
     public void testParser() throws Exception {
-
         Files files = TypeParser.getInstance().parser("org/mifos/framework/util/resources/tabletag/type.xml");
         Assert.assertNotNull(files);
         FileName[] file = files.getFileName();
@@ -114,6 +121,7 @@ public class TableTagTest extends TestCase {
 
     }
 
+    @Test
     public void testGetDisplayText() throws Exception {
         Assert.assertEquals("<span class=\"fontnormalbold\">a</span>,<span class=\"fontnormalbold\">b</span>", Text
                 .getDisplayText(new String[] { "a", "b" }, "true"));
@@ -123,6 +131,7 @@ public class TableTagTest extends TestCase {
 
     }
 
+    @Test
     public void testGetImage() throws Exception {
         Locale locale = Locale.ENGLISH;
         CustomerSearchDto customerSearchDto = new CustomerSearchDto();
@@ -142,6 +151,7 @@ public class TableTagTest extends TestCase {
                         Text.getImage(customerSearchDto, "13", locale));
     }
 
+    @Test
     public void testTableTagParser() throws Exception {
         Table table = TableTagParser.getInstance().parser("org/mifos/framework/util/resources/tabletag/viewUsers.xml");
         Path path[] = table.getPath();
@@ -204,6 +214,7 @@ public class TableTagTest extends TestCase {
 
     }
 
+    @Test
     public void testHelperCache() throws Exception {
 
         TableTag tableTag = new TableTag("single");
@@ -212,6 +223,7 @@ public class TableTagTest extends TestCase {
                 "viewUsers"));
     }
 
+    @Test
     public void testPageScroll() {
         Locale locale = Locale.ENGLISH;
         Assert.assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1'>text</a>", PageScroll.getAnchor(
@@ -230,6 +242,7 @@ public class TableTagTest extends TestCase {
                         PageScroll.getPages(1, 10, 3, "loaad", "1234", locale, null));
     }
 
+    @Test
     public void testPageScrollgetAnchor() {
         Assert.assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1'>text</a>", PageScroll.getAnchor(
                 "hRef", "text", "load", "1234", 1, null));
@@ -238,6 +251,7 @@ public class TableTagTest extends TestCase {
                 "load", "1234", 1, LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN));
     }
 
+    @Test
     public void testLink() {
         Assert.assertEquals("", Link.createLink(new String[] { "" }, null, null, null, null, null, null));
         Assert
@@ -257,6 +271,7 @@ public class TableTagTest extends TestCase {
                                 "1234", "9999"));
     }
 
+    @Test
     public void testTableTagTypeParserException() throws Exception {
         try {
             TypeParser.getInstance().parser("org/mifos/framework/components/tabletag/type.xml");
@@ -266,6 +281,7 @@ public class TableTagTest extends TestCase {
         }
     }
 
+    @Test
     public void testTableTagException() throws Exception {
         try {
             Locale locale = Localization.getInstance().getConfiguredLocale();
@@ -276,6 +292,7 @@ public class TableTagTest extends TestCase {
         }
     }
 
+    @Test
     public void testTabletag() {
 
         TableTag tableTag = new TableTag();
@@ -304,6 +321,7 @@ public class TableTagTest extends TestCase {
 
     }
 
+    @Test
     public void testSearchObject() throws Exception {
         SearchObject searchObject = new SearchObject();
         searchObject.addSearchTermAndOffice("newSearchTerm", "1");

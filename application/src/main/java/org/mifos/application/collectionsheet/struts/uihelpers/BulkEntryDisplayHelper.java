@@ -20,10 +20,9 @@
 
 package org.mifos.application.collectionsheet.struts.uihelpers;
 
+import static org.mifos.application.master.MessageLookup.getLocalizedMessage;
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
-
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.loan.util.helpers.LoanAccountsProductDto;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
@@ -41,7 +40,6 @@ import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.ConversionUtil;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
@@ -57,9 +55,8 @@ public class BulkEntryDisplayHelper {
     }
 
     private StringBuilder buildStartTable(final int totalProductSize, final Locale locale) {
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
-        String dueCollections = resources.getString(CollectionSheetEntryConstants.DUE_COLLECTION);
-        String issueWithdrawal = resources.getString(CollectionSheetEntryConstants.ISSUE_WITHDRAWAL);
+        String dueCollections = getLocalizedMessage(CollectionSheetEntryConstants.DUE_COLLECTION);
+        String issueWithdrawal = getLocalizedMessage(CollectionSheetEntryConstants.ISSUE_WITHDRAWAL);
         StringBuilder builder = new StringBuilder();
         builder.append("<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\">");
         builder.append("<tr class=\"fontnormalbold\">");
@@ -83,10 +80,9 @@ public class BulkEntryDisplayHelper {
     private void buildProductsHeading(final List<ProductDto> loanProducts, final List<ProductDto> savingsProducts,
             final StringBuilder builder, final Locale locale) {
 
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
-        String clientName = resources.getString(CollectionSheetEntryConstants.CLIENT_NAME);
-        String acCollection = resources.getString(CollectionSheetEntryConstants.AC_COLLECTION);
-        String attn = resources.getString(CollectionSheetEntryConstants.ATTN);
+        String clientName = getLocalizedMessage(CollectionSheetEntryConstants.CLIENT_NAME);
+        String acCollection = getLocalizedMessage(CollectionSheetEntryConstants.AC_COLLECTION);
+        String attn = getLocalizedMessage(CollectionSheetEntryConstants.ATTN);
         BulkEntryTagUIHelper.getInstance().generateStartTR(builder, "fontnormal8ptbold");
         BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, clientName, false);
         builder.append("<td height=\"30\">&nbsp;&nbsp;</td>");
@@ -133,8 +129,7 @@ public class BulkEntryDisplayHelper {
         Money[] groupTotals = new Money[(totalProductsSize + 1)];
         MifosCurrency currency = parent.getCurrency();
         Locale locale = userContext.getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
-        String account = resources.getString(CollectionSheetEntryConstants.ACCOUNT_GROUP_CENTER);
+        String account = getLocalizedMessage(CollectionSheetEntryConstants.ACCOUNT_GROUP_CENTER);
         String group = getLabel(ConfigurationConstants.GROUP, userContext);
         String groupAccountStr = account.format(account, group);
         groupAccountStr = " " + groupAccountStr + " ";
@@ -167,9 +162,7 @@ public class BulkEntryDisplayHelper {
         Money[] groupTotals = new Money[(totalProductsSize + 1)];
 
         final MifosCurrency currency = centerEntry.getCurrency();
-        final ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, userContext
-                .getPreferredLocale());
-        final String accountLabel = resources.getString(CollectionSheetEntryConstants.ACCOUNT_GROUP_CENTER);
+        final String accountLabel = getLocalizedMessage(CollectionSheetEntryConstants.ACCOUNT_GROUP_CENTER);
 
         final List<CollectionSheetEntryDto> groupEntries = centerEntry.getCollectionSheetEntryChildren();
 
@@ -641,9 +634,7 @@ public class BulkEntryDisplayHelper {
             final int loanProductsSize,
             final int savingsProductSize) {
         Short customerLevel = collectionSheetEntryDto.getCustomerDetail().getCustomerLevelId();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, userContext
-                .getPreferredLocale());
-        String totalStr = resources.getString(CollectionSheetEntryConstants.TOTAL_GROUP_CENTER);
+        String totalStr = getLocalizedMessage(CollectionSheetEntryConstants.TOTAL_GROUP_CENTER);
         String group = getLabel(ConfigurationConstants.GROUP, userContext);
         String center = getLabel(ConfigurationConstants.CENTER, userContext);
         String groupTotalStr = totalStr.format(totalStr, group);
@@ -794,16 +785,14 @@ public class BulkEntryDisplayHelper {
 
     private StringBuilder buildTotalstable(final Money dueColl, final Money loanDisb, final Money otherColl, final Money withDrawals,
             final Money totColl, final Money totIssue, final Money netCash, final String method, final UserContext userContext) {
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, userContext
-                .getPreferredLocale());
-        String totalCollections = resources.getString(CollectionSheetEntryConstants.TOTAL_COLLECTION);
-        String totalIssuesWithdrawals = resources.getString(CollectionSheetEntryConstants.TOTAL_ISSUE_WITHDRAWAL);
-        String dueCollections2 = resources.getString(CollectionSheetEntryConstants.DUE_COLLECTION2);
-        String loanDisbursements = resources.getString(CollectionSheetEntryConstants.LOAN_DISBURSEMENT);
-        String total = resources.getString(CollectionSheetEntryConstants.TOTAL);
-        String netCashStr = resources.getString(CollectionSheetEntryConstants.NET_CASH);
-        String withdrawals = resources.getString(CollectionSheetEntryConstants.WITHDRAWAL);
-        String otherCollections = resources.getString(CollectionSheetEntryConstants.OTHER_COLLECTION);
+        String totalCollections = getLocalizedMessage(CollectionSheetEntryConstants.TOTAL_COLLECTION);
+        String totalIssuesWithdrawals = getLocalizedMessage(CollectionSheetEntryConstants.TOTAL_ISSUE_WITHDRAWAL);
+        String dueCollections2 = getLocalizedMessage(CollectionSheetEntryConstants.DUE_COLLECTION2);
+        String loanDisbursements = getLocalizedMessage(CollectionSheetEntryConstants.LOAN_DISBURSEMENT);
+        String total = getLocalizedMessage(CollectionSheetEntryConstants.TOTAL);
+        String netCashStr = getLocalizedMessage(CollectionSheetEntryConstants.NET_CASH);
+        String withdrawals = getLocalizedMessage(CollectionSheetEntryConstants.WITHDRAWAL);
+        String otherCollections = getLocalizedMessage(CollectionSheetEntryConstants.OTHER_COLLECTION);
         StringBuilder builder = new StringBuilder();
         builder.append("<table width=\"95%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">");
         builder.append("<tr class=\"fontnormal\">");

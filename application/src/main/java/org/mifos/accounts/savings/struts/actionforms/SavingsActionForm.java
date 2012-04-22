@@ -23,8 +23,6 @@ package org.mifos.accounts.savings.struts.actionforms;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -50,11 +48,8 @@ import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ExceptionConstants;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-import org.mifos.security.login.util.helpers.LoginConstants;
-import org.mifos.security.util.UserContext;
 
 public class SavingsActionForm extends AccountAppActionForm implements QuestionResponseCapturer{
     private String recommendedAmount;
@@ -86,10 +81,7 @@ public class SavingsActionForm extends AccountAppActionForm implements QuestionR
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String method = request.getParameter("method");
         ActionErrors errors = new ActionErrors();
-        UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
-        Locale locale = userContext.getPreferredLocale();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE, locale);
-        String mandatoryAmount = resources.getString(SavingsConstants.MANDATORY_AMOUNT_FOR_DEPOSIT_KEY);
+        String mandatoryAmount = getLocalizedMessage(SavingsConstants.MANDATORY_AMOUNT_FOR_DEPOSIT_KEY);
         request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
 
         if (method.equals("getPrdOfferings") || method.equals("create") || method.equals("edit")
@@ -109,12 +101,10 @@ public class SavingsActionForm extends AccountAppActionForm implements QuestionR
                     if (StringUtils.isNotBlank(getRecommendedAmount())) {
                         if (savingsOffering.getSavingsType().equals(SavingsType.MANDATORY)) {
                             validateAmount(getRecommendedAmount(),
-                                    SavingsConstants.MANDATORY_AMOUNT_FOR_DEPOSIT_KEY, errors, locale,
-                                    FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE);
+                                    SavingsConstants.MANDATORY_AMOUNT_FOR_DEPOSIT_KEY, errors);
                         } else {
                             validateAmount(getRecommendedAmount(),
-                                    SavingsConstants.RECOMMENDED_AMOUNT_FOR_DEPOSIT_KEY, errors, locale,
-                                    FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE);
+                                    SavingsConstants.RECOMMENDED_AMOUNT_FOR_DEPOSIT_KEY, errors);
                         }
                     }
                     validateCustomFields(request, errors);
@@ -135,16 +125,12 @@ public class SavingsActionForm extends AccountAppActionForm implements QuestionR
     protected DoubleConversionResult validateAmount(String amountString, String fieldPropertyKey, ActionErrors errors,
             Locale locale, String propertyfileName) {
         DoubleConversionResult conversionResult = parseDoubleForMoney(amountString);
-        addConversionResultErrors(fieldPropertyKey, lookupLocalizedPropertyValue(fieldPropertyKey, locale,
-                propertyfileName), errors, locale, conversionResult);
+        String arg = getLocalizedMessage(fieldPropertyKey);
+        addConversionResultErrors(fieldPropertyKey, arg, errors, locale, conversionResult);
         return conversionResult;
     }
 
-    protected String lookupLocalizedPropertyValue(String key, Locale locale, String propertyFile) {
-        ResourceBundle resources = ResourceBundle.getBundle(propertyFile, locale);
-        String errorText = resources.getString(key);
-        return errorText;
-    }
+
 
     protected DoubleConversionResult parseDoubleForMoney(String doubleString) {
         return new LocalizationConverter().parseDoubleForMoney(doubleString);
@@ -167,9 +153,7 @@ public class SavingsActionForm extends AccountAppActionForm implements QuestionR
     }
 
     protected String getConversionErrorText(ConversionError error, Locale locale) {
-
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.UI_RESOURCE_PROPERTYFILE, locale);
-        String errorText = resources.getString(error.toString());
+        String errorText = this.getLocalizedMessage(error.toString());
         if (error.equals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY)) {
             errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsBeforeDecimal().toString());
         } else if (error.equals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY)) {
