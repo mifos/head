@@ -103,11 +103,14 @@ public class SearchResultsPage extends MifosPage {
         String heading = null;
         int resultCount;
         try {
+        	String jsScript = "selenium.browserbot.getCurrentWindow().jQuery('#mainCustomerSearchResultDataTable_info').length > 0";
+        	selenium.waitForCondition(jsScript, "3000"); // wait for jquery dataTable full load
             heading = selenium.getText("//div[@id='mainCustomerSearchResultDataTable_info']" );
-            resultCount = Integer.parseInt(heading.substring(heading.indexOf("of ")+3, heading.lastIndexOf(' ')));
+            String[] numbers = heading.replaceAll("\\D+", " ").split(" ");
+            resultCount = Integer.parseInt(numbers[numbers.length-1]);
         } catch (Exception e) {
             // failed to retrieve result
-            resultCount = 0;
+            resultCount = -1;
         }
         return resultCount;
     }
