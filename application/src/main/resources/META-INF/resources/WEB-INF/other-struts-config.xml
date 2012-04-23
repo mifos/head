@@ -164,6 +164,7 @@
             <forward name="cancelCreate_failure" path="/pages/application/fees/jsp/previewfeescreate.jsp"/>
             <forward name="cancelEdit_success" path="/feeaction.do?method=get"/>
             <forward name="cancelEdit_failure" path="/pages/application/fees/jsp/previewfeesedit.jsp"/>
+            <forward name="remove_success" path="/feeaction.do?method=viewAll"/>
         </action>
         <!-- CheckList Action M2-->
         <action path="/chkListAction"

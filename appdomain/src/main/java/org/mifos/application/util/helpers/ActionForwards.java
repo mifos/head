@@ -202,5 +202,6 @@ public enum ActionForwards {
     validateInstallments_failure,
     getLoanRepaymentScheduleFailure,
     capture_cash_flow,
-    viewAndEditAdditionalInformation
+    viewAndEditAdditionalInformation, 
+    remove_success
 }
