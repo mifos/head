@@ -187,14 +187,19 @@ public class FeeAction extends BaseAction {
         
 		Short appliedFeeId = this.feeDao.findFeeAppliedToLoan(feeId);
 		boolean isInProducts = appliedFeeId == null ? true : false;
+		List<Short> feesAppliedLoanAccountList = this.feeDao.getAllAtachedFeesToLoanAcounts();
+		boolean isFeeAppliedToLoan = feesAppliedLoanAccountList.contains(feeId);
         ActionMessages messages = new ActionMessages();
         
         if (((FeeActionForm) form).isToRemove()) {
-	    	if (!isInProducts) {
+	    	if (!isInProducts && !isFeeAppliedToLoan) {
 	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemoved"));
 	    	}
-	    	else if (isInProducts) {
+	    	else if (isFeeAppliedToLoan) {
 	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemovedFromPrd"));
+	    	}
+	    	else {
+	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeNotUsedRemove"));
 	    	}
         }
 		saveErrors(request, messages);
