@@ -71,7 +71,11 @@ public interface FeeConstants {
 
     String RATE_AND_FORMULA = "RateAndFormula";
     String RATE_OR_AMOUNT = "RateOrAmount";
-
+    String REMOVE_ACTIVE = "error.RemoveActive";
+    //
+    String FEE_REMOVED = "Fees.feeRemoved";
+    String FEE_REMOVED_FROM_PRD = "Fees.feeRemovedFromPrd";
+    
     // error messages for BO
     String INVALID_FEE_NAME = "errors.Fee.invalidName";
     String INVALID_FEE_CATEGORY = "errors.Fee.invalidCategory";

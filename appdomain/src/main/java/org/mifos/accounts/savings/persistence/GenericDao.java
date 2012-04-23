@@ -53,6 +53,8 @@ public interface GenericDao {
     Iterator<? extends Object> executeNamedQueryIterator(String queryName, Map<String, ?> queryParameters);
 
     <T> T initializeAndUnproxy(T var);
+    
+    int executeNamedQueryDelete(final String queryName, final Map<String, ?> queryParameters);
 
     void update(Object entity);
 }
