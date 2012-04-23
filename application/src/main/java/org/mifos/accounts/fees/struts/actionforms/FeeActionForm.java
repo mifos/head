@@ -28,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.bouncycastle.asn1.ocsp.Request;
 import org.hibernate.envers.synchronization.work.AddWorkUnit;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
@@ -77,6 +78,8 @@ public class FeeActionForm extends BaseActionForm {
     private String feeStatus;
     
     private boolean toRemove = false; 
+    
+    private boolean cantBeRemoved = false;
 
     public String getFeeId() {
         return feeId;
@@ -273,6 +276,14 @@ public class FeeActionForm extends BaseActionForm {
 		this.toRemove = toRemove;
 	}
 
+	public boolean isCantBeRemoved() {
+		return cantBeRemoved;
+	}
+
+	public void setCantBeRemoved(boolean cantBeRemoved) {
+		this.cantBeRemoved = cantBeRemoved;
+	}
+
 	@Override
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         super.reset(mapping, request);
@@ -286,6 +297,9 @@ public class FeeActionForm extends BaseActionForm {
         }
         if (method.equals("editPrevious") || method.equals("manage")) {
         	toRemove = false;
+        }
+        if (method.equals("editPreview")) {
+        	cantBeRemoved = false;
         }
 	}
 
@@ -306,6 +320,8 @@ public class FeeActionForm extends BaseActionForm {
         } else if (methodCalled.equalsIgnoreCase(Methods.editPreview.toString())) {
             // editing fees
             validateForEditPreview(errors, locale);
+        } else if (methodCalled.equalsIgnoreCase(Methods.update.toString())) {
+        	validateForUpdaste(errors, locale);
         }
 
         if (!errors.isEmpty()) {
@@ -313,7 +329,14 @@ public class FeeActionForm extends BaseActionForm {
         }
         return errors;
     }
-
+    
+    private void validateForUpdaste(ActionErrors errors, Locale locale) {
+    	if(isCantBeRemoved()) {
+    		addError(errors, FeeConstants.FEE_CANNOT_BE_REMOVED, FeeConstants.FEE_CANNOT_BE_REMOVED);
+    	}
+    }
+    
+    	
     /**
      * Used while creating fees.
      */
@@ -416,6 +439,7 @@ public class FeeActionForm extends BaseActionForm {
         monthRecurAfter = null;
         feeStatus = null;
         toRemove = false;
+        cantBeRemoved = false;
     }
 
 }

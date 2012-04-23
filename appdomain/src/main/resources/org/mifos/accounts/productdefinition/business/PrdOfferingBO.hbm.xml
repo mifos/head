@@ -398,10 +398,13 @@
     <query name="savingsProduct.openSavingsAccounts">
         <![CDATA[select count(*) from SavingsBO s where s.savingsOffering.prdOfferingId=:prdOfferingId and s.accountState in (16, 18)]]>
     </query>
-	<sql-query name="deleteFeeFromPrd_Offering_Fees">
+	<sql-query name="deleteFeeFromPrdOfferingFees">
 		<![CDATA[delete prd_fees from prd_offering as prd_off, prd_offering_fees as prd_fees where prd_fees.prd_offering_id=prd_off.prd_offering_id and prd_fees.fee_id=:FEEID]]>  
    	</sql-query>
-	<sql-query name="deleteFeeFromPrd">
+	<sql-query name="deleteFeeFromAccountFees">
 		<![CDATA[delete loan_fee,acc_fee from account_fees as acc_fee,loan_fee_schedule as loan_fee where acc_fee.account_fee_id=loan_fee.account_fee_id and loan_fee.fee_id=:FEEID]]>
+	</sql-query>
+		<sql-query name="deleteFeeFromAccountFeesAndTrhxHistoryAndOriginalFeeSchedule">
+		<![CDATA[delete loan_fee, trxn_fee, orgin_fee, acc_fee from account_fees as acc_fee,loan_fee_schedule as loan_fee, fee_trxn_detail as trxn_fee, original_loan_fee_schedule as orgin_fee where acc_fee.account_fee_id=loan_fee.account_fee_id and acc_fee.account_fee_id=trxn_fee.account_fee_id and acc_fee.account_fee_id=orgin_fee.account_fee_id and loan_fee.fee_id=:FEEID]]>
 	</sql-query>
 </hibernate-mapping>

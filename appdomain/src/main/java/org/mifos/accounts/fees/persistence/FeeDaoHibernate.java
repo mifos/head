@@ -44,6 +44,7 @@ import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.FeeDto;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -197,21 +198,25 @@ public class FeeDaoHibernate implements FeeDao {
     }
 
 	@Override
-	public void remove(FeeBO fee, boolean isInProducts, boolean isFeeAppliedToLoan) {
-		if (isInProducts && !isFeeAppliedToLoan) {	
+	public void remove(FeeBO fee, boolean isInProducts, boolean isFeeInUsedLoan) throws Exception {
+		if (isInProducts && !isFeeInUsedLoan) {	
 	        Map<String, Object> queryParameters = new HashMap<String, Object>();
 	        queryParameters.put("FEEID", fee.getFeeId());
-			this.genericDao.executeNamedQueryDelete("deleteFeeFromPrd_Offering_Fees", queryParameters);
+			this.genericDao.executeNamedQueryDelete("deleteFeeFromPrdOfferingFees", queryParameters);
 			this.genericDao.delete(fee);
 		}
-		else if (!isInProducts && isFeeAppliedToLoan) {
+		else if (isInProducts && isFeeInUsedLoan) {
 			 Map<String, Object> queryParameters = new HashMap<String, Object>();
 			 queryParameters.put("FEEID", fee.getFeeId());
-			 this.genericDao.executeNamedQueryDelete("deleteFeeFromPrd_Offering_Fees", queryParameters);
-			 this.genericDao.executeNamedQueryDelete("deleteFeeFromPrd", queryParameters);
+			 this.genericDao.executeNamedQueryDelete("deleteFeeFromPrdOfferingFees", queryParameters);
+			 this.genericDao.executeNamedQueryDelete("deleteFeeFromAccountFeesAndTrhxHistoryAndOriginalFeeSchedule", 
+					 queryParameters);
+		}
+		else if (!isInProducts && !isFeeInUsedLoan) {
+			this.genericDao.delete(fee);
 		}
 		else {
-			this.genericDao.delete(fee);
+			throw new MifosRuntimeException("You shall not pass !");
 		}
 	}
 
@@ -220,12 +225,18 @@ public class FeeDaoHibernate implements FeeDao {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("FEEID", feeId);        
         return (Short) this.genericDao.executeUniqueResultNamedQuery("findFeeAppliedToLoan", queryParameters);
-		
+	}
+	
+	@Override
+	public Short findFeeInSchedule(Short feeId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("FEEID", feeId);        
+        return (Short) this.genericDao.executeUniqueResultNamedQuery("findFeeInSchedule", queryParameters);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Short> getAllAtachedFeesToLoanAcounts() {
-		return (List<Short>) this.genericDao.executeNamedQuery("getAllAtachedFeesToLoans", null);
+	public List<Short> getAllUsedLoansWithAttachedFee() {
+		return (List<Short>) this.genericDao.executeNamedQuery("getAllUsedLoansWithAttachedFee", null);
 	}
 }

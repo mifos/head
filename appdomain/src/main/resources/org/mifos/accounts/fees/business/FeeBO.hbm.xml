@@ -79,9 +79,12 @@
     	<return-scalar column="fee_id" type="short"/>
     	<![CDATA[select fee_id from prd_offering_fees where fee_id=:FEEID]]>
     </sql-query>
-   	<sql-query name="getAllAtachedFeesToLoans">
+   	<sql-query name="getAllUsedLoansWithAttachedFee">
    	<return-scalar column="fee_id" type="short"/>
    		<![CDATA[select distinct fee_id from account_fees]]>
+   	</sql-query>
+   	<sql-query name="findFeeInSchedule">
+   		<![CDATA[select fee_id from original_loan_fee_schedule where fee_id=:FEEID]]>
    	</sql-query>
 
 </hibernate-mapping>

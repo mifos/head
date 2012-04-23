@@ -203,5 +203,7 @@ public enum ActionForwards {
     getLoanRepaymentScheduleFailure,
     capture_cash_flow,
     viewAndEditAdditionalInformation, 
-    remove_success
+    remove_success, 
+    remove_fee_success,
+    remove_failure
 }

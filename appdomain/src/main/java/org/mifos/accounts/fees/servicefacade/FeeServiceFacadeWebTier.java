@@ -49,6 +49,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.dto.domain.FeeCreateDto;
@@ -203,11 +204,15 @@ public class FeeServiceFacadeWebTier implements FeeServiceFacade {
 	public void removeFee(FeeUpdateRequest feeUpdateRequest) {
 		FeeBO feeToRemove = this.feeDao.findById(feeUpdateRequest.getFeeId());
 		Short appliedFeeId = this.feeDao.findFeeAppliedToLoan(feeUpdateRequest.getFeeId());
-		boolean isInProducts = appliedFeeId == null ? true : false;
-		List<Short> feesAppliedLoanAccountList = this.feeDao.getAllAtachedFeesToLoanAcounts();
-		boolean isFeeAppliedToLoan = feesAppliedLoanAccountList.contains(feeToRemove.getFeeId());
+		boolean isInProducts = appliedFeeId != null ? true : false;
+		List<Short> allUsedLoansWithAttachedFee = this.feeDao.getAllUsedLoansWithAttachedFee();
+		boolean isFeeInUsedLoan = allUsedLoansWithAttachedFee.contains(feeToRemove.getFeeId());
 		if  (!feeToRemove.isActive()) { 	
-			this.feeService.remove(feeToRemove, isInProducts, isFeeAppliedToLoan);
+			try {
+				this.feeService.remove(feeToRemove, isInProducts, isFeeInUsedLoan);
+			} catch (MifosRuntimeException e) {
+				throw new MifosRuntimeException(e.getMessage());
+			}
 		} 
 	}
 }

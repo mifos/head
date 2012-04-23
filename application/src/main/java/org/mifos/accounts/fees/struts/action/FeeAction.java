@@ -37,6 +37,7 @@ import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.AccountingRules;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.FeeCreateDto;
 import org.mifos.dto.domain.FeeDto;
 import org.mifos.dto.domain.FeeUpdateRequest;
@@ -181,29 +182,31 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward editPreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-    	FeeActionForm feeActionForm = (FeeActionForm) form;
     	
         Short feeId = ((FeeActionForm) form).getFeeIdValue();
         FeeDto feeDto = this.feeDao.findDtoById(feeId);
         
 		Short appliedFeeId = this.feeDao.findFeeAppliedToLoan(feeId);
 		boolean isInProducts = appliedFeeId == null ? true : false;
-		List<Short> feesAppliedLoanAccountList = this.feeDao.getAllAtachedFeesToLoanAcounts();
+		List<Short> feesAppliedLoanAccountList = this.feeDao.getAllUsedLoansWithAttachedFee();
 		boolean isFeeAppliedToLoan = feesAppliedLoanAccountList.contains(feeId);
-        ActionMessages messages = new ActionMessages();
-        if (feeActionForm.getFeeStatus().equals("2")) {
-        	feeActionForm.setToRemove(true);
-        }
-        if (feeActionForm.isToRemove()) {
+        Short feeInSchedule = this.feeDao.findFeeInSchedule(feeId);
+        boolean isFeeInSchedule = feeInSchedule == null ? false : true;
+		ActionMessages messages = new ActionMessages();
+        
+        if (((FeeActionForm) form).isToRemove()) {
 	    	if (!isInProducts && !isFeeAppliedToLoan) {
 	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemoved"));
 	    	}
 	    	else if (isFeeAppliedToLoan) {
 	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemovedFromPrd"));
+	    		if (!isFeeInSchedule)
+		    		((FeeActionForm) form).setCantBeRemoved(true);
 	    	}
 	    	else {
 	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeNotUsedRemove"));
 	    	}
+
         }
 		saveErrors(request, messages);
 
@@ -238,13 +241,14 @@ public class FeeAction extends BaseAction {
         
         if (feeActionForm.isToRemove() && feeUpdateRequest.getFeeStatusValue() == 2) {
         	this.feeServiceFacade.updateFee(feeUpdateRequest);
-        	this.feeServiceFacade.removeFee(feeUpdateRequest);
-        	forward = ActionForwards.remove_success.toString();
-            List<FeeDto> customerFees = this.feeDao.retrieveAllCustomerFees();
-            List<FeeDto> productFees = this.feeDao.retrieveAllProductFees();
-            
-            SessionUtils.setCollectionAttribute(FeeConstants.CUSTOMER_FEES, customerFees, request);
-            SessionUtils.setCollectionAttribute(FeeConstants.PRODUCT_FEES, productFees, request);
+	        	try {
+	        		this.feeServiceFacade.removeFee(feeUpdateRequest);
+	        	} catch (MifosRuntimeException e) {
+	        		ActionMessages messages = new ActionMessages();
+	        		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeCannotBeRemoved"));
+	        		saveMessages(request, messages);
+	        	}
+	        	forward = ActionForwards.remove_fee_success.toString();
         }
         else if (feeActionForm.isToRemove() && feeUpdateRequest.getFeeStatusValue() == 1) {
         	ActionMessages errors = new ActionMessages();
@@ -263,7 +267,8 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward viewAll(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        List<FeeDto> customerFees = this.feeDao.retrieveAllCustomerFees();
+    	((FeeActionForm) form).setCantBeRemoved(true);
+    	List<FeeDto> customerFees = this.feeDao.retrieveAllCustomerFees();
         List<FeeDto> productFees = this.feeDao.retrieveAllProductFees();
 
         SessionUtils.setCollectionAttribute(FeeConstants.CUSTOMER_FEES, customerFees, request);

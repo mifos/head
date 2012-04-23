@@ -191,12 +191,14 @@ public class FeeServiceImpl implements FeeService {
     }
 
 	@Override
-	public void remove(FeeBO fee, boolean isInProducts, boolean isFeeAppliedToLoan) {
+	public void remove(FeeBO fee, boolean isInProducts, boolean isFeeInUsedLoan) {
 		try {
             hibernateTransactionHelper.startTransaction();
-            this.feeDao.remove(fee, isInProducts, isFeeAppliedToLoan);
+            this.feeDao.remove(fee, isInProducts, isFeeInUsedLoan);
             hibernateTransactionHelper.commitTransaction();
-        } catch (Exception e) {
+        } catch (MifosRuntimeException e) {
+        	throw new MifosRuntimeException(e.getMessage());
+		} catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
