@@ -66,6 +66,7 @@
   <DATABASECHANGELOG ID="MIFOS_5433_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-15 15:00:43.0" ORDEREXECUTED="239" EXECTYPE="EXECUTED" MD5SUM="3:b32077bdab52d6cb9a4337ee44105586" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5446_1" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-29 20:51:01.0" ORDEREXECUTED="269" EXECTYPE="EXECUTED" MD5SUM="3:da9b46d48c36748f47566fc805e67bc8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5450_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-08 11:19:45.0" ORDEREXECUTED="291" EXECTYPE="EXECUTED" MD5SUM="3:0cfec9003f3dd9fa4d189f93b136b1e2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5456_1" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_I.xml" DATEEXECUTED="2012-04-24 17:14:01.0" ORDEREXECUTED="310" EXECTYPE="EXECUTED" MD5SUM="3:a8be286fb856d5853c17d302ec56dfda" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5458_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-13 18:00:28.0" ORDEREXECUTED="292" EXECTYPE="EXECUTED" MD5SUM="3:d52e183334a1d2419a7cdf05145fbb44" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5521_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-29 13:14:39.0" ORDEREXECUTED="306" EXECTYPE="EXECUTED" MD5SUM="3:60252201a85395f0b48a2f090a9fc456" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
@@ -90,6 +91,8 @@
   <accepted_payment_type accepted_payment_type_id="3" transaction_id="3" payment_type_id="1"/>
   <accepted_payment_type accepted_payment_type_id="4" transaction_id="4" payment_type_id="1"/>
   <accepted_payment_type accepted_payment_type_id="5" transaction_id="5" payment_type_id="1"/>
+  <accepted_payment_type accepted_payment_type_id="6" transaction_id="2" payment_type_id="4"/>
+  <accepted_payment_type accepted_payment_type_id="7" transaction_id="5" payment_type_id="4"/>
   <account account_id="1" global_account_num="000100000000001" customer_id="1" account_state_id="11" account_type_id="3" office_id="2" personnel_id="2" created_by="1" created_date="2008-12-04" version_no="1" offsetting_allowable="1"/>
   <account account_id="2" global_account_num="000100000000002" customer_id="2" account_state_id="11" account_type_id="3" office_id="2" personnel_id="2" created_by="1" created_date="2008-12-04" version_no="2" offsetting_allowable="1"/>
   <account account_id="3" global_account_num="000100000000003" customer_id="3" account_state_id="11" account_type_id="3" office_id="2" personnel_id="2" created_by="1" created_date="2008-12-04" version_no="2" offsetting_allowable="1"/>
@@ -2548,6 +2551,7 @@
   <lookup_value lookup_id="660" entity_id="87" lookup_name="Permissions-Penalties"/>
   <lookup_value lookup_id="661" entity_id="87" lookup_name="Permissions-CanDefineNewPenaltyType"/>
   <lookup_value lookup_id="662" entity_id="87" lookup_name="Permissions-CanModifyPenaltyInformation"/>
+  <lookup_value lookup_id="663" entity_id="71" lookup_name="PaymentType-Transfer"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -2952,6 +2956,7 @@
   <lookup_value_locale lookup_value_id="991" locale_id="1" lookup_id="660"/>
   <lookup_value_locale lookup_value_id="992" locale_id="1" lookup_id="661"/>
   <lookup_value_locale lookup_value_id="993" locale_id="1" lookup_id="662"/>
+  <lookup_value_locale lookup_value_id="994" locale_id="1" lookup_id="663"/>
   <max_min_interest_rate account_id="4" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="6" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="8" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
@@ -3048,6 +3053,7 @@
   <payment_type payment_type_id="1" payment_type_lookup_id="177"/>
   <payment_type payment_type_id="2" payment_type_lookup_id="179"/>
   <payment_type payment_type_id="3" payment_type_lookup_id="180"/>
+  <payment_type payment_type_id="4" payment_type_lookup_id="663"/>
   <penalty/>
   <penalty_category category_id="1" lookup_id="642"/>
   <penalty_category category_id="2" lookup_id="643"/>
