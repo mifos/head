@@ -40,6 +40,9 @@
                         [#if typeList.productName == "Loan-Loan" && typeList_index == dtoList_index]
                             <li type="circle"><a
                                     href="viewProductCategoryDetails.ftl?globalPrdCategoryNum=${dtoList.globalProductCategoryNumber}">${dtoList.productCategoryName}</a>
+                                    [#if dtoList.productCategoryStatusId == 2]
+                                    	<img src="pages/framework/images/status_closedblack.gif" width="8" height="9">&nbsp; [@spring.message "manageProducts.editCategory.inactive" /]
+                                    [/#if]
                             </li>
                         [/#if]
                     [/#list]
