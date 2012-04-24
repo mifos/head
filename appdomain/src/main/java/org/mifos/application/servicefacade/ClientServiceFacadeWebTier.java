@@ -795,4 +795,11 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         }
     }
     
+    @Override
+    public List<SavingsDetailDto> retrieveSavingsInUseForClient(Integer clientId) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        return this.customerDao.getSavingsDetailDto(clientId, userContext);
+    }
 }

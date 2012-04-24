@@ -121,4 +121,6 @@ public interface Constants {
     
     String ADJ_TYPE_KEY = "adjustmentType";
     String ADJ_SPECIFIC = "adjustSpec";
+
+    String ACCOUNTS_FOR_TRANSFER = "accountsForTransfer";
 }

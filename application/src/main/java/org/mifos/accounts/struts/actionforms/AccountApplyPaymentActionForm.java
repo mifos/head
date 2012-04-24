@@ -87,6 +87,10 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 
     private java.util.Date lastPaymentDate;
 
+    private String accountForTransfer;
+
+    private Short transferPaymentTypeId;
+
     public boolean amountCannotBeZero() {
         return this.amountCannotBeZero;
     }
@@ -121,6 +125,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         ActionErrors errors = new ActionErrors();
 
         if (methodCalled != null && methodCalled.equals("preview")) {
+            validateTransfer(errors);
             validateTransactionDate(errors);
             validatePaymentType(errors);
             validateReceiptDate(errors);
@@ -133,6 +138,13 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
             request.setAttribute("methodCalled", methodCalled);
         }
         return errors;
+    }
+
+    private void validateTransfer(ActionErrors errors) {
+        if (paymentTypeId.equals(String.valueOf(transferPaymentTypeId))
+                && StringUtils.isBlank(accountForTransfer)) {
+            errors.add(AccountConstants.NO_ACCOUNT_FOR_TRANSFER, new ActionMessage(AccountConstants.NO_ACCOUNT_FOR_TRANSFER));
+        }
     }
 
     private void validateAccountType(ActionErrors errors, String accountType) {
@@ -419,5 +431,21 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 
     public void setLastPaymentDate(java.util.Date lastPaymentDate) {
         this.lastPaymentDate = lastPaymentDate;
+    }
+
+    public String getAccountForTransfer() {
+        return accountForTransfer;
+    }
+
+    public void setAccountForTransfer(String accountForTransfer) {
+        this.accountForTransfer = accountForTransfer;
+    }
+
+    public Short getTransferPaymentTypeId() {
+        return transferPaymentTypeId;
+    }
+
+    public void setTransferPaymentTypeId(Short transferPaymentTypeId) {
+        this.transferPaymentTypeId = transferPaymentTypeId;
     }
 }

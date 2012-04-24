@@ -71,6 +71,7 @@ import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CenterUpdate;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.CustomerDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -1330,5 +1331,14 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public boolean isValidMeetingDate(Date transactionDate) throws MeetingException {
         return customerMeeting.getMeeting().isValidMeetingDateUntilNextYear(transactionDate);
+    }
+
+    public CustomerDto toCustomerDto() {
+        Short statusId = (getStatus() == null) ? null : getStatus().getValue();
+        Short customerLevelId = (getCustomerLevel() == null) ? null : getCustomerLevel().getId();
+        Short personnelId = (getPersonnel() == null) ? null : getPersonnel().getPersonnelId();
+
+        return new CustomerDto(getCustomerId(), getDisplayName(), getGlobalCustNum(), statusId, customerLevelId,
+                getVersionNo(), getOfficeId(), personnelId);
     }
 }

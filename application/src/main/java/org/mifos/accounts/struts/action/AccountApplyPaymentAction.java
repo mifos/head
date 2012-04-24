@@ -21,7 +21,6 @@
 package org.mifos.accounts.struts.action;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.servicefacade.AccountPaymentDto;
 import org.mifos.accounts.servicefacade.AccountServiceFacade;
@@ -58,19 +58,17 @@ import org.mifos.security.util.UserContext;
 public class AccountApplyPaymentAction extends BaseAction {
 
     private AccountService accountService = null;
-    private List<PaymentTypeDto> loanPaymentTypeDtos;
-    private List<PaymentTypeDto> feePaymentTypeDtos;
 
     public AccountApplyPaymentAction() throws Exception {
         accountService = ApplicationContextProvider.getBean(AccountService.class);
-        loanPaymentTypeDtos = accountService.getLoanPaymentTypes();
-        feePaymentTypeDtos = accountService.getFeePaymentTypes();
     }
 
     @Deprecated
-    //For unit testing
-    public AccountApplyPaymentAction(AccountServiceFacade accountServiceFacade) {
+    // For unit testing
+    public AccountApplyPaymentAction(AccountServiceFacade accountServiceFacade,
+            LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao) {
         this.accountServiceFacade = accountServiceFacade;
+        this.legacyAcceptedPaymentTypeDao = legacyAcceptedPaymentTypeDao;
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -91,6 +89,7 @@ public class AccountApplyPaymentAction extends BaseAction {
         setValuesInSession(request, actionForm, accountPaymentDto);
         actionForm.setLastPaymentDate(accountPaymentDto.getLastPaymentDate());
         actionForm.setAmount(accountPaymentDto.getTotalPaymentDue());
+        actionForm.setTransferPaymentTypeId(this.legacyAcceptedPaymentTypeDao.getSavingsTransferId());
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -99,6 +98,7 @@ public class AccountApplyPaymentAction extends BaseAction {
         SessionUtils.setAttribute(Constants.ACCOUNT_TYPE, accountPaymentDto.getAccountType().name(), request);
         SessionUtils.setAttribute(Constants.ACCOUNT_ID, Integer.valueOf(actionForm.getAccountId()), request);
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, accountPaymentDto.getPaymentTypeList(), request);
+        SessionUtils.setCollectionAttribute(Constants.ACCOUNTS_FOR_TRANSFER, accountPaymentDto.getSavingsAccountsFroTransfer(), request);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -136,11 +136,17 @@ public class AccountApplyPaymentAction extends BaseAction {
             paymentTypeDto = getFeePaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
         }
 
-        AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                userReferenceDto, new AccountReferenceDto(accountId), new BigDecimal(amount), actionForm.getTrxnDateAsLocalDate(),
-                paymentTypeDto, AccountConstants.NO_COMMENT, actionForm.getReceiptDateAsLocalDate(), actionForm.getReceiptId(), null);
+        AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(userReferenceDto,
+                new AccountReferenceDto(accountId), new BigDecimal(amount), actionForm.getTrxnDateAsLocalDate(),
+                paymentTypeDto, AccountConstants.NO_COMMENT, actionForm.getReceiptDateAsLocalDate(),
+                actionForm.getReceiptId(), accountPaymentDto.getCustomerDto());
 
-        this.accountServiceFacade.makePayment(accountPaymentParametersDto);
+        if (paymentTypeDto.getValue().equals(this.legacyAcceptedPaymentTypeDao.getSavingsTransferId())) {
+            this.accountServiceFacade.makePaymentFromSavingsAcc(accountPaymentParametersDto,
+                    actionForm.getAccountForTransfer());
+        } else {
+            this.accountServiceFacade.makePayment(accountPaymentParametersDto);
+        }
 
         return mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
 
@@ -173,8 +179,8 @@ public class AccountApplyPaymentAction extends BaseAction {
         }
     }
 
-    private PaymentTypeDto getLoanPaymentTypeDtoForId(short id) {
-        for (PaymentTypeDto paymentTypeDto : loanPaymentTypeDtos) {
+    private PaymentTypeDto getLoanPaymentTypeDtoForId(short id) throws Exception {
+        for (PaymentTypeDto paymentTypeDto : accountService.getLoanPaymentTypes()) {
             if (paymentTypeDto.getValue() == id) {
                 return paymentTypeDto;
             }
@@ -182,8 +188,8 @@ public class AccountApplyPaymentAction extends BaseAction {
         throw new MifosRuntimeException("Expected loan PaymentTypeDto not found for id: " + id);
     }
 
-    private PaymentTypeDto getFeePaymentTypeDtoForId(short id) {
-        for (PaymentTypeDto paymentTypeDto : feePaymentTypeDtos) {
+    private PaymentTypeDto getFeePaymentTypeDtoForId(short id) throws Exception {
+        for (PaymentTypeDto paymentTypeDto : accountService.getFeePaymentTypes()) {
             if (paymentTypeDto.getValue() == id) {
                 return paymentTypeDto;
             }

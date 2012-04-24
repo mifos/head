@@ -29,6 +29,7 @@ explanation of the license and how it is applied.
 <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="pages/js/singleitem.js"></script>
 <script type="text/javascript" src="pages/js/separator.js"></script>
+<script type="text/javascript" src="pages/js/applyPayment.js"></script>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/sessionaccess" prefix="session"%>
@@ -36,6 +37,7 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="ApplyPayment"></span>
 	<mifos:NumberFormattingInfo />
+    <span id="transfer.id" title="${applyPaymentActionForm.transferPaymentTypeId}"></span>
 <SCRIPT>
 	function ViewDetails(){
 		customerAccountActionForm.action="customerAccountAction.do?method=load";
@@ -139,6 +141,17 @@ explanation of the license and how it is applied.
 								</c:forEach>
 							</mifos:select></td>
 						</tr>
+                        <tr id="applypayment.row.savingsForTransfer">
+                            <td align="right" class="fontnormal"><mifos:mifoslabel
+                                name="accounts.account_for_transfer" mandatory="yes" isColonRequired="Yes" /></td>
+
+                            <td class="fontnormal"><mifos:select
+                                name="applyPaymentActionForm" styleId="applypayment.input.accountForTransfer" property="accountForTransfer">
+                                <c:forEach var="acc" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountsForTransfer')}" >
+                                    <html-el:option value="${acc.id}">${acc.displayValue}</html-el:option>
+                                </c:forEach>
+                            </mifos:select></td>
+                        </tr>
 						<tr>
 							<td align="right" class="fontnormal"><span id="applypayment.label.receiptId"><mifos:mifoslabel
 								name="accounts.receiptid" isColonRequired="Yes" /></span></td>

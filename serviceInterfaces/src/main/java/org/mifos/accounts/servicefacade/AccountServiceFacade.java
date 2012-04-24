@@ -56,6 +56,9 @@ public interface AccountServiceFacade {
     void makePayment(AccountPaymentParametersDto accountPaymentParametersDto);
 
     @PreAuthorize("isFullyAuthenticated()")
+    void makePaymentFromSavingsAcc(AccountPaymentParametersDto accountPaymentParametersDto, String savingsAccGlobalNumber);
+
+    @PreAuthorize("isFullyAuthenticated()")
     void applyAdjustment(String globalAccountNum, String adjustmentNote, Short personnelId);
     
     @PreAuthorize("isFullyAuthenticated()")

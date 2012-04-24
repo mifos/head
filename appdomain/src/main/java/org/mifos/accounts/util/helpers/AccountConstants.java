@@ -215,4 +215,6 @@ public interface AccountConstants {
     String ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT = "errors.payment.date.before.last.payment";
     
     String PENALTIES_REMOVED = "removed";
+
+    String NO_ACCOUNT_FOR_TRANSFER = "errors.payment.noAccountForTransfer";
 }

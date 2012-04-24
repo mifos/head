@@ -49,9 +49,13 @@ import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.servicefacade.ClientServiceFacade;
+import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
+import org.mifos.dto.domain.CustomerDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -78,6 +82,12 @@ public class WebTierAccountServiceFacadeTest {
     private LoanBO loanBO;
 
     @Mock
+    private CustomerBO customerBO;
+
+    @Mock
+    private CustomerDto customerDto;
+
+    @Mock
     private LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence;
 
     @Mock
@@ -93,17 +103,21 @@ public class WebTierAccountServiceFacadeTest {
     private UserContext userContext;
     @Mock
     private MonthClosingServiceFacade monthClosingServiceFacade;
+    @Mock
+    private ClientServiceFacade clientServiceFacade;
+    @Mock
+    private SavingsServiceFacade savingsServiceFacade;
 
     private WebTierAccountServiceFacade accountServiceFacade;
     private MifosCurrency rupee;
     private static final int LOAN_ID = 1;
-
+    private static final int CUSTOMER_ID = 1;
 
     @Before
     public void setUp() throws Exception {
         accountServiceFacade = new WebTierAccountServiceFacade(null, transactionHelper,
                 accountBusinessService, scheduleCalculatorAdaptor, acceptedPaymentTypePersistence, personnelPersistence,
-                legacyAccountDao, monthClosingServiceFacade){
+                legacyAccountDao, monthClosingServiceFacade, clientServiceFacade, savingsServiceFacade){
             @Override
             void clearSessionAndRollback() {
                 // do nothing
@@ -129,6 +143,9 @@ public class WebTierAccountServiceFacadeTest {
         when(loanBO.findMostRecentNonzeroPaymentByPaymentDate()).thenReturn(new AccountPaymentEntity(null, null, null, null, null, lastPaymentDate));
         Short transactionId = Short.valueOf("2");
         when(acceptedPaymentTypePersistence.getAcceptedPaymentTypesForATransaction(TEST_LOCALE, transactionId)).thenReturn(EMPTY_LIST);
+        when(loanBO.getCustomer()).thenReturn(customerBO);
+        when(customerBO.toCustomerDto()).thenReturn(customerDto);
+        when(customerDto.getCustomerId()).thenReturn(CUSTOMER_ID);
         AccountPaymentDto accountPaymentInformation = accountServiceFacade.getAccountPaymentInformation(LOAN_ID, Constants.LOAN, (short) 1, null, paymentDate);
         Assert.assertEquals(lastPaymentDate, accountPaymentInformation.getLastPaymentDate());
         verify(loanBO).findMostRecentNonzeroPaymentByPaymentDate();
@@ -151,6 +168,9 @@ public class WebTierAccountServiceFacadeTest {
         when(loanBO.findMostRecentNonzeroPaymentByPaymentDate()).thenReturn(null);
         Short transactionId = Short.valueOf("2");
         when(acceptedPaymentTypePersistence.getAcceptedPaymentTypesForATransaction(TEST_LOCALE, transactionId)).thenReturn(EMPTY_LIST);
+        when(loanBO.getCustomer()).thenReturn(customerBO);
+        when(customerBO.toCustomerDto()).thenReturn(customerDto);
+        when(customerDto.getCustomerId()).thenReturn(CUSTOMER_ID);
         AccountPaymentDto accountPaymentInformation = accountServiceFacade.getAccountPaymentInformation(LOAN_ID, Constants.LOAN, (short) 1, null, paymentDate);
         Assert.assertEquals(new Date(0), accountPaymentInformation.getLastPaymentDate());
         verify(loanBO).findMostRecentNonzeroPaymentByPaymentDate();

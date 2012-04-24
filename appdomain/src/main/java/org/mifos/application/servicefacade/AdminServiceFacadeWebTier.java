@@ -51,7 +51,6 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity;
-import org.mifos.accounts.productdefinition.business.PrdOfferingPenaltiesEntity;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
@@ -525,6 +524,10 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             List<PaymentTypeDto> inList = new ArrayList<PaymentTypeDto>(payments);
             List<PaymentTypeDto> outList = new ArrayList<PaymentTypeDto>();
 
+            if (transactionType != TrxnTypes.fee && transactionType != TrxnTypes.loan_repayment) {
+                RemoveFromInList(inList, legacyAcceptedPaymentTypeDao.getSavingsTransferId());
+            }
+
             PaymentTypeDto data = null;
             for (AcceptedPaymentType paymentType : paymentTypeList) {
                 Short paymentTypeId = paymentType.getPaymentTypeEntity().getId();
@@ -558,9 +561,11 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     private void RemoveFromInList(List<PaymentTypeDto> list, Short paymentTypeId) {
-        for (int i = list.size() - 1; i >= 0; i--) {
-            if (list.get(i).getId().shortValue() == paymentTypeId.shortValue()) {
-                list.remove(i);
+        if (paymentTypeId != null) {
+            for (int i = list.size() - 1; i >= 0; i--) {
+                if (list.get(i).getId().shortValue() == paymentTypeId.shortValue()) {
+                    list.remove(i);
+                }
             }
         }
     }

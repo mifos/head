@@ -94,6 +94,9 @@ public interface ClientServiceFacade {
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_UPDATE_GROUP_MEMBERSHIP_OF_CLIENT')")
     String transferClientToGroup(Integer parentGroupIdValue, String clientGlobalCustNum, Integer previousClientVersionNo);
 
+    @PreAuthorize("isFullyAuthenticated()")
+    List<SavingsDetailDto> retrieveSavingsInUseForClient(Integer clientId);
+
     String transferClientToBranch(String globalCustNum, Short officeId);
     
     void putClientBusinessKeyInSession(String globalCustNum, HttpServletRequest request);

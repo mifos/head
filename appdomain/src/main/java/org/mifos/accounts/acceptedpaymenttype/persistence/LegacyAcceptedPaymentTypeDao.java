@@ -36,6 +36,8 @@ import org.mifos.framework.persistence.LegacyGenericDao;
 @SuppressWarnings("unchecked")
 public class LegacyAcceptedPaymentTypeDao extends LegacyGenericDao {
 
+    private Short savingsTranferId = null;
+
     private LegacyAcceptedPaymentTypeDao() {
     }
 
@@ -87,4 +89,13 @@ public class LegacyAcceptedPaymentTypeDao extends LegacyGenericDao {
         return paymentTypeList;
     }
 
+    public Short getSavingsTransferId() throws PersistenceException{
+        if (savingsTranferId == null) {
+            List<?> queryResult = executeNamedQuery(NamedQueryConstants.GET_TRANSFER_PAYMENT_TYPE_ID, null);
+            if (!queryResult.isEmpty()) {
+                savingsTranferId = (Short)queryResult.get(0);
+            }
+        }
+        return savingsTranferId;
+    }
 }

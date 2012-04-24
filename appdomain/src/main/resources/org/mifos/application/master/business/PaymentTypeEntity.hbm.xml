@@ -14,4 +14,10 @@
         <many-to-one name="lookUpValue" column="payment_type_lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" insert="true"  />
     </class>
 
+    <sql-query name="paymentType.getTransferId">
+       <![CDATA[
+            SELECT payment_type_id FROM payment_type WHERE payment_type_lookup_id =
+                    (SELECT lookup_id FROM lookup_value WHERE lookup_name = 'PaymentType-Transfer' AND entity_id = 71);
+       ]]>
+    </sql-query>
 </hibernate-mapping>

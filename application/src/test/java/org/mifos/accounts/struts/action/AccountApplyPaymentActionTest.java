@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionMapping;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.servicefacade.AccountPaymentDto;
 import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
@@ -54,15 +55,19 @@ public class AccountApplyPaymentActionTest {
     private AccountServiceFacade accountServiceFacade;
     @Mock
     private UserContext userContext;
+    @Mock
+    private LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao;
 
     private AccountApplyPaymentAction accountApplyPaymentAction;
 
     @Test
     public void loadShouldSetLastPaymentDateOnForm() throws Exception {
         when(accountServiceFacade.getAccountPaymentInformation(Matchers.<Integer>any(), Matchers.<String>any(),
-                Matchers.<Short>any(), Matchers.<UserReferenceDto>any(), Matchers.<Date>any())).thenReturn(new AccountPaymentDto(null, 0, null, null, null, new Date(1234)));
+                        Matchers.<Short> any(), Matchers.<UserReferenceDto> any(), Matchers.<Date> any())).thenReturn(
+                new AccountPaymentDto(null, 0, null, null, null, new Date(1234), null, null));
         when(form.getAccountId()).thenReturn("1");
-        accountApplyPaymentAction = new AccountApplyPaymentAction(accountServiceFacade) {
+        accountApplyPaymentAction = new AccountApplyPaymentAction(accountServiceFacade, legacyAcceptedPaymentTypeDao) {
+
             @Override
             protected UserContext getUserContext(HttpServletRequest request) {
                 return userContext;

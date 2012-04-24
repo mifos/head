@@ -23,8 +23,10 @@ package org.mifos.accounts.servicefacade;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Stack;
 
+import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountBO;
@@ -46,8 +48,11 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.servicefacade.ClientServiceFacade;
 import org.mifos.application.servicefacade.ListItem;
+import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.exceptions.CustomerException;
@@ -57,6 +62,10 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AdjustedPaymentDto;
 import org.mifos.dto.domain.ApplicableCharge;
+import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.SavingsAccountDetailDto;
+import org.mifos.dto.domain.SavingsDetailDto;
+import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.dto.screen.AccountTypeCustomerLevelDto;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -87,7 +96,9 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     private LegacyPersonnelDao personnelPersistence;
     private LegacyAccountDao legacyAccountDao;
     private MonthClosingServiceFacade monthClosingServiceFacade;
-    
+    private ClientServiceFacade clientServiceFacade;
+    private SavingsServiceFacade savingsServiceFacade;
+
     @Autowired
     private PersonnelDao personnelDao;
     
@@ -106,7 +117,8 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                                        ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
                                        LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence,
                                        LegacyPersonnelDao personnelPersistence, LegacyAccountDao legacyAccountDao,
-                                       MonthClosingServiceFacade monthClosingServiceFacade) {
+                                       MonthClosingServiceFacade monthClosingServiceFacade,
+                                       ClientServiceFacade clientServiceFacade, SavingsServiceFacade savingsServiceFacade) {
         this.accountService = accountService;
         this.transactionHelper = transactionHelper;
         this.accountBusinessService = accountBusinessService;
@@ -115,12 +127,25 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         this.personnelPersistence = personnelPersistence;
         this.legacyAccountDao = legacyAccountDao;
         this.monthClosingServiceFacade = monthClosingServiceFacade;
+        this.clientServiceFacade = clientServiceFacade;
+        this.savingsServiceFacade = savingsServiceFacade;
     }
 
     @Override
     public AccountPaymentDto getAccountPaymentInformation(Integer accountId, String paymentType, Short localeId, UserReferenceDto userReferenceDto, Date paymentDate) {
         try {
             AccountBO account = accountBusinessService.getAccount(accountId);
+            CustomerDto customer = account.getCustomer().toCustomerDto();
+
+            List<SavingsDetailDto> savingsInUse = clientServiceFacade.retrieveSavingsInUseForClient(customer.getCustomerId());
+            List<ListItem<String>> accountsForTransfer = new ArrayList<ListItem<String>>();
+            if (savingsInUse != null) {
+                for (SavingsDetailDto savingsAccount : savingsInUse) {
+                    ListItem<String> listItem = new ListItem<String>(savingsAccount.getGlobalAccountNum(),
+                            savingsAccount.getGlobalAccountNum() + " - " + savingsAccount.getPrdOfferingName());
+                    accountsForTransfer.add(listItem);
+                }
+            }
 
             if (isLoanPayment(paymentType)){
                 scheduleCalculatorAdaptor.computeExtraInterest((LoanBO) account, paymentDate);
@@ -137,7 +162,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             clearSessionAndRollback();
 
             return new AccountPaymentDto(accountType, account.getVersionNo(), paymentTypeList, totalPaymentDue,
-                    accountUser, getLastPaymentDate(account));
+                    accountUser, getLastPaymentDate(account), accountsForTransfer, customer);
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }
@@ -205,7 +230,6 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                 listItems.add(new ListItem<Short>(paymentTypeEntity.getId(), paymentTypeEntity.getName()));
             }
             return listItems;
-
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
@@ -479,6 +503,37 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             throw new MifosRuntimeException(e);
         }
     }
-    
-    
+
+    @Override
+    public void makePaymentFromSavingsAcc(AccountPaymentParametersDto accountPaymentParametersDto,
+            String savingsAccGlobalNumber) {
+        SavingsAccountDetailDto savingsAcc = savingsServiceFacade.retrieveSavingsAccountDetails(savingsAccGlobalNumber);
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Long savingsId = savingsAcc.getAccountId().longValue();
+        Long customerId = accountPaymentParametersDto.getCustomer().getCustomerId().longValue();
+        LocalDate dateOfWithdrawal = accountPaymentParametersDto.getPaymentDate();
+        Double amount = accountPaymentParametersDto.getPaymentAmount().doubleValue();
+        Integer modeOfPayment = accountPaymentParametersDto.getPaymentType().getValue().intValue();
+        String receiptId = accountPaymentParametersDto.getReceiptId();
+        LocalDate dateOfReceipt = accountPaymentParametersDto.getReceiptDate();
+        Locale preferredLocale = Localization.getInstance().getLocaleById(user.getPreferredLocaleId());
+
+        SavingsWithdrawalDto savingsWithdrawalDto = new SavingsWithdrawalDto(savingsId, customerId, dateOfWithdrawal, amount,
+                modeOfPayment, receiptId, dateOfReceipt, preferredLocale);
+        try {
+            this.transactionHelper.startTransaction();
+
+            this.savingsServiceFacade.withdraw(savingsWithdrawalDto);
+            this.accountService.makePayment(accountPaymentParametersDto);
+
+            this.transactionHelper.commitTransaction();
+        } catch (BusinessRuleException ex) {
+            this.transactionHelper.rollbackTransaction();
+            throw ex;
+        } catch (Exception ex) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(ex);
+        }
+    }
 }

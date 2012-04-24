@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.servicefacade.ListItem;
+import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.UserReferenceDto;
 
 
@@ -38,15 +39,20 @@ public class AccountPaymentDto {
     private final String totalPaymentDue;
     private final UserReferenceDto userMakingPayment;
     private final Date lastPaymentDate;
+    private final List<ListItem<String>> savingsAccountsFroTransfer;
+    private final CustomerDto customerDto;
 
     public AccountPaymentDto(AccountTypeDto accountType, int version, List<ListItem<Short>> paymentTypeList,
-                             String totalPaymentDue, UserReferenceDto userMakingPayment, Date lastPaymentDate) {
+            String totalPaymentDue, UserReferenceDto userMakingPayment, Date lastPaymentDate,
+            List<ListItem<String>> savingsAccountsForTransfer, CustomerDto customerDto) {
         this.accountType = accountType;
         this.version = version;
         this.paymentTypeList = paymentTypeList;
         this.totalPaymentDue = totalPaymentDue;
         this.userMakingPayment = userMakingPayment;
         this.lastPaymentDate = new Date(lastPaymentDate.getTime());
+        this.savingsAccountsFroTransfer = savingsAccountsForTransfer;
+        this.customerDto = customerDto;
     }
 
     public AccountTypeDto getAccountType() {
@@ -71,5 +77,13 @@ public class AccountPaymentDto {
 
     public Date getLastPaymentDate() {
         return new Date(lastPaymentDate.getTime());
+    }
+
+    public List<ListItem<String>> getSavingsAccountsFroTransfer() {
+        return savingsAccountsFroTransfer;
+    }
+
+    public CustomerDto getCustomerDto() {
+        return customerDto;
     }
 }

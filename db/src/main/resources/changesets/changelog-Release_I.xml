@@ -2,4 +2,44 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="MIFOS_5456_1" author="Pawel Gesek" context="expansion">
+        <sql endDelimiter=";">
+            SET @PAYMENT_TYPE_ID = (SELECT MAX(pt.payment_type_id)+1 FROM payment_type pt);
+
+            INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((select MAX(lv.lookup_id)+1 from
+                lookup_value lv), 71, 'PaymentType-Transfer');
+
+            INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES
+            (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 71 AND
+                lookup_name='PaymentType-Transfer'), NULL);
+
+            INSERT INTO payment_type(payment_type_id, payment_type_lookup_id)  VALUES
+            (@PAYMENT_TYPE_ID, (SELECT lookup_id FROM lookup_value WHERE entity_id = 71 AND
+                lookup_name='PaymentType-Transfer'));
+
+            INSERT INTO accepted_payment_type(transaction_id, payment_type_id) VALUES
+            (2, @PAYMENT_TYPE_ID);
+
+            INSERT INTO accepted_payment_type(transaction_id, payment_type_id) VALUES
+            (5, @PAYMENT_TYPE_ID);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                SET @PAYMENT_TYPE_ID = (SELECT payment_type_id FROM payment_type WHERE payment_type_lookup_id =
+                    (SELECT lookup_id FROM lookup_value WHERE lookup_name = 'PaymentType-Transfer' AND entity_id = 71));
+
+                DELETE FROM accepted_payment_type WHERE payment_type_id = @PAYMENT_TYPE_ID;
+
+                DELETE FROM payment_type WHERE payment_type_id = @PAYMENT_TYPE_ID;
+
+                DELETE FROM lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    WHERE entity_id = 71 AND lookup_name='PaymentType-Transfer');
+
+                DELETE FROM lookup_value WHERE entity_id = 71 AND lookup_name =
+                    'PaymentType-Transfer';
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

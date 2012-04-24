@@ -499,4 +499,7 @@ public interface NamedQueryConstants {
     String GET_SAVING_PENALTIES = "penalty.getSavingPenalties";
     String GET_ALL_APPLICABLE_PENALTY_FOR_LOAN_CREATION = "penalty.getAllApplicablePenaltiesForLoanCreation";
     String GET_ALL_APPLICABLE_LOAN_PENALTY = "penalty.getAllApplicablePenaltiesForLoan";
+
+    // Payment types
+    String GET_TRANSFER_PAYMENT_TYPE_ID = "paymentType.getTransferId";
 }
