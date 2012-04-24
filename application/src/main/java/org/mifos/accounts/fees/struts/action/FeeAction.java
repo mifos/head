@@ -206,7 +206,6 @@ public class FeeAction extends BaseAction {
 	    	else {
 	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeNotUsedRemove"));
 	    	}
-
         }
 		saveErrors(request, messages);
 
