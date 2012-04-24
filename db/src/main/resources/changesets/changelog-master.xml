@@ -9,4 +9,5 @@
     <include file="changesets/changelog-PreRelease_G.xml"/>
     <include file="changesets/changelog-Release_G.xml"/>
     <include file="changesets/changelog-Release_H.xml"/>
+    <include file="changesets/changelog-Release_I.xml"/>
 </databaseChangeLog>
