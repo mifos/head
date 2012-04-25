@@ -4,6 +4,11 @@
          "name":"Cash",
          "id":1,
          "acceptedPaymentTypeId":5
+      },
+      {
+         "name":"Transfer from Savings",
+         "id":4,
+         "acceptedPaymentTypeId":7
       }
    ],
    "outDisbursementList":[
@@ -18,6 +23,11 @@
          "name":"Cash",
          "id":1,
          "acceptedPaymentTypeId":2
+      },
+      {
+         "name":"Transfer from Savings",
+         "id":4,
+         "acceptedPaymentTypeId":6
       }
    ],
    "outDepositList":[
