@@ -29,6 +29,10 @@
                 SET @PAYMENT_TYPE_ID = (SELECT payment_type_id FROM payment_type WHERE payment_type_lookup_id =
                     (SELECT lookup_id FROM lookup_value WHERE lookup_name = 'PaymentType-Transfer' AND entity_id = 71));
 
+                UPDATE account_payment SET payment_type_id = 1 WHERE payment_type_id = @PAYMENT_TYPE_ID;
+
+                DELETE FROM office_action_payment_type WHERE payment_type_id = @PAYMENT_TYPE_ID;
+
                 DELETE FROM accepted_payment_type WHERE payment_type_id = @PAYMENT_TYPE_ID;
 
                 DELETE FROM payment_type WHERE payment_type_id = @PAYMENT_TYPE_ID;
