@@ -217,8 +217,7 @@ public class OfficeListTag extends BodyTagSupport {
     }
 
     XmlBuilder getLink(Short officeId, String officeName) {
-        String urlencodedOfficeName = replaceSpaces(officeName);
-        urlencodedOfficeName = URLEncoder.encode(urlencodedOfficeName);
+        String urlencodedOfficeName = URLEncoder.encode(officeName);
         XmlBuilder builder = new XmlBuilder();
         String url = (actionName + "?method=" + methodName + "&office.officeId=" + officeId + "&office.officeName="
                 + urlencodedOfficeName + "&officeId=" + officeId + "&officeName=" + urlencodedOfficeName

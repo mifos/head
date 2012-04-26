@@ -125,8 +125,8 @@ public class OfficeListTagTest {
         OfficeListTag tag = new OfficeListTag("action", "method", "flow");
         XmlBuilder link = tag.getLink((short) 234, "My Office");
        Assert.assertEquals("<a href=\"action?method=method&amp;"
-                + "office.officeId=234&amp;office.officeName=My%20Office&amp;"
-                + "officeId=234&amp;officeName=My%20Office&amp;" + "currentFlowKey=flow\">My Office</a>", link
+                + "office.officeId=234&amp;office.officeName=My+Office&amp;"
+                + "officeId=234&amp;officeName=My+Office&amp;" + "currentFlowKey=flow\">My Office</a>", link
                 .getOutput());
     }
 
