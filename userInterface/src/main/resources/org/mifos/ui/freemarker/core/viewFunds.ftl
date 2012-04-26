@@ -50,6 +50,8 @@
                     [/#list]
                 </tbody>
             </table>
+            <br>
+            [@form.returnToPage  "AdminAction.do?method=load" "button.back" "viewsavingsproducts.button.back"/]
         </div>
     </div>
 </div><!--Main Content Ends-->

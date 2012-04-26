@@ -108,5 +108,9 @@
            <div><a  href="appliedUpgrades.ftl">[@spring.message "systemAdministration.viewsysteminformation.appliedUpgrades" /]</a></div>
         </div>
     </div>
+   	<div class="clear">&nbsp;</div>
+   	<div class ="marginLeft20px">
+    [@form.returnToPage  "AdminAction.do?method=load" "button.back" "systeminformation.button.back"/]
+    </div>
   </div>
 [/@adminLeftPaneLayout]

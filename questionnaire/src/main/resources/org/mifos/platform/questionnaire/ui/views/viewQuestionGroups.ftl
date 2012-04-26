@@ -52,5 +52,9 @@
             [/#list]
         </div>
     </div>
+   	<div class="clear">&nbsp;</div>
+   	<div class ="marginLeft20px">
+    [@form.returnToPage  "AdminAction.do?method=load" "button.back" "viewquestiongroups.button.back"/]
+    </div>
 </div>
 [/@adminLeftPaneLayout]

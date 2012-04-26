@@ -366,3 +366,7 @@ Renders a group of radio buttons.
     <label for="${id}" style="float:none;">${options[value]?html}</label>${separator}
     [/#list]
 [/#macro]
+
+[#macro returnToPage url value id]
+	<input type="submit" name="backButton" value="[@spring.message "${value}"/]" onclick="window.location.href='${url}'" id="${id}" class="buttn">
+[/#macro]

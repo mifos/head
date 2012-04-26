@@ -44,5 +44,9 @@
             [/#list]
         </ul>
     </div>
+   	<div class="clear">&nbsp;</div>
+   	<div class ="marginLeft20px">
+    [@form.returnToPage  "AdminAction.do?method=load" "button.back" "viewquestions.button.back"/]
+    </div>
 </div>
 [/@adminLeftPaneLayout]

@@ -103,6 +103,9 @@ explanation of the license and how it is applied.
     	            </td>
             	</tr>
         	  </table>
+		<html-el:submit property="backButton" styleId="viewadministrativedocuments.button.back" styleClass="buttn" onclick="window.location.href='AdminAction.do?method=load'">
+			<mifos:mifoslabel name="button.back" bundle ="PersonnelUIResources"></mifos:mifoslabel>
+		</html-el:submit>
         	</td>
         </tr>
       </table>

@@ -591,6 +591,9 @@ explanation of the license and how it is applied.
 					</td>
 				</tr>
 			</table>
+			  	    <html-el:submit property="backButton" styleId="definelookupoptions.button.back" styleClass="buttn" onclick="form.action='AdminAction.do?method=load'">
+						<mifos:mifoslabel name="button.back" bundle ="PersonnelUIResources"></mifos:mifoslabel>
+					</html-el:submit>
 			<html-el:hidden property="currentFlowKey"
 				value="${requestScope.currentFlowKey}" />
 			<html-el:hidden property="entity" value="${requestScope.entity}" />

@@ -132,5 +132,11 @@
         </p>
     </div>
        </form>
+   	<div class="clear">&nbsp;</div>
+   	<div class ="marginLeft20px">
+    [@form.returnToPage  "AdminAction.do?method=load" "button.back" "vieworganizationsettings.button.back"/]
+    </div>
   </div><!--Main Content Ends-->
+  
+  <br>
 [/@adminLeftPaneLayout]

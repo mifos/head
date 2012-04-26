@@ -49,5 +49,9 @@
                 </form>
             </div>
        </div>
+  	<div class="clear">&nbsp;</div>
+   	<div class ="marginLeft20px">
+    [@form.returnToPage  "AdminAction.do?method=load" "button.back" "viewproductsmix.button.back"/]
+    </div>
   </div><!--Main Content Ends-->
 [/@adminLeftPaneLayout]

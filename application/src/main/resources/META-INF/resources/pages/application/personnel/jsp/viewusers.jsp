@@ -98,6 +98,9 @@ explanation of the license and how it is applied.
               </table>
         </tr>
       </table>
+		<html-el:submit property="backButton" styleId="viewusers.button.back" styleClass="buttn" onclick="form.action='AdminAction.do?method=load'">
+			<mifos:mifoslabel name="button.back" bundle ="PersonnelUIResources"></mifos:mifoslabel>
+		</html-el:submit>
       <br>
 <br>
 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

@@ -63,6 +63,7 @@
            [/#list]
         </div>
     </div>
+    [@form.returnToPage  "AdminAction.do?method=load" "button.back" "viewholidays.button.back"/]
 </div>
 <!--Main Content Ends-->
 [/@adminLeftPaneLayout]
