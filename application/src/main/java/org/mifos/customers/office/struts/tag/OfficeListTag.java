@@ -20,6 +20,7 @@
 
 package org.mifos.customers.office.struts.tag;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -217,6 +218,7 @@ public class OfficeListTag extends BodyTagSupport {
 
     XmlBuilder getLink(Short officeId, String officeName) {
         String urlencodedOfficeName = replaceSpaces(officeName);
+        urlencodedOfficeName = URLEncoder.encode(urlencodedOfficeName);
         XmlBuilder builder = new XmlBuilder();
         String url = (actionName + "?method=" + methodName + "&office.officeId=" + officeId + "&office.officeName="
                 + urlencodedOfficeName + "&officeId=" + officeId + "&officeName=" + urlencodedOfficeName
