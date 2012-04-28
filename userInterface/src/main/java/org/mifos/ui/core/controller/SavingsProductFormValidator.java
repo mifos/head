@@ -124,8 +124,8 @@ public class SavingsProductFormValidator implements Validator {
         
         if (!formBean.isInterestRateZero()){
             if (null == formBean.getInterestRate() ||
-                    formBean.getInterestRate().intValue() < 1 ||
-                    formBean.getInterestRate().intValue() > 100 ||
+                    formBean.getInterestRate().doubleValue() < 1.0 ||
+                    formBean.getInterestRate().doubleValue() > 100.0 ||
                     errorProcessor.getRejectedValue("interestRate") != null) {
                 if (errorProcessor.getTarget() == null) {
                     errors.reject("NotNull.savingsProduct.interestRate");
