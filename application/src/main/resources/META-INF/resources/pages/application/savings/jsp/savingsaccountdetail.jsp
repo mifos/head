@@ -327,6 +327,12 @@ explanation of the license and how it is applied.
 						<mifos:mifoslabel name="Savings.applyAdjustment" />
 					</html-el:link>
 					<br>
+
+                    <html-el:link styleId="savingsaccountdetail.link.applyTransfer"
+                        href="fundTransfer.ftl?accountId=${BusinessKey.accountId}&globalAccNum=${BusinessKey.globalAccountNum}">
+                        <mifos:mifoslabel name="Savings.applyTransfer" />
+                    </html-el:link>
+                    <br />
 				</c:if>
 				<c:if test="${BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED || BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE}">
 											<html-el:link styleId="savingsaccountdetail.link.closeAccount" 

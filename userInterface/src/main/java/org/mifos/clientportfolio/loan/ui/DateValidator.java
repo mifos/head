@@ -21,6 +21,7 @@
 package org.mifos.clientportfolio.loan.ui;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 public class DateValidator {
 
@@ -45,5 +46,9 @@ public class DateValidator {
             isValid = false;
         }
         return isValid;
+    }
+
+    public boolean isFutureDate(LocalDate date) {
+        return date.isAfter(new LocalDate());
     }
 }

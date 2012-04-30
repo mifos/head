@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <var name="customerSearchFormBean" class="org.mifos.ui.core.controller.CustomerSearchFormBean" />
+    <var name="fundTransferFormBean" class="org.mifos.ui.core.controller.FundTransferFormBean" />
+
+    <view-state id="searchCustomerStep" view="fundTransferCustomerSearch" model="customerSearchFormBean">
+    	<on-entry>
+            <set name="flowScope.accountId" value="requestParameters.accountId" type="int" />
+            <evaluate expression="fundTransferController.retrieveSavingsAccDetails(requestParameters.globalAccNum)"
+                result="flowScope.sourceAccount" result-type="org.mifos.dto.domain.SavingsDetailDto" />
+        </on-entry>
+        <transition on="searchTermEntered" to="selectCustomerStep" validate="true">
+            <evaluate expression="fundTransferController.searchCustomers(customerSearchFormBean)" result="flowScope.customerSearchResultsDto" />
+        </transition>
+    	<transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+
+    <view-state id="selectCustomerStep" view="fundTransferCustomerSelect" model="customerSearchFormBean">
+        <transition on="searchTermEntered" to="selectCustomerStep" validate="true">
+            <evaluate expression="fundTransferController.searchCustomers(customerSearchFormBean)" result="flowScope.customerSearchResultsDto" />
+        </transition>
+        <transition on="customerSelected" to="handleSelectedCustomer" validate="false"/>
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+
+    <action-state id="handleSelectedCustomer">
+        <evaluate expression="fundTransferController.retrieveCustomerDetails(requestParameters.customerId)"
+            result="flowScope.beneficiary" result-type="org.mifos.dto.domain.CustomerDto" />
+        <transition to="selectSavingsAccStep"/>
+    </action-state>
+
+    <view-state id="selectSavingsAccStep" view="fundTransferSelectAcc">
+        <on-entry>
+            <evaluate expression="fundTransferController.retrieveSavingsAccounts(flowScope.beneficiary.customerId,
+                flowScope.sourceAccount.globalAccountNum)"
+             result="flowScope.savingsAccs" />
+        </on-entry>
+        <transition on="accountSelected" to="handleSelectedAcc"/>
+        <transition on="back" to="selectCustomerStep" validate="false" bind="false"/>
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+
+    <action-state id="handleSelectedAcc">
+        <evaluate expression="fundTransferController.retrieveSavingsAccDetails(requestParameters.targetAccGlobalNum)"
+            result="flowScope.targetAccount" result-type="org.mifos.dto.domain.SavingsDetailDto" />
+        <transition to="enterDetailsStep"/>
+    </action-state>
+
+    <view-state id="enterDetailsStep" view="fundTransferEnterDetails" model="fundTransferFormBean">
+        <on-entry>
+            <evaluate expression="fundTransferController.populateFormBean(fundTransferFormBean,
+                flowScope.sourceAccount.globalAccountNum, flowScope.targetAccount.globalAccountNum)" />
+        </on-entry>
+        <transition on="detailsEntered" to="previewStep"/>
+        <transition on="back" to="backToAccSelect" validate="false" bind="false"/>
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+
+    <action-state id="backToAccSelect">
+        <evaluate expression="fundTransferController.resetFormBean(fundTransferFormBean)" />
+        <transition to="selectSavingsAccStep"/>
+    </action-state>
+
+    <view-state id="previewStep" view="fundTransferPreview">
+        <transition on="submit" to="end">
+            <evaluate expression="fundTransferController.applyTransfer(fundTransferFormBean)" />
+        </transition>
+        <transition on="back" to="enterDetailsStep" />
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+
+    <end-state id="cancel" view="externalRedirect:contextRelative:/viewSavingsAccountDetails.ftl?globalAccountNum=${flowScope.sourceAccount.globalAccountNum}"/>
+    <end-state id="end" view="externalRedirect:contextRelative:/viewSavingsAccountDetails.ftl?globalAccountNum=${flowScope.sourceAccount.globalAccountNum}"/>
+</flow>

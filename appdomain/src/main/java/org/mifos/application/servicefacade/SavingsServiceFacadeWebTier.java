@@ -104,6 +104,7 @@ import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.DueOnDateDto;
+import org.mifos.dto.domain.FundTransferDto;
 import org.mifos.dto.domain.NoteSearchDto;
 import org.mifos.dto.domain.OpeningBalanceSavingsAccount;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -112,6 +113,7 @@ import org.mifos.dto.domain.SavingsAccountCreationDto;
 import org.mifos.dto.domain.SavingsAccountDetailDto;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
+import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SavingsStatusChangeHistoryDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
@@ -1410,4 +1412,56 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         }
     }
     
+    @Override
+    public List<CustomerSearchResultDto> retrieveCustomersThatQualifyForTransfer(CustomerSearchDto customerSearchDto) {
+        // TODO return only clients with savings accounts
+        return retrieveCustomerThatQualifyForSavings(customerSearchDto);
+    }
+
+    @Override
+    public SavingsDetailDto retrieveSavingsDetail(String accountGlobalNum) {
+        SavingsBO savingsAcc = this.savingsDao.findBySystemId(accountGlobalNum);
+        SavingsDetailDto savingsDetailsDto = new SavingsDetailDto(savingsAcc.getGlobalAccountNum(), savingsAcc
+                .getSavingsOffering().getPrdOfferingName(), savingsAcc.getAccountState().getId(), savingsAcc
+                .getAccountState().getName(), savingsAcc.getSavingsBalance().toString());
+        return savingsDetailsDto;
+    }
+
+    @Override
+    public void fundTransfer(FundTransferDto fundTransferDto) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        SavingsBO sourceAcc = this.savingsDao.findBySystemId(fundTransferDto.getSourceGlobalAccountNum());
+        SavingsBO targetAcc = this.savingsDao.findBySystemId(fundTransferDto.getTargetGlobalAccountNum());
+
+        SavingsDepositDto depositDto;
+        SavingsWithdrawalDto withdrawalDto;
+
+        // prepare data
+        try {
+            depositDto = new SavingsDepositDto(targetAcc.getAccountId().longValue(), targetAcc.getCustomer()
+                    .getCustomerId().longValue(), fundTransferDto.getTrxnDate(), fundTransferDto.getAmount()
+                    .doubleValue(), this.legacyAcceptedPaymentTypeDao.getSavingsTransferId().intValue(),
+                    fundTransferDto.getReceiptId(), fundTransferDto.getReceiptDate(), userContext.getPreferredLocale());
+
+            withdrawalDto = new SavingsWithdrawalDto(sourceAcc.getAccountId().longValue(), sourceAcc.getCustomer()
+                    .getCustomerId().longValue(), fundTransferDto.getTrxnDate(), fundTransferDto.getAmount()
+                    .doubleValue(), this.legacyAcceptedPaymentTypeDao.getSavingsTransferId().intValue(),
+                    fundTransferDto.getReceiptId(), fundTransferDto.getReceiptDate(), userContext.getPreferredLocale());
+        } catch (PersistenceException ex) {
+            throw new MifosRuntimeException(ex);
+        }
+
+        // transaction
+        try {
+            this.transactionHelper.startTransaction();
+            deposit(depositDto);
+            withdraw(withdrawalDto);
+            this.transactionHelper.commitTransaction();
+        } catch (Exception ex) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(ex);
+        }
+    }
 }
