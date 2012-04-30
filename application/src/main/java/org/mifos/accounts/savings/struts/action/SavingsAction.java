@@ -286,6 +286,8 @@ public class SavingsAction extends BaseAction {
 
         setCurrentPageUrl(request, savings);
         setQuestionGroupInstances(request, savings);
+        
+        request.getSession().setAttribute("backPageUrl", request.getAttribute("currentPageUrl"));
 
         return mapping.findForward("get_success");
     }

@@ -80,6 +80,7 @@ public class ViewLoanAccountDetailsController {
         }
         
         modelAndView.addObject("backPageUrl", UrlHelper.constructCurrentPageUrl(request));
+        request.getSession().setAttribute("backPageUrl", request.getAttribute("currentPageUrl"));
         
         loanAccountServiceFacade.putLoanBusinessKeyInSession(globalAccountNum, request);
         

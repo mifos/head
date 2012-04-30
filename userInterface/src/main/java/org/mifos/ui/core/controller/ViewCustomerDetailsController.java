@@ -64,6 +64,7 @@ public class ViewCustomerDetailsController {
         boolean containsQGForCloseClient = false;
         containsQGForCloseClient = questionnaireServiceFacade.getQuestionGroupInstances(clientInformationDto.getClientDisplay().getCustomerId(), "Close", "Client").size() > 0;
         modelAndView.addObject("containsQGForCloseClient", containsQGForCloseClient);
+        request.getSession().setAttribute("backPageUrl", request.getAttribute("currentPageUrl"));
 
         clientServiceFacade.putClientBusinessKeyInSession(clientSystemId, request);
 
@@ -88,6 +89,7 @@ public class ViewCustomerDetailsController {
         modelAndView.addObject("isCenterHierarchyExists", isCenterHierarchyExists );
 
         modelAndView.addObject("currentPageUrl", UrlHelper.constructCurrentPageUrl(request));
+        request.getSession().setAttribute("backPageUrl", request.getAttribute("currentPageUrl"));
         
         groupServiceFacade.putGroupBusinessKeyInSession(groupSystemId, request);
         
@@ -106,7 +108,7 @@ public class ViewCustomerDetailsController {
 	    modelAndView.addObject("centerInformationDto", centerInformationDto);
 	    
         modelAndView.addObject("currentPageUrl", UrlHelper.constructCurrentPageUrl(request));
-            
+        request.getSession().setAttribute("backPageUrl", request.getAttribute("currentPageUrl"));   
         centerServiceFacade.putCenterBusinessKeyInSession(centerSystemId, request);
         
 	    return modelAndView;

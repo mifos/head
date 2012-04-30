@@ -42,6 +42,7 @@ explanation of the license and how it is applied.
         </tr>
       </table>
       <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+      <c:set value="${sessionScope.backPageUrl}" var="backPageUrl"/>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td width="70%" align="left" valign="top" class="paddingL15T15">
@@ -81,7 +82,9 @@ explanation of the license and how it is applied.
                 </td>
               </tr>
             </table>
-
+			<html-el:button property="backButton" styleId="viewnotes.button.back" styleClass="buttn" onclick="window.location.href='${backPageUrl}'">
+				<mifos:mifoslabel name="button.back" bundle ="UIResources"></mifos:mifoslabel>
+			</html-el:button>
             <br>
           </td>
         </tr>

@@ -96,6 +96,7 @@ public class SearchAction extends BaseAction {
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         cleanUpSearch(request);
+        SessionUtils.setAttribute("backPageUrl", (String) request.getSession().getAttribute("currentPageUrl"),request);
         SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, getSearchResult(form), request);
         return mapping.findForward(ActionForwards.search_success.toString());
     }

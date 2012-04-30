@@ -112,6 +112,7 @@ import org.mifos.security.AuthenticationAuthorizationServiceFacade;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.UserContext;
+import org.mifos.ui.core.controller.util.helpers.UrlHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -190,7 +191,10 @@ public abstract class BaseAction extends DispatchAction {
         if (shutdownManager.isInShutdownCountdownNotificationThreshold()) {
             request.setAttribute("shutdownIsImminent", true);
         }
-        TransactionDemarcate annotation = getTransaction(form, request);
+        if (null != request.getSession().getAttribute("currentPageUrl")) {
+        	SessionUtils.setAttribute("backPageUrl", UrlHelper.constructCurrentPageUrl(request), request);
+        }
+    	TransactionDemarcate annotation = getTransaction(form, request);
         preExecute(form, request, annotation);
         ActionForward forward = super.execute(mapping, form, request, response);
         // TODO: passing 'true' to postExecute guarantees that the session will
@@ -372,7 +376,6 @@ public abstract class BaseAction extends DispatchAction {
         if (flowKey == null || !flowManager.isFlowValid(flowKey)) {
             throw new PageExpiredException("no flow for key " + flowKey);
         }
-
     }
 
     protected void postHandleTransaction(HttpServletRequest request, TransactionDemarcate annotation)
