@@ -49,7 +49,7 @@ public class DatabaseInitFilter implements Filter {
     }
 
     @Override
-	public synchronized void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
 
         if (!databaseVerified) {
