@@ -124,8 +124,7 @@ explanation of the license and how it is applied.
 
 								<tr id="Personnel.GovernmentId" class="fontnormal">
 									<td align="right"><mifos:mifoslabel
-										keyhm="Personnel.GovernmentId"
-										name="${ConfigurationConstants.GOVERNMENT_ID}"
+										name="Personnel.GovtIdNum"
 										bundle="PersonnelUIResources"></mifos:mifoslabel>:</td>
 									<td><c:out
 										value="${form.governmentIdNumber}" />

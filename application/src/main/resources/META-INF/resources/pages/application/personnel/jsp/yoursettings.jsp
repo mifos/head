@@ -99,7 +99,7 @@ explanation of the license and how it is applied.
 	</tr>
 	<tr id="Personnel.GovernmentId">
 		<td class="fontnormal">
-			<mifos:mifoslabel keyhm="Personnel.GovernmentId" name="${ConfigurationConstants.GOVERNMENT_ID}"/>:
+			<mifos:mifoslabel name="Personnel.GovtIdNum"/>
 			<span class="fontnormal"><c:out value="${Personnel.personnelDetails.governmentIdNumber}"/></span>
 		</td>
 	</tr>
