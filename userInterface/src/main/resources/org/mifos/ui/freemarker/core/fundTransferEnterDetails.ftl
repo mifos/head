@@ -42,6 +42,11 @@
 
 <br />
 <p>[@spring.message "fieldsmarkedwithanasteriskarerequired." /]</p>
+<br />
+
+[#if targetAccount.accountStateId == 18]
+	<p><b>[@spring.message "fundTransfer.inactiveBeneficiaryAcc" /]</b></p>
+[/#if]
 
 [@form.errors "fundTransferFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
