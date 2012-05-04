@@ -3,6 +3,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
+    <secured attributes="ROLE_CAN_TRANSFER_FUNDS"/>
+
     <var name="customerSearchFormBean" class="org.mifos.ui.core.controller.CustomerSearchFormBean" />
     <var name="fundTransferFormBean" class="org.mifos.ui.core.controller.FundTransferFormBean" />
 

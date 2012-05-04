@@ -153,7 +153,7 @@ public interface SavingsServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     SavingsDetailDto retrieveSavingsDetail(String accountGlobalNum);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_TRANSFER_FUNDS')")
     void fundTransfer(FundTransferDto fundTransferDto);
 
     void putSavingsBusinessKeyInSession(String globalAccountNum, HttpServletRequest request);
