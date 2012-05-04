@@ -67,7 +67,6 @@
   <DATABASECHANGELOG ID="MIFOS_5446_1" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-29 20:51:17.0" ORDEREXECUTED="271" EXECTYPE="EXECUTED" MD5SUM="3:da9b46d48c36748f47566fc805e67bc8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5450_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-08 11:19:00.0" ORDEREXECUTED="286" EXECTYPE="EXECUTED" MD5SUM="3:0cfec9003f3dd9fa4d189f93b136b1e2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5456_1" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_I.xml" DATEEXECUTED="2012-04-24 17:12:09.0" ORDEREXECUTED="305" EXECTYPE="EXECUTED" MD5SUM="3:a8be286fb856d5853c17d302ec56dfda" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
-  <DATABASECHANGELOG ID="MIFOS_5456_2" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_I.xml" DATEEXECUTED="2012-05-04 13:37:55.0" ORDEREXECUTED="306" EXECTYPE="EXECUTED" MD5SUM="3:8d1ccc4cbd550fa917d5a7d04143939e" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5458_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-13 17:59:44.0" ORDEREXECUTED="287" EXECTYPE="EXECUTED" MD5SUM="3:d52e183334a1d2419a7cdf05145fbb44" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5521_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-29 13:13:30.0" ORDEREXECUTED="303" EXECTYPE="EXECUTED" MD5SUM="3:60252201a85395f0b48a2f090a9fc456" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
@@ -425,7 +424,6 @@
   <activity activity_id="251" parent_id="1" activity_name_lookup_id="660" description_lookup_id="660"/>
   <activity activity_id="252" parent_id="251" activity_name_lookup_id="661" description_lookup_id="661"/>
   <activity activity_id="253" parent_id="251" activity_name_lookup_id="662" description_lookup_id="662"/>
-  <activity activity_id="254" parent_id="136" activity_name_lookup_id="664" description_lookup_id="664"/>
   <admin_document/>
   <admin_document_acc_state_mix/>
   <applied_upgrades upgrade_id="1277565300"/>
@@ -552,7 +550,6 @@
   <change_log change_log_id="23" changed_by="1" modifier_name="mifos" entity_id="26" entity_type="22" changed_date="2008-12-04"/>
   <change_log change_log_id="24" changed_by="1" modifier_name="mifos" entity_id="17" entity_type="1" changed_date="2008-12-04"/>
   <change_log change_log_id="25" changed_by="1" modifier_name="mifos" entity_id="28" entity_type="22" changed_date="2008-12-04"/>
-  <change_log change_log_id="26" changed_by="1" modifier_name="mifos" entity_id="1" entity_type="17" changed_date="2012-05-04"/>
   <change_log_detail sequence_num="1" change_log_id="1" field_name="Status" old_value="Application Pending Approval" new_value="Active"/>
   <change_log_detail sequence_num="2" change_log_id="2" field_name="Status" old_value="Application Pending Approval" new_value="Active"/>
   <change_log_detail sequence_num="3" change_log_id="3" field_name="Status" old_value="Application Pending Approval" new_value="Application Approved"/>
@@ -578,7 +575,6 @@
   <change_log_detail sequence_num="23" change_log_id="23" field_name="Status" old_value="Application Pending Approval" new_value="Application Approved"/>
   <change_log_detail sequence_num="24" change_log_id="24" field_name="Status" old_value="Application Pending Approval" new_value="Active"/>
   <change_log_detail sequence_num="25" change_log_id="25" field_name="Status" old_value="Application Pending Approval" new_value="Application Approved"/>
-  <change_log_detail sequence_num="26" change_log_id="26" field_name="Last Login" old_value="16/01/2009" new_value="04/05/2012"/>
   <checklist/>
   <checklist_detail/>
   <client_initial_savings_offering/>
@@ -2548,7 +2544,6 @@
   <lookup_value lookup_id="661" entity_id="87" lookup_name="Permissions-CanDefineNewPenaltyType"/>
   <lookup_value lookup_id="662" entity_id="87" lookup_name="Permissions-CanModifyPenaltyInformation"/>
   <lookup_value lookup_id="663" entity_id="71" lookup_name="PaymentType-Transfer"/>
-  <lookup_value lookup_id="664" entity_id="87" lookup_name="Permissions-CanTransferFunds"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -2954,7 +2949,6 @@
   <lookup_value_locale lookup_value_id="992" locale_id="1" lookup_id="661"/>
   <lookup_value_locale lookup_value_id="993" locale_id="1" lookup_id="662"/>
   <lookup_value_locale lookup_value_id="994" locale_id="1" lookup_id="663"/>
-  <lookup_value_locale lookup_value_id="995" locale_id="1" lookup_id="664"/>
   <max_min_interest_rate account_id="4" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="6" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="8" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
@@ -3071,7 +3065,7 @@
   <penalty_status status_id="1" lookup_id="654"/>
   <penalty_status status_id="2" lookup_id="655"/>
   <penalty_trxn_detail/>
-  <personnel personnel_id="1" level_id="2" global_personnel_num="1" office_id="1" title="1" personnel_status="1" preferred_locale="1" max_child_count="1" password="aN44v0pkryZHuRsN2EocydyfG5DONJVVFmGwYQ==" login_name="mifos" password_changed="1" display_name="mifos" created_by="1" updated_by="1" updated_date="2012-05-04" last_login="2012-05-04" locked="0" no_of_tries="0" version_no="6"/>
+  <personnel personnel_id="1" level_id="2" global_personnel_num="1" office_id="1" title="1" personnel_status="1" preferred_locale="1" max_child_count="1" password="aN44v0pkryZHuRsN2EocydyfG5DONJVVFmGwYQ==" login_name="mifos" password_changed="1" display_name="mifos" created_by="1" updated_by="1" last_login="2009-01-16" locked="0" no_of_tries="0" version_no="5"/>
   <personnel personnel_id="2" level_id="1" global_personnel_num="0002-00002" office_id="2" personnel_status="1" preferred_locale="1" password="WoviPj5kRhqMSRTf6GyrB9SpaNbZuu9Z0VYVaQ==" login_name="bagonza1228423252312" email_id="bagonza+1228423252312@example.com" password_changed="0" display_name="Bagonza Wilson" created_by="1" created_date="2008-12-04" locked="0" no_of_tries="0" version_no="1"/>
   <personnel personnel_id="3" level_id="1" global_personnel_num="0003-00003" office_id="3" personnel_status="1" preferred_locale="1" password="ycJ7RBeAwuME9TrG0WISphkW26i2KQrYSHLd8w==" login_name="bagonza1228423681546" email_id="john+1228423681546@example.com" password_changed="0" display_name="John Okoth" created_by="1" created_date="2008-12-04" locked="0" no_of_tries="0" version_no="1"/>
   <personnel personnel_id="4" level_id="1" global_personnel_num="0004-00004" office_id="4" personnel_status="1" preferred_locale="1" password="YU5n079inGkXN+ZpEi1RfAGZ7VVlhQg0GB9ZuQ==" login_name="bagonza1228424238375" email_id="jenna+1228424238375@example.com" password_changed="0" display_name="Jenna Barth" created_by="1" created_date="2008-12-04" locked="0" no_of_tries="0" version_no="1"/>
@@ -3377,7 +3371,6 @@
   <roles_activity activity_id="251" role_id="1"/>
   <roles_activity activity_id="252" role_id="1"/>
   <roles_activity activity_id="253" role_id="1"/>
-  <roles_activity activity_id="254" role_id="1"/>
   <saving_schedule/>
   <savings_account/>
   <savings_activity_details/>
