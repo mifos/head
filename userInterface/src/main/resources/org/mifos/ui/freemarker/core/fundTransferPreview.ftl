@@ -31,6 +31,14 @@
 <h1>[@spring.message "fundTransfer.transferFunds" /] - <span class="standout">[@spring.message "accounts.reviewtransaction" /]</span></h1>
 <br/>
 
+[#if transferError??]
+<div class="validationErrors">
+	<ul>
+		<li><b>[@spring.messageArgs transferError.msgKey transferError.msgArgs /]</b></li>
+	<ul>
+</div>
+[/#if]
+
 <div class="row">
 	<p>[@spring.message "fundTransfer.sourceAccount" /]: #${sourceAccount.globalAccountNum} - ${sourceAccount.prdOfferingName},&nbsp;
 		[@spring.message "Savings.accountBalance" /]: ${fundTransferFormBean.sourceBalance}</p>

@@ -1459,6 +1459,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             deposit(depositDto);
             withdraw(withdrawalDto);
             this.transactionHelper.commitTransaction();
+        } catch (BusinessRuleException ex) {
+            this.transactionHelper.rollbackTransaction();
+            throw ex;
         } catch (Exception ex) {
             this.transactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(ex);

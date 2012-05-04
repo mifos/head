@@ -32,7 +32,9 @@ import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.FundTransferDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.screen.CustomerSearchResultsDto;
+import org.mifos.dto.screen.MessageDto;
 import org.mifos.dto.screen.SearchDetailsDto;
+import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -104,11 +106,17 @@ public class FundTransferController {
         formBean.setAfterInit(false);
     }
 
-    public void applyTransfer(FundTransferFormBean formBean) {
+    public MessageDto applyTransfer(FundTransferFormBean formBean) {
+        MessageDto error = null;
         FundTransferDto fundTransferDto = new FundTransferDto(formBean.getSourceGlobalAccNum(),
                 formBean.getTargetGlobalAccNum(), formBean.getAmount(), formBean.getTrxnDate(),
                 formBean.getReceiptDate(), formBean.getReceiptId());
-        this.savingsServiceFacade.fundTransfer(fundTransferDto);
+        try {
+            this.savingsServiceFacade.fundTransfer(fundTransferDto);
+        } catch (BusinessRuleException ex) {
+            error = new MessageDto(ex.getMessageKey(), ex.getMessageValues());
+        }
+        return error;
     }
 
     public CustomerDto retrieveCustomerDetails(Integer customerId) {
