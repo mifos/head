@@ -46,4 +46,36 @@
             </sql>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_5456_2" author="Pawel Gesek" context="expansion">
+        <sql endDelimiter=";">
+            INSERT INTO lookup_value(lookup_id, entity_id, lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 FROM
+                lookup_value lv), 87, 'Permissions-CanTransferFunds');
+
+            INSERT INTO lookup_value_locale(locale_id, lookup_id, lookup_value) VALUES
+            (1, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND
+                lookup_name='Permissions-CanTransferFunds'), NULL);
+
+            INSERT INTO activity(activity_id, parent_id,  activity_name_lookup_id, description_lookup_id)
+            VALUES(254, 136, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND
+                lookup_name='Permissions-CanTransferFunds'),
+                (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND
+                lookup_name='Permissions-CanTransferFunds'));
+
+            INSERT INTO roles_activity(activity_id, role_id) VALUES(254, 1);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                DELETE FROM roles_activity WHERE activity_id = 254;
+
+                DELETE FROM activity WHERE activity_id = 254;
+
+                DELETE FROM lookup_value_locale WHERE lookup_id =
+                    (SELECT lookup_id from lookup_value
+                    WHERE lookup_name='Permissions-CanTransferFunds');
+
+                DELETE FROM lookup_value WHERE entity_id = 87 AND lookup_name =
+                    'Permissions-CanTransferFunds';
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

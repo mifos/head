@@ -67,6 +67,7 @@
   <DATABASECHANGELOG ID="MIFOS_5446_1" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-29 20:51:01.0" ORDEREXECUTED="269" EXECTYPE="EXECUTED" MD5SUM="3:da9b46d48c36748f47566fc805e67bc8" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5450_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-08 11:19:45.0" ORDEREXECUTED="291" EXECTYPE="EXECUTED" MD5SUM="3:0cfec9003f3dd9fa4d189f93b136b1e2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5456_1" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_I.xml" DATEEXECUTED="2012-04-24 17:14:01.0" ORDEREXECUTED="310" EXECTYPE="EXECUTED" MD5SUM="3:a8be286fb856d5853c17d302ec56dfda" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5456_2" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_I.xml" DATEEXECUTED="2012-05-04 14:27:01.0" ORDEREXECUTED="311" EXECTYPE="EXECUTED" MD5SUM="3:8d1ccc4cbd550fa917d5a7d04143939e" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5458_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-13 18:00:28.0" ORDEREXECUTED="292" EXECTYPE="EXECUTED" MD5SUM="3:d52e183334a1d2419a7cdf05145fbb44" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5521_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-29 13:14:39.0" ORDEREXECUTED="306" EXECTYPE="EXECUTED" MD5SUM="3:60252201a85395f0b48a2f090a9fc456" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
@@ -426,6 +427,7 @@
   <activity activity_id="251" parent_id="1" activity_name_lookup_id="660" description_lookup_id="660"/>
   <activity activity_id="252" parent_id="251" activity_name_lookup_id="661" description_lookup_id="661"/>
   <activity activity_id="253" parent_id="251" activity_name_lookup_id="662" description_lookup_id="662"/>
+  <activity activity_id="254" parent_id="136" activity_name_lookup_id="664" description_lookup_id="664"/>
   <admin_document/>
   <admin_document_acc_state_mix/>
   <applied_upgrades upgrade_id="1277565300"/>
@@ -2552,6 +2554,7 @@
   <lookup_value lookup_id="661" entity_id="87" lookup_name="Permissions-CanDefineNewPenaltyType"/>
   <lookup_value lookup_id="662" entity_id="87" lookup_name="Permissions-CanModifyPenaltyInformation"/>
   <lookup_value lookup_id="663" entity_id="71" lookup_name="PaymentType-Transfer"/>
+  <lookup_value lookup_id="664" entity_id="87" lookup_name="Permissions-CanTransferFunds"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -2957,6 +2960,7 @@
   <lookup_value_locale lookup_value_id="992" locale_id="1" lookup_id="661"/>
   <lookup_value_locale lookup_value_id="993" locale_id="1" lookup_id="662"/>
   <lookup_value_locale lookup_value_id="994" locale_id="1" lookup_id="663"/>
+  <lookup_value_locale lookup_value_id="995" locale_id="1" lookup_id="664"/>
   <max_min_interest_rate account_id="4" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="6" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="8" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
@@ -3373,6 +3377,7 @@
   <roles_activity activity_id="251" role_id="1"/>
   <roles_activity activity_id="252" role_id="1"/>
   <roles_activity activity_id="253" role_id="1"/>
+  <roles_activity activity_id="254" role_id="1"/>
   <saving_schedule/>
   <savings_account/>
   <savings_activity_details/>
