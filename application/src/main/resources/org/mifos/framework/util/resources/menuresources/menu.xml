@@ -11,6 +11,12 @@
                 </displayname>
                 <menuitem>
                     <displayname>
+                        <namefragment>label.createNewCenter</namefragment>
+                    </displayname>
+                    <linkvalue>centerCustAction.do?method=chooseOffice&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+                </menuitem>
+                <menuitem>
+                    <displayname>
                         <namefragment>label.createNewGroup</namefragment>
                     </displayname>
                     <linkvalue>groupCustAction.do?method=hierarchyCheck&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createGroup</linkvalue>
