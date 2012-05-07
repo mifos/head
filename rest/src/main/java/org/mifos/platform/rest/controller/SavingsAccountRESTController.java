@@ -103,7 +103,8 @@ public class SavingsAccountRESTController {
     public @ResponseBody
     Map<String, String> applyAdjustment(@PathVariable String globalAccountNum,
                                         @RequestParam BigDecimal amount,
-                                        @RequestParam String note ) throws Exception {
+                                        @RequestParam String note,
+                                        @RequestParam(required=false) Integer paymentId) throws Exception {
 
     	validateAmount(amount);
 
@@ -114,8 +115,9 @@ public class SavingsAccountRESTController {
     	Integer accountId = savingsBO.getAccountId();
     	Long savingsId = Long.valueOf(accountId.toString());
 
-    	SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, amount.doubleValue(), note);
-    	Money balanceBeforePayment = savingsBO.getSavingsBalance();
+        SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, amount.doubleValue(), note,
+                (paymentId == null) ? savingsBO.getLastPmnt().getPaymentId() : paymentId);
+        Money balanceBeforePayment = savingsBO.getSavingsBalance();
 
     	this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
 

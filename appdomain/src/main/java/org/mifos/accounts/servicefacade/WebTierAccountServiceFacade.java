@@ -44,6 +44,7 @@ import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.penalties.persistence.PenaltyDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
@@ -141,9 +142,11 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             List<ListItem<String>> accountsForTransfer = new ArrayList<ListItem<String>>();
             if (savingsInUse != null) {
                 for (SavingsDetailDto savingsAccount : savingsInUse) {
-                    ListItem<String> listItem = new ListItem<String>(savingsAccount.getGlobalAccountNum(),
-                            savingsAccount.getGlobalAccountNum() + " - " + savingsAccount.getPrdOfferingName());
-                    accountsForTransfer.add(listItem);
+                    if (savingsAccount.getAccountStateId().equals(AccountState.SAVINGS_ACTIVE.getValue())) {
+                        ListItem<String> listItem = new ListItem<String>(savingsAccount.getGlobalAccountNum(),
+                                savingsAccount.getGlobalAccountNum() + " - " + savingsAccount.getPrdOfferingName());
+                        accountsForTransfer.add(listItem);
+                    }
                 }
             }
 

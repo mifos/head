@@ -125,7 +125,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         Assert.assertNull(savings.findMostRecentPaymentByPaymentDate());
         Assert.assertNull(SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION, request));
         Assert.assertNull(SessionUtils.getAttribute(SavingsConstants.CLIENT_NAME, request));
-       Assert.assertEquals(Short.valueOf("0"), SessionUtils.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, request));
+        Assert.assertEquals(Short.valueOf("0"), SessionUtils.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, request));
     }
 
     @Test
@@ -215,6 +215,21 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         actionPerform();
         verifyForward("account_detail_page");
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+    }
+
+    @Test
+    public void testSuccessfullList() throws Exception {
+        createInitialObjects();
+        savingsOffering = createSavingsOffering();
+        savings = createSavingsAccount("000X00000000017", savingsOffering, group, AccountState.SAVINGS_ACTIVE);
+        StaticHibernateUtil.flushSession();
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
+        setRequestPathInfo("/savingsApplyAdjustmentAction.do");
+        addRequestParameter("method", "list");
+        actionPerform();
+        verifyForward("list_savings_adjustments");
+        verifyNoActionMessages();
+        verifyNoActionErrors();
     }
 
     @Test

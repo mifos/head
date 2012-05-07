@@ -160,6 +160,7 @@
             <forward name="preview_failure" path="/pages/application/savings/jsp/applyadjustment.jsp"/>
             <forward name="adjustLastUserAction_failure"
                      path="/pages/application/savings/jsp/applyadjustmentpreview.jsp"/>
+            <forward name="list_savings_adjustments" path="/pages/application/savings/jsp/applyadjustmentlist.jsp"/>
         </action>
         <!-- Savings Apply Adjustment action end -->
         <action path="/applyPaymentAction" type="org.mifos.accounts.struts.action.AccountApplyPaymentAction"

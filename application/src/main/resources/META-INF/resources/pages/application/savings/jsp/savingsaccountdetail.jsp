@@ -323,7 +323,7 @@ explanation of the license and how it is applied.
 		           </html-el:link><br>
 
 					<html-el:link styleId="savingsaccountdetail.link.applyAdjustment" 
-						href="savingsApplyAdjustmentAction.do?method=load&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+						href="savingsApplyAdjustmentAction.do?method=list&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 						<mifos:mifoslabel name="Savings.applyAdjustment" />
 					</html-el:link>
 					<br>

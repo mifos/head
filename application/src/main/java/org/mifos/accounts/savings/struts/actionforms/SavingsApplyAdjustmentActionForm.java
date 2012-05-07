@@ -43,11 +43,13 @@ import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
+    private static final long serialVersionUID = 6884712605827765997L;
 
     public String lastPaymentAmount;
     public String note;
     public String input;
     public String lastPaymentAmountOption;
+    public Integer paymentId;
 
     public SavingsApplyAdjustmentActionForm() {
     }
@@ -84,6 +86,14 @@ public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
         this.lastPaymentAmountOption = lastPaymentAmountOption;
     }
 
+    public Integer getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(Integer paymentId) {
+        this.paymentId = paymentId;
+    }
+
     @Override
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String method = request.getParameter("method");
@@ -94,9 +104,10 @@ public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
         try {
             if (method != null && method.equals("preview")) {
                 SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-                AccountPaymentEntity payment = savings.findMostRecentPaymentByPaymentDate();
-                if (payment == null || savings.getLastPmntAmnt() == 0
-                    || !(new SavingsHelper().getPaymentActionType(payment).equals(
+                AccountPaymentEntity payment = savings.findPaymentById(this.paymentId);
+                if (payment == null
+                        || savings.getLastPmntAmnt() == 0
+                        || !(new SavingsHelper().getPaymentActionType(payment).equals(
                                 AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()) || new SavingsHelper()
                                 .getPaymentActionType(payment).equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue()))) {
                     errors.add(SavingsConstants.INVALID_LAST_PAYMENT, new ActionMessage(
@@ -107,13 +118,12 @@ public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
                                 SavingsConstants.INVALID_ADJUSTMENT_AMOUNT));
                     }
 
-                    if(StringUtils.isNotBlank(getLastPaymentAmount())) {
+                    if (StringUtils.isNotBlank(getLastPaymentAmount())) {
                         Locale locale = getUserContext(request).getPreferredLocale();
                         validateAmount(errors, locale);
                     }
 
-                    if (StringUtils.isNotBlank(getNote())
-                            && getNote().length() > CustomerConstants.COMMENT_LENGTH) {
+                    if (StringUtils.isNotBlank(getNote()) && getNote().length() > CustomerConstants.COMMENT_LENGTH) {
                         errors.add(AccountConstants.MAX_NOTE_LENGTH, new ActionMessage(
                                 AccountConstants.MAX_NOTE_LENGTH, AccountConstants.COMMENT_LENGTH));
                     }
@@ -131,11 +141,14 @@ public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
     }
 
     private void validateAmount(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateAmount(getLastPaymentAmount(), SavingsConstants.AMOUNT, errors);
+        DoubleConversionResult conversionResult = validateAmount(getLastPaymentAmount(), SavingsConstants.AMOUNT,
+                errors);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-            //commented off for [MIFOS-2958]
-            /*addError(errors, SavingsConstants.AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                    getLocalizedMessage(SavingsConstants.AMOUNT, locale, FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE));*/
+            // commented off for [MIFOS-2958]
+            /*
+             * addError(errors, SavingsConstants.AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
+             * getLocalizedMessage(SavingsConstants.AMOUNT, locale, FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE));
+             */
         }
     }
 }

@@ -45,6 +45,7 @@ import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SavingsStatusChangeHistoryDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
+import org.mifos.dto.screen.AdjustableSavingsPaymentDto;
 import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
 import org.mifos.dto.screen.NotesSearchResultsDto;
 import org.mifos.dto.screen.SavingsAccountDepositDueDto;
@@ -65,6 +66,9 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
     SavingsAdjustmentReferenceDto retrieveAdjustmentReferenceData(Long savingsId);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
+    SavingsAdjustmentReferenceDto retrieveAdjustmentReferenceData(Long savingsId, Integer paymentId);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
     void adjustTransaction(SavingsAdjustmentDto savingsAdjustment);
@@ -155,6 +159,9 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_TRANSFER_FUNDS')")
     void fundTransfer(FundTransferDto fundTransferDto);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
+    List<AdjustableSavingsPaymentDto> retrievePaymentsForAdjustment(Integer accountId);
 
     void putSavingsBusinessKeyInSession(String globalAccountNum, HttpServletRequest request);
 }

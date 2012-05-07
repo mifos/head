@@ -20,6 +20,8 @@
 
 package org.mifos.accounts.savings.struts.action;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,6 +41,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
+import org.mifos.dto.screen.AdjustableSavingsPaymentDto;
 import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
@@ -68,19 +71,34 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         savings = this.savingsDao.findById(savingsId);
         savings.setUserContext(uc);
 
-        SavingsAdjustmentReferenceDto savingsAdjustmentDto = this.savingsServiceFacade.retrieveAdjustmentReferenceData(savingsId);
+        String paymentIdParam = request.getParameter("paymentId");
+        Integer paymentId;
+        if (paymentIdParam == null) {
+            AccountPaymentEntity payment = savings.getLastPmnt();
+            paymentId = (payment == null) ? null : payment.getPaymentId();
+        } else {
+            paymentId = Integer.valueOf(paymentIdParam);
+        }
+
+        SavingsAdjustmentReferenceDto savingsAdjustmentDto = this.savingsServiceFacade.retrieveAdjustmentReferenceData(
+                savingsId, paymentId);
 
         if (savingsAdjustmentDto.isDepositOrWithdrawal()) {
 
-            AccountPaymentEntity lastPayment = savings.findMostRecentPaymentByPaymentDate();
-            AccountActionEntity accountAction = legacyMasterDao.getPersistentObject(
-                    AccountActionEntity.class, new SavingsHelper().getPaymentActionType(lastPayment));
+            AccountPaymentEntity payment = (paymentId == null) ? savings.findMostRecentPaymentByPaymentDate() : savings
+                    .findPaymentById(paymentId);
+            AccountActionEntity accountAction = legacyMasterDao.getPersistentObject(AccountActionEntity.class,
+                    new SavingsHelper().getPaymentActionType(payment));
 
             Hibernate.initialize(savings.findMostRecentPaymentByPaymentDate().getAccountTrxns());
 
             SessionUtils.setAttribute(SavingsConstants.ACCOUNT_ACTION, accountAction, request);
             SessionUtils.setAttribute(SavingsConstants.CLIENT_NAME, savingsAdjustmentDto.getClientName(), request);
             SessionUtils.setAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, Constants.YES, request);
+            SessionUtils.setAttribute(SavingsConstants.ADJUSTMENT_AMOUNT, payment.getAmount().getAmount(), request);
+
+            SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm) form;
+            actionForm.setPaymentId(paymentId);
         } else {
             SessionUtils.setAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, Constants.NO, request);
         }
@@ -91,13 +109,15 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward preview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+    public ActionForward preview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
+            @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward("preview_success");
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+    public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
+            @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward("previous_success");
     }
@@ -136,7 +156,8 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         Double adjustedAmount = Double.valueOf(actionForm.getLastPaymentAmount());
         String note = actionForm.getNote();
 
-        SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, adjustedAmount, note);
+        SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, adjustedAmount, note,
+                actionForm.getPaymentId());
         try {
             this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
         } catch (BusinessRuleException e) {
@@ -149,15 +170,15 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancel(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+    public ActionForward cancel(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
+            HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         doCleanUp(request);
         return mapping.findForward("account_detail_page");
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
+            HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
         String forward = null;
         if (method != null && method.equals("preview")) {
@@ -168,16 +189,31 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         return mapping.findForward(forward);
     }
 
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward list(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
+            HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+
+        List<AdjustableSavingsPaymentDto> adjustablePayments = this.savingsServiceFacade
+                .retrievePaymentsForAdjustment(savings.getAccountId());
+        SessionUtils.setCollectionAttribute(SavingsConstants.ADJUSTABLE_PAYMENTS, adjustablePayments, request);
+
+        return mapping.findForward("list_savings_adjustments");
+    }
+
     private void clearActionForm(ActionForm form) {
         SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm) form;
         actionForm.setLastPaymentAmountOption("1");
         actionForm.setLastPaymentAmount(null);
         actionForm.setNote(null);
+        actionForm.setPaymentId(null);
     }
 
     private void doCleanUp(HttpServletRequest request) throws Exception {
         SessionUtils.removeAttribute(SavingsConstants.ACCOUNT_ACTION, request);
         SessionUtils.removeAttribute(SavingsConstants.CLIENT_NAME, request);
+        SessionUtils.removeAttribute(SavingsConstants.ADJUSTABLE_PAYMENTS, request);
+        SessionUtils.removeAttribute(SavingsConstants.ADJUSTMENT_AMOUNT, request);
     }
 
     private AccountBusinessService getBizService() {

@@ -142,4 +142,7 @@ public class SavingsConstants {
 
     public static final short SAVINGS_VOLUNTARY= 2;
 
+    public static final String ADJUSTABLE_PAYMENTS="savingsAdjustablePayments";
+
+    public static final String ADJUSTMENT_AMOUNT="adjustmentAmount";
 }

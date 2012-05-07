@@ -149,7 +149,7 @@ public class SavingsAccountAdjustmentAndInterestCalculationServiceFacadeIntegrat
         Long savingsId = Long.valueOf(savingsAccount.getAccountId());
         Double adjustedAmount = Double.valueOf("35");
         String note = "I entered 20 but it should of being 35 which is an overpayment of the mandatory sum.";
-        SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, adjustedAmount, note);
+        SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, adjustedAmount, note, savingsAccount.getLastPmnt().getPaymentId());
 
         // exercise test
         this.savingsServiceFacade.adjustTransaction(savingsAdjustment);

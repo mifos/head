@@ -17,36 +17,29 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+package org.mifos.test.acceptance.framework.savings;
 
-package org.mifos.dto.domain;
+import org.mifos.test.acceptance.framework.AbstractPage;
 
-public class SavingsAdjustmentDto {
+import com.thoughtworks.selenium.Selenium;
 
-    private final Long savingsId;
-    private final Double adjustedAmount;
-    private final String note;
-    private final Integer paymentId;
+public class SavingsAdjustmentListPage extends AbstractPage {
 
-    public SavingsAdjustmentDto(Long savingsId, Double adjustedAmount, String note, Integer paymentId) {
-        this.savingsId = savingsId;
-        this.adjustedAmount = adjustedAmount;
-        this.note = note;
-        this.paymentId = paymentId;
+    public SavingsAdjustmentListPage(Selenium selenium) {
+        super(selenium);
     }
 
-    public Long getSavingsId() {
-        return this.savingsId;
+    public void verifyPage() {
+        this.verifyPage("listSavingsPossibleAdjustments");
     }
 
-    public Double getAdjustedAmount() {
-        return this.adjustedAmount;
+    public int possibleAdjustmentCount() {
+        return selenium.getXpathCount("//a[@class='listAdjustments.link.applyAdjustment']").intValue();
     }
 
-    public String getNote() {
-        return this.note;
-    }
-
-    public Integer getPaymentId() {
-        return paymentId;
+    public SavingsApplyAdjustmentPage navigateToFirstAdjustment() {
+        selenium.click("//a[@class='listAdjustments.link.applyAdjustment'][1]");
+        waitForPageToLoad();
+        return new SavingsApplyAdjustmentPage(selenium);
     }
 }
