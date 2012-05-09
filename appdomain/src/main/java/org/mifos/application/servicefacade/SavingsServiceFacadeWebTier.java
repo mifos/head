@@ -347,6 +347,11 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                     savingsAdjustment.getPaymentId());
             recalculateInterestPostings(savingsAccount.getAccountId(), new LocalDate(adjustedPayment.getPaymentDate()));
 
+            if (hasAccountNegativeBalance(savingsAccount)) {
+                throw new BusinessRuleException("errors.insufficentbalance",
+                        new String[] { savingsAccount.getGlobalAccountNum() });
+            }
+
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.commitTransaction();
         } catch (BusinessRuleException e) {
@@ -1548,12 +1553,12 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 int result;
                 LocalDate firstDate = o1.getPaymentDate();
                 LocalDate secondDate = o2.getPaymentDate();
-                //sort by date
+                // sort by date
                 if (firstDate.isAfter(secondDate)) {
                     result = -1;
                 } else if (firstDate.isBefore(secondDate)) {
                     result = 1;
-                } else { //withdrawal comes after deposit
+                } else { // withdrawal comes after deposit
                     if (o1.isWithdrawal() && !o2.isWithdrawal()) {
                         result = -1;
                     } else if (!o1.isWithdrawal() && o2.isWithdrawal()) {
@@ -1577,5 +1582,21 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 currencyInUse);
 
         return amount.isGreaterThan(balanceOnDateOfWithdrawal);
+    }
+
+    private boolean hasAccountNegativeBalance(SavingsBO savingsAccount) {
+        boolean negativeBalance = false;
+        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(
+                savingsAccount.getCurrency(), savingsAccount.getAccountId().longValue());
+        Money balance = Money.zero(savingsAccount.getCurrency());
+
+        for (EndOfDayDetail endOfDayDetail : allEndOfDayDetailsForAccount) {
+            balance = balance.add(endOfDayDetail.getResultantAmountForDay());
+            if (balance.isLessThanZero()) {
+                negativeBalance = true;
+                break;
+            }
+        }
+        return negativeBalance;
     }
 }
