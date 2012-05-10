@@ -127,7 +127,7 @@ public class LoanScheduleFormBean implements Serializable {
             
             int installmentIndex = 0;
             while (remainingPayment.doubleValue() > BigDecimal.ZERO.doubleValue()
-                    && installmentIndex < this.actualPaymentAmounts.size() - 1) {
+                    && installmentIndex < this.actualPaymentAmounts.size()) {
                 
                 LoanCreationInstallmentDto installmentDetails = this.repaymentInstallments.get(installmentIndex);
                 Double installmentTotalAmount = this.installmentAmounts.get(installmentIndex).doubleValue();
@@ -314,7 +314,7 @@ public class LoanScheduleFormBean implements Serializable {
             lastPaymentDate = paymentDate;
         }
         
-        BigDecimal totalAllowedPayments = this.loanPrincipal.add(this.totalLoanFees).add(this.totalLoanFees);
+        BigDecimal totalAllowedPayments = this.loanPrincipal.add(this.totalLoanFees).add(this.totalLoanInterest);
         if (totalPayment.doubleValue() > totalAllowedPayments.doubleValue()) {
             String defaultMessage = "Exceeds total payments allowed for loan.";
             ErrorEntry fieldError = new ErrorEntry("totalPayments.exceeded.invalid", "disbursementDate", defaultMessage);
