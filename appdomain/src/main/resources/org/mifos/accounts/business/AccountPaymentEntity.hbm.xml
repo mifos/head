@@ -34,6 +34,8 @@
             <one-to-many class="org.mifos.accounts.business.AccountTrxnEntity" />
         </set>
 
+        <many-to-one name="otherTransferPayment" column="other_transfer_payment" class="org.mifos.accounts.business.AccountPaymentEntity" access="field" 
+            lazy="false"/>
     </class>
     <query name="accountPayment.maxAccPayment">
         <![CDATA[from org.mifos.accounts.business.AccountPaymentEntity accpayment
@@ -45,6 +47,11 @@
       <query name="accountPayment.allAccPayment">
         <![CDATA[from org.mifos.accounts.business.AccountPaymentEntity accpayment
                 where accpayment.account.accountId = :accountId order by accpayment.paymentId desc
+                ]]>
+      </query>
+      <query name="accountPayment.findPaymentById">
+        <![CDATA[from org.mifos.accounts.business.AccountPaymentEntity accpayment
+                where accpayment.paymentId = :paymentId
                 ]]>
       </query>
 </hibernate-mapping>

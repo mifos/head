@@ -109,6 +109,7 @@ import org.mifos.dto.domain.DueOnDateDto;
 import org.mifos.dto.domain.FundTransferDto;
 import org.mifos.dto.domain.NoteSearchDto;
 import org.mifos.dto.domain.OpeningBalanceSavingsAccount;
+import org.mifos.dto.domain.PaymentDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
@@ -245,8 +246,12 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public void withdraw(SavingsWithdrawalDto savingsWithdrawal) {
+    public Integer withdraw(SavingsWithdrawalDto savingsWithdrawal) {
+        return withdraw(savingsWithdrawal, false);
+    }
 
+    @Override
+    public Integer withdraw(SavingsWithdrawalDto savingsWithdrawal, boolean inTransaction) {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
 
@@ -280,10 +285,12 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         }
 
         try {
-            this.transactionHelper.startTransaction();
+            if (!inTransaction) {
+                this.transactionHelper.startTransaction();
+            }
             this.transactionHelper.beginAuditLoggingFor(savingsAccount);
 
-            savingsAccount.withdraw(payment, false);
+            AccountPaymentEntity paymentEntity = savingsAccount.withdraw(payment, false);
             this.savingsDao.save(savingsAccount);
 
             if (DateUtils.isPastDate(payment.getTransactionDate())) {
@@ -291,17 +298,28 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                         new LocalDate(payment.getTransactionDate()));
             }
 
-            this.transactionHelper.commitTransaction();
+            if (!inTransaction) {
+                this.transactionHelper.commitTransaction();
+            }
+
+            if (inTransaction) {
+                this.transactionHelper.flushSession();
+            }
+            return paymentEntity.getPaymentId();
         } catch (AccountException e) {
-            this.transactionHelper.rollbackTransaction();
+            if (!inTransaction) {
+                this.transactionHelper.rollbackTransaction();
+            }
             throw new BusinessRuleException(e.getKey(), e);
         } finally {
-            this.transactionHelper.closeSession();
+            if (!inTransaction) {
+                this.transactionHelper.closeSession();
+            }
         }
     }
 
     @Override
-    public void adjustTransaction(SavingsAdjustmentDto savingsAdjustment) {
+    public Integer adjustTransaction(SavingsAdjustmentDto savingsAdjustment) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
@@ -322,9 +340,10 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 .getAdjustedAmount()));
 
         AccountPaymentEntity adjustedPayment = savingsAccount.findPaymentById(savingsAdjustment.getPaymentId());
+        PaymentDto otherTransferPayment = adjustedPayment.getOtherTransferPaymentDto();
         Money originalAmount = adjustedPayment.getAmount();
 
-        LocalDate dateOfWithdrawal = new LocalDate(adjustedPayment.getPaymentDate());
+        LocalDate dateOfWithdrawal = savingsAdjustment.getTrxnDate();
         if (adjustedPayment.isSavingsWithdrawal() && originalAmount.isLessThan(amountAdjustedTo)) {
             Money addedWithdrawalAmount = amountAdjustedTo.subtract(originalAmount);
             if (withdrawalMakesBalanceNegative(savingsAccount, addedWithdrawalAmount, dateOfWithdrawal)) {
@@ -343,8 +362,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             this.transactionHelper.startTransaction();
             this.transactionHelper.beginAuditLoggingFor(savingsAccount);
 
-            savingsAccount.adjustUserAction(amountAdjustedTo, savingsAdjustment.getNote(), updatedBy,
-                    savingsAdjustment.getPaymentId());
+            AccountPaymentEntity newPayment = savingsAccount.adjustUserAction(amountAdjustedTo, savingsAdjustment.getNote(),
+                    savingsAdjustment.getTrxnDate(), updatedBy, savingsAdjustment.getPaymentId());
             recalculateInterestPostings(savingsAccount.getAccountId(), new LocalDate(adjustedPayment.getPaymentDate()));
 
             if (hasAccountNegativeBalance(savingsAccount)) {
@@ -353,7 +372,30 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             }
 
             this.savingsDao.save(savingsAccount);
+
+            // savings-savings transfer adjustment
+            if (otherTransferPayment != null && otherTransferPayment.isSavingsPayment()) {
+                SavingsBO otherSavingsAccount = this.savingsDao.findById(otherTransferPayment.getAccountId());
+                otherSavingsAccount.updateDetails(userContext);
+
+                AccountPaymentEntity newOtherTransferPayment = otherSavingsAccount.adjustUserAction(amountAdjustedTo, savingsAdjustment.getNote(),
+                        savingsAdjustment.getTrxnDate(), updatedBy, otherTransferPayment.getPaymentId());
+                recalculateInterestPostings(savingsAccount.getAccountId(), new LocalDate(adjustedPayment.getPaymentDate()));
+
+                if (hasAccountNegativeBalance(otherSavingsAccount)) {
+                    throw new BusinessRuleException("errors.insufficentbalance",
+                            new String[] { savingsAccount.getGlobalAccountNum() });
+                }
+                this.savingsDao.save(otherSavingsAccount);
+
+                newPayment.setOtherTransferPayment(newOtherTransferPayment);
+                newOtherTransferPayment.setOtherTransferPayment(newPayment);
+                this.savingsDao.save(savingsAccount);
+            }
+
             this.transactionHelper.commitTransaction();
+
+            return (newPayment == null) ? null : newPayment.getPaymentId();
         } catch (BusinessRuleException e) {
             this.transactionHelper.rollbackTransaction();
             throw new BusinessRuleException(e.getMessageKey(), e);

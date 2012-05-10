@@ -62,7 +62,10 @@ public interface SavingsServiceFacade {
     void deposit(SavingsDepositDto savingsDeposit);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MAKE_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
-    void withdraw(SavingsWithdrawalDto savingsWithdrawal);
+    Integer withdraw(SavingsWithdrawalDto savingsWithdrawal);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MAKE_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
+    Integer withdraw(SavingsWithdrawalDto savingsWithdrawal, boolean inTransaction);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
     SavingsAdjustmentReferenceDto retrieveAdjustmentReferenceData(Long savingsId);
@@ -71,7 +74,7 @@ public interface SavingsServiceFacade {
     SavingsAdjustmentReferenceDto retrieveAdjustmentReferenceData(Long savingsId, Integer paymentId);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
-    void adjustTransaction(SavingsAdjustmentDto savingsAdjustment);
+    Integer adjustTransaction(SavingsAdjustmentDto savingsAdjustment);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CLOSE_SAVINGS_ACCOUNT')")
     SavingsAccountClosureDto retrieveClosingDetails(Long savingsId, LocalDate closureDate);

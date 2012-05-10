@@ -78,4 +78,23 @@
             </sql>
         </rollback>
     </changeSet>
+        <changeSet id="MIFOS_5456_3" author="Pawel Gesek" context="expansion">
+        <sql endDelimiter=";">
+            ALTER TABLE account_payment ADD COLUMN other_transfer_payment INTEGER NULL DEFAULT NULL;
+            ALTER TABLE account_payment ADD FOREIGN KEY(other_transfer_payment) REFERENCES account_payment(payment_id);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                SET @mifosfkname = (select CONSTRAINT_NAME from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+                                    where REFERENCED_TABLE_NAME="account_payment"
+                                    and TABLE_NAME="account_payment" and CONSTRAINT_SCHEMA=DATABASE());
+                SET @mifosquery = CONCAT("ALTER TABLE account_payment DROP FOREIGN KEY ", @mifosfkname);
+                PREPARE stmt FROM @mifosquery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+
+                ALTER TABLE account_payment DROP COLUMN other_transfer_payment;
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

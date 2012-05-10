@@ -1812,6 +1812,14 @@ public class LoanBO extends AccountBO implements Loan {
                         .getPaymentTypeId()), paymentData.getTransactionDate());
         accountPayment.setCreatedByUser(paymentData.getPersonnel());
         accountPayment.setComment(paymentData.getComment());
+
+        //for savings transfers
+        AccountPaymentEntity otherTransferPayment = paymentData.getOtherTransferPayment();
+        if (otherTransferPayment != null) {
+            accountPayment.setOtherTransferPayment(otherTransferPayment);
+            otherTransferPayment.setOtherTransferPayment(accountPayment);
+        }
+
         return accountPayment;
     }
 

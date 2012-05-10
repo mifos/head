@@ -35,9 +35,11 @@ import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
+import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.customers.business.service.CustomerSearchServiceImpl;
 import org.mifos.customers.persistence.CustomerDaoHibernate;
 import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
@@ -76,7 +78,7 @@ public class PluginManager {
                     ApplicationContextProvider.getBean(LegacyAcceptedPaymentTypeDao.class), new PersonnelDaoHibernate(new GenericDaoHibernate()),
                     new CustomerDaoHibernate(new GenericDaoHibernate()), ApplicationContextProvider.getBean(LoanBusinessService.class),
                     new HibernateTransactionHelperForStaticHibernateUtil(), ApplicationContextProvider.getBean(LegacyMasterDao.class),
-                    ApplicationContextProvider.getBean(MonthClosingServiceFacade.class)) );
+                    ApplicationContextProvider.getBean(MonthClosingServiceFacade.class), ApplicationContextProvider.getBean(SavingsServiceFacade.class)));
         ti.setCustomerSearchService(new CustomerSearchServiceImpl(new CustomerDaoHibernate(new GenericDaoHibernate())));
             plugins.add(ti);
         }

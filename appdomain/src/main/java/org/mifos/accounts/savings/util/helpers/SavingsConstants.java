@@ -134,6 +134,10 @@ public class SavingsConstants {
 
     public static final String INVALID_ADJUSTMENT_AMOUNT = "errors.invalidAdjustmentAmount";
 
+    public static final String INVALID_TRXN_DATE = "errors.invaliddate";
+
+    public static final String FUTURE_DATE = "errors.futuredate";
+
     public static final String STATUS_CHANGE_HISTORY_LIST = "statusChangeHistoryList";
 
     public static final String DAYS = "days";
@@ -145,4 +149,8 @@ public class SavingsConstants {
     public static final String ADJUSTABLE_PAYMENTS="savingsAdjustablePayments";
 
     public static final String ADJUSTMENT_AMOUNT="adjustmentAmount";
+
+    public static final String TRXN_DATE = "Savings.dateOfTrxn";
+
+    public static final String TRXN_DATE_FIELD = "trxnDateDD";
 }

@@ -58,6 +58,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
+import org.mifos.customers.personnel.exceptions.PersonnelException;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.QueryParamConstants;
@@ -578,5 +579,12 @@ public class LegacyAccountDao extends LegacyGenericDao {
         parameters.put("overpaymentId", overpaymentId);
         Object queryResult = execUniqueResultNamedQuery(NamedQueryConstants.FIND_OVERPAYMENT_BY_ID, parameters);
         return queryResult == null ? null : (AccountOverpaymentEntity) queryResult;
+    }
+
+    public AccountPaymentEntity findPaymentById(Integer paymentId) throws PersistenceException {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("paymentId", paymentId);
+        Object queryResult = execUniqueResultNamedQuery(NamedQueryConstants.FIND_PAYMENT_BY_ID, parameters);
+        return (queryResult == null) ? null : (AccountPaymentEntity) queryResult;
     }
 }

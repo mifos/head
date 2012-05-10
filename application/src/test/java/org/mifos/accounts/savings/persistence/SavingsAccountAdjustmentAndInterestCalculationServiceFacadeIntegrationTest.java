@@ -26,6 +26,7 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampl
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -149,7 +150,8 @@ public class SavingsAccountAdjustmentAndInterestCalculationServiceFacadeIntegrat
         Long savingsId = Long.valueOf(savingsAccount.getAccountId());
         Double adjustedAmount = Double.valueOf("35");
         String note = "I entered 20 but it should of being 35 which is an overpayment of the mandatory sum.";
-        SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, adjustedAmount, note, savingsAccount.getLastPmnt().getPaymentId());
+        SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, adjustedAmount, note, savingsAccount.getLastPmnt().getPaymentId(), 
+                new LocalDate(savingsAccount.getLastPmnt().getPaymentDate()));
 
         // exercise test
         this.savingsServiceFacade.adjustTransaction(savingsAdjustment);

@@ -29,7 +29,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.hibernate.Hibernate;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionEntity;
+import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
@@ -40,6 +42,8 @@ import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.dto.domain.AdjustedPaymentDto;
+import org.mifos.dto.domain.PaymentDto;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.screen.AdjustableSavingsPaymentDto;
 import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
@@ -99,6 +103,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 
             SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm) form;
             actionForm.setPaymentId(paymentId);
+            actionForm.setTrxnDate(new LocalDate(payment.getPaymentDate()));
         } else {
             SessionUtils.setAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, Constants.NO, request);
         }
@@ -156,10 +161,26 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         Double adjustedAmount = Double.valueOf(actionForm.getLastPaymentAmount());
         String note = actionForm.getNote();
 
-        SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, adjustedAmount, note,
-                actionForm.getPaymentId());
+        AccountPaymentEntity adjustedPayment = savings.findPaymentById(actionForm.getPaymentId());
+        PaymentDto otherTransferPayment = adjustedPayment.getOtherTransferPaymentDto();
         try {
-            this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
+            if (otherTransferPayment == null) {
+                // regular savings payment adjustment
+                SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, adjustedAmount, note,
+                    actionForm.getPaymentId(), actionForm.getTrxnDateLocal());
+                this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
+            } else {
+                AccountBO account = adjustedPayment.getOtherTransferPayment().getAccount();
+                if (account instanceof SavingsBO) {
+                    // adjust savings-savings transfer
+                } else {
+                    // adjust repayment from savings account
+                    AdjustedPaymentDto adjustedPaymentDto = new AdjustedPaymentDto(actionForm.getLastPaymentAmount(),
+                            actionForm.getTrxnDateLocal().toDateMidnight().toDate(), otherTransferPayment.getPaymentTypeId());
+                    this.accountServiceFacade.applyHistoricalAdjustment(account.getGlobalAccountNum(),
+                            otherTransferPayment.getPaymentId(), note, uc.getId(), adjustedPaymentDto);
+                }
+            }
         } catch (BusinessRuleException e) {
             throw new AccountException(e.getMessageKey(), e);
         } finally {
@@ -207,6 +228,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         actionForm.setLastPaymentAmount(null);
         actionForm.setNote(null);
         actionForm.setPaymentId(null);
+        actionForm.setTrxnDate(null);
     }
 
     private void doCleanUp(HttpServletRequest request) throws Exception {

@@ -883,7 +883,7 @@ public class SavingsBO extends AccountBO {
      *             DAO/Persistence for {@link SavingsBO}.
      */
     @Deprecated
-    public void withdraw(final PaymentData accountPaymentData, final boolean persist) throws AccountException {
+    public AccountPaymentEntity withdraw(final PaymentData accountPaymentData, final boolean persist) throws AccountException {
         Money totalAmount = accountPaymentData.getTotalAmount();
         if (totalAmount.isGreaterThan(savingsBalance)) {
             throw new AccountException("errors.insufficentbalance", new String[] { getGlobalAccountNum() });
@@ -921,6 +921,7 @@ public class SavingsBO extends AccountBO {
                 throw new AccountException(e);
             }
         }
+        return accountPayment;
     }
 
     @Override
@@ -940,18 +941,21 @@ public class SavingsBO extends AccountBO {
         }
     }
 
-    public void adjustLastUserAction(Money amountAdjustedTo, String adjustmentNote, PersonnelBO updatedBy) {
+    public AccountPaymentEntity adjustLastUserAction(Money amountAdjustedTo, String adjustmentNote,
+            PersonnelBO updatedBy) {
         AccountPaymentEntity lastPayment = getLastPmnt();
-        adjustUserAction(amountAdjustedTo, adjustmentNote, updatedBy, lastPayment);
+        return adjustUserAction(amountAdjustedTo, adjustmentNote, new LocalDate(lastPayment.getPaymentDate()), updatedBy, lastPayment);
     }
 
-    public void adjustUserAction(Money amountAdjustedTo, String adjustmentNote, PersonnelBO updatedBy, Integer paymentId) {
+    public AccountPaymentEntity adjustUserAction(Money amountAdjustedTo, String adjustmentNote, LocalDate adjustmentDate,
+            PersonnelBO updatedBy, Integer paymentId) {
         AccountPaymentEntity payment = findPaymentById(paymentId);
-        adjustUserAction(amountAdjustedTo, adjustmentNote, updatedBy, payment);
+        return adjustUserAction(amountAdjustedTo, adjustmentNote, adjustmentDate, updatedBy, payment);
     }
 
-    private void adjustUserAction(Money amountAdjustedTo, String adjustmentNote, PersonnelBO updatedBy,
-            AccountPaymentEntity payment) {
+    private AccountPaymentEntity adjustUserAction(Money amountAdjustedTo, String adjustmentNote, LocalDate adjustmentDate,
+            PersonnelBO updatedBy, AccountPaymentEntity payment) {
+        AccountPaymentEntity newPayment = null;
         try {
             if (!isAdjustPossibleOnTrxn(amountAdjustedTo, payment)) {
                 throw new BusinessRuleException(AccountExceptionConstants.CANNOTADJUST);
@@ -967,15 +971,18 @@ public class SavingsBO extends AccountBO {
 
             if (amountAdjustedTo.isGreaterThanZero()) {
                 Set<AccountTrxnEntity> adjustedPaymentTransactions = createNewAccountPaymentWithAdjustedAmount(
-                        amountAdjustedTo, updatedBy, payment, savingsTransactionType, adjustedOn);
+                        amountAdjustedTo, updatedBy, payment, savingsTransactionType, adjustedOn, adjustmentDate);
 
                 buildFinancialEntries(adjustedPaymentTransactions);
+                newPayment = adjustedPaymentTransactions.toArray(new AccountTrxnEntity[adjustedPaymentTransactions
+                        .size()])[0].getAccountPayment();
             }
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
 
         goActiveDueToDepositOrWithdrawalOnAccount(updatedBy);
+        return newPayment;
     }
 
     private void goActiveDueToDepositOrWithdrawalOnAccount(PersonnelBO updatedBy) {
@@ -991,19 +998,19 @@ public class SavingsBO extends AccountBO {
 
     private Set<AccountTrxnEntity> createNewAccountPaymentWithAdjustedAmount(Money amountAdjustedTo,
             PersonnelBO updatedBy, AccountPaymentEntity lastPayment, AccountActionTypes savingsTransactionType,
-            Date adjustedOn) {
+            Date adjustedOn, LocalDate adjustmentDate) {
 
-        AccountPaymentEntity newAccountPayment = new AccountPaymentEntity(this, amountAdjustedTo, null, null, lastPayment.getPaymentType(), lastPayment.getPaymentDate());
+        AccountPaymentEntity newAccountPayment = new AccountPaymentEntity(this, amountAdjustedTo, null, null, lastPayment.getPaymentType(), adjustmentDate.toDateMidnight().toDate());
         newAccountPayment.setCreatedByUser(updatedBy);
         newAccountPayment.setAmount(amountAdjustedTo);
 
         Set<AccountTrxnEntity> accountTrxns = new HashSet<AccountTrxnEntity>();
         if (isMandatory() && savingsTransactionType.equals(AccountActionTypes.SAVINGS_DEPOSIT)) {
-            accountTrxns = createDepositTrxnsForMandatoryAccountsAfterAdjust(newAccountPayment, lastPayment, amountAdjustedTo, updatedBy);
+            accountTrxns = createDepositTrxnsForMandatoryAccountsAfterAdjust(newAccountPayment, lastPayment, amountAdjustedTo, adjustmentDate, updatedBy);
         } else if (isVoluntary() && savingsTransactionType.equals(AccountActionTypes.SAVINGS_DEPOSIT)) {
-            accountTrxns = createDepositTrxnsForVolAccountsAfterAdjust(newAccountPayment, lastPayment, amountAdjustedTo, updatedBy);
+            accountTrxns = createDepositTrxnsForVolAccountsAfterAdjust(newAccountPayment, lastPayment, amountAdjustedTo, adjustmentDate, updatedBy);
         } else {
-            accountTrxns = createWithdrawalTrxnsAfterAdjust(newAccountPayment, lastPayment, amountAdjustedTo, updatedBy);
+            accountTrxns = createWithdrawalTrxnsAfterAdjust(newAccountPayment, lastPayment, amountAdjustedTo, adjustmentDate, updatedBy);
         }
 
         for (AccountTrxnEntity accountTrxn : accountTrxns) {
@@ -1080,7 +1087,7 @@ public class SavingsBO extends AccountBO {
     }
 
     private Set<AccountTrxnEntity> createWithdrawalTrxnsAfterAdjust(final AccountPaymentEntity newAccountPayment,
-            final AccountPaymentEntity lastAccountPayment, final Money newAmount, PersonnelBO loggedInUser) {
+            final AccountPaymentEntity lastAccountPayment, final Money newAmount, final LocalDate adjustmentDate, PersonnelBO loggedInUser) {
 
         Set<AccountTrxnEntity> newTrxns = new LinkedHashSet<AccountTrxnEntity>();
         SavingsTrxnDetailEntity accountTrxn = null;
@@ -1097,7 +1104,7 @@ public class SavingsBO extends AccountBO {
 
         Date transactionCreatedDate = new DateTimeService().getCurrentJavaDateTime();
         accountTrxn = SavingsTrxnDetailEntity.savingsWithdrawal(newAccountPayment, oldSavingsAccntTrxn.getCustomer(), newAmount, newAmount, loggedInUser,
-                oldSavingsAccntTrxn.getDueDate(), oldSavingsAccntTrxn.getActionDate(), transactionCreatedDate);
+                oldSavingsAccntTrxn.getDueDate(), adjustmentDate.toDateMidnight().toDate(), transactionCreatedDate);
 
         this.savingsPerformance.setTotalWithdrawals(this.savingsPerformance.getTotalWithdrawals().add(accountTrxn.getWithdrawlAmount()));
         newTrxns.add(accountTrxn);
@@ -1105,16 +1112,15 @@ public class SavingsBO extends AccountBO {
     }
 
     private Set<AccountTrxnEntity> createDepositTrxnsForMandatoryAccountsAfterAdjust(
-            final AccountPaymentEntity newAccountPayment, final AccountPaymentEntity lastAccountPayment, Money newAmount, PersonnelBO createdBy) {
+            final AccountPaymentEntity newAccountPayment, final AccountPaymentEntity lastAccountPayment, Money newAmount, LocalDate adjustmentDate, PersonnelBO createdBy) {
 
         Set<AccountTrxnEntity> newTrxns = new LinkedHashSet<AccountTrxnEntity>();
         SavingsTrxnDetailEntity accountTrxn = null;
         CustomerBO customer = null;
-        Date oldTrxnDate = null;
+        Date trxnDate = adjustmentDate.toDateMidnight().toDate();
 
         for (AccountTrxnEntity oldAccntTrxn : lastAccountPayment.getAccountTrxns()) {
             customer = oldAccntTrxn.getCustomer();
-            oldTrxnDate = oldAccntTrxn.getActionDate();
             break;
         }
 
@@ -1133,7 +1139,7 @@ public class SavingsBO extends AccountBO {
                 Short installmentId = accountAction.getInstallmentId();
                 Date dueDate = accountAction.getActionDate();
                 Date transactionCreatedDate = new DateTimeService().getCurrentJavaDateTime();
-                accountTrxn = SavingsTrxnDetailEntity.savingsDeposit(newAccountPayment, customer, this.savingsBalance, accountAction.getDeposit(), createdBy, dueDate, oldTrxnDate, transactionCreatedDate, installmentId);
+                accountTrxn = SavingsTrxnDetailEntity.savingsDeposit(newAccountPayment, customer, this.savingsBalance, accountAction.getDeposit(), createdBy, dueDate, trxnDate, transactionCreatedDate, installmentId);
 
                 newAmount = newAmount.subtract(accountAction.getDeposit());
 
@@ -1146,7 +1152,7 @@ public class SavingsBO extends AccountBO {
                 Short installmentId = accountAction.getInstallmentId();
                 Date dueDate = accountAction.getActionDate();
                 Date transactionCreatedDate = new DateTimeService().getCurrentJavaDateTime();
-                accountTrxn = SavingsTrxnDetailEntity.savingsDeposit(newAccountPayment, customer, this.savingsBalance, newAmount, createdBy, dueDate, oldTrxnDate, transactionCreatedDate, installmentId);
+                accountTrxn = SavingsTrxnDetailEntity.savingsDeposit(newAccountPayment, customer, this.savingsBalance, newAmount, createdBy, dueDate, trxnDate, transactionCreatedDate, installmentId);
 
                 newAmount = newAmount.subtract(newAmount);
                 accountAction.setDepositPaid(accountAction.getDepositPaid().add(accountTrxn.getDepositAmount()));
@@ -1163,7 +1169,7 @@ public class SavingsBO extends AccountBO {
             Short installmentId = null;
             Date dueDate = null;
             Date transactionCreatedDate = new DateTimeService().getCurrentJavaDateTime();
-            accountTrxn = SavingsTrxnDetailEntity.savingsDeposit(newAccountPayment, customer, this.savingsBalance, newAmount, createdBy, dueDate, oldTrxnDate, transactionCreatedDate, installmentId);
+            accountTrxn = SavingsTrxnDetailEntity.savingsDeposit(newAccountPayment, customer, this.savingsBalance, newAmount, createdBy, dueDate, trxnDate, transactionCreatedDate, installmentId);
 
             newAmount = newAmount.subtract(newAmount);
             getSavingsPerformance().setTotalDeposits(getSavingsPerformance().getTotalDeposits().add(accountTrxn.getDepositAmount()));
@@ -1179,16 +1185,15 @@ public class SavingsBO extends AccountBO {
      * As a result there is no need to make a distinction between the amount deposited (be it less or greater than recommended amount)
      */
     private Set<AccountTrxnEntity> createDepositTrxnsForVolAccountsAfterAdjust(final AccountPaymentEntity newAccountPayment,
-            final AccountPaymentEntity lastAccountPayment, Money newAmount, PersonnelBO loggedInUser) {
+            final AccountPaymentEntity lastAccountPayment, Money newAmount, LocalDate adjustmentDate, PersonnelBO loggedInUser) {
 
         Set<AccountTrxnEntity> newTrxns = new LinkedHashSet<AccountTrxnEntity>();
         SavingsTrxnDetailEntity accountTrxn = null;
         CustomerBO customer = null;
-        Date oldTrxnDate = null;
+        Date trxnDate = adjustmentDate.toDateMidnight().toDate();
 
         for (AccountTrxnEntity oldAccntTrxn : lastAccountPayment.getAccountTrxns()) {
             customer = oldAccntTrxn.getCustomer();
-            oldTrxnDate = oldAccntTrxn.getActionDate();
             break;
         }
 
@@ -1212,7 +1217,7 @@ public class SavingsBO extends AccountBO {
 
                         this.savingsBalance = this.savingsBalance.add(accountAction.getDeposit());
 
-                        accountTrxn = SavingsTrxnDetailEntity.savingsDeposit(newAccountPayment, customer, this.savingsBalance, accountAction.getDeposit(), loggedInUser, dueDate, oldTrxnDate, transactionCreatedDate, installmentId);
+                        accountTrxn = SavingsTrxnDetailEntity.savingsDeposit(newAccountPayment, customer, this.savingsBalance, accountAction.getDeposit(), loggedInUser, dueDate, trxnDate, transactionCreatedDate, installmentId);
 
                         newAmount = newAmount.subtract(accountAction.getDeposit());
                         accountAction.setDepositPaid(accountAction.getDepositPaid().add(accountTrxn.getDepositAmount()));
@@ -1223,7 +1228,7 @@ public class SavingsBO extends AccountBO {
                         // not zero and amount paid is less that recommended amount
                         this.savingsBalance = this.savingsBalance.add(newAmount);
 
-                        accountTrxn = SavingsTrxnDetailEntity.savingsDeposit(newAccountPayment, customer, this.savingsBalance, newAmount, loggedInUser, dueDate, oldTrxnDate, transactionCreatedDate, installmentId);
+                        accountTrxn = SavingsTrxnDetailEntity.savingsDeposit(newAccountPayment, customer, this.savingsBalance, newAmount, loggedInUser, dueDate, trxnDate, transactionCreatedDate, installmentId);
 
                         newAmount = newAmount.subtract(newAmount);
                         accountAction.setDepositPaid(accountAction.getDepositPaid().add(accountTrxn.getDepositAmount()));
@@ -1244,7 +1249,7 @@ public class SavingsBO extends AccountBO {
         if (newAmount.isGreaterThanZero()) {
             this.savingsBalance = this.savingsBalance.add(newAmount);
 
-            accountTrxn = SavingsTrxnDetailEntity.savingsDeposit(newAccountPayment, customer, this.savingsBalance, newAmount, loggedInUser, dueDate, oldTrxnDate, transactionCreatedDate, installmentId);
+            accountTrxn = SavingsTrxnDetailEntity.savingsDeposit(newAccountPayment, customer, this.savingsBalance, newAmount, loggedInUser, dueDate, trxnDate, transactionCreatedDate, installmentId);
 
             this.savingsPerformance.setTotalDeposits(this.savingsPerformance.getTotalDeposits().add(accountTrxn.getDepositAmount()));
             newTrxns.add(accountTrxn);

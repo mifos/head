@@ -114,6 +114,11 @@ explanation of the license and how it is applied.
                 </c:if>
 				</td>
                 </tr>
+                <tr>
+                    <td class="fontnormal"><mifos:mifoslabel
+                        mandatory="yes" isColonRequired="Yes" name="accounts.date_of_trxn" />
+                    <date:datetag renderstyle="simple" property="trxnDate" /></td>
+                </tr>
             </table>
             <br>
            

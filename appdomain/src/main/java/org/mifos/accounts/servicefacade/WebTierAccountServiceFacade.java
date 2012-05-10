@@ -23,7 +23,6 @@ package org.mifos.accounts.servicefacade;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Stack;
 
 import org.joda.time.LocalDate;
@@ -53,7 +52,6 @@ import org.mifos.application.servicefacade.ClientServiceFacade;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.application.util.helpers.TrxnTypes;
-import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.exceptions.CustomerException;
@@ -64,9 +62,9 @@ import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AdjustedPaymentDto;
 import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.dto.domain.CustomerDto;
-import org.mifos.dto.domain.SavingsAccountDetailDto;
+import org.mifos.dto.domain.PaymentDto;
+import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDetailDto;
-import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.dto.screen.AccountTypeCustomerLevelDto;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -445,34 +443,50 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                 monthClosingServiceFacade.validateTransactionDate(accountPaymentEntity.getPaymentDate());
             }
 
+            PaymentDto otherTransferPayment = accountPaymentEntity.getOtherTransferPaymentDto();
+
+            transactionHelper.flushAndClearSession(); //flush to avoid proxy casting problems
             transactionHelper.startTransaction();
-            
+
+            Integer newSavingsPaymentId = null;
+            if (otherTransferPayment != null) {
+                SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(otherTransferPayment.getAccountId().longValue(),
+                        (adjustedPaymentDto == null) ? 0 : Double.valueOf(adjustedPaymentDto.getAmount()), adjustmentNote, otherTransferPayment.getPaymentId(),
+                                (adjustedPaymentDto == null) ? otherTransferPayment.getPaymentDate() : new LocalDate(adjustedPaymentDto.getPaymentDate()));
+                newSavingsPaymentId = this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
+            }
+
+            //reload after flush & clear
+            accountBO = accountBusinessService.findBySystemId(globalAccountNum);
+            accountBO.setUserContext(getUserContext());
+
             AccountPaymentEntity adjustedPayment = null;
             Integer adjustedId;
             Stack<PaymentData> paymentsToBeReapplied = new Stack<PaymentData>();
-            
+
             do {
                 adjustedPayment = accountBO.getLastPmntToBeAdjusted();
-                              
+
                 if (adjustedPayment == null) {
                     break;
                 }
+
                 adjustedId = adjustedPayment.getPaymentId();
                 if (!accountPaymentEntity.getPaymentId().equals(adjustedId)) {
-                    
                     PersonnelBO paymentCreator = (adjustedPayment.getCreatedByUser() == null) ? personnelBO : adjustedPayment.getCreatedByUser();
-                    
+
                     PaymentData paymentData = accountBO.createPaymentData(adjustedPayment.getAmount(), adjustedPayment.getPaymentDate(), 
                             adjustedPayment.getReceiptNumber(), adjustedPayment.getReceiptDate(), adjustedPayment.getPaymentType().getId(), 
-                            paymentCreator);             
+                            paymentCreator);
+
                     paymentsToBeReapplied.push(paymentData);
                 }
-                
+
                 accountBO.adjustLastPayment(adjustmentNote, personnelBO);
                 legacyAccountDao.createOrUpdate(accountBO);
                 transactionHelper.flushSession();
             } while (!accountPaymentEntity.getPaymentId().equals(adjustedId));
-          
+
             if (adjustedPaymentDto != null) {
                 //reapply adjusted payment
                 PersonnelBO paymentCreator = (accountPaymentEntity.getCreatedByUser() == null) ? personnelBO : accountPaymentEntity.getCreatedByUser();
@@ -481,19 +495,24 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                 PaymentData paymentData = accountBO.createPaymentData(amount, adjustedPaymentDto.getPaymentDate(), 
                         accountPaymentEntity.getReceiptNumber(), accountPaymentEntity.getReceiptDate(), adjustedPaymentDto.getPaymentType(), 
                         paymentCreator);
+
+                //new adjusted savings payment must be tied to this new payment
+                if (newSavingsPaymentId != null) {
+                    AccountPaymentEntity newSvngPayment = legacyAccountDao.findPaymentById(newSavingsPaymentId);
+                    paymentData.setOtherTransferPayment(newSvngPayment);
+                }
                 
                 accountBO.applyPayment(paymentData);
                 legacyAccountDao.createOrUpdate(accountBO);
-                
             }
-            
+
             while (!paymentsToBeReapplied.isEmpty()) {
                 PaymentData paymentData = paymentsToBeReapplied.pop();
                 accountBO.applyPayment(paymentData);
                 legacyAccountDao.createOrUpdate(accountBO);
                 transactionHelper.flushSession();
             }
-            
+
             transactionHelper.commitTransaction();
         } catch (ServiceException e) {
             transactionHelper.rollbackTransaction();
@@ -504,39 +523,17 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         } catch (PersistenceException e) {
             transactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
+        } catch (RuntimeException e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            transactionHelper.closeSession();
         }
     }
 
     @Override
     public void makePaymentFromSavingsAcc(AccountPaymentParametersDto accountPaymentParametersDto,
             String savingsAccGlobalNumber) {
-        SavingsAccountDetailDto savingsAcc = savingsServiceFacade.retrieveSavingsAccountDetails(savingsAccGlobalNumber);
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Long savingsId = savingsAcc.getAccountId().longValue();
-        Long customerId = accountPaymentParametersDto.getCustomer().getCustomerId().longValue();
-        LocalDate dateOfWithdrawal = accountPaymentParametersDto.getPaymentDate();
-        Double amount = accountPaymentParametersDto.getPaymentAmount().doubleValue();
-        Integer modeOfPayment = accountPaymentParametersDto.getPaymentType().getValue().intValue();
-        String receiptId = accountPaymentParametersDto.getReceiptId();
-        LocalDate dateOfReceipt = accountPaymentParametersDto.getReceiptDate();
-        Locale preferredLocale = Localization.getInstance().getLocaleById(user.getPreferredLocaleId());
-
-        SavingsWithdrawalDto savingsWithdrawalDto = new SavingsWithdrawalDto(savingsId, customerId, dateOfWithdrawal, amount,
-                modeOfPayment, receiptId, dateOfReceipt, preferredLocale);
-        try {
-            this.transactionHelper.startTransaction();
-
-            this.savingsServiceFacade.withdraw(savingsWithdrawalDto);
-            this.accountService.makePayment(accountPaymentParametersDto);
-
-            this.transactionHelper.commitTransaction();
-        } catch (BusinessRuleException ex) {
-            this.transactionHelper.rollbackTransaction();
-            throw ex;
-        } catch (Exception ex) {
-            this.transactionHelper.rollbackTransaction();
-            throw new MifosRuntimeException(ex);
-        }
+        this.accountService.makePaymentFromSavings(accountPaymentParametersDto, savingsAccGlobalNumber);
     }
 }

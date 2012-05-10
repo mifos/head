@@ -116,7 +116,7 @@ public class SavingsAccountRESTController {
     	Long savingsId = Long.valueOf(accountId.toString());
 
         SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, amount.doubleValue(), note,
-                (paymentId == null) ? savingsBO.getLastPmnt().getPaymentId() : paymentId);
+                (paymentId == null) ? savingsBO.getLastPmnt().getPaymentId() : paymentId, new LocalDate(savingsBO.getLastPmnt().getPaymentDate()));
         Money balanceBeforePayment = savingsBO.getSavingsBalance();
 
     	this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
