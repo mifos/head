@@ -30,6 +30,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.atLeastOnce;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -67,6 +68,7 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.internal.verification.AtLeast;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -193,20 +195,23 @@ public class WebTierAccountServiceFacadeTest {
         new DateTimeService().setCurrentDateTime(TestUtils.getDateTime(11, 10, 2010));
         Short recordOfficeId = new Short("1");
         Short recordLoanOfficer = new Short("1");
+        Integer paymentId = 1;
         AccountPaymentEntity lastPmntToBeAdjusted = mock(AccountPaymentEntity.class);
         when(loanBO.getLastPmntToBeAdjusted()).thenReturn(lastPmntToBeAdjusted);
         when(loanBO.getOfficeId()).thenReturn(recordOfficeId);
         when(loanBO.getPersonnel()).thenReturn(loanOfficer);
         when(loanBO.getUserContext()).thenReturn(userContext);
+        when(loanBO.findPaymentById(paymentId)).thenReturn(lastPmntToBeAdjusted);
         when(loanOfficer.getPersonnelId()).thenReturn(recordOfficeId);
         when(lastPmntToBeAdjusted.getPaymentDate()).thenReturn(paymentDate);
+        when(lastPmntToBeAdjusted.getPaymentId()).thenReturn(paymentId);
         when(accountBusinessService.findBySystemId(globalAccountNum)).thenReturn(loanBO);
         when(personnelPersistence.findPersonnelById(personnelId)).thenReturn(personnelBO);
         accountServiceFacade.applyAdjustment(globalAccountNum, adjustmentNote, personnelId);
-        verify(accountBusinessService).findBySystemId(globalAccountNum);
+        verify(accountBusinessService, atLeastOnce()).findBySystemId(globalAccountNum);
         verify(personnelPersistence).findPersonnelById(personnelId);
         verify(loanBO).adjustLastPayment(adjustmentNote, personnelBO);
-        verify(loanBO).setUserContext(userContext);
+        verify(loanBO, atLeastOnce()).setUserContext(userContext);
         verify(legacyAccountDao).createOrUpdate(loanBO);
         verify(transactionHelper).startTransaction();
         verify(transactionHelper).commitTransaction();
@@ -245,7 +250,7 @@ public class WebTierAccountServiceFacadeTest {
             assertThat((ServiceException) e.getCause(), CoreMatchers.any(ServiceException.class));
             assertThat(((ServiceException) e.getCause()).getKey(), is(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED));
         }
-        verify(accountBusinessService).findBySystemId(globalAccountNum);
+        verify(accountBusinessService, atLeastOnce()).findBySystemId(globalAccountNum);
         verify(lastPmntToBeAdjusted).getPaymentDate();
         verify(accountBusinessService).checkPermissionForAdjustmentOnBackDatedPayments(paymentDate, userContext, recordOfficeId, recordLoanOfficer);
 

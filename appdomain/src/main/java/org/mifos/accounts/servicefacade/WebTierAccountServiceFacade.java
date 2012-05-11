@@ -43,6 +43,7 @@ import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.penalties.persistence.PenaltyDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -386,28 +387,11 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     @Override
     public void applyAdjustment(String globalAccountNum, String adjustmentNote, Short loggedInUser) {
         try {
-            AccountBO accountBO = accountBusinessService.findBySystemId(globalAccountNum);
-            accountBO.setUserContext(getUserContext());
-            checkPermissionForAdjustment(accountBO);
-            PersonnelBO personnelBO = personnelPersistence.findPersonnelById(loggedInUser);
-
-            AccountPaymentEntity accountPaymentEntity = accountBO.getLastPmntToBeAdjusted();
-            if (accountPaymentEntity != null) {
-                monthClosingServiceFacade.validateTransactionDate(accountPaymentEntity.getPaymentDate());
-            }
-
-            transactionHelper.startTransaction();
-            accountBO.adjustLastPayment(adjustmentNote, personnelBO);
-            legacyAccountDao.createOrUpdate(accountBO);
-            transactionHelper.commitTransaction();
+            AccountBO account = accountBusinessService.findBySystemId(globalAccountNum);
+            AccountPaymentEntity lastPayment = account.getLastPmntToBeAdjusted();
+            applyHistoricalAdjustment(globalAccountNum, (lastPayment == null) ? null : lastPayment.getPaymentId(),
+                    adjustmentNote, loggedInUser, null);
         } catch (ServiceException e) {
-            transactionHelper.rollbackTransaction();
-            throw new MifosRuntimeException(e);
-        } catch (AccountException e) {
-            transactionHelper.rollbackTransaction();
-            throw new MifosRuntimeException(e);
-        } catch (PersistenceException e) {
-            transactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         }
     }
@@ -439,9 +423,10 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             PersonnelBO personnelBO = personnelPersistence.findPersonnelById(personnelId);
 
             AccountPaymentEntity accountPaymentEntity = accountBO.findPaymentById(paymentId);
-            if (accountPaymentEntity != null) {
-                monthClosingServiceFacade.validateTransactionDate(accountPaymentEntity.getPaymentDate());
+            if (accountPaymentEntity == null) {
+                throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
             }
+            monthClosingServiceFacade.validateTransactionDate(accountPaymentEntity.getPaymentDate());
 
             PaymentDto otherTransferPayment = accountPaymentEntity.getOtherTransferPaymentDto();
 
