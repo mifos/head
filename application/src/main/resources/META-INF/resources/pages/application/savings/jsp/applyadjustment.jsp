@@ -82,7 +82,6 @@ explanation of the license and how it is applied.
 			<table width="95%" border="0" cellspacing="0" cellpadding="2">
               <tr>
                 <td width="34%" class="fontnormal">
-                <mifos:mifoslabel name="savings.Last" bundle="SavingsUIResources" />
                 <c:out value="${accountActionValue.name}"/>
                 <mifos:mifoslabel name="savings.made" bundle="SavingsUIResources" isColonRequired="yes" />
                   <fmt:formatNumber value="${adjustmentAmount}"/></td>
