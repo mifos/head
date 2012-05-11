@@ -54,9 +54,9 @@ public class PaymentData {
      */
     private List<AccountPaymentData> accountPayments;
 
-    public static PaymentData createPaymentData(Money totalAmount, PersonnelBO personnel, Short paymentId,
+    public static PaymentData createPaymentData(Money totalAmount, PersonnelBO personnel, Short paymentTypeId,
             Date transactionDate) {
-        return new PaymentData(totalAmount, personnel, paymentId, transactionDate);
+        return new PaymentData(totalAmount, personnel, paymentTypeId, transactionDate);
     }
 
     /**
@@ -68,11 +68,11 @@ public class PaymentData {
                 template.getTransactionDate());
     }
 
-    public PaymentData(Money totalAmount, PersonnelBO personnel, Short paymentId, Date transactionDate) {
+    public PaymentData(Money totalAmount, PersonnelBO personnel, Short paymentTypeId, Date transactionDate) {
         accountPayments = new ArrayList<AccountPaymentData>();
         this.totalAmount = totalAmount;
         this.personnel = personnel;
-        this.paymentTypeId = paymentId;
+        this.paymentTypeId = paymentTypeId;
         this.transactionDate = transactionDate;
     }
 
