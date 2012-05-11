@@ -235,4 +235,11 @@ public interface AccountService {
             String phoneNumber, BigDecimal withdrawAmount) throws Exception;
 
     OverpaymentDto getOverpayment(String overpaymentId) throws Exception;
+
+    /**
+     * Makes a payment from a savings account. The amount paid is withdrawn from the savings account.
+     * @param accountPaymentParametersDto payment parameters
+     * @param savingsGlobalAccNum savings account number
+     */
+    public void makePaymentFromSavings(AccountPaymentParametersDto accountPaymentParametersDto, String savingsGlobalAccNum);
 }

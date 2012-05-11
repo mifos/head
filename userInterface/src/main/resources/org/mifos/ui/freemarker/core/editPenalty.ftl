@@ -18,17 +18,6 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-<script>
-function fnGracePeriod() {
-    if(document.getElementsByName("periodTypeId")[0].selectedIndex==0 ||
-        document.getElementsByName("periodTypeId")[0].value==3) {
-        document.getElementsByName("duration")[0].value="";
-        document.getElementsByName("duration")[0].disabled=true;
-    }else {
-        document.getElementsByName("duration")[0].disabled=false;
-    }
-}
-</script>
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
 <!--  Main Content Begins-->
@@ -167,6 +156,16 @@ function fnGracePeriod() {
 </form>
 </div>
 <script>
+function fnGracePeriod() {
+    if(document.getElementsByName("periodTypeId")[0].selectedIndex==0 ||
+        document.getElementsByName("periodTypeId")[0].value==3) {
+        document.getElementsByName("duration")[0].value="";
+        document.getElementsByName("duration")[0].disabled=true;
+    }else {
+        document.getElementsByName("duration")[0].disabled=false;
+    }
+}
+
 fnGracePeriod();
 </script>
 <!--Main Content Ends-->

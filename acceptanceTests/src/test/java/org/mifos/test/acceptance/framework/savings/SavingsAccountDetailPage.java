@@ -107,7 +107,9 @@ public class SavingsAccountDetailPage extends AbstractPage {
     public SavingsApplyAdjustmentPage navigateToApplyAdjustmentPage() {
         selenium.click("savingsaccountdetail.link.applyAdjustment");
         waitForPageToLoad();
-        return new SavingsApplyAdjustmentPage(selenium);
+        SavingsAdjustmentListPage adjustmentListPage = new SavingsAdjustmentListPage(selenium);
+        adjustmentListPage.verifyPage();
+        return adjustmentListPage.navigateToFirstAdjustment();
     }
 
     public AttachSurveyPage navigateToAttachSurveyPage() {

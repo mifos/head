@@ -50,7 +50,9 @@ import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
@@ -63,7 +65,10 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.OverpaymentDto;
+import org.mifos.dto.domain.PaymentDto;
 import org.mifos.dto.domain.PaymentTypeDto;
+import org.mifos.dto.domain.SavingsAccountDetailDto;
+import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
@@ -90,6 +95,7 @@ public class StandardAccountService implements AccountService {
     private LoanBusinessService loanBusinessService;
     private HibernateTransactionHelper transactionHelper;
     private MonthClosingServiceFacade monthClosingServiceFacade;
+    private SavingsServiceFacade savingsServiceFacade;
 
     private LegacyMasterDao legacyMasterDao;
 
@@ -98,7 +104,7 @@ public class StandardAccountService implements AccountService {
                                   LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence, PersonnelDao personnelDao,
                                   CustomerDao customerDao, LoanBusinessService loanBusinessService,
                                   HibernateTransactionHelper transactionHelper, LegacyMasterDao legacyMasterDao,
-                                  MonthClosingServiceFacade monthClosingServiceFacade) {
+                                  MonthClosingServiceFacade monthClosingServiceFacade, SavingsServiceFacade savingsServiceFacade) {
         this.legacyAccountDao = legacyAccountDao;
         this.legacyLoanDao = legacyLoanDao;
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
@@ -108,6 +114,7 @@ public class StandardAccountService implements AccountService {
         this.transactionHelper = transactionHelper;
         this.legacyMasterDao = legacyMasterDao;
         this.monthClosingServiceFacade = monthClosingServiceFacade;
+        this.savingsServiceFacade = savingsServiceFacade;
     }
 
     @Override
@@ -122,6 +129,42 @@ public class StandardAccountService implements AccountService {
         } catch (AccountException e) {
             transactionHelper.rollbackTransaction();
             throw new BusinessRuleException(e.getKey(), e);
+        } finally {
+            transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public void makePaymentFromSavings(AccountPaymentParametersDto accountPaymentParametersDto, String savingsGlobalAccNum) {
+        transactionHelper.flushAndClearSession();
+        SavingsAccountDetailDto savingsAcc = savingsServiceFacade.retrieveSavingsAccountDetails(savingsGlobalAccNum);
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Long savingsId = savingsAcc.getAccountId().longValue();
+        Long customerId = accountPaymentParametersDto.getCustomer().getCustomerId().longValue();
+        LocalDate dateOfWithdrawal = accountPaymentParametersDto.getPaymentDate();
+        Double amount = accountPaymentParametersDto.getPaymentAmount().doubleValue();
+        Integer modeOfPayment = accountPaymentParametersDto.getPaymentType().getValue().intValue();
+        String receiptId = accountPaymentParametersDto.getReceiptId();
+        LocalDate dateOfReceipt = accountPaymentParametersDto.getReceiptDate();
+        Locale preferredLocale = Localization.getInstance().getLocaleById(user.getPreferredLocaleId());
+
+        SavingsWithdrawalDto savingsWithdrawalDto = new SavingsWithdrawalDto(savingsId, customerId, dateOfWithdrawal, amount,
+                modeOfPayment, receiptId, dateOfReceipt, preferredLocale);
+        try {
+            transactionHelper.startTransaction();
+            PaymentDto withdrawal = this.savingsServiceFacade.withdraw(savingsWithdrawalDto, true);
+            makePaymentNoCommit(accountPaymentParametersDto, withdrawal.getPaymentId());
+            transactionHelper.commitTransaction();
+        } catch (AccountException e) {
+            transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } catch (BusinessRuleException e) {
+            transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getMessageKey(), e);
+        } catch (Exception e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
         }
     }
 
@@ -140,6 +183,11 @@ public class StandardAccountService implements AccountService {
     }
 
     public void makePaymentNoCommit(AccountPaymentParametersDto accountPaymentParametersDto)
+            throws PersistenceException, AccountException {
+        makePaymentNoCommit(accountPaymentParametersDto, null);
+    }
+
+    public void makePaymentNoCommit(AccountPaymentParametersDto accountPaymentParametersDto, Integer savingsPaymentId)
             throws PersistenceException, AccountException {
     	
         final int accountId = accountPaymentParametersDto.getAccountId();
@@ -179,6 +227,11 @@ public class StandardAccountService implements AccountService {
         PaymentData paymentData = account.createPaymentData(amount, accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate(),
                 accountPaymentParametersDto.getReceiptId(), receiptDate, accountPaymentParametersDto.getPaymentType()
                         .getValue(), loggedInUser);
+        if (savingsPaymentId != null) {
+            AccountPaymentEntity withdrawal = legacyAccountDao.findPaymentById(savingsPaymentId);
+            paymentData.setOtherTransferPayment(withdrawal);
+        }
+
         if (accountPaymentParametersDto.getCustomer() != null) {
             paymentData.setCustomer(customerDao.findCustomerById(
                 accountPaymentParametersDto.getCustomer().getCustomerId()));
@@ -554,5 +607,4 @@ public class StandardAccountService implements AccountService {
         }
         return withdrawAmount;
     }
-
 }

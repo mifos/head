@@ -28,11 +28,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.dto.domain.PaymentDto;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
 
@@ -53,6 +55,7 @@ public class AccountPaymentEntity extends AbstractEntity {
     private Money amount;
     private PersonnelBO createdByUser;
     private String comment;
+    private AccountPaymentEntity otherTransferPayment;
 
     private Set<AccountTrxnEntity> accountTrxns = new LinkedHashSet<AccountTrxnEntity>();
 
@@ -81,6 +84,7 @@ public class AccountPaymentEntity extends AbstractEntity {
         this.bankName = null;
         this.voucherNumber = null;
         this.checkNumber = null;
+        this.otherTransferPayment = null;
     }
 
     public Integer getPaymentId() {
@@ -145,6 +149,14 @@ public class AccountPaymentEntity extends AbstractEntity {
 
     public void setCreatedByUser(final PersonnelBO createdByUser) {
         this.createdByUser = createdByUser;
+    }
+
+    public AccountPaymentEntity getOtherTransferPayment() {
+        return otherTransferPayment;
+    }
+
+    public void setOtherTransferPayment(AccountPaymentEntity otherTransferPayment) {
+        this.otherTransferPayment = otherTransferPayment;
     }
 
     /**
@@ -230,5 +242,17 @@ public class AccountPaymentEntity extends AbstractEntity {
             }
         }
         return savingsInterestPosting;
+    }
+
+    public PaymentDto getOtherTransferPaymentDto() {
+        return (otherTransferPayment == null) ? null :
+            new PaymentDto(otherTransferPayment.getPaymentId(), otherTransferPayment.getAccount().getAccountId(),
+                    otherTransferPayment.getAmount().getAmount(), new LocalDate(otherTransferPayment.getPaymentDate()),
+                    otherTransferPayment.getPaymentType().getId(), otherTransferPayment.isSavingsDepositOrWithdrawal());
+    }
+
+    public PaymentDto toDto() {
+        return new PaymentDto(paymentId, account.getAccountId(), amount.getAmount(), new LocalDate(paymentDate),
+                paymentType.getId(), isSavingsDepositOrWithdrawal());
     }
 }

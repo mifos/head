@@ -40,7 +40,7 @@
         <div>[@spring.message "manageProducts.defineNewCategory.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminwithoutsubmittinginformation" /]</div>
         <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired." /] </div>
         <p>&nbsp;&nbsp;</p>
-        [@form.showAllErrors "formBean.*"/]
+       	[@form.showAllErrors "formBean.*"/]
         <p class="fontBold margin10bottom">[@spring.message "manageProducts.defineNewCategory.categoryDetails" /]</p>
         <div class="prepend-3  span-21 last">
             <div class="span-20 ">
@@ -69,7 +69,6 @@
                                 [/#list]
                             [/#if]
                         </select>
-
                 </span>
             </div>
             <p>&nbsp;&nbsp;</p>

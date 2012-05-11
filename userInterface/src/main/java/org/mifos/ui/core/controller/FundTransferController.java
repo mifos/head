@@ -21,6 +21,7 @@ package org.mifos.ui.core.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -40,6 +41,9 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class FundTransferController {
+
+    private static final Short ACCOUNT_ACTIVE = 16;
+    private static final Short ACCOUNT_INACTIVE = 18;
 
     private SavingsServiceFacade savingsServiceFacade;
     private ClientServiceFacade clientServiceFacade;
@@ -73,10 +77,11 @@ public class FundTransferController {
         if (savingsAccs == null) {
             savingsAccs = new ArrayList<SavingsDetailDto>();
         } else {
-            for (SavingsDetailDto savingsAcc : savingsAccs) {
-                if (savingsAcc.getGlobalAccountNum().equals(sourceAccountGlobalNum)) {
-                    savingsAccs.remove(savingsAcc);
-                    break;
+            for (Iterator<SavingsDetailDto> iter = savingsAccs.iterator(); iter.hasNext();) {
+                SavingsDetailDto savingsAccDetail = iter.next();
+                if (!isAccountStateOkForTransfer(savingsAccDetail.getAccountStateId())
+                        || savingsAccDetail.getGlobalAccountNum().equals(sourceAccountGlobalNum)) {
+                    iter.remove();
                 }
             }
         }
@@ -125,5 +130,9 @@ public class FundTransferController {
 
     public SavingsDetailDto retrieveSavingsAccDetails(String savingsGlobalNum) {
         return this.savingsServiceFacade.retrieveSavingsDetail(savingsGlobalNum);
+    }
+
+    private boolean isAccountStateOkForTransfer(Short accountStateId) {
+        return accountStateId.equals(ACCOUNT_ACTIVE) || accountStateId.equals(ACCOUNT_INACTIVE);
     }
 }

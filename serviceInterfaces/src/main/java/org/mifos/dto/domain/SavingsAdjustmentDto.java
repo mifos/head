@@ -20,16 +20,23 @@
 
 package org.mifos.dto.domain;
 
+import org.joda.time.LocalDate;
+
 public class SavingsAdjustmentDto {
 
     private final Long savingsId;
     private final Double adjustedAmount;
     private final String note;
+    private final Integer paymentId;
+    private LocalDate trxnDate;
 
-    public SavingsAdjustmentDto(Long savingsId, Double adjustedAmount, String note) {
+    public SavingsAdjustmentDto(Long savingsId, Double adjustedAmount, String note, Integer paymentId,
+            LocalDate trxnDate) {
         this.savingsId = savingsId;
         this.adjustedAmount = adjustedAmount;
         this.note = note;
+        this.paymentId = paymentId;
+        this.trxnDate = trxnDate;
     }
 
     public Long getSavingsId() {
@@ -42,5 +49,17 @@ public class SavingsAdjustmentDto {
 
     public String getNote() {
         return this.note;
+    }
+
+    public Integer getPaymentId() {
+        return paymentId;
+    }
+
+    public LocalDate getTrxnDate() {
+        return trxnDate;
+    }
+
+    public void setTrxnDate(LocalDate trxnDate) {
+        this.trxnDate = trxnDate;
     }
 }

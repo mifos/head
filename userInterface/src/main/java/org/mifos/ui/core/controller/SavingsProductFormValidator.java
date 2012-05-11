@@ -58,6 +58,9 @@ public class SavingsProductFormValidator implements Validator {
         if (formBean.getGeneralDetails().getName().trim().isEmpty()) {
             errors.reject("NotEmpty.generalDetails.name");
         }
+        if (formBean.getGeneralDetails().getDescription().length() > 200) {
+        	errors.reject("Size.generalDetails.description");
+        }
 
         if (formBean.getGeneralDetails().getShortName().trim().isEmpty()) {
             errors.reject("NotEmpty.generalDetails.shortName");

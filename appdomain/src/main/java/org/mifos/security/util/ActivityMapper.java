@@ -737,6 +737,7 @@ public class ActivityMapper {
         security.allow("preview", SecurityConstants.VIEW);
         security.allow("previous", SecurityConstants.VIEW);
         security.allow("adjustLastUserAction", SecurityConstants.VIEW);
+        security.allow("list", SecurityConstants.VIEW);
         return security;
     }
 

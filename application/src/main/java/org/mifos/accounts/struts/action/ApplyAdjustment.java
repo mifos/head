@@ -22,6 +22,7 @@ package org.mifos.accounts.struts.action;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -113,9 +114,26 @@ public class ApplyAdjustment extends BaseAction {
             
             appAdjustActionForm.setPreviousPaymentDate(previousPaymentDate);
             appAdjustActionForm.setNextPaymentDate(nextPaymentDate);
-            
+
             SessionUtils.setAttribute(Constants.ADJUSTED_AMOUNT, payment.getAmount().getAmount(), request);
+
+            Short transferPaymentTypeId = legacyAcceptedPaymentTypeDao.getSavingsTransferId();
+            if (payment.getPaymentType().getId().equals(transferPaymentTypeId)) {
+                List<ListItem<Short>> paymentTypeList = this.accountServiceFacade.constructPaymentTypeListForLoanRepayment(userContext.getLocaleId());
+                for (Iterator<ListItem<Short>> it = paymentTypeList.iterator(); it.hasNext(); ) {
+                    ListItem<Short> listItem = it.next();
+                    if (!listItem.getId().equals(transferPaymentTypeId)) {
+                        it.remove();
+                    }
+                }
+                SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, paymentTypeList, request);
+            } else {
+                SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
+                       this.accountServiceFacade.constructPaymentTypeListForLoanRepayment(userContext.getLocaleId()), request);
+            }
         } else {
+            SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
+                    this.accountServiceFacade.constructPaymentTypeListForLoanRepayment(userContext.getLocaleId()), request);
             payment = accnt.getLastPmntToBeAdjusted();
             appAdjustActionForm.setPaymentId(null);
             SessionUtils.setAttribute(Constants.ADJUSTED_AMOUNT, accnt.getLastPmntAmntToBeAdjusted(), request);

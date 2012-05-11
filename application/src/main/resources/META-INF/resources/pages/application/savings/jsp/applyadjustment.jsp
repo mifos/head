@@ -43,6 +43,7 @@ explanation of the license and how it is applied.
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountAction')}" var="accountActionValue" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isLastPaymentValid')}" var="isLastPaymentValid" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientName')}" var="clientName" />
+    <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'adjustmentAmount')}" var="adjustmentAmount" />
 
 	<script language="javascript">
 		function funCancel(){
@@ -81,10 +82,9 @@ explanation of the license and how it is applied.
 			<table width="95%" border="0" cellspacing="0" cellpadding="2">
               <tr>
                 <td width="34%" class="fontnormal">
-                <mifos:mifoslabel name="savings.Last" bundle="SavingsUIResources" />
                 <c:out value="${accountActionValue.name}"/>
                 <mifos:mifoslabel name="savings.made" bundle="SavingsUIResources" isColonRequired="yes" />
-                  <fmt:formatNumber value="${BusinessKey.lastPmnt.amount.amount}"/></td>
+                  <fmt:formatNumber value="${adjustmentAmount}"/></td>
                 </tr>
               <tr>
                 <td class="fontnormal">
@@ -112,6 +112,11 @@ explanation of the license and how it is applied.
                   </c:choose>
                 </c:if>
 				</td>
+                </tr>
+                <tr>
+                    <td class="fontnormal"><mifos:mifoslabel
+                        mandatory="yes" isColonRequired="Yes" name="accounts.date_of_trxn" />
+                    <date:datetag renderstyle="simple" property="trxnDate" /></td>
                 </tr>
             </table>
             <br>
@@ -148,7 +153,8 @@ explanation of the license and how it is applied.
         </tr>
       </table>
 <html-el:hidden property="accountId" value="${BusinessKey.accountId}"/>
-<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}"/> 
+<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}"/>
+<html-el:hidden property="paymentId"/>
       
 </html-el:form>
 </tiles:put>

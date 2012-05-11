@@ -20,6 +20,8 @@
 
 package org.mifos.ui.core.controller;
 
+import javax.validation.constraints.Size;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class ProductCategoryFormBean {
@@ -31,7 +33,8 @@ public class ProductCategoryFormBean {
 
     @NotEmpty
     private String productCategoryName;
-
+    
+    @Size(min = 0, max = 500)
     private String productCategoryDesc;
 
     @NotEmpty

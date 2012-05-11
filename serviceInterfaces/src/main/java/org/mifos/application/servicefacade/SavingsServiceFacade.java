@@ -36,6 +36,7 @@ import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.FundTransferDto;
 import org.mifos.dto.domain.NoteSearchDto;
 import org.mifos.dto.domain.OpeningBalanceSavingsAccount;
+import org.mifos.dto.domain.PaymentDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
@@ -45,6 +46,7 @@ import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SavingsStatusChangeHistoryDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
+import org.mifos.dto.screen.AdjustableSavingsPaymentDto;
 import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
 import org.mifos.dto.screen.NotesSearchResultsDto;
 import org.mifos.dto.screen.SavingsAccountDepositDueDto;
@@ -58,16 +60,28 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MAKE_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
-    void deposit(SavingsDepositDto savingsDeposit);
+    PaymentDto deposit(SavingsDepositDto savingsDeposit);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MAKE_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
-    void withdraw(SavingsWithdrawalDto savingsWithdrawal);
+    PaymentDto deposit(SavingsDepositDto savingsDeposit, boolean inTransaction);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MAKE_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
+    PaymentDto withdraw(SavingsWithdrawalDto savingsWithdrawal);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MAKE_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
+    PaymentDto withdraw(SavingsWithdrawalDto savingsWithdrawal, boolean inTransaction);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
     SavingsAdjustmentReferenceDto retrieveAdjustmentReferenceData(Long savingsId);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
-    void adjustTransaction(SavingsAdjustmentDto savingsAdjustment);
+    SavingsAdjustmentReferenceDto retrieveAdjustmentReferenceData(Long savingsId, Integer paymentId);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
+    PaymentDto adjustTransaction(SavingsAdjustmentDto savingsAdjustment);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
+    PaymentDto adjustTransaction(SavingsAdjustmentDto savingsAdjustment, boolean inTransaction);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CLOSE_SAVINGS_ACCOUNT')")
     SavingsAccountClosureDto retrieveClosingDetails(Long savingsId, LocalDate closureDate);
@@ -155,6 +169,9 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_TRANSFER_FUNDS')")
     void fundTransfer(FundTransferDto fundTransferDto);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
+    List<AdjustableSavingsPaymentDto> retrievePaymentsForAdjustment(Integer accountId);
 
     void putSavingsBusinessKeyInSession(String globalAccountNum, HttpServletRequest request);
 }

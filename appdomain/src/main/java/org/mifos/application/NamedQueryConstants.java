@@ -108,6 +108,9 @@ public interface NamedQueryConstants {
     String RETRIEVE_MAX_ACCPAYMENT = "accountPayment.maxAccPayment";
     String RETRIEVE_ALL_ACCPAYMENT = "accountPayment.allAccPayment";
 
+    // Payments
+    String FIND_PAYMENT_BY_ID = "accountPayment.findPaymentById";
+
     // For client closedacc, changelog,fee details
     String VIEWALLSAVINGSCLOSEDACCOUNTS = "accounts.viewallsavingsclosedaccounts";
     String GROUP_SEARCH_WITHOUT_CENTER = "group_SearchWithoutCenter";

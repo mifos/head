@@ -47,6 +47,7 @@ import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.master.persistence.LegacyMasterDao;
+import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
@@ -118,12 +119,15 @@ public class StandardAccountServiceTest {
     @Mock
     private HibernateTransactionHelper transactionHelper;
 
+    @Mock
+    private SavingsServiceFacade savingsServiceFacade;
+
     @Before
     public void setup() {
         standardAccountService = new StandardAccountService(legacyAccountDao,
                 legacyLoanDao,acceptedPaymentTypePersistence, personnelDao,
                 customerDao, loanBusinessService, transactionHelper, legacyMasterDao,
-                monthClosingServiceFacade);
+                monthClosingServiceFacade, savingsServiceFacade);
         Money.setDefaultCurrency(TestUtils.RUPEE);
         accountBO = new LoanAccountBuilder().withCustomer(customerBO).build();
         accountBO.setlegacyAccountDao(legacyAccountDao);

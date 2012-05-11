@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -46,6 +47,7 @@ public class PaymentData {
     private String comment;
     private Money overpaymentAmount;
 
+    private AccountPaymentEntity otherTransferPayment;
     /*
      * Holds information including the installment this payment is to be applied
      * towards and any installments in arrears.
@@ -140,5 +142,13 @@ public class PaymentData {
 
     public void setOverpaymentAmount(Money overpaymentAmount) {
         this.overpaymentAmount = overpaymentAmount;
+    }
+
+    public AccountPaymentEntity getOtherTransferPayment() {
+        return otherTransferPayment;
+    }
+
+    public void setOtherTransferPayment(AccountPaymentEntity otherTransferPayment) {
+        this.otherTransferPayment = otherTransferPayment;
     }
 }
