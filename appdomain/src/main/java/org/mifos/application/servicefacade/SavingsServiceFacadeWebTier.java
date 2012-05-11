@@ -47,6 +47,7 @@ import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
@@ -171,6 +172,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     @Autowired
     private QuestionnaireServiceFacade questionnaireServiceFacade;
 
+    @Autowired
+    private LegacyAccountDao legacyAcccountDao;
+
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
     private CalendarPeriodHelper interestCalculationIntervalHelper = new CalendarPeriodHelper();
     private SavingsInterestScheduledEventFactory savingsInterestScheduledEventFactory = new SavingsInterestScheduledEventFactory();
@@ -186,7 +190,12 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public void deposit(SavingsDepositDto savingsDeposit) {
+    public PaymentDto deposit(SavingsDepositDto savingsDeposit) {
+        return deposit(savingsDeposit, false);
+    }
+
+    @Override
+    public PaymentDto deposit(SavingsDepositDto savingsDeposit, boolean inTransaction) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
@@ -221,23 +230,37 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         }
 
         try {
-            this.transactionHelper.startTransaction();
-            this.transactionHelper.beginAuditLoggingFor(savingsAccount);
+            if (!inTransaction) {
+                this.transactionHelper.startTransaction();
+                this.transactionHelper.beginAuditLoggingFor(savingsAccount);
+            }
 
-            savingsAccount.applyPayment(payment);
+            AccountPaymentEntity newPaymentEntity = savingsAccount.applyPayment(payment);
             this.savingsDao.save(savingsAccount);
 
-            if (DateUtils.isPastDate(payment.getTransactionDate())) {
+            Date lastIntPostDate = savingsAccount.getLastIntPostDate();
+            if (lastIntPostDate != null &&
+                    DateUtils.dateFallsOnOrBeforeDate(payment.getTransactionDate(), lastIntPostDate)) {
                 this.recalculateInterestPostings(savingsAccount.getAccountId(),
                         new LocalDate(payment.getTransactionDate()));
             }
 
-            this.transactionHelper.commitTransaction();
+            //commit
+            if (inTransaction) {
+                this.transactionHelper.flushSession();
+            } else {
+                this.transactionHelper.commitTransaction();
+            }
+            return newPaymentEntity.toDto();
         } catch (AccountException e) {
-            this.transactionHelper.rollbackTransaction();
+            if (!inTransaction) {
+                this.transactionHelper.rollbackTransaction();
+            }
             throw new BusinessRuleException(e.getKey(), e);
         } finally {
-            this.transactionHelper.closeSession();
+            if (!inTransaction) {
+                this.transactionHelper.closeSession();
+            }
         }
     }
 
@@ -246,12 +269,12 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public Integer withdraw(SavingsWithdrawalDto savingsWithdrawal) {
+    public PaymentDto withdraw(SavingsWithdrawalDto savingsWithdrawal) {
         return withdraw(savingsWithdrawal, false);
     }
 
     @Override
-    public Integer withdraw(SavingsWithdrawalDto savingsWithdrawal, boolean inTransaction) {
+    public PaymentDto withdraw(SavingsWithdrawalDto savingsWithdrawal, boolean inTransaction) {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
 
@@ -293,19 +316,21 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             AccountPaymentEntity paymentEntity = savingsAccount.withdraw(payment, false);
             this.savingsDao.save(savingsAccount);
 
-            if (DateUtils.isPastDate(payment.getTransactionDate())) {
+            Date lastIntPostDate = savingsAccount.getLastIntPostDate();
+            if (lastIntPostDate != null &&
+                    DateUtils.dateFallsOnOrBeforeDate(payment.getTransactionDate(), lastIntPostDate)) {
                 this.recalculateInterestPostings(savingsAccount.getAccountId(),
                         new LocalDate(payment.getTransactionDate()));
             }
 
-            if (!inTransaction) {
+            //commit
+            if (inTransaction) {
+                this.transactionHelper.flushSession();
+            } else {
                 this.transactionHelper.commitTransaction();
             }
 
-            if (inTransaction) {
-                this.transactionHelper.flushSession();
-            }
-            return paymentEntity.getPaymentId();
+            return paymentEntity.toDto();
         } catch (AccountException e) {
             if (!inTransaction) {
                 this.transactionHelper.rollbackTransaction();
@@ -319,7 +344,12 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public Integer adjustTransaction(SavingsAdjustmentDto savingsAdjustment) {
+    public PaymentDto adjustTransaction(SavingsAdjustmentDto savingsAdjustment) {
+        return adjustTransaction(savingsAdjustment, false);
+    }
+
+    @Override
+    public PaymentDto adjustTransaction(SavingsAdjustmentDto savingsAdjustment, boolean inTransaction) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
@@ -359,7 +389,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         }
 
         try {
-            this.transactionHelper.startTransaction();
+            if (!inTransaction) {
+                this.transactionHelper.startTransaction();
+            }
             this.transactionHelper.beginAuditLoggingFor(savingsAccount);
 
             AccountPaymentEntity newPayment = savingsAccount.adjustUserAction(amountAdjustedTo, savingsAdjustment.getNote(),
@@ -375,6 +407,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
             // savings-savings transfer adjustment
             if (otherTransferPayment != null && otherTransferPayment.isSavingsPayment()) {
+                this.transactionHelper.flushAndClearSession();
                 SavingsBO otherSavingsAccount = this.savingsDao.findById(otherTransferPayment.getAccountId());
                 otherSavingsAccount.updateDetails(userContext);
 
@@ -386,24 +419,36 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                     throw new BusinessRuleException("errors.insufficentbalance",
                             new String[] { savingsAccount.getGlobalAccountNum() });
                 }
-                this.savingsDao.save(otherSavingsAccount);
 
-                newPayment.setOtherTransferPayment(newOtherTransferPayment);
-                newOtherTransferPayment.setOtherTransferPayment(newPayment);
-                this.savingsDao.save(savingsAccount);
+                transactionHelper.flushAndClearSession();
+                if (newPayment != null) {
+                    newPayment = savingsAccount.findPaymentById(newPayment.getPaymentId());
+                    newPayment.setOtherTransferPayment(newOtherTransferPayment);
+                    newOtherTransferPayment.setOtherTransferPayment(newPayment);
+                    legacyAcccountDao.updatePayment(newPayment);
+                }
+                this.savingsDao.save(otherSavingsAccount);
             }
 
-            this.transactionHelper.commitTransaction();
+            if (!inTransaction) {
+                this.transactionHelper.commitTransaction();
+            }
 
-            return (newPayment == null) ? null : newPayment.getPaymentId();
+            return (newPayment == null) ? null : newPayment.toDto();
         } catch (BusinessRuleException e) {
-            this.transactionHelper.rollbackTransaction();
+            if (!inTransaction) {
+                this.transactionHelper.rollbackTransaction();
+            }
             throw new BusinessRuleException(e.getMessageKey(), e);
         } catch (Exception e) {
-            this.transactionHelper.rollbackTransaction();
+            if (!inTransaction) {
+                this.transactionHelper.rollbackTransaction();
+            }
             throw new MifosRuntimeException(e.getMessage(), e);
         } finally {
-            this.transactionHelper.closeSession();
+            if (!inTransaction) {
+                this.transactionHelper.closeSession();
+            }
         }
     }
 
@@ -433,7 +478,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             this.savingsDao.prepareForInterestRecalculation(account, paymentDate);
             this.transactionHelper.flushSession();
             for (int i = 0; i < removedPostings; i++) {
-                postInterestForAccount(accountId, userContext, createdBy);
+                postInterestForAccount(accountId, userContext, createdBy, true);
             }
         }
     }
@@ -456,11 +501,11 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         List<Integer> accountIds = this.savingsDao
                 .retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(dateBatchJobIsScheduled);
         for (Integer savingsId : accountIds) {
-            postInterestForAccount(savingsId, userContext, createdBy);
+            postInterestForAccount(savingsId, userContext, createdBy, false);
         }
     }
 
-    private void postInterestForAccount(Integer savingsId, UserContext userContext, PersonnelBO createdBy) {
+    private void postInterestForAccount(Integer savingsId, UserContext userContext, PersonnelBO createdBy, boolean inTransaction) {
 
         SavingsBO savingsAccount = this.savingsDao.findById(Long.valueOf(savingsId));
         savingsAccount.updateDetails(userContext);
@@ -485,15 +530,24 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         logger.info(postingInfoMessage.toString());
 
         try {
-            this.transactionHelper.startTransaction();
+            if (!inTransaction) {
+                this.transactionHelper.startTransaction();
+            }
 
             this.savingsDao.save(savingsAccount);
-            this.transactionHelper.commitTransaction();
+
+            if (!inTransaction) {
+                this.transactionHelper.commitTransaction();
+            }
         } catch (Exception e) {
-            this.transactionHelper.rollbackTransaction();
+            if (!inTransaction) {
+                this.transactionHelper.rollbackTransaction();
+            }
             throw new BusinessRuleException(savingsAccount.getAccountId().toString(), e);
         } finally {
-            this.transactionHelper.closeSession();
+            if (!inTransaction) {
+                this.transactionHelper.closeSession();
+            }
         }
     }
 
@@ -1537,8 +1591,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
 
-        SavingsBO sourceAcc = this.savingsDao.findBySystemId(fundTransferDto.getSourceGlobalAccountNum());
         SavingsBO targetAcc = this.savingsDao.findBySystemId(fundTransferDto.getTargetGlobalAccountNum());
+        SavingsBO sourceAcc = this.savingsDao.findBySystemId(fundTransferDto.getSourceGlobalAccountNum());
 
         SavingsDepositDto depositDto;
         SavingsWithdrawalDto withdrawalDto;
@@ -1561,8 +1615,19 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         // transaction
         try {
             this.transactionHelper.startTransaction();
-            deposit(depositDto);
-            withdraw(withdrawalDto);
+
+            PaymentDto deposit = deposit(depositDto, true);
+            PaymentDto withdrawal = withdraw(withdrawalDto, true);
+
+            // connect the two payments
+            AccountPaymentEntity sourcePayment = sourceAcc.findPaymentById(withdrawal.getPaymentId());
+            AccountPaymentEntity targetPayment = targetAcc.findPaymentById(deposit.getPaymentId());
+            sourcePayment.setOtherTransferPayment(targetPayment);
+            targetPayment.setOtherTransferPayment(sourcePayment);
+
+            this.savingsDao.save(sourceAcc);
+            this.savingsDao.save(targetAcc);
+
             this.transactionHelper.commitTransaction();
         } catch (BusinessRuleException ex) {
             this.transactionHelper.rollbackTransaction();
@@ -1570,6 +1635,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         } catch (Exception ex) {
             this.transactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(ex);
+        } finally {
+            this.transactionHelper.closeSession();
         }
     }
 

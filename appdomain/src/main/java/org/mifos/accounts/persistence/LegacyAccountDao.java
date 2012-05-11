@@ -587,4 +587,8 @@ public class LegacyAccountDao extends LegacyGenericDao {
         Object queryResult = execUniqueResultNamedQuery(NamedQueryConstants.FIND_PAYMENT_BY_ID, parameters);
         return (queryResult == null) ? null : (AccountPaymentEntity) queryResult;
     }
+
+    public void updatePayment(AccountPaymentEntity payment) {
+        StaticHibernateUtil.getSessionTL().update(payment);
+    }
 }

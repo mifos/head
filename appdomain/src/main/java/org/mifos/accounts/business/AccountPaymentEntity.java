@@ -246,8 +246,13 @@ public class AccountPaymentEntity extends AbstractEntity {
 
     public PaymentDto getOtherTransferPaymentDto() {
         return (otherTransferPayment == null) ? null :
-            new PaymentDto(otherTransferPayment.paymentId, otherTransferPayment.account.getAccountId(),
-                    otherTransferPayment.amount.getAmount(), new LocalDate(otherTransferPayment.paymentDate),
-                    otherTransferPayment.paymentType.getId(), otherTransferPayment.isSavingsDepositOrWithdrawal());
+            new PaymentDto(otherTransferPayment.getPaymentId(), otherTransferPayment.getAccount().getAccountId(),
+                    otherTransferPayment.getAmount().getAmount(), new LocalDate(otherTransferPayment.getPaymentDate()),
+                    otherTransferPayment.getPaymentType().getId(), otherTransferPayment.isSavingsDepositOrWithdrawal());
+    }
+
+    public PaymentDto toDto() {
+        return new PaymentDto(paymentId, account.getAccountId(), amount.getAmount(), new LocalDate(paymentDate),
+                paymentType.getId(), isSavingsDepositOrWithdrawal());
     }
 }

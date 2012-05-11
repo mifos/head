@@ -82,6 +82,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.PaymentDto;
 import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -488,10 +489,11 @@ public class AccountBO extends AbstractBusinessObject {
         }
     }
 
-    public final void applyPayment(final PaymentData paymentData) throws AccountException {
+    public final AccountPaymentEntity applyPayment(final PaymentData paymentData) throws AccountException {
         AccountPaymentEntity accountPayment = makePayment(paymentData);
         addAccountPayment(accountPayment);
         buildFinancialEntries(accountPayment.getAccountTrxns());
+        return accountPayment;
     }
 
 

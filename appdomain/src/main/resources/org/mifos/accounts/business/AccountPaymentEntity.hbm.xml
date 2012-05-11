@@ -35,7 +35,7 @@
         </set>
 
         <many-to-one name="otherTransferPayment" column="other_transfer_payment" class="org.mifos.accounts.business.AccountPaymentEntity" access="field" 
-            lazy="false"/>
+            lazy="no-proxy"/>
     </class>
     <query name="accountPayment.maxAccPayment">
         <![CDATA[from org.mifos.accounts.business.AccountPaymentEntity accpayment

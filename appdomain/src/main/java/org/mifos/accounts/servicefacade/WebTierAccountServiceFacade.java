@@ -453,7 +453,8 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                 SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(otherTransferPayment.getAccountId().longValue(),
                         (adjustedPaymentDto == null) ? 0 : Double.valueOf(adjustedPaymentDto.getAmount()), adjustmentNote, otherTransferPayment.getPaymentId(),
                                 (adjustedPaymentDto == null) ? otherTransferPayment.getPaymentDate() : new LocalDate(adjustedPaymentDto.getPaymentDate()));
-                newSavingsPaymentId = this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
+                PaymentDto newSavingsPayment = this.savingsServiceFacade.adjustTransaction(savingsAdjustment, true);
+                newSavingsPaymentId = (newSavingsPayment == null) ? null : newSavingsPayment.getPaymentId();
             }
 
             //reload after flush & clear
@@ -478,10 +479,15 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                     PaymentData paymentData = accountBO.createPaymentData(adjustedPayment.getAmount(), adjustedPayment.getPaymentDate(), 
                             adjustedPayment.getReceiptNumber(), adjustedPayment.getReceiptDate(), adjustedPayment.getPaymentType().getId(), 
                             paymentCreator);
+                    paymentData.setOtherTransferPayment(adjustedPayment.getOtherTransferPayment());
 
                     paymentsToBeReapplied.push(paymentData);
                 }
 
+                transactionHelper.flushAndClearSession();
+                //reload after flush & clear
+                accountBO = accountBusinessService.findBySystemId(globalAccountNum);
+                accountBO.setUserContext(getUserContext());
                 accountBO.adjustLastPayment(adjustmentNote, personnelBO);
                 legacyAccountDao.createOrUpdate(accountBO);
                 transactionHelper.flushSession();
@@ -496,7 +502,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                         accountPaymentEntity.getReceiptNumber(), accountPaymentEntity.getReceiptDate(), adjustedPaymentDto.getPaymentType(), 
                         paymentCreator);
 
-                //new adjusted savings payment must be tied to this new payment
+                //new adjusted savings payment must be tied to this payment
                 if (newSavingsPaymentId != null) {
                     AccountPaymentEntity newSvngPayment = legacyAccountDao.findPaymentById(newSavingsPaymentId);
                     paymentData.setOtherTransferPayment(newSvngPayment);
@@ -508,6 +514,10 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
 
             while (!paymentsToBeReapplied.isEmpty()) {
                 PaymentData paymentData = paymentsToBeReapplied.pop();
+                //avoid lazy loading exception
+                if (paymentData.getOtherTransferPayment() != null) {
+                    legacyAccountDao.updatePayment(paymentData.getOtherTransferPayment());
+                }
                 accountBO.applyPayment(paymentData);
                 legacyAccountDao.createOrUpdate(accountBO);
                 transactionHelper.flushSession();

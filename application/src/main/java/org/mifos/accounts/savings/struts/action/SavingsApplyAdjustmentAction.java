@@ -162,24 +162,20 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         String note = actionForm.getNote();
 
         AccountPaymentEntity adjustedPayment = savings.findPaymentById(actionForm.getPaymentId());
-        PaymentDto otherTransferPayment = adjustedPayment.getOtherTransferPaymentDto();
+        AccountPaymentEntity otherTransferPayment = adjustedPayment.getOtherTransferPayment();
         try {
-            if (otherTransferPayment == null) {
-                // regular savings payment adjustment
+            if (otherTransferPayment == null || otherTransferPayment.isSavingsDepositOrWithdrawal()) {
+                // regular savings payment adjustment or savings-savings transfer adjustment
                 SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, adjustedAmount, note,
                     actionForm.getPaymentId(), actionForm.getTrxnDateLocal());
                 this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
             } else {
+                // adjust repayment from savings account
                 AccountBO account = adjustedPayment.getOtherTransferPayment().getAccount();
-                if (account instanceof SavingsBO) {
-                    // adjust savings-savings transfer
-                } else {
-                    // adjust repayment from savings account
-                    AdjustedPaymentDto adjustedPaymentDto = new AdjustedPaymentDto(actionForm.getLastPaymentAmount(),
-                            actionForm.getTrxnDateLocal().toDateMidnight().toDate(), otherTransferPayment.getPaymentTypeId());
-                    this.accountServiceFacade.applyHistoricalAdjustment(account.getGlobalAccountNum(),
-                            otherTransferPayment.getPaymentId(), note, uc.getId(), adjustedPaymentDto);
-                }
+                AdjustedPaymentDto adjustedPaymentDto = new AdjustedPaymentDto(actionForm.getLastPaymentAmount(),
+                        actionForm.getTrxnDateLocal().toDateMidnight().toDate(), otherTransferPayment.getPaymentType().getId());
+                this.accountServiceFacade.applyHistoricalAdjustment(account.getGlobalAccountNum(),
+                        otherTransferPayment.getPaymentId(), note, uc.getId(), adjustedPaymentDto);
             }
         } catch (BusinessRuleException e) {
             throw new AccountException(e.getMessageKey(), e);

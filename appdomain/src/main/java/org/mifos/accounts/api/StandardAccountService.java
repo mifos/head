@@ -65,6 +65,7 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.OverpaymentDto;
+import org.mifos.dto.domain.PaymentDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.SavingsAccountDetailDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
@@ -152,8 +153,8 @@ public class StandardAccountService implements AccountService {
                 modeOfPayment, receiptId, dateOfReceipt, preferredLocale);
         try {
             transactionHelper.startTransaction();
-            Integer withdrawalId = this.savingsServiceFacade.withdraw(savingsWithdrawalDto, true);
-            makePaymentNoCommit(accountPaymentParametersDto, withdrawalId);
+            PaymentDto withdrawal = this.savingsServiceFacade.withdraw(savingsWithdrawalDto, true);
+            makePaymentNoCommit(accountPaymentParametersDto, withdrawal.getPaymentId());
             transactionHelper.commitTransaction();
         } catch (AccountException e) {
             transactionHelper.rollbackTransaction();
