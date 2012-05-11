@@ -997,20 +997,21 @@ public class SavingsBO extends AccountBO {
     }
 
     private Set<AccountTrxnEntity> createNewAccountPaymentWithAdjustedAmount(Money amountAdjustedTo,
-            PersonnelBO updatedBy, AccountPaymentEntity lastPayment, AccountActionTypes savingsTransactionType,
+            PersonnelBO updatedBy, AccountPaymentEntity payment, AccountActionTypes savingsTransactionType,
             Date adjustedOn, LocalDate adjustmentDate) {
 
-        AccountPaymentEntity newAccountPayment = new AccountPaymentEntity(this, amountAdjustedTo, null, null, lastPayment.getPaymentType(), adjustmentDate.toDateMidnight().toDate());
+        AccountPaymentEntity newAccountPayment = new AccountPaymentEntity(this, amountAdjustedTo, payment.getReceiptNumber(),
+                payment.getReceiptDate(), payment.getPaymentType(), adjustmentDate.toDateMidnight().toDate());
         newAccountPayment.setCreatedByUser(updatedBy);
         newAccountPayment.setAmount(amountAdjustedTo);
 
         Set<AccountTrxnEntity> accountTrxns = new HashSet<AccountTrxnEntity>();
         if (isMandatory() && savingsTransactionType.equals(AccountActionTypes.SAVINGS_DEPOSIT)) {
-            accountTrxns = createDepositTrxnsForMandatoryAccountsAfterAdjust(newAccountPayment, lastPayment, amountAdjustedTo, adjustmentDate, updatedBy);
+            accountTrxns = createDepositTrxnsForMandatoryAccountsAfterAdjust(newAccountPayment, payment, amountAdjustedTo, adjustmentDate, updatedBy);
         } else if (isVoluntary() && savingsTransactionType.equals(AccountActionTypes.SAVINGS_DEPOSIT)) {
-            accountTrxns = createDepositTrxnsForVolAccountsAfterAdjust(newAccountPayment, lastPayment, amountAdjustedTo, adjustmentDate, updatedBy);
+            accountTrxns = createDepositTrxnsForVolAccountsAfterAdjust(newAccountPayment, payment, amountAdjustedTo, adjustmentDate, updatedBy);
         } else {
-            accountTrxns = createWithdrawalTrxnsAfterAdjust(newAccountPayment, lastPayment, amountAdjustedTo, adjustmentDate, updatedBy);
+            accountTrxns = createWithdrawalTrxnsAfterAdjust(newAccountPayment, payment, amountAdjustedTo, adjustmentDate, updatedBy);
         }
 
         for (AccountTrxnEntity accountTrxn : accountTrxns) {
