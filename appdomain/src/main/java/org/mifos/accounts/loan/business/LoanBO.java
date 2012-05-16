@@ -226,6 +226,8 @@ public class LoanBO extends AccountBO implements Loan {
     // automatic penalties
     private Set<AccountPenaltiesEntity> loanAccountPenalties;
 
+    private Set<LoanBO> memberAccounts;
+
     // persistence
     private LoanPrdPersistence loanPrdPersistence;
     private LegacyLoanDao legacyLoanDao = null;
@@ -250,6 +252,7 @@ public class LoanBO extends AccountBO implements Loan {
         this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
         this.accountOverpayments = new ArrayList<AccountOverpaymentEntity>();
         this.loanAccountPenalties = new LinkedHashSet<AccountPenaltiesEntity>();
+        this.memberAccounts = new LinkedHashSet<LoanBO>();
         this.redone = false;
         this.parentAccount = null;
         this.loanOffering = null;
@@ -334,6 +337,8 @@ public class LoanBO extends AccountBO implements Loan {
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey());
         }
+
+        this.memberAccounts = new LinkedHashSet<LoanBO>();
     }
 
     public static LoanBO openStandardLoanAccount(LoanOfferingBO loanProduct, CustomerBO customer,
@@ -663,6 +668,14 @@ public class LoanBO extends AccountBO implements Loan {
 
     public void setLoanArrearsAgingEntity(final LoanArrearsAgingEntity loanArrearsAgingEntity) {
         this.loanArrearsAgingEntity = loanArrearsAgingEntity;
+    }
+
+    public Set<LoanBO> getMemberAccounts() {
+        return memberAccounts;
+    }
+
+    public void addMemberAccount(LoanBO memberAccount) {
+       // this.memberAccounts.add(memberAccount);
     }
 
     @Override
@@ -1264,6 +1277,15 @@ public class LoanBO extends AccountBO implements Loan {
             this.delete(loanArrearsAgingEntity);
             loanArrearsAgingEntity = null;
             getlegacyLoanDao().createOrUpdate(this);
+
+            // GLIM
+            if (hasMemberAccounts()) {
+                for (LoanBO memberAccount : this.memberAccounts) {
+                    BigDecimal fraction = memberAccount.calcFactorOfEntireLoan();
+                    memberAccount.makeEarlyRepayment(totalAmount.divide(fraction), transactionDate, receiptNumber, receiptDate,
+                            paymentTypeId, personnelId, waiveInterest, interestDue);
+                }
+            }
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
@@ -1751,6 +1773,7 @@ public class LoanBO extends AccountBO implements Loan {
                     paymentData.getOverpaymentAmount(), OverpaymentStatus.UNCLEARED.getValue());
             addAccountOverpayment(overpaymentEntity);
         }
+        applyPaymentToMemberAccounts(paymentData); // GLIM
         return accountPaymentEntity;
     }
 
@@ -3006,6 +3029,9 @@ public class LoanBO extends AccountBO implements Loan {
 
     public void setParentAccount(final LoanBO parentAccount) {
         this.parentAccount = parentAccount;
+        if (parentAccount != null) {
+            parentAccount.addMemberAccount(this);
+        }
     }
 
     public MaxMinLoanAmount getMaxMinLoanAmount() {
@@ -3608,5 +3634,72 @@ public class LoanBO extends AccountBO implements Loan {
             lateActionDateList.addAll(getAccountActionDates());
         }
         return lateActionDateList;
+    }
+
+    private void applyPaymentToMemberAccounts(PaymentData paymentData) throws AccountException {
+        Money totalPaymentAmount = paymentData.getTotalAmount();
+        for (LoanBO memberAccount : this.memberAccounts) {
+            BigDecimal factor = memberAccount.calcFactorOfEntireLoan();
+            Money memberPaymentAmount = totalPaymentAmount.divide(factor);
+            memberPaymentAmount = MoneyUtils.currencyRound(memberPaymentAmount);
+
+            PaymentData memberPayment = new PaymentData(memberPaymentAmount, paymentData.getPersonnel(),
+                    paymentData.getPaymentTypeId(), paymentData.getTransactionDate());
+            memberAccount.applyPayment(memberPayment);
+        }
+    }
+
+    public boolean hasMemberAccounts() {
+        return this.memberAccounts != null && !this.memberAccounts.isEmpty();
+    }
+
+    public BigDecimal calcFactorOfEntireLoan() {
+        BigDecimal percentage = BigDecimal.ONE;
+        if (this.parentAccount != null) {
+            percentage = this.parentAccount.getLoanAmount().divide(this.loanAmount);
+        }
+        return percentage;
+    }
+
+    @Override
+    public void adjustLastPayment(final String adjustmentComment, PersonnelBO loggedInUser) throws AccountException {
+        if (isAdjustPossibleOnLastTrxn()) {
+            logger.debug("Adjustment is possible hence attempting to adjust.");
+            adjustPayment(getLastPmntToBeAdjusted(), loggedInUser, adjustmentComment);
+            if (hasMemberAccounts()) {
+                for (LoanBO memberAccount : this.memberAccounts) {
+                    memberAccount.setUserContext(this.userContext);
+                    memberAccount.adjustLastPayment(adjustmentComment, loggedInUser);
+                }
+            }
+        } else {
+            throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
+        }
+    }
+
+    public LoanBO findMemberByGlobalNum(String globalAccNum) {
+        LoanBO result = null;
+        if (hasMemberAccounts()) {
+            for (LoanBO member : this.memberAccounts) {
+                if (member.getGlobalAccountNum().equals(globalAccNum)) {
+                    result = member;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    public LoanBO findMemberById(Integer memberId) {
+        LoanBO result = null;
+        if (hasMemberAccounts()) {
+            for (LoanBO member : this.memberAccounts) {
+                if (member.getAccountId().equals(memberId)) {
+                    result = member;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 }

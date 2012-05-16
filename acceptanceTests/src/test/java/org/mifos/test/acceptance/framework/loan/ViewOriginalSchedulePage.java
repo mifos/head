@@ -58,6 +58,8 @@ public class ViewOriginalSchedulePage extends AbstractPage {
     }
     
     public LoanAccountPage returnToLoanAccountDetail() {
+        selenium.click("returnToRepaymentScheduleButton");
+        waitForPageToLoad();
         selenium.click("returnToAccountDetailsbutton");
         waitForPageToLoad();
         verifyPage("LoanAccountDetail");

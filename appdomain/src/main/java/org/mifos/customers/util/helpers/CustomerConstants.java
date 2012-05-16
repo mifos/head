@@ -31,6 +31,7 @@ public interface CustomerConstants {
     String PERSONNEL_NAME = "personnelName";
     String GLOBAL_CUST_NUM = "globalCustNum";
     String BLANK = " ";
+    String CUSTOMER_NAME = "customerName";
 
     /*
      * Like CustomerStatus.CENTER_ACTIVE.getValue() but usable in case

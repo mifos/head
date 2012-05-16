@@ -29,6 +29,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -49,6 +50,16 @@ import org.mifos.security.util.UserContext;
 public class LoanRepaymentTag extends BodyTagSupport {
     Locale locale = null;
 
+    private String memberGlobalNum;
+
+    public String getMemberGlobalNum() {
+        return memberGlobalNum;
+    }
+
+    public void setMemberGlobalNum(String memberGlobalNum) {
+        this.memberGlobalNum = memberGlobalNum;
+    }
+
     @Override
     public int doStartTag() throws JspException {
         boolean twoTables = false;
@@ -59,7 +70,12 @@ public class LoanRepaymentTag extends BodyTagSupport {
             String currentFlowKey = (String) pageContext.getRequest().getAttribute(Constants.CURRENTFLOWKEY);
             HttpSession session = pageContext.getSession();
             FlowManager flowManager = (FlowManager) session.getAttribute(Constants.FLOWMANAGER);
+
             loanBO = (LoanBO) flowManager.getFromFlow(currentFlowKey, Constants.BUSINESS_KEY);
+            if (StringUtils.isNotBlank(memberGlobalNum)) {
+                loanBO = loanBO.findMemberByGlobalNum(memberGlobalNum);
+            }
+
             Date viewDate = getViewDate(currentFlowKey, flowManager);
             Money totalPrincipal = new Money(loanBO.getCurrency(), "0");
             Money totalInterest = new Money(loanBO.getCurrency(), "0");
