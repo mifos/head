@@ -7,5 +7,7 @@ public interface AccountingConfigurationService {
     Short getDigitsAfterDecimal();
     
     int getGlNameMode();
+    
+    boolean isDefaultMifosCurrency(String currencyCode);
 
 }
