@@ -299,6 +299,9 @@ public class LoanAccountRESTController {
 
 		DateTime today = new DateTime();
 
+		loan = loanDao.findByGlobalAccountNum(globalAccountNum);
+		client = loan.getCustomer();
+
         Map<String, String> map = new HashMap<String, String>();
 		map.put("status", "success");
 		map.put("clientName", client.getDisplayName());
