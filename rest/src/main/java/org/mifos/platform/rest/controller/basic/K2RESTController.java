@@ -22,17 +22,21 @@ package org.mifos.platform.rest.controller.basic;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.api.AccountService;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.persistance.LoanDao;
-import org.mifos.config.service.AccountingConfigurationService;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PaymentTypeDto;
+import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +67,10 @@ public class K2RESTController {
     private AccountService accountService;
 
     @Autowired
-    private LoanDao loanDao;
+    private AccountBusinessService accountBusinessService;
+
+    @Autowired
+    private SavingsServiceFacade savingsServiceFacade;
 
     @RequestMapping(value = "/basic/k2/processTransaction", method = RequestMethod.POST)
     public @ResponseBody
@@ -82,7 +89,26 @@ public class K2RESTController {
             @RequestParam(required = false) BigDecimal amount, @RequestParam(required = false) String currency)
             throws Exception {
 
-        LoanBO loanBO = loanDao.findByGlobalAccountNum(acNo);
+        AccountBO accountBO = accountBusinessService.findBySystemId(acNo);
+
+        if (accountBO == null) {
+            return accountNotFound();
+        }
+
+        if (accountBO.isLoanAccount()) {
+            return processLoanPayment((LoanBO) accountBO, k2AccountId, acNo, mmSystemId, transactionDate, amount,
+                    currency);
+        } else if (accountBO.isSavingsAccount()) {
+            return processSavingsDeposit((SavingsBO) accountBO, k2TransactionId, mmSystemId, transactionDate, amount,
+                    currency);
+        }
+
+        return accountNotFound();
+
+    }
+
+    private Map<String, String> processLoanPayment(LoanBO loanBO, String k2TransactionId, String acNo,
+            String mmSystemId, LocalDate transactionDate, BigDecimal amount, String currency) throws Exception {
 
         if (loanBO == null) {
             return accountNotFound();
@@ -114,11 +140,43 @@ public class K2RESTController {
         CustomerDto customerDto = loanBO.getCustomer().toCustomerDto();
 
         LocalDate receiptLocalDate = transactionDate;
+        String receiptIdString = k2TransactionId;
 
         AccountPaymentParametersDto payment = new AccountPaymentParametersDto(userDto, accountReferenceDto, amount,
-                transactionDate, paymentTypeDto, acNo, receiptLocalDate, k2TransactionId, customerDto);
+                transactionDate, paymentTypeDto, acNo, receiptLocalDate, receiptIdString, customerDto);
 
         accountService.makePayment(payment);
+
+        return accepted();
+    }
+
+    private Map<String, String> processSavingsDeposit(SavingsBO savingsBO, String k2TransactionId, String mmSystemId,
+            LocalDate transactionDate, BigDecimal amount, String currency) throws Exception {
+
+        String paymentTypeName = mmSystemId;
+        if (paymentTypeName.isEmpty()) {
+            paymentTypeName = DEFAULT_PAYMENT_TYPE_NAME;
+        }
+
+        Integer paymentTypeId = null;
+        List<PaymentTypeDto> savingsPaymentTypes = accountService.getSavingsPaymentTypes();
+        for (PaymentTypeDto paymentTypeDtoIterator : savingsPaymentTypes) {
+            if (paymentTypeDtoIterator.getName().equals(paymentTypeName)) {
+                paymentTypeId = paymentTypeDtoIterator.getValue().intValue();
+            }
+        }
+
+        if (paymentTypeId == null || !savingsBO.getCurrency().getCurrencyCode().equals(currency)) {
+            return invalidPayment();
+        }
+
+        Long accountId = savingsBO.getAccountId().longValue();
+        Long customerId = savingsBO.getCustomer().getCustomerId().longValue();
+        String receiptIdString = k2TransactionId;
+
+        SavingsDepositDto savingsDeposit = new SavingsDepositDto(accountId, customerId, transactionDate,
+                amount.doubleValue(), paymentTypeId, receiptIdString, transactionDate, Locale.UK);
+        this.savingsServiceFacade.deposit(savingsDeposit);
 
         return accepted();
     }
