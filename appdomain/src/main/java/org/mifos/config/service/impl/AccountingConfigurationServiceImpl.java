@@ -1,7 +1,6 @@
 package org.mifos.config.service.impl;
 
 import org.mifos.config.AccountingRules;
-import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.config.service.AccountingConfigurationService;
 
 public class AccountingConfigurationServiceImpl implements AccountingConfigurationService {
@@ -20,10 +19,7 @@ public class AccountingConfigurationServiceImpl implements AccountingConfigurati
 	public int getGlNameMode() {
 		return AccountingRules.getGlNamesMode();
 	}
-
-    @Override
-    public boolean isDefaultMifosCurrency(String currencyCode) {
-        return AccountingRules.getMifosCurrency(new ConfigurationPersistence()).getCurrencyCode().equals(currencyCode);
-    }
     
+    
+
 }

@@ -63,9 +63,6 @@ public class K2RESTController {
     private AccountService accountService;
 
     @Autowired
-    private AccountingConfigurationService accountingConfigurationService;
-
-    @Autowired
     private LoanDao loanDao;
 
     @RequestMapping(value = "/basic/k2/processTransaction", method = RequestMethod.POST)
@@ -110,7 +107,7 @@ public class K2RESTController {
             }
         }
 
-        if (paymentTypeDto == null || !accountingConfigurationService.isDefaultMifosCurrency(currency)) {
+        if (paymentTypeDto == null || !loanBO.getCurrency().getCurrencyCode().equals(currency)) {
             return invalidPayment();
         }
 
