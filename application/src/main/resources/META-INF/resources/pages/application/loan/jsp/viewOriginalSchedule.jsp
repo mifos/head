@@ -38,6 +38,10 @@ explanation of the license and how it is applied.
 			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
 			<input type="hidden" name='randomNUm' value="${requestScope.randomNUm}"/>
 			<input type="hidden" name='currentFlowKey' value="${requestScope.currentFlowKey}"/>
+            <c:if test="${param.accountId != BusinessKey.accountId }">
+                <input type="hidden" name='memberAccountId' value="${param.accountId}"/>
+                <input type="hidden" name='memberAccountGlobalNum' value="${param.globalAccountNum}"/>
+            </c:if>
 		</form>
 		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
 			<input type="hidden" name='globalAccountNum' value="${param.parentLoanGlobalAccountNum}"/>

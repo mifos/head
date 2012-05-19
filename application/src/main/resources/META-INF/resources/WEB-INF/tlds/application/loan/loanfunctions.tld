@@ -12,6 +12,11 @@
         <name>getLoanRepaymentTable</name>
         <tag-class>org.mifos.accounts.loan.struts.uihelpers.LoanRepaymentTag</tag-class>
         <body-content>JSP</body-content>
+        <attribute>
+            <name>memberGlobalNum</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
     <function>
         <description>

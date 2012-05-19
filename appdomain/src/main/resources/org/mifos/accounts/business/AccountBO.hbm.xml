@@ -165,6 +165,11 @@
                 class="org.mifos.accounts.loan.business.LoanBO" not-null="false">
             </many-to-one>
 
+            <set name="memberAccounts" cascade="all" lazy="true" access="field">
+                <key column="parent_account_id" />
+                <one-to-many class="org.mifos.accounts.loan.business.LoanBO"></one-to-many>
+            </set>
+
             <property name="recurMonth" column="recur_month" type="short" />
             <property name="monthWeek" column="month_week"
                 type="org.mifos.application.meeting.util.helpers.WeekDayUserType" />

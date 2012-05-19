@@ -437,6 +437,16 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         OriginalScheduleInfoDto originalSchedule = this.loanServiceFacade.retrieveOriginalLoanSchedule(loanId);
 
+        String memberAccountIdParam = request.getParameter("memberAccountId");
+        if (StringUtils.isNotBlank(memberAccountIdParam)) {
+            Integer memberId = Integer.valueOf(memberAccountIdParam);
+            LoanBO member = loan.findMemberById(memberId);
+            if (member != null) {
+                SessionUtils.setAttribute(CustomerConstants.CUSTOMER_NAME, member.getCustomer().getDisplayName(), request);
+                SessionUtils.setAttribute(CustomerConstants.GLOBAL_CUST_NUM, member.getCustomer().getGlobalCustNum(), request);
+            }
+        }
+
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         SessionUtils.setAttribute(Constants.ORIGINAL_SCHEDULE_AVAILABLE, originalSchedule.hasOriginalInstallments(), request);
         SessionUtils.setAttribute(Constants.VIEW_DATE, viewDate, request);

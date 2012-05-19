@@ -1054,13 +1054,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                     defaultAccountFees.add(new CreateAccountFeeDto(feeId, amount));
                 }
                 
+                int memberCount = memberDetails.size();
                 for(CreateAccountPenaltyDto createAccountPenaltyDto : loanAccountInfo.getAccountPenalties()) {
                     Integer penaltyId = createAccountPenaltyDto.getPenaltyId();
                     String amount = createAccountPenaltyDto.getAmount();
                     PenaltyBO penaltyBO = this.penaltyDao.findPenaltyById(penaltyId.shortValue());
                     
                     if(penaltyBO instanceof AmountPenaltyBO) {
-                        amount = String.valueOf(Double.valueOf(createAccountPenaltyDto.getAmount()) * (loanAmount.divide(loanAccountInfo.getLoanAmount()).getAmount().doubleValue()));
+                        amount = String.valueOf(Double.valueOf(createAccountPenaltyDto.getAmount()) / memberCount);
                     }
                     
                     defaultAccountPenalties.add(new CreateAccountPenaltyDto(penaltyId, amount));
@@ -1893,7 +1894,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             loandetails.setLoanAccountId(individualLoan.getAccountId().toString());
             loandetails.setLoanGlobalAccountNum(individualLoan.getGlobalAccountNum());
             loandetails.setParentLoanGlobalAccountNum(individualLoan.getParentAccount().getGlobalAccountNum());
-            
+            loandetails.setParentLoanAccountId(individualLoan.getParentAccount().getAccountId());
+
             if (null != individualLoan.getBusinessActivityId()) {
                 loandetails.setBusinessActivity(individualLoan.getBusinessActivityId().toString());
                 for (ValueListElement busact : allLoanPurposes) {

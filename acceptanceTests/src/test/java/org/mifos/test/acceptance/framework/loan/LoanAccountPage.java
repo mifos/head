@@ -115,9 +115,13 @@ public class LoanAccountPage extends MifosPage {
                 
                 selenium.click(xpath + "/a");
                 waitForPageToLoad();
-                
+                selenium.click("loanRepayment.link.original_schedule");
+                waitForPageToLoad();
+
                 Assert.assertTrue(selenium.isElementPresent("originalInstallments"));
                 
+                selenium.click("loanRepayment.button.return");
+                waitForPageToLoad();
                 selenium.click("loanRepayment.button.return");
                 waitForPageToLoad();
             }
@@ -309,11 +313,19 @@ public class LoanAccountPage extends MifosPage {
         waitForPageToLoad();
         return new ViewRepaymentSchedulePage(selenium);
     }
-    
-    public ViewOriginalSchedulePage navigateToIndividualSchedulePage(int row) {
+
+    public ViewRepaymentSchedulePage navigateToIndividualRepaymentSchedulePage(int row) {
+        selenium.click("//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + (row + 2) + "]/td[6]/a");
+        waitForPageToLoad();
+        return new ViewRepaymentSchedulePage(selenium);
+    }
+
+    public ViewOriginalSchedulePage navigateToIndividualOriginalSchedulePage(int row) {
         selenium.click("//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + row + "]/td[6]/a");
         waitForPageToLoad();
-        
+        selenium.click("loanRepayment.link.original_schedule");
+        waitForPageToLoad();
+
         return new ViewOriginalSchedulePage(selenium);
     }
 
