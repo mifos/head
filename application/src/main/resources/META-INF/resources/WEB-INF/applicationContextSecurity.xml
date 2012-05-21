@@ -40,6 +40,11 @@
     <http pattern="/restLogin.ftl" security="none" />
     <http pattern="/accessDenied.json" security="none" />
 
+	<http pattern="/basic/**" use-expressions="true" create-session="stateless">
+		<intercept-url pattern="/**" access="isFullyAuthenticated()" />
+		<http-basic/>
+	</http>
+
     <http auto-config="false" entry-point-ref="loginFormAuthentication" use-expressions="true">
         <custom-filter position="FORM_LOGIN_FILTER" ref="mifosLegacyAuthenticationFilter" />
 
@@ -58,14 +63,14 @@
     <authentication-manager alias="authenticationManager">
         <authentication-provider ref="mifosAuthenticationProvider"/>
     </authentication-manager>
-
+	
     <beans:bean id="mifosLegacyAuthenticationFilter" class="org.mifos.security.authentication.MifosLegacyUsernamePasswordAuthenticationFilter">
         <beans:constructor-arg ref="loginServiceFacade" />
         <beans:property name="authenticationManager" ref="authenticationManager" />
         <beans:property name="authenticationSuccessHandler" ref="authenticationSuccessHandler" />
         <beans:property name="authenticationFailureHandler" ref="authenticationFailureHandler" />
     </beans:bean>
-
+    
     <beans:bean id="mifosAuthenticationProvider" class="org.mifos.security.authentication.MifosDaoAuthenticationProvider">
         <beans:property name="userDetailsService" ref="mifosAuthenticationAuthorizationService" />
     </beans:bean>
