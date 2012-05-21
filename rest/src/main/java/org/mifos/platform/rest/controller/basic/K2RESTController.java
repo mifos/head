@@ -104,7 +104,7 @@ public class K2RESTController {
         }
         
         if (accountBO.isLoanAccount()) {
-            return processLoanPayment((LoanBO) accountBO, k2AccountId, acNo, mmSystemId, transactionDate, amount,
+            return processLoanPayment((LoanBO) accountBO, k2TransactionId, acNo, mmSystemId, transactionDate, amount,
                     currency);
         } else if (accountBO.isSavingsAccount()) {
             return processSavingsDeposit((SavingsBO) accountBO, k2TransactionId, mmSystemId, transactionDate, amount,
