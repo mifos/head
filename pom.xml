@@ -89,6 +89,7 @@
         <module>war-test-exec</module>
         <!-- Keep this module in last, the module which does not have interdependency will build in the order they are defined here -->
         <module>acceptanceTests</module>
+	<module>android-client-tests</module>
     </modules>
 
 
