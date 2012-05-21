@@ -54,9 +54,9 @@ public class K2RESTController {
     public static final String STATUS_CODE_02 = "02";
     public static final String STATUS_CODE_03 = "03";
 
-    public static final String DESCRIPTION_01 = "Accepted";
-    public static final String DESCRIPTION_02 = "Account not Found";
-    public static final String DESCRIPTION_03 = "Invalid Payment";
+    public static final String DESCRIPTION_01_ACCEPTED = "Accepted";
+    public static final String DESCRIPTION_02_ACCOUNT_NOT_FOUND = "Account not Found";
+    public static final String DESCRIPTION_03_INVALID_PAYMENT = "Invalid Payment";
 
     public static final String STATUS = "status";
     public static final String DESCRIPTION = "description";
@@ -95,6 +95,14 @@ public class K2RESTController {
             return accountNotFound();
         }
 
+        /* TODO: currently, test transaction request from K2 does not contain mm_system_id attribute
+         * (mobile money system id). This validation for empty attribute is set only for
+         * test purposes. Should be removed.  
+         */
+        if (mmSystemId.isEmpty()) {
+            mmSystemId = DEFAULT_PAYMENT_TYPE_NAME;
+        }
+        
         if (accountBO.isLoanAccount()) {
             return processLoanPayment((LoanBO) accountBO, k2AccountId, acNo, mmSystemId, transactionDate, amount,
                     currency);
@@ -119,15 +127,10 @@ public class K2RESTController {
 
         AccountReferenceDto accountReferenceDto = new AccountReferenceDto(loanBO.getAccountId());
 
-        String paymentTypeName = mmSystemId;
-        if (paymentTypeName.isEmpty()) {
-            paymentTypeName = DEFAULT_PAYMENT_TYPE_NAME;
-        }
-
         PaymentTypeDto paymentTypeDto = null;
         List<PaymentTypeDto> loanPaymentTypes = accountService.getLoanPaymentTypes();
         for (PaymentTypeDto paymentTypeDtoIterator : loanPaymentTypes) {
-            if (paymentTypeDtoIterator.getName().equals(paymentTypeName)) {
+            if (paymentTypeDtoIterator.getName().equals(mmSystemId)) {
                 paymentTypeDto = paymentTypeDtoIterator;
                 break;
             }
@@ -153,15 +156,10 @@ public class K2RESTController {
     private Map<String, String> processSavingsDeposit(SavingsBO savingsBO, String k2TransactionId, String mmSystemId,
             LocalDate transactionDate, BigDecimal amount, String currency) throws Exception {
 
-        String paymentTypeName = mmSystemId;
-        if (paymentTypeName.isEmpty()) {
-            paymentTypeName = DEFAULT_PAYMENT_TYPE_NAME;
-        }
-
         Integer paymentTypeId = null;
         List<PaymentTypeDto> savingsPaymentTypes = accountService.getSavingsPaymentTypes();
         for (PaymentTypeDto paymentTypeDtoIterator : savingsPaymentTypes) {
-            if (paymentTypeDtoIterator.getName().equals(paymentTypeName)) {
+            if (paymentTypeDtoIterator.getName().equals(mmSystemId)) {
                 paymentTypeId = paymentTypeDtoIterator.getValue().intValue();
             }
         }
@@ -184,21 +182,21 @@ public class K2RESTController {
     private Map<String, String> accepted() {
         Map<String, String> response = new HashMap<String, String>();
         response.put(STATUS, STATUS_CODE_01);
-        response.put(DESCRIPTION, DESCRIPTION_01);
+        response.put(DESCRIPTION, DESCRIPTION_01_ACCEPTED);
         return response;
     }
 
     private Map<String, String> accountNotFound() {
         Map<String, String> response = new HashMap<String, String>();
         response.put(STATUS, STATUS_CODE_02);
-        response.put(DESCRIPTION, DESCRIPTION_02);
+        response.put(DESCRIPTION, DESCRIPTION_02_ACCOUNT_NOT_FOUND);
         return response;
     }
 
     private Map<String, String> invalidPayment() {
         Map<String, String> response = new HashMap<String, String>();
         response.put(STATUS, STATUS_CODE_03);
-        response.put(DESCRIPTION, DESCRIPTION_03);
+        response.put(DESCRIPTION, DESCRIPTION_03_INVALID_PAYMENT);
         return response;
     }
 
