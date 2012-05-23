@@ -79,28 +79,12 @@
 				            <goal>emulator-start</goal>
 				        </goals>
 				    </execution>
-				</executions>
-            </plugin>
-            <plugin>
-                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                <artifactId>maven-android-plugin</artifactId>
-                <version>${maven-android-plugin-version}</version>
-                <configuration>
-                    <sdk>
-                        <platform>${android-platform}</platform>
-                    </sdk>
-                    <deleteConflictingFiles>true</deleteConflictingFiles>
-                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
-                 	<sign>
-                        <debug>true</debug>
-                    </sign>
-                    <file>mifos-android-client.apk</file>
-                </configuration>
-                <extensions>true</extensions>
-                <executions>
 				    <execution>
 				        <id>install-client</id>
 				        <phase>initialize</phase>
+				        <configuration>
+		                    <file>mifos-android-client.apk</file>
+		                </configuration>
 				        <goals>
 				            <goal>deploy</goal>
 				        </goals>
