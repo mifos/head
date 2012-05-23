@@ -40,6 +40,7 @@ public class ClientMainActivityTest extends ActivityInstrumentationTestCase2 {
 		String login = "mlo";
 		String password = "m12345";
 		solo.clickOnButton(menuIndex);
+		solo.clickOnButton(menuIndex);
         
         solo.clickOnEditText(0);
         solo.enterText(0, login);
