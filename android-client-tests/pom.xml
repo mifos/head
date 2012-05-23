@@ -19,7 +19,6 @@
         <maven-android-plugin-version>2.8.4</maven-android-plugin-version>
         <maven-compiler-plugin-version>2.3.2</maven-compiler-plugin-version>
         <android-version>2.1.2</android-version>
-        <android-emulator>${env.MIFOS_AC_EMULATOR}</android-emulator>
     </properties>
 
 	<dependencies>
@@ -48,11 +47,103 @@
         </dependency> 
     </dependencies>    
 	
-    <build>
-        <sourceDirectory>src</sourceDirectory>
-        <finalName>${project.artifactId}</finalName>
-        <plugins>
-            <plugin>
+	<profiles>
+	    <profile>
+	        <id>continuous-integration</id>
+		    <build>
+		        <finalName>${project.artifactId}</finalName>
+		        <plugins>
+		            <plugin>
+		                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+		                <artifactId>maven-android-plugin</artifactId>
+		                <version>${maven-android-plugin-version}</version>
+		                <configuration>
+		                    <sdk>
+		                        <platform>${android-platform}</platform>
+		                    </sdk>
+		                    <emulator>
+		                        <avd>android2.1</avd>
+		                        <wait>50000</wait>
+		                    </emulator>
+		                    <deleteConflictingFiles>true</deleteConflictingFiles>
+		                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
+		                 	<sign>
+		                        <debug>true</debug>
+		                    </sign>
+		                </configuration>
+		                <extensions>true</extensions>
+		                <executions>
+						    <execution>
+						        <id>startEmulator</id>
+						        <phase>initialize</phase>
+						        <goals>
+						            <goal>emulator-start</goal>
+						        </goals>
+						    </execution>
+						    <execution>
+						        <id>install-client</id>
+						        <phase>initialize</phase>
+						        <configuration>
+				                    <file>mifos-android-client.apk</file>
+				                </configuration>
+						        <goals>
+						            <goal>deploy</goal>
+						        </goals>
+						    </execution>
+						</executions>
+		            </plugin>
+		          	<plugin>
+			            <groupId>org.apache.maven.plugins</groupId>
+			            <artifactId>maven-antrun-plugin</artifactId>
+			            <version>1.5</version>
+			            <dependencies>
+			                <dependency>
+			                    <groupId>org.apache.ant</groupId>
+			                    <artifactId>ant-commons-net</artifactId>
+			                    <version>1.8.1</version>
+			                </dependency>
+			            </dependencies>
+		                <executions>
+		                    <execution>
+		                        <phase>pre-integration-test</phase>
+		                        <configuration>
+		                            <target>
+		                                <echo>
+		                                    Using: ANDROID_AVD_USER_PORT=5554
+		                                </echo>
+		                                <telnet
+		                                    server="localhost"
+		                                    port="5554">
+		                                    <read>OK</read>
+		                                    <write>event send EV_KEY:KEY_MENU:1 EV_KEY:KEY_MENU:0</write>
+		                                    <read>OK</read>
+		                                    <write>quit</write>
+		                                </telnet>
+		                            </target>
+		                        </configuration>
+		                        <goals>
+		                            <goal>run</goal>
+		                        </goals>
+		                    </execution>
+		                </executions>
+		            </plugin>
+		            <plugin>
+		                <artifactId>maven-compiler-plugin</artifactId>
+		            </plugin>
+		        </plugins>
+		    </build>
+	    </profile>
+	</profiles>
+	
+	<build>
+	    <defaultGoal>internal-pre-integration-test</defaultGoal>
+		<sourceDirectory>src</sourceDirectory>
+	        <finalName>${project.artifactId}</finalName>
+	        <plugins>
+       	 <plugin>
+               <artifactId>maven-compiler-plugin</artifactId>
+           	</plugin>
+			<plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>maven-android-plugin</artifactId>
                 <version>${maven-android-plugin-version}</version>
@@ -61,74 +152,18 @@
                         <platform>${android-platform}</platform>
                     </sdk>
                     <emulator>
-                        <avd>android2.1</avd>
-                        <wait>50000</wait>
+                        <avd>${android-emulator}</avd>
                     </emulator>
                     <deleteConflictingFiles>true</deleteConflictingFiles>
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>
-                 	<sign>
-                        <debug>true</debug>
+                    <sign>
+                        <debug>false</debug>
                     </sign>
+                    <skip>${maven.test.skip}</skip>
+                    <enableIntegrationTest>false</enableIntegrationTest>
                 </configuration>
                 <extensions>true</extensions>
-                <executions>
-				    <execution>
-				        <id>startEmulator</id>
-				        <phase>initialize</phase>
-				        <goals>
-				            <goal>emulator-start</goal>
-				        </goals>
-				    </execution>
-				    <execution>
-				        <id>install-client</id>
-				        <phase>initialize</phase>
-				        <configuration>
-		                    <file>mifos-android-client.apk</file>
-		                </configuration>
-				        <goals>
-				            <goal>deploy</goal>
-				        </goals>
-				    </execution>
-				</executions>
             </plugin>
-          	<plugin>
-	            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-antrun-plugin</artifactId>
-	            <version>1.5</version>
-	            <dependencies>
-	                <dependency>
-	                    <groupId>org.apache.ant</groupId>
-	                    <artifactId>ant-commons-net</artifactId>
-	                    <version>1.8.1</version>
-	                </dependency>
-	            </dependencies>
-                <executions>
-                    <execution>
-                        <phase>pre-integration-test</phase>
-                        <configuration>
-                            <target>
-                                <echo>
-                                    Using: ANDROID_AVD_USER_PORT=5554
-                                </echo>
-                                <telnet
-                                    server="localhost"
-                                    port="5554">
-                                    <read>OK</read>
-                                    <write>event send EV_KEY:KEY_MENU:1 EV_KEY:KEY_MENU:0</write>
-                                    <read>OK</read>
-                                    <write>quit</write>
-                                </telnet>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+	        </plugins>	    
+	</build>
 </project>
