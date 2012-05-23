@@ -159,6 +159,9 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     void makeEarlyRepayment(RepayLoanInfoDto repayLoanInfoDto);
 
     @PreAuthorize("isFullyAuthenticated()")
+    void makeEarlyRepaymentFromSavings(RepayLoanInfoDto repayLoanInfoDto, String savingsAccGlobalNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
     LoanInformationDto retrieveLoanInformation(String globalAccountNum);
 
     @PreAuthorize("isFullyAuthenticated()")
