@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
@@ -622,6 +623,9 @@ public class LoanAccountPage extends MifosPage {
     	Assert.assertTrue(selenium.isTextPresent(msg), "not found: " + msg);
     }
     
-
+    public void verifyLastNoteDate(LocalDate date) {
+        String noteDateString = selenium.getText("//td[@id='recentNotes']/span[1]").trim().replace(":", "");
+        Assert.assertEquals(noteDateString, date.toString("dd/MM/yyyy"));
+    }
 }
 

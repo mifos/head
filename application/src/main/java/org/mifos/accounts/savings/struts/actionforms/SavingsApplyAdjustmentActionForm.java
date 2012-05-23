@@ -147,22 +147,7 @@ public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
     }
 
     public String getTrxnDate() {
-        if (isTrxnDateEntered()) {
-            String transactionDate = "";
-            if (trxnDateDD.length() < 2) {
-                transactionDate = transactionDate + "0" + trxnDateDD;
-            } else {
-                transactionDate = transactionDate + trxnDateDD;
-            }
-            if (trxnDateMM.length() < 2) {
-                transactionDate = transactionDate + "/" + "0" + trxnDateMM;
-            } else {
-                transactionDate = transactionDate + "/" + trxnDateMM;
-            }
-            transactionDate = transactionDate + "/" + trxnDateYY;
-            return transactionDate;
-        }
-        return null;
+        return compileDateString(trxnDateDD, trxnDateMM, trxnDateYY);
     }
 
     @Override

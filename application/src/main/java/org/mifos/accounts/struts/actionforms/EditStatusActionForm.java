@@ -43,7 +43,7 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import static org.mifos.framework.util.helpers.DateUtils.dateFallsBeforeDate;
 import static org.mifos.framework.util.helpers.DateUtils.getDateAsSentFromBrowser;
 
-public class EditStatusActionForm extends BaseActionForm implements QuestionResponseCapturer{
+public class EditStatusActionForm extends BaseActionForm implements QuestionResponseCapturer {
 
     public EditStatusActionForm() {
         selectedItems = new String[50];
@@ -74,6 +74,8 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
     private String transactionDate;
 
     private java.util.Date lastPaymentDate;
+
+    private Boolean allowBackDatedApprovals;
 
     public String getInput() {
         return input;
@@ -170,6 +172,14 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
         return new Date(DateUtils.getLocaleDate(preferredLocale, transactionDate).getTime());
     }
 
+    public Boolean getAllowBackDatedApprovals() {
+        return allowBackDatedApprovals;
+    }
+
+    public void setAllowBackDatedApprovals(Boolean allowBackDatedApprovals) {
+        this.allowBackDatedApprovals = allowBackDatedApprovals;
+    }
+
     @Override
     public void reset(@SuppressWarnings("unused") ActionMapping mapping, HttpServletRequest request) {
         String methodCalled = request.getParameter(Methods.method.toString());
@@ -225,8 +235,8 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
         if (StringUtils.isBlank(notes)) {
             addError(errors, LoanConstants.MANDATORY_TEXTBOX, LoanConstants.MANDATORY_TEXTBOX, notesString);
         } else if (notes.length() > LoanConstants.COMMENT_LENGTH) {
-            addError(errors, LoanConstants.MAX_LENGTH, LoanConstants.MAX_LENGTH, notesString, String
-                    .valueOf(LoanConstants.COMMENT_LENGTH));
+            addError(errors, LoanConstants.MAX_LENGTH, LoanConstants.MAX_LENGTH, notesString,
+                    String.valueOf(LoanConstants.COMMENT_LENGTH));
         }
         validateTransactionDate(errors);
         return errors;
@@ -289,8 +299,7 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
             }
         } else {
             errors = new ActionErrors();
-            errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
-                    fieldName));
+            errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY, fieldName));
         }
         return errors;
     }
@@ -298,18 +307,18 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
     public ActionErrors validatePaymentDate(String transactionDate, String fieldName) {
         ActionErrors errors = null;
         if (transactionDate != null && !transactionDate.equals("")) {
-	        try {
-	            if (lastPaymentDate != null && dateFallsBeforeDate(getDateAsSentFromBrowser(transactionDate), lastPaymentDate)) {
-	                errors = new ActionErrors();
-	                errors.add(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
-	                        new ActionMessage(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
-	                                fieldName));
-	            }
-	        } catch (InvalidDateException ide) {
-	            errors = new ActionErrors();
-	            errors.add(AccountConstants.ERROR_INVALIDDATE, new ActionMessage(AccountConstants.ERROR_INVALIDDATE,
-	                    fieldName));
-	        }
+            try {
+                if (lastPaymentDate != null
+                        && dateFallsBeforeDate(getDateAsSentFromBrowser(transactionDate), lastPaymentDate)) {
+                    errors = new ActionErrors();
+                    errors.add(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT, new ActionMessage(
+                            AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT, fieldName));
+                }
+            } catch (InvalidDateException ide) {
+                errors = new ActionErrors();
+                errors.add(AccountConstants.ERROR_INVALIDDATE, new ActionMessage(AccountConstants.ERROR_INVALIDDATE,
+                        fieldName));
+            }
         }
         return errors;
     }

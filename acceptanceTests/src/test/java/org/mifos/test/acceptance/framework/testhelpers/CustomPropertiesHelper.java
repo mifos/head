@@ -199,4 +199,8 @@ public class CustomPropertiesHelper {
     public void setClientPendingApprovalStateEnabled(String enabled){
         selenium.open(UPDATE_PAGE + "?ProcessFlow.ClientPendingApprovalStateEnabled=" + enabled);
     }
+
+    public void setAllowBackdatedApproval(boolean allow) {
+        selenium.open(UPDATE_PAGE + "?BackDatedApprovalsAllowed?=" + allow);
+    }
 }

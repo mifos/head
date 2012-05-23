@@ -21,10 +21,16 @@
 package org.mifos.test.acceptance.loan;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.account.AccountStatus;
+import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
+import org.mifos.test.acceptance.framework.loan.AccountChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
@@ -37,6 +43,7 @@ import org.testng.annotations.Test;
 @Test(singleThreaded = true, groups = {"acceptance", "ui", "loan", "no_db_unit"})
 public class ClientLoanStatusChangeTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
+    private CustomPropertiesHelper customPropertiesHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -48,6 +55,7 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2009, 7, 1, 12, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         loanTestHelper = new LoanTestHelper(selenium);
+        customPropertiesHelper = new CustomPropertiesHelper(selenium);
     }
 
     @AfterMethod
@@ -81,5 +89,22 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
         questionGroupTestHelper.markQuestionGroupAsInactive(qgForLoanApproval);
     }
 
+    public void testBackDatedApprovals() {
+        customPropertiesHelper.setAllowBackdatedApproval(true);
+        LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount("Stu1233171716380 Client1233171716380", "WeeklyFlatLoanWithOneTimeFees");
+        loanAccountPage.verifyStatus("Application Pending Approval");
+
+        AccountChangeStatusPage changeStatusPage = loanAccountPage.navigateToEditAccountStatus();
+
+        LocalDate approvalDate = new LocalDate(2009, 6, 1);
+        EditAccountStatusParameters editAccountStatusParams = new EditAccountStatusParameters();
+        editAccountStatusParams.setNote("test note");
+        editAccountStatusParams.setAccountStatus(AccountStatus.LOAN_APPROVED);
+        editAccountStatusParams.setTrxnDate(approvalDate);
+
+        loanAccountPage = changeStatusPage.setChangeStatusParametersAndSubmit(editAccountStatusParams).submitAndNavigateToLoanAccountPage();
+        loanAccountPage.verifyStatus("Application Approved");
+        loanAccountPage.verifyLastNoteDate(approvalDate);
+    }
 
 }

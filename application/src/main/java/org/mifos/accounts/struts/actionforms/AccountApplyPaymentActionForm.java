@@ -263,12 +263,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     }
 
     public String getReceiptDate() {
-        if (StringUtils.isNotBlank(receiptDateDD) && StringUtils.isNotBlank(receiptDateMM)
-                && StringUtils.isNotBlank(receiptDateYY)) {
-
-            return receiptDateDD + "/" + receiptDateMM + "/" + receiptDateYY;
-        }
-        return null;
+        return compileDateString(receiptDateDD, receiptDateMM, receiptDateYY);
     }
 
     public void setReceiptDate(String receiptDate) throws InvalidDateException {
@@ -295,23 +290,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     }
 
     public String getTransactionDate() {
-        if (StringUtils.isNotBlank(transactionDateDD) && StringUtils.isNotBlank(transactionDateMM)
-                && StringUtils.isNotBlank(transactionDateYY)) {
-            String transactionDate = "";
-            if (transactionDateDD.length() < 2) {
-                transactionDate = transactionDate + "0" + transactionDateDD;
-            } else {
-                transactionDate = transactionDate + transactionDateDD;
-            }
-            if (transactionDateMM.length() < 2) {
-                transactionDate = transactionDate + "/" + "0" + transactionDateMM;
-            } else {
-                transactionDate = transactionDate + "/" + transactionDateMM;
-            }
-            transactionDate = transactionDate + "/" + transactionDateYY;
-            return transactionDate;
-        }
-        return null;
+        return compileDateString(transactionDateDD, transactionDateMM, transactionDateYY);
     }
 
     public void setTransactionDate(String receiptDate) throws InvalidDateException {

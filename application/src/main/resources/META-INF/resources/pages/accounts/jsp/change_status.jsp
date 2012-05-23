@@ -36,6 +36,8 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="ChangeStatus"></span>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<script language="javascript">
+			const APPROVAL_ID = 3;
+
 			function goToCancelPage(form, input){
 				switch(input){
 				case 'loan':
@@ -51,7 +53,8 @@ explanation of the license and how it is applied.
 				form.submit();
  			 }
  			function checkStatusForTransactionDate(i) {
- 			    if (i==7 || i==8) {
+ 			    var form = document.getElementsByName("editStatusActionForm")[0];
+ 				if (i==7 || i==8 || (i==APPROVAL_ID && form.allowBackDatedApprovals.value == 'true')) {
  			        document.getElementById("statusChangeTransactionDateLabelDiv").style.display = "block";
  			        document.getElementById("statusChangeTransactionDateInputDiv").style.display = "block";
  			    }
@@ -223,6 +226,7 @@ explanation of the license and how it is applied.
 				</tr>
 			</table>
 			<html-el:hidden property="globalAccountNum" value="${sessionScope.editStatusActionForm.globalAccountNum}" />
+            <html-el:hidden property="allowBackDatedApprovals" />
 		</html-el:form>
 		<script language="javascript">
 				if(editStatusActionForm.newStatusId.length != undefined){
