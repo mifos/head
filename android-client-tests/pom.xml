@@ -136,7 +136,7 @@
 	</profiles>
 	
 	<build>
-	    <defaultGoal>internal-pre-integration-test</defaultGoal>
+	    <defaultGoal>integration-test</defaultGoal>
 		<sourceDirectory>src</sourceDirectory>
 	        <finalName>${project.artifactId}</finalName>
 	        <plugins>
