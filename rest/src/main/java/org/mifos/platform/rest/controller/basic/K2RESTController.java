@@ -61,8 +61,6 @@ public class K2RESTController {
     public static final String STATUS = "status";
     public static final String DESCRIPTION = "description";
 
-    public static final String DEFAULT_PAYMENT_TYPE_NAME = "M-PESA";
-
     @Autowired
     private AccountService accountService;
 
@@ -95,14 +93,6 @@ public class K2RESTController {
             return accountNotFound();
         }
 
-        /* TODO: currently, test transaction request from K2 does not contain mm_system_id attribute
-         * (mobile money system id). This validation for empty attribute is set only for
-         * test purposes. Should be removed.  
-         */
-        if (mmSystemId.isEmpty()) {
-            mmSystemId = DEFAULT_PAYMENT_TYPE_NAME;
-        }
-        
         if (accountBO.isLoanAccount()) {
             return processLoanPayment((LoanBO) accountBO, k2TransactionId, acNo, mmSystemId, transactionDate, amount,
                     currency);
@@ -117,10 +107,6 @@ public class K2RESTController {
 
     private Map<String, String> processLoanPayment(LoanBO loanBO, String k2TransactionId, String acNo,
             String mmSystemId, LocalDate transactionDate, BigDecimal amount, String currency) throws Exception {
-
-        if (loanBO == null) {
-            return accountNotFound();
-        }
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserReferenceDto userDto = new UserReferenceDto((short) user.getUserId());
