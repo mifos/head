@@ -27,10 +27,13 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.rest.api.K2IntegrationTestHelper.Parameter;
+import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
+@Test(singleThreaded = true, groups = { "k2", "rest", "acceptance"})
 public class K2IntegrationTest extends UiTestCaseBase {
 
     private K2IntegrationTestHelper helper;
