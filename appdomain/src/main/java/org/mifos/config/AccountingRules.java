@@ -284,6 +284,11 @@ public class AccountingRules {
         return cm.getBoolean(AccountingRulesConstants.BACKDATED_TRANSACTIONS_ALLOWED);
     }
 
+    public static boolean isBackDatedApprovalAllowed() {
+        MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
+        return cm.getBoolean(AccountingRulesConstants.BACKDATED_APPROVALS_ALLOWED);
+    }
+
     public static Boolean isMultiCurrencyEnabled() {
         if (getAdditionalCurrencyCodes().isEmpty()) {
             return false;

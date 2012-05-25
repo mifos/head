@@ -957,7 +957,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								src="pages/framework/images/trans.gif" width="10" height="2"></td>
 						</tr>
 						<tr>
-							<td class="paddingL10"><c:choose>
+							<td class="paddingL10" id="recentNotes"><c:choose>
 								<c:when
 									test="${!empty loanAccount.recentAccountNotes}">
 									<c:forEach var="note" items="${loanAccount.recentAccountNotes}">

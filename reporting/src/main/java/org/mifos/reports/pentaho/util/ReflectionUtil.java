@@ -21,6 +21,7 @@ package org.mifos.reports.pentaho.util;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,12 @@ public class ReflectionUtil {
         Object val = null;
         if (string != null && !string.equals("")) {
             try {
-                Constructor<?> constr = clazz.getConstructor(String.class);
+                Constructor<?> constr;
+                if (clazz.equals(Number.class)) {
+                    constr = BigDecimal.class.getConstructor(String.class);
+                } else {
+                    constr = clazz.getConstructor(String.class);
+                }
                 val = constr.newInstance(string);
             } catch (Exception ex) {
                 throw new ReflectionException(clazz, string);

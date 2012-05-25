@@ -69,6 +69,7 @@ public class RepayLoanAction extends BaseAction {
         actionForm.setPaymentTypeId(null);
         actionForm.setWaiverInterest(true);
         actionForm.setDateOfPayment(DateUtils.makeDateAsSentFromBrowser());
+        actionForm.setTransferPaymentTypeId(this.legacyAcceptedPaymentTypeDao.getSavingsTransferId());
         UserContext userContext = getUserContext(request);
 
         String globalAccountNum = request.getParameter("globalAccountNum");
@@ -86,6 +87,7 @@ public class RepayLoanAction extends BaseAction {
         SessionUtils.setAttribute(LoanConstants.WAIVER_INTEREST_SELECTED, repayLoanDto.shouldWaiverInterest(), request);
         SessionUtils.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, new Money(loan.getCurrency(), repayLoanDto.getEarlyRepaymentMoney()), request);
         SessionUtils.setAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, new Money(loan.getCurrency(), repayLoanDto.getWaivedRepaymentMoney()), request);
+        SessionUtils.setCollectionAttribute(Constants.ACCOUNTS_FOR_TRANSFER, repayLoanDto.getSavingsAccountsForTransfer(), request);
 
         List<PaymentTypeEntity> loanPaymentTypes = legacyAcceptedPaymentTypeDao.getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.loan_repayment.getValue());
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, loanPaymentTypes, request);
@@ -115,9 +117,16 @@ public class RepayLoanAction extends BaseAction {
                 receiptDate, repayLoanActionForm.getPaymentTypeId(), userContext.getId(),
                 repayLoanActionForm.isWaiverInterest(),
                 repayLoanActionForm.getDateOfPaymentValue(userContext.getPreferredLocale()),totalRepaymentAmount,waivedAmount);
-        this.loanAccountServiceFacade.makeEarlyRepayment(repayLoanInfoDto);
+
+        if (repayLoanActionForm.isSavingsTransfer()) {
+            this.loanAccountServiceFacade.makeEarlyRepaymentFromSavings(repayLoanInfoDto, repayLoanActionForm.getAccountForTransfer());
+        } else {
+            this.loanAccountServiceFacade.makeEarlyRepayment(repayLoanInfoDto);
+        }
+
         SessionUtils.removeAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request);
         SessionUtils.removeAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, request);
+        SessionUtils.removeAttribute(Constants.ACCOUNTS_FOR_TRANSFER, request);
         return mapping.findForward(forward);
     }
 

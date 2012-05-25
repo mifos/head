@@ -19,10 +19,13 @@
  */
 package org.mifos.test.acceptance.framework.account;
 
+import org.joda.time.LocalDate;
+
 public class EditAccountStatusParameters {
 
     private String note;
     private AccountStatus accountStatus;
+    private LocalDate trxnDate;
 
     public String getNote() {
         return this.note;
@@ -35,5 +38,11 @@ public class EditAccountStatusParameters {
     }
     public void setAccountStatus(AccountStatus accountStatus) {
         this.accountStatus = accountStatus;
+    }
+    public LocalDate getTrxnDate() {
+        return trxnDate;
+    }
+    public void setTrxnDate(LocalDate trxnDate) {
+        this.trxnDate = trxnDate;
     }
 }

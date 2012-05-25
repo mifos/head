@@ -1852,7 +1852,7 @@ public class SavingsBO extends AccountBO {
         return new SavingsAccountDetailDto(this.savingsOffering.toFullDto(), recentActivity, recentNoteDtos,
                 this.recommendedAmount.toString(), this.globalAccountNum, getAccountId(), getState().getValue(), getState().name(), getSavingsBalance().toString(),
                 nextInstallment != null ? nextInstallment.getActionDate() : null, getTotalAmountDue().toString(), getTotalAmountDueForNextInstallment().toString(), 
-                getTotalAmountInArrears().toString(), savingsPerformanceHistoryDto, this.savingsOffering.getSavingsTypeAsEnum().name());
+                getTotalAmountInArrears().toString(), savingsPerformanceHistoryDto, this.savingsOffering.getSavingsTypeAsEnum().name(), this.customer.getCustomerId());
     }
 
     public void setSavingsTransactionActivityHelper(SavingsTransactionActivityHelper savingsTransactionActivityHelper) {

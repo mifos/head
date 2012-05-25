@@ -105,6 +105,14 @@ explanation of the license and how it is applied.
                 </td>
               </tr>
               <tr>
+                <td width="29%" align="right" valign="top" class="fontnormalbold">
+                    <mifos:mifoslabel name="Savings.dateOfTrxn" isColonRequired="yes"/><br>
+                </td>
+                <td width="81%" class="fontnormal">
+                    ${sessionScope.savingsApplyAdjustmentActionForm.trxnDate}
+                </td>
+              </tr>
+              <tr>
                 <td align="right" valign="top" class="fontnormalbold">
                 <mifos:mifoslabel name="Savings.notes" isColonRequired="yes"/> </td>
                 <td class="fontnormal"><c:out value="${sessionScope.savingsApplyAdjustmentActionForm.note}"/></td>

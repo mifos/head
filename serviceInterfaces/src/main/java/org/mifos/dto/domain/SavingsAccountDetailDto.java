@@ -45,12 +45,13 @@ public class SavingsAccountDetailDto implements Serializable {
     private final String totalAmountInArrears;
     private final SavingsPerformanceHistoryDto performanceHistory;
     private final String depositTypeName;
+    private final Integer customerId;
 
     public SavingsAccountDetailDto(SavingsProductDto productDetails, List<SavingsRecentActivityDto> recentActivity,
             List<CustomerNoteDto> recentNoteDtos, String recommendedOrMandatoryAmount, String globalAccountNum,
             Integer accountId, Short accountStateId, String accountStateName, String accountBalance, Date dueDate,
             String totalAmountDue, String totalAmountDueForNextInstallment, String totalAmountInArrears,
-            SavingsPerformanceHistoryDto performanceHistory, String depositTypeName) {
+            SavingsPerformanceHistoryDto performanceHistory, String depositTypeName, Integer customerId) {
         super();
         this.productDetails = productDetails;
         this.recentActivity = recentActivity;
@@ -67,6 +68,7 @@ public class SavingsAccountDetailDto implements Serializable {
         this.totalAmountInArrears = totalAmountInArrears;
         this.performanceHistory = performanceHistory;
         this.depositTypeName = depositTypeName;
+        this.customerId = customerId;
     }
 
     public SavingsProductDto getProductDetails() {
@@ -129,4 +131,7 @@ public class SavingsAccountDetailDto implements Serializable {
         return depositTypeName;
     }
 
+    public Integer getCustomerId() {
+        return customerId;
+    }
 }

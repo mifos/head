@@ -202,6 +202,9 @@ import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.dto.domain.RepaymentScheduleInstallmentDto;
+import org.mifos.dto.domain.SavingsAccountDetailDto;
+import org.mifos.dto.domain.SavingsDetailDto;
+import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.AccountFeesDto;
@@ -272,10 +275,12 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private final ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
     private final LoanBusinessService loanBusinessService;
     private final LoanScheduleService loanScheduleService;
-    private final HibernateTransactionHelper transactionHelper;
+    private HibernateTransactionHelper transactionHelper;
     private final MonthClosingServiceFacade monthClosingServiceFacade;
     private final CustomerPersistence customerPersistence;
     private final ConfigurationPersistence configurationPersistence;
+    private final ClientServiceFacade clientServiceFacade;
+    private final SavingsServiceFacade savingsServiceFacade;
 
     @Autowired
     private FeeDao feeDao;
@@ -307,7 +312,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                                            LoanBusinessService loanBusinessService, LoanScheduleService loanScheduleService,
                                            InstallmentsValidator installmentsValidator, HolidayServiceFacade holidayServiceFacade,
                                            MonthClosingServiceFacade monthClosingServiceFacade,
-                                           CustomerPersistence customerPersistence, ConfigurationPersistence configurationPersistence) {
+                                           CustomerPersistence customerPersistence, ConfigurationPersistence configurationPersistence,
+                                           ClientServiceFacade clientServiceFacade, SavingsServiceFacade savingsServiceFacade) {
         this.officeDao = officeDao;
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
@@ -324,6 +330,12 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         this.monthClosingServiceFacade = monthClosingServiceFacade;
         this.customerPersistence = customerPersistence;
         this.configurationPersistence = configurationPersistence;
+        this.clientServiceFacade = clientServiceFacade;
+        this.savingsServiceFacade = savingsServiceFacade;
+    }
+
+    public void setTransactionHelper(HibernateTransactionHelper transactionHelper) {
+        this.transactionHelper = transactionHelper;
     }
 
     @Override
@@ -1536,6 +1548,38 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         transactionHelper.commitTransaction();
     }
     
+    public void makeEarlyRepaymentFromSavings(RepayLoanInfoDto repayLoanInfoDto, String savingsAccGlobalNum) {
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+
+        SavingsAccountDetailDto savingsAcc = savingsServiceFacade.retrieveSavingsAccountDetails(savingsAccGlobalNum);
+
+        Long savingsId = savingsAcc.getAccountId().longValue();
+        Long customerId = savingsAcc.getCustomerId().longValue();
+        LocalDate trxnDate = new LocalDate(repayLoanInfoDto.getDateOfPayment());
+        Double amount = Double.parseDouble(repayLoanInfoDto.getEarlyRepayAmount());
+        Integer paymentTypeId = Integer.parseInt(repayLoanInfoDto.getPaymentTypeId());
+        String receiptId = repayLoanInfoDto.getReceiptNumber();
+        LocalDate receiptDate = new LocalDate(repayLoanInfoDto.getReceiptDate());
+        Locale preferredLocale = userContext.getPreferredLocale();
+
+        SavingsWithdrawalDto withdrawal = new SavingsWithdrawalDto(savingsId, customerId, trxnDate, amount,
+                paymentTypeId, receiptId, receiptDate, preferredLocale);
+
+        try {
+            transactionHelper.startTransaction();
+            makeEarlyRepayment(repayLoanInfoDto);
+            savingsServiceFacade.withdraw(withdrawal, true);
+            transactionHelper.commitTransaction();
+        } catch (BusinessRuleException e) {
+            transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getMessageKey(), e);
+        } catch (Exception e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        }
+    }
+
     BigDecimal interestDueForNextInstallment(BigDecimal totalRepaymentAmount, BigDecimal waivedAmount,
                                              LoanBO loan, boolean waiveInterest) {
         BigDecimal result = BigDecimal.ZERO;
@@ -1790,7 +1834,20 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             waiverAmount = loan.waiverAmount();
         }
         Money waivedRepaymentAmount = repaymentAmount.subtract(waiverAmount);
-        return new RepayLoanDto(repaymentAmount.toString(), waivedRepaymentAmount.toString(), loan.isInterestWaived());
+
+        List<SavingsDetailDto> savingsInUse = clientServiceFacade.retrieveSavingsInUseForClient(loan.getCustomer().getCustomerId());
+        List<ListItem<String>> accountsForTransfer = new ArrayList<ListItem<String>>();
+        if (savingsInUse != null) {
+            for (SavingsDetailDto savingsAccount : savingsInUse) {
+                if (savingsAccount.getAccountStateId().equals(AccountState.SAVINGS_ACTIVE.getValue())) {
+                    ListItem<String> listItem = new ListItem<String>(savingsAccount.getGlobalAccountNum(),
+                            savingsAccount.getGlobalAccountNum() + " - " + savingsAccount.getPrdOfferingName());
+                    accountsForTransfer.add(listItem);
+                }
+            }
+        }
+
+        return new RepayLoanDto(repaymentAmount.toString(), waivedRepaymentAmount.toString(), loan.isInterestWaived(), accountsForTransfer);
     }
     
     @Override

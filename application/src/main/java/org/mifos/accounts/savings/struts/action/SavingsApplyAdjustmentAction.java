@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.savings.struts.action;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,13 +41,17 @@ import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.struts.actionforms.SavingsApplyAdjustmentActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
+import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.dto.domain.AdjustedPaymentDto;
 import org.mifos.dto.domain.PaymentDto;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.screen.AdjustableSavingsPaymentDto;
 import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -55,8 +60,9 @@ import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 
 /**
- * @deprecated - this struts action should be replaced by ftl/spring web flow or spring mvc implementation.
- *             - note: service facade is in place to return all information needed and spring security is set up on service facade
+ * @deprecated - this struts action should be replaced by ftl/spring web flow or spring mvc implementation. - note:
+ *             service facade is in place to return all information needed and spring security is set up on service
+ *             facade
  */
 @Deprecated
 public class SavingsApplyAdjustmentAction extends BaseAction {
@@ -124,6 +130,12 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
     public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
             @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        if (savings != null) {
+            savings = this.savingsDao.findById(savings.getAccountId());
+            Hibernate.initialize(savings.findMostRecentPaymentByPaymentDate().getAccountTrxns());
+            SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
+        }
         return mapping.findForward("previous_success");
     }
 
@@ -157,6 +169,16 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
             throw new MifosRuntimeException("Null payment amount is not allowed");
         }
 
+        // date validation
+        Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(savings.getCustomer()
+                .getCustomerId());
+        boolean repaymentIndependentOfMeetingEnabled = new ConfigurationPersistence()
+                .isRepaymentIndepOfMeetingEnabled();
+        if (!savings.isTrxnDateValid(actionForm.getTrxnDateLocal().toDateMidnight().toDate(), meetingDate,
+                repaymentIndependentOfMeetingEnabled)) {
+            throw new AccountException(AccountConstants.ERROR_INVALID_TRXN);
+        }
+
         Long savingsId = Long.valueOf(accountId.toString());
         Double adjustedAmount = Double.valueOf(actionForm.getLastPaymentAmount());
         String note = actionForm.getNote();
@@ -167,13 +189,14 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
             if (otherTransferPayment == null || otherTransferPayment.isSavingsDepositOrWithdrawal()) {
                 // regular savings payment adjustment or savings-savings transfer adjustment
                 SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, adjustedAmount, note,
-                    actionForm.getPaymentId(), actionForm.getTrxnDateLocal());
+                        actionForm.getPaymentId(), actionForm.getTrxnDateLocal());
                 this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
             } else {
                 // adjust repayment from savings account
                 AccountBO account = adjustedPayment.getOtherTransferPayment().getAccount();
                 AdjustedPaymentDto adjustedPaymentDto = new AdjustedPaymentDto(actionForm.getLastPaymentAmount(),
-                        actionForm.getTrxnDateLocal().toDateMidnight().toDate(), otherTransferPayment.getPaymentType().getId());
+                        actionForm.getTrxnDateLocal().toDateMidnight().toDate(), otherTransferPayment.getPaymentType()
+                                .getId());
                 this.accountServiceFacade.applyHistoricalAdjustment(account.getGlobalAccountNum(),
                         otherTransferPayment.getPaymentId(), note, uc.getId(), adjustedPaymentDto);
             }

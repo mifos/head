@@ -59,6 +59,8 @@ public class AspectJRESTApprovalInterceptor {
 
 	public static final String EXCLUDE_APPROVAL_API = "!execution(public * org.mifos.platform.rest.controller.ApprovalRESTController.*(..))";
 
+	public static final String EXCLUDE_RESTFUL_SERVICES = "!execution(public * org.mifos.platform.rest.controller.basic..*.*(..))";
+	
 	public static final Logger LOG = LoggerFactory.getLogger(AspectJRESTApprovalInterceptor.class);
 
 	@Autowired
@@ -78,8 +80,11 @@ public class AspectJRESTApprovalInterceptor {
 
     @Pointcut(REQUEST_MAPPING)
     public void requestMapping() {}
+    
+    @Pointcut(EXCLUDE_RESTFUL_SERVICES)
+    public void exludeRestfulServices() {}
 
-    @Around("restMethods() && requestMapping() && excludeAPI()")
+    @Around("restMethods() && requestMapping() && excludeAPI() && exludeRestfulServices()")
     public Object profile(ProceedingJoinPoint pjp) throws Throwable {
         Signature signature = pjp.getStaticPart().getSignature();
         LOG.debug(this.getClass().getSimpleName() + " staring");

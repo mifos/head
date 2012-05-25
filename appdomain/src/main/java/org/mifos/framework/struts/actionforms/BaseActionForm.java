@@ -219,4 +219,23 @@ public class BaseActionForm extends ValidatorActionForm {
         return new LocalizationConverter().parseDoubleForInterest(doubleString);
     }
 
+    protected String compileDateString(String dateDD, String dateMM, String dateYY) {
+        if (StringUtils.isNotBlank(dateDD) && StringUtils.isNotBlank(dateMM)
+                && StringUtils.isNotBlank(dateYY)) {
+            String transactionDate = "";
+            if (dateDD.length() < 2) {
+                transactionDate = transactionDate + "0" + dateDD;
+            } else {
+                transactionDate = transactionDate + dateDD;
+            }
+            if (dateMM.length() < 2) {
+                transactionDate = transactionDate + "/" + "0" + dateMM;
+            } else {
+                transactionDate = transactionDate + "/" + dateMM;
+            }
+            transactionDate = transactionDate + "/" + dateYY;
+            return transactionDate;
+        }
+        return null;
+    }
 }

@@ -23,6 +23,7 @@ package org.mifos.accounts.struts.action;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,10 +51,12 @@ import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.AccountingRules;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -76,6 +79,7 @@ public class EditStatusAction extends BaseAction {
         actionForm.setFlagId(null);
         actionForm.setQuestionGroups(null);
         actionForm.setTransactionDate(DateUtils.makeDateAsSentFromBrowser());
+        actionForm.setAllowBackDatedApprovals(AccountingRules.isBackDatedApprovalAllowed());
 
         request.getSession().removeAttribute(Constants.BUSINESS_KEY);
         UserContext userContext = getUserContext(request);
@@ -210,6 +214,12 @@ public class EditStatusAction extends BaseAction {
             newStatusId = getShortValue(editStatusActionForm.getNewStatusId());
         }
 
+        Date trxnDate = editStatusActionForm.getTransactionDateValue(userContext.getPreferredLocale());
+        if (editStatusActionForm.getNewStatusId().equals(AccountState.LOAN_APPROVED) &&
+                !AccountingRules.isBackDatedApprovalAllowed()) {
+            trxnDate = new DateTimeService().getCurrentJavaDateTime();
+        }
+
         checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
 
         if (accountBO.isLoanAccount()) {
@@ -226,7 +236,7 @@ public class EditStatusAction extends BaseAction {
             	updateStatus.add(new AccountUpdateStatus(individual.getAccountId().longValue(), newStatusId, flagId, updateComment));
             }
                 
-            this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(updateStatus, editStatusActionForm.getTransactionDateValue(userContext.getPreferredLocale()));
+            this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(updateStatus, trxnDate);
             
             return mapping.findForward(ActionForwards.loan_detail_page.toString());
         } if (accountBO.isSavingsAccount()) {
