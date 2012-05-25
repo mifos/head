@@ -11,7 +11,6 @@
     
     <artifactId>mifos-androidclient-test</artifactId>
     <version>1.0</version>
-    <packaging>apk</packaging>
     <name>Mifos - Android Client Tests</name>
 
     <properties>
@@ -58,6 +57,7 @@
 		                <artifactId>maven-android-plugin</artifactId>
 		                <version>${maven-android-plugin-version}</version>
 		                <configuration>
+		                    <packaging>apk</packaging>
 		                    <sdk>
 		                        <platform>${android-platform}</platform>
 		                    </sdk>
@@ -133,37 +133,31 @@
 		        </plugins>
 		    </build>
 	    </profile>
+	    <profile>
+		     <id>skipInstall</id>
+		     <activation>
+		         <activeByDefault>true</activeByDefault>
+		       <property>
+		         <name>maven.install.skip</name>
+		         <value>true</value>
+		       </property>
+		     </activation>
+		     <build>
+		       <pluginManagement>
+		         <plugins>
+		           <plugin>
+		             <groupId>org.apache.maven.plugins</groupId>
+		             <artifactId>maven-install-plugin</artifactId>
+		             <executions>
+		               <execution>
+		                 <id>default-install</id>
+		                 <phase>none</phase>
+		               </execution>
+		             </executions>
+		           </plugin>
+		         </plugins>
+		       </pluginManagement>
+		     </build>
+		   </profile>
 	</profiles>
-	
-	<build>
-	    <defaultGoal>integration-test</defaultGoal>
-		<sourceDirectory>src</sourceDirectory>
-	        <finalName>${project.artifactId}</finalName>
-	        <plugins>
-       	 <plugin>
-               <artifactId>maven-compiler-plugin</artifactId>
-           	</plugin>
-			<plugin>
-                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                <artifactId>maven-android-plugin</artifactId>
-                <version>${maven-android-plugin-version}</version>
-                <configuration>
-                    <sdk>
-                        <platform>${android-platform}</platform>
-                    </sdk>
-                    <emulator>
-                        <avd>${android-emulator}</avd>
-                    </emulator>
-                    <deleteConflictingFiles>true</deleteConflictingFiles>
-                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
-                    <sign>
-                        <debug>false</debug>
-                    </sign>
-                    <skip>${maven.test.skip}</skip>
-                    <enableIntegrationTest>false</enableIntegrationTest>
-                </configuration>
-                <extensions>true</extensions>
-            </plugin>
-	        </plugins>	    
-	</build>
 </project>
