@@ -19,6 +19,7 @@
  */
 package org.mifos.reports.pentaho.params;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 
 public class PentahoDateParameter extends AbstractPentahoParameter {
@@ -51,17 +52,24 @@ public class PentahoDateParameter extends AbstractPentahoParameter {
     }
 
     public LocalDate getDate() {
-        Integer day = Integer.parseInt(dateDD);
-        Integer month = Integer.parseInt(dateMM);
-        Integer year = Integer.parseInt(dateYY);
-
-        return new LocalDate(year, month, day);
+        LocalDate date = null;
+        if (isDateEntered()) {
+            Integer day = Integer.parseInt(dateDD);
+            Integer month = Integer.parseInt(dateMM);
+            Integer year = Integer.parseInt(dateYY);
+            date = new LocalDate(year, month, day);
+        }
+        return date;
     }
 
     public void setDate(LocalDate date) {
         this.dateDD = String.valueOf(date.getDayOfMonth());
         this.dateMM = String.valueOf(date.getMonthOfYear());
         this.dateYY = String.valueOf(date.getYear());
+    }
+
+    public boolean isDateEntered() {
+        return StringUtils.isNotBlank(dateDD) || StringUtils.isNotBlank(dateMM) || StringUtils.isNotBlank(dateYY);
     }
 
     @Override
