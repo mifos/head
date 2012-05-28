@@ -330,7 +330,27 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         }
     	return newMessage;
     }
-
+    
+    /**
+     * fieldName is taken from field_configuration table
+     */
+    @Override
+    public boolean isHiddenMandatoryField(String fieldName) {
+    	boolean isThatField = false;
+    	try {
+    	List<FieldConfigurationEntity> confFieldList = legacyFieldConfigurationDao
+                .getAllConfigurationFieldList();
+    	for (FieldConfigurationEntity field : confFieldList) {
+    		if (field.getFieldName().equalsIgnoreCase(fieldName)) {
+    			isThatField = true;
+    		}
+    	}
+    	} catch (PersistenceException e) {
+    		throw new MifosRuntimeException(e);
+    	}
+    	return isThatField;
+    }
+    
     @Override
     public MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields() {
 

@@ -235,8 +235,13 @@ public class EditStatusAction extends BaseAction {
             for(LoanBO individual : individualLoans) {
             	updateStatus.add(new AccountUpdateStatus(individual.getAccountId().longValue(), newStatusId, flagId, updateComment));
             }
-                
-            this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(updateStatus, trxnDate);
+            
+            if (individualLoans.size() == 0) {
+            	this.loanAccountServiceFacade.updateSingleLoanAccountStatus(updateStatus.get(0), trxnDate);
+            } 
+            else {
+            	this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(updateStatus, trxnDate);
+            }
             
             return mapping.findForward(ActionForwards.loan_detail_page.toString());
         } if (accountBO.isSavingsAccount()) {

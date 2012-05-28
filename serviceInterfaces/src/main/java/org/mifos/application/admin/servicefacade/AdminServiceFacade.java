@@ -83,6 +83,9 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CAN_DEFINE_PRODUCT_MIX', 'ROLE_CAN_EDIT_PRODUCT_MIX')")
     void createOrUpdateProductMix(Integer productId, List<Integer> notAllowedProductIds);
 
+    @PreAuthorize("isFullyAuthenticated()")
+    boolean isHiddenMandatoryField(String fieldName);
+    
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')")
     MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields();
 
