@@ -92,6 +92,9 @@
 		<br />
 		<h1>${reportName}</h1>
 		
+		<p><span class="mandatory">*</span>[@spring.message "accounts.asterisk" /]</p>
+		<br />
+		
 		[@form.errors "pentahoReportFormBean.*"/]
 		<form action="execPentahoReport.ftl" method="post" class="two-columns">
 			[@form.input path="pentahoReportFormBean.reportId" id="input.reportId" fieldType="hidden" /]
