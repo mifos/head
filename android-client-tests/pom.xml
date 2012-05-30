@@ -59,6 +59,31 @@
             </properties>
 		    <build>
 		        <plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jarsigner-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+				    <execution>
+				        <id>signing</id>
+				        <goals>
+				            <goal>sign</goal>
+				        </goals>
+				        <phase>package</phase>
+				        <inherited>true</inherited>
+				        <configuration>
+				            <archiveDirectory></archiveDirectory>
+				            <includes>
+				                <include>target/*.apk</include>
+				            </includes>
+				            <keystore>android-test-key.keystore</keystore>
+				            <storepass>mifosac</storepass>
+				            <keypass>mifosac</keypass>
+				            <alias>android-test</alias>
+				        </configuration>
+				    </execution>
+				</executions>
+			    </plugin>
 		            <plugin>
 		                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
 		                <artifactId>maven-android-plugin</artifactId>
@@ -74,7 +99,7 @@
 		                    <deleteConflictingFiles>true</deleteConflictingFiles>
 		                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
 		                 	<sign>
-		                        <debug>true</debug>
+		                        <debug>false</debug>
 		                    </sign>
 		                </configuration>
 		                <extensions>true</extensions>
@@ -94,6 +119,13 @@
 				                </configuration>
 						        <goals>
 						            <goal>deploy</goal>
+						        </goals>
+						    </execution>
+						    <execution>
+							<id>stopEmulator</id>
+							<phase>post-integration-test</phase>
+							<goals>
+						            <goal>emulator-stop</goal>
 						        </goals>
 						    </execution>
 						</executions>
