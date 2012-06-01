@@ -336,7 +336,7 @@
 					[@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmountOrRate[${index}]" attributes="disabled='disabled'"/]							        	
 		        [/#if]
 		        
-		        <span style="margin-left: 20px;">
+		        <span style="margin-left: 4px;">
 		        [#if defaultFee.feeFrequency.oneTime]
 		        	[@spring.message "createLoanAccount.periodicity"/] ${defaultFee.feeFrequencyType}
 		        [#else]
@@ -349,10 +349,10 @@
 		        [/#if]
 		        
 		       	[#if defaultFee.rateBasedFee]
-		        	<span style="position:relative; left: -116px; top: 15px">[@spring.message "createLoanAccount.formula"/] ${defaultFee.feeFormula.name}</span>
+		        	<span style="position:relative; left: -119px; top: 15px">[@spring.message "createLoanAccount.formula"/] ${defaultFee.feeFormula.name}</span>
 		       	[/#if]
 		       	</span>
-		       	<div style="position:relative; left: 650px; top: -25px; height: 2px;">[@spring.formCheckbox "loanAccountFormBean.defaultFeeSelected[${index}]"/]Check to remove</div>
+		       	<div style="position:relative; left: 655px; top: -25px; height: 2px;">[@spring.formCheckbox "loanAccountFormBean.defaultFeeSelected[${index}]"/]Check to remove</div>
 		       	[@spring.formHiddenInput "loanAccountFormBean.defaultFeeId[${index}]" /]
 		    </div>
      		[#assign index = index + 1]	    	
