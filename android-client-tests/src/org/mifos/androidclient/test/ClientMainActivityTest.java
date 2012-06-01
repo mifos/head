@@ -1,7 +1,8 @@
 package org.mifos.androidclient.test;
 
+import org.mifos.androiclient.utils.ConnectionHelper;
+
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.UiThreadTest;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -17,13 +18,10 @@ public class ClientMainActivityTest extends ActivityInstrumentationTestCase2 {
 		super(TARGET_PACKAGE_ID, Class.forName(LAUNCHER_ACTIVITY));
 	}
 	
-	@UiThreadTest
 	@Override
 	protected void setUp() throws Exception {
 		solo = new Solo(getInstrumentation(), getActivity());
 	}
-	
-	
 
 	@Override
 	protected void tearDown() throws Exception {
@@ -36,28 +34,13 @@ public class ClientMainActivityTest extends ActivityInstrumentationTestCase2 {
 		super.tearDown();
 	}
 	
-	private static void logIn(Solo solo, int menuIndex) {
-		String login = "mlo";
-		String password = "m12345";
-		solo.clickOnButton(menuIndex);
-		solo.clickOnButton(menuIndex);
-        
-        solo.clickOnEditText(0);
-        solo.enterText(0, login);
-        solo.clickOnEditText(1);
-        solo.enterText(1, password);
-        solo.clickOnButton(0);
-	}
 	
-	private static void logOut(Solo solo) {
-        solo.waitForText("Log out");
-        solo.clickOnMenuItem("Log out");
-	}
 	
 	public void testCentersListActivity() throws Exception {
-		logIn(solo,0);
+		ConnectionHelper.changeServer(solo);
+		ConnectionHelper.logIn(solo,0);
         solo.waitForActivity(Class.forName("org.mifos.androidclient.main.CustomersListActivity").getName());
         solo.assertCurrentActivity("CentersListActivity", Class.forName("org.mifos.androidclient.main.CentersListActivity"));
-        logOut(solo);
+        ConnectionHelper.logOut(solo);
 	}
 }

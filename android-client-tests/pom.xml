@@ -17,9 +17,25 @@
     <properties>
         <android-platform>7</android-platform>
         <maven-android-plugin-version>2.8.4</maven-android-plugin-version>
-        <maven-compiler-plugin-version>2.3.2</maven-compiler-plugin-version>
         <android-version>2.1.2</android-version>
         <packaging.type>jar</packaging.type>
+        
+        
+       	<modules.root.dir>${basedir}/..</modules.root.dir>
+        <selenium.background>true</selenium.background>
+        <selenium.log.output>true</selenium.log.output>
+          
+      	<SELENIUM_PORT>${env.SELENIUM_PORT}</SELENIUM_PORT>
+      	<SERVLET_PORT>${env.SERVLET_PORT}</SERVLET_PORT>
+      	<stop.port>${env.CI_JETTY_STOP_PORT}</stop.port>
+        <EMULATOR_PORT>${env.EMULATOR_PORT}</EMULATOR_PORT>
+
+        <database.properties.file>${modules.root.dir}/acceptanceTests/src/test/mvn /org/mifos/config/resources/acceptanceDatabase.properties</database.properties.file>
+        <sql.resources.main.directory>${modules.root.dir}/db/src/main/resources/sql</sql.resources.main.directory>
+        <sql.resources.test.directory>${modules.root.dir}/db/src/test/resources/sql</sql.resources.test.directory>
+        <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
+        <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
+        <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
     </properties>
 
 	<dependencies>
@@ -38,7 +54,7 @@
 		<dependency>
             <groupId>com.jayway.android.robotium</groupId>
             <artifactId>robotium-solo</artifactId>
-            <version>3.1</version>
+            <version>3.2.1</version>
         </dependency>
         <dependency> 
 			<groupId>junit</groupId> 
@@ -46,6 +62,13 @@
 			<version>3.8.2</version>
   			<scope>provided</scope>
         </dependency> 
+        
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-war</artifactId>
+            <version>1.11-SNAPSHOT</version>
+            <type>war</type>
+        </dependency>
     </dependencies>    
 	
 	<profiles>
@@ -58,7 +81,123 @@
                 <packaging.type>apk</packaging.type>
             </properties>
 		    <build>
-		        <plugins>
+        	<plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-1</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <quiet>true</quiet>
+                            <files>
+                                <file>${database.properties.file}</file>
+                                <file>${mifos.overrides.home}</file>
+                                <file>${mifos.overrides.conf}</file>
+                                <file>${mifos.overrides.env}</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.2</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>${mysql.connector.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <driver>com.mysql.jdbc.Driver</driver>
+                    <url>jdbc:mysql://${acceptance.database.host}:${acceptance.database.port}/?${acceptance.database.params}</url>
+                    <username>${acceptance.database.user}</username>
+                    <password>${acceptance.database.password}</password>
+                    <autocommit>true</autocommit>
+                    <skip>${maven.test.skip}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>drop_db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>DROP DATABASE IF EXISTS ${acceptance.database}</sqlCommand>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create_db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>CREATE DATABASE ${acceptance.database}</sqlCommand>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>populate_db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>USE ${acceptance.database}</sqlCommand>
+                            <srcFiles>
+                                <srcFile>${sql.resources.test.directory}/acceptance_test_dump.sql</srcFile>
+                                <srcFile>${sql.resources.main.directory}/init_mifos_password.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty.version}</version>
+                <executions>
+                    <execution>
+                        <id>start-container</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>deploy-war</goal>
+                        </goals>
+                        <configuration>
+                            <daemon>true</daemon>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop-container</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skip>${maven.test.skip}</skip>
+                    <connectors>
+                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                            <port>${SERVLET_PORT}</port>
+                        </connector>
+                    </connectors>
+                    <webAppConfig>
+                        <contextPath>/mifos</contextPath>
+                    </webAppConfig>
+                    <stopKey>secret</stopKey>
+                    <stopPort>${stop.port}</stopPort>
+                    <webApp>${basedir}/../war/target/mifos.war</webApp>
+                </configuration>
+            </plugin>		            
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jarsigner-plugin</artifactId>
@@ -70,7 +209,6 @@
 				            <goal>sign</goal>
 				        </goals>
 				        <phase>package</phase>
-				        <inherited>true</inherited>
 				        <configuration>
 				            <archiveDirectory></archiveDirectory>
 				            <includes>
@@ -89,6 +227,9 @@
 		                <artifactId>maven-android-plugin</artifactId>
 		                <version>${maven-android-plugin-version}</version>
 		                <configuration>
+                          	<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
+					      	<assetsDirectory>${project.basedir}/assets</assetsDirectory>
+					      	<resourceDirectory>${project.basedir}/res</resourceDirectory>
 		                    <sdk>
 		                        <platform>${android-platform}</platform>
 		                    </sdk>
@@ -106,14 +247,14 @@
 		                <executions>
 						    <execution>
 						        <id>startEmulator</id>
-						        <phase>initialize</phase>
+						        <phase>compile</phase>
 						        <goals>
 						            <goal>emulator-start</goal>
 						        </goals>
 						    </execution>
 						    <execution>
 						        <id>install-client</id>
-						        <phase>initialize</phase>
+						        <phase>compile</phase>
 						        <configuration>
 				                    <file>mifos-android-client.apk</file>
 				                </configuration>
@@ -121,10 +262,11 @@
 						            <goal>deploy</goal>
 						        </goals>
 						    </execution>
+
 						    <execution>
-							<id>stopEmulator</id>
-							<phase>post-integration-test</phase>
-							<goals>
+								<id>stopEmulator</id>
+								<phase>post-integration-test</phase>
+								<goals>
 						            <goal>emulator-stop</goal>
 						        </goals>
 						    </execution>
@@ -147,11 +289,11 @@
 		                        <configuration>
 		                            <target>
 		                                <echo>
-		                                    Using: ANDROID_AVD_USER_PORT=5554
+		                                    Using: ANDROID_AVD_USER_PORT=${EMULATOR_PORT}
 		                                </echo>
 		                                <telnet
 		                                    server="localhost"
-		                                    port="5554">
+		                                    port="${EMULATOR_PORT}">
 		                                    <read>OK</read>
 		                                    <write>event send EV_KEY:KEY_MENU:1 EV_KEY:KEY_MENU:0</write>
 		                                    <read>OK</read>
