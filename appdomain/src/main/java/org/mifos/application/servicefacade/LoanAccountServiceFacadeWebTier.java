@@ -2078,6 +2078,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     @Override
+    public String updateSingleLoanAccountStatus(AccountUpdateStatus accountForUpdate, Date transactionDate) {
+    	return updateLoanAccountStatus(accountForUpdate, transactionDate);
+    }
+    
+    @Override
     public List<String> updateSeveralLoanAccountStatuses(List<AccountUpdateStatus> accountsForUpdate, Date transactionDate) {
 
         List<String> updatedAccountNumbers = new ArrayList<String>();

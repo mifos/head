@@ -78,7 +78,7 @@
             </sql>
         </rollback>
     </changeSet>
-        <changeSet id="MIFOS_5456_3" author="Pawel Gesek" context="expansion">
+    <changeSet id="MIFOS_5456_3" author="Pawel Gesek" context="expansion">
         <sql endDelimiter=";">
             ALTER TABLE account_payment ADD COLUMN other_transfer_payment INTEGER NULL DEFAULT NULL;
             ALTER TABLE account_payment ADD FOREIGN KEY(other_transfer_payment) REFERENCES account_payment(payment_id);
@@ -94,6 +94,218 @@
                 DEALLOCATE PREPARE stmt;
 
                 ALTER TABLE account_payment DROP COLUMN other_transfer_payment;
+            </sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="MIFOS_5596_1" author="Pawel Gesek" context="expansion">
+        <sql endDelimiter=";">
+                SET @MANAGMENT_CATEGORY_ID = (SELECT MAX(report_category_id)+1 from report_category);
+                SET @OPERATIONAL_CATEGORY_ID = @MANAGMENT_CATEGORY_ID + 1;
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((select MAX(lv.lookup_id)+1 FROM lookup_value lv), 87, 'Permissions-CanViewManagmentReports');
+                
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES(1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewManagmentReports'), NULL);
+                
+                INSERT INTO activity(activity_id, parent_id,  activity_name_lookup_id, description_lookup_id) VALUES(255, 141, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewManagmentReports'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewManagmentReports'));
+                
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(255, 1);
+                
+                INSERT INTO report_category(report_category_id, report_category_value, activity_id) VALUES(@MANAGMENT_CATEGORY_ID, 'Management', 255);
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((select MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewOperationalReports');
+                
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES(1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewOperationalReports'), NULL);
+                
+                INSERT INTO activity(activity_id, parent_id,  activity_name_lookup_id, description_lookup_id) VALUES(256, 141, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewOperationalReports'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewOperationalReports'));
+                
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(256, 1);
+                
+                INSERT INTO report_category(report_category_id, report_category_value, activity_id) VALUES(@OPERATIONAL_CATEGORY_ID, 'Operational', 256);
+                
+                SET @REPORT_MAX_ID = (SELECT MAX(report_id) from report);
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewAgingSummaryReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewAgingSummaryReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(257, 255, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewAgingSummaryReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewAgingSummaryReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(257, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+1, @MANAGMENT_CATEGORY_ID, 'Aging Summary', 'aging_summary', 257, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+1, NULL, 'Aging Summary', 'aging_summary', 'AgingSummary.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewClosedLoansReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewClosedLoansReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(258, 255, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewClosedLoansReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewClosedLoansReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(258, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+2, @MANAGMENT_CATEGORY_ID, 'Closed Loans', 'closed_loans', 258, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+2, NULL, 'Closed Loans', 'closed_loans', 'ClosedLoans.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewClosedLoansSummaryperBranchReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewClosedLoansSummaryperBranchReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(259, 255, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewClosedLoansSummaryperBranchReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewClosedLoansSummaryperBranchReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(259, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+3, @MANAGMENT_CATEGORY_ID, 'Closed Loans Summary per Branch', 'closed_loans_summary_per_branch', 259, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+3, NULL, 'Closed Loans Summary per Branch', 'closed_loans_summary_per_branch', 'ClosedLoanSummaryBranch.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewDormantClientsSummaryReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewDormantClientsSummaryReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(260, 255, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewDormantClientsSummaryReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewDormantClientsSummaryReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(260, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+4, @MANAGMENT_CATEGORY_ID, 'Dormant Clients Summary', 'dormant_clients_summary', 260, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+4, NULL, 'Dormant Clients Summary', 'dormant_clients_summary', 'DormantClientsSummary.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewClientExitReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewClientExitReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(261, 255, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewClientExitReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewClientExitReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(261, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+5, @MANAGMENT_CATEGORY_ID, 'Client Exit', 'client_exit', 261, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+5, NULL, 'Client Exit', 'client_exit', 'ClientExit.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewActiveLoansSummaryperBranchReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansSummaryperBranchReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(262, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansSummaryperBranchReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansSummaryperBranchReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(262, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+6, @OPERATIONAL_CATEGORY_ID, 'Active Loans Summary per Branch', 'active_loans_summary_per_branch', 262, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+6, NULL, 'Active Loans Summary per Branch', 'active_loans_summary_per_branch', 'ActiveLoanSummaryBranch.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewActiveLoansbyCenterReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansbyCenterReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(263, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansbyCenterReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansbyCenterReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(263, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+7, @OPERATIONAL_CATEGORY_ID, 'Active Loans by Center', 'active_loans_by_center', 263, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+7, NULL, 'Active Loans by Center', 'active_loans_by_center', 'ActiveLoansCenter.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewActiveLoansbyLoanProductReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansbyLoanProductReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(264, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansbyLoanProductReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansbyLoanProductReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(264, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+8, @OPERATIONAL_CATEGORY_ID, 'Active Loans by Loan Product', 'active_loans_by_loan_product', 264, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+8, NULL, 'Active Loans by Loan Product', 'active_loans_by_loan_product', 'ActiveLoansLoanProduct.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewActiveLoansbyLoanPurposeReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansbyLoanPurposeReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(265, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansbyLoanPurposeReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansbyLoanPurposeReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(265, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+9, @OPERATIONAL_CATEGORY_ID, 'Active Loans by Loan Purpose', 'active_loans_by_loan_purpose', 265, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+9, NULL, 'Active Loans by Loan Purpose', 'active_loans_by_loan_purpose', 'ActiveLoansLoanPurpose.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewActiveLoansbyLoanOfficerReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansbyLoanOfficerReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(266, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansbyLoanOfficerReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansbyLoanOfficerReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(266, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+10, @OPERATIONAL_CATEGORY_ID, 'Active Loans by Loan Officer', 'active_loans_by_loan_officer', 266, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+10, NULL, 'Active Loans by Loan Officer', 'active_loans_by_loan_officer', 'ActiveLoansLoanOfficer.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewActiveLoansintheirLastInstallmentReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansintheirLastInstallmentReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(267, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansintheirLastInstallmentReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewActiveLoansintheirLastInstallmentReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(267, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+11, @OPERATIONAL_CATEGORY_ID, 'Active Loans in their Last Installment', 'active_loans_in_their_last_installment', 267, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+11, NULL, 'Active Loans in their Last Installment', 'active_loans_in_their_last_installment', 'ActiveLoansLastInstallment.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewBranchExpectedCashFlowReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewBranchExpectedCashFlowReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(268, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewBranchExpectedCashFlowReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewBranchExpectedCashFlowReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(268, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+12, @OPERATIONAL_CATEGORY_ID, 'Branch Expected Cash Flow', 'branch_expected_cash_flow', 268, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+12, NULL, 'Branch Expected Cash Flow', 'branch_expected_cash_flow', 'BranchExpectedCashFlow.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewClientsSummaryReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewClientsSummaryReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(269, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewClientsSummaryReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewClientsSummaryReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(269, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+13, @OPERATIONAL_CATEGORY_ID, 'Clients Summary', 'clients_summary', 269, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+13, NULL, 'Clients Summary', 'clients_summary', 'ClientSummary.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewCenterCollectionSheetReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewCenterCollectionSheetReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(270, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewCenterCollectionSheetReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewCenterCollectionSheetReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(270, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+14, @OPERATIONAL_CATEGORY_ID, 'Center Collection Sheet', 'center_collection_sheet', 270, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+14, NULL, 'Center Collection Sheet', 'center_collection_sheet', 'CenterCollectionSheet.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewGroupCollectionSheetM-PESAReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewGroupCollectionSheetM-PESAReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(271, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewGroupCollectionSheetM-PESAReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewGroupCollectionSheetM-PESAReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(271, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+15, @OPERATIONAL_CATEGORY_ID, 'Group Collection Sheet (M-PESA)', 'group_collection_sheet_(m-pesa)', 271, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+15, NULL, 'Group Collection Sheet (M-PESA)', 'group_collection_sheet_(m-pesa)', 'GroupCollectionSheetMPESA.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewGroupsInformationReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewGroupsInformationReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(272, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewGroupsInformationReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewGroupsInformationReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(272, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+16, @OPERATIONAL_CATEGORY_ID, 'Groups Information', 'groups_information', 272, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+16, NULL, 'Groups Information', 'groups_information', 'GroupsInformation.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewLoanAgeingReportReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewLoanAgeingReportReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(273, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewLoanAgeingReportReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewLoanAgeingReportReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(273, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+17, @OPERATIONAL_CATEGORY_ID, 'Loan Ageing Report', 'loan_ageing_report', 273, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+17, NULL, 'Loan Ageing Report', 'loan_ageing_report', 'LoanAgingReport.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewLoansPendingApprovalReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewLoansPendingApprovalReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(274, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewLoansPendingApprovalReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewLoansPendingApprovalReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(274, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+18, @OPERATIONAL_CATEGORY_ID, 'Loans Pending Approval', 'loans_pending_approval', 274, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+18, NULL, 'Loans Pending Approval', 'loans_pending_approval', 'LoansPendingApproval.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewLoanstobeDisbursedReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewLoanstobeDisbursedReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(275, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewLoanstobeDisbursedReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewLoanstobeDisbursedReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(275, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+19, @OPERATIONAL_CATEGORY_ID, 'Loans to be Disbursed', 'loans_to_be_disbursed', 275, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+19, NULL, 'Loans to be Disbursed', 'loans_to_be_disbursed', 'LoansToBeDisbursed.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewMifosTransactions-DetailedReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewMifosTransactions-DetailedReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(276, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewMifosTransactions-DetailedReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewMifosTransactions-DetailedReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(276, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+20, @OPERATIONAL_CATEGORY_ID, 'Mifos Transactions - Detailed', 'mifos_transactions_-_detailed', 276, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+20, NULL, 'Mifos Transactions - Detailed', 'mifos_transactions_-_detailed', 'MifosTransactions-Detail.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewMifosTransactions-SummaryReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewMifosTransactions-SummaryReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(277, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewMifosTransactions-SummaryReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewMifosTransactions-SummaryReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(277, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+21, @OPERATIONAL_CATEGORY_ID, 'Mifos Transactions - Summary', 'mifos_transactions_-_summary', 277, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+21, NULL, 'Mifos Transactions - Summary', 'mifos_transactions_-_summary', 'MifosTransactions-Summary.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewOverdueMatureLoansReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewOverdueMatureLoansReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(278, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewOverdueMatureLoansReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewOverdueMatureLoansReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(278, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+22, @OPERATIONAL_CATEGORY_ID, 'Overdue Mature Loans', 'overdue_mature_loans', 278, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+22, NULL, 'Overdue Mature Loans', 'overdue_mature_loans', 'OverdueMatureLoans.prpt');
+                
+                INSERT INTO lookup_value(lookup_id,entity_id,lookup_name) VALUES((SELECT MAX(lv.lookup_id)+1 from lookup_value lv), 87, 'Permissions-CanViewWrittenOffLoansReport');
+                INSERT INTO lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES (1,(SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewWrittenOffLoansReport'), NULL);
+                INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) VALUES(279, 256, (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewWrittenOffLoansReport'), (SELECT lookup_id FROM lookup_value WHERE entity_id = 87 AND lookup_name='Permissions-CanViewWrittenOffLoansReport'));
+                INSERT INTO roles_activity(activity_id, role_id) VALUES(279, 1);
+                INSERT INTO report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active) VALUES(@REPORT_MAX_ID+23, @OPERATIONAL_CATEGORY_ID, 'Written Off Loans', 'written_off_loans', 279, 1);
+                INSERT INTO report_jasper_map(report_id, report_category_id, report_name, report_identifier, report_jasper) VALUES(@REPORT_MAX_ID+23, NULL, 'Written Off Loans', 'written_off_loans', 'WrittenOff.prpt');
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                SET @MANAGMENT_CATEGORY_ID = (SELECT report_category_id from report_category WHERE activity_id = 255);
+                SET @OPERATIONAL_CATEGORY_ID = (SELECT report_category_id from report_category WHERE activity_id = 256);
+
+                DELETE FROM report_jasper_map WHERE report_id IN (SELECT report_id FROM report WHERE activity_id BETWEEN 257 AND 279 OR report_category_id = @MANAGMENT_CATEGORY_ID OR report_category_id = @OPERATIONAL_CATEGORY_ID);
+                DELETE FROM report WHERE activity_id BETWEEN 257 AND 279 OR report_category_id = @MANAGMENT_CATEGORY_ID OR report_category_id = @OPERATIONAL_CATEGORY_ID;
+                DELETE FROM report_category WHERE report_category_id = @MANAGMENT_CATEGORY_ID OR report_category_id = @OPERATIONAL_CATEGORY_ID; 
+
+                DELETE FROM roles_activity WHERE activity_id IN (SELECT activity_id FROM activity WHERE parent_id IN (255, 256) OR activity_id BETWEEN 257 AND 279 OR activity_id IN (SELECT activity_id FROM report WHERE report_category_id = @MANAGMENT_CATEGORY_ID OR report_category_id = @OPERATIONAL_CATEGORY_ID));
+
+                DELETE FROM activity WHERE parent_id IN (255, 256) OR activity_id BETWEEN 257 AND 279 OR activity_id IN (SELECT activity_id FROM report WHERE report_category_id = @MANAGMENT_CATEGORY_ID OR report_category_id = @OPERATIONAL_CATEGORY_ID);
+
+                DELETE FROM lookup_value_locale WHERE lookup_id IN (SELECT lookup_id from lookup_value WHERE lookup_name IN ('Permissions-CanViewAgingSummaryReport', 'Permissions-CanViewClosedLoansReport', 'Permissions-CanViewClosedLoansSummaryperBranchReport', 'Permissions-CanViewDormantClientsSummaryReport', 'Permissions-CanViewClientExitReport', 'Permissions-CanViewActiveLoansSummaryperBranchReport', 'Permissions-CanViewActiveLoansbyCenterReport', 'Permissions-CanViewActiveLoansbyLoanProductReport', 'Permissions-CanViewActiveLoansbyLoanPurposeReport', 'Permissions-CanViewActiveLoansbyLoanOfficerReport', 'Permissions-CanViewActiveLoansintheirLastInstallmentReport', 'Permissions-CanViewBranchExpectedCashFlowReport', 'Permissions-CanViewClientsSummaryReport', 'Permissions-CanViewCenterCollectionSheetReport', 'Permissions-CanViewGroupCollectionSheetM-PESAReport', 'Permissions-CanViewGroupsInformationReport', 'Permissions-CanViewLoanAgeingReportReport', 'Permissions-CanViewLoansPendingApprovalReport', 'Permissions-CanViewLoanstobeDisbursedReport', 'Permissions-CanViewMifosTransactions-DetailedReport', 'Permissions-CanViewMifosTransactions-SummaryReport', 'Permissions-CanViewOverdueMatureLoansReport', 'Permissions-CanViewWrittenOffLoansReport'));
+
+                DELETE FROM lookup_value WHERE entity_id = 87 AND lookup_name IN ('Permissions-CanViewAgingSummaryReport', 'Permissions-CanViewClosedLoansReport', 'Permissions-CanViewClosedLoansSummaryperBranchReport', 'Permissions-CanViewDormantClientsSummaryReport', 'Permissions-CanViewClientExitReport', 'Permissions-CanViewActiveLoansSummaryperBranchReport', 'Permissions-CanViewActiveLoansbyCenterReport', 'Permissions-CanViewActiveLoansbyLoanProductReport', 'Permissions-CanViewActiveLoansbyLoanPurposeReport', 'Permissions-CanViewActiveLoansbyLoanOfficerReport', 'Permissions-CanViewActiveLoansintheirLastInstallmentReport', 'Permissions-CanViewBranchExpectedCashFlowReport', 'Permissions-CanViewClientsSummaryReport', 'Permissions-CanViewCenterCollectionSheetReport', 'Permissions-CanViewGroupCollectionSheetM-PESAReport', 'Permissions-CanViewGroupsInformationReport', 'Permissions-CanViewLoanAgeingReportReport', 'Permissions-CanViewLoansPendingApprovalReport', 'Permissions-CanViewLoanstobeDisbursedReport', 'Permissions-CanViewMifosTransactions-DetailedReport', 'Permissions-CanViewMifosTransactions-SummaryReport', 'Permissions-CanViewOverdueMatureLoansReport', 'Permissions-CanViewWrittenOffLoansReport');
+
+                DELETE FROM roles_activity WHERE activity_id IN (255, 256);
+                DELETE FROM activity WHERE activity_id IN (255, 256);
+                DELETE FROM lookup_value_locale WHERE lookup_id IN (SELECT lookup_id from lookup_value WHERE lookup_name IN ('Permissions-CanViewManagmentReports', 'Permissions-CanViewOperationalReports'));
+                DELETE FROM lookup_value WHERE entity_id = 87 AND lookup_name IN ('Permissions-CanViewManagmentReports', 'Permissions-CanViewOperationalReports');
             </sql>
         </rollback>
     </changeSet>

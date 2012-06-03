@@ -191,7 +191,10 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_APPROVE_LOANS_IN_BULK')")
     List<String> updateSeveralLoanAccountStatuses(List<AccountUpdateStatus> accountsForUpdate, Date transactionDate);
-
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    String updateSingleLoanAccountStatus(AccountUpdateStatus accountForUpdate, Date transactionDate);
+    
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_REVERSE_LOAN_DISBURSAL')")
     List<LoanActivityDto> retrieveLoanPaymentsForReversal(String globalAccountNum);
 

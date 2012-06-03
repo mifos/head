@@ -50,7 +50,7 @@ public class PentahoReportLocator {
         String reportPath = getPathToUploadedReport(reportName);
         try {
             URL url = new URL(reportPath);
-            return url;
+            return (new File(url.getPath()).exists()) ? url : null;
         } catch (MalformedURLException ex) {
             throw new MifosRuntimeException(ex);
         }
