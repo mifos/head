@@ -307,6 +307,24 @@
 		                    </execution>
 		                </executions>
 		            </plugin>
+		            <plugin>
+						<artifactId>exec-maven-plugin</artifactId>
+						<groupId>org.codehaus.mojo</groupId>
+						<version>1.1</version>
+							<executions>
+							    <execution>
+							        <id>port-switch</id>
+							        <phase>compile</phase>
+							        <configuration>
+							            <executable>port_switch.sh</executable>
+							        </configuration>
+    								<goals>
+							            <goal>exec</goal>
+							        </goals>
+							    </execution>
+							</executions>
+						
+					</plugin>
 		        </plugins>
 		    </build>
 	    </profile>
