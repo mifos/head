@@ -290,8 +290,12 @@ public class StandardAccountService implements AccountService {
         boolean variableInstallmentsAllowed = loan.isVariableInstallmentsAllowed();
         loanBusinessService.adjustDatesForVariableInstallments(variableInstallmentsAllowed, loan.isFixedRepaymentSchedule(),
                 originalInstallments, oldDisbursementDate, newDisbursementDate, loan.getOfficeId());
+        Date today = new LocalDate().toDateMidnight().toDate();
+        Date disburseDay = new LocalDate(oldDisbursementDate).toDateMidnight().toDate();
+		if (!today.equals(disburseDay)) {
         loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(newDisbursementDate,
                 loan, variableInstallmentsAllowed, amount, interestRate), originalInstallments);
+        }
         loanBusinessService.persistOriginalSchedule(loan);
     }
 
