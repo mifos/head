@@ -22,6 +22,7 @@ package org.mifos.security.rolesandpermission.struts.tag;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.mifos.dto.domain.ActivityRestrictionDto;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -65,6 +67,13 @@ public class ActivityTag extends TagSupport {
                 Set<Short> activitySet = convertToIdSet(flitered);
                 builder.setCurrentActivites(activitySet);
             }
+            Map<Short, ActivityRestrictionDto> activityRestrictionDtoMap = (Map<Short, ActivityRestrictionDto>) SessionUtils
+                    .getAttribute(RolesAndPermissionConstants.ROLE_ACTIVITIES_RESTRICTIONS_MAP,
+                            (HttpServletRequest) pageContext.getRequest());
+            if ( activityRestrictionDtoMap == null){
+                activityRestrictionDtoMap = new HashMap<Short, ActivityRestrictionDto>();
+            }
+            builder.setActivityRestrictionDtoMap(activityRestrictionDtoMap);
             SessionUtils.getAttribute(Constants.BUSINESS_KEY, (HttpServletRequest) pageContext.getRequest());
             StringBuilder sb = builder.getRolesTemplete(activities);
             pageContext.getOut().print(sb.toString());
@@ -94,7 +103,7 @@ public class ActivityTag extends TagSupport {
         }
         return activities;
     }
-
+    
     List<ActivityEntity> getActivities(List<ActivityEntity> activityList, Map<String, String> activities) {
         List<ActivityEntity> newActivityList = new ArrayList<ActivityEntity>();
         List<Short> ids = new ArrayList<Short>();
