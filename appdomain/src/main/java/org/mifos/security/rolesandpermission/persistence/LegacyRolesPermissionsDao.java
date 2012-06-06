@@ -55,6 +55,8 @@ import org.mifos.security.activity.ActivityGeneratorException;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
+import org.mifos.security.rolesandpermission.business.ActivityRestrictionTypeEntity;
+import org.mifos.security.rolesandpermission.business.RoleActivityRestrictionBO;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
@@ -102,6 +104,40 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
             throw new SecurityException(SecurityConstants.GENERALERROR, he);
         }
         return roles;
+    }
+    
+    public RoleActivityRestrictionBO getRoleActivityRestrictionByType(short roleId, short activityRestrictionTypeId) throws PersistenceException{
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("roleId", roleId);
+        queryParameters.put("activityRestrictionTypeId", activityRestrictionTypeId);
+        return (RoleActivityRestrictionBO) execUniqueResultNamedQuery(NamedQueryConstants.GET_ROLE_ACTIVITY_RESTRICTION_FOR_GIVEN_TYPEID, queryParameters);
+    }
+    
+    public RoleActivityRestrictionBO getActivityRestrictionById(Integer activityRestrictionId) throws PersistenceException{
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("id", activityRestrictionId);
+        return (RoleActivityRestrictionBO) execUniqueResultNamedQuery(NamedQueryConstants.GET_ACTIVITY_RESTRICTION_FOR_GIVEN_ID, queryParameters);
+    }
+    
+    public List<RoleActivityRestrictionBO> getRoleActivitiesRestrictions(short roleId) throws PersistenceException{
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("roleId", roleId);
+        return (List<RoleActivityRestrictionBO>) executeNamedQuery(NamedQueryConstants.GET_ROLE_ACTIVITIES_RESTRICTIONS, queryParameters);
+    }
+    
+    public List<ActivityRestrictionTypeEntity> getActivitiesRestrictionTypes() throws PersistenceException{
+        try {
+            Query query = getSession().getNamedQuery(NamedQueryConstants.GET_ALL_ACTIVITY_RESTRICTION_TYPES);
+            return query.list();
+        } catch (HibernateException e){
+            throw new PersistenceException(e);
+        }
+    }
+    
+    public ActivityRestrictionTypeEntity getActivityRestrictionTypeEntity(Short id) throws PersistenceException{
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("id", id);
+        return (ActivityRestrictionTypeEntity) execUniqueResultNamedQuery(NamedQueryConstants.GET_ACTIVITY_RESTRICTION_TYPE_BY_ID, queryParameters);
     }
 
     /**

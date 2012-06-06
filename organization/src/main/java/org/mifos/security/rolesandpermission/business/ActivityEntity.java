@@ -33,6 +33,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.mifos.application.master.business.LookUpValueEntity;
@@ -70,6 +71,10 @@ public class ActivityEntity extends AbstractEntity {
             joinColumns={@JoinColumn(name="activity_id", referencedColumnName="activity_id")},
             inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="role_id")})
     private final Set<RoleBO> roles = new HashSet<RoleBO>(0);
+    
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name="activity_id")
+    private final Set<ActivityRestrictionTypeEntity> activityRestrictionTypes = new HashSet<ActivityRestrictionTypeEntity>(0);
 
     private transient String description;
     private transient String activityName;
@@ -145,6 +150,9 @@ public class ActivityEntity extends AbstractEntity {
         this.activityName = activityName;
     }
 
+    public Set<ActivityRestrictionTypeEntity> getActivityRestrictionTypes() {
+        return activityRestrictionTypes;
+    }
 
     @Override
     public int hashCode() {

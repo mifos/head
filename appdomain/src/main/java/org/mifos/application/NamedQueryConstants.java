@@ -305,6 +305,12 @@ public interface NamedQueryConstants {
     String GET_ALL_ROLES = "getAllRoles";
     String GET_PERSONNEL_ROLE_COUNT = "getPersonnelRoleCount";
 
+    String GET_ACTIVITY_RESTRICTION_FOR_GIVEN_ID = "getActivityRestrictionById";
+    String GET_ROLE_ACTIVITY_RESTRICTION_FOR_GIVEN_TYPEID = "getRoleActivityRestrictionForGivenTypeId";
+    String GET_ROLE_ACTIVITIES_RESTRICTIONS = "getRoleActivitiesRestrictions";
+    String GET_ALL_ACTIVITY_RESTRICTION_TYPES = "getAllActivityRestrictionTypes";
+    String GET_ACTIVITY_RESTRICTION_TYPE_BY_ID = "getActivityRestrictionTypeById";
+    
     String PRODUCT_STATUS = "product.status";
     String ALL_PRD_STATES = "product.getAllPrdStates";
     String PRODUCT_ALL_LOAN_PRODUCTS = "product.getAllLoanProducts";
