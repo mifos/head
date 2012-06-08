@@ -20,9 +20,13 @@
 
 package org.mifos.security.rolesandpermission.struts.actionforms;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.mifos.dto.domain.ActivityRestrictionDto;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 public class RolesPermissionsActionForm extends BaseActionForm {
@@ -32,7 +36,14 @@ public class RolesPermissionsActionForm extends BaseActionForm {
     private String name;
 
     private Map<String, String> activities = new HashMap<String, String>();
+    
+    private List<ActivityRestrictionDto> activityRestrictionDtoList = new ArrayList<ActivityRestrictionDto>();
 
+    /**
+     * map of activityRestrictionId and activityRestrictionTypeId 
+     */
+    private Map<String, String> activityRestrictionIdAndTypeIdMap = new HashMap<String, String>();
+    
     public Map<String, String> getActivities() {
         return activities;
     }
@@ -51,6 +62,38 @@ public class RolesPermissionsActionForm extends BaseActionForm {
 
     public void setActivity(String key, String value) {
         this.activities.put(key, value);
+    }
+    
+    public void setActivityRestriction(String activtiyRestrictionTypeIdString, String amountValueString){
+        if ( amountValueString != null && !amountValueString.isEmpty() ){
+            Short roleId = 0;
+            Short activtiyRestrictionTypeId = new Short(activtiyRestrictionTypeIdString);
+            BigDecimal amountValue = new BigDecimal(amountValueString);
+            if ( id != null ){ //update
+                roleId = new Short(id);
+                for (ActivityRestrictionDto activityRestrictionDtoIterator : this.activityRestrictionDtoList){
+                    if ( activityRestrictionDtoIterator.getActivityRestrictionTypeId().equals(activtiyRestrictionTypeId)){
+                        activityRestrictionDtoIterator.setAmountValue(amountValue);
+                        break;
+                    }
+                }
+            } else { //create new
+                this.activityRestrictionDtoList.add(new ActivityRestrictionDto(activtiyRestrictionTypeId, amountValue));    
+            }
+        }
+    }
+    
+    public void resetActivityRestriction(){
+        this.activityRestrictionDtoList.clear();
+        this.activityRestrictionIdAndTypeIdMap.clear();
+    }
+    
+    public List<ActivityRestrictionDto> getActivityRestrictionDtoList() {
+        return activityRestrictionDtoList;
+    }
+
+    public void setActivityRestrictionDtoList(List<ActivityRestrictionDto> activityRestrictionDtoList) {
+        this.activityRestrictionDtoList = activityRestrictionDtoList;
     }
 
     public String getId() {

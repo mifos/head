@@ -309,4 +309,74 @@
             </sql>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS-5408_1" author="Michal Dudzinski" context="expansion">
+    	<sql endDelimiter=";">
+    			DROP TABLE IF EXISTS activity_restriction_type;
+	    		CREATE TABLE activity_restriction_type (
+			  		activity_restriction_type_id smallint auto_increment not null,
+					activity_id smallint not null,
+					lookup_id integer not null,
+					PRIMARY KEY(activity_restriction_type_id),
+					foreign key(lookup_id)
+					  references lookup_value(lookup_id)
+					    on delete no action
+					    on update no action,
+					foreign key(activity_id)
+					  references activity(activity_id)
+					  on delete no action
+					  on update no action
+				) ENGINE=innodb character set utf8;
+
+				CREATE TABLE role_activity_restriction (
+				  activity_restriction_id integer not null,
+				  role_id smallint not null,
+				  activity_restriction_type_id smallint not null,
+				  activity_restriction_amount_value decimal(21,4),
+				  version_no integer not null,
+				  created_by smallint,
+				  created_date date,
+				  updated_by smallint,
+				  updated_date date,
+				  PRIMARY KEY(activity_restriction_id),
+				  foreign key(role_id)
+				    references role(role_id)
+				     on delete no action
+				     on update no action,
+				  foreign key(activity_restriction_type_id)
+				    references activity_restriction_type(activity_restriction_type_id)
+				    on delete no action
+				    on update no action,
+				  foreign key(created_by)
+				    references personnel(personnel_id)
+				      on delete no action
+				      on update no action,
+				  foreign key(updated_by)
+				    references personnel(personnel_id)
+				      on delete no action
+				      on update no action
+				)
+				ENGINE=InnoDB character set utf8;
+
+				INSERT INTO lookup_entity(entity_name, description) values ('ActivityRestriction', 'Activity Restriction');
+				INSERT INTO lookup_value(entity_id, lookup_name) SELECT entity_id, 'ActivityRestriction-MaxLoanAmountForApprove' FROM lookup_entity WHERE entity_name LIKE 'ActivityRestriction';
+				
+				SET @ACTIVITY_ID = (SELECT activity_id FROM activity WHERE activity.activity_name_lookup_Id = (SELECT lookup_id FROM lookup_value where lookup_value.lookup_name LIKE 'Permissions-LoanProcessing-CanChangeStateToApproved') );
+				SET @LOOKUP_ID = (SELECT lookup_id FROM lookup_value WHERE lookup_value.lookup_name LIKE 'ActivityRestriction-MaxLoanAmountForApprove' );
+				INSERT INTO activity_restriction_type  (activity_id, lookup_id) VALUES ( @ACTIVITY_ID, @LOOKUP_ID);
+    	</sql>
+    	<rollback>
+	    	<sql endDelimiter=";">
+				SET @ACTIVITY_ID = ( SELECT activity_id FROM activity WHERE activity.activity_name_lookup_Id = (select lookup_id from lookup_value where lookup_value.lookup_name LIKE 'Permissions-LoanProcessing-CanChangeStateToApproved') );
+				SET @LOOKUP_ID = (SELECT lookup_id FROM lookup_value WHERE lookup_value.lookup_name LIKE 'ActivityRestriction-MaxLoanAmountForApprove' );
+	    		SET @ACTIVITY_RESTRICTION_TYPE_ID = ( SELECT activity_restriction_type_id FROM activity_restriction_type WHERE activity_id = @ACTIVITY_ID AND lookup_id = @LOOKUP_ID );
+	    		SET @ENTITY_ID = (SELECT entity_id FROM lookup_entity WHERE lookup_entity.entity_name LIKE 'ActivityRestriction');
+				DELETE FROM activity_restriction_type where activity_restriction_type_id = @ACTIVITY_RESTRICTION_TYPE_ID;
+				DELETE FROM lookup_value WHERE lookup_value.lookup_id = @LOOKUP_ID;
+				DELETE FROM lookup_entity WHERE lookup_entity.entity_id = @ENTITY_ID;
+				
+				DROP TABLE role_activity_restriction;
+				DROP TABLE activity_restriction_type;
+	    	</sql>
+    	</rollback>
+    </changeSet>
 </databaseChangeLog>

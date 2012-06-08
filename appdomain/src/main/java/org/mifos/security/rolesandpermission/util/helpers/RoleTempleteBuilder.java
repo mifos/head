@@ -27,12 +27,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.dto.domain.ActivityRestrictionDto;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
+import org.mifos.security.rolesandpermission.business.ActivityRestrictionTypeEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +73,11 @@ public class RoleTempleteBuilder {
 
     private HashMap<Short, List<ActivityEntity>> childMap = new HashMap<Short, List<ActivityEntity>>();
 
+    /**
+     * This will hold role ActivityRestrictionDtos associated with given activityRestrictionTypeId
+     */
+    private Map<Short, ActivityRestrictionDto> activityRestrictionDtoMap = new HashMap<Short, ActivityRestrictionDto>();
+    
     /**
      * Helper varibale used to give name to the checkboxes in the ui
      */
@@ -218,13 +226,53 @@ public class RoleTempleteBuilder {
 
                     buff.append(entity.getDescription());
                 }
-
                 buff.append("</span></td></tr>");
+                if (li.size() == 0) {
+                    makeActivityRestrictionRow(entity.getActivityRestrictionTypes(), buff,  name1);
+                }
                 makeTable(l, lst.get(i).getId(), buff, level + 1, name1);
             }
 
         }
 
+    }
+    
+    /**
+     * This method builds row for activity restriction input (if is any defined for specified activity(permission)). 
+     */
+    private void makeActivityRestrictionRow(Set<ActivityRestrictionTypeEntity> activityRestrictionTypes, StringBuilder buffer, String name){
+        if ( activityRestrictionTypes.size() > 0){
+            Integer level = 0;
+            for (ActivityRestrictionTypeEntity activityRestrictionType : activityRestrictionTypes){
+                ActivityRestrictionDto activityRestrictionDto = activityRestrictionDtoMap.get(activityRestrictionType.getId());
+                String activityRestrictionValue = "";
+                if ( activityRestrictionDto != null){
+                    activityRestrictionValue = activityRestrictionDto.getAmountValue().toString();
+                }
+                String checkboxName = name + "_" + level.toString();
+                String activityRestrictionTypeDescription = ApplicationContextProvider.getBean(MessageLookup.class).lookup(activityRestrictionType.getLookUpValue());
+                String checked = "";
+                if (!activityRestrictionValue.isEmpty()){
+                    checked = " checked=\"checked\" ";
+                }
+                buffer.append("<tr>");
+                buffer.append("<td bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\">&nbsp; </td> ");
+                buffer.append("<td bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\">&nbsp; </td> ");
+                buffer.append("<td bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\">&nbsp; </td> ");
+                buffer.append("<td width=\"3%\" bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\">");
+                buffer.append("<input type=\"checkbox\" " + checked + "id=\"" + checkboxName + "\" onclick=\"doCheck(this)\"  />");
+                buffer.append("<td colspan=\"2\" bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\">");
+                buffer.append("<span class=\"fontnormal\">");
+                buffer.append(activityRestrictionTypeDescription);
+                buffer.append("</span>");
+                buffer.append("</td>");
+                buffer.append("<td width=\"50%\" bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomLeftBorder\">");
+                buffer.append("<input type=\"text\" value=\""+activityRestrictionValue+"\" name=\"activityRestriction("+ activityRestrictionType.getId() + ")\" />");
+                buffer.append("</td>");
+                buffer.append("</tr>"); 
+                level++;
+            }
+        }
     }
 
     /**
@@ -364,6 +412,14 @@ public class RoleTempleteBuilder {
         }
 
         return checked;
+    }
+
+    public Map<Short, ActivityRestrictionDto> getActivityRestrictionDtoMap() {
+        return activityRestrictionDtoMap;
+    }
+
+    public void setActivityRestrictionDtoMap(Map<Short, ActivityRestrictionDto> activityRestrictionDtoMap) {
+        this.activityRestrictionDtoMap = activityRestrictionDtoMap;
     }
 
 }

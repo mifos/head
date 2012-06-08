@@ -78,7 +78,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     @PreAuthorize("isFullyAuthenticated()")
     AccountStatusDto retrieveAccountStatuses(Long loanAccountId);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasPermission(#updateStatus, 'MAX_LOAN_AMOUNT_FOR_APPROVE')")
     String updateLoanAccountStatus(AccountUpdateStatus updateStatus, Date transactionDate);
 
     @PreAuthorize("isFullyAuthenticated()")
@@ -189,10 +189,10 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CAN_APPROVE_LOANS_IN_BULK', 'ROLE_CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS')")
     ChangeAccountStatusDto retrieveLoanOfficerDetailsForBranch(Short officeId);
 
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_APPROVE_LOANS_IN_BULK')")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_APPROVE_LOANS_IN_BULK') and hasPermission(#accountsForUpdate, 'MAX_LOAN_AMOUNT_FOR_APPROVE')")
     List<String> updateSeveralLoanAccountStatuses(List<AccountUpdateStatus> accountsForUpdate, Date transactionDate);
     
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasPermission(#accountForUpdate, 'MAX_LOAN_AMOUNT_FOR_APPROVE')")
     String updateSingleLoanAccountStatus(AccountUpdateStatus accountForUpdate, Date transactionDate);
     
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_REVERSE_LOAN_DISBURSAL')")

@@ -213,7 +213,9 @@
         <mapping resource="org/mifos/customers/client/business/ClientInitialSavingsOfferingEntity.hbm.xml" />
 
         <mapping class="org.mifos.security.rolesandpermission.business.ActivityEntity" />
+        <mapping class="org.mifos.security.rolesandpermission.business.ActivityRestrictionTypeEntity" />
         <mapping class="org.mifos.security.rolesandpermission.business.RoleBO" />
+        <mapping class="org.mifos.security.rolesandpermission.business.RoleActivityRestrictionBO" />
         <mapping resource="org/mifos/accounts/fund/business/FundBO.hbm.xml" />
         <mapping class="org.mifos.application.master.business.FundCodeEntity" />
 

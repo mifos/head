@@ -15,6 +15,7 @@
   <DATABASECHANGELOG ID="MIFOS-4951_1" AUTHOR="Van Mittal-Henkle" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-09-17 20:04:23.0" ORDEREXECUTED="115" EXECTYPE="EXECUTED" MD5SUM="3:5582c64c65c11eeb61ce7f8edd0d42f5" DESCRIPTION="Custom SQL, Create Procedure, Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS-5111_1" AUTHOR="Udai Gupta" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-10-04 01:31:58.0" ORDEREXECUTED="33" EXECTYPE="EXECUTED" MD5SUM="3:33dd48ee85c1bda8d6af0e90b95834b7" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS-5371_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-05 22:55:53.0" ORDEREXECUTED="205" EXECTYPE="EXECUTED" MD5SUM="3:6b6c689a6176a1245adb95e1af15072b" DESCRIPTION="Add Column" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS-5408_1" AUTHOR="Michal Dudzinski" FILENAME="changesets/changelog-Release_I.xml" DATEEXECUTED="2012-06-06 14:44:52.0" ORDEREXECUTED="325" EXECTYPE="EXECUTED" MD5SUM="3:e72c3614bea151e1ddd092fdec52bbc0" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOSSUPPORT-44_1" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:23.0" ORDEREXECUTED="105" EXECTYPE="EXECUTED" MD5SUM="3:eb1d1711b1eea8756e15291e03873ba5" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOSSUPPORT-44_2" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:04:23.0" ORDEREXECUTED="106" EXECTYPE="EXECUTED" MD5SUM="3:ad14c03a6c51a27ff46e10e0a28842d2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_2852_1" AUTHOR="Piotr Bogacz" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-09-17 20:04:23.0" ORDEREXECUTED="114" EXECTYPE="EXECUTED" MD5SUM="3:0781b02231b6f43b1a820baab16cb49b" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
@@ -71,6 +72,7 @@
   <DATABASECHANGELOG ID="MIFOS_5456_3" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_I.xml" DATEEXECUTED="2012-05-11 13:16:48.0" ORDEREXECUTED="307" EXECTYPE="EXECUTED" MD5SUM="3:2d61ecfdb933cb92d4ea74b85f64e3c9" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5458_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-13 17:59:44.0" ORDEREXECUTED="287" EXECTYPE="EXECUTED" MD5SUM="3:d52e183334a1d2419a7cdf05145fbb44" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS_5521_1" AUTHOR="Lukasz Lewczynski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-03-29 13:13:30.0" ORDEREXECUTED="303" EXECTYPE="EXECUTED" MD5SUM="3:60252201a85395f0b48a2f090a9fc456" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS_5596_1" AUTHOR="Pawel Gesek" FILENAME="changesets/changelog-Release_I.xml" DATEEXECUTED="2012-06-06 14:44:52.0" ORDEREXECUTED="324" EXECTYPE="EXECUTED" MD5SUM="3:006fc5f5fabb749f7f8de219640e1a35" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOGLOCK ID="1" LOCKED="false"/>
   <QRTZ_BLOB_TRIGGERS/>
   <QRTZ_CALENDARS/>
@@ -427,6 +429,32 @@
   <activity activity_id="252" parent_id="251" activity_name_lookup_id="661" description_lookup_id="661"/>
   <activity activity_id="253" parent_id="251" activity_name_lookup_id="662" description_lookup_id="662"/>
   <activity activity_id="254" parent_id="136" activity_name_lookup_id="664" description_lookup_id="664"/>
+  <activity activity_id="255" parent_id="141" activity_name_lookup_id="665" description_lookup_id="665"/>
+  <activity activity_id="256" parent_id="141" activity_name_lookup_id="666" description_lookup_id="666"/>
+  <activity activity_id="257" parent_id="255" activity_name_lookup_id="667" description_lookup_id="667"/>
+  <activity activity_id="258" parent_id="255" activity_name_lookup_id="668" description_lookup_id="668"/>
+  <activity activity_id="259" parent_id="255" activity_name_lookup_id="669" description_lookup_id="669"/>
+  <activity activity_id="260" parent_id="255" activity_name_lookup_id="670" description_lookup_id="670"/>
+  <activity activity_id="261" parent_id="255" activity_name_lookup_id="671" description_lookup_id="671"/>
+  <activity activity_id="262" parent_id="256" activity_name_lookup_id="672" description_lookup_id="672"/>
+  <activity activity_id="263" parent_id="256" activity_name_lookup_id="673" description_lookup_id="673"/>
+  <activity activity_id="264" parent_id="256" activity_name_lookup_id="674" description_lookup_id="674"/>
+  <activity activity_id="265" parent_id="256" activity_name_lookup_id="675" description_lookup_id="675"/>
+  <activity activity_id="266" parent_id="256" activity_name_lookup_id="676" description_lookup_id="676"/>
+  <activity activity_id="267" parent_id="256" activity_name_lookup_id="677" description_lookup_id="677"/>
+  <activity activity_id="268" parent_id="256" activity_name_lookup_id="678" description_lookup_id="678"/>
+  <activity activity_id="269" parent_id="256" activity_name_lookup_id="679" description_lookup_id="679"/>
+  <activity activity_id="270" parent_id="256" activity_name_lookup_id="680" description_lookup_id="680"/>
+  <activity activity_id="271" parent_id="256" activity_name_lookup_id="681" description_lookup_id="681"/>
+  <activity activity_id="272" parent_id="256" activity_name_lookup_id="682" description_lookup_id="682"/>
+  <activity activity_id="273" parent_id="256" activity_name_lookup_id="683" description_lookup_id="683"/>
+  <activity activity_id="274" parent_id="256" activity_name_lookup_id="684" description_lookup_id="684"/>
+  <activity activity_id="275" parent_id="256" activity_name_lookup_id="685" description_lookup_id="685"/>
+  <activity activity_id="276" parent_id="256" activity_name_lookup_id="686" description_lookup_id="686"/>
+  <activity activity_id="277" parent_id="256" activity_name_lookup_id="687" description_lookup_id="687"/>
+  <activity activity_id="278" parent_id="256" activity_name_lookup_id="688" description_lookup_id="688"/>
+  <activity activity_id="279" parent_id="256" activity_name_lookup_id="689" description_lookup_id="689"/>
+  <activity_restriction_type activity_restriction_type_id="1" activity_id="104" lookup_id="690"/>
   <admin_document/>
   <admin_document_acc_state_mix/>
   <applied_upgrades upgrade_id="1277565300"/>
@@ -2052,6 +2080,7 @@
   <lookup_entity entity_id="95" entity_name="PenaltyPeriod" description="PenaltyPeriod"/>
   <lookup_entity entity_id="96" entity_name="PenaltyFrequency" description="PenaltyFrequency"/>
   <lookup_entity entity_id="97" entity_name="PenaltyStatus" description="PenaltyStatus"/>
+  <lookup_entity entity_id="98" entity_name="ActivityRestriction" description="Activity Restriction"/>
   <lookup_label label_id="1" entity_id="1" locale_id="1"/>
   <lookup_label label_id="3" entity_id="2" locale_id="1"/>
   <lookup_label label_id="5" entity_id="3" locale_id="1"/>
@@ -2548,6 +2577,32 @@
   <lookup_value lookup_id="662" entity_id="87" lookup_name="Permissions-CanModifyPenaltyInformation"/>
   <lookup_value lookup_id="663" entity_id="71" lookup_name="PaymentType-Transfer"/>
   <lookup_value lookup_id="664" entity_id="87" lookup_name="Permissions-CanTransferFunds"/>
+  <lookup_value lookup_id="665" entity_id="87" lookup_name="Permissions-CanViewManagmentReports"/>
+  <lookup_value lookup_id="666" entity_id="87" lookup_name="Permissions-CanViewOperationalReports"/>
+  <lookup_value lookup_id="667" entity_id="87" lookup_name="Permissions-CanViewAgingSummaryReport"/>
+  <lookup_value lookup_id="668" entity_id="87" lookup_name="Permissions-CanViewClosedLoansReport"/>
+  <lookup_value lookup_id="669" entity_id="87" lookup_name="Permissions-CanViewClosedLoansSummaryperBranchReport"/>
+  <lookup_value lookup_id="670" entity_id="87" lookup_name="Permissions-CanViewDormantClientsSummaryReport"/>
+  <lookup_value lookup_id="671" entity_id="87" lookup_name="Permissions-CanViewClientExitReport"/>
+  <lookup_value lookup_id="672" entity_id="87" lookup_name="Permissions-CanViewActiveLoansSummaryperBranchReport"/>
+  <lookup_value lookup_id="673" entity_id="87" lookup_name="Permissions-CanViewActiveLoansbyCenterReport"/>
+  <lookup_value lookup_id="674" entity_id="87" lookup_name="Permissions-CanViewActiveLoansbyLoanProductReport"/>
+  <lookup_value lookup_id="675" entity_id="87" lookup_name="Permissions-CanViewActiveLoansbyLoanPurposeReport"/>
+  <lookup_value lookup_id="676" entity_id="87" lookup_name="Permissions-CanViewActiveLoansbyLoanOfficerReport"/>
+  <lookup_value lookup_id="677" entity_id="87" lookup_name="Permissions-CanViewActiveLoansintheirLastInstallmentReport"/>
+  <lookup_value lookup_id="678" entity_id="87" lookup_name="Permissions-CanViewBranchExpectedCashFlowReport"/>
+  <lookup_value lookup_id="679" entity_id="87" lookup_name="Permissions-CanViewClientsSummaryReport"/>
+  <lookup_value lookup_id="680" entity_id="87" lookup_name="Permissions-CanViewCenterCollectionSheetReport"/>
+  <lookup_value lookup_id="681" entity_id="87" lookup_name="Permissions-CanViewGroupCollectionSheetM-PESAReport"/>
+  <lookup_value lookup_id="682" entity_id="87" lookup_name="Permissions-CanViewGroupsInformationReport"/>
+  <lookup_value lookup_id="683" entity_id="87" lookup_name="Permissions-CanViewLoanAgeingReportReport"/>
+  <lookup_value lookup_id="684" entity_id="87" lookup_name="Permissions-CanViewLoansPendingApprovalReport"/>
+  <lookup_value lookup_id="685" entity_id="87" lookup_name="Permissions-CanViewLoanstobeDisbursedReport"/>
+  <lookup_value lookup_id="686" entity_id="87" lookup_name="Permissions-CanViewMifosTransactions-DetailedReport"/>
+  <lookup_value lookup_id="687" entity_id="87" lookup_name="Permissions-CanViewMifosTransactions-SummaryReport"/>
+  <lookup_value lookup_id="688" entity_id="87" lookup_name="Permissions-CanViewOverdueMatureLoansReport"/>
+  <lookup_value lookup_id="689" entity_id="87" lookup_name="Permissions-CanViewWrittenOffLoansReport"/>
+  <lookup_value lookup_id="690" entity_id="98" lookup_name="ActivityRestriction-MaxLoanAmountForApprove"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -2954,6 +3009,31 @@
   <lookup_value_locale lookup_value_id="993" locale_id="1" lookup_id="662"/>
   <lookup_value_locale lookup_value_id="994" locale_id="1" lookup_id="663"/>
   <lookup_value_locale lookup_value_id="995" locale_id="1" lookup_id="664"/>
+  <lookup_value_locale lookup_value_id="996" locale_id="1" lookup_id="665"/>
+  <lookup_value_locale lookup_value_id="997" locale_id="1" lookup_id="666"/>
+  <lookup_value_locale lookup_value_id="998" locale_id="1" lookup_id="667"/>
+  <lookup_value_locale lookup_value_id="999" locale_id="1" lookup_id="668"/>
+  <lookup_value_locale lookup_value_id="1000" locale_id="1" lookup_id="669"/>
+  <lookup_value_locale lookup_value_id="1001" locale_id="1" lookup_id="670"/>
+  <lookup_value_locale lookup_value_id="1002" locale_id="1" lookup_id="671"/>
+  <lookup_value_locale lookup_value_id="1003" locale_id="1" lookup_id="672"/>
+  <lookup_value_locale lookup_value_id="1004" locale_id="1" lookup_id="673"/>
+  <lookup_value_locale lookup_value_id="1005" locale_id="1" lookup_id="674"/>
+  <lookup_value_locale lookup_value_id="1006" locale_id="1" lookup_id="675"/>
+  <lookup_value_locale lookup_value_id="1007" locale_id="1" lookup_id="676"/>
+  <lookup_value_locale lookup_value_id="1008" locale_id="1" lookup_id="677"/>
+  <lookup_value_locale lookup_value_id="1009" locale_id="1" lookup_id="678"/>
+  <lookup_value_locale lookup_value_id="1010" locale_id="1" lookup_id="679"/>
+  <lookup_value_locale lookup_value_id="1011" locale_id="1" lookup_id="680"/>
+  <lookup_value_locale lookup_value_id="1012" locale_id="1" lookup_id="681"/>
+  <lookup_value_locale lookup_value_id="1013" locale_id="1" lookup_id="682"/>
+  <lookup_value_locale lookup_value_id="1014" locale_id="1" lookup_id="683"/>
+  <lookup_value_locale lookup_value_id="1015" locale_id="1" lookup_id="684"/>
+  <lookup_value_locale lookup_value_id="1016" locale_id="1" lookup_id="685"/>
+  <lookup_value_locale lookup_value_id="1017" locale_id="1" lookup_id="686"/>
+  <lookup_value_locale lookup_value_id="1018" locale_id="1" lookup_id="687"/>
+  <lookup_value_locale lookup_value_id="1019" locale_id="1" lookup_id="688"/>
+  <lookup_value_locale lookup_value_id="1020" locale_id="1" lookup_id="689"/>
   <max_min_interest_rate account_id="4" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="6" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="8" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
@@ -3183,6 +3263,29 @@
   <report report_id="3" report_category_id="6" report_name="Branch Progress Report" report_identifier="branch_progress_report" activity_id="232" report_active="1"/>
   <report report_id="4" report_category_id="6" report_name="Detailed Aging Of Portfolio At Risk" report_identifier="detailed_aging_portfolio_at_risk" activity_id="236" report_active="1"/>
   <report report_id="5" report_category_id="6" report_name="General Ledger Report" report_identifier="general_ledger_report" activity_id="237" report_active="1"/>
+  <report report_id="6" report_category_id="8" report_name="Aging Summary" report_identifier="aging_summary" activity_id="257" report_active="1"/>
+  <report report_id="7" report_category_id="8" report_name="Closed Loans" report_identifier="closed_loans" activity_id="258" report_active="1"/>
+  <report report_id="8" report_category_id="8" report_name="Closed Loans Summary per Branch" report_identifier="closed_loans_summary_per_branch" activity_id="259" report_active="1"/>
+  <report report_id="9" report_category_id="8" report_name="Dormant Clients Summary" report_identifier="dormant_clients_summary" activity_id="260" report_active="1"/>
+  <report report_id="10" report_category_id="8" report_name="Client Exit" report_identifier="client_exit" activity_id="261" report_active="1"/>
+  <report report_id="11" report_category_id="9" report_name="Active Loans Summary per Branch" report_identifier="active_loans_summary_per_branch" activity_id="262" report_active="1"/>
+  <report report_id="12" report_category_id="9" report_name="Active Loans by Center" report_identifier="active_loans_by_center" activity_id="263" report_active="1"/>
+  <report report_id="13" report_category_id="9" report_name="Active Loans by Loan Product" report_identifier="active_loans_by_loan_product" activity_id="264" report_active="1"/>
+  <report report_id="14" report_category_id="9" report_name="Active Loans by Loan Purpose" report_identifier="active_loans_by_loan_purpose" activity_id="265" report_active="1"/>
+  <report report_id="15" report_category_id="9" report_name="Active Loans by Loan Officer" report_identifier="active_loans_by_loan_officer" activity_id="266" report_active="1"/>
+  <report report_id="16" report_category_id="9" report_name="Active Loans in their Last Installment" report_identifier="active_loans_in_their_last_installment" activity_id="267" report_active="1"/>
+  <report report_id="17" report_category_id="9" report_name="Branch Expected Cash Flow" report_identifier="branch_expected_cash_flow" activity_id="268" report_active="1"/>
+  <report report_id="18" report_category_id="9" report_name="Clients Summary" report_identifier="clients_summary" activity_id="269" report_active="1"/>
+  <report report_id="19" report_category_id="9" report_name="Center Collection Sheet" report_identifier="center_collection_sheet" activity_id="270" report_active="1"/>
+  <report report_id="20" report_category_id="9" report_name="Group Collection Sheet (M-PESA)" report_identifier="group_collection_sheet_(m-pesa)" activity_id="271" report_active="1"/>
+  <report report_id="21" report_category_id="9" report_name="Groups Information" report_identifier="groups_information" activity_id="272" report_active="1"/>
+  <report report_id="22" report_category_id="9" report_name="Loan Ageing Report" report_identifier="loan_ageing_report" activity_id="273" report_active="1"/>
+  <report report_id="23" report_category_id="9" report_name="Loans Pending Approval" report_identifier="loans_pending_approval" activity_id="274" report_active="1"/>
+  <report report_id="24" report_category_id="9" report_name="Loans to be Disbursed" report_identifier="loans_to_be_disbursed" activity_id="275" report_active="1"/>
+  <report report_id="25" report_category_id="9" report_name="Mifos Transactions - Detailed" report_identifier="mifos_transactions_-_detailed" activity_id="276" report_active="1"/>
+  <report report_id="26" report_category_id="9" report_name="Mifos Transactions - Summary" report_identifier="mifos_transactions_-_summary" activity_id="277" report_active="1"/>
+  <report report_id="27" report_category_id="9" report_name="Overdue Mature Loans" report_identifier="overdue_mature_loans" activity_id="278" report_active="1"/>
+  <report report_id="28" report_category_id="9" report_name="Written Off Loans" report_identifier="written_off_loans" activity_id="279" report_active="1"/>
   <report_category report_category_id="1" report_category_value="Client Detail" activity_id="145"/>
   <report_category report_category_id="2" report_category_value="Performance" activity_id="148"/>
   <report_category report_category_id="3" report_category_value="Center" activity_id="146"/>
@@ -3190,16 +3293,42 @@
   <report_category report_category_id="5" report_category_value="Status" activity_id="147"/>
   <report_category report_category_id="6" report_category_value="Analysis" activity_id="150"/>
   <report_category report_category_id="7" report_category_value="Miscellaneous" activity_id="151"/>
+  <report_category report_category_id="8" report_category_value="Management" activity_id="255"/>
+  <report_category report_category_id="9" report_category_value="Operational" activity_id="256"/>
   <report_datasource/>
   <report_jasper_map report_id="1" report_category_id="1" report_name="Collection Sheet Report" report_identifier="collection_sheet_report" report_jasper="CollectionSheetReport.rptdesign"/>
   <report_jasper_map report_id="2" report_category_id="6" report_name="Branch Cash Confirmation Report" report_identifier="branch_cash_confirmation_report" report_jasper="BranchCashConfirmationReport.rptdesign"/>
   <report_jasper_map report_id="3" report_category_id="6" report_name="Branch Progress Report" report_identifier="branch_progress_report" report_jasper="ProgressReport.rptdesign"/>
   <report_jasper_map report_id="4" report_category_id="6" report_name="Detailed Aging Of Portfolio At Risk" report_identifier="detailed_aging_portfolio_at_risk" report_jasper="DetailedAgingPortfolioAtRiskReport.rptdesign"/>
   <report_jasper_map report_id="5" report_category_id="6" report_name="General Ledger Report" report_identifier="general_ledger_report" report_jasper="GeneralLedgerReport.rptdesign"/>
+  <report_jasper_map report_id="6" report_name="Aging Summary" report_identifier="aging_summary" report_jasper="AgingSummary.prpt"/>
+  <report_jasper_map report_id="7" report_name="Closed Loans" report_identifier="closed_loans" report_jasper="ClosedLoans.prpt"/>
+  <report_jasper_map report_id="8" report_name="Closed Loans Summary per Branch" report_identifier="closed_loans_summary_per_branch" report_jasper="ClosedLoanSummaryBranch.prpt"/>
+  <report_jasper_map report_id="9" report_name="Dormant Clients Summary" report_identifier="dormant_clients_summary" report_jasper="DormantClientsSummary.prpt"/>
+  <report_jasper_map report_id="10" report_name="Client Exit" report_identifier="client_exit" report_jasper="ClientExit.prpt"/>
+  <report_jasper_map report_id="11" report_name="Active Loans Summary per Branch" report_identifier="active_loans_summary_per_branch" report_jasper="ActiveLoanSummaryBranch.prpt"/>
+  <report_jasper_map report_id="12" report_name="Active Loans by Center" report_identifier="active_loans_by_center" report_jasper="ActiveLoansCenter.prpt"/>
+  <report_jasper_map report_id="13" report_name="Active Loans by Loan Product" report_identifier="active_loans_by_loan_product" report_jasper="ActiveLoansLoanProduct.prpt"/>
+  <report_jasper_map report_id="14" report_name="Active Loans by Loan Purpose" report_identifier="active_loans_by_loan_purpose" report_jasper="ActiveLoansLoanPurpose.prpt"/>
+  <report_jasper_map report_id="15" report_name="Active Loans by Loan Officer" report_identifier="active_loans_by_loan_officer" report_jasper="ActiveLoansLoanOfficer.prpt"/>
+  <report_jasper_map report_id="16" report_name="Active Loans in their Last Installment" report_identifier="active_loans_in_their_last_installment" report_jasper="ActiveLoansLastInstallment.prpt"/>
+  <report_jasper_map report_id="17" report_name="Branch Expected Cash Flow" report_identifier="branch_expected_cash_flow" report_jasper="BranchExpectedCashFlow.prpt"/>
+  <report_jasper_map report_id="18" report_name="Clients Summary" report_identifier="clients_summary" report_jasper="ClientSummary.prpt"/>
+  <report_jasper_map report_id="19" report_name="Center Collection Sheet" report_identifier="center_collection_sheet" report_jasper="CenterCollectionSheet.prpt"/>
+  <report_jasper_map report_id="20" report_name="Group Collection Sheet (M-PESA)" report_identifier="group_collection_sheet_(m-pesa)" report_jasper="GroupCollectionSheetMPESA.prpt"/>
+  <report_jasper_map report_id="21" report_name="Groups Information" report_identifier="groups_information" report_jasper="GroupsInformation.prpt"/>
+  <report_jasper_map report_id="22" report_name="Loan Ageing Report" report_identifier="loan_ageing_report" report_jasper="LoanAgingReport.prpt"/>
+  <report_jasper_map report_id="23" report_name="Loans Pending Approval" report_identifier="loans_pending_approval" report_jasper="LoansPendingApproval.prpt"/>
+  <report_jasper_map report_id="24" report_name="Loans to be Disbursed" report_identifier="loans_to_be_disbursed" report_jasper="LoansToBeDisbursed.prpt"/>
+  <report_jasper_map report_id="25" report_name="Mifos Transactions - Detailed" report_identifier="mifos_transactions_-_detailed" report_jasper="MifosTransactions-Detail.prpt"/>
+  <report_jasper_map report_id="26" report_name="Mifos Transactions - Summary" report_identifier="mifos_transactions_-_summary" report_jasper="MifosTransactions-Summary.prpt"/>
+  <report_jasper_map report_id="27" report_name="Overdue Mature Loans" report_identifier="overdue_mature_loans" report_jasper="OverdueMatureLoans.prpt"/>
+  <report_jasper_map report_id="28" report_name="Written Off Loans" report_identifier="written_off_loans" report_jasper="WrittenOff.prpt"/>
   <report_parameter/>
   <report_parameter_map/>
   <rest_approval/>
   <role role_id="1" role_name="Admin" version_no="1"/>
+  <role_activity_restriction/>
   <roles_activity activity_id="3" role_id="1"/>
   <roles_activity activity_id="4" role_id="1"/>
   <roles_activity activity_id="6" role_id="1"/>
@@ -3377,6 +3506,31 @@
   <roles_activity activity_id="252" role_id="1"/>
   <roles_activity activity_id="253" role_id="1"/>
   <roles_activity activity_id="254" role_id="1"/>
+  <roles_activity activity_id="255" role_id="1"/>
+  <roles_activity activity_id="256" role_id="1"/>
+  <roles_activity activity_id="257" role_id="1"/>
+  <roles_activity activity_id="258" role_id="1"/>
+  <roles_activity activity_id="259" role_id="1"/>
+  <roles_activity activity_id="260" role_id="1"/>
+  <roles_activity activity_id="261" role_id="1"/>
+  <roles_activity activity_id="262" role_id="1"/>
+  <roles_activity activity_id="263" role_id="1"/>
+  <roles_activity activity_id="264" role_id="1"/>
+  <roles_activity activity_id="265" role_id="1"/>
+  <roles_activity activity_id="266" role_id="1"/>
+  <roles_activity activity_id="267" role_id="1"/>
+  <roles_activity activity_id="268" role_id="1"/>
+  <roles_activity activity_id="269" role_id="1"/>
+  <roles_activity activity_id="270" role_id="1"/>
+  <roles_activity activity_id="271" role_id="1"/>
+  <roles_activity activity_id="272" role_id="1"/>
+  <roles_activity activity_id="273" role_id="1"/>
+  <roles_activity activity_id="274" role_id="1"/>
+  <roles_activity activity_id="275" role_id="1"/>
+  <roles_activity activity_id="276" role_id="1"/>
+  <roles_activity activity_id="277" role_id="1"/>
+  <roles_activity activity_id="278" role_id="1"/>
+  <roles_activity activity_id="279" role_id="1"/>
   <saving_schedule/>
   <savings_account/>
   <savings_activity_details/>
