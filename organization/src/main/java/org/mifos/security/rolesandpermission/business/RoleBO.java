@@ -193,7 +193,7 @@ public class RoleBO extends AbstractBusinessObject {
             List<RoleActivityRestrictionBO> activityRestrictionBOList) throws RolesPermissionException {     
         this.restrictions.clear();
         if (activityRestrictionBOList != null){
-            this.restrictions.addAll(activityRestrictionBOList);
+            createRoleActivitiesRestrictions(activityRestrictionBOList);
         }
         update(perosnnelId, roleName, activityList);
     }

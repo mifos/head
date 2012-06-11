@@ -256,8 +256,9 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
             List<RoleActivityRestrictionBO> activitiesRestrictions = new ArrayList<RoleActivityRestrictionBO>();
             
             for (ActivityRestrictionDto activityRestrictionDto : activityRestrictionDtoList){
-                RoleActivityRestrictionBO roleActivityRestrictionBO = legacyRolesPermissionsDao.getActivityRestrictionById(activityRestrictionDto.getActivityRestrictionId());
-                if ( roleActivityRestrictionBO != null){
+                RoleActivityRestrictionBO roleActivityRestrictionBO;
+                if ( activityRestrictionDto.getActivityRestrictionId() != null){
+                    roleActivityRestrictionBO = legacyRolesPermissionsDao.getActivityRestrictionById(activityRestrictionDto.getActivityRestrictionId());
                     roleActivityRestrictionBO.update(userContext.getId(), activityRestrictionDto.getAmountValue());
                 } else {
                     roleActivityRestrictionBO = new RoleActivityRestrictionBO(userContext);

@@ -66,20 +66,20 @@ public class RolesPermissionsActionForm extends BaseActionForm {
     
     public void setActivityRestriction(String activtiyRestrictionTypeIdString, String amountValueString){
         if ( amountValueString != null && !amountValueString.isEmpty() ){
-            Short roleId = 0;
             Short activtiyRestrictionTypeId = new Short(activtiyRestrictionTypeIdString);
             BigDecimal amountValue = new BigDecimal(amountValueString);
-            if ( id != null ){ //update
-                roleId = new Short(id);
-                for (ActivityRestrictionDto activityRestrictionDtoIterator : this.activityRestrictionDtoList){
-                    if ( activityRestrictionDtoIterator.getActivityRestrictionTypeId().equals(activtiyRestrictionTypeId)){
-                        activityRestrictionDtoIterator.setAmountValue(amountValue);
-                        break;
-                    }
+            for (ActivityRestrictionDto activityRestrictionDtoIterator : this.activityRestrictionDtoList){ // look for existing restriction for update
+                if ( activityRestrictionDtoIterator.getActivityRestrictionTypeId().equals(activtiyRestrictionTypeId)){
+                    activityRestrictionDtoIterator.setAmountValue(amountValue);
+                    return;
                 }
-            } else { //create new
-                this.activityRestrictionDtoList.add(new ActivityRestrictionDto(activtiyRestrictionTypeId, amountValue));    
             }
+            // add new restriction for role
+            Short roleId = 0;
+            if ( id != null ){
+                roleId = new Short(id);
+            }
+            this.activityRestrictionDtoList.add(new ActivityRestrictionDto(roleId, activtiyRestrictionTypeId, amountValue));
         }
     }
     
