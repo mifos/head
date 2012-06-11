@@ -33,9 +33,7 @@ explanation of the license and how it is applied.
       <tr>
         <td class="bluetablehead05">
         <span class="fontnormal8pt">
-        	<a id="viewusers.link.admin" href="AdminAction.do?method=load">
-	           <mifos:mifoslabel name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>             	
-         	</a> / 
+        	<a id="viewusers.link.admin" href="AdminAction.do?method=load"><mifos:mifoslabel name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel></a> / 
         </span>
             <span class="fontnormal8ptbold">
             <mifos:mifoslabel name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
@@ -96,11 +94,11 @@ explanation of the license and how it is applied.
               		className="UserSearchResults" width="100%" border="0" cellspacing="0" cellpadding="0"/>
                 </tr>
               </table>
+              <html-el:submit property="backButton" styleId="viewusers.button.back" styleClass="buttn" onclick="form.action='AdminAction.do?method=load'">
+				<mifos:mifoslabel name="button.back" bundle ="PersonnelUIResources"></mifos:mifoslabel>
+              </html-el:submit>
         </tr>
       </table>
-		<html-el:submit property="backButton" styleId="viewusers.button.back" styleClass="buttn" onclick="form.action='AdminAction.do?method=load'">
-			<mifos:mifoslabel name="button.back" bundle ="PersonnelUIResources"></mifos:mifoslabel>
-		</html-el:submit>
       <br>
 <br>
 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
