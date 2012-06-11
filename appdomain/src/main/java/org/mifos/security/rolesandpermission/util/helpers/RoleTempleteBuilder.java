@@ -228,7 +228,7 @@ public class RoleTempleteBuilder {
                 }
                 buff.append("</span></td></tr>");
                 if (li.size() == 0) {
-                    makeActivityRestrictionRow(entity.getActivityRestrictionTypes(), buff,  name1);
+                    makeActivityRestrictionRow(entity.getActivityRestrictionTypes(), buff);
                 }
                 makeTable(l, lst.get(i).getId(), buff, level + 1, name1);
             }
@@ -240,16 +240,14 @@ public class RoleTempleteBuilder {
     /**
      * This method builds row for activity restriction input (if is any defined for specified activity(permission)). 
      */
-    private void makeActivityRestrictionRow(Set<ActivityRestrictionTypeEntity> activityRestrictionTypes, StringBuilder buffer, String name){
+    private void makeActivityRestrictionRow(Set<ActivityRestrictionTypeEntity> activityRestrictionTypes, StringBuilder buffer){
         if ( activityRestrictionTypes.size() > 0){
-            Integer level = 0;
             for (ActivityRestrictionTypeEntity activityRestrictionType : activityRestrictionTypes){
                 ActivityRestrictionDto activityRestrictionDto = activityRestrictionDtoMap.get(activityRestrictionType.getId());
                 String activityRestrictionValue = "";
                 if ( activityRestrictionDto != null){
                     activityRestrictionValue = activityRestrictionDto.getAmountValue().toString();
                 }
-                String checkboxName = name + "_" + level.toString();
                 String activityRestrictionTypeDescription = ApplicationContextProvider.getBean(MessageLookup.class).lookup(activityRestrictionType.getLookUpValue());
                 String checked = "";
                 if (!activityRestrictionValue.isEmpty()){
@@ -260,7 +258,7 @@ public class RoleTempleteBuilder {
                 buffer.append("<td bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\">&nbsp; </td> ");
                 buffer.append("<td bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\">&nbsp; </td> ");
                 buffer.append("<td width=\"3%\" bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\">");
-                buffer.append("<input type=\"checkbox\" " + checked + "id=\"" + checkboxName + "\" onclick=\"doCheck(this)\"  />");
+                buffer.append("<input type=\"checkbox\" " + checked +" onclick=\"doCheck(this)\"  />");
                 buffer.append("<td colspan=\"2\" bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\">");
                 buffer.append("<span class=\"fontnormal\">");
                 buffer.append(activityRestrictionTypeDescription);
@@ -270,7 +268,6 @@ public class RoleTempleteBuilder {
                 buffer.append("<input type=\"text\" value=\""+activityRestrictionValue+"\" name=\"activityRestriction("+ activityRestrictionType.getId() + ")\" />");
                 buffer.append("</td>");
                 buffer.append("</tr>"); 
-                level++;
             }
         }
     }
