@@ -96,7 +96,7 @@ public class RolesPermissionsAction extends BaseAction {
                 RolesAndPermissionConstants.ACTIVITYLIST, request);
         RolesPermissionsActionForm rolesPermissionsActionForm = (RolesPermissionsActionForm) form;
         rolesPermissionServiceFacade.createRole(userContext.getId(), rolesPermissionsActionForm.getName(),
-                getActivityIds(getActivities(activities,rolesPermissionsActionForm.getActivities())), rolesPermissionsActionForm.getActivityRestrictionDtoList());
+                getActivityIds(getActivities(activities,rolesPermissionsActionForm.getActivities())), rolesPermissionsActionForm.getActivityRestrictionDtoToPersistList());
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 
@@ -131,7 +131,7 @@ public class RolesPermissionsAction extends BaseAction {
                 RolesAndPermissionConstants.ACTIVITYLIST, request);
         rolesPermissionServiceFacade.updateRole(Short.parseShort(rolesPermissionsActionForm.getId()), userContext.getId(),
                 rolesPermissionsActionForm.getName(), getActivityIds(getActivities(activities, rolesPermissionsActionForm.getActivities())),
-                rolesPermissionsActionForm.getActivityRestrictionDtoList());
+                rolesPermissionsActionForm.getActivityRestrictionDtoToPersistList());
         // MIFOS-3530: update all currently logged users
         for (String loggedUser : getLoggedUsers(request)) {
             this.authenticationAuthorizationServiceFacade.reloadUserDetailsForSecurityContext(loggedUser);

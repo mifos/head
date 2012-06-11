@@ -40,6 +40,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -86,7 +87,7 @@ public class RoleBO extends AbstractBusinessObject {
     @JoinTable(name = "roles_activity", joinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "role_id") }, inverseJoinColumns = { @JoinColumn(name = "activity_id", referencedColumnName = "activity_id") })
     private final Set<ActivityEntity> activities = new HashSet<ActivityEntity>(0);
 
-    @OneToMany(cascade = { CascadeType.ALL}, mappedBy="role")
+    @OneToMany(orphanRemoval=true, cascade = { CascadeType.ALL}, mappedBy="role")
     private final Set<RoleActivityRestrictionBO> restrictions = new HashSet<RoleActivityRestrictionBO>(0);
     
     @SuppressWarnings("unused")
@@ -191,7 +192,6 @@ public class RoleBO extends AbstractBusinessObject {
 
     public void updateWithActivitiesRestrictions(Short perosnnelId, String roleName, List<ActivityEntity> activityList,
             List<RoleActivityRestrictionBO> activityRestrictionBOList) throws RolesPermissionException {     
-        this.restrictions.clear();
         if (activityRestrictionBOList != null){
             createRoleActivitiesRestrictions(activityRestrictionBOList);
         }
@@ -209,8 +209,8 @@ public class RoleBO extends AbstractBusinessObject {
         restrictions.clear();
         for ( RoleActivityRestrictionBO activityRestrictionBO : activitiesRestrictions) {
             activityRestrictionBO.setRole(this);
-            restrictions.add(activityRestrictionBO);
         }
+        restrictions.addAll(activitiesRestrictions);
     }
 
     @Override

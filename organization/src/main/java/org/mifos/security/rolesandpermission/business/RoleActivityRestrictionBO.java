@@ -64,7 +64,7 @@ public class RoleActivityRestrictionBO extends AbstractBusinessObject {
     @Column(name = "role_id", insertable = false, updatable = false)
     private Short roleId;
 
-    @ManyToOne(cascade= CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="role_id")
     private RoleBO role;
     

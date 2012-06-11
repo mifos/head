@@ -38,6 +38,8 @@ public class RolesPermissionsActionForm extends BaseActionForm {
     private Map<String, String> activities = new HashMap<String, String>();
     
     private List<ActivityRestrictionDto> activityRestrictionDtoList = new ArrayList<ActivityRestrictionDto>();
+    
+    private List<ActivityRestrictionDto> activityRestrictionDtoToPersistList = new ArrayList<ActivityRestrictionDto>();
 
     /**
      * map of activityRestrictionId and activityRestrictionTypeId 
@@ -71,6 +73,7 @@ public class RolesPermissionsActionForm extends BaseActionForm {
             for (ActivityRestrictionDto activityRestrictionDtoIterator : this.activityRestrictionDtoList){ // look for existing restriction for update
                 if ( activityRestrictionDtoIterator.getActivityRestrictionTypeId().equals(activtiyRestrictionTypeId)){
                     activityRestrictionDtoIterator.setAmountValue(amountValue);
+                    activityRestrictionDtoToPersistList.add(activityRestrictionDtoIterator);
                     return;
                 }
             }
@@ -79,12 +82,13 @@ public class RolesPermissionsActionForm extends BaseActionForm {
             if ( id != null ){
                 roleId = new Short(id);
             }
-            this.activityRestrictionDtoList.add(new ActivityRestrictionDto(roleId, activtiyRestrictionTypeId, amountValue));
+            this.activityRestrictionDtoToPersistList.add(new ActivityRestrictionDto(roleId, activtiyRestrictionTypeId, amountValue));
         }
     }
     
     public void resetActivityRestriction(){
         this.activityRestrictionDtoList.clear();
+        this.activityRestrictionDtoToPersistList.clear();
         this.activityRestrictionIdAndTypeIdMap.clear();
     }
     
@@ -94,6 +98,22 @@ public class RolesPermissionsActionForm extends BaseActionForm {
 
     public void setActivityRestrictionDtoList(List<ActivityRestrictionDto> activityRestrictionDtoList) {
         this.activityRestrictionDtoList = activityRestrictionDtoList;
+    }
+
+    public List<ActivityRestrictionDto> getActivityRestrictionDtoToPersistList() {
+        return activityRestrictionDtoToPersistList;
+    }
+
+    public void setActivityRestrictionDtoToPersistList(List<ActivityRestrictionDto> activityRestrictionDtoToPersistList) {
+        this.activityRestrictionDtoToPersistList = activityRestrictionDtoToPersistList;
+    }
+
+    public Map<String, String> getActivityRestrictionIdAndTypeIdMap() {
+        return activityRestrictionIdAndTypeIdMap;
+    }
+
+    public void setActivityRestrictionIdAndTypeIdMap(Map<String, String> activityRestrictionIdAndTypeIdMap) {
+        this.activityRestrictionIdAndTypeIdMap = activityRestrictionIdAndTypeIdMap;
     }
 
     public String getId() {
