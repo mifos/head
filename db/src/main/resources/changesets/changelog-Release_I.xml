@@ -325,8 +325,9 @@
 					  references activity(activity_id)
 					  on delete no action
 					  on update no action
-				) ENGINE=innodb character set utf8;
+				) ENGINE=InnoDB character set utf8;
 
+				DROP TABLE IF EXISTS role_activity_restriction;
 				CREATE TABLE role_activity_restriction (
 				  activity_restriction_id integer not null,
 				  role_id smallint not null,
@@ -370,7 +371,8 @@
 				SET @LOOKUP_ID = (SELECT lookup_id FROM lookup_value WHERE lookup_value.lookup_name LIKE 'ActivityRestriction-MaxLoanAmountForApprove' );
 	    		SET @ACTIVITY_RESTRICTION_TYPE_ID = ( SELECT activity_restriction_type_id FROM activity_restriction_type WHERE activity_id = @ACTIVITY_ID AND lookup_id = @LOOKUP_ID );
 	    		SET @ENTITY_ID = (SELECT entity_id FROM lookup_entity WHERE lookup_entity.entity_name LIKE 'ActivityRestriction');
-				DELETE FROM activity_restriction_type where activity_restriction_type_id = @ACTIVITY_RESTRICTION_TYPE_ID;
+				DELETE FROM role_activity_restriction WHERE activity_restriction_type_id = @ACTIVITY_RESTRICTION_TYPE_ID;
+				DELETE FROM activity_restriction_type WHERE activity_restriction_type_id = @ACTIVITY_RESTRICTION_TYPE_ID;
 				DELETE FROM lookup_value WHERE lookup_value.lookup_id = @LOOKUP_ID;
 				DELETE FROM lookup_entity WHERE lookup_entity.entity_id = @ENTITY_ID;
 				
