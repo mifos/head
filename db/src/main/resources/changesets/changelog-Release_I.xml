@@ -310,6 +310,8 @@
         </rollback>
     </changeSet>
     <changeSet id="MIFOS-5408_1" author="Michal Dudzinski" context="expansion">
+    	<validCheckSum>3:dea5a5aba7fe6893351645304f315ae8</validCheckSum>
+    	<validCheckSum>3:e72c3614bea151e1ddd092fdec52bbc0</validCheckSum>
     	<sql endDelimiter=";">
     			DROP TABLE IF EXISTS activity_restriction_type;
 	    		CREATE TABLE activity_restriction_type (
