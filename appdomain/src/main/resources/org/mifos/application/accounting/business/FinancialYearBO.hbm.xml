@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+  <class name="org.mifos.application.accounting.business.FinancialYearBO" table="acc_financialyear" >
+    <id name="financialYearId" type="integer" column="financialyear_id">
+       <generator class="native"></generator>
+    </id>
+    <property name="financialYearStartDate" type="date" column="financialyear_startdate"></property>
+    <property name="financialYearEndDate" type="date" column="financialyear_enddate"></property>
+    <property name="status" type="string" column="status"></property>
+    <property name="createdDate" type="date" column="created_date"></property>
+    <property name="createdBy" type="short" column="created_by"></property>
+  </class>
+  
+  <query name="getStartDateByStatus">
+        <![CDATA[from org.mifos.application.accounting.business.FinancialYearBO as financial where financial.status = 'A']]>
+  </query>
+    
+</hibernate-mapping>

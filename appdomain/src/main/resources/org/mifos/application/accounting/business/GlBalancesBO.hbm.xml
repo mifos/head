@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+  <class name="org.mifos.application.accounting.business.GlBalancesBO" table="acc_glbalances" >
+    <id name="glBalancesId" type="integer" column="glbalances_id">
+       <generator class="native"></generator>
+    </id>
+    <property name="createdDate" type="date" column="created_date"></property>
+    <property name="createdBy" type="short" column="created_by"></property>
+    <property name="officeLevel" type="integer" column="office_level"></property>
+    <property name="officeId" type="string" column="office_id"></property>
+    <property name="glCodeValue" type="string" column="glcode_value"></property>
+    <property name="openingBalance" type="big_decimal" column="openning_bal"></property>
+    <property name="transactionDebitSum" type="big_decimal" column="transaction_Dr_sum"></property>
+    <property name="transactionCreditSum" type="big_decimal" column="transaction_Cr_sum"></property>
+    <property name="closingBalance" type="big_decimal" column="closing_bal"></property>
+    <many-to-one name="financialYearBO" class="org.mifos.application.accounting.business.FinancialYearBO" column="financialyear_id" cascade="all"></many-to-one>
+  </class>
+  
+    <query name="getExistedGlBalancesBO">
+        <![CDATA[ from org.mifos.application.accounting.business.GlBalancesBO as glbalance where glbalance.officeLevel = :OFFICE_LEVEL and glbalance.officeId= :OFFICE_ID and glbalance.glCodeValue= :GLCODEVALUE]]>
+  </query>
+</hibernate-mapping>

@@ -1,0 +1,73 @@
+body {
+	font-family: Verdana, Tahoma, Arial, Helvetica, sans-serif;
+	font-size: .8em;
+	}
+
+.dpDiv {
+	}
+
+.dpTable {
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-align: center;
+	color: #505050;
+	background-color: #ece9d8;
+	border: 1px solid #AAAAAA;
+	}
+
+.dpTR {
+	}
+.dpTitleTR {
+	}
+.dpDayTR {
+	}
+.dpTodayButtonTR {
+	}
+.dpTD {
+	border: 1px solid #ece9d8;
+	}
+.dpDayHighlightTD {
+	background-color: #CCCCCC;
+	border: 1px solid #AAAAAA;
+	}
+.dpTDHover {
+	background-color: #aca998;
+	border: 1px solid #888888;
+	cursor: pointer;
+	color: red;
+	}
+.dpTitleTD {
+	}
+.dpButtonTD {
+	}
+.dpTodayButtonTD {
+	}
+.dpDayTD {
+	background-color: #CCCCCC;
+	border: 1px solid #AAAAAA;
+	color: white;
+	}
+.dpTitleText {
+	font-size: 12px;
+	color: gray;
+	font-weight: bold;
+	}
+.dpDayHighlight {
+	color: 4060ff;
+	font-weight: bold;
+	}
+.dpButton {
+	font-family: Verdana, Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: gray;
+	background: #d8e8ff;
+	font-weight: bold;
+	padding: 0px;
+	}
+.dpTodayButton {
+	font-family: Verdana, Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: gray;
+	background: #d8e8ff;
+	font-weight: bold;
+	}

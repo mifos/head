@@ -172,6 +172,11 @@ public class ActivityMapper {
         parseActionSecurity(getNotesSecurity());
         parseActionSecurity(getMultipleLoanAccountsCreationSecurity());
         parseActionSecurity(getReverseLoanDisbursalSecurity());
+        parseActionSecurity(getGeneralLedgerActionSecurity()); 
+        parseActionSecurity(getJournalVoucherActionSecurity()); 
+        parseActionSecurity(getOpenBalanceActionSecurity()); 
+        parseActionSecurity(getViewGlTransactionsActionSecurity());
+        parseActionSecurity(getProcessAccountingTransactionsActionSecurity()); 
         parseActionSecurity(getReportsSecurity());
         parseActionSecurity(getReportsDataSourceSecurity());
         parseActionSecurity(getReportsParamsSecurity());
@@ -453,6 +458,58 @@ public class ActivityMapper {
         security.allow("validate", SecurityConstants.VIEW);
         return security;
     }
+    
+    private ActionSecurity getGeneralLedgerActionSecurity() {
+        ActionSecurity security = new ActionSecurity("generalledgeraction");
+        security.allow("load", SecurityConstants.ACCOUNTING_CREATE_GLTRANSACTION);
+        security.allow("loadOffices", SecurityConstants.VIEW);
+        security.allow("loadMainAccounts", SecurityConstants.VIEW);
+        security.allow("loadAccountHeads", SecurityConstants.VIEW);
+        security.allow("cancel", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("submit", SecurityConstants.VIEW);
+        return security;
+    }
+    
+    private ActionSecurity getJournalVoucherActionSecurity() {
+        ActionSecurity security = new ActionSecurity("journalvoucheraction");
+        security.allow("load", SecurityConstants.ACCOUNTING_CREATE_JVTRANSACTION);
+        security.allow("loadOffices", SecurityConstants.VIEW);
+        security.allow("loadCreditAccount", SecurityConstants.VIEW);
+        security.allow("cancel", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("submit", SecurityConstants.VIEW);
+        return security;
+    }
+    
+    private ActionSecurity getOpenBalanceActionSecurity() {
+        ActionSecurity security = new ActionSecurity("openbalanceaction");
+        security.allow("load", SecurityConstants.ACCOUNTING_CREATE_OPENBALANCE);
+        security.allow("loadOffices", SecurityConstants.VIEW);
+        security.allow("loadOpenBalance", SecurityConstants.VIEW);
+        security.allow("cancel", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("submit", SecurityConstants.VIEW);
+        return security;
+    }
+    
+    private ActionSecurity getViewGlTransactionsActionSecurity() {
+        ActionSecurity security = new ActionSecurity("viewgltransactionsaction");
+        security.allow("load", SecurityConstants.ACCOUNTING_CREATE_VIEWTRANSACTIONS);
+        security.allow("submit", SecurityConstants.VIEW);
+        return security;
+    }
+    
+    private ActionSecurity getProcessAccountingTransactionsActionSecurity() {
+        ActionSecurity security = new ActionSecurity("processaccountingtransactionsaction");
+        security.allow("load", SecurityConstants.ACCOUNTING_CREATE_MISPROCESSING);
+        security.allow("process", SecurityConstants.VIEW);
+        return security;
+    }
+
 
     private ActionSecurity getMultipleLoanAccountsCreationSecurity() {
         ActionSecurity security = new ActionSecurity("multipleloansaction");
