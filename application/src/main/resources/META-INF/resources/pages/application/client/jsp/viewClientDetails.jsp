@@ -86,13 +86,18 @@ explanation of the license and how it is applied.
 							<td class="fontnormalbold"><span class="fontnormal">
 							<mifoscustom:MifosImage
 								id="${clientInformationDto.clientDisplay.customerStatusId}" moduleName="org.mifos.customers.util.resources.customerImages" /> <span id="viewClientDetails.text.status"><c:out
-								value="${clientInformationDto.clientDisplay.customerStatusName}" /></span> <c:forEach
-								var="flagSet" items="${clientInformationDto.customerFlags}">
-								<span class="fontnormal"> <c:if
-									test="${clientInformationDto.clientDisplay.blackListed}">
-									<mifos:MifosImage id="blackListed" moduleName="org.mifos.customers.client.util.resources.clientImages" />
-								</c:if> <c:out value="${flagSet.statusFlagName}" /> </span>
-							</c:forEach> </span><br>
+								value="${clientInformationDto.clientDisplay.customerStatusName}" /></span>
+                                <c:if
+                                    test="${clientInformationDto.clientDisplay.blackListed}">
+                                    <span id="viewClientDetails.img.blackFlag">
+                                        <mifos:MifosImage id="blackListed" moduleName="org.mifos.customers.client.util.resources.clientImages" />
+                                    </span>
+                                </c:if>
+                                <span id="viewClientDetails.text.cancellationReason">
+                                 <c:forEach
+                                var="flagSet" items="${clientInformationDto.customerFlags}">
+                                <span class="fontnormal">  <c:out value="${flagSet.statusFlagName}" /> </span>
+                            </c:forEach> </span></span><br>
 							<!-- System Id of the client --> <span class="fontnormal"><mifos:mifoslabel
 								name="client.SystemId" bundle="ClientUIResources" isColonRequired="yes"></mifos:mifoslabel></span>
 							<span id="viewClientDetails.text.globalcustnum" class="fontnormal"><c:out

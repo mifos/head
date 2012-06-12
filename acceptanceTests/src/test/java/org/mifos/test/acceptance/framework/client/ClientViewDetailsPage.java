@@ -314,5 +314,33 @@ public class ClientViewDetailsPage extends MifosPage {
         waitForPageToLoad();
         return new ViewQuestionResponseDetailPage(selenium);
     }
+    /**
+     * Gets cancellation reason from webpage.
+     * @return String from Client Details page with cancellation reason
+     */
+    public String getCancellationReason(){
+        return selenium.getText("viewClientDetails.text.cancellationReason");
+    }
+    /**
+     * Assert that actual cancellation reason is equal to expected reason
+     * @param string expected cancellation reason
+     */
+    public void verifyCancellationReason(String string) {
+        Assert.assertEquals(getCancellationReason(), string);
+    }
+    /**
+     * Asserts that image with given id is visible on page
+     * @param idOfImage id of element containing image
+     */
+    public void verifyElementExistence(String imageSource){
+        Assert.assertTrue(selenium.isElementPresent(imageSource));
+    }
+    /**
+     * Assert that number of blackflag images is equal to expected number.
+     * @param expectedNumber expected number of blackflag images
+     */
+    public void verifyNumberOfBlackflags(int expectedNumber){
+        Assert.assertEquals(selenium.getXpathCount("//span[contains(@id,'viewClientDetails.img.blackFlag')]"),expectedNumber);
+    }
 }
 

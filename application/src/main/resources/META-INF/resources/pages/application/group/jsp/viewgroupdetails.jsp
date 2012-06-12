@@ -76,12 +76,16 @@ explanation of the license and how it is applied.
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal"> <mifoscustom:MifosImage
 								id="${groupInformationDto.groupDisplay.customerStatusId}" moduleName="org.mifos.customers.util.resources.customerImages" />
-							<span id="viewgroupdetails.text.status"><c:out value="${groupInformationDto.groupDisplay.customerStatusName}" /></span> <c:forEach
-								var="flagSet" items="${groupInformationDto.customerFlags}">
-								<span class="fontnormal"> <c:if
-									test="${groupInformationDto.groupDisplay.blackListed}">
-									<mifoscustom:MifosImage id="blackListed" moduleName="org.mifos.customers.util.resources.customerImages" />
-								</c:if> <span id="viewgroupdetails.text.closeCancelReason"><c:out value="${flagSet.statusFlagName}" /> </span></span>
+
+							<span id="viewgroupdetails.text.status"><c:out value="${groupInformationDto.groupDisplay.customerStatusName}" /></span>
+                            <c:if
+                                test="${groupInformationDto.groupDisplay.blackListed}">
+                                <span id="viewgroupdetails.img.blackflag"><mifoscustom:MifosImage id="blackListed" moduleName="org.mifos.customers.util.resources.customerImages" /></span>
+                            </c:if>
+                            <c:forEach
+                                var="flagSet" items="${groupInformationDto.customerFlags}">
+                                <span class="fontnormal"><span id="viewgroupdetails.text.closeCancelReason"><c:out value="${flagSet.statusFlagName}" /></span></span>
+
 							</c:forEach> <span class="fontnormal"><br>
 							<mifos:mifoslabel name="Group.systemId" bundle="GroupUIResources" />
 							<c:out value="${groupInformationDto.groupDisplay.globalCustNum}" /> </span><br>

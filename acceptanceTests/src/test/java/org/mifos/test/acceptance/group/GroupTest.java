@@ -28,6 +28,7 @@ import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.DefineAcceptedPaymentTypesPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewPage;
+import org.mifos.test.acceptance.framework.group.CancelReason;
 import org.mifos.test.acceptance.framework.group.CenterSearchTransferGroupPage;
 import org.mifos.test.acceptance.framework.group.ConfirmCenterMembershipPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupConfirmationPage;
@@ -438,5 +439,84 @@ public class GroupTest extends UiTestCaseBase {
         return formParameters;
     }
 
+    //http://mifosforge.jira.com/browse/MIFOS-4643
+    /**
+     * Creates new group, tests status changes and verifies blacklisted flag.
+     * @see http://mifosforge.jira.com/browse/MIFOS-4643
+     */
+    @Test(enabled=true)
+    public void changeGroupStatusAndVerifyBlacklistedFlag(){
+        String groupStatusNote = "GROUP TEST FOR GROUP";
+        String center="Default Center";
+        String fullGroupName="testGroup"+StringUtil.getRandomString(8);
+        //create test group
+        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
+        groupParams.setGroupName(fullGroupName);
+        GroupViewDetailsPage detailsPage=groupTestHelper.createNewGroupPartialApplication(center, groupParams);
+        //verify with starting status
+        EditCustomerStatusParameters statusParameters=new EditCustomerStatusParameters();
+        statusParameters.setGroupStatus(GroupStatus.PARTIAL);
+        statusParameters.setNote(groupStatusNote+fullGroupName); //note will be set only once
+        detailsPage.verifyStatus(statusParameters);
+        //change status to Cancelled with reason Rejected and check
+        changeStatusParameters(statusParameters,GroupStatus.CANCELLED,CancelReason.GROUP_REJECTED);
+        detailsPage = changeGroupStatusToCancelled(fullGroupName,statusParameters);
+        detailsPage.verifyStatus(statusParameters);
+        //change status back to Partial Application and verify
+        detailsPage=changeGroupStatusBackToPartial(fullGroupName,statusParameters);
+        detailsPage.verifyStatus(statusParameters);
+        //change status to Cancelled with Reason blacklisted
+        changeStatusParameters(statusParameters, GroupStatus.CANCELLED, CancelReason.GROUP_BLACKLISTED);
+        detailsPage=changeGroupStatusToCancelledAndVerifyFlag(fullGroupName,
+                statusParameters);
+        //sequence of setting group status to partial, verifying blackflag, changing status to cancelled and verifying again
+        CancelReason reasonArray[]={CancelReason.GROUP_DUPLICATE, CancelReason.GROUP_OTHER, CancelReason.GROUP_REJECTED,
+                CancelReason.GROUP_WITHDRAW, CancelReason.GROUP_BLACKLISTED};
+        for (CancelReason cancelReason : reasonArray) {
+            detailsPage=changeGroupStatusToPartialAndVerifyFlag(fullGroupName, statusParameters);
+            changeStatusParameters(statusParameters, GroupStatus.CANCELLED, cancelReason);
+            changeGroupStatusToCancelledAndVerifyFlag(fullGroupName,statusParameters);
+        }
+    }
 
+    private GroupViewDetailsPage changeGroupStatusToCancelledAndVerifyFlag(
+            String fullGroupName, EditCustomerStatusParameters statusParameters) {
+        GroupViewDetailsPage detailsPage;
+        int expectedNumberOfFlags = 1;
+        detailsPage=changeGroupStatusToCancelled(fullGroupName, statusParameters);
+        detailsPage.verifyStatus(statusParameters);
+        detailsPage.verifyNumberOfBlackFlags(expectedNumberOfFlags);
+        return detailsPage;
+    }
+
+    private GroupViewDetailsPage changeGroupStatusToPartialAndVerifyFlag(String fullGroupName,
+            EditCustomerStatusParameters statusParameters) {
+        GroupViewDetailsPage detailsPage;
+        int expectedNumberOfFlags = 1;
+        detailsPage=changeGroupStatusBackToPartial(fullGroupName, statusParameters);
+        detailsPage.verifyStatus(statusParameters);
+        detailsPage.verifyNumberOfBlackFlags(expectedNumberOfFlags);
+        return detailsPage;
+    }
+
+    private GroupViewDetailsPage changeGroupStatusToCancelled(String fullGroupName,
+            EditCustomerStatusParameters statusParameters) {
+        GroupViewDetailsPage detailsPage;
+        detailsPage=groupTestHelper.changeGroupStatus(fullGroupName, statusParameters);
+        return detailsPage;
+    }
+
+    private GroupViewDetailsPage changeGroupStatusBackToPartial(String fullGroupName,
+            EditCustomerStatusParameters statusParameters) {
+        statusParameters.setGroupStatus(GroupStatus.PARTIAL);
+        return groupTestHelper.changeGroupStatus(fullGroupName, statusParameters);
+    }
+
+    private void changeStatusParameters(EditCustomerStatusParameters statusParameters, GroupStatus status,
+            CancelReason reason) {
+        statusParameters.setGroupStatus(status);
+        if(status.equals(GroupStatus.CANCELLED)){
+            statusParameters.setCancelReason(reason);
+        }
+    }
 }
