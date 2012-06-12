@@ -31,6 +31,7 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.ViewSystemUsersPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.login.ChangePasswordPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
@@ -112,6 +113,21 @@ public class PersonnelTest extends UiTestCaseBase {
         userDetailsPage2.verifyModifiedNameAndEmail(formParameters);
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = true, groups = {"acceptance"})
+    public void findUserTest() throws Exception {
+    	CreateUserParameters formParameters = new CreateUserParameters();
+    	AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        formParameters = adminPage.getAdminUserParameters();
+        formParameters.setSecondLastName("SecondLastName" + StringUtil.getRandomString(8));
+        //When
+        userHelper.createUser(formParameters, "MyOfficeDHMFT");
+        //Then
+        ViewSystemUsersPage findUserPage = navigationHelper.navigateToFindUserPage();
+        String secondLastName = formParameters.getSecondLastName();
+        findUserPage.searchAndNavigateToUserViewDetailsPage(secondLastName); 
+    }
+    
     //http://mifosforge.jira.com/browse/MIFOSTEST-298
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled = true, groups = {"acceptance"})

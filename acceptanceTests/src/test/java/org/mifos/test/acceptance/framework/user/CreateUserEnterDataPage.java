@@ -42,6 +42,7 @@ public class CreateUserEnterDataPage extends MifosPage {
     private void fillForm(CreateUserParameters parameters){
         typeTextIfNotEmpty("create_user.input.firstName", parameters.getFirstName());
         typeTextIfNotEmpty("create_user.input.lastName", parameters.getLastName());
+        typeTextIfNotEmpty("create_user.input.secondLastName", parameters.getSecondLastName());
         typeTextIfNotEmpty("create_user.input.email", parameters.getEmail());
         selectIfNotEmpty("maritalStatus", parameters.getMaritalStatus());
         typeTextIfNotEmpty("dobDD", parameters.getDateOfBirthDD());
