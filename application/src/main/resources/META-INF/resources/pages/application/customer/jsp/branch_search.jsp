@@ -110,10 +110,8 @@ explanation of the license and how it is applied.
 										<tr class="fontnormal">
 											<td width="100%" colspan="2" class="bglightblue"><span
 												class="heading"> <mifos:mifoslabel
-												name="CustomerSearch.selectLoanOfficer" /></span></td>
-										</tr>
-                                        <tr>
-                                            <td>
+												name="CustomerSearch.selectLoanOfficer" /></span>
+                                        <!--  officeID hidden form element -->
                                                 <c:choose>
 									               <c:when test="${custSearchActionForm.officeId != null && custSearchActionForm.officeId > 0}">
 									                   <html-el:hidden property="officeId"
