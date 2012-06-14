@@ -60,7 +60,6 @@ public class JournalVoucherAction extends BaseAction {
 
 		java.util.Date voucherDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		actionForm.setVoucherDate(voucherDate);
-		request.getSession().setAttribute("status", "");
 		storingSession(request, "DebitAccountGlCodes", accountingDtos);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -154,9 +153,7 @@ public class JournalVoucherAction extends BaseAction {
 		glMasterBO.setTransactionBy(0);
 		glMasterBO.setCreatedBy(getUserContext(request).getId());
 		glMasterBO.setCreatedDate(DateUtils.getCurrentDateWithoutTimeStamp());
-		if (accountingServiceFacade.savingAccountingTransactions(glMasterBO))
-			storingSession(request, "status", "success");
-
+		accountingServiceFacade.savingAccountingTransactions(glMasterBO);
 		return mapping.findForward("submit_success");
 	}
 

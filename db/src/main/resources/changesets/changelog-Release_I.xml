@@ -651,30 +651,33 @@
 		<rollback>
 			<sql endDelimiter=";">
 				Delete from config_key_value where
-				configuration_key='MisProcessing';
+				configuration_key='MisProcessing' ;
 
 				delete lv from lookup_value as lv
 				join lookup_entity as le
 				where le.entity_id=lv.entity_id and
-				le.entity_name='cash'
+				le.entity_name='cash' ;
 
 				delete lv from lookup_value as lv
 				join
 				lookup_entity as le
 				where le.entity_id=lv.entity_id and
-				le.entity_name='bank'
+				le.entity_name='bank' ;
 
-				DELETE FROM lookup_entity WHERE entity_name
-				LIKE 'Cash';
+
+				DELETE FROM lookup_entity WHERE entity_name LIKE 'Cash';
+				
 				DELETE FROM lookup_entity WHERE entity_name LIKE 'Bank';
 
 
 				DROP TABLE IF EXISTS acc_glbalances;
-				DROP TABLE IF EXISTS
-				acc_financialyear;
+				
+				DROP TABLE IF EXISTS acc_financialyear;
+				
 				DROP TABLE IF EXISTS acc_gldetail;
-				DROP TABLE IF
-				EXISTS acc_glmaster;
+				
+				DROP TABLE IF EXISTS acc_glmaster;
+				
 
 				DELETE FROM roles_activity WHERE activity_id =
 				280;
@@ -700,19 +703,23 @@
 				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
 				lookup_value
 				WHERE lookup_name='Permissions-Generalledger');
+				
 				DELETE
 				FROM lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
 				lookup_value
 				WHERE lookup_name='Permissions-JournalVoucher');
+				
 				DELETE
 				FROM lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
 				lookup_value
 				WHERE lookup_name='Permissions-CanDefineOpenBalances');
+				
 				DELETE FROM lookup_value_locale WHERE lookup_id =(SELECT lookup_id
 				from
 				lookup_value
 				WHERE
 				lookup_name='Permissions-CanViewGlTransactions');
+				
 				DELETE FROM
 				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
 				lookup_value
@@ -720,23 +727,25 @@
 				lookup_name='Permissions-CanProcessAccountingTransactions');
 
 
-
 				DELETE
 				FROM lookup_value WHERE entity_id = 87 AND lookup_name =
 				'Permissions-Generalledger';
+				
 				DELETE FROM lookup_value WHERE entity_id
 				= 87 AND lookup_name =
 				'Permissions-JournalVoucher';
+				
 				DELETE FROM
 				lookup_value WHERE entity_id = 87 AND lookup_name =
 				'Permissions-CanDefineOpenBalances';
+				
 				DELETE FROM lookup_value WHERE
 				entity_id = 87 AND lookup_name =
 				'Permissions-CanViewGlTransactions';
+				
 				DELETE FROM lookup_value WHERE
 				entity_id = 87 AND lookup_name
 				='Permissions-CanProcessAccountingTransactions';
-
 			</sql>
 		</rollback>
 	</changeSet>
