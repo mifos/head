@@ -97,6 +97,7 @@ import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.InstallmentRange;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
@@ -184,6 +185,7 @@ import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
+import org.mifos.dto.domain.FeeDto;
 import org.mifos.dto.domain.InstallmentDetailsDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanActivityDto;
@@ -995,16 +997,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.isRepaymentScheduleIndependentOfCustomerMeeting();
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
 
-        MeetingBO repaymentDayMeeting = null;
-        if (loanScheduleIndependentOfCustomerMeetingEnabled) {
-            repaymentDayMeeting = this.createNewMeetingForRepaymentDay(loanAccountInfo.getDisbursementDate(), loanAccountInfo, loanAccountDetail.getCustomer());
-        } else {
-            MeetingDto customerMeetingDto = customer.getCustomerMeetingValue().toDto();
-            repaymentDayMeeting = new MeetingFactory().create(customerMeetingDto);
-            
-            Short recurAfter = loanAccountDetail.getLoanProduct().getLoanOfferingMeeting().getMeeting().getRecurAfter();
-            repaymentDayMeeting.getMeetingDetails().setRecurAfter(recurAfter);
-        }
+        MeetingDto customerMeetingDto = customer.getCustomerMeetingValue().toDto();
+        MeetingBO repaymentDayMeeting = new MeetingFactory().create(customerMeetingDto);
+        
+        Short recurAfter = loanAccountDetail.getLoanProduct().getLoanOfferingMeeting().getMeeting().getRecurAfter();
+        repaymentDayMeeting.getMeetingDetails().setRecurAfter(recurAfter);
 
         List<DateTime> loanScheduleDates = new ArrayList<DateTime>(loanScheduleInstallmentDates);
 
@@ -2277,6 +2274,15 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             String externalId = null;
             RecurringSchedule recurringSchedule = null;
             List<CreateAccountFeeDto> accountFees = new ArrayList<CreateAccountFeeDto>();
+            
+            for (LoanOfferingFeesEntity loanOfferingFeesEntity : loanProduct.getLoanOfferingFees()){
+            	FeeBO feeBO = loanOfferingFeesEntity.getFees();
+            	FeeDto feeDto = feeBO.toDto();
+            	String amountOrRate = feeDto.getAmountOrRate().toString();
+            	
+            	accountFees.add(new CreateAccountFeeDto(feeBO.getFeeId().intValue(), amountOrRate));
+            }
+            
             CreateLoanAccount loanAccountInfo = new CreateLoanAccount(loanDetail.getClientId(), loanDetail.getLoanProductId().intValue(), loanDetail.getAccountStateId().intValue(),
                     loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount,
                     interestRate, disbursementDate, null,
