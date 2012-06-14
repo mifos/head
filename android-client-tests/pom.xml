@@ -236,6 +236,7 @@
 		                    <emulator>
 		                        <avd>android2.1</avd>
 		                        <wait>50000</wait>
+					<options>-port ${EMULATOR_PORT}</options>
 		                    </emulator>
 		                    <deleteConflictingFiles>true</deleteConflictingFiles>
 		                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
