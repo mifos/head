@@ -444,7 +444,7 @@ public class GroupTest extends UiTestCaseBase {
      * Creates new group, tests status changes and verifies blacklisted flag.
      * @see http://mifosforge.jira.com/browse/MIFOS-4643
      */
-    @Test(enabled=true)
+    @Test(enabled=true,groups = {"group", "acceptance", "ui", "no_db_unit"})
     public void changeGroupStatusAndVerifyBlacklistedFlag(){
         String groupStatusNote = "GROUP TEST FOR GROUP";
         String center="Default Center";
