@@ -27,7 +27,6 @@ explanation of the license and how it is applied.
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <script language="javascript">
  function fnAccountDetail(accountingActivationStatus){
-	// var trxnType = $('#trxnTypeId option:selected').val();
 	if(accountingActivationStatus == true){
 		$("#accountDetailsId").show();
 	}else{
@@ -474,5 +473,6 @@ explanation of the license and how it is applied.
 			</tr>
 			</table>
 		</html-el:form>
+		</body>
 	</tiles:put>
 </tiles:insert>

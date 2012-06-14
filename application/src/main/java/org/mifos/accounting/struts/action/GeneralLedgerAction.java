@@ -58,7 +58,6 @@ public class GeneralLedgerAction extends BaseAction {
 		GeneralLedgerActionForm actionForm = (GeneralLedgerActionForm) form;
 		java.util.Date trxnDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		actionForm.setTrxnDate(trxnDate);
-		// request.getSession().setAttribute("status", "");
 		storingSession(request, "OfficesOnHierarchy", null);
 		storingSession(request, "MainAccountGlCodes", null);
 		storingSession(request, "AccountHeadGlCodes", null);
@@ -153,10 +152,6 @@ public class GeneralLedgerAction extends BaseAction {
 		glMasterBO.setTransactionBy(0); // default value
 		glMasterBO.setCreatedBy(getUserContext(request).getId());
 		glMasterBO.setCreatedDate(DateUtils.getCurrentDateWithoutTimeStamp());
-		/*
-		 * if (accountingServiceFacade.savingAccountingTransactions(glMasterBO))
-		 * storingSession(request, "status", "success");
-		 */
 		accountingServiceFacade.savingAccountingTransactions(glMasterBO);
 		return mapping.findForward("submit_success");
 	}

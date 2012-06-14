@@ -234,7 +234,6 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 					bo.getGlDetailBOList().get(0).getAmountAction(), bo);
 		}
 		//
-		// this.hibernateTransactionHelper.flushSession();
 		this.hibernateTransactionHelper.commitTransaction();
 
 		return flag;

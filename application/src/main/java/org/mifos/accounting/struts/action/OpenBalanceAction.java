@@ -67,7 +67,6 @@ public class OpenBalanceAction extends BaseAction {
 				.findTotalGlAccounts();
 
 		storingSession(request, "TotalGlCodes", accountingDtos);
-		request.getSession().setAttribute("status", "");
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -163,8 +162,7 @@ public class OpenBalanceAction extends BaseAction {
 				.getAmountAction() + actionForm.getOpenBalance()));
 		glBalancesBO.setTransactionDebitSum(new BigDecimal(0.0));
 		glBalancesBO.setTransactionCreditSum(new BigDecimal(0.0));
-		if (accountingServiceFacade.savingOpeningBalances(glBalancesBO))
-			storingSession(request, "status", "success");
+		accountingServiceFacade.savingOpeningBalances(glBalancesBO);
 		return mapping.findForward("submit_success");
 	}
 
