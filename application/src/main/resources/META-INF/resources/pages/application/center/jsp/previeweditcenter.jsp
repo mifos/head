@@ -207,10 +207,11 @@ explanation of the license and how it is applied.
 			        </span>
             </td>
             </tr>
-		<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+		
 			 <tr>
              <td width="100%" class="fontnormal">
              <br>
+             		<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 			        <span class="fontnormalbold">
 					<mifos:mifoslabel name="Center.AdditionalInformationHeading" bundle="CenterUIResources"></mifos:mifoslabel>
 					<span class="fontnormalbold"><br>
@@ -222,14 +223,19 @@ explanation of the license and how it is applied.
 							</c:if>
 						</c:forEach>
     				  </c:forEach>
-					  <br>
-					</span>
-			        <html-el:button styleId="previeweditcenter.button.previous" onclick="goToEditPage()" property = "editButton" styleClass="insidebuttn">
+    				 
+    				</span>
+				    </span>
+				    </c:if>
+					<br>
+					<%-- Edit center information button --%>
+					<html-el:button styleId="previeweditcenter.button.previous" onclick="goToEditPage()" property = "editButton" styleClass="insidebuttn">
 			        <mifos:mifoslabel name="button.previous" bundle="CenterUIResources"></mifos:mifoslabel></html-el:button>
-					</span>
-				</td>
+
+				
+			   </td>
               </tr>
-		</c:if>
+              
             </table>
 
            	  <!-- Submit and cancel buttons -->
