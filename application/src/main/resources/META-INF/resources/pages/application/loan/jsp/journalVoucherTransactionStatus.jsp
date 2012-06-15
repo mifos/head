@@ -188,16 +188,16 @@ function fnEditTransaction(form) {
 			   <th width="15%" align="right"><mifos:mifoslabel name="simpleAccounting.debitAccount" mandatory="yes" isColonRequired="Yes"/></th>
 					<td width="25%" align="left">
 						  <c:forEach items="${sessionScope.DebitAccountGlCodes}" var="debitglAccounts">
-							 	<c:if test="${debitglAccounts.glCode==JournalVoucherActionForm.debitAccountHead}"> 
-					                  ${debitglAccounts.glDesc}
+							 	<c:if test="${debitglAccounts.glcode==JournalVoucherActionForm.debitAccountHead}"> 
+					                  ${debitglAccounts.glname}
 								</c:if>  
 					      </c:forEach>
 			       </td>
 				<th align="right"><mifos:mifoslabel name="simpleAccounting.creditAccount" mandatory="yes" isColonRequired="Yes"/></th>
 				<td align="left">
 					     <c:forEach items="${sessionScope.CreditAccounts}" var="creditglAccounts">
-							 	<c:if test="${creditglAccounts.glCode==JournalVoucherActionForm.creditAccountHead}"> 
-					                  ${creditglAccounts.glDesc}
+							 	<c:if test="${creditglAccounts.glcode==JournalVoucherActionForm.creditAccountHead}"> 
+					                  ${creditglAccounts.glname}
 								</c:if>  
 					      </c:forEach>			
 				</td>

@@ -35,7 +35,7 @@ import org.mifos.application.accounting.business.GlBalancesBO;
 import org.mifos.application.servicefacade.AccountingServiceFacade;
 import org.mifos.application.servicefacade.AccountingServiceFacadeWebTier;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.dto.domain.AccountingDto;
+import org.mifos.dto.domain.GLCodeDto;
 import org.mifos.dto.domain.OfficeGlobalDto;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -63,7 +63,7 @@ public class OpenBalanceAction extends BaseAction {
 
 		actionForm.setFinancialYearId(new Integer(financialYearBO
 				.getFinancialYearId()).toString());
-		List<AccountingDto> accountingDtos = accountingServiceFacade
+		List<GLCodeDto> accountingDtos = accountingServiceFacade
 				.findTotalGlAccounts();
 
 		storingSession(request, "TotalGlCodes", accountingDtos);
