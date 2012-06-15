@@ -997,11 +997,16 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.isRepaymentScheduleIndependentOfCustomerMeeting();
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
 
-        MeetingDto customerMeetingDto = customer.getCustomerMeetingValue().toDto();
-        MeetingBO repaymentDayMeeting = new MeetingFactory().create(customerMeetingDto);
-        
-        Short recurAfter = loanAccountDetail.getLoanProduct().getLoanOfferingMeeting().getMeeting().getRecurAfter();
-        repaymentDayMeeting.getMeetingDetails().setRecurAfter(recurAfter);
+        MeetingBO repaymentDayMeeting = null;
+        if (loanScheduleIndependentOfCustomerMeetingEnabled) {
+            repaymentDayMeeting = this.createNewMeetingForRepaymentDay(loanAccountInfo.getDisbursementDate(), loanAccountInfo, loanAccountDetail.getCustomer());
+        } else {
+            MeetingDto customerMeetingDto = customer.getCustomerMeetingValue().toDto();
+            repaymentDayMeeting = new MeetingFactory().create(customerMeetingDto);
+            
+            Short recurAfter = loanAccountDetail.getLoanProduct().getLoanOfferingMeeting().getMeeting().getRecurAfter();
+            repaymentDayMeeting.getMeetingDetails().setRecurAfter(recurAfter);
+        }
 
         List<DateTime> loanScheduleDates = new ArrayList<DateTime>(loanScheduleInstallmentDates);
 
