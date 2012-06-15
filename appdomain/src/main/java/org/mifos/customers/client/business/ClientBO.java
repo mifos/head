@@ -792,7 +792,7 @@ public class ClientBO extends CustomerBO {
 
     public void validateIsSameGroup(Integer groupId) throws CustomerException {
         if (isSameGroup(groupId)) {
-            throw new CustomerException(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER);
+            throw new CustomerException(CustomerConstants.ERRORS_SAME_GROUP_TRANSFER);
         }
     }
 
