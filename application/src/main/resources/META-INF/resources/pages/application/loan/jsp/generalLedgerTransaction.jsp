@@ -216,7 +216,7 @@ function fnBankDetail(){
 					<td width="25%" align="left">
 						<mifos:select property="mainAccount" onchange="fnloadAccountHeads(this.form)">
 				        <c:forEach items="${sessionScope.MainAccountGlCodes}" var="mainAccount">
-				            <html-el:option value="${mainAccount.glCode}">${mainAccount.glDesc}</html-el:option>
+				            <html-el:option value="${mainAccount.glcode}">${mainAccount.glname}</html-el:option>
 				        </c:forEach>
 						</mifos:select>
 				</td>
@@ -228,7 +228,7 @@ function fnBankDetail(){
 				<td align="left">
 					<mifos:select property="accountHead">
 				        <c:forEach items="${sessionScope.AccountHeadGlCodes}" var="accountHead">
-				            <html-el:option value="${accountHead.glCode}">${accountHead.glDesc}</html-el:option>
+				            <html-el:option value="${accountHead.glcode}">${accountHead.glname}</html-el:option>
 				        </c:forEach>
 					</mifos:select>
 				</td>

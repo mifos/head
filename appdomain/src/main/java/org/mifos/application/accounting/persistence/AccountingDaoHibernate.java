@@ -32,7 +32,7 @@ import org.mifos.application.accounting.business.GlBalancesBO;
 import org.mifos.application.accounting.business.GlMasterBO;
 import org.mifos.config.business.ConfigurationKeyValue;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.dto.domain.AccountingDto;
+import org.mifos.dto.domain.GLCodeDto;
 import org.mifos.dto.domain.MisProcessingTransactionsDto;
 import org.mifos.dto.domain.OfficeGlobalDto;
 import org.mifos.dto.domain.RowCount;
@@ -46,12 +46,12 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<AccountingDto> findMainAccountCashGlCodes() {
+	public List<GLCodeDto> findMainAccountCashGlCodes() {
 
 		final Map<String, Object> emptyqueryparameters = new HashMap<String, Object>();
-		final List<AccountingDto> cashGlCodes = executeNamedQueryWithResultTransformer(
+		final List<GLCodeDto> cashGlCodes = executeNamedQueryWithResultTransformer(
 				"ChartOfAccountsForMifos.Cash", emptyqueryparameters,
-				AccountingDto.class);
+				GLCodeDto.class);
 		return cashGlCodes;
 	}
 
@@ -67,42 +67,42 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 	}
 
 	@Override
-	public List<AccountingDto> findDebitAccounts() {
+	public List<GLCodeDto> findDebitAccounts() {
 
 		final Map<String, Object> emptyqueryparameters = new HashMap<String, Object>();
-		final List<AccountingDto> cashGlCodes = executeNamedQueryWithResultTransformer(
+		final List<GLCodeDto> cashGlCodes = executeNamedQueryWithResultTransformer(
 				"ChartOfAccountsForMifos.DebitAccountGlCodes",
-				emptyqueryparameters, AccountingDto.class);
+				emptyqueryparameters, GLCodeDto.class);
 		return cashGlCodes;
 	}
 
 	@Override
-	public List<AccountingDto> findCreditAccounts(String glCode) {
+	public List<GLCodeDto> findCreditAccounts(String glCode) {
 
 		final Map<String, Object> queryparameters = new HashMap<String, Object>();
 		queryparameters.put("Gl_Code", glCode);
-		final List<AccountingDto> cashGlCodes = executeNamedQueryWithResultTransformer(
+		final List<GLCodeDto> cashGlCodes = executeNamedQueryWithResultTransformer(
 				"ChartOfAccountsForMifos.CreditAccountGlCodes",
-				queryparameters, AccountingDto.class);
+				queryparameters, GLCodeDto.class);
 		return cashGlCodes;
 	}
 
 	@Override
-	public List<AccountingDto> findMainAccountBankGlCodes() {
+	public List<GLCodeDto> findMainAccountBankGlCodes() {
 		final Map<String, Object> emptyqueryparameters = new HashMap<String, Object>();
-		final List<AccountingDto> bankGlCodes = executeNamedQueryWithResultTransformer(
+		final List<GLCodeDto> bankGlCodes = executeNamedQueryWithResultTransformer(
 				"ChartOfAccountsForMifos.Bank", emptyqueryparameters,
-				AccountingDto.class);
+				GLCodeDto.class);
 		return bankGlCodes;
 	}
 
 	@Override
-	public List<AccountingDto> findAccountHeadGlCodes(String glCode) {
+	public List<GLCodeDto> findAccountHeadGlCodes(String glCode) {
 		final Map<String, Object> queryparameters = new HashMap<String, Object>();
 		queryparameters.put("Gl_Code", glCode);
-		final List<AccountingDto> accountHeadGlCodes = executeNamedQueryWithResultTransformer(
+		final List<GLCodeDto> accountHeadGlCodes = executeNamedQueryWithResultTransformer(
 				"ChartOfAccountsForMifos.AccountHeadGlCodes", queryparameters,
-				AccountingDto.class);
+				GLCodeDto.class);
 		return accountHeadGlCodes;
 	}
 
@@ -179,11 +179,11 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 	}
 
 	@Override
-	public List<AccountingDto> findGlCodes() {
+	public List<GLCodeDto> findGlCodes() {
 		final Map<String, Object> queryparameters = new HashMap<String, Object>();
-		final List<AccountingDto> glCodes = executeNamedQueryWithResultTransformer(
+		final List<GLCodeDto> glCodes = executeNamedQueryWithResultTransformer(
 				"ChartOfAccountsForMifos.TotalGlCodes", queryparameters,
-				AccountingDto.class);
+				GLCodeDto.class);
 		return glCodes;
 	}
 

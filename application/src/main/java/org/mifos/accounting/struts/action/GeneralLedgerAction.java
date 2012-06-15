@@ -37,7 +37,7 @@ import org.mifos.application.accounting.util.helpers.SimpleAccountingConstants;
 import org.mifos.application.servicefacade.AccountingServiceFacade;
 import org.mifos.application.servicefacade.AccountingServiceFacadeWebTier;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.dto.domain.AccountingDto;
+import org.mifos.dto.domain.GLCodeDto;
 import org.mifos.dto.domain.OfficeGlobalDto;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -97,7 +97,7 @@ public class GeneralLedgerAction extends BaseAction {
 			@SuppressWarnings("unused") HttpServletResponse response)
 			throws Exception {
 		GeneralLedgerActionForm actionForm = (GeneralLedgerActionForm) form;
-		List<AccountingDto> accountingDtos = null;
+		List<GLCodeDto> accountingDtos = null;
 		if (actionForm.getTrxnType().equals("CR")
 				|| actionForm.getTrxnType().equals("CP")) {
 			accountingDtos = accountingServiceFacade.mainAccountForCash();
@@ -115,7 +115,7 @@ public class GeneralLedgerAction extends BaseAction {
 			@SuppressWarnings("unused") HttpServletResponse response)
 			throws Exception {
 		GeneralLedgerActionForm actionForm = (GeneralLedgerActionForm) form;
-		List<AccountingDto> accountingDtos = null;
+		List<GLCodeDto> accountingDtos = null;
 
 		accountingDtos = accountingServiceFacade.accountHead(actionForm
 				.getMainAccount());

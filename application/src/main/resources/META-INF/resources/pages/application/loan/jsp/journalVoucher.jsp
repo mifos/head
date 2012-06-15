@@ -191,7 +191,7 @@ function fnCancel(form) {
 					<td width="25%" align="left">
 						<mifos:select property="debitAccountHead" onchange="fnloadCreditAccounts(this.form)">
 				        <c:forEach items="${sessionScope.DebitAccountGlCodes}" var="debitAccountHead">
-				            <html-el:option value="${debitAccountHead.glCode}">${debitAccountHead.glDesc}</html-el:option>
+				            <html-el:option value="${debitAccountHead.glcode}">${debitAccountHead.glname}</html-el:option>
 				        </c:forEach>
 						</mifos:select>
 				</td>
@@ -199,7 +199,7 @@ function fnCancel(form) {
 				<td align="left">
 					<mifos:select property="creditAccountHead">
 				        <c:forEach items="${sessionScope.CreditAccounts}" var="creditAccount">
-				            <html-el:option value="${creditAccount.glCode}">${creditAccount.glDesc}</html-el:option>
+				            <html-el:option value="${creditAccount.glcode}">${creditAccount.glname}</html-el:option>
 				        </c:forEach>
 					</mifos:select>
 				</td>

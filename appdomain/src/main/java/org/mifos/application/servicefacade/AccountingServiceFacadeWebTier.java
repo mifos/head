@@ -32,7 +32,7 @@ import org.mifos.application.accounting.business.GlMasterBO;
 import org.mifos.application.accounting.persistence.AccountingDao;
 import org.mifos.application.accounting.persistence.AccountingDaoHibernate;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.dto.domain.AccountingDto;
+import org.mifos.dto.domain.GLCodeDto;
 import org.mifos.dto.domain.MisProcessingTransactionsDto;
 import org.mifos.dto.domain.OfficeGlobalDto;
 import org.mifos.dto.domain.RowCount;
@@ -75,36 +75,36 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 	}
 
 	@Override
-	public List<AccountingDto> mainAccountForCash() {
-		List<AccountingDto> accountingDtos = null;
+	public List<GLCodeDto> mainAccountForCash() {
+		List<GLCodeDto> accountingDtos = null;
 		accountingDtos = accountingDao.findMainAccountCashGlCodes();
 		return accountingDtos;
 	}
 
 	@Override
-	public List<AccountingDto> loadDebitAccounts() {
-		List<AccountingDto> accountingDtos = null;
+	public List<GLCodeDto> loadDebitAccounts() {
+		List<GLCodeDto> accountingDtos = null;
 		accountingDtos = accountingDao.findDebitAccounts();
 		return accountingDtos;
 	}
 
 	@Override
-	public List<AccountingDto> loadCreditAccounts(String glCode) {
-		List<AccountingDto> accountingDtos = null;
+	public List<GLCodeDto> loadCreditAccounts(String glCode) {
+		List<GLCodeDto> accountingDtos = null;
 		accountingDtos = accountingDao.findCreditAccounts(glCode);
 		return accountingDtos;
 	}
 
 	@Override
-	public List<AccountingDto> mainAccountForBank() {
-		List<AccountingDto> accountingDtos = null;
+	public List<GLCodeDto> mainAccountForBank() {
+		List<GLCodeDto> accountingDtos = null;
 		accountingDtos = accountingDao.findMainAccountBankGlCodes();
 		return accountingDtos;
 	}
 
 	@Override
-	public List<AccountingDto> accountHead(String glCode) {
-		List<AccountingDto> accountingDtos = null;
+	public List<GLCodeDto> accountHead(String glCode) {
+		List<GLCodeDto> accountingDtos = null;
 		accountingDtos = accountingDao.findAccountHeadGlCodes(glCode);
 		return accountingDtos;
 	}
@@ -203,10 +203,10 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 	}
 
 	@Override
-	public List<AccountingDto> findTotalGlAccounts() {
-		List<AccountingDto> AccountingDtos = null;
-		AccountingDtos = accountingDao.findGlCodes();
-		return AccountingDtos;
+	public List<GLCodeDto> findTotalGlAccounts() {
+		List<GLCodeDto> accountingDtos = null;
+		accountingDtos = accountingDao.findGlCodes();
+		return accountingDtos;
 	}
 
 	public FinancialYearBO getFinancialYearBO(int financialYearId) {

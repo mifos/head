@@ -6,10 +6,10 @@
 
 
 	<sql-query name="ChartOfAccountsForMifos.Cash">
-		<return-scalar column="glCode" type="string" />
-		<return-scalar column="glDesc" type="string" />
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
         <![CDATA[
-            Select b.glcode_value as glCode,a.coa_name as glDesc from coa a,gl_code b where a.glcode_id=b.glcode_id
+            Select b.glcode_value as glcode,a.coa_name as glname from coa a,gl_code b where a.glcode_id=b.glcode_id
 			and glcode_value in (Select lookup_name from lookup_value where entity_id in 
 			(Select entity_id from lookup_entity where entity_name='Cash'));
 
@@ -17,10 +17,10 @@
 	</sql-query>
 
 	<sql-query name="ChartOfAccountsForMifos.Bank">
-		<return-scalar column="glCode" type="string" />
-		<return-scalar column="glDesc" type="string" />
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
         <![CDATA[
-            Select b.glcode_value as glCode,a.coa_name as glDesc from coa a,gl_code b where a.glcode_id=b.glcode_id
+            Select b.glcode_value as glcode,a.coa_name as glname from coa a,gl_code b where a.glcode_id=b.glcode_id
 			and glcode_value in (Select lookup_name from lookup_value where entity_id in 
 			(Select entity_id from lookup_entity where entity_name='Bank'));
 
@@ -28,10 +28,10 @@
 	</sql-query>
 
 	<sql-query name="ChartOfAccountsForMifos.AccountHeadGlCodes">
-		<return-scalar column="glCode" type="string" />
-		<return-scalar column="glDesc" type="string" />
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
         <![CDATA[
-         SELECT gll.glcode_value as glCode, coo.coa_name as glDesc
+         SELECT gll.glcode_value as glcode, coo.coa_name as glname
 			FROM coahierarchy c
 			      LEFT JOIN coa co ON co.coa_id = c.parent_coaid
 			      LEFT JOIN gl_code gl ON gl.glcode_id = co.glcode_id
@@ -44,10 +44,10 @@
 	</sql-query>
 
 	<sql-query name="ChartOfAccountsForMifos.DebitAccountGlCodes">
-		<return-scalar column="glCode" type="string" />
-		<return-scalar column="glDesc" type="string" />
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
         <![CDATA[
-               SELECT gll.glcode_value as glCode, coo.coa_name as glDesc
+               SELECT gll.glcode_value as glcode, coo.coa_name as glname
 			FROM coahierarchy c
 			      LEFT JOIN coa co ON co.coa_id = c.parent_coaid
 			      LEFT JOIN gl_code gl ON gl.glcode_id = co.glcode_id
@@ -228,10 +228,10 @@ where a.account_trxn_id=b.account_trxn_id
 and a.debit_credit_flag=0 and b.debit_credit_flag=1
  ]]></sql-query>
 	<sql-query name="ChartOfAccountsForMifos.CreditAccountGlCodes">
-		<return-scalar column="glCode" type="string" />
-		<return-scalar column="glDesc" type="string" />
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
         <![CDATA[
-                    SELECT gll.glcode_value as glCode, coo.coa_name as glDesc
+                    SELECT gll.glcode_value as glcode, coo.coa_name as glname
 			FROM coahierarchy c
 			      LEFT JOIN coa co ON co.coa_id = c.parent_coaid
 			      LEFT JOIN gl_code gl ON gl.glcode_id = co.glcode_id
@@ -241,21 +241,11 @@ and a.debit_credit_flag=0 and b.debit_credit_flag=1
         ]]>
 	</sql-query>
 	
-<!-- 	<sql-query name="ChartOfAccountsForMifos.FinancialYear">
-		<return-scalar column="financialYearId" type="string" />
-		<return-scalar column="fyStartDate" type="date" />
-		<return-scalar column="fyEndDate" type="date" />
-        <![CDATA[
-              select af.financialyear_id as financialYearId,af.financialyear_startdate as fyStartDate,af.financialyear_enddate as fyEndDate
-			  from acc_financialyear af
-              where status='A'
-        ]]>
-	</sql-query> -->
 	<sql-query name="ChartOfAccountsForMifos.TotalGlCodes">
-		<return-scalar column="glCode" type="string" />
-		<return-scalar column="glDesc" type="string" />
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
         <![CDATA[
-     SELECT gll.glcode_value as glCode, coo.coa_name as glDesc
+     SELECT gll.glcode_value as glcode, coo.coa_name as glname
 			FROM coahierarchy c
 			      LEFT JOIN coa co ON co.coa_id = c.parent_coaid
 			      LEFT JOIN gl_code gl ON gl.glcode_id = co.glcode_id
