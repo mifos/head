@@ -228,7 +228,7 @@ public class GroupBO extends CustomerBO {
         }
 
         if (isSameCenter(toCenter)) {
-            throw new CustomerException(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER);
+            throw new CustomerException(CustomerConstants.ERRORS_SAME_CENTER_TRANSFER);
         }
 
         if (!toCenter.isActive()) {
