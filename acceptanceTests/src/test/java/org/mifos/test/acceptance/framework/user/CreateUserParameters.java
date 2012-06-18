@@ -51,6 +51,7 @@ public class CreateUserParameters {
     String firstName;
     String lastName;
     String email;
+    String secondLastName;
     String maritalStatus;
     String dateOfBirthDD;
     String dateOfBirthMM;
@@ -77,6 +78,14 @@ public class CreateUserParameters {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+    
+    public String getSecondLastName() {
+		return secondLastName;
+    }
+    
+    public void setSecondLastName(String secondLastName) {
+		this.secondLastName = secondLastName;
     }
 
     public String getEmail() {

@@ -30,6 +30,9 @@ explanation of the license and how it is applied.
 
 <!-- Tile  definitions -->
 <tiles:insert definition=".withoutmenu">
+	<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="pages/js/singleitem.js"></script>
+	
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="createnewcenter"></span>
 	

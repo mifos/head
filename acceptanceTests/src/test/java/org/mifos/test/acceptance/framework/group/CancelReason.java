@@ -20,21 +20,31 @@
 
 package org.mifos.test.acceptance.framework.group;
 
-public enum GroupCancelReason {
-
-    WITHDRAW ("Withdraw", 11),
-    REJECTED("Rejected", 12),
-    BLACKLISTED("Blacklisted", 13),
-    DUPLICATE("Duplicate", 14),
-    OTHER("Other", 15);
+public enum CancelReason {
+	//8 June 2012: refactoring for Client's cancel reasons
+	
+	//GROUP CANCEL REASONS
+    GROUP_WITHDRAW ("Withdraw", 11),
+    GROUP_REJECTED("Rejected", 12),
+    GROUP_BLACKLISTED("Blacklisted", 13),
+    GROUP_DUPLICATE("Duplicate", 14),
+    GROUP_OTHER("Other", 15),
+    
+    //CLIENT CANCEL REASONS
+    CLIENT_WITHDRAW ("Withdraw", 1),
+    CLIENT_REJECTED("Rejected", 2),
+    CLIENT_BLACKLISTED("Blacklisted", 3),
+    CLIENT_DUPLICATE("Duplicate", 4),
+    CLIENT_OTHER("Other", 5);
 
     private final String purposeText;
     private final Integer id;
 
-    private GroupCancelReason(String purposeText, Integer id) {
+    private CancelReason(String purposeText, Integer id) {
         this.purposeText = purposeText;
         this.id = id;
     }
+    
 
     public String getPurposeText() {
         return this.purposeText;

@@ -54,7 +54,15 @@ public class UserHelper {
 
         UserViewDetailsPage userDetailsPage = userConfirmationPage.navigateToUserViewDetailsPage();
         userDetailsPage.verifyPage();
-        Assert.assertTrue(userDetailsPage.getFullName().contains(userParameters.getFirstName() + " " + userParameters.getLastName()));
+        
+        if (userParameters.getSecondLastName() == null){
+        	Assert.assertTrue(userDetailsPage.getFullName().contains(userParameters.getFirstName() + " " + userParameters.getLastName()));
+        }
+        
+        else if (userParameters.getSecondLastName() != null){
+        	Assert.assertTrue(userDetailsPage.getFullName().contains(userParameters.getFirstName() + " " + userParameters.getSecondLastName() + " " + userParameters.getLastName()));
+        }
+        
 
         return userDetailsPage;
     }

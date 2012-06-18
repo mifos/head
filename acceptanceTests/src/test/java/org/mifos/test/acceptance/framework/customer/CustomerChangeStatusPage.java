@@ -51,8 +51,13 @@ public class CustomerChangeStatusPage extends MifosPage {
         if(customerStatusParameters.getClientStatus()!=null){
             selenium.check("name=newStatusId value=" + customerStatusParameters.getClientStatus().getId());
             selenium.fireEvent("name=newStatusId value=" + customerStatusParameters.getClientStatus().getId(), "click");
-            if(customerStatusParameters.getClientStatus().equals(ClientStatus.CLOSED) && customerStatusParameters.getClientCloseReason()!=null) {
+            boolean statusIsClosed = customerStatusParameters.getClientStatus().equals(ClientStatus.CLOSED) && customerStatusParameters.getClientCloseReason()!=null;
+            boolean statusIsCancelled = customerStatusParameters.getClientStatus().equals(ClientStatus.CANCELLED) && customerStatusParameters.getCancelReason()!=null;
+            if(statusIsClosed) {
                 selenium.select("customerchangeStatus.input.cancel_reason", "value="+customerStatusParameters.getClientCloseReason().getId());
+            }
+            else if(statusIsCancelled){
+                selenium.select("customerchangeStatus.input.cancel_reason", "value="+customerStatusParameters.getCancelReason().getId());
             }
         }
         if(customerStatusParameters.getCenterStatus() != null) {
