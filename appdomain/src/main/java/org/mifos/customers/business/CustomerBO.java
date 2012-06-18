@@ -1224,9 +1224,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public void clearCustomerFlagsIfApplicable(CustomerStatus oldStatus, CustomerStatus newStatus) {
         if (checkStatusChangeCancelToPartial(oldStatus, newStatus)) {
-            if (!isBlackListed()) {
-                this.customerFlags.clear();
-            }
+            this.customerFlags.clear();
         }
     }
 

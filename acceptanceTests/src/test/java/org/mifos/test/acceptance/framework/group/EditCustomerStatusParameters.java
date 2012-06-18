@@ -27,7 +27,7 @@ import org.mifos.test.acceptance.framework.client.ClientStatus;
 public class EditCustomerStatusParameters {
 
     private String note;
-    private GroupCancelReason cancelReason;
+    private CancelReason cancelReason;
     private GroupCloseReason closeReason;
     private GroupStatus groupStatus;
     private ClientStatus clientStatus;
@@ -42,11 +42,11 @@ public class EditCustomerStatusParameters {
         this.note = note;
     }
 
-    public GroupCancelReason getCancelReason() {
+    public CancelReason getCancelReason() {
         return this.cancelReason;
     }
 
-    public void setCancelReason(GroupCancelReason cancelReason) {
+    public void setCancelReason(CancelReason cancelReason) {
         this.cancelReason = cancelReason;
     }
 
@@ -89,6 +89,5 @@ public class EditCustomerStatusParameters {
     public CenterStatus getCenterStatus() {
         return centerStatus;
     }
-
 
 }

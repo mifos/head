@@ -89,20 +89,28 @@ public class AccountStatusAction extends BaseAction {
         AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
 
         List<AccountUpdateStatus> accountsForUpdate = new ArrayList<AccountUpdateStatus>();
+        List<AccountUpdateStatus> individualAccountsForUpdate = new ArrayList<AccountUpdateStatus>();
         for (String accountId : accountStatusActionForm.getAccountRecords()) {
             if (StringUtils.isNotBlank(accountId)) {
                 Long accountIdValue = Long.parseLong(accountId);
+                
+                //GLIM
+            	List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(Integer.valueOf(accountId));
+            	for(LoanBO indivdual : individualLoans) {
+            		Short newStatusId = getShortValue(accountStatusActionForm.getNewStatus());
+            		individualAccountsForUpdate.add(new AccountUpdateStatus(indivdual.getAccountId().longValue(), newStatusId, null, accountStatusActionForm.getComments()));
+            	}
+            	this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(individualAccountsForUpdate, null);
 
                 Short newStatusId = getShortValue(accountStatusActionForm.getNewStatus());
                 Short flagId = null;
                 String comment = accountStatusActionForm.getComments();
-                AccountUpdateStatus updateStatus = new AccountUpdateStatus(accountIdValue, newStatusId, flagId, comment);
-                accountsForUpdate.add(updateStatus);
+                accountsForUpdate.add(new AccountUpdateStatus(accountIdValue, newStatusId, flagId, comment));
             }
         }
-
+        
         List<String> accountNumbers = this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(accountsForUpdate, null);
-
+        
         request.setAttribute(LoanConstants.ACCOUNTS_LIST, accountNumbers);
 
         return mapping.findForward(ActionForwards.changeAccountStatusConfirmation_success.toString());

@@ -64,6 +64,7 @@ import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
+import org.mifos.test.acceptance.framework.group.CancelReason;
 import org.mifos.test.acceptance.framework.group.GroupCloseReason;
 import org.mifos.test.acceptance.framework.group.GroupStatus;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
@@ -1274,5 +1275,72 @@ public class ClientTest extends UiTestCaseBase {
         clientParams.setSpouseFirstName("fatherName");
         clientParams.setSpouseLastName("fatherLastName");
         return clientParams;
+    }
+    //http://mifosforge.jira.com/browse/MIFOS-4643
+    /**
+     * Creates new client, tests status changes and verifies blacklisted flag.
+     * @see http://mifosforge.jira.com/browse/MIFOS-4643
+     */
+    @Test(enabled=true)
+    public void changeClientStatusAndVerifyBlacklistedFlag(){
+        //Constant values
+        String STATUS_PENDING_APPROVAL="Application Pending Approval";
+        int numberOfBlackFlags = 1;
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer","MyOfficeDHMFT");
+        //verify new client's status
+        clientDetailsPage.verifyStatus(STATUS_PENDING_APPROVAL);
+        //change client status to PARTIAL APPLICATION and check
+        clientDetailsPage = changeClientStatusToPartialAndVerify(clientDetailsPage);
+        //change client status to CANCELED with reason REJECTED and check
+        clientDetailsPage=changeClientStatusToCancelWithReason("CancelWithReasonRejected", CancelReason.CLIENT_REJECTED, clientDetailsPage);
+        clientDetailsPage.verifyCancellationReason(CancelReason.CLIENT_REJECTED.getPurposeText());
+        //change client status to PARTIAL APPLICATION again and check
+        clientDetailsPage=changeClientStatusToPartialAndVerify(clientDetailsPage);
+        //change client status to CANCELED with reason BLACKLISTED and check for text and flag image
+        clientDetailsPage=changeClientStatusToCancelWithReason("CancelWithReasonBlacklisted",
+                CancelReason.CLIENT_BLACKLISTED, clientDetailsPage);
+        clientDetailsPage.verifyCancellationReason(CancelReason.CLIENT_BLACKLISTED.getPurposeText());
+        clientDetailsPage.verifyElementExistence("viewClientDetails.img.blackFlag");
+        //next is sequence of status changing and verifying that there is always one and only one blackflag image
+        CancelReason reasonArray[]={CancelReason.CLIENT_REJECTED, CancelReason.CLIENT_DUPLICATE,
+                CancelReason.CLIENT_OTHER, CancelReason.CLIENT_WITHDRAW, CancelReason.CLIENT_BLACKLISTED
+        };
+        for (CancelReason cancelReason : reasonArray) {
+            clientDetailsPage = changeBackToPartialApplication(numberOfBlackFlags,
+            clientDetailsPage);
+            clientDetailsPage=changeClientStatusToCancelWithReason("CancelWithBlackFlag",
+                    cancelReason,clientDetailsPage);
+            clientDetailsPage.verifyNumberOfBlackflags(numberOfBlackFlags);
+        }
+    }
+
+    private ClientViewDetailsPage changeBackToPartialApplication(
+            int numberOfBlackFlags,
+            ClientViewDetailsPage clientDetailsPage){
+        ClientViewDetailsPage newClientDetailsPage = changeClientStatusToPartialAndVerify(clientDetailsPage);
+        newClientDetailsPage.verifyNumberOfBlackflags(numberOfBlackFlags);
+        return clientDetailsPage;
+        }
+
+    private ClientViewDetailsPage changeClientStatusToPartialAndVerify(ClientViewDetailsPage clientDetailsPage) {
+        String STATUS_PARTIAL_APPLICATION="Partial Application";
+        //change status
+        ClientViewDetailsPage newClientDetailsPage=clientTestHelper.changeCustomerStatus(clientDetailsPage,ClientStatus.PARTIAL);
+        //verify
+        newClientDetailsPage.verifyStatus(STATUS_PARTIAL_APPLICATION);
+        return clientDetailsPage;
+        }
+    private ClientViewDetailsPage changeClientStatusToCancelWithReason(String note, CancelReason reason, ClientViewDetailsPage clientDetailsPage){
+        String STATUS_CANCELLED="Cancelled";
+        //prepare parameters
+        EditCustomerStatusParameters statusParameters=new EditCustomerStatusParameters();
+        statusParameters.setClientStatus(ClientStatus.CANCELLED);
+        statusParameters.setNote(note);
+        statusParameters.setCancelReason(reason);
+        //change status
+        ClientViewDetailsPage newClientDetailsPage=clientTestHelper.changeCustomerStatus(clientDetailsPage.getHeading(), statusParameters);
+        //verify that status has changed
+        newClientDetailsPage.verifyStatus(STATUS_CANCELLED);
+        return clientDetailsPage;
     }
 }
