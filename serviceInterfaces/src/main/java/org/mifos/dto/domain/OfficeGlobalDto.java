@@ -18,18 +18,30 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.security.rolesandpermission;
+package org.mifos.dto.domain;
 
-public class RoleTestUtil {
-    /**
-     * The total number of activities for the built in Admin role. Whenever a
-     * new activity is added to the role this number must be increased by one.
-     */
-    public static final int EXPECTED_ACTIVITIES_FOR_ROLE = 207;
-    /**
-     * The total number of activities. Whenever a new activity is added to the
-     * role this number must be increased by one.
-     */
-    public static final int EXPECTED_ACTIVITY_COUNT = 228;
+
+/**
+ * this class is used for holding Office globalNum and displayName(including centers,groups).
+ *
+ */
+public class OfficeGlobalDto {
+
+	private String globalOfficeNum;
+	private String displayName;
+
+	public String getGlobalOfficeNum() {
+		return globalOfficeNum;
+	}
+	public void setGlobalOfficeNum(String globalOfficeNum) {
+		this.globalOfficeNum = globalOfficeNum;
+	}
+	public String getDisplayName() {
+		return displayName;
+	}
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
 
 }
