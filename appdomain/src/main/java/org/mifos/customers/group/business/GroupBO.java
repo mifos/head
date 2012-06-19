@@ -247,7 +247,10 @@ public class GroupBO extends CustomerBO {
         }
         return isSame;
     }
-
+    /**
+     * Checks if group and its members have active loan/savings account.
+    * @throws CustomerException
+    */
     public void validateNoActiveAccountsExist() throws CustomerException {
         if (this.isAnyLoanAccountOpen() || this.isAnySavingsAccountOpen()) {
             throw new CustomerException(CustomerConstants.ERRORS_HAS_ACTIVE_ACCOUNT);

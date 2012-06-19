@@ -52,4 +52,25 @@ public class ConfirmAddClientToGroupPage extends MifosPage{
         return new ConfirmAddClientToGroupPage(selenium);
     }
 
+    /**
+    * Tries to add client to group but fails because active account exists.
+    +     * @return
+    */
+    public ConfirmAddClientToGroupPage submitAddGroupWithErrorActiveAccountExists(){
+        submit();
+        verifyActiveAccountExists();
+        return new ConfirmAddClientToGroupPage(selenium);
+    }
+    /**
+    * Checks presence of error message for errors:
+    * <ul>
+    * <li>The membership cannot be changed since there are Active accounts present</li>
+    * <li>Membership cannot be changed, as Active accounts exist</li>
+    * </ul>
+    */
+    public void verifyActiveAccountExists(){
+        boolean errorPresent=selenium.isTextPresent("Membership cannot be changed, as Active accounts exist");
+        Assert.assertTrue(errorPresent);
+    }
+
 }

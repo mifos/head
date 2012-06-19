@@ -1339,4 +1339,18 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return new CustomerDto(getCustomerId(), getDisplayName(), getGlobalCustNum(), statusId, customerLevelId,
                 getVersionNo(), getOfficeId(), personnelId);
     }
+    /**
+     * Checks if any account (either savings or loan) is in 'active' state
+     * @return true if any of customer's accounts is in active state
+     */
+    public boolean isAnyAccountActive(){
+        boolean activeAccountExits=false;
+        for (AccountBO account : getAccounts()) {
+            activeAccountExits=account.isActiveLoanAccount() || account.isActiveSavingsAccount();
+            if(activeAccountExits){
+                break;
+            }           
+        }
+        return activeAccountExits;
+    }
 }

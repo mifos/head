@@ -1900,4 +1900,12 @@ public class AccountBO extends AbstractBusinessObject {
         currentDateCalendar = new GregorianCalendar(year, month, day + numberOfDays);
         changeActionDateOfFirstInstallment(currentDateCalendar, getAccountActionDates());
     }
+    /**
+    * Check if account is active savings account
+    * @return true if account is savings account and is in active state
+    */
+    public boolean isActiveSavingsAccount(){
+        return AccountState.fromShort(accountState.getId()).isActiveSavingsAccountState();
+    }
+
 }

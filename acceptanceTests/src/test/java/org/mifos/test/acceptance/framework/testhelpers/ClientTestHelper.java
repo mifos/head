@@ -444,4 +444,46 @@ public class ClientTestHelper {
     	navigationHelper.navigateToClientViewDetailsPage(clientName)
     		.verifyMeetingSchedule(meetingSchedule);
     }
+
+    /**
+    * Adds client to group but fails cause either client or group has active loan and/or savings accounts.
+    * @param clientName
+    * @param groupName
+    */
+    public void addClientToGroupWithErrorActiveAccountExists(String clientName, String groupName) {
+        navigateToGroupSearchAddClientResult(clientName, groupName)
+        .selectGroupToAdd(groupName)
+        .submitAddGroupWithErrorActiveAccountExists();
+    }
+    /**
+     * Creates client for office and witch custom weekly meeting schedule.
+     * @param loanOfficer assigned loan officer
+     * @param office office's name
+     * @param frequency weekly meeting frequency
+     * @param weekDay day of the meeting
+     * @param meetingPlace place of the meetings
+     * @return
+     */
+    public ClientViewDetailsPage createClientWithCustomMFIInformation(String loanOfficer,
+            String office, String frequency, MeetingParameters.WeekDay weekDay, String meetingPlace) {
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToPersonalDataPage(office);
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = FormParametersHelper.getClientEnterPersonalDataPageFormParameters();
+        clientPersonalDataPage = clientPersonalDataPage.create(formParameters);
+        clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
+        CreateClientEnterMfiDataPage.SubmitFormParameters mfiFormParameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
+        mfiFormParameters.setLoanOfficerId(loanOfficer);
+
+        MeetingParameters meetingFormParameters = new MeetingParameters();
+        meetingFormParameters.setWeekFrequency(frequency);
+        meetingFormParameters.setWeekDay(weekDay);
+        meetingFormParameters.setMeetingPlace(meetingPlace);
+
+        mfiFormParameters.setMeeting(meetingFormParameters);
+
+        CreateClientPreviewDataPage clientPreviewDataPage = new CreateClientEnterMfiDataPage(selenium).submitAndGotoCreateClientPreviewDataPage(mfiFormParameters);
+        CreateClientConfirmationPage clientConfirmationPage = clientPreviewDataPage.submit();
+        clientConfirmationPage.verifyPage();
+        return navigateToClientViewDetails(formParameters);
+        
+    }
 }
