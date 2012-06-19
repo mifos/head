@@ -118,6 +118,7 @@ public interface FilePaths {
             + "ProductDefinitionResources";
     public static final String UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "UIResources";
     public final String BULKENTRY_RESOURCE = LOCALIZED_RESOURCE_PATH + "BulkEntryUIResources";
+    public final String SIMPLE_ACCOUNTING_RESOURCE = LOCALIZED_RESOURCE_PATH + "SimpleAccountingUIResources";
     public final String CHECKLIST_RESOURCE = LOCALIZED_RESOURCE_PATH + "CheckListUIResources";
 
     public final String LOGIN_UI_PROPERTY_FILE = LOCALIZED_RESOURCE_PATH + "LoginUIResources";
