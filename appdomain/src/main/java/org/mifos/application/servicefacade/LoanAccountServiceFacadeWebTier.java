@@ -122,6 +122,7 @@ import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.business.MeetingFactory;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
@@ -130,7 +131,9 @@ import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
 import org.mifos.clientportfolio.loan.service.MonthlyOnDayOfMonthSchedule;
+import org.mifos.clientportfolio.loan.service.MonthlyOnWeekOfMonthSchedule;
 import org.mifos.clientportfolio.loan.service.RecurringSchedule;
+import org.mifos.clientportfolio.loan.service.WeeklySchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateGlimLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.GroupMemberAccountDto;
@@ -2277,7 +2280,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             Integer collateralTypeId = null;
             String collateralNotes = null;
             String externalId = null;
-            RecurringSchedule recurringSchedule = null;
             List<CreateAccountFeeDto> accountFees = new ArrayList<CreateAccountFeeDto>();
             
             for (LoanOfferingFeesEntity loanOfferingFeesEntity : loanProduct.getLoanOfferingFees()){
@@ -2286,6 +2288,35 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             	String amountOrRate = feeDto.getAmountOrRate().toString();
             	
             	accountFees.add(new CreateAccountFeeDto(feeBO.getFeeId().intValue(), amountOrRate));
+            }
+            
+            RecurringSchedule recurringSchedule = null;
+            if ( isRepaymentIndepOfMeetingEnabled ){
+                MeetingBO meetingBO = loanProduct.getLoanOfferingMeetingValue();
+                MeetingDetailsEntity meetingDetailsEntity = meetingBO.getMeetingDetails();
+                
+                Integer recursEvery = meetingDetailsEntity.getRecurAfter().intValue();
+            	Short dayOfMonth = meetingDetailsEntity.getDayNumber();
+            	RankOfDay weekOfMonth = meetingDetailsEntity.getWeekRank();
+            	WeekDay dayOfWeek = meetingDetailsEntity.getWeekDay();
+                
+            	MeetingDetailsEntity customerMeetingDetailsEntity = center.getCustomerAccount().getMeetingForAccount().getMeetingDetails();
+                Short customerRecurrenceType = customerMeetingDetailsEntity.getRecurrenceType().getRecurrenceId();
+                if (meetingDetailsEntity.getRecurrenceType().getRecurrenceId().equals(customerRecurrenceType)){
+                	dayOfMonth = customerMeetingDetailsEntity.getDayNumber();
+                	weekOfMonth = customerMeetingDetailsEntity.getWeekRank();
+                	dayOfWeek = customerMeetingDetailsEntity.getWeekDay();
+                }
+                
+                if (meetingBO.isMonthly()) {
+                    if (meetingBO.isMonthlyOnDate()) {
+                        recurringSchedule = new MonthlyOnDayOfMonthSchedule(recursEvery, dayOfMonth.intValue());
+                    } else {
+                        recurringSchedule = new MonthlyOnWeekOfMonthSchedule(recursEvery, weekOfMonth.getValue().intValue(), dayOfWeek.getValue().intValue());
+                    }
+                } else if (meetingBO.isWeekly()) {
+                    recurringSchedule = new WeeklySchedule(recursEvery, dayOfWeek.getValue().intValue());
+                }	
             }
             
             CreateLoanAccount loanAccountInfo = new CreateLoanAccount(loanDetail.getClientId(), loanDetail.getLoanProductId().intValue(), loanDetail.getAccountStateId().intValue(),

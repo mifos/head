@@ -194,7 +194,7 @@ public class GroupValidationTest {
             group.validateReceivingCenter(center);
             fail("should fail validation");
         } catch (CustomerException e) {
-            assertThat(e.getKey(), is(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER));
+            assertThat(e.getKey(), is(CustomerConstants.ERRORS_SAME_CENTER_TRANSFER));
         }
     }
 

@@ -375,6 +375,21 @@ public class ClientTestHelper {
         return page.createMember(formParameters);
     }
 
+    public CreateClientEnterFamilyDetailsPage createFamilyWithAllName(String fname, String lname, String mname, String slname, String dd, String mm, String yy, CreateClientEnterFamilyDetailsPage page){
+        CreateClientEnterFamilyDetailsPage.SubmitFormParameters formParameters = new CreateClientEnterFamilyDetailsPage.SubmitFormParameters();
+        formParameters.setRelationship(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.FATHER);
+        formParameters.setFirstName(fname);
+        formParameters.setLastName(lname);
+        formParameters.setMiddleName(mname);
+        formParameters.setSecondLastName(slname);
+        formParameters.setDateOfBirthDD(dd);
+        formParameters.setDateOfBirthMM(mm);
+        formParameters.setDateOfBirthYY(yy);
+        formParameters.setGender(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.MALE);
+        formParameters.setLivingStatus(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.TOGETHER);
+        return page.createMemberWithAllNames(formParameters);
+    }
+    
     public CreateClientPreviewDataPage createClientMFIInformationAndGoToPreviewPage(String loanOfficer, CreateClientEnterMfiDataPage clientMfiDataPage) {
         CreateClientEnterMfiDataPage.SubmitFormParameters mfiFormParameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
         mfiFormParameters.setLoanOfficerId(loanOfficer);

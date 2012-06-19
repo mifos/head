@@ -166,4 +166,16 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
         //Assert.assertTrue(selenium.isTextPresent("newName newLastName"));
         Assert.assertEquals(selenium.getText("displayName"), "newName newLastName");
     }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void addFamilyWithAllNamesTest() throws Exception {
+        propertiesHelper.setMaximumNumberOfFamilyMemebers(10);
+        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientTestHelper.createClientForFamilyInfo( "MyOfficeDHMFT","11","12","1988");
+        CreateClientEnterFamilyDetailsPage clientFamilyDataPage=clientPersonalDataPage.submitAndGotoCreateClientEnterFamilyDetailsPage();
+        clientFamilyDataPage=clientTestHelper.createFamilyWithAllName("fname", "lname","mname","slname", "11", "01", "1987", clientFamilyDataPage);
+        CreateClientEnterMfiDataPage nextPage=clientFamilyDataPage.submitAndGotoCreateClientEnterMfiDataPage();
+        CreateClientPreviewDataPage clientPreviewDataPage=clientTestHelper.createClientMFIInformationAndGoToPreviewPage("loan officer",nextPage);
+        CreateClientEnterFamilyDetailsPage editPage=clientPreviewDataPage.edit();
+        editPage.verifyPage("CreateClientFamilyInfo");
+    }
 }
