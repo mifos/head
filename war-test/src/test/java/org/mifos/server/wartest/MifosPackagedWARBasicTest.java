@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.server.WARServerLauncher;
 import org.openqa.selenium.By;
@@ -38,6 +39,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
  * 
  * @author Michael Vorburger
  */
+@Ignore
 public class MifosPackagedWARBasicTest {
 
 	// TODO When acceptanceTest is WebDriver instead of Selenium-based, and uses

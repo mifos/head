@@ -23,6 +23,7 @@ package org.mifos.server.workspace;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -32,6 +33,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
  * Tests launching of Mifos in the Workspace through simple embedded Servlet Container Web Server. All the dependencies
  * / web modules are simply on the (Maven provided) classpath in this test.
  */
+@Ignore
 public class WorkspaceServerLauncherTest {
 
     private static WorkspaceServerLauncher serverLauncher;
