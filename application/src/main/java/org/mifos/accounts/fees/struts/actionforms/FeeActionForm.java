@@ -273,7 +273,7 @@ public class FeeActionForm extends BaseActionForm {
 	}
 
 	public void setToRemove(boolean toRemove) {
-		this.toRemove = toRemove;
+		this.toRemove = true;
 	}
 
 	public boolean isCantBeRemoved() {
@@ -300,7 +300,10 @@ public class FeeActionForm extends BaseActionForm {
         }
         if (method.equals("editPreview")) {
         	cantBeRemoved = false;
-        }
+        	if (feeStatus.equalsIgnoreCase("1")) {
+        	    toRemove = false;
+        	}
+    	}
 	}
 
     @Override
@@ -387,7 +390,7 @@ public class FeeActionForm extends BaseActionForm {
         if (getFeeStatusValue() == null) {
             addError(errors, FeeConstants.AMOUNT, FeeConstants.ERRORS_SELECT_STATUS);
         }
-        if(isToRemove() && feeStatus.equalsIgnoreCase("1")) {
+        if (isToRemove() && feeStatus.equalsIgnoreCase("1")) {
         	addError(errors, FeeConstants.REMOVE_ACTIVE, FeeConstants.REMOVE_ACTIVE);
         }
     }

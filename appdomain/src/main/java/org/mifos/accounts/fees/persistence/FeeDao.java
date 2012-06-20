@@ -74,7 +74,7 @@ public interface FeeDao {
     
     List<Short> getAllUsedLoansWithAttachedFee();
     
-    void remove(FeeBO fee, boolean isInProducts, boolean isFeeAppliedToLoan) throws Exception;
+    void remove(FeeBO fee, boolean isInProducts, boolean isFeeAppliedToLoan, boolean remove) throws Exception;
 
 	Short findFeeInSchedule(Short feeId);
 }
