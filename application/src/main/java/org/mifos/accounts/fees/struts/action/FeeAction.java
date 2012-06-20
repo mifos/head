@@ -53,6 +53,10 @@ public class FeeAction extends BaseAction {
     public FeeAction() throws Exception {
     }
 
+    private static final String UPDATE_SUCCESS = "update";
+    private static final String REMOVE_SUCCESS = "remove";
+    private static final String UPDATE_FAILURE = "failure";
+    
     @TransactionDemarcate(saveToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
@@ -245,6 +249,7 @@ public class FeeAction extends BaseAction {
         FeeStatus feeStatus = feeActionForm.getFeeStatusValue();
         String forward = "";
         Short feeStatusValue = null;
+        String whereToForward = "";
         
         if (feeStatus != null) {
             feeStatusValue = feeStatus.getValue();
@@ -257,22 +262,33 @@ public class FeeAction extends BaseAction {
 	        	try {
 	        	    boolean remove = feeActionForm.isToRemove();
 	        		this.feeServiceFacade.removeFee(feeUpdateRequest, remove);
+	        		whereToForward = REMOVE_SUCCESS;
 	        	} catch (MifosRuntimeException e) {
 	        		ActionMessages messages = new ActionMessages();
 	        		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeCannotBeRemoved"));
 	        		saveMessages(request, messages);
+	        		whereToForward = UPDATE_SUCCESS;
 	        	}
-	        	forward = ActionForwards.remove_fee_success.toString();
         }
         else if (feeActionForm.isToRemove() && feeUpdateRequest.getFeeStatusValue() == 1) {
         	ActionMessages errors = new ActionMessages();
         	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeCantBeRemove"));
         	saveErrors(request, errors);
-        	forward = ActionForwards.update_failure.toString();
+        	whereToForward = UPDATE_FAILURE;
         }
         else {
         	this.feeServiceFacade.updateFee(feeUpdateRequest);
-        	forward = ActionForwards.update_success.toString();
+        	whereToForward = UPDATE_SUCCESS;
+        }
+        
+        if (whereToForward.equals(UPDATE_SUCCESS)) {
+            forward = ActionForwards.update_success.toString();
+        }
+        else if (whereToForward.equals(UPDATE_FAILURE)) {
+            forward = ActionForwards.update_failure.toString();
+        }
+        else if (whereToForward.equals(REMOVE_SUCCESS)) {
+            forward = ActionForwards.remove_fee_success.toString(); 
         }
         
         return mapping.findForward(forward);
