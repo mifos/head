@@ -166,6 +166,7 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward manage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        form.reset(mapping, request);
         FeeActionForm feeActionForm = (FeeActionForm) form;
 
         Short feeId = Short.valueOf(feeActionForm.getFeeId());
@@ -182,7 +183,7 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward editPreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-    	
+        
         Short feeId = ((FeeActionForm) form).getFeeIdValue();
         FeeDto feeDto = this.feeDao.findDtoById(feeId);
         
@@ -194,18 +195,31 @@ public class FeeAction extends BaseAction {
         boolean isFeeInSchedule = feeInSchedule == null ? false : true;
 		ActionMessages messages = new ActionMessages();
         
+		if (!(((FeeActionForm) form).isToRemove() && feeDto.getFeeStatus().getId().equalsIgnoreCase("2"))) {
+		    form.reset(mapping, request);
+		}
+
         if (((FeeActionForm) form).isToRemove()) {
 	    	if (!isInProducts && !isFeeAppliedToLoan) {
 	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemoved"));
 	    	}
 	    	else if (isFeeAppliedToLoan) {
-	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemovedFromPrd"));
-	    		if (!isFeeInSchedule)
+	    		if (!isFeeInSchedule) {
+	    		    messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemovedFromPrd"));
 		    		((FeeActionForm) form).setCantBeRemoved(true);
+	    		}
+	    		else {
+	    		    messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemovedFromPrdButNotDeleted"));
+	    		}
 	    	}
 	    	else {
 	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeNotUsedRemove"));
 	    	}
+        }
+        else {
+            if (((FeeActionForm) form).getFeeStatusValue().getValue() == 2) {
+                messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemovedFromPrdWhenInActive"));
+            }
         }
 		saveErrors(request, messages);
 
@@ -238,10 +252,11 @@ public class FeeAction extends BaseAction {
         FeeUpdateRequest feeUpdateRequest = new FeeUpdateRequest(Short.valueOf(feeActionForm.getFeeId()), feeActionForm.getCurrencyId(),
                 feeActionForm.getAmount(), feeStatusValue, feeActionForm.getRateValue());
         
-        if (feeActionForm.isToRemove() && feeUpdateRequest.getFeeStatusValue() == 2) {
+        if (feeUpdateRequest.getFeeStatusValue() == 2) {
         	this.feeServiceFacade.updateFee(feeUpdateRequest);
 	        	try {
-	        		this.feeServiceFacade.removeFee(feeUpdateRequest);
+	        	    boolean remove = feeActionForm.isToRemove();
+	        		this.feeServiceFacade.removeFee(feeUpdateRequest, remove);
 	        	} catch (MifosRuntimeException e) {
 	        		ActionMessages messages = new ActionMessages();
 	        		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeCannotBeRemoved"));
