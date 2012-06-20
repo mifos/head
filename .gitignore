@@ -18,4 +18,7 @@ out/*
 *.sql
 targetEclipse
 .metadata/
-.project
+*/.settings/.jsdtscope
+*/.settings/org.eclipse.wst.*
+*/.settings/org.hibernate.*
+

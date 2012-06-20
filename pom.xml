@@ -63,6 +63,7 @@
         <targetJdk>1.6</targetJdk>
         <birt.version>2.5.0</birt.version>
         <birt.libs.groupId>org.mifos.birtlibs</birt.libs.groupId>
+        <exec.war.main.class>org.mifos.server.ExecutableWARServerLauncherMain</exec.war.main.class>
     </properties>
 
     <modules>
@@ -87,8 +88,9 @@
         <module>rest</module>
         <module>war-test</module>
         <module>war-test-exec</module>
-        <!-- Keep this module in last, the module which does not have interdependency will build in the order they are defined here -->
+        <!-- Keep these modules in last, as module which do not have interdependency will build in the order they are defined here -->
         <module>acceptanceTests</module>
+        <module>dist</module>
     </modules>
 
 
@@ -230,6 +232,12 @@
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-server-workspace</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mifos</groupId>
+                <artifactId>mifos-war</artifactId>
+                <type>war</type>
                 <version>${project.version}</version>
             </dependency>
 
@@ -886,7 +894,17 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.11</version>
             	</plugin>
-            	
+                <plugin>
+                    <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                    <artifactId>launch4j-maven-plugin</artifactId>
+                    <version>1.5.1</version>
+            	</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>appassembler-maven-plugin</artifactId>
+					<version>1.2.2</version>
+				</plugin>
+
         		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
         		<plugin>
         			<groupId>org.eclipse.m2e</groupId>
@@ -987,6 +1005,19 @@
 										</versionRange>
 										<goals>
 											<goal>copy</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>build-helper-maven-plugin</artifactId>
+										<versionRange>[1.7,)</versionRange>
+										<goals>
+											<goal>parse-version</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>

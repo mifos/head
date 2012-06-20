@@ -114,4 +114,13 @@ public abstract class AbstractServerLauncher {
         return this.context;
     }
 
+    /**
+     * Application base URL.
+     *
+     * @return String of App's URL, including a trailing slash after the context.
+     */
+    public String getAppURL() {
+        return "http://localhost:" + getPort() + "/" + getContext() + "/";
+    }
+
 }

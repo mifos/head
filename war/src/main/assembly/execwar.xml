@@ -20,7 +20,7 @@
         <dependencySet>
             <useStrictFiltering>true</useStrictFiltering>
             <useProjectArtifact>false</useProjectArtifact>
-            <outputFileNameMapping></outputFileNameMapping>
+            <outputFileNameMapping>mifos.war</outputFileNameMapping>
             <unpack>true</unpack>
             <scope>provided</scope>
             <outputDirectory>/</outputDirectory>

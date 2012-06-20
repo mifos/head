@@ -6,6 +6,18 @@
         <format>zip</format>
     </formats>
     <fileSets>
+    	<fileSet>
+    		<directory>target/appassembler/bin</directory>
+    		<outputDirectory>bin</outputDirectory>
+    		<fileMode>0755</fileMode>
+    		<directoryMode>0755</directoryMode>
+    	</fileSet>
+    	<fileSet>
+    		<directory>target/appassembler/lib</directory>
+    		<outputDirectory>lib</outputDirectory>
+    		<fileMode>0644</fileMode>
+    		<directoryMode>0755</directoryMode>
+    	</fileSet>
         <fileSet>
             <outputDirectory/>
             <directory>${basedir}/..</directory>
@@ -30,13 +42,16 @@
             <destName>local.properties</destName>
         </file>
         <file>
-            <source>target/mifos.war</source>
-            <outputDirectory/>
-            <destName>mifos.war</destName>
-        </file>
-        <file>
             <source>src/main/release/install-ubuntu.sh</source>
             <outputDirectory/>
+        </file>
+        <file>
+        	<source>target/mifos.exe</source>
+        	<outputDirectory>bin</outputDirectory>
+        </file>
+        <file>
+        	<source>src/main/launch4j/mifos.l4j.ini</source>
+        	<outputDirectory>bin</outputDirectory>
         </file>
     </files>
 </assembly>

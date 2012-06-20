@@ -61,18 +61,6 @@ public class FrameworkExceptionTest extends TestCase {
     }
 
     @SuppressWarnings("null")
-    public void testLoggerConfigurationException() throws Exception {
-        try {
-            ArrayList<?> arrayList = null;
-            arrayList.size();
-            Assert.fail();
-        } catch (Exception ex) {
-            LoggerConfigurationException lce = new LoggerConfigurationException(ex);
-           Assert.assertEquals("exception.framework.SystemException.LoggerConfigurationException", lce.getKey());
-        }
-    }
-
-    @SuppressWarnings("null")
     public void testHibernateProcessException() throws Exception {
         try {
             ArrayList<?> arrayList = null;

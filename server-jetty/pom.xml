@@ -40,6 +40,11 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- Selenium 2.0 (WebDriver)
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
