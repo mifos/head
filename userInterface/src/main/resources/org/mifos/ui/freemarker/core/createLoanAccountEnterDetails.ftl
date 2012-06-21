@@ -28,7 +28,6 @@
                          
 <span id="page.id" title="LoanCreationDetail"></span>
 [@i18n.formattingInfo /]
-<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="pages/js/singleitem.js"></script>
 
 [#if customerSearchFormBean.redoLoanAccount]
