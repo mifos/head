@@ -802,10 +802,6 @@ public class ClientBO extends CustomerBO {
         }
 
         validateForGroupStatus(toGroup.getStatus());
-        if (getCustomerMeeting() != null && toGroup.getCustomerMeeting() != null) {
-            validateMeetingRecurrenceForTransfer(getCustomerMeeting().getMeeting(), toGroup.getCustomerMeeting()
-                    .getMeeting());
-        }
     }
 
     private void validateForGroupStatus(final CustomerStatus groupStatus) throws CustomerException {

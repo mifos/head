@@ -1484,4 +1484,28 @@ public class ClientTest extends UiTestCaseBase {
             savingsAccountHelper.activateSavingsAccount(sadp.getAccountId());
         }
     }
+    
+    @Test(enabled=true)
+    public void moveClientToGroupWithDifferentMeetingFrequencyTest(){
+        //Given
+    	String startGroupName = "GroupWeekly";
+    	String destinationGroupName = "MonthlyGroup";
+    	
+    	//client
+        CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = clientParams();
+        clientParams.setFirstName("John");
+        clientParams.setLastName("DoeTest");
+        ClientViewDetailsPage clientPage = clientTestHelper.createNewClient(startGroupName, clientParams);
+    	
+        
+        //When     
+        clientPage.navigateToEditRemoveGroupMembership()
+        	.searchGroup(destinationGroupName)
+        	.selectGroupToAdd(destinationGroupName)
+        	.submitAddGroup();
+        
+        
+        //Then
+        clientPage.verifyGroupMembership(destinationGroupName);
+    }
 }
