@@ -36,6 +36,8 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 		<span id="page.id" title="CreateMultipleLoanAccountsSearchResults"></span>
+		<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="pages/js/singleitem.js"></script>
 		<mifos:NumberFormattingInfo />
 
 
