@@ -21,15 +21,10 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
 <span id="page.id" title="admin"></span>
-[@widget.crumbs accessDeniedBreadcrumbs /]
 <div class="content_panel">
     <div class="marginLeft30 marginTop20">
         <h3 id="accessDeniedHeading">[@spring.message "accessDeniedHeading" /]</h3>
         <p id="accessDeniedMessage" class="red">[@spring.message "accessDeniedMessage" /]</p>
-        <div class="clear">&nbsp;</div>
-   		<div class ="marginLeft20px">
-    		[@form.returnToPage  "${Request.urlToBackPage}" "button.back" "accessdenied.button.back"/]
-    	</div> 
     </div>
 </div>
 

@@ -22,8 +22,6 @@ package org.mifos.framework.struts.action;
 
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -114,7 +112,6 @@ import org.mifos.security.AuthenticationAuthorizationServiceFacade;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.UserContext;
-import org.mifos.ui.core.controller.BreadCrumbsLinks;
 import org.mifos.ui.core.controller.util.helpers.UrlHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,7 +122,7 @@ import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsService
 public abstract class BaseAction extends DispatchAction {
 
     private static final Logger logger = LoggerFactory.getLogger(BaseAction.class);
-    
+
     protected BusinessService getService() throws ServiceException {
         return null;
     }
@@ -173,8 +170,7 @@ public abstract class BaseAction extends DispatchAction {
 
     // non domain app
     protected LoanServiceFacade loanServiceFacade;
-    protected List<BreadCrumbsLinks> breadcrumbs = new LinkedList<BreadCrumbsLinks>();
-    
+
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -198,9 +194,6 @@ public abstract class BaseAction extends DispatchAction {
         if (null != request.getSession().getAttribute("currentPageUrl")) {
         	SessionUtils.setAttribute("backPageUrl", UrlHelper.constructCurrentPageUrl(request), request);
         }
-        
-        setBreadCrumbs(request);
-        
     	TransactionDemarcate annotation = getTransaction(form, request);
         preExecute(form, request, annotation);
         ActionForward forward = super.execute(mapping, form, request, response);
@@ -208,53 +201,9 @@ public abstract class BaseAction extends DispatchAction {
         // be closed still working through resolving issues related to enforcing
         // this postExecute(request, annotation, true);
         postExecute(request, annotation, isCloseSessionAnnotationPresent(form, request));
-        
         return forward;
     }
-    
-    private void setBreadCrumbs(HttpServletRequest request){
-        try {
-            String viewName = request.getRequestURI().replaceFirst(".+/", "").replaceFirst("\\..+", "");
-            if (!viewName.equals("holidayAction") && !viewName.equals("chkListAction")) {
-                if (viewName.equals("admin") || viewName.equals("reportsAction")) {
-                    breadcrumbs = new LinkedList<BreadCrumbsLinks>();
-                }
-                if (exist(viewName)) {
-                    while (!breadcrumbs.get(breadcrumbs.size() - 1).getMessage().equals(viewName)) {
-                        breadcrumbs.remove(breadcrumbs.size() - 1);
-                    }
-                    breadcrumbs.remove(breadcrumbs.size() - 1);
-                }
-                BreadCrumbsLinks root = new BreadCrumbsLinks();
-                root.setMessage(viewName);
-                if (viewName.equals("groupCustAction")) {
-                    root.setLink("centerCustAction.do");
-                } else {
-                    root.setLink(UrlHelper.constructCurrentPageUrl(request));
-                }
-                breadcrumbs.add(root);
-                request.getSession().setAttribute("accessDeniedBreadcrumbs", breadcrumbs);
-            }
-        } catch (Exception e) {
-            BreadCrumbsLinks root = new BreadCrumbsLinks();
-            root.setMessage("admin");
-            root.setLink("adminAction.do?method=load");
-            breadcrumbs.add(root);
-            request.getSession().setAttribute("accessDeniedBreadcrumbs", breadcrumbs);
-        }
-    }
-    
-    private boolean exist(String viewName){
-        boolean exist = false;
-        for (BreadCrumbsLinks breadcrumb : breadcrumbs){
-            if(breadcrumb.getMessage().equals(viewName)) {
-                exist = true; 
-                break;
-            }
-        }
-        return exist;	
-    }
-    
+
     private void checkLocaleContext(HttpServletRequest request) {
         // Legacy struts actions and UserContext uses this
         // Eg. LoanPrdActionForm.validateInterestGLCode
