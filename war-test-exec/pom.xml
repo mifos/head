@@ -43,7 +43,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
-									<artifactId>mifos-war</artifactId>
+									<artifactId>mifos</artifactId>
 									<version>${project.version}</version>
 									<type>war</type>
 									<overWrite>true</overWrite>

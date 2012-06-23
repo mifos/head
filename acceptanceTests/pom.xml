@@ -117,8 +117,7 @@
     <dependencies>
         <dependency>
             <groupId>org.mifos</groupId>
-            <artifactId>mifos-war</artifactId>
-            <version>1.11-SNAPSHOT</version>
+            <artifactId>mifos</artifactId>
             <type>war</type>
         </dependency>
         <dependency>

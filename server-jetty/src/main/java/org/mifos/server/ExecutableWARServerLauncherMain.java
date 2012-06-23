@@ -42,31 +42,45 @@ import org.mifos.server.tray.MifosTray;
 public class ExecutableWARServerLauncherMain extends WARServerLauncher {
 	// If this class is ever renamed or refactored, please change the ${exec.war.main.class} property in the parent pom.xml
 	
+	private static File warFile;
+	
     public ExecutableWARServerLauncherMain(int httpPort, String urlContext) throws IOException {
-        super(httpPort, urlContext, getWARFileOrDirectory());
+        super(httpPort, urlContext, getWARFileOrDirectory(), getTempDir());
     }
 
     private static File getWARFileOrDirectory() throws IOException {
-    	File warDir = new File("mifos/webapp").getAbsoluteFile();
-    	if (warDir.exists() && warDir.isDirectory()) {
-    		System.out.println("WAR directory found (already unpacked previously) : " + warDir);
-    		return warDir;
+    	// This (temp/ + "webapp") is hard-coded in org.eclipse.jetty.webapp.WebInfConfiguration#unpack as well, so fair game:
+    	File extractedWebAppDir = new File(getTempDir(), "webapp");
+    	if (extractedWebAppDir.exists() && extractedWebAppDir.isDirectory()) {
+    		System.out.println("WAR directory found (already unpacked previously) : " + extractedWebAppDir);
+    		return extractedWebAppDir;
     	} else {
-    		System.out.println("WAR directory NOT found: " + warDir);
+    		System.out.println("WAR directory NOT found: " + extractedWebAppDir);
     		return getWARFile();
     	}
     }
     
     private static File getWARFile() throws IOException {
-        final String classResourceName = ExecutableWARServerLauncherMain.class.getName().replace('.', '/') + ".class";
-        URL url = ExecutableWARServerLauncherMain.class.getClassLoader().getResource(classResourceName);
-        if (url == null)
-            throw new IOException("URL for class resource not found: " + classResourceName);
-        File warFile = new File(((JarURLConnection) url.openConnection()).getJarFile().getName());
-        System.out.println("WAR Archive File found, going to unpack: " + warFile);
-        return warFile.getAbsoluteFile();
+    	if (warFile == null) {
+	        final String classResourceName = ExecutableWARServerLauncherMain.class.getName().replace('.', '/') + ".class";
+	        URL url = ExecutableWARServerLauncherMain.class.getClassLoader().getResource(classResourceName);
+	        if (url == null)
+	            throw new IOException("URL for class resource not found: " + classResourceName);
+	        warFile = new File(((JarURLConnection) url.openConnection()).getJarFile().getName()).getAbsoluteFile();
+	        System.out.println("WAR Archive File found (it will be unpacked automatically by Jetty on first launch if the temporary directory doesn't exist already): " + warFile);
+    	}
+    	return warFile;
     }
 
+    private static File getTempDir() throws IOException {
+    	// Place the temp/ directory right "next" to the WAR file, for now
+		File warFile = getWARFile();
+		File tempDir = new File(warFile.getParentFile(), "temp");
+		// Pre-create temp/, because if it's not, then Jetty will deleteOnExit it
+		tempDir.mkdirs();
+		return tempDir;
+	}
+    
     public static void main(String[] args) throws Exception {
         int port = 8080;
         if (args.length == 1) {
@@ -92,8 +106,17 @@ public class ExecutableWARServerLauncherMain extends WARServerLauncher {
 		};
 		
 		tray.init();
-		serverLauncher.startServer();
-		tray.started(true);
+		try {
+			serverLauncher.startServer();
+			tray.started(true);
+		} catch (Exception e) {
+			// Just for end-user convenience, open log if the server didn't start up properly (e.g. DB unreachable)
+			tray.openLog();
+			// If the server didn't start up properly, we MUST shutdown the Tray,
+			// otherwise there are some lingering AT Daemon threads, and the JVM doesn't quit.
+			tray.quit();
+			throw e;
+		}
     }
 
 }

@@ -17,13 +17,16 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.mifos</groupId>
-			<artifactId>mifos-war</artifactId>
+			<artifactId>mifos</artifactId>
 			<type>war</type>
 		</dependency>
 	</dependencies>
 	
 	<build>
 		<plugins>
+<!-- @see src/main/appassembler/readme.txt for why this is commented / not actually feasible...
+     may be useful to leave in, because if appassembler-maven-plugin provide improved scripts
+     you could temporarily uncomment this, gen. new launch scripts, and replace them in src/. 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>appassembler-maven-plugin</artifactId>
@@ -40,8 +43,15 @@
 					<useAllDependencies>true</useAllDependencies>
           			<repositoryLayout>flat</repositoryLayout>
           			<repositoryName>lib</repositoryName>
-          			<!-- This doesn't work <useAsterikClassPath>true</useAsterikClassPath>, at least in appassembler-maven-plugin v1.2.2 :-( -->	
-					<!-- Identical settings are also defined in mifos.l4j.ini for Launch4j (remember to change both) -->
+          			< ! - - We cannot use the <useAsterikClassPath>true</useAsterikClassPath>,
+          				 because Java6 "class path wildcards" only get *.jar from lib/*
+          				 and ignore *.war. 
+          			     We must use lib/mifos.war, not lib/mifos-1.11[-SNAPSHOT].war
+          				 because in the dist ZIP the WAR's filename, even if in lib, should be the one ready for external Jetty deployment, 
+          				 and also because otherwise the Launch4j EXE wouldn't find it (or if we baked the version number into the EXE, it would break too easily when people would rename the WAR)  
+          			 - - >
+          			<useAsterikClassPath>true</useAsterikClassPath>	
+					< ! - - Identical settings are also defined in mifos.l4j.ini for Launch4j (remember to change both) - - >
 					<extraJvmArguments>-Xms1024M -Xmx1024M -XX:MaxPermSize=256m</extraJvmArguments>
 					<configurationDirectory>conf</configurationDirectory>
 					<binFileExtensions>
@@ -55,9 +65,9 @@
 					</programs>
 				</configuration>
 			</plugin>
-			
+ -->
 			<plugin>
-				<!-- Used to set the parsedVersion.* properties, see http://mojo.codehaus.org/build-helper-maven-plugin/usage.html -->
+				<!-- Used to set the parsedVersion.* properties used in <versionInfo> below, see http://mojo.codehaus.org/build-helper-maven-plugin/usage.html -->
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<version>1.7</version>
@@ -71,6 +81,25 @@
 				</executions>
 			</plugin>
 
+			<plugin>
+  				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>antrun-mkdir-target</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<!-- launch4j-maven-plugin doesn't mkdir it's outfile, so we have to ;( -->
+								<mkdir dir="${project.build.directory}"/>
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
 			<plugin>
 				<groupId>com.akathist.maven.plugins.launch4j</groupId>
 				<artifactId>launch4j-maven-plugin</artifactId>
@@ -90,7 +119,7 @@
 								 @see http://launch4j.sourceforge.net/docs.html
 							-->
 							<headerType>gui</headerType>
-							<jar>mifos.war</jar>
+							<jar>../mifos.war</jar>
 							<dontWrapJar>true</dontWrapJar>
 							<errTitle>Mifos</errTitle>
 							<outfile>${project.build.directory}/mifos.exe</outfile>
@@ -161,7 +190,7 @@
 								 @see http://launch4j.sourceforge.net/docs.html
 							-->
 							<headerType>console</headerType>
-							<jar>mifos.war</jar>
+							<jar>../mifos.war</jar>
 							<dontWrapJar>true</dontWrapJar>
 							<errTitle>Mifos</errTitle>
 							<outfile>${project.build.directory}/mifos-cli.exe</outfile>

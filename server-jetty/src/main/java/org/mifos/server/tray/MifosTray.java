@@ -51,7 +51,7 @@ public class MifosTray extends Tray {
 		});
 		addMenuItem(popup, "Open Log", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				openURL(logFile);
+				openLog();
 			}
 		});
 		addMenuItem(popup, "Quit", new ActionListener() {
@@ -76,6 +76,10 @@ public class MifosTray extends Tray {
 	public void quit() {
 		message("Mifos", "has been stopped");
 		super.quit();
+	}
+
+	public void openLog() {
+		openURL(logFile);
 	}
 
 }

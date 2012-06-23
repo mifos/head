@@ -58,7 +58,7 @@ public abstract class AbstractServerLauncher {
         webAppContext.getServletHandler().setStartWithUnavailable(false);
         server.setHandler(webAppContext);
 
-        // webAppContext.setTempDirectory(...);
+        // webAppContext.setTempDirectory(...) should typically already have been done by createWebAppContext()
 
         // No sure how much use that is, as we'll terminate this via Ctrl-C, but
         // it doesn't hurt either:
@@ -73,13 +73,12 @@ public abstract class AbstractServerLauncher {
             // thread keeps running, and the JVM won't exit (e.g. in JUnit
             // Tests)
             server.stop();
-            if (webAppContext.getUnavailableException() != null) {
-                throw new IllegalStateException(
-                        "Web App in Jetty Server does not seem to have started up; CHECK THE LOG! PS: Chained exception is: ",
-                        webAppContext.getUnavailableException());
+            Throwable e = webAppContext.getUnavailableException();
+            webAppContext = null;
+            if (e != null) {
+                throw new IllegalStateException("Web App in Jetty Server does not seem to have started up; CHECK THE LOG! PS: Chained exception is: ", e);
             } else {
-                throw new IllegalStateException(
-                        "Web App in Jetty Server does not seem to have started up; CHECK THE LOG! (NO chained exception)");
+                throw new IllegalStateException("Web App in Jetty Server does not seem to have started up; CHECK THE LOG! (NO chained exception)");
             }
         }
     }
@@ -100,10 +99,14 @@ public abstract class AbstractServerLauncher {
     }
 
     public void stopServer() throws Exception {
-        webAppContext.stop();
-        webAppContext = null;
-        server.stop();
-        server = null;
+    	if (webAppContext != null) {
+	        webAppContext.stop();
+	        webAppContext = null;
+    	}
+    	if (server != null) {
+	        server.stop();
+	        server = null;
+    	}
     }
 
     public int getPort() {

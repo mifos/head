@@ -2,7 +2,8 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mifos-war</artifactId>
+	<!-- Since MIFOS-5157, the artifactId must be mifos instead of mifos-war so that the assembly in dist/ works nicely -->
+    <artifactId>mifos</artifactId>
     <packaging>war</packaging>
     <name>Mifos - WAR</name>
     <description>The actual mifos.war (as the mifos-webapp/application is now a JAR), including making it &quot;self-executable&quot; with an embedded Jetty (for &quot;raw&quot; java -jar mifos.war).</description>

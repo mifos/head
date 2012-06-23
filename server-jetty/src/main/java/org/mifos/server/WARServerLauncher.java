@@ -40,21 +40,23 @@ import org.eclipse.jetty.webapp.WebAppContext;
  */
 public class WARServerLauncher extends AbstractServerLauncher {
 
-    private final File warFile;
+    private final File warFileOrDirectory;
+	private final File tempDirectory;
 
     /**
      * Constructor.
      * 
      * @param httpPort HTTP Port
      * @param urlContext Web Context
-     * @param warFile WAR Web Archive
+     * @param warFileOrDirectory WAR Web Archive, or Directory where already unpacked WAR lives
      * @throws IllegalArgumentException if warFile is not a valid JAR (WAR) file, e.g. corrupt or technically valid but completely empty
      * @throws IOException if warFile could not even be found or opened for sanity checking
      */
-    public WARServerLauncher(int httpPort, String urlContext, File warFile) throws IllegalArgumentException, IOException {
+    public WARServerLauncher(int httpPort, String urlContext, File warFileOrDirectory, File tempDirectory) throws IllegalArgumentException, IOException {
         super(httpPort, urlContext);
-        this.warFile = warFile;
-        checkArchive(warFile);
+        this.warFileOrDirectory = warFileOrDirectory;
+        this.tempDirectory = tempDirectory;
+        checkArchive(warFileOrDirectory);
     }
 
     private void checkArchive(File jarFile) throws IOException, IllegalArgumentException {
@@ -74,19 +76,17 @@ public class WARServerLauncher extends AbstractServerLauncher {
 
 	@Override
     protected WebAppContext createWebAppContext() throws Exception {
-        WebAppContext warCtx = new WebAppContext(warFile.toURI().toString(), "/" + getContext());
+        WebAppContext warCtx = new WebAppContext(warFileOrDirectory.toURI().toString(), "/" + getContext());
 
-        if (warFile.isFile()) {
+        if (warFileOrDirectory.isFile()) {
 	        // http://mifosforge.jira.com/browse/MIFOS-4765
-	        File warCtxTmpDir = new File(warFile.getParentFile(), warFile.getName().substring(0, warFile.getName().indexOf('.')));
+	        File warCtxTmpDir = tempDirectory;
 	        IO.delete(warCtxTmpDir);
 	        warCtx.setTempDirectory(warCtxTmpDir);
-	        // DON'T warCtxTmpDir.deleteOnExit();
-        
+	        // NOTE That setTempDirectory() does a deleteOnExit() - if it didn't already exist before
 	        warCtx.setExtractWAR(true);
         } else {
-        	// if warFile is a dir, it will be mifos/webapp - the temp is the one up: 
-	        warCtx.setTempDirectory(warFile.getParentFile());
+	        warCtx.setTempDirectory(tempDirectory);
         }
         
         return warCtx;
