@@ -21,8 +21,8 @@
 [@layout.header "title" /]
 [@widget.topNavigationNoSecurity currentTab="Admin" /]
 <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="pages/js/singleitem.js"></scrpt>
- <script type="text/javascript">
+<script type="text/javascript" src="pages/js/singleitem.js"></script>
+<script type="text/javascript">
  function addOption(root, text, value)
 {
   var newOpt = new Option(text, value);

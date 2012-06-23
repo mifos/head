@@ -949,7 +949,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         GroupBO receivingGroup = (GroupBO) customerDao.findCustomerById(groupId);
         client.validateReceivingGroup(receivingGroup);
-        client.validateNoActiveAccountExist();
+        client.validateForActiveAccounts();
 
         CustomerBO oldParent = client.getParentCustomer();
 
@@ -1170,7 +1170,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         if (client.hasActiveLoanAccounts()) {
             throw new BusinessRuleException(CustomerConstants.CLIENT_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
-        }
+        }    
 
         if (client.getParentCustomer() != null) {
 

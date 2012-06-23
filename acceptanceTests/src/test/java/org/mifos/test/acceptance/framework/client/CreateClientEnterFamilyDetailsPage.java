@@ -46,6 +46,7 @@ public class CreateClientEnterFamilyDetailsPage extends MifosPage {
         String  firstName;
         String  lastName;
         String  middleName;
+        String  secondLastName;
         String  dateOfBirthDD;
         String  dateOfBirthMM;
         String  dateOfBirthYY;
@@ -81,6 +82,14 @@ public class CreateClientEnterFamilyDetailsPage extends MifosPage {
         public void setMiddleName(String middleName) {
             this.middleName = middleName;
         }
+        
+        public String getSecondLastName() {
+            return this.secondLastName;
+        }
+        public void setSecondLastName(String secondLastName) {
+            this.secondLastName = secondLastName;
+        }
+        
         public String getDateOfBirthDD() {
             return this.dateOfBirthDD;
         }
@@ -141,6 +150,20 @@ public class CreateClientEnterFamilyDetailsPage extends MifosPage {
 
     }
 
+    public CreateClientEnterFamilyDetailsPage createMemberWithAllNames(SubmitFormParameters parameters) {
+        selectValueIfNotZero("familyRelationship[0]", parameters.getRelationship());
+        typeTextIfNotEmpty("familyFirstName[0]", parameters.getFirstName());
+        typeTextIfNotEmpty("familyLastName[0]", parameters.getLastName());
+        typeTextIfNotEmpty("familyMiddleName[0]", parameters.getMiddleName());
+        typeTextIfNotEmpty("familySecondLastName[0]", parameters.getSecondLastName());
+        typeTextIfNotEmpty("familyDateOfBirthDD[0]", parameters.getDateOfBirthDD());
+        typeTextIfNotEmpty("familyDateOfBirthMM[0]", parameters.getDateOfBirthMM());
+        typeTextIfNotEmpty("familyDateOfBirthYY[0]", parameters.getDateOfBirthYY());
+        selectValueIfNotZero("familyGender[0]", parameters.getGender());
+        selectValueIfNotZero("familyLivingStatus[0]", parameters.getLivingStatus());
+        return this;
+    }
+    
     public CreateClientEnterMfiDataPage submitAndGotoCreateClientEnterMfiDataPage() {
         selenium.click("create_ClientFamilyInfo.button.continue");
         waitForPageToLoad();

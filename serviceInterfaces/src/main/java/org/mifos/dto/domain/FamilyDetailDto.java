@@ -26,6 +26,7 @@ public class FamilyDetailDto {
     private String firstName;
     private String middleName;
     private String lastName;
+    private String secondLastName;
     private String dateOfBirthDD;
     private String dateOfBirthMM;
     private String dateOfBirthYY;
@@ -63,7 +64,15 @@ public class FamilyDetailDto {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
+    
+    public String getSecondLastName() {
+    	return this.secondLastName;
+    }
+    
+    public void setSecondLastName(String secondLastName) {
+    	this.secondLastName = secondLastName;
+    }
+	
     public String getDateOfBirthDD() {
         return this.dateOfBirthDD;
     }

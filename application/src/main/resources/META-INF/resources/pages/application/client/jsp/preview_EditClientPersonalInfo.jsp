@@ -289,12 +289,13 @@ explanation of the license and how it is applied.
 
 							<!--CustomField addition -->
 						</td></tr>
-						<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
-									<tr><td height="23" class="fontnormalbold"><br><mifos:mifoslabel
-								name="client.AdditionalInformationHeading"
+						
+								<tr><td height="23" class="fontnormalbold"><br>
+								<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+								<mifos:mifoslabel name="client.AdditionalInformationHeading"
 								bundle="ClientUIResources"></mifos:mifoslabel><span></span>
 								<br>
-							 <c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+							 	<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 								<c:forEach var="customField"
 									items="${sessionScope.clientCustActionForm.customFields}">
 									<c:if test="${cf.fieldId==customField.fieldId}">
@@ -304,14 +305,19 @@ explanation of the license and how it is applied.
 										<br>
 									</c:if>
 								</c:forEach>
-							</c:forEach><br>
-							<!-- Edit Button --> <html-el:button styleId="preview_EditClientPersonalInfo.button.editPersonalInformation" onclick="goToPersonalPage()"
+							</c:forEach>
+							</c:if>
+							<br>
+						<!-- Edit Button -->
+						<html-el:button styleId="preview_EditClientPersonalInfo.button.editPersonalInformation" onclick="goToPersonalPage()"
 								property="editButton" styleClass="insidebuttn">
 								<mifos:mifoslabel name="button.previousPersonalInfo"
 									bundle="ClientUIResources"></mifos:mifoslabel>
-							</html-el:button></td>
+						</html-el:button>
+						</td>
 						</tr>
-						</c:if>
+
+						
 					</table>
 					<%-- Personal Information end --%> <!-- Submit and cancel buttons -->
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">

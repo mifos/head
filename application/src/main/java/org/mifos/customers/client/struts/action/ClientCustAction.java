@@ -854,6 +854,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             actionForm.setFamilyFirstName(familyMemberCount, familyMember.getFirstName());
             actionForm.setFamilyMiddleName(familyMemberCount, familyMember.getMiddleName());
             actionForm.setFamilyLastName(familyMemberCount, familyMember.getLastName());
+            actionForm.setFamilySecondLastName(familyMemberCount, familyMember.getSecondLastName());
             actionForm.setFamilyRelationship(familyMemberCount, familyMember.getNameType());
 
             Map<Integer, List<ClientFamilyDetailDto>> clientFamilyDetailsMap = clientFamilyInfo.getClientFamilyDetails();

@@ -103,6 +103,7 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
     private List<String> familyFirstName;
     private List<String> familyMiddleName;
     private List<String> familyLastName;
+    private List<String> familySecondLastName;
     private List<String> familyDateOfBirthDD;
     private List<String> familyDateOfBirthMM;
     private List<String> familyDateOfBirthYY;
@@ -189,6 +190,7 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
             familyNames.setFirstName(getFamilyFirstName(row));
             familyNames.setMiddleName(getFamilyMiddleName(row));
             familyNames.setLastName(getFamilyLastName(row));
+            familyNames.setSecondLastName(getFamilySecondLastName(row));
             familyNames.setNameType(getFamilyRelationship(row));
             familyNames.setDisplayName(new StringBuilder(getFamilyFirstName(row) + getFamilyLastName(row)));
             familyNames.setNames(ClientRules.getNameSequence());
@@ -874,12 +876,32 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
             familyLastName.set(forMember, value);
         }
     }
+    
+    //SecondLastName
 
+    public List<String> getFamilySecondLastName() {
+        return this.familySecondLastName;
+    }
+    
+    public void setFamilySecondLastName(List<String> familySecondLastName) {
+        this.familySecondLastName = familySecondLastName;
+    }
+    
+    public String getFamilySecondLastName(int forMember) {
+        return familySecondLastName.get(forMember);
+    }
+
+    public void setFamilySecondLastName(int forMember, String value) {
+        if (forMember < familySecondLastName.size()) {
+            familySecondLastName.set(forMember, value);
+        }
+    }
+    
     // DOB-DD
     public List<String> getFamilyDateOfBirthDD() {
         return this.familyDateOfBirthDD;
     }
-
+    
     public void setFamilyDateOfBirthDD(List<String> familyDateOfBirthDD) {
         this.familyDateOfBirthDD = familyDateOfBirthDD;
     }
@@ -999,6 +1021,9 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
         // lastName
         familyLastName = new ArrayList<String>();
 
+        //secondLastName
+        familySecondLastName = new ArrayList<String>();
+
         // DOB-DD
         familyDateOfBirthDD = new ArrayList<String>();
 
@@ -1024,6 +1049,7 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
         familyFirstName.add(null);
         familyMiddleName.add(null);
         familyLastName.add(null);
+        familySecondLastName.add(null);
         familyDateOfBirthDD.add(null);
         familyDateOfBirthMM.add(null);
         familyDateOfBirthYY.add(null);
@@ -1037,6 +1063,7 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
         familyFirstName.remove(member);
         familyMiddleName.remove(member);
         familyLastName.remove(member);
+        familySecondLastName.remove(member);
         familyDateOfBirthDD.remove(member);
         familyDateOfBirthMM.remove(member);
         familyDateOfBirthYY.remove(member);
@@ -1098,6 +1125,7 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
         setFamilyFirstName(new ArrayList<String>());
         setFamilyMiddleName(new ArrayList<String>());
         setFamilyLastName(new ArrayList<String>());
+        setFamilySecondLastName(new ArrayList<String>());
         setFamilyDateOfBirthDD(new ArrayList<String>());
         setFamilyDateOfBirthMM(new ArrayList<String>());
         setFamilyDateOfBirthYY(new ArrayList<String>());

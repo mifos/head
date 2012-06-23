@@ -375,6 +375,21 @@ public class ClientTestHelper {
         return page.createMember(formParameters);
     }
 
+    public CreateClientEnterFamilyDetailsPage createFamilyWithAllName(String fname, String lname, String mname, String slname, String dd, String mm, String yy, CreateClientEnterFamilyDetailsPage page){
+        CreateClientEnterFamilyDetailsPage.SubmitFormParameters formParameters = new CreateClientEnterFamilyDetailsPage.SubmitFormParameters();
+        formParameters.setRelationship(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.FATHER);
+        formParameters.setFirstName(fname);
+        formParameters.setLastName(lname);
+        formParameters.setMiddleName(mname);
+        formParameters.setSecondLastName(slname);
+        formParameters.setDateOfBirthDD(dd);
+        formParameters.setDateOfBirthMM(mm);
+        formParameters.setDateOfBirthYY(yy);
+        formParameters.setGender(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.MALE);
+        formParameters.setLivingStatus(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.TOGETHER);
+        return page.createMemberWithAllNames(formParameters);
+    }
+    
     public CreateClientPreviewDataPage createClientMFIInformationAndGoToPreviewPage(String loanOfficer, CreateClientEnterMfiDataPage clientMfiDataPage) {
         CreateClientEnterMfiDataPage.SubmitFormParameters mfiFormParameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
         mfiFormParameters.setLoanOfficerId(loanOfficer);
@@ -428,5 +443,47 @@ public class ClientTestHelper {
     public void verifyMeetingSchedule(String clientName, String meetingSchedule){
     	navigationHelper.navigateToClientViewDetailsPage(clientName)
     		.verifyMeetingSchedule(meetingSchedule);
+    }
+
+    /**
+    * Adds client to group but fails cause either client or group has active loan and/or savings accounts.
+    * @param clientName
+    * @param groupName
+    */
+    public void addClientToGroupWithErrorActiveAccountExists(String clientName, String groupName) {
+        navigateToGroupSearchAddClientResult(clientName, groupName)
+        .selectGroupToAdd(groupName)
+        .submitAddGroupWithErrorActiveAccountExists();
+    }
+    /**
+     * Creates client for office and witch custom weekly meeting schedule.
+     * @param loanOfficer assigned loan officer
+     * @param office office's name
+     * @param frequency weekly meeting frequency
+     * @param weekDay day of the meeting
+     * @param meetingPlace place of the meetings
+     * @return
+     */
+    public ClientViewDetailsPage createClientWithCustomMFIInformation(String loanOfficer,
+            String office, String frequency, MeetingParameters.WeekDay weekDay, String meetingPlace) {
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToPersonalDataPage(office);
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = FormParametersHelper.getClientEnterPersonalDataPageFormParameters();
+        clientPersonalDataPage = clientPersonalDataPage.create(formParameters);
+        clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
+        CreateClientEnterMfiDataPage.SubmitFormParameters mfiFormParameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
+        mfiFormParameters.setLoanOfficerId(loanOfficer);
+
+        MeetingParameters meetingFormParameters = new MeetingParameters();
+        meetingFormParameters.setWeekFrequency(frequency);
+        meetingFormParameters.setWeekDay(weekDay);
+        meetingFormParameters.setMeetingPlace(meetingPlace);
+
+        mfiFormParameters.setMeeting(meetingFormParameters);
+
+        CreateClientPreviewDataPage clientPreviewDataPage = new CreateClientEnterMfiDataPage(selenium).submitAndGotoCreateClientPreviewDataPage(mfiFormParameters);
+        CreateClientConfirmationPage clientConfirmationPage = clientPreviewDataPage.submit();
+        clientConfirmationPage.verifyPage();
+        return navigateToClientViewDetails(formParameters);
+        
     }
 }
