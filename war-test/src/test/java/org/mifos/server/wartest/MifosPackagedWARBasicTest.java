@@ -23,6 +23,8 @@ package org.mifos.server.wartest;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -47,7 +49,7 @@ public class MifosPackagedWARBasicTest {
 	// acceptanceTest (and the entire war-test module would no longer needed -
 	// be the same thing?)
 
-	private static WARServerLauncher mifosLauncher(int port) {
+	private static WARServerLauncher mifosLauncher(int port) throws IllegalArgumentException, IOException {
 		// maven-dependency-plugin (see pom.xml) copied it:
 		File warFile = new File("target/dependency/mifos.war");
 		assertTrue(warFile.toString() + " doesn't exist?!", warFile.exists());
@@ -55,6 +57,18 @@ public class MifosPackagedWARBasicTest {
 		return new WARServerLauncher(port, "mifos", warFile);
 	}
 
+	@Test(expected=IllegalArgumentException.class)
+	public void testCorruptArchive() throws Exception {
+		File badFile = new File("target/test.bad");
+		FileWriter fw = new FileWriter(badFile);
+		fw.append("I am not an archive file");
+		fw.close();
+		
+		WARServerLauncher serverLauncher = new WARServerLauncher(1234, "mifos", badFile);
+		serverLauncher.startServer();
+		serverLauncher.stopServer();
+	}
+	
 	@Test
 	public void testPackagedWARStartup() throws Exception {
 		WARServerLauncher serverLauncher = mifosLauncher(7077);

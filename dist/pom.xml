@@ -1,0 +1,175 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>mifos-dist</artifactId>
+	<packaging>pom</packaging>
+	<name>Mifos - Distribution</name>
+	<description>The mifos.zip distribution, including launchers Unix Shell and mifos.bat Windows starter scripts for the executable WAR (based on appassembler) and the mifos.exe launcher (based on Launch4j).</description>
+
+	<parent>
+		<groupId>org.mifos</groupId>
+		<artifactId>mifos-parent</artifactId>
+		<version>1.11-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.mifos</groupId>
+			<artifactId>mifos-war</artifactId>
+			<type>war</type>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>appassembler</id>
+						<phase>package</phase>
+						<goals>
+							<goal>assemble</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<useAllDependencies>true</useAllDependencies>
+          			<repositoryLayout>flat</repositoryLayout>
+          			<repositoryName>lib</repositoryName>
+          			<!-- This doesn't work <useAsterikClassPath>true</useAsterikClassPath>, at least in appassembler-maven-plugin v1.2.2 :-( -->	
+					<!-- Identical settings are also defined in mifos.l4j.ini for Launch4j (remember to change both) -->
+					<extraJvmArguments>-Xms1024M -Xmx1024M -XX:MaxPermSize=256m</extraJvmArguments>
+					<configurationDirectory>conf</configurationDirectory>
+					<binFileExtensions>
+          				<unix>.sh</unix>
+         			</binFileExtensions>
+					<programs>
+						<program>
+							<mainClass>${exec.war.main.class}</mainClass>
+							<name>mifos</name>
+						</program>
+					</programs>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<!-- Used to set the parsedVersion.* properties, see http://mojo.codehaus.org/build-helper-maven-plugin/usage.html -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>parse-version</id>
+						<goals>
+							<goal>parse-version</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>com.akathist.maven.plugins.launch4j</groupId>
+				<artifactId>launch4j-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>launch4j</id>
+						<phase>package</phase>
+						<goals>
+							<goal>launch4j</goal>
+						</goals>
+						<configuration>
+							<!-- 
+								 @see http://9stmaryrd.com/tools/launch4j-maven-plugin/
+								 @see http://launch4j.sourceforge.net/docs.html
+							-->
+							<headerType>gui</headerType>
+							<!-- Sometimes useful for debug in dev, only: <headerType>console</headerType> -->
+							<jar>mifos.war</jar>
+							<dontWrapJar>true</dontWrapJar>
+							<errTitle>Mifos</errTitle>
+							<outfile>${project.build.directory}/mifos.exe</outfile>
+							<downloadUrl>http://java.com/download</downloadUrl>
+							<classPath>
+								<mainClass>${exec.war.main.class}</mainClass>
+								<!-- NOTE This is weird, this <preCp>anything</preCp> MUST be left as is... it adds the  
+								     literal String "anything" before mifos.jar to the -cp, but removing this line leads to 
+								     "An error occurred while starting the application." - probably a launch4j bug. 
+								 -->
+								<preCp>anything</preCp>
+							</classPath>
+							<chdir>.</chdir>
+							<!-- Let's NOT use <stayAlive>true</stayAlive>, as that's more confusing than helpful...
+								 users will THINK that they can kill (or Ctrl-C) the mifos.exe and expect Mifos
+								 to stop - but actually it won't, as the javaw.exe will keep running... better
+								 let the mifos.exe live only to launch and show the Splash screen, then stop. -->
+							<singleInstance>
+								<!-- This would be useful, to prevent end-users from clicking
+									 mifos.exe twice and to avoid having two processes running,
+									 BUT this doesn't actually seem to be working... :-(
+									 On Windows 7 at least, may be it works XP,
+									 so leaving it as no harm either.
+								 -->
+								<mutexName>mifos-exe-singleInstance-mutex</mutexName>
+								<windowTitle>Mifos</windowTitle>
+							</singleInstance>
+							<jre>
+								<minVersion>1.6.0</minVersion>
+								<!-- TODO Is a JRE enough? Because of the JSPs, we may require JDK... 
+									in which case downloadUrl must be changed as well! -->
+								<jdkPreference>preferJre</jdkPreference>
+							</jre>
+							<!-- Note that -Xms -Xmx -XX:MaxPermSize heap etc. sizes are
+							     intentionally not baked into the EXE, but are defined in a mifos.l4j.ini,
+							     see http://launch4j.sourceforge.net/docs.html#Additional_jvm_options -->
+							<versionInfo>
+								<!-- Use of parsedVersion because Windows fileVersion & productVersion have to be completely numeric and cannot contain -SNAPSHOT -->
+								<fileVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}</fileVersion>
+								<txtFileVersion>${project.version}</txtFileVersion>
+								<productVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}</productVersion>
+								<txtProductVersion>${project.version}</txtProductVersion>
+								<fileDescription>Mifos Open Source Microfinance http://mifos.org/</fileDescription>
+								<copyright>Mifos.org</copyright>
+								<originalFilename>mifos.exe</originalFilename>
+								<productName>Mifos</productName>
+								<companyName>Mifos</companyName>
+								<internalName>mifos</internalName>
+							</versionInfo>
+							<icon>src/main/launch4j/mifos.ico</icon>
+							<splash>
+								<file>src/main/launch4j/mifos-splash.bmp</file>
+								<!-- This "timeout" (it's just how long the Splash screen will be shown)
+									 should be set to approx. how long it takes for the tray icon infos to appear... -->
+								<timeout>30</timeout>
+							</splash>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>release</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>mifos-${env.BUILD_TAG}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>src/main/assembly/release.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+			
+		</plugins>
+	</build>
+</project>

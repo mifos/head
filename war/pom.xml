@@ -5,7 +5,7 @@
     <artifactId>mifos-war</artifactId>
     <packaging>war</packaging>
     <name>Mifos - WAR</name>
-    <description>The actual mifos.war (as the mifos-webapp/application is now a JAR)</description>
+    <description>The actual mifos.war (as the mifos-webapp/application is now a JAR), including making it &quot;self-executable&quot; with an embedded Jetty (for &quot;raw&quot; java -jar mifos.war).</description>
 
     <parent>
         <groupId>org.mifos</groupId>
@@ -66,23 +66,9 @@
                             </descriptors>
                             <archive>
                                 <manifest>
-                                    <mainClass>org.mifos.server.ExecutableWARServerLauncherMain</mainClass>
+                                    <mainClass>${exec.war.main.class}</mainClass>
                                 </manifest>
                             </archive>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>release</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <finalName>mifos-${env.BUILD_TAG}</finalName>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <descriptors>
-                                <descriptor>src/main/assembly/release.xml</descriptor>
-                            </descriptors>
                         </configuration>
                     </execution>
                 </executions>

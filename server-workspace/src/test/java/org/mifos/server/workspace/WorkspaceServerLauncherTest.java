@@ -63,7 +63,7 @@ public class WorkspaceServerLauncherTest {
     @Test
     public void testLogin() throws Exception {
         WebDriver wd = new FirefoxDriver();
-        wd.get(getAppURL());
+        wd.get(serverLauncher.getAppURL());
 
         wd.findElement(By.id(UID)).sendKeys("mifos");
         wd.findElement(By.id(PWD)).sendKeys("testmifos");
@@ -74,15 +74,6 @@ public class WorkspaceServerLauncherTest {
         Assert.assertTrue(wd.getPageSource().contains("Search"));
 
         wd.quit();
-    }
-
-    /**
-     * Application base URL.
-     *
-     * @return String of App's URL, including a trailing slash after the context.
-     */
-    protected String getAppURL() {
-        return "http://localhost:" + serverLauncher.getPort() + "/" + serverLauncher.getContext() + "/";
     }
 
 }
