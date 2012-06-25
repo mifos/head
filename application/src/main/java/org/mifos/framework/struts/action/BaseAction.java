@@ -194,7 +194,12 @@ public abstract class BaseAction extends DispatchAction {
         if (null != request.getSession().getAttribute("currentPageUrl")) {
         	SessionUtils.setAttribute("backPageUrl", UrlHelper.constructCurrentPageUrl(request), request);
         }
-    	TransactionDemarcate annotation = getTransaction(form, request);
+        try {
+            request.getSession().setAttribute("previousPageUrl", UrlHelper.constructCurrentPageUrl(request));
+        } catch (Exception e) {
+            request.setAttribute("previousPageUrl", "");
+        }
+        TransactionDemarcate annotation = getTransaction(form, request);
         preExecute(form, request, annotation);
         ActionForward forward = super.execute(mapping, form, request, response);
         // TODO: passing 'true' to postExecute guarantees that the session will
