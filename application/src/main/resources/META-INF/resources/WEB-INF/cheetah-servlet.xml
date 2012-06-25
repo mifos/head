@@ -30,7 +30,6 @@
        <bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" />
        <bean class="org.springframework.mobile.device.site.SitePreferenceHandlerInterceptor" />
        <bean class="org.mifos.interceptors.FlowKeyInterceptor" />
-       <bean class="org.mifos.interceptors.BackUrlInterceptor" />
     </mvc:interceptors>
 
 	<context:annotation-config />

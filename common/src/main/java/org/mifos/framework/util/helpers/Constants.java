@@ -93,8 +93,7 @@ public interface Constants {
 
     String CURRENTFLOWKEY = "currentFlowKey";
     String FLOWMANAGER = "flowManager";
-    String CURRENTPAGEURL = "currentPageUrl";
-    String URLTOBACKPAGE = "urlToBackPage";
+
     String ACTION_MAPPING = "actionMapping";
 
     /**
