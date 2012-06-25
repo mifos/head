@@ -11,29 +11,24 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.ui.core.controller.BreadCrumbsLinks;
 import org.mifos.ui.core.controller.BreadcrumbBuilder;
-import org.mifos.ui.core.controller.util.helpers.UrlHelper;
 
-@SessionAttributes({ "accessDeniedBreadcrumbs", "previousPageUrl" })
+@SessionAttributes("accessDeniedBreadcrumbs")
 public class BackUrlInterceptor extends HandlerInterceptorAdapter {
 
     protected List<BreadCrumbsLinks> breadcrumbs = new LinkedList<BreadCrumbsLinks>();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String currentPage = request.getRequestURI().replaceFirst(".+/", "");
-        String urlToBackPage = (String) request.getSession().getAttribute("previousPageUrl");
-        if ("pageNotFound.ftl".equals(currentPage)) {
+        String urlToBackPage = "";
+        try {
+            urlToBackPage = request.getHeader("Referer").replaceFirst(".+/", "");
             breadcrumbs = new BreadcrumbBuilder().withLink("previousPage", urlToBackPage)
-                    .withLink("pageNotFound", currentPage).build();
+                    .withLink("accessDenied", "accessDenied.ftl").build();
             request.setAttribute("accessDeniedBreadcrumbs", breadcrumbs);
-        } else if ("accessDenied.ftl".equals(currentPage)) {
-            breadcrumbs = new BreadcrumbBuilder().withLink("previousPage", urlToBackPage)
-                    .withLink("accessDenied", currentPage).build(); 
-            request.setAttribute("accessDeniedBreadcrumbs", breadcrumbs);
+        } catch (RuntimeException e) {
+            urlToBackPage = "AdminAction.do?method=load";
         }
-        
         request.setAttribute(Constants.URLTOBACKPAGE, urlToBackPage);
-        request.getSession().setAttribute("previousPageUrl", UrlHelper.constructCurrentPageUrl(request));
         return true;
     }
 }

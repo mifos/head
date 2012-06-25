@@ -18,21 +18,8 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[#include "layout.ftl"]
-[@adminLeftPaneLayout]
-<span id="page.id" title="admin"></span>
-[@widget.crumbs accessDeniedBreadcrumbs /]
 [@layout.header "pageNotFoundTitle" /]
-<div class="content_panel">
-<div class="marginLeft30 marginTop20">    
-	<h3 id="pageNotFoundHeading">[@spring.message "pageNotFoundHeading" /]</h3>
-    <p id="pageNotFoundMessage" class="red">[@spring.message "pageNotFoundMessage" /]</p>
-    <div class="clear">&nbsp;</div>
-   		<div class ="marginLeft20px">
-    		[@form.returnToPage  "${Request.urlToBackPage}" "button.back" "pageNotFound.button.back"/]
-    	</div>
-   </div>
-</div>
-[@layout.footer /] 
-[/@adminLeftPaneLayout]
+    <h1 id="pageNotFoundHeading">[@spring.message "pageNotFoundHeading" /]</h1>
+    <p id="pageNotFoundMessage">[@spring.message "pageNotFoundMessage" /]</p>
+[@layout.footer /]
 
