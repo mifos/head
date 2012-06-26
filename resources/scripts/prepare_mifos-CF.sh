@@ -96,6 +96,7 @@ rm mifos-reporting*.jar
 #move content
 cp -r org $TEMP_DIR/output/WEB-INF/classes
 mv birt/* $TEMP_DIR/output
+mv pentaho $TEMP_DIR/output/WEB-INF/classes
 mv META-INF/resources/webcontent $TEMP_DIR/output
 cp -r META-INF/resources/pages $TEMP_DIR/output
 cp -r META-INF/resources/WEB-INF/* $TEMP_DIR/output/WEB-INF
