@@ -24,7 +24,7 @@
 <span id="page.id" title="MainSearchResults"></span>
 <div class="content">
 	<div class="fontnormal">
-		<form method="POST" action="searchResult.ftl">
+		<form method="POST" action="legacySearchResult.ftl">
 			[@form.showAllErrors "customerSearch.*"/]
 			[@spring.message "CustomerSearch.searchFor" /]:
 			[@spring.bind "customerSearch.searchString" /]
@@ -451,7 +451,7 @@
 	<div>
 		[#if isPrevPageAvailable ]
 		<span class="fontnormalbold">
-			<a href="searchResult.ftl?currentPage=${currentPage-1}">	
+			<a href="legacySearchResult.ftl?currentPage=${currentPage-1}">	
 				[@spring.message "Previous" /]	
 			</a>
 		</span>
@@ -466,7 +466,7 @@
 		</span>
 		[#if isNextPageAvailable ]
 		<span class="fontnormalbold">
-			<a href="searchResult.ftl?currentPage=${currentPage+1}">	
+			<a href="legacySearchResult.ftl?currentPage=${currentPage+1}">	
 				[@spring.message "Next" /]	
 			</a>
 		</span>

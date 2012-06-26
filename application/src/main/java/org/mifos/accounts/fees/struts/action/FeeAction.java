@@ -53,6 +53,10 @@ public class FeeAction extends BaseAction {
     public FeeAction() throws Exception {
     }
 
+    private static final String UPDATE_SUCCESS = "update";
+    private static final String REMOVE_SUCCESS = "remove";
+    private static final String UPDATE_FAILURE = "failure";
+    
     @TransactionDemarcate(saveToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
@@ -166,6 +170,7 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward manage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        form.reset(mapping, request);
         FeeActionForm feeActionForm = (FeeActionForm) form;
 
         Short feeId = Short.valueOf(feeActionForm.getFeeId());
@@ -182,7 +187,7 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward editPreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-    	
+        
         Short feeId = ((FeeActionForm) form).getFeeIdValue();
         FeeDto feeDto = this.feeDao.findDtoById(feeId);
         
@@ -194,18 +199,31 @@ public class FeeAction extends BaseAction {
         boolean isFeeInSchedule = feeInSchedule == null ? false : true;
 		ActionMessages messages = new ActionMessages();
         
+		if (!(((FeeActionForm) form).isToRemove() && feeDto.getFeeStatus().getId().equalsIgnoreCase("2"))) {
+		    form.reset(mapping, request);
+		}
+
         if (((FeeActionForm) form).isToRemove()) {
 	    	if (!isInProducts && !isFeeAppliedToLoan) {
 	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemoved"));
 	    	}
 	    	else if (isFeeAppliedToLoan) {
-	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemovedFromPrd"));
-	    		if (!isFeeInSchedule)
+	    		if (!isFeeInSchedule) {
+	    		    messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemovedFromPrd"));
 		    		((FeeActionForm) form).setCantBeRemoved(true);
+	    		}
+	    		else {
+	    		    messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemovedFromPrdButNotDeleted"));
+	    		}
 	    	}
 	    	else {
 	    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeNotUsedRemove"));
 	    	}
+        }
+        else {
+            if (((FeeActionForm) form).getFeeStatusValue().getValue() == 2) {
+                messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeRemovedFromPrdWhenInActive"));
+            }
         }
 		saveErrors(request, messages);
 
@@ -231,6 +249,7 @@ public class FeeAction extends BaseAction {
         FeeStatus feeStatus = feeActionForm.getFeeStatusValue();
         String forward = "";
         Short feeStatusValue = null;
+        String whereToForward = "";
         
         if (feeStatus != null) {
             feeStatusValue = feeStatus.getValue();
@@ -238,26 +257,38 @@ public class FeeAction extends BaseAction {
         FeeUpdateRequest feeUpdateRequest = new FeeUpdateRequest(Short.valueOf(feeActionForm.getFeeId()), feeActionForm.getCurrencyId(),
                 feeActionForm.getAmount(), feeStatusValue, feeActionForm.getRateValue());
         
-        if (feeActionForm.isToRemove() && feeUpdateRequest.getFeeStatusValue() == 2) {
+        if (feeUpdateRequest.getFeeStatusValue() == 2) {
         	this.feeServiceFacade.updateFee(feeUpdateRequest);
 	        	try {
-	        		this.feeServiceFacade.removeFee(feeUpdateRequest);
+	        	    boolean remove = feeActionForm.isToRemove();
+	        		this.feeServiceFacade.removeFee(feeUpdateRequest, remove);
+	        		whereToForward = REMOVE_SUCCESS;
 	        	} catch (MifosRuntimeException e) {
 	        		ActionMessages messages = new ActionMessages();
 	        		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeCannotBeRemoved"));
 	        		saveMessages(request, messages);
+	        		whereToForward = UPDATE_SUCCESS;
 	        	}
-	        	forward = ActionForwards.remove_fee_success.toString();
         }
         else if (feeActionForm.isToRemove() && feeUpdateRequest.getFeeStatusValue() == 1) {
         	ActionMessages errors = new ActionMessages();
         	errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("Fees.feeCantBeRemove"));
         	saveErrors(request, errors);
-        	forward = ActionForwards.update_failure.toString();
+        	whereToForward = UPDATE_FAILURE;
         }
         else {
         	this.feeServiceFacade.updateFee(feeUpdateRequest);
-        	forward = ActionForwards.update_success.toString();
+        	whereToForward = UPDATE_SUCCESS;
+        }
+        
+        if (whereToForward.equals(UPDATE_SUCCESS)) {
+            forward = ActionForwards.update_success.toString();
+        }
+        else if (whereToForward.equals(UPDATE_FAILURE)) {
+            forward = ActionForwards.update_failure.toString();
+        }
+        else if (whereToForward.equals(REMOVE_SUCCESS)) {
+            forward = ActionForwards.remove_fee_success.toString(); 
         }
         
         return mapping.findForward(forward);

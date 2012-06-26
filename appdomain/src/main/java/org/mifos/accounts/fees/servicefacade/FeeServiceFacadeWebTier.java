@@ -201,7 +201,7 @@ public class FeeServiceFacadeWebTier implements FeeServiceFacade {
     }
 
 	@Override
-	public void removeFee(FeeUpdateRequest feeUpdateRequest) {
+	public void removeFee(FeeUpdateRequest feeUpdateRequest, boolean remove) {
 		FeeBO feeToRemove = this.feeDao.findById(feeUpdateRequest.getFeeId());
 		Short appliedFeeId = this.feeDao.findFeeAppliedToLoan(feeUpdateRequest.getFeeId());
 		boolean isInProducts = appliedFeeId != null ? true : false;
@@ -209,7 +209,7 @@ public class FeeServiceFacadeWebTier implements FeeServiceFacade {
 		boolean isFeeInUsedLoan = allUsedLoansWithAttachedFee.contains(feeToRemove.getFeeId());
 		if  (!feeToRemove.isActive()) { 	
 			try {
-				this.feeService.remove(feeToRemove, isInProducts, isFeeInUsedLoan);
+				this.feeService.remove(feeToRemove, isInProducts, isFeeInUsedLoan, remove);
 			} catch (MifosRuntimeException e) {
 				throw new MifosRuntimeException(e.getMessage());
 			}

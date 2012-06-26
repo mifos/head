@@ -32,8 +32,8 @@
 
 {
 	"sEcho": "${sEcho}",
-	"iTotalRecords": "${customerHierarchy.size}",
-	"iTotalDisplayRecords": "${customerHierarchy.size}",
+	"iTotalRecords": "${customerHierarchy.size?c}",
+	"iTotalDisplayRecords": "${customerHierarchy.size?c}",
 	"aaData": [
 		[#if customerHierarchy?has_content]
 			[#assign index = iDisplayStart /]
