@@ -53,6 +53,8 @@ public class CreateLoanAccount implements RecurringSchedule {
     private final int maxAllowedNumberOfInstallments;
     private final BigDecimal minAllowedLoanAmount;
     private final BigDecimal maxAllowedLoanAmount;
+    private String predefinedAccountNumber;
+    private Short flagId;
 
     public CreateLoanAccount(Integer customerId, Integer productId, Integer accountState, BigDecimal loanAmount,
             BigDecimal minAllowedLoanAmount, BigDecimal maxAllowedLoanAmount, Double interestRate,
@@ -202,5 +204,33 @@ public class CreateLoanAccount implements RecurringSchedule {
 
     public BigDecimal getMaxAllowedLoanAmount() {
         return maxAllowedLoanAmount;
+    }
+    /**
+     * Sets predefined account number used for importing loan accounts
+     * @param accountNumber
+     */
+    public void setPredefinedAccountNumber(String accountNumber) {
+        this.predefinedAccountNumber=accountNumber;
+    }
+    /**
+     *
+     *@return predefined account number used for importing loan accounts
+     */
+    public String getPredefinedAccountNumber(){
+        return predefinedAccountNumber;
+    }
+    /**
+     *
+     *@return id of status flag used in import
+     */
+    public Short getFlagId() {
+        return flagId;
+    }
+    /**
+     * Sets status flag id used in import
+     * @param flag
+     */
+    public void setFlagId(Short flag) {
+        this.flagId=flag;
     }
 }
