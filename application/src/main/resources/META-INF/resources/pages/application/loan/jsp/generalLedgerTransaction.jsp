@@ -271,9 +271,9 @@ function fnBankDetail(){
 			</td>
 			</tr>
 			<tr class="fontnormal">
-		   <td align="right"><mifos:mifoslabel name="simpleAccounting.trxnNotes" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
-		 <td align="left" colspan="3">
-		 <mifos:textarea property="notes" cols='68'></mifos:textarea>
+		   <td align="right" colspan="1"><mifos:mifoslabel name="simpleAccounting.trxnNotes" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
+		 <td align="left">
+		 <mifos:textarea property="notes"></mifos:textarea>
              </td>
 		</tr>
 		</table>

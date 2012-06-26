@@ -123,7 +123,7 @@ function fnEditTransaction(form) {
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td class="headingorange">
-												<span id="bulkentry.heading" class="heading"> <mifos:mifoslabel name="simpleAccounting.head" /> - </span>
+												
 												<mifos:mifoslabel name="simpleAccounting.processMifosAccountingTransactions" />
 
 											</td>

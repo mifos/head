@@ -218,9 +218,9 @@ function fnCancel(form) {
 			</tr>
 
 		<tr class="fontnormal">
-		   <td align="right"><mifos:mifoslabel name="simpleAccounting.voucherNotes" mandatory="yes" isColonRequired="Yes"/></td>
-		 <td align="left" colspan='3'>
-		 <mifos:textarea property="voucherNotes" cols='68'></mifos:textarea>
+		   <td align="right" colspan="1"><mifos:mifoslabel name="simpleAccounting.voucherNotes" mandatory="yes" isColonRequired="Yes"/></td>
+		 <td align="left">
+		 <mifos:textarea property="voucherNotes"></mifos:textarea>
              </td>
 		</tr>
 		</table>
