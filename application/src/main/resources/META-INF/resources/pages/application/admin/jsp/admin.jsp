@@ -25,20 +25,10 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
-<script language="javascript">
- function fnAccountDetail(accountingActivationStatus){
-	// var trxnType = $('#trxnTypeId option:selected').val();
-	if(accountingActivationStatus == true){
-		$("#accountDetailsId").show();
-	}else{
-		$("#accountDetailsId").hide();
-	}
-  }
-</script>
 
 <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.adminUIResources"/>
-<body onload="fnAccountDetail(${accountingActivationStatus})">
+
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
         <span id="page.id" title="admin" ></span>
@@ -193,36 +183,6 @@ explanation of the license and how it is applied.
                                 <a id="admin.link.monthClosing" href="monthClosing.ftl"><mifos:mifoslabel name="admin.monthClosing" /></a>
                             </td>
                         </tr>
-                        <tr class="fontnormal">
-			<td align="center" colspan="2">
-			 	<div id="accountDetailsId">
-				<br>
-				 <table width="90%" border="0" cellspacing="0" cellpadding="0">
-                   <tr class="fontnormal">
-                      <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-                      <td width="97%"><a href="generalledgeraction.do?method=load"><mifos:mifoslabel name="admin.glaction" bundle="adminUIResources"/></a></td>
-                  </tr>
-                  <tr class="fontnormal">
-                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-                    <td width="97%"><a href="journalvoucheraction.do?method=load"><mifos:mifoslabel name="admin.jvaction" bundle="adminUIResources"/></a></td>
-                  </tr>
-                   <tr class="fontnormal">
-                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-                    <td width="97%"><a href="openbalanceaction.do?method=load"><mifos:mifoslabel name="admin.defineOpenBalance" bundle="adminUIResources"/></a></td>
-                  </tr>
-                  <tr class="fontnormal">
-                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-                    <td width="97%"><a href="viewgltransactionsaction.do?method=load"><mifos:mifoslabel name="admin.viewGlTransaction" bundle="adminUIResources"/></a></td>
-                  </tr>
-                  <tr class="fontnormal">
-                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-                    <td width="97%"><a href="processaccountingtransactionsaction.do?method=load"><mifos:mifoslabel name="admin.processTransactions" bundle="adminUIResources"/></a></td>
-                  </tr>
-               </table>
-		     <br>
-			</div>
-			</td>
-			</tr>
                     </table>
 
 					<!-- spacer -->
