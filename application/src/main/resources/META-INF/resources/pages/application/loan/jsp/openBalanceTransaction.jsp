@@ -187,7 +187,7 @@ function fnloadOpenBalance(form) {
 					<td width="25%" align="left">
 						<mifos:select property="coaName" onchange="fnloadOpenBalance(this.form)">
 				            <c:forEach items="${sessionScope.TotalGlCodes}" var="glAccount">
-				               <html-el:option value="${glAccount.glcode}">${glAccount.glname}</html-el:option>
+				               <html-el:option value="${glAccount.glCode}">${glAccount.glDesc}</html-el:option>
 				            </c:forEach>
 						</mifos:select>
 				    </td>

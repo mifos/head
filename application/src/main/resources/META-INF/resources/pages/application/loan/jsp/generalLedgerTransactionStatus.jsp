@@ -207,8 +207,8 @@ function fnEditTransaction(form) {
 			 <th width="15%" align="right"><mifos:mifoslabel name="simpleAccounting.mainAccount" mandatory="yes" isColonRequired="Yes"/></th>
 					<td width="25%" align="left">
 				  <c:forEach items="${sessionScope.MainAccountGlCodes}" var="mainaccount">
-						 	<c:if test="${mainaccount.glcode==GeneralLedgerActionForm.mainAccount}"> 
-				                          ${mainaccount.glname}
+						 	<c:if test="${mainaccount.glCode==GeneralLedgerActionForm.mainAccount}"> 
+				                          ${mainaccount.glDesc}
 							</c:if>  
 				  </c:forEach>
 				    </td>
@@ -219,8 +219,8 @@ function fnEditTransaction(form) {
 			<th align="right"><mifos:mifoslabel name="simpleAccounting.accountHead" mandatory="yes" isColonRequired="Yes"/></th>
 				<td align="left">
 					 <c:forEach items="${sessionScope.AccountHeadGlCodes}" var="accountHead">
-						 	<c:if test="${accountHead.glcode==GeneralLedgerActionForm.accountHead}"> 
-				                          ${accountHead.glname}
+						 	<c:if test="${accountHead.glCode==GeneralLedgerActionForm.accountHead}"> 
+				                          ${accountHead.glDesc}
 							</c:if>  
 					 </c:forEach>
 					

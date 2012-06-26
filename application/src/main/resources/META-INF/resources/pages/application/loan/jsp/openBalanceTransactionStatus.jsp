@@ -187,8 +187,8 @@ function fnEditTransaction(form) {
 				    </th>
 					<td width="25%" align="left">
 						    <c:forEach items="${sessionScope.TotalGlCodes}" var="totalGlCodes">
-							 	<c:if test="${totalGlCodes.glcode==OpenBalanceActionForm.coaName}"> 
-					                  ${totalGlCodes.glname}
+							 	<c:if test="${totalGlCodes.glCode==OpenBalanceActionForm.coaName}"> 
+					                  ${totalGlCodes.glDesc}
 								</c:if>  
 					      </c:forEach>
 					    

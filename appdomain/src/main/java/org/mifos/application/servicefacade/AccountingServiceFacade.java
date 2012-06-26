@@ -25,7 +25,7 @@ import java.util.List;
 import org.mifos.application.accounting.business.FinancialYearBO;
 import org.mifos.application.accounting.business.GlBalancesBO;
 import org.mifos.application.accounting.business.GlMasterBO;
-import org.mifos.dto.domain.GLCodeDto;
+import org.mifos.dto.domain.AccountingDto;
 import org.mifos.dto.domain.OfficeGlobalDto;
 import org.mifos.dto.domain.ViewTransactionsDto;
 
@@ -40,15 +40,15 @@ public interface AccountingServiceFacade {
 
 	List<OfficeGlobalDto> loadCustomerForLevel(Short customerLevelId);
 
-	List<GLCodeDto> mainAccountForCash();
+	List<AccountingDto> mainAccountForCash();
 
-	List<GLCodeDto> loadDebitAccounts();
+	List<AccountingDto> loadDebitAccounts();
 
-	List<GLCodeDto> loadCreditAccounts(String glCode);
+	List<AccountingDto> loadCreditAccounts(String glCode);
 
-	List<GLCodeDto> mainAccountForBank();
+	List<AccountingDto> mainAccountForBank();
 
-	List<GLCodeDto> accountHead(String glCode);
+	List<AccountingDto> accountHead(String glCode);
 
 	List<ViewTransactionsDto> getAccountingTransactions(Date trxnDate,
 			int startRecord, int numberOfRecords);
@@ -61,7 +61,7 @@ public interface AccountingServiceFacade {
 
 	FinancialYearBO getFinancialYear();
 
-	List<GLCodeDto> findTotalGlAccounts();
+	List<AccountingDto> findTotalGlAccounts();
 
 	FinancialYearBO getFinancialYearBO(int financialYearId);
 

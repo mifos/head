@@ -27,7 +27,7 @@ import java.util.List;
 import org.mifos.application.accounting.business.FinancialYearBO;
 import org.mifos.application.accounting.business.GlBalancesBO;
 import org.mifos.application.accounting.business.GlMasterBO;
-import org.mifos.dto.domain.GLCodeDto;
+import org.mifos.dto.domain.AccountingDto;
 import org.mifos.dto.domain.MisProcessingTransactionsDto;
 import org.mifos.dto.domain.OfficeGlobalDto;
 import org.mifos.dto.domain.RowCount;
@@ -36,18 +36,18 @@ import org.mifos.framework.exceptions.PersistenceException;
 
 public interface AccountingDao {
 
-	public List<GLCodeDto> findMainAccountCashGlCodes();
+	public List<AccountingDto> findMainAccountCashGlCodes();
 
 	public List<GlBalancesBO> findExistedGlBalacesBOs(Integer officeLevelId,
 			String officeId, String glCodeValue);
 
-	public List<GLCodeDto> findDebitAccounts();
+	public List<AccountingDto> findDebitAccounts();
 
-	public List<GLCodeDto> findCreditAccounts(String glCode);
+	public List<AccountingDto> findCreditAccounts(String glCode);
 
-	public List<GLCodeDto> findMainAccountBankGlCodes();
+	public List<AccountingDto> findMainAccountBankGlCodes();
 
-	public List<GLCodeDto> findAccountHeadGlCodes(String glCode);
+	public List<AccountingDto> findAccountHeadGlCodes(String glCode);
 
 	public List<OfficeGlobalDto> findOfficesWithGlobalNum(Short levelId);
 
@@ -67,7 +67,7 @@ public interface AccountingDao {
 
 	public List<FinancialYearBO> findFinancialYear();
 
-	public List<GLCodeDto> findGlCodes();
+	public List<AccountingDto> findGlCodes();
 
 	public void updateLastProcessDate(Date lastProcessDate);
 
