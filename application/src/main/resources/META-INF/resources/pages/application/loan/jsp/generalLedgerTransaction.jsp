@@ -159,6 +159,15 @@ function fnBankDetail(){
 												<mifos:mifoslabel name="simpleAccounting.mandatory" bundle="simpleAccountingUIResources"/>
 											</td>
 										</tr>
+										<tr class="fontnormal">
+										    <td>
+										        <c:choose>
+								                     <c:when test="${status=='success'}">
+										                <font color="#FF0000" ><mifos:mifoslabel name="simpleAccounting.status" bundle="simpleAccountingUIResources"/></font>
+										             </c:when>
+										         </c:choose>
+										    </td>
+										</tr>
 									</table>
 
 									<logic:messagesPresent>
@@ -239,6 +248,7 @@ function fnBankDetail(){
 				</td>
 
 			</tr>
+			<!-- start Woriking Zone -->
 
 		  <tr class="fontnormal">
 			<td align="center" colspan="4">
@@ -288,6 +298,7 @@ function fnBankDetail(){
 
 					<html-el:hidden property="method" value="load" />
 					<html-el:hidden property="input" value="load" />
+					<%-- <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" /> --%>
 				<br>
 
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">

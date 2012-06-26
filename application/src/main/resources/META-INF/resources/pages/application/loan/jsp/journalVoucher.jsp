@@ -144,6 +144,15 @@ function fnCancel(form) {
 												<mifos:mifoslabel name="simpleAccounting.mandatory" />
 											</td>
 										</tr>
+										<tr class="fontnormal">
+										    <td>
+										        <c:choose>
+								                     <c:when test="${status=='success'}">
+										                <font color="#FF0000" ><mifos:mifoslabel name="simpleAccounting.status" /></font>
+										             </c:when>
+										         </c:choose>
+										    </td>
+										</tr>
 									</table>
 
 									<logic:messagesPresent>

@@ -27,6 +27,10 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@page import="java.util.*" %>
+<%@page import="org.mifos.dto.domain.OfficeGlobalDto" %>
+<%@page import="org.mifos.accounting.struts.actionform.GeneralLedgerActionForm" %>
+<%@page import="org.mifos.dto.domain.AccountingDto" %>
 
 
 <head>

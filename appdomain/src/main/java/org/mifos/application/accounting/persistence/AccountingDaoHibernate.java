@@ -226,6 +226,7 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 	public String findLastProcessingDateFirstTime(String namedQueryString) {
 		String lastProcessingDate = null;
 		Query query = createdNamedQuery(namedQueryString);
+		// query.setString("STATUS", "A");
 		List<FinancialYearBO> list = query.list();
 		if (list.size() > 0) {
 			FinancialYearBO bo = list.get(0);
