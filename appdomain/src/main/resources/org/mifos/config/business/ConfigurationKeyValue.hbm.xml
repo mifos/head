@@ -5,21 +5,20 @@
 
 
 <hibernate-mapping>
-	<class name="org.mifos.config.business.ConfigurationKeyValue"
-		table="config_key_value">
-		<id name="configurationId" column="configuration_id" type="integer"
-			access="field">
-			<generator class="native" />
-		</id>
-		<property name="type" column="configuration_type" type="short" />
-		<property name="key" column="configuration_key" type="string" />
-		<property name="value" column="configuration_value" type="string" />
-	</class>
-	<query name="getConfigurationKeyValueByKey">
+    <class name="org.mifos.config.business.ConfigurationKeyValue"
+        table="config_key_value">
+        <id name="configurationId" column="configuration_id" type="integer"    access="field">
+            <generator class="native" />
+        </id>
+        <property name="type" column="configuration_type" type="short" />
+        <property name="key" column="configuration_key" type="string" />
+        <property name="value" column="configuration_value" type="string" />
+    </class>
+    <query name="getConfigurationKeyValueByKey">
         <![CDATA[from org.mifos.config.business.ConfigurationKeyValue as config where config.key = :KEY]]>
-	</query>
-	<query name="getAllConfigurationValues">
+    </query>
+    <query name="getAllConfigurationValues">
         <![CDATA[from org.mifos.config.business.ConfigurationKeyValue as config]]>
-	</query>
+    </query>
 
 </hibernate-mapping>

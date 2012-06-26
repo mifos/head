@@ -191,10 +191,6 @@ public class AccountingRules {
     public static Short getDigitsAfterDecimal() {
         return MifosConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL);
     }
-    
-    public static Boolean getSimpleAccountingStatus() {
-        return MifosConfigurationManager.getInstance().getBoolean(AccountingRulesConstants.ENABLE_SIMPLE_ACCOUNTING);
-    }
 
     public static Short getDigitsAfterDecimal(final MifosCurrency currency) {
         if (currency == null) return getDigitsAfterDecimal();
