@@ -201,6 +201,7 @@ import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OriginalScheduleInfoDto;
 import org.mifos.dto.domain.OverpaymentDto;
+import org.mifos.dto.domain.PaymentDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.PenaltyDto;
 import org.mifos.dto.domain.PersonnelDto;
@@ -1537,10 +1538,18 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             BigDecimal interestDueForCurrentInstallment =
                     interestDueForNextInstallment(repayLoanInfoDto.getTotalRepaymentAmount(),
                     repayLoanInfoDto.getWaivedAmount(),loan,repayLoanInfoDto.isWaiveInterest());
-            loan.makeEarlyRepayment(earlyRepayAmount, repayLoanInfoDto.getDateOfPayment(),
-                    repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(),
-                    repayLoanInfoDto.getPaymentTypeId(), repayLoanInfoDto.getId(),
-                    repayLoanInfoDto.isWaiveInterest(), new Money(loan.getCurrency(), interestDueForCurrentInstallment));
+            if (repayLoanInfoDto.getSavingsPaymentId() != null){
+                loan.makeEarlyRepayment(earlyRepayAmount, repayLoanInfoDto.getDateOfPayment(),
+                        repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(),
+                        repayLoanInfoDto.getPaymentTypeId(), repayLoanInfoDto.getId(),
+                        repayLoanInfoDto.isWaiveInterest(), new Money(loan.getCurrency(), interestDueForCurrentInstallment),
+                        repayLoanInfoDto.getSavingsPaymentId());
+            } else {
+                loan.makeEarlyRepayment(earlyRepayAmount, repayLoanInfoDto.getDateOfPayment(),
+                        repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(),
+                        repayLoanInfoDto.getPaymentTypeId(), repayLoanInfoDto.getId(),
+                        repayLoanInfoDto.isWaiveInterest(), new Money(loan.getCurrency(), interestDueForCurrentInstallment));
+            }
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
@@ -1568,13 +1577,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         LocalDate receiptDate = new LocalDate(repayLoanInfoDto.getReceiptDate());
         Locale preferredLocale = userContext.getPreferredLocale();
 
-        SavingsWithdrawalDto withdrawal = new SavingsWithdrawalDto(savingsId, customerId, trxnDate, amount,
+        SavingsWithdrawalDto savingsWithdrawalDto = new SavingsWithdrawalDto(savingsId, customerId, trxnDate, amount,
                 paymentTypeId, receiptId, receiptDate, preferredLocale);
 
         try {
             transactionHelper.startTransaction();
+            PaymentDto withdrawal = savingsServiceFacade.withdraw(savingsWithdrawalDto, true);
+            repayLoanInfoDto.setSavingsPaymentId(withdrawal.getPaymentId());
             makeEarlyRepayment(repayLoanInfoDto);
-            savingsServiceFacade.withdraw(withdrawal, true);
             transactionHelper.commitTransaction();
         } catch (BusinessRuleException e) {
             transactionHelper.rollbackTransaction();

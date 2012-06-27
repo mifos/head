@@ -70,6 +70,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
+import org.mifos.dto.domain.PaymentDto;
 import org.mifos.dto.domain.SavingsAccountDetailDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.screen.RepayLoanDto;
@@ -158,6 +159,9 @@ public class LoanAccountServiceFacadeWebTierTest {
 
     @Mock
     private SavingsAccountDetailDto savingsAccountDetailDto;
+    
+    @Mock
+    private PaymentDto withdrawal;
 
     @Mock
     private HibernateTransactionHelper hibernateTransactionHelper;
@@ -226,7 +230,9 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(savingsAccountDetailDto.getAccountId()).thenReturn(1);
         String paymentMethod = "4";
         String receiptNumber = "001";
-
+        when(savingsServiceFacade.withdraw(any(SavingsWithdrawalDto.class), eq(true))).thenReturn(withdrawal);
+        when(withdrawal.getPaymentId()).thenReturn(1);
+        
         loanAccountServiceFacade.makeEarlyRepaymentFromSavings(new RepayLoanInfoDto("1", "100", receiptNumber, date,
                 paymentMethod, (short) 1, waiveInterest, date,BigDecimal.TEN,BigDecimal.ZERO), savingsAccGlobalNum);
 
@@ -247,7 +253,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         assertEquals(withdrawal.getValue().getPreferredLocale(), userContext.getPreferredLocale());
 
         verify(loanBO).makeEarlyRepayment(new Money(rupee, "100"), date, receiptNumber, date,
-                paymentMethod, (short) 1, waiveInterest, new Money(rupee, BigDecimal.ZERO));
+                paymentMethod, (short) 1, waiveInterest, new Money(rupee, BigDecimal.ZERO), 1);
     }
 
     @Test
