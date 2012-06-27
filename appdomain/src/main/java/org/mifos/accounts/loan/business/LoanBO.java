@@ -178,6 +178,7 @@ public class LoanBO extends AccountBO implements Loan {
     private static final Logger logger = LoggerFactory.getLogger(LoanBO.class);
 
     private LegacyPersonnelDao legacyPersonnelDao = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);
+    private LegacyAccountDao legacyAccountDao = ApplicationContextProvider.getBean(LegacyAccountDao.class);
     private Integer businessActivityId;
 
     private Money loanAmount;
@@ -1239,16 +1240,29 @@ public class LoanBO extends AccountBO implements Loan {
         return amount;
     }
 
+    public void makeEarlyRepayment(final Money totalAmount, final Date transactionDate, final String receiptNumber,
+            final Date receiptDate, final String paymentTypeId, final Short personnelId, boolean waiveInterest,
+            Money interestDue) throws AccountException {
+
+        makeEarlyRepayment(totalAmount, transactionDate, receiptNumber, receiptDate, paymentTypeId, personnelId,
+                waiveInterest, interestDue, null);
+
+    }
+    
     public void makeEarlyRepayment(final Money totalAmount, final Date transactionDate,
                                    final String receiptNumber, final Date receiptDate,
                                    final String paymentTypeId, final Short personnelId,
-                                   boolean waiveInterest, Money interestDue) throws AccountException {
+                                   boolean waiveInterest, Money interestDue, Integer savingsPaymentId) throws AccountException {
         try {
             PersonnelBO currentUser = legacyPersonnelDao.getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
             this.setUpdatedDate(transactionDate);
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, totalAmount, receiptNumber,
                     receiptDate, getPaymentTypeEntity(Short.valueOf(paymentTypeId)), transactionDate);
+            if (savingsPaymentId != null) {
+                AccountPaymentEntity withdrawal = legacyAccountDao.findPaymentById(savingsPaymentId);
+                accountPaymentEntity.setOtherTransferPayment(withdrawal);
+            }
             addAccountPayment(accountPaymentEntity);
 
             makeEarlyRepaymentForArrears(accountPaymentEntity, AccountConstants.PAYMENT_RCVD,
@@ -1283,7 +1297,7 @@ public class LoanBO extends AccountBO implements Loan {
                 for (LoanBO memberAccount : this.memberAccounts) {
                     BigDecimal fraction = memberAccount.calcFactorOfEntireLoan();
                     memberAccount.makeEarlyRepayment(totalAmount.divide(fraction), transactionDate, receiptNumber, receiptDate,
-                            paymentTypeId, personnelId, waiveInterest, interestDue);
+                            paymentTypeId, personnelId, waiveInterest, interestDue, null);
                 }
             }
         } catch (PersistenceException e) {
