@@ -1912,6 +1912,7 @@ public class LoanBO extends AccountBO implements Loan {
         Money increasePenalty = new Money(this.getCurrency());
 
         int numberOfFullPayments = 0;
+        short numberOfInstalments = (short)reversedTrxns.size();
         List<AccountActionDateEntity> allInstallments = this.getAllInstallments();
 
         if (isNotEmpty(reversedTrxns)) {
@@ -1937,14 +1938,17 @@ public class LoanBO extends AccountBO implements Loan {
                          * This means... for paid installments add up the amount due (for interest, fees and penalties).
                          * The amount due is not necessarily zero for this case.
                          */
+                        
                         if (installment.isPaid()) {
                             increaseInterest = increaseInterest.add(installment.getInterestDue()).
                                     add(loanReverseTrxn.getInterestAmount());
+                            increaseFees = increaseFees.add(installment.getTotalFeesDue());
+                            if (!this.noOfInstallments.equals(numberOfInstalments)) {
                             increaseFees = increaseFees.add(installment.getMiscFeeDue()).
                                     add(loanReverseTrxn.getMiscFeeAmount());
-                            increaseFees = increaseFees.add(installment.getTotalFeesDue());
                             increasePenalty = increasePenalty.add(installment.getPenaltyDue()).
                                     add(loanReverseTrxn.getPenaltyAmount());
+                            }
                         }
 
                         installment.recordForAdjustment();
