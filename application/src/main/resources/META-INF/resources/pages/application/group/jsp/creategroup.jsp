@@ -562,7 +562,7 @@ explanation of the license and how it is applied.
 													<mifos:mifoslabel name="Group.feetype" bundle="GroupUIResources"></mifos:mifoslabel>
 												</td>
 												<td class="fontnormal" width="17%">
-													<mifos:select name="groupCustActionForm" property='selectedFee[${ctr2}].feeId' onchange="displayAmount('selectedFee[${ctr2}].feeId', 'selectedFee[${ctr2}].amount' )">
+													<mifos:select name="groupCustActionForm" property='selectedFee[${ctr2}].feeId' onchange="displayAmount('selectedFee[${ctr2}].feeId', 'selectedFee[${ctr2}].amount' )" styleClass="noAutoSelect">
 														<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" var="additionalFee">
 															<html-el:option value="${additionalFee.feeId}">${additionalFee.feeName}</html-el:option>
 														</c:forEach>

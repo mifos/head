@@ -503,7 +503,7 @@ explanation of the license and how it is applied.
 												<mifos:mifoslabel name="Center.FeeType" bundle="CenterUIResources" />
 											</td>
 											<td width="17%" class="fontnormal">
-												<mifos:select name="centerCustActionForm" property='selectedFee[${ctr2}].feeId' onchange="displayAmount('selectedFee[${ctr2}].feeId', 'selectedFee[${ctr2}].amount' )">
+												<mifos:select name="centerCustActionForm" property='selectedFee[${ctr2}].feeId' onchange="displayAmount('selectedFee[${ctr2}].feeId', 'selectedFee[${ctr2}].amount' )" styleClass="noAutoSelect">
 													<c:forEach var="feeList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" >
 														<html-el:option value="${feeList.feeId}">${feeList.feeName}</html-el:option>
 													</c:forEach>

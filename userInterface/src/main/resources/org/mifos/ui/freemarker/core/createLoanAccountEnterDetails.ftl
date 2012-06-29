@@ -177,7 +177,7 @@
     		<td>&nbsp;</td>
     		<td>[@form.input path="loanAccountFormBean.clientAmount[${index}]"  id="clientAmount[${index}]" attributes="class='amountfield separatedNumber' "/]</td>
     		<td>&nbsp;</td>
-    		<td>[@form.singleSelectWithPrompt path="loanAccountFormBean.clientLoanPurposeId[${index}]" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" attributes="class=trigger"/]</td>
+    		<td>[@form.singleSelectWithPrompt path="loanAccountFormBean.clientLoanPurposeId[${index}]" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" attributes="class=trigger noAutoSelect" /]</td>
     	</tr>
     	[#assign index = index + 1]
     	[/#list]
@@ -290,14 +290,14 @@
     </div>
     <div class="row">
         [@form.label "fundId" loanAccountFormBean.sourceOfFundsMandatory][@spring.message "createLoanAccount.sourceOfFund" /][/@form.label]
-        [@form.singleSelectWithPrompt path="loanAccountFormBean.fundId" options=loanProductReferenceData.fundOptions selectPrompt="selectPrompt" /]
+        [@form.singleSelectWithPrompt path="loanAccountFormBean.fundId" options=loanProductReferenceData.fundOptions selectPrompt="selectPrompt" attributes="class='noAutoSelect'" /]
     </div>
 
 	[#if loanProductReferenceData.glimApplicable]
 	[#else]
     <div class="row">
         [@form.label "loanPurposeId" loanAccountFormBean.purposeOfLoanMandatory][@spring.message "createLoanAccount.purposeOfLoan" /][/@form.label]
-        [@form.singleSelectWithPrompt path="loanAccountFormBean.loanPurposeId" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" /]
+        [@form.singleSelectWithPrompt path="loanAccountFormBean.loanPurposeId" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" attributes="class='noAutoSelect'"/]
     </div>
     [/#if]
     
@@ -305,7 +305,7 @@
     [#else]
     <div class="row">
         [@form.label "collateralTypeId" false][@spring.message "createLoanAccount.collateralType" /][/@form.label]
-        [@form.singleSelectWithPrompt path="loanAccountFormBean.collateralTypeId" options=loanProductReferenceData.collateralOptions selectPrompt="selectPrompt" /]
+        [@form.singleSelectWithPrompt path="loanAccountFormBean.collateralTypeId" options=loanProductReferenceData.collateralOptions selectPrompt="selectPrompt" attributes="class='noAutoSelect'" /]
     </div>
     
     <div class="row">

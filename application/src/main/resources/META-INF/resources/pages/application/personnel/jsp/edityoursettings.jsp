@@ -156,7 +156,7 @@ explanation of the license and how it is applied.
 
 
 
-									<mifos:select property="maritalStatus" value="${form.maritalStatus}">
+									<mifos:select property="maritalStatus" value="${form.maritalStatus}" styleClass="noAutoSelect">
 											<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusList')}"
 											var="maritalStatus">
 											<html-el:option value="${maritalStatus.id}">${maritalStatus.name}</html-el:option>
