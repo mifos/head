@@ -61,8 +61,8 @@ public interface ClientServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     ClientInformationDto getClientInformationDto(String globalCustNum);
 
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO')")
-    ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId);
+    @PreAuthorize("isFullyAuthenticated() and (hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO') or (hasRole('ROLE_CREATE_CLIENT_IN_SAVE_FOR_LATER_STATE') and hasPermission(#clientStatus, 'CLIENT_STATUS')))")
+    ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId, @SuppressWarnings("PMD") String clientStatus);
 
     @PreAuthorize("isFullyAuthenticated()")
     ClientPhotoDto getClientPhoto(Long clientId);
@@ -70,8 +70,9 @@ public interface ClientServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     ClientRulesDto retrieveClientDetailsForPreviewingEditOfPersonalInfo();
 
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO')")
-    void updateClientPersonalInfo(ClientPersonalInfoUpdate personalInfo);
+    @PreAuthorize("isFullyAuthenticated() and (hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO') or (hasRole('ROLE_CREATE_CLIENT_IN_SAVE_FOR_LATER_STATE') and hasPermission(#clientStatus, 'CLIENT_STATUS')))")
+    void updateClientPersonalInfo(ClientPersonalInfoUpdate personalInfo, @SuppressWarnings("PMD") String clientStatus);
+
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO')")
     ClientFamilyInfoDto retrieveFamilyInfoForEdit(String globalCustNum);

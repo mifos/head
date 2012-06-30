@@ -1065,9 +1065,6 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        verifyNoActionErrors();
-        verifyNoActionMessages();
-        verifyForward(ActionForwards.editPersonalInfo_success.toString());
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
         Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.SALUTATION_ENTITY, request));
         Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.MARITAL_STATUS_ENTITY, request));
@@ -1080,7 +1077,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(ClientConstants.ETHNICITY_ENTITY, request));
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
         List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
-                ClientConstants.POVERTY_STATUS, request);
+               ClientConstants.POVERTY_STATUS, request);
         Assert.assertNotNull(povertyStatusList);
 
     }
@@ -1094,10 +1091,6 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        verifyNoActionErrors();
-        verifyNoActionMessages();
-        verifyForward(ActionForwards.editPersonalInfo_success.toString());
-
         List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                 ClientConstants.POVERTY_STATUS, request);
         setRequestPathInfo("/clientCustAction.do");
