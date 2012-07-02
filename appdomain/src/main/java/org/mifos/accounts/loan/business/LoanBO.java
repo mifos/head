@@ -1430,18 +1430,25 @@ public class LoanBO extends AccountBO implements Loan {
     @Override
     public AccountPaymentEntity getLastPmntToBeAdjusted() {
         AccountPaymentEntity accntPmnt = null;
-        // MIFOS-4238: we don't want to show disbursal amount as an adjustment amount
-        int i = 0;
-        for (AccountPaymentEntity accntPayment : accountPayments) {
-            i = i + 1;
-            if (i == accountPayments.size()) {
-                break;
-            }
-            if (accntPayment.getAmount().isNonZero()) {
-                accntPmnt = accntPayment;
-                break;
-            }
+        /*MIFOS-5694: this is just workaround for more complex issue.
+         *This condition should be removed when MIFOS-5692 is fixed.  
+         */
+        if (this.parentAccount != null) {
+            accntPmnt = super.getLastPmntToBeAdjusted();
+        } else {
+            // MIFOS-4238: we don't want to show disbursal amount as an adjustment amount
+            int i = 0;
+            for (AccountPaymentEntity accntPayment : accountPayments) {
+                i = i + 1;
+                if (i == accountPayments.size()) {
+                    break;
+                }
+                if (accntPayment.getAmount().isNonZero()) {
+                    accntPmnt = accntPayment;
+                    break;
+                }
 
+            }
         }
         return accntPmnt;
     }
@@ -3690,7 +3697,7 @@ public class LoanBO extends AccountBO implements Loan {
                     memberAccount.adjustLastPayment(adjustmentComment, loggedInUser);
                 }
             }
-        } else {
+        } else if (this.parentAccount == null){ //MIFOS-5694: if member account has no payments it could mean that payment was made before 2.4.0, remove this condition when MIFOS-5692 is done 
             throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
         }
     }
