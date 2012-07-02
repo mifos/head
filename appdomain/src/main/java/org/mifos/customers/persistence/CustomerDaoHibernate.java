@@ -870,7 +870,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("customerId", customerId);
         queryParameters.put("clientStatus", customerStatus.getValue());
         List queryResult = this.genericDao.executeNamedQuery(queryName, queryParameters);
-        return ((Long) queryResult.get(0)).intValue() > 0;
+        return ((Long) queryResult.get(0)).intValue() > 1;
     }
 
     @SuppressWarnings("unchecked")
