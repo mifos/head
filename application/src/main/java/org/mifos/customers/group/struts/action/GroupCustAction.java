@@ -88,7 +88,7 @@ public class GroupCustAction extends CustAction {
     private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
 
     private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Group",
-            ActionForwards.preview_success, "clientsAndAccounts.ftl", questionnaireServiceFacadeLocator);
+            ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator);
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward hierarchyCheck(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
