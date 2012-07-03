@@ -78,7 +78,7 @@ public enum XlsMessageConstants {
             DIGITS_BEFORE_DECIMAL("loanAccountFormBean.amount.digitsBeforeDecimal.invalid"),
             DIGITS_AFTER_DECIMAL("loanAccountFormBean.amount.digitsAfterDecimal.invalid"),
             MISSING_INTEREST_RATE("admin.importexport.xls.error.missingInterestRate"),
-            INTEREST_RATE_OUT_OF_RANGE("admin.importexport.xls.error.interestRateOutOfBonds"),
+            INTEREST_RATE_OUT_OF_RANGE("admin.importexport.xls.error.loanAmountOutOfBonds"),
             NOT_A_NUMBER("admin.importexport.xls.error.notANumber"),
             MISSING_NUMBER_OF_INSTALLMENTS("admin.importexport.xls.error.missingNumberOfInstallments"),
             NUMBER_OF_INSTALLMENTS_OUT_OF_RANGE("admin.importexport.xls.error.numberOfInstallmentsOutOfRange"),
