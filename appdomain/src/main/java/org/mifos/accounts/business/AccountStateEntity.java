@@ -110,6 +110,14 @@ public class AccountStateEntity extends StateEntity implements LocalizedTextLook
     public boolean isLoanClosedObligationsMet() {
         return getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue());
     }
+    
+    public boolean isLoanClosedWrittenOff() {
+        return getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue());
+    }
+    
+    public boolean isLoanClosedReschedule() {
+        return getId().equals(AccountState.LOAN_CLOSED_RESCHEDULED.getValue());
+    }
 
     public boolean isLoanActiveInGoodStanding() {
         return getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue());

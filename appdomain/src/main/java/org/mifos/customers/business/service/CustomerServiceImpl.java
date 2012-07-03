@@ -1217,7 +1217,16 @@ public class CustomerServiceImpl implements CustomerService {
     private boolean customerIsMemberOfAnyExistingGlimLoanAccount(CustomerBO customerToRemoveFromGroup, CustomerBO customerWithActiveAccounts) {
 
         List<AccountBO> activeLoanAccounts = customerDao.findGLIMLoanAccountsApplicableTo(customerToRemoveFromGroup.getCustomerId(), customerWithActiveAccounts.getCustomerId());
-
+        
+        
+        for (int i = activeLoanAccounts.size() -1 ; i >=0; i--) {
+            AccountBO glim = activeLoanAccounts.get(i);
+            if (glim.getAccountState().isLoanClosedObligationsMet() || 
+                    glim.getAccountState().isLoanClosedWrittenOff() ||
+                    glim.getAccountState().isLoanClosedReschedule()) {
+                activeLoanAccounts.remove(i);
+            }
+        }
         return !activeLoanAccounts.isEmpty();
     }
 
