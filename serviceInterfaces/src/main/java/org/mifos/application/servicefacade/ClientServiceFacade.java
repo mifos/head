@@ -61,8 +61,8 @@ public interface ClientServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     ClientInformationDto getClientInformationDto(String globalCustNum);
 
-    @PreAuthorize("isFullyAuthenticated() and (hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO') or (hasRole('ROLE_CREATE_CLIENT_IN_SAVE_FOR_LATER_STATE') and hasPermission(#clientStatus, 'CLIENT_STATUS')))")
-    ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId, @SuppressWarnings("PMD") String clientStatus);
+    @PreAuthorize("isFullyAuthenticated() and (hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO') or (hasRole('ROLE_CREATE_CLIENT_IN_SAVE_FOR_LATER_STATE') and hasPermission(#clientStatus, 'CLIENT_STATUS') and hasPermission(#loanOfficerId, 'LOAN_OFFICER_ID')))")
+    ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId, @SuppressWarnings("PMD") String clientStatus, @SuppressWarnings("PMD") short loanOfficerId);
 
     @PreAuthorize("isFullyAuthenticated()")
     ClientPhotoDto getClientPhoto(Long clientId);

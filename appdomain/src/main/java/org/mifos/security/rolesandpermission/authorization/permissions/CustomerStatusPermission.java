@@ -10,16 +10,18 @@ public class CustomerStatusPermission implements MifosPermission {
     @Override
     public boolean isAllowed(Authentication authentication, Object targetDomainObject) throws ServiceException {
 
-        String customerStatus = (String) targetDomainObject;
         MifosUser user = (MifosUser) authentication.getPrincipal();
-        return checkPermissionToEditCustomerInformation(user, customerStatus);
+        return checkPermissionToEditCustomerInformation(user, targetDomainObject);
     }
 
-    private boolean checkPermissionToEditCustomerInformation(MifosUser user, String customerStatus)
+    private boolean checkPermissionToEditCustomerInformation(MifosUser user, Object status)
             throws ServiceException {
         boolean isAllowed = false;
-        if (customerStatus.equals(CustomerConstants.CLIENT_STATUS_PARTIAL)) {
+        if (status.equals(CustomerConstants.CLIENT_STATUS_PARTIAL)) {
             isAllowed = true;
+        } 
+        else if (((Short)status).intValue() == user.getUserId()) {
+        	isAllowed = true;
         }
         return isAllowed;
     }
