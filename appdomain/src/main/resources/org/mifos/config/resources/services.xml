@@ -126,7 +126,4 @@
     <bean id="configurationBusinessService" class="org.mifos.config.business.service.ConfigurationBusinessService"/>
 
     <bean id="pentahoReportsService" class="org.mifos.reports.pentaho.service.PentahoReportsServiceImpl"/>
-
-    <bean id="importLoansSavingsFacade" class="org.mifos.application.importexport.servicefacade.ImportLoansSavingsFacadeWebTier" />
-    <bean id="xlsLoansAccountImporter" class="org.mifos.application.importexport.xls.XlsLoansAccountImporter" />
 </beans>
