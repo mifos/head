@@ -48,6 +48,8 @@ public interface SimpleAccountingConstants {
 	String INVALID_PAST = "errors.invaliddatepast";
 
 	String TRXNDATE = "simpleAccounting.trxnDate";
+	String TO_TRXNDATE = "simpleAccounting.toTrxnDate";
+	String FROM_TRXNDATE = "simpleAccounting.fromTrxnDate";
 	String VOUCHERDATE = "simpleAccounting.voucherDate";
 	String LASTPROCESSDATE = "simpleAccounting.lastProcessDate";
 	String PROCESSTILLDATE = "simpleAccounting.processTillDate";

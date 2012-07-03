@@ -50,10 +50,10 @@ public interface AccountingServiceFacade {
 
 	List<GLCodeDto> accountHead(String glCode);
 
-	List<ViewTransactionsDto> getAccountingTransactions(Date trxnDate,
+	List<ViewTransactionsDto> getAccountingTransactions(Date toTrxnDate,Date fromTrxnDate,
 			int startRecord, int numberOfRecords);
 
-	int getNumberOfTransactions(Date trxnDate);
+	int getNumberOfTransactions(Date toTrxnDate,Date fromTrxnDate);
 
 	String getLastProcessDate();
 

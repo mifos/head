@@ -127,18 +127,25 @@ function fnCancel(form) {
 									</logic:messagesPresent>
 									<br>
 				<table width="93%" border="0" cellpadding="3" cellspacing="0">
-					<tr class="fontnormal">
+				    <tr class="fontnormal">
 							<td align="right">
-			                   <mifos:mifoslabel name="simpleAccounting.trxnDate" mandatory="yes" isColonRequired="Yes"/>
+			                   <mifos:mifoslabel name="simpleAccounting.fromTrxnDate" mandatory="yes" isColonRequired="Yes"/>
 			                </td>
 			                <td align="left">
-			                 <mifos:mifosalphanumtext styleId= "createLoanProduct.input.prdOffering" property="trxnDate" size="10"/>
-							 &nbsp  <img src="pages/framework/images/mainbox/calendaricon.gif" onclick="displayDatePicker('trxnDate', this);"/>
+			                 <mifos:mifosalphanumtext styleId= "createLoanProduct.input.prdOffering" property="fromTrxnDate" size="10"/>
+							 &nbsp  <img src="pages/framework/images/mainbox/calendaricon.gif" onclick="displayDatePicker('fromTrxnDate', this);"/>
 			                </td>
-
 					</tr>
-
-		</table>
+					<tr class="fontnormal">
+							<td align="right">
+			                   <mifos:mifoslabel name="simpleAccounting.toTrxnDate" mandatory="yes" isColonRequired="Yes"/>
+			                </td>
+			                <td align="left">
+			                 <mifos:mifosalphanumtext styleId= "createLoanProduct.input.prdOffering" property="toTrxnDate" size="10"/>
+							 &nbsp  <img src="pages/framework/images/mainbox/calendaricon.gif" onclick="displayDatePicker('toTrxnDate', this);"/>
+			                </td>
+					</tr>
+		        </table>
 			<br>
 			<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>

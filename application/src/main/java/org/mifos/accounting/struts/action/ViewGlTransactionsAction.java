@@ -51,7 +51,7 @@ public class ViewGlTransactionsAction extends BaseAction {
 			throws Exception {
 		ViewGlTransactionsActionForm actionForm = (ViewGlTransactionsActionForm) form;
 		java.util.Date trxnDate = DateUtils.getCurrentDateWithoutTimeStamp();
-		actionForm.setTrxnDate(trxnDate);
+		actionForm.setToTrxnDate(trxnDate);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -85,7 +85,7 @@ public class ViewGlTransactionsAction extends BaseAction {
 
 		List<ViewTransactionsDto> viewTransactionsDtos = accountingServiceFacade
 				.getAccountingTransactions(
-						DateUtils.getDate(actionForm.getTrxnDate()), iPageNo,
+						DateUtils.getDate(actionForm.getToTrxnDate()),DateUtils.getDate(actionForm.getFromTrxnDate()), iPageNo,
 						noOfRecordsPerPage);
 		storingSession(request, "ViewTransactionsDtos", viewTransactionsDtos);
 
@@ -93,7 +93,7 @@ public class ViewGlTransactionsAction extends BaseAction {
 
 		totalNoOfRowsForPagination = accountingServiceFacade
 				.getNumberOfTransactions(DateUtils.getDate(actionForm
-						.getTrxnDate()));
+						.getToTrxnDate()),DateUtils.getDate(actionForm.getFromTrxnDate()));
 
 		// // calculate next record start record and end record
 		if (totalNoOfRowsForPagination < (iPageNo + noOfRecordsPerPage)) {

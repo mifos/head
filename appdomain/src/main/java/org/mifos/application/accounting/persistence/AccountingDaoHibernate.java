@@ -188,10 +188,11 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 	}
 
 	@Override
-	public List<ViewTransactionsDto> findAccountingTransactions(Date trxnDate,
+	public List<ViewTransactionsDto> findAccountingTransactions(Date toTrxnDate,Date fromTrxnDate,
 			int startRecord, int numberOfRecords) {
 		final Map<String, Object> queryparameters = new HashMap<String, Object>();
-		queryparameters.put("TRANSACTION_DATE", trxnDate);
+		queryparameters.put("TO_TRANSACTION_DATE", toTrxnDate);
+		queryparameters.put("FROM_TRANSACTION_DATE", fromTrxnDate);
 		queryparameters.put("START_RECORD", startRecord);
 		queryparameters.put("NUMBER_OF_RECORDS", numberOfRecords);
 		final List<ViewTransactionsDto> viewAccountingTransactions = executeNamedQueryWithResultTransformer(
@@ -200,9 +201,10 @@ public class AccountingDaoHibernate extends LegacyGenericDao implements
 		return viewAccountingTransactions;
 	}
 
-	public List<RowCount> findTotalNumberOfRecords(Date trxnDate) {
+	public List<RowCount> findTotalNumberOfRecords(Date toTrxnDate,Date fromTrxnDate) {
 		final Map<String, Object> queryparameters = new HashMap<String, Object>();
-		queryparameters.put("TRANSACTION_DATE", trxnDate);
+		queryparameters.put("TO_TRANSACTION_DATE", toTrxnDate);
+		queryparameters.put("FROM_TRANSACTION_DATE", fromTrxnDate);
 		final List<RowCount> rowCountList = executeNamedQueryWithResultTransformer(
 				"ChartOfAccountsForMifos.TotalNumberOfRecords",
 				queryparameters, RowCount.class);

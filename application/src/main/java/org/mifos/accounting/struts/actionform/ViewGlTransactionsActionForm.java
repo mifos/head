@@ -20,7 +20,6 @@
 
 package org.mifos.accounting.struts.actionform;
 
-import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -42,18 +41,34 @@ import org.slf4j.LoggerFactory;
 public class ViewGlTransactionsActionForm extends BaseActionForm {
     private static final Logger logger = LoggerFactory.getLogger(GeneralLedgerActionForm.class);
 
-    private String trxnDate;
+    private String toTrxnDate; 
+    private String fromTrxnDate;
+    
 
-	public void setTrxnDate(String trxnDate){
-		this.trxnDate=trxnDate;
+
+	
+	public String getToTrxnDate() {
+		return toTrxnDate;
+	}
+
+	public void setToTrxnDate(String toTrxnDate) {
+		this.toTrxnDate = toTrxnDate;
 	}
 	
-	public void setTrxnDate(java.util.Date date){
-	    this.trxnDate=DateUtils.format(date);
+	public void setToTrxnDate(java.util.Date date) {
+		this.toTrxnDate = DateUtils.format(date);
 	}
 
-	public String getTrxnDate(){
-	  return trxnDate;
+	public String getFromTrxnDate() {
+		return fromTrxnDate;
+	}
+	
+	public void setFromTrxnDate(java.util.Date date) {
+		this.fromTrxnDate = DateUtils.format(date);
+	}
+
+	public void setFromTrxnDate(String fromTrxnDate) {
+		this.fromTrxnDate = fromTrxnDate;
 	}
 
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
@@ -69,10 +84,20 @@ public class ViewGlTransactionsActionForm extends BaseActionForm {
 	        return errors;
 	    }
 
-	   private ActionErrors trxnDateValidate(ActionErrors errors, Locale locale) {
-	        if (StringUtils.isNotBlank(getTrxnDate()) && !DateUtils.isValidDate(getTrxnDate())) {
+	   private ActionErrors toTrxnDateValidate(ActionErrors errors, Locale locale) {
+	        if (StringUtils.isNotBlank(getToTrxnDate()) && !DateUtils.isValidDate(getToTrxnDate())) {
 	            ResourceBundle resources = ResourceBundle.getBundle(FilePaths.SIMPLE_ACCOUNTING_RESOURCE, locale);
-	            String trxnDate = resources.getString(SimpleAccountingConstants.TRXNDATE);
+	            String trxnDate = resources.getString(SimpleAccountingConstants.TO_TRXNDATE);
+	            errors.add(SimpleAccountingConstants.INVALID_TRXN_DATE, new ActionMessage(
+				SimpleAccountingConstants.INVALID_TRXN_DATE, trxnDate));
+	        }
+	        return errors;
+	    }
+	   
+	   private ActionErrors fromTrxnDateValidate(ActionErrors errors, Locale locale) {
+	        if (StringUtils.isNotBlank(getFromTrxnDate()) && !DateUtils.isValidDate(getFromTrxnDate())) {
+	            ResourceBundle resources = ResourceBundle.getBundle(FilePaths.SIMPLE_ACCOUNTING_RESOURCE, locale);
+	            String trxnDate = resources.getString(SimpleAccountingConstants.FROM_TRXNDATE);
 	            errors.add(SimpleAccountingConstants.INVALID_TRXN_DATE, new ActionMessage(
 				SimpleAccountingConstants.INVALID_TRXN_DATE, trxnDate));
 	        }
@@ -84,7 +109,8 @@ public class ViewGlTransactionsActionForm extends BaseActionForm {
 	        Locale locale = userContext.getPreferredLocale();
 	        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.SIMPLE_ACCOUNTING_RESOURCE, locale);
 
-	        String trxn_Date = resources.getString(SimpleAccountingConstants.TRXNDATE);
+	        String to_Trxn_Date = resources.getString(SimpleAccountingConstants.TO_TRXNDATE);
+	        String from_Trxn_Date = resources.getString(SimpleAccountingConstants.FROM_TRXNDATE);
 
 	        ActionErrors errors = new ActionErrors();
 	        java.sql.Date currentDate = null;
@@ -98,32 +124,46 @@ public class ViewGlTransactionsActionForm extends BaseActionForm {
 
 	        java.sql.Date trxnDate = null;
 
-	        if (getTrxnDate() ==null || "".equals(getTrxnDate())) {
+	        if (getToTrxnDate() ==null || "".equals(getToTrxnDate())) {
 			 errors.add(SimpleAccountingConstants.MANDATORYENTER, new ActionMessage(
-					 SimpleAccountingConstants.MANDATORYENTER, trxn_Date));
+					 SimpleAccountingConstants.MANDATORYENTER, to_Trxn_Date));
 	        }
-	        else if(getTrxnDate() != null && !getTrxnDate().equals("") && !DateUtils.isValidDate(getTrxnDate())){
-			 errors=trxnDateValidate(errors, locale);
+	        else if(getToTrxnDate() != null && !getToTrxnDate().equals("") && !DateUtils.isValidDate(getToTrxnDate())){
+			 errors=toTrxnDateValidate(errors, locale);
 	        }
-	        else if(DateUtils.isValidDate(getTrxnDate())){
+	        else if(DateUtils.isValidDate(getToTrxnDate())){
 			 try {
-		                trxnDate = DateUtils.getDateAsSentFromBrowser(getTrxnDate());
+		                trxnDate = DateUtils.getDateAsSentFromBrowser(getToTrxnDate());
 		            } catch (InvalidDateException ide) {
-		                errors.add(SimpleAccountingConstants.MANDATORYFIELDS, new ActionMessage(SimpleAccountingConstants.INVALID_TRXN_DATE,trxn_Date));
+		                errors.add(SimpleAccountingConstants.MANDATORYFIELDS, new ActionMessage(SimpleAccountingConstants.INVALID_TRXN_DATE,to_Trxn_Date));
 		            }
 			 if(trxnDate.compareTo(currentDate)>0){
 				 errors.add(SimpleAccountingConstants.INVALID_FUTURE, new ActionMessage(
-						 SimpleAccountingConstants.INVALID_FUTURE, trxn_Date));
+						 SimpleAccountingConstants.INVALID_FUTURE, to_Trxn_Date));
 			 }
-
 	        }
+	        
+	        if (getFromTrxnDate() ==null || "".equals(getFromTrxnDate())) {
+				 errors.add(SimpleAccountingConstants.MANDATORYENTER, new ActionMessage(
+						 SimpleAccountingConstants.MANDATORYENTER, from_Trxn_Date));
+		        }
+	        else if(getFromTrxnDate() != null && !getFromTrxnDate().equals("") && !DateUtils.isValidDate(getFromTrxnDate())){
+				 errors=fromTrxnDateValidate(errors, locale);
+		        }
+	        else if(DateUtils.isValidDate(getFromTrxnDate())){
+				 try {
+			                trxnDate = DateUtils.getDateAsSentFromBrowser(getFromTrxnDate());
+			            } catch (InvalidDateException ide) {
+			                errors.add(SimpleAccountingConstants.MANDATORYFIELDS, new ActionMessage(SimpleAccountingConstants.INVALID_TRXN_DATE,from_Trxn_Date));
+			            }
+				 if(trxnDate.compareTo(currentDate)>0){
+					 errors.add(SimpleAccountingConstants.INVALID_FUTURE, new ActionMessage(
+							 SimpleAccountingConstants.INVALID_FUTURE, from_Trxn_Date));
+				 }
+		        }
 
 	        return errors;
 	    }
-
-
-
-
 
 
 }

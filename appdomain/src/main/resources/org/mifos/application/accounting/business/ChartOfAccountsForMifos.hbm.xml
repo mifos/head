@@ -319,7 +319,7 @@ select m.transaction_master_id as transactionNo, transaction_date as transaction
 		          from office o ) c
 			where m.transaction_master_id=d.transaction_master_id
 			  and m.from_office_id=c.global_num
-			  and m.transaction_date= :TRANSACTION_DATE
+			  and m.transaction_date between :FROM_TRANSACTION_DATE and :TO_TRANSACTION_DATE
 			  Order by m.transaction_master_id
 			  LIMIT :START_RECORD , :NUMBER_OF_RECORDS
         ]]>
@@ -349,7 +349,7 @@ select m.transaction_master_id as transactionNo, transaction_date as transaction
 		          from office o ) c
 			where m.transaction_master_id=d.transaction_master_id
 			  and m.from_office_id=c.global_num
-			  and m.transaction_date= :TRANSACTION_DATE
+			  and m.transaction_date between :FROM_TRANSACTION_DATE and :TO_TRANSACTION_DATE
 			  Order by m.transaction_master_id
         ]]>
 	</sql-query>

@@ -110,18 +110,18 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 	}
 
 	@Override
-	public List<ViewTransactionsDto> getAccountingTransactions(Date trxnDate,
+	public List<ViewTransactionsDto> getAccountingTransactions(Date toTrxnDate,Date fromTrxnDate,
 			int startRecord, int numberOfRecords) {
 		List<ViewTransactionsDto> accountingTransactions = null;
 		accountingTransactions = accountingDao.findAccountingTransactions(
-				trxnDate, startRecord, numberOfRecords);
+				toTrxnDate,fromTrxnDate, startRecord, numberOfRecords);
 		return accountingTransactions;
 	}
 
-	public int getNumberOfTransactions(Date trxnDate) {
+	public int getNumberOfTransactions(Date toTrxnDate,Date fromTrxnDate) {
 		int totalNumberOfRecords = 0;
 		List<RowCount> rowCountList = accountingDao
-				.findTotalNumberOfRecords(trxnDate);
+				.findTotalNumberOfRecords(toTrxnDate,fromTrxnDate);
 		if (rowCountList != null && rowCountList.size() > 0) {
 			totalNumberOfRecords = rowCountList.get(0)
 					.getTotalNumberOfRecords();

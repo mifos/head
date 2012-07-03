@@ -53,10 +53,10 @@ public interface AccountingDao {
 
 	public List<OfficeGlobalDto> findCustomersWithGlobalNum(Short levelId);
 
-	public List<ViewTransactionsDto> findAccountingTransactions(Date trxnDate,
+	public List<ViewTransactionsDto> findAccountingTransactions(Date toTrxnDate,Date fromTrxnDate,
 			int startRecord, int numberOfRecords);
 
-	public List<RowCount> findTotalNumberOfRecords(Date trxnDate);
+	public List<RowCount> findTotalNumberOfRecords(Date toTrxnDate,Date fromTrxnDate);
 
 	public String findLastProcessingDate(String namedQueryString);
 
