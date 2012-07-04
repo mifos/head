@@ -1649,9 +1649,9 @@ public class LoanBO extends AccountBO implements Loan {
     public void updateLoan(final Money loanAmount, final Integer businessActivityId) throws AccountException {
         setLoanAmount(loanAmount);
         setBusinessActivityId(businessActivityId);
-        
+        MeetingBO meetingBO = ( isIndividualLoan() ? this.getParentAccount().getLoanMeeting() : this.getLoanMeeting());
         boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-        regeneratePaymentSchedule(isRepaymentIndepOfMeetingEnabled, getLoanMeeting());
+        regeneratePaymentSchedule(isRepaymentIndepOfMeetingEnabled, meetingBO);
         
         update();
     }
@@ -2614,24 +2614,17 @@ public class LoanBO extends AccountBO implements Loan {
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
-        // Delete previous loan meeting if there is a new meeting for repayment
-        // day
-        if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null) {
-            try {
-                if (null != this.getLoanMeeting()) {
-                    getlegacyLoanDao().delete(this.getLoanMeeting());
-                }
-            } catch (PersistenceException e) {
-                throw new AccountException(e);
+        // Set new meeting if there is new one for repayment day
+        // Delete previous loan meeting if loan is parent account (individual loans should have same meetingBO object as parent)
+        if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null &&
+                !this.getLoanMeeting().equals(newMeetingForRepaymentDay)) {
+            if ( null != this.getLoanMeeting() && !this.isIndividualLoan() ){
+                this.delete(this.getLoanMeeting());
             }
+            setLoanMeeting(newMeetingForRepaymentDay);
         }
         this.resetAccountActionDates();
         loanMeeting.setMeetingStartDate(disbursementDate);
-
-        // FIXME - keithw - newMeetingForRepaymentDay is only populated when updating loan see LoanAccountAction.update
-		if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null) {
-		    setLoanMeeting(newMeetingForRepaymentDay);
-		}
 
 		RecurringScheduledEventFactory scheduledEventFactory = new RecurringScheduledEventFactoryImpl();
 		ScheduledEvent meetingScheduledEvent = scheduledEventFactory.createScheduledEventFrom(this.loanMeeting);
@@ -3726,5 +3719,9 @@ public class LoanBO extends AccountBO implements Loan {
             }
         }
         return result;
+    }
+    
+    public boolean isIndividualLoan(){
+        return this.parentAccount != null && this.accountType.getAccountTypeId().equals(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT.getValue()); 
     }
 }
