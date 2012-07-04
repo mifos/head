@@ -2615,13 +2615,18 @@ public class LoanBO extends AccountBO implements Loan {
             throw new AccountException(e);
         }
         // Set new meeting if there is new one for repayment day
-        // Delete previous loan meeting if loan is parent account (individual loans should have same meetingBO object as parent)
+        // Delete previous loan meeting if loan is parent account and set individual loans(if any) loanMeeting same as parent 
         if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null &&
                 !this.getLoanMeeting().equals(newMeetingForRepaymentDay)) {
             if ( null != this.getLoanMeeting() && !this.isIndividualLoan() ){
                 this.delete(this.getLoanMeeting());
             }
             setLoanMeeting(newMeetingForRepaymentDay);
+            if ( this.hasMemberAccounts()){
+                for (LoanBO individualLoanBO : this.getMemberAccounts()){
+                    individualLoanBO.setLoanMeeting(newMeetingForRepaymentDay);
+                }
+            }
         }
         this.resetAccountActionDates();
         loanMeeting.setMeetingStartDate(disbursementDate);
