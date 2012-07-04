@@ -264,13 +264,13 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         setExtraInterestPaid(getExtraInterestPaid().add(getExtraInterestDue()));
         if (payFullOrPartial.equals(LoanConstants.PAY_FEES_PENALTY_INTEREST)) {
             setInterestPaid(getInterestPaid().add(interestDue));
-            setPenaltyPaid(getPenaltyPaid());
-            setMiscFeePaid(getMiscFeePaid());
-            setMiscPenaltyPaid(getMiscPenaltyPaid());
+            setPenaltyPaid(getPenaltyPaid().add(getPenaltyDue()));
+            setMiscFeePaid(getMiscFeePaid().add(getMiscFee()));
+            setMiscPenaltyPaid(getMiscPenaltyPaid().add(getMiscPenalty()));
         } else if (payFullOrPartial.equals(LoanConstants.PAY_FEES_PENALTY)) {
             setPenaltyPaid(getPenaltyPaid().add(getPenaltyDue()));
-            setMiscFeePaid(getMiscFeePaid());
-            setMiscPenaltyPaid(getMiscPenaltyPaid());
+            setMiscFeePaid(getMiscFeePaid().add(getMiscFee()));
+            setMiscPenaltyPaid(getMiscPenaltyPaid().add(getMiscPenalty()));
         }
         makeRepaymentEntries(payFullOrPartial, paymentDate);
     }
