@@ -34,7 +34,10 @@
                     <div class="span-23">
                         <span class="span-11">[@spring.message "systemAdministration.shutdown.welcometotheMifosshutdownmanagementArea" /].</span>
                     </div>
+                    [#if model.submitButtonDisabled]
+                    [#else]
                     [@form.showAllErrors "shutdownFormBean.*"/]
+                    [/#if]
                     <div class="clear">&nbsp;</div>
                     <div class="span-23">
                         <span class="span-7">[@spring.message "systemAdministration.shutdown.shutdownStatus" /]</span>
