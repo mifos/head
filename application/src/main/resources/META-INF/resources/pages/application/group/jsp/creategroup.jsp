@@ -79,7 +79,7 @@ explanation of the license and how it is applied.
     }
 
   function goToPreviewPage(){
-	groupCustActionForm.action="groupCustAction.do?method=previewOnly";
+	groupCustActionForm.action="groupCustAction.do?method=preview";
 	groupCustActionForm.submit();
   }
 
