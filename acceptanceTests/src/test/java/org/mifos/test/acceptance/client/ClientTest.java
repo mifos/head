@@ -1508,4 +1508,60 @@ public class ClientTest extends UiTestCaseBase {
         //Then
         clientPage.verifyGroupMembership(destinationGroupName);
     }
+    
+    @Test(enabled=true)
+    public void longTextInViewAdditionalInformationOfClientTest() {
+    	//Given
+    	String questionGroupTtile = "QGLoan";
+    	String clientName = "DoeTest2";
+    	String loanProductName = "WeeklyClientFlatLoanWithNoFee";
+    	
+    	
+    	//new question group
+    	CreateQuestionGroupParameters questionGroupParameters = new CreateQuestionGroupParameters();
+    	questionGroupParameters.setTitle(questionGroupTtile);
+    	questionGroupParameters.setAppliesTo("Create Loan");
+    	questionGroupParameters.setApplyToAllLoanProducts(true);
+    	
+    	HashMap<String, List<CreateQuestionParameters>> questionMap
+    		= new HashMap<String, List<CreateQuestionParameters>>();
+    	List<CreateQuestionParameters> questionList = new ArrayList<CreateQuestionParameters>();
+    	CreateQuestionParameters questionParameters = new CreateQuestionParameters();
+    	questionParameters.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+    	questionParameters.setText("what is Mifos?");
+    	questionList.add(questionParameters);
+    	
+    	questionMap.put("question", questionList);
+    	questionGroupParameters.setNewQuestions(questionMap);
+    	questionGroupTestHelper.createQuestionGroup(questionGroupParameters);
+    	
+    	
+    	//client
+    	CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = clientParams();
+    	clientParams.setFirstName("John");
+    	clientParams.setLastName(clientName);
+    	ClientViewDetailsPage clientPage = clientTestHelper.createNewClient("GroupWeekly", clientParams);
+    	clientTestHelper.changeCustomerStatus(clientPage, ClientStatus.ACTIVE);
+    	
+    	
+    	//When
+    	CreateLoanAccountSearchParameters loanSearchParameters = new CreateLoanAccountSearchParameters();
+    	loanSearchParameters.setSearchString(clientName);
+    	loanSearchParameters.setLoanProduct(loanProductName);
+    	CreateLoanAccountSubmitParameters loanSubmitParameters = new CreateLoanAccountSubmitParameters();
+    	QuestionResponseParameters questionResponse = new QuestionResponseParameters();
+    	questionResponse.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value",
+    			"Mifos is a web-based management information system (MIS) for microfinance institutions (MFIs). " 
+    	        + "Through its open source technology platform, Mifos streamlines the operations of microfinance institutions, "
+    	        + "providing real-time information and the capacity to scale. Mifos helps MFIs operate more efficiently and to drive a broader and deeper outreach to the poor. "
+    	        + "As the core backbone of an MFI’s operations, Mifos provides portfolio and transaction management, on-the-fly financial product creation, "
+    	        + "in-depth client management, integrated social performance measurement, and a reporting engine to provide financial transparency and business and social insight.");
+    	
+    	loanTestHelper.createLoanAccount(loanSearchParameters, loanSubmitParameters, questionResponse)
+    		.navigateToAdditionalInformationPage();
+      
+    	
+    	//Then
+        Assert.assertTrue(selenium.isElementPresent("fixTableId"));
+    }
 }
