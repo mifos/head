@@ -19,7 +19,7 @@
 *  explanation of the license and how it is applied.
 --]
 [#assign mifostag=JspTaglibs["/tags/mifos-html"]]
-
+[@layout.header "title" /]
 <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="pages/js/switchInterestRateZero.js"></script>
 <script type="text/javascript">
@@ -53,7 +53,6 @@
         }
     }
 </script>
-[@layout.header "title" /]
 [@widget.topNavigationNoSecurity currentTab="Admin" /]
 
   <!--  Main Content Begins-->
