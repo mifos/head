@@ -270,6 +270,14 @@
             and accountTrxn.actionDate <= date(:ACTION_DATE)
         ]]>
     </query>
+    
+    <query name="accounts.getFirstMeetingDateForCustomer">
+    	<![CDATA[
+    		select min(accountTrxn.actionDate)
+            from org.mifos.customers.business.CustomerScheduleEntity accountTrxn
+            where accountTrxn.customer.customerId = :CUSTOMER_ID
+    	]]>
+    </query>
 
     <query name="accounts.getApplicableSavingsProductOfferings">
         <![CDATA[select prdOffering.prdOfferingId as prdOfferingId,

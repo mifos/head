@@ -1498,16 +1498,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Override
     public boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate) {
+        LoanBO loan = this.loanDao.findById(loanAccountId);
 
-        try {
-            LoanBO loan = this.loanDao.findById(loanAccountId);
-
-            Date meetingDate = customerPersistence.getLastMeetingDateForCustomer(loan.getCustomer().getCustomerId());
-            boolean repaymentIndependentOfMeetingEnabled = configurationPersistence.isRepaymentIndepOfMeetingEnabled();
-            return loan.isTrxnDateValid(trxnDate, meetingDate, repaymentIndependentOfMeetingEnabled);
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
-        }
+        Date firstMeetingDate = customerDao.getFirstMeetingDateForCustomer(loan.getCustomer().getCustomerId());
+        boolean repaymentIndependentOfMeetingEnabled = configurationPersistence.isRepaymentIndepOfMeetingEnabled();
+        return loan.isTrxnDateValid(trxnDate, firstMeetingDate, repaymentIndependentOfMeetingEnabled);
     }
 
     @Override

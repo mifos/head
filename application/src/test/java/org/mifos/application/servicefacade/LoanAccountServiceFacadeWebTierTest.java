@@ -187,7 +187,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
         when(loanDao.findById(0)).thenReturn(loanBO);
         java.sql.Date date = new java.sql.Date(new Date().getTime());
-        when(customerPersistence.getLastMeetingDateForCustomer(2)).thenReturn(date);
+        when(customerDao.getFirstMeetingDateForCustomer(2)).thenReturn(date);
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
         when(loanBO.getCurrency()).thenReturn(rupee);
         boolean waiveInterest = true;
@@ -215,7 +215,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
         when(loanDao.findById(0)).thenReturn(loanBO);
         final java.sql.Date date = new java.sql.Date(new Date().getTime());
-        when(customerPersistence.getLastMeetingDateForCustomer(2)).thenReturn(date);
+        when(customerDao.getFirstMeetingDateForCustomer(2)).thenReturn(date);
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
         when(loanBO.getCurrency()).thenReturn(rupee);
         boolean waiveInterest = true;
@@ -272,7 +272,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanBO.getDetailsOfNextInstallment()).thenReturn(loanScheduleEntity);
         java.sql.Date date = mock(java.sql.Date.class);
         when(loanBO.isTrxnDateValid(date, date, false)).thenReturn(true);
-        when(customerPersistence.getLastMeetingDateForCustomer(2)).thenReturn(date);
+        when(customerDao.getFirstMeetingDateForCustomer(2)).thenReturn(date);
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
         String paymentMethod = "Cash";
         String receiptNumber = "001";
@@ -292,7 +292,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanDao.findById(0)).thenReturn(loanBO);
         boolean actualWaiveInterestValue = false;
         java.sql.Date date = mock(java.sql.Date.class);
-        when(customerPersistence.getLastMeetingDateForCustomer(2)).thenReturn(date);
+        when(customerDao.getFirstMeetingDateForCustomer(2)).thenReturn(date);
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
         when(loanBO.isInterestWaived()).thenReturn(actualWaiveInterestValue);
         when(loanBO.getOfficeId()).thenReturn((short)1);
