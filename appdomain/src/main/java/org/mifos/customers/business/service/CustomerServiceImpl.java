@@ -1223,7 +1223,8 @@ public class CustomerServiceImpl implements CustomerService {
             AccountBO glim = activeLoanAccounts.get(i);
             if (glim.getAccountState().isLoanClosedObligationsMet() || 
                     glim.getAccountState().isLoanClosedWrittenOff() ||
-                    glim.getAccountState().isLoanClosedReschedule()) {
+                    glim.getAccountState().isLoanClosedReschedule() ||
+                    glim.getAccountState().isLoanCanceled()) {
                 activeLoanAccounts.remove(i);
             }
         }
