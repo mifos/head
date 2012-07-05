@@ -440,9 +440,10 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
 
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         List<Holiday> holidays = new ArrayList<Holiday>();
-        center.getCustomerAccount().handleChangeInMeetingSchedule(workingDays, holidays);
-        accountBO.handleChangeInMeetingSchedule(workingDays, holidays);
-        savingsBO.handleChangeInMeetingSchedule(workingDays, holidays);
+        boolean isTopOfHierarchy = center.isTopOfHierarchy();
+        center.getCustomerAccount().handleChangeInMeetingSchedule(workingDays, holidays, isTopOfHierarchy);
+        accountBO.handleChangeInMeetingSchedule(workingDays, holidays, isTopOfHierarchy);
+        savingsBO.handleChangeInMeetingSchedule(workingDays, holidays, isTopOfHierarchy);
 
         StaticHibernateUtil.flushSession();
     }

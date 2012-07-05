@@ -77,6 +77,7 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameter
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
@@ -1508,4 +1509,58 @@ public class ClientTest extends UiTestCaseBase {
         //Then
         clientPage.verifyGroupMembership(destinationGroupName);
     }
+    
+    @Test(enabled=true)
+    public void verifyCustomerScheduleAfterMovingClientToGroupWithDifferentMeetingFrequency(){
+	    //Given
+	    String startGroupName = "GroupWeekly";
+	    String destinationGroupName = "MonthlyGroup";
+	    String clientName = "DoeTest2";
+	
+	    //define declining balance monthly loan product
+	    DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
+	    navigationHelper.navigateToAdminPage().
+	    defineLoanProduct(formParameters);
+	          
+	    //client
+	    CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = clientParams();
+	    clientParams.setFirstName("John");
+	    clientParams.setLastName(clientName);
+    	ClientViewDetailsPage clientPage = clientTestHelper.createNewClient(startGroupName, clientParams);
+    	clientTestHelper.changeCustomerStatus(clientPage, ClientStatus.ACTIVE);
+    	
+    	
+    	//When
+    	CreateLoanAccountSearchParameters loanFormParameters = new CreateLoanAccountSearchParameters();
+        loanFormParameters.setSearchString(clientName);
+        loanFormParameters.setLoanProduct("productMonthly*");
+    	
+    	clientPage.navigateToEditRemoveGroupMembership()
+    		.searchGroup(destinationGroupName)
+    		.selectGroupToAdd(destinationGroupName)
+    		.submitAddGroup()
+    		.navigateToClientsAndAccountsPageUsingHeaderTab()
+    		.navigateToCreateLoanAccountUsingLeftMenu()
+    		.searchAndNavigateToCreateLoanAccountPage(loanFormParameters);
+   
+        
+    	//Then
+        //get current month
+        int currentMonth = targetTime.getMonthOfYear();
+        
+        //get disbursement month
+        int disbursementMonth = Integer.parseInt(selenium.getValue(
+        		"id=disbursementDateMM"));
+
+        //disbursement date should be set to next month
+        //check if its a last month
+        if(currentMonth == 12) {
+        	currentMonth = 1;
+        }
+        else {
+        	currentMonth++;
+        }
+        
+        Assert.assertEquals(currentMonth, disbursementMonth);
+    	}
 }
