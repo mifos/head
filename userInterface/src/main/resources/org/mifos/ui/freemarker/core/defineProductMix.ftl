@@ -18,8 +18,7 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
-[@layout.header "title" /]
-[@widget.topNavigationNoSecurity currentTab="Admin" /]
+
 <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="pages/js/singleitem.js"></script>
 <script type="text/javascript">
@@ -76,7 +75,8 @@ function selectAllOptions(outSel)
     }
 }
 </script>
-
+[@layout.header "title" /]
+[@widget.topNavigationNoSecurity currentTab="Admin" /]
   <div class="container">&nbsp;
   <!--  Main Content Begins-->
   <span id="page.id" title="createProductsMix"></span>
