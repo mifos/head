@@ -85,10 +85,10 @@ public class NewFundPreviewController {
                 this.fundServiceFacade.createFund(fundDto);
                 status.setComplete();
             } catch(org.mifos.service.BusinessRuleException e){
-                ObjectError error = new ObjectError("formBean", new String[] { e.getMessageKey() }, new Object[] {},  new String("There is another fund named: " + formBean.getName()));
+                ObjectError error = new ObjectError("formBean", new String[] { e.getMessageKey() }, new Object[] {},  "default: ");
                 result.addError(error);
                 mav.setViewName("newFundPreview");
-                mav.addObject("formBean", formBean);
+                mav.addObject("formBean", formBean);    
             }
             
             
