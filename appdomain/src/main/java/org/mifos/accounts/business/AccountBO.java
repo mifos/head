@@ -1141,7 +1141,12 @@ public class AccountBO extends AbstractBusinessObject {
                 // must be >= creation date for other accounts
                 return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(this.getCreatedDate())) >= 0;
             } else if (meetingDate != null) {
-                    return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(meetingDate)) >= 0;
+                if (this instanceof LoanBO) {
+                    Date startDate = (this.getAccountApprovalDate() != null ? this.getAccountApprovalDate() : this.getCreatedDate());
+                    return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(startDate)) >= 0 &&
+                        trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(meetingDate)) >= 0;
+                }
+                return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(meetingDate)) >= 0;
             }
             return false;
     }
@@ -1157,14 +1162,14 @@ public class AccountBO extends AbstractBusinessObject {
         return true;
     }
 
-    public boolean isTrxnDateValid(final Date trxnDate, Date lastCustomerMeetingDate, boolean repaymentIndependentOfMeetingEnabled) {
+    public boolean isTrxnDateValid(final Date trxnDate, Date meetingDate, boolean repaymentIndependentOfMeetingEnabled) {
         boolean isTrxnDateAfterMonthClosingDay = true;
     	
     	if (getConfigurationPersistence().isMonthClosingDaySet()){
         	isTrxnDateAfterMonthClosingDay = isTrxnDateAfterMonthClosingDate(trxnDate);
         }
     	if (AccountingRules.isBackDatedTxnAllowed()) {
-            return isTrxnDateAfterMonthClosingDay && isTrxnDateBeforePreviousMeetingDateAllowed(trxnDate, lastCustomerMeetingDate, repaymentIndependentOfMeetingEnabled);
+            return isTrxnDateAfterMonthClosingDay && isTrxnDateBeforePreviousMeetingDateAllowed(trxnDate, meetingDate, repaymentIndependentOfMeetingEnabled);
         }
         return isTrxnDateAfterMonthClosingDay && trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
     }

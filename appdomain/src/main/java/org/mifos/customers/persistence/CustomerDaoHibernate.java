@@ -223,6 +223,15 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
+    public Date getFirstMeetingDateForCustomer(Integer customerId) {
+        Date meetingDate = null;
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CUSTOMER_ID", customerId);
+        meetingDate = (Date) genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_FIRST_MEETINGDATE_FOR_CUSTOMER, queryParameters);
+        return meetingDate;
+    }
+
+    @Override
     public List<FeeBO> retrieveFeesApplicableToGroups() {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(FeeCategory.ALLCUSTOMERS.toString(), FeeCategory.ALLCUSTOMERS.getValue());
