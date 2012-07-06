@@ -27,6 +27,7 @@ import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
+import org.mifos.service.BusinessRuleException;
 
 @Controller
 @RequestMapping("/newFundPreview")
@@ -81,8 +83,15 @@ public class NewFundPreviewController {
             fundDto.setCode(codeDto);
             fundDto.setId(formBean.getId());
             fundDto.setName(formBean.getName());
-            this.fundServiceFacade.createFund(fundDto);
-            status.setComplete();
+            try{
+                this.fundServiceFacade.createFund(fundDto);
+                status.setComplete();
+            } catch(BusinessRuleException e){
+                ObjectError error = new ObjectError("formBean", new String[] { e.getMessageKey() }, new Object[] {},  "default: ");
+                result.addError(error);
+                mav.setViewName("newFundPreview");
+                mav.addObject("formBean", formBean);
+            }
         }
         return mav;
     }
