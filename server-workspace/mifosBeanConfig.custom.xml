@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    <bean id = "financialRules"
+       class="org.mifos.accounts.financial.util.helpers.FinancialRules"
+       abstract="false" factory-method="getInstance">
+       <property name="actionToDebitAccount">
+           <map>
+               <entry key="PRINCIPALPOSTING" value="5301"/>
+               <entry key="INTERESTPOSTING" value="5301"/>
+               <entry key="FEEPOSTING" value="7132"/>
+               <entry key="PENALTYPOSTING" value="5301"/>
+               <entry key="ROUNDING" value="788"/>
+               <entry key="MANDATORYDEPOSIT" value="10000"/>
+               <entry key="VOLUNTARYDEPOSIT" value="10000"/>
+               <entry key="MANDATORYWITHDRAWAL" value="20000"/>
+               <entry key="VOLUNTARYWITHDRAWAL" value="20000"/>
+               <entry key="SAVINGS_INTERESTPOSTING" value="40000"/>
+               <entry key="DISBURSAL" value="5301"/>
+               <entry key="MISCFEEPOSTING" value="7132"/>
+               <entry key="MISCPENALTYPOSTING" value="7133"/>
+               <entry key="CUSTOMERACCOUNTMISCFEESPOSTING" value="7132"/>
+               <entry key="MANDATORYDEPOSIT_ADJUSTMENT" value="20000"/>
+               <entry key="VOLUNTARYDEPOSIT_ADJUSTMENT" value="20000"/>
+               <entry key="MANDATORYWITHDRAWAL_ADJUSTMENT" value="20000"/>
+               <entry key="VOLUNTARYWITHDRAWAL_ADJUSTMENT" value="20000"/>
+               <entry key="WRITEOFF" value="6612"/>
+               <entry key="RESCHEDULE" value="5301"/>
+           </map>
+       </property>
+       <property name="actionToCreditAccount">
+           <map>
+               <entry key="PRINCIPALPOSTING" value="5301"/>
+               <entry key="INTERESTPOSTING" value="7131"/>
+               <entry key="FEEPOSTING" value="7132"/>
+               <entry key="PENALTYPOSTING" value="7133"/>
+               <entry key="ROUNDING" value="788"/>
+               <entry key="MANDATORYDEPOSIT" value="20000"/>
+               <entry key="VOLUNTARYDEPOSIT" value="20000"/>
+               <entry key="MANDATORYWITHDRAWAL" value="10000"/>
+               <entry key="VOLUNTARYWITHDRAWAL" value="10000"/>
+               <entry key="SAVINGS_INTERESTPOSTING" value="20000"/>
+               <entry key="DISBURSAL" value="5301"/>
+               <entry key="MISCFEEPOSTING" value="7132"/>
+               <entry key="MISCPENALTYPOSTING" value="7133"/>
+               <entry key="CUSTOMERACCOUNTMISCFEESPOSTING" value="7132"/>
+               <entry key="MANDATORYDEPOSIT_ADJUSTMENT" value="10000"/> 
+               <entry key="VOLUNTARYDEPOSIT_ADJUSTMENT" value="10000"/>
+               <entry key="MANDATORYWITHDRAWAL_ADJUSTMENT" value="20000"/>
+               <entry key="VOLUNTARYWITHDRAWAL_ADJUSTMENT" value="20000"/>
+               <entry key="WRITEOFF" value="6612"/>
+               <entry key="RESCHEDULE" value="5301"/>
+           </map>
+       </property>
+   </bean>
+</beans>
+

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (c) 2005-2008 Grameen Foundation USA
+    1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+    All rights reserved.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+    implied. See the License for the specific language governing
+    permissions and limitations under the License.
+
+    See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+    explanation of the license and how it is applied.
+  -->
+
+<!--
+    Chart of Accounts XML configuration. The filename starts with "mifos" so
+    this file can be easily differentiated from other files on the CLASSPATH
+    when Class.getResource() (or something similiar) is used to search for
+    this file.  
+
+    "code" attributes refer to general ledger account codes. This attribute can
+    contain numbers and letters.
+
+    "name" refers to the general ledger account name. This attribute can
+    contain numbers and letters.
+
+    code/name combinations must be unique or Mifos will not initialize.
+
+    Once this file is set and Mifos is deployed, only the name attributes may be
+    changed.
+
+    Leading and trailing whitespace will be trimmed.
+
+    See mifosChartOfAccounts.xsd for XML validation details.
+  -->
+<configuration>
+  <ChartOfAccounts>
+    <GLAssetsAccount code="10000" name="ASSETS">
+      <GLAccount code="5" name="Cash and bank balances">
+        <GLAccount code="53" name="Cash">
+	  <GLAccount code="5301" name="General Cash">
+            <GLAccount code="5301001" name="Cash LL" />
+            <GLAccount code="5301002" name="Cash USD" />
+          </GLAccount>
+	</GLAccount>
+        <GLAccount code="5121" name="Bank accounts">
+
+          <GLAccount code="51211" name="Fransabank">
+	    <GLAccount code="5121101" name="Fransabank Loan Capital USD" />
+	    <GLAccount code="5121102" name="Fransabank Loan Capital LBP" />
+	  </GLAccount>
+
+          <GLAccount code="51214" name="Audi">
+	    <GLAccount code="51214101" name="Audi Loan Capital USD" />
+	    <GLAccount code="51214102" name="Audi Loan Capital LBP" />
+	  </GLAccount>
+
+          <GLAccount code="51215" name="BSL">
+	    <GLAccount code="51215001" name="BSL Loan Capital USD" />
+	  </GLAccount>
+
+          <GLAccount code="51216" name="Lebanese Canadian Bank">
+	    <GLAccount code="51216001" name="Lebanese Canadian Bank Loan Capital USD" />
+	    <GLAccount code="51216002" name="Lebanese Canadian Labwe Loan Capital USD" />
+	  </GLAccount>
+
+          <GLAccount code="51217" name="BBAC">
+	    <GLAccount code="51217001" name="BBAC Loan Capital USD" />		
+	  </GLAccount>
+
+        </GLAccount>
+      </GLAccount>
+      <GLAccount code="411" name="Client Loan Portfolio" />
+      <GLAccount code="655" name="Loan Loss Provisions" />
+      <GLAccount code="6612" name="Write-offs" />
+      
+    </GLAssetsAccount>
+
+    <GLLiabilitiesAccount code="20000" name="LIABILITIES">
+    </GLLiabilitiesAccount>
+
+    <GLIncomeAccount code="30000" name="INCOME">
+      <GLAccount code="71" name="Operating Income">
+        <GLAccount code="7131" name="Loan Interest" />
+	<GLAccount code="7132" name="Fees Received">
+          <GLAccount code="7132000" name="Insurance Fee 5" />
+          <GLAccount code="7132001" name="Insurance Fee 10" />
+          <GLAccount code="7132002" name="Minimum Fee 30" />
+          <GLAccount code="7132003" name="Maximum Fee 60" />
+          <GLAccount code="7132004" name="Minimum Fee 13" />
+          <GLAccount code="7132005" name="Overdue Principal Fee" />
+          <GLAccount code="7132006" name="Overdue Interest Fee" />
+          <GLAccount code="7132007" name="Loan Fee 2" />
+          <GLAccount code="7132008" name="Loan Fee 2.5" />
+          <GLAccount code="7132009" name="Loan Fee 3.5" />
+          <GLAccount code="7132010" name="Overpayment Fee" />
+	  <GLAccount code="7132011" name="Maximum Fee 100" />
+	  <GLAccount code="7132012" name="Takafol USD" />
+	  <GLAccount code="7132013" name="Takafol LBP" />
+	  <GLAccount code="7132014" name="Collection Fee LBP" />
+	  <GLAccount code="7132015" name="Collection Fee USD" />
+	  <GLAccount code="7132016" name="Additional Collection Fee LBP" />
+	  <GLAccount code="7132017" name="Additional Collection Fee USD" />
+	  <GLAccount code="7132018" name="Overdue Principal Fee LBP" />
+          <GLAccount code="7132019" name="Overdue Interest Fee LBP" />
+	  <GLAccount code="7132020" name="test" />
+	</GLAccount>
+	<GLAccount code="7133" name="Penalties Received" />
+      </GLAccount>
+      <GLAccount code="788" name="Rounding" />
+    </GLIncomeAccount>
+
+    <GLExpenditureAccount code="40000" name="EXPENDITURE">
+    </GLExpenditureAccount>
+
+  </ChartOfAccounts>
+</configuration>
+
