@@ -46,11 +46,13 @@
                     [/#if]
                     [#list questionGroupInstanceDetail.questionGroupDetail.sectionDetails as sectionDetail]
                     <span class="paddingleft10 fontnormalbold">${sectionDetail.name}</span>
-                    <ol>
+                     <table id="fixTableId">
                         [#list sectionDetail.questions as sectionQuestionDetail]
-                        <li style='background-color: ${((sectionQuestionDetail_index % 2)==0)?string("#F2F2F2", "#FFFFFF")}'>
-                            <label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
-                            ${sectionQuestionDetail.text}:</label>[#if sectionQuestionDetail.multiSelectQuestion && sectionQuestionDetail.values?size > 1]
+                        <tr style='background-color: ${((sectionQuestionDetail_index % 2)==0)?string("#F2F2F2", "#FFFFFF")}'>
+                            <td><label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
+                            ${sectionQuestionDetail.text}:</label></td>
+                            [#if sectionQuestionDetail.multiSelectQuestion && sectionQuestionDetail.values?size > 1]
+                            <td>
                         <ol>
                             [#list sectionQuestionDetail.values as answer]
                             <li>
@@ -58,12 +60,15 @@
                             </li>
                             [/#list]
                         </ol>
+                        </td>
                         [#else]
+                        	<td>
                             ${sectionQuestionDetail.answer}
+                            </td>
                         [/#if]
-                        </li>
+                        </tr>
                         [/#list]
-                    </ol>
+                    </table>
                     [/#list]
                 </fieldset>
                 [/#list]
