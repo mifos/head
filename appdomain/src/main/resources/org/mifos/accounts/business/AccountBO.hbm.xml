@@ -479,11 +479,11 @@
                 join customer c on c.customer_id = a.customer_id
                 where c.status_id in (3,9,13)
                 and a.account_state_id = 11
-                and (select max(cs.installment_id) from customer_schedule cs
+                and (select ifnull(max(cs.installment_id), 0) from customer_schedule cs
                     where cs.account_id = a.account_id
                     and cs.action_date <= date(:DATE)) + 4 >
 
-                    (select max(cs2.installment_id) from customer_schedule cs2
+                    (select ifnull(max(cs2.installment_id), 0) from customer_schedule cs2
                     where cs2.account_id = a.account_id)
             ]]>
     </sql-query>
