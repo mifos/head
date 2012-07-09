@@ -390,4 +390,59 @@ public class PersonnelTest extends UiTestCaseBase {
 
         return homePage;
     }
+    
+    /**
+     * This test checks if user permissions are refreshed properly
+     * 
+     * We create new user with Admin role
+     * we log as this user and remove Admin rights
+     * Then we check if we are allowed to define new fees
+     * If error occurs then test passed 
+     */
+	@Test(enabled=true)
+	public void userPermissionRefreshingTest() {
+		//Given
+		//center
+		String officeName = "branch1";
+		
+		//new system user with Admin permissions
+		String userName = "jtest1";
+		String password = "jtest123";
+		String userFirstName = "John";
+		String userLastName = "Tester1";
+		String adminRole = "Admin";
+		
+		CreateUserParameters userParameters = new CreateUserParameters();
+		userParameters.setFirstName(userFirstName);
+		userParameters.setLastName(userLastName);
+		userParameters.setUserName(userName);
+		userParameters.setPassword(password);
+		userParameters.setPasswordRepeat(password);
+		userParameters.setUserLevel(CreateUserParameters.NON_LOAN_OFFICER);
+		userParameters.setDateOfBirthDD("10");
+		userParameters.setDateOfBirthMM("10");
+		userParameters.setDateOfBirthYYYY("1970");
+		userParameters.setGender(CreateUserParameters.MALE);
+		userParameters.setRole(adminRole);
+		userHelper.createUser(userParameters, officeName);
+		
+		
+		//When
+		CreateUserParameters userParametersNewRole = new CreateUserParameters();
+		userParametersNewRole.setRole("");
+		
+		navigationHelper.navigateToHomePageAsNewUser(userName, password)
+			.navigateToAdminPage()
+			.navigateToViewSystemUsersPage()
+			.searchAndNavigateToUserViewDetailsPage(userLastName)
+			.navigateToEditUserDataPage()
+			.submitAndGotoEditUserPreviewDataPage(userParametersNewRole)
+			.submit()
+			.navigateToAdminPageUsingHeaderTab()
+			.navigateToFeesCreate();
+		
+		
+		//Then
+		Assert.assertTrue(selenium.isElementPresent("accessDeniedHeading"));
+	}
 }
