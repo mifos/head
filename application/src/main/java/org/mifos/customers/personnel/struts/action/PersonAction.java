@@ -442,6 +442,8 @@ public class PersonAction extends SearchAction {
             Name name = new Name(actionForm.getFirstName(), actionForm.getMiddleName(), actionForm.getSecondLastName(), actionForm.getLastName());
             request.setAttribute("displayName", name.getDisplayName());
             request.setAttribute("globalPersonnelNum", globalPersonnelNum);
+            
+            authenticationAuthorizationServiceFacade.reloadUserDetailsForSecurityContext(perosonnelInfo.getUserName());
 
             return mapping.findForward(ActionForwards.update_success.toString());
         } catch (BusinessRuleException e) {
