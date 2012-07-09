@@ -48,6 +48,9 @@ public interface CustomerConstants {
     short TRAINED_NO = 2;
     String TRAINED_DATE = "trainedDate";
 
+    String CLIENT_STATUS = "CLIENT_STATUS";
+    String CLIENT_STATUS_PARTIAL = "Partial Application";
+    
     short All_CATEGORY_ID = 1;
 
     /** Exceptions */
