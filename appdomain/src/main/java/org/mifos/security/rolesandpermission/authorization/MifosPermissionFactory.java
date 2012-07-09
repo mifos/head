@@ -11,7 +11,7 @@ public class MifosPermissionFactory {
     public static MifosPermission getPermissionClass(Object permissionName) {
         if (permissionName.equals(ActivityRestrictionType.MAX_LOAN_AMOUNT_FOR_APPROVE.toString())) {
             return new MaxLoanAmountForApprovePermission();
-        } else if (permissionName.equals(CustomerConstants.CLIENT_STATUS)) {
+        } else if (permissionName.equals(CustomerConstants.CLIENT_STATUS) || permissionName.equals(CustomerConstants.LOAN_OFFICER_ID)) {
             return new CustomerStatusPermission();
         }
         return null;

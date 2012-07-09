@@ -63,7 +63,6 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -556,7 +555,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     }
 
     @Override
-    public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId, String clientStatus) {
+    public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId, String clientStatus, short loanOfficerId) {
 
         ClientDropdownsDto clientDropdowns = retrieveClientDropdownData();
 
