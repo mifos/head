@@ -70,8 +70,8 @@ public interface ClientServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     ClientRulesDto retrieveClientDetailsForPreviewingEditOfPersonalInfo();
 
-    @PreAuthorize("isFullyAuthenticated() and (hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO') or (hasRole('ROLE_CREATE_CLIENT_IN_SAVE_FOR_LATER_STATE') and hasPermission(#clientStatus, 'CLIENT_STATUS')))")
-    void updateClientPersonalInfo(ClientPersonalInfoUpdate personalInfo, @SuppressWarnings("PMD") String clientStatus);
+    @PreAuthorize("isFullyAuthenticated() and (hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO') or (hasRole('ROLE_CREATE_CLIENT_IN_SAVE_FOR_LATER_STATE') and hasPermission(#clientStatus, 'CLIENT_STATUS') and hasPermission(#loanOfficerId, 'LOAN_OFFICER_ID')))")
+    void updateClientPersonalInfo(ClientPersonalInfoUpdate personalInfo, @SuppressWarnings("PMD") String clientStatus, @SuppressWarnings("PMD") short loanOfficerId);
 
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO')")
