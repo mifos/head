@@ -25,9 +25,12 @@ public interface ImportLoansSavingsFacade {
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_CLIENTS')")
     ParsedLoansDto createLoansDtoFromSingleError(String error);
     
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_CLIENTS')")
     ParsedSavingsDto parseImportSavings(InputStream stream);
     
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_CLIENTS')")
     ParsedSavingsDto saveSavings(ParsedSavingsDto parsedSavingsDto);
-
+    
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_CLIENTS')")
     ParsedSavingsDto createSavingsDtoFromSingleError(String error);
 }

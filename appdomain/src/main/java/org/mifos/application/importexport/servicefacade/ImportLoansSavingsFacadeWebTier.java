@@ -8,18 +8,24 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.importexport.xls.XlsClientsImporter;
 import org.mifos.application.importexport.xls.XlsLoansAccountImporter;
+import org.mifos.application.importexport.xls.XlsSavingsAccountImporter;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
+import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
 import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.dto.domain.CreateAccountPenaltyDto;
 import org.mifos.dto.domain.ImportedClientDetail;
 import org.mifos.dto.domain.ImportedLoanDetail;
+import org.mifos.dto.domain.ImportedSavingDetail;
 import org.mifos.dto.domain.ParsedLoansDto;
+import org.mifos.dto.domain.ParsedSavingsDto;
+import org.mifos.dto.domain.SavingsAccountCreationDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
@@ -35,14 +41,18 @@ public class ImportLoansSavingsFacadeWebTier implements
     private XlsLoansAccountImporter xlsLoansAccount;
     private PersonnelServiceFacade personelServiceFacade;
     private LoanAccountServiceFacade loanAccountServiceFacade;
+    private XlsSavingsAccountImporter xlsSavingsAccount;
+    private SavingsServiceFacade savingServiceFacade;
     
 
     @Autowired
     public ImportLoansSavingsFacadeWebTier(XlsLoansAccountImporter xlsLoansAccount, PersonnelServiceFacade personelServiceFacade,
-            LoanAccountServiceFacade loanAccountServiceFacade) {
+            LoanAccountServiceFacade loanAccountServiceFacade, XlsSavingsAccountImporter xlsSavingsAccount, SavingsServiceFacade savingServiceFacade) {
         this.xlsLoansAccount=xlsLoansAccount;
         this.personelServiceFacade=personelServiceFacade;
         this.loanAccountServiceFacade=loanAccountServiceFacade;
+        this.xlsSavingsAccount = xlsSavingsAccount;
+        this.savingServiceFacade = savingServiceFacade;
     }
 
     @Override
@@ -81,5 +91,34 @@ public class ImportLoansSavingsFacadeWebTier implements
         parseErrors.add(error);
         return new ParsedLoansDto(parseErrors, parsedRows);
     }
+
+	@Override
+	public ParsedSavingsDto parseImportSavings(InputStream stream) {
+		xlsSavingsAccount.setLocale(personelServiceFacade.getUserPreferredLocale());
+        ParsedSavingsDto savingDto=xlsSavingsAccount.parse(stream);
+        return savingDto;
+	}
+
+	@Override
+	public ParsedSavingsDto saveSavings(ParsedSavingsDto parsedSavingsDto) {
+	    List<QuestionGroupDetail> questionGroupDetails=new ArrayList<QuestionGroupDetail>();
+	    for(ImportedSavingDetail detail : parsedSavingsDto.getSuccessfullyParsedRows()){
+	    SavingsAccountCreationDto savingsAccountCreation = new SavingsAccountCreationDto(
+             detail.getPrdOfferingId().intValue(), detail.getCustomerId(), detail.getStatus(), detail.getSavingsAmount().toString());
+        
+        Long savingsId = savingServiceFacade.createSavingsAccount(savingsAccountCreation, questionGroupDetails);
+        System.out.println(savingsId);
+
+	    }
+        return null;
+	}
+
+	@Override
+	public ParsedSavingsDto createSavingsDtoFromSingleError(String error) {
+	    List<ImportedSavingDetail> parsedRows = new ArrayList<ImportedSavingDetail>();
+        List<String> parseErrors = new ArrayList<String>();
+        parseErrors.add(error);
+        return new ParsedSavingsDto(parseErrors, parsedRows);
+	}
 
 }
