@@ -1035,18 +1035,39 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         if (isBackdatedLoan) {
             loan.markAsCreatedWithBackdatedPayments();
         }
-
+        //set up predefined loan account for importing loans
+        if(loanAccountInfo.getPredefinedAccountNumber()!=null){
+            loan.setGlobalAccountNum(loanAccountInfo.getPredefinedAccountNumber());
+        }
         try {
             transactionHelper.startTransaction();
             this.loanDao.save(loan);
             transactionHelper.flushSession();
-            try {
-                loan.setGlobalAccountNum(loan.generateId(userOffice.getGlobalOfficeNum()));
-            } catch (AccountException e) {
-                throw new BusinessRuleException(e.getMessage());
+            //no predefined account number, generate one instead
+            if(loanAccountInfo.getPredefinedAccountNumber()==null){
+                try {
+                    loan.setGlobalAccountNum(loan.generateId(userOffice.getGlobalOfficeNum()));
+                } catch (AccountException e) {
+                    throw new BusinessRuleException(e.getMessage());
+                }
+                this.loanDao.save(loan);
+                transactionHelper.flushSession();
             }
-            this.loanDao.save(loan);
-            transactionHelper.flushSession();
+            //set up status flag
+            AccountStateFlagEntity flagEntity=null;
+            if(loanAccountInfo.getFlagId()!=null){
+                try {
+                    flagEntity=legacyMasterDao.getPersistentObject(AccountStateFlagEntity.class, loanAccountInfo.getFlagId());
+                    loan.setUserContext(userContext);
+                    loan.setFlag(flagEntity);
+                    loan.setClosedDate(new DateTimeService().getCurrentJavaDateTime());
+                    loan.setUserContext(userContext);
+                } catch (PersistenceException e) {
+                    throw new BusinessRuleException(e.getMessage());
+                }
+                this.loanDao.save(loan);
+                transactionHelper.flushSession();
+            }
 
             // for GLIM loans only
             List<GroupMemberLoanDetail> individualMembersOfGroupLoan = new ArrayList<GroupMemberLoanDetail>();
@@ -2903,4 +2924,5 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             throw new MifosRuntimeException(e);
         }
     }
+
 }

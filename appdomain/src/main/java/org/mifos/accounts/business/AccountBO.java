@@ -417,7 +417,7 @@ public class AccountBO extends AbstractBusinessObject {
         this.personnel = personnel;
     }
 
-    protected void setClosedDate(final Date closedDate) {
+    public void setClosedDate(final Date closedDate) {
         this.closedDate = (Date) (closedDate == null ? null : closedDate.clone());
     }
 
@@ -1750,7 +1750,7 @@ public class AccountBO extends AbstractBusinessObject {
         }
     }
 
-    private void setFlag(final AccountStateFlagEntity accountStateFlagEntity) {
+    public void setFlag(final AccountStateFlagEntity accountStateFlagEntity) {
         Iterator iter = this.getAccountFlags().iterator();
         while (iter.hasNext()) {
             AccountFlagMapping currentFlag = (AccountFlagMapping) iter.next();
