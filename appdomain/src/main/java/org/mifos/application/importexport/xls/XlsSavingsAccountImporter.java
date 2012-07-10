@@ -3,11 +3,9 @@ package org.mifos.application.importexport.xls;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -17,35 +15,22 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.joda.time.LocalDate;
-import org.mifos.accounts.fund.servicefacade.FundDto;
 import org.mifos.accounts.loan.persistance.LoanDao;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.importexport.xls.XlsLoansAccountImporter.XlsParsingException;
-import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.dto.domain.ImportedLoanDetail;
 import org.mifos.dto.domain.ImportedSavingDetail;
-import org.mifos.dto.domain.ParsedLoansDto;
 import org.mifos.dto.domain.ParsedSavingsDto;
 import org.mifos.dto.domain.PrdOfferingDto;
-import org.mifos.dto.domain.SavingsAccountCreationDto;
-import org.mifos.dto.domain.ValueListElement;
-import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 
 public class XlsSavingsAccountImporter implements MessageSourceAware {
 
-    private static final String NESTED_LEVEL_IND = "--> ";
     private MessageSource messageSource;
     private Locale locale;
     private CustomerDao customerDao;
@@ -53,17 +38,14 @@ public class XlsSavingsAccountImporter implements MessageSourceAware {
     private LoanDao loanDao;
     private SavingsProductDao savingsProductDao;
 
-    private SavingsServiceFacade savingsServiceFacade;
-
     @Autowired
     public XlsSavingsAccountImporter(CustomerDao customerDao, SavingsDao savingsDao,
-            SavingsProductDao savingsProductDao, LoanDao loanDao, SavingsServiceFacade savingsServiceFacade) {
+            SavingsProductDao savingsProductDao, LoanDao loanDao) {
         super();
         this.customerDao = customerDao;
         this.savingsDao = savingsDao;
         this.savingsProductDao = savingsProductDao;
         this.loanDao = loanDao;
-        this.savingsServiceFacade = savingsServiceFacade;
     }
 
     public void setMessageSource(MessageSource messageSource) {
@@ -94,7 +76,6 @@ public class XlsSavingsAccountImporter implements MessageSourceAware {
                 XlsSavingsImportTemplateConstants currentCell = XlsSavingsImportTemplateConstants.ACCOUNT_NUMBER;
                 try {
                     String accountNumber = getCellStringValue(row, currentCell);
-                    System.out.println(accountNumber);
                     if (StringUtils.isBlank(accountNumber)) {
                         accountNumber = null;
                     } else if (!StringUtils.isBlank(accountNumber)) {
@@ -105,10 +86,7 @@ public class XlsSavingsAccountImporter implements MessageSourceAware {
                             throw new XlsParsingException(getCellError(XlsMessageConstants.DUPLICATE_GLOBAL_NUM_ERROR,
                                     row, currentCell.getValue(), params));
                         }
-                    }// all good, account is either predefined from xls document or null and will be generated
-
-                    // TODO: extract methods that can be shared between loans and savings
-                    // customer global id
+                    }
                     currentCell = XlsSavingsImportTemplateConstants.CUSTOMER_GLOBAL_ID;
                     String customerGlobalId = getCellStringValue(row, currentCell);
                     CustomerBO customerBO = null;
@@ -119,37 +97,31 @@ public class XlsSavingsAccountImporter implements MessageSourceAware {
                         throw new XlsParsingException(getCellError(XlsMessageConstants.CUSTOMER_NOT_FOUND, row,
                                 currentCell.getValue(), params));
                     }
-                    // product name
                     currentCell = XlsSavingsImportTemplateConstants.PRODUCT_NAME;
                     String productName = getCellStringValue(row, currentCell);
                     PrdOfferingDto prdOfferingDto = null;
                     prdOfferingDto = validateProductName(productName, customerBO, row, currentCell.getValue());
-                    
-                    // status name
                     currentCell = XlsSavingsImportTemplateConstants.STATUS_NAME;
                     String statusName = getCellStringValue(row, currentCell);
                     XlsLoanSavingsAccountStatesConstants statusConstant = null;
                     statusConstant = validateStatusName(statusName, customerBO, row, currentCell.getValue());
-                    // status reason flag
                     currentCell = XlsSavingsImportTemplateConstants.CANCEL_FlAG_REASON;
                     String cancelReason = getCellStringValue(row, currentCell);
                     XlsLoanSavingsFlagsConstants flagConstant = null;
-                    flagConstant = validateStatusFlagReason(cancelReason, statusName, AccountTypes.LOAN_ACCOUNT, row,
+                    flagConstant = validateStatusFlagReason(cancelReason, statusName, AccountTypes.SAVINGS_ACCOUNT, row,
                             currentCell.getValue());
 
                     currentCell = XlsSavingsImportTemplateConstants.SAVINGS_AMOUNT;
                     BigDecimal savingAmount = getCellDecimalValue(row,currentCell);
-                    
-                    // all is good, so add accepted account number to temporary list...
-                    // ...will be used for editing/adding loans with predefined account numbers
-                    if (accountNumber != null) {
-                        newAccountsNumbers.add(accountNumber);
-                    }
+                    if(savingAmount == BigDecimal.valueOf(0)){
+            			savingAmount = savingsProductDao.findBySystemId(prdOfferingDto.getGlobalPrdOfferingNum()).getRecommendedAmount().getAmount(); 
+            		}
                     currentCell = XlsSavingsImportTemplateConstants.SAVINGS_BALANCE;
                     BigDecimal savingBalance = getCellDecimalValue(row, currentCell);
                     
-                    // create final objects
-                    // TODO handle backdated payments
+                    if (accountNumber != null) {
+                        newAccountsNumbers.add(accountNumber);
+                    }
                     LocalDate date = new LocalDate();
                     Short flagValue = flagConstant == null ? null : flagConstant.getFlag().getValue();
                     ImportedSavingDetail detail = new ImportedSavingDetail(accountNumber, customerGlobalId,
@@ -175,7 +147,7 @@ public class XlsSavingsAccountImporter implements MessageSourceAware {
         return result;
     }
 
-    public Locale getLocale() {
+	public Locale getLocale() {
         return locale;
     }
 
@@ -241,12 +213,10 @@ public class XlsSavingsAccountImporter implements MessageSourceAware {
 
     private PrdOfferingDto validateProductName(String productName, CustomerBO customerBO, HSSFRow row, int currentCell)
             throws XlsParsingException {
-        // check if blank
         if (StringUtils.isBlank(productName)) {
             throw new XlsParsingException(
                     getCellError(XlsMessageConstants.MISSING_PRODUCT_NAME, row, currentCell, null));
         }
-        // check if product is definied
         List<PrdOfferingDto> products = savingsProductDao.findSavingsProductByCustomerLevel(customerBO
                 .getCustomerLevel());
         PrdOfferingDto foundProduct = null;
@@ -261,13 +231,6 @@ public class XlsSavingsAccountImporter implements MessageSourceAware {
             params.add(productName);
             throw new XlsParsingException(getCellError(XlsMessageConstants.PRODUCT_NOT_FOUND, row, currentCell, params));
         }
-        // check if installments date is synchronized with meetings
-        // boolean meetingOk = foundProduct..getLoanOfferingMeeting().getMeeting()
-        // .hasSameRecurrenceAs(customerBO.getCustomerMeetingValue());
-        // if (!meetingOk) {
-        // throw new XlsParsingException(getCellError(XlsMessageConstants.DIFFERENT_MEETING_FREQUENCY, row, currentCell,
-        // null));
-        // }
         return foundProduct;
     }
 
@@ -305,33 +268,27 @@ public class XlsSavingsAccountImporter implements MessageSourceAware {
 
     private XlsLoanSavingsAccountStatesConstants validateStatusName(String statusName, CustomerBO customerBO,
             HSSFRow row, int currentCell) throws XlsParsingException {
-        // TODO change method so it will support both loans and savings
-        // check if blank
         if (StringUtils.isBlank(statusName)) {
             throw new XlsParsingException(getCellError(XlsMessageConstants.MISSING_ACCOUNT_STATUS, row, currentCell,
                     null));
         }
-        // check if not known status
         List<XlsLoanSavingsAccountStatesConstants> states = XlsLoanSavingsAccountStatesConstants
                 .getAccountStatesForAccountType(AccountTypes.SAVINGS_ACCOUNT);
         XlsLoanSavingsAccountStatesConstants found = null;
         for (XlsLoanSavingsAccountStatesConstants accountState : states) {
-            if (accountState.getName().equalsIgnoreCase(statusName)) {
+        	if (accountState.getName().equalsIgnoreCase(statusName)) {
                 found = accountState;
                 break;
             }
         }
         if (found == null) {
-            throw new XlsParsingException(getCellError(XlsMessageConstants.LOAN_STATUS_NOT_FOUND, row, currentCell,
+            throw new XlsParsingException(getCellError(XlsMessageConstants.SAVINGS_STATUS_NOT_FOUND, row, currentCell,
                     null));
         }
-        // check if customer active
         if (!customerBO.isActive()) {
             throw new XlsParsingException(getCellError(XlsMessageConstants.CUSTOMER_FOR_LOAN_INACTIVE, row,
                     currentCell, null));
         }
-
-        // TODO more status checks for importing archival data and editing
         return found;
     }
     

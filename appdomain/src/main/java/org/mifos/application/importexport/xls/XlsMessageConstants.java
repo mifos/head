@@ -70,6 +70,7 @@ public enum XlsMessageConstants {
             CUSTOMER_FOR_LOAN_INACTIVE("admin.importexport.xls.error.customerForLoanInactive"),
             MISSING_ACCOUNT_STATUS("admin.importexport.xls.error.missingAccountStatus"),
             LOAN_STATUS_NOT_FOUND("admin.importexport.xls.error.loanStatusNotFound"),
+            SAVINGS_STATUS_NOT_FOUND("admin.importexport.xls.error.savingsStatusNotFound"),
             MISSING_STATUS_REASON("admin.importexport.xls.error.missingStatusReason"),
             DIFFERENT_MEETING_FREQUENCY("admin.importexport.xls.error.differentMeetingFrequency"),
             WRONG_STATUS_REASON("admin.importexport.xls.error.wrongStatusReason"),

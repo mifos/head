@@ -5,8 +5,6 @@ import java.util.logging.Logger;
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.admin.ImportLoansReviewPage;
-import org.mifos.test.acceptance.framework.admin.ImportLoansSaveSummaryPage;
 import org.mifos.test.acceptance.framework.admin.ImportSavingsReviewPage;
 import org.mifos.test.acceptance.framework.admin.ImportSavingsSaveSummaryPage;
 import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
@@ -58,12 +56,24 @@ public class SavingsImportTest extends UiTestCaseBase {
         } catch (AssertionError e){
             Logger.getAnonymousLogger().info("Product exists");
         }
+        arrayOfErrors = buildArrayOfErrorsForImportSavingsTest();
         String importFile=this.getClass().getResource("/ImportSavingsAccountsTest.xls").toString();
         ImportSavingsReviewPage reviewPage=adminTestHelper.loadImportSavingsFileAndSubmitForReview(importFile);
         reviewPage.validateErrors(arrayOfErrors);
         reviewPage.validateSuccesText(succesNumber);
         ImportSavingsSaveSummaryPage summaryPage= reviewPage.saveSuccessfullRows();
         summaryPage.verifySuccesString(succesNumber);
-        summaryPage.verifyErrorStroing(errorNumber);
+        summaryPage.verifyErrorString(errorNumber);
+    }
+    
+    private String[] buildArrayOfErrorsForImportSavingsTest() {
+            String[] arrayString={"Error in row 3, Column 2: Customer with global id 2 not found",
+                    "Error in row 4, Column 3: Missing product name",
+                    "Error in row 5, Column 3: Active and applicable product with name WrongProductName not found",
+                    "Error in row 6, Column 4: Missing account status name",
+                    "Error in row 7, Column 4: Saving status is incorrect"
+            };
+            
+        return arrayString;
     }
 }

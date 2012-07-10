@@ -13,24 +13,24 @@ public interface ImportLoansSavingsFacade {
      * @param stream
      * @return
      */
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_CLIENTS')")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_LOANS')")
     ParsedLoansDto parseImportLoans(InputStream stream);
     /**
      * Saves parsed loan accounts data.
      * @param parsedLoansDto
      * @return
      */
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_CLIENTS')")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_LOANS')")
     ParsedLoansDto saveLoans(ParsedLoansDto parsedLoansDto);
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_CLIENTS')")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_LOANS')")
     ParsedLoansDto createLoansDtoFromSingleError(String error);
     
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_CLIENTS')")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_SAVINGS')")
     ParsedSavingsDto parseImportSavings(InputStream stream);
     
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_CLIENTS')")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_SAVINGS')")
     ParsedSavingsDto saveSavings(ParsedSavingsDto parsedSavingsDto);
     
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_CLIENTS')")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_IMPORT_SAVINGS')")
     ParsedSavingsDto createSavingsDtoFromSingleError(String error);
 }

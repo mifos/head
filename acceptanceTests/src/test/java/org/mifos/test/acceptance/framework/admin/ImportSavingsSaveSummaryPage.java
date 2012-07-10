@@ -18,7 +18,7 @@ public class ImportSavingsSaveSummaryPage extends MifosPage {
         Assert.assertTrue(selenium.isTextPresent("Loans successfully saved: "+succesNumber+";"));
     }
 
-    public void verifyErrorStroing(String errorNumber) {
+    public void verifyErrorString(String errorNumber) {
         Assert.assertTrue(selenium.isTextPresent("Ignored rows: "+errorNumber+";"));
     }
 }
