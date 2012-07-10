@@ -63,6 +63,7 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -555,7 +556,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     }
 
     @Override
-    public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId, String clientStatus, short loanOfficerId) {
+    public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId) {
 
         ClientDropdownsDto clientDropdowns = retrieveClientDropdownData();
 
@@ -575,7 +576,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     }
 
     @Override
-    public void updateClientPersonalInfo(ClientPersonalInfoUpdate personalInfo, String clientStatus, short loanOfficerId) {
+    public void updateClientPersonalInfo(ClientPersonalInfoUpdate personalInfo) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
