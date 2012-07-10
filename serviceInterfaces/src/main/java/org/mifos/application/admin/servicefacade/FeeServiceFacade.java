@@ -41,5 +41,6 @@ public interface FeeServiceFacade {
     void updateFee(FeeUpdateRequest feeUpdateRequest);
     
     @PreAuthorize("isFullyAuthenticated()")
-    void removeFee(FeeUpdateRequest feeUpdateRequest);
+    void removeFee(FeeUpdateRequest feeUpdateRequest, boolean remove);
+
 }

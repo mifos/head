@@ -32,6 +32,6 @@ public interface FeeService {
 
     void update(FeeUpdateRequest feeUpdateRequest, UserContext userContext) throws ApplicationException;
     
-    void remove(FeeBO fee, boolean isInProducts, boolean isFeeAppliedToLoan);
+    void remove(FeeBO fee, boolean isInProducts, boolean isFeeAppliedToLoan, boolean remove);
 
 }

@@ -36,6 +36,8 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="CreateClientMfiInfo"></span>	
+		<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="pages/js/singleitem.js"></script>
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
 		<script language="javascript">
 
@@ -355,7 +357,7 @@ explanation of the license and how it is applied.
 												<mifos:mifoslabel name="client.FeeType" bundle="ClientUIResources" />
 											</td>
 											<td width="11%" class="fontnormal">
-												<mifos:select name="clientCustActionForm" property='selectedFee[${ctr2}].feeId' onchange="displayAmount('selectedFee[${ctr2}].feeId', 'selectedFee[${ctr2}].amount' )">
+												<mifos:select name="clientCustActionForm" property='selectedFee[${ctr2}].feeId' onchange="displayAmount('selectedFee[${ctr2}].feeId', 'selectedFee[${ctr2}].amount' )" styleClass="noAutoSelect">
 													<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" var="additionalFee">
 														<html-el:option value="${additionalFee.feeId}">${additionalFee.feeName}</html-el:option>
 													</c:forEach>
@@ -404,7 +406,7 @@ explanation of the license and how it is applied.
 											</fmt:message>:
 										</td>
 										<td width="73%" class="fontnormal">
-											<mifos:select name="clientCustActionForm" property="savingsOffering[${savingsCtr}]">
+											<mifos:select name="clientCustActionForm" property="savingsOffering[${savingsCtr}]" styleClass="noAutoSelect">
 												<c:forEach var="offering" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'savingsOfferingList')}" >
 													<html-el:option value="${offering.prdOfferingId}">${offering.prdOfferingName}</html-el:option>
 												</c:forEach>

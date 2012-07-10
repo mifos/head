@@ -177,6 +177,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
             formParameters.setSearchString("%");
             createLoanAccountSearchPage = createLoanAccountSearchPage.navigateToCreateLoanAccountEntryPage(formParameters);
 
+            createLoanAccountSearchPage.waitForElementToPresent("name=customerSearchResults_length");
             verify10SearchResults();
             verify25SearchResults();
             verify50SearchResults();

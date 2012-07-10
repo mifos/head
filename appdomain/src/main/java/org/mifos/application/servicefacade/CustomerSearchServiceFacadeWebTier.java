@@ -182,7 +182,13 @@ public class CustomerSearchServiceFacadeWebTier implements
             		loanAccountSearchResultDto.setClientGlobalCustNum(customerSearchDto.getCenterGlobalCustNum());
             		loanAccountSearchResultDto.setGroupName(customerSearchDto.getGroupName());
             		loanAccountSearchResultDto.setGroupGlobalCustNum(customerSearchDto.getGroupGlobalCustNum());
-        		} else {
+        		} else if( customerSearchDto.getCustomerType() == 5 ) {
+                    loanAccountSearchResultDto.setGroupName(customerSearchDto.getCenterName());
+                    loanAccountSearchResultDto.setGroupGlobalCustNum(customerSearchDto.getCenterGlobalCustNum());
+                    loanAccountSearchResultDto.setCenterName(customerSearchDto.getGroupName());
+                    loanAccountSearchResultDto.setCenterGlobalCustNum(customerSearchDto.getGroupGlobalCustNum());
+        		} 
+        		else {
             		loanAccountSearchResultDto.setClientName(customerSearchDto.getCenterName());
             		loanAccountSearchResultDto.setClientGlobalCustNum(customerSearchDto.getCenterGlobalCustNum());
             		loanAccountSearchResultDto.setGroupName(customerSearchDto.getClientName());
