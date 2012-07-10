@@ -34,7 +34,7 @@ public class ImportLoansController {
             is = file.getInputStream();
             result = importLSServiceFacade.parseImportLoans(is);
         } catch (IOException ex) {
-            result = importLSServiceFacade.createDtoFromSingleError(ex.getMessage());
+            result = importLSServiceFacade.createLoansDtoFromSingleError(ex.getMessage());
 
         } finally {
             closeStream(is);

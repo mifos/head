@@ -75,7 +75,7 @@ public class ImportLoansSavingsFacadeWebTier implements
     }
 
     @Override
-    public ParsedLoansDto createDtoFromSingleError(String error) {
+    public ParsedLoansDto createLoansDtoFromSingleError(String error) {
         List<ImportedLoanDetail> parsedRows = new ArrayList<ImportedLoanDetail>();
         List<String> parseErrors = new ArrayList<String>();
         parseErrors.add(error);
