@@ -43,7 +43,7 @@ public class ImportedLoanDetail implements Serializable{
         this.loanAmount = loanAmount;
         this.interestRate = interestRate;
         this.numberOfInstallments = numberOfInstallments;
-        this.disbursalDate = disbursalDate;
+        this.disbursalDate = (Date)disbursalDate.clone();
         this.gracePeriod = gracePeriod;
         this.sourceOfFundId=sourceOfFundId;
         this.loanPurposeId=loanPurposeId;
@@ -106,13 +106,13 @@ public class ImportedLoanDetail implements Serializable{
         this.numberOfInstallments = numberOfInstallments;
     }
     public Date getDisbursalDate() {
-        return disbursalDate;
+        return (Date)disbursalDate.clone();
     }
     public void setDisbursalDate(Date disbursalDate) {
-        this.disbursalDate = disbursalDate;
+        this.disbursalDate = (Date)disbursalDate.clone();
     }
     public Integer getGracePeriod() {
-        return gracePeriod==null ? new Integer(0) : gracePeriod;
+        return gracePeriod==null ? Integer.valueOf(0)  : gracePeriod;
     }
     public void setGracePeriod(Integer gracePeriod) {
         this.gracePeriod = gracePeriod;

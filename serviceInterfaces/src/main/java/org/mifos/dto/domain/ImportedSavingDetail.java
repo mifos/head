@@ -3,26 +3,32 @@ package org.mifos.dto.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import org.joda.time.LocalDate;
+
 public class ImportedSavingDetail implements Serializable {
 
 	private static final long serialVersionUID = -6458510092009432439L;
 
 	private String accountNumber;
-    private Integer customerId;
-    private Short prdOfferingId;
+    private String customerId;
+    private String prdOfferingId;
     private Short status;
     private Short flag;
     private BigDecimal savingsAmount;
+    private BigDecimal savingsBalance;
+    private LocalDate date;
     
     @SuppressWarnings("PMD.ExcessiveParameterList")
-    public ImportedSavingDetail(String accountNumber, Integer customerId, Short prdOfferingId, Short status,
-            Short flag, BigDecimal savingsAmount) {
+    public ImportedSavingDetail(String accountNumber, String customerId, String prdOfferingId, Short status,
+            Short flag, BigDecimal savingsAmount, BigDecimal savingsBalance, LocalDate date) {
         this.accountNumber = accountNumber;
         this.customerId = customerId;
         this.prdOfferingId = prdOfferingId;
         this.status = status;
         this.flag = flag;
         this.savingsAmount = savingsAmount;
+        this.savingsBalance = savingsBalance;
+        this.date = date;
     }
     
     public String getAccountNumber() {
@@ -33,19 +39,19 @@ public class ImportedSavingDetail implements Serializable {
         this.accountNumber = accountNumber;
     }
     
-    public Integer getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
     
-    public void setCustomerId(Integer customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
     
-    public Short getPrdOfferingId() {
+    public String getPrdOfferingId() {
         return prdOfferingId;
     }
     
-    public void setPrdOfferingId(Short prdOfferingId) {
+    public void setPrdOfferingId(String prdOfferingId) {
         this.prdOfferingId = prdOfferingId;
     }
     
@@ -72,4 +78,21 @@ public class ImportedSavingDetail implements Serializable {
     public void setSavingsAmount(BigDecimal savingsAmount) {
         this.savingsAmount = savingsAmount;
     }
+
+    public BigDecimal getSavingsBalance() {
+        return savingsBalance;
+    }
+
+    public void setSavingsBalance(BigDecimal savingsBalance) {
+        this.savingsBalance = savingsBalance;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+    
 }

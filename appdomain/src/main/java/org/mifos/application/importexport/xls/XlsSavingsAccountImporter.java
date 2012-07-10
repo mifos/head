@@ -16,6 +16,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.fund.servicefacade.FundDto;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -93,6 +94,7 @@ public class XlsSavingsAccountImporter implements MessageSourceAware {
                 XlsSavingsImportTemplateConstants currentCell = XlsSavingsImportTemplateConstants.ACCOUNT_NUMBER;
                 try {
                     String accountNumber = getCellStringValue(row, currentCell);
+                    System.out.println(accountNumber);
                     if (StringUtils.isBlank(accountNumber)) {
                         accountNumber = null;
                     } else if (!StringUtils.isBlank(accountNumber)) {
@@ -137,19 +139,21 @@ public class XlsSavingsAccountImporter implements MessageSourceAware {
 
                     currentCell = XlsSavingsImportTemplateConstants.SAVINGS_AMOUNT;
                     BigDecimal savingAmount = getCellDecimalValue(row,currentCell);
-                    validateAmount(savingAmount, prdOfferingDto,
-                            customerBO,row,currentCell.getValue());
+                    
                     // all is good, so add accepted account number to temporary list...
                     // ...will be used for editing/adding loans with predefined account numbers
                     if (accountNumber != null) {
                         newAccountsNumbers.add(accountNumber);
                     }
+                    currentCell = XlsSavingsImportTemplateConstants.SAVINGS_BALANCE;
+                    BigDecimal savingBalance = getCellDecimalValue(row, currentCell);
+                    
                     // create final objects
                     // TODO handle backdated payments
-
+                    LocalDate date = new LocalDate();
                     Short flagValue = flagConstant == null ? null : flagConstant.getFlag().getValue();
-                    ImportedSavingDetail detail = new ImportedSavingDetail(accountNumber, customerBO.getCustomerId(),
-                            prdOfferingDto.getPrdOfferingId(), statusConstant.getState().getValue(), flagValue, savingAmount);
+                    ImportedSavingDetail detail = new ImportedSavingDetail(accountNumber, customerGlobalId,
+                            prdOfferingDto.getGlobalPrdOfferingNum(), statusConstant.getState().getValue(), flagValue, savingAmount, savingBalance, date);
                     parsedSavingDetails.add(detail);
                 } catch (XlsParsingException xex) {
                     if (xex.isMultiple()) {
@@ -358,10 +362,6 @@ public class XlsSavingsAccountImporter implements MessageSourceAware {
             }
         }
         return flag;
-    }
-    
-    private void validateAmount(BigDecimal rawAmount,
-            PrdOfferingDto prdOfferingDto, CustomerBO customerBO, HSSFRow row, int currentCell) throws XlsParsingException {    
     }
     
     private BigDecimal getCellDecimalValue(HSSFRow row,

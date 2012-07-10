@@ -1,10 +1,15 @@
 package org.mifos.application.importexport.servicefacade;
 
 import java.io.InputStream;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
@@ -23,6 +28,7 @@ import org.mifos.dto.domain.CreateAccountPenaltyDto;
 import org.mifos.dto.domain.ImportedClientDetail;
 import org.mifos.dto.domain.ImportedLoanDetail;
 import org.mifos.dto.domain.ImportedSavingDetail;
+import org.mifos.dto.domain.OpeningBalanceSavingsAccount;
 import org.mifos.dto.domain.ParsedLoansDto;
 import org.mifos.dto.domain.ParsedSavingsDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
@@ -101,12 +107,14 @@ public class ImportLoansSavingsFacadeWebTier implements
 
 	@Override
 	public ParsedSavingsDto saveSavings(ParsedSavingsDto parsedSavingsDto) {
-	    List<QuestionGroupDetail> questionGroupDetails=new ArrayList<QuestionGroupDetail>();
 	    for(ImportedSavingDetail detail : parsedSavingsDto.getSuccessfullyParsedRows()){
-	    SavingsAccountCreationDto savingsAccountCreation = new SavingsAccountCreationDto(
-             detail.getPrdOfferingId().intValue(), detail.getCustomerId(), detail.getStatus(), detail.getSavingsAmount().toString());
+	        OpeningBalanceSavingsAccount openingBalanceSavingsAccount = 
+	                new OpeningBalanceSavingsAccount(detail.getCustomerId(), 
+	                        detail.getPrdOfferingId(), detail.getStatus(), detail.getSavingsAmount().toString(), 
+	                        detail.getSavingsBalance().toString(), detail.getDate(), detail.getAccountNumber());
+            
         
-        Long savingsId = savingServiceFacade.createSavingsAccount(savingsAccountCreation, questionGroupDetails);
+        String savingsId = savingServiceFacade.createSavingsAccount(openingBalanceSavingsAccount);
         System.out.println(savingsId);
 
 	    }
