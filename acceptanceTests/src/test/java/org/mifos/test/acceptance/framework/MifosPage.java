@@ -112,6 +112,15 @@ public class MifosPage extends AbstractPage {
     }
 
     @SuppressWarnings("PMD.OnlyOneReturn")
+    public boolean isAccessDeniedDisplayed(){
+    	String accessDenied = selenium.getText("id=\"accessDeniedHeading\"");
+    	if(isEmpty(accessDenied)){
+    		return false;
+    	}
+    	return true;
+    }
+    
+    @SuppressWarnings("PMD.OnlyOneReturn")
     public boolean isErrorMessageDisplayed() {
         // the error message span id is always <page_id>.error.message so
         // using a wildcard we check to see if that span has text or not.
