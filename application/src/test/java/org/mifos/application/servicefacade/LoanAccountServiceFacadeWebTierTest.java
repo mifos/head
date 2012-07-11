@@ -70,6 +70,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
+import org.mifos.dto.domain.PaymentDto;
 import org.mifos.dto.domain.SavingsAccountDetailDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.screen.RepayLoanDto;
@@ -158,6 +159,9 @@ public class LoanAccountServiceFacadeWebTierTest {
 
     @Mock
     private SavingsAccountDetailDto savingsAccountDetailDto;
+    
+    @Mock
+    private PaymentDto withdrawal;
 
     @Mock
     private HibernateTransactionHelper hibernateTransactionHelper;
@@ -183,7 +187,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
         when(loanDao.findById(0)).thenReturn(loanBO);
         java.sql.Date date = new java.sql.Date(new Date().getTime());
-        when(customerPersistence.getLastMeetingDateForCustomer(2)).thenReturn(date);
+        when(customerDao.getFirstMeetingDateForCustomer(2)).thenReturn(date);
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
         when(loanBO.getCurrency()).thenReturn(rupee);
         boolean waiveInterest = true;
@@ -211,7 +215,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
         when(loanDao.findById(0)).thenReturn(loanBO);
         final java.sql.Date date = new java.sql.Date(new Date().getTime());
-        when(customerPersistence.getLastMeetingDateForCustomer(2)).thenReturn(date);
+        when(customerDao.getFirstMeetingDateForCustomer(2)).thenReturn(date);
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
         when(loanBO.getCurrency()).thenReturn(rupee);
         boolean waiveInterest = true;
@@ -226,7 +230,9 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(savingsAccountDetailDto.getAccountId()).thenReturn(1);
         String paymentMethod = "4";
         String receiptNumber = "001";
-
+        when(savingsServiceFacade.withdraw(any(SavingsWithdrawalDto.class), eq(true))).thenReturn(withdrawal);
+        when(withdrawal.getPaymentId()).thenReturn(1);
+        
         loanAccountServiceFacade.makeEarlyRepaymentFromSavings(new RepayLoanInfoDto("1", "100", receiptNumber, date,
                 paymentMethod, (short) 1, waiveInterest, date,BigDecimal.TEN,BigDecimal.ZERO), savingsAccGlobalNum);
 
@@ -247,7 +253,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         assertEquals(withdrawal.getValue().getPreferredLocale(), userContext.getPreferredLocale());
 
         verify(loanBO).makeEarlyRepayment(new Money(rupee, "100"), date, receiptNumber, date,
-                paymentMethod, (short) 1, waiveInterest, new Money(rupee, BigDecimal.ZERO));
+                paymentMethod, (short) 1, waiveInterest, new Money(rupee, BigDecimal.ZERO), 1);
     }
 
     @Test
@@ -266,7 +272,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanBO.getDetailsOfNextInstallment()).thenReturn(loanScheduleEntity);
         java.sql.Date date = mock(java.sql.Date.class);
         when(loanBO.isTrxnDateValid(date, date, false)).thenReturn(true);
-        when(customerPersistence.getLastMeetingDateForCustomer(2)).thenReturn(date);
+        when(customerDao.getFirstMeetingDateForCustomer(2)).thenReturn(date);
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
         String paymentMethod = "Cash";
         String receiptNumber = "001";
@@ -286,7 +292,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanDao.findById(0)).thenReturn(loanBO);
         boolean actualWaiveInterestValue = false;
         java.sql.Date date = mock(java.sql.Date.class);
-        when(customerPersistence.getLastMeetingDateForCustomer(2)).thenReturn(date);
+        when(customerDao.getFirstMeetingDateForCustomer(2)).thenReturn(date);
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
         when(loanBO.isInterestWaived()).thenReturn(actualWaiveInterestValue);
         when(loanBO.getOfficeId()).thenReturn((short)1);

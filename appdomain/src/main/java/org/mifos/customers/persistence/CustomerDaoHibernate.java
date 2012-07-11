@@ -223,6 +223,15 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
+    public Date getFirstMeetingDateForCustomer(Integer customerId) {
+        Date meetingDate = null;
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CUSTOMER_ID", customerId);
+        meetingDate = (Date) genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_FIRST_MEETINGDATE_FOR_CUSTOMER, queryParameters);
+        return meetingDate;
+    }
+
+    @Override
     public List<FeeBO> retrieveFeesApplicableToGroups() {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(FeeCategory.ALLCUSTOMERS.toString(), FeeCategory.ALLCUSTOMERS.getValue());
@@ -870,7 +879,8 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("customerId", customerId);
         queryParameters.put("clientStatus", customerStatus.getValue());
         List queryResult = this.genericDao.executeNamedQuery(queryName, queryParameters);
-        return ((Long) queryResult.get(0)).intValue() > 0;
+        int queryResultValue = ((Long) queryResult.get(0)).intValue();
+        return (customerId > 0 ? queryResultValue > 0 : queryResultValue > 1);
     }
 
     @SuppressWarnings("unchecked")

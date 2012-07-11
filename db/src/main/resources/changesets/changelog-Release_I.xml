@@ -383,4 +383,25 @@
 	    	</sql>
     	</rollback>
     </changeSet>
+    <changeSet id="MIFOS-5674_1" author="Michal Dudzinski" context="contraction">
+       	<sql endDelimiter=";">
+   				UPDATE account a INNER JOIN loan_account la ON a.account_id = la.account_id INNER JOIN account pa ON la.parent_account_id = pa.account_id SET a.account_state_id = ( CASE WHEN pa.account_state_id = 5 OR pa.account_state_id = 9 THEN pa.account_state_id ELSE a.account_state_id END ) WHERE la.parent_account_id IS NOT NULL; 
+    	</sql>
+    	<rollback>
+    	</rollback>
+    </changeSet>
+        <changeSet id="MIFOS-5695_1" author="Kamil Kalfas" context="contraction">
+       	<sql endDelimiter=";">
+   				UPDATE account a INNER JOIN loan_account la ON a.account_id = la.account_id INNER JOIN account pa ON la.parent_account_id = pa.account_id SET a.account_state_id = ( CASE WHEN pa.account_state_id = 6 THEN pa.account_state_id ELSE a.account_state_id END ) WHERE la.parent_account_id IS NOT NULL; 
+    	</sql>
+    	<rollback>
+    	</rollback>
+    </changeSet>
+    <changeSet id="MIFOS-5695_2" author="Kamil Kalfas" context="contraction">
+       	<sql endDelimiter=";">
+   				UPDATE account a INNER JOIN loan_account la ON a.account_id = la.account_id INNER JOIN account pa ON la.parent_account_id = pa.account_id SET a.account_state_id = ( CASE WHEN pa.account_state_id = 7 OR pa.account_state_id = 8 OR pa.account_state_id = 10 THEN pa.account_state_id ELSE a.account_state_id END ) WHERE la.parent_account_id IS NOT NULL; 
+    	</sql>
+    	<rollback>
+    	</rollback>
+    </changeSet>
 </databaseChangeLog>

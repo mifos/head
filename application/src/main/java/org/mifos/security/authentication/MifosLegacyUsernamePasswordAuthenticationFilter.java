@@ -194,7 +194,9 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
 
             request.setAttribute(Constants.USERCONTEXT, userContext);
             request.getSession(false).setAttribute(Constants.USERCONTEXT, userContext);
-
+            request.removeAttribute("CURRENT_LOCALE_ID");
+            request.setAttribute("CURRENT_LOCALE_ID", localeId);
+            
             if (loginActivity.isPasswordChanged()) {
                 HttpSession hs = request.getSession(false);
                 hs.setAttribute(Constants.USERCONTEXT, userContext);
