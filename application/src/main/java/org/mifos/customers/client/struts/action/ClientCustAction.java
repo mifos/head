@@ -595,9 +595,9 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         ClientBO clientFromSession = getClientFromSession(request);
         final String clientSystemId = clientFromSession.getGlobalCustNum();
         ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
-
+        short loanOfficerId = client.getCreatedBy();
         String clientStatus = client.getCustomerStatus().getName();
-        ClientPersonalInfoDto personalInfo = this.clientServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId, clientStatus);
+        ClientPersonalInfoDto personalInfo = this.clientServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId, clientStatus, loanOfficerId);
         
         SessionUtils.setCollectionAttribute(ClientConstants.SALUTATION_ENTITY, personalInfo.getClientDropdowns().getSalutations(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, personalInfo.getClientDropdowns().getGenders(), request);
@@ -735,10 +735,10 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         Integer customerId = clientInSession.getCustomerId();
         String clientStatus = clientInSession.getCustomerStatus().getName();
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-
+        short loanOfficerId = clientInSession.getCreatedBy();
         final String clientSystemId = clientInSession.getGlobalCustNum();
 
-        ClientPersonalInfoDto clientPersonalInfo = this.clientServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId, clientStatus);
+        ClientPersonalInfoDto clientPersonalInfo = this.clientServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId, clientStatus, loanOfficerId);
         
         AddressDto address = null;
         if (actionForm.getAddress() != null) {
