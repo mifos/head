@@ -636,10 +636,16 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                         <c:set target="${urlMap}" property="${loanInformationDto.officeName}" value="custSearchAction.do?method=getOfficeHomePage&officeId=${loanInformationDto.officeId}"/>
                                         <c:set target="${urlMap}" property="${loanInformationDto.customerName}" value="clientCustAction.do?method=get&globalCustNum=${loanInformationDto.globalCustNum}"/>
                                         <c:set target="${urlMap}" property="${loanInformationDto.prdOfferingName}" value="viewLoanAccountDetails.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}"/>
-							            <a id="loanaccountdetail.link.questionGroups" href="loanAccountAction.do?method=viewAndEditAdditionalInformation&creatorId=${sessionScope.UserContext.id}&entityId=${loanInformationDto.accountId}&event=Create&source=Loan&backPageUrl=${backPageUrl}">	
-							            <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
-										</a>
-							            <br/>
+                                        <c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaireMethodUrl" >
+                                            <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
+                                            <c:param name="entityId" value="${loanInformationDto.accountId}" />
+                                            <c:param name="event" value="Create" />
+                                            <c:param name="source" value="Loan" />
+                                            <c:param name="backPageUrl" value="${backPageUrl}" />
+                                        </c:url >
+                                        <a id="loanaccountdetail.link.questionGroups" href="${viewAndEditQuestionnaireMethodUrl}">
+                                            <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
+                                        </a> <br/>
                                            <c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaireForClosedLoanResponsesLinkMethodUrl" >
                                             <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
                                             <c:param name="entityId" value="${loanInformationDto.accountId}" />
