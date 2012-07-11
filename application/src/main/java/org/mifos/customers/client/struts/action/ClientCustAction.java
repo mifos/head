@@ -806,7 +806,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
                 customFields, address, clientDetail, clientNameDetails, spouseFather, picture, governmentId,
                 clientDisplayName, dateOfBirth);
 
-        this.clientServiceFacade.updateClientPersonalInfo(personalInfo, clientStatus);
+        this.clientServiceFacade.updateClientPersonalInfo(personalInfo, clientStatus, loanOfficerId);
         
         return mapping.findForward(ActionForwards.updatePersonalInfo_success.toString());
     }

@@ -575,7 +575,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     }
 
     @Override
-    public void updateClientPersonalInfo(ClientPersonalInfoUpdate personalInfo, String clientStatus) {
+    public void updateClientPersonalInfo(ClientPersonalInfoUpdate personalInfo, String clientStatus, short loanOfficerId) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
