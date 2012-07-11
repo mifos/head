@@ -556,7 +556,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     }
 
     @Override
-    public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId) {
+    public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId, String clientStatus) {
 
         ClientDropdownsDto clientDropdowns = retrieveClientDropdownData();
 
@@ -576,7 +576,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     }
 
     @Override
-    public void updateClientPersonalInfo(ClientPersonalInfoUpdate personalInfo) {
+    public void updateClientPersonalInfo(ClientPersonalInfoUpdate personalInfo, String clientStatus) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);

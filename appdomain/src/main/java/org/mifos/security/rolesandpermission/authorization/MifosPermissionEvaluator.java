@@ -41,10 +41,7 @@ public class MifosPermissionEvaluator implements PermissionEvaluator {
     }
 
     public boolean checkPermission(Authentication authentication, Object targetDomainObject, Object permissionName) throws SystemException, ApplicationException{
-        /** TODO: when Mifos will contain more permissions than one, MifosPermissionEvaluator should
-         *  use factory class to get appriopriate MifosPermission implementation for given permissionName.
-         */
-        MifosPermission permission = new MaxLoanAmountForApprovePermission();
+        MifosPermission permission = MifosPermissionFactory.getPermissionClass(permissionName);
         return permission.isAllowed(authentication, targetDomainObject);
     }
     
