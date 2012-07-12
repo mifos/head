@@ -113,7 +113,7 @@ public class MifosPage extends AbstractPage {
 
     @SuppressWarnings("PMD.OnlyOneReturn")
     public boolean isAccessDeniedDisplayed(){
-    	String accessDenied = selenium.getText("id=\"accessDeniedHeading\"");
+    	String accessDenied = selenium.getText("id=accessDeniedHeading");
     	if(isEmpty(accessDenied)){
     		return false;
     	}

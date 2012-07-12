@@ -17,11 +17,15 @@ public class CustomerStatusPermission implements MifosPermission {
     private boolean checkPermissionToEditCustomerInformation(MifosUser user, Object status)
             throws ServiceException {
         boolean isAllowed = false;
-        if (status.equals(CustomerConstants.CLIENT_STATUS_PARTIAL)) {
-            isAllowed = true;
-        } 
-        else if (((Short)status).intValue() == user.getUserId()) {
-        	isAllowed = true;
+        if(status instanceof String){
+        	if (status.equals(CustomerConstants.CLIENT_STATUS_PARTIAL)) {
+        		isAllowed = true;
+        	} 
+        }
+        else {
+        	if (((Short)status).intValue() == user.getUserId()) {
+        		isAllowed = true;
+        	}
         }
         return isAllowed;
     }
