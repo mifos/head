@@ -37,6 +37,9 @@ public class RepayLoanPage extends MifosPage {
 
     public RepayLoanConfirmationPage submitAndNavigateToRepayLoanConfirmationPage(RepayLoanParameters params) {
         selenium.select("RepayLoan.input.modeOfRepayment", "value=" + params.getModeOfRepaymentValue());
+        if(params.getModeOfRepayment()==RepayLoanParameters.TRANSFER_FROM_SAVINGS){
+            selenium.select("repayLoan.input.accountForTransfer", "value=" + params.getAccountForTransfer());
+        }
         this.typeTextIfNotEmpty("RepayLoan.input.receiptId", params.getReceiptId());
 
         this.typeTextIfNotEmpty("receiptDateDD", params.getReceiptDateDD());

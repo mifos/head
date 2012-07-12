@@ -80,7 +80,7 @@ explanation of the license and how it is applied.
 						</table>
 						<br>
                         <font class="fontnormalRedBold no-list-style">
-							<span id="Review_RepayLoan.error.message"><html-el:errors bundle="loanUIResources" />
+                            <span id="Review_RepayLoan.error.message"><html-el:errors bundle="SavingsUIResources" />
 						</font>
 						<br>
 						<table width="95%" border="0" cellspacing="0" cellpadding="3">

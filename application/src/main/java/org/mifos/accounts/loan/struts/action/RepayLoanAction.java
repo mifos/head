@@ -119,7 +119,17 @@ public class RepayLoanAction extends BaseAction {
                 repayLoanActionForm.getDateOfPaymentValue(userContext.getPreferredLocale()),totalRepaymentAmount,waivedAmount);
 
         if (repayLoanActionForm.isSavingsTransfer()) {
-            this.loanAccountServiceFacade.makeEarlyRepaymentFromSavings(repayLoanInfoDto, repayLoanActionForm.getAccountForTransfer());
+            try{
+                this.loanAccountServiceFacade.makeEarlyRepaymentFromSavings(repayLoanInfoDto, repayLoanActionForm.getAccountForTransfer());
+            }
+            catch(BusinessRuleException e){
+                if(e.getMessageKey()=="errors.insufficentbalance") {
+                    throw new BusinessRuleException("errors.noEnoughBalance");
+                }
+                else {
+                    throw e;
+                }
+            }
         } else {
             this.loanAccountServiceFacade.makeEarlyRepayment(repayLoanInfoDto);
         }
