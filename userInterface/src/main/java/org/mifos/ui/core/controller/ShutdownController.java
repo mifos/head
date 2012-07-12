@@ -107,9 +107,6 @@ public class ShutdownController {
             }
             status.setComplete();
         }
-        else if(StringUtils.isNotBlank(cancel)) {
-        	this.shutdownServiceFacade.cancelShutdown(request);
-        }
 
         return loadShutdownInfo(request);
     }
