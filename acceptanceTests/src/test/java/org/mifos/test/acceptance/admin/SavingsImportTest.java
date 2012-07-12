@@ -17,7 +17,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@Test(singleThreaded = true, groups = {"admin","acceptance","ui","no_db_unit"})
+@Test(singleThreaded = true, groups = {"import"})
 public class SavingsImportTest extends UiTestCaseBase {
     NavigationHelper navigationHelper;
     ClientTestHelper clientTestHelper;
@@ -48,6 +48,9 @@ public class SavingsImportTest extends UiTestCaseBase {
     public void importSavingAccountsToClientTest(){
         String succesNumber="1";
         String errorNumber="27";
+        arrayOfErrors = buildArrayOfErrorsForImportSavingsTest();
+        String importFile=this.getClass().getResource("/ImportSavingsAccountsTest.xls").toString();
+        
         SavingsProductParameters parameters = savingsProductHelper.getGenericSavingsProductParameters(new DateTime(), SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CLIENTS);
         parameters.setProductInstanceName("importSavings");
         parameters.setShortName("IMP");
@@ -56,8 +59,7 @@ public class SavingsImportTest extends UiTestCaseBase {
         } catch (AssertionError e){
             Logger.getAnonymousLogger().info("Product exists");
         }
-        arrayOfErrors = buildArrayOfErrorsForImportSavingsTest();
-        String importFile=this.getClass().getResource("/ImportSavingsAccountsTest.xls").toString();
+        
         ImportSavingsReviewPage reviewPage=adminTestHelper.loadImportSavingsFileAndSubmitForReview(importFile);
         reviewPage.validateErrors(arrayOfErrors);
         reviewPage.validateSuccesText(succesNumber);

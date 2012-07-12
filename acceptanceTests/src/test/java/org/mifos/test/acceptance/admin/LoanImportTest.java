@@ -22,7 +22,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@Test(singleThreaded = true, groups = {"admin", "acceptance", "ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"import"})
 public class LoanImportTest extends UiTestCaseBase {
     NavigationHelper navigationHelper;
     ClientTestHelper clientTestHelper;
@@ -38,6 +38,7 @@ public class LoanImportTest extends UiTestCaseBase {
     String fund="Non Donor";
     String[] arrayOfErrors;
     boolean valuesDefined=false;
+    
     @Override
     @BeforeMethod(alwaysRun = true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -115,7 +116,7 @@ public class LoanImportTest extends UiTestCaseBase {
                     "Error in row 18, Column 9: Invalid date: datetext",
                     "Error in row 19, Column 9: Invalid date: 1998-11-20",
                     "--> The disbursement date is invalid. Disbursement date must be on or after todays date.",
-                    "--> The disbursement date is invalid. It cannot be before the customers activation date 18-Feb-2011.",
+                    "--> The disbursement date is invalid. It cannot be before the customers activation date 26-Jan-2009.",
                     "--> The disbursement date is invalid. It cannot be before the product start date 22-Jun-2012.",
                     "--> The disbursement date is invalid. It must fall on a valid customer meeting schedule.",
                     "Error in row 20, Column 10: Missing grace period",
