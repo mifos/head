@@ -47,6 +47,7 @@ import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.DefineAcceptedPaymentTypesPage;
 import org.mifos.test.acceptance.framework.admin.DefineHiddenMandatoryFieldsPage;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.admin.ManageRolePage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPage;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIParameters;
@@ -1507,5 +1508,45 @@ public class ClientTest extends UiTestCaseBase {
         
         //Then
         clientPage.verifyGroupMembership(destinationGroupName);
+    }
+    
+    @Test(enabled=true)
+    public void checkPermissionToEditClientInPendingApprovalState() {
+    	String firstName = "Edit";
+    	String lastName = "Permission";
+    	
+    	DefineHiddenMandatoryFieldsPage mandatoryFieldsPage = navigationHelper.navigateToAdminPage().navigateToDefineHiddenMandatoryFields();
+    	mandatoryFieldsPage.uncheckMandatoryCitizenShip();
+        mandatoryFieldsPage.uncheckMandatoryEthnicity();
+        mandatoryFieldsPage.uncheckMandatoryMaritalStatus();
+        mandatoryFieldsPage.submit();
+       
+        CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = clientParams();
+    	clientParams.setFirstName(firstName);
+    	clientParams.setLastName(lastName);
+    	ClientViewDetailsPage clientPage = clientTestHelper.createNewClient("group1", clientParams);
+    	clientPage.editPersonalInformation().submitAndNavigateToViewDetailsPage(clientParams);
+    	
+    	CustomerChangeStatusPage changeStatusPage = clientPage.navigateToCustomerChangeStatusPage();
+    	EditCustomerStatusParameters parameters = new EditCustomerStatusParameters();
+        parameters.setClientStatus(ClientStatus.PARTIAL);
+        parameters.setNote("test");
+        changeStatusPage.setChangeStatusParametersAndSubmit(parameters);
+
+        ManageRolePage manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
+        manageRolePage.disablePermission("3");
+        manageRolePage.enablePermission("3_0_0");
+        manageRolePage.enablePermission("3_0_2");
+        manageRolePage.enablePermission("3_0_3");
+        manageRolePage.submitAndGotoViewRolesPage();
+        HomePage homePage = navigationHelper.navigateToHomePage();
+        SearchResultsPage searchResultsPage = homePage.search(firstName+" "+lastName);
+        
+        ClientViewDetailsPage viewDetailsPage = searchResultsPage.navigateToClientViewDetailsPage("link="+firstName+" "+lastName+"*");
+        Assert.assertTrue(viewDetailsPage.editPersonalInformation().isAccessDeniedDisplayed());
+        
+        manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
+        manageRolePage.enablePermission("3");
+        manageRolePage.submitAndGotoViewRolesPage();
     }
 }
