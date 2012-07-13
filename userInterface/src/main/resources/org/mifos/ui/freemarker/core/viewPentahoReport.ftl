@@ -110,7 +110,7 @@
 	    		 	[@form.input path="${item}.paramName" id="${param.paramName}_paramName" fieldType="hidden" /]
 	    		 	[@form.input path="${item}.mandatory" id="${param.paramName}_mandatory," fieldType="hidden" /]
 	    		 	<label for="${param.paramName}_DD">
-	    		 	    [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.paramName}:
+	    		 	    [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.labelName}:
 	    		 	</label>
 			        [@form.input path="${item}.dateDD" id="${param.paramName}_DD" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.dd"/]</span>
 	    			[@form.input path="${item}.dateMM" id="${param.paramName}_MM" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.mm"/]</span>
@@ -124,7 +124,7 @@
 	    		 	[@form.input path="${item}.paramName" id="${param.paramName}_paramName" fieldType="hidden" /]
 	    		 	[@form.input path="${item}.mandatory" id="${param.paramName}_mandatory," fieldType="hidden" /]
 	    		 	<label for="${param.paramName}_value">
-	    		 	    [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.paramName}:
+	    		 	    [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.labelName}:
 	    		 	</label>
 			        [@form.input path="${item}.value" id="${param.paramName}_value" /]
 	    		</div>
@@ -136,7 +136,7 @@
 	    		 	[@form.input path="${item}.paramName" id="${param.paramName}_paramName" fieldType="hidden" /]
 	    		 	[@form.input path="${item}.mandatory" id="${param.paramName}_mandatory," fieldType="hidden" /]
 	    		 	<label for="${param.paramName}_slectedValue">
-	    		 	    [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.paramName}:
+	    		 	    [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.labelName}:
 	    		 	</label>
 			        [@form.singleSelectWithPrompt path="${item}.selectedValue" id="${param.paramName}_selectedValue" 
 			        	options=param.possibleValues /]
@@ -150,7 +150,7 @@
 	    		 	[@form.input path="${item}.mandatory" id="${param.paramName}_mandatory," fieldType="hidden" /]
 	    		 	<div> 
                         <label for="${item}.possibleValues">
-                        	[#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.paramName}:
+                        	[#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.labelName}:
                         </label>
                     </div>
                     <div style="display: inline-block; vertical-align: top"> 

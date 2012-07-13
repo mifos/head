@@ -23,6 +23,7 @@ public abstract class AbstractPentahoParameter {
 
     protected boolean mandatory = false;
     protected String paramName;
+    protected String labelName;
 
     public boolean isMandatory() {
         return mandatory;
@@ -38,6 +39,14 @@ public abstract class AbstractPentahoParameter {
 
     public void setParamName(String paramName) {
         this.paramName = paramName;
+    }
+
+    public String getLabelName() {
+        return labelName;
+    }
+
+    public void setLabelName(String labelName) {
+        this.labelName = labelName;
     }
 
     public abstract Object getParamValue();
