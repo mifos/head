@@ -110,6 +110,7 @@
 	    		 	[@form.input path="${item}.paramName" id="${param.paramName}_paramName" fieldType="hidden" /]
 	    		 	[@form.input path="${item}.mandatory" id="${param.paramName}_mandatory," fieldType="hidden" /]
 	    		 	<label for="${param.paramName}_DD">
+	    		 	[@form.input path="${item}.labelName" id="input.labelName" fieldType="hidden"/]
 	    		 	    [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.labelName}:
 	    		 	</label>
 			        [@form.input path="${item}.dateDD" id="${param.paramName}_DD" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.dd"/]</span>
@@ -124,6 +125,7 @@
 	    		 	[@form.input path="${item}.paramName" id="${param.paramName}_paramName" fieldType="hidden" /]
 	    		 	[@form.input path="${item}.mandatory" id="${param.paramName}_mandatory," fieldType="hidden" /]
 	    		 	<label for="${param.paramName}_value">
+	    		 	[@form.input path="${item}.labelName" id="input.labelName" fieldType="hidden"/]
 	    		 	    [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.labelName}:
 	    		 	</label>
 			        [@form.input path="${item}.value" id="${param.paramName}_value" /]
@@ -136,6 +138,7 @@
 	    		 	[@form.input path="${item}.paramName" id="${param.paramName}_paramName" fieldType="hidden" /]
 	    		 	[@form.input path="${item}.mandatory" id="${param.paramName}_mandatory," fieldType="hidden" /]
 	    		 	<label for="${param.paramName}_slectedValue">
+	    		 	[@form.input path="${item}.labelName" id="input.labelName" fieldType="hidden"/]
 	    		 	    [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.labelName}:
 	    		 	</label>
 			        [@form.singleSelectWithPrompt path="${item}.selectedValue" id="${param.paramName}_selectedValue" 
@@ -150,6 +153,7 @@
 	    		 	[@form.input path="${item}.mandatory" id="${param.paramName}_mandatory," fieldType="hidden" /]
 	    		 	<div> 
                         <label for="${item}.possibleValues">
+                        [@form.input path="${item}.labelName" id="input.labelName" fieldType="hidden"/]
                         	[#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.labelName}:
                         </label>
                     </div>
