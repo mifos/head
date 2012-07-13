@@ -595,9 +595,10 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         ClientBO clientFromSession = getClientFromSession(request);
         final String clientSystemId = clientFromSession.getGlobalCustNum();
         ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
-
-        ClientPersonalInfoDto personalInfo = this.clientServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId);
-
+        short loanOfficerId = client.getCreatedBy();
+        String clientStatus = client.getCustomerStatus().getName();
+        ClientPersonalInfoDto personalInfo = this.clientServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId, clientStatus, loanOfficerId);
+        
         SessionUtils.setCollectionAttribute(ClientConstants.SALUTATION_ENTITY, personalInfo.getClientDropdowns().getSalutations(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, personalInfo.getClientDropdowns().getGenders(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.MARITAL_STATUS_ENTITY, personalInfo.getClientDropdowns().getMaritalStatuses(), request);
@@ -732,13 +733,13 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         ClientBO clientInSession = getClientFromSession(request);
         Integer oldClientVersionNumber = clientInSession.getVersionNo();
         Integer customerId = clientInSession.getCustomerId();
-
+        String clientStatus = clientInSession.getCustomerStatus().getName();
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-
+        short loanOfficerId = clientInSession.getCreatedBy();
         final String clientSystemId = clientInSession.getGlobalCustNum();
 
-        ClientPersonalInfoDto clientPersonalInfo = this.clientServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId);
-
+        ClientPersonalInfoDto clientPersonalInfo = this.clientServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId, clientStatus, loanOfficerId);
+        
         AddressDto address = null;
         if (actionForm.getAddress() != null) {
             address = Address.toDto(actionForm.getAddress());
@@ -805,8 +806,8 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
                 customFields, address, clientDetail, clientNameDetails, spouseFather, picture, governmentId,
                 clientDisplayName, dateOfBirth);
 
-        this.clientServiceFacade.updateClientPersonalInfo(personalInfo);
-
+        this.clientServiceFacade.updateClientPersonalInfo(personalInfo, clientStatus, loanOfficerId);
+        
         return mapping.findForward(ActionForwards.updatePersonalInfo_success.toString());
     }
 
