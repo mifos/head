@@ -21,6 +21,7 @@
 package org.mifos.customers.client.struts.action;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -264,7 +265,7 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         center1 = TestObjectFactory.createWeeklyFeeCenter("Center1", meeting1);
         group1 = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
-        client = TestObjectFactory.createClient("Client11", CustomerStatus.CLIENT_ACTIVE, group);
+        client = TestObjectFactory.createClient("Client11", CustomerStatus.CLIENT_ACTIVE, group, null, (String) null, new Date(1222333444000L));
         StaticHibernateUtil.flushSession();
     }
 

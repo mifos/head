@@ -757,8 +757,14 @@ public class ClientBO extends CustomerBO {
     public void validateForActiveAccounts() throws CustomerException {
         if (isAnyAccountActive()) {
             throw new CustomerException(ClientConstants.ERRORS_ACTIVE_ACCOUNTS_PRESENT,
-                    new Object[] { ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.GROUP) });
+            		new Object[] { ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.GROUP) });
         }
+    }
+    
+    public void validateForPeriodicFees() throws CustomerException {
+    	if (isAnyPeriodicFeeActive()) {
+    		throw new CustomerException(ClientConstants.ERRORS_ACTIVE_PERIODIC_FEES_PRESENT);
+    	}
     }
 
     private void validateBranchTransfer(final OfficeBO officeToTransfer) throws CustomerException {
