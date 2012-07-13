@@ -237,4 +237,6 @@ public interface CustomerDao {
     ClientBO findClientById(Integer integer);
 
 	Date getLastMeetingDateForCustomer(Integer customerId);
+	
+	Date getFirstMeetingDateForCustomer(Integer customerId);
 }

@@ -178,6 +178,7 @@ public class LoanBO extends AccountBO implements Loan {
     private static final Logger logger = LoggerFactory.getLogger(LoanBO.class);
 
     private LegacyPersonnelDao legacyPersonnelDao = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);
+    private LegacyAccountDao legacyAccountDao = ApplicationContextProvider.getBean(LegacyAccountDao.class);
     private Integer businessActivityId;
 
     private Money loanAmount;
@@ -1239,16 +1240,29 @@ public class LoanBO extends AccountBO implements Loan {
         return amount;
     }
 
+    public void makeEarlyRepayment(final Money totalAmount, final Date transactionDate, final String receiptNumber,
+            final Date receiptDate, final String paymentTypeId, final Short personnelId, boolean waiveInterest,
+            Money interestDue) throws AccountException {
+
+        makeEarlyRepayment(totalAmount, transactionDate, receiptNumber, receiptDate, paymentTypeId, personnelId,
+                waiveInterest, interestDue, null);
+
+    }
+    
     public void makeEarlyRepayment(final Money totalAmount, final Date transactionDate,
                                    final String receiptNumber, final Date receiptDate,
                                    final String paymentTypeId, final Short personnelId,
-                                   boolean waiveInterest, Money interestDue) throws AccountException {
+                                   boolean waiveInterest, Money interestDue, Integer savingsPaymentId) throws AccountException {
         try {
             PersonnelBO currentUser = legacyPersonnelDao.getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
             this.setUpdatedDate(transactionDate);
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, totalAmount, receiptNumber,
                     receiptDate, getPaymentTypeEntity(Short.valueOf(paymentTypeId)), transactionDate);
+            if (savingsPaymentId != null) {
+                AccountPaymentEntity withdrawal = legacyAccountDao.findPaymentById(savingsPaymentId);
+                accountPaymentEntity.setOtherTransferPayment(withdrawal);
+            }
             addAccountPayment(accountPaymentEntity);
 
             makeEarlyRepaymentForArrears(accountPaymentEntity, AccountConstants.PAYMENT_RCVD,
@@ -1283,7 +1297,7 @@ public class LoanBO extends AccountBO implements Loan {
                 for (LoanBO memberAccount : this.memberAccounts) {
                     BigDecimal fraction = memberAccount.calcFactorOfEntireLoan();
                     memberAccount.makeEarlyRepayment(totalAmount.divide(fraction), transactionDate, receiptNumber, receiptDate,
-                            paymentTypeId, personnelId, waiveInterest, interestDue);
+                            paymentTypeId, personnelId, waiveInterest, interestDue, null);
                 }
             }
         } catch (PersistenceException e) {
@@ -1416,18 +1430,25 @@ public class LoanBO extends AccountBO implements Loan {
     @Override
     public AccountPaymentEntity getLastPmntToBeAdjusted() {
         AccountPaymentEntity accntPmnt = null;
-        // MIFOS-4238: we don't want to show disbursal amount as an adjustment amount
-        int i = 0;
-        for (AccountPaymentEntity accntPayment : accountPayments) {
-            i = i + 1;
-            if (i == accountPayments.size()) {
-                break;
-            }
-            if (accntPayment.getAmount().isNonZero()) {
-                accntPmnt = accntPayment;
-                break;
-            }
+        /*MIFOS-5694: this is just workaround for more complex issue.
+         *This condition should be removed when MIFOS-5692 is fixed.  
+         */
+        if (this.parentAccount != null) {
+            accntPmnt = super.getLastPmntToBeAdjusted();
+        } else {
+            // MIFOS-4238: we don't want to show disbursal amount as an adjustment amount
+            int i = 0;
+            for (AccountPaymentEntity accntPayment : accountPayments) {
+                i = i + 1;
+                if (i == accountPayments.size()) {
+                    break;
+                }
+                if (accntPayment.getAmount().isNonZero()) {
+                    accntPmnt = accntPayment;
+                    break;
+                }
 
+            }
         }
         return accntPmnt;
     }
@@ -1628,9 +1649,9 @@ public class LoanBO extends AccountBO implements Loan {
     public void updateLoan(final Money loanAmount, final Integer businessActivityId) throws AccountException {
         setLoanAmount(loanAmount);
         setBusinessActivityId(businessActivityId);
-        
+        MeetingBO meetingBO = ( isIndividualLoan() ? this.getParentAccount().getLoanMeeting() : this.getLoanMeeting());
         boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-        regeneratePaymentSchedule(isRepaymentIndepOfMeetingEnabled, getLoanMeeting());
+        regeneratePaymentSchedule(isRepaymentIndepOfMeetingEnabled, meetingBO);
         
         update();
     }
@@ -1898,6 +1919,7 @@ public class LoanBO extends AccountBO implements Loan {
         Money increasePenalty = new Money(this.getCurrency());
 
         int numberOfFullPayments = 0;
+        short numberOfInstalments = (short)reversedTrxns.size();
         List<AccountActionDateEntity> allInstallments = this.getAllInstallments();
 
         if (isNotEmpty(reversedTrxns)) {
@@ -1923,14 +1945,17 @@ public class LoanBO extends AccountBO implements Loan {
                          * This means... for paid installments add up the amount due (for interest, fees and penalties).
                          * The amount due is not necessarily zero for this case.
                          */
+                        
                         if (installment.isPaid()) {
                             increaseInterest = increaseInterest.add(installment.getInterestDue()).
                                     add(loanReverseTrxn.getInterestAmount());
+                            increaseFees = increaseFees.add(installment.getTotalFeesDue());
+                            if (!this.noOfInstallments.equals(numberOfInstalments)) {
                             increaseFees = increaseFees.add(installment.getMiscFeeDue()).
                                     add(loanReverseTrxn.getMiscFeeAmount());
-                            increaseFees = increaseFees.add(installment.getTotalFeesDue());
                             increasePenalty = increasePenalty.add(installment.getPenaltyDue()).
                                     add(loanReverseTrxn.getPenaltyAmount());
+                            }
                         }
 
                         installment.recordForAdjustment();
@@ -2589,24 +2614,22 @@ public class LoanBO extends AccountBO implements Loan {
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
-        // Delete previous loan meeting if there is a new meeting for repayment
-        // day
-        if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null) {
-            try {
-                if (null != this.getLoanMeeting()) {
-                    getlegacyLoanDao().delete(this.getLoanMeeting());
+        // Set new meeting if there is new one for repayment day
+        // Delete previous loan meeting if loan is parent account and set individual loans(if any) loanMeeting same as parent 
+        if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null &&
+                !this.getLoanMeeting().equals(newMeetingForRepaymentDay)) {
+            if ( null != this.getLoanMeeting() && !this.isIndividualLoan() ){
+                this.delete(this.getLoanMeeting());
+            }
+            setLoanMeeting(newMeetingForRepaymentDay);
+            if ( this.hasMemberAccounts()){
+                for (LoanBO individualLoanBO : this.getMemberAccounts()){
+                    individualLoanBO.setLoanMeeting(newMeetingForRepaymentDay);
                 }
-            } catch (PersistenceException e) {
-                throw new AccountException(e);
             }
         }
         this.resetAccountActionDates();
         loanMeeting.setMeetingStartDate(disbursementDate);
-
-        // FIXME - keithw - newMeetingForRepaymentDay is only populated when updating loan see LoanAccountAction.update
-		if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null) {
-		    setLoanMeeting(newMeetingForRepaymentDay);
-		}
 
 		RecurringScheduledEventFactory scheduledEventFactory = new RecurringScheduledEventFactoryImpl();
 		ScheduledEvent meetingScheduledEvent = scheduledEventFactory.createScheduledEventFrom(this.loanMeeting);
@@ -3672,7 +3695,7 @@ public class LoanBO extends AccountBO implements Loan {
                     memberAccount.adjustLastPayment(adjustmentComment, loggedInUser);
                 }
             }
-        } else {
+        } else if (this.parentAccount == null){ //MIFOS-5694: if member account has no payments it could mean that payment was made before 2.4.0, remove this condition when MIFOS-5692 is done 
             throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
         }
     }
@@ -3701,5 +3724,9 @@ public class LoanBO extends AccountBO implements Loan {
             }
         }
         return result;
+    }
+    
+    public boolean isIndividualLoan(){
+        return this.parentAccount != null && this.accountType.getAccountTypeId().equals(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT.getValue()); 
     }
 }

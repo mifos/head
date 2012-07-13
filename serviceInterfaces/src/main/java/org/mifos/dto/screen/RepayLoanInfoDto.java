@@ -14,6 +14,8 @@ public class RepayLoanInfoDto {
     private final Date dateOfPayment;
     private final BigDecimal waivedAmount;
     private final BigDecimal totalRepaymentAmount;
+    
+    private Integer savingsPaymentId;
 
     @SuppressWarnings("PMD.ExcessiveParameterList")
     public RepayLoanInfoDto(String globalAccountNum, String earlyRepayAmount, String receiptNumber,
@@ -69,5 +71,13 @@ public class RepayLoanInfoDto {
 
     public BigDecimal getTotalRepaymentAmount() {
         return totalRepaymentAmount;
+    }
+
+    public Integer getSavingsPaymentId() {
+        return savingsPaymentId;
+    }
+
+    public void setSavingsPaymentId(Integer savingsPaymentId) {
+        this.savingsPaymentId = savingsPaymentId;
     }
 }
