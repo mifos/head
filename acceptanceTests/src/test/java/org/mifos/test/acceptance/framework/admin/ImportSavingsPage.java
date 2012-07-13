@@ -15,8 +15,8 @@ public class ImportSavingsPage extends MifosPage {
     }
 
     public ImportSavingsReviewPage submitToReview(String importFile) {
-        selenium.type("importSaving.file", importFile);
-        selenium.click("importSaving.review");
+        selenium.type("importSavings.file", importFile);
+        selenium.click("importSavings.review");
         waitForPageToLoad();
         return new ImportSavingsReviewPage(selenium);
     }

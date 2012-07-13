@@ -11,51 +11,44 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.DefineLookupOptionParameters;
 import org.mifos.test.acceptance.framework.admin.ImportLoansReviewPage;
 import org.mifos.test.acceptance.framework.admin.ImportLoansSaveSummaryPage;
+import org.mifos.test.acceptance.framework.admin.ManageRolePage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.AdminTestHelper;
-import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
-import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@Test(singleThreaded = true, groups = {"import"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@SuppressWarnings("PMD.SignatureDeclareThrowsException")
+@Test(singleThreaded = true, groups = {"client","acceptance","import"})
 public class LoanImportTest extends UiTestCaseBase {
-    NavigationHelper navigationHelper;
-    ClientTestHelper clientTestHelper;
-    GroupTestHelper groupTestHelper;
-    LoanProductTestHelper loanProductTestHelper;
-    AdminTestHelper adminTestHelper;
+    private LoanProductTestHelper loanProductTestHelper;
+    private AdminTestHelper adminTestHelper;
+    private NavigationHelper navigationHelper;
     DateTime targetTime;
-    String office="MyOfficeDHMFT";
-    String loanOfficer="loan officer";
     String productForClient="TestLoanProductForClient";
-    String externalID="VeryExternalID";
-    String collNotes="Collateral Notes";
-    String fund="Non Donor";
     String[] arrayOfErrors;
-    boolean valuesDefined=false;
+    private boolean valuesDefined=false;
     
     @Override
-    @BeforeMethod(alwaysRun = true)
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        navigationHelper=new NavigationHelper(selenium);
-        clientTestHelper=new ClientTestHelper(selenium);
-        groupTestHelper=new GroupTestHelper(selenium);
-        loanProductTestHelper=new LoanProductTestHelper(selenium);
-        adminTestHelper=new AdminTestHelper(selenium);
+        loanProductTestHelper = new LoanProductTestHelper(selenium);
+        adminTestHelper = new AdminTestHelper(selenium);
+        navigationHelper = new NavigationHelper(selenium);
         targetTime=new DateTime(2012, 6, 22, 12, 0, 0, 0); //changing date so dates in xls spreadsheet will be appropriate
         DateTimeUpdaterRemoteTestingService dtUpdate=new DateTimeUpdaterRemoteTestingService(selenium);
         dtUpdate.setDateTime(targetTime);
     }
-    @AfterMethod(alwaysRun = true)
+    @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
+        new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();
     }
     /**
      * MIFOS-5662: Add the possibility to import new Loans data.
@@ -64,6 +57,8 @@ public class LoanImportTest extends UiTestCaseBase {
      */
     @Test(enabled=true)
     public void importLoanAccountsToClientTest(){
+        ManageRolePage manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
+        manageRolePage.enablePermission("8_7");
         if(!valuesDefined){
             valuesDefined=defineValuesForProducts();
         }
@@ -94,6 +89,7 @@ public class LoanImportTest extends UiTestCaseBase {
         summaryPage.verifySuccesString(succesNumber);
         summaryPage.verifyErrorStroing(errorNumber);
     }
+    
     private String[] buildArrayOfErrorsForImportLoanTest(String testID) {
         String[] result;
         String tid1="TID1";

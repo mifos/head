@@ -7,75 +7,70 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.ImportSavingsReviewPage;
 import org.mifos.test.acceptance.framework.admin.ImportSavingsSaveSummaryPage;
+import org.mifos.test.acceptance.framework.admin.ManageRolePage;
 import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
 import org.mifos.test.acceptance.framework.testhelpers.AdminTestHelper;
-import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
-import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsProductHelper;
+import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@Test(singleThreaded = true, groups = {"import"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@SuppressWarnings("PMD.SignatureDeclareThrowsException")
+@Test(singleThreaded = true, groups = { "client", "acceptance", "import" })
 public class SavingsImportTest extends UiTestCaseBase {
-    NavigationHelper navigationHelper;
-    ClientTestHelper clientTestHelper;
-    GroupTestHelper groupTestHelper;
-    SavingsProductHelper savingsProductHelper;
-    AdminTestHelper adminTestHelper;
+    private SavingsProductHelper savingsProductHelper;
+    private AdminTestHelper adminTestHelper;
+    private NavigationHelper navigationHelper;
     String[] arrayOfErrors;
-    
+
     @Override
-    @BeforeMethod(alwaysRun = true)
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        navigationHelper=new NavigationHelper(selenium);
-        clientTestHelper=new ClientTestHelper(selenium);
-        groupTestHelper=new GroupTestHelper(selenium);
-        savingsProductHelper=new SavingsProductHelper(selenium);
-        adminTestHelper=new AdminTestHelper(selenium);
-
+        savingsProductHelper = new SavingsProductHelper(selenium);
+        adminTestHelper = new AdminTestHelper(selenium);
+        navigationHelper = new NavigationHelper(selenium);
     }
-    
-    @AfterMethod(alwaysRun = true)
+
+    @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-    
-    @Test(enabled=true)
-    public void importSavingAccountsToClientTest(){
-        String succesNumber="1";
-        String errorNumber="27";
+
+    @Test(enabled = true)
+    public void importSavingAccountsToClientTest() {
+        ManageRolePage manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
+        manageRolePage.enablePermission("8_8");
+        String succesNumber = "1";
+        String errorNumber = "5";
         arrayOfErrors = buildArrayOfErrorsForImportSavingsTest();
-        String importFile=this.getClass().getResource("/ImportSavingsAccountsTest.xls").toString();
-        
-        SavingsProductParameters parameters = savingsProductHelper.getGenericSavingsProductParameters(new DateTime(), SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CLIENTS);
+        String importFile = this.getClass().getResource("/ImportSavingsAccountsTest.xls").toString();
+        SavingsProductParameters parameters = savingsProductHelper.getGenericSavingsProductParameters(new DateTime(),
+                SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CLIENTS);
         parameters.setProductInstanceName("importSavings");
         parameters.setShortName("IMP");
         try {
             savingsProductHelper.createSavingsProduct(parameters);
-        } catch (AssertionError e){
+        } catch (AssertionError e) {
             Logger.getAnonymousLogger().info("Product exists");
         }
-        
-        ImportSavingsReviewPage reviewPage=adminTestHelper.loadImportSavingsFileAndSubmitForReview(importFile);
+        ImportSavingsReviewPage reviewPage = adminTestHelper.loadImportSavingsFileAndSubmitForReview(importFile);
         reviewPage.validateErrors(arrayOfErrors);
         reviewPage.validateSuccesText(succesNumber);
-        ImportSavingsSaveSummaryPage summaryPage= reviewPage.saveSuccessfullRows();
+        ImportSavingsSaveSummaryPage summaryPage = reviewPage.saveSuccessfullRows();
         summaryPage.verifySuccesString(succesNumber);
         summaryPage.verifyErrorString(errorNumber);
     }
-    
+
     private String[] buildArrayOfErrorsForImportSavingsTest() {
-            String[] arrayString={"Error in row 3, Column 2: Customer with global id 2 not found",
-                    "Error in row 4, Column 3: Missing product name",
-                    "Error in row 5, Column 3: Active and applicable product with name WrongProductName not found",
-                    "Error in row 6, Column 4: Missing account status name",
-                    "Error in row 7, Column 4: Saving status is incorrect"
-            };
-            
+        String[] arrayString = { "Error in row 3, Column 2: Customer with global id 2 not found",
+                "Error in row 4, Column 3: Missing product name",
+                "Error in row 5, Column 3: Active and applicable product with name WrongProductName not found",
+                "Error in row 6, Column 4: Missing account status name",
+                "Error in row 7, Column 4: Saving status is incorrect" };
         return arrayString;
     }
 }
