@@ -19,6 +19,8 @@
  */
 package org.mifos.ui.pentaho.controller;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.mifos.reports.pentaho.params.PentahoDateParameter;
@@ -50,12 +52,11 @@ public class PentahoReportFormValidator implements Validator {
         int i = 0;
         String[] args = new String[1];
         for (PentahoDateParameter dateParam : formBean.getReportDateParams()) {
-            String dayString = dateParam.getDateDD();
-            String monthString = dateParam.getDateMM();
-            String yearString = dateParam.getDateYY();
-            if (!StringUtils.isBlank(dayString) || !StringUtils.isBlank(monthString)
-                    || !StringUtils.isBlank(yearString)) {
-                try {
+            if(!dateParam.getDateDD().isEmpty() && dateParam.getDateDD().split("/").length == 3){
+        	String dayString = dateParam.getDateDD().split("/")[0];
+            String monthString = dateParam.getDateDD().split("/")[1];
+            String yearString = dateParam.getDateDD().split("/")[2];
+             try {
                     Integer day = Integer.parseInt(dayString);
                     Integer month = Integer.parseInt(monthString);
                     Integer year = Integer.parseInt(yearString);
