@@ -59,6 +59,7 @@ public class LoanImportTest extends UiTestCaseBase {
     public void importLoanAccountsToClientTest(){
         ManageRolePage manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
         manageRolePage.enablePermission("8_7");
+        manageRolePage.submitAndGotoViewRolesPage();
         if(!valuesDefined){
             valuesDefined=defineValuesForProducts();
         }

@@ -44,6 +44,7 @@ public class SavingsImportTest extends UiTestCaseBase {
     public void importSavingAccountsToClientTest() {
         ManageRolePage manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
         manageRolePage.enablePermission("8_8");
+        manageRolePage.submitAndGotoViewRolesPage();
         String succesNumber = "1";
         String errorNumber = "5";
         arrayOfErrors = buildArrayOfErrorsForImportSavingsTest();
