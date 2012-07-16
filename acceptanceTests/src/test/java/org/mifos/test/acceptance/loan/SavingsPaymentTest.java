@@ -22,6 +22,7 @@ import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -123,5 +124,56 @@ public class SavingsPaymentTest extends UiTestCaseBase {
     private void verifySavingsAccount(String savingsGlobalNum, String expectedBalance) {
         SavingsAccountDetailPage savingsPage = navigationHelper.navigateToSavingsAccountDetailPage(savingsGlobalNum);
         savingsPage.verifySavingsAmount(expectedBalance);
+    }
+    
+    public void testPermissionForPaymentFromSavings() {
+        String timeout = "30000";
+        String loanGlobalNum = setUpLoanAccount();
+        String savingsGlobalNum = setUpSavingsAccount();
+        
+        String accessDenied = "Access Denied";
+        String youAreNotAllowedToAccessThisPage = "You are not allowed to access this page.";
+        
+        
+        //first uncheck permission and see if access denied page is displayed
+        //while trying transfer from savings
+        navigationHelper.navigateToAdminPage()
+        .navigateToViewRolesPage()
+        .navigateToManageRolePage("Admin")
+        .disablePermission("5_1_11")
+        .submitAndGotoViewRolesPage();
+        
+        CreateLoanAccountSearchParameters loanSearchParams = new CreateLoanAccountSearchParameters();
+        loanSearchParams.setSearchString(loanGlobalNum);
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanGlobalNum);
+
+        ApplyPaymentPage applyPaymentPage = loanAccountPage.navigateToApplyPayment();
+        PaymentParameters paymentParams = new PaymentParameters();
+        paymentParams.setAmount(String.valueOf(TRANSFER_AMOUNT));
+        paymentParams.setPaymentType(PaymentParameters.TRANSFER);
+        paymentParams.setSavingsAccountGlobalNum(savingsGlobalNum);
+        paymentParams.setTransactionDateDD("13");
+        paymentParams.setTransactionDateMM("03");
+        paymentParams.setTransactionDateYYYY("2011");
+        
+        applyPaymentPage.submitAndNavigateToApplyPaymentConfirmationPage(paymentParams);
+        
+        selenium.click("reviewapplypayment.button.submit");
+        selenium.waitForPageToLoad(timeout);
+        Assert.assertTrue(selenium.isTextPresent(accessDenied));
+        Assert.assertTrue(selenium.isTextPresent(youAreNotAllowedToAccessThisPage));
+
+        
+        //now enable permission and validate transfer success
+        navigationHelper.navigateToAdminPage()
+        .navigateToViewRolesPage()
+        .navigateToManageRolePage("Admin")
+        .enablePermission("5_1_11")
+        .submitAndGotoViewRolesPage();
+        
+        navigationHelper.navigateToLoanAccountPage(loanGlobalNum)
+        .navigateToApplyPayment()
+        .submitAndNavigateToApplyPaymentConfirmationPage(paymentParams)
+        .submitAndNavigateToLoanAccountDetailsPage();
     }
 }
