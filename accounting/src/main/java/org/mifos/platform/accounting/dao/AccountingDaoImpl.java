@@ -20,8 +20,10 @@
 
 package org.mifos.platform.accounting.dao;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -63,6 +65,24 @@ public class AccountingDaoImpl implements AccountingDao {
     }
 
     @Override
+    public final Integer getNumberOfTrxnByDate(LocalDate startDate, LocalDate endDate) {
+        Object[] parameter = new Object[] { startDate.toString(), endDate.toString() };
+        return jdbcTemplate.queryForList("select count(*) from financial_trxn where posted_date between date(?) and date(?) group by posted_date",parameter, Integer.class).size();
+    }
+    
+    @Override
+    public final List<LocalDate> getTenTxnDate(LocalDate startDate, LocalDate endDate, Integer offset) {
+        Object[] parameter = new Object[] {startDate.toString(), endDate.toString(), offset };
+        List<LocalDate> tenTrxn = jdbcTemplate.query(getTenTrxDataQuery() ,parameter, new ParameterizedRowMapper<LocalDate>() {
+            @Override
+            public LocalDate mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new LocalDate(rs.getDate(1).getTime());
+            }
+        });
+        return tenTrxn;
+    }
+    
+    @Override
     public final LocalDate getStartDateOfFinancialTransactions() {
         String date = jdbcTemplate.queryForObject("select min(posted_date) from financial_trxn", String.class);
         LocalDate lDate = new LocalDate();
@@ -75,6 +95,10 @@ public class AccountingDaoImpl implements AccountingDao {
     private String getAccountingDataQuery() {
         return SqlExecutor.readFile(AccountingDaoImpl.class.getResourceAsStream("AccountingGLIntegrationQuery.sql"))[0];
     }
+    
+    private String getTenTrxDataQuery() {
+        return SqlExecutor.readFile(AccountingDaoImpl.class.getResourceAsStream("AccountingPostedDateQuery.sql"))[0];
+    }
 
     public static final ParameterizedRowMapper<AccountingDto> MAPPER = new ParameterizedRowMapper<AccountingDto>() {
         @Override
@@ -83,4 +107,5 @@ public class AccountingDaoImpl implements AccountingDao {
                     rs.getString(GL_CODE), rs.getString(GL_CODE_NAME), rs.getString(DEBIT), rs.getString(CREDIT));
         }
     };
+    
 }
