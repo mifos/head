@@ -6,7 +6,7 @@
     <parent>
         <artifactId>mifos-parent</artifactId>
         <groupId>org.mifos</groupId>
-        <version>1.11-SNAPSHOT</version>
+        <version>1.12-SNAPSHOT</version>
     </parent>
     
     <packaging>${packaging.type}</packaging>
@@ -21,13 +21,13 @@
         <packaging.type>jar</packaging.type>
         
         
-       	<modules.root.dir>${basedir}/..</modules.root.dir>
+        <modules.root.dir>${basedir}/..</modules.root.dir>
         <selenium.background>true</selenium.background>
         <selenium.log.output>true</selenium.log.output>
           
-      	<SELENIUM_PORT>${env.SELENIUM_PORT}</SELENIUM_PORT>
-      	<SERVLET_PORT>${env.SERVLET_PORT}</SERVLET_PORT>
-      	<stop.port>${env.CI_JETTY_STOP_PORT}</stop.port>
+        <SELENIUM_PORT>${env.SELENIUM_PORT}</SELENIUM_PORT>
+        <SERVLET_PORT>${env.SERVLET_PORT}</SERVLET_PORT>
+        <stop.port>${env.CI_JETTY_STOP_PORT}</stop.port>
         <EMULATOR_PORT>${env.EMULATOR_PORT}</EMULATOR_PORT>
 
         <database.properties.file>${modules.root.dir}/acceptanceTests/src/test/mvn /org/mifos/config/resources/acceptanceDatabase.properties</database.properties.file>
@@ -38,7 +38,7 @@
         <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
     </properties>
 
-	<dependencies>
+    <dependencies>
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
@@ -46,42 +46,41 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>android-test</artifactId>
-			<version>${android-version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android-test</artifactId>
+            <version>${android-version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.jayway.android.robotium</groupId>
             <artifactId>robotium-solo</artifactId>
             <version>3.2.1</version>
         </dependency>
         <dependency> 
-			<groupId>junit</groupId> 
-			<artifactId>junit</artifactId>
-			<version>3.8.2</version>
-  			<scope>provided</scope>
+            <groupId>junit</groupId> 
+            <artifactId>junit</artifactId>
+            <version>3.8.2</version>
+            <scope>provided</scope>
         </dependency> 
         
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-war</artifactId>
-            <version>1.11-SNAPSHOT</version>
+            <version>1.12-SNAPSHOT</version>
             <type>war</type>
         </dependency>
     </dependencies>    
-	
-	<profiles>
-	    <profile>
-	        <id>continuous-integration</id>
+    <profiles>
+        <profile>
+            <id>android-tests</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
                 <packaging.type>apk</packaging.type>
             </properties>
-		    <build>
-        	<plugins>
+            <build>
+            <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
@@ -197,142 +196,140 @@
                     <stopPort>${stop.port}</stopPort>
                     <webApp>${basedir}/../war/target/mifos.war</webApp>
                 </configuration>
-            </plugin>		            
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jarsigner-plugin</artifactId>
-				<version>1.2</version>
-				<executions>
-				    <execution>
-				        <id>signing</id>
-				        <goals>
-				            <goal>sign</goal>
-				        </goals>
-				        <phase>package</phase>
-				        <configuration>
-				            <archiveDirectory></archiveDirectory>
-				            <includes>
-				                <include>target/*.apk</include>
-				            </includes>
-				            <keystore>android-test-key.keystore</keystore>
-				            <storepass>mifosac</storepass>
-				            <keypass>mifosac</keypass>
-				            <alias>android-test</alias>
-				        </configuration>
-				    </execution>
-				</executions>
-			    </plugin>
-		            <plugin>
-		                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-		                <artifactId>maven-android-plugin</artifactId>
-		                <version>${maven-android-plugin-version}</version>
-		                <configuration>
-                          	<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
-					      	<assetsDirectory>${project.basedir}/assets</assetsDirectory>
-					      	<resourceDirectory>${project.basedir}/res</resourceDirectory>
-		                    <sdk>
-		                        <platform>${android-platform}</platform>
-		                    </sdk>
-		                    <emulator>
-		                        <avd>android2.1</avd>
-		                        <wait>50000</wait>
-					<options>-port ${EMULATOR_PORT}</options>
-		                    </emulator>
-		                    <deleteConflictingFiles>true</deleteConflictingFiles>
-		                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
-		                 	<sign>
-		                        <debug>false</debug>
-		                    </sign>
-		                </configuration>
-		                <extensions>true</extensions>
-		                <executions>
-						    <execution>
-						        <id>startEmulator</id>
-						        <phase>compile</phase>
-						        <goals>
-						            <goal>emulator-start</goal>
-						        </goals>
-						    </execution>
-						    <execution>
-						        <id>install-client</id>
-						        <phase>compile</phase>
-						        <configuration>
-				                    <file>mifos-android-client.apk</file>
-				                </configuration>
-						        <goals>
-						            <goal>deploy</goal>
-						        </goals>
-						    </execution>
-
-						    <execution>
-								<id>stopEmulator</id>
-								<phase>post-integration-test</phase>
-								<goals>
-						            <goal>emulator-stop</goal>
-						        </goals>
-						    </execution>
-						</executions>
-		            </plugin>
-		          	<plugin>
-			            <groupId>org.apache.maven.plugins</groupId>
-			            <artifactId>maven-antrun-plugin</artifactId>
-			            <version>1.5</version>
-			            <dependencies>
-			                <dependency>
-			                    <groupId>org.apache.ant</groupId>
-			                    <artifactId>ant-commons-net</artifactId>
-			                    <version>1.8.1</version>
-			                </dependency>
-			            </dependencies>
-		                <executions>
-		                    <execution>
-		                        <phase>pre-integration-test</phase>
-		                        <configuration>
-		                            <target>
-		                                <echo>
-		                                    Using: ANDROID_AVD_USER_PORT=${EMULATOR_PORT}
-		                                </echo>
-		                                <telnet
-		                                    server="localhost"
-		                                    port="${EMULATOR_PORT}">
-		                                    <read>OK</read>
-		                                    <write>event send EV_KEY:KEY_MENU:1 EV_KEY:KEY_MENU:0</write>
-		                                    <read>OK</read>
-		                                    <write>quit</write>
-		                                </telnet>
-		                            </target>
-		                        </configuration>
-		                        <goals>
-		                            <goal>run</goal>
-		                        </goals>
-		                    </execution>
-		                </executions>
-		            </plugin>
-		            <plugin>
-						<artifactId>exec-maven-plugin</artifactId>
-						<groupId>org.codehaus.mojo</groupId>
-						<version>1.1</version>
-							<executions>
-							    <execution>
-							        <id>port-switch</id>
-							        <phase>compile</phase>
-							        <configuration>
-							            <executable>port_switch.sh</executable>
-							        </configuration>
-    								<goals>
-							            <goal>exec</goal>
-							        </goals>
-							    </execution>
-							</executions>
-						
-					</plugin>
-		        </plugins>
-		    </build>
-	    </profile>
+            </plugin>
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jarsigner-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                    <execution>
+                        <id>signing</id>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <archiveDirectory></archiveDirectory>
+                            <includes>
+                                <include>target/*.apk</include>
+                            </includes>
+                            <keystore>android-test-key.keystore</keystore>
+                            <storepass>mifosac</storepass>
+                            <keypass>mifosac</keypass>
+                            <alias>android-test</alias>
+                        </configuration>
+                    </execution>
+                </executions>
+                </plugin>
+                    <plugin>
+                        <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                        <artifactId>maven-android-plugin</artifactId>
+                        <version>${maven-android-plugin-version}</version>
+                        <configuration>
+                            <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
+                            <assetsDirectory>${project.basedir}/assets</assetsDirectory>
+                            <resourceDirectory>${project.basedir}/res</resourceDirectory>
+                            <sdk>
+                                <platform>${android-platform}</platform>
+                            </sdk>
+                            <emulator>
+                                <avd>android2.1</avd>
+                                <wait>50000</wait>
+                                <options>-port ${EMULATOR_PORT}</options>
+                            </emulator>
+                            <deleteConflictingFiles>true</deleteConflictingFiles>
+                            <undeployBeforeDeploy>true</undeployBeforeDeploy>
+                         	<sign>
+                                <debug>false</debug>
+                            </sign>
+                        </configuration>
+                        <extensions>true</extensions>
+                        <executions>
+                            <execution>
+                                <id>startEmulator</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>emulator-start</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                            <id>install-client</id>
+                                <phase>compile</phase>
+                                <configuration>
+                                    <file>mifos-android-client.apk</file>
+                                </configuration>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>stopEmulator</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>emulator-stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                  	<plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.5</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.ant</groupId>
+                                <artifactId>ant-commons-net</artifactId>
+                                <version>1.8.1</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <phase>pre-integration-test</phase>
+                                <configuration>
+                                    <target>
+                                        <echo>
+                                            Using: ANDROID_AVD_USER_PORT=${EMULATOR_PORT}
+                                        </echo>
+                                        <telnet
+                                            server="localhost"
+                                            port="${EMULATOR_PORT}">
+                                            <read>OK</read>
+                                            <write>event send EV_KEY:KEY_MENU:1 EV_KEY:KEY_MENU:0</write>
+                                            <read>OK</read>
+                                            <write>quit</write>
+                                        </telnet>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <version>1.1</version>
+                            <executions>
+                                <execution>
+                                    <id>port-switch</id>
+                                    <phase>compile</phase>
+                                    <configuration>
+                                        <executable>port_switch.sh</executable>
+                                    </configuration>
+                                    <goals>
+                                        <goal>exec</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
     
-	<build>
-	    <sourceDirectory>src</sourceDirectory>
-       	<finalName>${project.artifactId}</finalName>
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <finalName>${project.artifactId}</finalName>
     </build>
 </project>
