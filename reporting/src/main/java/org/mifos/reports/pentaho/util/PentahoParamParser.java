@@ -168,6 +168,9 @@ public class PentahoParamParser {
         if (defaultVal != null && possibleValues.containsKey(String.valueOf(defaultVal))) {
             result.setSelectedValue(String.valueOf(defaultVal));
         }
+        else if (defaultVal==null){
+        	result.setSelectedValue(String.valueOf(-1));
+        }
 
         return result;
     }
