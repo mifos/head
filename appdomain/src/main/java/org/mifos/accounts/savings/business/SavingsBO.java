@@ -187,7 +187,7 @@ public class SavingsBO extends AccountBO {
             SavingsAccountActivationDetail activationDetails, PersonnelBO createdBy, Money openingBalance) {
 
         RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
-        CreationDetail creationDetail = new CreationDetail(new DateTime(createdDate), createdById);
+        CreationDetail creationDetail = new CreationDetail(createdDate.toDateMidnight().toDateTime(), createdById);
         SavingsBO savingsAccount = new SavingsBO(savingsAccountState, customer, activationDetails, creationDetail, savingsProduct, recommendedAmountUnit, recommendedOrMandatoryAmount, createdBy, openingBalance);
 
         return savingsAccount;

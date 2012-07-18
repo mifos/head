@@ -62,7 +62,35 @@ public enum XlsMessageConstants {
 
     WEEKDAYS_MONDAY("WeekDays-Monday"), WEEKDAYS_TUESDAY("WeekDays-Tuesday"), WEEKDAYS_WEDNESDAY("WeekDays-Wednesday"), WEEKDAYS_THURSDAY(
             "WeekDays-Thursday"), WEEKDAYS_FRIDAY("WeekDays-Friday"), WEEKDAYS_SATURDAY("WeekDays-Saturday"), WEEKDAYS_SUNDAY(
-            "WeekDays-Sunday");
+            "WeekDays-Sunday"),
+            MISSING_ACCOUNT_NUMBER("admin.importexport.xls.error.missingAccountNumber"),
+            CUSTOMER_NOT_FOUND("admin.importexport.xls.error.customerNotFound"),
+            MISSING_PRODUCT_NAME("admin.importexport.xls.error.missingProductName"),
+            PRODUCT_NOT_FOUND("admin.importexport.xls.error.productNotFound"),
+            CUSTOMER_FOR_LOAN_INACTIVE("admin.importexport.xls.error.customerForLoanInactive"),
+            MISSING_ACCOUNT_STATUS("admin.importexport.xls.error.missingAccountStatus"),
+            LOAN_STATUS_NOT_FOUND("admin.importexport.xls.error.loanStatusNotFound"),
+            SAVINGS_STATUS_NOT_FOUND("admin.importexport.xls.error.savingsStatusNotFound"),
+            MISSING_STATUS_REASON("admin.importexport.xls.error.missingStatusReason"),
+            DIFFERENT_MEETING_FREQUENCY("admin.importexport.xls.error.differentMeetingFrequency"),
+            WRONG_STATUS_REASON("admin.importexport.xls.error.wrongStatusReason"),
+            MISSING_LOAN_AMOUNT("admin.importexport.xls.error.missingLoanAmount"),
+            LOAN_AMOUNT_OUF_OF_RANGE("admin.importexport.xls.error.loanAmountOutOfBonds"),
+            DIGITS_BEFORE_DECIMAL("loanAccountFormBean.amount.digitsBeforeDecimal.invalid"),
+            DIGITS_AFTER_DECIMAL("loanAccountFormBean.amount.digitsAfterDecimal.invalid"),
+            MISSING_INTEREST_RATE("admin.importexport.xls.error.missingInterestRate"),
+            INTEREST_RATE_OUT_OF_RANGE("admin.importexport.xls.error.interestRateOutOfBonds"),
+            NOT_A_NUMBER("admin.importexport.xls.error.notANumber"),
+            MISSING_NUMBER_OF_INSTALLMENTS("admin.importexport.xls.error.missingNumberOfInstallments"),
+            NUMBER_OF_INSTALLMENTS_OUT_OF_RANGE("admin.importexport.xls.error.numberOfInstallmentsOutOfRange"),
+            MISSING_DISBURSAL_DATE("admin.importexport.xls.error.missingDisbursalDate"),
+            MISSING_GRACE_PERIOD("admin.importexport.xls.error.missingGracePeriod"),
+            GRACE_PERIOD_IS_GREATER_THAN_INSTALLMENTS("loanAccountFormBean.gracePeriodDurationInRelationToInstallments.invalid"),
+            GRACE_PERIOD_EXCEEDS_PRODUCT_DEFINITION("loanAccountFormBean.gracePeriodDuration.invalid"),
+            WRONG_ACCOUNT_NUMBER("admin.importexport.xls.error.wrongAccountNumber"),
+            UNKNOWN_SOURCE_OF_FUND("admin.importexport.xls.error.unknownSourceOfFound"),
+            UNKNOWN_LOAN_PURPOSE("admin.importexport.xls.error.unknownLoanPurpose"),
+            UNKNOWN_COLLATERAL_TYPE("admin.importexport.xls.error.unknownCollateralType");
 
     private final String text;
 
