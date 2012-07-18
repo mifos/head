@@ -297,7 +297,9 @@ public class ImportClientsServiceFacadeWebTier implements ImportClientsServiceFa
                     }
 
                     client.setCustomerActivationDate(dateTimeService.getCurrentJavaDateTime());
-
+                    customerAccount.createSchedulesAndFeeSchedulesForFirstTimeActiveCustomer(client, accountFees,
+                            meeting, applicableCalendarEvents, new DateTime(client.getCustomerActivationDate()));
+                    
                     customerDao.save(client);
                 }
             }
