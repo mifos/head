@@ -315,7 +315,7 @@
                                     <id>port-switch</id>
                                     <phase>compile</phase>
                                     <configuration>
-                                        <executable>port_switch.sh</executable>
+                                        <executable>${basedir}/port_switch.sh</executable>
                                     </configuration>
                                     <goals>
                                         <goal>exec</goal>
