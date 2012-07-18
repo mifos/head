@@ -22,4 +22,13 @@ public enum ActivityRestrictionType implements LocalizedTextLookup {
     public Short getValue(){
         return value;
     }
+    
+    static public ActivityRestrictionType getByValue(short value){
+    	for (ActivityRestrictionType activityRestrictionType : values()){
+    		if (activityRestrictionType.getValue() == value){
+    			return activityRestrictionType;
+    		}
+    	}
+    	throw new RuntimeException("can't find activity restriction type " + value);
+    }
 }

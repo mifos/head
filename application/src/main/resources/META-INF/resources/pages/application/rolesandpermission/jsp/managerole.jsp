@@ -32,10 +32,9 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="managerole"></span>
-		<script language="javascript"
-			src="pages/application/rolesandpermission/js/checkBoxLogic.js">
-</script>
-
+	<script language="javascript" src="pages/application/rolesandpermission/js/checkBoxLogic.js"></script>
+	<script type="text/javascript" src="pages/js/separator.js"></script>
+	<mifos:NumberFormattingInfo />
 		<html-el:form action="/rolesPermission.do?method=update">
 			<c:set
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
@@ -120,7 +119,7 @@ explanation of the license and how it is applied.
 						<table width="95%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center"><html-el:submit styleId="managerole.button.submit" property="ss" 
-									styleClass="buttn">
+									styleClass="buttn submit">
 
 									<mifos:mifoslabel name="roleandpermission.button.submit"
 										bundle="RolesAndPermissionResources" />

@@ -26,8 +26,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMapping;
+import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.dto.domain.ActivityRestrictionDto;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.security.rolesandpermission.exceptions.RolesPermissionException;
+import org.mifos.security.util.helpers.ActivityRestrictionType;
 
 public class RolesPermissionsActionForm extends BaseActionForm {
 
@@ -37,15 +45,14 @@ public class RolesPermissionsActionForm extends BaseActionForm {
 
     private Map<String, String> activities = new HashMap<String, String>();
     
-    private List<ActivityRestrictionDto> activityRestrictionDtoList = new ArrayList<ActivityRestrictionDto>();
+    private Map<String, String> restrictionsValues = new HashMap<String, String>();
+    
+    private Map<Short, ActivityRestrictionDto> activityRestrictionDtoMap = new HashMap<Short, ActivityRestrictionDto>();
     
     private List<ActivityRestrictionDto> activityRestrictionDtoToPersistList = new ArrayList<ActivityRestrictionDto>();
-
-    /**
-     * map of activityRestrictionId and activityRestrictionTypeId 
-     */
-    private Map<String, String> activityRestrictionIdAndTypeIdMap = new HashMap<String, String>();
     
+    private List<ActivityRestrictionType> invalidActivityRestrictionsValues = new ArrayList<ActivityRestrictionType>();
+
     public Map<String, String> getActivities() {
         return activities;
     }
@@ -66,40 +73,45 @@ public class RolesPermissionsActionForm extends BaseActionForm {
         this.activities.put(key, value);
     }
     
-    public void setActivityRestriction(String activtiyRestrictionTypeIdString, String amountValueString){
-        if ( amountValueString != null && !amountValueString.isEmpty() ){
+    public void setRestrictionValue(String activtiyRestrictionTypeIdString, String amountValueString){
+        this.restrictionsValues.put(activtiyRestrictionTypeIdString, amountValueString);
+    }
+    
+    public void setActivityRestriction(String activtiyRestrictionTypeIdString) throws RolesPermissionException{
+        String amountValueString = restrictionsValues.get(activtiyRestrictionTypeIdString);
+        if (amountValueString != null && !amountValueString.isEmpty()) {
             Short activtiyRestrictionTypeId = new Short(activtiyRestrictionTypeIdString);
-            BigDecimal amountValue = new BigDecimal(amountValueString);
-            for (ActivityRestrictionDto activityRestrictionDtoIterator : this.activityRestrictionDtoList){ // look for existing restriction for update
-                if ( activityRestrictionDtoIterator.getActivityRestrictionTypeId().equals(activtiyRestrictionTypeId)){
-                    activityRestrictionDtoIterator.setAmountValue(amountValue);
-                    activityRestrictionDtoToPersistList.add(activityRestrictionDtoIterator);
-                    return;
+            BigDecimal amountValue = null;
+            try {
+                amountValue = new BigDecimal(amountValueString);
+
+                ActivityRestrictionDto activityRestrictionDto = activityRestrictionDtoMap.get(activtiyRestrictionTypeId);
+                if (activityRestrictionDto != null) {
+                    activityRestrictionDto.setAmountValue(amountValue);
+                    activityRestrictionDtoToPersistList.add(activityRestrictionDto);
+                } else {
+                    // add new restriction for role
+                    Short roleId = 0;
+                    if (id != null) {
+                        roleId = new Short(id);
+                    }
+                    activityRestrictionDto = new ActivityRestrictionDto(roleId, activtiyRestrictionTypeId, amountValue);
+                    activityRestrictionDtoMap.put(activtiyRestrictionTypeId, activityRestrictionDto);
                 }
+                this.activityRestrictionDtoToPersistList.add(activityRestrictionDto);
+            } catch (NumberFormatException e) {
+                invalidActivityRestrictionsValues.add(ActivityRestrictionType.getByValue(activtiyRestrictionTypeId));
             }
-            // add new restriction for role
-            Short roleId = 0;
-            if ( id != null ){
-                roleId = new Short(id);
-            }
-            this.activityRestrictionDtoToPersistList.add(new ActivityRestrictionDto(roleId, activtiyRestrictionTypeId, amountValue));
         }
     }
     
     public void resetActivityRestriction(){
-        this.activityRestrictionDtoList.clear();
         this.activityRestrictionDtoToPersistList.clear();
-        this.activityRestrictionIdAndTypeIdMap.clear();
+        this.activityRestrictionDtoMap.clear();
+        this.invalidActivityRestrictionsValues.clear();
+        this.restrictionsValues.clear();
     }
     
-    public List<ActivityRestrictionDto> getActivityRestrictionDtoList() {
-        return activityRestrictionDtoList;
-    }
-
-    public void setActivityRestrictionDtoList(List<ActivityRestrictionDto> activityRestrictionDtoList) {
-        this.activityRestrictionDtoList = activityRestrictionDtoList;
-    }
-
     public List<ActivityRestrictionDto> getActivityRestrictionDtoToPersistList() {
         return activityRestrictionDtoToPersistList;
     }
@@ -108,13 +120,14 @@ public class RolesPermissionsActionForm extends BaseActionForm {
         this.activityRestrictionDtoToPersistList = activityRestrictionDtoToPersistList;
     }
 
-    public Map<String, String> getActivityRestrictionIdAndTypeIdMap() {
-        return activityRestrictionIdAndTypeIdMap;
-    }
+    public Map<Short, ActivityRestrictionDto> getActivityRestrictionDtoMap() {
+		return activityRestrictionDtoMap;
+	}
 
-    public void setActivityRestrictionIdAndTypeIdMap(Map<String, String> activityRestrictionIdAndTypeIdMap) {
-        this.activityRestrictionIdAndTypeIdMap = activityRestrictionIdAndTypeIdMap;
-    }
+	public void setActivityRestrictionDtoMap(
+			Map<Short, ActivityRestrictionDto> activityRestrictionDtoMap) {
+		this.activityRestrictionDtoMap = activityRestrictionDtoMap;
+	}
 
     public String getId() {
         return id;
@@ -123,5 +136,27 @@ public class RolesPermissionsActionForm extends BaseActionForm {
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        ActionErrors actionErrors = new ActionErrors();
+        String method = request.getParameter(Methods.method.toString());
+        if (method != null && Methods.update.toString().equals(method) || Methods.create.toString().equals(method)) {
+            for (ActivityRestrictionType activityRestrictionType : invalidActivityRestrictionsValues) {
+                switch (activityRestrictionType) {
+                case MAX_LOAN_AMOUNT_FOR_APPROVE:
+                    addError(actionErrors, ConfigurationConstants.BRANCHOFFICE,
+                            "roleandpermission.error.activity.restriction.invalid.value",
+                            getMessageText(ActivityRestrictionType.MAX_LOAN_AMOUNT_FOR_APPROVE.getPropertiesKey()));
+                    break;
+                }
+            }
+        }
+        if (!actionErrors.isEmpty()) {
+            request.setAttribute("methodCalled", method);
+        }
+        this.invalidActivityRestrictionsValues.clear();
+		return actionErrors;
+	}
 
 }

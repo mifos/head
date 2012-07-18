@@ -246,7 +246,7 @@ public class RoleTempleteBuilder {
                 ActivityRestrictionDto activityRestrictionDto = activityRestrictionDtoMap.get(activityRestrictionType.getId());
                 String activityRestrictionValue = "";
                 if ( activityRestrictionDto != null){
-                    activityRestrictionValue = activityRestrictionDto.getAmountValue().toString();
+                    activityRestrictionValue = "" + activityRestrictionDto.getAmountValue().doubleValue();
                 }
                 String activityRestrictionTypeDescription = ApplicationContextProvider.getBean(MessageLookup.class).lookup(activityRestrictionType.getLookUpValue());
                 String checked = "";
@@ -258,14 +258,14 @@ public class RoleTempleteBuilder {
                 buffer.append("<td bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\">&nbsp; </td> ");
                 buffer.append("<td bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\">&nbsp; </td> ");
                 buffer.append("<td width=\"3%\" bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\">");
-                buffer.append("<input id=\"activityRestrictionCheckbox"+activityRestrictionType.getId()+"\" value=\""+activityRestrictionValue+"\" type=\"checkbox\" " + checked +" name=\"activityRestriction("+ activityRestrictionType.getId() + ")\" />");
+                buffer.append("<input id=\"activityRestrictionCheckbox"+activityRestrictionType.getId()+"\" type=\"checkbox\" " + checked +" name=\"activityRestriction\" value=\""+activityRestrictionType.getId()+"\" />");
                 buffer.append("<td colspan=\"2\" bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\">");
                 buffer.append("<span class=\"fontnormal\">");
                 buffer.append(activityRestrictionTypeDescription);
                 buffer.append("</span>");
                 buffer.append("</td>");
                 buffer.append("<td width=\"50%\" bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomLeftBorder\">");
-                buffer.append("<input type=\"text\" value=\""+activityRestrictionValue+"\" onchange=\"$('#activityRestrictionCheckbox"+activityRestrictionType.getId()+"').val($(this).val());\" />");
+                buffer.append("<input type=\"text\" value=\""+activityRestrictionValue+"\" name=\"restrictionValue("+activityRestrictionType.getId()+")\" class=\"separatedNumber\" />");
                 buffer.append("</td>");
                 buffer.append("</tr>"); 
             }

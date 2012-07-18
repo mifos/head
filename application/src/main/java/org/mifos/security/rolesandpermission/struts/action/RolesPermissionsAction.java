@@ -20,7 +20,6 @@
 
 package org.mifos.security.rolesandpermission.struts.action;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -39,6 +38,7 @@ import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.dto.domain.ActivityRestrictionDto;
@@ -114,8 +114,7 @@ public class RolesPermissionsAction extends BaseAction {
         for (ActivityRestrictionDto activityRestrictionDto : activityRestrictionDtoList){
             activityRestrictionDtoMap.put(activityRestrictionDto.getActivityRestrictionTypeId(), activityRestrictionDto);
         }
-        SessionUtils.removeThenSetAttribute(RolesAndPermissionConstants.ROLE_ACTIVITIES_RESTRICTIONS_MAP, (Serializable) activityRestrictionDtoMap, request);
-        rolesPermissionsActionForm.setActivityRestrictionDtoList(activityRestrictionDtoList);
+        rolesPermissionsActionForm.setActivityRestrictionDtoMap(activityRestrictionDtoMap);
         rolesPermissionsActionForm.setName(role.getName());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, role, request);
         return mapping.findForward(ActionForwards.manage_success.toString());
@@ -184,6 +183,23 @@ public class RolesPermissionsAction extends BaseAction {
     public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.cancel_success.toString());
+    }
+    
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        ActionForwards actionForward = ActionForwards.viewRoles_success;
+        String method = (String) request.getAttribute("methodCalled");
+        if (method != null) {
+            if (Methods.update.toString().equals(method)) {
+                actionForward = ActionForwards.manage_success;
+            } else if (Methods.create.toString().equals(method)){
+            	actionForward = ActionForwards.load_success;
+            } else {
+                actionForward = ActionForwards.valueOf(method+"_success");
+            }
+        }
+        return mapping.findForward(actionForward.toString());
     }
 
     @Override
