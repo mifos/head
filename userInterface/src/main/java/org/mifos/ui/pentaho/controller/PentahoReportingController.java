@@ -32,6 +32,7 @@ import org.mifos.reports.pentaho.PentahoReport;
 import org.mifos.reports.pentaho.PentahoReportsServiceFacade;
 import org.mifos.reports.pentaho.PentahoValidationError;
 import org.mifos.reports.pentaho.params.AbstractPentahoParameter;
+import org.mifos.reports.pentaho.params.PentahoDateParameter;
 import org.mifos.ui.core.controller.BreadCrumbsLinks;
 import org.mifos.ui.core.controller.BreadcrumbBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,7 @@ public class PentahoReportingController {
         if (!this.pentahoReportsService.checkAccessToReport(pentahoReportFormBean.getReportId())) {
             throw new AccessDeniedException("Access denied");
         }
-
+        pentahoReportFormBean = dateSplit(pentahoReportFormBean);
         ModelAndView mav = null;
         Integer reportId = pentahoReportFormBean.getReportId();
         if (StringUtils.isNotBlank(cancel)) {
@@ -152,5 +153,20 @@ public class PentahoReportingController {
 
     private Integer getReportId(HttpServletRequest request) {
         return Integer.parseInt(request.getParameter(REPORT_ID_PARAM));
+    }
+    
+    private PentahoReportFormBean dateSplit(PentahoReportFormBean pentahoReportFormBean){
+        List<PentahoDateParameter> date = pentahoReportFormBean.getReportDateParams();
+        for (PentahoDateParameter pentahoDateParameter : date) {
+            if(!pentahoDateParameter.getDateAll().isEmpty()){
+				pentahoDateParameter.setDateYY(pentahoDateParameter.getDateAll()
+						.split("/")[2]);
+				pentahoDateParameter.setDateMM(pentahoDateParameter.getDateAll()
+						.split("/")[1]);
+				pentahoDateParameter.setDateDD(pentahoDateParameter.getDateAll()
+						.split("/")[0]);
+			}
+        }
+        return pentahoReportFormBean;
     }
 }

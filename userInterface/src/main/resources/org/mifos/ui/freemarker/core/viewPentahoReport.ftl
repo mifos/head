@@ -112,9 +112,19 @@
 	    		 	<label for="${param.paramName}_DD">
 	    		 	    [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.paramName}:
 	    		 	</label>
-			        [@form.input path="${item}.dateDD" id="${param.paramName}_DD" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.dd"/]</span>
-	    			[@form.input path="${item}.dateMM" id="${param.paramName}_MM" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.mm"/]</span>
-    				[@form.input path="${item}.dateYY" id="${param.paramName}_YY" attributes="size=3 maxlength=4" /]<span>[@spring.message "datefield.yyyy"/]</span>
+	    		 	<script>
+$(document).ready(function() {
+	$.datepicker.setDefaults($.datepicker.regional[""]);
+    $("#${param.paramName}_Date").datepicker({
+		dateFormat: 'dd/mm/yy',	
+        showOn: "button",
+        buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
+		buttonImageOnly: true
+    });
+  }
+);
+</script>
+			        [@form.input path="${item}.dateAll" id="${param.paramName}_Date" /]
 	    		</div>
 		    [/#list]
 		    

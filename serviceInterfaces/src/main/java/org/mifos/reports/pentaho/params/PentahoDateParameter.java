@@ -26,6 +26,7 @@ public class PentahoDateParameter extends AbstractPentahoParameter {
     private String dateDD;
     private String dateMM;
     private String dateYY;
+    private String dateAll;
 
     public String getDateDD() {
         return dateDD;
@@ -51,7 +52,15 @@ public class PentahoDateParameter extends AbstractPentahoParameter {
         this.dateYY = dateYY;
     }
 
-    public LocalDate getDate() {
+    public String getDateAll() {
+		return dateAll;
+	}
+
+	public void setDateAll(String dateAll) {
+		this.dateAll = dateAll;
+	}
+
+	public LocalDate getDate() {
         LocalDate date = null;
         if (isDateEntered()) {
             Integer day = Integer.parseInt(dateDD);
