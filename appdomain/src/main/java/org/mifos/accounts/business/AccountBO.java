@@ -545,10 +545,23 @@ public class AccountBO extends AbstractBusinessObject {
         buildFinancialEntries(new LinkedHashSet<AccountTrxnEntity>(reversedTrxns));
     }
 
-    public final void handleChangeInMeetingSchedule(final List<Days> workingDays, final List<Holiday> holidays)
+    /*
+     * There are two different strategies for updating customers schedule:
+	 * 1) for customers being at the top of hierarchy
+     * 2) for customers who are switching their membership
+	 * customerTopOfHierarchy parameter specifies it
+     */
+    public final void handleChangeInMeetingSchedule(final List<Days> workingDays, final List<Holiday> holidays, boolean customerTopOfHierarchy)
             throws AccountException {
         // find the installment to update
-        AccountActionDateEntity nextInstallment = findInstallmentToUpdate();
+    	AccountActionDateEntity nextInstallment;
+    	
+        if(customerTopOfHierarchy) {
+    		nextInstallment = findInstallmentToUpdate();
+        }
+        else {
+        	nextInstallment = findInstallmentToUpdateFromNow();
+        }
         if (nextInstallment != null) {
             regenerateFutureInstallments(nextInstallment, workingDays, holidays);
         }
@@ -596,6 +609,38 @@ public class AccountBO extends AbstractBusinessObject {
         return installment;
     }
 
+    /*
+     * similar to findInstallmentToUpdate excepts this one
+     * finds and updates all installments that are after current date
+     * which is proper for switching client to different group
+     * but is NOT proper for Customer being at the top of the customer hierarchy
+     * (in that case findInstallmentToUpdate is the right one)
+     */
+    private AccountActionDateEntity findInstallmentToUpdateFromNow() {
+        List<AccountActionDateEntity> allInstallments = getAllInstallments();
+        if (allInstallments.size() == 0) {
+            return null;
+        }
+
+        LocalDate currentDate = new LocalDate();
+
+        int installmentIndex = 0;
+        AccountActionDateEntity installment = allInstallments.get(installmentIndex);
+
+        // update all installments that are after current date
+        while (installment != null && currentDate.isAfter(new LocalDate(installment.getActionDate().getTime()))) {
+
+            ++installmentIndex;
+            // if we've iterated over all the installments, then just return null
+            if (installmentIndex == allInstallments.size()) {
+                installment = null;
+            } else {
+                installment = allInstallments.get(installmentIndex);
+            }
+        }
+        return installment;
+    }
+    
     public void changeStatus(final AccountState newStatus, final Short flagId, final String comment, PersonnelBO loggedInUser) throws AccountException {
         changeStatus(newStatus.getValue(), flagId, comment, loggedInUser, getDateTimeService().getCurrentJavaDateTime());
     }
@@ -739,7 +784,7 @@ public class AccountBO extends AbstractBusinessObject {
 
         return amount;
     }
-
+    
     public double getLastPmntAmnt() {
         if (null != accountPayments && accountPayments.size() > 0) {
             return findMostRecentPaymentByPaymentDate().getAmount().getAmountDoubleValue();
@@ -1543,6 +1588,14 @@ public class AccountBO extends AbstractBusinessObject {
             }
         }
         return periodicFeeList;
+    }
+    
+    public boolean isAnyPeriodicFeeActive() {
+    	List<AccountFeesEntity> periodicFeeList = getPeriodicFeeList();
+    	if(periodicFeeList.isEmpty()) {
+    		return true;
+    	}
+    	return false;
     }
 
     protected void deleteFutureInstallments() throws AccountException {
