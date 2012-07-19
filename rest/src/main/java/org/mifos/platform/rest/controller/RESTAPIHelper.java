@@ -11,6 +11,8 @@ public class RESTAPIHelper {
         public static final String INVALID_DATE_STRING = "string is not valid date";
         public static final String FUTURE_DATE = "Date can not be a future date.";
         public static final String INVALID_PAYMENT_TYPE_ID = "invalid payment type Id";
+        public static final String INVALID_PRODUCT_ID = "invalid product Id";
+        public static final String INVALID_GLOABAL_CUSTOMER_NUM = "invalid global customer number";
     }
 
 }

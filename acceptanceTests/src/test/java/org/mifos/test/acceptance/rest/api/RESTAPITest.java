@@ -31,8 +31,8 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.rest.api.RESTAPITestHelper.By;
-import org.mifos.test.acceptance.rest.api.RESTAPITestHelper.Type;
 import org.mifos.test.acceptance.rest.api.RESTAPITestHelper.Op;
+import org.mifos.test.acceptance.rest.api.RESTAPITestHelper.Type;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -58,6 +58,7 @@ public class RESTAPITest extends UiTestCaseBase {
     public static final String SAVINGS_MANDATORY_ACCOUNT_GLOBAL_ID = "000100000000007";
     public static final String MEETINGS_DAY = "19-09-2011";
     public static final String TODAY = "13-09-2011";
+    public static final String SAVINGS_PRODUCT = "3";
     
     private RESTAPITestHelper helper;
 
@@ -571,6 +572,23 @@ public class RESTAPITest extends UiTestCaseBase {
         value = SAVINGS_VOLUNTARY_ACCOUNT_GLOBAL_ID + Op.WITHDRAW;
         verifySavingsTrxn(data, type, by, value);
     }
+    
+    @Test(dependsOnGroups="readOnly")
+    public void createSavingsAccount() throws Exception {
+        String url = "?globalCustomerNum="+ CLIENT_GLOBAL_ID +"&productId=" + SAVINGS_PRODUCT;
+        String type = Type.SAVINGS;
+        String value = Op.CREATE;
+                
+        String actualJSON = helper.postJSONFromUI(type, value, url);
+        String expectedJSON = helper.getJSONFromDataSet(type, value);
+        AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
+        jsonAssert.assertEqual("customerName");
+        jsonAssert.assertEqual("productName");
+        jsonAssert.assertEqual("interesRate");
+        jsonAssert.assertEqual("interestRatePeriod");
+        jsonAssert.assertEqual("recommendedAmount");
+    }
+    
 
     private void verifySavingsTrxn(String data, String type, String by, String value) throws Exception {
         String actualJSON = helper.postJSONFromUI(type, by, value, data);

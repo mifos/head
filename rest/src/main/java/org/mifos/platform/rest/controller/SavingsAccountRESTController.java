@@ -32,15 +32,20 @@ import javax.servlet.http.HttpServletRequest;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.api.AccountService;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PaymentTypeDto;
+import org.mifos.dto.domain.SavingsAccountCreationDto;
 import org.mifos.dto.domain.SavingsAccountDetailDto;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
@@ -76,7 +81,13 @@ public class SavingsAccountRESTController {
 
     @Autowired
     private PersonnelDao personnelDao;
+    
+    @Autowired
+    private CustomerDao customerDao;
 
+    @Autowired
+    private SavingsProductDao savingsProductDao;
+    
     @RequestMapping(value = "account/savings/num-{globalAccountNum}/deposit", method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> deposit(@PathVariable String globalAccountNum,
@@ -222,6 +233,35 @@ public class SavingsAccountRESTController {
         return map;
     }
 
+    @RequestMapping(value = "/account/savings/create", method=RequestMethod.POST)
+    public @ResponseBody
+    Map<String, String> createSavingsAccount(@RequestParam String globalCustomerNum,
+                                            @RequestParam(required=false) String amount,
+                                            @RequestParam Integer productId) throws Throwable {
+        
+        String recommendedAmount = null != amount ? amount : "0";
+        
+        CustomerBO customer = validateGlobalCustNum(globalCustomerNum);
+        SavingsOfferingBO product = validateProductId(productId);
+        
+        Integer customerId = customer.getCustomerId();
+        AccountState accountState = AccountState.SAVINGS_PENDING_APPROVAL;
+        
+        SavingsAccountCreationDto savingsAccountCreation = new SavingsAccountCreationDto(
+                productId, customerId, accountState.getValue(), recommendedAmount);
+        Long savings = savingsServiceFacade.createSavingsAccount(savingsAccountCreation);
+        SavingsAccountDetailDto details = savingsServiceFacade.retrieveSavingsAccountDetails(savings);
+        
+        
+        Map<String,String> map = new HashMap<String, String>();
+        map.put("customerName", customer.getDisplayName());
+        map.put("productName", product.getPrdOfferingName());
+        map.put("interesRate", details.getProductDetails().getInterestRate().toString());
+        map.put("interestRatePeriod", details.getProductDetails().getInterestCalculationFrequencyPeriod().toString());
+        map.put("recommendedAmount", recommendedAmount);
+        return map;
+    }
+    
     private void validateAmount(BigDecimal amount) throws ParamValidationException {
         if (amount != null && amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new ParamValidationException(ErrorMessage.NON_NEGATIVE_AMOUNT);
@@ -231,6 +271,26 @@ public class SavingsAccountRESTController {
     private void validateNote(String note) throws ParamValidationException {
         if (note == null || note.isEmpty()){
             throw new ParamValidationException(ErrorMessage.INVALID_NOTE);
+        }
+    }
+    
+    private SavingsOfferingBO validateProductId(Integer productId) throws ParamValidationException {
+        SavingsOfferingBO product = savingsProductDao.findById(productId);
+        if (null == product) {
+            throw new ParamValidationException(ErrorMessage.INVALID_PRODUCT_ID);
+        }
+        else {
+            return product;
+        }
+    }
+    
+    private CustomerBO validateGlobalCustNum(String globalCustomerNum) throws ParamValidationException {
+        CustomerBO client = customerDao.findCustomerBySystemId(globalCustomerNum);
+        if (null == client) {
+            throw new ParamValidationException(ErrorMessage.INVALID_GLOABAL_CUSTOMER_NUM);
+        }
+        else {
+            return client;
         }
     }
 
