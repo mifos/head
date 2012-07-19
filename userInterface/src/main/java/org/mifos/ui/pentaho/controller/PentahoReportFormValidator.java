@@ -66,7 +66,7 @@ public class PentahoReportFormValidator implements Validator {
                             dateParam.getParamName() + ": Invalid date");
                 }
             } else if (dateParam.isMandatory()) {
-                rejectValueAsMandatory("reportDateParams[" + i++ + "].dateDD", dateParam.getParamName(), errors);
+                rejectValueAsMandatory("reportDateParams[" + i++ + "].dateDD", dateParam.getLabelName(), errors);
             }
         }
     }
