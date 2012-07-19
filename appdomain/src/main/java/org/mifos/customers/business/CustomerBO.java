@@ -1302,6 +1302,13 @@ public abstract class CustomerBO extends AbstractBusinessObject {
             throw new CustomerException(CustomerConstants.INVALID_PARENT);
         }
     }
+    
+    public boolean isTopOfHierarchy() {
+    	if (this.parentCustomer == null) {
+    		return true;
+    	}
+    	return false;
+    }
 
     public boolean hasMeetingDifferentTo(MeetingBO groupMeeting) {
         MeetingBO customerMeeting = getCustomerMeetingValue();
@@ -1352,5 +1359,18 @@ public abstract class CustomerBO extends AbstractBusinessObject {
             }           
         }
         return activeAccountExits;
+    }
+    
+    /**
+     * Checks if there are any active periodic fees for customer.
+     * @return true if at least one active and periodic fee is found, otherwise false
+     */
+    public boolean isAnyPeriodicFeeActive() {
+    	for (AccountBO account : getAccounts()) {
+    		if(!account.isAnyPeriodicFeeActive()) {
+    			return true;
+    		}
+    	}
+    	return false;
     }
 }

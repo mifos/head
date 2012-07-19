@@ -29,6 +29,7 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
@@ -950,7 +951,9 @@ public class CustomerServiceImpl implements CustomerService {
         GroupBO receivingGroup = (GroupBO) customerDao.findCustomerById(groupId);
         client.validateReceivingGroup(receivingGroup);
         client.validateForActiveAccounts();
+        client.validateForPeriodicFees();
 
+        	
         CustomerBO oldParent = client.getParentCustomer();
 
         try {
@@ -1155,7 +1158,7 @@ public class CustomerServiceImpl implements CustomerService {
             if (account instanceof LoanBO && lsimEnabled) {
                 // do not change schedules when LSIm is on for loan accounts
             } else {
-                account.handleChangeInMeetingSchedule(workingDays, orderedUpcomingHolidays);
+                account.handleChangeInMeetingSchedule(workingDays, orderedUpcomingHolidays, customer.isTopOfHierarchy());
                 customerDao.save(account);
             }
         }
