@@ -43,7 +43,11 @@ public class SavingsImportTest extends UiTestCaseBase {
     @Test(enabled = true)
     public void importSavingAccountsToClientTest() {
         ManageRolePage manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
-        manageRolePage.enablePermission("8_8");
+        try {
+            manageRolePage.enablePermission("8_8");
+        } catch (AssertionError ex) {
+            Logger.getAnonymousLogger().info("Permission is marked.");
+        }
         manageRolePage.submitAndGotoViewRolesPage();
         String succesNumber = "1";
         String errorNumber = "5";
