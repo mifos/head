@@ -76,6 +76,27 @@ public class LoanRepayTest extends UiTestCaseBase {
         verifyRepaymentSchedule();
         verifyAccountActivity();
     }
+    
+    public void repayLoanFromSavingsAccountWithInsufficentBalance()
+    {
+        String loanToRepay = "000100000000015";
+        String savingAccountWithInsufficentBalance = "000100000000059";
+        String expectedErrorMessage = "No enough balance in the account, please select a different account.";
+        
+        RepayLoanParameters repayLoanParameters = new RepayLoanParameters();
+        repayLoanParameters.setModeOfRepayment(RepayLoanParameters.TRANSFER_FROM_SAVINGS);
+        repayLoanParameters.setAccountForTransfer(savingAccountWithInsufficentBalance);  
+        
+        String errors = navigationHelper
+                .navigateToLoanAccountPage(loanToRepay)
+                .navigateToRepayLoan()
+                .submitAndNavigateToRepayLoanConfirmationPage(repayLoanParameters)
+                .submitWithError()
+                .getErrors();
+        
+        Assert.assertEquals(errors, expectedErrorMessage);    
+    }
+
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-251
     private void verifyPaymentTypesForLoanRepayments() {
