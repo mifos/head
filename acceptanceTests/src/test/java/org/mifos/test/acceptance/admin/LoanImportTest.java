@@ -58,7 +58,11 @@ public class LoanImportTest extends UiTestCaseBase {
     @Test(enabled=true)
     public void importLoanAccountsToClientTest(){
         ManageRolePage manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
+        try {
         manageRolePage.enablePermission("8_7");
+        } catch (AssertionError ex) {
+        	Logger.getAnonymousLogger().info("Permission is marked.");
+        }
         manageRolePage.submitAndGotoViewRolesPage();
         if(!valuesDefined){
             valuesDefined=defineValuesForProducts();
