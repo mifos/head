@@ -158,12 +158,12 @@ public class PentahoReportingController {
     private PentahoReportFormBean dateSplit(PentahoReportFormBean pentahoReportFormBean){
         List<PentahoDateParameter> date = pentahoReportFormBean.getReportDateParams();
         for (PentahoDateParameter pentahoDateParameter : date) {
-            if(!pentahoDateParameter.getDateDD().isEmpty()){
-				pentahoDateParameter.setDateYY(pentahoDateParameter.getDateDD()
+            if(!pentahoDateParameter.getDateAll().isEmpty()){
+				pentahoDateParameter.setDateYY(pentahoDateParameter.getDateAll()
 						.split("/")[2]);
-				pentahoDateParameter.setDateMM(pentahoDateParameter.getDateDD()
+				pentahoDateParameter.setDateMM(pentahoDateParameter.getDateAll()
 						.split("/")[1]);
-				pentahoDateParameter.setDateDD(pentahoDateParameter.getDateDD()
+				pentahoDateParameter.setDateDD(pentahoDateParameter.getDateAll()
 						.split("/")[0]);
 			}
         }

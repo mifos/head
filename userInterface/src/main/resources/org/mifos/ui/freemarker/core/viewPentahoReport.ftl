@@ -124,7 +124,7 @@ $(document).ready(function() {
   }
 );
 </script>
-			        [@form.input path="${item}.dateDD" id="${param.paramName}_Date" /]
+			        [@form.input path="${item}.dateAll" id="${param.paramName}_Date" /]
 	    		</div>
 		    [/#list]
 		    
