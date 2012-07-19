@@ -8090,7 +8090,7 @@ CREATE TABLE personnel (
 
 /*!40000 ALTER TABLE personnel DISABLE KEYS */;
 INSERT INTO personnel VALUES (1,2,'1',1,1,1,1,NULL,1,'\"d��#0�a�M�2�Nj����d�QS8�','mifos',NULL,1,'mifos',1,NULL,1,'2011-03-14','2011-03-14',0,0,23);
-INSERT INTO personnel VALUES (2,1,'0002-00002',2,NULL,1,1,NULL,NULL,'ï¿œ;}ï¿œï¿œï¿œÇï¿œ1d&ï¿œDï¿œï¿œï¿œï¿œ1sIï¿œ@}ï¿œ','loanofficer','',0,'loan officer',1,'2011-02-18',NULL,NULL,NULL,0,0,1);
+INSERT INTO personnel VALUES (2,1,'0002-00002',2,NULL,1,1,NULL,NULL,0x22648ca42330a561964dbe32f54e6a04a49d03f203ca64b2515338d9,'loanofficer','',1,'loan officer',1,'2011-02-18',2,'2011-11-25','2011-11-25',0,0,2);
 INSERT INTO personnel VALUES (3,1,'0003-00003',3,NULL,1,1,NULL,NULL,0x22648ca42330a561964dbe32f54e6a04a49d03f203ca64b2515338d9,'loanofficerbranch1','',1,'loanofficer branch1',1,'2011-03-03',3,'2011-11-25','2011-11-25',0,0,4);
 INSERT INTO personnel VALUES (4,1,'0004-00004',4,NULL,1,1,NULL,NULL,'ͱ~�y9��I�(�P\\bc4&I�','loanofficerbranch2','',0,'loanofficerbranch2 loanofficerbranch2',1,'2011-03-14',NULL,NULL,NULL,0,0,1);
 /*!40000 ALTER TABLE personnel ENABLE KEYS */;
