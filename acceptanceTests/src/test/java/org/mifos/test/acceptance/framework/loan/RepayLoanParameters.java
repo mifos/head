@@ -24,12 +24,14 @@ public class RepayLoanParameters {
     public static final String CASH = "Cash";
     public static final String VOUCHER = "Voucher";
     public static final String CHEQUE = "Cheque";
+    public static final String TRANSFER_FROM_SAVINGS = "Transfer from Savings";
 
     private String modeOfRepayment;
     private String receiptId;
     private String receiptDateDD;
     private String receiptDateMM;
     private String receiptDateYYYY;
+    private String accountForTransfer;
 
     public String getModeOfRepayment() {
         return this.modeOfRepayment;
@@ -61,6 +63,13 @@ public class RepayLoanParameters {
     public void setReceiptDateYYYY(String receiptDateYYYY) {
         this.receiptDateYYYY = receiptDateYYYY;
     }
+    
+    public String getAccountForTransfer() {
+        return this.accountForTransfer;
+    }
+    public void setAccountForTransfer(String accountForTransfer) {
+        this.accountForTransfer = accountForTransfer;
+    }
 
     /**
      * Used to select the right option.
@@ -70,6 +79,7 @@ public class RepayLoanParameters {
         if (CASH.equals(modeOfRepayment)) { return 1; }
         if (VOUCHER.equals(modeOfRepayment)) { return 2; }
         if (CHEQUE.equals(modeOfRepayment)) { return 3; }
+        if (TRANSFER_FROM_SAVINGS.equals(modeOfRepayment)) { return 4; }
         return 0;
     }
 }

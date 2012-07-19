@@ -39,6 +39,12 @@ public class RepayLoanConfirmationPage extends MifosPage {
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
     }
+    
+    public RepayLoanConfirmationPage submitWithError(){
+        selenium.click("Review_RepayLoan.button.submit");
+        waitForPageToLoad();
+        return new RepayLoanConfirmationPage(selenium);
+    }
 
     public String getSelectedValueForInterestWaiver() {
         String result = null;
