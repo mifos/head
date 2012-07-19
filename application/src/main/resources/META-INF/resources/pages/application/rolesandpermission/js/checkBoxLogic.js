@@ -168,7 +168,16 @@ var index=0;
 
 
 
-   }   
+   } 
+
+
+    //add filter for 'Can make payment to the account using Saving Account Transfer'
+    if (myname = "5_1_6" && !(box.checked)) {
+        document.getElementById('5_1_11').checked = false;
+    }
+    else if (myname = '5_1_11' && box.checked) {
+        document.getElementById('5_1_6').checked = true;
+    }
 
 }
 

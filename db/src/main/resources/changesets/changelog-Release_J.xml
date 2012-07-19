@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <changeSet id="MIFOS-5671" author="Adrian Winkler">
+    	<sql endDelimiter=";">
+    		INSERT INTO lookup_value VALUES(DEFAULT, 87, 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer');
+
+			INSERT INTO lookup_value_locale(locale_id, lookup_id, lookup_value) SELECT 1, lookup_id, 
+			'Can make payment to the account using Savings Account Transfer' FROM lookup_value 
+			WHERE lookup_name = 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer';
+
+			INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) SELECT 282, 113, lookup_id, lookup_id 
+			FROM lookup_value WHERE lookup_name = 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer';
+
+			INSERT INTO roles_activity(activity_id, role_id) SELECT activity_id, 1 FROM activity WHERE activity_name_lookup_id = 
+			(SELECT lookup_id FROM lookup_value WHERE lookup_name = 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer');
+
+		</sql>
+    	<rollback>
+    		<sql endDelimiter=";">
+    		DELETE FROM lookup_value WHERE lookup_name = 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer';
+
+			DELETE FROM lookup_value_locale WHERE lookup_value = 'Can make payment to the account using Savings Account Transfer';
+
+			DELETE FROM activity WHERE activity_id = 282;
+
+			DELETE FROM roles_activity WHERE activity_id = 282;   		
+    		
+    		</sql></rollback>
+    </changeSet>
+</databaseChangeLog>
