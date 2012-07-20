@@ -26,6 +26,10 @@ public class BackUrlInterceptor extends HandlerInterceptorAdapter {
             breadcrumbs = new BreadcrumbBuilder().withLink("previousPage", urlToBackPage)
                     .withLink("pageNotFound", errorPage).build();
             request.setAttribute("accessDeniedBreadcrumbs", breadcrumbs);
+        } else if ("viewPentahoReport.ftl".equals(errorPage)) {
+            breadcrumbs = new BreadcrumbBuilder().withLink("previousPage", urlToBackPage)
+                    .withLink("JNDIError", errorPage).build();
+            request.setAttribute("accessDeniedBreadcrumbs", breadcrumbs);
         } else {
             breadcrumbs = new BreadcrumbBuilder().withLink("previousPage", urlToBackPage)
                     .withLink("accessDenied", errorPage).build(); 

@@ -25,19 +25,20 @@
 <div class="content_panel">
     <div class="marginLeft30 marginTop20">
         <h3 id="jndiHeading">JNDI Error</h3>
-        <p id="jndiMessage">Report cannot be generated because JNDI has not been configured. Please follow the instructions below to set up JNDI:
-
-Jetty supports JNDI, but by default it is disabled in a standard server. In order to enable JNDI in Jetty a few changes to the start.ini file in Jetty home directory must be made:
-
-1) Add 'plus' and 'annotations' to OPTIONS, so that it looks something like this:
-
-OPTIONS=Server,jsp,jmx,resources,websocket,ext,plus,annotations
-
-2) Enable the plus configuration by adding the following line:
-
-etc/jetty-plus.xml
-
-at the end of the file next to other similar entries.</p>
+        <p id="jndiMessage">
+        	Report cannot be generated because JNDI has not been configured. Please follow the instructions below to set up JNDI:
+        	<br>		
+			Jetty supports JNDI, but by default it is disabled in a standard server. In order to enable JNDI in Jetty a few changes to the start.ini file in Jetty home directory must be made:
+			<br><br>
+			1) Add 'plus' and 'annotations' to OPTIONS, so that it looks something like this:
+			<br><br>
+			OPTIONS=Server,jsp,jmx,resources,websocket,ext,plus,annotations
+			<br><br>
+			2) Enable the plus configuration by adding the following line:
+			<br><br>
+			etc/jetty-plus.xml
+			<br><br>
+			at the end of the file next to other similar entries.</p>
         <div class="clear">&nbsp;</div>
    		<div class ="marginLeft20px">
     		[@form.returnToPage  "${Request.urlToBackPage}" "button.back" "jndi.button.back"/]
@@ -47,4 +48,3 @@ at the end of the file next to other similar entries.</p>
 
 [@layout.footer /]
 [/@adminLeftPaneLayout]
-test
