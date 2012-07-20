@@ -61,7 +61,9 @@ public class PentahoParamParser {
             }
 
             return result;
-        } catch (Exception ex) {
+        } catch (ReportDataFactoryException ex) { 
+        	throw new JNDIException("JNDI is not configured");
+    	}catch (Exception ex) {
             throw new MifosRuntimeException(ex);
         } finally {
             if (paramContext != null) {
