@@ -997,12 +997,14 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         SavingsBO savingsAccount = SavingsBO.createOpeningBalanceIndividualSavingsAccount(customer, savingsProduct,
                 recommendedOrMandatory, savingsAccountState, createdDate, createdById, activationDetails, createdBy,
                 openingBalance);
+        System.out.println(openingBalanceSavingsAccount.getAccountNumber());
+        savingsAccount.setGlobalAccountNum(openingBalanceSavingsAccount.getAccountNumber());
 
         try {
             this.transactionHelper.startTransaction();
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.flushSession();
-            savingsAccount.generateSystemId(createdBy.getOffice().getGlobalOfficeNum());
+            //savingsAccount.generateSystemId(createdBy.getOffice().getGlobalOfficeNum());
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.commitTransaction();
             return savingsAccount.getGlobalAccountNum();
