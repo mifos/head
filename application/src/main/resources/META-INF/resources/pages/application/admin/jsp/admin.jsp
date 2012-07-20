@@ -208,6 +208,20 @@ explanation of the license and how it is applied.
                                             <mifos:mifoslabel name="admin.importexport.clients" bundle="adminUIResources" /></a>
                                         </td>
                                 </tr>
+                                <tr class="fontnormal">
+                                        <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                                        <td width="97%">
+                                            <a id="admin.link.importLoans" href="importLoans.ftl">
+                                            <mifos:mifoslabel name="admin.importexport.loans.importLoans" bundle="adminUIResources" /></a>
+                                        </td>
+                                </tr>
+                                <tr class="fontnormal">
+                                        <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                                        <td width="97%">
+                                            <a id="admin.link.importSavings" href="importSavings.ftl">
+                                            <mifos:mifoslabel name="admin.importexport.savings.importSavings" bundle="adminUIResources" /></a>
+                                        </td>
+                                </tr>
 								<tr class="fontnormal">
 									<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 									<td width="97%">

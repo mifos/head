@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+		<changeSet id="MIFOS_5661" author="Lukasz Wyszomirski" context="expansion">
+        <sql endDelimiter=";">
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanImportLoans');
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanImportSavings');
+
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanImportLoans'),null);
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanImportSavings'),null);
+
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            values(280,196,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanImportLoans'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanImportLoans'));
+			insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            values(281,196,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanImportSavings'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanImportSavings'));
+                
+            insert into roles_activity(activity_id, role_id) values(280, 1);
+            insert into roles_activity(activity_id, role_id) values(281, 1);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                delete from roles_activity where activity_id = 280;
+                delete from roles_activity where activity_id = 281;
+
+                delete from activity where activity_id = 280;
+                delete from activity where activity_id = 281;
+
+                delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanImportLoans');
+                delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanImportSavings');
+
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanImportLoans';
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanImportSavings';
+            </sql>
+        </rollback>
+    </changeSet>
+ </databaseChangeLog>
