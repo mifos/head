@@ -221,12 +221,6 @@ public class ImportClientsServiceFacadeWebTier implements ImportClientsServiceFa
                 client.setGlobalCustNum(importedClient.getClientGlobalNum());
             }
 
-            /* Family data */
-            if (ClientRules.isFamilyDetailsRequired()) {
-                client.setFamilyAndNameDetailSets(clientCreationDetail.getFamilyNames(),
-                        clientCreationDetail.getFamilyDetails());
-            }
-
             NewClientDto newClient = new NewClientDto(client, finalStatus);
 
             newClients.add(newClient);
