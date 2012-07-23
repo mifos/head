@@ -123,7 +123,7 @@ explanation of the license and how it is applied.
 										</tr>
 									</table>
 									</td>
-									<td width="25%" align="center">
+									<td width="25%" align="left">
 									<table border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td><img src="pages/framework/images/timeline/bigarrow.gif"
@@ -146,7 +146,7 @@ explanation of the license and how it is applied.
 										</tr>
 									</table>
 									</td>
-									<td width="25%" align="right">
+									<td width="25%" align="center">
 									<table border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td><img
@@ -180,21 +180,24 @@ explanation of the license and how it is applied.
 							
 							<!-- Family Details -->
 							<table>
+					<table style=" width : 516px; height : 63px;">
                                 <c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsMandatory')}">
                                     <tr class="fontnormalboldorange">
-                                        <td>
+                                           <td style=" width : 593px;">
                                             <mifos:mifoslabel name="client.FamilyDetailsOptional" bundle="ClientUIResources"/>
                                         </td>
                                     </tr>
                                 </c:if>
+</table>
+<table>
 								<tr class="fontnormal">
-									<td align="right" class="paddingL10">
+									<td align="left" class="paddingL10" style=" width : 97px;">
                                         <c:if test="${sessionScope.clientCustActionForm.familySize >= 0}">
                                             <mifos:mifoslabel name="client.FamilyDetails" keyhm="Client.FamilyDetails"
                                                               bundle="ClientUIResources"></mifos:mifoslabel>
                                         </c:if>
                                     </td>
-									<td>
+									<td class="paddingL10" style=" width : 920px;" style=" width : 822px;">
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr class="fontnormal">
 											
@@ -345,7 +348,7 @@ explanation of the license and how it is applied.
 									</td>
 								</tr>
 								</table>
-								
+								</table>
 							<!-- Buttons -->
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
