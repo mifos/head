@@ -21,12 +21,14 @@ package org.mifos.reports.pentaho.params;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class PentahoDateParameter extends AbstractPentahoParameter {
     private String dateDD;
     private String dateMM;
     private String dateYY;
-    private String dateAll;
+    @DateTimeFormat(style = "S-")
+    private LocalDate date;
 
     public String getDateDD() {
         return dateDD;
@@ -52,29 +54,12 @@ public class PentahoDateParameter extends AbstractPentahoParameter {
         this.dateYY = dateYY;
     }
 
-    public String getDateAll() {
-		return dateAll;
-	}
-
-	public void setDateAll(String dateAll) {
-		this.dateAll = dateAll;
-	}
-
 	public LocalDate getDate() {
-        LocalDate date = null;
-        if (isDateEntered()) {
-            Integer day = Integer.parseInt(dateDD);
-            Integer month = Integer.parseInt(dateMM);
-            Integer year = Integer.parseInt(dateYY);
-            date = new LocalDate(year, month, day);
-        }
         return date;
     }
 
     public void setDate(LocalDate date) {
-        this.dateDD = String.valueOf(date.getDayOfMonth());
-        this.dateMM = String.valueOf(date.getMonthOfYear());
-        this.dateYY = String.valueOf(date.getYear());
+        this.date = date;
     }
 
     public boolean isDateEntered() {

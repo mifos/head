@@ -109,7 +109,7 @@
 	    		<div class="row">
 	    		 	[@form.input path="${item}.paramName" id="${param.paramName}_paramName" fieldType="hidden" /]
 	    		 	[@form.input path="${item}.mandatory" id="${param.paramName}_mandatory," fieldType="hidden" /]
-	    		 	<label for="${param.paramName}_DD">
+	    		 	<label for="${param.paramName}_date">
 	    		 	    [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.paramName}:
 	    		 	</label>
 	    		 	<script>
@@ -124,7 +124,7 @@ $(document).ready(function() {
   }
 );
 </script>
-			        [@form.input path="${item}.dateAll" id="${param.paramName}_Date" /]
+			        [@form.input path="${item}.date" id="${param.paramName}_Date" /]
 	    		</div>
 		    [/#list]
 		    

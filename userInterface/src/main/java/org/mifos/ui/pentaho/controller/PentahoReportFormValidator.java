@@ -50,20 +50,10 @@ public class PentahoReportFormValidator implements Validator {
         int i = 0;
         String[] args = new String[1];
         for (PentahoDateParameter dateParam : formBean.getReportDateParams()) {
-            if(!dateParam.getDateAll().isEmpty()){
-             try {
-                    Integer day = Integer.parseInt(dateParam.getDateAll().split("/")[0]);
-                    Integer month = Integer.parseInt(dateParam.getDateAll().split("/")[1]);
-                    Integer year = Integer.parseInt(dateParam.getDateAll().split("/")[2]);
-                    new LocalDate(year, month, day);
-                } catch (RuntimeException ex) {
-                    args[0] = dateParam.getParamName();
-                    errors.rejectValue("reportDateParams[" + i++ + "].dateAll", "reports.invalidDate", args,
-                            dateParam.getParamName() + ": Invalid date");
-                }
-            } else if (dateParam.isMandatory()) {
-                rejectValueAsMandatory("reportDateParams[" + i++ + "].dateAll", dateParam.getParamName(), errors);
+            if (null==dateParam.getDate() && !errors.hasFieldErrors("reportDateParams[" + i + "].date")) {
+                rejectValueAsMandatory("reportDateParams[" + i + "].date", dateParam.getParamName(), errors);
             }
+            i+=1;
         }
     }
 
