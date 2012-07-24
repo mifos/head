@@ -109,24 +109,14 @@
 	    		<div class="row">
 	    		 	[@form.input path="${item}.paramName" id="${param.paramName}_paramName" fieldType="hidden" /]
 	    		 	[@form.input path="${item}.mandatory" id="${param.paramName}_mandatory," fieldType="hidden" /]
-	    		 	<label for="${param.paramName}_Date">
+	    		 	<label for="${param.paramName}_DD">
 	    		 	[@form.input path="${item}.labelName" id="input.labelName" fieldType="hidden"/]
 	    		 	    [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.labelName}:
 	    		 	</label>
-			        <script>
-$(document).ready(function() {
-	$.datepicker.setDefaults($.datepicker.regional[""]);
-    $("#${param.paramName}_Date").datepicker({
-		dateFormat: 'dd/mm/yy',	
-        showOn: "button",
-        buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
-		buttonImageOnly: true
-    });
-  }
-);
-</script>
-			        [@form.input path="${item}.date" id="${param.paramName}_Date" /]
-			        </div>
+			        [@form.input path="${item}.dateDD" id="${param.paramName}_DD" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.dd"/]</span>
+	    			[@form.input path="${item}.dateMM" id="${param.paramName}_MM" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.mm"/]</span>
+    				[@form.input path="${item}.dateYY" id="${param.paramName}_YY" attributes="size=3 maxlength=4" /]<span>[@spring.message "datefield.yyyy"/]</span>
+	    		</div>
 		    [/#list]
 		    
 		    [#list pentahoReportFormBean.reportInputParams as param]

@@ -48,9 +48,25 @@ public class PentahoReportFormValidator implements Validator {
 
     private void validateDateParams(PentahoReportFormBean formBean, Errors errors) {
         int i = 0;
+        String[] args = new String[1];
         for (PentahoDateParameter dateParam : formBean.getReportDateParams()) {
-            if (null == dateParam.getDate() && !errors.hasFieldErrors("reportDateParams[" + i + "].date")) {
-                rejectValueAsMandatory("reportDateParams[" + i + "].date", dateParam.getParamName(), errors);
+            String dayString = dateParam.getDateDD();
+            String monthString = dateParam.getDateMM();
+            String yearString = dateParam.getDateYY();
+            if (!StringUtils.isBlank(dayString) || !StringUtils.isBlank(monthString)
+                    || !StringUtils.isBlank(yearString)) {
+                try {
+                    Integer day = Integer.parseInt(dayString);
+                    Integer month = Integer.parseInt(monthString);
+                    Integer year = Integer.parseInt(yearString);
+                    new LocalDate(year, month, day);
+                } catch (RuntimeException ex) {
+                    args[0] = dateParam.getParamName();
+                    errors.rejectValue("reportDateParams[" + i++ + "].dateDD", "reports.invalidDate", args,
+                            dateParam.getParamName() + ": Invalid date");
+                }
+            } else if (dateParam.isMandatory()) {
+                rejectValueAsMandatory("reportDateParams[" + i++ + "].dateDD", dateParam.getLabelName(), errors);
             }
         }
     }
@@ -61,7 +77,6 @@ public class PentahoReportFormValidator implements Validator {
             if (inputParam.isMandatory() && StringUtils.isBlank(inputParam.getValue())) {
                 rejectValueAsMandatory("reportInputParams[" + i++ + "].value", inputParam.getParamName(), errors);
             }
-            i+=1;
         }
     }
 
