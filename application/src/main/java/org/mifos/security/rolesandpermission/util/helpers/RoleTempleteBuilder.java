@@ -34,6 +34,8 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.dto.domain.ActivityRestrictionDto;
+import org.mifos.framework.util.helpers.ConversionUtil;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.ActivityRestrictionTypeEntity;
 import org.slf4j.Logger;
@@ -246,7 +248,8 @@ public class RoleTempleteBuilder {
                 ActivityRestrictionDto activityRestrictionDto = activityRestrictionDtoMap.get(activityRestrictionType.getId());
                 String activityRestrictionValue = "";
                 if ( activityRestrictionDto != null){
-                    activityRestrictionValue = "" + activityRestrictionDto.getAmountValue().doubleValue();
+                    Money amount = new Money(Money.getDefaultCurrency(), activityRestrictionDto.getAmountValue());
+                    activityRestrictionValue = ConversionUtil.formatNumber(amount.toString());
                 }
                 String activityRestrictionTypeDescription = ApplicationContextProvider.getBean(MessageLookup.class).lookup(activityRestrictionType.getLookUpValue());
                 String checked = "";
