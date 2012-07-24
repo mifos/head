@@ -24,9 +24,10 @@
 [@widget.crumbs accessDeniedBreadcrumbs /]
 <div class="content_panel">
     <div class="marginLeft30 marginTop20">
-        <h3 id="jndiHeading">JNDI Error</h3>
+        <h3 id="jndiHeading" class="red">JNDI Error</h3>
+        <h5 id="jndiHeadingMessage" class="red">Report cannot be generated because JNDI has not been configured.</h5><br>
         <p id="jndiMessage">
-        	Report cannot be generated because JNDI has not been configured. Please follow the instructions below to set up JNDI:
+        	Please follow the instructions below to set up JNDI:
         	<br>		
 			Jetty supports JNDI, but by default it is disabled in a standard server. In order to enable JNDI in Jetty a few changes to the start.ini file in Jetty home directory must be made:
 			<br><br>
