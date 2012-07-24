@@ -114,7 +114,11 @@ public class PentahoParamParser {
 
         result.setMandatory(paramDefEntry.isMandatory());
         result.setParamName(paramDefEntry.getName());
-        result.setLabelName(paramDefEntry.getParameterAttribute(paramDefEntry.getParameterAttributeNamespaces()[0], "label", paramContext).replace(":", ""));
+        if (null!=paramDefEntry.getParameterAttribute(paramDefEntry.getParameterAttributeNamespaces()[0], "label", paramContext)) {
+            result.setLabelName(paramDefEntry.getParameterAttribute(paramDefEntry.getParameterAttributeNamespaces()[0], "label", paramContext).replace(":", ""));
+        } else {
+            result.setLabelName(paramDefEntry.getName()); 
+        }
         return result;
     }
 
