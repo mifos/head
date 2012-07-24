@@ -19,14 +19,32 @@
  */
 package org.mifos.platform.rest.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.joda.time.LocalDate;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterServiceFacade;
+import org.mifos.application.servicefacade.CreateCenterDetailsDto;
+import org.mifos.application.servicefacade.CreationAddresDto;
+import org.mifos.application.servicefacade.CreationFeeDto;
+import org.mifos.application.servicefacade.CreationMeetingDto;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.dto.domain.CenterCreationDetail;
 import org.mifos.dto.domain.CenterInformationDto;
 import org.mifos.dto.domain.CustomerChargesDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -56,4 +74,102 @@ public class CenterRESTController {
 
         return centerCharges;
     }
+
+    @RequestMapping(value = "/center/create", method = RequestMethod.POST)
+    public @ResponseBody
+    Map<String, String> createCenter(@RequestBody String request) throws Throwable {
+        ObjectMapper om = createCenterMaping();
+
+        CreateCenterDetailsDto creationDetail = null;
+        MeetingBO meetingBO = null;
+
+        try {
+            creationDetail = om.readValue(request, CreateCenterDetailsDto.class);
+        } catch (JsonMappingException e) {
+            throw e.getCause();
+        }
+
+        meetingBO = (MeetingBO) creationDetail.getMeeting().toBO();
+
+        CenterCreationDetail center = createCenter(creationDetail);
+        if (null != creationDetail) {
+            this.centerServiceFacade.createNewCenter(center, meetingBO.toDto());
+        }
+
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("status", "success");
+        map.put("name", center.getDisplayName());
+        map.put("externalId", center.getExternalId());
+        map.put("mfiDate", center.getMfiJoiningDate().toString());
+        map.put("addres", center.getAddressDto().getDisplayAddress());
+        map.put("city", center.getAddressDto().getCity());
+        map.put("state", center.getAddressDto().getState());
+        map.put("country", center.getAddressDto().getCountry());
+        map.put("postal code", center.getAddressDto().getZip());
+        map.put("phone", center.getAddressDto().getPhoneNumber());
+        return map;
+    }
+
+    private ObjectMapper createCenterMaping() {
+        ObjectMapper om = new ObjectMapper();
+        om.getDeserializationConfig()
+                .addMixInAnnotations(CreateCenterDetailsDto.class, CenterCreationDetailMixIn.class);
+        om.getDeserializationConfig().addMixInAnnotations(CreationAddresDto.class, CreationAddresDtoMixIn.class);
+        om.getDeserializationConfig().addMixInAnnotations(CreationFeeDto.class, CreationFeeDtoDtoMixIn.class);
+        om.getDeserializationConfig().addMixInAnnotations(CreationMeetingDto.class, CreationMeetingDtoMixIn.class);
+        om.getJsonFactory().configure(JsonParser.Feature.ALLOW_NUMERIC_LEADING_ZEROS, true);
+        return om;
+    }
+
+    private CenterCreationDetail createCenter(CreateCenterDetailsDto creationDetail) {
+        return new CenterCreationDetail(creationDetail.getMfiJoiningDate(), creationDetail.getDisplayName(),
+                creationDetail.getExternalId(), creationDetail.getAddressDto().toDto(), new Short(creationDetail
+                        .getLoanOfficerId().shortValue()), new Short(creationDetail.getOfficeId().shortValue()),
+                creationDetail.feeAsAccountFeeDto(creationDetail.getAccountFees()));
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static abstract class CenterCreationDetailMixIn {
+
+        @JsonCreator
+        public CenterCreationDetailMixIn(@JsonProperty("mfiJoiningDate") LocalDate mfiJoiningDate,
+                @JsonProperty("displayName") String displayName, @JsonProperty("externalId") String externalId,
+                @JsonProperty("loanOfficerId") Integer loanOfficerId, @JsonProperty("officeId") Integer officeId,
+                @JsonProperty("address") CreationAddresDto creationAddresDto,
+                @JsonProperty("accountFees") List<CreationFeeDto> creationFeeDto,
+                @JsonProperty("meeting") CreationMeetingDto meeting) {
+        }
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static abstract class CreationAddresDtoMixIn {
+
+        @JsonCreator
+        public CreationAddresDtoMixIn(@JsonProperty("addres1") String line1, @JsonProperty("addres2") String line2,
+                @JsonProperty("addres3") String line3, @JsonProperty("city") String city,
+                @JsonProperty("state") String state, @JsonProperty("country") String country,
+                @JsonProperty("zip") String zip, @JsonProperty("phoneNumber") String phoneNumber) {
+        }
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static abstract class CreationFeeDtoDtoMixIn {
+
+        @JsonCreator
+        public CreationFeeDtoDtoMixIn(@JsonProperty("feeId") Integer feeId, @JsonProperty("amount") String amount) {
+        }
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static abstract class CreationMeetingDtoMixIn {
+
+        @JsonCreator
+        public CreationMeetingDtoMixIn(@JsonProperty("meetingStartDate") LocalDate meetingStartDate,
+                @JsonProperty("meetingPlace") String meetingPlace,
+                @JsonProperty("recurrenceType") Short recurrenceType, @JsonProperty("dayNumber") Short dayNumber,
+                @JsonProperty("weekDay") Short weekDay, @JsonProperty("rankOfDay") Short rankOfDay,
+                @JsonProperty("recurAfter") Short recurAfter) {
+        }
+    }
+
 }
