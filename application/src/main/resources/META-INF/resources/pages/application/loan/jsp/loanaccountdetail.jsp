@@ -485,7 +485,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 												<c:if test="${adminDocMixed.accountStateID.id==loanInformationDto.accountStateId}">
 												<span class="fontnormal"> 
 									  <html-el:link styleId="loanaccountdetail.link.viewAdminReport"
-										href="reportsUserParamsAction.do?method=loadAdminReport&admindocId=${adminDoc.admindocId}&globalAccountNum=${loanInformationDto.globalAccountNum}">
+										href="executeAdminDocument.ftl?adminDocumentId=${adminDoc.admindocId}&entityId=${loanInformationDto.globalAccountNum}">
 										 <c:out value="${adminDoc.adminDocumentName}" />
 								      </html-el:link>
 								  				</span>

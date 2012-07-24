@@ -31,7 +31,13 @@ public interface PentahoReportsServiceFacade {
     PentahoReport getReport(Integer reportId, Integer outputTypeId, Map<String, AbstractPentahoParameter> params);
 
     @PreAuthorize("isFullyAuthenticated()")
+    PentahoReport getAdminReport(Integer adminReportId, Map<String, AbstractPentahoParameter> params);
+    
+    @PreAuthorize("isFullyAuthenticated()")
     String getReportName(Integer reportId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    String getAdminReportFileName(Integer adminReportId);
 
     @PreAuthorize("isFullyAuthenticated()")
     Map<String, String> getReportOutputTypes();

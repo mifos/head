@@ -98,14 +98,14 @@ public class BirtAdminDocumentUploadActionForm extends ValidatorActionForm {
                 errors.add(ReportsConstants.ERROR_STATUSLIST, new ActionMessage(ReportsConstants.ERROR_STATUSLIST));
             }
             if (methodFromRequest.equals(Methods.preview.toString())) {
-                if (file == null || !file.getFileName().endsWith(".rptdesign")) {
+                if (file == null || (!file.getFileName().endsWith(".rptdesign") && !file.getFileName().endsWith(".prpt"))) {
                     errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(ReportsConstants.ERROR_FILE));
                 }
 
             }
             if (methodFromRequest.equals(Methods.editpreview.toString())) {
                 if (file != null && !StringUtils.isEmpty(file.getFileName())
-                        && !file.getFileName().endsWith(".rptdesign")) {
+                        && !file.getFileName().endsWith(".rptdesign") && !file.getFileName().endsWith(".prpt")) {
                     errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(ReportsConstants.ERROR_FILE));
                 }
             }
