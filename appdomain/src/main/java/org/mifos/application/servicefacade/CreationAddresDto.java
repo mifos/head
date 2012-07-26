@@ -4,37 +4,49 @@ import org.mifos.dto.domain.AddressDto;
 
 public class CreationAddresDto {
 
-    private String line1;
-    private String line2;
-    private String line3;
+    private String address1;
+    private String address2;
+    private String address3;
     private String city;
     private String state;
     private String country;
     private String zip;
     private String phoneNumber;
 
+    public CreationAddresDto(String address1, String address2, String address3, String city, String state, String country,
+            String zip, String phoneNumber) {
+        this.address1 = address1;
+        this.address2 = address2;
+        this.address3 = address3;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.zip = zip;
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getLine1() {
-        return line1;
+        return address1;
     }
 
     public void setLine1(String line1) {
-        this.line1 = line1;
+        this.address1 = line1;
     }
 
     public String getLine2() {
-        return line2;
+        return address2;
     }
 
     public void setLine2(String line2) {
-        this.line2 = line2;
+        this.address2 = line2;
     }
 
     public String getLine3() {
-        return line3;
+        return address3;
     }
 
     public void setLine3(String line3) {
-        this.line3 = line3;
+        this.address3 = line3;
     }
 
     public String getCity() {

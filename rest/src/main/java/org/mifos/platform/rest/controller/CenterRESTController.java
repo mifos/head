@@ -20,16 +20,11 @@
 package org.mifos.platform.rest.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.joda.time.LocalDate;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.CreateCenterDetailsDto;
@@ -41,6 +36,10 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.dto.domain.CenterCreationDetail;
 import org.mifos.dto.domain.CenterInformationDto;
 import org.mifos.dto.domain.CustomerChargesDetailsDto;
+import org.mifos.platform.rest.controller.RESTAPIHelper.CenterCreationDetailMixIn;
+import org.mifos.platform.rest.controller.RESTAPIHelper.CreationAddresDtoMixIn;
+import org.mifos.platform.rest.controller.RESTAPIHelper.CreationFeeDtoDtoMixIn;
+import org.mifos.platform.rest.controller.RESTAPIHelper.CreationMeetingDtoMixIn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -126,50 +125,6 @@ public class CenterRESTController {
                 creationDetail.getExternalId(), creationDetail.getAddressDto().toDto(), new Short(creationDetail
                         .getLoanOfficerId().shortValue()), new Short(creationDetail.getOfficeId().shortValue()),
                 creationDetail.feeAsAccountFeeDto(creationDetail.getAccountFees()));
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static abstract class CenterCreationDetailMixIn {
-
-        @JsonCreator
-        public CenterCreationDetailMixIn(@JsonProperty("mfiJoiningDate") LocalDate mfiJoiningDate,
-                @JsonProperty("displayName") String displayName, @JsonProperty("externalId") String externalId,
-                @JsonProperty("loanOfficerId") Integer loanOfficerId, @JsonProperty("officeId") Integer officeId,
-                @JsonProperty("address") CreationAddresDto creationAddresDto,
-                @JsonProperty("accountFees") List<CreationFeeDto> creationFeeDto,
-                @JsonProperty("meeting") CreationMeetingDto meeting) {
-        }
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static abstract class CreationAddresDtoMixIn {
-
-        @JsonCreator
-        public CreationAddresDtoMixIn(@JsonProperty("addres1") String line1, @JsonProperty("addres2") String line2,
-                @JsonProperty("addres3") String line3, @JsonProperty("city") String city,
-                @JsonProperty("state") String state, @JsonProperty("country") String country,
-                @JsonProperty("zip") String zip, @JsonProperty("phoneNumber") String phoneNumber) {
-        }
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static abstract class CreationFeeDtoDtoMixIn {
-
-        @JsonCreator
-        public CreationFeeDtoDtoMixIn(@JsonProperty("feeId") Integer feeId, @JsonProperty("amount") String amount) {
-        }
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static abstract class CreationMeetingDtoMixIn {
-
-        @JsonCreator
-        public CreationMeetingDtoMixIn(@JsonProperty("meetingStartDate") LocalDate meetingStartDate,
-                @JsonProperty("meetingPlace") String meetingPlace,
-                @JsonProperty("recurrenceType") Short recurrenceType, @JsonProperty("dayNumber") Short dayNumber,
-                @JsonProperty("weekDay") Short weekDay, @JsonProperty("rankOfDay") Short rankOfDay,
-                @JsonProperty("recurAfter") Short recurAfter) {
-        }
     }
 
 }
