@@ -25,6 +25,8 @@ import java.util.Map;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.hibernate.event.def.ReattachVisitor;
+import org.joda.time.LocalDate;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.CreateCenterDetailsDto;
@@ -36,10 +38,13 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.dto.domain.CenterCreationDetail;
 import org.mifos.dto.domain.CenterInformationDto;
 import org.mifos.dto.domain.CustomerChargesDetailsDto;
+import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.platform.rest.controller.RESTAPIHelper.CenterCreationDetailMixIn;
 import org.mifos.platform.rest.controller.RESTAPIHelper.CreationAddresDtoMixIn;
 import org.mifos.platform.rest.controller.RESTAPIHelper.CreationFeeDtoDtoMixIn;
 import org.mifos.platform.rest.controller.RESTAPIHelper.CreationMeetingDtoMixIn;
+import org.mifos.platform.rest.controller.RESTAPIHelper.ErrorMessage;
+import org.mifos.platform.rest.controller.validation.ParamValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -87,16 +92,18 @@ public class CenterRESTController {
         } catch (JsonMappingException e) {
             throw e.getCause();
         }
-
+        validate(creationDetail);
+        
         meetingBO = (MeetingBO) creationDetail.getMeeting().toBO();
 
         CenterCreationDetail center = createCenter(creationDetail);
-        if (null != creationDetail) {
-            this.centerServiceFacade.createNewCenter(center, meetingBO.toDto());
-        }
-
+        CustomerDetailsDto details = this.centerServiceFacade.createNewCenter(center, meetingBO.toDto());
+        CenterInformationDto centerInfo = this.centerServiceFacade.getCenterInformationDto(details.getGlobalCustNum());
+        
         Map<String, String> map = new HashMap<String, String>();
         map.put("status", "success");
+        map.put("globalCustNum", centerInfo.getCenterDisplay().getGlobalCustNum());
+        map.put("accountNum", centerInfo.getCustomerAccountSummary().getGlobalAccountNum());
         map.put("name", center.getDisplayName());
         map.put("externalId", center.getExternalId());
         map.put("mfiDate", center.getMfiJoiningDate().toString());
@@ -125,6 +132,32 @@ public class CenterRESTController {
                 creationDetail.getExternalId(), creationDetail.getAddressDto().toDto(), new Short(creationDetail
                         .getLoanOfficerId().shortValue()), new Short(creationDetail.getOfficeId().shortValue()),
                 creationDetail.feeAsAccountFeeDto(creationDetail.getAccountFees()));
+    }
+    
+    private void validate(CreateCenterDetailsDto creationDetail) throws ParamValidationException {
+        validateCenterData(creationDetail);
+        validateMeeting(creationDetail);
+    }
+    
+    private void validateCenterData(CreateCenterDetailsDto creationDetail) throws ParamValidationException {
+        if (null == creationDetail.getMeeting()) {
+            throw new ParamValidationException(ErrorMessage.INVALID_MEETING);
+        }
+    }
+    
+    private void validateMeeting(CreateCenterDetailsDto creationDetail) throws ParamValidationException {
+        if (null == creationDetail.getDisplayName()) {
+            throw new ParamValidationException(ErrorMessage.INVALID_DISPLAY_NAME);
+        }
+        if (null == creationDetail.getLoanOfficerId()) {
+            throw new ParamValidationException(ErrorMessage.INVALID_LOAN_OFFICER_ID);
+        }
+        if (null == creationDetail.getOfficeId()) {
+            throw new ParamValidationException(ErrorMessage.INVALID_OFFICE_ID);
+        }
+        if (null == creationDetail.getMfiJoiningDate()) {
+            throw new ParamValidationException(ErrorMessage.INVALID_MFI_DATE);
+        }
     }
 
 }

@@ -28,6 +28,7 @@ public class RESTAPIHelper {
         public static final String INVALID_DISPLAY_NAME = "invalid customer name";
         public static final String INVALID_LOAN_OFFICER_ID = "invalid loan officer id";
         public static final String INVALID_OFFICE_ID = "invalid office id";
+        public static final String INVALID_MFI_DATE = "mfiJoiningDate is mandatory";
     }
     
     @JsonIgnoreProperties(ignoreUnknown = true)
