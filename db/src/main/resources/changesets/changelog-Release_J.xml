@@ -53,4 +53,29 @@
             </sql>
         </rollback>
     </changeSet>
- </databaseChangeLog>
+		<changeSet id="MIFOS-5671" author="Adrian Winkler" context="expansion">
+			<sql endDelimiter=";">
+			INSERT INTO lookup_value VALUES(DEFAULT, 87, 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer');
+
+			INSERT INTO lookup_value_locale(locale_id, lookup_id, lookup_value) SELECT 1, lookup_id, 
+			'Can make payment to the account using Savings Account Transfer' FROM lookup_value 
+			WHERE lookup_name = 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer';
+
+			INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) SELECT 282, 113, lookup_id, lookup_id 
+			FROM lookup_value WHERE lookup_name = 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer';
+
+			INSERT INTO roles_activity(activity_id, role_id) SELECT activity_id, 1 FROM activity WHERE activity_name_lookup_id = 
+			(SELECT lookup_id FROM lookup_value WHERE lookup_name = 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer');
+			</sql>
+			<rollback>
+				<sql endDelimiter=";">
+				DELETE FROM roles_activity WHERE activity_id = 282;
+	    		
+	    		DELETE FROM activity WHERE activity_id = 282; 
+	    		
+	    		DELETE FROM lookup_value_locale WHERE lookup_value = 'Can make payment to the account using Savings Account Transfer';
+	    		
+	    		DELETE FROM lookup_value WHERE lookup_name = 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer';
+				</sql></rollback>
+		</changeSet>
+</databaseChangeLog>
