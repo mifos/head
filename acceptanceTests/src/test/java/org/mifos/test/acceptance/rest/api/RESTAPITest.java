@@ -573,6 +573,7 @@ public class RESTAPITest extends UiTestCaseBase {
         verifySavingsTrxn(data, type, by, value);
     }
     
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(dependsOnGroups="readOnly")
     public void createSavingsAccount() throws Exception {
         String url = "?globalCustomerNum="+ CLIENT_GLOBAL_ID +"&productId=" + SAVINGS_PRODUCT;
@@ -588,7 +589,54 @@ public class RESTAPITest extends UiTestCaseBase {
         jsonAssert.assertEqual("interestRatePeriod");
         jsonAssert.assertEqual("recommendedAmount");
     }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(dependsOnGroups="readOnly")
+    public void createNewClient() throws Exception {
+        String url = Op.CREATE + "-response";
+        String request = helper.getJSONFromDataSet(Type.CLIENT, Op.CREATE);
+        String actualJSON = helper.postJSONFromUI("client/create.json", request);
+        String expectedJSON = helper.getJSONFromDataSet(Type.CLIENT, url);
+        checkCustomer(actualJSON, expectedJSON);
+    }
     
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(dependsOnGroups="readOnly")
+    public void createNewCenter() throws Exception {
+        String url = Op.CREATE + "-response";
+        String request = helper.getJSONFromDataSet(Type.CENTER, Op.CREATE);
+        String actualJSON = helper.postJSONFromUI("center/create.json", request);
+        String expectedJSON = helper.getJSONFromDataSet(Type.CENTER, url);
+        checkCustomer(actualJSON, expectedJSON);
+        AssertJSON jsonAssert =new AssertJSON(actualJSON, expectedJSON);
+        jsonAssert.assertEqual("mfiDate");
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(dependsOnGroups="readOnly")
+    public void createNewGroup() throws Exception {
+        String url = Op.CREATE + "-response";
+        String request = helper.getJSONFromDataSet(Type.GROUP, Op.CREATE);
+        String actualJSON = helper.postJSONFromUI("group/create.json", request);
+        String expectedJSON = helper.getJSONFromDataSet(Type.GROUP, url);
+        checkCustomer(actualJSON, expectedJSON);
+    }
+    
+    private void checkCustomer(String actualJSON, String expectedJSON) throws Exception {
+        AssertJSON jsonAssert = new AssertJSON(actualJSON, expectedJSON);
+        jsonAssert.assertEqual("phone");
+        jsonAssert.assertEqual("dispalyName");
+        jsonAssert.assertEqual("eternalId");
+        jsonAssert.assertEqual("accountNum");
+        jsonAssert.assertEqual("globalCustNum");
+        jsonAssert.assertEqual("loanOfficer");
+        jsonAssert.assertEqual("address");
+        jsonAssert.assertEqual("status");
+        jsonAssert.assertEqual("state");
+        jsonAssert.assertEqual("postal code");
+        jsonAssert.assertEqual("country");
+        jsonAssert.assertEqual("city");
+    }
 
     private void verifySavingsTrxn(String data, String type, String by, String value) throws Exception {
         String actualJSON = helper.postJSONFromUI(type, by, value, data);

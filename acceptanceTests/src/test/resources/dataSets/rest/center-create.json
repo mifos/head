@@ -1,0 +1,27 @@
+{
+    "mfiJoiningDate": [2012,07,23],
+    "displayName" : "NewRestCenter",
+    "externalId" : "1234",
+    "loanOfficerId" : 1,
+    "officeId" : 2,
+    "address" : {
+        "address1" : "address1",
+        "address2" : "address2",
+        "address3" : "address3",
+        "city" : "city",
+        "state" : "state",
+        "country" : "country",
+        "zip" : "zip-zip",
+        "phoneNumber" : "+99 999999999"
+    },
+    "accountFees"  : [],
+    "meeting" : {
+    "meetingStartDate" : [2012,07,23],
+    "meetingPlace" : "meting place",
+    "recurrenceType" : 1,
+    "dayNumber" : 2,
+    "weekDay" : "",
+    "rankOfDay" : "",
+    "recurAfter" : 2
+    }
+}

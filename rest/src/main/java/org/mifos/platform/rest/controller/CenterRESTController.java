@@ -105,7 +105,7 @@ public class CenterRESTController {
         map.put("name", center.getDisplayName());
         map.put("externalId", center.getExternalId());
         map.put("mfiDate", center.getMfiJoiningDate().toString());
-        map.put("addres", center.getAddressDto().getDisplayAddress());
+        map.put("address", center.getAddressDto().getDisplayAddress());
         map.put("city", center.getAddressDto().getCity());
         map.put("state", center.getAddressDto().getState());
         map.put("country", center.getAddressDto().getCountry());

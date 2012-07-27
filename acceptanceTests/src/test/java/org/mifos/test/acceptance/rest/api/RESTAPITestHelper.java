@@ -106,6 +106,14 @@ public class RESTAPITestHelper {
         Thread.sleep(1000);
         return selenium.getText("restdata");
     }
+    
+    public String getJSONFromUI(String inUrl) throws InterruptedException {
+        String url = String.format("%s.json", inUrl);
+        selenium.type("resturl", url);
+        selenium.click("getJSON");
+        Thread.sleep(1000);
+        return selenium.getText("restdata");
+    }
 
     public String postJSONFromUI(String type, String by, String value, String data) throws InterruptedException {
         String result;
