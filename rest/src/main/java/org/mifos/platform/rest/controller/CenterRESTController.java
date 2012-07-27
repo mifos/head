@@ -25,8 +25,6 @@ import java.util.Map;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.hibernate.event.def.ReattachVisitor;
-import org.joda.time.LocalDate;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.CreateCenterDetailsDto;
@@ -41,7 +39,7 @@ import org.mifos.dto.domain.CustomerChargesDetailsDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.platform.rest.controller.RESTAPIHelper.CenterCreationDetailMixIn;
 import org.mifos.platform.rest.controller.RESTAPIHelper.CreationAddresDtoMixIn;
-import org.mifos.platform.rest.controller.RESTAPIHelper.CreationFeeDtoDtoMixIn;
+import org.mifos.platform.rest.controller.RESTAPIHelper.CreationFeeDtoMixIn;
 import org.mifos.platform.rest.controller.RESTAPIHelper.CreationMeetingDtoMixIn;
 import org.mifos.platform.rest.controller.RESTAPIHelper.ErrorMessage;
 import org.mifos.platform.rest.controller.validation.ParamValidationException;
@@ -93,13 +91,13 @@ public class CenterRESTController {
             throw e.getCause();
         }
         validate(creationDetail);
-        
+
         meetingBO = (MeetingBO) creationDetail.getMeeting().toBO();
 
         CenterCreationDetail center = createCenter(creationDetail);
         CustomerDetailsDto details = this.centerServiceFacade.createNewCenter(center, meetingBO.toDto());
         CenterInformationDto centerInfo = this.centerServiceFacade.getCenterInformationDto(details.getGlobalCustNum());
-        
+
         Map<String, String> map = new HashMap<String, String>();
         map.put("status", "success");
         map.put("globalCustNum", centerInfo.getCenterDisplay().getGlobalCustNum());
@@ -121,7 +119,7 @@ public class CenterRESTController {
         om.getDeserializationConfig()
                 .addMixInAnnotations(CreateCenterDetailsDto.class, CenterCreationDetailMixIn.class);
         om.getDeserializationConfig().addMixInAnnotations(CreationAddresDto.class, CreationAddresDtoMixIn.class);
-        om.getDeserializationConfig().addMixInAnnotations(CreationFeeDto.class, CreationFeeDtoDtoMixIn.class);
+        om.getDeserializationConfig().addMixInAnnotations(CreationFeeDto.class, CreationFeeDtoMixIn.class);
         om.getDeserializationConfig().addMixInAnnotations(CreationMeetingDto.class, CreationMeetingDtoMixIn.class);
         om.getJsonFactory().configure(JsonParser.Feature.ALLOW_NUMERIC_LEADING_ZEROS, true);
         return om;
@@ -133,18 +131,18 @@ public class CenterRESTController {
                         .getLoanOfficerId().shortValue()), new Short(creationDetail.getOfficeId().shortValue()),
                 creationDetail.feeAsAccountFeeDto(creationDetail.getAccountFees()));
     }
-    
+
     private void validate(CreateCenterDetailsDto creationDetail) throws ParamValidationException {
         validateCenterData(creationDetail);
         validateMeeting(creationDetail);
     }
-    
+
     private void validateCenterData(CreateCenterDetailsDto creationDetail) throws ParamValidationException {
         if (null == creationDetail.getMeeting()) {
             throw new ParamValidationException(ErrorMessage.INVALID_MEETING);
         }
     }
-    
+
     private void validateMeeting(CreateCenterDetailsDto creationDetail) throws ParamValidationException {
         if (null == creationDetail.getDisplayName()) {
             throw new ParamValidationException(ErrorMessage.INVALID_DISPLAY_NAME);

@@ -41,7 +41,7 @@ import org.mifos.dto.domain.GroupCreationDetail;
 import org.mifos.dto.screen.GroupInformationDto;
 import org.mifos.platform.rest.controller.RESTAPIHelper.CreateGroupCreationDetailDtoMixIn;
 import org.mifos.platform.rest.controller.RESTAPIHelper.CreationAddresDtoMixIn;
-import org.mifos.platform.rest.controller.RESTAPIHelper.CreationFeeDtoDtoMixIn;
+import org.mifos.platform.rest.controller.RESTAPIHelper.CreationFeeDtoMixIn;
 import org.mifos.platform.rest.controller.RESTAPIHelper.CreationMeetingDtoMixIn;
 import org.mifos.platform.rest.controller.RESTAPIHelper.ErrorMessage;
 import org.mifos.platform.rest.controller.validation.ParamValidationException;
@@ -64,7 +64,7 @@ public class GroupRESTController {
 
     @Autowired
     private CustomerDao customerDao;
-    
+
     @RequestMapping(value = "group/num-{globalCustNum}", method = RequestMethod.GET)
     public @ResponseBody
     GroupInformationDto getGroupByNumber(@PathVariable String globalCustNum) {
@@ -96,13 +96,13 @@ public class GroupRESTController {
             throw e.getCause();
         }
         validate(creationDetail);
-        
+
         meetingBO = (MeetingBO) creationDetail.getMeeting().toBO();
-        
+
         GroupCreationDetail group = createGroup(creationDetail);
         CustomerDetailsDto groupDetails = groupServiceFacade.createNewGroup(group, meetingBO.toDto());
         GroupInformationDto groupInfo = groupServiceFacade.getGroupInformationDto(groupDetails.getGlobalCustNum());
-        
+
         Map<String, String> map = new HashMap<String, String>();
         map.put("status", "success");
         map.put("globalCusNum", groupInfo.getGroupDisplay().getGlobalCustNum());
@@ -125,31 +125,31 @@ public class GroupRESTController {
         om.getDeserializationConfig().addMixInAnnotations(CreateGroupCreationDetailDto.class,
                 CreateGroupCreationDetailDtoMixIn.class);
         om.getDeserializationConfig().addMixInAnnotations(CreationAddresDto.class, CreationAddresDtoMixIn.class);
-        om.getDeserializationConfig().addMixInAnnotations(CreationFeeDto.class, CreationFeeDtoDtoMixIn.class);
+        om.getDeserializationConfig().addMixInAnnotations(CreationFeeDto.class, CreationFeeDtoMixIn.class);
         om.getDeserializationConfig().addMixInAnnotations(CreationMeetingDto.class, CreationMeetingDtoMixIn.class);
         om.getJsonFactory().configure(JsonParser.Feature.ALLOW_NUMERIC_LEADING_ZEROS, true);
         return om;
     }
 
     private GroupCreationDetail createGroup(CreateGroupCreationDetailDto creationDetail) {
-        return new GroupCreationDetail(creationDetail.getDisplayName(), creationDetail.getExternalId(),
-                creationDetail.getAddressDto().toDto(), creationDetail.getLoanOfficerId(), creationDetail.feeAsAccountFeeDto(creationDetail.getFeesToApply()),
-                creationDetail.getCustomerStatus(), creationDetail.isTrained(), creationDetail.getTrainedOn(),
-                creationDetail.getParentSystemId(), creationDetail.getOfficeId(), creationDetail.getMfiJoiningDate(),
-                creationDetail.getActivationDate());
+        return new GroupCreationDetail(creationDetail.getDisplayName(), creationDetail.getExternalId(), creationDetail
+                .getAddressDto().toDto(), creationDetail.getLoanOfficerId(),
+                creationDetail.feeAsAccountFeeDto(creationDetail.getFeesToApply()), creationDetail.getCustomerStatus(),
+                creationDetail.isTrained(), creationDetail.getTrainedOn(), creationDetail.getParentSystemId(),
+                creationDetail.getOfficeId(), creationDetail.getMfiJoiningDate(), creationDetail.getActivationDate());
     }
-    
+
     private void validate(CreateGroupCreationDetailDto creationDetail) throws ParamValidationException {
         validateMeeting(creationDetail);
         validateGroupData(creationDetail);
     }
-    
-    private  void validateMeeting(CreateGroupCreationDetailDto creationDetail) throws ParamValidationException {
+
+    private void validateMeeting(CreateGroupCreationDetailDto creationDetail) throws ParamValidationException {
         if (null == creationDetail.getMeeting() && null == creationDetail.getParentSystemId()) {
             throw new ParamValidationException(ErrorMessage.INVALID_MEETING);
         }
     }
-    
+
     private void validateGroupData(CreateGroupCreationDetailDto creationDetail) throws ParamValidationException {
         if (null == creationDetail.getDisplayName()) {
             throw new ParamValidationException(ErrorMessage.INVALID_DISPLAY_NAME);
@@ -161,5 +161,5 @@ public class GroupRESTController {
             throw new ParamValidationException(ErrorMessage.INVALID_OFFICE_ID);
         }
     }
-    
+
 }

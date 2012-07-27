@@ -5,8 +5,9 @@ import java.util.List;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.mifos.application.servicefacade.CreateClientNameDetailDto;
+import org.mifos.application.servicefacade.CreatePersonalDetailDto;
 import org.mifos.application.servicefacade.CreationAddresDto;
 import org.mifos.application.servicefacade.CreationFeeDto;
 import org.mifos.application.servicefacade.CreationMeetingDto;
@@ -43,10 +44,10 @@ public class RESTAPIHelper {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static abstract class CreationFeeDtoDtoMixIn {
+    public static abstract class CreationFeeDtoMixIn {
 
         @JsonCreator
-        public CreationFeeDtoDtoMixIn(@JsonProperty("feeId") Integer feeId, @JsonProperty("amount") String amount) {
+        public CreationFeeDtoMixIn(@JsonProperty("feeId") Integer feeId, @JsonProperty("amount") String amount) {
         }
     }
 
@@ -95,5 +96,59 @@ public class RESTAPIHelper {
                 @JsonProperty("parentSystemId") String parentSystemId,
                 @JsonProperty("meeting") CreationMeetingDto meeting
                 ) {}
+    }
+    
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static abstract class CreateClientCreationDetailMixIn {
+        
+        @JsonCreator
+        public CreateClientCreationDetailMixIn(
+                @JsonProperty("officeId") Short officeId,
+                @JsonProperty("loanOfficerId") Short loanOfficerId,
+                @JsonProperty("formedBy") Short formedBy,
+                @JsonProperty("parentGroupId") String parentGroupId,
+                @JsonProperty("externalId") String externalId,
+                @JsonProperty("groupFlag") Short groupFlag,
+                @JsonProperty("governmentId") String governmentId,
+                @JsonProperty("trained") boolean trained,
+                @JsonProperty("trainedDate") LocalDate trainedDate,
+                @JsonProperty("dateOfBirth") LocalDate dateOfBirth,
+                @JsonProperty("activationDate") LocalDate activationDate,
+                @JsonProperty("mfiJoiningDate") LocalDate mfiJoiningDate,
+                @JsonProperty("customerStatus") Short customerStatus,
+                @JsonProperty("personalDetail") CreatePersonalDetailDto personalDetail,
+                @JsonProperty("clientNameDetail") CreateClientNameDetailDto clientNameDetail,
+                @JsonProperty("address") CreationAddresDto address,
+                @JsonProperty("accountFees") CreationFeeDto accountFees,
+                @JsonProperty("meeting") CreationMeetingDto meeting
+                ) {}
+    }
+    
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static abstract class CreateClientNameDetailDtoMixIn {
+        
+        @JsonCreator
+        public CreateClientNameDetailDtoMixIn(
+                @JsonProperty("salutationId") Integer salutation,
+                @JsonProperty("firstName") String firstName,
+                @JsonProperty("middleName") String middleName,
+                @JsonProperty("lastName") String lastName,
+                @JsonProperty("secondLastName") String secondLastName) {}
+    }
+    
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static abstract class CreatePersonalDetailDtoMixIn {
+        
+        @JsonCreator 
+        public CreatePersonalDetailDtoMixIn(
+                @JsonProperty("ethnicity") Integer ethnicity,
+                @JsonProperty("citizenship") Integer citizenship,
+                @JsonProperty("handicapped") Integer handicapped,
+                @JsonProperty("businessActivities") Integer businessActivities,
+                @JsonProperty("maritalStatus") Integer maritalStatus,
+                @JsonProperty("educationLevel") Integer educationLevel,
+                @JsonProperty("numberOfChildren") Short numberOfChildren,
+                @JsonProperty("gender") Short genderId,
+                @JsonProperty("povertyStatus") Short povertyStatus) {}
     }
 }
