@@ -110,6 +110,15 @@ public class ClientRESTController {
         map.put("status", "success");
         map.put("globalCustNum", clientInfo.getClientDisplay().getGlobalCustNum());
         map.put("accountNum", clientInfo.getCustomerAccountSummary().getGlobalAccountNum());
+        map.put("address", clientInfo.getAddress().getDisplayAddress());
+        map.put("city", clientInfo.getAddress().getCity());
+        map.put("state", clientInfo.getAddress().getState());
+        map.put("country", clientInfo.getAddress().getCountry());
+        map.put("postal code", clientInfo.getAddress().getZip());
+        map.put("phone", clientInfo.getAddress().getPhoneNumber());
+        map.put("dispalyName", clientInfo.getClientDisplay().getDisplayName());
+        map.put("eternalId", clientInfo.getClientDisplay().getExternalId());
+        map.put("loanOfficer", clientInfo.getClientDisplay().getLoanOfficerName());
         return map;
     }
 
