@@ -1794,7 +1794,11 @@ public class LoanBO extends AccountBO implements Loan {
                     paymentData.getOverpaymentAmount(), OverpaymentStatus.UNCLEARED.getValue());
             addAccountOverpayment(overpaymentEntity);
         }
-        applyPaymentToMemberAccounts(paymentData); // GLIM
+        
+        // GLIM
+        BigDecimal installmentsPaid = findNumberOfPaidInstallments();
+        applyPaymentToMemberAccounts(paymentData, installmentsPaid);
+        
         return accountPaymentEntity;
     }
 
@@ -3659,6 +3663,8 @@ public class LoanBO extends AccountBO implements Loan {
         return lateActionDateList;
     }
 
+    @SuppressWarnings("unused")
+    @Deprecated
     private void applyPaymentToMemberAccounts(PaymentData paymentData) throws AccountException {
         Money totalPaymentAmount = paymentData.getTotalAmount();
         for (LoanBO memberAccount : this.memberAccounts) {
@@ -3670,6 +3676,60 @@ public class LoanBO extends AccountBO implements Loan {
                     paymentData.getPaymentTypeId(), paymentData.getTransactionDate());
             memberAccount.applyPayment(memberPayment);
         }
+    }
+    
+    private void applyPaymentToMemberAccounts(PaymentData paymentData, BigDecimal installmentsPaid) throws AccountException {
+        
+        for (LoanBO memberAccount : getMemberAccounts()) {
+            BigDecimal memberPaid = memberAccount.findNumberOfPaidInstallments();
+            List<LoanScheduleEntity> memberInstallments = memberAccount.getLoanInstallments();
+            Money memberPaymentAmount = new Money(getCurrency());
+            int currentPayment;
+            
+            for(currentPayment = memberPaid.intValue(); currentPayment < installmentsPaid.intValue() ; currentPayment++) {
+                memberPaymentAmount = memberPaymentAmount.add(memberInstallments.get(currentPayment).getAmountToBePaidToGetExpectedProportion(BigDecimal.ONE));
+            }
+            
+            BigDecimal afterComa = installmentsPaid.subtract(new BigDecimal(installmentsPaid.intValue()));
+            
+            if(afterComa.compareTo(BigDecimal.ZERO)==1) {
+                memberPaymentAmount = memberPaymentAmount.add(memberInstallments.get(currentPayment).getAmountToBePaidToGetExpectedProportion(afterComa));
+            }
+            
+            //It prevents member account to be closed before parent due to small last payments in parent account. Member accounts will remain in 0.1 unpaid until last payment for parent account will be submitted
+            if(getState().getValue()!=(short)6 && memberPaymentAmount.subtract((memberAccount.getTotalRepayableAmount())).isTinyAmount()) {
+                memberPaymentAmount = memberPaymentAmount.subtract(new Money(getCurrency(), 0.1));
+            }
+                   
+            PaymentData memberPayment = new PaymentData(memberPaymentAmount, paymentData.getPersonnel(),
+                    paymentData.getPaymentTypeId(), paymentData.getTransactionDate());
+            
+            if(!memberPaymentAmount.isTinyAmount() && !memberPaymentAmount.isLessThanZero()) {
+                memberAccount.applyPayment(memberPayment);
+            }
+        }
+    }
+    
+    private BigDecimal findNumberOfPaidInstallments() {
+        List<LoanScheduleEntity> loanInstallments = getLoanInstallments();
+        
+        BigDecimal paidInstallments = new BigDecimal(0);
+        
+        for(LoanScheduleEntity installment : loanInstallments) {
+            paidInstallments = paidInstallments.add(installment.getPaidProportion());
+        }
+        
+        return paidInstallments;
+    }
+    
+    private List<LoanScheduleEntity> getLoanInstallments() {     
+        List<AccountActionDateEntity> installments = getAllInstallments();
+        List<LoanScheduleEntity> schedule = new ArrayList<LoanScheduleEntity>();
+       
+        for (AccountActionDateEntity accountActionDateEntity : installments) {
+          schedule.add((LoanScheduleEntity) accountActionDateEntity);
+        }
+        return schedule;
     }
 
     public boolean hasMemberAccounts() {
@@ -3726,7 +3786,8 @@ public class LoanBO extends AccountBO implements Loan {
         return result;
     }
     
+    
     public boolean isIndividualLoan(){
-        return this.parentAccount != null && this.accountType.getAccountTypeId().equals(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT.getValue()); 
+        return this.parentAccount != null && this.accountType.getAccountTypeId().equals(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT.getValue());
     }
 }
