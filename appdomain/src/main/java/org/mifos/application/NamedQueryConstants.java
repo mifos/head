@@ -453,7 +453,9 @@ public interface NamedQueryConstants {
 
     String GET_ALL_ACTIVE_ADMINISTRATIVE_DOCUMENT = "admindocument.getAllActiveAdministrativeDocument";
     String GET_MIX_BY_ADMINISTRATIVE_DOCUMENT = "admindocument.getMixByAdministrativeDocument";
+    String GET_ACC_ACTION_MIX_BY_ADMINISTRATIVE_DOCUMENT_ID = "admindocument.getAccActionMixByAdministrativeDocumentId";
     String GET_ALL_MIXED_ADMINISTRATIVE_DOCUMENT = "admindocument.getAllMixedAdministrativeDocument";
+    String gET_ADMIN_DOCUMENTS_BY_ACCOUNT_ACTION_ID = "admindocument.getAdminDocumentsByAccountActionId";
 
     // new queries for issue 1601 to allow backfilling of custom fields
     // on existing database objects like customers, personnel, loans, etc.

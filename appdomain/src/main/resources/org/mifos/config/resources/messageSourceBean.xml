@@ -46,6 +46,7 @@
                 <value>classpath:org/mifos/config/localizedResources/OfficeUIResources</value>
                 <value>classpath:org/mifos/config/localizedResources/ConfigurationUIResources</value>
                 <value>classpath:org/mifos/config/localizedResources/CheckListUIResources</value>
+                <value>classpath:org/mifos/config/localizedResources/ReportsUIResources</value>
             </list>
         </property>
         <property name="fileEncodings" value="UTF-8" />

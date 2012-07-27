@@ -150,8 +150,9 @@ explanation of the license and how it is applied.
 										<mifos:select property="accountTypeId"
 											onchange="return populateParent(this)" >
 												<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ProductTypeList')}" var="producttype">
-													<html-el:option value="${producttype.productTypeID}">${producttype.name}</html-el:option>
+													<html-el:option value="${producttype.productTypeID}">${producttype.name} <mifos:mifoslabel name="reports.administrativedocument"/></html-el:option>
 												</c:forEach>
+												<html-el:option value="3"><mifos:mifoslabel name="reports.paymentReceipts" mandatory="no"/></html-el:option>
 										</mifos:select>
 									</td>
 								</tr>

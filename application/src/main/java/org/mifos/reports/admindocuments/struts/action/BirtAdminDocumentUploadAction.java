@@ -39,12 +39,14 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.upload.FormFile;
+import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
+import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.business.MifosConfigurationManager;
@@ -56,6 +58,7 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.reports.admindocuments.business.AdminDocAccActionMixBO;
 import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
 import org.mifos.reports.admindocuments.business.AdminDocumentBO;
 import org.mifos.reports.admindocuments.struts.actionforms.BirtAdminDocumentUploadActionForm;
@@ -75,7 +78,8 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
             HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
         uploadForm.clear();
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(), request);
+        List<ProductTypeEntity> productTypes = getProductTypes();
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, productTypes, request);
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -96,29 +100,58 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         SessionUtils.removeAttribute(ProductDefinitionConstants.AVAILABLEACCOUNTSTATUS, request);
         SessionUtils.removeAttribute(ProductDefinitionConstants.SELECTEDACCOUNTSTATUS, request);
         SessionUtils.removeAttribute(ProductDefinitionConstants.STATUS_LIST, request);
-        if (StringUtils.isNotBlank(uploadForm.getAccountTypeId())) {
+        if (StringUtils.isNotBlank(uploadForm.getAccountTypeId()) && Short
+                .valueOf(uploadForm.getAccountTypeId()).shortValue() <= 2) {
             SessionUtils.setCollectionAttribute(ProductDefinitionConstants.AVAILABLEACCOUNTSTATUS,
                     new AccountBusinessService().retrieveAllActiveAccountStateList(AccountTypes.getAccountType(Short
                             .valueOf(uploadForm.getAccountTypeId()))), request);
+        } else if (StringUtils.isNotBlank(uploadForm.getAccountTypeId())) {
+            SessionUtils.setCollectionAttribute(ProductDefinitionConstants.AVAILABLEACCOUNTSTATUS,
+                    getAvailableLoanTransactions((Short)SessionUtils.getAttribute("CURRENT_LOCALE_ID", request)), request);
         }
         return mapping.findForward(ActionForwards.load_success.toString());
+    }
+
+    /**
+     * This is hardcode settings for extended admin documents functionality.
+     */
+    private List<AccountActionEntity> getAvailableLoanTransactions(Short currentLocaleId) throws ServiceException{
+        List<AccountActionEntity> loanAccountActionTypes = new ArrayList<AccountActionEntity>();
+        loanAccountActionTypes.add(new AccountBusinessService().getAccountAction(AccountActionTypes.LOAN_REPAYMENT.getValue(), currentLocaleId ));
+        loanAccountActionTypes.add(new AccountBusinessService().getAccountAction(AccountActionTypes.DISBURSAL.getValue(), currentLocaleId ));
+        return loanAccountActionTypes;
     }
 
     @TransactionDemarcate(joinToken = true)
     private void updateSelectedStatus(HttpServletRequest request, BirtAdminDocumentUploadActionForm uploadForm)
             throws PageExpiredException, ServiceException {
-        List<AccountStateEntity> selectList = new ArrayList<AccountStateEntity>();
+        List selectList;
         if (uploadForm.getStatusList() != null) {
-            List<AccountStateEntity> masterList = new AccountBusinessService()
-                    .retrieveAllActiveAccountStateList(AccountTypes.getAccountType(Short.valueOf(uploadForm
-                            .getAccountTypeId())));
-            for (AccountStateEntity product : masterList) {
-                for (String productStatusId : uploadForm.getStatusList()) {
-                    if (productStatusId != null
-                            && product.getId().intValue() == Integer.valueOf(productStatusId).intValue()) {
+            Short accountTypeId = Short.valueOf(uploadForm
+                    .getAccountTypeId());
+            if (accountTypeId.shortValue() <= 2){
+                selectList = new ArrayList<AccountStateEntity>();
+                List<AccountStateEntity> masterList = new AccountBusinessService()
+                        .retrieveAllActiveAccountStateList(AccountTypes.getAccountType(accountTypeId));
+                for (AccountStateEntity product : masterList) {
+                    for (String productStatusId : uploadForm.getStatusList()) {
+                        if (productStatusId != null
+                                && product.getId().intValue() == Integer.valueOf(productStatusId).intValue()) {
 
-                        selectList.add(product);
+                            selectList.add(product);
 
+                        }
+                    }
+                }
+            } else {
+                Short currentLocaleId = (Short)SessionUtils.getAttribute("CURRENT_LOCALE_ID", request);
+                selectList = new ArrayList<AccountActionEntity>();
+                List<AccountActionEntity> masterList = getAvailableLoanTransactions(currentLocaleId);
+                for (String accountActionId : uploadForm.getStatusList()){
+                    AccountActionTypes accountActionType = AccountActionTypes.fromInt(Integer.valueOf(accountActionId));
+                    AccountActionEntity accountAction = new AccountBusinessService().getAccountAction(accountActionType.getValue(), currentLocaleId);
+                    if ( masterList.contains(accountAction) ){
+                        selectList.add(accountAction);
                     }
                 }
             }
@@ -134,8 +167,10 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
         if (uploadForm.getAccountTypeId().equals(ProductType.LOAN.getValue().toString())) {
             uploadForm.setAccountTypeName("LOAN");
-        } else {
+        } else if (uploadForm.getAccountTypeId().equals(ProductType.SAVINGS.getValue().toString())){
             uploadForm.setAccountTypeName("SAVINGS");
+        } else {
+            uploadForm.setAccountTypeName("TRANSACTIONS");
         }
 
         updateSelectedStatus(request, uploadForm);
@@ -165,20 +200,31 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
     public ActionForward upload(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
-        List<AccountStateEntity> masterList = (List<AccountStateEntity>) SessionUtils.getAttribute("SelectedStatus",
-                request);
 
         FormFile formFile = uploadForm.getFile();
         uploadFile(formFile);
         AdminDocumentBO admindocBO = createOrUpdateAdminDocument(uploadForm.getAdminiDocumentTitle(), Short
                 .valueOf("1"), formFile.getFileName());
         AdminDocAccStateMixBO admindocaccstatemixBO = new AdminDocAccStateMixBO();
-        for (AccountStateEntity acc : masterList) {
-            admindocaccstatemixBO = new AdminDocAccStateMixBO();
-            admindocaccstatemixBO.setAccountStateID(acc);
-            admindocaccstatemixBO.setAdminDocumentID(admindocBO);
-            legacyAdminDocAccStateMixDao.createOrUpdate(admindocaccstatemixBO);
+        if (Short.valueOf(uploadForm.getAccountTypeId()).shortValue() <= 2){
+            List<AccountStateEntity> masterList = (List<AccountStateEntity>) SessionUtils.getAttribute("SelectedStatus",
+                    request);
+            for (AccountStateEntity acc : masterList) {
+                admindocaccstatemixBO = new AdminDocAccStateMixBO();
+                admindocaccstatemixBO.setAccountStateID(acc);
+                admindocaccstatemixBO.setAdminDocumentID(admindocBO);
+                legacyAdminDocAccStateMixDao.createOrUpdate(admindocaccstatemixBO);
 
+            }
+        } else {
+            List<AccountActionEntity> masterList = (List<AccountActionEntity>) SessionUtils.getAttribute("SelectedStatus",
+                    request);
+            for (AccountActionEntity accountActionEntity : masterList) {
+                AdminDocAccActionMixBO adminDocAccActionMixBO = new AdminDocAccActionMixBO();
+                adminDocAccActionMixBO.setAccountAction(accountActionEntity);
+                adminDocAccActionMixBO.setAdminDocument(admindocBO);
+                legacyAdminDocumentDao.createOrUpdate(adminDocAccActionMixBO);
+            }
         }
         request.setAttribute("report", admindocBO);
         return getViewBirtAdminDocumentPage(mapping, form, request, response);
@@ -241,35 +287,58 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         AdminDocumentBO businessKey = null;
-
         BirtAdminDocumentUploadActionForm birtReportsUploadActionForm = (BirtAdminDocumentUploadActionForm) form;
+
+        List masterList = null;
+        List selectedlist = null;
+
         List<AdminDocAccStateMixBO> admindoclist = legacyAdminDocAccStateMixDao.getMixByAdminDocuments(Short
                 .valueOf(request.getParameter("admindocId")));
-        if ((admindoclist != null) && (!admindoclist.isEmpty())) {
-            SessionUtils.setAttribute("admindocId", admindoclist.get(0).getAdminDocumentID().getAdmindocId(), request);
+        if (admindoclist != null && !admindoclist.isEmpty()){
+            if ((admindoclist != null) && (!admindoclist.isEmpty())) {
+                SessionUtils.setAttribute("admindocId", admindoclist.get(0).getAdminDocumentID().getAdmindocId(), request);
 
-            birtReportsUploadActionForm.setAdminiDocumentTitle(admindoclist.get(0).getAdminDocumentID()
-                    .getAdminDocumentName());
-            birtReportsUploadActionForm.setAccountTypeId(admindoclist.get(0).getAccountStateID().getPrdType()
-                    .getProductTypeID().toString());
-            businessKey = admindoclist.get(0).getAdminDocumentID();
-        }
+                birtReportsUploadActionForm.setAdminiDocumentTitle(admindoclist.get(0).getAdminDocumentID()
+                        .getAdminDocumentName());
+                birtReportsUploadActionForm.setAccountTypeId(admindoclist.get(0).getAccountStateID().getPrdType()
+                        .getProductTypeID().toString());
+                businessKey = admindoclist.get(0).getAdminDocumentID();
+            }
 
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(), request);
-        List<AccountStateEntity> selectedlist = new ArrayList<AccountStateEntity>();
-        for (AdminDocAccStateMixBO admindoc : admindoclist) {
-            selectedlist.add(admindoc.getAccountStateID());
-        }
+            selectedlist = new ArrayList<AccountStateEntity>();
+            for (AdminDocAccStateMixBO admindoc : admindoclist) {
+                selectedlist.add(admindoc.getAccountStateID());
+            }
+            if (birtReportsUploadActionForm.getAccountTypeId() != null) {
+                Short accountTypeId = Short.valueOf(birtReportsUploadActionForm.getAccountTypeId());
+                masterList = new AccountBusinessService().retrieveAllActiveAccountStateList(AccountTypes
+                        .getAccountType(accountTypeId));
+                masterList.removeAll(selectedlist);
+            }
+        } else {
+            List<AdminDocAccActionMixBO> adminDocAccActionMixList = legacyAdminDocAccStateMixDao.getAccActionMixByAdminDocument(Short
+                    .valueOf(request.getParameter("admindocId")));
+            if ((adminDocAccActionMixList != null) && (!adminDocAccActionMixList.isEmpty())) {
+                SessionUtils.setAttribute("admindocId", adminDocAccActionMixList.get(0).getAdminDocument().getAdmindocId(), request);
 
-        List<AccountStateEntity> masterList = null;
-        if (birtReportsUploadActionForm.getAccountTypeId() != null) {
-            masterList = new AccountBusinessService().retrieveAllActiveAccountStateList(AccountTypes
-                    .getAccountType(Short.valueOf(birtReportsUploadActionForm.getAccountTypeId())));
+                birtReportsUploadActionForm.setAdminiDocumentTitle(adminDocAccActionMixList.get(0).getAdminDocument()
+                        .getAdminDocumentName());
+                birtReportsUploadActionForm.setAccountTypeId("3");
+                businessKey = adminDocAccActionMixList.get(0).getAdminDocument();
+            }
+
+            selectedlist = new ArrayList<AccountActionEntity>();
+            for (AdminDocAccActionMixBO admindoc : adminDocAccActionMixList) {
+                selectedlist.add(admindoc.getAccountAction());
+            }
+
+            masterList = getAvailableLoanTransactions((Short)SessionUtils.getAttribute("CURRENT_LOCALE_ID", request));
             masterList.removeAll(selectedlist);
         }
 
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.AVAILABLEACCOUNTSTATUS, masterList, request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDACCOUNTSTATUS, selectedlist, request);
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(), request);
 
         request.setAttribute(Constants.BUSINESS_KEY, businessKey);
 
@@ -281,8 +350,6 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
     public ActionForward editThenUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
-        List<AccountStateEntity> masterList = (List<AccountStateEntity>) SessionUtils.getAttribute("SelectedStatus",
-                request);
         FormFile formFile = uploadForm.getFile();
         boolean newFile = false;
 
@@ -301,19 +368,41 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
             admindoc.setAdminDocumentIdentifier(formFile.getFileName());
         }
         legacyAdminDocumentDao.createOrUpdate(admindoc);
-        List<AdminDocAccStateMixBO> admindoclist = legacyAdminDocAccStateMixDao.getMixByAdminDocuments(Short
-                .valueOf(SessionUtils.getAttribute("admindocId", request).toString()));
-        for (AdminDocAccStateMixBO temp : admindoclist) {
-            legacyAdminDocAccStateMixDao.delete(temp);
-        }
 
-        AdminDocAccStateMixBO admindocaccstatemixBO = new AdminDocAccStateMixBO();
-        for (AccountStateEntity acc : masterList) {
-            admindocaccstatemixBO = new AdminDocAccStateMixBO();
-            admindocaccstatemixBO.setAccountStateID(acc);
-            admindocaccstatemixBO.setAdminDocumentID(admindoc);
-            legacyAdminDocAccStateMixDao.createOrUpdate(admindocaccstatemixBO);
+        if (Short.valueOf(uploadForm.getAccountTypeId()).shortValue() <= 2){
+            List<AccountStateEntity> masterList = (List<AccountStateEntity>) SessionUtils.getAttribute("SelectedStatus",
+                    request);
+            List<AdminDocAccStateMixBO> admindoclist = legacyAdminDocAccStateMixDao.getMixByAdminDocuments(Short
+                    .valueOf(SessionUtils.getAttribute("admindocId", request).toString()));
+            for (AdminDocAccStateMixBO temp : admindoclist) {
+                legacyAdminDocAccStateMixDao.delete(temp);
+            }
 
+            AdminDocAccStateMixBO admindocaccstatemixBO = new AdminDocAccStateMixBO();
+            for (AccountStateEntity acc : masterList) {
+                admindocaccstatemixBO = new AdminDocAccStateMixBO();
+                admindocaccstatemixBO.setAccountStateID(acc);
+                admindocaccstatemixBO.setAdminDocumentID(admindoc);
+                legacyAdminDocAccStateMixDao.createOrUpdate(admindocaccstatemixBO);
+
+            }
+        } else {
+            List<AccountActionEntity> masterList = (List<AccountActionEntity>) SessionUtils.getAttribute("SelectedStatus",
+                    request);
+            List<AdminDocAccActionMixBO> admindoclist = legacyAdminDocAccStateMixDao.getAccActionMixByAdminDocument(Short
+                    .valueOf(SessionUtils.getAttribute("admindocId", request).toString()));
+            for (AdminDocAccActionMixBO temp : admindoclist) {
+                legacyAdminDocAccStateMixDao.delete(temp);
+            }
+
+            AdminDocAccActionMixBO adminDocAccActionMixBO = new AdminDocAccActionMixBO();
+            for (AccountActionEntity acc : masterList) {
+                adminDocAccActionMixBO = new AdminDocAccActionMixBO();
+                adminDocAccActionMixBO.setAccountAction(acc);
+                adminDocAccActionMixBO.setAdminDocument(admindoc);
+                legacyAdminDocAccStateMixDao.createOrUpdate(adminDocAccActionMixBO);
+
+            }
         }
         return getViewBirtAdminDocumentPage(mapping, form, request, response);
     }

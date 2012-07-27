@@ -133,4 +133,6 @@
     
     <bean id="importLoansSavingsFacade" class="org.mifos.application.importexport.servicefacade.ImportLoansSavingsFacadeWebTier" />
     
+    <bean id="adminDocumentsServiceFacade" class="org.mifos.reports.admindocuments.service.AdminDocumentsServiceImpl" />
+
 </beans>

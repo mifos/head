@@ -78,4 +78,33 @@
 	    		DELETE FROM lookup_value WHERE lookup_name = 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer';
 				</sql></rollback>
 		</changeSet>
+	<changeSet id="MIFOS-5616_1" author="Michal Dudzinski" context="expansion">
+	   	<sql endDelimiter=";">
+	    	DROP TABLE IF EXISTS admin_document_acc_action_mix;
+	    	CREATE TABLE admin_document_acc_action_mix (
+			  admin_doc_acc_action_mix_id integer auto_increment,
+			  account_action_id smallint not null,
+			  admin_document_id integer not null,
+			  created_by smallint,
+			  create_date date,
+			  updated_by smallint,
+			  updated_date date,
+			  version_no integer,
+			  PRIMARY KEY (admin_doc_acc_action_mix_id),
+			  foreign key (account_action_id)
+			    references account_action(account_action_id)
+			    on delete no action
+			    on update no action,
+			  foreign key (admin_document_id)
+			    references admin_document(admin_document_id)
+			    on delete no action
+			    on update no action
+			)
+	   	</sql>
+	   	<rollback>
+	   		<sql endDelimiter=";">
+	   			DROP TABLE admin_document_acc_action_mix;
+	   		</sql>
+	   	</rollback>
+    </changeSet>
 </databaseChangeLog>

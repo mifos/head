@@ -35,5 +35,8 @@
         <![CDATA[ from  AdminDocumentBO admindoc where admindoc.isActive =1 ]]>
     </query>
 
+    <query name="admindocument.getAdminDocumentsByAccountActionId">
+        <![CDATA[ select adminDocument from AdminDocAccActionMixBO as adminDocAccActionMix where adminDocAccActionMix.accountAction.id = :accountActionId ]]>
+    </query>
 
 </hibernate-mapping>

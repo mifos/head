@@ -43,4 +43,10 @@ public class LegacyAdminDocumentDao extends LegacyGenericDao {
 
     }
 
+    public List<AdminDocumentBO> getAdminDocumentsByAccountActionId(Short accountActionId) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("accountActionId", accountActionId);
+        return executeNamedQuery(NamedQueryConstants.gET_ADMIN_DOCUMENTS_BY_ACCOUNT_ACTION_ID, queryParameters);
+    }
+
 }

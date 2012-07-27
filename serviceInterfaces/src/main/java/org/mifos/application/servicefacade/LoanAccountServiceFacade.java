@@ -54,6 +54,7 @@ import org.mifos.dto.domain.LoanRepaymentScheduleItemDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.dto.domain.OriginalScheduleInfoDto;
 import org.mifos.dto.domain.OverpaymentDto;
+import org.mifos.dto.screen.AccountPaymentDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.dto.screen.ExpectedPaymentDto;
@@ -255,4 +256,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
 
     @PreAuthorize("isFullyAuthenticated()")
     List<ApplicableCharge> getApplicablePenalties(Integer accountId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<AccountPaymentDto> getLoanAccountPayments(String globalAccountNum);
 }

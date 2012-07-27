@@ -144,14 +144,15 @@ explanation of the license and how it is applied.
 								</tr>
 							    <tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
-										name="reports.accountType" mandatory="yes"/>
+										name="reports.type" mandatory="yes"/>
 									</td>
 									<td>
 										<mifos:select property="accountTypeId"
 											onchange="return populateParent(this)" >
 												<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ProductTypeList')}" var="producttype">
-													<html-el:option value="${producttype.productTypeID}">${producttype.name}</html-el:option>
+													<html-el:option value="${producttype.productTypeID}">${producttype.name} <mifos:mifoslabel name="reports.administrativedocument"/></html-el:option>
 												</c:forEach>
+												<html-el:option value="3"><mifos:mifoslabel name="reports.paymentReceipts" mandatory="no"/></html-el:option>
 										</mifos:select>
 									</td>
 								</tr>

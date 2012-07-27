@@ -231,6 +231,7 @@
         <!-- Administratives Documents  -->
         <mapping resource="org/mifos/reports/admindocuments/business/AdminDocAccStateMix.hbm.xml" />
         <mapping resource="org/mifos/reports/admindocuments/business/AdminDocument.hbm.xml" />
+        <mapping class="org.mifos.reports.admindocuments.business.AdminDocAccActionMixBO" />
         <!--  -->
 
         <!-- Branch Report -->

@@ -17,51 +17,24 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+package org.mifos.dto.screen;
 
-package org.mifos.dto.domain;
-
-public class AdminDocumentDto {
-
+public class AccountActionDto {
     private final Integer id;
     private final String name;
-    private final String identifier;
-    private final boolean active;
 
-    public AdminDocumentDto(Integer id, String name, String identifier, boolean active) {
+    public AccountActionDto(Integer id, String name) {
+        super();
         this.id = id;
         this.name = name;
-        this.identifier = identifier;
-        this.active = active;
     }
 
     public Integer getId() {
-        return this.id;
+        return id;
     }
 
     public String getName() {
-        return this.name;
-    }
-
-    public String getIdentifier() {
-        return this.identifier;
-    }
-
-    public boolean isActive() {
-        return this.active;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        boolean isEqual = false;
-        if (obj instanceof AdminDocumentDto) {
-            isEqual = this.id.equals(((AdminDocumentDto)obj).getId());
-        }
-        return isEqual;
-    }
-
-    @Override
-    public int hashCode() {
-        return this.id.intValue();
+        return name;
     }
 
 }

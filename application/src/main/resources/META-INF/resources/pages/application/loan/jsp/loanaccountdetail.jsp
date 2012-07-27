@@ -630,6 +630,12 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									<html-el:link styleId="loanaccountdetail.link.viewTransactionHistory"  href="transaction_history_loanAccount.htm"> <mifos:mifoslabel name="loan.view_transc_history" />
 									</html-el:link><br>--%> 
 									<span class="fontnormal">
+                                        <c:url value="viewLoanAccountPayments.ftl" var="viewLoanAccountPaymentsUrl" >
+                                            <c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}" />
+                                        </c:url >
+                                        <a id="loanaccountdetail.link.accountpayments" href="${viewLoanAccountPaymentsUrl}">
+                                            <mifos:mifoslabel name="loan.ViewLoanAccountPaymentsLink" />
+                                        </a> <br/>
                                         <c:set var="questionnaireFor" scope="session" value="${loanInformationDto.prdOfferingName}"/>
                                         <c:remove var="urlMap" />
                                         <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>

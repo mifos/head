@@ -214,6 +214,7 @@ import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.AccountFeesDto;
+import org.mifos.dto.screen.AccountPaymentDto;
 import org.mifos.dto.screen.AccountPenaltiesDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
@@ -267,6 +268,7 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade {
@@ -2928,6 +2930,18 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    @Override
+    public List<AccountPaymentDto> getLoanAccountPayments(String globalAccountNum) {
+        List<AccountPaymentDto> loanAccountPayments = new ArrayList<AccountPaymentDto>();
+        LoanBO loanAccount = loanDao.findByGlobalAccountNum(globalAccountNum);
+        List<AccountPaymentEntity> loanAccountPaymentsEntities = loanAccount.getAccountPayments();
+        for (AccountPaymentEntity accountPaymentEntity : loanAccountPaymentsEntities){
+            loanAccountPayments.add(accountPaymentEntity.toScreenDto());
+        }
+
+        return loanAccountPayments;
     }
 
 }
