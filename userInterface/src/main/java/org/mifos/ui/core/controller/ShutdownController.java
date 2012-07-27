@@ -99,14 +99,16 @@ public class ShutdownController {
                                     @ModelAttribute("shutdownFormBean") @Valid ShutdownFormBean formBean,
                                     BindingResult result,
                                     SessionStatus status) {
-        if (!result.hasErrors()) {
-            if (StringUtils.isNotBlank(start)) {
-                this.shutdownServiceFacade.scheduleShutdown(request, formBean.getTimeout() * 1000L);
-            } else if (StringUtils.isNotBlank(cancel)) {
-                this.shutdownServiceFacade.cancelShutdown(request);
-            }
-            status.setComplete();
-        }
+    	if (StringUtils.isNotBlank(cancel))
+    	{
+    		this.shutdownServiceFacade.cancelShutdown(request);
+    		status.setComplete();
+    	}
+    	else if(StringUtils.isNotBlank(start) && !result.hasErrors())
+    	{
+    		this.shutdownServiceFacade.scheduleShutdown(request, formBean.getTimeout() * 1000L);
+    		status.setComplete();
+    	}
 
         return loadShutdownInfo(request);
     }
