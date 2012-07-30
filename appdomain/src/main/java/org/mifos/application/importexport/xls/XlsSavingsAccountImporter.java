@@ -113,12 +113,14 @@ public class XlsSavingsAccountImporter implements MessageSourceAware {
 
                     currentCell = XlsSavingsImportTemplateConstants.SAVINGS_AMOUNT;
                     BigDecimal savingAmount = getCellDecimalValue(row,currentCell);
-                    if(savingAmount == BigDecimal.valueOf(0)){
+                    if(savingAmount == BigDecimal.valueOf(0) || null==savingAmount){
             			savingAmount = savingsProductDao.findBySystemId(prdOfferingDto.getGlobalPrdOfferingNum()).getRecommendedAmount().getAmount(); 
             		}
                     currentCell = XlsSavingsImportTemplateConstants.SAVINGS_BALANCE;
                     BigDecimal savingBalance = getCellDecimalValue(row, currentCell);
-                    
+                    if(savingBalance==null){
+                        savingBalance= BigDecimal.valueOf(0);
+                    }
                     if (accountNumber != null) {
                         newAccountsNumbers.add(accountNumber);
                     }
