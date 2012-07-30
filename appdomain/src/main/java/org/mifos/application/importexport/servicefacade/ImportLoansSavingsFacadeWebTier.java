@@ -115,8 +115,6 @@ public class ImportLoansSavingsFacadeWebTier implements
             
         
         String savingsId = savingServiceFacade.createSavingsAccount(openingBalanceSavingsAccount);
-        System.out.println(savingsId);
-
 	    }
         return null;
 	}

@@ -318,6 +318,33 @@ public class SavingsBO extends AccountBO {
 
         return new SavingsAccountActivationDetail(activationDate, nextInterestPostingDate, scheduledPayments);
     }
+    
+    public static SavingsAccountActivationDetail generateAccountActivationDetails(CustomerBO customer, SavingsOfferingBO savingsProduct,
+            Money recommendedOrMandatoryAmount, AccountState savingsAccountState, CalendarEvent calendarEvents, LocalDate activationDate) {
+
+        List<AccountActionDateEntity> scheduledPayments = new ArrayList<AccountActionDateEntity>();
+        LocalDate nextInterestPostingDate = new LocalDate();
+
+        if (savingsAccountState.isActiveSavingsAccountState()) {
+            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
+            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
+
+            List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, activationDate.toDateTimeAtStartOfDay(), scheduledEvent, false);
+
+            short installmentNumber = 0;
+            for (DateTime date : depositDates) {
+                java.sql.Date depositDueDate = new java.sql.Date(date.toDate().getTime());
+                AccountActionDateEntity scheduledSavingsDeposit = new SavingsScheduleEntity(customer, installmentNumber++,
+                        depositDueDate, PaymentStatus.UNPAID, recommendedOrMandatoryAmount, savingsProduct.getCurrency());
+                scheduledPayments.add(scheduledSavingsDeposit);
+            }
+
+            InterestScheduledEvent interestPostingEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(savingsProduct.getFreqOfPostIntcalc().getMeeting());
+            nextInterestPostingDate = interestPostingEvent.nextMatchingDateAfter(new LocalDate(startOfFiscalYear()), activationDate);
+        }
+
+        return new SavingsAccountActivationDetail(activationDate, nextInterestPostingDate, scheduledPayments);
+    }
 
     /**
      * @deprecated use minimal legal constructor from builder
