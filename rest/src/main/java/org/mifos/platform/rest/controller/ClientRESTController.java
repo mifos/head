@@ -117,7 +117,7 @@ public class ClientRESTController {
         map.put("postal code", clientInfo.getAddress().getZip());
         map.put("phone", clientInfo.getAddress().getPhoneNumber());
         map.put("dispalyName", clientInfo.getClientDisplay().getDisplayName());
-        map.put("eternalId", clientInfo.getClientDisplay().getExternalId());
+        map.put("externalId", clientInfo.getClientDisplay().getExternalId());
         map.put("loanOfficer", clientInfo.getClientDisplay().getLoanOfficerName());
         return map;
     }

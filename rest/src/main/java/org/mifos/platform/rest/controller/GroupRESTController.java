@@ -114,7 +114,7 @@ public class GroupRESTController {
         map.put("postal code", groupInfo.getAddress().getZip());
         map.put("phone", groupInfo.getAddress().getPhoneNumber());
         map.put("dispalyName", groupInfo.getGroupDisplay().getDisplayName());
-        map.put("eternalId", groupInfo.getGroupDisplay().getExternalId());
+        map.put("externalId", groupInfo.getGroupDisplay().getExternalId());
         map.put("loanOfficer", groupInfo.getGroupDisplay().getLoanOfficerName());
         return map;
     }
