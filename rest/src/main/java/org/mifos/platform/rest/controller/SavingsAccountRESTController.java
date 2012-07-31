@@ -257,7 +257,7 @@ public class SavingsAccountRESTController {
         map.put("customerName", customer.getDisplayName());
         map.put("productName", product.getPrdOfferingName());
         map.put("interesRate", details.getProductDetails().getInterestRate().toString());
-        map.put("interestRatePeriod", details.getProductDetails().getInterestCalculationFrequencyPeriod().toString());
+        map.put("interestRatePeriod", details.getProductDetails().getInterestCalculationFrequency().toString());
         map.put("recommendedAmount", recommendedAmount);
         return map;
     }
