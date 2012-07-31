@@ -125,7 +125,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     private void updateSelectedStatus(HttpServletRequest request, BirtAdminDocumentUploadActionForm uploadForm)
             throws PageExpiredException, ServiceException {
-        List selectList;
+        List selectList = null;
         if (uploadForm.getStatusList() != null) {
             Short accountTypeId = Short.valueOf(uploadForm
                     .getAccountTypeId());
@@ -155,9 +155,8 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
                     }
                 }
             }
-            SessionUtils.setCollectionAttribute("SelectedStatus", selectList, request);
-
         }
+        SessionUtils.setCollectionAttribute("SelectedStatus", selectList, request);
 
     }
 
@@ -170,7 +169,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         } else if (uploadForm.getAccountTypeId().equals(ProductType.SAVINGS.getValue().toString())){
             uploadForm.setAccountTypeName("SAVINGS");
         } else {
-            uploadForm.setAccountTypeName("TRANSACTIONS");
+            uploadForm.setAccountTypeName("TRANSACTIONS PAYMENTS");
         }
 
         updateSelectedStatus(request, uploadForm);
@@ -185,8 +184,10 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
         if (uploadForm.getAccountTypeId().equals(ProductType.LOAN.getValue().toString())) {
             uploadForm.setAccountTypeName("LOAN");
-        } else {
+        } else if (uploadForm.getAccountTypeId().equals(ProductType.SAVINGS.getValue().toString())){
             uploadForm.setAccountTypeName("SAVINGS");
+        } else {
+            uploadForm.setAccountTypeName("TRANSACTIONS PAYMENTS");
         }
 
         updateSelectedStatus(request, uploadForm);
@@ -295,16 +296,14 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         List<AdminDocAccStateMixBO> admindoclist = legacyAdminDocAccStateMixDao.getMixByAdminDocuments(Short
                 .valueOf(request.getParameter("admindocId")));
         if (admindoclist != null && !admindoclist.isEmpty()){
-            if ((admindoclist != null) && (!admindoclist.isEmpty())) {
-                SessionUtils.setAttribute("admindocId", admindoclist.get(0).getAdminDocumentID().getAdmindocId(), request);
+            SessionUtils.setAttribute("admindocId", admindoclist.get(0).getAdminDocumentID().getAdmindocId(), request);
 
-                birtReportsUploadActionForm.setAdminiDocumentTitle(admindoclist.get(0).getAdminDocumentID()
-                        .getAdminDocumentName());
-                birtReportsUploadActionForm.setAccountTypeId(admindoclist.get(0).getAccountStateID().getPrdType()
-                        .getProductTypeID().toString());
-                birtReportsUploadActionForm.setIsActive(admindoclist.get(0).getAdminDocumentID().getIsActive().toString());
-                businessKey = admindoclist.get(0).getAdminDocumentID();
-            }
+            birtReportsUploadActionForm.setAdminiDocumentTitle(admindoclist.get(0).getAdminDocumentID()
+                    .getAdminDocumentName());
+            birtReportsUploadActionForm.setAccountTypeId(admindoclist.get(0).getAccountStateID().getPrdType()
+                    .getProductTypeID().toString());
+            birtReportsUploadActionForm.setIsActive(admindoclist.get(0).getAdminDocumentID().getIsActive().toString());
+            businessKey = admindoclist.get(0).getAdminDocumentID();
 
             selectedlist = new ArrayList<AccountStateEntity>();
             for (AdminDocAccStateMixBO admindoc : admindoclist) {
@@ -343,6 +342,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(), request);
 
         request.setAttribute(Constants.BUSINESS_KEY, businessKey);
+        birtReportsUploadActionForm.setStatusList(null);
 
         return mapping.findForward(ActionForwards.edit_success.toString());
     }
@@ -396,7 +396,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
             for (AdminDocAccActionMixBO temp : admindoclist) {
                 legacyAdminDocAccStateMixDao.delete(temp);
             }
-
+            
             AdminDocAccActionMixBO adminDocAccActionMixBO = new AdminDocAccActionMixBO();
             for (AccountActionEntity acc : masterList) {
                 adminDocAccActionMixBO = new AdminDocAccActionMixBO();

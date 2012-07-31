@@ -205,7 +205,6 @@ explanation of the license and how it is applied.
                                         <input type="file" value="" name="file"/>
                                     </td>
 								</tr>
-								<input type="hidden" name="isActive"  value="1" />
 						  </table><br>	
 						 <table width="90%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
