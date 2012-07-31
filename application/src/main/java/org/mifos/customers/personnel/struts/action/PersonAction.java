@@ -24,11 +24,15 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
@@ -38,6 +42,8 @@ import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.mifos.accounts.loan.util.helpers.RequestConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
+import org.mifos.application.admin.system.PersonnelInfo;
+import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -78,6 +84,7 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.login.util.helpers.LoginConstants;
@@ -443,12 +450,40 @@ public class PersonAction extends SearchAction {
             request.setAttribute("displayName", name.getDisplayName());
             request.setAttribute("globalPersonnelNum", globalPersonnelNum);
             
-            authenticationAuthorizationServiceFacade.reloadUserDetailsForSecurityContext(perosonnelInfo.getUserName());
+            //refresh user context roles if active
+            Set<Short> roles = new HashSet<Short>();
+            for(ListElement userNewRole : perosonnelInfo.getRoles()) {
+                roles.add(userNewRole.getId().shortValue());
+            }
+            
+            refreshUserContextIfActive(request, perosonnelInfo.getId(), perosonnelInfo.getUserName(), roles);
 
             return mapping.findForward(ActionForwards.update_success.toString());
         } catch (BusinessRuleException e) {
             throw new PersonnelException(e.getMessageKey(), e.getMessageValues());
         }
+    }
+    
+    /*
+     * When we update user we want to refresh his roles (and permissions) immediately
+     * This method search for edited user in all active sessions and refresh his context
+     */
+    private void refreshUserContextIfActive(HttpServletRequest request, Long id, String username, Set<Short> roles) {
+        ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class
+                .getName());
+        Collection<HttpSession> sessions = shutdownManager.getActiveSessions();
+        
+        for (HttpSession session : sessions) {
+            UserContext userContext = (UserContext) session.getAttribute("UserContext");
+            if(userContext != null) {
+                if(userContext.getId() == id.shortValue()) {
+                    userContext.setRoles(roles);
+                    authenticationAuthorizationServiceFacade.reloadUserDetailsForSecurityContext(username);
+                    break;
+                }
+            }
+        }
+        
     }
 
     @SuppressWarnings("unused")
