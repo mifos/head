@@ -33,7 +33,7 @@ public class AdminDocumentsServiceImpl implements AdminDocumentsServiceFacade {
 
             for (AccountTrxnEntity accountTrxnEntity : accountTrxnEntities) {
                 List<AdminDocumentBO> adminDocumentBOs = legacyAdminDocumentDao
-                        .getAdminDocumentsByAccountActionId(accountTrxnEntity.getAccountActionEntity().getId());
+                        .getActiveAdminDocumentsByAccountActionId(accountTrxnEntity.getAccountActionEntity().getId());
                 if (adminDocumentBOs != null && !adminDocumentBOs.isEmpty()) {
                     for (AdminDocumentBO adminDocumentBO : adminDocumentBOs) {
                         AdminDocumentDto adminDocumentDto = new AdminDocumentDto(adminDocumentBO.getAdmindocId().intValue(),

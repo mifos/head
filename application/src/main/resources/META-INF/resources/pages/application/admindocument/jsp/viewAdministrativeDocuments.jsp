@@ -82,9 +82,12 @@ explanation of the license and how it is applied.
 	                 		<c:forEach var="adminDocuments" items="${sessionScope.listOfAdministrativeDocuments}" varStatus="loop" begin='0'>
 	    		              <tr>
     	        		        <td height="30" colspan="2" class="blueline">
-        	    		        	
-  										<c:out value="${adminDocuments.adminDocumentName}" />
-									
+									<c:out value="${adminDocuments.adminDocumentName}" />
+									<c:if test="${adminDocuments.isActive == 0}">
+										&nbsp;&nbsp;
+										<img src="pages/framework/images/status_closedblack.gif" width="8" height="9" />
+										<mifos:mifoslabel name = "reports.inactive" bundle="reportsUIResources" />
+                   					</c:if>
 								</td>
 															
 		      					<td width="45%" class="blueline"> 

@@ -302,6 +302,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
                         .getAdminDocumentName());
                 birtReportsUploadActionForm.setAccountTypeId(admindoclist.get(0).getAccountStateID().getPrdType()
                         .getProductTypeID().toString());
+                birtReportsUploadActionForm.setIsActive(admindoclist.get(0).getAdminDocumentID().getIsActive().toString());
                 businessKey = admindoclist.get(0).getAdminDocumentID();
             }
 
@@ -324,6 +325,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
                 birtReportsUploadActionForm.setAdminiDocumentTitle(adminDocAccActionMixList.get(0).getAdminDocument()
                         .getAdminDocumentName());
                 birtReportsUploadActionForm.setAccountTypeId("3");
+                birtReportsUploadActionForm.setIsActive(adminDocAccActionMixList.get(0).getAdminDocument().getIsActive().toString());
                 businessKey = adminDocAccActionMixList.get(0).getAdminDocument();
             }
 
@@ -363,7 +365,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         AdminDocumentBO admindoc = legacyAdminDocumentDao.getAdminDocumentById(Short.valueOf(SessionUtils
                 .getAttribute("admindocId", request).toString()));
         admindoc.setAdminDocumentName(uploadForm.getAdminiDocumentTitle());
-        admindoc.setIsActive(Short.valueOf("1"));
+        admindoc.setIsActive(Short.valueOf(uploadForm.getIsActive()));
         if (newFile) {
             admindoc.setAdminDocumentIdentifier(formFile.getFileName());
         }

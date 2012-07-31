@@ -142,6 +142,24 @@ explanation of the license and how it is applied.
 									<td><html-el:text styleId="111"
 										property="adminiDocumentTitle" maxlength="200"/> </td>
 								</tr>
+								<tr class="fontnormal">
+									<td align="right"><mifos:mifoslabel
+										name="reports.labelReportStatus" mandatory="yes"/>
+									</td>
+									<td>
+									    <select style="width:136px;" name="isActive">
+									      <option value="-1" selected>
+									      	<mifos:mifoslabel name="select" bundle="UIResources"/>
+									      </option>
+									      <option <c:if test="${birtAdminDocumentUploadActionForm.isActive eq '1'}">selected="true"</c:if> value="1">
+									      	<mifos:mifoslabel name="reports.active"/>
+									      </option>  
+									      <option <c:if test="${birtAdminDocumentUploadActionForm.isActive eq '0'}">selected="true"</c:if> value="0">
+									      	<mifos:mifoslabel name="reports.inactive"/>
+									      </option>  
+									    </select>
+									</td>
+								</tr>
 							    <tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
 										name="reports.accountType" mandatory="yes"/>
