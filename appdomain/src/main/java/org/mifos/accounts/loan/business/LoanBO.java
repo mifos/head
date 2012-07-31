@@ -3666,8 +3666,17 @@ public class LoanBO extends AccountBO implements Loan {
             Money memberPaymentAmount = totalPaymentAmount.divide(factor);
             memberPaymentAmount = MoneyUtils.currencyRound(memberPaymentAmount);
 
-            PaymentData memberPayment = new PaymentData(memberPaymentAmount, paymentData.getPersonnel(),
-                    paymentData.getPaymentTypeId(), paymentData.getTransactionDate());
+            PaymentData memberPayment;
+            
+            if(getState().getValue()==(short)6) {
+                memberPayment = new PaymentData(memberAccount.getTotalRepayableAmount(), paymentData.getPersonnel(),
+                        paymentData.getPaymentTypeId(), paymentData.getTransactionDate());
+            }
+            else {
+                memberPayment = new PaymentData(memberPaymentAmount, paymentData.getPersonnel(),
+                        paymentData.getPaymentTypeId(), paymentData.getTransactionDate());
+            }
+            
             memberAccount.applyPayment(memberPayment);
         }
     }
