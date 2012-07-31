@@ -16,6 +16,10 @@
   <DATABASECHANGELOG ID="MIFOS-5111_1" AUTHOR="Udai Gupta" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-10-04 01:32:41.0" ORDEREXECUTED="39" EXECTYPE="EXECUTED" MD5SUM="3:33dd48ee85c1bda8d6af0e90b95834b7" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS-5371_1" AUTHOR="Jakub Slawinski" FILENAME="changesets/changelog-Release_H.xml" DATEEXECUTED="2012-02-05 22:59:14.0" ORDEREXECUTED="211" EXECTYPE="EXECUTED" MD5SUM="3:6b6c689a6176a1245adb95e1af15072b" DESCRIPTION="Add Column" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOS-5408_1" AUTHOR="Michal Dudzinski" FILENAME="changesets/changelog-Release_I.xml" DATEEXECUTED="2012-06-06 14:44:43.0" ORDEREXECUTED="323" EXECTYPE="EXECUTED" MD5SUM="3:e72c3614bea151e1ddd092fdec52bbc0" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS-5671_1" AUTHOR="Adrian Winkler" FILENAME="changesets/changelog-Release_J.xml" DATEEXECUTED="2012-07-31 14:02:26.0" ORDEREXECUTED="341" EXECTYPE="EXECUTED" MD5SUM="3:74fd8f31a7ccc1a335436cd99492de6f" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS-5674_1" AUTHOR="Michal Dudzinski" FILENAME="changesets/changelog-Release_I.xml" DATEEXECUTED="2012-07-31 14:02:26.0" ORDEREXECUTED="342" EXECTYPE="EXECUTED" MD5SUM="3:cda3026c03a6f67a5d34ba95be31249d" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS-5695_1" AUTHOR="Kamil Kalfas" FILENAME="changesets/changelog-Release_I.xml" DATEEXECUTED="2012-07-31 14:02:26.0" ORDEREXECUTED="343" EXECTYPE="EXECUTED" MD5SUM="3:f13880842534a9f7b3028ec6c91c2efb" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
+  <DATABASECHANGELOG ID="MIFOS-5695_2" AUTHOR="Kamil Kalfas" FILENAME="changesets/changelog-Release_I.xml" DATEEXECUTED="2012-07-31 14:02:26.0" ORDEREXECUTED="344" EXECTYPE="EXECUTED" MD5SUM="3:bd149291503621e84c382ce4828d4b08" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.3"/>
   <DATABASECHANGELOG ID="MIFOSSUPPORT-44_1" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="250" EXECTYPE="EXECUTED" MD5SUM="3:eb1d1711b1eea8756e15291e03873ba5" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOSSUPPORT-44_2" AUTHOR="John Woodlock" FILENAME="changesets/changelog-PreRelease_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="251" EXECTYPE="EXECUTED" MD5SUM="3:ad14c03a6c51a27ff46e10e0a28842d2" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
   <DATABASECHANGELOG ID="MIFOS_2852_1" AUTHOR="Piotr Bogacz" FILENAME="changesets/changelog-Release_G.xml" DATEEXECUTED="2011-09-17 20:05:03.0" ORDEREXECUTED="259" EXECTYPE="EXECUTED" MD5SUM="3:0781b02231b6f43b1a820baab16cb49b" DESCRIPTION="Custom SQL" COMMENTS="" LIQUIBASE="2.0.0"/>
@@ -1520,6 +1524,7 @@
   <activity activity_id="279" parent_id="256" activity_name_lookup_id="688" description_lookup_id="688"/>
   <activity activity_id="280" parent_id="196" activity_name_lookup_id="690" description_lookup_id="690"/>
   <activity activity_id="281" parent_id="196" activity_name_lookup_id="691" description_lookup_id="691"/>
+  <activity activity_id="282" parent_id="113" activity_name_lookup_id="692" description_lookup_id="692"/>
   <activity_restriction_type activity_restriction_type_id="1" activity_id="104" lookup_id="689"/>
   <admin_document admin_document_id="1" admin_document_name="test2" admin_document_identifier="test2.rptdesign" admin_document_active="1" version_no="0"/>
   <admin_document_acc_state_mix admin_doc_acc_state_mix_id="1" account_state_id="1" admin_document_id="1" version_no="0"/>
@@ -7421,6 +7426,7 @@
   <lookup_value lookup_id="689" entity_id="98" lookup_name="ActivityRestriction-MaxLoanAmountForApprove"/>
   <lookup_value lookup_id="690" entity_id="87" lookup_name="Permissions-CanImportLoans"/>
   <lookup_value lookup_id="691" entity_id="87" lookup_name="Permissions-CanImportSavings"/>
+  <lookup_value lookup_id="692" entity_id="87" lookup_name="Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -8021,6 +8027,7 @@
   <lookup_value_locale lookup_value_id="1019" locale_id="1" lookup_id="688"/>
   <lookup_value_locale lookup_value_id="1020" locale_id="1" lookup_id="690"/>
   <lookup_value_locale lookup_value_id="1021" locale_id="1" lookup_id="691"/>
+  <lookup_value_locale lookup_value_id="1022" locale_id="1" lookup_id="692" lookup_value="Can make payment to the account using Savings Account Transfer"/>
   <max_min_interest_rate account_id="4" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="5" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="9" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
@@ -9339,6 +9346,7 @@
   <roles_activity activity_id="279" role_id="1"/>
   <roles_activity activity_id="280" role_id="1"/>
   <roles_activity activity_id="281" role_id="1"/>
+  <roles_activity activity_id="282" role_id="1"/>
   <saving_schedule id="1" account_id="15" customer_id="9" action_date="2009-01-29" deposit="0.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="1" version_no="0"/>
   <saving_schedule id="2" account_id="15" customer_id="9" action_date="2009-02-05" deposit="0.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="2" version_no="0"/>
   <saving_schedule id="3" account_id="15" customer_id="9" action_date="2009-02-12" deposit="0.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="3" version_no="0"/>
