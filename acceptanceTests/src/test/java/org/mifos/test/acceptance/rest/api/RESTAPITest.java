@@ -627,8 +627,6 @@ public class RESTAPITest extends UiTestCaseBase {
         jsonAssert.assertEqual("phone");
         jsonAssert.assertEqual("dispalyName");
         jsonAssert.assertEqual("externalId");
-        jsonAssert.assertEqual("accountNum");
-        jsonAssert.assertEqual("globalCustNum");
         jsonAssert.assertEqual("loanOfficer");
         jsonAssert.assertEqual("address");
         jsonAssert.assertEqual("status");
