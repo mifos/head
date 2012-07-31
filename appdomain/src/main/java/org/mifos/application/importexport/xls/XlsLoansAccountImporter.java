@@ -207,7 +207,7 @@ public class XlsLoansAccountImporter implements MessageSourceAware {
                     // disbursal date
                     currentCell=XlsLoansImportTemplateConstants.DISBURLSAL_DATE;
                     Date disbursalDate=getCellDateValue(row, currentCell);
-                    validateDisbursalDate(disbursalDate,customerBO,loanOfferingBO,currentCell.getValue(),row);
+                    validateDisbursalDate(disbursalDate,customerBO,loanOfferingBO,currentCell.getValue(),row,statusName);
 
                     // grace period
                     currentCell=XlsLoansImportTemplateConstants.GRACE_PERIOD;
@@ -356,12 +356,16 @@ public class XlsLoansAccountImporter implements MessageSourceAware {
     }
 
     private void validateDisbursalDate(Date disbursalDate,
-            CustomerBO customerBO, LoanOfferingBO loanOfferingBO, int currentCell, HSSFRow currentRow) throws XlsParsingException {
+            CustomerBO customerBO, LoanOfferingBO loanOfferingBO, int currentCell, HSSFRow currentRow, String statusName) throws XlsParsingException {
         if(disbursalDate==null){
             throw new XlsParsingException(getCellError(XlsMessageConstants.MISSING_DISBURSAL_DATE, currentRow, currentCell, null));
         }
         LocalDate localDisbursalDate=new LocalDate(disbursalDate.getTime());
         Errors errors=loanAccountServiceFacade.validateLoanDisbursementDate(localDisbursalDate, customerBO.getCustomerId(), loanOfferingBO.getPrdOfferingId().intValue());
+        if(localDisbursalDate.isAfter(new LocalDate()) && (statusName.equals("Active in good standing") || statusName.equals("Active in bad standing"))){
+            String[] args = {""};
+            errors.addError("import.loan.account.disbursal.date", args);
+        }
         if(errors.hasErrors()){
             XlsParsingException xlEx=new XlsParsingException(true);
             List<Object> tmp=new ArrayList<Object>();
