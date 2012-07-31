@@ -239,11 +239,9 @@ public class SavingsAccountRESTController {
                                             @RequestParam(required=false) String amount,
                                             @RequestParam Integer productId) throws Throwable {
         
-        String recommendedAmount = null != amount ? amount : "0";
-        
         CustomerBO customer = validateGlobalCustNum(globalCustomerNum);
         SavingsOfferingBO product = validateProductId(productId);
-        
+        String recommendedAmount = null != amount ? amount : product.getRecommendedAmount().toString();
         Integer customerId = customer.getCustomerId();
         AccountState accountState = AccountState.SAVINGS_PENDING_APPROVAL;
         
