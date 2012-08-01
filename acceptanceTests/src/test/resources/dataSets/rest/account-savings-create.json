@@ -1,6 +1,7 @@
-{   "customerName": "Client REST API",
-"recommendedAmount": "0",
-"interestRatePeriod": "2",
+{   
+"customerName": "Client REST API",
+"recommendedAmount": "100.0",
+"interestRatePeriod": "1",
 "productName": "Savings A",
 "interesRate": "5.0"
 }
