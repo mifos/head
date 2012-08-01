@@ -19,6 +19,7 @@ import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.application.importexport.xls.XlsLoansAccountImporter.XlsParsingException;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
@@ -89,6 +90,11 @@ public class XlsSavingsAccountImporter implements MessageSourceAware {
                     }
                     currentCell = XlsSavingsImportTemplateConstants.CUSTOMER_GLOBAL_ID;
                     String customerGlobalId = getCellStringValue(row, currentCell);
+                    if(customerGlobalId.isEmpty()) {
+                    	params.clear();
+                        params.add(customerGlobalId);
+                    	throw new XlsParsingException(getCellError(XlsMessageConstants.CUSTOMER_NOT_BLANK, row, currentCell.getValue(), params));
+                    }
                     CustomerBO customerBO = null;
                     customerBO = validateCustomerGlobalId(customerGlobalId);
                     if (customerBO == null) {

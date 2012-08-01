@@ -65,6 +65,7 @@ public enum XlsMessageConstants {
             "WeekDays-Sunday"),
             MISSING_ACCOUNT_NUMBER("admin.importexport.xls.error.missingAccountNumber"),
             CUSTOMER_NOT_FOUND("admin.importexport.xls.error.customerNotFound"),
+            CUSTOMER_NOT_BLANK("admin.importexport.xls.error.customerNotBlank"),
             MISSING_PRODUCT_NAME("admin.importexport.xls.error.missingProductName"),
             PRODUCT_NOT_FOUND("admin.importexport.xls.error.productNotFound"),
             CUSTOMER_FOR_LOAN_INACTIVE("admin.importexport.xls.error.customerForLoanInactive"),

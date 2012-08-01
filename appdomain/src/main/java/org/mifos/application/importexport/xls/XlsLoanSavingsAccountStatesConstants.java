@@ -20,7 +20,6 @@ public enum XlsLoanSavingsAccountStatesConstants {
     LOAN_CLOSED_OBLIGATIONS_MET("Closed Obligation Met",AccountState.LOAN_CLOSED_OBLIGATIONS_MET),
     LOAN_CLOSED_RESCHEDULED("Closed Rescheduled",AccountState.LOAN_CLOSED_RESCHEDULED),
     LOAN_CLOSED_WRITTEN_OFF("Closed Written OFF",AccountState.LOAN_CLOSED_WRITTEN_OFF),
-    LOAN_DISBURSED_TO_LOAN_OFFICER("Disbursed To Loan Officer",AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER),
     LOAN_PARTIAL_APPLICATION("Partial Application",AccountState.LOAN_PARTIAL_APPLICATION),
     LOAN_PENDING_APPROVAL("Pending Approval",AccountState.LOAN_PENDING_APPROVAL),
     
@@ -45,7 +44,7 @@ public enum XlsLoanSavingsAccountStatesConstants {
         List<XlsLoanSavingsAccountStatesConstants> accountStates=new ArrayList<XlsLoanSavingsAccountStatesConstants>();
         if(typeOfAccount.equals(AccountTypes.LOAN_ACCOUNT)){
             XlsLoanSavingsAccountStatesConstants[] states={LOAN_PARTIAL_APPLICATION, LOAN_PENDING_APPROVAL, LOAN_APPROVED,
-                    LOAN_DISBURSED_TO_LOAN_OFFICER, LOAN_ACTIVE_GOOD_STANDING, LOAN_CLOSED_OBLIGATIONS_MET,
+                    LOAN_ACTIVE_GOOD_STANDING, LOAN_CLOSED_OBLIGATIONS_MET,
                     LOAN_CLOSED_WRITTEN_OFF, LOAN_CLOSED_RESCHEDULED, LOAN_ACTIVE_BAD_STANDING,
                     LOAN_CANCELLED};
             accountStates=Arrays.asList(states);

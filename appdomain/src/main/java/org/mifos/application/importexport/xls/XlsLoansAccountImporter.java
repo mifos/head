@@ -156,6 +156,9 @@ public class XlsLoansAccountImporter implements MessageSourceAware {
                     // customer global id
                     currentCell = XlsLoansImportTemplateConstants.CUSTOMER_GLOBAL_ID;
                     String customerGlobalId = getCellStringValue(row,currentCell);
+                    if(customerGlobalId.isEmpty()) {
+                    	throw new XlsParsingException(getCellError(XlsMessageConstants.CUSTOMER_NOT_BLANK, row, currentCell.getValue(), params));
+                    }
                     CustomerBO customerBO = null;
                     customerBO = validateCustomerGlobalId(customerGlobalId);
                     if (customerBO==null) {
