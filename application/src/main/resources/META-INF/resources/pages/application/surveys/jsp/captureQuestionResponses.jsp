@@ -216,6 +216,35 @@ explanation of the license and how it is applied.
 				                            </ol>
 				                          </fieldset>
                                      </c:if>
+                                     <c:if test="${question.questionType == 'SMART_SINGLE_SELECT'}">
+                                         <fieldset style="width:70%" class="right_section">
+
+                                            <div class="noPadding" style="list-style: none;">
+				                                <input type="text" autocomplete="off" id="txtListSearch" name="txtListSearch" style="width:21em;" class="txtListSearch" />
+				                            </div>
+				                            <ol class="questionList" id="questionList" style="overflow:auto; width:20em; height:180px; border:1px solid #336699; padding:5px; margin:12px 0;">
+                                              <input type="radiobutton" checked="checked" name="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="" style="display:none;" />
+				                              <c:forEach var="choiceValue" items="${question.answerChoices}" >
+		            							<c:choose>
+                                                  <c:when test="${choiceValue.tags !=null && !empty choiceValue.tags}">
+                                                    <c:forEach var="tagValue" items="${choiceValue.tags}" >
+                                                         <li class="noPadding" style="overflow:hidden; margin-right: -3px;">
+                                                            <html:radio property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="${choiceValue}:${tagValue}" style="float:left;" />
+                                                            <label tag="${tagValue}" choice="${choiceValue}" style="float:left; width: 180px; margin: 0;">${choiceValue}&nbsp;:&nbsp;${tagValue}</label>
+                                                         </li>
+                                                    </c:forEach>
+                                                  </c:when>
+            									  <c:otherwise>
+                                                     <li class="noPadding" style="overflow:hidden; margin-right: -3px;">
+                                                        <html:radio property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="${choiceValue}" style="float:left;" />
+                                                        <label tag="" choice="${choiceValue}" style="float:left; width: 180px; margin: 0;">${choiceValue}</label>
+                                                     </li>
+            									  </c:otherwise>
+            									</c:choose>
+							                  </c:forEach>
+				                            </ol>
+				                          </fieldset>
+                                     </c:if>
                                      </td>
                                  </tr>
 
