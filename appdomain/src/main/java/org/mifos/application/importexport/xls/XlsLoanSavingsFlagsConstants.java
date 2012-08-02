@@ -9,7 +9,7 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 
 public enum XlsLoanSavingsFlagsConstants {
     LOAN_WITHDRAW("Withdraw",AccountStateFlag.LOAN_WITHDRAW),
-    LOAN_OTHER("Other",AccountStateFlag.LOAN_OTHER),
+    LOAN_OTHER("Other",AccountStateFlag.LOAN_REJECTED),
     LOAN_REJECTED("Rejected",AccountStateFlag.LOAN_REJECTED),
     LOAN_REVERSAL("Reversal",AccountStateFlag.LOAN_REVERSAL),
     

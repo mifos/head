@@ -576,28 +576,18 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
             //check if ds is already bound
             boolean dataSourceBound = true;
-            boolean dataSourceBoundDw = true;
             try {
                 DataSource datasource = (DataSource)ic.lookup("jdbc/SourceDB");
-                
                 if (datasource != null) {
                     dataSourceBound = true;
                 }
             } catch (Exception ex) {
                 dataSourceBound = false;
             }
-            try {
-                DataSource datasourcedw = (DataSource)ic.lookup("jdbc/DestinationDB");
-                if (datasourcedw != null) {
-                    dataSourceBoundDw = true;
-                }
-            } catch (Exception ex) {
-                dataSourceBoundDw = false;
-            }
-            
+
             if (!dataSourceBound) {
                 Object dataSource = applicationContext.getBean("dataSource");
-                
+
                 try {
                     ic.createSubcontext("jdbc");
                 } catch (NameAlreadyBoundException ex) {
@@ -608,22 +598,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 logger.info("Bound datasource to jdbc/SourceDB");
             } else {
                 logger.info("jdbc/SourceDB is already bound");
-            }
-            
-            if (!dataSourceBoundDw) {
-                
-                Object dataSourcedw = applicationContext.getBean("dataSourcePentahoDW");
-
-                try {
-                    ic.createSubcontext("jdbc");
-                } catch (NameAlreadyBoundException ex) {
-                    logger.info("Subcontext jdbc was already bound");
-                }
-
-                ic.bind("jdbc/DestinationDB", dataSourcedw);
-                logger.info("Bound datasource to jdbc/DestinationDB");
-            } else {
-                logger.info("jdbc/DestinationDB is already bound");
             }
         } catch (Exception ex) {
             logger.error("Unable to bind dataSource to JNDI");
