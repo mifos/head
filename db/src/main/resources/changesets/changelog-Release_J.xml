@@ -107,4 +107,17 @@
 	   		</sql>
 	   	</rollback>
     </changeSet>
+    <changeSet id="MIFOS-5733_1" author="Jakub Podeszwik" context="contraction">
+        <sql endDelimiter=";">
+            UPDATE loan_schedule ls1
+            INNER JOIN loan_account la
+            ON ls1.account_id = la.account_id
+            INNER JOIN loan_schedule ls2
+            ON ls2.account_id = la.parent_account_id
+            SET ls1.action_date = ls2.action_date
+            WHERE ls1.installment_id = ls2.installment_id;
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>
