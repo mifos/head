@@ -345,6 +345,107 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
         return new CollectionSheetDto(populatedCollectionSheetCustomer, transactionDate);
     }
+    
+    @Override
+    public CollectionSheetDto retrieveCollectionSheet(final CollectionSheetFormEnteredDataDto formEnteredDataDto, final LocalDate transactionDate) {
+    	
+    	Integer customerId=formEnteredDataDto.getCustomer().getCustomerId();// By Prudhvi : Hugo Technologies 
+
+        if (customerId == null) {
+            throw new IllegalArgumentException("Invalid Null Customer Id");
+        }
+        if (transactionDate == null) {
+            throw new IllegalArgumentException("Invalid Null Transaction Date: ");
+        }
+        //commented By Prudhvi : Hugo Technologies
+   /*     final List<CollectionSheetCustomerDto> customerHierarchy = collectionSheetDao.findCustomerHierarchy(customerId,
+                transactionDate);*/
+        final List<CollectionSheetCustomerDto> customerHierarchy = collectionSheetDao.findCustomerHierarchy(formEnteredDataDto,
+                transactionDate);
+
+        if (customerHierarchy == null || customerHierarchy.size() == 0) {
+            throw new IllegalArgumentException("Invalid Customer Id: " + customerId);
+        }
+
+        final Short branchId = customerHierarchy.get(0).getBranchId();
+        final String searchId = customerHierarchy.get(0).getSearchId() + ".%";
+
+        final CustomerHierarchyParams customerHierarchyParams = new CustomerHierarchyParams(customerId, branchId,
+                searchId, transactionDate);
+
+        final Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanRepaymentsGroupedByCustomerId = collectionSheetDao
+                .findAllLoanRepaymentsForCustomerHierarchy(branchId, searchId, transactionDate, customerId);
+
+        final Map<Integer, Map<Integer, List<CollectionSheetLoanFeeDto>>> allLoanFeesGroupedByCustomerIdAndAccountId = collectionSheetDao
+                .findOutstandingFeesForLoansOnCustomerHierarchy(branchId, searchId, transactionDate, customerId);
+
+        final Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> allAccountCollectionsByCustomerId = collectionSheetDao
+                .findAccountCollectionsOnCustomerAccount(branchId, searchId, transactionDate, customerId);
+
+        final Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> feesAssociatedWithAccountCollectionsByCustomerId = collectionSheetDao
+                .findOutstandingFeesForCustomerAccountOnCustomerHierarchy(branchId, searchId, transactionDate,
+                        customerId);
+
+        final Map<Integer, List<CollectionSheetCustomerLoanDto>> allLoanDisbursements = collectionSheetDao
+                .findLoanDisbursementsForCustomerHierarchy(branchId, searchId, transactionDate, customerId);
+
+        // Retrieve Each Savings Account
+        final List<CollectionSheetCustomerSavingsAccountDto> savingsAccounts = collectionSheetDao
+                .findAllSavingAccountsForCustomerHierarchy(customerHierarchyParams);
+        Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingsDepositsGroupedByCustomerId = new HashMap<Integer, List<CollectionSheetCustomerSavingDto>>();
+        Map<Integer, List<CollectionSheetCustomerSavingDto>> allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId = new HashMap<Integer, List<CollectionSheetCustomerSavingDto>>();
+        // No need to look for unpaid Savings Account transactions if no Savings Accounts
+        if (savingsAccounts != null && savingsAccounts.size() > 0) {
+            allSavingsDepositsGroupedByCustomerId = collectionSheetDao
+                    .findSavingsDepositsforCustomerHierarchy(customerHierarchyParams);
+
+            // only need to look for unpaid installments for the CLIENTS underneath center or group individual savings
+            // account if those accounts exist
+            if (containsIndividualAccount(savingsAccounts)) {
+                allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId = collectionSheetDao
+                        .findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(customerHierarchyParams);
+            }
+        }
+
+        //
+        final List<CollectionSheetCustomerDto> populatedCollectionSheetCustomer = new ArrayList<CollectionSheetCustomerDto>();
+        for (CollectionSheetCustomerDto collectionSheetCustomer : customerHierarchy) {
+
+            final Integer customerInHierarchyId = collectionSheetCustomer.getCustomerId();
+            final List<CollectionSheetCustomerLoanDto> associatedLoanRepayments = allLoanRepaymentsGroupedByCustomerId
+                    .get(customerInHierarchyId);
+
+            final Map<Integer, List<CollectionSheetLoanFeeDto>> outstandingFeesOnLoanRepayments = allLoanFeesGroupedByCustomerIdAndAccountId
+                    .get(customerInHierarchyId);
+
+            final List<CollectionSheetCustomerLoanDto> associatedLoanDisbursements = allLoanDisbursements
+                    .get(customerInHierarchyId);
+
+            final List<CollectionSheetCustomerAccountCollectionDto> customerAccountCollections = allAccountCollectionsByCustomerId
+                    .get(customerInHierarchyId);
+            final List<CollectionSheetCustomerAccountCollectionDto> customerAccountCollectionFees = feesAssociatedWithAccountCollectionsByCustomerId
+                    .get(customerInHierarchyId);
+
+            final CollectionSheetCustomerAccountDto customerAccount = sumAssociatedCustomerAccountCollectionFees(
+                    customerAccountCollections, customerAccountCollectionFees);
+
+            // process savings accounts
+            List<CollectionSheetCustomerSavingDto> associatedSavingAccounts = ensureAllSavingsAccountsRepresented(
+                    allSavingsDepositsGroupedByCustomerId.get(customerInHierarchyId), savingsAccounts,
+                    customerInHierarchyId);
+            List<CollectionSheetCustomerSavingDto> associatedIndividualSavingsAccounts = ensureAllClientIndividualSavingsAccountsRepresented(
+                    allSavingsAccountsToBePaidByIndividualClientsGroupedByCustomerId.get(customerInHierarchyId),
+                    getIndividualSavingsAccounts(savingsAccounts), collectionSheetCustomer);
+
+            //
+            populatedCollectionSheetCustomer.add(createNullSafeCollectionSheetCustomer(collectionSheetCustomer,
+                    associatedLoanRepayments, outstandingFeesOnLoanRepayments, associatedLoanDisbursements,
+                    associatedSavingAccounts, associatedIndividualSavingsAccounts, customerAccount));
+
+        }
+
+        return new CollectionSheetDto(populatedCollectionSheetCustomer, transactionDate);
+    }
 
     /*
      * Each savings account should be represented in the collection sheet. The previous retrievals only bring back

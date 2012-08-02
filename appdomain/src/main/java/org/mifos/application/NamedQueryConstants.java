@@ -124,6 +124,7 @@ public interface NamedQueryConstants {
     String COLLECTION_SHEET_CUSTOMER_SAVINGSS_WITH_SPECIFIED_MEETING_DATE_AS_SQL = "CollectionSheetCustomer.savingssWithSpecifiedMeetingDateAsSql";
 
     String MASTERDATA_ACTIVE_BRANCHES = "masterdata.activeBranches";
+    String GET_ACTIVE_GROUPS_FOR_CENTER = "Customer.getGroupsListForCenter";
 
     /** M2 queries */
     /** Personnel Queries */

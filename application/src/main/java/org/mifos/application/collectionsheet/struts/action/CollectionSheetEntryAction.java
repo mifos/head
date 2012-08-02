@@ -23,6 +23,7 @@ package org.mifos.application.collectionsheet.struts.action;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -53,6 +54,7 @@ import org.mifos.config.business.Configuration;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -164,12 +166,22 @@ public class CollectionSheetEntryAction extends BaseAction {
         final Integer customerId = Integer.valueOf(actionForm.getCustomerId());
         final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = retrieveFromRequestCollectionSheetEntryFormDto(request);
 
-        final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto = collectionSheetServiceFacade
+        /*final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto = collectionSheetServiceFacade
                 .loadMeetingDateForCustomer(customerId, previousCollectionSheetEntryFormDto);
 
         actionForm.setTransactionDate(latestCollectionSheetEntryFormDto.getMeetingDate());
 
-        storeOnRequestCollectionSheetEntryFormDto(request, latestCollectionSheetEntryFormDto);
+        storeOnRequestCollectionSheetEntryFormDto(request, latestCollectionSheetEntryFormDto);*/
+    	final Short personnelId = Short.valueOf(actionForm.getLoanOfficerId());
+		final Short officeId = Short.valueOf(actionForm.getOfficeId());
+		
+
+
+		final CollectionSheetEntryFormDto groupsCollectionFormDto = collectionSheetServiceFacade.loadGroupsForCustomer(personnelId,officeId,customerId,previousCollectionSheetEntryFormDto);
+		actionForm.setTransactionDate(groupsCollectionFormDto.getMeetingDate());
+		storeOnRequestCollectionSheetEntryFormDto(request, groupsCollectionFormDto);
+		
+		request.getSession().setAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO, groupsCollectionFormDto);
 
         return mapping.findForward(CollectionSheetEntryConstants.LOADSUCCESS);
     }
@@ -188,9 +200,10 @@ public class CollectionSheetEntryAction extends BaseAction {
 
         final BulkEntryActionForm collectionSheetEntryActionForm = (BulkEntryActionForm) form;
         final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = retrieveFromRequestCollectionSheetEntryFormDto(request);
+        final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto=retrieveCollectionSheetEntryFormDtoIncludingMembers(previousCollectionSheetEntryFormDto, request);
 
         final CollectionSheetEntryFormDtoDecorator dtoDecorator = new CollectionSheetEntryFormDtoDecorator(
-                previousCollectionSheetEntryFormDto);
+        		latestCollectionSheetEntryFormDto);
         final CollectionSheetFormEnteredDataDto formEnteredDataDto = new FormEnteredDataAssembler(
                 collectionSheetEntryActionForm, dtoDecorator).toDto();
 
@@ -437,6 +450,14 @@ public class CollectionSheetEntryAction extends BaseAction {
         return (CollectionSheetEntryFormDto) SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO, request);
     }
+    
+    private CollectionSheetEntryFormDto retrieveCollectionSheetEntryFormDtoIncludingMembers(final CollectionSheetEntryFormDto collSheetEntryFormDto,final HttpServletRequest request)
+            throws PageExpiredException {
+    	List<CustomerDto> membersList=(List<CustomerDto>)request.getSession().getAttribute(CollectionSheetEntryConstants.MEMBERSLIST);
+        return new CollectionSheetEntryFormDto(collSheetEntryFormDto.getActiveBranchesList(),collSheetEntryFormDto.getPaymentTypesList(),collSheetEntryFormDto.getLoanOfficerList(),
+         collSheetEntryFormDto.getCustomerList(),collSheetEntryFormDto.getReloadFormAutomatically(),collSheetEntryFormDto.getCenterHierarchyExists(),
+         collSheetEntryFormDto.getBackDatedTransactionAllowed(),collSheetEntryFormDto.getMeetingDate(),collSheetEntryFormDto.getGroupsList(), membersList);
+    }
 
     private void storeOnRequestCollectionSheetEntryFormDto(final HttpServletRequest request,
             final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto) throws PageExpiredException {
@@ -458,6 +479,10 @@ public class CollectionSheetEntryAction extends BaseAction {
         SessionUtils.setAttribute(CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED,
                 latestCollectionSheetEntryFormDto.getBackDatedTransactionAllowed(), request);
         SessionUtils.setAttribute("LastMeetingDate", latestCollectionSheetEntryFormDto.getMeetingDate(), request);
+        SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.GROUPSLIST,
+  				latestCollectionSheetEntryFormDto.getGroupsList(), request);		
+  		SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.MEMBERSLIST,
+  				latestCollectionSheetEntryFormDto.getMembersList(), request);
     }
 
     private CollectionSheetEntryGridDto retrieveFromRequestCollectionSheetEntryDto(final HttpServletRequest request)
