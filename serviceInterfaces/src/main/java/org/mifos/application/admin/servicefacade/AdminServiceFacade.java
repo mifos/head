@@ -86,6 +86,9 @@ public interface AdminServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     boolean isHiddenMandatoryField(String fieldName);
     
+    @PreAuthorize("isFullyAuthenticated()")
+    MandatoryHiddenFieldsDto retrieveHiddenMandatoryFieldsToRead();
+    
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')")
     MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields();
 

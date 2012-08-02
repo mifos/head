@@ -1423,4 +1423,13 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     public Locale retreiveLocaleFromConfiguration() {
         return Localization.getInstance().getConfiguredLocale();
     }
+
+    /**
+     * method created for MIFOS-5729 
+     * should be used to resolve similar issues with Can define hidden/mandatory fields permission
+     */
+	@Override
+	public MandatoryHiddenFieldsDto retrieveHiddenMandatoryFieldsToRead() {
+		return retrieveHiddenMandatoryFields();
+	}
 }
