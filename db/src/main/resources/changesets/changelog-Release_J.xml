@@ -107,4 +107,17 @@
 	   		</sql>
 	   	</rollback>
     </changeSet>
-</databaseChangeLog>
+    <changeSet id="MIFOS-5716_1" author="Jakub Podeszwik" context="contraction">
+      	<sql endDelimiter=";">
+	        update  account m
+	        inner join loan_account l
+	        on m.account_id = l.account_id
+	        inner join account p
+	        on p.account_id = l.parent_account_id
+	        set m.account_state_id = p.account_state_id
+	        where m.account_state_id != p.account_state_id;
+	   	</sql>
+	   	<rollback>
+	   	</rollback>
+   </changeSet>
+ </databaseChangeLog>
