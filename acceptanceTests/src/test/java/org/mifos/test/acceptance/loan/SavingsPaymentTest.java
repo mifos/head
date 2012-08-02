@@ -9,6 +9,7 @@ import junit.framework.Assert;
 import org.dbunit.DatabaseUnitException;
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.admin.ManageRolePage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
@@ -49,6 +50,7 @@ public class SavingsPaymentTest extends UiTestCaseBase {
         setupTime();
     }
 
+    @Test(dependsOnMethods = "testPermissionForPaymentFromSavings")
     public void testPaymentFromSavings() {
         String loanGlobalNum = setUpLoanAccount();
         String savingsGlobalNum = setUpSavingsAccount();
@@ -138,11 +140,12 @@ public class SavingsPaymentTest extends UiTestCaseBase {
         
         //first uncheck permission and see if access denied page is displayed
         //while trying transfer from savings
-        navigationHelper.navigateToAdminPage()
-        .navigateToViewRolesPage()
-        .navigateToManageRolePage("Admin")
-        .disablePermission("5_1_11")
-        .submitAndGotoViewRolesPage();
+        ManageRolePage manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
+        
+        if (manageRolePage.isPermissionEnable("5_1_11")) {
+        	manageRolePage.disablePermission("5_1_11");
+        }
+        manageRolePage.submitAndGotoViewRolesPage();
         
         CreateLoanAccountSearchParameters loanSearchParams = new CreateLoanAccountSearchParameters();
         loanSearchParams.setSearchString(loanGlobalNum);
@@ -165,11 +168,11 @@ public class SavingsPaymentTest extends UiTestCaseBase {
         Assert.assertTrue(selenium.isTextPresent(youAreNotAllowedToAccessThisPage));
         
         //now enable permission and validate transfer success
-        navigationHelper.navigateToAdminPage()
-        .navigateToViewRolesPage()
-        .navigateToManageRolePage("Admin")
-        .enablePermission("5_1_11")
-        .submitAndGotoViewRolesPage();
+        manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
+        if (!manageRolePage.isPermissionEnable("5_1_11")) {
+        	manageRolePage.enablePermission("5_1_11");
+        }
+        manageRolePage.submitAndGotoViewRolesPage();
         
         navigationHelper.navigateToLoanAccountPage(loanGlobalNum)
         .navigateToApplyPayment()
