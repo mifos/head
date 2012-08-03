@@ -20,20 +20,29 @@
 
 package org.mifos.ui.core.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.mifos.dto.domain.AdminDocumentDto;
+import org.mifos.reports.pentaho.PentahoReport;
+import org.mifos.reports.pentaho.PentahoReportsServiceFacade;
+import org.mifos.reports.pentaho.params.AbstractPentahoParameter;
+import org.mifos.reports.pentaho.params.PentahoInputParameter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -41,6 +50,38 @@ import org.springframework.web.servlet.ModelAndView;
 @SessionAttributes("formBean")
 public class AdminDocumentController {
 
+    private final static String LEGACY_BIRT_ADMIN_DOCUMENT_LOAD_PATH = "reportsUserParamsAction.do?method=loadAdminReport&admindocId=%s&globalAccountNum=%s";
+    
+    @Autowired
+    private PentahoReportsServiceFacade pentahoReportsService;
+    
+    @RequestMapping(value = "/executeAdminDocument.ftl", method = RequestMethod.GET)
+    public ModelAndView executeAdminDocument(final HttpServletRequest request, HttpServletResponse response,
+            @RequestParam Integer adminDocumentId, @RequestParam String entityId) throws IOException{
+        ModelAndView mav = null;
+        String fileName = pentahoReportsService.getAdminReportFileName(adminDocumentId);
+        
+        if (fileName.endsWith(".rptdesign")) {
+            response.sendRedirect(String.format(LEGACY_BIRT_ADMIN_DOCUMENT_LOAD_PATH, adminDocumentId.toString(), entityId));
+        } else {
+            Map<String, AbstractPentahoParameter> params = new HashMap<String, AbstractPentahoParameter>();
+            PentahoInputParameter entityIdParameter = new PentahoInputParameter();
+            entityIdParameter.setParamName("entity_id");
+            entityIdParameter.setValue(entityId);
+            params.put("entity_id", entityIdParameter);
+            
+            PentahoReport report = pentahoReportsService.getAdminReport(adminDocumentId, params);
+            
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getFilename() + "\"");
+            response.setContentType(report.getContentType());
+            response.setContentLength(report.getContentSize());
+
+            response.getOutputStream().write(report.getContent());
+        }
+        
+        return mav;
+    }
+    
     @RequestMapping(value="/viewAdminDocs", method = RequestMethod.GET)
     @ModelAttribute("listofadministrativedocuments")
     public List<AdminDocumentDto> showAllDocuments() {

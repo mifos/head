@@ -59,7 +59,7 @@ function addExportListLink(listStartDay, totalNumberOfExports) {
     <br />
     <div id='table'>
          
-            <div id='export_list'><script>loadExportsList(0,${numberDaysFromStartOfFinancialTransactions});</script></div>
+            <div id='export_list'><script>loadExportsList(0,${numberDaysFromStartOfFinancialTransactions?c});</script></div>
     </div>
     <div align='center'>
     <b>

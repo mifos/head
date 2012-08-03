@@ -27,6 +27,10 @@ import org.mifos.test.acceptance.framework.admin.CustomizeTextViewPage;
 import org.mifos.test.acceptance.framework.admin.DefineChecklistParameters;
 import org.mifos.test.acceptance.framework.admin.DefineLookupOptionParameters;
 import org.mifos.test.acceptance.framework.admin.DefineLookupOptionsPage;
+import org.mifos.test.acceptance.framework.admin.ImportLoansPage;
+import org.mifos.test.acceptance.framework.admin.ImportLoansReviewPage;
+import org.mifos.test.acceptance.framework.admin.ImportSavingsPage;
+import org.mifos.test.acceptance.framework.admin.ImportSavingsReviewPage;
 import org.mifos.test.acceptance.framework.admin.SystemInfoPage;
 
 import com.thoughtworks.selenium.Selenium;
@@ -106,5 +110,27 @@ public class AdminTestHelper {
             .navigateToAdminPage()
             .navigateToCustomizeTextViewPage()
             .removeCustomizedText(originalText);
+    }
+    /**
+     * Navigates to import loan accounts page, loads file for parser and displays parser's result.
+     * @param importFile path to file/resource
+     * @return
+     */
+    public ImportLoansReviewPage loadImportLoansFileAndSubmitForReview(String importFile) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ImportLoansPage selectFilePage=adminPage.navigateToImportLoansPage();
+        selectFilePage.verifyPage();
+        ImportLoansReviewPage reviewPage =selectFilePage.submitToReview(importFile);
+        reviewPage.verifyPage();
+        return reviewPage;
+    }
+    
+    public ImportSavingsReviewPage loadImportSavingsFileAndSubmitForReview(String importFile) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ImportSavingsPage selectFilePage=adminPage.navigateToImportSavingPage();
+        selectFilePage.verifyPage();
+        ImportSavingsReviewPage reviewPage =selectFilePage.submitToReview(importFile);
+        reviewPage.verifyPage();
+        return reviewPage;
     }
 }

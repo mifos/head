@@ -36,7 +36,7 @@ public class ManageRolePage  extends MifosPage {
         return this;
     }
     public ManageRolePage disablePermission(String permissionValue) {
-        Assert.assertEquals("on", selenium.getValue(permissionValue));
+        Assert.assertEquals(selenium.getValue(permissionValue), "on");
         selenium.click(permissionValue);
         return this;
     }
@@ -53,7 +53,10 @@ public class ManageRolePage  extends MifosPage {
         waitForPageToLoad();
         return new ViewRolesPage(selenium);
     }
-
+    
+    public Boolean isPermissionEnable(String permisson) {
+    	return selenium.getValue(permisson).equalsIgnoreCase("on");
+    }
 
     public ManageRolePage verifyPermissionText(String permisson, String description) {
         Assert.assertEquals(2,selenium.getXpathCount("//input[@id='" + permisson + "']/parent::td/following-sibling::td/span[text()='" + description + "']"));

@@ -55,6 +55,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -62,7 +63,9 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.access.AccessDeniedException;
 
 public class EditStatusAction extends BaseAction {
 
@@ -236,11 +239,15 @@ public class EditStatusAction extends BaseAction {
             	updateStatus.add(new AccountUpdateStatus(individual.getAccountId().longValue(), newStatusId, flagId, updateComment));
             }
             
-            if (individualLoans.size() == 0) {
-            	this.loanAccountServiceFacade.updateSingleLoanAccountStatus(updateStatus.get(0), trxnDate);
-            } 
-            else {
-            	this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(updateStatus, trxnDate);
+            try {
+                if (individualLoans.size() == 0) {
+                    this.loanAccountServiceFacade.updateSingleLoanAccountStatus(updateStatus.get(0), trxnDate);
+                } 
+                else {
+                	this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(updateStatus, trxnDate);
+                }
+            } catch (AccessDeniedException e) {
+                throw new ServiceException(SecurityConstants.KEY_ACTIVITY_APPROVE_LOAN_NOT_ALLOWED);
             }
             
             return mapping.findForward(ActionForwards.loan_detail_page.toString());

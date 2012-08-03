@@ -67,9 +67,7 @@ public class ActivityTag extends TagSupport {
                 Set<Short> activitySet = convertToIdSet(flitered);
                 builder.setCurrentActivites(activitySet);
             }
-            Map<Short, ActivityRestrictionDto> activityRestrictionDtoMap = (Map<Short, ActivityRestrictionDto>) SessionUtils
-                    .getAttribute(RolesAndPermissionConstants.ROLE_ACTIVITIES_RESTRICTIONS_MAP,
-                            (HttpServletRequest) pageContext.getRequest());
+            Map<Short, ActivityRestrictionDto> activityRestrictionDtoMap = rolesPermissionsActionForm.getActivityRestrictionDtoMap();
             if ( activityRestrictionDtoMap == null){
                 activityRestrictionDtoMap = new HashMap<Short, ActivityRestrictionDto>();
             }

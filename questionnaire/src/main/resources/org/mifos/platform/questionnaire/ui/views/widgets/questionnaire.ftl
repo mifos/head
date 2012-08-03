@@ -85,6 +85,12 @@ A widget to render the UI for collecting questionnaire responses.
                                         [@form.checkboxesWithTags "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,',<br/>', ''/]
                                     </div>
                                   [#break]
+                                  [#case "SMART_SINGLE_SELECT"]
+                                    <input type="text" autocomplete="off" id="txtListSearch" name="txtListSearch" style="width:21em;" class="txtListSearch"/>
+                                    <div class="questionList" id="questionList" style="overflow:auto; width:19em; height:180px; border:1px solid #336699; padding-left:5px">
+                                        [@form.radioWithTags "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,',<br/>', ''/]
+                                    </div>
+                                  [#break]
                                   [#case "SINGLE_SELECT"]
                                       [#if question.answerChoices?size > 6]
                                           <!-- single select: select -->
@@ -124,7 +130,7 @@ A widget to render the UI for collecting questionnaire responses.
                 <div class="row">
                     <div class="attribute">${question.text}:</div>
                     <div class="value">
-                        [#if question.questionType == 'MULTI_SELECT' || question.questionType == 'SMART_SELECT']
+                        [#if question.questionType == 'MULTI_SELECT' || question.questionType == 'SMART_SELECT' || question.questionType == "SMART_SINGLE_SELECT"]
                             [#list question.valuesAsArray as value]
                                 ${value}[#if value_has_next], [/#if]
                             [/#list]

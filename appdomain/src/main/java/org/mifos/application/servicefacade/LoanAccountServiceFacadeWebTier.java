@@ -201,6 +201,7 @@ import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OriginalScheduleInfoDto;
 import org.mifos.dto.domain.OverpaymentDto;
+import org.mifos.dto.domain.PaymentDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.PenaltyDto;
 import org.mifos.dto.domain.PersonnelDto;
@@ -213,6 +214,7 @@ import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.AccountFeesDto;
+import org.mifos.dto.screen.AccountPaymentDto;
 import org.mifos.dto.screen.AccountPenaltiesDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
@@ -266,6 +268,7 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade {
@@ -1035,18 +1038,39 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         if (isBackdatedLoan) {
             loan.markAsCreatedWithBackdatedPayments();
         }
-
+        //set up predefined loan account for importing loans
+        if(loanAccountInfo.getPredefinedAccountNumber()!=null){
+            loan.setGlobalAccountNum(loanAccountInfo.getPredefinedAccountNumber());
+        }
         try {
             transactionHelper.startTransaction();
             this.loanDao.save(loan);
             transactionHelper.flushSession();
-            try {
-                loan.setGlobalAccountNum(loan.generateId(userOffice.getGlobalOfficeNum()));
-            } catch (AccountException e) {
-                throw new BusinessRuleException(e.getMessage());
+            //no predefined account number, generate one instead
+            if(loanAccountInfo.getPredefinedAccountNumber()==null){
+                try {
+                    loan.setGlobalAccountNum(loan.generateId(userOffice.getGlobalOfficeNum()));
+                } catch (AccountException e) {
+                    throw new BusinessRuleException(e.getMessage());
+                }
+                this.loanDao.save(loan);
+                transactionHelper.flushSession();
             }
-            this.loanDao.save(loan);
-            transactionHelper.flushSession();
+            //set up status flag
+            AccountStateFlagEntity flagEntity=null;
+            if(loanAccountInfo.getFlagId()!=null){
+                try {
+                    flagEntity=legacyMasterDao.getPersistentObject(AccountStateFlagEntity.class, loanAccountInfo.getFlagId());
+                    loan.setUserContext(userContext);
+                    loan.setFlag(flagEntity);
+                    loan.setClosedDate(new DateTimeService().getCurrentJavaDateTime());
+                    loan.setUserContext(userContext);
+                } catch (PersistenceException e) {
+                    throw new BusinessRuleException(e.getMessage());
+                }
+                this.loanDao.save(loan);
+                transactionHelper.flushSession();
+            }
 
             // for GLIM loans only
             List<GroupMemberLoanDetail> individualMembersOfGroupLoan = new ArrayList<GroupMemberLoanDetail>();
@@ -1497,16 +1521,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Override
     public boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate) {
+        LoanBO loan = this.loanDao.findById(loanAccountId);
 
-        try {
-            LoanBO loan = this.loanDao.findById(loanAccountId);
-
-            Date meetingDate = customerPersistence.getLastMeetingDateForCustomer(loan.getCustomer().getCustomerId());
-            boolean repaymentIndependentOfMeetingEnabled = configurationPersistence.isRepaymentIndepOfMeetingEnabled();
-            return loan.isTrxnDateValid(trxnDate, meetingDate, repaymentIndependentOfMeetingEnabled);
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
-        }
+        Date firstMeetingDate = customerDao.getFirstMeetingDateForCustomer(loan.getCustomer().getCustomerId());
+        boolean repaymentIndependentOfMeetingEnabled = configurationPersistence.isRepaymentIndepOfMeetingEnabled();
+        return loan.isTrxnDateValid(trxnDate, firstMeetingDate, repaymentIndependentOfMeetingEnabled);
     }
 
     @Override
@@ -1537,10 +1556,18 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             BigDecimal interestDueForCurrentInstallment =
                     interestDueForNextInstallment(repayLoanInfoDto.getTotalRepaymentAmount(),
                     repayLoanInfoDto.getWaivedAmount(),loan,repayLoanInfoDto.isWaiveInterest());
-            loan.makeEarlyRepayment(earlyRepayAmount, repayLoanInfoDto.getDateOfPayment(),
-                    repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(),
-                    repayLoanInfoDto.getPaymentTypeId(), repayLoanInfoDto.getId(),
-                    repayLoanInfoDto.isWaiveInterest(), new Money(loan.getCurrency(), interestDueForCurrentInstallment));
+            if (repayLoanInfoDto.getSavingsPaymentId() != null){
+                loan.makeEarlyRepayment(earlyRepayAmount, repayLoanInfoDto.getDateOfPayment(),
+                        repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(),
+                        repayLoanInfoDto.getPaymentTypeId(), repayLoanInfoDto.getId(),
+                        repayLoanInfoDto.isWaiveInterest(), new Money(loan.getCurrency(), interestDueForCurrentInstallment),
+                        repayLoanInfoDto.getSavingsPaymentId());
+            } else {
+                loan.makeEarlyRepayment(earlyRepayAmount, repayLoanInfoDto.getDateOfPayment(),
+                        repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(),
+                        repayLoanInfoDto.getPaymentTypeId(), repayLoanInfoDto.getId(),
+                        repayLoanInfoDto.isWaiveInterest(), new Money(loan.getCurrency(), interestDueForCurrentInstallment));
+            }
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
@@ -1568,13 +1595,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         LocalDate receiptDate = new LocalDate(repayLoanInfoDto.getReceiptDate());
         Locale preferredLocale = userContext.getPreferredLocale();
 
-        SavingsWithdrawalDto withdrawal = new SavingsWithdrawalDto(savingsId, customerId, trxnDate, amount,
+        SavingsWithdrawalDto savingsWithdrawalDto = new SavingsWithdrawalDto(savingsId, customerId, trxnDate, amount,
                 paymentTypeId, receiptId, receiptDate, preferredLocale);
 
         try {
             transactionHelper.startTransaction();
+            PaymentDto withdrawal = savingsServiceFacade.withdraw(savingsWithdrawalDto, true);
+            repayLoanInfoDto.setSavingsPaymentId(withdrawal.getPaymentId());
             makeEarlyRepayment(repayLoanInfoDto);
-            savingsServiceFacade.withdraw(withdrawal, true);
             transactionHelper.commitTransaction();
         } catch (BusinessRuleException e) {
             transactionHelper.rollbackTransaction();
@@ -2903,4 +2931,17 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             throw new MifosRuntimeException(e);
         }
     }
+
+    @Override
+    public List<AccountPaymentDto> getLoanAccountPayments(String globalAccountNum) {
+        List<AccountPaymentDto> loanAccountPayments = new ArrayList<AccountPaymentDto>();
+        LoanBO loanAccount = loanDao.findByGlobalAccountNum(globalAccountNum);
+        List<AccountPaymentEntity> loanAccountPaymentsEntities = loanAccount.getAccountPayments();
+        for (AccountPaymentEntity accountPaymentEntity : loanAccountPaymentsEntities){
+            loanAccountPayments.add(accountPaymentEntity.toScreenDto());
+        }
+
+        return loanAccountPayments;
+    }
+
 }

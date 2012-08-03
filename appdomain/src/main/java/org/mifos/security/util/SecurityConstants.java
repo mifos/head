@@ -57,6 +57,8 @@ public interface SecurityConstants {
     // Activity not allowd key
 
     String KEY_ACTIVITY_NOT_ALLOWED = "error.activity.not.allowed";
+    
+    String KEY_ACTIVITY_APPROVE_LOAN_NOT_ALLOWED = "error.activity.not.allowed.approve.loan";
 
     String KEY_SHUTDOWN_TIMEOUT_INVALID = "error.shutdown.timeout.invalid";
 

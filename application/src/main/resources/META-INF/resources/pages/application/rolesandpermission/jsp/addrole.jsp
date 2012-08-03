@@ -30,7 +30,9 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="addrole"></span>
 
 <script language="javascript" src="pages/application/rolesandpermission/js/checkBoxLogic.js">
-</script>	
+</script>
+<script type="text/javascript" src="pages/js/separator.js"></script>	
+<mifos:NumberFormattingInfo />
 		<html-el:form action="/rolesPermission.do?method=create" focus="name">
 
 		
@@ -108,7 +110,7 @@ explanation of the license and how it is applied.
 							<table width="95%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center"><html-el:submit  property="SS"
-										styleClass="buttn"> 
+										styleClass="buttn submit"> 
 										<mifos:mifoslabel name="roleandpermission.button.submit" bundle="RolesAndPermissionResources" />
 										</html-el:submit>
 										

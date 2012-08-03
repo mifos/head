@@ -31,4 +31,7 @@ public interface AccountingDao {
 
     LocalDate getStartDateOfFinancialTransactions();
 
+    Integer getNumberOfTrxnByDate(LocalDate startDate, LocalDate endDate);
+
+    List<LocalDate> getTenTxnDate(LocalDate startDate, LocalDate endDate, Integer offset);
 }

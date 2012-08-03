@@ -61,7 +61,9 @@ public class PentahoParamParser {
             }
 
             return result;
-        } catch (Exception ex) {
+        } catch (ReportDataFactoryException ex) { 
+        	throw new JNDIException("JNDI is not configured");
+    	}catch (Exception ex) {
             throw new MifosRuntimeException(ex);
         } finally {
             if (paramContext != null) {
@@ -112,6 +114,11 @@ public class PentahoParamParser {
 
         result.setMandatory(paramDefEntry.isMandatory());
         result.setParamName(paramDefEntry.getName());
+        if (null!=paramDefEntry.getParameterAttribute(paramDefEntry.getParameterAttributeNamespaces()[0], "label", paramContext)) {
+            result.setLabelName(paramDefEntry.getParameterAttribute(paramDefEntry.getParameterAttributeNamespaces()[0], "label", paramContext).replace(":", ""));
+        } else {
+            result.setLabelName(paramDefEntry.getName()); 
+        }
         return result;
     }
 
@@ -167,6 +174,9 @@ public class PentahoParamParser {
         Object defaultVal = paramDefEntry.getDefaultValue(paramContext);
         if (defaultVal != null && possibleValues.containsKey(String.valueOf(defaultVal))) {
             result.setSelectedValue(String.valueOf(defaultVal));
+        }
+        else if (defaultVal==null){
+        	result.setSelectedValue(String.valueOf(-1));
         }
 
         return result;

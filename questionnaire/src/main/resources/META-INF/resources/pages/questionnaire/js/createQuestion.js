@@ -60,7 +60,7 @@ $(document).ready(function(){
         }else{
             $("#numericDiv").hide();
         }
-        if(selectedOption == "smartSelect") {
+        if(selectedOption == "smartSelect" || selectedOption == "smartSingleSelect") {
             $("#choiceTagsDiv").show();
         }else{
             $("#choiceTagsDiv").hide();

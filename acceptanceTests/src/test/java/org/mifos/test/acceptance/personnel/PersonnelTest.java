@@ -404,6 +404,7 @@ public class PersonnelTest extends UiTestCaseBase {
 		//Given
 		//center
 		String officeName = "branch1";
+		String accessDeniedElement = "admin.error.message";
 		
 		//new system user with Admin permissions
 		String userName = "jtest1";
@@ -443,6 +444,6 @@ public class PersonnelTest extends UiTestCaseBase {
 		
 		
 		//Then
-		Assert.assertTrue(selenium.isElementPresent("accessDeniedHeading"));
+		Assert.assertTrue(selenium.isElementPresent(accessDeniedElement));
 	}
 }

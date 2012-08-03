@@ -71,9 +71,21 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
                                 new LocalDate(penaltyEntity.getCreatedDate()), currentLocalDate);
                         
                         for (LoanScheduleEntity entity : lateInstallments) {
-                            if (lateInstallments.get(0).getInstallmentId().equals(entity.getInstallmentId())
-                                    && checkGracePeriod(lateInstallments, penaltyEntity)) {
-                                continue;
+                            
+                            //check grace period for installment period type
+                            if(penaltyEntity.getPenalty().getPeriodType().getPenaltyPeriod() == PenaltyPeriod.INSTALLMENTS
+                                    && penaltyEntity.hasPeriodType()) {
+                                if (lateInstallments.get(0).getInstallmentId().equals(entity.getInstallmentId())
+                                        && checkGracePeriodTypeInstallments(lateInstallments, penaltyEntity.getPenalty().getPeriodDuration())) {
+                                    continue;
+                                }
+                            }
+                            //check grace period for daily period type
+                            else if (penaltyEntity.getPenalty().getPeriodType().getPenaltyPeriod() == PenaltyPeriod.DAYS
+                                    && penaltyEntity.hasPeriodType()) {
+                                if (checkGracePeriodTypeDays(entity, penaltyEntity.getPenalty().getPeriodDuration())) {
+                                    continue;
+                                }
                             }
                             
                             LoanPenaltyScheduleEntity penaltySchedule = entity.getPenaltyScheduleEntity(penaltyEntity.getPenalty().getPenaltyId());
@@ -124,34 +136,29 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
         return check;
     }
 
-    private boolean checkGracePeriod(final List<LoanScheduleEntity> lateInstallments,
-            final AccountPenaltiesEntity penaltyEntity) {
+    private boolean checkGracePeriodTypeInstallments(final List<LoanScheduleEntity> lateInstallments,
+            final int duration) {
         boolean check = false;
 
-        if (penaltyEntity.hasPeriodType()) {
-            int days = Days.daysBetween(new LocalDate(lateInstallments.get(0).getActionDate().getTime()), currentLocalDate).getDays();
-            PenaltyPeriod penaltyPeriod = penaltyEntity.getPenalty().getPeriodType().getPenaltyPeriod();
-            int duration = penaltyEntity.getPenalty().getPeriodDuration();
-
-            switch (penaltyPeriod) {
-            case DAYS:
-                check = days - 1 <= duration;
-                break;
-            case INSTALLMENTS:
-                if(lateInstallments.size() - 1 < duration) {
-                    check = true;
-                } else if (lateInstallments.size() -1 == duration) {
-                    check = lateInstallments.get(duration).isOn(currentLocalDate.minusDays(1));
-                } else {
-                    check = false;
-                }
-                break;
-            }
+        if(lateInstallments.size() - 1 < duration) {
+            check = true;
+        } else if (lateInstallments.size() -1 == duration) {
+            check = lateInstallments.get(duration).isOn(currentLocalDate.minusDays(1));
+        } else {
+            check = false;
         }
+        return check;
+    }
+    
+    private boolean checkGracePeriodTypeDays(final LoanScheduleEntity entity, final int duration) {
+        boolean check = false;
+
+        int days = Days.daysBetween(new LocalDate(entity.getActionDate().getTime()), currentLocalDate).getDays();
+        check = days <= duration;
 
         return check;
     }
-
+    
     private void addAmountPenalty(final AccountPenaltiesEntity penaltyEntity, final LoanBO loanAccount,
             final LoanScheduleEntity loanScheduleEntity) {
         AmountPenaltyBO penalty = (AmountPenaltyBO) penaltyEntity.getPenalty();

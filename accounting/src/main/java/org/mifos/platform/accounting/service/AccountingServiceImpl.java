@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.platform.accounting.AccountingDto;
 import org.mifos.platform.accounting.dao.AccountingDao;
@@ -36,8 +35,6 @@ public class AccountingServiceImpl implements AccountingService {
     private final AccountingDataCacheManager cacheManager;
 
     private final AccountingDao accountingDao;
-
-    private static final int LIST_SIZE = 10;
 
     @Autowired
     public AccountingServiceImpl(AccountingDataCacheManager cacheManager, AccountingDao accountingDao) {
@@ -95,24 +92,21 @@ public class AccountingServiceImpl implements AccountingService {
     }
 
     @Override
-    public List<ExportFileInfo> getLastTenExports(Integer listStartDay) {
-        LocalDate runningDate = new LocalDate().minusDays(listStartDay);
+    public List<ExportFileInfo> getLastTenExports(Integer offset) {
         List<ExportFileInfo> exports = new ArrayList<ExportFileInfo>();
-        for (int i = 0; i < LIST_SIZE && isCurrentDateUnderStartOfFinancialTrxn(runningDate); i++) {
-            runningDate = runningDate.minusDays(1);
+        LocalDate startDate = accountingDao.getStartDateOfFinancialTransactions();
+        LocalDate endDate = new LocalDate().minusDays(1);
+        List<LocalDate> tenTrxn = accountingDao.getTenTxnDate(startDate, endDate, offset);
+        for (LocalDate date : tenTrxn) {
             ExportFileInfo export;
-            if(hasAlreadyRanQuery(runningDate, runningDate)) {
-                export = cacheManager.getExportFileInfoFromCache(runningDate, runningDate);
+            if(hasAlreadyRanQuery(date, date)) {
+                export = cacheManager.getExportFileInfoFromCache(date, date);
             } else {
-                export = getNotGeneratedExportFileInfo(runningDate, runningDate);
+                export = getNotGeneratedExportFileInfo(date, date);
             }
             exports.add(export);
         }
         return exports;
-    }
-
-    private boolean isCurrentDateUnderStartOfFinancialTrxn(LocalDate currentDate) {
-        return currentDate.isAfter(accountingDao.getStartDateOfFinancialTransactions());
     }
 
     private ExportFileInfo getNotGeneratedExportFileInfo(LocalDate startDate, LocalDate endDate) {
@@ -127,6 +121,6 @@ public class AccountingServiceImpl implements AccountingService {
     public Integer getNumberDaysFromStartOfFinancialTransactions() {
         LocalDate startDate = accountingDao.getStartDateOfFinancialTransactions();
         LocalDate endDate = new LocalDate();
-        return Days.daysBetween(startDate, endDate).getDays();
-    }
+        return accountingDao.getNumberOfTrxnByDate(startDate, endDate);   
+        }
 }

@@ -35,8 +35,8 @@ public class AdminDocumentPersistenceIntegrationTest extends MifosIntegrationTes
     private LegacyAdminDocumentDao legacyAdminDocumentDao;
 
     @Test
-    public void testGetAllAdminDocuments() throws PersistenceException {
-        List<AdminDocumentBO> listadmindoc = legacyAdminDocumentDao.getAllAdminDocuments();
+    public void testGetAllActiveAdminDocuments() throws PersistenceException {
+        List<AdminDocumentBO> listadmindoc = legacyAdminDocumentDao.getAllActiveAdminDocuments();
        Assert.assertEquals(0, listadmindoc.size());
     }
 

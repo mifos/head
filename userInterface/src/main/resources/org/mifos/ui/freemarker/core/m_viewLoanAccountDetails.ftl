@@ -423,6 +423,10 @@
 				[@spring.message "loan.more_details" /]
 			</span><br/>
 			<span class="fontnormal">
+	            <a id="loanaccountdetail.link.accountpayments" href="viewLoanAccountPayments.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}">
+				[@spring.message "loan.ViewLoanAccountPaymentsLink" /]
+				</a>
+	            <br/>
 	            <a id="loanaccountdetail.link.questionGroups" href="loanAccountAction.do?method=viewAndEditAdditionalInformation&creatorId=${Session.UserContext.id?c}&entityId=${loanInformationDto.accountId?c}&event=Create&source=Loan&backPageUrl=${currentPageUrl?url('UTF-8')}">
 	    			[@spring.message "client.ViewQuestionGroupResponsesLink" /]
 				</a>

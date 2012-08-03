@@ -1,0 +1,53 @@
+{
+    "officeId" : 2,
+    "loanOfficerId" : 1,
+    "formedBy" : 1,
+    "groupFlag" : 1,
+    "parentGroupId" : "2",
+    "externalId" : "externalId",
+    "governmentId" : "governmentId", 
+    "trained" : true,
+    "trainedDate" : [2012,07,20],
+    "dateOfBirth" : [1980,6,11],
+    "activationDate" : [2012,07,20],
+    "mfiJoiningDate" : [2012,07,20],
+    "customerStatus" : 2,
+    "clientNameDetail" : {
+        "salutation" : 1,
+        "firstName" : "firstN",
+        "middleName" : "middleN",
+        "lastName" : "lastN",
+        "secondLastName" : ""
+    },
+    "personalDetail" : {
+        "ethnicity" : 1,
+        "citizenship" : 1,
+        "handicapped" : 1,
+        "businessActivities" : 1,
+        "maritalStatus" : 1,
+        "educationLevel" : 1,
+        "numberOfChildren" : 2,
+        "gender" : 1,
+        "povertyStatus" : 2
+    },
+    "address" : {
+        "address1" : "address1",
+        "address2" : "address2",
+        "address3" : "address3",
+        "city" : "city",
+        "state" : "state",
+        "country" : "country",
+        "zip" : "zip-zip",
+        "phoneNumber" : "+99 999999999"
+    },
+    "accountFees"  : [],
+    "meeting" : {
+        "meetingStartDate" : [2012,07,23],
+        "meetingPlace" : "meting place",
+        "recurrenceType" : 1,
+        "dayNumber" : 2,
+        "weekDay" : "",
+        "rankOfDay" : "",
+        "recurAfter" : 2
+    }
+}

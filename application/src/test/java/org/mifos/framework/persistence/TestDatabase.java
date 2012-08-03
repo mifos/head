@@ -36,6 +36,7 @@ import org.springframework.beans.factory.FactoryBean;
 public class TestDatabase implements FactoryBean<TestDatabase> {
 
     private static DataSource integrationDataSource;
+    private static DataSource integrationDataSourcePentahoDW;
 
     private static TestDatabase testDatabase;
 
@@ -65,6 +66,14 @@ public class TestDatabase implements FactoryBean<TestDatabase> {
         this.integrationDataSource = integrationDataSource;
     }
 
+    public static DataSource getIntegrationDataSourcePentahoDW() {
+        return integrationDataSourcePentahoDW;
+    }
+
+    public void setIntegrationDataSourcePentahoDW(DataSource integrationDataSourcePentahoDW) {
+        this.integrationDataSourcePentahoDW = integrationDataSourcePentahoDW;
+    }
+    
     /*
      * public static void createNotMappedTables() throws Exception { Connection connection = getJDBCConnection(); String
      * sql =
