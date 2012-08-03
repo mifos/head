@@ -15,6 +15,7 @@
         <constructor-arg index="2" value="${${mifos.mode}.database}" />
         <constructor-arg index="3" value="${${mifos.mode}.database.host}" />
         <constructor-arg index="4" value="${${mifos.mode}.database.port}" />
+        <constructor-arg index="5" value="${${mifos.mode}.database.dbPentahoDW}"/>
     </bean>
      
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
@@ -29,7 +30,19 @@
         p:maxStatements="${${mifos.mode}.database.hibernate.c3p0.max_statements}"
         p:testConnectionOnCheckout="false"
         p:idleConnectionTestPeriod="${${mifos.mode}.database.hibernate.c3p0.idle_test_period}" destroy-method="close" />
-
+	
+	<bean id="dataSourcePentahoDW" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+        p:driverClass="${${mifos.mode}.database.driver}"
+        p:jdbcUrl="jdbc:mysql://#{dbConfig.host}:#{dbConfig.port}/#{dbConfig.dbPentahoDW}?${${mifos.mode}.database.params}"
+        p:user="#{dbConfig.user}"
+        p:password="#{dbConfig.password}"
+        p:initialPoolSize="5"
+        p:minPoolSize="${${mifos.mode}.database.hibernate.c3p0.min_size}"
+        p:maxPoolSize="${${mifos.mode}.database.hibernate.c3p0.max_size}"
+        p:checkoutTimeout="${${mifos.mode}.database.hibernate.c3p0.timeout}"      
+        p:maxStatements="${${mifos.mode}.database.hibernate.c3p0.max_statements}"
+        p:testConnectionOnCheckout="false"
+        p:idleConnectionTestPeriod="${${mifos.mode}.database.hibernate.c3p0.idle_test_period}" destroy-method="close" />
 <!--      p:checkoutTimeout="${${mifos.mode}.database.hibernate.c3p0.timeout}"   -->   
     <!--
         ========= Batch jobs configurations: =========
