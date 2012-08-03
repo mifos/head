@@ -125,7 +125,7 @@
             insert into roles_activity(activity_id, role_id) values(283, 1);
             
             insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
-            values((select max(rid.report_id)+1 from report rid), 9, 'Balance Outstanding', 'balance_outstanding', 283, 1);
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Balance Outstanding', 'balance_outstanding', 283, 1);
             
             insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
             values((select report_id from report where report_name='Balance Outstanding'), 'Balance Outstanding', 'balance_outstanding', 'BalanceOutstanding.prpt');
@@ -147,7 +147,7 @@
             insert into roles_activity(activity_id, role_id) values(284, 1);
             
             insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
-            values((select max(rid.report_id)+1 from report rid), 9, 'Balance Outstanding By Source Of Funds', 'balance_outstanding_by_source_of_funds', 284, 1);
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Balance Outstanding By Source Of Funds', 'balance_outstanding_by_source_of_funds', 284, 1);
             
             insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
             values((select report_id from report where report_name='Balance Outstanding By Source Of Funds'), 'Balance Outstanding By Source Of Funds', 
@@ -170,7 +170,7 @@
             insert into roles_activity(activity_id, role_id) values(285, 1);
             
             insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
-            values((select max(rid.report_id)+1 from report rid), 9, 'Due Vs Collected Branch', 'due_vs_collected_branch', 285, 1);
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Due Vs Collected Branch', 'due_vs_collected_branch', 285, 1);
             
             insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
             values((select report_id from report where report_name='Due Vs Collected Branch'), 'Due Vs Collected Branch', 
@@ -193,7 +193,7 @@
             insert into roles_activity(activity_id, role_id) values(286, 1);
             
             insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
-            values((select max(rid.report_id)+1 from report rid), 9, 'Due Vs Collected Center', 'due_vs_collected_center', 286, 1);
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Due Vs Collected Center', 'due_vs_collected_center', 286, 1);
             
             insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
             values((select report_id from report where report_name='Due Vs Collected Center'), 'Due Vs Collected Center', 
@@ -216,7 +216,7 @@
             insert into roles_activity(activity_id, role_id) values(287, 1);
             
             insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
-            values((select max(rid.report_id)+1 from report rid), 9, 'Due Vs Collected Officer', 'due_vs_collected_officer', 287, 1);
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Due Vs Collected Officer', 'due_vs_collected_officer', 287, 1);
             
             insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
             values((select report_id from report where report_name='Due Vs Collected Officer'), 'Due Vs Collected Officer',
@@ -239,7 +239,7 @@
             insert into roles_activity(activity_id, role_id) values(288, 1);
             
             insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
-            values((select max(rid.report_id)+1 from report rid), 8, 'Funds Movement', 'funds_movement', 288, 1);
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Management'), 'Funds Movement', 'funds_movement', 288, 1);
             
             insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
             values((select report_id from report where report_name='Funds Movement'), 'Funds Movement', 'funds_movement', 'FundsMovement.prpt');
@@ -261,7 +261,7 @@
             insert into roles_activity(activity_id, role_id) values(289, 1);
             
             insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
-            values((select max(rid.report_id)+1 from report rid), 9, 'Loan Classification Product', 'loan_classification_product', 289, 1);
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Loan Classification Product', 'loan_classification_product', 289, 1);
             
             insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
             values((select report_id from report where report_name='Loan Classification Product'), 'Loan Classification Product', 
@@ -284,7 +284,7 @@
             insert into roles_activity(activity_id, role_id) values(290, 1);
             
             insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
-            values((select max(rid.report_id)+1 from report rid), 8, 'Loan Officer Detailed', 'loan_officer_detailed', 290, 1);
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Loan Officer Detailed', 'loan_officer_detailed', 290, 1);
             
             insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
             values((select report_id from report where report_name='Loan Officer Detailed'), 'Loan Officer Detailed', 
@@ -307,7 +307,7 @@
             insert into roles_activity(activity_id, role_id) values(291, 1);
             
             insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
-            values((select max(rid.report_id)+1 from report rid), 9, 'Loan Officer Performance Summary Cumulative', 
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Loan Officer Performance Summary Cumulative', 
             'loan_officer_performance_summary_cumulative', 291, 1);
             
             insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
@@ -331,7 +331,7 @@
             insert into roles_activity(activity_id, role_id) values(292, 1);
             
             insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
-            values((select max(rid.report_id)+1 from report rid), 9, 'Loan Officer Performance Summary Period', 
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Loan Officer Performance Summary Period', 
             'loan_officer_performance_summary_period', 292, 1);
             
             insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
@@ -355,7 +355,7 @@
             insert into roles_activity(activity_id, role_id) values(293, 1);
             
             insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
-            values((select max(rid.report_id)+1 from report rid), 8, 'MFI Progress', 'mfi_progress', 293, 1);
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Management'), 'MFI Progress', 'mfi_progress', 293, 1);
             
             insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
             values((select report_id from report where report_name='MFI Progress'), 'MFI Progress', 'mfi_progress', 'MFIProgress.prpt');
