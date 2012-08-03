@@ -108,6 +108,8 @@
 	   	</rollback>
     </changeSet>
         <changeSet id="MIFOS_5723_1" author="Lukasz Wyszomirski" context="expansion">
+        <validCheckSum>3:30ae39ddcd8d1df1fb7d13e597f3fbda</validCheckSum>
+    	<validCheckSum>3:ab20c7fb0c7f65a28d8430cf5c71c095</validCheckSum>
 	    <sql endDelimiter=";">
             insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
                 lookup_value lv), 87, 'Permissions-CanViewBalanceOutstanding');
