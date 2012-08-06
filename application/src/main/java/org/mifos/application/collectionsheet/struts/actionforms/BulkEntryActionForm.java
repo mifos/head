@@ -59,6 +59,8 @@ public class BulkEntryActionForm extends BaseActionForm {
     private String transactionDateMM;
     private String transactionDateYY;
     private String officeId;
+    private String groupId;
+    private String memberId;
 
     public String getCustomerId() {
         return customerId;
@@ -198,7 +200,23 @@ public class BulkEntryActionForm extends BaseActionForm {
         return transactionDateYY;
     }
 
-    @Override
+    public String getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(String groupId) {
+		this.groupId = groupId;
+	}
+
+	public String getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
+	}
+
+	@Override
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         logger.debug("BulkEntryActionForm.validate");
         request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));

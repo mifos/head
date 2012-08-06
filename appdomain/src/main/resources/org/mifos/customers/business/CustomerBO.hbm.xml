@@ -179,6 +179,11 @@
         <![CDATA[select new org.mifos.dto.domain.CustomerDto(customer.customerId,customer.displayName,customer.customerLevel.id,customer.searchId) from  org.mifos.customers.business.CustomerBO customer where customer.personnel.personnelId=:personnelId and
                            customer.office.officeId=:officeId and customer.customerLevel.id=:customerLevelId and customer.customerStatus.id in (13,9,10) order by customer.displayName ]]>
     </query>
+    	<query name="Customer.getGroupsListForCenter">
+        <![CDATA[select new org.mifos.dto.domain.CustomerDto(customer.customerId,customer.displayName,customer.customerLevel.id,customer.searchId,customer.globalCustNum) 
+						from  org.mifos.customers.business.CustomerBO customer 
+							where customer.customerLevel.id=:customerLevelId and customer.parentCustomer.customerId=:CUSTOMER_ID and customer.customerStatus.id in (13,9,10,3,4) order by customer.displayName]]>
+    </query>
     <query name="Customer.getActiveChildrenForParent"><![CDATA[
         select new org.mifos.dto.domain.CustomerDto(
             customer.customerId,customer.displayName,

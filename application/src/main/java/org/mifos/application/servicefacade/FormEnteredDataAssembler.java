@@ -56,9 +56,21 @@ public class FormEnteredDataAssembler {
         final java.sql.Date meetingDate = collectionSheetFormDtoDecorator.getMeetingDateAsSqlDate();
 
         final java.sql.Date receiptDate = determineReceiptDateIfPopulated();
+        CustomerDto selectedMember = null;
+        CustomerDto selectedGroup = null;
+        
+        
+        if(collectionSheetForm.getGroupId().length() > 0){
+           selectedGroup = collectionSheetFormDtoDecorator.findSelectedGroupById(Integer.valueOf(collectionSheetForm
+                    .getGroupId()));    
+           if(collectionSheetForm.getMemberId().length() > 0){
+           	selectedMember = collectionSheetFormDtoDecorator.findSelectedMemberById(Integer.valueOf(collectionSheetForm.getMemberId()));        
+                      
+           } 
+        }
 
         return new CollectionSheetFormEnteredDataDto(office, loanOfficer, selectedCustomer, selectedPaymentType,
-                meetingDate, receiptDate, collectionSheetForm.getReceiptId());
+                meetingDate, receiptDate, collectionSheetForm.getReceiptId(),selectedGroup,selectedMember);
     }
 
     private java.sql.Date determineReceiptDateIfPopulated() {
