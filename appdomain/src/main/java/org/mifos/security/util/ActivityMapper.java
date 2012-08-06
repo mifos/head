@@ -147,6 +147,7 @@ public class ActivityMapper {
         parseActionSecurity(getEditStatusSecurity());
         parseActionSecurity(getCustSecurity());
         parseActionSecurity(getCollectionSheetEntrySecurity());
+        parseActionSecurity(getCollectionSheetMemberEntrySecurity());
         parseActionSecurity(getAccountAppSecurity());
         parseActionSecurity(getSavingsSecurity());
         parseActionSecurity(getSavingsClosureSecurity());
@@ -798,6 +799,13 @@ public class ActivityMapper {
         security.allow("loadLoanOfficers", SecurityConstants.VIEW);
         security.allow("loadCustomerList", SecurityConstants.VIEW);
         security.allow("validate", SecurityConstants.VIEW);
+        return security;
+    }
+    
+    private ActionSecurity getCollectionSheetMemberEntrySecurity() {
+        ActionSecurity security = new ActionSecurity("collectionsheetmemberaction");   
+        security.allow("loadMembers", SecurityConstants.VIEW);        
+        
         return security;
     }
 

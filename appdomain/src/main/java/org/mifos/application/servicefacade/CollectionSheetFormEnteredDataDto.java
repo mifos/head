@@ -38,9 +38,11 @@ public class CollectionSheetFormEnteredDataDto implements DataTransferObject {
     private final Date meetingDate;
     private final Date receiptDate;
     private final String receiptId;
+    private final CustomerDto member;
+    private final CustomerDto group;
 
     public CollectionSheetFormEnteredDataDto(OfficeDetailsDto office, PersonnelDto loanOfficer, CustomerDto customer,
-            ListItem<Short> paymentType, Date meetingDate, Date receiptDate, String receiptId) {
+            ListItem<Short> paymentType, Date meetingDate, Date receiptDate, String receiptId,CustomerDto group,CustomerDto member) {
         this.office = office;
         this.loanOfficer = loanOfficer;
         this.customer = customer;
@@ -48,6 +50,8 @@ public class CollectionSheetFormEnteredDataDto implements DataTransferObject {
         this.meetingDate = meetingDate;
         this.receiptDate = receiptDate;
         this.receiptId = receiptId;
+        this.group=group;
+        this.member=member;
     }
 
     public OfficeDetailsDto getOffice() {
@@ -77,4 +81,13 @@ public class CollectionSheetFormEnteredDataDto implements DataTransferObject {
     public ListItem<Short> getPaymentType() {
         return this.paymentType;
     }
+
+	public CustomerDto getMember() {
+		return member;
+	}
+
+	public CustomerDto getGroup() {
+		return group;
+	}
+    
 }

@@ -36,5 +36,7 @@ public interface CollectionSheetService {
      * Retrieves a Collection Sheet
      */
     CollectionSheetDto retrieveCollectionSheet(Integer customerId, LocalDate transactionDate);
+    
+    CollectionSheetDto retrieveCollectionSheet(CollectionSheetFormEnteredDataDto formEnteredDataDto, LocalDate transactionDate);
 
 }
