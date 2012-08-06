@@ -222,71 +222,13 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                 .getLoanOfficerList(), formDto.getCustomerList(), formDto.getReloadFormAutomatically(), formDto
                 .getCenterHierarchyExists(), backDatedTransactionAllowed, meetingDate);
     }
-    
-    @Override
-    public CollectionSheetEntryFormDto loadGroupsForCustomer(final Short personnelId,
-            final Short officeId,final Integer customerId,
-            final CollectionSheetEntryFormDto formDto) {
-
-        Short backDatedTransactionAllowed = Constants.NO;
-        java.util.Date meetingDate = null;
-        try {
-            meetingDate = customerPersistence.getLastMeetingDateForCustomer(customerId);
-
-            final boolean isBackDatedTrxnAllowed = AccountingRules.isBackDatedTxnAllowed();
-            if (meetingDate == null) {
-                meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
-            }
-            backDatedTransactionAllowed = isBackDatedTrxnAllowed ? Constants.YES : Constants.NO;
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
-        }
-        
-        List<CustomerDto> groupList = new ArrayList<CustomerDto>();
-        try {
-        	groupList = customerPersistence.getActiveGroupsList(customerId, Short.valueOf(CustomerLevel.GROUP.getValue()));
-        	
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
-        }
-
-        return new CollectionSheetEntryFormDto(formDto.getActiveBranchesList(), formDto.getPaymentTypesList(), formDto
-                .getLoanOfficerList(), formDto.getCustomerList(), formDto.getReloadFormAutomatically(), formDto
-                .getCenterHierarchyExists(), backDatedTransactionAllowed, meetingDate,groupList,null);
-    }
-    
-   	@Override
-   	public CollectionSheetEntryFormDto loadMembersByGroup(final Short personnelId,
-               final Short officeId,final Integer groupId,final CollectionSheetEntryFormDto formDto) {
-   		
-   		   
-   	        
-   	        List<CustomerDto> customerList = new ArrayList<CustomerDto>();
-   	        
-   	        try {	        	
-   	        	customerList = customerPersistence.getActiveGroupsList(groupId, Short.valueOf(CustomerLevel.CLIENT.getValue()));
-   	        	if(customerList == null){
-   	        		return null;
-   	        	}        	
-   	        	
-   	        } catch (PersistenceException e) {
-   	            throw new MifosRuntimeException(e);
-   	        }
-   	        
-   	        
-   	        return new CollectionSheetEntryFormDto(formDto.getActiveBranchesList(), formDto.getPaymentTypesList(), formDto
-   	                .getLoanOfficerList(), formDto.getCustomerList(), formDto.getReloadFormAutomatically(), formDto
-   	                .getCenterHierarchyExists(), formDto.getBackDatedTransactionAllowed(), formDto.getMeetingDate(),formDto.getGroupsList(),customerList);      
-             
-   	}
 
     @Override
 	public CollectionSheetEntryGridDto generateCollectionSheetEntryGridView(
             final CollectionSheetFormEnteredDataDto formEnteredDataDto, final MifosCurrency currency) {
 
-        /*final CollectionSheetDto collectionSheet = getCollectionSheet(formEnteredDataDto
-                .getCustomer().getCustomerId(), DateUtils.getLocalDateFromDate(formEnteredDataDto.getMeetingDate()));*/
-    	final CollectionSheetDto collectionSheet = getCollectionSheet(formEnteredDataDto, DateUtils.getLocalDateFromDate(formEnteredDataDto.getMeetingDate()));
+        final CollectionSheetDto collectionSheet = getCollectionSheet(formEnteredDataDto
+                .getCustomer().getCustomerId(), DateUtils.getLocalDateFromDate(formEnteredDataDto.getMeetingDate()));
 
         try {
             final List<CustomValueListElementDto> attendanceTypesList = legacyMasterDao.getCustomValueList(
@@ -316,10 +258,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     	
     	return collectionSheetService.retrieveCollectionSheet(customerId, meetingDate);
     }
-    
-    public CollectionSheetDto getCollectionSheet(final CollectionSheetFormEnteredDataDto formEnteredDataDto, LocalDate meetingDate) {
-	return collectionSheetService.retrieveCollectionSheet(formEnteredDataDto, meetingDate);
-}
 
     @Override
 	public CollectionSheetEntryGridDto previewCollectionSheetEntry(

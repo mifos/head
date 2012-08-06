@@ -66,16 +66,6 @@ public class CustomerDto implements Serializable {
         this.globalCustNum = globalCustNum;
         this.statusId = statusId;
     }
-    
-    public CustomerDto(java.lang.Integer customerId, java.lang.String displayName, Short levelId,
-            String customerSearchId,String globalCustNum) {
-        this.customerId = customerId;
-        this.displayName = displayName;
-        this.customerSearchId = customerSearchId;
-        this.customerLevelId = levelId;
-        this.globalCustNum=globalCustNum;
-
-    }
 
     /**
      * This constructor is called when instantiating the object from the query

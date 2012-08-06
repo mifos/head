@@ -29,7 +29,6 @@ import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerLoanDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
-import org.mifos.application.servicefacade.CollectionSheetFormEnteredDataDto;
 import org.mifos.application.servicefacade.CollectionSheetLoanFeeDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 
@@ -39,8 +38,6 @@ import org.mifos.application.servicefacade.CustomerHierarchyParams;
 public interface CollectionSheetDao {
 
     List<CollectionSheetCustomerDto> findCustomerHierarchy(Integer customerId, LocalDate transactionDate);
-    
-    List<CollectionSheetCustomerDto> findCustomerHierarchy(CollectionSheetFormEnteredDataDto formEnteredDataDto, LocalDate transactionDate);
 
     Map<Integer, List<CollectionSheetCustomerLoanDto>> findAllLoanRepaymentsForCustomerHierarchy(Short branchId,
             String searchId, LocalDate transactionDate, Integer customerId);

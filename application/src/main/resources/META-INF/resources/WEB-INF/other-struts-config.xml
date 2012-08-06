@@ -211,11 +211,6 @@
             <forward name="get_failure" path="/pages/application/collectionsheet/jsp/bulkentry.jsp"/>
             <forward name="cancel_success" path="/clientsAndAccounts.ftl" redirect="true"/>
         </action>
-         <action path="/collectionsheetmemberaction" type="org.mifos.application.collectionsheet.struts.action.CollectionSheetMemberAction"
-                parameter="method" scope="session" name="collectionsheetactionform" validate="true">
-                
-                <forward name="load_member_success" path="/pages/application/collectionsheet/jsp/bulkentry_child.jsp"/>
-        </action> 
         <!-- Ends-->
 
         <!-- offAction start-->

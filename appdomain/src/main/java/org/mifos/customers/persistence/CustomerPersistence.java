@@ -255,16 +255,6 @@ public class CustomerPersistence extends LegacyGenericDao {
                 queryParameters);
         return meetingDate;
     }
-    
-    public List<CustomerDto> getActiveGroupsList(final Integer parentId, final Short customerLevelId) throws PersistenceException {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOMER_ID", parentId);
-        queryParameters.put("customerLevelId", customerLevelId);     
-
-        List<CustomerDto> queryResult = executeNamedQuery(NamedQueryConstants.GET_ACTIVE_GROUPS_FOR_CENTER,
-                queryParameters);
-        return queryResult;
-    }
 
     /**
      * @deprecated use {@link CustomerDao#findCustomerById(Integer)}

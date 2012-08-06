@@ -112,24 +112,6 @@ explanation of the license and how it is applied.
 					form.submit();
 				}
 			}
-			
-			function fnLoadMembers(form) {
-				var groupId = document.getElementsByName("groupId")[0].value				
-				if(groupId.length == 0){
-					alert("Please select a group.");	
-					return false;
-				}			
-				
-				var url="collectionsheetmemberaction.do?method=loadMembers&groupId="+groupId;
-				window.open(url,"_blank","directories=no, status=no,scrollbars=yes, width=900, height=500,top=0,left=0"); 
-							
-			}
-		
-			function getValueFromPopupWindow(membName,membId)
-			{				
-			  document.getElementById('bulkentry.input.memberName').value = membName;
-			  document.getElementById('bulkentry.input.memberId').value = membId;			  
-			};
 		//-->
 		</script>
 		<script src="pages/framework/js/date.js"></script>
@@ -323,30 +305,6 @@ explanation of the license and how it is applied.
 													</c:forEach>
 												</mifos:select>
 											</td>
-										</tr>
-										<tr class="fontnormal">
-													<td align="right">
-														<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" mandatory="no" isColonRequired="Yes"/>														
-													</td>
-													<td>
-														<mifos:select property="groupId">
-														<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterGroupList')}" var="customerGroups">
-															<html-el:option value="${customerGroups.customerId}">${customerGroups.displayName}</html-el:option>
-														</c:forEach>
-														</mifos:select>
-													</td>
-										</tr>
-										<tr class="fontnormal">
-											<td align="right">
-												<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" mandatory="no" isColonRequired="Yes"/>	
-											</td>
-											<td>
-												<input readonly="readonly" type="text" id="bulkentry.input.memberName" style="width:272px" maxlength="60" />
-												<html-el:hidden styleId="bulkentry.input.memberId" property="memberId"/>								
-												<input  type="button" name="select" value="Select" onclick="fnLoadMembers(this.form);"/>
-													
-											</td>
-											
 										</tr>
 										<tr class="fontnormal">
 											<td align="right">

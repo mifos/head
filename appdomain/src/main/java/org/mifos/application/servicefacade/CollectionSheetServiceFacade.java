@@ -52,11 +52,5 @@ public interface CollectionSheetServiceFacade {
 	CollectionSheetErrorsDto saveCollectionSheet(SaveCollectionSheetDto saveCollectionSheet);
 
 	CollectionSheetDto getCollectionSheet(Integer customerId, LocalDate meetingDate);
-	
-	CollectionSheetEntryFormDto loadGroupsForCustomer(final Short personnelId,
-            final Short officeId,final Integer customerId,final CollectionSheetEntryFormDto formDto);
-	
-    CollectionSheetEntryFormDto loadMembersByGroup(final Short personnelId,
-            final Short officeId,final Integer groupId,final CollectionSheetEntryFormDto formDto);
 
 }
