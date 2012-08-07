@@ -39,6 +39,7 @@ public class DatabaseConfiguration {
     private String user;
     private String password;
     private String dbName;
+    private String dbPentahoDW;
     
     public void setHost(String host) {
         this.host = host;
@@ -80,17 +81,26 @@ public class DatabaseConfiguration {
         return dbName;
     }
 
-    public DatabaseConfiguration() { 
+    public String getDbPentahoDW() {
+		return dbPentahoDW;
+	}
+
+	public void setDbPentahoDW(String dbPentahoDW) {
+		this.dbPentahoDW = dbPentahoDW;
+	}
+
+	public DatabaseConfiguration() { 
         //Empty constructor required by Spring 
     }
     
-    public DatabaseConfiguration(final String user, final String password, final String dbName, final String host, final String port)
+    public DatabaseConfiguration(final String user, final String password, final String dbName, final String host, final String port, final String dbPentahoDW)
             throws ConfigurationException {
         this.user = user;
         this.password = password;
         this.dbName = dbName;
         this.host = host;
         this.port = port;
+        this.dbPentahoDW = dbPentahoDW;
 
         readVCAPConfiguration();
     }
@@ -136,6 +146,7 @@ public class DatabaseConfiguration {
             this.port = credentialsJson.getString("port");
             this.user = credentialsJson.getString("user");
             this.password = credentialsJson.getString("password");
+            this.dbPentahoDW=credentialsJson.getString("dbPentahoDW");
         }
     }
 }
