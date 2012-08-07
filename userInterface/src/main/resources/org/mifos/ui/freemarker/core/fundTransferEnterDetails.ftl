@@ -45,7 +45,7 @@
 <br />
 
 [#if targetAccount.accountStateId == 18]
-	<p class="fontnormalRedBold">[@spring.message "fundTransfer.inactiveBeneficiaryAcc" /]</p>
+	<p class="red"><b>[@spring.message "fundTransfer.inactiveBeneficiaryAcc" /]</b></p>
 [/#if]
 
 [@form.errors "fundTransferFormBean.*"/]
