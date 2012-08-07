@@ -3696,8 +3696,8 @@ public class LoanBO extends AccountBO implements Loan {
                 memberPaymentAmount = memberPaymentAmount.add(memberInstallments.get(currentPayment).getAmountToBePaidToGetExpectedProportion(afterComa));
             }
             
-            //It prevents member account to be closed before parent due to small last payments in parent account. Member accounts will remain in 0.1 unpaid until last payment for parent account will be submitted
-            if(getState().getValue()!=(short)6 && memberPaymentAmount.subtract((memberAccount.getTotalRepayableAmount())).isTinyAmount()) {
+            //It prevents member account to be closed before parent due to small last payments in parent account. Member accounts will remain in <0.1 unpaid until last payment for parent account will be submitted
+            if(getState().compareTo(AccountState.LOAN_CLOSED_OBLIGATIONS_MET)!=0 && memberPaymentAmount.subtract((memberAccount.getTotalRepayableAmount())).isTinyAmount()) {
                 memberPaymentAmount = memberPaymentAmount.subtract(new Money(getCurrency(), 0.1));
             }
                    
