@@ -3817,5 +3817,6 @@ public class LoanBO extends AccountBO implements Loan {
     
     public boolean validateNoOfInstallments(LoanBO memberAccount) {
         return memberAccount.getNoOfInstallments()==getNoOfInstallments();
+
     }
 }
