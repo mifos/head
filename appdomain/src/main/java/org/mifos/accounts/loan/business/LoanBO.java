@@ -1794,7 +1794,11 @@ public class LoanBO extends AccountBO implements Loan {
                     paymentData.getOverpaymentAmount(), OverpaymentStatus.UNCLEARED.getValue());
             addAccountOverpayment(overpaymentEntity);
         }
-        applyPaymentToMemberAccounts(paymentData); // GLIM
+        
+        // GLIM
+        BigDecimal installmentsPaid = findNumberOfPaidInstallments();
+        applyPaymentToMemberAccounts(paymentData, installmentsPaid);
+        
         return accountPaymentEntity;
     }
 
@@ -3659,6 +3663,8 @@ public class LoanBO extends AccountBO implements Loan {
         return lateActionDateList;
     }
 
+    @SuppressWarnings("unused")
+    @Deprecated
     private void applyPaymentToMemberAccounts(PaymentData paymentData) throws AccountException {
         Money totalPaymentAmount = paymentData.getTotalAmount();
         for (LoanBO memberAccount : this.memberAccounts) {
@@ -3679,6 +3685,71 @@ public class LoanBO extends AccountBO implements Loan {
             
             memberAccount.applyPayment(memberPayment);
         }
+    }
+    
+    /** Makes payments for member accounts that will equalize number of paid installments to installmentsPaid parameter
+     * Example: member accounts have currently paid 2.5 installments,
+     * after calling this method with installmentsPaid = 5.3,
+     * it will make payments for member accounts that pays 2.8 installments,
+     * so after all member accounts will have 5,3 installments paid. 
+     * 
+     * @param installmentsPaid - number of installments that are currently paid on parent account.
+     * 
+     */
+    private void applyPaymentToMemberAccounts(PaymentData paymentData, BigDecimal installmentsPaid) throws AccountException {
+        
+        for (LoanBO memberAccount : getMemberAccounts()) {
+            BigDecimal memberPaid = memberAccount.findNumberOfPaidInstallments();
+            List<LoanScheduleEntity> memberInstallments = memberAccount.getLoanInstallments();
+            Money memberPaymentAmount = new Money(getCurrency());
+            int currentPayment;
+            
+            //Full payments for installments that are expected to be paid fully
+            for(currentPayment = memberPaid.intValue(); currentPayment < installmentsPaid.intValue() ; currentPayment++) {
+                memberPaymentAmount = memberPaymentAmount.add(memberInstallments.get(currentPayment).getAmountToBePaidToGetExpectedProportion(BigDecimal.ONE));
+            }
+            
+            BigDecimal afterComa = installmentsPaid.subtract(new BigDecimal(installmentsPaid.intValue()));
+            //If there is fraction in number of installments to be paid
+            if(afterComa.compareTo(BigDecimal.ZERO)==1) {
+                memberPaymentAmount = memberPaymentAmount.add(memberInstallments.get(currentPayment).getAmountToBePaidToGetExpectedProportion(afterComa));
+            }
+            
+            //It prevents member account to be closed before parent due to small last payments in parent account. Member accounts will remain in minimalPayment unpaid until last payment for parent account will be submitted
+            if(getState().compareTo(AccountState.LOAN_CLOSED_OBLIGATIONS_MET)!=0 && memberPaymentAmount.subtract((memberAccount.getTotalRepayableAmount())).isTinyAmount()) {
+                Double minimalPayment = Math.pow(10.0, (double)-AccountingRules.getDigitsAfterDecimal());
+                memberPaymentAmount = memberPaymentAmount.subtract(new Money(getCurrency(), minimalPayment));
+            }
+                   
+            PaymentData memberPayment = new PaymentData(memberPaymentAmount, paymentData.getPersonnel(),
+                    paymentData.getPaymentTypeId(), paymentData.getTransactionDate());
+            
+            if(!memberPaymentAmount.isTinyAmount() && !memberPaymentAmount.isLessThanZero()) {
+                memberAccount.applyPayment(memberPayment);
+            }
+        }
+    }
+    
+    private BigDecimal findNumberOfPaidInstallments() {
+        List<LoanScheduleEntity> loanInstallments = getLoanInstallments();
+        
+        BigDecimal paidInstallments = new BigDecimal(0);
+        
+        for(LoanScheduleEntity installment : loanInstallments) {
+            paidInstallments = paidInstallments.add(installment.getPaidProportion());
+        }
+        
+        return paidInstallments;
+    }
+    
+    private List<LoanScheduleEntity> getLoanInstallments() {     
+        List<AccountActionDateEntity> installments = getAllInstallments();
+        List<LoanScheduleEntity> schedule = new ArrayList<LoanScheduleEntity>();
+       
+        for (AccountActionDateEntity accountActionDateEntity : installments) {
+          schedule.add((LoanScheduleEntity) accountActionDateEntity);
+        }
+        return schedule;
     }
 
     public boolean hasMemberAccounts() {
@@ -3735,7 +3806,8 @@ public class LoanBO extends AccountBO implements Loan {
         return result;
     }
     
+    
     public boolean isIndividualLoan(){
-        return this.parentAccount != null && this.accountType.getAccountTypeId().equals(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT.getValue()); 
+        return this.parentAccount != null && this.accountType.getAccountTypeId().equals(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT.getValue());
     }
 }
