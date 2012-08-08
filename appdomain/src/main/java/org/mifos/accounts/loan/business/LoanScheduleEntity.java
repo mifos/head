@@ -640,6 +640,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return balanceAmount;
     }
 
+    public Money payInterestComponent(Money paymentAmount, Date paymentDate) {
+        initPaymentAllocation(paymentAmount.getCurrency());
+        Money balanceAmount = paymentAmount;
+        balanceAmount = payInterest(balanceAmount);
+        recordPayment(paymentDate);
+        return balanceAmount;
+    }
+
     public void payComponents(Installment installment, MifosCurrency currency, Date paymentDate) {
         initPaymentAllocation(currency);
         allocatePrincipal(new Money(currency, installment.getCurrentPrincipalPaid()));
@@ -780,6 +788,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     public Money applyPayment(AccountPaymentEntity accountPaymentEntity, Money balance, PersonnelBO personnel, Date transactionDate) {
         if (isNotPaid() && balance.isGreaterThanZero()) {
             balance = payComponents(balance, transactionDate);
+            updateSummaryAndPerformanceHistory(accountPaymentEntity, personnel, transactionDate);
+        }
+        return balance;
+    }
+
+    public Money applyPaymentToInterest(AccountPaymentEntity accountPaymentEntity, Money balance, PersonnelBO personnel, Date transactionDate) {
+        if (isNotPaid() && balance.isGreaterThanZero()) {
+            balance = payInterestComponent(balance, transactionDate);
             updateSummaryAndPerformanceHistory(accountPaymentEntity, personnel, transactionDate);
         }
         return balance;
