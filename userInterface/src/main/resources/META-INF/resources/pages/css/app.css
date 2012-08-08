@@ -225,9 +225,9 @@ form.two-columns input.disabledbuttn
     font-weight: bold;
 }
 
-.search-results td
-{
-    padding: 3px 0px 5px 1px;
+.search-results tr > td:first-child 
+{ 
+    width: 1px ;  
 }
 
 .mandatory {
