@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -320,6 +321,12 @@ public class LoanBusinessService implements BusinessService {
         if (loanBO.isDecliningBalanceInterestRecalculation()) {
             scheduleCalculatorAdaptor.applyPayment(loanBO, balance, transactionDate, personnel, accountPaymentEntity);
         } else {
+            if (AccountingRules.isOverdueInterestPaidFirst()) {
+                for (AccountActionDateEntity accountActionDate : loanBO.getDetailsOfInstallmentsInArrearsOn(new LocalDate(transactionDate))) {
+                    balance = ((LoanScheduleEntity) accountActionDate).applyPaymentToInterest(accountPaymentEntity, balance, personnel, transactionDate);
+                }
+            }
+
             for (AccountActionDateEntity accountActionDate : loanBO.getAccountActionDatesSortedByInstallmentId()) {
                 balance = ((LoanScheduleEntity) accountActionDate).applyPayment(accountPaymentEntity, balance, personnel, transactionDate);
             }
