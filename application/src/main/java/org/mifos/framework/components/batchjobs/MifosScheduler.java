@@ -251,6 +251,10 @@ public class MifosScheduler {
         if ("BranchReportTask".equals(jobName)) {
             return "BranchReportHelper";
         }
+        if ("ETLReportDWTask".equals(jobName)) {
+            return "ETLReportDWTask";
+        }
+       
 
         throw new TaskSystemException("Unknown helper for " + jobName);
     }
