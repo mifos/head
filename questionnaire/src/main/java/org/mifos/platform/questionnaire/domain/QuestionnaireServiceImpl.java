@@ -20,8 +20,22 @@
 
 package org.mifos.platform.questionnaire.domain;
 
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_EXT;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_PREFIX;
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
+
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.validations.ValidationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.domain.ppi.PPISurveyLocator;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
@@ -31,31 +45,24 @@ import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
-import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
+import org.mifos.platform.validations.ValidationException;
+import org.mifos.security.MifosUser;
+import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Arrays;
-import java.security.NoSuchAlgorithmException;
-import java.security.MessageDigest;
-import java.io.UnsupportedEncodingException;
-
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_EXT;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_PREFIX;
-import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
@@ -85,6 +92,9 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Autowired
     private SectionQuestionDao sectionQuestionDao;
+    
+    @Autowired
+    private RolesPermissionServiceFacade rolesPermissionServiceFacade;
 
     @SuppressWarnings({"UnusedDeclaration"})
     private QuestionnaireServiceImpl() {
@@ -94,7 +104,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
                                     QuestionnaireMapper questionnaireMapper, QuestionGroupDao questionGroupDao,
                                     EventSourceDao eventSourceDao, QuestionGroupInstanceDao questionGroupInstanceDao,
                                     PPISurveyLocator ppiSurveyLocator, QuestionGroupDefinitionParser questionGroupDefinitionParser,
-                                    SectionQuestionDao sectionQuestionDao) {
+                                    SectionQuestionDao sectionQuestionDao, RolesPermissionServiceFacade rolesPermissionServiceFacade) {
         this.questionnaireValidator = questionnaireValidator;
         this.questionDao = questionDao;
         this.questionnaireMapper = questionnaireMapper;
@@ -104,6 +114,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         this.ppiSurveyLocator = ppiSurveyLocator;
         this.questionGroupDefinitionParser = questionGroupDefinitionParser;
         this.sectionQuestionDao = sectionQuestionDao;
+        this.rolesPermissionServiceFacade = rolesPermissionServiceFacade;
     }
 
     @Override
@@ -138,6 +149,11 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         questionnaireValidator.validateForDefineQuestionGroup(questionGroupDetail);
         generateNicknamesForQuestions(questionGroupDetail);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
+        Set<RoleBO> roles = new HashSet<RoleBO>();
+        for (String id : questionGroupDetail.getRolesId()) {
+            roles.add(rolesPermissionServiceFacade.getRoleById(Short.valueOf(id)));
+        }
+        questionGroup.setAllowedRoles(roles);
         questionGroupDao.create(questionGroup);
         return questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
     }
@@ -160,7 +176,28 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         if (questionGroup == null) {
             throw new SystemException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND);
         }
+        
+        checkQuestionGroupRoleRequirements(questionGroup.getAllowedRoles());
+        
         return questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
+    }
+    
+    private void checkQuestionGroupRoleRequirements(Set<RoleBO> allowedRoles) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Short> allowedRolesId = new ArrayList<Short>();
+        for (RoleBO role : allowedRoles) {
+            allowedRolesId.add(role.getId());
+        }
+        Boolean flag = allowedRolesId.isEmpty() ? Boolean.TRUE : Boolean.FALSE; 
+        for (Short allowedId: allowedRolesId) {
+            if (user.getRoleIds().contains(allowedId)) {
+                flag = Boolean.TRUE;
+                break;
+            }
+        }
+        if (!flag.equals(Boolean.TRUE)) {
+            throw new AccessDeniedException("Access denied!");
+        }
     }
 
     @Override

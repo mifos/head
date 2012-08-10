@@ -24,8 +24,11 @@ package org.mifos.platform.questionnaire.domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.mifos.security.rolesandpermission.business.RoleBO;
 
 public class QuestionGroup implements Serializable {
     //TODO: For the time being to resolve dependencies
@@ -49,6 +52,8 @@ public class QuestionGroup implements Serializable {
     private boolean editable;
 
     private boolean ppi;
+    
+    private Set<RoleBO> allowedRoles = new HashSet<RoleBO>(0);
 
     @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor","PMD.UncommentedEmptyConstructor"})
     public QuestionGroup() {
@@ -129,5 +134,21 @@ public class QuestionGroup implements Serializable {
         }
         return sectionQuestions;
     }
+
+	public Set<RoleBO> getAllowedRoles() {
+		return allowedRoles;
+	}
+
+	public void setAllowedRoles(Set<RoleBO> allowedRoles) {
+		this.allowedRoles = allowedRoles;
+	}
+	
+	public List<String> getAllowedRolesIds() {
+		List<String> ids = new ArrayList<String>();
+		for (RoleBO role : allowedRoles) {
+			ids.add(role.getId().toString());
+		}
+		return ids;
+	}
 
 }

@@ -20,17 +20,17 @@
 
 package org.mifos.platform.questionnaire.domain;
 
+import java.util.List;
+
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
-
-import java.util.List;
 
 public interface QuestionnaireService {
     QuestionDetail defineQuestion(QuestionDetail questionDetail) throws SystemException;
@@ -80,5 +80,5 @@ public interface QuestionnaireService {
     EventSourceDto getEventSource(int eventSourceId);
 
     Integer getEventSourceId(String event, String source);
-
+    
 }

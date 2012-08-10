@@ -20,6 +20,15 @@
 
 package org.mifos.platform.questionnaire.ui.model;
 
+import static java.lang.String.format;
+import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.apache.commons.lang.StringUtils.trim;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_APPLIES_TO_OPTION;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
@@ -28,15 +37,7 @@ import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.validation.ScreenObject;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import static java.lang.String.format;
-import static org.apache.commons.lang.StringUtils.isEmpty;
-import static org.apache.commons.lang.StringUtils.trim;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_APPLIES_TO_OPTION;
+import org.mifos.security.rolesandpermission.exceptions.RolesPermissionException;
 @SuppressWarnings("PMD")
 public class QuestionGroupForm extends ScreenObject {
     private static final long serialVersionUID = -7545625058942409636L;
@@ -55,6 +56,7 @@ public class QuestionGroupForm extends ScreenObject {
     private List<String> sectionsToAdd = new ArrayList<String>();
     private List<Integer> questionsToAdd = new ArrayList<Integer>();
     private boolean applyToAllLoanProducts;
+    private List<String> availableRolesToAssign = new ArrayList<String>();
 
     public QuestionGroupForm() {
         this(new QuestionGroupDetail());
@@ -487,5 +489,18 @@ public class QuestionGroupForm extends ScreenObject {
     public void setApplyToAllLoanProducts(boolean applyToAllLoanProducts) {
         this.applyToAllLoanProducts = applyToAllLoanProducts;
     }
+
+	public List<String> getAvailableRolesToAssign() {   
+	    List<String> rolesIds = this.questionGroupDetail.getRolesId();
+	    if (null == rolesIds) {
+	        return new ArrayList<String>();
+	    }
+	    return rolesIds;
+	}
+
+	public void setAvailableRolesToAssign(List<String> availableRolesToAssign) throws RolesPermissionException {
+		this.availableRolesToAssign = availableRolesToAssign;
+	    questionGroupDetail.setRolesId(availableRolesToAssign);
+	}
 
 }

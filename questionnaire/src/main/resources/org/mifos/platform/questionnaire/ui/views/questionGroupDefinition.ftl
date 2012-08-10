@@ -54,6 +54,10 @@
                     "questionnaire.questionGroupAppliesTo"/]:</label>
                 [@form.formMultiSelect "questionGroupForm.eventSourceIds", EventSources, '' /]
             </li>
+            <li>
+                <label for="availableRolesToAssign">[@spring.message "questionnaire.questionGroupRole"/]:</label>
+                [@form.formMultiSelect "questionGroupForm.availableRolesToAssign", Roles, '' /]
+            </li>
             <li id="applyToAllLoansDiv">
                 <label for="applyToAllLoanProducts">[@spring.message "questionnaire.applyToAllLoanProducts"/]:</label>
                 [@form.formCheckbox "questionGroupForm.applyToAllLoanProducts", ""/]

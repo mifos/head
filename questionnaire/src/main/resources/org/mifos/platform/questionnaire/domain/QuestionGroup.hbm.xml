@@ -27,6 +27,11 @@
             <many-to-many column="event_source_id"
                 class="org.mifos.platform.questionnaire.domain.EventSourceEntity"/>
         </set>
+        <set name="allowedRoles" table="question_group_permission" inverse="true" lazy="true" fetch="select">
+            <key column="group_id"/>
+            <many-to-many column="role_id"
+                class="org.mifos.security.rolesandpermission.business.RoleBO"/>
+        </set>
     </class>
     <query name="QuestionGroup.retrieveQuestionGroupsByEventSource">
               <![CDATA[select questionGroup from QuestionGroup as questionGroup join questionGroup.eventSources eventSource

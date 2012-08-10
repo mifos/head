@@ -20,13 +20,13 @@
 
 package org.mifos.platform.questionnaire.service;
 
-import org.apache.commons.lang.StringUtils;
-import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 
 public class QuestionGroupDetail implements Serializable {
     private static final long serialVersionUID = 5240884292277900071L;
@@ -39,6 +39,7 @@ public class QuestionGroupDetail implements Serializable {
     private boolean editable;
     private boolean active;
     private boolean ppi;
+    private List<String> rolesId;
 
     public QuestionGroupDetail() {
         this(0, null, new ArrayList<EventSourceDto>(), new ArrayList<SectionDetail>(), false);
@@ -51,7 +52,7 @@ public class QuestionGroupDetail implements Serializable {
     public QuestionGroupDetail(int id, String title, List<EventSourceDto> eventSourceDtos, List<SectionDetail> sectionDetails, boolean editable) {
         this(id, title, eventSourceDtos, sectionDetails, editable, false);
     }
-
+    
     public QuestionGroupDetail(int id, String title, List<EventSourceDto> eventSourceDtos, List<SectionDetail> sectionDetails, boolean editable, boolean active) {
         this.id = id;
         this.title = title;
@@ -60,8 +61,18 @@ public class QuestionGroupDetail implements Serializable {
         this.editable = editable;
         this.active = active;
     }
+    
+    public QuestionGroupDetail(int id, String title, List<EventSourceDto> eventSourceDtos, List<SectionDetail> sectionDetails, boolean editable, boolean active, List<String> rolesId) {
+        this.id = id;
+        this.title = title;
+        this.sectionDetails = sectionDetails;
+        this.eventSourceDtos = eventSourceDtos;
+        this.editable = editable;
+        this.active = active;
+        this.rolesId = rolesId;
+    }
 
-    public QuestionGroupDetail(int id, String title, List<EventSourceDto> eventSourceDtos, List<SectionDetail> sectionDetails, boolean editable, boolean active, boolean ppi) {
+    public QuestionGroupDetail(int id, String title, List<EventSourceDto> eventSourceDtos, List<SectionDetail> sectionDetails, boolean editable, boolean active, boolean ppi, List<String> rolesId) {
         this.id = id;
         this.title = title;
         this.sectionDetails = sectionDetails;
@@ -69,9 +80,10 @@ public class QuestionGroupDetail implements Serializable {
         this.editable = editable;
         this.active = active;
         this.ppi = ppi;
+        this.rolesId = rolesId;
     }
 
-    public String getTitle() {
+	public String getTitle() {
         return title;
     }
 
@@ -171,5 +183,13 @@ public class QuestionGroupDetail implements Serializable {
             }
         }
         return result;
+    }
+
+    public List<String> getRolesId() {
+        return rolesId;
+    }
+
+    public void setRolesId(List<String> rolesId) {
+        this.rolesId = rolesId;
     }
 }

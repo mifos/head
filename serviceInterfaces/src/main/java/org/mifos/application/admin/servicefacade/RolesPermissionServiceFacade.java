@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.mifos.dto.domain.ActivityRestrictionDto;
 import org.mifos.dto.screen.ListElement;
+import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @SuppressWarnings("PMD")
@@ -31,6 +32,9 @@ public interface RolesPermissionServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     List<ListElement> retrieveAllRoles();
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    RoleBO getRoleById(Short id);
 
     @PreAuthorize("isFullyAuthenticated()")
     void createRole(Short userId, String name, List<Short> ActivityIds) throws Exception;

@@ -58,6 +58,15 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
         }
         return null;
     }
+    
+    @Override
+    public RoleBO getRoleById(Short id) {
+        try {
+            return new RolesPermissionsBusinessService().getRole(id);
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
 
     @Override
     public void createRole(Short userId, String name, List<Short> ActivityIds) throws RolesPermissionException {

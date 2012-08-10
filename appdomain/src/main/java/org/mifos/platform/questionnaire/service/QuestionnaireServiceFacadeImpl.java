@@ -23,6 +23,8 @@ package org.mifos.platform.questionnaire.service;
 import java.util.Iterator;
 import java.util.List;
 
+import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
+import org.mifos.dto.screen.ListElement;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.AuditLogService;
 import org.mifos.platform.questionnaire.QGFlowsService;
@@ -31,6 +33,7 @@ import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
+import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacade {
@@ -44,6 +47,9 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     @Autowired
     private QGFlowsService qgFlowsService;
 
+    @Autowired
+    private RolesPermissionServiceFacade rolesPermissionServiceFacade;
+    
     public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService) {
         this.questionnaireService = questionnaireService;
     }
@@ -236,4 +242,10 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     private EventSourceDto getEventSource(String event, String source) {
         return new EventSourceDto(event, source, String.format("%s.%s", event, source));
     }
+
+	@Override
+	public List<ListElement> retrieveAllRoles() {
+		return rolesPermissionServiceFacade.retrieveAllRoles();
+	}
+
 }

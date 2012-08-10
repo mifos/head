@@ -20,6 +20,20 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import static java.lang.System.currentTimeMillis;
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -58,6 +72,7 @@ import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupResponseDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
+import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
@@ -66,20 +81,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static java.lang.System.currentTimeMillis;
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -188,7 +189,7 @@ public class QuestionnaireServiceIntegrationTest {
         QuestionDetail questionDetail2 = defineQuestion(title + 2, QuestionType.FREETEXT, true);
         SectionDetail section1 = getSectionWithQuestionId("S1", questionDetail1);
         SectionDetail section2 = getSectionWithQuestionId("S2", questionDetail2);
-        QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", asList(section1, section2), true);
+        QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", asList(section1, section2), true, null);
         assertNotNull(questionGroupDetail);
         Integer questionGroupId = questionGroupDetail.getId();
         assertNotNull(questionGroupId);
@@ -283,9 +284,9 @@ public class QuestionnaireServiceIntegrationTest {
         String questionGroupTitle1 = "QG1" + currentTimeMillis();
         String questionGroupTitle2 = "QG2" + currentTimeMillis();
         List<SectionDetail> sectionsForQG1 = asList(getSection("Section1"));
-        defineQuestionGroup(questionGroupTitle1, "Create", "Client", sectionsForQG1, false);
+        defineQuestionGroup(questionGroupTitle1, "Create", "Client", sectionsForQG1, false, null);
         List<SectionDetail> sectionsForQG2 = asList(getSection("S2"), getSection("Section2"));
-        defineQuestionGroup(questionGroupTitle2, "Create", "Client", sectionsForQG2, false);
+        defineQuestionGroup(questionGroupTitle2, "Create", "Client", sectionsForQG2, false, null);
         List<QuestionGroupDetail> questionGroups = questionnaireService.getAllQuestionGroups();
         int finalCount = questionGroups.size();
         assertThat(finalCount - initialCount, is(2));
@@ -297,7 +298,7 @@ public class QuestionnaireServiceIntegrationTest {
     public void shouldGetQuestionGroupById() throws SystemException {
         String title = "QG1" + currentTimeMillis();
         List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
-        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title, "Create", "Client", details, true);
+        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title, "Create", "Client", details, true, null);
         QuestionGroupDetail retrievedQuestionGroupDetail = questionnaireService.getQuestionGroup(createdQuestionGroupDetail.getId());
         Assert.assertNotSame(createdQuestionGroupDetail, retrievedQuestionGroupDetail);
         assertThat(retrievedQuestionGroupDetail.getTitle(), is(title));
@@ -336,7 +337,7 @@ public class QuestionnaireServiceIntegrationTest {
         String section2Question3 = "S1_" + currentTimeMillis();
         sectionDefinition2.addQuestion(new SectionQuestionDetail(defineQuestion(section2Question3, QuestionType.NUMERIC, true), true));
 
-        int questionGroupId = defineQuestionGroup(qgTitle, "Create", "Client", asList(sectionDefinition1, sectionDefinition2), false).getId();
+        int questionGroupId = defineQuestionGroup(qgTitle, "Create", "Client", asList(sectionDefinition1, sectionDefinition2), false, null).getId();
         QuestionGroupDetail questionGroupDetail = questionnaireService.getQuestionGroup(questionGroupId);
         assertThat(questionGroupDetail, Matchers.notNullValue());
         List<SectionDetail> sectionDetails = questionGroupDetail.getSectionDetails();
@@ -366,7 +367,7 @@ public class QuestionnaireServiceIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void testGetQuestionGroupByIdFailure() throws SystemException {
         String title = "QG1" + currentTimeMillis();
-        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title, "Create", "Client", asList(getSection("S1")), true);
+        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title, "Create", "Client", asList(getSection("S1")), true, null);
         Integer maxQuestionGroupId = createdQuestionGroupDetail.getId();
         try {
             questionnaireService.getQuestionGroup(maxQuestionGroupId + 1);
@@ -465,7 +466,7 @@ public class QuestionnaireServiceIntegrationTest {
     public void shouldGetQuestionGroupsByEventAndSource() throws SystemException {
         String title = "QG1" + currentTimeMillis();
         List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
-        QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details, false);
+        QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details, false, null);
         List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSourceDto("Create", "Client", "Create.Client"));
         assertThat(questionGroups, is(notNullValue()));
         QuestionGroupDetail actualQGDetail = getMatchingQGDetailById(expectedQGDetail.getId(), questionGroups);
@@ -478,7 +479,7 @@ public class QuestionnaireServiceIntegrationTest {
     public void shouldSaveResponse() throws SystemException {
         String title = "QG1" + currentTimeMillis();
         List<SectionDetail> details = asList(getSection("S1"), getSectionWithSmartSelectQuestion("S2"));
-        QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", details, true);
+        QuestionGroupDetail questionGroupDetail = defineQuestionGroup(title, "Create", "Client", details, true, null);
         questionGroupDetail.getSectionDetail(0).getQuestionDetail(0).setValue("1");
         SelectionDetail selectionDetail1 = getSelectionDetail("Ch1", "Tag2");
         SelectionDetail selectionDetail2 = getSelectionDetail("Ch3", "Tag1");
@@ -545,7 +546,7 @@ public class QuestionnaireServiceIntegrationTest {
     public void shouldNotGetInActiveQuestionGroupsByEventAndSource() throws SystemException {
         String title = "QG1" + currentTimeMillis();
         List<SectionDetail> details = asList(getSection("S1"), getSection("S2"));
-        QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details, true);
+        QuestionGroupDetail expectedQGDetail = defineQuestionGroup(title, "Create", "Client", details, true, null);
         setState(expectedQGDetail.getId(), QuestionGroupState.INACTIVE);
         List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSourceDto("Create", "Client", "Create.Client"));
         assertThat(questionGroups, is(notNullValue()));
@@ -558,7 +559,7 @@ public class QuestionnaireServiceIntegrationTest {
     public void shouldNotGetInQuestionGroupsWithAllInactiveQuestions() throws SystemException {
         String title = "QG1" + currentTimeMillis();
         List<SectionDetail> sectionDetails = asList(getSectionWithAllInactiveQuestions("S1"), getSectionWithAllInactiveQuestions("S2"));
-        defineQuestionGroup(title, "Create", "Client", sectionDetails, true);
+        defineQuestionGroup(title, "Create", "Client", sectionDetails, true, null);
         List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSourceDto("Create", "Client", "Create.Client"));
         assertThat(questionGroups, is(notNullValue()));
         assertThat(questionGroups.size(), is(0));
@@ -611,7 +612,7 @@ public class QuestionnaireServiceIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldSaveQuestionGroupInstance() {
         String title = "QG1" + currentTimeMillis();
-        QuestionGroupDetail qgDetail = defineQuestionGroup(title, "Create", "Client", asList(getSection("S1")), true);
+        QuestionGroupDetail qgDetail = defineQuestionGroup(title, "Create", "Client", asList(getSection("S1")), true, null);
         Integer sectionQuestionId = qgDetail.getSectionDetail(0).getQuestionDetail(0).getId();
         QuestionGroupInstanceDto qgInstanceDto = getQuestionGroupInstanceDto("1234", 121, 567, qgDetail.getId(), sectionQuestionId);
         Integer qgInstanceId = questionnaireService.saveQuestionGroupInstance(qgInstanceDto);
@@ -748,8 +749,8 @@ public class QuestionnaireServiceIntegrationTest {
         return choiceDtos;
     }
 
-    private QuestionGroupDetail defineQuestionGroup(String title, String event, String source, List<SectionDetail> sectionDetails, boolean editable) throws SystemException {
-        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, Arrays.asList(new EventSourceDto(event, source, null)), sectionDetails, editable, true));
+    private QuestionGroupDetail defineQuestionGroup(String title, String event, String source, List<SectionDetail> sectionDetails, boolean editable, List<String> allowedRoles) throws SystemException {
+        return questionnaireService.defineQuestionGroup(new QuestionGroupDetail(0, title, Arrays.asList(new EventSourceDto(event, source, null)), sectionDetails, editable, true, allowedRoles));
     }
 
     private SectionDetail getSection(String name) throws SystemException {

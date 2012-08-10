@@ -16,6 +16,7 @@
     <view-state id="editQuestionGroup" model="questionGroupForm">
         <on-entry>
             <evaluate expression="questionGroupController.getAllQgEventSources()" result="flowScope.EventSources" />
+            <evaluate expression="questionGroupController.getRoles()" result="flowScope.Roles" />
             <evaluate expression="questionGroupController.getAllSectionQuestions(questionGroupForm)" result="questionGroupForm.questionPool" />
         </on-entry>
         <transition on="addSection" to="addSection"/>

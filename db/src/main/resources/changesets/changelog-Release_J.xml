@@ -499,4 +499,54 @@
        <rollback>
        </rollback>
    </changeSet>
+   <changeSet id="MIFOS-5632_1" author="Kamil Kalfas" context="expansion">
+       <sql endDelimiter=";">
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanAssignRoleToQuestionGroups');
+                
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanAssignRoleToQuestionGroups'),null);	
+                
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            	values(294,203,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanAssignRoleToQuestionGroups'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanAssignRoleToQuestionGroups'));
+                
+          	insert into roles_activity(activity_id, role_id) values(294, 1);
+          	
+          	create table question_group_permission 
+			(
+			    group_id int not null, 
+			    role_id smallint not null,
+			    primary key(group_id, role_id),
+			    foreign key(group_id) 
+			        references question_group(id)
+			            on delete no action
+			            on update no action,
+			    foreign key(role_id) 
+		        	references role(role_id)
+			            on delete no action
+			            on update no action
+			)
+			engine=innodb character set utf8;
+       </sql>
+       <rollback>
+           <sql endDelimiter=";">
+                delete from roles_activity where activity_id = 294;
+
+                delete from activity where activity_id = 294;
+
+                delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanAssignRoleToQuestionGroups');
+
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanAssignRoleToQuestionGroups';
+                    
+               	drop table question_group_permission;
+           </sql>
+       </rollback>
+   </changeSet>
 </databaseChangeLog>

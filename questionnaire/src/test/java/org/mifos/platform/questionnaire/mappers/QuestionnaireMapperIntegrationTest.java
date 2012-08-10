@@ -54,13 +54,13 @@ public class QuestionnaireMapperIntegrationTest {
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
-    public void shouldMapEventSources() {
+    public void shouldMapEventSources() throws Exception {
         testMapEventSource("Create", "Client", "Create Client");
         testMapEventSource("View", "Client", "View Client");
         testMapEventSource("Create", "Loan", "Create Loan");
     }
 
-    private void testMapEventSource(String event, String source, String description) {
+    private void testMapEventSource(String event, String source, String description) throws Exception {
         EventSourceDto eventSourceDto = new EventSourceDto(event, source, description);
         List<SectionDetail> sectionDetails = getSectionDefinitions();
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(new QuestionGroupDetail(0, "Title", Arrays.asList(eventSourceDto), sectionDetails, false));

@@ -20,7 +20,21 @@
 
 package org.mifos.platform.questionnaire.mappers;
 
+import static org.mifos.platform.util.CollectionUtils.asMap;
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
+import static org.mifos.platform.util.MapEntry.makeEntry;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.mifos.platform.questionnaire.domain.AnswerType;
 import org.mifos.platform.questionnaire.domain.ChoiceTagEntity;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
@@ -38,9 +52,6 @@ import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
-import org.mifos.platform.questionnaire.service.SelectionDetail;
-import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
-import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
@@ -48,6 +59,9 @@ import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.SelectionDetail;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
@@ -55,20 +69,6 @@ import org.mifos.platform.questionnaire.service.dtos.QuestionGroupResponseDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.mifos.platform.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static org.mifos.platform.util.CollectionUtils.asMap;
-import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
-import static org.mifos.platform.util.MapEntry.makeEntry;
 
 @SuppressWarnings({"PMD", "UnusedDeclaration"})
 public class QuestionnaireMapperImpl implements QuestionnaireMapper {
@@ -89,7 +89,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     @Autowired
     private QuestionGroupInstanceDao questionGroupInstanceDao;
-
+    
     public QuestionnaireMapperImpl() {
         this(null, null, null, null,null);
     }
@@ -203,7 +203,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setEditable(questionGroupDetail.isEditable());
         return questionGroup;
     }
-
+    
     private QuestionGroup getQuestionGroup(QuestionGroupDetail questionGroupDetail) {
         return questionGroupDetail.isNewQuestionGroup() ? new QuestionGroup() : questionGroupDao.getDetails(questionGroupDetail.getId());
     }
@@ -287,7 +287,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         List<EventSourceDto> eventSourceDtos = mapToEventSource(questionGroup.getEventSources());
         return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(),
                 eventSourceDtos, sectionDetails, questionGroup.isEditable(),
-                QuestionGroupState.ACTIVE.equals(questionGroup.getState()), questionGroup.isPpi());
+                QuestionGroupState.ACTIVE.equals(questionGroup.getState()), questionGroup.isPpi(), questionGroup.getAllowedRolesIds());
     }
 
     private List<EventSourceDto> mapToEventSource(Set<EventSourceEntity> eventSources) {

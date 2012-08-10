@@ -7,6 +7,14 @@
         <property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
         <mapping class="org.mifos.platform.questionnaire.domain.EventEntity" />
         <mapping class="org.mifos.platform.questionnaire.domain.EventSourceEntity"/>
+        <mapping class="org.mifos.security.rolesandpermission.business.ActivityEntity" />
+        <mapping class="org.mifos.security.rolesandpermission.business.ActivityRestrictionTypeEntity" />
+        <mapping class="org.mifos.security.rolesandpermission.business.RoleBO" />
+        <mapping class="org.mifos.security.rolesandpermission.business.RoleActivityRestrictionBO" />
+        <mapping class="org.mifos.application.master.business.LookUpLabelEntity" />
+        <mapping class="org.mifos.application.master.business.LookUpValueEntity" />
+        <mapping class="org.mifos.application.master.business.LookUpValueLocaleEntity" />
+        <mapping class="org.mifos.application.master.business.LookUpEntity"/>
 
         <mapping resource="org/mifos/platform/questionnaire/domain/QuestionEntity.hbm.xml" />
         <mapping resource="org/mifos/platform/questionnaire/domain/QuestionChoiceEntity.hbm.xml" />
@@ -17,5 +25,7 @@
         <mapping resource="org/mifos/platform/questionnaire/domain/QuestionGroupInstance.hbm.xml" />
         <mapping resource="org/mifos/platform/questionnaire/domain/QuestionGroupResponse.hbm.xml" />
         <mapping resource="org/mifos/platform/questionnaire/domain/ChoiceTagEntity.hbm.xml" />
+        
+
     </session-factory>
 </hibernate-configuration>

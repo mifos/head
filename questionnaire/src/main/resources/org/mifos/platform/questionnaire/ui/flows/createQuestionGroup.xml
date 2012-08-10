@@ -7,6 +7,7 @@
 
     <on-start>
        <evaluate expression="questionGroupController.getAllQgEventSources()" result="flowScope.EventSources" />
+       <evaluate expression="questionGroupController.getRoles()" result="flowScope.Roles" />
        <evaluate expression="questionGroupController.getAllSectionQuestions()" result="questionGroupForm.questionPool" />
     </on-start>
 
