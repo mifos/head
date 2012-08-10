@@ -158,7 +158,7 @@ public class RESTAPIHelper {
                 @JsonProperty("loanPurposeId") Integer loanPurposeId,
                 @JsonProperty("collateralTypeId") Integer collateralTypeId,
                 @JsonProperty("collateralNotes") String collateralNotes, @JsonProperty("externalId") String externalId,
-                @JsonProperty("lsim") Boolean lsim, @JsonProperty("accountFees") List<CreationFeeDto> accountFees,
+                @JsonProperty("accountFees") List<CreationFeeDto> accountFees,
                 @JsonProperty("accountPenalties") List<CreationAccountPenaltyDto> accountPenalties,
                 @JsonProperty("minNumOfInstallments") Integer minNumOfInstallments,
                 @JsonProperty("maxNumOfInstallments") Integer maxNumOfInstallments,

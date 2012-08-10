@@ -13,7 +13,6 @@
     "collateralTypeId" : 1,
     "collateralNotes" : "",
     "externalId" : "",
-    "lsim" : false,
     "glim" : false,
     "accountFees" : [],
     "accountPenalties" : [],
