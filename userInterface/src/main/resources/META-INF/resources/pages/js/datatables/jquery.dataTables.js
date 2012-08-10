@@ -3951,7 +3951,7 @@
 				nScrollFootTable.style.width = _fnStringToCss( o.nTable.offsetWidth );
 			}
 			
-			/* If sorting or filtering has occured, jump the scrolling back to the top */
+			/* If sorting or filtering has occurred, jump the scrolling back to the top */
 			if ( o.bSorted || o.bFiltered )
 			{
 				nScrollBody.scrollTop = 0;

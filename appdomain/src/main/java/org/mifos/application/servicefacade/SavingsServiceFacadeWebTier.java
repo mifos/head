@@ -752,7 +752,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
         LocalDate closureDate = closeAccountDto.getDateOfWithdrawal();
 
-        // Assumption that all previous interest postings occured correctly
+        // Assumption that all previous interest postings occurred correctly
         InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory
                 .createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
         LocalDate nextPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
