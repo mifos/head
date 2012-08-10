@@ -24,11 +24,15 @@ import java.util.Date;
 
 import org.mifos.accounts.loan.business.RepaymentResultsHolder;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
+import org.mifos.config.AccountingRules;
 
 public class ScheduleCalculator {
     public void applyPayment(Schedule schedule, BigDecimal amount, Date transactionDate) {
         schedule.resetCurrentPayment();
         computeExtraInterest(schedule, transactionDate);
+        if(AccountingRules.isOverdueInterestPaidFirst()){
+            amount = schedule.payOverDueInstallments(transactionDate, amount);
+        }
         BigDecimal balance = schedule.payDueInstallments(transactionDate, amount);
         schedule.adjustFutureInstallments(balance, transactionDate);
     }

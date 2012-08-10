@@ -312,7 +312,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
         html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getEffectiveInterestPaid().toString()) :
-                ConversionUtil.formatNumber(installment.getEffectiveInterestDue().toString())));
+                ConversionUtil.formatNumber(installment.getEffectiveInterestDue().toString()) + " ("+ConversionUtil.formatNumber(installment.getInterestPaid().toString())+")"));
         html.endTag("td");
 
         html.startTag("td", "width", "10%", "align", "right", "class", "drawtablerow");
