@@ -279,6 +279,19 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 					StaticHibernateUtil.closeSession();
 				}
             }
+            
+            boolean key5722Exists = customJdbcService.mifos5722IssueKeyExists();
+            if(!key5722Exists) {
+                try {
+                    applyMifos5722Fix();
+                    customJdbcService.insertMifos5722Issuekey();
+                } catch (Exception e) {
+                    logger.error("Could not apply Mifos-5692 and mifos-5722 fix");
+                    e.printStackTrace();
+                } finally {
+                    StaticHibernateUtil.closeSession();
+                }
+            }
         }
 
     }
@@ -313,6 +326,44 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         		logger.info(fixLoans.size() + " Account Payments created to fix data related to MIFOS-4948");
         }
 
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void applyMifos5722Fix() throws PersistenceException {
+        int counter = 0;
+        List<LoanBO> fixLoans;
+        Session session = StaticHibernateUtil.getSessionTL();
+        logger.info("Started Mifos-5692 and Mifos-5722 fix.");
+        Query query = session.getNamedQuery("accounts.countAllParentLoans");
+        Long loanCount = (Long)query.uniqueResult();
+        logger.info("Query found " + loanCount.toString() + " accounts.");
+        do {
+            query = session.getNamedQuery("accounts.findAllParentLoans");
+            query.setFirstResult(counter);
+            query.setMaxResults(20);
+            fixLoans = query.list();
+            
+            if(fixLoans != null && !fixLoans.isEmpty()) {
+                
+                
+                for(LoanBO fixLoan : fixLoans) {
+                    counter++;
+                    if(fixLoan.needsMifos5722Repair()) {
+                        try {
+                            StaticHibernateUtil.startTransaction();
+                            fixLoan.applyMifos5722Fix();
+                            StaticHibernateUtil.commitTransaction();
+                        } catch(AccountException e) {
+                            StaticHibernateUtil.rollbackTransaction();
+                        }
+                    }
+                }
+                
+                StaticHibernateUtil.clearSession();
+                logger.info("Fixed " + counter + " accounts.");
+            }         
+        } while(fixLoans != null && !fixLoans.isEmpty());
+        logger.info("Finished Mifos-5692 and Mifos-5722 fix.");
     }
 
     private void initializeDBConnectionForHibernate(DatabaseMigrator migrator) {

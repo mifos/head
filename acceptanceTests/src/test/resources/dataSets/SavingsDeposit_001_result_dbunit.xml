@@ -2433,6 +2433,7 @@
   <config_key_value configuration_id="11" configuration_type="0" configuration_key="AdministrativeDocumentsIsEnabled" configuration_value="1"/>
   <config_key_value configuration_id="12" configuration_type="0" configuration_key="MIFOS-4948" configuration_value="1"/>
   <config_key_value configuration_id="16" configuration_type="0" configuration_key="prorate_Rule" configuration_value="0"/>
+  <config_key_value configuration_id="19" configuration_type="0" configuration_key="MIFOS-5722" configuration_value="1"/>
   <currency currency_id="1" currency_name="US Dollar" rounding_amount="1.000" currency_code="USD"/>
   <currency currency_id="2" currency_name="Indian Rupee" rounding_amount="1.000" currency_code="INR"/>
   <currency currency_id="3" currency_name="Euro" rounding_amount="1.000" currency_code="EUR"/>
