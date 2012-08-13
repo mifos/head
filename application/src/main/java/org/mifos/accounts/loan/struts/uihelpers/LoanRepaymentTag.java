@@ -36,6 +36,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.tags.XmlBuilder;
@@ -312,7 +313,8 @@ public class LoanRepaymentTag extends BodyTagSupport {
 
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
         html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getEffectiveInterestPaid().toString()) :
-                ConversionUtil.formatNumber(installment.getEffectiveInterestDue().toString()) + " ("+ConversionUtil.formatNumber(installment.getInterestPaid().toString())+")"));
+                ConversionUtil.formatNumber(installment.getEffectiveInterestDue().toString()) + ( 
+                AccountingRules.isOverdueInterestPaidFirst() ? " ("+ConversionUtil.formatNumber(installment.getInterestPaid().toString())+")" : "")));
         html.endTag("td");
 
         html.startTag("td", "width", "10%", "align", "right", "class", "drawtablerow");

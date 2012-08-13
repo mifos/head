@@ -38,14 +38,15 @@ public class LoanAccountOverdueInterestTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
+        propertiesHelper = new CustomPropertiesHelper(selenium);
+        propertiesHelper.setOverdueInterestPaidFirst("true"); 
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         systemDateTime = new DateTime(2011, 3, 4, 12, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(systemDateTime);
         loanTestHelper = new LoanTestHelper(selenium);
-        this.navigationHelper = new NavigationHelper(selenium);
+        navigationHelper = new NavigationHelper(selenium);
         loanProductTestHelper = new LoanProductTestHelper(selenium);
-        propertiesHelper = new CustomPropertiesHelper(selenium);
-        propertiesHelper.setOverdueInterestPaidFirst("true");
+        
         
     }
 
@@ -55,7 +56,7 @@ public class LoanAccountOverdueInterestTest extends UiTestCaseBase {
         propertiesHelper.setOverdueInterestPaidFirst("false");
     }
     
-    @Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "smoke", "no_db_unit"})
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyPayOverdueInstalment() throws Exception {
         SubmitFormParameters loanParameters = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -63,7 +64,7 @@ public class LoanAccountOverdueInterestTest extends UiTestCaseBase {
         loanProductTestHelper.defineNewLoanProduct(loanParameters);
         
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("client1 lastname");
+        searchParameters.setSearchString("Stu");
         searchParameters.setLoanProduct("OverdueLoan");
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1012.0");
