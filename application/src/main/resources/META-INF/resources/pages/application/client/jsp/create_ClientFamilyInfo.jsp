@@ -182,8 +182,9 @@ explanation of the license and how it is applied.
 							<table>
                                 <c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsMandatory')}">
                                     <tr class="fontnormalboldorange">
-                                        <td>
+                                        <td colspan="2">
                                             <mifos:mifoslabel name="client.FamilyDetailsOptional" bundle="ClientUIResources"/>
+                                            <br /><br />
                                         </td>
                                     </tr>
                                 </c:if>
