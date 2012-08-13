@@ -917,12 +917,21 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 	}
 	
 	public BigDecimal getPaidProportion() {
-	    return getTotalPaidAmount().divide(getTotalAmountOfInstallment());
+	    BigDecimal proportion = getTotalPaidAmount().divide(getTotalAmountOfInstallment());
+	    
+	    if(proportion.compareTo(BigDecimal.ZERO)<0) {
+	        proportion = BigDecimal.ZERO;
+	    }
+	    
+	    if(proportion.compareTo(BigDecimal.ONE)>0) {
+	        proportion = BigDecimal.ONE;
+	    }
+	    
+	    return proportion;
 	}
 	
 	public Money getAmountToBePaidToGetExpectedProportion(BigDecimal expected) {
 	    Money amount = getTotalAmountOfInstallment().multiply(expected);
-	    amount = MoneyUtils.currencyRound(amount);
 	    amount = amount.subtract(getTotalPaidAmount());
 	    
 	    return amount;
