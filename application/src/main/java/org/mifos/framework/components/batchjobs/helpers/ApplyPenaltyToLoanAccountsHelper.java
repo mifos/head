@@ -164,7 +164,7 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
         AmountPenaltyBO penalty = (AmountPenaltyBO) penaltyEntity.getPenalty();
         Money accountPenaltyAmount = penaltyEntity.getAccountPenaltyAmount();
         Money charge = verifyLimits(loanAccount.getTotalPenalty(accountPenaltyAmount.getCurrency(), penalty.getPenaltyId()),
-                accountPenaltyAmount, penalty.getMinimumLimit(), penalty.getMaximumLimit());
+                accountPenaltyAmount, penalty.getMaximumLimit()/loanAccount.calcFactorOfEntireLoan().doubleValue(), penalty.getMinimumLimit()/loanAccount.calcFactorOfEntireLoan().doubleValue());
 
         if (charge != null && charge.isGreaterThanZero()) {
             loanAccount.applyPenalty(charge, loanScheduleEntity.getInstallmentId(), penaltyEntity, currentDate);
@@ -199,7 +199,7 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
         }
 
         Money totalPenalty = loanAccount.getTotalPenalty(charge.getCurrency(), penalty.getPenaltyId());
-        charge = verifyLimits(totalPenalty, charge, penalty.getMinimumLimit(), penalty.getMaximumLimit());
+        charge = verifyLimits(totalPenalty, charge, penalty.getMinimumLimit()/loanAccount.calcFactorOfEntireLoan().doubleValue(), penalty.getMaximumLimit()/loanAccount.calcFactorOfEntireLoan().doubleValue());
 
         if (charge.isGreaterThanZero()) {
             loanAccount.applyPenalty(charge, loanScheduleEntity.getInstallmentId(), penaltyEntity, currentDate);
