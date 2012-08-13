@@ -177,7 +177,7 @@ public class CustomPropertiesHelper {
     }
     
     public void setOverdueInterestPaidFirst(String overdueInterestPaidFirst) {
-        selenium.open(UPDATE_PAGE + "?AccountingRules.OverdueInterestPaidFirst=" + overdueInterestPaidFirst);
+        selenium.open(UPDATE_PAGE + "?OverdueInterestPaidFirst=" + overdueInterestPaidFirst);
     }
     
 
