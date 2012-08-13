@@ -152,11 +152,23 @@ public class ClientRESTController {
     private void validate(CreateClientCreationDetail creationDetail) throws ParamValidationException {
         validateMeeting(creationDetail);
         validateGroupData(creationDetail);
+        validateClientStatus(creationDetail);
     }
 
     private void validateMeeting(CreateClientCreationDetail creationDetail) throws ParamValidationException {
         if (null == creationDetail.getMeeting() && null == creationDetail.getParentGroupId()) {
             throw new ParamValidationException(ErrorMessage.INVALID_MEETING);
+        }
+    }
+    
+    private void validateClientStatus(CreateClientCreationDetail creationDetail) throws ParamValidationException {
+        if(!creationDetail.getCustomerStatus().equals(new Short("1"))
+                && !creationDetail.getCustomerStatus().equals(new Short("2"))
+                && !creationDetail.getCustomerStatus().equals(new Short("3"))
+                && !creationDetail.getCustomerStatus().equals(new Short("4"))
+                && !creationDetail.getCustomerStatus().equals(new Short("5"))
+                && !creationDetail.getCustomerStatus().equals(new Short("6"))) {
+            throw new ParamValidationException(ErrorMessage.INVALID_CUSTOMER_STATUS);
         }
     }
 

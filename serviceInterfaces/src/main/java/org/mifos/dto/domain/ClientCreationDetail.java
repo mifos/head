@@ -114,7 +114,7 @@ public class ClientCreationDetail implements Serializable {
         this.groupFlag = groupFlag;
         this.clientNameDetailDto = clientNameDetailDto;
         this.clientPersonalDetailDto = clientPersonalDetailDto;
-        this.spouseFatherName = null;
+        this.spouseFatherName = new ClientNameDetailDto(null, null, "", "", "", "");
         this.picture = null;
         this.feesToApply = feesToApply;
         this.parentGroupId = parentGroupId;

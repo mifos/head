@@ -33,6 +33,7 @@ public class RESTAPIHelper {
         public static final String INVALID_OFFICE_ID = "invalid office id";
         public static final String INVALID_MFI_DATE = "mfiJoiningDate is mandatory";
         public static final String INVALID_GLIM_AMOUNT = "individual amont must be equal glim amount";
+        public static final String INVALID_CUSTOMER_STATUS = "invalid customer status";
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
