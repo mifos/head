@@ -951,6 +951,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 	public Money getAmountToBePaidToGetExpectedProportion(BigDecimal expected) {
 	    Money amount = getTotalAmountOfInstallment().multiply(expected);
 
+
 	    amount = amount.subtract(getTotalPaidAmount());
 	    
 	    return amount;
