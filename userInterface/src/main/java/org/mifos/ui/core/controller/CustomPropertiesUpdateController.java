@@ -71,6 +71,8 @@ public class CustomPropertiesUpdateController extends AbstractController {
 
             handleBackDatedTransactionsAllowed(request, model);
 
+            handleOverdueInterestPaidFirst(request, model);
+            
             model.put("request", request);
             Map<String, Object> status = new HashMap<String, Object>();
             status.put("errorMessages", errorMessages);
@@ -272,6 +274,15 @@ public class CustomPropertiesUpdateController extends AbstractController {
 
     public void setTestingService(TestingService testingService) {
         this.testingService = testingService;
+    }
+    
+    private void handleOverdueInterestPaidFirst(HttpServletRequest request, Map<String, Object> model) {
+        String overdueInterestPaidFirst = request.getParameter("OverdueInterestPaidFirst");
+        if (StringUtils.isNotBlank(overdueInterestPaidFirst)) {
+            boolean allowed=Boolean.valueOf(overdueInterestPaidFirst);
+            testingService.setOverdueInterestPaidFirst(allowed);
+            model.put("accountingRulesResult", "OverdueInterestPaidFirst: " + overdueInterestPaidFirst);
+        }
     }
 
 

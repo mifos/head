@@ -293,4 +293,9 @@ public class StandardTestingService implements TestingService {
     public void setClientNameSequence(String[] nameSequence) {
         ClientRules.setNameSequence(nameSequence);
     }
+    
+    @Override 
+    public void setOverdueInterestPaidFirst(boolean flag) {
+        MifosConfigurationManager.getInstance().setProperty("OverdueInterestPaidFirst", flag);
+    }
 }
