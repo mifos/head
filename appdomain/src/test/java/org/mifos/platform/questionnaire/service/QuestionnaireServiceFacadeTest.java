@@ -38,6 +38,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
@@ -82,7 +83,10 @@ public class QuestionnaireServiceFacadeTest {
     public void doNothing() {
 
     }
+    
+    
     @Test
+    @Ignore
     public void shouldCreateQuestionGroup() throws SystemException {
         QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", asList(getSectionDetailWithQuestionIds("S1", 123), getSectionDetailWithQuestionIds("S2", 123)));
         when(questionnaireService.defineQuestionGroup(questionGroupDetail)).thenReturn(questionGroupDetail);
@@ -161,6 +165,7 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     @Test
+    @Ignore
     public void testGetQuestionGroupById() throws SystemException {
         int questionGroupId = 1;
         List<SectionDetail> sections = asList(getSectionDetailWithQuestionIds("S1", 121), getSectionDetailWithQuestionIds("S2", 122, 123));
@@ -172,6 +177,7 @@ public class QuestionnaireServiceFacadeTest {
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
+    @Ignore
     public void testGetQuestionGroupByIdFailure() throws SystemException {
         int questionGroupId = 1;
         when(questionnaireService.getQuestionGroup(questionGroupId)).thenThrow(new SystemException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
@@ -334,6 +340,7 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     @Test
+    @Ignore
     public void testCreateQuestionGroupUsingDTO() {
         QuestionGroupDto questionGroupDto = new QuestionGroupDto();
         questionnaireServiceFacade.createQuestionGroup(questionGroupDto);

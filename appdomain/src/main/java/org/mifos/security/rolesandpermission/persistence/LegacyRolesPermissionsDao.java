@@ -358,6 +358,18 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
         StaticHibernateUtil.commitTransaction();
         return lookUpId;
     }
+    
+    public int createActivityForQuestionGroup(short parentActivity, String lookUpDescription)
+            throws HibernateException, PersistenceException, ServiceException, ActivityGeneratorException {
+        StaticHibernateUtil.startTransaction();
+        int lookUpId = createLookUpValue(DynamicLookUpValueCreationTypes.QuestionGroup, lookUpDescription);
+        insertLookUpValueLocale(lookUpId, lookUpDescription);
+        ActivityEntity activityEntity = createActivityEntity(parentActivity, lookUpId);
+        RoleBO role = getPersistentObject(RoleBO.class, RolesAndPermissionConstants.ADMIN_ROLE);
+        role.getActivities().add(activityEntity);
+        StaticHibernateUtil.commitTransaction();
+        return lookUpId;
+    }
 
     private ActivityEntity createActivityEntity(short parentActivity, int lookUpId) throws ServiceException,
             ActivityGeneratorException, PersistenceException {
@@ -410,6 +422,19 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
         int newActivityId = activityId - 1;
 
         return newActivityId;
+    }
+    
+    public void updateLookUpValue(Short activityId, String inputCategoryName) {
+        ActivityEntity activityEntity = null;
+        try {
+            activityEntity = getPersistentObject(ActivityEntity.class, activityId);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+        if (activityEntity != null) {
+            LookUpValueEntity lookUpValueEntity = activityEntity.getDescriptionLookupValues();
+            ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValue(lookUpValueEntity, inputCategoryName);
+        }
     }
 
     public ActivityEntity getActivityEntity(int lookUpId) throws PersistenceException {
