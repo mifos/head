@@ -3778,6 +3778,10 @@ public class LoanBO extends AccountBO implements Loan {
                     memberAccount.setUserContext(this.userContext);
                     memberAccount.adjustLastPayment(adjustmentComment, loggedInUser);
                 }
+                //MIFOS-5742: equalizing payment made to solve the problem with adjusting very small payment on GLIM account
+                PaymentData equalizingPaymentData = new PaymentData(getLastPmntToBeAdjusted().getAmount(), loggedInUser, getLastPmntToBeAdjusted().getPaymentType().getId(), getLastPmntToBeAdjusted().getPaymentDate());
+                BigDecimal installmentsPaid = findNumberOfPaidInstallments();
+                applyPaymentToMemberAccounts(equalizingPaymentData, installmentsPaid);
             }
         } else if (this.parentAccount == null){ //MIFOS-5694: if member account has no payments it could mean that payment was made before 2.4.0, remove this condition when MIFOS-5692 is done 
             throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
