@@ -938,19 +938,16 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 	    
 	    if(proportion.compareTo(BigDecimal.ZERO)<0) {
 	        proportion = BigDecimal.ZERO;
-	    }
-	    
-	    if(proportion.compareTo(BigDecimal.ONE)>0) {
+
+	    } else if(proportion.compareTo(BigDecimal.ONE)>0) {
 	        proportion = BigDecimal.ONE;
 	    }
 	    
-	    return proportion;
-
+        return proportion;
 	}
 	
 	public Money getAmountToBePaidToGetExpectedProportion(BigDecimal expected) {
 	    Money amount = getTotalAmountOfInstallment().multiply(expected);
-
 
 	    amount = amount.subtract(getTotalPaidAmount());
 	    
