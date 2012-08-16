@@ -3699,33 +3699,37 @@ public class LoanBO extends AccountBO implements Loan {
     private void applyPaymentToMemberAccounts(PaymentData paymentData, BigDecimal installmentsPaid) throws AccountException {
         
         for (LoanBO memberAccount : getMemberAccounts()) {
-            BigDecimal memberPaid = memberAccount.findNumberOfPaidInstallments();
-            List<LoanScheduleEntity> memberInstallments = memberAccount.getLoanInstallments();
-            Money memberPaymentAmount = new Money(getCurrency());
-            int currentPayment;
-            
-            //Full payments for installments that are expected to be paid fully
-            for(currentPayment = memberPaid.intValue(); currentPayment < installmentsPaid.intValue() ; currentPayment++) {
-                memberPaymentAmount = memberPaymentAmount.add(memberInstallments.get(currentPayment).getAmountToBePaidToGetExpectedProportion(BigDecimal.ONE));
-            }
-            
-            BigDecimal afterComa = installmentsPaid.subtract(new BigDecimal(installmentsPaid.intValue()));
-            //If there is fraction in number of installments to be paid
-            if(afterComa.compareTo(BigDecimal.ZERO)==1) {
-                memberPaymentAmount = memberPaymentAmount.add(memberInstallments.get(currentPayment).getAmountToBePaidToGetExpectedProportion(afterComa));
-            }
-            
-            //It prevents member account to be closed before parent due to small last payments in parent account. Member accounts will remain in minimalPayment unpaid until last payment for parent account will be submitted
-            if(getState().compareTo(AccountState.LOAN_CLOSED_OBLIGATIONS_MET)!=0 && memberPaymentAmount.subtract((memberAccount.getTotalRepayableAmount())).isTinyAmount()) {
-                Double minimalPayment = Math.pow(10.0, (double)-AccountingRules.getDigitsAfterDecimal());
-                memberPaymentAmount = memberPaymentAmount.subtract(new Money(getCurrency(), minimalPayment));
-            }
-                   
-            PaymentData memberPayment = new PaymentData(memberPaymentAmount, paymentData.getPersonnel(),
-                    paymentData.getPaymentTypeId(), paymentData.getTransactionDate());
-            
-            if(!memberPaymentAmount.isTinyAmount() && !memberPaymentAmount.isLessThanZero()) {
-                memberAccount.applyPayment(memberPayment);
+            if(validateNoOfInstallments(memberAccount)) {
+                BigDecimal memberPaid = memberAccount.findNumberOfPaidInstallments();
+                List<LoanScheduleEntity> memberInstallments = memberAccount.getLoanInstallments();
+                Money memberPaymentAmount = new Money(getCurrency());
+                int currentPayment;
+                
+                //Full payments for installments that are expected to be paid fully
+                for(currentPayment = memberPaid.intValue(); currentPayment < installmentsPaid.intValue() ; currentPayment++) {
+                    memberPaymentAmount = memberPaymentAmount.add(memberInstallments.get(currentPayment).getAmountToBePaidToGetExpectedProportion(BigDecimal.ONE));
+                }
+                
+                BigDecimal afterComa = installmentsPaid.subtract(new BigDecimal(installmentsPaid.intValue()));
+                //If there is fraction in number of installments to be paid
+                if(afterComa.compareTo(BigDecimal.ZERO)==1) {
+                    memberPaymentAmount = memberPaymentAmount.add(memberInstallments.get(currentPayment).getAmountToBePaidToGetExpectedProportion(afterComa));
+                }
+                
+                //It prevents member account to be closed before parent due to small last payments in parent account. Member accounts will remain in minimalPayment unpaid until last payment for parent account will be submitted
+                if(getState().compareTo(AccountState.LOAN_CLOSED_OBLIGATIONS_MET)!=0 && memberPaymentAmount.subtract((memberAccount.getTotalRepayableAmount())).isTinyAmount()) {
+                    Double minimalPayment = Math.pow(10.0, (double)-AccountingRules.getDigitsAfterDecimal());
+                    memberPaymentAmount = memberPaymentAmount.subtract(new Money(getCurrency(), minimalPayment));
+                }
+                
+                memberPaymentAmount = MoneyUtils.currencyRound(memberPaymentAmount);
+                       
+                PaymentData memberPayment = new PaymentData(memberPaymentAmount, paymentData.getPersonnel(),
+                        paymentData.getPaymentTypeId(), paymentData.getTransactionDate());
+                
+                if(!memberPaymentAmount.isTinyAmount() && !memberPaymentAmount.isLessThanZero()) {
+                    memberAccount.applyPayment(memberPayment);
+                }
             }
         }
     }
@@ -3809,5 +3813,9 @@ public class LoanBO extends AccountBO implements Loan {
     
     public boolean isIndividualLoan(){
         return this.parentAccount != null && this.accountType.getAccountTypeId().equals(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT.getValue());
+    }
+    
+    public boolean validateNoOfInstallments(LoanBO memberAccount) {
+        return memberAccount.getNoOfInstallments()==getNoOfInstallments();
     }
 }
