@@ -20,14 +20,14 @@
 
 package org.mifos.platform.questionnaire.service;
 
+import java.util.List;
+
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.springframework.security.access.prepost.PreAuthorize;
-
-import java.util.List;
 
 public interface QuestionnaireServiceFacade {
     void createQuestions(List<QuestionDetail> questionDetails) throws SystemException;
@@ -83,4 +83,5 @@ public interface QuestionnaireServiceFacade {
     Integer createQuestion(QuestionDto questionDto);
 
     void applyToAllLoanProducts(Integer entityId);
+    
 }

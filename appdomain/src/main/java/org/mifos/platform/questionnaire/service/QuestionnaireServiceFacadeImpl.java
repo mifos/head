@@ -23,15 +23,21 @@ package org.mifos.platform.questionnaire.service;
 import java.util.Iterator;
 import java.util.List;
 
+import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
+import org.mifos.config.Localization;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.AuditLogService;
 import org.mifos.platform.questionnaire.QGFlowsService;
+import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
+import org.mifos.security.util.SecurityConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 
 public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacade {
 
@@ -43,6 +49,9 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Autowired
     private QGFlowsService qgFlowsService;
+    
+    @Autowired
+    private RolesPermissionServiceFacade rolesPermissionService;
 
     public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService) {
         this.questionnaireService = questionnaireService;
@@ -74,11 +83,13 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public Integer createQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
+        questionGroupDetail.setActivityId(addActivityPermission(questionGroupDetail.getTitle(), questionGroupDetail.getId()));
         return questionnaireService.defineQuestionGroup(questionGroupDetail).getId();
     }
 
     @Override
     public Integer createActiveQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
+        questionGroupDetail.setActivityId(addActivityPermission(questionGroupDetail.getTitle(), questionGroupDetail.getId()));
         return questionnaireService.defineQuestionGroup(questionGroupDetail).getId();
     }
 
@@ -104,6 +115,9 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public QuestionGroupDetail getQuestionGroupDetail(Integer questionGroupId) throws SystemException {
+        if(!checkAccessToQuestionGroup(questionGroupId)) {
+            throw new AccessDeniedException("Access denied");
+        }
         return questionnaireService.getQuestionGroup(questionGroupId);
     }
 
@@ -198,7 +212,31 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public Integer createQuestionGroup(QuestionGroupDto questionGroupDto) throws SystemException {
+        questionGroupDto.setActivityId(addActivityPermission(questionGroupDto.getTitle(), 
+                getQuestionGroupIdforDto(questionGroupDto.getEventSourceDtos(), questionGroupDto.getTitle())));
         return questionnaireService.defineQuestionGroup(questionGroupDto);
+    }
+    
+    private Integer getQuestionGroupIdforDto(List<EventSourceDto> eventSourceDto, String title) {
+        Integer id = null;
+        boolean flag = true;
+        List<QuestionGroupDetail> groupDetails;
+        for (EventSourceDto event : eventSourceDto) {
+            if(flag) {
+            groupDetails = this.questionnaireService.getQuestionGroups(event);
+                for(QuestionGroupDetail details : groupDetails) {
+                    if (details.getTitle().equalsIgnoreCase(title)) {
+                        id = details.getId();
+                        flag = false;
+                        break;
+                    }
+                }
+            } 
+            else {
+            break;  
+            }
+        }
+        return id;
     }
 
     @Override
@@ -236,4 +274,45 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     private EventSourceDto getEventSource(String event, String source) {
         return new EventSourceDto(event, source, String.format("%s.%s", event, source));
     }
+
+    private boolean checkAccessToQuestionGroup(Integer questionGroupId) {
+        QuestionGroup questionGroup = this.questionnaireService.getQuestionGroupById(questionGroupId);
+        boolean result = false;
+        if (questionGroup != null) {
+            Short activityID = questionGroup.getActivityId();
+            try {
+                result = this.rolesPermissionService.hasUserAccessForActivity(activityID);
+            } catch (Exception ex) {
+                result = false;
+            }
+        }
+        return result;
+    }
+    
+    @SuppressWarnings({"PMD.AvoidUsingShortType", "PMD.AvoidUsingShortType"})
+    private Short addActivityPermission(String title, Integer id) {
+        short parentActivity = SecurityConstants.QUESTION_MANAGMENT;
+        Short oldActivityId;
+        int newActivityId;
+        try {
+            oldActivityId = this.questionnaireService.getQuestionGroupById(id).getActivityId();
+        } catch (Exception e) {
+            oldActivityId = 0;
+        }
+        String activityNameHead = "Can edit ";
+        try {
+            if(null != oldActivityId && !oldActivityId.equals((short)0)) {
+                newActivityId = oldActivityId;
+                this.rolesPermissionService.updateLookUpValue(newActivityId, activityNameHead, title);
+            }
+            else {
+                newActivityId = this.rolesPermissionService.calculateDynamicActivityId();
+                this.rolesPermissionService.createActivityForQuestionGroup(parentActivity, activityNameHead + title);
+            }
+        } catch (Exception e) {
+           throw new MifosRuntimeException(e);
+        }
+        return new Short((short)newActivityId);
+    }
+    
 }
