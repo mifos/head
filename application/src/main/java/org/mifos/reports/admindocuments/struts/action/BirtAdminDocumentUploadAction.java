@@ -275,6 +275,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
             HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.getSession().setAttribute(AdminDocumentsContants.LISTOFADMINISTRATIVEDOCUMENTS,
                 legacyAdminDocumentDao.getAllAdminDocuments());
+        ((BirtAdminDocumentUploadActionForm) form).clear();
         return mapping.findForward(ActionForwards.get_success.toString());
     }
     
@@ -287,23 +288,22 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        AdminDocumentBO businessKey = null;
         BirtAdminDocumentUploadActionForm birtReportsUploadActionForm = (BirtAdminDocumentUploadActionForm) form;
 
         List masterList = null;
         List selectedlist = null;
 
+        AdminDocumentBO adminDocumentBO = this.legacyAdminDocumentDao.getAdminDocumentById(Short
+                .valueOf(request.getParameter("admindocId")));
         List<AdminDocAccStateMixBO> admindoclist = legacyAdminDocAccStateMixDao.getMixByAdminDocuments(Short
                 .valueOf(request.getParameter("admindocId")));
         if (admindoclist != null && !admindoclist.isEmpty()){
-            SessionUtils.setAttribute("admindocId", admindoclist.get(0).getAdminDocumentID().getAdmindocId(), request);
+            SessionUtils.setAttribute("admindocId", adminDocumentBO.getAdmindocId(), request);
 
-            birtReportsUploadActionForm.setAdminiDocumentTitle(admindoclist.get(0).getAdminDocumentID()
-                    .getAdminDocumentName());
+            birtReportsUploadActionForm.setAdminiDocumentTitle(adminDocumentBO.getAdminDocumentName());
             birtReportsUploadActionForm.setAccountTypeId(admindoclist.get(0).getAccountStateID().getPrdType()
                     .getProductTypeID().toString());
-            birtReportsUploadActionForm.setIsActive(admindoclist.get(0).getAdminDocumentID().getIsActive().toString());
-            businessKey = admindoclist.get(0).getAdminDocumentID();
+            birtReportsUploadActionForm.setIsActive(adminDocumentBO.getIsActive().toString());
 
             selectedlist = new ArrayList<AccountStateEntity>();
             for (AdminDocAccStateMixBO admindoc : admindoclist) {
@@ -315,33 +315,32 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
                         .getAccountType(accountTypeId));
                 masterList.removeAll(selectedlist);
             }
-        } else {
+        } else if (adminDocumentBO != null){
             List<AdminDocAccActionMixBO> adminDocAccActionMixList = legacyAdminDocAccStateMixDao.getAccActionMixByAdminDocument(Short
                     .valueOf(request.getParameter("admindocId")));
-            if ((adminDocAccActionMixList != null) && (!adminDocAccActionMixList.isEmpty())) {
-                SessionUtils.setAttribute("admindocId", adminDocAccActionMixList.get(0).getAdminDocument().getAdmindocId(), request);
 
-                birtReportsUploadActionForm.setAdminiDocumentTitle(adminDocAccActionMixList.get(0).getAdminDocument()
-                        .getAdminDocumentName());
-                birtReportsUploadActionForm.setAccountTypeId("3");
-                birtReportsUploadActionForm.setIsActive(adminDocAccActionMixList.get(0).getAdminDocument().getIsActive().toString());
-                businessKey = adminDocAccActionMixList.get(0).getAdminDocument();
-            }
+            SessionUtils.setAttribute("admindocId", adminDocumentBO.getAdmindocId(), request);
 
-            selectedlist = new ArrayList<AccountActionEntity>();
-            for (AdminDocAccActionMixBO admindoc : adminDocAccActionMixList) {
-                selectedlist.add(admindoc.getAccountAction());
-            }
-
+            birtReportsUploadActionForm.setAdminiDocumentTitle(adminDocumentBO.getAdminDocumentName());
+            birtReportsUploadActionForm.setAccountTypeId("3");
+            birtReportsUploadActionForm.setIsActive(adminDocumentBO.getIsActive().toString());
+            
             masterList = getAvailableLoanTransactions((Short)SessionUtils.getAttribute("CURRENT_LOCALE_ID", request));
-            masterList.removeAll(selectedlist);
+            if ((adminDocAccActionMixList != null) && (!adminDocAccActionMixList.isEmpty())) {
+                selectedlist = new ArrayList<AccountActionEntity>();
+                for (AdminDocAccActionMixBO admindoc : adminDocAccActionMixList) {
+                    selectedlist.add(admindoc.getAccountAction());
+                }
+
+                masterList.removeAll(selectedlist);
+            }
         }
 
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.AVAILABLEACCOUNTSTATUS, masterList, request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDACCOUNTSTATUS, selectedlist, request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(), request);
 
-        request.setAttribute(Constants.BUSINESS_KEY, businessKey);
+        request.setAttribute(Constants.BUSINESS_KEY, adminDocumentBO);
         birtReportsUploadActionForm.setStatusList(null);
 
         return mapping.findForward(ActionForwards.edit_success.toString());
