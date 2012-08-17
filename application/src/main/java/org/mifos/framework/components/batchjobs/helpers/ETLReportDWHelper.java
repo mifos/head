@@ -1,9 +1,11 @@
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.io.BufferedReader;
+
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+
 
 import org.apache.log4j.Logger;
 import org.mifos.application.servicefacade.ApplicationContextHolder;
@@ -25,7 +27,9 @@ public class ETLReportDWHelper extends TaskHelper {
         String jarPath = this.getClass().getResource("/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar").toString().replace("file:", "");
         try {
             String cmd = System.getProperty("java.home") + "/bin/java -jar " + jarPath + " " + path + " false";
+
             Process p = Runtime.getRuntime().exec(cmd);    
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -34,6 +38,7 @@ public class ETLReportDWHelper extends TaskHelper {
 
     private void createPropertiesFileForPentahoDWReports() {
         try {
+
             File file = new File(System.getProperty("user.dir")+"/Simple-JNDI/jdbc.properties");
             new ApplicationContextHolder();
             ApplicationContext ach = ApplicationContextHolder.getApplicationContext();
@@ -51,6 +56,7 @@ public class ETLReportDWHelper extends TaskHelper {
             fw.println("DestinationDB/user="+dsDW.getUsername());
             fw.println("DestinationDB/password="+dsDW.getUsername());
             fw.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
