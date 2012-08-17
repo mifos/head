@@ -53,8 +53,9 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     @Autowired
     private RolesPermissionServiceFacade rolesPermissionService;
 
-    public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService) {
+    public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService,RolesPermissionServiceFacade rolesPermissionService) {
         this.questionnaireService = questionnaireService;
+        this.rolesPermissionService = rolesPermissionService;
     }
 
     public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService, AuditLogService auditLogService,
@@ -66,7 +67,7 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @SuppressWarnings({"UnusedDeclaration"})
     public QuestionnaireServiceFacadeImpl() {
-        this(null);
+        this(null,null);
     }
 
     @Override
@@ -212,31 +213,8 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public Integer createQuestionGroup(QuestionGroupDto questionGroupDto) throws SystemException {
-        questionGroupDto.setActivityId(addActivityPermission(questionGroupDto.getTitle(), 
-                getQuestionGroupIdforDto(questionGroupDto.getEventSourceDtos(), questionGroupDto.getTitle())));
+        questionGroupDto.setActivityId(addActivityPermission(questionGroupDto.getTitle(), null));
         return questionnaireService.defineQuestionGroup(questionGroupDto);
-    }
-    
-    private Integer getQuestionGroupIdforDto(List<EventSourceDto> eventSourceDto, String title) {
-        Integer id = null;
-        boolean flag = true;
-        List<QuestionGroupDetail> groupDetails;
-        for (EventSourceDto event : eventSourceDto) {
-            if(flag) {
-            groupDetails = this.questionnaireService.getQuestionGroups(event);
-                for(QuestionGroupDetail details : groupDetails) {
-                    if (details.getTitle().equalsIgnoreCase(title)) {
-                        id = details.getId();
-                        flag = false;
-                        break;
-                    }
-                }
-            } 
-            else {
-            break;  
-            }
-        }
-        return id;
     }
 
     @Override
