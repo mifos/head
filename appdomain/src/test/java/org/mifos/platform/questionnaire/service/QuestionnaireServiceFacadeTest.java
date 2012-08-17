@@ -38,13 +38,16 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.AuditLogService;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.builders.QuestionDtoBuilder;
+import org.mifos.platform.questionnaire.domain.QuestionGroup;
+import org.mifos.platform.questionnaire.domain.QuestionGroupState;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.matchers.EventSourceMatcher;
@@ -72,11 +75,14 @@ public class QuestionnaireServiceFacadeTest {
     @Mock
     private AuditLogService auditLogService;
     
+    @Mock
+    private RolesPermissionServiceFacade rolesPermissionServiceFacade;
+    
     private static final String TITLE = "Title";
 
     @Before
     public void setUp() throws Exception {
-        questionnaireServiceFacade = new QuestionnaireServiceFacadeImpl(questionnaireService);
+        questionnaireServiceFacade = new QuestionnaireServiceFacadeImpl(questionnaireService, rolesPermissionServiceFacade);
     }
 
     @Test
@@ -84,17 +90,24 @@ public class QuestionnaireServiceFacadeTest {
 
     }
     
+    @Mock
+    private QuestionGroup questionGroup;
     
     @Test
-    @Ignore
-    public void shouldCreateQuestionGroup() throws SystemException {
+    public void shouldCreateQuestionGroup() throws Exception {
         QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", asList(getSectionDetailWithQuestionIds("S1", 123), getSectionDetailWithQuestionIds("S2", 123)));
+        questionGroupDetail.setActivityId((short) 0);
+        
+        when(questionnaireService.getQuestionGroupById(1)).thenReturn(questionGroup);
+        when(questionGroup.getActivityId()).thenReturn((short)-1);
+        when(rolesPermissionServiceFacade.createActivityForQuestionGroup((short)240, "" + "")).thenReturn(-1);
         when(questionnaireService.defineQuestionGroup(questionGroupDetail)).thenReturn(questionGroupDetail);
         questionnaireServiceFacade.createQuestionGroup(questionGroupDetail);
+       
         Mockito.verify(questionnaireService, times(1)).defineQuestionGroup(argThat(
                 new QuestionGroupDetailMatcher(questionGroupDetail)));
     }
-
+    
     @Test
     public void testShouldCreateQuestions() throws SystemException {
         String title = TITLE + System.currentTimeMillis();
@@ -165,11 +178,13 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     @Test
-    @Ignore
-    public void testGetQuestionGroupById() throws SystemException {
+    public void testGetQuestionGroupById() throws Exception {
         int questionGroupId = 1;
         List<SectionDetail> sections = asList(getSectionDetailWithQuestionIds("S1", 121), getSectionDetailWithQuestionIds("S2", 122, 123));
         QuestionGroupDetail expectedQuestionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", sections);
+        when(questionnaireService.getQuestionGroupById(questionGroupId)).thenReturn(questionGroup);
+        when(questionGroup.getActivityId()).thenReturn((short)-1);
+        when(rolesPermissionServiceFacade.hasUserAccessForActivity(questionGroup.getActivityId())).thenReturn(true);
         when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(expectedQuestionGroupDetail);
         QuestionGroupDetail questionGroupDetail = questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId);
         assertThat(questionGroupDetail, new QuestionGroupDetailMatcher(expectedQuestionGroupDetail));
@@ -177,10 +192,12 @@ public class QuestionnaireServiceFacadeTest {
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
-    @Ignore
-    public void testGetQuestionGroupByIdFailure() throws SystemException {
+    public void testGetQuestionGroupByIdFailure() throws Exception {
         int questionGroupId = 1;
         when(questionnaireService.getQuestionGroup(questionGroupId)).thenThrow(new SystemException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
+        when(questionnaireService.getQuestionGroupById(questionGroupId)).thenReturn(questionGroup);
+        when(questionGroup.getActivityId()).thenReturn((short)-1);
+        when(rolesPermissionServiceFacade.hasUserAccessForActivity(questionGroup.getActivityId())).thenReturn(true);
         try {
             questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId);
         } catch (SystemException e) {
@@ -340,7 +357,6 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     @Test
-    @Ignore
     public void testCreateQuestionGroupUsingDTO() {
         QuestionGroupDto questionGroupDto = new QuestionGroupDto();
         questionnaireServiceFacade.createQuestionGroup(questionGroupDto);
