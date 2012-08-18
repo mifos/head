@@ -175,6 +175,11 @@ public class CustomPropertiesHelper {
     public void setInitialRoundOffMultiple(String initialRoundOffMultiple) {
         selenium.open(UPDATE_PAGE + "?AccountingRules.InitialRoundOffMultiple=" + initialRoundOffMultiple);
     }
+    
+    public void setOverdueInterestPaidFirst(String overdueInterestPaidFirst) {
+        selenium.open(UPDATE_PAGE + "?OverdueInterestPaidFirst=" + overdueInterestPaidFirst);
+    }
+    
 
     /**
      * Set order of products a transaction import

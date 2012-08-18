@@ -80,5 +80,7 @@ public interface QuestionnaireService {
     EventSourceDto getEventSource(int eventSourceId);
 
     Integer getEventSourceId(String event, String source);
+    
+    QuestionGroup getQuestionGroupById(Integer questionGroupId);
 
 }

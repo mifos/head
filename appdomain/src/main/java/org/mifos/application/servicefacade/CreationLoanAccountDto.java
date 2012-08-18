@@ -26,7 +26,6 @@ public class CreationLoanAccountDto implements RecurringSchedule {
     private Integer collateralTypeId;
     private String collateralNotes;
     private String externalId;
-    private Boolean lsim;
     private RecurringSchedule recurringSchedule;
     private List<CreationFeeDto> accountFees;
     private List<CreationAccountPenaltyDto> accountPenalties;
@@ -173,14 +172,6 @@ public class CreationLoanAccountDto implements RecurringSchedule {
 
     public void setExternalId(String externalId) {
         this.externalId = externalId;
-    }
-
-    public Boolean getLsim() {
-        return lsim;
-    }
-
-    public void setLsim(Boolean lsim) {
-        this.lsim = lsim;
     }
 
     public RecurringSchedule getRecurringSchedule() {

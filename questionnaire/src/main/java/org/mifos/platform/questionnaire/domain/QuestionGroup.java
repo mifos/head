@@ -40,6 +40,8 @@ public class QuestionGroup implements Serializable {
 
     private QuestionGroupState state;
 
+    private Short activityId;
+    
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<Section> sections;
 
@@ -128,6 +130,14 @@ public class QuestionGroup implements Serializable {
             }
         }
         return sectionQuestions;
+    }
+
+    public Short getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(Short activityId) {
+        this.activityId = activityId;
     }
 
 }

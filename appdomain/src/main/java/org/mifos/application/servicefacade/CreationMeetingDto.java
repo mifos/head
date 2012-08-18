@@ -1,5 +1,7 @@
 package org.mifos.application.servicefacade;
 
+import java.util.Date;
+
 import org.joda.time.LocalDate;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -56,12 +58,11 @@ public class CreationMeetingDto {
     public void setRecurAfter(Short recurAfter) {
         this.recurAfter = recurAfter;
     }
-    
+
     public WeekDay getWeekDay() {
         if (null != weekDay) {
             return WeekDay.getJodaWeekDay(weekDay);
-        }
-        else {
+        } else {
             return WeekDay.MONDAY;
         }
     }
@@ -69,8 +70,7 @@ public class CreationMeetingDto {
     public RankOfDay getRankOfDay() {
         if (null != rankOfDay) {
             return RankOfDay.getRankOfDay(rankOfDay);
-        }
-        else {
+        } else {
             return RankOfDay.FIRST;
         }
     }
@@ -78,11 +78,11 @@ public class CreationMeetingDto {
     public MeetingBO toBO() throws MeetingException {
         MeetingBO meeting = null;
         if (recurrenceType.equals(RecurrenceType.WEEKLY.getValue())) {
-            meeting = new MeetingBO(getDayNumber(), getRecurAfter(), getMeetingStartDate().toDateMidnight().toDate(),
+            meeting = new MeetingBO(getWeekDay(), getRecurAfter(), getMeetingStartDate().toDateMidnight().toDate(),
                     MeetingType.CUSTOMER_MEETING, getMeetingPlace());
         } else {
-            meeting = new MeetingBO(getWeekDay(), getRankOfDay(), getRecurAfter(),
-                    getMeetingStartDate().toDateMidnight().toDate(), MeetingType.CUSTOMER_MEETING, getMeetingPlace());
+            meeting = new MeetingBO(getWeekDay(), getRankOfDay(), getRecurAfter(), getMeetingStartDate()
+                    .toDateMidnight().toDate(), MeetingType.CUSTOMER_MEETING, getMeetingPlace());
         }
         return meeting;
     }

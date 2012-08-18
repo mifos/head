@@ -1042,6 +1042,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         if(loanAccountInfo.getPredefinedAccountNumber()!=null){
             loan.setGlobalAccountNum(loanAccountInfo.getPredefinedAccountNumber());
         }
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, loan.getOfficeId(), loan.getCustomer()
+                    .getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
+        }
+        
         try {
             transactionHelper.startTransaction();
             this.loanDao.save(loan);

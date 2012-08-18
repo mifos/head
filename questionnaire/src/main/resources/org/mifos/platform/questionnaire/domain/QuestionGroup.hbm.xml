@@ -27,6 +27,7 @@
             <many-to-many column="event_source_id"
                 class="org.mifos.platform.questionnaire.domain.EventSourceEntity"/>
         </set>
+        <property name="activityId" column="activity_id"/>
     </class>
     <query name="QuestionGroup.retrieveQuestionGroupsByEventSource">
               <![CDATA[select questionGroup from QuestionGroup as questionGroup join questionGroup.eventSources eventSource

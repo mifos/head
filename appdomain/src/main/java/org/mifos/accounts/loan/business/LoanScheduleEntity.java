@@ -22,6 +22,7 @@ package org.mifos.accounts.loan.business;
 
 import static org.mifos.framework.util.helpers.NumberUtils.min;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -48,6 +49,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyUtils;
 import org.mifos.platform.util.CollectionUtils;
 
 public class LoanScheduleEntity extends AccountActionDateEntity {
@@ -640,6 +642,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return balanceAmount;
     }
 
+    public Money payInterestComponent(Money paymentAmount, Date paymentDate) {
+        initPaymentAllocation(paymentAmount.getCurrency());
+        Money balanceAmount = paymentAmount;
+        balanceAmount = payInterest(balanceAmount);
+        recordPayment(paymentDate);
+        return balanceAmount;
+    }
+
     public void payComponents(Installment installment, MifosCurrency currency, Date paymentDate) {
         initPaymentAllocation(currency);
         allocatePrincipal(new Money(currency, installment.getCurrentPrincipalPaid()));
@@ -784,6 +794,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         }
         return balance;
     }
+
+    public Money applyPaymentToInterest(AccountPaymentEntity accountPaymentEntity, Money balance, PersonnelBO personnel, Date transactionDate) {
+        if (isNotPaid() && balance.isGreaterThanZero()) {
+            balance = payInterestComponent(balance, transactionDate);
+            updateSummaryAndPerformanceHistory(accountPaymentEntity, personnel, transactionDate);
+        }
+        return balance;
+    }
     
     public Money reducePrincipal(AccountPaymentEntity accountPaymentEntity,
 			Money balance, PersonnelBO personnel, Date transactionDate) {
@@ -891,4 +909,45 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         }
         return penaltyAmount;
     }
+	
+	public Money getTotalAmountOfInstallment(){
+	    Money money = new Money(getCurrency());
+	    money = money.add(getTotalFees())
+	            .add(getTotalPenalty())
+	            .add(getPrincipal())
+	            .add(getInterest())
+	            .add(getMiscFee());
+	    
+	    return money;
+	}
+	
+	public Money getTotalPaidAmount(){
+	    Money money = new Money(getCurrency());
+	    money = money.add(getInterestPaid())
+	            .add(getTotalFeesPaid())
+	            .add(getTotalPenaltyPaid())
+	            .add(getPrincipalPaid())
+	            .add(getMiscFeePaid());
+	    
+	    return money;
+	}
+	
+	public BigDecimal getPaidProportion() {
+	    BigDecimal proportion = getTotalPaidAmount().divide(getTotalAmountOfInstallment());
+	    
+	    if(proportion.compareTo(BigDecimal.ZERO)<0) {
+	        proportion = BigDecimal.ZERO;
+	    } else if(proportion.compareTo(BigDecimal.ONE)>0) {
+	        proportion = BigDecimal.ONE;
+	    }
+	    
+        return proportion;
+	}
+	
+	public Money getAmountToBePaidToGetExpectedProportion(BigDecimal expected) {
+	    Money amount = getTotalAmountOfInstallment().multiply(expected);
+	    amount = amount.subtract(getTotalPaidAmount());
+	    
+	    return amount;
+	}
 }

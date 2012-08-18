@@ -492,7 +492,7 @@ public class LoanAccountRESTController {
                     creationDetails.getMinNumOfInstallments(), creationDetails.getMaxNumOfInstallments(),
                     creationDetails.getGraceDuration(), creationDetails.getSourceOfFundId(),
                     creationDetails.getLoanPurposeId(), creationDetails.getCollateralTypeId(),
-                    creationDetails.getCollateralNotes(), creationDetails.getExternalId(), creationDetails.getLsim(),
+                    creationDetails.getCollateralNotes(), creationDetails.getExternalId(), false,
                     creationDetails.getRecurringSchedule(), creationDetails.feeAsAccountFeeDto(creationDetails
                             .getAccountFees()), creationDetails.penaltiesAsAccountPenaltiesDto(creationDetails
                             .getAccountPenalties()));

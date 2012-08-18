@@ -39,6 +39,7 @@ public class QuestionGroupDetail implements Serializable {
     private boolean editable;
     private boolean active;
     private boolean ppi;
+    private Short activityId;
 
     public QuestionGroupDetail() {
         this(0, null, new ArrayList<EventSourceDto>(), new ArrayList<SectionDetail>(), false);
@@ -172,4 +173,13 @@ public class QuestionGroupDetail implements Serializable {
         }
         return result;
     }
+
+    public Short getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(Short activityId) {
+        this.activityId = activityId;
+    }
+    
 }

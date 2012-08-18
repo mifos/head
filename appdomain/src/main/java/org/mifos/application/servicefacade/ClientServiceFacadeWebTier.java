@@ -429,10 +429,16 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
                 if (ClientRules.isFamilyDetailsRequired()) {
                     client.setFamilyAndNameDetailSets(clientCreationDetail.getFamilyNames(), clientCreationDetail.getFamilyDetails());
                 }
-
+                
+                try {
+                    personnelDao.checkAccessPermission(userContext, client.getOfficeId(), client.getLoanOfficerId());
+                } catch (AccountException e) {
+                    throw new MifosRuntimeException("Access denied!", e);
+                }
                 this.customerService.createClient(client, clientMeeting, feesForCustomerAccount, selectedOfferings);
             }
 
+                        
             clientPhotoService.create(client.getCustomerId().longValue(), clientCreationDetail.getPicture());
 
             return new CustomerDetailsDto(client.getCustomerId(), client.getGlobalCustNum());

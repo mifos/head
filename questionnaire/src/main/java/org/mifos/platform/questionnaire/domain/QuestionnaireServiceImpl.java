@@ -20,8 +20,19 @@
 
 package org.mifos.platform.questionnaire.domain;
 
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_EXT;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_PREFIX;
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
+
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.validations.ValidationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.domain.ppi.PPISurveyLocator;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
@@ -31,32 +42,22 @@ import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupInstanceDao;
 import org.mifos.platform.questionnaire.persistence.SectionQuestionDao;
-import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
+import org.mifos.platform.validations.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Arrays;
-import java.security.NoSuchAlgorithmException;
-import java.security.MessageDigest;
-import java.io.UnsupportedEncodingException;
-
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_EXT;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_PREFIX;
-import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
-
+@SuppressWarnings({ "PMD.ExcessiveParameterList", "PMD.ExcessiveParameterList" })
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Autowired
@@ -85,11 +86,11 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Autowired
     private SectionQuestionDao sectionQuestionDao;
-
+    
     @SuppressWarnings({"UnusedDeclaration"})
     private QuestionnaireServiceImpl() {
     }
-
+    
     public QuestionnaireServiceImpl(QuestionnaireValidator questionnaireValidator, QuestionDao questionDao,
                                     QuestionnaireMapper questionnaireMapper, QuestionGroupDao questionGroupDao,
                                     EventSourceDao eventSourceDao, QuestionGroupInstanceDao questionGroupInstanceDao,
@@ -105,7 +106,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         this.questionGroupDefinitionParser = questionGroupDefinitionParser;
         this.sectionQuestionDao = sectionQuestionDao;
     }
-
+    
     @Override
     public QuestionDetail defineQuestion(QuestionDetail questionDetail) throws SystemException {
         questionnaireValidator.validateForDefineQuestion(questionDetail);
@@ -258,7 +259,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDto);
         return persistQuestionGroup(questionGroup);
     }
-
+    
     /*
      * When creating questions, if a question has no nickname (nickname == null),
      * then try to find an existing question with the same text and use it
@@ -491,5 +492,10 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
             } while(two_halfs++ < 1);
         }
         return buf.toString();
+    }
+
+    @Override
+    public QuestionGroup getQuestionGroupById(Integer questionGroupId) {
+        return questionGroupDao.getDetails(questionGroupId);
     }
 }

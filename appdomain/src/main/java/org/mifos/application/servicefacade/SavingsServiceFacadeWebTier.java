@@ -752,7 +752,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
         LocalDate closureDate = closeAccountDto.getDateOfWithdrawal();
 
-        // Assumption that all previous interest postings occured correctly
+        // Assumption that all previous interest postings occurred correctly
         InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory
                 .createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
         LocalDate nextPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
@@ -1042,7 +1042,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             List<QuestionGroupDetail> questionGroups) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+        UserContext userContext = toUserContext(user);
+        
         LocalDate createdDate = new LocalDate();
         Integer createdById = user.getUserId();
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(createdById.shortValue());
@@ -1076,6 +1077,13 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                         activeAndOnHoldClients);
             }
 
+            try {
+                personnelDao.checkAccessPermission(userContext, savingsAccount.getOfficeId(), savingsAccount.getCustomer()
+                        .getLoanOfficerId());
+            } catch (AccountException e) {
+                throw new MifosRuntimeException("Access denied!", e);
+            }
+            
             this.transactionHelper.startTransaction();
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.flushSession();

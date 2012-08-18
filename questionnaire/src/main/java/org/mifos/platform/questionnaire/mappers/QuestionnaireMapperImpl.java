@@ -201,6 +201,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setSections(mapToSections(questionGroupDetail));
         questionGroup.setEventSources(mapEventSourceDtoToEntity(questionGroupDetail.getEventSources()));
         questionGroup.setEditable(questionGroupDetail.isEditable());
+        questionGroup.setActivityId(questionGroupDetail.getActivityId());
         return questionGroup;
     }
 
@@ -424,6 +425,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setTitle(questionGroupDto.getTitle());
         questionGroup.setState(questionGroupDto.isActive() ? QuestionGroupState.ACTIVE : QuestionGroupState.INACTIVE);
         questionGroup.setSections(mapToSectionsFromDtos(questionGroupDto.getSections()));
+        questionGroup.setActivityId(questionGroupDto.getActivityId());
         return questionGroup;
     }
 

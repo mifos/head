@@ -40,6 +40,7 @@ public class QuestionGroupDto implements Serializable {
     private boolean editable;
     private boolean ppi;
     private boolean active;
+    private Short activityId;
 
     public QuestionGroupDto() {
         sections = new ArrayList<SectionDto>();
@@ -97,4 +98,14 @@ public class QuestionGroupDto implements Serializable {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    public Short getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(Short activityId) {
+        this.activityId = activityId;
+    }
+    
+    
 }

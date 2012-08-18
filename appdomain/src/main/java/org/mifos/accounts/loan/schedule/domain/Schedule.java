@@ -70,6 +70,13 @@ public class Schedule {
         }
         return amount;
     }
+    
+    public BigDecimal payOverDueInstallments(Date transactionDate, BigDecimal amount) {
+        for (Installment dueInstallment : getInstallmentsOnOrBefore(transactionDate)) {
+            amount = dueInstallment.payInterest(amount, transactionDate);
+        }
+        return amount;
+    }
 
     public void adjustFutureInstallments(BigDecimal balance, Date transactionDate) {
         List<Installment> futureInstallments = getInstallmentsAfter(transactionDate);
