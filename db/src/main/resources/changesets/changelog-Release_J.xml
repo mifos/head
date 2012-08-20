@@ -525,9 +525,12 @@
        </sql>
        <rollback>
            <sql endDelimiter=";">
-                delete from roles_activity where activity_id = 294;
+                alter table question_group drop column activity_id,
+                    drop foreign key question_group_ibfk_1;
+               
+                delete from roles_activity where activity_id = 294 or activity_id in (select activity_id from activity where parent_id = 294);
                 
-                delete from activity where activity_id = 294;
+                delete from activity where parent_id = 294 or activity_id = 294;
                 
                 delete from lookup_value_locale where lookup_id =
                     (select lookup_id from lookup_value
@@ -535,9 +538,6 @@
 
                 delete from lookup_value where entity_id = 87 and lookup_name =
                     'Permissions-CanEditQuestionGroups';
-                
-                alter table question_group drop column activity_id,
-                    drop foreign key question_group_ibfk_1;
            </sql>
        </rollback>
    </changeSet>
