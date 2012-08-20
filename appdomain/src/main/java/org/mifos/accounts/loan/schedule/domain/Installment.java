@@ -195,6 +195,7 @@ public class Installment implements Comparable<Installment> {
     public BigDecimal payInterest(BigDecimal amount, Date transactionDate) {
         currentPayment.setPaidDate(transactionDate);
         amount = payInterest(amount, currentPayment);
+        amount = payExtraInterest(amount, currentPayment);
         recordCurrentPayment();
         return amount;
     }
