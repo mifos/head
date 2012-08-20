@@ -293,6 +293,11 @@ public class AccountingRules {
         return cm.getBoolean(AccountingRulesConstants.BACKDATED_APPROVALS_ALLOWED);
     }
 
+    public static boolean isOverdueInterestPaidFirst() {
+        MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
+        return cm.getBoolean(AccountingRulesConstants.OVERDUE_INTEREST_PAID_FIRST);
+    }
+
     public static Boolean isMultiCurrencyEnabled() {
         if (getAdditionalCurrencyCodes().isEmpty()) {
             return false;

@@ -184,6 +184,7 @@ public interface ClientConstants {
     String ERRORS_GROUP_CANCELLED = "errors.Client.groupCancelled";
     String ERRORS_LOWER_GROUP_STATUS = "errors.Client.lowerGroupStatus";
     String ERRORS_ACTIVE_ACCOUNTS_PRESENT = "errors.Client.hasActiveAccount";
+    String ERRORS_ACTIVE_PERIODIC_FEES_PRESENT = "errors.Client.hasActivePeriodicFees";
     String ERRORS_DUPLICATE_OFFERING_SELECTED = "errors.Client.duplicateOfferingSelected";
 
     String CLIENTPERFORMANCEHISTORY = "ClientPerformanceHistory";

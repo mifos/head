@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.HibernateException;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.dto.domain.ActivityRestrictionDto;
@@ -15,6 +18,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.MifosUser;
+import org.mifos.security.activity.ActivityGeneratorException;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.ActivityRestrictionTypeEntity;
 import org.mifos.security.rolesandpermission.business.RoleActivityRestrictionBO;
@@ -23,6 +27,7 @@ import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBu
 import org.mifos.security.rolesandpermission.exceptions.RolesPermissionException;
 import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
@@ -329,7 +334,7 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
         try {
             for (Short roleId : mifosUser.getRoleIds()) {
                 RoleBO role = legacyRolesPermissionsDao.getRole(roleId);
-                if (role.getActivityIds().contains(activityID)) {
+                if (role.getActivityIds().contains(activityID) || null == activityID) {
                     result = true;
                     break;
                 }
@@ -338,5 +343,25 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
             throw new RolesPermissionException(e);
         }
         return result;
+    }
+
+    @Override
+    public int calculateDynamicActivityId() throws ServiceException, ActivityGeneratorException {
+        return legacyRolesPermissionsDao.calculateDynamicActivityId();
+    }
+
+    @Override
+    public int createActivityForQuestionGroup(short parentActivity, String lookUpDescription) throws HibernateException, PersistenceException, ServiceException, ActivityGeneratorException {
+        return legacyRolesPermissionsDao.createActivityForQuestionGroup(parentActivity, lookUpDescription);
+    }
+
+    @Override
+    public void updateLookUpValue(int newActivityId, String activityNameHead, String title) throws PersistenceException {
+        StaticHibernateUtil.startTransaction();
+        legacyRolesPermissionsDao.updateLookUpValue((short)newActivityId, activityNameHead + title);
+        legacyRolesPermissionsDao.reparentActivityUsingHibernate((short)newActivityId, SecurityConstants.QUESTION_MANAGMENT);
+        legacyRolesPermissionsDao.changeActivityMessage((short)newActivityId, Localization.ENGLISH_LOCALE_ID,
+                activityNameHead + title);
+        StaticHibernateUtil.commitTransaction();
     }
 }

@@ -475,7 +475,7 @@ public class LoanAccountFormBean implements Serializable {
                                             "selectedFeeId",
                                             "loanAccountFormBean.defaultfees.amountOrRate.digits.before.decimal.invalid",
                                             new Object[] { Integer.valueOf(defaultFeeIndex + 1),
-                                                    this.digitsAfterDecimalForMonetaryAmounts },
+                                                    this.digitsBeforeDecimalForMonetaryAmounts },
                                             "Please specify fee amount for additional fee "
                                                     + Integer.valueOf(defaultFeeIndex + 1).toString());
                                 }

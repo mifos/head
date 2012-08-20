@@ -20,6 +20,7 @@
 package org.mifos.reports.pentaho.service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
@@ -32,8 +33,10 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
+import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
 import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.business.ReportsJasperMap;
 import org.mifos.reports.pentaho.PentahoReport;
@@ -49,6 +52,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
@@ -77,10 +81,16 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
     private final ReportsPersistence reportsPersistence = new ReportsPersistence();
     private PentahoParamParser paramParser = new PentahoParamParser();
     private RolesPermissionServiceFacade rolesPermissionService;
+    private LegacyAdminDocumentDao legacyAdminDocumentDao;
+    private ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade;
 
     @Autowired
-    public void setRolesPermissionService(RolesPermissionServiceFacade rolesPermissionService) {
+    public PentahoReportsServiceImpl(RolesPermissionServiceFacade rolesPermissionService,
+            LegacyAdminDocumentDao legacyAdminDocumentDao,
+            ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade) {
         this.rolesPermissionService = rolesPermissionService;
+        this.legacyAdminDocumentDao = legacyAdminDocumentDao;
+        this.viewOrganizationSettingsServiceFacade = viewOrganizationSettingsServiceFacade;
     }
 
     @Override
@@ -153,6 +163,58 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
         }
     }
 
+    @Override
+    public PentahoReport getAdminReport(Integer adminReportId, Map<String, AbstractPentahoParameter> params) {
+        ByteArrayOutputStream baos = null;
+        try{
+            // load report definition
+            ResourceManager manager = new ResourceManager();
+            manager.registerDefaults();
+            
+            String reportName = legacyAdminDocumentDao.getAdminDocumentById(adminReportId.shortValue())
+                    .getAdminDocumentName();
+            String filename = legacyAdminDocumentDao.getAdminDocumentById(adminReportId.shortValue())
+                    .getAdminDocumentIdentifier();
+            File file = new File(viewOrganizationSettingsServiceFacade.getAdminDocumentStorageDirectory(), filename);
+            
+            StringBuilder path = new StringBuilder("file:");
+            path.append(file.getAbsolutePath());
+            URL url =  new URL(path.toString());
+            
+            Resource res = manager.createDirectly(url, MasterReport.class);
+            MasterReport report = (MasterReport) res.getResource();
+
+            PentahoReport result = new PentahoReport();
+            
+            List<PentahoValidationError> errors = new ArrayList<PentahoValidationError>();
+            try {
+                addParametersToReport(report, params);
+                validate(report, errors);
+            } catch (ReflectionException ex) {
+                errors.add(new PentahoValidationError(ex.getMessage()));
+            }
+
+            result.setErrors(errors);
+            
+            if (errors.isEmpty()) {
+                baos = new ByteArrayOutputStream();
+                PdfReportUtil.createPDF(report, baos);
+                
+                result.setContentType(PentahoOutputType.PDF.getContentType());
+                result.setFileExtension(PentahoOutputType.PDF.getFileExtension());
+    
+                result.setName(reportName);
+                result.setContent(baos.toByteArray());
+            }
+                
+            return result;
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+        } finally {
+            closeStream(baos);
+        }
+    }
+
     @PostConstruct
     public void init() {
         ClassicEngineBoot.getInstance().start();
@@ -171,6 +233,16 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
     @Override
     public String getReportName(Integer reportId) {
         return this.reportsPersistence.getReport((short) reportId.intValue()).getReportName();
+    }
+
+    @Override
+    public String getAdminReportFileName(Integer adminReportId) {
+        try {
+            return this.legacyAdminDocumentDao.getAdminDocumentById(adminReportId.shortValue())
+                    .getAdminDocumentIdentifier();
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 
     @Override

@@ -161,7 +161,8 @@ public class SectionQuestionDetail implements Serializable {
     public boolean isMultiSelectQuestion() {
         QuestionType questionType = getQuestionType();
         return QuestionType.MULTI_SELECT.equals(questionType) ||
-                QuestionType.SMART_SELECT.equals(questionType);
+                QuestionType.SMART_SELECT.equals(questionType) ||
+                QuestionType.SMART_SINGLE_SELECT.equals(questionType);
     }
 
     public boolean isNumeric() {

@@ -639,14 +639,14 @@ public class ActivityMapper {
         security.allow("create", SecurityConstants.VIEW);
         security.allow("loadMeeting", SecurityConstants.MEETING_CREATE_CLIENT_MEETING);
         security.allow("get", SecurityConstants.VIEW);
-        security.allow("editPersonalInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+        security.allow("editPersonalInfo", SecurityConstants.VIEW);
         security.allow("editFamilyInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
         security.allow("editAddFamilyRow", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
         security.allow("editDeleteFamilyRow", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
         security.allow("previewEditFamilyInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
         security.allow("previewEditPersonalInfo", SecurityConstants.VIEW);
         security.allow("prevEditPersonalInfo", SecurityConstants.VIEW);
-        security.allow("updatePersonalInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+        security.allow("updatePersonalInfo", SecurityConstants.VIEW);
         security.allow("editMfiInfo", SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
         security.allow("previewEditMfiInfo", SecurityConstants.VIEW);
         security.allow("prevEditMfiInfo", SecurityConstants.VIEW);

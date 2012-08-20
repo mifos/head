@@ -264,7 +264,12 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
                         loanOfficer, office, address, externalId, trained, trainedOn,
                         customerStatus, numberOfCustomersInOfficeAlready, mfiJoiningDate, activationDate);
             }
-
+            try {
+                personnelDao.checkAccessPermission(userContext, group.getOfficeId(), group.getLoanOfficerId());
+            } catch (AccountException e) {
+                throw new MifosRuntimeException("Access denied!", e);
+            }
+            
             this.customerService.createGroup(group, groupMeeting, feesForCustomerAccount);
 
             return new CustomerDetailsDto(group.getCustomerId(), group.getGlobalCustNum());

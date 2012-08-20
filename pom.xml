@@ -5,7 +5,7 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.11-SNAPSHOT</version>
+    <version>1.12-SNAPSHOT</version>
     <name>Mifos - Parent</name>
     <description>Mifos is a Web application and platform for microfinance portfolio management.</description>
 
@@ -89,6 +89,7 @@
         <module>war-test-exec</module>
         <!-- Keep this module in last, the module which does not have interdependency will build in the order they are defined here -->
         <module>acceptanceTests</module>
+	<module>android-client-tests</module>
     </modules>
 
 

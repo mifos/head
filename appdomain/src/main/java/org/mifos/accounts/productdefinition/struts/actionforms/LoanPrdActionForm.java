@@ -1932,7 +1932,7 @@ public class LoanPrdActionForm extends BaseActionForm {
             }
             SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDQGLIST, questionGroups, request);
         } catch (PageExpiredException e) {
-            logger.error("An error occured while setting selected question groups on session", e);
+            logger.error("An error occurred while setting selected question groups on session", e);
         }
     }
 

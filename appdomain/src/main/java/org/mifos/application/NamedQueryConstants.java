@@ -159,6 +159,7 @@ public interface NamedQueryConstants {
     /** Account */
     String GET_CUSTOMER_STATE_CHECKLIST = "customer.checklist";
     String GET_LAST_MEETINGDATE_FOR_CUSTOMER = "accounts.getLastMeetingDateforCustomer";
+    String GET_FIRST_MEETINGDATE_FOR_CUSTOMER = "accounts.getFirstMeetingDateForCustomer";
 
     String RETRIEVE_SAVINGS_ACCCOUNT = "accounts.retrieveSavingsAccounts";
     String RETRIEVE_SAVINGS_ACCCOUNT_FOR_CUSTOMER = "accounts.retrieveSavingsAccountsForCustomer";
@@ -451,8 +452,11 @@ public interface NamedQueryConstants {
     // Administrative documents
 
     String GET_ALL_ACTIVE_ADMINISTRATIVE_DOCUMENT = "admindocument.getAllActiveAdministrativeDocument";
+    String GET_ALL_ADMINISTRATIVE_DOCUMENT = "admindocument.getAllAdministrativeDocument";
     String GET_MIX_BY_ADMINISTRATIVE_DOCUMENT = "admindocument.getMixByAdministrativeDocument";
+    String GET_ACC_ACTION_MIX_BY_ADMINISTRATIVE_DOCUMENT_ID = "admindocument.getAccActionMixByAdministrativeDocumentId";
     String GET_ALL_MIXED_ADMINISTRATIVE_DOCUMENT = "admindocument.getAllMixedAdministrativeDocument";
+    String GET_ACTIVE_ADMIN_DOCUMENTS_BY_ACCOUNT_ACTION_ID = "admindocument.getActiveAdminDocumentsByAccountActionId";
 
     // new queries for issue 1601 to allow backfilling of custom fields
     // on existing database objects like customers, personnel, loans, etc.

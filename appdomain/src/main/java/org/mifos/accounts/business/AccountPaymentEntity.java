@@ -34,7 +34,10 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.PaymentDto;
+import org.mifos.dto.screen.AccountPaymentDto;
+import org.mifos.dto.screen.PaymentTypeDto;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
 
@@ -254,5 +257,11 @@ public class AccountPaymentEntity extends AbstractEntity {
     public PaymentDto toDto() {
         return new PaymentDto(paymentId, account.getAccountId(), amount.getAmount(), new LocalDate(paymentDate),
                 paymentType.getId(), isSavingsDepositOrWithdrawal());
+    }
+
+    public AccountPaymentDto toScreenDto() {
+        PaymentTypeDto paymentTypeDto = new PaymentTypeDto(paymentType.getId(), paymentType.getName());
+        return new AccountPaymentDto(paymentId, new AccountReferenceDto(account.getAccountId()), paymentTypeDto,
+                amount.getAmount(), new LocalDate(paymentDate), receiptNumber, new LocalDate(receiptDate));
     }
 }

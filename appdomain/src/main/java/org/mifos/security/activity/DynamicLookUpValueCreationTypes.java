@@ -22,7 +22,7 @@ package org.mifos.security.activity;
 
 public enum DynamicLookUpValueCreationTypes {
 
-    BirtReport((short) 1), CustomField((short) 2), LookUpOption((short) 3), DBUpgrade((short) 4);
+    BirtReport((short) 1), CustomField((short) 2), LookUpOption((short) 3), DBUpgrade((short) 4), QuestionGroup((short) 5) ;
 
     Short value;
 

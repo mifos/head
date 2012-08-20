@@ -220,7 +220,12 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
         CenterBO center = CenterBO.createNew(userContext, centerName, mfiJoiningDate, meeting, loanOfficer,
                 centerOffice, centerAddress, externalId, new DateMidnight().toDateTime());
-
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, center.getOfficeId(), center.getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
+        }
         this.customerService.createCenter(center, meeting, feesForCustomerAccount);
 
         return new CustomerDetailsDto(center.getCustomerId(), center.getGlobalCustNum());

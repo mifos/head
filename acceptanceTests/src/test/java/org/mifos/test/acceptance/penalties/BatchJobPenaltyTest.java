@@ -184,15 +184,15 @@ public class BatchJobPenaltyTest extends UiTestCaseBase {
         final String accountId = setUpPenaltyAndLoanAccount(PENALTY_NAME[6], PenaltyFormParameters.PERIOD_DAYS, "7",
                 PenaltyFormParameters.FREQUENCY_WEEKLY, "0.1", PenaltyFormParameters.FORMULA_OUTSTANDING_PRINCIPAL, "0.1", "9,999,999,999");
         
-        changeDateTime(03, 15);
+        changeDateTime(03, 22);
         penaltyHelper.verifyCalculatePenaltyWithPayment(accountId,
-                new String[] { "18", "0", "18" },
-                new String[][] { { "0", "450" }, null /* Installments due */, { "4.5", "454.5" }, { "9", "459" }, { "4.5", "454.5" },
-                { "0", "450" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
-                new String[] { "1,818", "15/03/2012", "1,368" }
+                new String[] { "27", "0", "27" },
+                new String[][] { { "0", "450" }, null /* Installments due */, { "13.5", "463.5" }, { "9", "459" }, { "4.5", "454.5" },
+                { "0", "450" }, { "0", "450" }, null /* Future Installments */, { "0", "450" }, { "0", "450" }, { "0", "450" }, { "0", "450" } },
+                new String[] { "2,277", "22/03/2012", "1,827" }
         );
         
-        verifyAfterRepayLoan(accountId, new String[] { "0", "4.5", "9", "4.5", "0", "0", "0", "0", "0", "0" }, false);
+        verifyAfterRepayLoan(accountId, new String[] { "0", "13.5", "9", "4.5", "0", "0", "0", "0", "0", "0" }, false);
     }
     
     @Test(enabled = true)

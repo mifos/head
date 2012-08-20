@@ -227,7 +227,8 @@ public class Question implements Serializable {
     }
 
     private boolean answerChoicesApplicableFor(QuestionType type) {
-        return QuestionType.MULTI_SELECT.equals(type) || QuestionType.SINGLE_SELECT.equals(type) || QuestionType.SMART_SELECT.equals(type);
+        return QuestionType.MULTI_SELECT.equals(type) || QuestionType.SINGLE_SELECT.equals(type) || QuestionType.SMART_SELECT.equals(type) 
+                || QuestionType.SMART_SINGLE_SELECT.equals(type);
     }
 
     private void resetChoices() {
@@ -254,7 +255,9 @@ public class Question implements Serializable {
                 makeEntry("multiSelect", QuestionType.MULTI_SELECT),
                 makeEntry("singleSelect", QuestionType.SINGLE_SELECT),
                 makeEntry("smartSelect", QuestionType.SMART_SELECT),
-                makeEntry("number", QuestionType.NUMERIC));
+                makeEntry("number", QuestionType.NUMERIC),
+                makeEntry("smartSingleSelect", QuestionType.SMART_SINGLE_SELECT)
+        );
     }
 
     private static void populateQuestionTypeToStringMap() {
@@ -264,7 +267,8 @@ public class Question implements Serializable {
                 makeEntry(QuestionType.NUMERIC, "number"),
                 makeEntry(QuestionType.MULTI_SELECT, "multiSelect"),
                 makeEntry(QuestionType.SMART_SELECT, "smartSelect"),
-                makeEntry(QuestionType.SINGLE_SELECT, "singleSelect")
+                makeEntry(QuestionType.SINGLE_SELECT, "singleSelect"),
+                makeEntry(QuestionType.SMART_SINGLE_SELECT, "smartSingleSelect")
         );
     }
 

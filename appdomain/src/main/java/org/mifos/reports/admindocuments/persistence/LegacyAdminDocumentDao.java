@@ -37,10 +37,21 @@ public class LegacyAdminDocumentDao extends LegacyGenericDao {
         return getPersistentObject(AdminDocumentBO.class, adminDocumentId);
     }
 
-    public List<AdminDocumentBO> getAllAdminDocuments() throws PersistenceException {
+    public List<AdminDocumentBO> getAllActiveAdminDocuments() throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         return executeNamedQuery(NamedQueryConstants.GET_ALL_ACTIVE_ADMINISTRATIVE_DOCUMENT, queryParameters);
 
+    }
+
+    public List<AdminDocumentBO> getAllAdminDocuments() throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        return executeNamedQuery(NamedQueryConstants.GET_ALL_ADMINISTRATIVE_DOCUMENT, queryParameters);
+    }
+    
+    public List<AdminDocumentBO> getActiveAdminDocumentsByAccountActionId(Short accountActionId) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("accountActionId", accountActionId);
+        return executeNamedQuery(NamedQueryConstants.GET_ACTIVE_ADMIN_DOCUMENTS_BY_ACCOUNT_ACTION_ID, queryParameters);
     }
 
 }

@@ -225,6 +225,11 @@ form.two-columns input.disabledbuttn
     font-weight: bold;
 }
 
+.search-results tr > td:first-child 
+{ 
+    width: 1px ;  
+}
+
 .mandatory {
 	color: red;
 }

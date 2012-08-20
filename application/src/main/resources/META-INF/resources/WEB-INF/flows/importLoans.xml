@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <secured attributes="ROLE_CAN_IMPORT_LOANS"/>
+    
+    <var name="importLoansFormBean" class="org.mifos.ui.core.controller.ImportLoansFormBean" />
+    
+    <view-state id="selectFileStep" view="importLoansSelectFile" model="importLoansFormBean">
+        <transition on="fileSelected" to="reviewStep" validate="true">
+            <evaluate expression="importLoansController.parseFile(importLoansFormBean)" result="flowScope.parsedLoansDto" />
+        </transition>
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/> 
+    </view-state>
+
+    <view-state id="reviewStep" view="importLoansReview">
+        <transition on="save" to="saveStep">
+            <evaluate expression="importLoansController.save(flowScope.parsedLoansDto)"></evaluate>
+        </transition>
+        <transition on="back" to="selectFileStep" />
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/> 
+    </view-state>
+
+    <end-state id="saveStep" view="importLoansSave" />
+    <end-state id="cancel" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
+
+</flow>

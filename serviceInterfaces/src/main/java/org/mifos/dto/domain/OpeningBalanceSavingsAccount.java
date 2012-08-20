@@ -24,6 +24,7 @@ import org.joda.time.LocalDate;
 
 public class OpeningBalanceSavingsAccount {
 
+    private final String accountNumber;
     private final String customerGlobalId;
     private final String productGlobalId;
     private final Short accountState;
@@ -32,13 +33,14 @@ public class OpeningBalanceSavingsAccount {
     private final LocalDate activationDate;
 
     public OpeningBalanceSavingsAccount(final String customerGlobalId, final String productGlobalId,
-            final Short accountState, final String recommendedOrMandatoryAmount, final String openingBalance, final LocalDate activationDate) {
+            final Short accountState, final String recommendedOrMandatoryAmount, final String openingBalance, final LocalDate activationDate, final String accountNumber) {
         this.customerGlobalId = customerGlobalId;
         this.productGlobalId = productGlobalId;
         this.accountState = accountState;
         this.recommendedOrMandatoryAmount = recommendedOrMandatoryAmount;
         this.openingBalance = openingBalance;
         this.activationDate = activationDate;
+        this.accountNumber = accountNumber;
     }
 
     public String getCustomerGlobalId() {
@@ -64,4 +66,9 @@ public class OpeningBalanceSavingsAccount {
     public LocalDate getActivationDate() {
         return this.activationDate;
     }
+
+    public String getAccountNumber() {
+        return this.accountNumber;
+    }
+    
 }

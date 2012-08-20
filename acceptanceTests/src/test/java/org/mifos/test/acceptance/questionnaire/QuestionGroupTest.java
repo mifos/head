@@ -17,44 +17,52 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.test.acceptance.questionnaire;
 
-import java.util.Collections;
-import java.util.Set;
-import org.mifos.test.acceptance.framework.client.QuestionGroup;
-import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
-import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
-import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
-import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
-import org.mifos.test.acceptance.framework.questionnaire.Choice;
-import org.mifos.test.acceptance.framework.client.ClientViewChangeLogPage;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.DefineNewOfficePage;
+import org.mifos.test.acceptance.framework.admin.ManageRolePage;
+import org.mifos.test.acceptance.framework.admin.ViewRolesPage;
 import org.mifos.test.acceptance.framework.client.ClientCloseReason;
 import org.mifos.test.acceptance.framework.client.ClientStatus;
+import org.mifos.test.acceptance.framework.client.ClientViewChangeLogPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
+import org.mifos.test.acceptance.framework.client.QuestionGroup;
+import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
 import org.mifos.test.acceptance.framework.questionnaire.AttachQuestionGroupParameters;
+import org.mifos.test.acceptance.framework.questionnaire.Choice;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
 import org.mifos.test.acceptance.framework.questionnaire.EditQuestionGroupPage;
+import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupDetailPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupResponsePage;
-import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionGroupsPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.OfficeHelper;
@@ -66,14 +74,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static java.util.Arrays.*;  //NOPMD
 import static org.apache.commons.lang.ArrayUtils.*; //NOPMD
 import static org.junit.Assert.*; //NOPMD
+
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @SuppressWarnings("PMD.CyclomaticComplexity")
@@ -83,7 +87,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private OfficeHelper officeHelper;
     private QuestionGroupTestHelper questionGroupTestHelper;
     private ClientTestHelper clientTestHelper;
-    private String qgTitle1, qgTitle2, qgTitle3;
+    private String qgTitle1, qgTitle2, qgTitle3, qgTitle4;
     private String qTitle1, qTitle2, qTitle3, qTitle4, qTitle5;
     private static final String TITLE_MISSING = "Please specify Question Group title.";
     private static final String APPLIES_TO_MISSING = "Please choose a valid 'Applies To' value.";
@@ -102,7 +106,9 @@ public class QuestionGroupTest extends UiTestCaseBase {
             "ViewCenterQG", "QGForCreateSavingsAccount", "QGForViewSavings", "QGForCreateLoan1", "QGForCreateLoan2", "QGForLoanApproval",
             "QGForApproveLoan1", "QGForApproveLoan2", "QGForDisburseLoan1", "QGForDisburseLoan2"));
     private static final Map<String, String> QUESTIONS = new HashMap<String, String>();
-
+    private static final String ADMIN_ROLE = "Admin";
+    private static final String QUESTION_PERMISSION_ID = "9_6_0";
+    private static final String QUESTION_PERMISSION_HEADER = "Can edit ";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -117,6 +123,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         qgTitle1 = "QuestionGroup1";
         qgTitle2 = "QuestionGroup2";
         qgTitle3 = "QuestionGroup3";
+        qgTitle4 = "QuestionGroup4";
         qTitle1 = "Question1";
         qTitle2 = "Question2";
         qTitle3 = "Question3";
@@ -150,6 +157,30 @@ public class QuestionGroupTest extends UiTestCaseBase {
             questionGroupTestHelper.markQuestionGroupAsInactive(qgTitle2);
             questionGroupTestHelper.markQuestionGroupAsInactive(qgTitle3);
         }
+    }
+    
+    @Test(enabled = true)
+    public void checkQuestionGroupPermission() {
+        AdminPage adminPage = getAdminPage();
+        CreateQuestionGroupPage createQuestionGroupPage = getCreateQuestionGroupPage(adminPage);
+        CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
+        parameters.setTitle(qgTitle4);
+        parameters.setAppliesTo(APPLIES_TO_CREATE_CLIENT);
+        parameters.setAnswerEditable(true);
+        for (String question : asList(qTitle1, qTitle2)) {
+            parameters.addExistingQuestion(SECTION_DEFAULT, question);
+        }
+        for (String section : parameters.getExistingQuestions().keySet()) {
+            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
+        }
+        createQuestionGroupPage.submit(parameters);
+        ViewRolesPage rolesPage = adminPage.navigateToViewRolesPage();
+        ManageRolePage manageRolePage = rolesPage.navigateToManageRolePage(ADMIN_ROLE);
+        manageRolePage.verifyPermissionText(QUESTION_PERMISSION_ID, QUESTION_PERMISSION_HEADER + qgTitle4);
+        manageRolePage.disablePermission(QUESTION_PERMISSION_ID);
+        manageRolePage.submitAndGotoViewRolesPage();
+        adminPage = getAdminPage();
+        Assert.assertTrue(adminPage.navigateToViewAllQuestionGroups().navigateToQuestionGroupDetailPage(qgTitle4).isAccessDeniedDisplayed());
     }
 
     /**

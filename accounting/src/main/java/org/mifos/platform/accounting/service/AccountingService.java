@@ -35,7 +35,7 @@ public interface AccountingService {
     List<AccountingDto> getExportDetails(LocalDate startDate, LocalDate endDate);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
-    List<ExportFileInfo> getLastTenExports(Integer listStartDay);
+    List<ExportFileInfo> getLastTenExports( Integer listStartDay);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
     Integer getNumberDaysFromStartOfFinancialTransactions();

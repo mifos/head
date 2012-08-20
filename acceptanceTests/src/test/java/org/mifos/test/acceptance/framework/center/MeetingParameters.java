@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework.center;
 
+import org.mifos.test.acceptance.framework.center.MeetingParameters.WeekDay;
+
 @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
 public class MeetingParameters {
 
@@ -46,6 +48,21 @@ public class MeetingParameters {
 
         public Integer getId() {
             return this.id;
+        }
+        /**
+         * Gets enum value by day of the week number.
+         * @param dayOfWeek day of the week number
+         * @return enum value where WeekDay.id==dayOfWeek or null
+         */
+        public static WeekDay findByInt(int dayOfWeek) {
+            WeekDay weekDay=null;
+            for (WeekDay wd : values()) {
+                if(wd.id.equals(dayOfWeek)){
+                    weekDay=wd;
+                    break;
+                }
+            }
+            return weekDay;
         }
 
     }

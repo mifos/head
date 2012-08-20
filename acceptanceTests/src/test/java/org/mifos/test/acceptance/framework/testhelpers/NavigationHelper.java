@@ -80,6 +80,14 @@ public class NavigationHelper {
         adminPage.verifyPage();
         return adminPage;
     }
+    
+    public HomePage navigateToHomePageAsNewUser(String userName, String oldPassword) {
+    	LoginPage loginPage = new AppLauncher(selenium).launchMifos();
+    	loginPage.verifyPage();
+    	HomePage homePage = loginPage.loginSuccessfulAsWithChnagePasw(userName, oldPassword);
+    	homePage.verifyPage();
+    	return homePage;
+    }
 
     public LoanAccountPage navigateToLoanAccountPage(String loanAccountID) {
         HomePage homePage = navigateToHomePage();

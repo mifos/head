@@ -392,6 +392,8 @@ public interface SecurityConstants {
     short CAN_ENTER_COLLECTION_SHEET_DATA = 197;
 
     short REPORTS_MANAGEMENT = 141;
+    
+    short QUESTION_MANAGMENT = 294;
 
     // FIXME: both use the same ID? Is this a mistake?
     short ADMINISTER_REPORTPARAMS = 142;

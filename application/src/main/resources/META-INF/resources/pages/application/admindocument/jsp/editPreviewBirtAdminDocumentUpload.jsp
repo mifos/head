@@ -120,6 +120,15 @@ explanation of the license and how it is applied.
 									<c:out
 										value="${birtAdminDocumentUploadActionForm.adminiDocumentTitle}" />
 									<br />
+				                    <mifos:mifoslabel name="reports.reports" />
+				                    <mifos:mifoslabel name="reports.status" />:
+									<c:if test="${birtAdminDocumentUploadActionForm.isActive eq '1'}">
+										<mifos:mifoslabel name="reports.active"/>
+									</c:if>
+									<c:if test="${birtAdminDocumentUploadActionForm.isActive eq '0'}">
+										<mifos:mifoslabel name="reports.inactive"/>
+									</c:if>
+									<br/>
 									<mifos:mifoslabel name="reports.accountType" isColonRequired="Yes"/><span
 										class="fontnormal"> <c:out
 										value="${birtAdminDocumentUploadActionForm.accountTypeName}" />

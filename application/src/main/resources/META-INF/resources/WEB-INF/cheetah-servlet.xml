@@ -30,6 +30,7 @@
        <bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" />
        <bean class="org.springframework.mobile.device.site.SitePreferenceHandlerInterceptor" />
        <bean class="org.mifos.interceptors.FlowKeyInterceptor" />
+       <bean class="org.mifos.interceptors.BackUrlInterceptor" />
     </mvc:interceptors>
 
 	<context:annotation-config />
@@ -43,6 +44,7 @@
 				<prop key="org.springframework.security.access.AccessDeniedException">accessDenied</prop>
 				<prop key="org.mifos.framework.exceptions.PageExpiredException">pageExpired</prop>
 				<prop key="org.springframework.webflow.execution.repository.FlowExecutionRestorationFailureException">pageExpired</prop>
+				<prop key="org.mifos.reports.pentaho.util.JNDIException">JNDIExceptionPage</prop>
 			</props>
 		</property>
 		<property name="exceptionAttribute" value="exception" />

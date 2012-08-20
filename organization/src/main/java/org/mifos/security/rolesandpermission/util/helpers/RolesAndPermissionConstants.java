@@ -39,7 +39,6 @@ public interface RolesAndPermissionConstants {
     String KEYROLELOADINGFAILED = "roleandpermission.error.noRoleInSystem";
     String KEYROLENOTEXIST = "roleandpermission.errorroleNotExist";
     String ACTIVITYLIST = "ActivityList";
-    String ROLE_ACTIVITIES_RESTRICTIONS_MAP = "RoleActivitiesRestrictionsMap";
     String SELECTED_ACTIVITIES = "SelectedActivities";
     String ROLESUBOBJECT = "RoleSubObject";
     String KEYROLEASSIGNEDTOPERSONNEL = "roleandpermission.error.roleassigned";

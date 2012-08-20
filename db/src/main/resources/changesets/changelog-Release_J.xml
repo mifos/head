@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+		<changeSet id="MIFOS_5661" author="Lukasz Wyszomirski" context="expansion">
+        <sql endDelimiter=";">
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanImportLoans');
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanImportSavings');
+
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanImportLoans'),null);
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanImportSavings'),null);
+
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            values(280,196,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanImportLoans'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanImportLoans'));
+			insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            values(281,196,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanImportSavings'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanImportSavings'));
+                
+            insert into roles_activity(activity_id, role_id) values(280, 1);
+            insert into roles_activity(activity_id, role_id) values(281, 1);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                delete from roles_activity where activity_id = 280;
+                delete from roles_activity where activity_id = 281;
+
+                delete from activity where activity_id = 280;
+                delete from activity where activity_id = 281;
+
+                delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanImportLoans');
+                delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanImportSavings');
+
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanImportLoans';
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanImportSavings';
+            </sql>
+        </rollback>
+    </changeSet>
+		<changeSet id="MIFOS-5671_1" author="Adrian Winkler" context="expansion">
+			<sql endDelimiter=";">
+			INSERT INTO lookup_value VALUES(DEFAULT, 87, 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer');
+
+			INSERT INTO lookup_value_locale(locale_id, lookup_id, lookup_value) SELECT 1, lookup_id, 
+			'Can make payment to the account using Savings Account Transfer' FROM lookup_value 
+			WHERE lookup_name = 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer';
+
+			INSERT INTO activity(activity_id, parent_id, activity_name_lookup_id, description_lookup_id) SELECT 282, 113, lookup_id, lookup_id 
+			FROM lookup_value WHERE lookup_name = 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer';
+
+			INSERT INTO roles_activity(activity_id, role_id) SELECT activity_id, 1 FROM activity WHERE activity_name_lookup_id = 
+			(SELECT lookup_id FROM lookup_value WHERE lookup_name = 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer');
+			</sql>
+			<rollback>
+				<sql endDelimiter=";">
+				DELETE FROM roles_activity WHERE activity_id = 282;
+	    		
+	    		DELETE FROM activity WHERE activity_id = 282; 
+	    		
+	    		DELETE FROM lookup_value_locale WHERE lookup_value = 'Can make payment to the account using Savings Account Transfer';
+	    		
+	    		DELETE FROM lookup_value WHERE lookup_name = 'Permissions-LoanTransactions-CanMakePaymentToAccountUsingSavingsTransfer';
+				</sql></rollback>
+		</changeSet>
+	<changeSet id="MIFOS-5616_1" author="Michal Dudzinski" context="expansion">
+	   	<sql endDelimiter=";">
+	    	DROP TABLE IF EXISTS admin_document_acc_action_mix;
+	    	CREATE TABLE admin_document_acc_action_mix (
+			  admin_doc_acc_action_mix_id integer auto_increment,
+			  account_action_id smallint not null,
+			  admin_document_id integer not null,
+			  created_by smallint,
+			  create_date date,
+			  updated_by smallint,
+			  updated_date date,
+			  version_no integer,
+			  PRIMARY KEY (admin_doc_acc_action_mix_id),
+			  foreign key (account_action_id)
+			    references account_action(account_action_id)
+			    on delete no action
+			    on update no action,
+			  foreign key (admin_document_id)
+			    references admin_document(admin_document_id)
+			    on delete no action
+			    on update no action
+			)
+	   	</sql>
+	   	<rollback>
+	   		<sql endDelimiter=";">
+	   			DROP TABLE admin_document_acc_action_mix;
+	   		</sql>
+	   	</rollback>
+    </changeSet>
+    <changeSet id="MIFOS_5723_1" author="Lukasz Wyszomirski" context="expansion">
+        <validCheckSum>3:30ae39ddcd8d1df1fb7d13e597f3fbda</validCheckSum>
+    	<validCheckSum>3:ab20c7fb0c7f65a28d8430cf5c71c095</validCheckSum>
+	    <sql endDelimiter=";">
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewBalanceOutstanding');
+
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewBalanceOutstanding'),null);
+                
+			insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            values(283,256,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewBalanceOutstanding'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewBalanceOutstanding'));
+                
+            insert into roles_activity(activity_id, role_id) values(283, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Balance Outstanding', 'balance_outstanding', 283, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+            values((select report_id from report where report_name='Balance Outstanding'), 'Balance Outstanding', 'balance_outstanding', 'BalanceOutstanding.prpt');
+            
+          
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewBalanceOutstandingBySourceOfFunds');
+
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewBalanceOutstandingBySourceOfFunds'),null);
+                
+			insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            values(284,256,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewBalanceOutstandingBySourceOfFunds'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewBalanceOutstandingBySourceOfFunds'));
+                
+            insert into roles_activity(activity_id, role_id) values(284, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Balance Outstanding By Source Of Funds', 'balance_outstanding_by_source_of_funds', 284, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+            values((select report_id from report where report_name='Balance Outstanding By Source Of Funds'), 'Balance Outstanding By Source Of Funds', 
+            'balance_outstanding_by_source_of_funds', 'BalanceOutstandingBySourceOfFunds.prpt');
+            
+    
+      		insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewDueVsCollectedBranch');
+
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewDueVsCollectedBranch'),null);
+                
+			insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            values(285,256,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewDueVsCollectedBranch'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewDueVsCollectedBranch'));
+                
+            insert into roles_activity(activity_id, role_id) values(285, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Due Vs Collected Branch', 'due_vs_collected_branch', 285, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+            values((select report_id from report where report_name='Due Vs Collected Branch'), 'Due Vs Collected Branch', 
+            'due_vs_collected_branch', 'DueVsCollectedBranch.prpt');
+            
+      
+      		insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewDueVsCollectedCenter');
+
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewDueVsCollectedCenter'),null);
+                
+			insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            values(286,256,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewDueVsCollectedCenter'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewDueVsCollectedCenter'));
+                
+            insert into roles_activity(activity_id, role_id) values(286, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Due Vs Collected Center', 'due_vs_collected_center', 286, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+            values((select report_id from report where report_name='Due Vs Collected Center'), 'Due Vs Collected Center', 
+            'due_vs_collected_center', 'DueVsCollectedCenter.prpt');
+            
+       
+       		insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewDueVsCollectedOfficer');
+
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewDueVsCollectedOfficer'),null);
+                
+			insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            values(287,256,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewDueVsCollectedOfficer'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewDueVsCollectedOfficer'));
+                
+            insert into roles_activity(activity_id, role_id) values(287, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Due Vs Collected Officer', 'due_vs_collected_officer', 287, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+            values((select report_id from report where report_name='Due Vs Collected Officer'), 'Due Vs Collected Officer',
+            'due_vs_collected_officer', 'DueVsCollectedLoanOfficer.prpt');
+              
+        
+       		insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewFundsMovement');
+
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewFundsMovement'),null);
+                
+			insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            values(288,255,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewFundsMovement'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewFundsMovement'));
+                
+            insert into roles_activity(activity_id, role_id) values(288, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Management'), 'Funds Movement', 'funds_movement', 288, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+            values((select report_id from report where report_name='Funds Movement'), 'Funds Movement', 'funds_movement', 'FundsMovement.prpt');
+              
+        
+       		insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewLoanClassificationProduct');
+
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewLoanClassificationProduct'),null);
+                
+			insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            values(289,256,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewLoanClassificationProduct'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewLoanClassificationProduct'));
+                
+            insert into roles_activity(activity_id, role_id) values(289, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Loan Classification Product', 'loan_classification_product', 289, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+            values((select report_id from report where report_name='Loan Classification Product'), 'Loan Classification Product', 
+            'loan_classification_product', 'LoanClassificationProduct.prpt');
+              
+        
+       		insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewLoanOfficerDetailed');
+
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewLoanOfficerDetailed'),null);
+                
+			insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            values(290,255,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewLoanOfficerDetailed'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewLoanOfficerDetailed'));
+                
+            insert into roles_activity(activity_id, role_id) values(290, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Loan Officer Detailed', 'loan_officer_detailed', 290, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+            values((select report_id from report where report_name='Loan Officer Detailed'), 'Loan Officer Detailed', 
+            'loan_officer_detailed', 'LoanOfficerDetailed.prpt');
+              
+       
+       		insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewLoanOfficerPerformanceSummaryCumulative');
+
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewLoanOfficerPerformanceSummaryCumulative'),null);
+                
+			insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            values(291,256,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewLoanOfficerPerformanceSummaryCumulative'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewLoanOfficerPerformanceSummaryCumulative'));
+                
+            insert into roles_activity(activity_id, role_id) values(291, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Loan Officer Performance Summary Cumulative', 
+            'loan_officer_performance_summary_cumulative', 291, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+            values((select report_id from report where report_name='Loan Officer Performance Summary Cumulative'), 
+            'Loan Officer Performance Summary Cumulative', 'loan_officer_performance_summary_cumulative', 'LoanOfficerPerformanceSummaryCumulative.prpt');
+              
+       
+       		insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewLoanOfficerPerformanceSummaryPeriod');
+
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewLoanOfficerPerformanceSummaryPeriod'),null);
+                
+			insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            values(292,256,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewLoanOfficerPerformanceSummaryPeriod'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewLoanOfficerPerformanceSummaryPeriod'));
+                
+            insert into roles_activity(activity_id, role_id) values(292, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Operational'), 'Loan Officer Performance Summary Period', 
+            'loan_officer_performance_summary_period', 292, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+            values((select report_id from report where report_name='Loan Officer Performance Summary Period'), 'Loan Officer Performance Summary Period', 
+            'loan_officer_performance_summary_period', 'LoanOfficerPerformanceSummaryDuringPeriod.prpt');
+              
+
+       		insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanViewMFIProgress');
+
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+            	(1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewMFIProgress'),null);
+                
+			insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+            values(293,255,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewMFIProgress'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanViewMFIProgress'));
+                
+            insert into roles_activity(activity_id, role_id) values(293, 1);
+            
+            insert into report(report_id, report_category_id, report_name, report_identifier, activity_id, report_active)
+            values((select max(rid.report_id)+1 from report rid), (select rci.report_category_id from report_category rci where rci.report_category_value='Management'), 'MFI Progress', 'mfi_progress', 293, 1);
+            
+            insert into report_jasper_map(report_id, report_name, report_identifier, report_jasper) 
+            values((select report_id from report where report_name='MFI Progress'), 'MFI Progress', 'mfi_progress', 'MFIProgress.prpt');
+              
+       </sql>
+	    <rollback>
+	    	<sql endDelimiter=";">
+	    		delete from report_jasper_map where report_identifier = 'balance_outstanding';
+                delete from report_jasper_map where report_identifier = 'balance_outstanding_by_source_of_funds';
+                delete from report_jasper_map where report_identifier = 'due_vs_collected_branch';
+                delete from report_jasper_map where report_identifier = 'due_vs_collected_center';
+                delete from report_jasper_map where report_identifier = 'due_vs_collected_officer';
+                delete from report_jasper_map where report_identifier = 'funds_movement';
+                delete from report_jasper_map where report_identifier = 'loan_classification_product';
+                delete from report_jasper_map where report_identifier = 'loan_officer_detailed';
+                delete from report_jasper_map where report_identifier = 'loan_officer_performance_summary_cumulative';
+                delete from report_jasper_map where report_identifier = 'loan_officer_performance_summary_period';
+                delete from report_jasper_map where report_identifier = 'mfi_progress';
+	    	
+	    		delete from report where report_identifier = 'balance_outstanding';
+                delete from report where report_identifier = 'balance_outstanding_by_source_of_funds';
+                delete from report where report_identifier = 'due_vs_collected_branch';
+                delete from report where report_identifier = 'due_vs_collected_center';
+                delete from report where report_identifier = 'due_vs_collected_officer';
+                delete from report where report_identifier = 'funds_movement';
+                delete from report where report_identifier = 'loan_classification_product';
+                delete from report where report_identifier = 'loan_officer_detailed';
+                delete from report where report_identifier = 'loan_officer_performance_summary_cumulative';
+                delete from report where report_identifier = 'loan_officer_performance_summary_period';
+                delete from report where report_identifier = 'mfi_progress';
+                
+	    		delete from roles_activity where activity_id = 283;
+                delete from roles_activity where activity_id = 284;
+				delete from roles_activity where activity_id = 285;
+				delete from roles_activity where activity_id = 286;
+				delete from roles_activity where activity_id = 287;
+				delete from roles_activity where activity_id = 288;
+				delete from roles_activity where activity_id = 289;
+				delete from roles_activity where activity_id = 290;
+				delete from roles_activity where activity_id = 291;
+				delete from roles_activity where activity_id = 292;
+				delete from roles_activity where activity_id = 293;
+				
+	
+                delete from activity where activity_id = 283;
+                delete from activity where activity_id = 284;
+                delete from activity where activity_id = 285;
+                delete from activity where activity_id = 286;
+                delete from activity where activity_id = 287;
+                delete from activity where activity_id = 288;
+                delete from activity where activity_id = 289;
+                delete from activity where activity_id = 290;
+                delete from activity where activity_id = 291;
+                delete from activity where activity_id = 292;
+                delete from activity where activity_id = 293;
+
+                delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanViewBalanceOutstanding');
+                delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanViewBalanceOutstandingBySourceOfFunds');
+                delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanViewDueVsCollectedBranch');
+				delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanViewDueVsCollectedCenter');
+				delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanViewDueVsCollectedOfficer');
+				delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanViewFundsMovement');
+				delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanViewLoanClassificationProduct');
+				delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanViewLoanOfficerDetailed');
+				delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanViewLoanOfficerPerformanceSummaryCumulative');
+                delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanViewLoanOfficerPerformanceSummaryPeriod');
+                delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanViewMFIProgress');
+                
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanViewBalanceOutstanding';
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanViewBalanceOutstandingBySourceOfFunds';
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanViewDueVsCollectedBranch';
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanViewDueVsCollectedCenter';
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanViewDueVsCollectedOfficer';
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanViewFundsMovement';
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanViewLoanClassificationProduct';
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanViewLoanOfficerDetailed';
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanViewLoanOfficerPerformanceSummaryCumulative';
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanViewLoanOfficerPerformanceSummaryPeriod';
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanViewMFIProgress'; 
+	    	</sql>
+	    </rollback>
+    </changeSet>
+    <changeSet id="MIFOS-5716_1" author="Jakub Podeszwik" context="contraction">
+      	<sql endDelimiter=";">
+	        update  account m
+	        inner join loan_account l
+	        on m.account_id = l.account_id
+	        inner join account p
+	        on p.account_id = l.parent_account_id
+	        set m.account_state_id = p.account_state_id
+	        where m.account_state_id != p.account_state_id;
+	   	</sql>
+	   	<rollback>
+	   	</rollback>
+   </changeSet>
+   <changeSet id="MIFOS-5733_1" author="Jakub Podeszwik" context="contraction">
+       <sql endDelimiter=";">
+	       UPDATE loan_schedule ls1
+	       INNER JOIN loan_account la
+	       ON ls1.account_id = la.account_id
+	       INNER JOIN loan_schedule ls2
+	       ON ls2.account_id = la.parent_account_id
+	       SET ls1.action_date = ls2.action_date
+	       WHERE ls1.installment_id = ls2.installment_id;
+       </sql>
+       <rollback>
+       </rollback>
+   </changeSet>
+   <changeSet id="MIFOS-5632_1" author="Kamil Kalfas" context="expansion">
+       <sql endDelimiter=";">
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+                lookup_value lv), 87, 'Permissions-CanEditQuestionGroups');
+                
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values
+                (1,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanEditQuestionGroups'),null); 
+                
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) 
+                values(294,203,(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanEditQuestionGroups'),
+                (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanEditQuestionGroups'));
+                
+            insert into roles_activity(activity_id, role_id) values(294, 1);          
+           
+            alter table question_group add activity_id smallint,
+                add constraint foreign key(activity_id) 
+                    references activity(activity_id)
+                    on delete no action
+                    on update no action;
+
+       </sql>
+       <rollback>
+           <sql endDelimiter=";">
+                alter table question_group drop column activity_id,
+                    drop foreign key question_group_ibfk_1;
+               
+                delete from roles_activity where activity_id = 294 or activity_id in (select activity_id from activity where parent_id = 294);
+                
+                delete from activity where parent_id = 294 or activity_id = 294;
+                
+                delete from lookup_value_locale where lookup_id =
+                    (select lookup_id from lookup_value
+                    where lookup_name='Permissions-CanEditQuestionGroups');
+
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                    'Permissions-CanEditQuestionGroups';
+           </sql>
+       </rollback>
+   </changeSet>
+</databaseChangeLog>

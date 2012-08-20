@@ -345,7 +345,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         if (null != administrativeDocumentsIsEnabled && administrativeDocumentsIsEnabled.intValue() == 1) {
             SessionUtils.setCollectionAttribute(AdminDocumentsContants.ADMINISTRATIVEDOCUMENTSLIST,
-                    legacyAdminDocumentDao.getAllAdminDocuments(), request);
+                    legacyAdminDocumentDao.getAllActiveAdminDocuments(), request);
 
             SessionUtils.setCollectionAttribute(AdminDocumentsContants.ADMINISTRATIVEDOCUMENTSACCSTATEMIXLIST,
                     legacyAdminDocAccStateMixDao.getAllMixedAdminDocuments(), request);

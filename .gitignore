@@ -19,3 +19,5 @@ out/*
 targetEclipse
 .metadata/
 .project
+*/bin/*
+*/gen/*
