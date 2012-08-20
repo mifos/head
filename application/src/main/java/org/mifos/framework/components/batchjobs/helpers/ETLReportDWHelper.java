@@ -30,6 +30,7 @@ public class ETLReportDWHelper extends TaskHelper {
 
             Process p = Runtime.getRuntime().exec(cmd);    
 
+
         } catch (Exception e) {
             e.printStackTrace();
         }
