@@ -330,39 +330,45 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     
     @SuppressWarnings("unchecked")
     private void applyMifos5722Fix() throws PersistenceException {
-        int counter = 0;
-        List<LoanBO> fixLoans;
+        
         Session session = StaticHibernateUtil.getSessionTL();
+        int counter = 0;
+        LoanBO fixLoan;
+        
         logger.info("Started Mifos-5692 and Mifos-5722 fix.");
+        
         Query query = session.getNamedQuery("accounts.countAllParentLoans");
         Long loanCount = (Long)query.uniqueResult();
+        StaticHibernateUtil.clearSession();
+        
         logger.info("Query found " + loanCount.toString() + " accounts.");
+
         do {
+            session = StaticHibernateUtil.getSessionTL();
             query = session.getNamedQuery("accounts.findAllParentLoans");
             query.setFirstResult(counter);
-            query.setMaxResults(20);
-            fixLoans = query.list();
+            query.setMaxResults(1);
+            fixLoan = (LoanBO)query.uniqueResult();
             
-            if(fixLoans != null && !fixLoans.isEmpty()) {
-                
-                
-                for(LoanBO fixLoan : fixLoans) {
-                    counter++;
-                    if(fixLoan.needsMifos5722Repair()) {
-                        try {
-                            StaticHibernateUtil.startTransaction();
-                            fixLoan.applyMifos5722Fix();
-                            StaticHibernateUtil.commitTransaction();
-                        } catch(AccountException e) {
-                            StaticHibernateUtil.rollbackTransaction();
-                        }
+            if(fixLoan != null) {
+                counter++;
+                if(fixLoan.needsMifos5722Repair()) {
+                    try {
+                        StaticHibernateUtil.startTransaction();
+                        fixLoan.applyMifos5722Fix();
+                        StaticHibernateUtil.commitTransaction();
+                    } catch(AccountException e) {
+                        logger.info("Failed to fix loan: " + fixLoan.getGlobalAccountNum());
+                        StaticHibernateUtil.rollbackTransaction();
+                    } finally {
+                        StaticHibernateUtil.clearSession();
                     }
                 }
-                
-                StaticHibernateUtil.clearSession();
-                logger.info("Fixed " + counter + " accounts.");
-            }         
-        } while(fixLoans != null && !fixLoans.isEmpty());
+            }  
+            if(counter%100==0 || fixLoan==null) {
+                logger.info("Fixed " + counter + " accounts."); 
+            }
+        } while(fixLoan != null);
         logger.info("Finished Mifos-5692 and Mifos-5722 fix.");
     }
 
