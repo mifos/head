@@ -58,7 +58,7 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
         clientDetails.add(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300);
         List<LoanBO> loans = new ArrayList<LoanBO>();
         loans.add(loanMock);
-        glimLoanUpdaterMock.updateIndividualLoan(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300, loanMock);
+        glimLoanUpdaterMock.updateIndividualLoan(null, LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300, loanMock);
         expectLastCall().atLeastOnce();
         replay(glimLoanUpdaterMock, loanMock, customerMock);
         loanAccountAction.handleIndividualLoans(loanMock, loanAccountActionForm, true, clientDetails, loans);

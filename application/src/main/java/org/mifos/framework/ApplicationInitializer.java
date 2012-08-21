@@ -292,6 +292,19 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     StaticHibernateUtil.closeSession();
                 }
             }
+            
+            boolean key5732Exists = customJdbcService.mifos5732IssueKeyExists();
+            if(!key5732Exists) {
+                try {
+                    applyMifos5732Fix();
+                    customJdbcService.insertMifos5732Issuekey();                  
+                } catch (Exception e) {
+                    logger.info("Failed to apply Mifos-5732 fix");
+                    e.printStackTrace();
+                } finally {
+                    StaticHibernateUtil.closeSession();
+                }
+            }
         }
 
     }
@@ -372,6 +385,54 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         logger.info("Finished Mifos-5692 and Mifos-5722 fix.");
     }
 
+    private void applyMifos5732Fix() {
+        Session session = StaticHibernateUtil.getSessionTL();
+        int counter = 0;
+        int index = 0;
+        LoanBO fixLoan;
+        
+        Query query = session.getNamedQuery("accounts.countGLIMAccountsWithIncorrectNumberOfInstallmentsOnIndividualLoans");
+        Long loanCount = (Long)query.uniqueResult();
+        logger.info("Found " + loanCount.toString() + " GLIM accounts wtih incorrect number of installments on member accounts");
+        
+        StaticHibernateUtil.clearSession();
+        do {
+            session = StaticHibernateUtil.getSessionTL();
+            query = session.getNamedQuery("accounts.findGLIMAccountsWithIncorrectNumberOfInstallmentsOnIndividualLoans");
+            query.setFirstResult(index);
+            query.setMaxResults(1);
+            fixLoan = (LoanBO)query.uniqueResult();
+            
+            if(fixLoan != null) {
+                counter++;
+                try {
+                    StaticHibernateUtil.startTransaction();
+                    fixLoan.applyMifos5732Fix();
+                    StaticHibernateUtil.commitTransaction();
+                    logger.info("Trying to apply Mifos-5722 fix to current loan");
+                    try {
+                        StaticHibernateUtil.startTransaction();
+                        fixLoan.applyMifos5722Fix();
+                        StaticHibernateUtil.commitTransaction();
+                    } catch (Exception e) {
+                        logger.info("Failed to apply Mifos-5722 fix to loan " + fixLoan.getGlobalAccountNum());
+                        StaticHibernateUtil.rollbackTransaction();
+                    }
+                } catch(AccountException e) {
+                    logger.info("Failed to fix loan: " + fixLoan.getGlobalAccountNum());
+                    index++;
+                    StaticHibernateUtil.rollbackTransaction();
+                } finally {
+                    StaticHibernateUtil.clearSession();
+                }
+            }  
+            if(counter%100==0 || fixLoan==null) {
+                logger.info("Fixed " + counter + " accounts."); 
+            }
+        } while(fixLoan != null);
+        logger.info("Finished Mifos-5732 fix.");
+    }
+    
     private void initializeDBConnectionForHibernate(DatabaseMigrator migrator) {
         try {
             /*

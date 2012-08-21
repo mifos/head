@@ -31,11 +31,11 @@ import org.mifos.framework.util.helpers.Money;
 
 public class GlimLoanUpdater {
 
-    void updateIndividualLoan(final LoanAccountDetailsDto loanAccountDetail, LoanBO individualLoan)
+    void updateIndividualLoan(final Short noOfInstallments, final LoanAccountDetailsDto loanAccountDetail, LoanBO individualLoan)
             throws AccountException {
         String loanAmount = loanAccountDetail.getLoanAmount();
         Money loanMoney = new Money(individualLoan.getCurrency(), !loanAmount.equals("-") ? loanAmount : "0");
-        individualLoan.updateLoan(loanMoney, !businessActivityIsEmpty(loanAccountDetail) ? Integer
+        individualLoan.updateLoan(noOfInstallments, loanMoney, !businessActivityIsEmpty(loanAccountDetail) ? Integer
                 .valueOf(loanAccountDetail.getBusinessActivity()) : null);
     }
 

@@ -923,7 +923,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 //                        loanAccountDetail);
             } else {
                 foundLoans.add(individualLoan.getAccountId());
-                glimLoanUpdater.updateIndividualLoan(loanAccountDetail, individualLoan);
+                glimLoanUpdater.updateIndividualLoan(loanAccountActionForm.getNoOfInstallmentsValue(),loanAccountDetail, individualLoan);
             }
         }
         for (LoanBO loan : individualLoans) {
