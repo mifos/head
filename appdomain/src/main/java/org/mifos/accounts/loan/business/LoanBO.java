@@ -1648,8 +1648,10 @@ public class LoanBO extends AccountBO implements Loan {
         update();
     }
 
-    public void updateLoan(final Money loanAmount, final Integer businessActivityId) throws AccountException {
+    public void updateLoan(final Date disbursementDate, final Short noOfInstallments, final Money loanAmount, final Integer businessActivityId) throws AccountException {
         setLoanAmount(loanAmount);
+        setNoOfInstallments(noOfInstallments);
+        setDisbursementDate(disbursementDate);
         setBusinessActivityId(businessActivityId);
         MeetingBO meetingBO = ( isIndividualLoan() ? this.getParentAccount().getLoanMeeting() : this.getLoanMeeting());
         boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
@@ -3963,4 +3965,23 @@ public class LoanBO extends AccountBO implements Loan {
             applyPeriodicFee(fee, charge, dueInstallments);
         }
     } 
+      
+    public void applyMifos5763Fix() throws AccountException {
+        MeetingBO meetingBO = getLoanMeeting();
+        boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+        
+        for(LoanBO memberAccount : getMemberAccounts()) {
+            memberAccount.setNoOfInstallments(getNoOfInstallments());
+            memberAccount.setDisbursementDate(getDisbursementDate());
+            memberAccount.setLoanMeeting(meetingBO);
+            memberAccount.regeneratePaymentSchedule(isRepaymentIndepOfMeetingEnabled, meetingBO);
+            
+            memberAccount.update();
+            
+            for(int i = 0 ; i < getNoOfInstallments() ; i++) {
+                memberAccount.getAccountActionDatesSortedByInstallmentId().get(i).setActionDate(getAccountActionDatesSortedByInstallmentId().get(i).getActionDate());
+            }
+        }
+        
+    }
 }
