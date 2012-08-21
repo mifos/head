@@ -944,10 +944,28 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return proportion;
 	}
 	
+	public BigDecimal getProportionPaidBy(BigDecimal amount){
+	    return new BigDecimal(amount.doubleValue()/getTotalAmountOfInstallment().getAmount().doubleValue());
+	}
+	
 	public Money getAmountToBePaidToGetExpectedProportion(BigDecimal expected) {
 	    Money amount = getTotalAmountOfInstallment().multiply(expected);
 	    amount = amount.subtract(getTotalPaidAmount());
 	    
 	    return amount;
+	}
+	
+	public void removeAllFees() {        
+	    while(getAccountFeesActionDetails().iterator().hasNext()) {
+	        AccountFeesActionDetailEntity fee = getAccountFeesActionDetails().iterator().next();
+	        removeAccountFeesActionDetailEntity(fee);
+	    }
+	}
+ 
+	public void removeAllPenalties() {
+	    while(getLoanPenaltyScheduleEntities().iterator().hasNext()) {
+	        LoanPenaltyScheduleEntity penalty = getLoanPenaltyScheduleEntities().iterator().next();
+	        removePenalties(penalty.getPenalty().getPenaltyId());
+	    }
 	}
 }
