@@ -3939,9 +3939,9 @@ public class LoanBO extends AccountBO implements Loan {
 
     public boolean needsMifos5722Repair() {
         LoanBO memberAccount = getMemberAccounts().iterator().next();
-        boolean result = (getAccountPayments().size() > memberAccount.getAccountPayments().size()+1);
-        result = result | (getAccountFees().size() != memberAccount.getAccountFees().size());
-        result = result | (getAccountPenalties().size() != memberAccount.getAccountPenalties().size());
+        boolean result = (getAccountPayments().size() > memberAccount.getAccountPayments().size()+1)
+                || (getAccountFees().size() != memberAccount.getAccountFees().size())
+                || (getAccountPenalties().size() != memberAccount.getAccountPenalties().size());
         return result;
     }
 
