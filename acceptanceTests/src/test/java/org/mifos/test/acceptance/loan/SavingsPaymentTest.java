@@ -130,12 +130,11 @@ public class SavingsPaymentTest extends UiTestCaseBase {
     }
     
     public void testPermissionForPaymentFromSavings() {
-        String timeout = "30000";
+        
         String loanGlobalNum = setUpLoanAccount();
         String savingsGlobalNum = setUpSavingsAccount();
         
-        String accessDenied = "Access Denied";
-        String youAreNotAllowedToAccessThisPage = "You are not allowed to access this page.";
+        String errorMessage = "You do not have permission to make payment to the account using Savings Account Transfer";
         
         
         //first uncheck permission and see if access denied page is displayed
@@ -159,13 +158,12 @@ public class SavingsPaymentTest extends UiTestCaseBase {
         paymentParams.setTransactionDateDD("13");
         paymentParams.setTransactionDateMM("03");
         paymentParams.setTransactionDateYYYY("2011");
-        
-        applyPaymentPage.submitAndNavigateToApplyPaymentConfirmationPage(paymentParams);
-        
-        selenium.click("reviewapplypayment.button.submit");
-        selenium.waitForPageToLoad(timeout);
-        Assert.assertTrue(selenium.isTextPresent(accessDenied));
-        Assert.assertTrue(selenium.isTextPresent(youAreNotAllowedToAccessThisPage));
+        try {
+            applyPaymentPage.submitAndNavigateToApplyPaymentConfirmationPage(paymentParams);
+        } catch (AssertionError e) {
+            Assert.assertTrue(selenium.isTextPresent(errorMessage));
+        }
+       
         
         //now enable permission and validate transfer success
         manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
