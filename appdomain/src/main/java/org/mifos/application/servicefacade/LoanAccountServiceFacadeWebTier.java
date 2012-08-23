@@ -100,6 +100,7 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
+import org.mifos.accounts.productdefinition.business.QuestionGroupReference;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
@@ -2607,11 +2608,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         List<QuestionGroupDetail> questionGroupDetails = new ArrayList<QuestionGroupDetail>();
         LoanOfferingBO loanProduct = this.loanProductDao.findById(productId);
-        if (!loanProduct.getQuestionGroups().isEmpty()) {
+        Set<QuestionGroupReference> questionGroupReferences = loanProduct.getQuestionGroups();
+        if (!questionGroupReferences.isEmpty()) {
             List<QuestionGroupDetail> allQuestionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Create", "Loan");
             for (QuestionGroupDetail questionGroupDetail : allQuestionGroupDetails) {
-                if (questionGroupDetail.isActive()) {
-                    questionGroupDetails.add(questionGroupDetail);
+                for (QuestionGroupReference questionGroupReference : questionGroupReferences) {
+                    if (questionGroupDetail.isActive() && questionGroupReference.getQuestionGroupId().equals(questionGroupDetail.getId())) {
+                        questionGroupDetails.add(questionGroupDetail);
+                    }
                 }
             }
         }
