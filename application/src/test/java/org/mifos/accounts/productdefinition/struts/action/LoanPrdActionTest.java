@@ -75,9 +75,9 @@ public class LoanPrdActionTest {
     @Test
     public void shouldSetSelectedQuestionGroupsOnSession() throws PageExpiredException {
         List<QuestionGroupDetail> questionGroupDetails = asList(getQuestionGroupDetail(1, "QG1", true), getQuestionGroupDetail(2, "QG2", true), getQuestionGroupDetail(3, "QG3", false));
-        when(questionnaireServiceFacade.getQuestionGroupDetail(1)).thenReturn(questionGroupDetails.get(0));
-        when(questionnaireServiceFacade.getQuestionGroupDetail(2)).thenReturn(questionGroupDetails.get(1));
-        when(questionnaireServiceFacade.getQuestionGroupDetail(3)).thenReturn(questionGroupDetails.get(2));
+        when(questionnaireServiceFacade.getQuestionGroupDetailForLoanPrd(1)).thenReturn(questionGroupDetails.get(0));
+        when(questionnaireServiceFacade.getQuestionGroupDetailForLoanPrd(2)).thenReturn(questionGroupDetails.get(1));
+        when(questionnaireServiceFacade.getQuestionGroupDetailForLoanPrd(3)).thenReturn(questionGroupDetails.get(2));
         when(request.getAttribute(Constants.CURRENTFLOWKEY)).thenReturn(FLOW_KEY);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute(Constants.FLOWMANAGER)).thenReturn(flowManager);
@@ -91,7 +91,7 @@ public class LoanPrdActionTest {
         assertThat(questionGroupDetailList.size(), is(2));
         assertQuestionGroup(questionGroupDetailList.get(0), 1, "QG1");
         assertQuestionGroup(questionGroupDetailList.get(1), 2, "QG2");
-        verify(questionnaireServiceFacade, times(3)).getQuestionGroupDetail(anyInt());
+        verify(questionnaireServiceFacade, times(3)).getQuestionGroupDetailForLoanPrd(anyInt());
         verify(request, times(1)).getAttribute(Constants.CURRENTFLOWKEY);
         verify(request, times(1)).getSession();
         verify(session, times(1)).getAttribute(Constants.FLOWMANAGER);
