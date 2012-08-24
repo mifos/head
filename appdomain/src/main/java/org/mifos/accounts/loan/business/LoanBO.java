@@ -1648,9 +1648,10 @@ public class LoanBO extends AccountBO implements Loan {
         update();
     }
 
-    public void updateLoan(final Short noOfInstallments, final Money loanAmount, final Integer businessActivityId) throws AccountException {
+    public void updateLoan(final Date disbursementDate, final Short noOfInstallments, final Money loanAmount, final Integer businessActivityId) throws AccountException {
         setLoanAmount(loanAmount);
         setNoOfInstallments(noOfInstallments);
+        setDisbursementDate(disbursementDate);
         setBusinessActivityId(businessActivityId);
         MeetingBO meetingBO = ( isIndividualLoan() ? this.getParentAccount().getLoanMeeting() : this.getLoanMeeting());
         boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();

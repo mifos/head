@@ -20,6 +20,8 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -31,11 +33,11 @@ import org.mifos.framework.util.helpers.Money;
 
 public class GlimLoanUpdater {
 
-    void updateIndividualLoan(final Short noOfInstallments, final LoanAccountDetailsDto loanAccountDetail, LoanBO individualLoan)
+    void updateIndividualLoan(final Date disbursementDate, final Short noOfInstallments, final LoanAccountDetailsDto loanAccountDetail, LoanBO individualLoan)
             throws AccountException {
         String loanAmount = loanAccountDetail.getLoanAmount();
         Money loanMoney = new Money(individualLoan.getCurrency(), !loanAmount.equals("-") ? loanAmount : "0");
-        individualLoan.updateLoan(noOfInstallments, loanMoney, !businessActivityIsEmpty(loanAccountDetail) ? Integer
+        individualLoan.updateLoan(disbursementDate, noOfInstallments, loanMoney, !businessActivityIsEmpty(loanAccountDetail) ? Integer
                 .valueOf(loanAccountDetail.getBusinessActivity()) : null);
     }
 
