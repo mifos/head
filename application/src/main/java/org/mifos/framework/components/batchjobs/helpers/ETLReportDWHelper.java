@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import org.apache.log4j.Logger;
 import org.mifos.application.servicefacade.ApplicationContextHolder;
 import org.mifos.framework.components.batchjobs.TaskHelper;
@@ -42,15 +41,15 @@ public class ETLReportDWHelper extends TaskHelper {
                 jarPath = this.getClass().getResource("\\mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar").toString()
                         .replace("file:", "");
                 try {
-                    String cmd = System.getProperty("java.home") + "\\bin\\java -jar " + jarPath + " " + path + " false";
+                    String cmd = System.getProperty("java.home") + "\\bin\\java -jar " + jarPath + " " + path + " false "+ dsDW.getUsername() +" "+dsDW.getPassword()+" "+dsDW.getUrl();
                     Process p = Runtime.getRuntime().exec(cmd);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
                 try {
-                    String cmd = System.getProperty("java.home") + "/bin/java -jar " + jarPath + " " + path + " false";
-                    Process p = Runtime.getRuntime().exec(cmd);
+                    String cmd = System.getProperty("java.home") + "/bin/java -jar " + jarPath + " " + path + " false "+ dsDW.getUsername() +" "+dsDW.getPassword()+" "+dsDW.getUrl();
+                    Process p = Runtime.getRuntime().exec(cmd); 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
