@@ -1007,7 +1007,7 @@ public class AccountBO extends AbstractBusinessObject {
         if (accountActionDates!= null && !accountActionDates.isEmpty()) {
             for (AccountActionDateEntity accountAction : accountActionDates) {
             	LocalDate installmentDate = new LocalDate(accountAction.getActionDate());
-                if (asOf.isAfter(installmentDate) && !accountAction.isPaid()) {
+                if (asOf.isAfter(installmentDate) && !accountAction.isPaid() || asOf.isEqual(installmentDate)) {
                     installmentsInArrears.add(accountAction);
                 }
             }

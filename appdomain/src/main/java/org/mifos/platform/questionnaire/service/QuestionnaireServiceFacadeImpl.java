@@ -123,6 +123,11 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
+    public QuestionGroupDetail getQuestionGroupDetailForLoanPrd(Integer questionGroupId) throws SystemException {
+        return questionnaireService.getQuestionGroup(questionGroupId);
+    }
+
+    @Override
     public QuestionDetail getQuestionDetail(Integer questionId) throws SystemException {
         return questionnaireService.getQuestion(questionId);
     }
