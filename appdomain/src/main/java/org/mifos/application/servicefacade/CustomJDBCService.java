@@ -8,4 +8,8 @@ public interface CustomJDBCService {
     boolean mifos5722IssueKeyExists();
 
     void insertMifos5722Issuekey();
+    
+    boolean mifos5732IssueKeyExists();
+
+    void insertMifos5732Issuekey();
 }

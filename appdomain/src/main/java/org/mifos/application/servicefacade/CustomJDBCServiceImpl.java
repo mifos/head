@@ -38,5 +38,18 @@ public class CustomJDBCServiceImpl implements CustomJDBCService {
     public void insertMifos5722Issuekey() {
         this.template.execute("insert into config_key_value (configuration_key, configuration_type, configuration_value) values ('MIFOS-5722', 0, 1)");
     }
+    
+    @Override
+    public boolean mifos5732IssueKeyExists() {
+        
+        int count = this.template.queryForInt("select count(*) from config_key_value c where c.configuration_key like 'MIFOS-5732'");
+        
+        return count > 0;
+    }
+    
+    @Override
+    public void insertMifos5732Issuekey() {
+        this.template.execute("insert into config_key_value (configuration_key, configuration_type, configuration_value) values ('MIFOS-5732', 0, 1)");
+    }
 
 }
