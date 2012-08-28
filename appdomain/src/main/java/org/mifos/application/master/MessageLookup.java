@@ -110,18 +110,23 @@ public class MessageLookup implements MessageSourceAware, FactoryBean<MessageLoo
     }
 
     public String lookup(String lookupKey) {
+        String msg;
         try {
-            Locale locale = personnelServiceFacade.getUserPreferredLocale();
             String textMessage = getLabel(lookupKey);
             // if we don't find a message above, then it means that it has not
             // been customized and
             // we should return the default message from the properties file
-            return StringUtils.isEmpty(textMessage) ?
-                    replaceSubstitutions(messageSource.getMessage(lookupKey, null, lookupKey, locale))
-                    : replaceSubstitutions(textMessage);
+            if (StringUtils.isEmpty(textMessage)) {
+                Locale locale = personnelServiceFacade.getUserPreferredLocale();
+                msg = replaceSubstitutions(messageSource.getMessage(lookupKey, null, lookupKey, locale));
+            }
+            else { 
+                msg = replaceSubstitutions(textMessage);
+            }
         } catch (ConfigurationException e) {
             throw new RuntimeException(e);
         }
+        return msg;
     }
 
     /*
