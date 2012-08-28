@@ -892,7 +892,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             List<LoanBO> individualLoans = loanBusinessService.findIndividualLoans(Integer.valueOf(
                     loanBO.getAccountId()).toString());
             handleIndividualLoans(loanBO, loanAccountActionForm, isRepaymentIndepOfMeetingEnabled,
-                    loanAccountDetailsList, individualLoans);
+                    loanAccountDetailsList, individualLoans, getUserContext(request).getPreferredLocale());
             request.setAttribute(CUSTOMER_ID, loanBO.getCustomer().getCustomerId().toString());
         }
 
@@ -905,7 +905,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     void handleIndividualLoans(final LoanBO loanBO, final LoanAccountActionForm loanAccountActionForm,
                                final boolean isRepaymentIndepOfMeetingEnabled, final List<LoanAccountDetailsDto> loanAccountDetailsList,
-                               final List<LoanBO> individualLoans) throws AccountException, ServiceException {
+                               final List<LoanBO> individualLoans, final Locale locale) throws AccountException, ServiceException {
         List<Integer> foundLoans = new ArrayList<Integer>();
         for (final LoanAccountDetailsDto loanAccountDetail : loanAccountDetailsList) {
             Predicate predicate = new Predicate() {
@@ -923,7 +923,12 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 //                        loanAccountDetail);
             } else {
                 foundLoans.add(individualLoan.getAccountId());
-                glimLoanUpdater.updateIndividualLoan(loanAccountDetail, individualLoan);
+                try {
+                    glimLoanUpdater.updateIndividualLoan(
+                            loanAccountActionForm.getDisbursementDateValue(locale), loanAccountActionForm.getNoOfInstallmentsValue(),loanAccountDetail, individualLoan);
+                } catch (InvalidDateException e) {
+                    e.printStackTrace();
+                }
             }
         }
         for (LoanBO loan : individualLoans) {
