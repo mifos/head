@@ -26,33 +26,26 @@ public class ETLReportDWHelper extends TaskHelper {
         Pattern pat = Pattern.compile("(jdbc:mysql://)(.*)(:)([0-9]+)(/)([a-zA-Z]*)(?)(.*)");
         Matcher m = pat.matcher(dsDW.getUrl());
         String nameOfDataBase = null;
-        if(m.find()){
+        if (m.find()) {
             nameOfDataBase = m.group(6);
         }
         if (!nameOfDataBase.equals("")) {
             createPropertiesFileForPentahoDWReports(ds, dsDW);
-            String path = this.getClass().getResource("/MifosDataWarehouseETL/" + FILENAME).toString()
-                    .replace("file:", "");
-            String jarPath = this.getClass().getResource("/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar").toString()
-                    .replace("file:", "");
-            if (path.equals(null)) {
-                path = this.getClass().getResource("\\MifosDataWarehouseETL\\" + FILENAME).toString()
-                        .replace("file:", "");
-                jarPath = this.getClass().getResource("\\mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar").toString()
-                        .replace("file:", "");
-                try {
-                    String cmd = System.getProperty("java.home") + "\\bin\\java -jar " + jarPath + " " + path + " false "+ dsDW.getUsername() +" "+dsDW.getPassword()+" "+dsDW.getUrl();
-                    Process p = Runtime.getRuntime().exec(cmd);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    String cmd = System.getProperty("java.home") + "/bin/java -jar " + jarPath + " " + path + " false "+ dsDW.getUsername() +" "+dsDW.getPassword()+" "+dsDW.getUrl();
-                    Process p = Runtime.getRuntime().exec(cmd); 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            String path = System.getProperty("user.home") + "/.mifos/ETL/MifosDataWarehouseETL/" + FILENAME;
+            String jarPath = System.getProperty("user.home") + "/.mifos/ETL/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
+            String javaHome = System.getProperty("java.home") + "/bin/java"; 
+            String cmd = "-jar " + jarPath + " " + path + " false";
+                    
+            if (File.separatorChar == '\\') { // windows platform
+                javaHome=javaHome.replaceAll("/", "\\\\");
+                javaHome='"'+javaHome+'"';
+                cmd = cmd.replaceAll("/", "\\\\");
+            }
+            try {
+                cmd = javaHome +" "+ cmd +" "+ dsDW.getUsername() + " " + dsDW.getPassword() + " " + dsDW.getUrl();
+                Process p = Runtime.getRuntime().exec(cmd);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -60,7 +53,24 @@ public class ETLReportDWHelper extends TaskHelper {
 
     private void createPropertiesFileForPentahoDWReports(DriverManagerDataSource ds, DriverManagerDataSource dsDW) {
         try {
-            File file = new File(System.getProperty("user.dir") + "/Simple-JNDI/jdbc.properties");
+            String jdbc = null;
+            if (File.separatorChar == '\\') {
+                if(!(new File(System.getProperty("user.dir") + "\\Simple-JNDI")).exists()){
+                    System.out.println("create Simple-JNDI");
+                    new File(System.getProperty("user.dir") + "\\Simple-JNDI").mkdirs();
+                   
+                }
+                jdbc = System.getProperty("user.dir") + "\\Simple-JNDI\\jdbc.properties";
+                
+            } else {
+                if(!(new File(System.getProperty("user.home") + "/.mifos/ETL/Simple-JNDI")).exists()){
+                    System.out.println("create Simple-JNDIlinux");
+                    new File(System.getProperty("user.home") + "/.mifos/ETL/Simple-JNDI").mkdirs();
+                    
+                }
+                jdbc = System.getProperty("user.home") + "/.mifos/ETL/Simple-JNDI/jdbc.properties";
+            }
+            File file = new File(jdbc);
             PrintWriter fw = new PrintWriter(file);
             fw.println("SourceDB/type=javax.sql.DataSource");
             fw.println("SourceDB/driver=com.mysql.jdbc.Driver");

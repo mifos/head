@@ -20,9 +20,12 @@
 
 package org.mifos.framework;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.Enumeration;
@@ -45,6 +48,7 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import javax.sql.DataSource;
 
+import org.apache.commons.io.FileUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -72,6 +76,7 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
+import org.mifos.framework.components.batchjobs.helpers.ETLReportDWHelper;
 import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -92,6 +97,9 @@ import org.mifos.security.util.ActivityMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
@@ -204,6 +212,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 }
                 initJNDIforPentaho(applicationContext);
                 setAttributesOnContext(servletContext);
+                copyResources(servletContext);
             }
         } catch (Exception e) {
             String errMsgStart = "unable to start Mifos web application";
@@ -217,6 +226,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         }
         logger.info("Mifos is ready.");
     }
+
+    
 
     public void dbUpgrade(ApplicationContext applicationContext) throws ConfigurationException, PersistenceException, FinancialException, TaskSystemException {
         logger.info("Logger has been initialised");
@@ -772,5 +783,33 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         final ShutdownManager shutdownManager = (ShutdownManager) ctx.getAttribute(ShutdownManager.class.getName());
         shutdownManager.sessionDestroyed(httpSessionEvent);
     }
+    
+    private void copyResources(ServletContext sc) throws IOException {
+        URL protocol = ETLReportDWHelper.class.getClassLoader().getResource("sql/release-upgrades.txt");
+        if(protocol.getProtocol().equals("jar")){
+        String destinationDirectoryForJobs = System.getProperty("user.home")+"/.mifos/ETL/MifosDataWarehouseETL";
+        String destinationDirectoryForJar = System.getProperty("user.home")+"/.mifos/ETL/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
+        String pathFromJar ="/WEB-INF/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
+        String pathFromJobs = "/WEB-INF/MifosDataWarehouseETL/";
+        if(File.separatorChar == '\\'){
+          destinationDirectoryForJobs = destinationDirectoryForJobs.replaceAll("/", "\\\\");
+          destinationDirectoryForJar = destinationDirectoryForJar.replaceAll("/", "\\\\");
+        }
+        File directory = new File(destinationDirectoryForJobs);
+        directory.mkdirs();
+        FileUtils.cleanDirectory(directory);
+        
+            File jarDest = new File(destinationDirectoryForJar);
+            URL fullPath = sc.getResource(pathFromJar);   
+            File f = new File(sc.getResource(pathFromJobs).toString().replace("file:", ""));
+            for (File fileEntry : f.listFiles()) {
+                FileUtils.copyFileToDirectory(fileEntry, directory);
+                logger.info("Copy file: "+fileEntry.getName()+" to: "+directory);
+            }
+            FileUtils.copyURLToFile(fullPath, jarDest);
+            logger.info("Copy file: "+fullPath+" to: "+directory);
+        } 
+    }
 
+    
 }
