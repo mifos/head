@@ -53,8 +53,10 @@
                         <input type="submit" id="_eventId_selectQuestionnaire" name="_eventId_selectQuestionnaire"
                                value="[@spring.message "questionnaire.continue"/]" class="buttn"/>
                         &nbsp;
-                        <input type="submit" id="_eventId_cancel" name="_eventId_cancel"
-                               value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
+          [#--              <input type="submit" id="_eventId_cancel" name="_eventId_cancel"
+                               value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>  --]
+                            <input type="button" id="cancelbutton" 
+                               value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn" onclick="window.history.go(-1);"/>
                     </li>
                 </ol>
             </fieldset>
