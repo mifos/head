@@ -21,11 +21,16 @@
 package org.mifos.application.importexport.business.service;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
 import org.mifos.application.importexport.persistence.ImportedFilesDao;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.dto.domain.AccountTrxDto;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
@@ -42,10 +47,17 @@ public class ImportedFilesServiceImpl implements ImportedFilesService {
     }
 
     @Override
-    public void saveImportedFileName(String fileName, PersonnelBO submittedBy) {
+    public void saveImportedFileName(String fileName, PersonnelBO submittedBy, List<AccountTrxDto> idsToUndoImport, Boolean phaseOut) {
         Timestamp submittedOn = new Timestamp(new DateTimeService().getCurrentDateTime().getMillis());
-        ImportedFilesEntity importedFile = new ImportedFilesEntity(fileName, submittedOn, submittedBy);
-
+        Set<AccountTrxnEntity> accTrxEnt = new HashSet<AccountTrxnEntity>();
+        ImportedFilesEntity importedFile = new ImportedFilesEntity(fileName, submittedOn, submittedBy, accTrxEnt, phaseOut);
+        
+        if (null != idsToUndoImport) {
+            for (AccountTrxDto trx : idsToUndoImport) {
+                accTrxEnt.add(importedFileDao.getAccTrxById(trx.getId()));
+            }
+            importedFile.setImportedTrxn(accTrxEnt);
+        }
         try {
             hibernateTransactionHelper.startTransaction();
             importedFileDao.saveImportedFile(importedFile);
@@ -66,4 +78,10 @@ public class ImportedFilesServiceImpl implements ImportedFilesService {
     public void setHibernateTransactionHelper(HibernateTransactionHelper hibernateTransactionHelper) {
         this.hibernateTransactionHelper = hibernateTransactionHelper;
     }
+
+    @Override
+    public List<ImportedFilesEntity> getImportedFiles() {
+        return this.importedFileDao.retriveImportedFiles();
+    }
+
 }

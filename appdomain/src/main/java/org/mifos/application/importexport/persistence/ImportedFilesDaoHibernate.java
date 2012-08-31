@@ -21,8 +21,10 @@
 package org.mifos.application.importexport.persistence;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,4 +50,18 @@ public class ImportedFilesDaoHibernate implements ImportedFilesDao {
         Object queryResult = this.genericDao.executeUniqueResultNamedQuery("importfiles.getImportedFileByName", queryParameters);
         return queryResult == null ? null : (ImportedFilesEntity) queryResult;
     }
+
+    @Override
+    public AccountTrxnEntity getAccTrxById(Integer id) {
+        Map<String, Integer> queryParameters = new HashMap<String, Integer>();
+        queryParameters.put("accountTrxnId", id);
+        return (AccountTrxnEntity)this.genericDao.executeUniqueResultNamedQuery("importfiles.getAccTrxById", queryParameters);
+    }
+
+    @Override
+    public List<ImportedFilesEntity> retriveImportedFiles() {
+        Map<String, Integer> queryParameters = new HashMap<String, Integer>();
+        return (List<ImportedFilesEntity>) this.genericDao.executeNamedQuery("importfiles.retriveImportedFiles", queryParameters);
+    }
+
 }

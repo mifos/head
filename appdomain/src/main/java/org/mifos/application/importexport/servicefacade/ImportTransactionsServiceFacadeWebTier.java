@@ -26,7 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.mifos.accounts.api.TransactionImport;
+import org.mifos.accounts.business.AccountTrxnEntity;
+import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
 import org.mifos.application.importexport.business.service.ImportedFilesService;
@@ -34,8 +37,10 @@ import org.mifos.application.servicefacade.ListItem;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.dto.domain.AccountTrxDto;
 import org.mifos.dto.domain.ParseResultDto;
 import org.mifos.dto.domain.UserReferenceDto;
+import org.mifos.dto.screen.ImportedFileDto;
 import org.mifos.framework.plugin.PluginManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
@@ -48,14 +53,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class ImportTransactionsServiceFacadeWebTier implements ImportTransactionsServiceFacade {
 
     private static final Logger logger = LoggerFactory.getLogger(ImportTransactionsServiceFacadeWebTier.class);
-
+    private static final String IMPORT_UNDONE = "Import file has been phased out";
+    
     private ImportedFilesService importedFilesService;
     private PersonnelDao personnelDao;
+    private AccountServiceFacade accountServiceFacade;
 
     @Autowired
-    public ImportTransactionsServiceFacadeWebTier(ImportedFilesService importedFilesService, PersonnelDao personnelDao) {
+    public ImportTransactionsServiceFacadeWebTier(ImportedFilesService importedFilesService, PersonnelDao personnelDao, AccountServiceFacade accountServiceFacade) {
         this.importedFilesService = importedFilesService;
         this.personnelDao = personnelDao;
+        this.accountServiceFacade = accountServiceFacade;
     }
 
     @Override
@@ -71,13 +79,13 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
     }
 
     @Override
-    public void saveImportedFileName(String importTransactionsFileName) {
+    public void saveImportedFileName(String importTransactionsFileName, List<AccountTrxDto> idsToUndoImport) {
 
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(mifosUser);
 
         PersonnelBO submittedBy = this.personnelDao.findPersonnelById(userContext.getId());
-        importedFilesService.saveImportedFileName(importTransactionsFileName, submittedBy);
+        importedFilesService.saveImportedFileName(importTransactionsFileName, submittedBy, idsToUndoImport, Boolean.FALSE);
     }
 
     @Override
@@ -157,7 +165,8 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
             fileInput.close();
 
             fileInput = new FileInputStream(tempFileName);
-            transactionImport.store(fileInput);
+            List<AccountTrxDto> storeForUndoImport = transactionImport.storeForUndoImport(fileInput);
+            importResult.setTrxIdsToUndo(storeForUndoImport);
             return importResult;
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
@@ -170,5 +179,60 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
                 }
             }
         }
+    }
+
+    @Override
+    public void undoFullImport(String importTransactionsFileName) {
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+        try {
+            ImportedFilesEntity filesEntity = this.importedFilesService.getImportedFileByName(importTransactionsFileName);
+            List<AccountTrxnEntity> trxUndo = new ArrayList<AccountTrxnEntity>(filesEntity.getImportedTrxn());
+            List<ImportedAccPaymentDto> accPaymentList = new ArrayList<ImportedAccPaymentDto>();
+            for (AccountTrxnEntity trxn : trxUndo) {
+                accPaymentList.add(new ImportedAccPaymentDto(trxn.getAccount().getGlobalAccountNum(), 
+                        trxn.getAccountPayment().getPaymentId()));
+            }
+            for (ImportedAccPaymentDto accDto : accPaymentList) {
+                this.accountServiceFacade.applyHistoricalAdjustment(accDto.getGlobalNum(), 
+                        accDto.getPaymentId(), IMPORT_UNDONE, userContext.getId(), null);
+            }
+            this.importedFilesService.saveImportedFileName(filesEntity.getFileName(), filesEntity.getSubmittedBy(), null, Boolean.TRUE);
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<ImportedFileDto> getImportedFiles() {
+        List<ImportedFileDto> importedFilesDto = new ArrayList<ImportedFileDto>();
+        List<ImportedFilesEntity> importedFiles = this.importedFilesService.getImportedFiles();
+        DateTime date;
+        
+        for (ImportedFilesEntity fileEntity : importedFiles) {
+            date = new DateTime(fileEntity.getSubmittedOn().getTime());
+            importedFilesDto.add(new ImportedFileDto(fileEntity.getFileName(), date, fileEntity.getPhaseOut()));
+        }
+        return importedFilesDto;
+    }
+    
+    private class ImportedAccPaymentDto {
+        private String globalNum;
+        private Integer paymentId;
+        
+        public String getGlobalNum() {
+            return globalNum;
+        }
+        public Integer getPaymentId() {
+            return paymentId;
+        }
+        
+        public ImportedAccPaymentDto(String globalNum, Integer paymentId) {
+            super();
+            this.globalNum = globalNum;
+            this.paymentId = paymentId;
+        }
+        
+        
     }
 }

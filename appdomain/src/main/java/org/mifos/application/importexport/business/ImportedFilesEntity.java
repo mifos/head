@@ -21,7 +21,10 @@
 package org.mifos.application.importexport.business;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
 
 public class ImportedFilesEntity {
@@ -31,16 +34,22 @@ public class ImportedFilesEntity {
     private Timestamp submittedOn;
 
     private PersonnelBO submittedBy;
+    
+    private Set<AccountTrxnEntity> importedTrxn = new HashSet<AccountTrxnEntity>(0);
+    
+    private Boolean phaseOut;
 
     protected ImportedFilesEntity() {
      // empty constructor for Hibernate
     }
 
-    public ImportedFilesEntity(String fileName, Timestamp submittedOn, PersonnelBO submittedBy) {
+    public ImportedFilesEntity(String fileName, Timestamp submittedOn, PersonnelBO submittedBy, Set<AccountTrxnEntity> importedTrxn, Boolean phaseOut) {
         super();
         this.fileName = fileName;
         this.submittedOn = submittedOn;
         this.submittedBy = submittedBy;
+        this.importedTrxn = importedTrxn;
+        this.phaseOut = phaseOut;
     }
 
     public String getFileName() {
@@ -67,4 +76,20 @@ public class ImportedFilesEntity {
         this.submittedBy = submittedBy;
     }
 
+    public Set<AccountTrxnEntity> getImportedTrxn() {
+        return importedTrxn;
+    }
+
+    public void setImportedTrxn(Set<AccountTrxnEntity> importedTrxn) {
+        this.importedTrxn = importedTrxn;
+    }
+
+    public Boolean getPhaseOut() {
+        return phaseOut;
+    }
+
+    public void setPhaseOut(Boolean phaseOut) {
+        this.phaseOut = phaseOut;
+    }
+    
 }

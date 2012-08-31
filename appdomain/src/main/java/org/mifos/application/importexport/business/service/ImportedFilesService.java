@@ -20,12 +20,18 @@
 
 package org.mifos.application.importexport.business.service;
 
+import java.util.List;
+
 import org.mifos.application.importexport.business.ImportedFilesEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.dto.domain.AccountTrxDto;
 
 public interface ImportedFilesService {
 
-    void saveImportedFileName(String fileName, PersonnelBO submittedBy);
+    void saveImportedFileName(String fileName, PersonnelBO submittedBy, List<AccountTrxDto> idsToUndoImport , Boolean phaseOut);
 
     ImportedFilesEntity getImportedFileByName(String fileName);
+    
+    List<ImportedFilesEntity> getImportedFiles();
+    
 }
