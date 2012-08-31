@@ -51,11 +51,13 @@
                     ${i18n.date_formatter(file.submittedOn, "dd/MM/yyyy", Application.LocaleSetting.locale)}       
                     </td>
                     <td>
-                    [#if !file.phaseOut]
+                    [#if !file.phaseOut && file.undoable]
                         <a href='viewImportedTransactions.ftl?fileName=${file.importedFileName}'>
                             [@spring.message "admin.viewimportedfiles.undo"/]
                         </a>
-                    [#else]
+                    [#elseif !file.phaseOut && !file.undoable]
+                        [@spring.message "admin.importexport.undo.undoable" /]
+                    [#elseif file.phaseOut]
                         [@spring.message "admin.importexport.undo.phaseout" /]
                     [/#if]
                     </td>

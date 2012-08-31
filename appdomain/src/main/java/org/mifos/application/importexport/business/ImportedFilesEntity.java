@@ -38,18 +38,21 @@ public class ImportedFilesEntity {
     private Set<AccountTrxnEntity> importedTrxn = new HashSet<AccountTrxnEntity>(0);
     
     private Boolean phaseOut;
+    
+    private Boolean undoable;
 
     protected ImportedFilesEntity() {
      // empty constructor for Hibernate
     }
 
-    public ImportedFilesEntity(String fileName, Timestamp submittedOn, PersonnelBO submittedBy, Set<AccountTrxnEntity> importedTrxn, Boolean phaseOut) {
+    public ImportedFilesEntity(String fileName, Timestamp submittedOn, PersonnelBO submittedBy, Set<AccountTrxnEntity> importedTrxn, Boolean phaseOut, Boolean undoable) {
         super();
         this.fileName = fileName;
         this.submittedOn = submittedOn;
         this.submittedBy = submittedBy;
         this.importedTrxn = importedTrxn;
         this.phaseOut = phaseOut;
+        this.undoable= undoable;
     }
 
     public String getFileName() {
@@ -90,6 +93,14 @@ public class ImportedFilesEntity {
 
     public void setPhaseOut(Boolean phaseOut) {
         this.phaseOut = phaseOut;
+    }
+
+    public Boolean getUndoable() {
+        return undoable;
+    }
+
+    public void setUndoable(Boolean undoable) {
+        this.undoable = undoable;
     }
     
 }

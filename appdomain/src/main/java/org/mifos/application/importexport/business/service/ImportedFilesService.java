@@ -28,7 +28,7 @@ import org.mifos.dto.domain.AccountTrxDto;
 
 public interface ImportedFilesService {
 
-    void saveImportedFileName(String fileName, PersonnelBO submittedBy, List<AccountTrxDto> idsToUndoImport , Boolean phaseOut);
+    void saveImportedFileName(String fileName, PersonnelBO submittedBy, List<AccountTrxDto> idsToUndoImport , Boolean phaseOut, Boolean undoable);
 
     ImportedFilesEntity getImportedFileByName(String fileName);
     

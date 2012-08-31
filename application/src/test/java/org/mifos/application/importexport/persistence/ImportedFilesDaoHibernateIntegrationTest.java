@@ -50,7 +50,7 @@ public class ImportedFilesDaoHibernateIntegrationTest extends MifosIntegrationTe
         PersonnelBO personnelBO = TestObjectFactory.getPersonnel(personnelId);
         Timestamp timeStamp = new Timestamp(123134554L);
         String fileName = "testFile.xls";
-        ImportedFilesEntity expected = new ImportedFilesEntity(fileName, timeStamp, personnelBO, null, false);
+        ImportedFilesEntity expected = new ImportedFilesEntity(fileName, timeStamp, personnelBO, null, false, false);
 
         StaticHibernateUtil.startTransaction();
         importedFilesDao.saveImportedFile(expected);
@@ -71,13 +71,13 @@ public class ImportedFilesDaoHibernateIntegrationTest extends MifosIntegrationTe
         PersonnelBO personnelBO = TestObjectFactory.getPersonnel(personnelId);
         Timestamp timeStamp = new Timestamp(123134554L);
         String fileName = "testFile.xls";
-        ImportedFilesEntity expected = new ImportedFilesEntity(fileName, timeStamp, personnelBO, null, false);
+        ImportedFilesEntity expected = new ImportedFilesEntity(fileName, timeStamp, personnelBO, null, false, false);
 
         StaticHibernateUtil.startTransaction();
         importedFilesDao.saveImportedFile(expected);
         StaticHibernateUtil.flushSession();
 
-        ImportedFilesEntity shouldViolateConstraint = new ImportedFilesEntity(fileName, timeStamp, personnelBO, null, false);
+        ImportedFilesEntity shouldViolateConstraint = new ImportedFilesEntity(fileName, timeStamp, personnelBO, null, false, false);
         importedFilesDao.saveImportedFile(shouldViolateConstraint);
         StaticHibernateUtil.flushSession();
     }

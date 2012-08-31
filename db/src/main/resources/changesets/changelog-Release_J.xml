@@ -567,4 +567,14 @@
            </sql>
        </rollback>
    </changeSet>
+      <changeSet id="MIFOS_5702_2" author="Kamil Kalfas">
+       <sql endDelimiter=";">
+             alter table imported_transactions_files add undoable boolean default 0;
+       </sql>
+       <rollback>
+           <sql endDelimiter=";">
+             alter table imported_transactions_files drop column undoable;
+           </sql>
+       </rollback>
+   </changeSet>
 </databaseChangeLog>

@@ -47,10 +47,10 @@ public class ImportedFilesServiceImpl implements ImportedFilesService {
     }
 
     @Override
-    public void saveImportedFileName(String fileName, PersonnelBO submittedBy, List<AccountTrxDto> idsToUndoImport, Boolean phaseOut) {
+    public void saveImportedFileName(String fileName, PersonnelBO submittedBy, List<AccountTrxDto> idsToUndoImport, Boolean phaseOut, Boolean undoable) {
         Timestamp submittedOn = new Timestamp(new DateTimeService().getCurrentDateTime().getMillis());
         Set<AccountTrxnEntity> accTrxEnt = new HashSet<AccountTrxnEntity>();
-        ImportedFilesEntity importedFile = new ImportedFilesEntity(fileName, submittedOn, submittedBy, accTrxEnt, phaseOut);
+        ImportedFilesEntity importedFile = new ImportedFilesEntity(fileName, submittedOn, submittedBy, accTrxEnt, phaseOut, undoable);
         
         if (null != idsToUndoImport) {
             for (AccountTrxDto trx : idsToUndoImport) {

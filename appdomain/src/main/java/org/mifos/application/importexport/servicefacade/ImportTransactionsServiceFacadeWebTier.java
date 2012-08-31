@@ -79,13 +79,17 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
     }
 
     @Override
-    public void saveImportedFileName(String importTransactionsFileName, List<AccountTrxDto> idsToUndoImport) {
+    public void saveImportedFileName(String importTransactionsFileName, String importPluginClassname, List<AccountTrxDto> idsToUndoImport) {
 
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(mifosUser);
 
         PersonnelBO submittedBy = this.personnelDao.findPersonnelById(userContext.getId());
-        importedFilesService.saveImportedFileName(importTransactionsFileName, submittedBy, idsToUndoImport, Boolean.FALSE);
+        Boolean undoable = Boolean.FALSE;
+        if (importPluginClassname.equalsIgnoreCase("org.almajmoua.AudiBankXlsImporter")){
+            undoable = Boolean.TRUE;
+        }
+        importedFilesService.saveImportedFileName(importTransactionsFileName, submittedBy, idsToUndoImport, Boolean.FALSE, undoable);
     }
 
     @Override
@@ -197,7 +201,7 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
                 this.accountServiceFacade.applyHistoricalAdjustment(accDto.getGlobalNum(), 
                         accDto.getPaymentId(), IMPORT_UNDONE, userContext.getId(), null);
             }
-            this.importedFilesService.saveImportedFileName(filesEntity.getFileName(), filesEntity.getSubmittedBy(), null, Boolean.TRUE);
+            this.importedFilesService.saveImportedFileName(filesEntity.getFileName(), filesEntity.getSubmittedBy(), null, Boolean.TRUE, filesEntity.getUndoable());
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
         }
@@ -211,7 +215,7 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
         
         for (ImportedFilesEntity fileEntity : importedFiles) {
             date = new DateTime(fileEntity.getSubmittedOn().getTime());
-            importedFilesDto.add(new ImportedFileDto(fileEntity.getFileName(), date, fileEntity.getPhaseOut()));
+            importedFilesDto.add(new ImportedFileDto(fileEntity.getFileName(), date, fileEntity.getPhaseOut(), fileEntity.getUndoable()));
         }
         return importedFilesDto;
     }

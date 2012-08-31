@@ -30,7 +30,7 @@ import org.mifos.dto.screen.ImportedFileDto;
 
 public interface ImportTransactionsServiceFacade {
 
-    void saveImportedFileName(String importTransactionsFileName, List<AccountTrxDto> idsToUndoImport);
+    void saveImportedFileName(String importTransactionsFileName, String importPluginClassname,List<AccountTrxDto> idsToUndoImport);
 
     boolean isAlreadyImported(String importTransactionsFileName);
 
