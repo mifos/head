@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.net.URL;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -316,6 +317,19 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     StaticHibernateUtil.closeSession();
                 }
             }
+            
+            boolean key5632Exists = customJdbcService.mifos5632IssueKeyExists();
+            if(!key5632Exists) {
+                try {
+                    applyMifos5632();
+                    customJdbcService.insertMifos5632IssueKey();                  
+                } catch (Exception e) {
+                    logger.info("Failed to apply Mifos-5632 fix");
+                    e.printStackTrace();
+                } finally {
+                    StaticHibernateUtil.closeSession();
+                }
+            }
         }
 
     }
@@ -350,6 +364,55 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         		logger.info(fixLoans.size() + " Account Payments created to fix data related to MIFOS-4948");
         }
 
+    }
+    
+    @SuppressWarnings("unused")
+    private void applyMifos5632() throws PersistenceException {
+        Session session = StaticHibernateUtil.getSessionTL();
+        
+        @SuppressWarnings("unused")
+        Query lookup_value_query,lookup_value_locale_query,activity_query,roles_activity_query;
+        Query count_query = session.createSQLQuery("select count(*) from question_group;");
+        BigInteger count = (BigInteger)count_query.uniqueResult();
+        Long iterator = count.longValue();
+        Integer activity_id = -4;
+        StaticHibernateUtil.clearSession();
+        logger.info("Started Mifos-5632");
+        while (iterator != 0) {
+            try {
+                StaticHibernateUtil.startTransaction();
+                
+                lookup_value_query = session.createSQLQuery("insert into lookup_value(lookup_id,entity_id,lookup_name) " +
+                		"values((select max(lv.lookup_id)+1 from lookup_value lv), 87," +
+                		"concat(concat('QuestionGroup.',(select title from question_group where id="+ iterator +")),'"+ iterator +"'))");
+                lookup_value_query.executeUpdate();
+                
+                lookup_value_locale_query = session.createSQLQuery("insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values" +
+                		"(1,(select lookup_id from lookup_value where entity_id =87 and " +
+                		"lookup_name=concat(concat('QuestionGroup.',(select title from question_group where id="+ iterator +")),'"+ iterator +"')),concat('Can edit ', (select title from question_group where id="+ iterator +")))");
+                lookup_value_locale_query.executeUpdate();
+                
+                activity_query = session.createSQLQuery("insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id)" +
+                		"values("+ activity_id +",294,(select lookup_id from lookup_value where entity_id =87 and " +
+                		"lookup_name=concat(concat('QuestionGroup.',(select title from question_group where id="+ iterator +")),'"+ iterator +"'))," +
+                		"(select lookup_id from lookup_value where entity_id =87 and " +
+                		"lookup_name=concat(concat('QuestionGroup.',(select title from question_group where id="+ iterator +")),'"+ iterator +"')))");
+                activity_query.executeUpdate();
+                
+                roles_activity_query = session.createSQLQuery("insert into roles_activity(activity_id, role_id) values("+ activity_id +", 1)");
+                roles_activity_query.executeUpdate();
+                
+                iterator--;
+                activity_id--;
+                StaticHibernateUtil.commitTransaction();
+            } catch(Exception e) {
+                logger.info("Failed add permission for existing Question groups");
+                StaticHibernateUtil.rollbackTransaction();
+            } finally {
+                StaticHibernateUtil.clearSession();
+            }
+        }
+        logger.info("Success, permission has been added.");
     }
     
     @SuppressWarnings("unchecked")
