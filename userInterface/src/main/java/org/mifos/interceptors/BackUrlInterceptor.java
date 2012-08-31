@@ -13,7 +13,7 @@ import org.mifos.ui.core.controller.BreadCrumbsLinks;
 import org.mifos.ui.core.controller.BreadcrumbBuilder;
 import org.mifos.ui.core.controller.util.helpers.UrlHelper;
 
-@SessionAttributes({ "accessDeniedBreadcrumbs", "previousPageUrl" })
+@SessionAttributes({ "accessDeniedBreadcrumbs", "previousPageUrl", "configureDwDatabase" })
 public class BackUrlInterceptor extends HandlerInterceptorAdapter {
 
     protected List<BreadCrumbsLinks> breadcrumbs = new LinkedList<BreadCrumbsLinks>();
@@ -37,6 +37,7 @@ public class BackUrlInterceptor extends HandlerInterceptorAdapter {
         }
         request.setAttribute(Constants.URLTOBACKPAGE, urlToBackPage);
         request.getSession().setAttribute("previousPageUrl", UrlHelper.constructCurrentPageUrl(request));
+        
         return true;
     }
 }

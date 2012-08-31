@@ -25,12 +25,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.joda.time.LocalDate;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.reports.pentaho.params.PentahoDateParameter;
-import org.mifos.reports.pentaho.params.PentahoMultiSelectParameter;
-import org.mifos.reports.pentaho.params.PentahoInputParameter;
 import org.mifos.reports.pentaho.params.AbstractPentahoParameter;
+import org.mifos.reports.pentaho.params.PentahoDateParameter;
+import org.mifos.reports.pentaho.params.PentahoInputParameter;
+import org.mifos.reports.pentaho.params.PentahoMultiSelectParameter;
 import org.mifos.reports.pentaho.params.PentahoSingleSelectParameter;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.ReportDataFactoryException;
@@ -49,7 +51,7 @@ public class PentahoParamParser {
 
     private final static Logger logger = LoggerFactory.getLogger(PentahoParamParser.class);
 
-    public List<AbstractPentahoParameter> parseReportParams(MasterReport report) {
+    public List<AbstractPentahoParameter> parseReportParams(MasterReport report, HttpServletRequest request) {
         ParameterContext paramContext = null;
         try {
             paramContext = new DefaultParameterContext(report);
@@ -61,8 +63,8 @@ public class PentahoParamParser {
             }
 
             return result;
-        } catch (ReportDataFactoryException ex) { 
-        	throw new JNDIException("JNDI is not configured");
+        } catch (ReportDataFactoryException ex) {
+        	throw new JNDIException("Problem with Pentaho Reports", request);
     	}catch (Exception ex) {
             throw new MifosRuntimeException(ex);
         } finally {

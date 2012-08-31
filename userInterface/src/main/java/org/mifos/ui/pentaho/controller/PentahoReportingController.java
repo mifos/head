@@ -82,7 +82,7 @@ public class PentahoReportingController {
             mav = new ModelAndView("redirect:" + REPORTS_MAIN_URL);
         } else if (bindingResult.hasErrors()) {
             mav = new ModelAndView("viewPentahoReport");
-            initFormBean(pentahoReportFormBean, reportId);
+            initFormBean(pentahoReportFormBean, reportId, request);
         } else {
             Integer outputType = Integer.parseInt(pentahoReportFormBean.getOutputType());
             Map<String, AbstractPentahoParameter> reportParams = pentahoReportFormBean.getAllParameteres();
@@ -94,7 +94,7 @@ public class PentahoReportingController {
                     addErrorToBindingResult(error, bindingResult);
                 }
                 mav = new ModelAndView("viewPentahoReport");
-                initFormBean(pentahoReportFormBean, reportId);
+                initFormBean(pentahoReportFormBean, reportId, request);
             } else {
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getFilename() + "\"");
                 response.setContentType(report.getContentType());
@@ -108,11 +108,11 @@ public class PentahoReportingController {
 
     @RequestMapping(value = "/viewPentahoReport.ftl")
     public void loadReport(@RequestParam(value = REPORT_ID_PARAM, required = true) Integer reportId,
-            @ModelAttribute("pentahoReportFormBean") PentahoReportFormBean formBean) {
+            @ModelAttribute("pentahoReportFormBean") PentahoReportFormBean formBean, HttpServletRequest request) {
         if (!this.pentahoReportsService.checkAccessToReport(reportId)) {
             throw new AccessDeniedException("Access denied");
         }
-        initFormBean(formBean, reportId);
+        initFormBean(formBean, reportId, request);
     }
 
     @ModelAttribute("breadcrumbs")
@@ -128,14 +128,14 @@ public class PentahoReportingController {
         return this.pentahoReportsService.getReportName(getReportId(request));
     }
 
-    private void initFormBean(PentahoReportFormBean form, Integer reportId) {
+    private void initFormBean(PentahoReportFormBean form, Integer reportId, HttpServletRequest request) {
         form.setAllowedOutputTypes(this.pentahoReportsService.getReportOutputTypes());
         form.setReportId(reportId);
         if (form.getOutputType() == null) {
             form.setOutputType("0");
         }
 
-        List<AbstractPentahoParameter> params = this.pentahoReportsService.getParametersForReport(reportId);
+        List<AbstractPentahoParameter> params = this.pentahoReportsService.getParametersForReport(reportId, request);
         form.setReportParameters(params);
     }
 
