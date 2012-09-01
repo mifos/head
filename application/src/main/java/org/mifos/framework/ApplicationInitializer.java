@@ -371,16 +371,23 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         Session session = StaticHibernateUtil.getSessionTL();
         
         @SuppressWarnings("unused")
-        Query lookup_value_query,lookup_value_locale_query,activity_query,roles_activity_query;
+        Query lookup_value_query,lookup_value_locale_query,activity_query,roles_activity_query, min_question_group_id;
         Query count_query = session.createSQLQuery("select count(*) from question_group;");
         BigInteger count = (BigInteger)count_query.uniqueResult();
-        Long iterator = count.longValue();
-        Integer activity_id = -4;
+        Long iterator = count.longValue() + 1;
+        min_question_group_id = session.createSQLQuery("select min(id) from question_group ");
+        Integer activity_id = (Integer)min_question_group_id.uniqueResult();
+        if (activity_id == 1) {
+            activity_id = activity_id - 2;
+        }
         StaticHibernateUtil.clearSession();
         logger.info("Started Mifos-5632");
         while (iterator != 0) {
             try {
                 StaticHibernateUtil.startTransaction();
+                
+                iterator--;
+                activity_id--;
                 
                 lookup_value_query = session.createSQLQuery("insert into lookup_value(lookup_id,entity_id,lookup_name) " +
                 		"values((select max(lv.lookup_id)+1 from lookup_value lv), 87," +
@@ -402,8 +409,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 roles_activity_query = session.createSQLQuery("insert into roles_activity(activity_id, role_id) values("+ activity_id +", 1)");
                 roles_activity_query.executeUpdate();
                 
-                iterator--;
-                activity_id--;
                 StaticHibernateUtil.commitTransaction();
             } catch(Exception e) {
                 logger.info("Failed add permission for existing Question groups");
