@@ -371,18 +371,18 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         Session session = StaticHibernateUtil.getSessionTL();
         
         @SuppressWarnings("unused")
-        Query lookup_value_query,lookup_value_locale_query,activity_query,roles_activity_query, min_question_group_id;
-        Query count_query = session.createSQLQuery("select count(*) from question_group;");
-        BigInteger count = (BigInteger)count_query.uniqueResult();
+        Query lookup_value_query,lookup_value_locale_query,activity_query,roles_activity_query, min_activity_id, question_activity;
+        Query count_query = session.createSQLQuery("select max(id) from question_group where activity_id is null;");
+        Integer count = (Integer)count_query.uniqueResult();
         Long iterator = count.longValue() + 1;
-        min_question_group_id = session.createSQLQuery("select min(id) from question_group ");
-        Integer activity_id = (Integer)min_question_group_id.uniqueResult();
+        min_activity_id = session.createSQLQuery("select min(activity_id) from activity;");
+        Integer activity_id = ((Short)min_activity_id.uniqueResult()).intValue();
         if (activity_id == 1) {
             activity_id = activity_id - 2;
         }
         StaticHibernateUtil.clearSession();
         logger.info("Started Mifos-5632");
-        while (iterator != 0) {
+        while (iterator > 0) {
             try {
                 StaticHibernateUtil.startTransaction();
                 
@@ -405,6 +405,9 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 		"(select lookup_id from lookup_value where entity_id =87 and " +
                 		"lookup_name=concat(concat('QuestionGroup.',(select title from question_group where id="+ iterator +")),'"+ iterator +"')))");
                 activity_query.executeUpdate();
+                
+                question_activity = session.createSQLQuery("update question_group set activity_id ="+ activity_id +" where id = "+ iterator);
+                question_activity.executeUpdate();
                 
                 roles_activity_query = session.createSQLQuery("insert into roles_activity(activity_id, role_id) values("+ activity_id +", 1)");
                 roles_activity_query.executeUpdate();
