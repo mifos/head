@@ -22,13 +22,23 @@ package org.mifos.reports.pentaho.util;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.joda.time.LocalDate;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.application.servicefacade.CenterServiceFacade;
+import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.PersonnelDto;
+import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.reports.pentaho.params.AbstractPentahoParameter;
 import org.mifos.reports.pentaho.params.PentahoDateParameter;
 import org.mifos.reports.pentaho.params.PentahoInputParameter;
@@ -51,7 +61,7 @@ public class PentahoParamParser {
 
     private final static Logger logger = LoggerFactory.getLogger(PentahoParamParser.class);
 
-    public List<AbstractPentahoParameter> parseReportParams(MasterReport report, HttpServletRequest request) {
+    public List<AbstractPentahoParameter> parseReportParams(MasterReport report, HttpServletRequest request, Map<String, AbstractPentahoParameter> selectedValues, boolean update) {
         ParameterContext paramContext = null;
         try {
             paramContext = new DefaultParameterContext(report);
@@ -59,7 +69,7 @@ public class PentahoParamParser {
 
             List<AbstractPentahoParameter> result = new ArrayList<AbstractPentahoParameter>();
             for (ParameterDefinitionEntry paramDefEntry : paramDefinition.getParameterDefinitions()) {
-                result.add(parseParam(paramDefEntry, paramContext));
+                result.add(parseParam(paramDefEntry, paramContext, selectedValues, update));
             }
 
             return result;
@@ -103,13 +113,13 @@ public class PentahoParamParser {
         return result;
     }
 
-    private AbstractPentahoParameter parseParam(ParameterDefinitionEntry paramDefEntry, ParameterContext paramContext)
+    private AbstractPentahoParameter parseParam(ParameterDefinitionEntry paramDefEntry, ParameterContext paramContext, Map<String, AbstractPentahoParameter> selectedValues, boolean update)
             throws ReportDataFactoryException {
         AbstractPentahoParameter result = null;
         if (paramDefEntry instanceof PlainParameter) {
             result = parsePlainParameter((PlainParameter) paramDefEntry);
         } else if (paramDefEntry instanceof ListParameter) {
-            result = parseListParameter((ListParameter) paramDefEntry, paramContext);
+            result = parseListParameter((ListParameter) paramDefEntry, paramContext, selectedValues, update);
         } else {
             return null;
         }
@@ -154,23 +164,31 @@ public class PentahoParamParser {
         return result;
     }
 
-    private AbstractPentahoParameter parseListParameter(ListParameter paramDefEntry, ParameterContext paramContext)
+    private AbstractPentahoParameter parseListParameter(ListParameter paramDefEntry, ParameterContext paramContext,
+    		Map<String, AbstractPentahoParameter> selectedValues, boolean update)
             throws ReportDataFactoryException {
         DefaultListParameter listParam = (DefaultListParameter) paramDefEntry;
         AbstractPentahoParameter result;
         if (listParam.isAllowMultiSelection()) {
             result = parseMultiListParameter(paramDefEntry, paramContext);
         } else {
-            result = parseSingleListParameter(paramDefEntry, paramContext);
+            result = parseSingleListParameter(paramDefEntry, paramContext, selectedValues, update);
         }
         return result;
     }
 
     private PentahoSingleSelectParameter parseSingleListParameter(ListParameter paramDefEntry,
-            ParameterContext paramContext) throws ReportDataFactoryException {
+            ParameterContext paramContext,Map<String, AbstractPentahoParameter> selectedValues, boolean update) throws ReportDataFactoryException {
         PentahoSingleSelectParameter result = new PentahoSingleSelectParameter();
 
-        Map<String, String> possibleValues = getPossibleValuesForParam(paramDefEntry, paramContext);
+		Map<String, String> possibleValues = null;
+		if (update == false) {
+			possibleValues = getPossibleValuesForParam(paramDefEntry,
+					paramContext);
+		} else {
+			possibleValues = updatePossibleValuesForParam(paramDefEntry,
+					paramContext, selectedValues);
+		}
         result.setPossibleValues(possibleValues);
 
         Object defaultVal = paramDefEntry.getDefaultValue(paramContext);
@@ -206,4 +224,112 @@ public class PentahoParamParser {
         }
         return result;
     }
+    
+
+	private Map<String, String> updatePossibleValuesForParam(
+			ListParameter paramDefEntry, ParameterContext paramContext,
+			Map<String, AbstractPentahoParameter> selectedValues)
+			throws ReportDataFactoryException {
+		Map<String, String> result = new HashMap<String, String>();
+
+		String id;
+		if (parameterIsCenter(paramDefEntry.getName())) {
+			String keyValue = searchKey("(.*officer$)|(.*officer_id$)|(selected_office$)", selectedValues, paramDefEntry.getName());
+			if (!keyValue.equals("")){
+			id = (String) selectedValues.get(keyValue)
+					.getParamValue();
+			if (!id.equals("-1")) {
+				List<CustomerDetailDto> customerList = ApplicationContextProvider
+						.getBean(CenterServiceFacade.class)
+						.retrieveCustomersUnderUser(new Short(id));
+				for (CustomerDetailDto office : customerList) {
+					String key = office.getCustomerId().toString();
+					String value = office.getDisplayName();
+					result.put(key, value);
+				}
+			} else {
+			ParameterValues paramValues = paramDefEntry.getValues(paramContext);
+			for (int i = 0; i < paramValues.getRowCount(); i++) {
+				String key = String.valueOf(paramValues.getKeyValue(i));
+				String value = String.valueOf(paramValues.getTextValue(i));
+				result.put(key, value);
+			}}
+			} else {
+				ParameterValues paramValues = paramDefEntry.getValues(paramContext);
+				for (int i = 0; i < paramValues.getRowCount(); i++) {
+					String key = String.valueOf(paramValues.getKeyValue(i));
+					String value = String.valueOf(paramValues.getTextValue(i));
+					result.put(key, value);
+				}	
+			}
+			String key = "-1";
+			String value = "All";
+			result.put(key, value);
+		} else if (parameterIsOfficer(paramDefEntry.getName())) {
+			String keyValue = searchKey("(.*office$)|(.*office_id$)|(.*branch_id$)|(.*office$)", selectedValues, paramDefEntry.getName());
+			if(!keyValue.equals("")){
+			id = (String) selectedValues.get(keyValue).getParamValue();
+			if (!id.equals("-1")) {
+				ChangeAccountStatusDto changeAccountStatusDto = ApplicationContextProvider
+						.getBean(LoanAccountServiceFacade.class)
+						.retrieveLoanOfficerDetailsForBranch(new Short(id));
+				List<PersonnelDto> officers = changeAccountStatusDto
+						.getLoanOfficers();
+				for (PersonnelDto officer : officers) {
+					String key = officer.getPersonnelId().toString();
+					String value = officer.getDisplayName();
+					result.put(key, value);
+				}
+			}
+			String key = "-1";
+			String value = "All";
+			result.put(key, value);
+			}
+		} else {
+			ParameterValues paramValues = paramDefEntry.getValues(paramContext);
+			for (int i = 0; i < paramValues.getRowCount(); i++) {
+				String key = String.valueOf(paramValues.getKeyValue(i));
+				String value = String.valueOf(paramValues.getTextValue(i));
+				result.put(key, value);
+			}
+		}
+		return result;
+	}
+    
+    private boolean parameterIsCenter(String name) {
+        Pattern p = Pattern.compile("(.*center.*)|(.*office_id$)|(.*branch_id$)|(.*office$)");
+        Matcher m = p.matcher(name);
+        boolean b = m.matches(); 
+        return b;
+    }
+    
+    private boolean parameterIsOfficer(String name) {
+        Pattern p = Pattern.compile("(.*officer$)|(.*officer_id$)");
+        Matcher m = p.matcher(name);
+        boolean b = m.matches(); 
+        return b;
+    }
+    
+	public String searchKey(String regex,
+			Map<String, AbstractPentahoParameter> selectedValues, String name) {
+		String results = "";
+
+		Pattern p = Pattern.compile(regex);
+
+		Set<String> keys = selectedValues.keySet();
+		Iterator<String> ite = keys.iterator();
+		
+		while (ite.hasNext()) {
+			String candidate = ite.next();
+			Matcher m = p.matcher(candidate);
+			if (m.matches() && !name.equals(candidate)) {
+				results = candidate;
+			}
+		}
+		if (results.isEmpty()) {
+			return "";
+		} else {
+			return results;
+		}
+	}
 }

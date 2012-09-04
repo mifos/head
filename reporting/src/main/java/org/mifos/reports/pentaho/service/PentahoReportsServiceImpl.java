@@ -256,7 +256,7 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
     }
 
     @Override
-    public List<AbstractPentahoParameter> getParametersForReport(Integer reportId, HttpServletRequest request) {
+    public List<AbstractPentahoParameter> getParametersForReport(Integer reportId, HttpServletRequest request, Map<String, AbstractPentahoParameter> selectedValues, boolean update) {
         if (!checkAccessToReport(reportId)) {
             throw new AccessDeniedException("Access denied");
         }
@@ -264,7 +264,7 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
         String reportName = getReportFilename(reportId);
         MasterReport report = loadReport(reportName);
 
-        return paramParser.parseReportParams(report, request);
+        return paramParser.parseReportParams(report, request, selectedValues, update);
     }
 
     private MasterReport loadReport(String reportName) {

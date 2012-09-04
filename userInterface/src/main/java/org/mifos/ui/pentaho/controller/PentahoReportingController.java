@@ -106,7 +106,7 @@ public class PentahoReportingController {
         return mav;
     }
 
-    @RequestMapping(value = "/viewPentahoReport.ftl")
+    @RequestMapping(value = "/viewPentahoReport.ftl", method=RequestMethod.GET)
     public void loadReport(@RequestParam(value = REPORT_ID_PARAM, required = true) Integer reportId,
             @ModelAttribute("pentahoReportFormBean") PentahoReportFormBean formBean, HttpServletRequest request) {
         if (!this.pentahoReportsService.checkAccessToReport(reportId)) {
@@ -134,8 +134,9 @@ public class PentahoReportingController {
         if (form.getOutputType() == null) {
             form.setOutputType("0");
         }
-
-        List<AbstractPentahoParameter> params = this.pentahoReportsService.getParametersForReport(reportId, request);
+        Map <String, AbstractPentahoParameter> selectedValues = form.getAllParameteres();
+        boolean update=false;
+        List<AbstractPentahoParameter> params = this.pentahoReportsService.getParametersForReport(reportId, request, selectedValues, update);
         form.setReportParameters(params);
     }
 
@@ -150,7 +151,24 @@ public class PentahoReportingController {
         bindingResult.addError(error);
     }
 
+    @ModelAttribute("report_id")
     private Integer getReportId(HttpServletRequest request) {
         return Integer.parseInt(request.getParameter(REPORT_ID_PARAM));
     }
+    
+	@RequestMapping(value = "/viewPentahoReport.ftl", method = RequestMethod.POST)
+	public void updateSelectDropdown(
+			@ModelAttribute("pentahoReportFormBean") PentahoReportFormBean formBean,
+			HttpServletRequest request) {
+		formBean.setAllowedOutputTypes(this.pentahoReportsService.getReportOutputTypes());
+		Map<String, AbstractPentahoParameter> selectedValues = formBean
+				.getAllParameteres();
+		boolean update = true;
+		List<AbstractPentahoParameter> params = this.pentahoReportsService
+				.getParametersForReport(getReportId(request), request, selectedValues,
+						update);
+
+		formBean.setReportParameters(params);
+
+	}
 }

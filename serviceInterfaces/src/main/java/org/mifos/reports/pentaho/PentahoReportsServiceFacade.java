@@ -45,7 +45,7 @@ public interface PentahoReportsServiceFacade {
     Map<String, String> getReportOutputTypes();
 
     @PreAuthorize("isFullyAuthenticated()")
-    List<AbstractPentahoParameter> getParametersForReport(Integer reportId, HttpServletRequest request);
+    List<AbstractPentahoParameter> getParametersForReport(Integer reportId, HttpServletRequest request, Map<String, AbstractPentahoParameter> selectedValues, boolean update);
 
     @PreAuthorize("isFullyAuthenticated()")
     boolean checkAccessToReport(Integer reportId);
