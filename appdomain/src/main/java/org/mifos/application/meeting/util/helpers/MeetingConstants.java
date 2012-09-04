@@ -89,6 +89,7 @@ public interface MeetingConstants {
 
     String WEEK_SCHEDULE = "meeting.weekSchedule";
     String MONTH_DAY_SCHEDULE = "meeting.daySchedule";
+    String DAY_SCHEDULE = "meeting.everyDaySchedule";
     String MONTH_SCHEDULE = "meeting.monthSchedule";
     String WEEK_SCHEDULE_CHANGE = "meeting.weekSchedule.change";
     String MONTH_DAY_SCHEDULE_CHANGE = "meeting.daySchedule.change";

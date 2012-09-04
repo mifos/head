@@ -36,11 +36,18 @@ explanation of the license and how it is applied.
 </script>
 		<script>
 function showMeetingFrequency(){
-	if (document.meetingActionForm.frequency[0].checked == true){
+	if (document.meetingActionForm.frequency[0].checked==true){
+		document.getElementById("dayDIV").style.display = "block";
+		document.getElementById("weekDIV").style.display = "none";
+		document.getElementById("monthDIV").style.display = "none";	
+	}
+	else if (document.meetingActionForm.frequency[1].checked == true){
+		document.getElementById("dayDIV").style.display = "none";
 		document.getElementById("weekDIV").style.display = "block";
 		document.getElementById("monthDIV").style.display = "none";
 		}
-	else if (document.meetingActionForm.frequency[1].checked == true){
+	else if (document.meetingActionForm.frequency[2].checked == true){
+		document.getElementById("dayDIV").style.display = "none";
 		document.getElementById("weekDIV").style.display = "none";
 		document.getElementById("monthDIV").style.display = "block";
 		if(document.meetingActionForm.monthType[0].checked == false && document.meetingActionForm.monthType[1].checked == false)
@@ -51,8 +58,6 @@ function showMeetingFrequency(){
 function goToCancelPage(){
 	document.meetingActionForm.method.value="cancelCreate";
 	meetingActionForm.submit();
-	
-	
   }
 </script>
 
@@ -118,7 +123,9 @@ function goToCancelPage(){
 										style="border-top: 1px solid #CECECE; border-left: 1px solid #CECECE; border-right: 1px solid #CECECE;">
 									<table width="98%" border="0" cellspacing="0" cellpadding="2">
 										<tr valign="top" class="fontnormal">
-
+											<td width="20%"><html-el:radio styleId="createmeeting.input.frequencyDays" property="frequency" value="3"
+												onclick="showMeetingFrequency();" /> <span id="createmeeting.label.frequencyDays"><mifos:mifoslabel
+												name="meeting.labelDays" bundle="MeetingResources" /></span></td>
 											<td width="24%"><html-el:radio styleId="createmeeting.input.frequencyWeeks" property="frequency" value="1"
 												onclick="showMeetingFrequency();" /> <span id="createmeeting.label.frequencyWeeks"><mifos:mifoslabel
 												name="meeting.labelWeeks" bundle="MeetingResources" /></span></td>
@@ -133,7 +140,23 @@ function goToCancelPage(){
 									<td width="22%" align="right" valign="top">&nbsp;</td>
 									<td width="59%" align="left" valign="top"
 										style="border: 1px solid #CECECE;">
+									<div id="dayDIV" style="height:40px; width:380px; "><mifos:mifoslabel
+										name="meeting.labelRecurDays" bundle="MeetingResources" />
+										<table border="0" cellspacing="0" cellpadding="2">
+										<tr class="fontnormal">
+											<td colspan="4"><mifos:mifoslabel
+												name="meeting.labelRecurEvery"
+												bundle="MeetingResources" /> <mifos:mifosnumbertext
+												styleId="createmeeting.input.dayFrequency"
+																	property="recurDay" size="3" maxlength="3" /> <span
+																id="createcustomermeeting.label.dayFrequency"> <mifos:mifoslabel
+																		name="meeting.labelDays" bundle="MeetingResources" /></span>
 
+															</td>
+														</tr>
+									</table>
+									</div>
+									
 									<div id="weekDIV" style="height:40px; width:380px; "><mifos:mifoslabel
 										name="meeting.labelRecurWeeks" bundle="MeetingResources" />
 

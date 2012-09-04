@@ -20,6 +20,8 @@
 
 package org.mifos.application.meeting.business;
 
+import java.util.Date;
+
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
@@ -65,7 +67,11 @@ public class MeetingFactory {
                         .getMeetingStartDate().toDateMidnight().toDate(), MeetingType.CUSTOMER_MEETING, meetingDto
                         .getMeetingPlace());
             }
-
+			if (meetingDetailsDto.getRecurrenceTypeId().equals(3)) {
+				meeting = new MeetingBO(meetingDto.getMeetingStartDate()
+						.toDateMidnight().toDate(), meetingDto.getMeetingDetailsDto().getEvery().shortValue(),
+						MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
+			}
             return meeting;
         } catch (MeetingException e) {
             throw new BusinessRuleException(e.getKey(), e);

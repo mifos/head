@@ -15,4 +15,6 @@ public interface RecurringSchedule {
     Integer getDay();
     
     Integer getWeek();
+    
+    boolean isDaily();
 }

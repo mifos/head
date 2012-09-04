@@ -20,8 +20,10 @@
 
 package org.mifos.application.meeting.business;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
@@ -112,6 +114,10 @@ public class MeetingBO extends AbstractBusinessObject {
     public MeetingBO(final WeekDay weekDay, final Short recurAfter, final Date startDate, final MeetingType meetingType, final String meetingPlace)
             throws MeetingException {
         this(RecurrenceType.WEEKLY, null, weekDay, null, recurAfter, startDate, meetingType, meetingPlace);
+    }
+    
+    public MeetingBO(final Date startDate, final Short recurDay, final MeetingType customerMeeting, final String meetingPlace) throws MeetingException{
+        this(RecurrenceType.DAILY, null, null, null, recurDay, startDate, customerMeeting, meetingPlace, null);
     }
 
     public MeetingBO(final MeetingTemplate template) throws MeetingException {
@@ -208,6 +214,10 @@ public class MeetingBO extends AbstractBusinessObject {
 
     public boolean isMonthly() {
         return getMeetingDetails().isMonthly();
+    }
+    
+    public boolean isDaily(){
+    	return getMeetingDetails().isDaily();
     }
 
     public void update(final WeekDay weekDay, final String meetingPlace) throws MeetingException {
@@ -316,14 +326,20 @@ public class MeetingBO extends AbstractBusinessObject {
         return true;
     }
 
-    public Date getNextScheduleDateAfterRecurrenceWithoutAdjustment(final Date afterDate) throws MeetingException {
+    public List<DateTime> getNextScheduleDateAfterRecurrenceWithoutAdjustment(final Date afterDate) throws MeetingException {
+    	List<DateTime> meetingDate= new ArrayList<DateTime>();
         validateMeetingDate(afterDate);
         DateTime from = findNearestMatchingDate(new DateTime(this.meetingStartDate));
         DateTime currentScheduleDate = findNextMatchingDate(from);
-        while (currentScheduleDate.toDate().compareTo(afterDate) <= 0) {
-            currentScheduleDate = findNextMatchingDate(currentScheduleDate);
+        while (currentScheduleDate.isBefore(from.plusDays(7))){
+        	while (currentScheduleDate.toDate().compareTo(afterDate) <= 0) {
+                currentScheduleDate = findNextMatchingDate(currentScheduleDate);
+            }
+        	meetingDate.add(currentScheduleDate);
+        	currentScheduleDate = findNextMatchingDate(currentScheduleDate);
         }
-        return currentScheduleDate.toDate();
+        
+        return meetingDate;
     }
 
     private DateTime findNearestMatchingDate(DateTime startingFrom) {

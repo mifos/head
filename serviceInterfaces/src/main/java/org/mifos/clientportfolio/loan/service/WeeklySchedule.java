@@ -64,4 +64,9 @@ public class WeeklySchedule implements RecurringSchedule {
     public Integer getWeek() {
         return Integer.valueOf(-1);
     }
+
+	@Override
+	public boolean isDaily() {
+		return false;
+	}
 }

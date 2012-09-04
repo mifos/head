@@ -194,9 +194,12 @@ public class MeetingAction extends BaseAction {
         } else if (form.isMonthlyOnDate()) {
             meeting = new MeetingBO(form.getMonthDayValue(), form.getDayRecurMonthValue(), startDate,
                     MeetingType.CUSTOMER_MEETING, form.getMeetingPlace());
-        } else {
+        } else if (form.getRecurrenceType().equals(RecurrenceType.MONTHLY) && !form.getMonthWeekValue().equals(null)
+                && !form.getMonthRankValue().equals(null) && !form.getRecurMonthValue().equals(null)){
             meeting = new MeetingBO(form.getMonthWeekValue(), form.getMonthRankValue(), form.getRecurMonthValue(),
                     startDate, MeetingType.CUSTOMER_MEETING, form.getMeetingPlace());
+        } else {
+            meeting = new MeetingBO(startDate, form.gerRecurDeyValue(), MeetingType.CUSTOMER_MEETING, form.getMeetingPlace());
         }
         return meeting;
     }

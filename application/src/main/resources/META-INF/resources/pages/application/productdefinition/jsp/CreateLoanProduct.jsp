@@ -676,11 +676,15 @@ explanation of the license and how it is applied.
 												<table width="98%" border="0" cellspacing="0"
 													cellpadding="2">
 													<tr valign="top" class="fontnormal">
+														<td width="24%"><html-el:radio styleId="createLoanProduct.radio.freqOfInstallmentsDays"
+															property="freqOfInstallments" value="3"
+															onclick="showMeetingFrequency();" /> <mifos:mifoslabel
+															name="product.days" bundle="ProductDefUIResources" /></td>
 														<td width="24%"><html-el:radio styleId="createLoanProduct.radio.freqOfInstallmentsWeeks"
 															property="freqOfInstallments" value="1"
 															onclick="showMeetingFrequency();" /> <mifos:mifoslabel
 															name="product.weeks" bundle="ProductDefUIResources" /></td>
-														<td width="55%"><html-el:radio styleId="createLoanProduct.radio.freqOfInstallmentsMonths"
+														<td width="52%"><html-el:radio styleId="createLoanProduct.radio.freqOfInstallmentsMonths"
 															property="freqOfInstallments" value="2"
 															onclick="showMeetingFrequency();" /> <mifos:mifoslabel
 															name="product.months" bundle="ProductDefUIResources" /></td>
@@ -700,8 +704,10 @@ explanation of the license and how it is applied.
 															name="product.recur" bundle="ProductDefUIResources" /> <mifos:mifosnumbertext
 															styleId="createLoanProduct.input.recur" property="recurAfter" size="3" maxlength="3" /></td>
 														<td><span id="week"> <mifos:mifoslabel
-															name="product.week" bundle="ProductDefUIResources" /> </span> <span
-															id="month"> <mifos:mifoslabel name="product.month"
+															name="product.week" bundle="ProductDefUIResources" /></span> 
+															<span id="month"> <mifos:mifoslabel name="product.month"
+															bundle="ProductDefUIResources" /> </span></td>
+														<td>	<span id="day"> <mifos:mifoslabel name="product.days"
 															bundle="ProductDefUIResources" /> </span></td>
 													</tr>
 												</table>

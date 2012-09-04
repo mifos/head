@@ -48,6 +48,9 @@ public class MeetingHelper {
                 key = MeetingConstants.MONTH_DAY_SCHEDULE;
             args[0] = meeting.getMeetingDetails().getDayNumber();
             args[1] = meeting.getMeetingDetails().getRecurAfter();
+        } else if(meeting.isDaily()){
+        		key = MeetingConstants.DAY_SCHEDULE;
+        		args[0] = meeting.getMeetingDetails().getRecurAfter();
         } else {
                 key = MeetingConstants.MONTH_SCHEDULE;
             args[0] = meeting.getMeetingDetails().getMeetingRecurrence().getRankOfDays().getName();

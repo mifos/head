@@ -113,6 +113,10 @@ public class MeetingDetailsEntity extends AbstractEntity {
     public boolean isMonthly() {
         return getRecurrenceType().isMonthly();
     }
+    
+    public boolean isDaily() {
+    	return getRecurrenceType().isDaily();
+    }
 
     public boolean isMonthlyOnDate() {
         return isMonthly() && getMeetingRecurrence().isOnDate();

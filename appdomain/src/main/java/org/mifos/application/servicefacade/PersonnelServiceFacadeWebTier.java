@@ -669,22 +669,27 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             if (ClientRules.getCenterHierarchyExists()) {
                 for (CustomerDetailDto center : this.customerDao.findActiveCentersUnderUser(personnel)){
                     CustomerBO centerBO = this.customerDao.findCustomerById(center.getCustomerId());
-                    DateTime nextMeeting = new DateTime(centerBO.getCustomerMeetingValue().getNextScheduleDateAfterRecurrenceWithoutAdjustment(currentDate.toDate()));
-                    if ( Days.daysBetween(day, nextMeeting).getDays() == 0 ){
-                        CenterDescriptionDto centerDescription = new CenterDescriptionDto();
-                        centerDescription.setId(center.getCustomerId());
-                        centerDescription.setDisplayName(center.getDisplayName());
-                        centerDescription.setGlobalCustNum(center.getGlobalCustNum());
-                        centerDescription.setSearchId(center.getSearchId());
-                        hierarchy.getCenters().add(centerDescription);
-                    }
+                    List<DateTime> meetingList = centerBO.getCustomerMeetingValue().getNextScheduleDateAfterRecurrenceWithoutAdjustment(currentDate.toDate());
+					for (DateTime nextMeeting : meetingList) {
+						if (Days.daysBetween(day, nextMeeting).getDays() == 0) {
+							CenterDescriptionDto centerDescription = new CenterDescriptionDto();
+							centerDescription.setId(center.getCustomerId());
+							centerDescription.setDisplayName(center
+									.getDisplayName());
+							centerDescription.setGlobalCustNum(center
+									.getGlobalCustNum());
+							centerDescription.setSearchId(center.getSearchId());
+							hierarchy.getCenters().add(centerDescription);
+						}
+					}
                 }
             }
 
             allGroups:
             for (CustomerDetailDto group : this.customerDao.findGroupsUnderUser(personnel)){
                 CustomerBO groupBO = this.customerDao.findCustomerById(group.getCustomerId());
-                DateTime nextMeeting = new DateTime(groupBO.getCustomerMeetingValue().getNextScheduleDateAfterRecurrenceWithoutAdjustment(currentDate.toDate()));
+                List<DateTime> meetingList = groupBO.getCustomerMeetingValue().getNextScheduleDateAfterRecurrenceWithoutAdjustment(currentDate.toDate());
+                for(DateTime nextMeeting : meetingList){
                 if ( Days.daysBetween(day, nextMeeting).getDays() == 0 ){
                     GroupDescriptionDto groupDescription = new GroupDescriptionDto();
                     groupDescription.setId(group.getCustomerId());
@@ -708,6 +713,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                         }
                     }
                     hierarchy.getGroups().add(groupDescription);
+                }
                 }
             }
         } catch (MeetingException e) {

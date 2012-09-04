@@ -65,8 +65,18 @@ public class MeetingActionForm extends BaseActionForm {
     private String customerLevel;
 
     private String input;
+    
+    private String recurDay;
 
-    public String getInput() {
+    public String getRecurDay() {
+		return recurDay;
+	}
+
+	public void setRecurDay(String recurDay) {
+		this.recurDay = recurDay;
+	}
+
+	public String getInput() {
         return input;
     }
 
@@ -183,7 +193,11 @@ public class MeetingActionForm extends BaseActionForm {
     public Short getRecurWeekValue() {
         return getShortValue(getRecurWeek());
     }
-
+    
+    public Short gerRecurDeyValue() {
+    	return getShortValue(getRecurDay());
+    }
+    
     public Short getRecurMonthValue() {
         return getShortValue(getRecurMonth());
     }

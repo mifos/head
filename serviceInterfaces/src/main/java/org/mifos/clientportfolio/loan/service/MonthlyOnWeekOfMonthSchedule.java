@@ -46,4 +46,9 @@ public class MonthlyOnWeekOfMonthSchedule implements RecurringSchedule {
     public Integer getWeek() {
         return this.weekOfMonth;
     }
+
+	@Override
+	public boolean isDaily() {
+		return false;
+	}
 }

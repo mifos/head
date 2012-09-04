@@ -233,4 +233,9 @@ public class CreateLoanAccount implements RecurringSchedule {
     public void setFlagId(Short flag) {
         this.flagId=flag;
     }
+
+	@Override
+	public boolean isDaily() {
+		return this.recurringSchedule.isDaily();
+	}
 }

@@ -113,6 +113,7 @@ public class LoanAccountFormBean implements Serializable {
     private boolean monthlyWeekOfMonthOptionSelected;
     private String montlyOption = "weekOfMonth";
     private boolean weekly;
+    private boolean daily;
 
     // variable installments only for validation purposes
     private boolean variableInstallmentsAllowed;
@@ -1007,9 +1008,17 @@ public class LoanAccountFormBean implements Serializable {
     public boolean isMonthly() {
         return monthly;
     }
+    
+    public boolean isDaily() {
+    	return daily;
+    }
 
     public void setMonthly(boolean monthly) {
         this.monthly = monthly;
+    }
+    
+    public void setDaily(boolean daily){
+    	this.daily = daily;
     }
 
     public boolean isMonthlyDayOfMonthOptionSelected() {
