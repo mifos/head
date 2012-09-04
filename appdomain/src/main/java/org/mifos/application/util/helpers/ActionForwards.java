@@ -205,5 +205,6 @@ public enum ActionForwards {
     viewAndEditAdditionalInformation, 
     remove_success, 
     remove_fee_success,
-    remove_failure
+    remove_failure,
+    printPaymentReceipt
 }

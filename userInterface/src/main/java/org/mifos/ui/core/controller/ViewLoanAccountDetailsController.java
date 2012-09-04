@@ -149,6 +149,24 @@ public class ViewLoanAccountDetailsController {
 
         return modelAndView;
     }
+    
+    @RequestMapping(value = "/printPaymentReceipt", method=RequestMethod.GET)
+    public ModelAndView showLastPaymentReceipt(HttpServletRequest request, HttpServletResponse response, @RequestParam (required=false) String globalAccountNum){
+        ModelAndView modelAndView = new ModelAndView("printPaymentReceipt");
+        if(globalAccountNum==null) {
+            globalAccountNum = request.getSession().getAttribute("globalAccountNum").toString();
+        }
+        AccountPaymentDto loanAccountPayment = loanAccountServiceFacade.getLoanAccountPayments(globalAccountNum).get(0);
+            List<AdminDocumentDto> adminDocuments = adminDocumentsServiceFacade.getAdminDocumentsForAccountPayment(loanAccountPayment.getPaymentId());
+            if (adminDocuments != null && !adminDocuments.isEmpty()){
+                loanAccountPayment.setAdminDocuments(adminDocuments);
+            }
+
+        modelAndView.addObject("loanAccountPayment", loanAccountPayment);
+        modelAndView.addObject("globalAccountNum", globalAccountNum);
+        
+        return modelAndView;
+    }
 
     @RequestMapping(value = "/viewLoanAccountNextInstallmentDetails", method=RequestMethod.GET)
     public ModelAndView showLoanAccountNextInstallmentDetails(HttpServletRequest request, HttpServletResponse response){

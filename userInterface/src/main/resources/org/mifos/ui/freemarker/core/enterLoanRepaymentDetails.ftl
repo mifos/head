@@ -60,6 +60,14 @@
         [@form.input path="loanRepaymentFormBean.receiptDateMM" id="receiptDateMM" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.mm"/]</span>
         [@form.input path="loanRepaymentFormBean.receiptDateYY" id="receiptDateYY" attributes="size=3 maxlength=4" /]<span>[@spring.message "datefield.yyyy"/]</span>
     </div>
+    <div class="row">
+    	<label for="printPaymentReceipt">[@spring.message "accounts.check_to_print_payment_receipt"/]:</label>
+    	[#if loanRepaymentFormBean.truePrintReceipt]
+			<input id="accounts.printReceipt" type="checkbox" name="printReceipt" checked="yes" value="true" />
+		[#else]
+			<input id="accounts.printReceipt" type="checkbox" name="printReceipt" value="true" />
+		[/#if]
+    </div>
     </fieldset>
     <div class="row">
         [@form.submitButton label="widget.form.buttonLabel.submit" id="enterLoanRepaymentDetails.submit" webflowEvent="detailsEntered" /]
