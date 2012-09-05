@@ -52,6 +52,24 @@ public class RepayLoanActionForm extends BaseActionForm {
     private java.util.Date lastPaymentDate;
     private Short transferPaymentTypeId;
     private String accountForTransfer;
+    private boolean printReceipt;
+    private boolean truePrintReceipt = false;
+    
+    public boolean getTruePrintReceipt() {
+        return this.truePrintReceipt;
+    }
+    
+    public void setTruePrintReceipt(boolean truePrintReceipt) {
+        this.truePrintReceipt = truePrintReceipt;
+    }
+    
+    public boolean getPrintReceipt() {
+        return this.printReceipt;
+    }
+    
+    public void setPrintReceipt(boolean printReceipt) {
+        this.printReceipt = printReceipt;
+    }
 
     public RepayLoanActionForm() {
         waiverInterest = true;

@@ -23,6 +23,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
@@ -80,6 +81,7 @@ explanation of the license and how it is applied.
 		<html-el:form action="editStatusAction.do?method=preview" onsubmit="return validateMyForm(transactionDate,transactionDateFormat,transactionDateYY)">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'editAccountStatusDocumentsList')}" var="adminDoc" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -219,6 +221,27 @@ explanation of the license and how it is applied.
                                 </html-el:button>
 							</td>
 						</tr>
+					</table>
+					<table>
+						<tr>
+							<td>
+								<span class="fontnormalbold"> 
+									<c:if test="${fn:length(adminDoc) > 0}">
+										<mifos:mifoslabel name="reports.administrativedocuments" /> :&nbsp
+									</c:if>
+								</span>
+							</td>
+						</tr>
+						<c:forEach var="adminDoc" items="${adminDoc}">
+							<tr>
+								<td>
+								<html-el:link styleId="loanaccountdetail.link.viewAdminReport"
+									href="executeAdminDocument.ftl?adminDocumentId=${adminDoc.admindocId}&entityId=${BusinessKey.globalAccountNum}">
+									<c:out value="${adminDoc.adminDocumentName}" />
+								</html-el:link>	  	
+								</td>
+							</tr>	
+						</c:forEach>			
 					</table>
 					<br>
 					<br>
