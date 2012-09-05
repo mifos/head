@@ -37,6 +37,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -314,6 +315,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private final InstallmentsValidator installmentsValidator;
     private final HolidayServiceFacade holidayServiceFacade;
 
+    @PostConstruct
+    public void init() {
+    	questionnaireServiceFacade.setLoanAccountServiceFacade(this);
+    }
+    
     @Autowired
     public LoanAccountServiceFacadeWebTier(OfficeDao officeDao, LoanProductDao loanProductDao, CustomerDao customerDao,
                                            PersonnelDao personnelDao, FundDao fundDao, LoanDao loanDao,

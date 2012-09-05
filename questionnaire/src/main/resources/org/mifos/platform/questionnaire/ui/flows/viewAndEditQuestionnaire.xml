@@ -33,7 +33,7 @@
     </action-state>
 
     <action-state id="getQuestionGroupInstance">
-        <evaluate result="flowScope.questionGroupInstanceDetails" expression="questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(requestParameters.entityId, requestParameters.event, requestParameters.source)"/>
+        <evaluate result="flowScope.questionGroupInstanceDetails" expression="questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroupsForLoan(requestParameters.entityId, requestParameters.event, requestParameters.source)"/>
         <transition to="displayResponses"/>
     </action-state>
 

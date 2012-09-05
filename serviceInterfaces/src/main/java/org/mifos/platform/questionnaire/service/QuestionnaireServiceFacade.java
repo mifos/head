@@ -22,6 +22,7 @@ package org.mifos.platform.questionnaire.service;
 
 import java.util.List;
 
+import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
@@ -67,6 +68,8 @@ public interface QuestionnaireServiceFacade {
 
     List<QuestionGroupInstanceDetail> getQuestionGroupInstancesWithUnansweredQuestionGroups(Integer entityId, String event, String source);
 
+    List<QuestionGroupInstanceDetail> getQuestionGroupInstancesWithUnansweredQuestionGroupsForLoan(Integer entityId, String event, String source);
+    
     QuestionGroupInstanceDetail getQuestionGroupInstance(Integer questionGroupInstanceId);
 
     Integer createQuestionGroup(QuestionGroupDto questionGroupDto) throws SystemException;
@@ -85,5 +88,7 @@ public interface QuestionnaireServiceFacade {
     Integer createQuestion(QuestionDto questionDto);
 
     void applyToAllLoanProducts(Integer entityId);
+    
+    void setLoanAccountServiceFacade(LoanAccountServiceFacade loanAccountServiceFacade);
     
 }
