@@ -173,6 +173,21 @@ explanation of the license and how it is applied.
 							<td align="center">&nbsp;</td>
 						</tr>
 						<tr>
+							<td align="left">
+								<c:choose>
+								<c:when test="${applyPaymentActionForm.truePrintReceipt }">
+									<input id="accounts.printReceipt" type="checkbox" name="printReceipt" checked="yes" value="true" />
+								</c:when>
+								<c:otherwise>
+									<input id="accounts.printReceipt" type="checkbox" name="printReceipt" value="true" />
+								</c:otherwise>
+								</c:choose>
+								
+								<span id="payment.label.printReceipt">
+								<mifos:mifoslabel name="accounts.check_to_print_payment_receipt"/></span>
+							</td>
+						</tr>
+						<tr>
 							<td align="center"><c:choose>
 								<c:when
 									test="${(AccountType!='LOAN_ACCOUNT') && (applyPaymentActionForm.amount == '0.0'||applyPaymentActionForm.amount=='0')}">
