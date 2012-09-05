@@ -100,6 +100,7 @@
             <forward name="update_success" path="/loanAccountAction.do?method=get"/>
             <forward name="update_failure" path="/pages/application/loan/jsp/Review_RepayLoan.jsp"/>
             <forward name="preview_failure" path="/pages/application/loan/jsp/RepayLoan.jsp"/>
+            <forward name="printPaymentReceipt" path="printPaymentReceipt.ftl" redirect="true"/>
         </action>
         <!-- Ends-->
         <!-- New Account Action  -->
@@ -173,6 +174,7 @@
             <forward name="applyPayment_success" path="/customerAccountAction.do?method=load"/>
             <forward name="applyPayment_failure" path="/pages/accounts/jsp/reviewapplypayment.jsp"/>
             <forward name="loan_detail_page" path="/loanAccountAction.do?method=get"/>
+            <forward name="printPaymentReceipt" path="printPaymentReceipt.ftl" redirect="true"/>
         </action>
         <!--  redo loan -->
         <action path="/loanAccountAction" type="org.mifos.accounts.loan.struts.action.LoanAccountAction"

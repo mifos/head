@@ -78,6 +78,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
+import org.mifos.reports.admindocuments.business.AdminDocumentBO;
+import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
 import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.ActivityContext;
@@ -94,7 +97,9 @@ public class SavingsAction extends BaseAction {
     private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
     private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Savings",
             ActionForwards.preview_success, "clientsAndAccounts.ftl", questionnaireServiceFacadeLocator);
-
+    
+    private LegacyAdminDocumentDao legacyAdminDocumentDao;
+    
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("savingsAction");
 
@@ -123,6 +128,7 @@ public class SavingsAction extends BaseAction {
     }
 
     public SavingsAction() throws Exception {
+        this.legacyAdminDocumentDao = ApplicationContextProvider.getBean(LegacyAdminDocumentDao.class);
     }
 
     @TransactionDemarcate(saveToken = true)
@@ -267,6 +273,16 @@ public class SavingsAction extends BaseAction {
             throw e;
         }
 
+        List<AdminDocumentBO> allAdminDocuments = legacyAdminDocumentDao.getAllActiveAdminDocuments();
+        List<AdminDocumentBO> savingsAdminDocuments = new ArrayList();
+        for(AdminDocumentBO adminDocumentBO : allAdminDocuments) {
+            List<AdminDocAccStateMixBO> admindoclist = legacyAdminDocAccStateMixDao.getMixByAdminDocuments(adminDocumentBO.getAdmindocId());
+            if (!savingsAdminDocuments.contains(adminDocumentBO) && admindoclist.size() > 0 && admindoclist.get(0).getAccountStateID().getPrdType().getProductTypeID().equals(Short.valueOf("2"))){
+                savingsAdminDocuments.add(adminDocumentBO);
+            }
+        }
+        SessionUtils.setCollectionAttribute("administrativeDocumentsList", savingsAdminDocuments, request);
+        
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, legacyMasterDao.findMasterDataEntitiesWithLocale(SavingsTypeEntity.class), request);
         SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, legacyMasterDao.findMasterDataEntitiesWithLocale(RecommendedAmntUnitEntity.class), request);

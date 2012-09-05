@@ -93,6 +93,26 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     private String accountForTransfer;
 
     private Short transferPaymentTypeId;
+    
+    private boolean printReceipt;
+    
+    private boolean truePrintReceipt = false;
+    
+    public boolean getTruePrintReceipt() {
+        return this.truePrintReceipt;
+    }
+    
+    public void setTruePrintReceipt(boolean truePrintReceipt) {
+        this.truePrintReceipt = truePrintReceipt;
+    }
+    
+    public boolean getPrintReceipt() {
+        return this.printReceipt;
+    }
+    
+    public void setPrintReceipt(boolean printReceipt) {
+        this.printReceipt = printReceipt;
+    }
 
     public boolean amountCannotBeZero() {
         return this.amountCannotBeZero;
@@ -339,6 +359,8 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     protected void clear() throws InvalidDateException {
         this.amount = null;
         this.paymentTypeId = null;
+        this.printReceipt = false;
+        this.truePrintReceipt = false;
         setReceiptDate(null);
         this.receiptId = null;
     }
