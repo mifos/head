@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
+import org.mifos.clientportfolio.newloan.domain.LoanAccountDetail;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.AuditLogService;
@@ -212,18 +213,23 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 		List<QuestionGroupInstanceDetail> details = filterInActiveQuestions(questionnaireService
 				.getQuestionGroupInstances(entityId,
 						getEventSource(event, source), true, true));
-		List<QuestionGroupDetail> questionGroupDetails = this.loanAccountServiceFacade
-				.retrieveApplicableQuestionGroups(entityId);
-		List<QuestionGroupInstanceDetail> filteringGroups = new ArrayList<QuestionGroupInstanceDetail>();
-		for (QuestionGroupInstanceDetail questionGroupInstanceDetail : details) {
-			for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
-				if (questionGroupDetail.getId() == questionGroupInstanceDetail
-						.getQuestionGroupDetail().getId()) {
-					filteringGroups.add(questionGroupInstanceDetail);
+		
+		if (event.equals("Create") && source.equals("Loan")) {
+			List<QuestionGroupInstanceDetail> filteringGroups = new ArrayList<QuestionGroupInstanceDetail>();
+			Short prdId = this.loanAccountServiceFacade.retrieveLoanAccountNotes(entityId.longValue()).getProductDetails().getPrdOfferingId();
+			List<QuestionGroupDetail> questionGroupDetails = this.loanAccountServiceFacade
+					.retrieveApplicableQuestionGroups(prdId.intValue());
+			for (QuestionGroupInstanceDetail questionGroupInstanceDetail : details) {
+				for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
+					if (questionGroupDetail.getId() == questionGroupInstanceDetail
+							.getQuestionGroupDetail().getId()) {
+						filteringGroups.add(questionGroupInstanceDetail);
+					}
 				}
 			}
+			details = filteringGroups;
 		}
-		return filteringGroups;
+		return details;
 	}
 
     private List<QuestionGroupInstanceDetail> filterInActiveQuestions(List<QuestionGroupInstanceDetail> instanceDetails) {
