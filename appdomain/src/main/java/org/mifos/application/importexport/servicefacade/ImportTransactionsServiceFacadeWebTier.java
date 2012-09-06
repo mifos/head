@@ -198,8 +198,12 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
                         trxn.getAccountPayment().getPaymentId()));
             }
             for (ImportedAccPaymentDto accDto : accPaymentList) {
-                this.accountServiceFacade.applyHistoricalAdjustment(accDto.getGlobalNum(), 
-                        accDto.getPaymentId(), IMPORT_UNDONE, userContext.getId(), null);
+                try {
+                    this.accountServiceFacade.applyHistoricalAdjustment(accDto.getGlobalNum(), 
+                            accDto.getPaymentId(), IMPORT_UNDONE, userContext.getId(), null);
+                } catch (MifosRuntimeException e) {
+                    // TODO: validation will be added with MIFOS-5779
+                }
             }
             this.importedFilesService.saveImportedFileName(filesEntity.getFileName(), filesEntity.getSubmittedBy(), null, Boolean.TRUE, filesEntity.getUndoable());
         } catch (Exception e) {

@@ -58,10 +58,30 @@ public class LoanRepaymentFormBean implements Serializable {
     private Map<String, String> allowedPaymentTypes;
     private LocalDate lastPaymentDate;
     
+    private boolean printReceipt = false;
+    
+    private boolean truePrintReceipt = false;
+    
     @Autowired
     private transient MifosBeanValidator validator;
 
     private transient DateValidator dateValidator;
+    
+    public void setPrintReceipt(boolean printReceipt) {
+        this.printReceipt = printReceipt;
+    }
+    
+    public boolean getPrintReceipt() {
+        return this.printReceipt;
+    }
+    
+    public void setTruePrintReceipt(boolean truePrintReceipt) {
+        this.truePrintReceipt = truePrintReceipt;
+    }
+    
+    public boolean getTruePrintReceipt() {
+        return this.truePrintReceipt;
+    }
     
     public void setValidator(MifosBeanValidator validator) {
         this.validator = validator;
@@ -102,6 +122,10 @@ public class LoanRepaymentFormBean implements Serializable {
         //amount validation
         if (paymentAmount != null && paymentAmount.doubleValue() <= 0) {
             messageContext.addMessage(buildValidationMessage("error.penalty.incorrectDouble", "paymentAmount", "Amount"));          
+        }
+        if(messageContext.hasErrorMessages()) {
+            this.truePrintReceipt = this.printReceipt;
+            this.printReceipt = false;
         }
     }
     
