@@ -541,4 +541,370 @@
            </sql>
        </rollback>
    </changeSet>
+   <changeSet id="MIFOSACC" author="Hugo Technologies" context="expansion">
+		<sql endDelimiter=";">
+			Insert into config_key_value
+			(configuration_type,configuration_key,
+			configuration_value) values
+			(1,'MisProcessing','01/01/2012');
+
+			INSERT INTO
+			lookup_entity(entity_name, description) VALUES ('Cash', 'Cash
+			CoA');
+			INSERT INTO lookup_entity(entity_name, description) VALUES ('Bank',
+			'Bank
+			CoA');
+
+			insert into lookup_value(entity_id,lookup_name) values
+			((Select entity_id
+			from lookup_entity where
+			entity_name='Cash'),'11101');
+			insert into
+			lookup_value(entity_id,lookup_name) values ((Select entity_id
+			from
+			lookup_entity where
+			entity_name='Cash'),'11102');
+			insert into
+			lookup_value(entity_id,lookup_name) values ((Select entity_id
+			from
+			lookup_entity where
+			entity_name='Bank'),'11201');
+			insert into
+			lookup_value(entity_id,lookup_name) values ((Select entity_id
+			from
+			lookup_entity where
+			entity_name='Bank'),'11202');
+
+
+			create table
+			`acc_financialyear` (
+			`financialyear_id` int(8) not null,
+			`financialyear_startdate` date,
+			`financialyear_enddate` date,
+			`status`
+			varchar(1) default null,
+			`created_by` int not null,
+			`created_date` date
+			not null,
+			primary key (`financialyear_id`)
+			)
+			engine=innodb character set
+			utf8;
+			insert into acc_financialyear values
+			(20122012,'2012-01-01','2012-12-31','A',1,'2012-01-01');
+
+
+			create table
+			`acc_glbalances` (
+			`glbalances_id` smallint(6) not null
+			auto_increment,
+			`financialyear_id` int(8) not null,
+			`office_level` int
+			not null,
+			`office_id` varchar(30) NOT NULL,
+			`glcode_value` varchar(50)
+			not null,
+			`openning_bal` decimal(21,4) not null,
+			`transaction_dr_sum`
+			decimal(21,4) not null,
+			`transaction_cr_sum` decimal(21,4) not null,
+			`closing_bal` decimal(21,4) not null,
+			`created_by` int not null,
+			`created_date` date not null,
+			primary key (`glbalances_id`),
+			foreign
+			key(`financialyear_id`)
+			references acc_financialyear(financialyear_id)
+			on delete no action
+			on update no action
+			) engine=innodb character set
+			utf8;
+
+
+			create table acc_glmaster (
+			`transaction_master_id` bigint(20)
+			not null auto_increment,
+			`transaction_date` datetime default null,
+			`transaction_type` varchar(64) not null,
+			`from_office_level` int not
+			null,
+			`from_office_id` varchar(30) not null,
+			`main_account` varchar(64)
+			not null,
+			`transaction_amount` decimal(21,3) default null,
+			`amount_action` varchar(20),
+			`transaction_narration` varchar(255) not
+			null,
+			`to_office_level` int not null,
+			`to_office_id` varchar(30) not
+			null,
+			`transaction_by` smallint default 0,
+			`status` varchar(30) not
+			null,
+			`created_by` int not null,
+			`created_date` date not null,
+			primary
+			key (`transaction_master_id`)
+			)
+			engine=innodb character set utf8;
+
+			create table acc_gldetail (
+			transaction_master_id bigint(20) default
+			null,
+			`transaction_id` bigint(20) not null auto_increment,
+			`sub_account` varchar(64) not null,
+			`transaction_amount` decimal(21,3)
+			default null,
+			`amount_action` varchar(20),
+			`cheque_no` varchar(40),
+			`cheque_date` datetime default null,
+			`bank_name` varchar(20),
+			`bank_branch` varchar(120),
+			primary key(transaction_id),
+			foreign
+			key(transaction_master_id)
+			references
+			acc_glmaster(transaction_master_id)
+			)
+			engine=innodb character set utf8;
+
+
+
+
+			insert into lookup_value(lookup_id, entity_id, lookup_name) values
+			((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv), 87,
+			'Permissions-Generalledger');
+			insert into lookup_value(lookup_id,
+			entity_id, lookup_name) values ((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv),87, 'Permissions-JournalVoucher');
+			insert into
+			lookup_value(lookup_id,entity_id, lookup_name) values ((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv),87,
+			'Permissions-CanDefineOpenBalances');
+			insert into
+			lookup_value(lookup_id,entity_id, lookup_name) values ((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv),87,
+			'Permissions-CanViewGlTransactions');
+			insert into
+			lookup_value(lookup_id,entity_id, lookup_name) values ((SELECT
+			MAX(lv.lookup_id)+1 FROM
+			lookup_value lv),87,
+			'Permissions-CanProcessAccountingTransactions');
+
+
+
+
+
+
+
+			insert into
+			lookup_value_locale(locale_id, lookup_id, lookup_value) values
+			(1,
+			(select lookup_id from lookup_value where
+			lookup_name='Permissions-Generalledger'), NULL);
+			insert into
+			lookup_value_locale(locale_id, lookup_id, lookup_value) values
+			(1,
+			(select lookup_id from lookup_value where
+			lookup_name='Permissions-JournalVoucher'), NULL);
+			insert into
+			lookup_value_locale(locale_id, lookup_id, lookup_value) values
+			(1,
+			(select lookup_id from lookup_value where
+			lookup_name='Permissions-CanDefineOpenBalances'), NULL);
+			insert into
+			lookup_value_locale(locale_id, lookup_id, lookup_value) values
+			(1,
+			(select lookup_id from lookup_value where
+			lookup_name='Permissions-CanViewGlTransactions'), NULL);
+			insert into
+			lookup_value_locale(locale_id, lookup_id) values
+			(1, (select lookup_id
+			from lookup_value where
+			lookup_name='Permissions-CanProcessAccountingTransactions'));
+
+
+
+
+
+
+
+
+			insert
+			into activity(activity_id, parent_id, activity_name_lookup_id,
+			description_lookup_id) values
+			(295, 113,
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-Generalledger'),
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-Generalledger'));
+
+			insert into
+			activity(activity_id, parent_id, activity_name_lookup_id,
+			description_lookup_id) values
+			(296, 113,
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-JournalVoucher'),
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-JournalVoucher'));
+
+			insert into
+			activity(activity_id, parent_id, activity_name_lookup_id,
+			description_lookup_id) values
+			(297, 113,
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-CanDefineOpenBalances'),
+			(select lookup_id
+			from lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-CanDefineOpenBalances'));
+
+			insert into activity(activity_id, parent_id,
+			activity_name_lookup_id,
+			description_lookup_id) values
+			(298, 113,
+			(select lookup_id from lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-CanViewGlTransactions'),
+			(select lookup_id
+			from lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-CanViewGlTransactions'));
+
+			insert into activity(activity_id, parent_id,
+			activity_name_lookup_id,
+			description_lookup_id) values
+			(299, 113,
+			(select lookup_id from
+			lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-CanProcessAccountingTransactions'),
+			(select
+			lookup_id from lookup_value where entity_id = 87 AND
+			lookup_name='Permissions-CanProcessAccountingTransactions'));
+
+
+
+
+
+			insert into roles_activity(activity_id, role_id) values (295, 1);
+			
+			insert into roles_activity(activity_id, role_id) values (296, 1);
+			
+			insert into roles_activity(activity_id, role_id) values (297, 1);
+			
+			insert into roles_activity(activity_id, role_id) values (298, 1);
+			
+			insert into roles_activity(activity_id, role_id) values (299, 1);
+			
+
+
+		</sql>
+		<rollback>
+			<sql endDelimiter=";">
+				Delete from config_key_value where
+				configuration_key='MisProcessing' ;
+
+				delete lv from lookup_value as lv
+				join lookup_entity as le
+				where le.entity_id=lv.entity_id and
+				le.entity_name='cash' ;
+
+				delete lv from lookup_value as lv
+				join
+				lookup_entity as le
+				where le.entity_id=lv.entity_id and
+				le.entity_name='bank' ;
+
+
+				DELETE FROM lookup_entity WHERE entity_name LIKE 'Cash';
+				
+				DELETE FROM lookup_entity WHERE entity_name LIKE 'Bank';
+
+
+				DROP TABLE IF EXISTS acc_glbalances;
+				
+				DROP TABLE IF EXISTS acc_financialyear;
+				
+				DROP TABLE IF EXISTS acc_gldetail;
+				
+				DROP TABLE IF EXISTS acc_glmaster;
+				
+
+				DELETE FROM roles_activity WHERE activity_id =
+				295;
+				DELETE FROM roles_activity WHERE activity_id = 296;
+				DELETE FROM
+				roles_activity WHERE activity_id = 297;
+				DELETE FROM roles_activity
+				WHERE activity_id = 298;
+				DELETE FROM roles_activity WHERE activity_id
+				= 299;
+
+
+				delete from activity where activity_id = 295;
+				delete from
+				activity where activity_id = 296;
+				delete from activity where
+				activity_id = 297;
+				delete from activity where activity_id = 298;
+				delete from activity where activity_id = 299;
+
+
+				DELETE FROM
+				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
+				lookup_value
+				WHERE lookup_name='Permissions-Generalledger');
+				
+				DELETE
+				FROM lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
+				lookup_value
+				WHERE lookup_name='Permissions-JournalVoucher');
+				
+				DELETE
+				FROM lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
+				lookup_value
+				WHERE lookup_name='Permissions-CanDefineOpenBalances');
+				
+				DELETE FROM lookup_value_locale WHERE lookup_id =(SELECT lookup_id
+				from
+				lookup_value
+				WHERE
+				lookup_name='Permissions-CanViewGlTransactions');
+				
+				DELETE FROM
+				lookup_value_locale WHERE lookup_id =(SELECT lookup_id from
+				lookup_value
+				WHERE
+				lookup_name='Permissions-CanProcessAccountingTransactions');
+
+
+				DELETE
+				FROM lookup_value WHERE entity_id = 87 AND lookup_name =
+				'Permissions-Generalledger';
+				
+				DELETE FROM lookup_value WHERE entity_id
+				= 87 AND lookup_name =
+				'Permissions-JournalVoucher';
+				
+				DELETE FROM
+				lookup_value WHERE entity_id = 87 AND lookup_name =
+				'Permissions-CanDefineOpenBalances';
+				
+				DELETE FROM lookup_value WHERE
+				entity_id = 87 AND lookup_name =
+				'Permissions-CanViewGlTransactions';
+				
+				DELETE FROM lookup_value WHERE
+				entity_id = 87 AND lookup_name
+				='Permissions-CanProcessAccountingTransactions';
+			</sql>
+		</rollback>
+	</changeSet>
 </databaseChangeLog>
