@@ -149,7 +149,7 @@ public interface AccountConstants {
     short COMMENT_LENGTH = 500;
     String MAX_LENGTH = "errors.maximumlength";
     String APPLICABLE_CHARGE_LIST = "applicableChargeList";
-
+    String LOAN_TRANSFER_PERMISSION="accounts.mode_of_payment_permission";
     String ERROR_ADJUSTMENT_PREVIOUS_DATE = "errors.adjustmentPreviousDate";
     String ERROR_ADJUSTMENT_NEXT_DATE = "errors.adjustmentNextDate";
     

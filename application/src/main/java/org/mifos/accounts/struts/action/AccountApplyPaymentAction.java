@@ -35,6 +35,7 @@ import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -52,13 +53,14 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class AccountApplyPaymentAction extends BaseAction {
 
     private AccountService accountService = null;
-
+    
     public AccountApplyPaymentAction() throws Exception {
         accountService = ApplicationContextProvider.getBean(AccountService.class);
     }
