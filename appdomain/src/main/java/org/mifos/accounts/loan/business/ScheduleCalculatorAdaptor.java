@@ -19,6 +19,7 @@
  */
 package org.mifos.accounts.loan.business;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -56,6 +57,12 @@ public class ScheduleCalculatorAdaptor {
             scheduleCalculator.computeExtraInterest(schedule, asOfDate);
             populateExtraInterestInLoanScheduleEntities(schedule, loan.getLoanScheduleEntityMap());
         }
+    }
+    
+    public BigDecimal getExtraInterest(LoanBO loan, Date transactionDate) {
+        Schedule schedule = scheduleMapper.mapToSchedule(new ArrayList<LoanScheduleEntity>(loan.getLoanScheduleEntities()),
+                loan.getDisbursementDate(), getDailyInterest(loan.getInterestRate()), loan.getLoanAmount().getAmount());
+        return scheduleCalculator.getExtraInterest(schedule, transactionDate);
     }
 
     private double getDailyInterest(Double annualInterest) {
