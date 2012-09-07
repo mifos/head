@@ -20,13 +20,12 @@
 
 package org.mifos.platform.questionnaire.service;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
-import org.mifos.application.servicefacade.LoanAccountServiceFacade;
-import org.mifos.clientportfolio.newloan.domain.LoanAccountDetail;
+
+import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.AuditLogService;
@@ -54,18 +53,10 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     
     @Autowired
     private RolesPermissionServiceFacade rolesPermissionService;
-    
-    private LoanAccountServiceFacade loanAccountServiceFacade;
 
-    @Override
-    public void setLoanAccountServiceFacade(LoanAccountServiceFacade loanAccountServiceFacade) {
-    	this.loanAccountServiceFacade = loanAccountServiceFacade;
-	}
-    
     public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService,RolesPermissionServiceFacade rolesPermissionService) {
         this.questionnaireService = questionnaireService;
         this.rolesPermissionService = rolesPermissionService;
-        
     }
 
     public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService, AuditLogService auditLogService,
@@ -203,34 +194,8 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public List<QuestionGroupInstanceDetail> getQuestionGroupInstancesWithUnansweredQuestionGroups(Integer entityId, String event, String source) {
-    	return filterInActiveQuestions(questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), true, true));
-        
+        return filterInActiveQuestions(questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), true, true));
     }
-    
-    @Override
-	public List<QuestionGroupInstanceDetail> getQuestionGroupInstancesWithUnansweredQuestionGroupsForLoan(
-			Integer entityId, String event, String source) {
-		List<QuestionGroupInstanceDetail> details = filterInActiveQuestions(questionnaireService
-				.getQuestionGroupInstances(entityId,
-						getEventSource(event, source), true, true));
-		
-		if (event.equals("Create") && source.equals("Loan")) {
-			List<QuestionGroupInstanceDetail> filteringGroups = new ArrayList<QuestionGroupInstanceDetail>();
-			Short prdId = this.loanAccountServiceFacade.retrieveLoanAccountNotes(entityId.longValue()).getProductDetails().getPrdOfferingId();
-			List<QuestionGroupDetail> questionGroupDetails = this.loanAccountServiceFacade
-					.retrieveApplicableQuestionGroups(prdId.intValue());
-			for (QuestionGroupInstanceDetail questionGroupInstanceDetail : details) {
-				for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
-					if (questionGroupDetail.getId() == questionGroupInstanceDetail
-							.getQuestionGroupDetail().getId()) {
-						filteringGroups.add(questionGroupInstanceDetail);
-					}
-				}
-			}
-			details = filteringGroups;
-		}
-		return details;
-	}
 
     private List<QuestionGroupInstanceDetail> filterInActiveQuestions(List<QuestionGroupInstanceDetail> instanceDetails) {
         for (QuestionGroupInstanceDetail instanceDetail : instanceDetails) {
