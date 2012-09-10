@@ -88,7 +88,7 @@ public class DefineSavingsProductsFormController {
         binder.setBindingErrorProcessor(errorProcessor);
     }
 
-    @RequestMapping(value ="procesImportedTransactionUndo", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public ModelAndView processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
                                     @ModelAttribute("savingsProduct") @Valid SavingsProductFormBean savingsProductFormBean, BindingResult result, SessionStatus status) {
     	ModelAndView modelAndView = new ModelAndView("redirect:/previewSavingsProducts.ftl?editFormview=defineSavingsProduct");
