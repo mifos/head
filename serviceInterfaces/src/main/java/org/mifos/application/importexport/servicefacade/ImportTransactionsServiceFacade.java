@@ -22,6 +22,7 @@ package org.mifos.application.importexport.servicefacade;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.dto.domain.AccountTrxDto;
@@ -43,4 +44,6 @@ public interface ImportTransactionsServiceFacade {
     void undoFullImport(String importTransactionsFileName);
     
     List<ImportedFileDto> getImportedFiles();
+    
+    Map<String, Map<String, String>> getUndoImportDateToValidate(String fileName);
 }
