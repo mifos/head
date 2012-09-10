@@ -20,6 +20,7 @@
 
 package org.mifos.dto.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -37,6 +38,7 @@ public class ParseResultDto {
     private BigDecimal totalAmountOfDisbursementsImported;
     private int numberRowSuccessfullyParsed;
     private String statusLogFile;
+    private List<AccountTrxDto> trxIdsToUndo;
 
     public ParseResultDto(final List<String> parseErrors, final List<AccountPaymentParametersDto> successfullyParsedRows) {
         this.parseErrors = parseErrors;
@@ -44,6 +46,7 @@ public class ParseResultDto {
         this.totalAmountOfDisbursementsImported = new BigDecimal(BigInteger.ZERO);
         this.totalAmountOfTransactionsImported = new BigDecimal(BigInteger.ZERO);
         this.totalAmountOfTransactionsWithError = new BigDecimal(BigInteger.ZERO);
+        this.trxIdsToUndo = new ArrayList<AccountTrxDto>();
     }
 
     public List<String> getParseErrors() {
@@ -124,6 +127,14 @@ public class ParseResultDto {
 
     public void setStatusLogFile(String statusLogFile) {
         this.statusLogFile = statusLogFile;
+    }
+
+    public List<AccountTrxDto> getTrxIdsToUndo() {
+        return trxIdsToUndo;
+    }
+
+    public void setTrxIdsToUndo(List<AccountTrxDto> trxIdsToUndo) {
+        this.trxIdsToUndo = trxIdsToUndo;
     }
 
 }

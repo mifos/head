@@ -314,7 +314,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
         html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getEffectiveInterestPaid().toString()) :
                 ConversionUtil.formatNumber(installment.getEffectiveInterestDue().toString()) + ( 
-                AccountingRules.isOverdueInterestPaidFirst() ? " ("+ConversionUtil.formatNumber(installment.getInterestPaid().toString())+")" : "")));
+                AccountingRules.isOverdueInterestPaidFirst() ? " ("+ConversionUtil.formatNumber((installment.getInterestPaid().add(installment.getExtraInterestPaid())).toString())+")" : "")));
         html.endTag("td");
 
         html.startTag("td", "width", "10%", "align", "right", "class", "drawtablerow");

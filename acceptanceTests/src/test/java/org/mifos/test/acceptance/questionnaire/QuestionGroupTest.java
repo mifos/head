@@ -181,6 +181,15 @@ public class QuestionGroupTest extends UiTestCaseBase {
         manageRolePage.submitAndGotoViewRolesPage();
         adminPage = getAdminPage();
         Assert.assertTrue(adminPage.navigateToViewAllQuestionGroups().navigateToQuestionGroupDetailPage(qgTitle4).isAccessDeniedDisplayed());
+        //set question group on inactive
+        adminPage.navigateBack();
+        adminPage.navigateToAdminPageUsingHeaderTab();
+        manageRolePage = adminPage.navigateToViewRolesPage().navigateToManageRolePage(ADMIN_ROLE);
+        manageRolePage.verifyPermissionText(QUESTION_PERMISSION_ID, QUESTION_PERMISSION_HEADER + qgTitle4);
+        manageRolePage.enablePermission(QUESTION_PERMISSION_ID);
+        manageRolePage.submitAndGotoViewRolesPage().navigateToAdminPage().navigateToViewAllQuestionGroups().navigateToQuestionGroupDetailPage(qgTitle4);
+        questionGroupTestHelper.markQuestionGroupAsInactive(qgTitle4);
+        
     }
 
     /**

@@ -317,6 +317,21 @@
             group by account.accountId]]>
     </query>
 
+	<query name="accounts.findAllParentLoans">
+		<![CDATA[from org.mifos.accounts.loan.business.LoanBO account
+			where
+			account.memberAccounts is not empty
+			and account.accountState.id in (5,9)
+			group by account.accountId
+			order by account.accountId
+		]]>
+	</query>
+    <query name="accounts.countAllParentLoans">
+        <![CDATA[select count(*) from org.mifos.accounts.loan.business.LoanBO account
+            where
+            account.memberAccounts is not empty
+            and account.accountState.id in (5,9)]]>
+    </query>
     <query name="accounts.retrieveLastTrxn">
         <![CDATA[from org.mifos.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn
             where  savingsTrxn.accountTrxnId = (select max(savingsTrxn1.accountTrxnId)
@@ -1015,4 +1030,25 @@ select coll.*,
         FROM account_custom_field a join account b on a.account_id = b.account_id
         where a.field_id in (:CUSTOM_FIELD_ID) order by b.account_id]]>
     </sql-query>
+    
+    <query name="accounts.countGLIMAccountsWithIncorrectNumberOfInstallmentsOnIndividualLoans">
+        <![CDATA[select count(distinct parent) from org.mifos.accounts.loan.business.LoanBO account
+            left join account.parentAccount as parent
+            where
+            account.accountActionDates.size != parent.accountActionDates.size
+            and account.parentAccount.accountState.id in (3,4,5,9)
+        ]]>
+    </query>
+    
+    <query name="accounts.findGLIMAccountsWithIncorrectNumberOfInstallmentsOnIndividualLoans">
+        <![CDATA[select parent from org.mifos.accounts.loan.business.LoanBO account
+            left join account.parentAccount as parent
+            where
+            account.accountActionDates.size != parent.accountActionDates.size
+            and account.parentAccount.accountState.id in (3,4,5,9)
+    		group by account.parentAccount
+            order by account.parentAccount.id
+        ]]>
+    </query>
+    
 </hibernate-mapping>

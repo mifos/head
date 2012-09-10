@@ -63,6 +63,9 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
+import org.mifos.reports.admindocuments.business.AdminDocumentBO;
+import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.springframework.security.access.AccessDeniedException;
@@ -108,6 +111,25 @@ public class EditStatusAction extends BaseAction {
             editStatusActionForm.setGlobalAccountNum(loanAccount.getGlobalAccountNum());
             editStatusActionForm.setAccountName(loanAccount.getLoanOffering().getPrdOfferingName());
             editStatusActionForm.setInput("loan");
+            
+            if(loanAccount.getAccountState().getId().equals(Short.valueOf("2"))) {
+                List<AdminDocumentBO> allAdminDocuments = legacyAdminDocumentDao.getAllActiveAdminDocuments();
+                List<AdminDocumentBO> loanAdminDocuments = new ArrayList();
+                for(AdminDocumentBO adminDocumentBO : allAdminDocuments) {
+                    List<AdminDocAccStateMixBO> admindoclist = legacyAdminDocAccStateMixDao.getMixByAdminDocuments(adminDocumentBO.getAdmindocId());
+                    if (!loanAdminDocuments.contains(adminDocumentBO) && admindoclist.size() > 0 
+                            && admindoclist.get(0).getAccountStateID().getPrdType().getProductTypeID().equals(loanAccount.getType().getValue().shortValue())){
+                        for(AdminDocAccStateMixBO admindoc : admindoclist) {
+                            if(admindoc.getAccountStateID().getId().shortValue()==loanAccount.getAccountState().getId().shortValue()) {
+                                loanAdminDocuments.add(adminDocumentBO);
+                            }
+                        }
+                    }
+                }
+                SessionUtils.setCollectionAttribute("editAccountStatusDocumentsList", loanAdminDocuments, request);
+            } else {
+                SessionUtils.setCollectionAttribute("editAccountStatusDocumentsList", null, request);
+            }
         } if (accountBO.isSavingsAccount()) {
 
             // NOTE - not using dto values at present but available when ui is refactored away from jsp

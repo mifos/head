@@ -20,6 +20,9 @@
 
 package org.mifos.application.importexport.persistence;
 
+import java.util.List;
+
+import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
 
 public interface ImportedFilesDao {
@@ -27,5 +30,9 @@ public interface ImportedFilesDao {
     void saveImportedFile(ImportedFilesEntity importedFileEntity);
 
     ImportedFilesEntity findImportedFileByName(String fileName);
-
+    
+    AccountTrxnEntity getAccTrxById(Integer id);
+    
+    List<ImportedFilesEntity> retriveImportedFiles();
+    
 }

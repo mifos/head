@@ -24,11 +24,13 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.mifos.application.servicefacade.ListItem;
+import org.mifos.dto.domain.AccountTrxDto;
 import org.mifos.dto.domain.ParseResultDto;
+import org.mifos.dto.screen.ImportedFileDto;
 
 public interface ImportTransactionsServiceFacade {
 
-    void saveImportedFileName(String importTransactionsFileName);
+    void saveImportedFileName(String importTransactionsFileName, String importPluginClassname,List<AccountTrxDto> idsToUndoImport);
 
     boolean isAlreadyImported(String importTransactionsFileName);
 
@@ -37,4 +39,8 @@ public interface ImportTransactionsServiceFacade {
     ParseResultDto parseImportTransactions(String importPluginClassname, InputStream inputStream);
 
     ParseResultDto confirmImport(String importPluginClassname, String tempFileName);
+    
+    void undoFullImport(String importTransactionsFileName);
+    
+    List<ImportedFileDto> getImportedFiles();
 }

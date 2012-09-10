@@ -69,4 +69,7 @@ public interface AccountServiceFacade {
     
     @PreAuthorize("isFullyAuthenticated()")
     Date retrieveLatPaymentDate(String globalAccountNum);
+    
+    Integer getAccountTrxnById(Integer id);
+    
 }

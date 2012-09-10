@@ -907,4 +907,40 @@
 			</sql>
 		</rollback>
 	</changeSet>
+   <changeSet id="MIFOS_5702_1" author="Kamil Kalfas">
+       <sql endDelimiter=";">
+            create table trxn_imported_files (
+                file_name varchar(100) not null,
+                account_trxn_id int(11) not null,
+                primary key(file_name, account_trxn_id),
+                foreign key(file_name) 
+                    references imported_transactions_files(file_name)
+						on delete no action
+						on update no action,
+                foreign key(account_trxn_id) 
+                    references account_trxn(account_trxn_id)
+						on delete no action
+						on update no action
+            ) engine=innodb character set utf8;
+            
+            alter table imported_transactions_files add phase_out boolean default 0;
+       </sql>
+       <rollback>
+           <sql endDelimiter=";">
+               alter table imported_transactions_files drop column phase_out;    
+               
+               drop table trxn_imported_files;
+           </sql>
+       </rollback>
+   </changeSet>
+      <changeSet id="MIFOS_5702_2" author="Kamil Kalfas">
+       <sql endDelimiter=";">
+             alter table imported_transactions_files add undoable boolean default 0;
+       </sql>
+       <rollback>
+           <sql endDelimiter=";">
+             alter table imported_transactions_files drop column undoable;
+           </sql>
+       </rollback>
+   </changeSet>
 </databaseChangeLog>

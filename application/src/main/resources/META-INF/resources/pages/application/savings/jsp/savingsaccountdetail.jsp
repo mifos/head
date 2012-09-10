@@ -44,6 +44,7 @@ explanation of the license and how it is applied.
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
             <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'containsQGForCloseSavings')}"
 			   var="containsQGForCloseSavings" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'administrativeDocumentsList')}" var="adminDoc" />
 			<c:set var="questionnaireFor" scope="session" value="${BusinessKey.savingsOffering.prdOfferingName}" />
             <c:remove var="urlMap" />
             <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
@@ -257,7 +258,27 @@ explanation of the license and how it is applied.
 								</td>
 							</tr>
 						</table>
-						<br>
+						<table width="96%" border="0" cellpadding="3" cellspacing="0">
+						    <tr>
+								<td class="fontnormal"><br>
+									 <span class="fontnormalbold"> 
+									<mifos:mifoslabel
+								name="reports.administrativedocuments" /> 
+								<br></span>	
+									<c:forEach var="adminDoc" items="${adminDoc}">
+										<span class="fontnormal"> 
+									  		<html-el:link styleId="loanaccountdetail.link.viewAdminReport"
+												href="executeAdminDocument.ftl?adminDocumentId=${adminDoc.admindocId}&entityId=${BusinessKey.globalAccountNum}">
+										 		<c:out value="${adminDoc.adminDocumentName}" />
+								      		</html-el:link>
+								  		</span>
+										<br>
+					                </c:forEach>
+					                <br>
+					                </td>
+					            </tr>
+								
+						</table>
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td width="66%" class="headingorange">

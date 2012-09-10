@@ -40,6 +40,10 @@ public class ScheduleCalculator {
     public void computeExtraInterest(Schedule schedule, Date transactionDate) {
         schedule.computeExtraInterest(transactionDate);
     }
+    
+    public BigDecimal getExtraInterest(Schedule schedule, Date transactionDate) {
+        return schedule.getExtraInterest(transactionDate);
+    }
 
     public RepaymentResultsHolder computeRepaymentAmount(Schedule schedule, Date asOfDate) {
         computeExtraInterest(schedule, asOfDate);

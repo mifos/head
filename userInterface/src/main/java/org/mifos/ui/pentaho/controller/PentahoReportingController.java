@@ -82,7 +82,7 @@ public class PentahoReportingController {
             mav = new ModelAndView("redirect:" + REPORTS_MAIN_URL);
         } else if (bindingResult.hasErrors()) {
             mav = new ModelAndView("viewPentahoReport");
-            initFormBean(pentahoReportFormBean, reportId);
+            initFormBean(pentahoReportFormBean, reportId, request);
         } else {
             Integer outputType = Integer.parseInt(pentahoReportFormBean.getOutputType());
             Map<String, AbstractPentahoParameter> reportParams = pentahoReportFormBean.getAllParameteres();
@@ -94,7 +94,7 @@ public class PentahoReportingController {
                     addErrorToBindingResult(error, bindingResult);
                 }
                 mav = new ModelAndView("viewPentahoReport");
-                initFormBean(pentahoReportFormBean, reportId);
+                initFormBean(pentahoReportFormBean, reportId, request);
             } else {
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getFilename() + "\"");
                 response.setContentType(report.getContentType());
@@ -106,13 +106,13 @@ public class PentahoReportingController {
         return mav;
     }
 
-    @RequestMapping(value = "/viewPentahoReport.ftl")
+    @RequestMapping(value = "/viewPentahoReport.ftl", method=RequestMethod.GET)
     public void loadReport(@RequestParam(value = REPORT_ID_PARAM, required = true) Integer reportId,
-            @ModelAttribute("pentahoReportFormBean") PentahoReportFormBean formBean) {
+            @ModelAttribute("pentahoReportFormBean") PentahoReportFormBean formBean, HttpServletRequest request) {
         if (!this.pentahoReportsService.checkAccessToReport(reportId)) {
             throw new AccessDeniedException("Access denied");
         }
-        initFormBean(formBean, reportId);
+        initFormBean(formBean, reportId, request);
     }
 
     @ModelAttribute("breadcrumbs")
@@ -128,14 +128,15 @@ public class PentahoReportingController {
         return this.pentahoReportsService.getReportName(getReportId(request));
     }
 
-    private void initFormBean(PentahoReportFormBean form, Integer reportId) {
+    private void initFormBean(PentahoReportFormBean form, Integer reportId, HttpServletRequest request) {
         form.setAllowedOutputTypes(this.pentahoReportsService.getReportOutputTypes());
         form.setReportId(reportId);
         if (form.getOutputType() == null) {
             form.setOutputType("0");
         }
-
-        List<AbstractPentahoParameter> params = this.pentahoReportsService.getParametersForReport(reportId);
+        Map <String, AbstractPentahoParameter> selectedValues = form.getAllParameteres();
+        boolean update=false;
+        List<AbstractPentahoParameter> params = this.pentahoReportsService.getParametersForReport(reportId, request, selectedValues, update);
         form.setReportParameters(params);
     }
 
@@ -150,7 +151,24 @@ public class PentahoReportingController {
         bindingResult.addError(error);
     }
 
+    @ModelAttribute("report_id")
     private Integer getReportId(HttpServletRequest request) {
         return Integer.parseInt(request.getParameter(REPORT_ID_PARAM));
     }
+    
+	@RequestMapping(value = "/viewPentahoReport.ftl", method = RequestMethod.POST)
+	public void updateSelectDropdown(
+			@ModelAttribute("pentahoReportFormBean") PentahoReportFormBean formBean,
+			HttpServletRequest request) {
+		formBean.setAllowedOutputTypes(this.pentahoReportsService.getReportOutputTypes());
+		Map<String, AbstractPentahoParameter> selectedValues = formBean
+				.getAllParameteres();
+		boolean update = true;
+		List<AbstractPentahoParameter> params = this.pentahoReportsService
+				.getParametersForReport(getReportId(request), request, selectedValues,
+						update);
+
+		formBean.setReportParameters(params);
+
+	}
 }

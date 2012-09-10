@@ -223,6 +223,24 @@
     </batch:job>
     <bean name="BranchReportTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.BranchReportHelper" />
 
+	<!--
+                ETLReportDWTask:
+    -->	
+    <bean name="ETLReportDWTask" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
+      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.ETLReportDWTask" />
+      <property name="name" value="ETLReportDWTaskJob" />
+    </bean>
+    <bean id="ETLReportDWTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="ETLReportDWTask" />
+        <property name="cronExpression" value="0 0 0 * * ?" />
+    </bean>
+    <batch:job id="ETLReportDWTaskJob" parent="jobBase" job-repository="jobRepository">
+        <batch:step id="ETLReportDWTask-step-1">
+            <batch:tasklet ref="ETLReportDWTaskTasklet" />
+        </batch:step>
+    </batch:job>
+    <bean name="ETLReportDWTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.ETLReportDWHelper" />
+
     <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="quartzProperties">
             <props>
@@ -246,6 +264,7 @@
                 <ref bean="generateMeetingsForCustomerAndSavingsTaskTrigger" />
                 <ref bean="branchReportTaskTrigger" />
                 <ref bean="applyPenaltyToLoanAccountsTaskTrigger"/>
+                <ref bean="ETLReportDWTaskTrigger"/> 
             </list>
         </property>
     </bean>

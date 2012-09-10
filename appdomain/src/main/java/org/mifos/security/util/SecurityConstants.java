@@ -376,6 +376,8 @@ public interface SecurityConstants {
     short KENDRA_MEETING = 177;
 
     short LOAN_CAN_REPAY_LOAN = 178;
+    
+    short LOAN_CAN_TRANSFER_FROM_SAVINGS_ACCOUNT = 282;
 
     short SAVINGS_CANWAIVE_DUEAMOUNT = 187;
 

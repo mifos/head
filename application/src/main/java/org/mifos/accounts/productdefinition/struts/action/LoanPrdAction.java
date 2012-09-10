@@ -463,7 +463,7 @@ public class LoanPrdAction extends BaseAction {
             List<QuestionGroupDetail> questionGroupDetails = new ArrayList<QuestionGroupDetail>();
             for (QuestionGroupReference questionGroupReference : questionGroupReferences) {
                 Integer questionGroupId = questionGroupReference.getQuestionGroupId();
-                QuestionGroupDetail questionGroupDetail = questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId);
+                QuestionGroupDetail questionGroupDetail = questionnaireServiceFacade.getQuestionGroupDetailForLoanPrd(questionGroupId);
                 if (questionGroupDetail != null && questionGroupDetail.isActive()) {
                     questionGroupDetails.add(questionGroupDetail);
                 }

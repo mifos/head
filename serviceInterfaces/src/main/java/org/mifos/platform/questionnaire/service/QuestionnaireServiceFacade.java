@@ -48,6 +48,8 @@ public interface QuestionnaireServiceFacade {
     List<QuestionGroupDetail> getAllQuestionGroups();
 
     QuestionGroupDetail getQuestionGroupDetail(Integer questionGroupId) throws SystemException;
+    
+    QuestionGroupDetail getQuestionGroupDetailForLoanPrd(Integer questionGroupId) throws SystemException;
 
     QuestionDetail getQuestionDetail(Integer questionId) throws SystemException;
 

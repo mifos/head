@@ -93,6 +93,18 @@
 	                            </ol>
 	                          </fieldset>
 	                          [#break]
+	                          [#case "SMART_SINGLE_SELECT"]
+                                  <fieldset class="right_section" style="width:68%">
+	                                <div class="noPadding">
+	                                  <input type="text" autocomplete="off" id="txtListSearch" name="txtListSearch" style="width:21em;" class="txtListSearch"/>
+	                                </div>
+	                                <ol class="questionList" id="questionList" style="overflow:auto; width:19em; height:180px; border:1px solid #336699; padding-left:5px">
+	                                    <li style="padding-bottom: 0pt;">
+	                                        [@form.radioWithTags "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,'</li><li class="noPadding">', ''/]
+	                                    </li>
+	                                </ol>
+	                          	  </fieldset>  
+                              [#break]
 	                          [#default]
 	                             Unknown question type ${question.questionType}
 	                        [/#switch]

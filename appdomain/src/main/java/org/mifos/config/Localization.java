@@ -130,8 +130,8 @@ public class Localization {
             configuredLocaleId = getLocaleId(locale);
         }
         configuredLocale = locale;
-        // workaround for MIFOS-5138
-        Locale.setDefault(locale);
+        // workaround for MIFOS-5704: All unlocalized strings will be shown in English
+        Locale.setDefault(LOCALE_MAP.get(ENGLISH_LOCALE_ID));
     }
 
     private synchronized void setLocaleMap() {

@@ -36,6 +36,7 @@ import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.business.FeeStatusEntity;
+import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
@@ -241,5 +242,13 @@ public class FeeDaoHibernate implements FeeDao {
 	@Override
 	public List<Short> getAllUsedLoansWithAttachedFee() {
 		return (List<Short>) this.genericDao.executeNamedQuery("getAllUsedLoansWithAttachedFee", null);
+	}
+	
+	@Override
+	public RateFeeBO findRateFeeById(Short feeId){
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("feeId", feeId);
+
+        return (RateFeeBO) this.genericDao.executeUniqueResultNamedQuery("findRateFeeById", queryParameters);
 	}
 }

@@ -69,7 +69,7 @@ public class MpesaImportTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
     CustomPropertiesHelper propertiesHelper;
-    private final PluginsUtil pluginsUtil = new PluginsUtil("mpesa-xls-importer-0.0.2-SNAPSHOT-jar-with-dependencies.jar");
+    private final PluginsUtil pluginsUtil = new PluginsUtil("mpesa-xls-importer-0.0.3-SNAPSHOT-jar-with-dependencies.jar");
     private static final String EXCEL_IMPORT_TYPE = "M-PESA Excel 97(-2007)";
     static final String[] TEST_FILES = new String[] { "loan_product_code.xls", "mixed.xls", "saving_and_loan.xls",
         "savings_product_code.xls", "example_loan_disb.xls"};

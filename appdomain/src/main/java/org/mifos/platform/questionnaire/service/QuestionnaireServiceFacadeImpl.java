@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
+
 import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.SystemException;
@@ -119,6 +120,11 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         if(!checkAccessToQuestionGroup(questionGroupId)) {
             throw new AccessDeniedException("Access denied");
         }
+        return questionnaireService.getQuestionGroup(questionGroupId);
+    }
+
+    @Override
+    public QuestionGroupDetail getQuestionGroupDetailForLoanPrd(Integer questionGroupId) throws SystemException {
         return questionnaireService.getQuestionGroup(questionGroupId);
     }
 

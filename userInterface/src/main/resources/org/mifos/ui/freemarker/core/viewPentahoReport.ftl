@@ -81,6 +81,11 @@
 	        }
 	    });
 	}
+	
+	function updateDropdown(form){ 			 		
+		 form.action="viewPentahoReport.ftl"; 			
+		 form.submit(); 		
+	}
 	</script>
 	
 	[@widget.crumbs breadcrumbs /]
@@ -152,7 +157,7 @@ $(document).ready(function() {
 	    		 	    [#if param.mandatory == true]<span class="mandatory">*</span>[/#if]${param.labelName}:
 	    		 	</label>
 			        [@form.singleSelectWithPrompt path="${item}.selectedValue" id="${param.paramName}_selectedValue" 
-			        	options=param.possibleValues /]
+			        	options=param.possibleValues attributes="onchange=updateDropdown(this.form)"/]
 	    		</div>
 		    [/#list]
 		    

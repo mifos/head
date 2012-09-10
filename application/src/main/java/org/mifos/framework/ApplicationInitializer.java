@@ -20,9 +20,13 @@
 
 package org.mifos.framework;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.reflect.Field;
+import java.math.BigInteger;
+import java.net.URL;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.Enumeration;
@@ -45,6 +49,7 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import javax.sql.DataSource;
 
+import org.apache.commons.io.FileUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -72,6 +77,7 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
+import org.mifos.framework.components.batchjobs.helpers.ETLReportDWHelper;
 import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -92,6 +98,9 @@ import org.mifos.security.util.ActivityMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
@@ -204,6 +213,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 }
                 initJNDIforPentaho(applicationContext);
                 setAttributesOnContext(servletContext);
+                copyResources(servletContext);
             }
         } catch (Exception e) {
             String errMsgStart = "unable to start Mifos web application";
@@ -217,6 +227,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         }
         logger.info("Mifos is ready.");
     }
+
+    
 
     public void dbUpgrade(ApplicationContext applicationContext) throws ConfigurationException, PersistenceException, FinancialException, TaskSystemException {
         logger.info("Logger has been initialised");
@@ -279,6 +291,45 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 					StaticHibernateUtil.closeSession();
 				}
             }
+            
+            boolean key5722Exists = customJdbcService.mifos5722IssueKeyExists();
+            if(!key5722Exists) {
+                try {
+                    applyMifos5722Fix();
+                    customJdbcService.insertMifos5722Issuekey();
+                } catch (Exception e) {
+                    logger.error("Could not apply Mifos-5692 and mifos-5722 fix");
+                    e.printStackTrace();
+                } finally {
+                    StaticHibernateUtil.closeSession();
+                }
+            }
+            
+            boolean key5763Exists = customJdbcService.mifos5763IssueKeyExists();
+            if(!key5763Exists) {
+                try {
+                    applyMifos5763Fix();
+                    customJdbcService.insertMifos5763Issuekey();                  
+                } catch (Exception e) {
+                    logger.info("Failed to apply Mifos-5763 fix");
+                    e.printStackTrace();
+                } finally {
+                    StaticHibernateUtil.closeSession();
+                }
+            }
+            
+            boolean key5632Exists = customJdbcService.mifos5632IssueKeyExists();
+            if(!key5632Exists) {
+                try {
+                    applyMifos5632();
+                    customJdbcService.insertMifos5632IssueKey();                  
+                } catch (Exception e) {
+                    logger.info("Failed to apply Mifos-5632 fix");
+                    e.printStackTrace();
+                } finally {
+                    StaticHibernateUtil.closeSession();
+                }
+            }
         }
 
     }
@@ -314,7 +365,156 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         }
 
     }
+    
+    @SuppressWarnings("unused")
+    private void applyMifos5632() throws PersistenceException {
+        Session session = StaticHibernateUtil.getSessionTL();
+        
+        @SuppressWarnings("unused")
+        Query lookup_value_query,lookup_value_locale_query,activity_query,roles_activity_query, min_activity_id, question_activity;
+        Query count_query = session.createSQLQuery("select max(id) from question_group where activity_id is null;");
+        Integer count = (Integer)count_query.uniqueResult();
+        Long iterator = count.longValue() + 1;
+        min_activity_id = session.createSQLQuery("select min(activity_id) from activity;");
+        Integer activity_id = ((Short)min_activity_id.uniqueResult()).intValue();
+        if (activity_id == 1) {
+            activity_id = activity_id - 2;
+        }
+        StaticHibernateUtil.clearSession();
+        logger.info("Started Mifos-5632");
+        while (iterator > 0) {
+            try {
+                StaticHibernateUtil.startTransaction();
+                
+                iterator--;
+                activity_id--;
+                
+                lookup_value_query = session.createSQLQuery("insert into lookup_value(lookup_id,entity_id,lookup_name) " +
+                		"values((select max(lv.lookup_id)+1 from lookup_value lv), 87," +
+                		"concat(concat('QuestionGroup.',(select title from question_group where id="+ iterator +")),'"+ iterator +"'))");
+                lookup_value_query.executeUpdate();
+                
+                lookup_value_locale_query = session.createSQLQuery("insert into lookup_value_locale(locale_id,lookup_id,lookup_value) values" +
+                		"(1,(select lookup_id from lookup_value where entity_id =87 and " +
+                		"lookup_name=concat(concat('QuestionGroup.',(select title from question_group where id="+ iterator +")),'"+ iterator +"')),concat('Can edit ', (select title from question_group where id="+ iterator +")))");
+                lookup_value_locale_query.executeUpdate();
+                
+                activity_query = session.createSQLQuery("insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id)" +
+                		"values("+ activity_id +",294,(select lookup_id from lookup_value where entity_id =87 and " +
+                		"lookup_name=concat(concat('QuestionGroup.',(select title from question_group where id="+ iterator +")),'"+ iterator +"'))," +
+                		"(select lookup_id from lookup_value where entity_id =87 and " +
+                		"lookup_name=concat(concat('QuestionGroup.',(select title from question_group where id="+ iterator +")),'"+ iterator +"')))");
+                activity_query.executeUpdate();
+                
+                question_activity = session.createSQLQuery("update question_group set activity_id ="+ activity_id +" where id = "+ iterator);
+                question_activity.executeUpdate();
+                
+                roles_activity_query = session.createSQLQuery("insert into roles_activity(activity_id, role_id) values("+ activity_id +", 1)");
+                roles_activity_query.executeUpdate();
+                
+                StaticHibernateUtil.commitTransaction();
+            } catch(Exception e) {
+                logger.info("Failed add permission for existing Question groups");
+                StaticHibernateUtil.rollbackTransaction();
+            } finally {
+                StaticHibernateUtil.clearSession();
+            }
+        }
+        logger.info("Success, permission has been added.");
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void applyMifos5722Fix() throws PersistenceException {
+        
+        Session session = StaticHibernateUtil.getSessionTL();
+        int counter = 0;
+        LoanBO fixLoan;
+        
+        logger.info("Started Mifos-5692 and Mifos-5722 fix.");
+        
+        Query query = session.getNamedQuery("accounts.countAllParentLoans");
+        Long loanCount = (Long)query.uniqueResult();
+        StaticHibernateUtil.clearSession();
+        
+        logger.info("Query found " + loanCount.toString() + " accounts.");
 
+        do {
+            session = StaticHibernateUtil.getSessionTL();
+            query = session.getNamedQuery("accounts.findAllParentLoans");
+            query.setFirstResult(counter);
+            query.setMaxResults(1);
+            fixLoan = (LoanBO)query.uniqueResult();
+            
+            if(fixLoan != null) {
+                counter++;
+                if(fixLoan.needsMifos5722Repair()) {
+                    try {
+                        StaticHibernateUtil.startTransaction();
+                        fixLoan.applyMifos5722Fix();
+                        StaticHibernateUtil.commitTransaction();
+                    } catch(AccountException e) {
+                        logger.info("Failed to fix loan: " + fixLoan.getGlobalAccountNum());
+                        StaticHibernateUtil.rollbackTransaction();
+                    } finally {
+                        StaticHibernateUtil.clearSession();
+                    }
+                }
+            }  
+            if(counter%100==0 || fixLoan==null) {
+                logger.info("Fixed " + counter + " accounts."); 
+            }
+        } while(fixLoan != null);
+        logger.info("Finished Mifos-5692 and Mifos-5722 fix.");
+    }
+
+    private void applyMifos5763Fix() {
+        Session session = StaticHibernateUtil.getSessionTL();
+        int counter = 0;
+        int index = 0;
+        LoanBO fixLoan;
+        
+        Query query = session.getNamedQuery("accounts.countGLIMAccountsWithIncorrectNumberOfInstallmentsOnIndividualLoans");
+        Long loanCount = (Long)query.uniqueResult();
+        logger.info("Found " + loanCount.toString() + " GLIM accounts wtih incorrect number of installments on member accounts");
+        
+        StaticHibernateUtil.clearSession();
+        do {
+            session = StaticHibernateUtil.getSessionTL();
+            query = session.getNamedQuery("accounts.findGLIMAccountsWithIncorrectNumberOfInstallmentsOnIndividualLoans");
+            query.setFirstResult(index);
+            query.setMaxResults(1);
+            fixLoan = (LoanBO)query.uniqueResult();
+            
+            if(fixLoan != null) {
+                counter++;
+                try {
+                    StaticHibernateUtil.startTransaction();
+                    fixLoan.applyMifos5763Fix();
+                    StaticHibernateUtil.commitTransaction();
+                    logger.info("Trying to apply Mifos-5722 fix to current loan");
+                    try {
+                        StaticHibernateUtil.startTransaction();
+                        fixLoan.applyMifos5722Fix();
+                        StaticHibernateUtil.commitTransaction();
+                    } catch (Exception e) {
+                        logger.info("Failed to apply Mifos-5722 fix to loan " + fixLoan.getGlobalAccountNum());
+                        StaticHibernateUtil.rollbackTransaction();
+                    }
+                } catch(AccountException e) {
+                    logger.info("Failed to fix loan: " + fixLoan.getGlobalAccountNum());
+                    index++;
+                    StaticHibernateUtil.rollbackTransaction();
+                } finally {
+                    StaticHibernateUtil.clearSession();
+                }
+            }  
+            if(counter%100==0 || fixLoan==null) {
+                logger.info("Fixed " + counter + " accounts."); 
+            }
+        } while(fixLoan != null);
+        logger.info("Finished Mifos-5763 fix.");
+    }
+    
     private void initializeDBConnectionForHibernate(DatabaseMigrator migrator) {
         try {
             /*
@@ -654,5 +854,33 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         final ShutdownManager shutdownManager = (ShutdownManager) ctx.getAttribute(ShutdownManager.class.getName());
         shutdownManager.sessionDestroyed(httpSessionEvent);
     }
+    
+    private void copyResources(ServletContext sc) throws IOException {
+        URL protocol = ETLReportDWHelper.class.getClassLoader().getResource("sql/release-upgrades.txt");
+        if(protocol.getProtocol().equals("jar")){
+        String destinationDirectoryForJobs = System.getProperty("user.home")+"/.mifos/ETL/MifosDataWarehouseETL";
+        String destinationDirectoryForJar = System.getProperty("user.home")+"/.mifos/ETL/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
+        String pathFromJar ="/WEB-INF/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
+        String pathFromJobs = "/WEB-INF/MifosDataWarehouseETL/";
+        if(File.separatorChar == '\\'){
+          destinationDirectoryForJobs = destinationDirectoryForJobs.replaceAll("/", "\\\\");
+          destinationDirectoryForJar = destinationDirectoryForJar.replaceAll("/", "\\\\");
+        }
+        File directory = new File(destinationDirectoryForJobs);
+        directory.mkdirs();
+        FileUtils.cleanDirectory(directory);
+        
+            File jarDest = new File(destinationDirectoryForJar);
+            URL fullPath = sc.getResource(pathFromJar);   
+            File f = new File(sc.getResource(pathFromJobs).toString().replace("file:", ""));
+            for (File fileEntry : f.listFiles()) {
+                FileUtils.copyFileToDirectory(fileEntry, directory);
+                logger.info("Copy file: "+fileEntry.getName()+" to: "+directory);
+            }
+            FileUtils.copyURLToFile(fullPath, jarDest);
+            logger.info("Copy file: "+fullPath+" to: "+directory);
+        } 
+    }
 
+    
 }
