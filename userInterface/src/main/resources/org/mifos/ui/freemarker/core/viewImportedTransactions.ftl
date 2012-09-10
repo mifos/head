@@ -52,7 +52,7 @@
                     </td>
                     <td>
                     [#if !file.phaseOut && file.undoable]
-                        <a href='viewImportedTransactions.ftl?fileName=${file.importedFileName}'>
+                        <a href='viewImportedTransactionsConfirmation.ftl?fileName=${file.importedFileName}'>
                             [@spring.message "admin.viewimportedfiles.undo"/]
                         </a>
                     [#elseif !file.phaseOut && !file.undoable]
