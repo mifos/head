@@ -28,7 +28,7 @@ Usage:
 2. Give the table an ID
 3. Call this macro anywhere on the page. Viola! 
 --]
-[#macro datatable tableId]
+[#macro datatable tableId sortingIndex=-1]
 <!-- Datatable -->
 <style type="text/css" title="currentStyle">
     @import "pages/css/datatables/table_jui.css";
@@ -45,7 +45,11 @@ $(document).ready(function() {
         "bLengthChange": true,
         "bFilter": true,
         "bProcessing": true,
+        [#if sortingIndex = -1]
         "aaSorting": [],
+        [#else]
+        "aaSorting": [[ ${sortingIndex}, "desc" ]],
+        [/#if]
         "bSort": true,
         "bInfo": true,
         "bAutoWidth": true,
