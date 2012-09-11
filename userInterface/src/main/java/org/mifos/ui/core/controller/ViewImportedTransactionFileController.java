@@ -1,8 +1,11 @@
 package org.mifos.ui.core.controller;
 
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
+import org.mifos.dto.screen.ImportedFileDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +23,16 @@ public class ViewImportedTransactionFileController {
     public ModelAndView viewImportedTransactions(@RequestParam(required = false) String fileName) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("viewImportedTransactions");
+
+        List<ImportedFileDto> importedFiles = this.importTransactionsServiceFacade.getImportedFiles();
+        List<ImportedFileDto> supportedFiles = new ArrayList<ImportedFileDto>();
         
-        modelAndView.addObject("importedFiles", this.importTransactionsServiceFacade.getImportedFiles());
+        for(ImportedFileDto importedFile : importedFiles) {
+            if(!importedFile.getPhaseOut() && importedFile.getUndoable()) {
+                supportedFiles.add(importedFile);
+            }
+        }
+        modelAndView.addObject("importedFiles", supportedFiles);
 
         return modelAndView;
     }
