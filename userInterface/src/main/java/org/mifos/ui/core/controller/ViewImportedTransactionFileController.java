@@ -28,7 +28,7 @@ public class ViewImportedTransactionFileController {
         List<ImportedFileDto> supportedFiles = new ArrayList<ImportedFileDto>();
         
         for(ImportedFileDto importedFile : importedFiles) {
-            if(!importedFile.getPhaseOut() && importedFile.getUndoable()) {
+            if(importedFile.getUndoable()) {
                 supportedFiles.add(importedFile);
             }
         }
