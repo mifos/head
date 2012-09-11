@@ -198,7 +198,7 @@ explanation of the license and how it is applied.
 									<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 									<td width="97%">
 									<a id="admin.link.viewimportedfiles" href="viewImportedTransactions.ftl">
-                                        <mifos:mifoslabel name="admin.importexport.viewimportedfiles" bundle="adminUIResources" /></a>
+                                        <mifos:mifoslabel name="admin.importexport.undoImportedFiles" bundle="adminUIResources" /></a>
 										| <a id="admin.link.manageImports" href="manageImportAction.do?method=load">
 										<mifos:mifoslabel name="admin.importexport.importtransactions" bundle="adminUIResources" /></a>
                                         </td>
