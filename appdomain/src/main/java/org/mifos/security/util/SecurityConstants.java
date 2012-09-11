@@ -108,6 +108,13 @@ public interface SecurityConstants {
     short ROLES_EDIT_ROLES = 24;
 
     short ROLES_DELETE_ROLES = 25;
+    
+    //Accounting management
+    short ACCOUNTING_CREATE_GLTRANSACTION = 280; 
+    short ACCOUNTING_CREATE_JVTRANSACTION = 281;
+    short ACCOUNTING_CREATE_OPENBALANCE = 282; 
+    short ACCOUNTING_CREATE_VIEWTRANSACTIONS = 283; 
+    short ACCOUNTING_CREATE_MISPROCESSING = 284; 
 
     // Client attributes management
     short EDIT_CLIENTNAME_HIERARCHY_GROUPLOANALLOWED = 28;

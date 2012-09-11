@@ -48,4 +48,5 @@ public class AccountingRulesConstants {
     public static final String BACKDATED_APPROVALS_ALLOWED = "BackDatedApprovalsAllowed";
     public static final String OVERDUE_INTEREST_PAID_FIRST = "OverdueInterestPaidFirst";
     public static final String GL_NAMES_MODE = "AccountingRules.GlNamesMode";
+    public static final String ENABLE_SIMPLE_ACCOUNTING = "AccountingRules.SimpleAccounting"; 
 }
