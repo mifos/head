@@ -177,8 +177,12 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
             fileInput.close();
 
             fileInput = new FileInputStream(tempFileName);
-            List<AccountTrxDto> storeForUndoImport = transactionImport.storeForUndoImport(fileInput);
-            importResult.setTrxIdsToUndo(storeForUndoImport);
+            if (importPluginClassname.equalsIgnoreCase("org.almajmoua.AudiBankXlsImporter")) {
+                importResult.setTrxIdsToUndo(transactionImport.storeForUndoImport(fileInput));
+            }
+            else {
+                transactionImport.store(fileInput);
+            }
             return importResult;
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
