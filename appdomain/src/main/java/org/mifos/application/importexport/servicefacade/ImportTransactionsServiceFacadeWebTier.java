@@ -36,6 +36,8 @@ import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
 import org.mifos.application.importexport.business.service.ImportedFilesService;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -269,14 +271,14 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
             error_flag = Boolean.FALSE;
             if(trxn.getAccount().getAccountState().isLoanCanceled() ||
                     trxn.getAccount().getAccountState().isLoanClosedWrittenOff()) {
-                    accountStatusValidationResults.put(trxn.getAccount().getAccountState().getDescription(), trxn.getAccount().getGlobalAccountNum());
+                    accountStatusValidationResults.put(ApplicationContextProvider.getBean(MessageLookup.class).lookup("ftlDefinedLabels.undoImport.invalidAccountState")+trxn.getAccount().getAccountState().getName(), trxn.getAccount().getGlobalAccountNum());
                     error_flag = Boolean.TRUE;
             }
             else {
                 try {
                     monthClosingServiceFacade.validateTransactionDate(trxn.getAccountPayment().getPaymentDate());
                 } catch (BusinessRuleException e) {
-                    accountStatusValidationResults.put(e.getMessageKey(), trxn.getAccount().getGlobalAccountNum());
+                    accountStatusValidationResults.put(ApplicationContextProvider.getBean(MessageLookup.class).lookup(e.getMessageKey()), trxn.getAccount().getGlobalAccountNum());
                     error_flag = Boolean.TRUE;
                 }
             }
