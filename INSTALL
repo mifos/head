@@ -20,7 +20,7 @@ This file describes how to install Mifos for use in a production environment.
    http://mifos.org/documentation/upgrades
 
    For upgrade instructions for this release see:
-   http://mifosforge.jira.com/wiki/display/MIFOS/Mifos+2.4+Upgrade+Instructions
+   http://mifosforge.jira.com/wiki/display/MIFOS/Mifos+2.5+Upgrade+Instructions
 
 3. Configuring MySQL
     3.1. Setting Database Parameters
@@ -117,10 +117,10 @@ This file describes how to install Mifos for use in a production environment.
          "trapdoor".
 
     7.2. Release Notes -
-         http://mifosforge.jira.com/wiki/display/MIFOS/v2.4
+         http://mifosforge.jira.com/wiki/display/MIFOS/v2.5
 
     7.3. System Recommendations (hardware, networking) -
-         http://mifosforge.jira.com/wiki/display/MIFOS/Mifos+System+Recommendations+v2.4
+         http://mifosforge.jira.com/wiki/display/MIFOS/Mifos+System+Recommendations+v2.5
 
     7.4. Ubuntu Install Guide -
          http://mifosforge.jira.com/wiki/display/MIFOS/Ubuntu+Install
