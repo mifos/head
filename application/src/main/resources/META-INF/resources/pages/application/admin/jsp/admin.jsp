@@ -195,8 +195,7 @@ explanation of the license and how it is applied.
                         <tr class="fontnormal">
 			<td align="center" colspan="2">
 			 	<div id="accountDetailsId">
-				<br>
-				 <table width="90%" border="0" cellspacing="0" cellpadding="0">
+				 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                    <tr class="fontnormal">
                       <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                       <td width="97%"><a href="generalledgeraction.do?method=load"><mifos:mifoslabel name="admin.glaction" bundle="adminUIResources"/></a></td>
@@ -222,7 +221,6 @@ explanation of the license and how it is applied.
                     <td width="97%"><a href="yearEndProcessAction.do?method=load"><mifos:mifoslabel name="admin.yearEndProcess" bundle="adminUIResources"/></a></td>
                   </tr> 
                </table>
-		     <br>
 			</div>
 			</td>
 			</tr>
