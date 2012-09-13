@@ -23,7 +23,9 @@ package org.mifos.application.importexport.servicefacade;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -31,8 +33,11 @@ import org.mifos.accounts.api.TransactionImport;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.UserContextFactory;
+import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
 import org.mifos.application.importexport.business.service.ImportedFilesService;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -45,6 +50,7 @@ import org.mifos.framework.plugin.PluginManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,16 +60,20 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
 
     private static final Logger logger = LoggerFactory.getLogger(ImportTransactionsServiceFacadeWebTier.class);
     private static final String IMPORT_UNDONE = "Import file has been phased out";
+    private static final String INVALID_TRXN =  "INVALID_TRXN";
+    private static final String VALID_TRXN =  "VALID_TRXN";
     
     private ImportedFilesService importedFilesService;
     private PersonnelDao personnelDao;
     private AccountServiceFacade accountServiceFacade;
+    private MonthClosingServiceFacade monthClosingServiceFacade;
 
     @Autowired
-    public ImportTransactionsServiceFacadeWebTier(ImportedFilesService importedFilesService, PersonnelDao personnelDao, AccountServiceFacade accountServiceFacade) {
+    public ImportTransactionsServiceFacadeWebTier(ImportedFilesService importedFilesService, PersonnelDao personnelDao, AccountServiceFacade accountServiceFacade, MonthClosingServiceFacade monthClosingServiceFacade) {
         this.importedFilesService = importedFilesService;
         this.personnelDao = personnelDao;
         this.accountServiceFacade = accountServiceFacade;
+        this.monthClosingServiceFacade = monthClosingServiceFacade;
     }
 
     @Override
@@ -169,8 +179,12 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
             fileInput.close();
 
             fileInput = new FileInputStream(tempFileName);
-            List<AccountTrxDto> storeForUndoImport = transactionImport.storeForUndoImport(fileInput);
-            importResult.setTrxIdsToUndo(storeForUndoImport);
+            if (importPluginClassname.equalsIgnoreCase("org.almajmoua.AudiBankXlsImporter")) {
+                importResult.setTrxIdsToUndo(transactionImport.storeForUndoImport(fileInput));
+            }
+            else {
+                transactionImport.store(fileInput);
+            }
             return importResult;
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
@@ -242,5 +256,41 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
         }
         
         
+    }
+
+    @Override
+    public Map<String, Map<String, String>> getUndoImportDateToValidate(String importTransactionsFileName) {
+        Map<String, Map<String, String>> validationResults = new HashMap<String, Map<String, String>>();
+        Map<String, String> accountStatusValidationResults = new HashMap<String, String>();;
+        Map<String, String> trxnToUndo = new HashMap<String, String>();;
+        List<AccountTrxnEntity> trxnData = new ArrayList<AccountTrxnEntity>(this.importedFilesService.getImportedFileByName(importTransactionsFileName).getImportedTrxn());
+        Integer iterator = 0;
+        Boolean error_flag = Boolean.FALSE;
+        
+        for (AccountTrxnEntity trxn : trxnData) {
+            error_flag = Boolean.FALSE;
+            if(trxn.getAccount().getAccountState().isLoanCanceled() ||
+                    trxn.getAccount().getAccountState().isLoanClosedWrittenOff()) {
+                    accountStatusValidationResults.put(ApplicationContextProvider.getBean(MessageLookup.class).lookup("ftlDefinedLabels.undoImport.invalidAccountState")+trxn.getAccount().getAccountState().getName(), trxn.getAccount().getGlobalAccountNum());
+                    error_flag = Boolean.TRUE;
+            }
+            else {
+                try {
+                    monthClosingServiceFacade.validateTransactionDate(trxn.getAccountPayment().getPaymentDate());
+                } catch (BusinessRuleException e) {
+                    accountStatusValidationResults.put(ApplicationContextProvider.getBean(MessageLookup.class).lookup(e.getMessageKey()), trxn.getAccount().getGlobalAccountNum());
+                    error_flag = Boolean.TRUE;
+                }
+            }
+            if(error_flag) {
+                iterator +=1;
+            }
+            
+        }
+        Integer valid_trxn = trxnData.size() - iterator;
+        validationResults.put(INVALID_TRXN, accountStatusValidationResults);
+        trxnToUndo.put(((Integer)trxnData.size()).toString(), valid_trxn.toString());
+        validationResults.put(VALID_TRXN, trxnToUndo);
+        return validationResults;
     }
 }

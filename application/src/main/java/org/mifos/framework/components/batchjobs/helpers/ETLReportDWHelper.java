@@ -1,6 +1,8 @@
 package org.mifos.framework.components.batchjobs.helpers;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,15 +37,28 @@ public class ETLReportDWHelper extends TaskHelper {
             String jarPath = System.getProperty("user.home") + "/.mifos/ETL/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
             String javaHome = System.getProperty("java.home") + "/bin/java"; 
             String cmd = "-jar " + jarPath + " " + path + " false";
-                    
+            String pathToLog = System.getProperty("user.home") + "/.mifos/ETL/log";     
             if (File.separatorChar == '\\') { // windows platform
                 javaHome=javaHome.replaceAll("/", "\\\\");
                 javaHome='"'+javaHome+'"';
                 cmd = cmd.replaceAll("/", "\\\\");
+                pathToLog = pathToLog.replaceAll("/", "\\\\");
             }
             try {
+            	
                 cmd = javaHome +" "+ cmd +" "+ dsDW.getUsername() + " " + dsDW.getPassword() + " " + dsDW.getUrl();
                 Process p = Runtime.getRuntime().exec(cmd);
+                BufferedReader reader = new BufferedReader (new InputStreamReader(p.getInputStream()));
+                String line =null;
+                if(new File(pathToLog).exists()){
+                	new File(pathToLog).delete();
+                }
+                File file = new File(pathToLog);
+                PrintWriter fw = new PrintWriter(file);
+                while ((line = reader.readLine ()) != null) {
+                	fw.println(line);
+                }
+                fw.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -53,24 +68,16 @@ public class ETLReportDWHelper extends TaskHelper {
 
     private void createPropertiesFileForPentahoDWReports(DriverManagerDataSource ds, DriverManagerDataSource dsDW) {
         try {
-            String jdbc = null;
+            String pathToJNDIDirectory = System.getProperty("user.dir") + "/simple-jndi";
+            String pathToJNDIPropertiesFile = System.getProperty("user.dir") + "/simple-jndi/jdbc.properties";
             if (File.separatorChar == '\\') {
-                if(!(new File(System.getProperty("user.dir") + "\\Simple-JNDI")).exists()){
-                    System.out.println("create Simple-JNDI");
-                    new File(System.getProperty("user.dir") + "\\Simple-JNDI").mkdirs();
-                   
-                }
-                jdbc = System.getProperty("user.dir") + "\\Simple-JNDI\\jdbc.properties";
-                
-            } else {
-                if(!(new File(System.getProperty("user.home") + "/.mifos/ETL/Simple-JNDI")).exists()){
-                    System.out.println("create Simple-JNDIlinux");
-                    new File(System.getProperty("user.home") + "/.mifos/ETL/Simple-JNDI").mkdirs();
-                    
-                }
-                jdbc = System.getProperty("user.home") + "/.mifos/ETL/Simple-JNDI/jdbc.properties";
+                pathToJNDIDirectory = pathToJNDIDirectory.replaceAll("/", "\\\\");
+                pathToJNDIPropertiesFile = pathToJNDIPropertiesFile.replaceAll("/", "\\\\");
             }
-            File file = new File(jdbc);
+            if(!new File(pathToJNDIDirectory).exists()){
+            	new File(pathToJNDIDirectory).mkdir();
+            }
+            File file = new File(pathToJNDIPropertiesFile);
             PrintWriter fw = new PrintWriter(file);
             fw.println("SourceDB/type=javax.sql.DataSource");
             fw.println("SourceDB/driver=com.mysql.jdbc.Driver");

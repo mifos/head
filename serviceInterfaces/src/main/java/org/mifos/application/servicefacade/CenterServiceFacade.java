@@ -126,4 +126,7 @@ public interface CenterServiceFacade {
     void addNoteToPersonnel(Short personnelId, String comment);
     
     void putCenterBusinessKeyInSession(String globalCustNum, HttpServletRequest request);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    List<CustomerDetailDto> retrieveGroupForPentahoReport(Short loanOfficerId);
 }

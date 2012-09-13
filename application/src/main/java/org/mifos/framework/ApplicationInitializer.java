@@ -857,6 +857,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     
     private void copyResources(ServletContext sc) throws IOException {
         URL protocol = ETLReportDWHelper.class.getClassLoader().getResource("sql/release-upgrades.txt");
+        try {
         if(protocol.getProtocol().equals("jar")){
         String destinationDirectoryForJobs = System.getProperty("user.home")+"/.mifos/ETL/MifosDataWarehouseETL";
         String destinationDirectoryForJar = System.getProperty("user.home")+"/.mifos/ETL/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
@@ -869,7 +870,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         File directory = new File(destinationDirectoryForJobs);
         directory.mkdirs();
         FileUtils.cleanDirectory(directory);
-        
             File jarDest = new File(destinationDirectoryForJar);
             URL fullPath = sc.getResource(pathFromJar);   
             File f = new File(sc.getResource(pathFromJobs).toString().replace("file:", ""));
@@ -880,7 +880,28 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             FileUtils.copyURLToFile(fullPath, jarDest);
             logger.info("Copy file: "+fullPath+" to: "+directory);
         } 
-    }
-
-    
+        } catch (NullPointerException e) {
+                String destinationDirectoryForJobs = System.getProperty("user.home")+"/.mifos/ETL/MifosDataWarehouseETL";
+                String destinationDirectoryForJar = System.getProperty("user.home")+"/.mifos/ETL/";
+                String pathFromJar =sc.getRealPath("/")+"/WEB-INF/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
+                String pathFromJobs = sc.getRealPath("/")+"/WEB-INF/MifosDataWarehouseETL/";
+                if(File.separatorChar == '\\'){
+                  destinationDirectoryForJobs = destinationDirectoryForJobs.replaceAll("/", "\\\\");
+                  destinationDirectoryForJar = destinationDirectoryForJar.replaceAll("/", "\\\\");
+                }
+                File directory = new File(destinationDirectoryForJobs);
+                directory.mkdirs();
+                FileUtils.cleanDirectory(directory);
+                logger.info(System.getProperty("user.dir"));
+                    File jarDest = new File(destinationDirectoryForJar);
+                    URL fullPath = sc.getResource(pathFromJar);  
+                    File f = new File(pathFromJobs);
+                    for (File fileEntry : f.listFiles()) {
+                        FileUtils.copyFileToDirectory(fileEntry, directory);
+                        logger.info("Copy file: "+fileEntry.getName()+" to: "+directory);
+                    }
+                    FileUtils.copyFileToDirectory(new File(pathFromJar), jarDest);
+                    logger.info("Copy file: "+fullPath+" to: "+directory);
+        }
+    }   
 }

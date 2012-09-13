@@ -226,110 +226,164 @@ public class PentahoParamParser {
     }
     
 
-	private Map<String, String> updatePossibleValuesForParam(
-			ListParameter paramDefEntry, ParameterContext paramContext,
-			Map<String, AbstractPentahoParameter> selectedValues)
-			throws ReportDataFactoryException {
-		Map<String, String> result = new HashMap<String, String>();
+    private Map<String, String> updatePossibleValuesForParam(ListParameter paramDefEntry,
+            ParameterContext paramContext, Map<String, AbstractPentahoParameter> selectedValues)
+            throws ReportDataFactoryException {
+        Map<String, String> result = new HashMap<String, String>();
 
-		String id;
-		if (parameterIsCenter(paramDefEntry.getName())) {
-			String keyValue = searchKey("(.*officer$)|(.*officer_id$)|(selected_office$)", selectedValues, paramDefEntry.getName());
-			if (!keyValue.equals("")){
-			id = (String) selectedValues.get(keyValue)
-					.getParamValue();
-			if (!id.equals("-1")) {
-				List<CustomerDetailDto> customerList = ApplicationContextProvider
-						.getBean(CenterServiceFacade.class)
-						.retrieveCustomersUnderUser(new Short(id));
-				for (CustomerDetailDto office : customerList) {
-					String key = office.getCustomerId().toString();
-					String value = office.getDisplayName();
-					result.put(key, value);
-				}
-			} else {
-			ParameterValues paramValues = paramDefEntry.getValues(paramContext);
-			for (int i = 0; i < paramValues.getRowCount(); i++) {
-				String key = String.valueOf(paramValues.getKeyValue(i));
-				String value = String.valueOf(paramValues.getTextValue(i));
-				result.put(key, value);
-			}}
-			} else {
-				ParameterValues paramValues = paramDefEntry.getValues(paramContext);
-				for (int i = 0; i < paramValues.getRowCount(); i++) {
-					String key = String.valueOf(paramValues.getKeyValue(i));
-					String value = String.valueOf(paramValues.getTextValue(i));
-					result.put(key, value);
-				}	
-			}
-			String key = "-1";
-			String value = "All";
-			result.put(key, value);
-		} else if (parameterIsOfficer(paramDefEntry.getName())) {
-			String keyValue = searchKey("(.*office$)|(.*office_id$)|(.*branch_id$)|(.*office$)", selectedValues, paramDefEntry.getName());
-			if(!keyValue.equals("")){
-			id = (String) selectedValues.get(keyValue).getParamValue();
-			if (!id.equals("-1")) {
-				ChangeAccountStatusDto changeAccountStatusDto = ApplicationContextProvider
-						.getBean(LoanAccountServiceFacade.class)
-						.retrieveLoanOfficerDetailsForBranch(new Short(id));
-				List<PersonnelDto> officers = changeAccountStatusDto
-						.getLoanOfficers();
-				for (PersonnelDto officer : officers) {
-					String key = officer.getPersonnelId().toString();
-					String value = officer.getDisplayName();
-					result.put(key, value);
-				}
-			}
-			String key = "-1";
-			String value = "All";
-			result.put(key, value);
-			}
-		} else {
-			ParameterValues paramValues = paramDefEntry.getValues(paramContext);
-			for (int i = 0; i < paramValues.getRowCount(); i++) {
-				String key = String.valueOf(paramValues.getKeyValue(i));
-				String value = String.valueOf(paramValues.getTextValue(i));
-				result.put(key, value);
-			}
-		}
-		return result;
+        String id;
+        if (parameterIsOffice(paramDefEntry.getName())) {
+            ParameterValues paramValues = paramDefEntry.getValues(paramContext);
+            for (int i = 0; i < paramValues.getRowCount(); i++) {
+                String key = String.valueOf(paramValues.getKeyValue(i));
+                String value = String.valueOf(paramValues.getTextValue(i));
+                result.put(key, value);
+            }
+        } else if (parameterIsCenter(paramDefEntry.getName())) {
+            String keyValue = searchKey("(.*officer$)|(.*officer_id$)|(selected_office$)|(.*BRANCH_NAME.*)", selectedValues,
+                    paramDefEntry.getName());
+            if (!keyValue.equals("")) {
+                id = (String) selectedValues.get(keyValue).getParamValue();
+                if (!id.equals("-1")) {
+                    List<CustomerDetailDto> customerList = ApplicationContextProvider
+                            .getBean(CenterServiceFacade.class).retrieveCustomersUnderUser(new Short(id));
+                    for (CustomerDetailDto office : customerList) {
+                        String key = office.getCustomerId().toString();
+                        String value = office.getDisplayName();
+                        result.put(key, value);
+                    }
+                } else {
+                    ParameterValues paramValues = paramDefEntry.getValues(paramContext);
+                    for (int i = 0; i < paramValues.getRowCount(); i++) {
+                        String key = String.valueOf(paramValues.getKeyValue(i));
+                        String value = String.valueOf(paramValues.getTextValue(i));
+                        result.put(key, value);
+                    }
+                }
+            } else {
+                ParameterValues paramValues = paramDefEntry.getValues(paramContext);
+                for (int i = 0; i < paramValues.getRowCount(); i++) {
+                    String key = String.valueOf(paramValues.getKeyValue(i));
+                    String value = String.valueOf(paramValues.getTextValue(i));
+                    result.put(key, value);
+                }
+            }
+            String key = "-1";
+            String value = "All";
+            result.put(key, value);
+
+        }  else if (parameterIsGroup(paramDefEntry.getName())) {
+            String keyValue = searchKey("(.*officer*)", selectedValues,
+                    paramDefEntry.getName());
+            if (!keyValue.equals("")) {
+                id = (String) selectedValues.get(keyValue).getParamValue();
+                if (!id.equals("-1")) {
+                    List<CustomerDetailDto> customerList = ApplicationContextProvider
+                            .getBean(CenterServiceFacade.class).retrieveGroupForPentahoReport(new Short(id));
+                    for (CustomerDetailDto office : customerList) {
+                        String key = office.getCustomerId().toString();
+                        String value = office.getDisplayName();
+                        result.put(key, value);
+                    }
+                } else {
+                    ParameterValues paramValues = paramDefEntry.getValues(paramContext);
+                    for (int i = 0; i < paramValues.getRowCount(); i++) {
+                        String key = String.valueOf(paramValues.getKeyValue(i));
+                        String value = String.valueOf(paramValues.getTextValue(i));
+                        result.put(key, value);
+                    }
+                }
+            } else {
+                ParameterValues paramValues = paramDefEntry.getValues(paramContext);
+                for (int i = 0; i < paramValues.getRowCount(); i++) {
+                    String key = String.valueOf(paramValues.getKeyValue(i));
+                    String value = String.valueOf(paramValues.getTextValue(i));
+                    result.put(key, value);
+                }
+            }
+            String key = "-1";
+            String value = "All";
+            result.put(key, value);
+
+        } else if (parameterIsOfficer(paramDefEntry.getName())) {
+            String keyValue = searchKey("(.*office$)|(.*office_id$)|(.*branch_id$)|(.*office$)|(.*selectedBranch.*)", selectedValues, paramDefEntry.getName());
+            if(!keyValue.equals("")){
+            id = (String) selectedValues.get(keyValue).getParamValue();
+            if (!id.equals("-1")) {
+                ChangeAccountStatusDto changeAccountStatusDto = ApplicationContextProvider
+                        .getBean(LoanAccountServiceFacade.class)
+                        .retrieveLoanOfficerDetailsForBranch(new Short(id));
+                List<PersonnelDto> officers = changeAccountStatusDto
+                        .getLoanOfficers();
+                for (PersonnelDto officer : officers) {
+                    String key = officer.getPersonnelId().toString();
+                    String value = officer.getDisplayName();
+                    result.put(key, value);
+                }
+            }
+            String key = "-1";
+            String value = "All";
+            result.put(key, value);
+            }
+        } else {
+            ParameterValues paramValues = paramDefEntry.getValues(paramContext);
+            for (int i = 0; i < paramValues.getRowCount(); i++) {
+                String key = String.valueOf(paramValues.getKeyValue(i));
+                String value = String.valueOf(paramValues.getTextValue(i));
+                result.put(key, value);
+            }
+        }
+        return result;
+    }
+		
+	private boolean parameterIsOffice(String name) {
+	    Pattern p = Pattern.compile("(.*office_id$)|(.*branch_id$)|(.*office$)");
+        Matcher m = p.matcher(name);
+        boolean b = m.matches(); 
+        return b;
 	}
-    
-    private boolean parameterIsCenter(String name) {
-        Pattern p = Pattern.compile("(.*center.*)|(.*office_id$)|(.*branch_id$)|(.*office$)");
+	
+	private boolean parameterIsCenter(String name) {
+        Pattern p = Pattern.compile("(.*center.*)|(.*CENTER_NAME.*)");
         Matcher m = p.matcher(name);
         boolean b = m.matches(); 
         return b;
     }
     
     private boolean parameterIsOfficer(String name) {
-        Pattern p = Pattern.compile("(.*officer$)|(.*officer_id$)");
+        Pattern p = Pattern.compile("(.*officer$)|(.*officer_id$)|(.*user.*)|(.*selectedLoanOfficer.*)");
         Matcher m = p.matcher(name);
         boolean b = m.matches(); 
         return b;
     }
     
-	public String searchKey(String regex,
-			Map<String, AbstractPentahoParameter> selectedValues, String name) {
-		String results = "";
+    private boolean parameterIsGroup(String name) {
+        Pattern p = Pattern.compile("(.*group.*)");
+        Matcher m = p.matcher(name);
+        boolean b = m.matches(); 
+        return b;
+    }
+    
+    private String searchKey(String regex,
+            Map<String, AbstractPentahoParameter> selectedValues, String name) {
+        String results = "";
 
-		Pattern p = Pattern.compile(regex);
+        Pattern p = Pattern.compile(regex);
 
-		Set<String> keys = selectedValues.keySet();
-		Iterator<String> ite = keys.iterator();
-		
-		while (ite.hasNext()) {
-			String candidate = ite.next();
-			Matcher m = p.matcher(candidate);
-			if (m.matches() && !name.equals(candidate)) {
-				results = candidate;
-			}
-		}
-		if (results.isEmpty()) {
-			return "";
-		} else {
-			return results;
-		}
-	}
+        Set<String> keys = selectedValues.keySet();
+        Iterator<String> ite = keys.iterator();
+        
+        while (ite.hasNext()) {
+            String candidate = ite.next();
+            Matcher m = p.matcher(candidate);
+            if (m.matches() && !name.equals(candidate)) {
+                results = candidate;
+            }
+        }
+        if (results.isEmpty()) {
+            return "";
+        } else {
+            return results;
+        }
+    }
 }

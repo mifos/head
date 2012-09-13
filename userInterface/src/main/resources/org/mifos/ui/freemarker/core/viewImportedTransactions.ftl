@@ -51,14 +51,12 @@
                     ${i18n.date_formatter(file.submittedOn, "dd/MM/yyyy", Application.LocaleSetting.locale)}       
                     </td>
                     <td>
-                    [#if !file.phaseOut && file.undoable]
-                        <a href='viewImportedTransactions.ftl?fileName=${file.importedFileName}'>
-                            [@spring.message "admin.viewimportedfiles.undo"/]
-                        </a>
-                    [#elseif !file.phaseOut && !file.undoable]
-                        [@spring.message "admin.importexport.undo.undoable" /]
-                    [#elseif file.phaseOut]
-                        [@spring.message "admin.importexport.undo.phaseout" /]
+                    [#if !file.phaseOut]
+                    <a href='viewImportedTransactionsConfirmation.ftl?fileName=${file.importedFileName}'>
+                        [@spring.message "admin.viewimportedfiles.undo"/]
+                    </a>
+                    [#else]
+                    [@spring.message "admin.importexport.undo.phaseout" /]
                     [/#if]
                     </td>
                 </tr>
@@ -67,7 +65,7 @@
 
         </tbody>
     </table>
-    [@widget.datatable "importedTransactions" /]
+    [@widget.datatable "importedTransactions" 1 /]
     [@form.returnToPage  "AdminAction.do?method=load" "button.back" "admin.importexport.button.back"/]
 </div>
 [/@adminLeftPaneLayout]

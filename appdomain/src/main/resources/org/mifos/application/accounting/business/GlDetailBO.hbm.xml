@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+
+  <class name="org.mifos.application.accounting.business.GlDetailBO" table="acc_gldetail" >
+    <id name="transactionId" type="integer" column="transaction_id">
+       <generator class="native"></generator>
+    </id>
+    <property name="subAccount" type="string" column="sub_account"></property>
+    <property name="transactionAmount" type="big_decimal" column="transaction_amount"></property>
+    <property name="amountAction" type="string" column="amount_action"></property>
+    <property name="chequeNo" type="string" column="cheque_no"></property>
+    <property name="chequeDate" type="date" column="cheque_date"></property>
+    <!--  -->
+    <property name="bankName" type="string" column="bank_name"></property>
+    <property name="bankBranch" type="string" column="bank_branch"></property>
+    <!--  -->
+  </class>
+</hibernate-mapping>

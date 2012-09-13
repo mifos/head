@@ -69,6 +69,7 @@ import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
+import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.InstallmentPrincipalAndInterest;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -2861,6 +2862,17 @@ public class LoanBO extends AccountBO implements Loan {
         Money amount = new Money(getCurrency());
         for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
             amount = amount.add(((LoanScheduleEntity) accountActionDateEntity).getTotalDueWithFees());
+        }
+        
+        if(isDecliningBalanceInterestRecalculation()) {
+            BigDecimal extraInterest = ApplicationContextProvider.getBean(ScheduleCalculatorAdaptor.class).getExtraInterest(this, DateUtils.getCurrentDateWithoutTimeStamp());
+            Money extraInterestMoney = MoneyUtils.currencyRound(amount.add(new Money(amount.getCurrency(), extraInterest)));
+            
+            //MIFOS-5589 - formula sometimes makes repayable amount less than original principal.
+            //Condition should be removed after further fixes.
+            if(extraInterestMoney.isGreaterThanZero()) {
+                amount = amount.add(extraInterestMoney);
+            }
         }
         return amount;
     }

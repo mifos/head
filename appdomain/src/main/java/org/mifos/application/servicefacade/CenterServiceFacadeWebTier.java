@@ -950,6 +950,12 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     }
 
     @Override
+    public List<CustomerDetailDto> retrieveGroupForPentahoReport(Short loanOfficerId){
+        PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(loanOfficerId);
+        return this.customerDao.findGroupsUnderUser(loanOfficer);
+    }
+    
+    @Override
     public UserDetailDto retrieveUsersDetails(Short userId) {
         return this.personnelDao.findPersonnelById(userId).toDto();
     }
