@@ -194,7 +194,11 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public List<QuestionGroupInstanceDetail> getQuestionGroupInstancesWithUnansweredQuestionGroups(Integer entityId, String event, String source) {
-        return filterInActiveQuestions(questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), true, true));
+    	boolean includeUnansweredQuestionGroups = true;
+    	if(event.equals("Create") && source.equals("Loan")) {
+    		includeUnansweredQuestionGroups = false;
+    	}
+        return filterInActiveQuestions(questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), includeUnansweredQuestionGroups, true));
     }
 
     private List<QuestionGroupInstanceDetail> filterInActiveQuestions(List<QuestionGroupInstanceDetail> instanceDetails) {
