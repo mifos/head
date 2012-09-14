@@ -53,12 +53,12 @@ function fnCancel(form) {
                 </span>
             </p>
             [#list invalid_trxns?keys as key]
-                [#assign arguments = ["${invalid_trxns[key]}", "${key}"]/]
+                [#assign arguments = ["${key}", "${invalid_trxns[key]}"]/]
                 <span class="red">[@spring.messageArgs "ftlDefinedLabels.undoImport.invalidTrxn" arguments /]</span></br>
             [/#list]
             </br>
             [#list valid_trxns?keys as key]
-                 [#assign arguments = ["${valid_trxns[key]}", "${key}"]/]
+                 [#assign arguments = ["${key}", "${valid_trxns[key]}"]/]
                 <span >[@spring.messageArgs "ftlDefinedLabels.undoImport.validTrxn" arguments /]</span></br>
             [/#list]
          

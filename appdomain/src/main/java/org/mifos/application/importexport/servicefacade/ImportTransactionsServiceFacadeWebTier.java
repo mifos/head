@@ -22,10 +22,14 @@ package org.mifos.application.importexport.servicefacade;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
+
+import org.hibernate.Query;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -46,6 +50,7 @@ import org.mifos.dto.domain.AccountTrxDto;
 import org.mifos.dto.domain.ParseResultDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.dto.screen.ImportedFileDto;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.plugin.PluginManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
@@ -203,13 +208,20 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
     public void undoFullImport(String importTransactionsFileName) {
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(mifosUser);
+        TreeSet<String> accountsWithAdjustedPayments = new TreeSet<String>();
         try {
             ImportedFilesEntity filesEntity = this.importedFilesService.getImportedFileByName(importTransactionsFileName);
             List<AccountTrxnEntity> trxUndo = new ArrayList<AccountTrxnEntity>(filesEntity.getImportedTrxn());
             List<ImportedAccPaymentDto> accPaymentList = new ArrayList<ImportedAccPaymentDto>();
             for (AccountTrxnEntity trxn : trxUndo) {
-                accPaymentList.add(new ImportedAccPaymentDto(trxn.getAccount().getGlobalAccountNum(), 
-                        trxn.getAccountPayment().getPaymentId()));
+                try {
+                    validateForAdjustedPayments(trxn, accountsWithAdjustedPayments);
+                    accPaymentList.add(new ImportedAccPaymentDto(trxn.getAccount().getGlobalAccountNum(), 
+                            trxn.getAccountPayment().getPaymentId()));
+                } catch (BusinessRuleException e) {
+                   //nothing to do   
+                }
+                
             }
             for (ImportedAccPaymentDto accDto : accPaymentList) {
                 try {
@@ -258,12 +270,17 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
         
     }
 
+    
+    /**
+     * Method currently returns last problem found for each account.
+     */
     @Override
     public Map<String, Map<String, String>> getUndoImportDateToValidate(String importTransactionsFileName) {
         Map<String, Map<String, String>> validationResults = new HashMap<String, Map<String, String>>();
         Map<String, String> accountStatusValidationResults = new HashMap<String, String>();;
         Map<String, String> trxnToUndo = new HashMap<String, String>();;
         List<AccountTrxnEntity> trxnData = new ArrayList<AccountTrxnEntity>(this.importedFilesService.getImportedFileByName(importTransactionsFileName).getImportedTrxn());
+        TreeSet<String> accountsWithAdjustedPayments = new TreeSet<String>();
         Integer iterator = 0;
         Boolean error_flag = Boolean.FALSE;
         
@@ -271,14 +288,15 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
             error_flag = Boolean.FALSE;
             if(trxn.getAccount().getAccountState().isLoanCanceled() ||
                     trxn.getAccount().getAccountState().isLoanClosedWrittenOff()) {
-                    accountStatusValidationResults.put(ApplicationContextProvider.getBean(MessageLookup.class).lookup("ftlDefinedLabels.undoImport.invalidAccountState")+trxn.getAccount().getAccountState().getName(), trxn.getAccount().getGlobalAccountNum());
+                    accountStatusValidationResults.put(trxn.getAccount().getGlobalAccountNum(), ApplicationContextProvider.getBean(MessageLookup.class).lookup("ftlDefinedLabels.undoImport.invalidAccountState")+trxn.getAccount().getAccountState().getName());
                     error_flag = Boolean.TRUE;
             }
             else {
                 try {
+                    validateForAdjustedPayments(trxn, accountsWithAdjustedPayments);
                     monthClosingServiceFacade.validateTransactionDate(trxn.getAccountPayment().getPaymentDate());
                 } catch (BusinessRuleException e) {
-                    accountStatusValidationResults.put(ApplicationContextProvider.getBean(MessageLookup.class).lookup(e.getMessageKey()), trxn.getAccount().getGlobalAccountNum());
+                    accountStatusValidationResults.put(trxn.getAccount().getGlobalAccountNum(), ApplicationContextProvider.getBean(MessageLookup.class).lookup(e.getMessageKey()));
                     error_flag = Boolean.TRUE;
                 }
             }
@@ -289,8 +307,20 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
         }
         Integer valid_trxn = trxnData.size() - iterator;
         validationResults.put(INVALID_TRXN, accountStatusValidationResults);
-        trxnToUndo.put(((Integer)trxnData.size()).toString(), valid_trxn.toString());
+        trxnToUndo.put(valid_trxn.toString(), ((Integer)trxnData.size()).toString());
         validationResults.put(VALID_TRXN, trxnToUndo);
         return validationResults;
+    }
+    
+    private void validateForAdjustedPayments(AccountTrxnEntity trxn, TreeSet<String> accountsWithAdjustedPayments) {
+        if(accountsWithAdjustedPayments.contains(trxn.getAccount().getGlobalAccountNum())) {
+            throw new BusinessRuleException("errors.paymentsWereAdjusted");
+        }
+        Query query = StaticHibernateUtil.getSessionTL().getNamedQuery("countRelatedTransactions");
+        query.setParameter("trxn_id", trxn.getAccountTrxnId().intValue());
+        if(((BigInteger)query.uniqueResult()).intValue()>0) {
+            accountsWithAdjustedPayments.add(trxn.getAccount().getGlobalAccountNum());
+            throw new BusinessRuleException("errors.paymentsWereAdjusted");
+        }
     }
 }
