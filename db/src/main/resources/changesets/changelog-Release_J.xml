@@ -933,13 +933,23 @@
            </sql>
        </rollback>
    </changeSet>
-      <changeSet id="MIFOS_5702_2" author="Kamil Kalfas">
+   <changeSet id="MIFOS_5702_2" author="Kamil Kalfas">
        <sql endDelimiter=";">
              alter table imported_transactions_files add undoable boolean default 0;
        </sql>
        <rollback>
            <sql endDelimiter=";">
              alter table imported_transactions_files drop column undoable;
+           </sql>
+       </rollback>
+   </changeSet>
+   <changeSet id="MIFOS_5628_1" author="Kamil Kalfas">
+       <sql endDelimiter=";">
+             alter table loan_account add group_loan boolean default 0;
+       </sql>
+       <rollback>
+           <sql endDelimiter=";">
+             alter table loan_account drop column group_loan;
            </sql>
        </rollback>
    </changeSet>
