@@ -35,7 +35,7 @@ public class SavingsImportTest extends UiTestCaseBase {
         savingsProductHelper = new SavingsProductHelper(selenium);
         adminTestHelper = new AdminTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
-        targetTime=new DateTime(2012, 6, 22, 12, 0, 0, 0); //changing date so dates in xls spreadsheet will be appropriate
+        targetTime=new DateTime(2012, 9, 18, 12, 0, 0, 0); //changing date so dates in xls spreadsheet will be appropriate
         DateTimeUpdaterRemoteTestingService dtUpdate=new DateTimeUpdaterRemoteTestingService(selenium);
         dtUpdate.setDateTime(targetTime);
     }
@@ -59,7 +59,7 @@ public class SavingsImportTest extends UiTestCaseBase {
         String errorNumber = "5";
         arrayOfErrors = buildArrayOfErrorsForImportSavingsTest();
         String importFile = this.getClass().getResource("/ImportSavingsAccountsTest.xls").toString();
-        SavingsProductParameters parameters = savingsProductHelper.getGenericSavingsProductParameters(targetTime.minusDays(1),
+        SavingsProductParameters parameters = savingsProductHelper.getGenericSavingsProductParameters(targetTime,
                 SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CLIENTS);
         parameters.setProductInstanceName("importSavings");
         parameters.setShortName("IMP");
