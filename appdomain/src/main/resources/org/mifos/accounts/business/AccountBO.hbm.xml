@@ -262,15 +262,6 @@
                 <one-to-many class="org.mifos.customers.business.CustomerScheduleEntity" />
             </set>
         </joined-subclass>
-        <!-- This is for new Group Loan -->
-        <joined-subclass name="org.mifos.accounts.loan.business.GroupLoanBO"
-            table="loan_account">
-            <key column="account_id" />
-            <set name="childAccounts" table="loan_account" access="field">
-                 <key column="account_id" />
-                <one-to-many class="org.mifos.accounts.loan.business.LoanBO">
-            </set>            
-        </joined-subclass>
     </class>
     <query name="accounts.getLastMeetingDateforCustomer">
         <![CDATA[select max(accountTrxn.actionDate)
