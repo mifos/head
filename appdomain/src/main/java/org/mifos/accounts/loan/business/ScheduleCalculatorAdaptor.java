@@ -38,11 +38,13 @@ public class ScheduleCalculatorAdaptor {
 
     private ScheduleCalculator scheduleCalculator;
     private ScheduleMapper scheduleMapper;
+    private ConfigurationPersistence configurationPersistence;
 
     @Autowired
-    public ScheduleCalculatorAdaptor(ScheduleCalculator scheduleCalculator, ScheduleMapper scheduleMapper) {
+    public ScheduleCalculatorAdaptor(ScheduleCalculator scheduleCalculator, ScheduleMapper scheduleMapper, ConfigurationPersistence configurationPersistence) {
         this.scheduleCalculator = scheduleCalculator;
         this.scheduleMapper = scheduleMapper;
+        this.configurationPersistence = configurationPersistence;
     }
 
     public void applyPayment(LoanBO loanBO, Money amount, Date paymentDate, PersonnelBO personnel, AccountPaymentEntity accountPaymentEntity) {
@@ -53,7 +55,7 @@ public class ScheduleCalculatorAdaptor {
     }
 
     public void computeExtraInterest(LoanBO loan, Date asOfDate) {
-    	int recalculateInterest = new ConfigurationPersistence().getConfigurationValueInteger(RECALCULATE_INTEREST);
+    	int recalculateInterest = configurationPersistence.getConfigurationValueInteger(RECALCULATE_INTEREST);
        	if(recalculateInterest==1 && loan.isDecliningBalanceEqualPrincipleCalculation()){
        		Schedule schedule = scheduleMapper.mapToSchedule(new ArrayList<LoanScheduleEntity>(loan.getLoanScheduleEntities()),
             loan.getDisbursementDate(), getDailyInterest(loan.getInterestRate()), loan.getLoanAmount().getAmount());

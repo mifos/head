@@ -81,6 +81,8 @@ public class LoanBusinessService implements BusinessService {
     @Autowired
     private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
 
+    @Autowired
+    private ConfigurationPersistence configurationPersistence;
 
     public LegacyLoanDao getlegacyLoanDao() {
         if (legacyLoanDao == null) {
@@ -112,12 +114,13 @@ public class LoanBusinessService implements BusinessService {
 
     public LoanBusinessService(LegacyLoanDao legacyLoanDao, ConfigurationBusinessService configService,
                                AccountBusinessService accountBusinessService, HolidayService holidayService,
-                               ScheduleCalculatorAdaptor scheduleCalculatorAdaptor) {
+                               ScheduleCalculatorAdaptor scheduleCalculatorAdaptor, ConfigurationPersistence configurationPersistence) {
         this.legacyLoanDao = legacyLoanDao;
         this.configService = configService;
         this.accountBusinessService = accountBusinessService;
         this.holidayService = holidayService;
         this.scheduleCalculatorAdaptor = scheduleCalculatorAdaptor;
+        this.configurationPersistence = configurationPersistence;
     }
 
     @Override
@@ -320,7 +323,7 @@ public class LoanBusinessService implements BusinessService {
         Money balance = paymentData.getTotalAmount();
         PersonnelBO personnel = paymentData.getPersonnel();
         Date transactionDate = paymentData.getTransactionDate();
-        int recalculateInterest = new ConfigurationPersistence().getConfigurationValueInteger(RECALCULATE_INTEREST);
+        int recalculateInterest = configurationPersistence.getConfigurationValueInteger(RECALCULATE_INTEREST);
         if(recalculateInterest==1 && loanBO.isDecliningBalanceEqualPrincipleCalculation())
         	scheduleCalculatorAdaptor.applyPayment(loanBO, balance, transactionDate, personnel, accountPaymentEntity);
         else if (loanBO.isDecliningBalanceInterestRecalculation()) {
