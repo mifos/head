@@ -223,6 +223,9 @@ public class LoanBO extends AccountBO implements Loan {
     private WeekDay monthWeek;
     private RankOfDay monthRank;
 
+    //new group loan account
+    private Boolean groupLoan;
+    
     // associations
     private List<LoanActivityEntity> loanActivityDetails;
     private List<AccountOverpaymentEntity> accountOverpayments;
@@ -856,6 +859,14 @@ public class LoanBO extends AccountBO implements Loan {
             }
         }
         return amount;
+    }
+
+    public Boolean getGroupLoan() {
+        return groupLoan;
+    }
+
+    public void setGroupLoan(Boolean groupLoan) {
+        this.groupLoan = groupLoan;
     }
 
     /**

@@ -170,12 +170,12 @@
                 <one-to-many class="org.mifos.accounts.loan.business.LoanBO"></one-to-many>
             </set>
 
+            <property name="groupLoan" column="group_loan" type="boolean"/>
             <property name="recurMonth" column="recur_month" type="short" />
             <property name="monthWeek" column="month_week"
                 type="org.mifos.application.meeting.util.helpers.WeekDayUserType" />
             <property name="monthRank" column="month_rank"
                 type="org.mifos.application.meeting.util.helpers.RankOfDayUserType" />
-            <property name="groupLoan" column="group_loan" type="boolean"/>
         </joined-subclass>
         <!-- This is for savings account-->
         <joined-subclass name="org.mifos.accounts.savings.business.SavingsBO"
