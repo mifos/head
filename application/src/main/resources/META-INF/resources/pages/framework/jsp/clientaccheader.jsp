@@ -39,6 +39,11 @@ explanation of the license and how it is applied.
 								name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
                   <td class="taborange"><a id="header.link.admin" href="AdminAction.do?method=load" class="tabfontwhite"><mifos:mifoslabel
 								name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
+		 			<c:if test="${accountingActivationStatus == true}">
+       		<td class="tablightorange"><a id="header.link.financialaccounting" href="FinancialAccountingAction.do?method=load"><mifos:mifoslabel
+								name="framework.financialaccounting" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>	
+		 </c:if>	
+					
               </c:when>
               <c:otherwise>
                   <td class="taborange"><a id="header.link.clientsAndAccounts" href="clientsAndAccounts.ftl" class="tabfontwhite"><mifos:mifoslabel
@@ -47,6 +52,11 @@ explanation of the license and how it is applied.
 								name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
                   <td class="tablightorange"><a id="header.link.admin" href="AdminAction.do?method=load"><mifos:mifoslabel
 								name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
+					<c:if test="${accountingActivationStatus == true}">
+       		<td class="tablightorange"><a id="header.link.financialaccounting" href="FinancialAccountingAction.do?method=load"><mifos:mifoslabel
+								name="framework.financialaccounting" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>	
+		 </c:if>
+					
               </c:otherwise>
           </c:choose>
         </tr>

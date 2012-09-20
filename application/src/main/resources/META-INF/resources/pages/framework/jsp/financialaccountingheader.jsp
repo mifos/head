@@ -23,21 +23,15 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <%@include file="headBar.jsp" %>
-  <tr>
+<tr>
     <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
         <tr>
-          <td class="taborange">
-              <a id="header.link.home" href="home.ftl" class="tabfontwhite">
-                <mifos:mifoslabel name="framework.home" bundle="FrameworkUIResources"></mifos:mifoslabel>
-              </a>
-          </td>
+          
+          <td class="tablightorange"><a href="home.ftl"><mifos:mifoslabel name="framework.home" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
           <td class="tablightorange"><a id="header.link.clientsAndAccounts" href="clientsAndAccounts.ftl"><mifos:mifoslabel name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
           <td class="tablightorange"><a id="header.link.reports" href="reportsAction.do?method=load"><mifos:mifoslabel name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
           <td class="tablightorange"><a id="header.link.admin" href="AdminAction.do?method=load"><mifos:mifoslabel name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-       	<c:if test="${accountingActivationStatus == true}">
-       		<td class="tablightorange"><a id="header.link.financialaccounting" href="FinancialAccountingAction.do?method=load"><mifos:mifoslabel
-								name="framework.financialaccounting" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>	
-		 </c:if>			
+          <td class="taborange"><a id="header.link.financialaccounting" href="FinancialAccountingAction.do?method=load"><mifos:mifoslabel name="framework.financialaccounting" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
         </tr>
       </table>
         <c:if test="${requestScope.shutdownIsImminent == true}">

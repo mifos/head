@@ -99,8 +99,8 @@ border-bottom : solid 1px #EAEBF4;
 									<tr>
 										<td align="left" class="headingorange">
 											&nbsp;
-										  <html-el:link styleId="bulkentryconfirmation.link.enterCollSheetData" href="AdminAction.do?method=load">
-									           <mifos:mifoslabel name="simpleAccounting.clickToAdminPage" bundle="simpleAccountingUIResources"/>
+										  <html-el:link styleId="bulkentryconfirmation.link.enterCollSheetData" href="FinancialAccountingAction.do?method=load">
+									           <mifos:mifoslabel name="simpleAccounting.clickToFinancialAccountingPage" bundle="simpleAccountingUIResources"/>
 								          </html-el:link>
 										</td>
 									</tr>

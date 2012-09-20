@@ -195,7 +195,7 @@ public class ActivityMapper {
         parseActionSecurity(getReportsCategorySecurity());
         parseActionSecurity(getBirtAdminDocumentUploadSecurity());
         parseActionSecurity(getImportTransactionsSecurity());
-
+        parseActionSecurity(getFinancialAccountingSecurity());
         parseActionSecurity(getMigrateSecurity());
     }
 
@@ -1069,7 +1069,11 @@ public class ActivityMapper {
         security.allow("load", SecurityConstants.VIEW);
         return security;
     }
-
+    private ActionSecurity getFinancialAccountingSecurity() {
+        ActionSecurity security = new ActionSecurity("FinancialAccountingAction");
+        security.allow("load", SecurityConstants.VIEW);
+        return security;
+    }
     private void addCustomerSearchMappings() {
         activityMap.put("/CustomerSearchAction-load", SecurityConstants.VIEW);
         activityMap.put("/CustomerSearchAction-search", SecurityConstants.SEARCH);
