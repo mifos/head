@@ -1218,7 +1218,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
                 customer.updatePerformanceHistoryOnDisbursement(loan, loan.getLoanAmount());
                 // end of refactoring of loan disbural
-
+                loan.setGroupLoan(Boolean.FALSE);
                 this.loanDao.save(loan);
                 transactionHelper.flushSession();
 
