@@ -88,7 +88,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * business objects, only DTOs.
  */
 public class StandardAccountService implements AccountService {
-
+	
     private LegacyAccountDao legacyAccountDao;
     private LegacyLoanDao legacyLoanDao;
     private LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence;
@@ -258,9 +258,23 @@ public class StandardAccountService implements AccountService {
          * non-Mifos-Web-UI service, we'll need to handle the rollback here.
          */
         List<AccountTrxDto> trxIds = new ArrayList<AccountTrxDto>();
+        List <AccountBO> accounts = new ArrayList<AccountBO>();
+        StaticHibernateUtil.startTransaction();
+        int i = 0;
         for (AccountPaymentParametersDto accountPaymentParametersDTO : accountPaymentParametersDtoList) {
-            trxIds.add(new AccountTrxDto(makePaymentWithCommit(accountPaymentParametersDTO)));
+            accounts.add(makePaymentWithCommit(accountPaymentParametersDTO));
+            if (i%30 == 0) {
+            	StaticHibernateUtil.getSessionTL().flush();
+            	StaticHibernateUtil.getSessionTL().clear();
+            }
+            i++;
         }
+        StaticHibernateUtil.getSessionTL().flush();
+    	StaticHibernateUtil.getSessionTL().clear();
+        StaticHibernateUtil.commitTransaction();
+        for (AccountBO account : accounts) {
+        	trxIds.add(new AccountTrxDto(getAccTrxId(account)));
+        }        
         return trxIds;
     }
     
@@ -268,7 +282,7 @@ public class StandardAccountService implements AccountService {
      * method created for undo transaction import ability MIFOS-5702
      * changed return type 
      * */
-    public Integer makePaymentWithCommit(AccountPaymentParametersDto accountPaymentParametersDto)
+    public AccountBO makePaymentWithCommit(AccountPaymentParametersDto accountPaymentParametersDto)
             throws PersistenceException, AccountException {
         return makePaymentWithCommit(accountPaymentParametersDto, null);
     }
@@ -279,9 +293,8 @@ public class StandardAccountService implements AccountService {
      * returns Id of transaction 
      * 
      * */
-    public Integer makePaymentWithCommit(AccountPaymentParametersDto accountPaymentParametersDto, Integer savingsPaymentId)
+    public AccountBO makePaymentWithCommit(AccountPaymentParametersDto accountPaymentParametersDto, Integer savingsPaymentId)
             throws PersistenceException, AccountException {
-        
         final int accountId = accountPaymentParametersDto.getAccountId();
         final AccountBO account = this.legacyAccountDao.getAccount(accountId);
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -332,11 +345,9 @@ public class StandardAccountService implements AccountService {
         paymentData.setOverpaymentAmount(overpaymentAmount);
 
         account.applyPayment(paymentData);
-        StaticHibernateUtil.startTransaction();
         this.legacyAccountDao.createOrUpdate(account);
-        StaticHibernateUtil.commitTransaction();
         
-        return getAccTrxId(account);
+        return account;
     }
     
     private Integer getAccTrxId(AccountBO account) {
