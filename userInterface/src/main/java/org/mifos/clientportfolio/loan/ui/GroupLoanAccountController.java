@@ -11,6 +11,7 @@ import org.mifos.clientportfolio.loan.service.RecurringSchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateGroupLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanAccountCashFlow;
+import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
 import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.dto.domain.CreateAccountPenaltyDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
@@ -32,10 +33,26 @@ public class GroupLoanAccountController {
         this.groupLoanAccountServiceFacade = groupLoanAccountServiceFacade;
     }
     
-    public LoanCreationResultDto submitGroupLoanApplication(LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean,
+    public LoanCreationResultDto saveLoanApplicationForLater(LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean,
             LoanAccountCashFlow loanAccountCashFlow, CashFlowSummaryFormBean cashFlowSummaryFormBean, LoanScheduleFormBean loanScheduleFormBean) {
 
-        Integer accountState = loanAccountServiceFacade.retrieveLoanApplicationState().getConfiguredApplicationId();
+        LoanApplicationStateDto applicationState = loanAccountServiceFacade.retrieveLoanApplicationState();
+
+        return submitGroupLoanApplication(applicationState.getPartialApplicationId(), formBean, loanAccountQuestionGroupFormBean, loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean);
+    }
+    
+    public LoanCreationResultDto saveGroupLoanApplication(LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean,
+            LoanAccountCashFlow loanAccountCashFlow, CashFlowSummaryFormBean cashFlowSummaryFormBean, LoanScheduleFormBean loanScheduleFormBean) {
+
+        LoanApplicationStateDto applicationState = loanAccountServiceFacade.retrieveLoanApplicationState();
+
+        return submitGroupLoanApplication(applicationState.getConfiguredApplicationId(), formBean, loanAccountQuestionGroupFormBean, loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean);
+    }
+    
+    
+    
+    public LoanCreationResultDto submitGroupLoanApplication(Integer accountState, LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean,
+            LoanAccountCashFlow loanAccountCashFlow, CashFlowSummaryFormBean cashFlowSummaryFormBean, LoanScheduleFormBean loanScheduleFormBean) {
         
         LocalDate disbursementDate =  LoanCreationHelper.translateDisbursementDateToLocalDate(formBean);
         RecurringSchedule recurringSchedule =  LoanCreationHelper.determineRecurringSchedule(formBean);
