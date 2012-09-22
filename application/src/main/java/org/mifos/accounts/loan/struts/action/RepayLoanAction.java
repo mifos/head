@@ -37,6 +37,7 @@ import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.actionforms.RepayLoanActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -70,6 +71,8 @@ public class RepayLoanAction extends BaseAction {
         actionForm.setWaiverInterest(true);
         actionForm.setDateOfPayment(DateUtils.makeDateAsSentFromBrowser());
         actionForm.setTransferPaymentTypeId(this.legacyAcceptedPaymentTypeDao.getSavingsTransferId());
+        actionForm.setPrintReceipt(false);
+        actionForm.setTruePrintReceipt(false);
         UserContext userContext = getUserContext(request);
 
         String globalAccountNum = request.getParameter("globalAccountNum");
@@ -127,6 +130,12 @@ public class RepayLoanAction extends BaseAction {
         SessionUtils.removeAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request);
         SessionUtils.removeAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, request);
         SessionUtils.removeAttribute(Constants.ACCOUNTS_FOR_TRANSFER, request);
+        
+        request.getSession().setAttribute("globalAccountNum", globalAccountNum);
+        
+        if(repayLoanActionForm.getPrintReceipt()) {
+            return mapping.findForward(ActionForwards.printPaymentReceipt.toString());
+        }
         return mapping.findForward(forward);
     }
 
@@ -140,6 +149,12 @@ public class RepayLoanAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        
+        //workaround for checkbox problem
+        RepayLoanActionForm repayLoanActionForm = (RepayLoanActionForm) form; 
+        repayLoanActionForm.setTruePrintReceipt(repayLoanActionForm.getPrintReceipt());
+        repayLoanActionForm.setPrintReceipt(false);
+        
         SessionUtils.setAttribute(LoanConstants.WAIVER_INTEREST_SELECTED, ((RepayLoanActionForm) form).isWaiverInterest(), request);
         return mapping.findForward(Constants.PREVIOUS_SUCCESS);
     }
@@ -150,6 +165,12 @@ public class RepayLoanAction extends BaseAction {
         String method = (String) request.getAttribute("methodCalled");
         logger.debug("In RepayLoanAction::validate(), method: " + method);
         String forward = null;
+        
+        //workaround for checkbox problem
+        RepayLoanActionForm repayLoanActionForm = (RepayLoanActionForm) form; 
+        repayLoanActionForm.setTruePrintReceipt(repayLoanActionForm.getPrintReceipt());
+        repayLoanActionForm.setPrintReceipt(false);
+        
         if (method != null && method.equals("preview")) {
             forward = ActionForwards.preview_failure.toString();
         }

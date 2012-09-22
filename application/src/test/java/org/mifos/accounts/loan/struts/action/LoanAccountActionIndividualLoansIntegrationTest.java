@@ -28,6 +28,7 @@ import static org.easymock.classextension.EasyMock.verify;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.Test;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -47,6 +48,7 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
         LoanAccountAction loanAccountAction = new LoanAccountAction(ApplicationContextProvider.getBean(LoanBusinessService.class),
                 new ConfigurationBusinessService(), glimLoanUpdaterMock);
         LoanBO loanMock = createMock(LoanBO.class);
+        Locale locale = Locale.ENGLISH;
         expect(loanMock.getAccountId()).andReturn(2).anyTimes();
         ClientBO customerMock = createMock(ClientBO.class);
         expect(loanMock.getCustomer()).andReturn(customerMock).anyTimes();
@@ -58,10 +60,10 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
         clientDetails.add(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300);
         List<LoanBO> loans = new ArrayList<LoanBO>();
         loans.add(loanMock);
-        glimLoanUpdaterMock.updateIndividualLoan(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300, loanMock);
+        glimLoanUpdaterMock.updateIndividualLoan(null, null, LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300, loanMock);
         expectLastCall().atLeastOnce();
         replay(glimLoanUpdaterMock, loanMock, customerMock);
-        loanAccountAction.handleIndividualLoans(loanMock, loanAccountActionForm, true, clientDetails, loans);
+        loanAccountAction.handleIndividualLoans(loanMock, loanAccountActionForm, true, clientDetails, loans, locale);
         verify(glimLoanUpdaterMock, loanMock, customerMock);
     }
 
@@ -71,6 +73,7 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
         LoanAccountAction loanAccountAction = new LoanAccountAction(ApplicationContextProvider.getBean(LoanBusinessService.class),
                 new ConfigurationBusinessService(), glimLoanUpdaterMock);
         LoanBO loanMock = createMock(LoanBO.class);
+        Locale locale = Locale.ENGLISH;
         expect(loanMock.getAccountId()).andReturn(2).anyTimes();
         ClientBO customerMock = createMock(ClientBO.class);
         expect(loanMock.getCustomer()).andReturn(customerMock).anyTimes();
@@ -82,7 +85,7 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
         glimLoanUpdaterMock.delete(loanMock);
         expectLastCall().atLeastOnce();
         replay(glimLoanUpdaterMock, loanMock, customerMock);
-        loanAccountAction.handleIndividualLoans(loanMock, loanAccountActionForm, true, clientDetails, loans);
+        loanAccountAction.handleIndividualLoans(loanMock, loanAccountActionForm, true, clientDetails, loans, locale);
         verify(glimLoanUpdaterMock, loanMock, customerMock);
 
     }

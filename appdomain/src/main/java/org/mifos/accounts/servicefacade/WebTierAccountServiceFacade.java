@@ -531,4 +531,10 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             String savingsAccGlobalNumber) {
         this.accountService.makePaymentFromSavings(accountPaymentParametersDto, savingsAccGlobalNumber);
     }
+
+    @Override
+    public Integer getAccountTrxnById(Integer id) {
+        return null;
+    }
+
 }

@@ -75,6 +75,9 @@ public class LoanRepaymentController {
 		} else {
 		    loanRepaymentFormBean.setPaymentDate(new LocalDate());
 		}
+		loanRepaymentFormBean.setTruePrintReceipt(loanRepaymentFormBean.getPrintReceipt());
+		loanRepaymentFormBean.setPrintReceipt(false);
+		
 		return result;
 	}
 	
@@ -88,6 +91,10 @@ public class LoanRepaymentController {
 			this.loanAccountServiceFacade.applyLoanRepayment(loanGlobalAccountNumber, loanRepaymentFormBean.getPaymentDate(), repaymentAmount,
 			        loanRepaymentFormBean.getReceiptId(), loanRepaymentFormBean.getReceiptDate(), loanRepaymentFormBean.getPaymentTypeId());
 			returnCode = "success";
+			if(loanRepaymentFormBean.getPrintReceipt()) {
+			    returnCode = "printPaymentReceipt";
+			    
+			}
 		} catch (BusinessRuleException e) {
 			MessageBuilder builder = new MessageBuilder()
 					.error()
@@ -103,6 +110,8 @@ public class LoanRepaymentController {
 		
 		return returnCode;
 	}
+	
+	
 	
 	//called by spring webflow
 	public Map<String, String> retrievePaymentTypes() {

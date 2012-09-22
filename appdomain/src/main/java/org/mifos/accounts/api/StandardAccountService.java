@@ -34,6 +34,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountOverpaymentEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
@@ -64,6 +65,7 @@ import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
+import org.mifos.dto.domain.AccountTrxDto;
 import org.mifos.dto.domain.OverpaymentDto;
 import org.mifos.dto.domain.PaymentDto;
 import org.mifos.dto.domain.PaymentTypeDto;
@@ -242,6 +244,108 @@ public class StandardAccountService implements AccountService {
         account.applyPayment(paymentData);
 
         this.legacyAccountDao.createOrUpdate(account);
+    }
+    
+    /**
+     * method created for undo transaction import ability MIFOS-5702
+     * changed return type 
+     * */
+    @Override
+    public List<AccountTrxDto> makePaymentsForImport(List<AccountPaymentParametersDto> accountPaymentParametersDtoList)
+            throws PersistenceException, AccountException {
+        /*
+         * We're counting on rollback on exception behavior in BaseAction. If we want to expose makePayments via a
+         * non-Mifos-Web-UI service, we'll need to handle the rollback here.
+         */
+        List<AccountTrxDto> trxIds = new ArrayList<AccountTrxDto>();
+        for (AccountPaymentParametersDto accountPaymentParametersDTO : accountPaymentParametersDtoList) {
+            trxIds.add(new AccountTrxDto(makePaymentWithCommit(accountPaymentParametersDTO)));
+        }
+        return trxIds;
+    }
+    
+    /**
+     * method created for undo transaction import ability MIFOS-5702
+     * changed return type 
+     * */
+    public Integer makePaymentWithCommit(AccountPaymentParametersDto accountPaymentParametersDto)
+            throws PersistenceException, AccountException {
+        return makePaymentWithCommit(accountPaymentParametersDto, null);
+    }
+    
+    /**
+     * method created for undo transaction import ability MIFOS-5702
+     * this method commits transaction
+     * returns Id of transaction 
+     * 
+     * */
+    public Integer makePaymentWithCommit(AccountPaymentParametersDto accountPaymentParametersDto, Integer savingsPaymentId)
+            throws PersistenceException, AccountException {
+        
+        final int accountId = accountPaymentParametersDto.getAccountId();
+        final AccountBO account = this.legacyAccountDao.getAccount(accountId);
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, account.getOfficeId(), account.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED, e);
+        }
+
+        monthClosingServiceFacade.validateTransactionDate(accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate());
+        
+        PersonnelBO loggedInUser = ApplicationContextProvider.getBean(LegacyPersonnelDao.class).findPersonnelById(accountPaymentParametersDto.getUserMakingPayment().getUserId());
+        List<InvalidPaymentReason> validationErrors = validatePayment(accountPaymentParametersDto);
+        if (!(account instanceof CustomerAccountBO) && validationErrors.contains(InvalidPaymentReason.INVALID_DATE)) {
+            throw new AccountException("errors.invalidTxndate");
+        }
+
+        Money overpaymentAmount = null;
+        Money amount = new Money(account.getCurrency(), accountPaymentParametersDto.getPaymentAmount());
+
+        if (account instanceof LoanBO &&
+                accountPaymentParametersDto.getPaymentOptions().contains(AccountPaymentParametersDto.PaymentOptions.ALLOW_OVERPAYMENTS) &&
+                amount.isGreaterThan(((LoanBO) account).getTotalRepayableAmount())) {
+            overpaymentAmount = amount.subtract(((LoanBO) account).getTotalRepayableAmount());
+            amount = ((LoanBO) account).getTotalRepayableAmount();
+        }
+
+        Date receiptDate = null;
+        if (accountPaymentParametersDto.getReceiptDate() != null) {
+            receiptDate = accountPaymentParametersDto.getReceiptDate().toDateMidnight().toDate();
+        }
+
+        PaymentData paymentData = account.createPaymentData(amount, accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate(),
+                accountPaymentParametersDto.getReceiptId(), receiptDate, accountPaymentParametersDto.getPaymentType()
+                        .getValue(), loggedInUser);
+        if (savingsPaymentId != null) {
+            AccountPaymentEntity withdrawal = legacyAccountDao.findPaymentById(savingsPaymentId);
+            paymentData.setOtherTransferPayment(withdrawal);
+        }
+
+        if (accountPaymentParametersDto.getCustomer() != null) {
+            paymentData.setCustomer(customerDao.findCustomerById(
+                accountPaymentParametersDto.getCustomer().getCustomerId()));
+        }
+        paymentData.setComment(accountPaymentParametersDto.getComment());
+        paymentData.setOverpaymentAmount(overpaymentAmount);
+
+        account.applyPayment(paymentData);
+        StaticHibernateUtil.startTransaction();
+        this.legacyAccountDao.createOrUpdate(account);
+        StaticHibernateUtil.commitTransaction();
+        
+        return getAccTrxId(account);
+    }
+    
+    private Integer getAccTrxId(AccountBO account) {
+        Integer ID = null; 
+        Set<AccountTrxnEntity> accountTrxns = account.getAccountPayments().get(account.getAccountPayments().size() - 1).getAccountTrxns();
+        for (AccountTrxnEntity trx : accountTrxns) {
+            ID = trx.getAccountTrxnId();
+        }
+        return ID;
     }
 
     @Override

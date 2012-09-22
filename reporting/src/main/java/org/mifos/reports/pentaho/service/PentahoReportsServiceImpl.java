@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
@@ -255,7 +256,7 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
     }
 
     @Override
-    public List<AbstractPentahoParameter> getParametersForReport(Integer reportId) {
+    public List<AbstractPentahoParameter> getParametersForReport(Integer reportId, HttpServletRequest request, Map<String, AbstractPentahoParameter> selectedValues, boolean update) {
         if (!checkAccessToReport(reportId)) {
             throw new AccessDeniedException("Access denied");
         }
@@ -263,7 +264,7 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
         String reportName = getReportFilename(reportId);
         MasterReport report = loadReport(reportName);
 
-        return paramParser.parseReportParams(report);
+        return paramParser.parseReportParams(report, request, selectedValues, update);
     }
 
     private MasterReport loadReport(String reportName) {

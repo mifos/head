@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+
+  <class name="org.mifos.application.accounting.business.GlMasterBO" table="acc_glmaster" >
+    <id name="transactionMasterId" type="integer" column="transaction_master_id">
+       <generator class="native"></generator>
+    </id>
+    <property name="transactionDate" type="date" column="transaction_date"></property>
+    <property name="transactionType" type="string" column="transaction_type"></property>
+    <property name="fromOfficeLevel" type="integer" column="from_office_level"></property>
+    <property name="fromOfficeId" type="string" column="from_office_id"></property>
+
+    <property name="mainAccount" type="string" column="main_account"></property>
+    <property name="transactionAmount" type="big_decimal" column="transaction_amount"></property>
+    <property name="amountAction" type="string" column="amount_action"></property>
+    <property name="transactionNarration" type="string" column="transaction_narration"></property>
+
+    <property name="toOfficeLevel" type="integer" column="to_office_level"></property>
+    <property name="toOfficeId" type="string" column="to_office_id"></property>
+    <property name="transactionBy" type="int" column="transaction_by"></property>
+    <property name="status" type="string" column="status"></property>
+    <property name="createdBy" type="short" column="created_by"></property>
+    <property name="createdDate" type="date" column="created_date"></property>
+
+
+    <bag name="glDetailBOList" cascade="all" table="acc_gldetail" lazy="false" >
+            <key column="transaction_master_id" />
+            <one-to-many class="org.mifos.application.accounting.business.GlDetailBO" />
+    </bag>
+
+  </class>
+</hibernate-mapping>

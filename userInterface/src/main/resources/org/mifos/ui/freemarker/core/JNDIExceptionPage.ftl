@@ -24,8 +24,9 @@
 [@widget.crumbs accessDeniedBreadcrumbs /]
 <div class="content_panel">
     <div class="marginLeft30 marginTop20">
+       	[#if configureDwDatabase=="true"]
         <h3 id="jndiHeading" class="red">JNDI Error</h3>
-        <h5 id="jndiHeadingMessage" class="red">Report cannot be generated because JNDI has not been configured.</h5><br>
+        <h5 id="jndiHeadingMessage" class="red">Report cannot be generated because JNDI has not been configured.</h5><br>  
         <p id="jndiMessage">
         	Please follow the instructions below to set up JNDI:
         	<br>		
@@ -40,6 +41,35 @@
 			etc/jetty-plus.xml
 			<br><br>
 			at the end of the file next to other similar entries.</p>
+		[#else]
+		<h3 id="jndiHeading" class="red">DW database Error</h3>
+        <h5 id="jndiHeadingMessage" class="red">Report cannot be generated because Your warehouse database is not configured.</h5> 
+			<p>If you want configure data warehouse in mifos you must:
+		<br>		
+			Add new data warehouse database:
+	<br><br>
+			Connect to your database:<br>
+			mysql -u root -p
+	<br><br>
+			Create database:<br>
+			CREATE DATABASE &ltname your warehouse database&gt;
+	<br><br>
+			Add all permissions for mifos user:<br>
+			GRANT ALL on &ltname your warehouse database&gt.* to 'mifos'@'localhost' identified by 'mifos';
+	<br><br>
+			Reload all permissions in mysql:<br>
+			FLUSH PRIVILEGES;
+	<br><br>
+			Load the database schemas:<br>
+			mysql -u mifos -pmifos &ltname your warehouse database&gt < db/sql/load_mifos_datawarehouse.sql<br>
+			mysql -u mifos -pmifos &ltname your warehouse database&gt < db/sql/load_mifos_datawarehouse_stored_procedures.sql<br>
+			mysql -u mifos -pmifos &ltname your warehouse database&gt < db/sql/load_dw_ppi_survey.sql<br>
+			mysql -u mifos -pmifos &ltname your warehouse database&gt < db/sql/load_ppi_poverty_lines.sql<br>
+	<br>
+		Add a new setting in your local.properties file:<br>
+		main.database.dbPentahoDW=&ltname your warehouse database&gt
+		
+		[/#if]
         <div class="clear">&nbsp;</div>
    		<div class ="marginLeft20px">
     		[@form.returnToPage  "${Request.urlToBackPage}" "button.back" "jndi.button.back"/]

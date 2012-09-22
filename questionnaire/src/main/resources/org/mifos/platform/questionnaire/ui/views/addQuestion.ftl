@@ -24,12 +24,14 @@
 [#assign multiSelect][@spring.message "questionnaire.quesiton.choices.multiselect"/][/#assign]
 [#assign singleSelect][@spring.message "questionnaire.quesiton.choices.singleselect"/][/#assign]
 [#assign smartSelect][@spring.message "questionnaire.quesiton.choices.smartselect"/][/#assign]
+[#assign smartSingleSelect][@spring.message "questionnaire.quesiton.choices.smartsingleselect"/][/#assign]
 [#assign active][@spring.message "questionnaire.active"/][/#assign]
 [#assign inActive][@spring.message "questionnaire.inactive"/][/#assign]
 <input type="hidden" id="number" name="number" value="${number}"/>
 <input type="hidden" id="multiSelect" name="multiSelect" value="${multiSelect}"/>
 <input type="hidden" id="singleSelect" name="singleSelect" value="${singleSelect}" />
 <input type="hidden" id="smartSelect" name="smartSelect" value="${smartSelect}" />
+<input type="hidden" id="smartSingleSelect" name="smartSingleSelect" value="${smartSingleSelect}" />
 <input type="submit" id="_eventId_removeChoice" name="_eventId_removeChoice" value="" style="display: none;"/>
 <input type="submit" id="_eventId_removeChoiceTag" name="_eventId_removeChoiceTag" value="" style="display: none;"/>
 <input type="submit" id="_eventId_addSmartChoiceTag" name="_eventId_addSmartChoiceTag" value="" style="display: none;"/>
@@ -41,7 +43,7 @@
     <li>
       <label for="currentQuestion.type"><span class="red">*</span>[@spring.message "questionnaire.answer.type"/]: </label>
       [@spring.formSingleSelect "questionGroupForm.currentQuestion.type",
-      {"freeText":freeText, "date":date, "number":number, "multiSelect":multiSelect, "singleSelect":singleSelect, "smartSelect":smartSelect}, ''/]
+      {"freeText":freeText, "date":date, "number":number, "multiSelect":multiSelect, "singleSelect":singleSelect, "smartSelect":smartSelect, "smartSingleSelect":smartSingleSelect}, ''/]
     </li>
     <li id="numericDiv">
         <label for="currentQuestion.numericMin">[@spring.message "questionnaire.quesiton.numeric.min"/]: </label>

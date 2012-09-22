@@ -1,0 +1,958 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+
+
+	<sql-query name="ChartOfAccountsForMifos.Cash">
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
+        <![CDATA[
+            Select b.glcode_value as glcode,a.coa_name as glname from coa a,gl_code b where a.glcode_id=b.glcode_id
+			and glcode_value in (Select lookup_name from lookup_value where entity_id in 
+			(Select entity_id from lookup_entity where entity_name='Cash'));
+
+        ]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.Bank">
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
+        <![CDATA[
+            Select b.glcode_value as glcode,a.coa_name as glname from coa a,gl_code b where a.glcode_id=b.glcode_id
+			and glcode_value in (Select lookup_name from lookup_value where entity_id in 
+			(Select entity_id from lookup_entity where entity_name='Bank'));
+
+        ]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.AccountHeadGlCodes">
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
+        <![CDATA[
+         SELECT gll.glcode_value as glcode, coo.coa_name as glname
+			FROM coahierarchy c
+			      LEFT JOIN coa co ON co.coa_id = c.parent_coaid
+			      LEFT JOIN gl_code gl ON gl.glcode_id = co.glcode_id
+			      LEFT JOIN coa coo ON coo.coa_id = c.coa_id
+			      LEFT JOIN gl_code gll ON gll.glcode_id = coo.glcode_id
+     		WHERE c.parent_coaid is not null and gll.glcode_value <> :Gl_Code ;
+
+
+        ]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.DebitAccountGlCodes">
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
+        <![CDATA[
+               SELECT gll.glcode_value as glcode, coo.coa_name as glname
+			FROM coahierarchy c
+			      LEFT JOIN coa co ON co.coa_id = c.parent_coaid
+			      LEFT JOIN gl_code gl ON gl.glcode_id = co.glcode_id
+			      LEFT JOIN coa coo ON coo.coa_id = c.coa_id
+			      LEFT JOIN gl_code gll ON gll.glcode_id = coo.glcode_id
+      WHERE c.parent_coaid is not null order by 1;
+        ]]>
+
+	</sql-query>
+	<sql-query name="ChartOfAccountsForMifos.ProcessAccountingList">
+		<return-scalar column="officeLevel" type="int" />
+		<return-scalar column="globalOfficeNum" type="string" />
+		<return-scalar column="postedDate" type="date" />
+		<return-scalar column="voucherDate" type="date" />
+		<return-scalar column="voucherType" type="string" />
+		<return-scalar column="glDebit" type="string" />
+		<return-scalar column="glCredit" type="string" />
+		<return-scalar column="amount" type="big_decimal" />
+        <![CDATA[
+Select 5 as officeLevel,a.global_office_num as globalOfficeNum,a.posted_date as postedDate,a.voucherdate
+ as voucherDate ,a.vouchertype as voucherType,a.glcode as glDebit,b.glcode as glCredit,a.debit as amount
+from 
+(
+Select  fintrxn.debit_credit_flag,fintrxn.account_trxn_id,5 Office_level,o.global_office_num,o.display_name as "branchname",
+fintrxn.posted_date,fintrxn.action_date as "voucherdate",
+(CASE fintrxn.fin_action_id
+WHEN 1 then /*PRINCIPALPOSTING*/
+    (CASE atrxn.account_action_id
+        WHEN 1 then 'CR' /*LoanRepayment*/
+        WHEN 9 then 'JV' /*Adjustment (undoes LoanRepayment)*/
+        WHEN 18 then 'JV' /*LoanReversal (reverses fees & payments parts)*/
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
+    END)
+WHEN 2 then /*INTERESTPOSTING*/
+    (CASE atrxn.account_action_id
+        WHEN 1 then 'CR' /*LoanRepayment*/
+        WHEN 9 then 'JV' /*Adjustment (undoes LoanRepayment)*/
+        WHEN 18 then 'JV' /*LoanReversal (reverses fees & payments parts)*/
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
+    END)
+WHEN 4 then /*MISCFEEPOSTING*/
+    (CASE atrxn.account_action_id
+        WHEN 1 then 'CR' /*LoanRepayment*/
+        WHEN 9 then 'JV' /*Adjustment (undoes LoanRepayment)*/
+        WHEN 18 then 'JV' /*LoanReversal (reverses fees & payments parts)*/
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
+    END)
+WHEN 6 then /*MISCPENALTYPOSTING*/
+    (CASE atrxn.account_action_id
+        WHEN 1 then 'CR' /*LoanRepayment*/
+        WHEN 9 then 'JV' /*Adjustment (undoes LoanRepayment)*/
+        WHEN 12 then 'CR' /*CustomerAccountRepayment*/
+        WHEN 18 then 'JV' /*LoanReversal (reverses fees & payments parts)*/
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
+    END)
+WHEN 3 then  /*FEEPOSTING*/
+    (CASE atrxn.account_action_id
+        WHEN 1 then 'CR' /*Fee*/
+        WHEN 4 then 'CR' /*Fee*/
+        WHEN 9 then 'JV' /* Adjustment (undoes Fee) */
+        WHEN 18 then 'JV' /*LoanReversal (reverses fees & payments parts)*/
+        WHEN 12 then 'CR' /*Customer Fee*/
+        WHEN 13 THEN 'JV' /*CustomerAdjustment*/
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
+    END)
+WHEN 7 then  /*DISBURSAL*/
+    (CASE atrxn.account_action_id
+        WHEN 10 then 'CP' /*Disbursal*/
+        WHEN 19 then 'JV' /*DisrbursalAmountReversal (undoes Disbursal part)*/
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
+    END)
+WHEN 5 then 'CR' /*PENALTYPOSTING - However, this is not used by mifos*/
+WHEN 9 then 'CR' /*MANDATORYDEPOSIT*/
+WHEN 10 then 'CR' /*VOLUNTARYDEPOSIT*/
+WHEN 16 then 'CR' /*CUSTOMERACCOUNTMISCFEESPOSTING*/
+WHEN 11 then 'CP' /*MANDATORYWITHDRAWAL*/
+WHEN 12 then 'CP' /*VOLUNTARYWITHDRAWAL*/
+WHEN 8 then 'JV' /*ROUNDING*/
+WHEN 14 then 'JV' /*SAVINGS_INTERESTPOSTING*/
+WHEN 18 then 'JV' /*MANDATORYDEPOSIT_ADJUSTMENT*/
+WHEN 19 then 'JV' /*VOLUNTARYDEPOSIT_ADJUSTMENT*/
+WHEN 20 then 'JV' /*MANDATORYWITHDRAWAL_ADJUSTMENT*/
+WHEN 21 then 'JV' /*VOLUNTARYWITHDRAWAL_ADJUSTMENT*/
+WHEN 22 then 'JV' /*WRITEOFF*/
+WHEN 23 then 'JV' /*RESCHEDULE*/
+ELSE concat('Unknown Financial Action:', fintrxn.fin_action_id)  /*shouldnt ever get this */
+END) as "vouchertype",
+gl.glcode_value as "glcode", coa.coa_name as "glname",
+sum((case fintrxn.debit_credit_flag when 0 then abs(fintrxn.posted_amount) else 0 end )) as "debit",
+sum((case fintrxn.debit_credit_flag when 0 then 0 else abs(fintrxn.posted_amount) end )) as "credit"
+from financial_trxn fintrxn
+inner join gl_code gl on gl.glcode_id = fintrxn.glcode_id
+inner join coa on coa.glcode_id = gl.glcode_id
+inner join account_trxn atrxn on atrxn.account_trxn_id = fintrxn.account_trxn_id
+inner join account a on a.account_id = atrxn.account_id
+inner join office o on o.office_id = a.office_id
+where fintrxn.posted_date between :LAST_PROCESSING_DATE and :LAST_PROCESSING_DATE
+group by fin_action_id,branchname, voucherdate, vouchertype, glcode, glname
+order by branchname, voucherdate, vouchertype, glcode, glname ) a,
+(
+Select  fintrxn.debit_credit_flag,fintrxn.account_trxn_id,5 Office_level,o.global_office_num,o.display_name as "branchname",
+fintrxn.posted_date,fintrxn.action_date as "voucherdate",
+(CASE fintrxn.fin_action_id
+WHEN 1 then /*PRINCIPALPOSTING*/
+    (CASE atrxn.account_action_id
+        WHEN 1 then 'CR' /*LoanRepayment*/
+        WHEN 9 then 'JV' /*Adjustment (undoes LoanRepayment)*/
+        WHEN 18 then 'JV' /*LoanReversal (reverses fees & payments parts)*/
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
+    END)
+WHEN 2 then /*INTERESTPOSTING*/
+    (CASE atrxn.account_action_id
+        WHEN 1 then 'CR' /*LoanRepayment*/
+        WHEN 9 then 'JV' /*Adjustment (undoes LoanRepayment)*/
+        WHEN 18 then 'JV' /*LoanReversal (reverses fees & payments parts)*/
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
+    END)
+WHEN 4 then /*MISCFEEPOSTING*/
+    (CASE atrxn.account_action_id
+        WHEN 1 then 'CR' /*LoanRepayment*/
+        WHEN 9 then 'JV' /*Adjustment (undoes LoanRepayment)*/
+        WHEN 18 then 'JV' /*LoanReversal (reverses fees & payments parts)*/
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
+    END)
+WHEN 6 then /*MISCPENALTYPOSTING*/
+    (CASE atrxn.account_action_id
+        WHEN 1 then 'CR' /*LoanRepayment*/
+        WHEN 9 then 'JV' /*Adjustment (undoes LoanRepayment)*/
+        WHEN 12 then 'CR' /*CustomerAccountRepayment*/
+        WHEN 18 then 'JV' /*LoanReversal (reverses fees & payments parts)*/
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
+    END)
+WHEN 3 then  /*FEEPOSTING*/
+    (CASE atrxn.account_action_id
+        WHEN 1 then 'CR' /*Fee*/
+        WHEN 4 then 'CR' /*Fee*/
+        WHEN 9 then 'JV' /* Adjustment (undoes Fee) */
+        WHEN 18 then 'JV' /*LoanReversal (reverses fees & payments parts)*/
+        WHEN 12 then 'CR' /*Customer Fee*/
+        WHEN 13 THEN 'JV' /*CustomerAdjustment*/
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
+    END)
+WHEN 7 then  /*DISBURSAL*/
+    (CASE atrxn.account_action_id
+        WHEN 10 then 'CP' /*Disbursal*/
+        WHEN 19 then 'JV' /*DisrbursalAmountReversal (undoes Disbursal part)*/
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
+    END)
+WHEN 5 then 'CR' /*PENALTYPOSTING - However, this is not used by mifos*/
+WHEN 9 then 'CR' /*MANDATORYDEPOSIT*/
+WHEN 10 then 'CR' /*VOLUNTARYDEPOSIT*/
+WHEN 16 then 'CR' /*CUSTOMERACCOUNTMISCFEESPOSTING*/
+WHEN 11 then 'CP' /*MANDATORYWITHDRAWAL*/
+WHEN 12 then 'CP' /*VOLUNTARYWITHDRAWAL*/
+WHEN 8 then 'JV' /*ROUNDING*/
+WHEN 14 then 'JV' /*SAVINGS_INTERESTPOSTING*/
+WHEN 18 then 'JV' /*MANDATORYDEPOSIT_ADJUSTMENT*/
+WHEN 19 then 'JV' /*VOLUNTARYDEPOSIT_ADJUSTMENT*/
+WHEN 20 then 'JV' /*MANDATORYWITHDRAWAL_ADJUSTMENT*/
+WHEN 21 then 'JV' /*VOLUNTARYWITHDRAWAL_ADJUSTMENT*/
+WHEN 22 then 'JV' /*WRITEOFF*/
+WHEN 23 then 'JV' /*RESCHEDULE*/
+ELSE concat('Unknown Financial Action:', fintrxn.fin_action_id)  /*shouldnt ever get this */
+END) as "vouchertype",
+gl.glcode_value as "glcode", coa.coa_name as "glname",
+sum((case fintrxn.debit_credit_flag when 0 then abs(fintrxn.posted_amount) else 0 end )) as "debit",
+sum((case fintrxn.debit_credit_flag when 0 then 0 else abs(fintrxn.posted_amount) end )) as "credit"
+from financial_trxn fintrxn
+inner join gl_code gl on gl.glcode_id = fintrxn.glcode_id
+inner join coa on coa.glcode_id = gl.glcode_id
+inner join account_trxn atrxn on atrxn.account_trxn_id = fintrxn.account_trxn_id
+inner join account a on a.account_id = atrxn.account_id
+inner join office o on o.office_id = a.office_id
+where fintrxn.posted_date between :LAST_PROCESSING_DATE and :LAST_PROCESSING_DATE
+group by fin_action_id,branchname, voucherdate, vouchertype, glcode, glname
+order by branchname, voucherdate, vouchertype, glcode, glname ) b
+where a.account_trxn_id=b.account_trxn_id 
+and a.debit_credit_flag=0 and b.debit_credit_flag=1
+ ]]></sql-query>
+	<sql-query name="ChartOfAccountsForMifos.CreditAccountGlCodes">
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
+        <![CDATA[
+                    SELECT gll.glcode_value as glcode, coo.coa_name as glname
+			FROM coahierarchy c
+			      LEFT JOIN coa co ON co.coa_id = c.parent_coaid
+			      LEFT JOIN gl_code gl ON gl.glcode_id = co.glcode_id
+			      LEFT JOIN coa coo ON coo.coa_id = c.coa_id
+			      LEFT JOIN gl_code gll ON gll.glcode_id = coo.glcode_id
+      WHERE c.parent_coaid is not null and gll.glcode_value <> :Gl_Code order by 1;
+        ]]>
+	</sql-query>
+	
+	<sql-query name="ChartOfAccountsForMifos.TotalGlCodes">
+		<return-scalar column="glcode" type="string" />
+		<return-scalar column="glname" type="string" />
+        <![CDATA[
+     SELECT gll.glcode_value as glcode, coo.coa_name as glname
+			FROM coahierarchy c
+			      LEFT JOIN coa co ON co.coa_id = c.parent_coaid
+			      LEFT JOIN gl_code gl ON gl.glcode_id = co.glcode_id
+			      LEFT JOIN coa coo ON coo.coa_id = c.coa_id
+			      LEFT JOIN gl_code gll ON gll.glcode_id = coo.glcode_id
+      WHERE c.parent_coaid is not null order by 1;
+        ]]>
+
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.customer">
+		<return-scalar column="globalOfficeNum" type="string" />
+		<return-scalar column="displayName" type="string" />
+        <![CDATA[
+            select c.global_cust_num as globalOfficeNum, c.display_name as displayName
+            from customer c
+            where c.customer_level_id= :CUSTOMER_LEVEL_ID
+        ]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.office">
+		<return-scalar column="globalOfficeNum" type="string" />
+		<return-scalar column="displayName" type="string" />
+        <![CDATA[
+            select o.global_office_num as globalOfficeNum, o.display_name as displayName
+			from office o
+			where o.office_level_id= :OFFICE_LEVEL_ID
+        ]]>
+	</sql-query>
+	<sql-query name="ChartOfAccountsForMifos.ViewTransactions">
+		<return-scalar column="transactionNo" type="int" />
+		<return-scalar column="transactionDate" type="date" />
+		<return-scalar column="transactionType" type="string" />
+		<return-scalar column="officeLevel" type="string" />
+		<return-scalar column="displayName" type="string" />
+		<return-scalar column="mainAccount" type="string" />
+		<return-scalar column="amountAction" type="string" />
+		<return-scalar column="subAccount" type="string" />
+		<return-scalar column="transactionAmount" type="big_decimal" />
+		<return-scalar column="narration" type="string" />
+        <![CDATA[
+select m.transaction_master_id as transactionNo, transaction_date as transactionDate,
+       	case transaction_type  when 'CP' then 'Cash Payment'
+		              when 'CR' then 'Cash Receipt'
+                              when 'BR' then 'Bank Receipt'
+                              when 'BP' then 'Bank Payment'
+                              when 'JV' then 'Journal Voucher'
+                              else 'unknown' end as transactionType,
+		         c.officelevel as officeLevel,display_name as displayName,
+		(Select  coa_name  from coa a, gl_code b where a.glcode_id=b.glcode_id and glcode_value=m.main_account)  as
+		         mainaccount,m.amount_action as amountaction,
+		(Select  coa_name  from coa a, gl_code b where a.glcode_id=b.glcode_id and glcode_value=d.sub_account) as subaccount,m.transaction_amount as
+		         transactionAmount,m.transaction_narration as narration
+					from acc_glmaster m,acc_gldetail d,(
+		           select global_cust_num global_num,
+		                  case customer_level_id when 2 then 'Group'
+		                                         When 3 then 'Center'
+		                                         Else 'None' end as officelevel
+		                 ,display_name
+		           from customer c
+		           where customer_level_id in (2,3)
+		            union all
+		          select global_office_num global_num,
+		                  case office_level_id when 1 then 'Head Office'
+		                                       When 2 then 'Regional Office'
+					               When 3 then 'Divisional Office'
+					               When 4 then 'Area Office'
+					               When 5 then 'Branch Office'
+						       Else 'None' end as officelevel
+		                  ,display_name
+		          from office o ) c
+			where m.transaction_master_id=d.transaction_master_id
+			  and m.from_office_id=c.global_num
+			  and m.transaction_date between :FROM_TRANSACTION_DATE and :TO_TRANSACTION_DATE
+			  Order by m.transaction_master_id
+			  LIMIT :START_RECORD , :NUMBER_OF_RECORDS
+        ]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.TotalNumberOfRecords">
+		<return-scalar column="totalNumberOfRecords" type="int" />
+        <![CDATA[
+		select count(*) as totalNumberOfRecords
+					from acc_glmaster m,acc_gldetail d,(
+		           select global_cust_num global_num,
+		                  case customer_level_id when 2 then 'Group'
+		                                         When 3 then 'Center'
+		                                         Else 'None' end as officelevel
+		                 ,display_name
+		           from customer c
+		           where customer_level_id in (2,3)
+		            union all
+		          select global_office_num global_num,
+		                  case office_level_id when 1 then 'Head Office'
+		                                       When 2 then 'Regional Office'
+					               When 3 then 'Divisional Office'
+					               When 4 then 'Area Office'
+					               When 5 then 'Branch Office'
+						       Else 'None' end as officelevel
+		                  ,display_name
+		          from office o ) c
+			where m.transaction_master_id=d.transaction_master_id
+			  and m.from_office_id=c.global_num
+			  and m.transaction_date between :FROM_TRANSACTION_DATE and :TO_TRANSACTION_DATE
+			  Order by m.transaction_master_id
+        ]]>
+	</sql-query>
+
+	<sql-query name="ChartOfAccountsForMifos.GetExistedOpenBalance">
+		<return-scalar column="glBalancesId" type="int" />
+		<return-scalar column="officeLevel" type="int" />
+		<return-scalar column="officeId" type="string" />
+		<return-scalar column="glCodeValue" type="string" />
+		<return-scalar column="openingBalance" type="big_decimal" />
+		<return-scalar column="transactionDebitSum" type="big_decimal" />
+		<return-scalar column="transactionCreditSum" type="big_decimal" />
+		<return-scalar column="closingBalance" type="big_decimal" />
+		<return-scalar column="createdBy" type="short" />
+		<return-scalar column="createdDate" type="date" />
+        <![CDATA[
+			select ag.glbalances_id as glBalancesId,
+       ag.office_level as officeLevel,ag.office_id as officeId,ag.glcode_value as glCodeValue,
+       ag.openning_bal as openingBalance,ag.transaction_dr_sum as     transactionDebitSum,ag.transaction_cr_sum as transactionCreditSum,ag.closing_bal as closingBalance,
+ag.created_by as createdBy,ag.created_date as createdDate
+from acc_glbalances ag
+where ag.office_id= :OFFICEID AND ag.office_level= :OFFICELEVEL AND ag.glcode_value= :COAID AND ag.financialyear_id= :FINANCIALYEARID
+		]]>
+	</sql-query>
+	
+	<sql-query name="ChartOfAccountsForMifos.YearEndProcessLiabilities">
+		<return-scalar column="officeLevel" type="integer" />
+		<return-scalar column="officeId" type="string" />
+		<return-scalar column="glCodeValue" type="string" />
+		<return-scalar column="openingBalance" type="big_decimal" />
+		<return-scalar column="transactionDebitSum" type="big_decimal" />
+		<return-scalar column="transactionCreditSum" type="big_decimal" />
+		<return-scalar column="closingBalance" type="big_decimal" />
+		<return-scalar column="createdDate" type="date" />
+		<return-scalar column="createdBy" type="short" />
+        <![CDATA[
+           SELECT a.`office_level` as officeLevel, a.`office_id` as officeId, a.`glcode_value` as glCodeValue,a.`closing_bal` as openingBalance, 0  as transactionDebitSum, 0 as transactionCreditSum, 0 as closingBalance, a.`created_by` as createdBy, a.`created_date` as createdDate  FROM acc_glbalances a where financialyear_id=:FINANCIALYEARID and glcode_value in (SELECT DISTINCT liabilities.glcode_value
+  FROM (SELECT gll.glcode_value
+          FROM coahierarchy c
+               LEFT JOIN coa co
+                  ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                  ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                  ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                  ON gll.glcode_id = coo.glcode_id
+         WHERE gl.glcode_value = (Select lookup_name from lookup_value a, lookup_entity b where a.entity_id=b.entity_id and entity_name='LIABILITY')
+        UNION
+        SELECT gll.glcode_value
+          FROM coahierarchy c
+               LEFT JOIN coa co
+                  ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                  ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                  ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                  ON gll.glcode_id = coo.glcode_id
+         WHERE gl.glcode_value IN (SELECT gll.glcode_value
+                                     FROM coahierarchy c
+                                          LEFT JOIN coa co
+                                             ON co.coa_id = c.parent_coaid
+                                          LEFT JOIN gl_code gl
+                                             ON gl.glcode_id = co.glcode_id
+                                          LEFT JOIN coa coo
+                                             ON coo.coa_id = c.coa_id
+                                          LEFT JOIN gl_code gll
+                                             ON gll.glcode_id = coo.glcode_id
+                                    WHERE gl.glcode_value = (Select lookup_name from lookup_value a, lookup_entity b where a.entity_id=b.entity_id and entity_name='LIABILITY'))
+        UNION
+        SELECT gll.glcode_value
+          FROM coahierarchy c
+               LEFT JOIN coa co
+                  ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                  ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                  ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                  ON gll.glcode_id = coo.glcode_id
+         WHERE gl.glcode_value IN
+                  (SELECT gll.glcode_value
+                     FROM coahierarchy c
+                          LEFT JOIN coa co
+                             ON co.coa_id = c.parent_coaid
+                          LEFT JOIN gl_code gl
+                             ON gl.glcode_id = co.glcode_id
+                          LEFT JOIN coa coo
+                             ON coo.coa_id = c.coa_id
+                          LEFT JOIN gl_code gll
+                             ON gll.glcode_id = coo.glcode_id
+                    WHERE gl.glcode_value IN
+                             (SELECT gll.glcode_value
+                                FROM coahierarchy c
+                                     LEFT JOIN coa co
+                                        ON co.coa_id =
+                                              c.parent_coaid
+                                     LEFT JOIN gl_code gl
+                                        ON gl.glcode_id =
+                                              co.glcode_id
+                                     LEFT JOIN coa coo
+                                        ON coo.coa_id =
+                                              c.coa_id
+                                     LEFT JOIN gl_code gll
+                                        ON gll.glcode_id =
+                                              coo.glcode_id
+                               WHERE gl.glcode_value = (Select lookup_name from lookup_value a, lookup_entity b where a.entity_id=b.entity_id and entity_name='LIABILITY')))
+        UNION
+        SELECT gll.glcode_value
+          FROM coahierarchy c
+               LEFT JOIN coa co
+                  ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                  ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                  ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                  ON gll.glcode_id = coo.glcode_id
+         WHERE gl.glcode_value IN
+                  (SELECT gll.glcode_value
+                     FROM coahierarchy c
+                          LEFT JOIN coa co
+                             ON co.coa_id = c.parent_coaid
+                          LEFT JOIN gl_code gl
+                             ON gl.glcode_id = co.glcode_id
+                          LEFT JOIN coa coo
+                             ON coo.coa_id = c.coa_id
+                          LEFT JOIN gl_code gll
+                             ON gll.glcode_id = coo.glcode_id
+                    WHERE gl.glcode_value IN
+                             (SELECT gll.glcode_value
+                                FROM coahierarchy c
+                                     LEFT JOIN coa co
+                                        ON co.coa_id =
+                                              c.parent_coaid
+                                     LEFT JOIN gl_code gl
+                                        ON gl.glcode_id =
+                                              co.glcode_id
+                                     LEFT JOIN coa coo
+                                        ON coo.coa_id =
+                                              c.coa_id
+                                     LEFT JOIN gl_code gll
+                                        ON gll.glcode_id =
+                                              coo.glcode_id
+                               WHERE gl.glcode_value IN
+                                        (SELECT gll.glcode_value
+                                           FROM coahierarchy c
+                                                LEFT JOIN coa co
+                                                   ON co.coa_id =
+                                                         c.parent_coaid
+                                                LEFT JOIN gl_code gl
+                                                   ON gl.glcode_id =
+                                                         co.glcode_id
+                                                LEFT JOIN coa coo
+                                                   ON coo.coa_id = c.coa_id
+                                                LEFT JOIN gl_code gll
+                                                   ON gll.glcode_id =
+                                                         coo.glcode_id
+                                          WHERE gl.glcode_value = (Select lookup_name from lookup_value a, lookup_entity b where a.entity_id=b.entity_id and entity_name='LIABILITY'))))
+        UNION
+        SELECT gll.glcode_value
+          FROM coahierarchy c
+               LEFT JOIN coa co
+                  ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                  ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                  ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                  ON gll.glcode_id = coo.glcode_id
+         WHERE gl.glcode_value IN
+                  (SELECT gll.glcode_value
+                     FROM coahierarchy c
+                          LEFT JOIN coa co
+                             ON co.coa_id = c.parent_coaid
+                          LEFT JOIN gl_code gl
+                             ON gl.glcode_id = co.glcode_id
+                          LEFT JOIN coa coo
+                             ON coo.coa_id = c.coa_id
+                          LEFT JOIN gl_code gll
+                             ON gll.glcode_id = coo.glcode_id
+                    WHERE gl.glcode_value IN
+                             (SELECT gll.glcode_value
+                                FROM coahierarchy c
+                                     LEFT JOIN coa co
+                                        ON co.coa_id =
+                                              c.parent_coaid
+                                     LEFT JOIN gl_code gl
+                                        ON gl.glcode_id =
+                                              co.glcode_id
+                                     LEFT JOIN coa coo
+                                        ON coo.coa_id =
+                                              c.coa_id
+                                     LEFT JOIN gl_code gll
+                                        ON gll.glcode_id =
+                                              coo.glcode_id
+                               WHERE gl.glcode_value IN
+                                        (SELECT gll.glcode_value
+                                           FROM coahierarchy c
+                                                LEFT JOIN coa co
+                                                   ON co.coa_id =
+                                                         c.parent_coaid
+                                                LEFT JOIN gl_code gl
+                                                   ON gl.glcode_id =
+                                                         co.glcode_id
+                                                LEFT JOIN coa coo
+                                                   ON coo.coa_id = c.coa_id
+                                                LEFT JOIN gl_code gll
+                                                   ON gll.glcode_id =
+                                                         coo.glcode_id
+                                          WHERE gl.glcode_value IN
+                                                   (SELECT gll.glcode_value
+                                                      FROM coahierarchy c
+                                                           LEFT JOIN coa co
+                                                              ON co.coa_id =
+                                                                    c.parent_coaid
+                                                           LEFT JOIN gl_code gl
+                                                              ON gl.glcode_id =
+                                                                    co.glcode_id
+                                                           LEFT JOIN coa coo
+                                                              ON coo.coa_id =
+                                                                    c.coa_id
+                                                           LEFT JOIN gl_code gll
+                                                              ON gll.glcode_id =
+                                                                    coo.glcode_id
+                                                     WHERE gl.glcode_value =
+                                                              (Select lookup_name from lookup_value a, lookup_entity b where a.entity_id=b.entity_id and entity_name='LIABILITY')))))
+        UNION
+        SELECT gll.glcode_value
+          FROM coahierarchy c
+               LEFT JOIN coa co
+                  ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                  ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                  ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                  ON gll.glcode_id = coo.glcode_id
+         WHERE gl.glcode_value IN
+                  (SELECT gll.glcode_value
+                     FROM coahierarchy c
+                          LEFT JOIN coa co
+                             ON co.coa_id = c.parent_coaid
+                          LEFT JOIN gl_code gl
+                             ON gl.glcode_id = co.glcode_id
+                          LEFT JOIN coa coo
+                             ON coo.coa_id = c.coa_id
+                          LEFT JOIN gl_code gll
+                             ON gll.glcode_id = coo.glcode_id
+                    WHERE gl.glcode_value IN
+                             (SELECT gll.glcode_value
+                                FROM coahierarchy c
+                                     LEFT JOIN coa co
+                                        ON co.coa_id =
+                                              c.parent_coaid
+                                     LEFT JOIN gl_code gl
+                                        ON gl.glcode_id =
+                                              co.glcode_id
+                                     LEFT JOIN coa coo
+                                        ON coo.coa_id =
+                                              c.coa_id
+                                     LEFT JOIN gl_code gll
+                                        ON gll.glcode_id =
+                                              coo.glcode_id
+                               WHERE gl.glcode_value IN
+                                        (SELECT gll.glcode_value
+                                           FROM coahierarchy c
+                                                LEFT JOIN coa co
+                                                   ON co.coa_id =
+                                                         c.parent_coaid
+                                                LEFT JOIN gl_code gl
+                                                   ON gl.glcode_id =
+                                                         co.glcode_id
+                                                LEFT JOIN coa coo
+                                                   ON coo.coa_id = c.coa_id
+                                                LEFT JOIN gl_code gll
+                                                   ON gll.glcode_id =
+                                                         coo.glcode_id
+                                          WHERE gl.glcode_value IN
+                                                   (SELECT gll.glcode_value
+                                                      FROM coahierarchy c
+                                                           LEFT JOIN coa co
+                                                              ON co.coa_id =
+                                                                    c.parent_coaid
+                                                           LEFT JOIN gl_code gl
+                                                              ON gl.glcode_id =
+                                                                    co.glcode_id
+                                                           LEFT JOIN coa coo
+                                                              ON coo.coa_id =
+                                                                    c.coa_id
+                                                           LEFT JOIN gl_code gll
+                                                              ON gll.glcode_id =
+                                                                    coo.glcode_id
+                                                     WHERE gl.glcode_value IN
+                                                              (SELECT gll.glcode_value
+                                                                 FROM coahierarchy c
+                                                                      LEFT JOIN coa co
+                                                                         ON co.coa_id =
+                                                                               c.parent_coaid
+                                                                      LEFT JOIN gl_code gl
+                                                                         ON gl.glcode_id =
+                                                                               co.glcode_id
+                                                                      LEFT JOIN coa coo
+                                                                         ON coo.coa_id =
+                                                                               c.coa_id
+                                                                      LEFT JOIN gl_code gll
+                                                                         ON gll.glcode_id =
+                                                                               coo.glcode_id
+                                                                WHERE gl.glcode_value =
+                                                                         (Select lookup_name from lookup_value a, lookup_entity b where a.entity_id=b.entity_id and entity_name='LIABILITY'))))))) liabilities);
+        ]]>
+	</sql-query>
+	
+	<sql-query name="ChartOfAccountsForMifos.YearEndProcessAssets">
+		<return-scalar column="officeLevel" type="integer" />
+		<return-scalar column="officeId" type="string" />
+		<return-scalar column="glCodeValue" type="string" />
+		<return-scalar column="openingBalance" type="big_decimal" />
+		<return-scalar column="transactionDebitSum" type="big_decimal" />
+		<return-scalar column="transactionCreditSum" type="big_decimal" />
+		<return-scalar column="closingBalance" type="big_decimal" />
+		<return-scalar column="createdDate" type="date" />
+		<return-scalar column="createdBy" type="short" />
+        <![CDATA[
+            SELECT a.`office_level` as officeLevel, a.`office_id` as officeId, a.`glcode_value` as glCodeValue,a.`closing_bal` as openingBalance, 0  as transactionDebitSum, 0 as transactionCreditSum, 0 as closingBalance, a.`created_by` as createdBy, a.`created_date` as createdDate FROM acc_glbalances a where financialyear_id=:FINANCIALYEARID AND glcode_value in (SELECT DISTINCT assets.glcode_value
+  FROM (SELECT gll.glcode_value
+          FROM coahierarchy c
+               LEFT JOIN coa co
+                  ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                  ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                  ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                  ON gll.glcode_id = coo.glcode_id
+         WHERE gl.glcode_value = (Select lookup_name from lookup_value a, lookup_entity b where a.entity_id=b.entity_id and entity_name='ASSET')
+        UNION
+        SELECT gll.glcode_value
+          FROM coahierarchy c
+               LEFT JOIN coa co
+                  ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                  ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                  ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                  ON gll.glcode_id = coo.glcode_id
+         WHERE gl.glcode_value IN (SELECT gll.glcode_value
+                                     FROM coahierarchy c
+                                          LEFT JOIN coa co
+                                             ON co.coa_id = c.parent_coaid
+                                          LEFT JOIN gl_code gl
+                                             ON gl.glcode_id = co.glcode_id
+                                          LEFT JOIN coa coo
+                                             ON coo.coa_id = c.coa_id
+                                          LEFT JOIN gl_code gll
+                                             ON gll.glcode_id = coo.glcode_id
+                                    WHERE gl.glcode_value = (Select lookup_name from lookup_value a, lookup_entity b where a.entity_id=b.entity_id and entity_name='ASSET'))
+        UNION
+        SELECT gll.glcode_value
+          FROM coahierarchy c
+               LEFT JOIN coa co
+                  ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                  ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                  ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                  ON gll.glcode_id = coo.glcode_id
+         WHERE gl.glcode_value IN
+                  (SELECT gll.glcode_value
+                     FROM coahierarchy c
+                          LEFT JOIN coa co
+                             ON co.coa_id = c.parent_coaid
+                          LEFT JOIN gl_code gl
+                             ON gl.glcode_id = co.glcode_id
+                          LEFT JOIN coa coo
+                             ON coo.coa_id = c.coa_id
+                          LEFT JOIN gl_code gll
+                             ON gll.glcode_id = coo.glcode_id
+                    WHERE gl.glcode_value IN
+                             (SELECT gll.glcode_value
+                                FROM coahierarchy c
+                                     LEFT JOIN coa co
+                                        ON co.coa_id =
+                                              c.parent_coaid
+                                     LEFT JOIN gl_code gl
+                                        ON gl.glcode_id =
+                                              co.glcode_id
+                                     LEFT JOIN coa coo
+                                        ON coo.coa_id =
+                                              c.coa_id
+                                     LEFT JOIN gl_code gll
+                                        ON gll.glcode_id =
+                                              coo.glcode_id
+                               WHERE gl.glcode_value = (Select lookup_name from lookup_value a, lookup_entity b where a.entity_id=b.entity_id and entity_name='ASSET')))
+        UNION
+        SELECT gll.glcode_value
+          FROM coahierarchy c
+               LEFT JOIN coa co
+                  ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                  ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                  ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                  ON gll.glcode_id = coo.glcode_id
+         WHERE gl.glcode_value IN
+                  (SELECT gll.glcode_value
+                     FROM coahierarchy c
+                          LEFT JOIN coa co
+                             ON co.coa_id = c.parent_coaid
+                          LEFT JOIN gl_code gl
+                             ON gl.glcode_id = co.glcode_id
+                          LEFT JOIN coa coo
+                             ON coo.coa_id = c.coa_id
+                          LEFT JOIN gl_code gll
+                             ON gll.glcode_id = coo.glcode_id
+                    WHERE gl.glcode_value IN
+                             (SELECT gll.glcode_value
+                                FROM coahierarchy c
+                                     LEFT JOIN coa co
+                                        ON co.coa_id =
+                                              c.parent_coaid
+                                     LEFT JOIN gl_code gl
+                                        ON gl.glcode_id =
+                                              co.glcode_id
+                                     LEFT JOIN coa coo
+                                        ON coo.coa_id =
+                                              c.coa_id
+                                     LEFT JOIN gl_code gll
+                                        ON gll.glcode_id =
+                                              coo.glcode_id
+                               WHERE gl.glcode_value IN
+                                        (SELECT gll.glcode_value
+                                           FROM coahierarchy c
+                                                LEFT JOIN coa co
+                                                   ON co.coa_id =
+                                                         c.parent_coaid
+                                                LEFT JOIN gl_code gl
+                                                   ON gl.glcode_id =
+                                                         co.glcode_id
+                                                LEFT JOIN coa coo
+                                                   ON coo.coa_id = c.coa_id
+                                                LEFT JOIN gl_code gll
+                                                   ON gll.glcode_id =
+                                                         coo.glcode_id
+                                          WHERE gl.glcode_value = (Select lookup_name from lookup_value a, lookup_entity b where a.entity_id=b.entity_id and entity_name='ASSET'))))
+        UNION
+        SELECT gll.glcode_value
+          FROM coahierarchy c
+               LEFT JOIN coa co
+                  ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                  ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                  ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                  ON gll.glcode_id = coo.glcode_id
+         WHERE gl.glcode_value IN
+                  (SELECT gll.glcode_value
+                     FROM coahierarchy c
+                          LEFT JOIN coa co
+                             ON co.coa_id = c.parent_coaid
+                          LEFT JOIN gl_code gl
+                             ON gl.glcode_id = co.glcode_id
+                          LEFT JOIN coa coo
+                             ON coo.coa_id = c.coa_id
+                          LEFT JOIN gl_code gll
+                             ON gll.glcode_id = coo.glcode_id
+                    WHERE gl.glcode_value IN
+                             (SELECT gll.glcode_value
+                                FROM coahierarchy c
+                                     LEFT JOIN coa co
+                                        ON co.coa_id =
+                                              c.parent_coaid
+                                     LEFT JOIN gl_code gl
+                                        ON gl.glcode_id =
+                                              co.glcode_id
+                                     LEFT JOIN coa coo
+                                        ON coo.coa_id =
+                                              c.coa_id
+                                     LEFT JOIN gl_code gll
+                                        ON gll.glcode_id =
+                                              coo.glcode_id
+                               WHERE gl.glcode_value IN
+                                        (SELECT gll.glcode_value
+                                           FROM coahierarchy c
+                                                LEFT JOIN coa co
+                                                   ON co.coa_id =
+                                                         c.parent_coaid
+                                                LEFT JOIN gl_code gl
+                                                   ON gl.glcode_id =
+                                                         co.glcode_id
+                                                LEFT JOIN coa coo
+                                                   ON coo.coa_id = c.coa_id
+                                                LEFT JOIN gl_code gll
+                                                   ON gll.glcode_id =
+                                                         coo.glcode_id
+                                          WHERE gl.glcode_value IN
+                                                   (SELECT gll.glcode_value
+                                                      FROM coahierarchy c
+                                                           LEFT JOIN coa co
+                                                              ON co.coa_id =
+                                                                    c.parent_coaid
+                                                           LEFT JOIN gl_code gl
+                                                              ON gl.glcode_id =
+                                                                    co.glcode_id
+                                                           LEFT JOIN coa coo
+                                                              ON coo.coa_id =
+                                                                    c.coa_id
+                                                           LEFT JOIN gl_code gll
+                                                              ON gll.glcode_id =
+                                                                    coo.glcode_id
+                                                     WHERE gl.glcode_value =
+                                                              (Select lookup_name from lookup_value a, lookup_entity b where a.entity_id=b.entity_id and entity_name='ASSET')))))
+        UNION
+        SELECT gll.glcode_value
+          FROM coahierarchy c
+               LEFT JOIN coa co
+                  ON co.coa_id = c.parent_coaid
+               LEFT JOIN gl_code gl
+                  ON gl.glcode_id = co.glcode_id
+               LEFT JOIN coa coo
+                  ON coo.coa_id = c.coa_id
+               LEFT JOIN gl_code gll
+                  ON gll.glcode_id = coo.glcode_id
+         WHERE gl.glcode_value IN
+                  (SELECT gll.glcode_value
+                     FROM coahierarchy c
+                          LEFT JOIN coa co
+                             ON co.coa_id = c.parent_coaid
+                          LEFT JOIN gl_code gl
+                             ON gl.glcode_id = co.glcode_id
+                          LEFT JOIN coa coo
+                             ON coo.coa_id = c.coa_id
+                          LEFT JOIN gl_code gll
+                             ON gll.glcode_id = coo.glcode_id
+                    WHERE gl.glcode_value IN
+                             (SELECT gll.glcode_value
+                                FROM coahierarchy c
+                                     LEFT JOIN coa co
+                                        ON co.coa_id =
+                                              c.parent_coaid
+                                     LEFT JOIN gl_code gl
+                                        ON gl.glcode_id =
+                                              co.glcode_id
+                                     LEFT JOIN coa coo
+                                        ON coo.coa_id =
+                                              c.coa_id
+                                     LEFT JOIN gl_code gll
+                                        ON gll.glcode_id =
+                                              coo.glcode_id
+                               WHERE gl.glcode_value IN
+                                        (SELECT gll.glcode_value
+                                           FROM coahierarchy c
+                                                LEFT JOIN coa co
+                                                   ON co.coa_id =
+                                                         c.parent_coaid
+                                                LEFT JOIN gl_code gl
+                                                   ON gl.glcode_id =
+                                                         co.glcode_id
+                                                LEFT JOIN coa coo
+                                                   ON coo.coa_id = c.coa_id
+                                                LEFT JOIN gl_code gll
+                                                   ON gll.glcode_id =
+                                                         coo.glcode_id
+                                          WHERE gl.glcode_value IN
+                                                   (SELECT gll.glcode_value
+                                                      FROM coahierarchy c
+                                                           LEFT JOIN coa co
+                                                              ON co.coa_id =
+                                                                    c.parent_coaid
+                                                           LEFT JOIN gl_code gl
+                                                              ON gl.glcode_id =
+                                                                    co.glcode_id
+                                                           LEFT JOIN coa coo
+                                                              ON coo.coa_id =
+                                                                    c.coa_id
+                                                           LEFT JOIN gl_code gll
+                                                              ON gll.glcode_id =
+                                                                    coo.glcode_id
+                                                     WHERE gl.glcode_value IN
+                                                              (SELECT gll.glcode_value
+                                                                 FROM coahierarchy c
+                                                                      LEFT JOIN coa co
+                                                                         ON co.coa_id =
+                                                                               c.parent_coaid
+                                                                      LEFT JOIN gl_code gl
+                                                                         ON gl.glcode_id =
+                                                                               co.glcode_id
+                                                                      LEFT JOIN coa coo
+                                                                         ON coo.coa_id =
+                                                                               c.coa_id
+                                                                      LEFT JOIN gl_code gll
+                                                                         ON gll.glcode_id =
+                                                                               coo.glcode_id
+                                                                WHERE gl.glcode_value =
+                                                                         (Select lookup_name from lookup_value a, lookup_entity b where a.entity_id=b.entity_id and entity_name='ASSET'))))))) assets
+);
+        ]]>
+	</sql-query>
+	
+
+</hibernate-mapping>

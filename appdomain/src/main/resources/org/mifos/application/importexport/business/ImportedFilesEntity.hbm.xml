@@ -9,10 +9,25 @@
         <property name="submittedOn" column="submitted_on" type="timestamp" access="field" />
         <many-to-one name="submittedBy" column="submitted_by" class="org.mifos.customers.personnel.business.PersonnelBO"
             unique="true" lazy="false" />
+        <set name="importedTrxn" table="trxn_imported_files">
+            <key column="file_name"/>
+            <many-to-many column="account_trxn_id" class="org.mifos.accounts.business.AccountTrxnEntity" unique="true" order-by="account_trxn_id desc"/>
+        </set>
+        <property name="phaseOut" column="phase_out" type="boolean" access="field"/>
+        <property name="undoable" column="undoable" type="boolean" access="field"/>
     </class>
 
     <query name="importfiles.getImportedFileByName">
         <![CDATA[from org.mifos.application.importexport.business.ImportedFilesEntity as importedFiles
                  where importedFiles.fileName = :importedFileName]]>
     </query>
+    
+    <query name="importfiles.getAccTrxById">
+        <![CDATA[from org.mifos.accounts.business.AccountTrxnEntity accTrx where accTrx.accountTrxnId=:accountTrxnId]]>
+    </query>
+    
+    <query name="importfiles.retriveImportedFiles">
+        <![CDATA[from org.mifos.application.importexport.business.ImportedFilesEntity]]>
+    </query>
+    
 </hibernate-mapping>

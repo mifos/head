@@ -189,6 +189,21 @@ explanation of the license and how it is applied.
 								</td>
 							</tr>
 							<tr>
+							<td align="left">
+								<c:choose>
+								<c:when test="${repayLoanActionForm.truePrintReceipt}">
+									<input id="accounts.printReceipt" type="checkbox" name="printReceipt" checked="yes" value="true">
+								</c:when>
+								<c:otherwise>
+									<input id="accounts.printReceipt" type="checkbox" name="printReceipt" value="true">
+								</c:otherwise>
+								</c:choose>
+								
+								<span id="payment.label.printReceipt">
+								<mifos:mifoslabel name="accounts.check_to_print_payment_receipt"/></span>
+							</td>
+						</tr>
+							<tr>
 								<td align="center">
 									<html-el:submit styleId="RepayLoan.button.reviewTransaction" styleClass="buttn" >
 										<mifos:mifoslabel name="loan.reviewtransaction" />

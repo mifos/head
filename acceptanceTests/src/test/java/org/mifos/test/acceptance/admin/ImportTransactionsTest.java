@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
 public class ImportTransactionsTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
-    private final PluginsUtil pluginsUtil = new PluginsUtil("audibank-xls-importer-0.0.2-SNAPSHOT-jar-with-dependencies.jar");
+    private final PluginsUtil pluginsUtil = new PluginsUtil("audibank-xls-importer-0.0.3-SNAPSHOT-jar-with-dependencies.jar");
 
     private static final String EXCEL_IMPORT_TYPE = "Audi Bank (Excel 2007)";
 

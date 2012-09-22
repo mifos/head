@@ -29,8 +29,10 @@
         <evaluate expression="loanRepaymentController.applyPayment(flowScope.loanAccountNumber, loanRepaymentFormBean, messageContext)" />
         <transition on="success" to="success" />
         <transition on="error" to="enterLoanRepaymentDetails" />
+        <transition on="printPaymentReceipt" to="printPaymentReceipt" />
     </action-state>
-
+    
+    <view-state id="printPaymentReceipt" view="externalRedirect:contextRelative:/printPaymentReceipt.ftl?globalAccountNum=${flowScope.loanAccountNumber}" />
     <view-state id="success" view="externalRedirect:contextRelative:/loanAccountAction.do?globalAccountNum=${flowScope.loanAccountNumber}&amp;randomNUm=-2&amp;method=get" />
     <end-state id="cancel" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
 

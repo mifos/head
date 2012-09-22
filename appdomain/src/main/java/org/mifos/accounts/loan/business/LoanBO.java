@@ -69,6 +69,7 @@ import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
+import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.InstallmentPrincipalAndInterest;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -1648,8 +1649,10 @@ public class LoanBO extends AccountBO implements Loan {
         update();
     }
 
-    public void updateLoan(final Money loanAmount, final Integer businessActivityId) throws AccountException {
+    public void updateLoan(final Date disbursementDate, final Short noOfInstallments, final Money loanAmount, final Integer businessActivityId) throws AccountException {
         setLoanAmount(loanAmount);
+        setNoOfInstallments(noOfInstallments);
+        setDisbursementDate(disbursementDate);
         setBusinessActivityId(businessActivityId);
         MeetingBO meetingBO = ( isIndividualLoan() ? this.getParentAccount().getLoanMeeting() : this.getLoanMeeting());
         boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
@@ -2860,6 +2863,17 @@ public class LoanBO extends AccountBO implements Loan {
         for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
             amount = amount.add(((LoanScheduleEntity) accountActionDateEntity).getTotalDueWithFees());
         }
+        
+        if(isDecliningBalanceInterestRecalculation()) {
+            BigDecimal extraInterest = ApplicationContextProvider.getBean(ScheduleCalculatorAdaptor.class).getExtraInterest(this, DateUtils.getCurrentDateWithoutTimeStamp());
+            Money extraInterestMoney = MoneyUtils.currencyRound(amount.add(new Money(amount.getCurrency(), extraInterest)));
+            
+            //MIFOS-5589 - formula sometimes makes repayable amount less than original principal.
+            //Condition should be removed after further fixes.
+            if(extraInterestMoney.isGreaterThanZero()) {
+                amount = amount.add(extraInterestMoney);
+            }
+        }
         return amount;
     }
 
@@ -3963,4 +3977,23 @@ public class LoanBO extends AccountBO implements Loan {
             applyPeriodicFee(fee, charge, dueInstallments);
         }
     } 
+      
+    public void applyMifos5763Fix() throws AccountException {
+        MeetingBO meetingBO = getLoanMeeting();
+        boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+        
+        for(LoanBO memberAccount : getMemberAccounts()) {
+            memberAccount.setNoOfInstallments(getNoOfInstallments());
+            memberAccount.setDisbursementDate(getDisbursementDate());
+            memberAccount.setLoanMeeting(meetingBO);
+            memberAccount.regeneratePaymentSchedule(isRepaymentIndepOfMeetingEnabled, meetingBO);
+            
+            memberAccount.update();
+            
+            for(int i = 0 ; i < getNoOfInstallments() ; i++) {
+                memberAccount.getAccountActionDatesSortedByInstallmentId().get(i).setActionDate(getAccountActionDatesSortedByInstallmentId().get(i).getActionDate());
+            }
+        }
+        
+    }
 }
