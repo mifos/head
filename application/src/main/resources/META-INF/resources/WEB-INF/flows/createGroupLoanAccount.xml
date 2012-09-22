@@ -142,7 +142,7 @@
         <transition on="submit" to="confirmation">
             <set name="flowScope.accountStateId" value="requestParameters.accountState" type="int"/>
             <evaluate expression="cashFlowController.transformCashFlow(flowScope.cashFlow)" result="flowScope.loanAccountCashFlow" />
-            <evaluate expression="groupLoanAccountController.submitGroupLoanApplication(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean)" result="flowScope.loanCreationResultDto" />
+            <evaluate expression="groupLoanAccountController.saveGroupLoanApplication(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean)" result="flowScope.loanCreationResultDto" />
         </transition>
         
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
