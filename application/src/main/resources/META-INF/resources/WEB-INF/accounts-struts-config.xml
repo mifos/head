@@ -187,6 +187,11 @@
             <forward name="printPaymentReceipt" path="printPaymentReceipt.ftl" redirect="true"/>
         </action>
         <!--  redo loan -->
+        <action path="/groupLoanAccountAction" type="org.mifos.accounts.loan.struts.action.GroupLoanAccountAction"
+                name="loanAccountActionForm" parameter="method"
+                input="/groupLoanAccountAction.do?method=validate" scope="session" validate="true" >
+                <forward name="get_success" path="/pages/application/loan/jsp/groupLoanAccountDetail.jsp"/>
+        </action>
         <action path="/loanAccountAction" type="org.mifos.accounts.loan.struts.action.LoanAccountAction"
                 name="loanAccountActionForm" parameter="method"
                 input="/loanAccountAction.do?method=validate" scope="session" validate="true" >
