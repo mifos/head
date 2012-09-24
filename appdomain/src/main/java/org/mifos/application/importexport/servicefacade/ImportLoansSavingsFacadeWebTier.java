@@ -20,14 +20,20 @@ import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.importexport.xls.XlsClientsImporter;
 import org.mifos.application.importexport.xls.XlsLoansAccountImporter;
 import org.mifos.application.importexport.xls.XlsSavingsAccountImporter;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
+import org.mifos.clientportfolio.loan.service.MonthlyOnDayOfMonthSchedule;
+import org.mifos.clientportfolio.loan.service.MonthlyOnWeekOfMonthSchedule;
+import org.mifos.clientportfolio.loan.service.RecurringSchedule;
+import org.mifos.clientportfolio.loan.service.WeeklySchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
 import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.dto.domain.CreateAccountPenaltyDto;
 import org.mifos.dto.domain.ImportedClientDetail;
 import org.mifos.dto.domain.ImportedLoanDetail;
 import org.mifos.dto.domain.ImportedSavingDetail;
+import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.OpeningBalanceSavingsAccount;
 import org.mifos.dto.domain.ParsedLoansDto;
 import org.mifos.dto.domain.ParsedSavingsDto;
@@ -76,13 +82,27 @@ public class ImportLoansSavingsFacadeWebTier implements
         for (ImportedLoanDetail detail : parsedLoansDto.getSuccessfullyParsedRows()) {
             LoanCreationLoanDetailsDto lcldd=loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(
                     detail.getCustomerId(), detail.getPrdOfferingId(), false);
+            RecurringSchedule recurringSchedule = null;
+            if (lcldd.isRepaymentIndependentOfMeetingEnabled()) {
+            	MeetingDto meetingDto = lcldd.getLoanOfferingMeetingDetail();
+            	if (meetingDto.getMeetingDetailsDto().getRecurrenceTypeId().equals(1)) {
+                    if (meetingDto.getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth().equals(0)) {
+                        recurringSchedule = new MonthlyOnDayOfMonthSchedule(meetingDto.getMeetingDetailsDto().getEvery(), meetingDto.getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek());
+                    } else {
+                        recurringSchedule = new MonthlyOnWeekOfMonthSchedule(meetingDto.getMeetingDetailsDto().getEvery(),meetingDto.getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth(), meetingDto.getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek());
+                    }
+                } else if (meetingDto.getMeetingDetailsDto().getRecurrenceTypeId().equals(2)) {
+                    recurringSchedule = new WeeklySchedule(meetingDto.getMeetingDetailsDto().getEvery(), meetingDto.getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek());
+                }
+            }
+            
             CreateLoanAccount cla=new CreateLoanAccount(detail.getCustomerId(), new Integer(detail.getPrdOfferingId()), 
                     new Integer(detail.getStatus()), detail.getLoanAmount(), lcldd.getMinLoanAmount(), lcldd.getMaxLoanAmount(), 
                     detail.getInterestRate().doubleValue(), new LocalDate(detail.getDisbursalDate().getTime()), null, detail.getNumberOfInstallments(),
                     lcldd.getMinNumberOfInstallments(), lcldd.getMaxNumberOfInstallments(),
                     detail.getGracePeriod(), detail.getSourceOfFundId(), detail.getLoanPurposeId(), 
                     detail.getCollateralTypeId(), detail.getCollateralNotes(), detail.getExternalId(), 
-                    lcldd.isRepaymentIndependentOfMeetingEnabled(), null, defaultAccountFees, defaultPenalties);
+                    lcldd.isRepaymentIndependentOfMeetingEnabled(), recurringSchedule, defaultAccountFees, defaultPenalties);
             cla.setPredefinedAccountNumber(detail.getAccountNumber());
             cla.setFlagId(detail.getFlag());
             this.loanAccountServiceFacade.createLoan(cla, questionGroupDetails, null);
