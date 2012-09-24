@@ -20,6 +20,7 @@
 
 package org.mifos.clientportfolio.newloan.domain.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.InstallmentDate;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoanScheduleFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanInstallmentFactory;
@@ -41,6 +43,7 @@ import org.mifos.clientportfolio.newloan.domain.LoanScheduleFactory;
 import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactory;
 import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactoryImpl;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.framework.util.helpers.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoanScheduleServiceDomain implements LoanScheduleService {
@@ -84,5 +87,28 @@ public class LoanScheduleServiceDomain implements LoanScheduleService {
             loanScheduleDates.add(new DateTime(installmentDate.getInstallmentDueDate()));
         }
         return loanScheduleDates;
+    }
+
+    @Override
+    public LoanSchedule generateGroupLoanSchedule(LoanOfferingBO loanProduct, MeetingBO loanMeeting, LoanSchedule originalSchedule, 
+            List<LoanSchedule> membersSchedule, LocalDate disbursementDate, LoanProductOverridenDetail overridenDetail, 
+            LoanScheduleConfiguration configuration, Short userBranchOfficeId, CustomerBO customer, List<AccountFeesEntity> accountFees) {
+        
+        List<DateTime> loanScheduleDates = generateScheduleDates(loanProduct, loanMeeting, overridenDetail, configuration, userBranchOfficeId);
+        Money loanAmount = new Money(loanProduct.getCurrency());
+        Double installment;
+        List<Number> totalInstallmentAmounts = new ArrayList<Number>();
+        for (LoanSchedule schedule : membersSchedule) {
+            installment = 0.0;
+            loanAmount.add(schedule.getRawAmount());
+            for (int i = 0; i < schedule.getRoundedLoanSchedules().size(); i++) {
+                installment += schedule.getRoundedLoanSchedules().get(i).getTotalAmountOfInstallment().getAmount().doubleValue();
+            }
+            totalInstallmentAmounts.add(installment);
+            
+        }
+        
+        return loanScheduleFactory.create(disbursementDate, loanScheduleDates, totalInstallmentAmounts, loanProduct, customer, loanMeeting,
+                loanAmount,  overridenDetail.getInterestRate(), configuration.getNumberOfInterestDays(), overridenDetail.getGraceDuration(), accountFees);
     }
 }

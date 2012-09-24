@@ -341,7 +341,14 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
                 memberLoans.add(memberLoan);
                 index ++;
             }
-
+            
+            
+            // update loan schedule for Group Loan Account
+            loanSchedule = this.loanScheduleService.generateGroupLoanSchedule(loanAccountDetail.getLoanProduct(), repaymentDayMeeting, loanSchedule, memberLoanSchedules, 
+                    loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate(), overridenDetail, configuration, userOffice.getOfficeId(), loanAccountDetail.getCustomer(), accountFeeEntities);
+            this.loanDao.save(loan);
+            transactionHelper.flushSession();
+            
             // save question groups
             if (!questionGroups.isEmpty()) {
                 Integer eventSourceId = questionnaireServiceFacade.getEventSourceId("Create", "Loan");
