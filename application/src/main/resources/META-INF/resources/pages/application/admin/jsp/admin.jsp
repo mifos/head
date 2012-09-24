@@ -192,7 +192,7 @@ explanation of the license and how it is applied.
                                 <a id="admin.link.monthClosing" href="monthClosing.ftl"><mifos:mifoslabel name="admin.monthClosing" /></a>
                             </td>
                         </tr>
-                        <tr class="fontnormal">
+                        <!--<tr class="fontnormal">
 			<td align="center" colspan="2">
 			 	<div id="accountDetailsId">
 				 <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -219,7 +219,7 @@ explanation of the license and how it is applied.
                   <tr class="fontnormal">
                     <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                     <td width="97%"><a href="yearEndProcessAction.do?method=load"><mifos:mifoslabel name="admin.yearEndProcess" bundle="adminUIResources"/></a></td>
-                  </tr> 
+                  </tr>-->
                </table>
 			</div>
 			</td>
@@ -319,7 +319,7 @@ explanation of the license and how it is applied.
 					</table>
 					<br />
 					</td>
-					<td width="52%" valign="top" class="paddingleft"><span
+					<td width="52%" bgcolor="#FFFFFF" valign="top" class="paddingleft"><span
 						class="headingorange"><mifos:mifoslabel name="admin.manageprd" /></span><br>
 					<span class="fontnormalbold"><mifos:mifoslabel name="admin.prdrules" /></span><br>
 					<table width="90%" border="0" cellspacing="0" cellpadding="0">

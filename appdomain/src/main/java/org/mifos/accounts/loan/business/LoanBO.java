@@ -160,6 +160,7 @@ import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
@@ -1811,6 +1812,10 @@ public class LoanBO extends AccountBO implements Loan {
         closeLoanIfRequired(paymentData);
         updateLoanStatus(paymentData, loanPaymentType);
         handleLoanArrearsAging(loanPaymentType);
+        AccountPaymentEntity otherTransferPayment = paymentData.getOtherTransferPayment();
+        if (otherTransferPayment != null) {
+        	otherTransferPayment.setOtherTransferPayment(accountPaymentEntity);          
+        }
         addLoanActivity(buildLoanActivity(accountPaymentEntity.getAccountTrxns(), paymentData.getPersonnel(),
                 AccountConstants.PAYMENT_RCVD, paymentData.getTransactionDate()));
     }
@@ -1870,7 +1875,6 @@ public class LoanBO extends AccountBO implements Loan {
         AccountPaymentEntity otherTransferPayment = paymentData.getOtherTransferPayment();
         if (otherTransferPayment != null) {
             accountPayment.setOtherTransferPayment(otherTransferPayment);
-            otherTransferPayment.setOtherTransferPayment(accountPayment);
         }
 
         return accountPayment;
@@ -3440,6 +3444,10 @@ public class LoanBO extends AccountBO implements Loan {
 
     public boolean isDecliningBalanceInterestRecalculation() {
         return loanOffering.isDecliningBalanceInterestRecalculation();
+    }
+    
+    public boolean isDecliningBalanceEqualPrincipleCalculation() {
+         return loanOffering.isDecliningBalanceEqualPrinciplecalculation();
     }
 
     public LoanAccountDetailDto toDto() {

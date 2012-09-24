@@ -943,4 +943,14 @@
            </sql>
        </rollback>
    </changeSet>
+   <changeSet id="MIFOS_RI" author="Hugo Technologies" context="expansion">
+        <sql endDelimiter=";">
+            Insert into config_key_value(configuration_type,configuration_key, configuration_value) values (0,'RecalculateInterest','0');
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                Delete from config_key_value where configuration_key='RecalculateInterest';
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

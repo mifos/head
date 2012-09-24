@@ -1641,4 +1641,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
     public boolean isDecliningBalanceInterestRecalculation() {
         return getInterestType() == InterestType.DECLINING_PB;
     }
+    
+    public boolean isDecliningBalanceEqualPrinciplecalculation() {
+    	return getInterestType() == InterestType.DECLINING_EPI;
+    }
 }
