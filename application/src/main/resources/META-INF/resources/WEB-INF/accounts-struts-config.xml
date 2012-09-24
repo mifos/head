@@ -308,7 +308,8 @@
 			<forward name="submit_success" path="/generalledgeraction.do?method=load" />
 			<forward name="previous_success"
 				path="/pages/application/loan/jsp/generalLedgerTransaction.jsp" />
-			<forward name="cancel_success" path="/AdminAction.do?method=load" />
+		  <!-- <forward name="cancel_success" path="/AdminAction.do?method=load" />   -->
+		 <forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" /> 
 		</action>
 		<action path="/journalvoucheraction"
 			type="org.mifos.accounting.struts.action.JournalVoucherAction" name="journalvoucheractionform"
@@ -321,8 +322,8 @@
 			<forward name="submit_success" path="/journalvoucheraction.do?method=load" />
 			<forward name="previous_success"
 				path="/pages/application/loan/jsp/journalVoucher.jsp" />
-			<forward name="cancel_success" path="/AdminAction.do?method=load" />
-
+			<!-- <forward name="cancel_success" path="/AdminAction.do?method=load" /> -->
+<forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" />
 		</action>
 
 		<action path="/openbalanceaction"
@@ -336,7 +337,8 @@
 			<forward name="submit_success" path="/openbalanceaction.do?method=load" />
 			<forward name="previous_success"
 				path="/pages/application/loan/jsp/openBalanceTransaction.jsp" />
-			<forward name="cancel_success" path="/AdminAction.do?method=load" />
+			<forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" />
+			<!-- <forward name="cancel_success" path="/AdminAction.do?method=load" /> -->
 		</action>
 
 		<action path="/viewgltransactionsaction"
@@ -347,7 +349,8 @@
 				path="/pages/application/loan/jsp/viewGlTransactions.jsp" />
 			<forward name="submit_success"
 				path="/pages/application/loan/jsp/showViewGlTransactions.jsp" />
-			<forward name="cancel_success" path="/AdminAction.do?method=load" />
+				<!-- <forward name="cancel_success" path="/AdminAction.do?method=load" /> -->
+			<forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" />
 		</action>
 
 		<action path="/processaccountingtransactionsaction"
@@ -366,7 +369,7 @@
 			type="org.mifos.accounting.struts.action.YearEndProcessAction"
 			parameter="method"
 			validate="true"
-			input="/mifos-webapp/src/main/resources/META-INF/resources/pages/application/admin/jsp/admin.jsp"
+			input="/mifos-webapp/src/main/resources/META-INF/resources/pages/application/financialaccounting/jsp/financialAccounting.jsp"
 			scope="session">
 			<forward name="load_success"
 				path="/pages/application/loan/jsp/yearEndProcess.jsp" />

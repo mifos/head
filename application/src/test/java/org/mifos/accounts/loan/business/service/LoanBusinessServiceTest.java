@@ -56,8 +56,10 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
+import org.mifos.accounts.loan.business.ScheduleMapper;
 import org.mifos.accounts.loan.business.matchers.OriginalLoanScheduleEntitiesMatcher;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
+import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -68,6 +70,7 @@ import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.TestUtils;
@@ -83,11 +86,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanBusinessServiceTest {
-    private LoanBusinessService loanBusinessService;
     private Locale locale;
     private RepaymentScheduleInstallmentBuilder installmentBuilder;
     private MifosCurrency rupee;
 
+    @Mock
+    private LoanBusinessService loanBusinessService;
+    
     @Mock
     private LoanBO loanBO;
 
@@ -103,17 +108,22 @@ public class LoanBusinessServiceTest {
     @Mock
     private PaymentData paymentData;
 
+    
     @Mock
     private PersonnelBO personnel;
 
     @Mock
     private LegacyLoanDao legacyLoanDao;
     private Short officeId;
-
-
+    
+    @Mock
+    private ConfigurationPersistence configurationPersistence;
+    
+    private static String RECALCULATE_INTEREST="RecalculateInterest";
+    
     @Before
     public void setupAndInjectDependencies() {
-        loanBusinessService = new LoanBusinessService(legacyLoanDao, null, null, holidayService, scheduleCalculatorAdaptor);
+        loanBusinessService = new LoanBusinessService(legacyLoanDao, null, null, holidayService, scheduleCalculatorAdaptor, configurationPersistence);
         locale = new Locale("en", "GB");
         installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
@@ -128,6 +138,7 @@ public class LoanBusinessServiceTest {
         when(paymentData.getTransactionDate()).thenReturn(transactionDate);
         when(paymentData.getTotalAmount()).thenReturn(totalAmount);
         when(paymentData.getPersonnel()).thenReturn(personnel);
+        when(configurationPersistence.getConfigurationValueInteger(RECALCULATE_INTEREST)).thenReturn(0);
         loanBusinessService.applyPayment(paymentData, loanBO, accountPaymentEntity);
         verify(scheduleCalculatorAdaptor, times(1)).applyPayment(loanBO, totalAmount,
                 transactionDate, personnel, accountPaymentEntity);
@@ -153,6 +164,7 @@ public class LoanBusinessServiceTest {
         when(paymentData.getTransactionDate()).thenReturn(transactionDate);
         when(paymentData.getTotalAmount()).thenReturn(totalAmount);
         when(paymentData.getPersonnel()).thenReturn(personnel);
+        when(configurationPersistence.getConfigurationValueInteger(RECALCULATE_INTEREST)).thenReturn(0);
         loanBusinessService.applyPayment(paymentData, loanBO, accountPaymentEntity);
         verify(scheduleCalculatorAdaptor, times(0)).applyPayment(loanBO, totalAmount,
                 transactionDate, personnel, accountPaymentEntity);

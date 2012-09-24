@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.loan.business.service;
 
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECALCULATE_INTEREST;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -50,6 +51,7 @@ import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -79,6 +81,8 @@ public class LoanBusinessService implements BusinessService {
     @Autowired
     private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
 
+    @Autowired
+    private ConfigurationPersistence configurationPersistence;
 
     public LegacyLoanDao getlegacyLoanDao() {
         if (legacyLoanDao == null) {
@@ -110,12 +114,13 @@ public class LoanBusinessService implements BusinessService {
 
     public LoanBusinessService(LegacyLoanDao legacyLoanDao, ConfigurationBusinessService configService,
                                AccountBusinessService accountBusinessService, HolidayService holidayService,
-                               ScheduleCalculatorAdaptor scheduleCalculatorAdaptor) {
+                               ScheduleCalculatorAdaptor scheduleCalculatorAdaptor, ConfigurationPersistence configurationPersistence) {
         this.legacyLoanDao = legacyLoanDao;
         this.configService = configService;
         this.accountBusinessService = accountBusinessService;
         this.holidayService = holidayService;
         this.scheduleCalculatorAdaptor = scheduleCalculatorAdaptor;
+        this.configurationPersistence = configurationPersistence;
     }
 
     @Override
@@ -318,7 +323,10 @@ public class LoanBusinessService implements BusinessService {
         Money balance = paymentData.getTotalAmount();
         PersonnelBO personnel = paymentData.getPersonnel();
         Date transactionDate = paymentData.getTransactionDate();
-        if (loanBO.isDecliningBalanceInterestRecalculation()) {
+        int recalculateInterest = configurationPersistence.getConfigurationValueInteger(RECALCULATE_INTEREST);
+        if(recalculateInterest==1 && loanBO.isDecliningBalanceEqualPrincipleCalculation())
+        	scheduleCalculatorAdaptor.applyPayment(loanBO, balance, transactionDate, personnel, accountPaymentEntity);
+        else if (loanBO.isDecliningBalanceInterestRecalculation()) {
             scheduleCalculatorAdaptor.applyPayment(loanBO, balance, transactionDate, personnel, accountPaymentEntity);
         } else {
             if (AccountingRules.isOverdueInterestPaidFirst()) {

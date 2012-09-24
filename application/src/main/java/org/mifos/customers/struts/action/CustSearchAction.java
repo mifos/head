@@ -190,6 +190,7 @@ public class CustSearchAction extends SearchAction {
         SessionUtils.setAttribute("isCenterHierarchyExists", ClientRules.getCenterHierarchyExists(), request);
 
         forward = loadMasterData(userContext.getId(), request, actionForm);
+   
         return mapping.findForward(forward);
     }
 

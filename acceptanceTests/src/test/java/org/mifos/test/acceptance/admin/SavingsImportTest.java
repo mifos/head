@@ -12,6 +12,7 @@ import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParamete
 import org.mifos.test.acceptance.framework.testhelpers.AdminTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsProductHelper;
+import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -25,6 +26,7 @@ public class SavingsImportTest extends UiTestCaseBase {
     private AdminTestHelper adminTestHelper;
     private NavigationHelper navigationHelper;
     String[] arrayOfErrors;
+    DateTime targetTime;
 
     @Override
     @BeforeMethod
@@ -33,11 +35,15 @@ public class SavingsImportTest extends UiTestCaseBase {
         savingsProductHelper = new SavingsProductHelper(selenium);
         adminTestHelper = new AdminTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
+        targetTime=new DateTime(2012, 9, 18, 12, 0, 0, 0); //changing date so dates in xls spreadsheet will be appropriate
+        DateTimeUpdaterRemoteTestingService dtUpdate=new DateTimeUpdaterRemoteTestingService(selenium);
+        dtUpdate.setDateTime(targetTime);
     }
 
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
+        new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();
     }
 
     @Test(enabled = true)
@@ -53,7 +59,7 @@ public class SavingsImportTest extends UiTestCaseBase {
         String errorNumber = "5";
         arrayOfErrors = buildArrayOfErrorsForImportSavingsTest();
         String importFile = this.getClass().getResource("/ImportSavingsAccountsTest.xls").toString();
-        SavingsProductParameters parameters = savingsProductHelper.getGenericSavingsProductParameters(new DateTime(),
+        SavingsProductParameters parameters = savingsProductHelper.getGenericSavingsProductParameters(targetTime,
                 SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CLIENTS);
         parameters.setProductInstanceName("importSavings");
         parameters.setShortName("IMP");
