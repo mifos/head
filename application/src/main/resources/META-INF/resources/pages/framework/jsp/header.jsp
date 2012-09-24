@@ -30,6 +30,11 @@ explanation of the license and how it is applied.
           <td class="tablightorange"><a id="header.link.clientsAndAccounts" href="clientsAndAccounts.ftl"><mifos:mifoslabel name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel> </a></td>
           <td class="tablightorange"><a id="header.link.reports" href="reportsAction.do?method=load"><mifos:mifoslabel name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
           <td class="taborange"><a id="header.link.admin" href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}" class="tabfontwhite"><mifos:mifoslabel name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
+        	<c:if test="${accountingActivationStatus == true}">
+       		<td class="tablightorange"><a id="header.link.financialaccounting" href="FinancialAccountingAction.do?method=load"><mifos:mifoslabel
+								name="framework.financialaccounting" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>	
+		 </c:if>
+					
         </tr>
       </table>
         <c:if test="${requestScope.shutdownIsImminent == true}">

@@ -31,6 +31,8 @@
           <a id="header.link.home" href="home.ftl" class="[#if currentTab == "Home"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Home" /]">[@spring.message "tab.Home" /]</a>
           <a id="header.link.clientsAndAccounts" href="clientsAndAccounts.ftl" class="[#if currentTab == "ClientsAndAccounts"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.ClientsAndAccounts" /]">[@spring.message "tab.ClientsAndAccounts" /]</a>
           <a id="header.link.reports" href="reportsAction.do?method=load" class="[#if currentTab == "Reports"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Reports" /]">[@spring.message "tab.Reports" /]</a>
+          <a id="header.link.financialaccounting" href="FinancialAccountingAction.do?method=load" class="[#if currentTab == "FinancialAccounting"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.FinancialAccounting" /]">[@spring.message "tab.FinancialAccounting" /]</a>
+          
           [@security.authorize ifAllGranted="ROLE_ADMIN"]
           <a id="header.link.admin" href="AdminAction.do?method=load" class="[#if currentTab == "Admin"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a></span>
           [/@security.authorize]
@@ -49,6 +51,7 @@
          </li> <li> <a id="header.link.clientsAndAccounts" href="clientsAndAccounts.ftl" class="[#if currentTab == "ClientsAndAccounts"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.ClientsAndAccounts" /]">[@spring.message "tab.ClientsAndAccounts" /]</a>
          </li> <li> <a id="header.link.reports" href="reportsAction.do?method=load" class="[#if currentTab == "Reports"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Reports" /]">[@spring.message "tab.Reports" /]</a>
          </li> <li><a id="header.link.admin" href="AdminAction.do?method=load" class="[#if currentTab == "Admin"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a></li>
+          </li> <li><a id="header.link.financialaccounting" href="FinancialAccountingAction.do?method=load" class="[#if currentTab == "FinancialAccounting"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.FinancialAccounting" /]">[@spring.message "tab.FinancialAccounting" /]</a></li>
      </ul>
     </div>
 
@@ -64,6 +67,7 @@
          </li> <li> <a id="header.link.clientsAndAccounts" href="clientsAndAccounts.ftl" class="[#if currentTab == "ClientsAndAccounts"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.ClientsAndAccounts" /]">[@spring.message "tab.ClientsAndAccounts" /]</a>
          </li> <li> <a id="header.link.reports" href="reportsAction.do?method=load" class="[#if currentTab == "Reports"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Reports" /]">[@spring.message "tab.Reports" /]</a>
          </li> <li><a id="header.link.admin" href="AdminAction.do?method=load" class="[#if currentTab == "Admin"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a></li>
+         </li> <li><a id="header.link.financialaccounting" href="FinancialAccountingAction.do?method=load" class="[#if currentTab == "FinancialAccounting"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.FinancialAccounting" /]">[@spring.message "tab.FinancialAccounting" /]</a></li>
      	</ul>
     </div>
 </div>

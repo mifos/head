@@ -21,6 +21,9 @@
         <form-bean name="meetingActionForm" type="org.mifos.application.meeting.struts.actionforms.MeetingActionForm"/>
         <!-- admin action form -->
         <form-bean name="adminActionForm" type="org.mifos.application.admin.struts.actionforms.AdminActionForm"/>
+        <!-- financial accounting action form -->
+        <form-bean name="financialAccountingActionForm" type="org.mifos.application.financialaccounting.struts.actionforms.FinancialAccountingActionForm"/>
+        
         <!-- Notes form bean -->
         <form-bean name="feeactionform" type="org.mifos.accounts.fees.struts.actionforms.FeeActionForm"/>
         <!-- ChkListActionForm Action Form  -->
@@ -138,6 +141,11 @@
         <action path="/AdminAction" type="org.mifos.application.admin.struts.action.AdminAction" name="adminActionForm"
                 parameter="method" input="/AdminAction.do?method=validate" validate="false">
             <forward name="load_success" path="/pages/application/admin/jsp/admin.jsp" />
+        </action>
+        <!-- Financial Accounting action -->
+        <action path="/FinancialAccountingAction" type="org.mifos.application.financialaccounting.struts.action.FinancialAccountingAction" name="financialAccountingActionForm"
+                parameter="method" input="/FinancialAccountingAction.do?method=validate" validate="false">
+            <forward name="load_success" path="/pages/application/financialaccounting/jsp/financialAccounting.jsp" />
         </action>
         <!-- Fee Action -->
         <action path="/feeaction" type="org.mifos.accounts.fees.struts.action.FeeAction" parameter="method"
@@ -349,6 +357,10 @@
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="adminUIResources" parameter="org.mifos.config.localizedResources.adminUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+                        <!-- FinancialAccounting Resources resources -->
+    <message-resources key="FinancialAccountingUIResources" parameter="org.mifos.config.localizedResources.FinancialAccountingUIResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+                       
     <!-- fees resources -->
     <message-resources key="FeesUIResources" parameter="org.mifos.config.localizedResources.FeesUIResources"/>
     <!-- CheckList resources -->

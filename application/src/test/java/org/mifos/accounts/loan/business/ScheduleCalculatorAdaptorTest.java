@@ -55,6 +55,7 @@ import org.mifos.accounts.loan.schedule.domain.Schedule;
 import org.mifos.accounts.loan.schedule.domain.ScheduleMatcher;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.CollectionUtils;
@@ -68,6 +69,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ScheduleCalculatorAdaptorTest {
 
+	@Mock
+	private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
+	
     @Mock
     private ScheduleMapper scheduleMapper;
 
@@ -92,19 +96,24 @@ public class ScheduleCalculatorAdaptorTest {
     @Mock
     private LoanPerformanceHistoryEntity performanceHistory;
 
+    @Mock
+    private ConfigurationPersistence configurationPersistence;
+    
+    @Mock
     private ScheduleCalculator scheduleCalculator;
+    
     private MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", valueOf(1), "INR");
-    private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
     private static final Double DAILY_INTEREST_RATE = 0.000658;
     private static final Double ANNUAL_INTEREST_RATE = 24.0;
     private static BigDecimal LOAN_AMOUNT = new BigDecimal(1000);
     private static final Date DISBURSEMENT_DATE = getDate(23, 9, 2010);
+    private static String RECALCULATE_INTEREST="RecalculateInterest";
 
     @Before
     public void setup() {
         scheduleCalculator = Mockito.spy(new ScheduleCalculator());
         scheduleMapper = Mockito.spy(new ScheduleMapper());
-        scheduleCalculatorAdaptor = new ScheduleCalculatorAdaptor(scheduleCalculator, scheduleMapper);
+        scheduleCalculatorAdaptor = new ScheduleCalculatorAdaptor(scheduleCalculator, scheduleMapper, configurationPersistence);
         LOAN_AMOUNT = LOAN_AMOUNT.setScale(13, RoundingMode.HALF_UP);
         when(loanBO.getCurrency()).thenReturn(rupee);
     }
@@ -165,9 +174,11 @@ public class ScheduleCalculatorAdaptorTest {
         when(loanBO.getDisbursementDate()).thenReturn(DISBURSEMENT_DATE);
         when(loanBO.getLoanAmount()).thenReturn(new Money(rupee, LOAN_AMOUNT));
         when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
-        when(loanBO.getLoanScheduleEntityMap()).thenReturn(getLoanScheduleEntityMap(loanScheduleEntities));
-
+     	when(loanBO.getLoanScheduleEntityMap()).thenReturn(getLoanScheduleEntityMap(loanScheduleEntities));
+        
+        when(configurationPersistence.getConfigurationValueInteger(RECALCULATE_INTEREST)).thenReturn(0);
         scheduleCalculatorAdaptor.computeExtraInterest(loanBO, getDate(30, 10, 2010));
+        
         Schedule expectedSchedule = getSchedule(DISBURSEMENT_DATE, LOAN_AMOUNT, getInstallments(0, .46, 0));
         verify(scheduleCalculator).computeExtraInterest(argThat(new ScheduleMatcher(expectedSchedule)), Mockito.eq(getDate(30, 10, 2010)));
 
@@ -194,6 +205,7 @@ public class ScheduleCalculatorAdaptorTest {
         when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
         when(loanBO.getLoanScheduleEntityMap()).thenReturn(getLoanScheduleEntityMap(loanScheduleEntities));
 
+        when(configurationPersistence.getConfigurationValueInteger(RECALCULATE_INTEREST)).thenReturn(0);
         scheduleCalculatorAdaptor.computeExtraInterest(loanBO, getDate(30, 10, 2010));
 
         verify(scheduleCalculator, times(0)).computeExtraInterest(Mockito.<Schedule>any(), Mockito.<Date>any());
