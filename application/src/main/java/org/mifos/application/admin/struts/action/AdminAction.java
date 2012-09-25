@@ -34,8 +34,6 @@ public class AdminAction extends BaseAction {
 
     public ActionForward load(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-    	boolean flag= AccountingRules.getSimpleAccountingStatus();
-    	request.getSession().setAttribute("accountingActivationStatus", flag);
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 }
