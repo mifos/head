@@ -194,6 +194,8 @@ public abstract class BaseAction extends DispatchAction {
         if (null != request.getSession().getAttribute("currentPageUrl")) {
         	SessionUtils.setAttribute("backPageUrl", UrlHelper.constructCurrentPageUrl(request), request);
         }
+        boolean flag= AccountingRules.getSimpleAccountingStatus();
+        request.getSession().setAttribute("accountingActivationStatus", flag);
         TransactionDemarcate annotation = getTransaction(form, request);
         preExecute(form, request, annotation);
         ActionForward forward = super.execute(mapping, form, request, response);

@@ -6,12 +6,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.ui.core.controller.BreadCrumbsLinks;
 import org.mifos.ui.core.controller.BreadcrumbBuilder;
 import org.mifos.ui.core.controller.util.helpers.UrlHelper;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 @SessionAttributes({ "accessDeniedBreadcrumbs", "previousPageUrl", "configureDwDatabase" })
 public class BackUrlInterceptor extends HandlerInterceptorAdapter {
@@ -21,7 +21,14 @@ public class BackUrlInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String errorPage = request.getRequestURI().replaceFirst(".+/", "");
+        String accountingActivationStatus = null;
+        try {
+        	accountingActivationStatus = request.getSession().getAttribute("accountingActivationStatus").toString();
+        } catch (Exception e){
+        	accountingActivationStatus = "false";
+        }
         String urlToBackPage = (String) request.getSession().getAttribute("previousPageUrl");
+        
         if ("pageNotFound.ftl".equals(errorPage)) {
             breadcrumbs = new BreadcrumbBuilder().withLink("previousPage", urlToBackPage)
                     .withLink("pageNotFound", errorPage).build();
@@ -36,6 +43,7 @@ public class BackUrlInterceptor extends HandlerInterceptorAdapter {
             request.setAttribute("accessDeniedBreadcrumbs", breadcrumbs);
         }
         request.setAttribute(Constants.URLTOBACKPAGE, urlToBackPage);
+        request.setAttribute("accountingActivationStatus", Boolean.parseBoolean(accountingActivationStatus));
         request.getSession().setAttribute("previousPageUrl", UrlHelper.constructCurrentPageUrl(request));
         
         return true;
