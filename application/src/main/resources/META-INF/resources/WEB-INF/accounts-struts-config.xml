@@ -192,6 +192,12 @@
                 input="/groupLoanAccountAction.do?method=validate" scope="session" validate="true" >
                 <forward name="get_success" path="/pages/application/loan/jsp/groupLoanAccountDetail.jsp"/>
         </action>
+        <action path="/applyGroupPaymentAction" type="org.mifos.accounts.struts.action.AccountApplyGroupPaymentAction"
+                name="applyPaymentActionForm" parameter="method"
+                input="/applyGroupPaymentAction.do?method=validate" scope="session" validate="true">
+                <forward name="load_success" path="/pages/accounts/jsp/applyGroupPayment.jsp"/>
+                <forward name="divide" path="/pages/accounts/jsp/divideGroupPayment.jsp"/>
+        </action>
         <action path="/loanAccountAction" type="org.mifos.accounts.loan.struts.action.LoanAccountAction"
                 name="loanAccountActionForm" parameter="method"
                 input="/loanAccountAction.do?method=validate" scope="session" validate="true" >

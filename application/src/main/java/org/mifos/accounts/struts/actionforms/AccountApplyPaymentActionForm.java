@@ -24,9 +24,12 @@ import static org.mifos.framework.util.helpers.DateUtils.dateFallsBeforeDate;
 import static org.mifos.framework.util.helpers.DateUtils.getDateAsSentFromBrowser;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -97,7 +100,27 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     private boolean printReceipt;
     
     private boolean truePrintReceipt = false;
+       
+    //Group Loan
+    private List<String> individualValues = new ArrayList<String>();
     
+
+    public String getIndividualValues(int index) {
+        return individualValues.get(index);
+    }
+    
+    public void setIndividualValues(int index, String value) {
+        individualValues.set(index, value);
+    }
+    
+    public List<String> getIndividualValues() {
+        return individualValues;
+    }
+
+    public void setIndividualValues(List<String> individualValues) {
+        this.individualValues = individualValues;
+    }
+
     public boolean getTruePrintReceipt() {
         return this.truePrintReceipt;
     }

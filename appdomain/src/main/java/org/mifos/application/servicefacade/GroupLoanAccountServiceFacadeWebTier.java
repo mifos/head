@@ -4,7 +4,9 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEE
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -69,6 +71,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.dto.domain.CreateAccountPenaltyDto;
+import org.mifos.dto.domain.GroupIndividualLoanDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
@@ -531,6 +534,59 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
     @Override
     public Integer getMemberClientId(String globalCustNum) {
         return this.customerDao.findClientBySystemId(globalCustNum).getCustomerId();
+    }
+    
+    
+    @Override
+    public int getNumberOfMemberAccounts(Integer accountId) {
+        LoanBO loanAccount = loanDao.findById(accountId);
+        return loanAccount.getMemberAccounts().size();
+    }
+    
+    @Override
+    public List<Integer> getListOfMemberAccountIds(Integer parentAccountId){
+        List<Integer> ids = new ArrayList<Integer>();
+        LoanBO loanAccount = loanDao.findById(parentAccountId);
+        for(LoanBO memberAccount : loanAccount.getMemberAccounts()) {
+            ids.add(memberAccount.getAccountId());
+        }
+        Collections.sort(ids);
+        return ids;
+    }
+    
+    public List<String> getListOfMemberGlobalAccountNumbers(Integer parentAccountId) {
+        List<String> memberNumbers = new ArrayList<String>();
+        LoanBO loanAccount = loanDao.findById(parentAccountId);
+        for(LoanBO memberAccount : loanAccount.getMemberAccounts()) {
+            memberNumbers.add(memberAccount.getGlobalAccountNum());
+        }
+        Collections.sort(memberNumbers);
+        return memberNumbers;
+    }
+
+    @Override
+    public List<GroupIndividualLoanDto> getMemberLoansAndDefaultPayments(Integer parentAccountId, BigDecimal amount) {
+        LoanBO loanAccount = loanDao.findById(parentAccountId);
+        List<GroupIndividualLoanDto> memberAccountDtos = new ArrayList<GroupIndividualLoanDto>();
+        BigDecimal amountSpent = BigDecimal.ZERO;
+              
+        Iterator<LoanBO> itr = loanAccount.getMemberAccounts().iterator();
+        
+        while(itr.hasNext()) {
+            LoanBO memberAccount = itr.next();
+            if(itr.hasNext()) {
+                BigDecimal currentAmount = amount.divide(memberAccount.calcFactorOfEntireLoan());
+                memberAccountDtos.add(new GroupIndividualLoanDto(memberAccount.getGlobalAccountNum(), currentAmount, memberAccount.getAccountId()));
+                amountSpent = amountSpent.add(currentAmount);
+            } else {
+                //last element
+                memberAccountDtos.add(new GroupIndividualLoanDto(memberAccount.getGlobalAccountNum(), amount.subtract(amountSpent), memberAccount.getAccountId()));
+            }
+        }
+        
+        Collections.sort(memberAccountDtos);
+        
+        return memberAccountDtos;
     }
 
 }

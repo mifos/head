@@ -157,6 +157,7 @@ public class ActivityMapper {
         parseActionSecurity(getCustomerSecurity());
         parseActionSecurity(getLoanAccountSecurity());
         parseActionSecurity(getGroupLoanAccountSecurity());
+        parseActionSecurity(getGroupAccountApplyPaymentSecurity());
         parseActionSecurity(getAccountApplyPaymentSecurity());
         parseActionSecurity(getLoanDisbursementSecurity());
         parseActionSecurity(getSavingsDepositWithdrawalSecurity());
@@ -757,6 +758,13 @@ public class ActivityMapper {
     private ActionSecurity getGroupLoanAccountSecurity() {
         ActionSecurity security = new ActionSecurity("groupLoanAccountAction");
         security.allow("get", SecurityConstants.VIEW);
+        return security;
+    }
+    
+    private ActionSecurity getGroupAccountApplyPaymentSecurity() {
+        ActionSecurity security = new ActionSecurity("applyGroupPaymentAction");
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("divide", SecurityConstants.VIEW);
         return security;
     }
     
