@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,7 +37,12 @@ public class ETLReportDWHelper extends TaskHelper {
             nameOfDataBase = m.group(6);
         }
         if (!nameOfDataBase.equals("")) {
-        	
+        	try {
+        		dsDW.getConnection();
+        	} catch (SQLException ex) {
+        		errors.add("Data Warehouse is not configured");
+        		throw new BatchJobException("Data warehouse database", errors);
+        	}
         	ConfigurationLocator configurationLocator = new ConfigurationLocator();
         	String configPath = configurationLocator.getConfigurationDirectory();
             createPropertiesFileForPentahoDWReports(ds, dsDW);
@@ -75,7 +81,10 @@ public class ETLReportDWHelper extends TaskHelper {
             } catch (IOException ex) {
             	throw new BatchJobException(ex.getCause());
             }
-        } 
+		} else {
+			errors.add("Data Warehouse is not configured");
+			throw new BatchJobException("Data warehouse database", errors);
+		}
         
 
     }
