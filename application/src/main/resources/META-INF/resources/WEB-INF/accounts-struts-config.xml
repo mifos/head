@@ -382,6 +382,14 @@
 			<forward name="load_success"
 				path="/pages/application/loan/jsp/yearEndProcess.jsp" />
 		</action>
+		
+		<!-- Group Loan -->
+       <action path="/groupIndividualLoanAccountAction" type="org.mifos.accounts.loan.struts.action.GroupIndividualLoanAccountAction"
+                name="loanAccountActionForm" parameter="method"
+                input="/groupIndividualLoanAccountAction.do?method=validate" scope="session" validate="true" >
+                <forward name="get_success" path="/pages/application/loan/jsp/groupIndividualLoanAccountDetails.jsp"/>
+        </action>
+       <!-- Group Loan end -->
     </action-mappings>
 
 <!-- 
