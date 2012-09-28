@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +25,7 @@ public class ETLReportDWHelper extends TaskHelper {
     @Override
     public void execute(final long timeInMillis) throws BatchJobException {
         new ApplicationContextHolder();
+        ArrayList<String> errors = new ArrayList<String>();
         ApplicationContext ach = ApplicationContextHolder.getApplicationContext();
         DriverManagerDataSource ds = (DriverManagerDataSource) ach.getBean("dataSource");
         DriverManagerDataSource dsDW = (DriverManagerDataSource) ach.getBean("dataSourcePentahoDW");
@@ -49,6 +51,7 @@ public class ETLReportDWHelper extends TaskHelper {
                 cmd = cmd.replaceAll("/", "\\\\");
             }
             try {
+            	boolean hasErrors = false;
             	cmd = javaHome +" "+ cmd +" "+ dsDW.getUsername() + " " + dsDW.getPassword() + " " + dsDW.getUrl();
                 Process p = Runtime.getRuntime().exec(cmd);
                 BufferedReader reader = new BufferedReader (new InputStreamReader(p.getInputStream()));
@@ -60,14 +63,21 @@ public class ETLReportDWHelper extends TaskHelper {
 				PrintWriter fw = new PrintWriter(file);
                 while ((line = reader.readLine ()) != null) {
                 	fw.println(line);
-                	
+                	if (line.matches("^ERROR.*")) {
+                		hasErrors = true;
+                	}
                 }
                 fw.close();
-               
+                if (hasErrors) {
+                	errors.add("ETL error, for more details see log file: "+pathToLog);
+                	throw new BatchJobException("ETL error", errors);
+                }
             } catch (IOException ex) {
             	throw new BatchJobException(ex.getCause());
             }
         } 
+        
+
     }
 
     private void createPropertiesFileForPentahoDWReports(DriverManagerDataSource ds, DriverManagerDataSource dsDW) {
