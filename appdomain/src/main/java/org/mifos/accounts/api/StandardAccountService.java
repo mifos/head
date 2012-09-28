@@ -262,7 +262,7 @@ public class StandardAccountService implements AccountService {
         StaticHibernateUtil.startTransaction();
         int i = 0;
         for (AccountPaymentParametersDto accountPaymentParametersDTO : accountPaymentParametersDtoList) {
-            accounts.add(makePaymentWithCommit(accountPaymentParametersDTO));
+            accounts.add(makeImportedPayments(accountPaymentParametersDTO));
             if (i%30 == 0) {
             	StaticHibernateUtil.getSessionTL().flush();
             	StaticHibernateUtil.getSessionTL().clear();
@@ -282,18 +282,16 @@ public class StandardAccountService implements AccountService {
      * method created for undo transaction import ability MIFOS-5702
      * changed return type 
      * */
-    public AccountBO makePaymentWithCommit(AccountPaymentParametersDto accountPaymentParametersDto)
+    public AccountBO makeImportedPayments(AccountPaymentParametersDto accountPaymentParametersDto)
             throws PersistenceException, AccountException {
-        return makePaymentWithCommit(accountPaymentParametersDto, null);
+        return makeImportedPayments(accountPaymentParametersDto, null);
     }
     
     /**
      * method created for undo transaction import ability MIFOS-5702
-     * this method commits transaction
-     * returns Id of transaction 
-     * 
+     * returns Id of transaction  
      * */
-    public AccountBO makePaymentWithCommit(AccountPaymentParametersDto accountPaymentParametersDto, Integer savingsPaymentId)
+    public AccountBO makeImportedPayments(AccountPaymentParametersDto accountPaymentParametersDto, Integer savingsPaymentId)
             throws PersistenceException, AccountException {
         final int accountId = accountPaymentParametersDto.getAccountId();
         final AccountBO account = this.legacyAccountDao.getAccount(accountId);

@@ -71,13 +71,13 @@ public class ConfigurationPersistence extends LegacyGenericDao {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(KEY_QUERY_PARAMETER, key);
         try {
-            return (ConfigurationKeyValue) execUniqueResultNamedQuery(
-                    NamedQueryConstants.GET_CONFIGURATION_KEYVALUE_BY_KEY, queryParameters);
+        	return (ConfigurationKeyValue) execUniqueResultNamedQuery(
+        			NamedQueryConstants.GET_CONFIGURATION_KEYVALUE_BY_KEY, queryParameters);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
     }
-
+    
     /**
      * Lookup a known persistent integer configuration value.
      *
@@ -167,5 +167,27 @@ public class ConfigurationPersistence extends LegacyGenericDao {
         }
 
         createOrUpdate(keyValue);
+    }
+    
+    public int getConfigurationValueIntegerWithoutFlush(String key) {
+    	ConfigurationKeyValue keyValue = getConfigurationKeyValueWithoutFlush(key);
+
+        if (keyValue != null && ConfigurationKeyValue.Type.INTEGER.getTypeId().equals(keyValue.getType())) {
+            return Integer.parseInt(keyValue.getValue());
+        }
+
+        throw new RuntimeException("Configuration parameter not found for key: " + "'" + key + "'");
+    }
+
+    public ConfigurationKeyValue getConfigurationKeyValueWithoutFlush(String key) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(KEY_QUERY_PARAMETER, key);
+		try {
+			return (ConfigurationKeyValue) execUniqueResultNamedQuery(
+					NamedQueryConstants.GET_CONFIGURATION_KEYVALUE_BY_KEY,
+					queryParameters);
+		} catch (PersistenceException e) {
+			throw new MifosRuntimeException(e);
+		}
     }
 }

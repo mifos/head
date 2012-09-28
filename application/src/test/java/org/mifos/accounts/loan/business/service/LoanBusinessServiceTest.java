@@ -70,6 +70,7 @@ import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -117,13 +118,11 @@ public class LoanBusinessServiceTest {
     private Short officeId;
     
     @Mock
-    private ConfigurationPersistence configurationPersistence;
-    
-    private static String RECALCULATE_INTEREST="RecalculateInterest";
+    private ConfigurationBusinessService configService;
     
     @Before
     public void setupAndInjectDependencies() {
-        loanBusinessService = new LoanBusinessService(legacyLoanDao, null, null, holidayService, scheduleCalculatorAdaptor, configurationPersistence);
+        loanBusinessService = new LoanBusinessService(legacyLoanDao, configService, null, holidayService, scheduleCalculatorAdaptor);
         locale = new Locale("en", "GB");
         installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
@@ -138,7 +137,6 @@ public class LoanBusinessServiceTest {
         when(paymentData.getTransactionDate()).thenReturn(transactionDate);
         when(paymentData.getTotalAmount()).thenReturn(totalAmount);
         when(paymentData.getPersonnel()).thenReturn(personnel);
-        when(configurationPersistence.getConfigurationValueInteger(RECALCULATE_INTEREST)).thenReturn(0);
         loanBusinessService.applyPayment(paymentData, loanBO, accountPaymentEntity);
         verify(scheduleCalculatorAdaptor, times(1)).applyPayment(loanBO, totalAmount,
                 transactionDate, personnel, accountPaymentEntity);
@@ -164,7 +162,6 @@ public class LoanBusinessServiceTest {
         when(paymentData.getTransactionDate()).thenReturn(transactionDate);
         when(paymentData.getTotalAmount()).thenReturn(totalAmount);
         when(paymentData.getPersonnel()).thenReturn(personnel);
-        when(configurationPersistence.getConfigurationValueInteger(RECALCULATE_INTEREST)).thenReturn(0);
         loanBusinessService.applyPayment(paymentData, loanBO, accountPaymentEntity);
         verify(scheduleCalculatorAdaptor, times(0)).applyPayment(loanBO, totalAmount,
                 transactionDate, personnel, accountPaymentEntity);
