@@ -1,5 +1,6 @@
 package org.mifos.reports.pentaho.util;
 
+import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,7 +41,12 @@ public class JNDIException extends RuntimeException {
            if (nameOfDataBase.equals("")) {
            	request.getSession().setAttribute("configureDwDatabase", "false");
            } else {
-           	request.getSession().setAttribute("configureDwDatabase", "true");
+        	   try {
+        		   dsDW.getConnection();
+        		   request.getSession().setAttribute("configureDwDatabase", "true");
+        	   } catch (SQLException ex) {
+        		   request.getSession().setAttribute("configureDwDatabase", "false");
+        	   }
            }
       }
     
