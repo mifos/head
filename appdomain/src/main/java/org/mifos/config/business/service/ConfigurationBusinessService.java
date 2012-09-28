@@ -22,6 +22,7 @@ package org.mifos.config.business.service;
 
 import java.util.List;
 
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.config.business.ConfigurationKeyValue;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -59,8 +60,12 @@ public class ConfigurationBusinessService implements BusinessService {
         return configurationPersistence.isGlimEnabled();
     }
 
-    public boolean isRepaymentIndepOfMeetingEnabled() {
+     public boolean isRepaymentIndepOfMeetingEnabled() {
         return new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
     }
+     
+     public boolean isRecalculateInterestEnabled() {
+    	 return (configurationPersistence.getConfigurationValueIntegerWithoutFlush(LoanConstants.RECALCULATE_INTEREST)==1);
+     }
 
 }
