@@ -13,7 +13,7 @@ import org.mifos.ui.core.controller.util.helpers.UrlHelper;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-@SessionAttributes({ "accessDeniedBreadcrumbs", "previousPageUrl", "configureDwDatabase" })
+@SessionAttributes({ "accessDeniedBreadcrumbs", "previousPageUrl", "configureDwDatabase", "accountingActivationStatus" })
 public class BackUrlInterceptor extends HandlerInterceptorAdapter {
 
     protected List<BreadCrumbsLinks> breadcrumbs = new LinkedList<BreadCrumbsLinks>();

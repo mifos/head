@@ -34,7 +34,7 @@
           [@security.authorize ifAllGranted="ROLE_ADMIN"]
           <a id="header.link.admin" href="AdminAction.do?method=load" class="[#if currentTab == "Admin"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a></span>
           [/@security.authorize]
-          [#if Request?has_content && Request.accountingActivationStatus == true]
+          [#if Request?has_content && Session.accountingActivationStatus == true]
           <a id="header.link.financialaccounting" href="FinancialAccountingAction.do?method=load" class="[#if currentTab == "FinancialAccounting"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.FinancialAccounting" /]">[@spring.message "tab.FinancialAccounting" /]</a>
           [/#if]
         </span>
@@ -53,7 +53,7 @@
          </li> <li> <a id="header.link.reports" href="reportsAction.do?method=load" class="[#if currentTab == "Reports"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Reports" /]">[@spring.message "tab.Reports" /]</a>
          </li> <li><a id="header.link.admin" href="AdminAction.do?method=load" class="[#if currentTab == "Admin"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a></li>
           </li> 
-          [#if Request?has_content && Request.accountingActivationStatus == true]
+          [#if Request?has_content && Session.accountingActivationStatus == true]
           <li><a id="header.link.financialaccounting" href="FinancialAccountingAction.do?method=load" class="[#if currentTab == "FinancialAccounting"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.FinancialAccounting" /]">[@spring.message "tab.FinancialAccounting" /]</a></li>
        	  [/#if]
      </ul>
@@ -72,7 +72,7 @@
          </li> <li> <a id="header.link.reports" href="reportsAction.do?method=load" class="[#if currentTab == "Reports"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Reports" /]">[@spring.message "tab.Reports" /]</a>
          </li> <li><a id="header.link.admin" href="AdminAction.do?method=load" class="[#if currentTab == "Admin"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a></li>
          </li> 
-          [#if Request?has_content && Request.accountingActivationStatus == true]
+          [#if Request?has_content && Session.accountingActivationStatus == true]
          <li><a id="header.link.financialaccounting" href="FinancialAccountingAction.do?method=load" class="[#if currentTab == "FinancialAccounting"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.FinancialAccounting" /]">[@spring.message "tab.FinancialAccounting" /]</a></li>
      	 [/#if]
      	</ul>
