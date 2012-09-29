@@ -456,7 +456,10 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     } catch(AccountException e) {
                         logger.info("Failed to fix loan: " + fixLoan.getGlobalAccountNum());
                         StaticHibernateUtil.rollbackTransaction();
-                    } finally {
+                    } catch(NullPointerException e) {
+                        logger.info("Failed to fix loan: " + fixLoan.getGlobalAccountNum());
+                        StaticHibernateUtil.rollbackTransaction();
+                    }finally {
                         StaticHibernateUtil.clearSession();
                     }
                 }
