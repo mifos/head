@@ -3914,8 +3914,6 @@ public class LoanBO extends AccountBO implements Loan {
             }
         }
         applyAllPenaltiesToMemberAccounts();
-        
-        applyRoundingOnInstallments(getLoanInstallments(), getLoanInstallments());
 
         List<AccountPaymentEntity> parentPayments = getAccountPayments();
 
