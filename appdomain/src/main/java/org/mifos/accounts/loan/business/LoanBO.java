@@ -3441,6 +3441,10 @@ public class LoanBO extends AccountBO implements Loan {
     public boolean isDecliningBalanceInterestRecalculation() {
         return loanOffering.isDecliningBalanceInterestRecalculation();
     }
+    
+    public boolean isDecliningBalanceEqualPrincipleCalculation() {
+         return loanOffering.isDecliningBalanceEqualPrinciplecalculation();
+    }
 
     public LoanAccountDetailDto toDto() {
         PrdOfferingDto productDetails = this.loanOffering.toDto();

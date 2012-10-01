@@ -19,15 +19,17 @@
  */
 package org.mifos.accounts.loan.business;
 
-import java.math.BigDecimal;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECALCULATE_INTEREST;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
+import java.math.BigDecimal;
 
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.helpers.Money;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +53,13 @@ public class ScheduleCalculatorAdaptor {
     }
 
     public void computeExtraInterest(LoanBO loan, Date asOfDate) {
-        if (loan.isDecliningBalanceInterestRecalculation()) {
+    	int recalculateInterest = new ConfigurationPersistence().getConfigurationValueInteger(RECALCULATE_INTEREST);
+       	if(recalculateInterest==1 && loan.isDecliningBalanceEqualPrincipleCalculation()){
+       		Schedule schedule = scheduleMapper.mapToSchedule(new ArrayList<LoanScheduleEntity>(loan.getLoanScheduleEntities()),
+            loan.getDisbursementDate(), getDailyInterest(loan.getInterestRate()), loan.getLoanAmount().getAmount());
+            scheduleCalculator.computeExtraInterest(schedule, asOfDate);
+            populateExtraInterestInLoanScheduleEntities(schedule, loan.getLoanScheduleEntityMap());
+       	} else if (loan.isDecliningBalanceInterestRecalculation()) {
             Schedule schedule = scheduleMapper.mapToSchedule(new ArrayList<LoanScheduleEntity>(loan.getLoanScheduleEntities()),
                     loan.getDisbursementDate(), getDailyInterest(loan.getInterestRate()), loan.getLoanAmount().getAmount());
             scheduleCalculator.computeExtraInterest(schedule, asOfDate);

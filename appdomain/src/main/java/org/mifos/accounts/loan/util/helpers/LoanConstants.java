@@ -198,6 +198,7 @@ public interface LoanConstants {
     String MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY = "minDaysBetweenDisbursalAndFirstRepaymentDay";
     String MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY = "maxDaysBetweenDisbursalAndFirstRepaymentDay";
     String PRORATE_RULE="prorate_Rule";
+    String RECALCULATE_INTEREST="RecalculateInterest";
     String ADMINISTRATIVE_DOCUMENT_IS_ENABLED = "AdministrativeDocumentsIsEnabled";
     String MIN_RANGE_IS_NOT_MET = "errors.minrangeisnotmet";
     String MAX_RANGE_IS_NOT_MET = "errors.maxrangeisnotmet";
