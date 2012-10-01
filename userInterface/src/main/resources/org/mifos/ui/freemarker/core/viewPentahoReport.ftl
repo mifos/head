@@ -121,8 +121,7 @@
 			        <script>
 $(document).ready(function() {
 	$.datepicker.setDefaults($.datepicker.regional[""]);
-    $("#${param.paramName}_Date").datepicker({
-		dateFormat: 'dd/mm/yy',	
+    $("#${param.paramName}_Date").datepicker({	
         showOn: "button",
         buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
 		buttonImageOnly: true
