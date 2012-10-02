@@ -41,6 +41,7 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
     protected FormFile file;
     private String reportId;
     private String isActive;
+    private Boolean isDW;
 
     public BirtReportsUploadActionForm() {
         super();
@@ -52,6 +53,7 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
         this.file = null;
         this.reportId = null;
         this.isActive = null;
+        this.isDW = null;
     }
 
     @Override
@@ -144,4 +146,13 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
         this.isActive = isActive;
     }
 
+	public Boolean getIsDW() {
+		return isDW;
+	}
+
+	public void setIsDW(Boolean isDW) {
+		this.isDW = isDW;
+	}
+    
+    
 }

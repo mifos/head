@@ -20,6 +20,7 @@
 package org.mifos.ui.pentaho.controller;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -137,6 +138,15 @@ public class PentahoReportingController {
         Map <String, AbstractPentahoParameter> selectedValues = form.getAllParameteres();
         boolean update=false;
         List<AbstractPentahoParameter> params = this.pentahoReportsService.getParametersForReport(reportId, request, selectedValues, update);
+        if (this.pentahoReportsService.isDW(reportId)) {
+        	form.setEtlLastUpdate(this.pentahoReportsService.getEtlLastUpdateDate(request));
+        	if (form.getEtlLastUpdate().equals(new Date(0))) {
+        		request.getSession().setAttribute("dwNotRun", "true");
+        	}
+        	request.getSession().setAttribute("isDW", "true");
+        } else {
+        	request.getSession().setAttribute("isDW", "false");
+        }
         form.setReportParameters(params);
     }
 

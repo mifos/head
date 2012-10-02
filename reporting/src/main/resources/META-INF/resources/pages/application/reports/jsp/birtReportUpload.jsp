@@ -153,6 +153,15 @@ explanation of the license and how it is applied.
                                         <input type="file" size="70" value="" name="file"/>
                                     </td>
 								</tr>
+								<tr class="fontnormal">
+								    <td align="right">
+									    <mifos:mifoslabel
+										name="reports.isDW" />:</td>
+								    <td>
+								    	<input type="radio" name="isDW" value="true"> Yes 
+										<input type="radio" name="isDW" value="false" checked> No
+                                    </td>
+								</tr> 
 								<input type="hidden" name="isActive"  value="1" />
 						  </table><br>	
 						 <table width="90%" border="0" cellpadding="0" cellspacing="0">

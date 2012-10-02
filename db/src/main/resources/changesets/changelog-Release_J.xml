@@ -995,4 +995,33 @@
            </sql>
        </rollback>
    </changeSet>
+   <changeSet id="MIFOS-5828_1" author="Lukasz Wyszomirski" context="expansion">
+        <sql endDelimiter=";">
+        	ALTER TABLE report ADD is_dw boolean default 0; 
+        	
+        	UPDATE report SET is_dw=1 WHERE report_name='Loan Officer Detailed';
+        	UPDATE report SET report_category_id=8 WHERE report_name='Loan Officer Detailed';
+        	UPDATE report SET is_dw=1 WHERE report_name='MFI Progress'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Funds Movement'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Due Vs Collected Branch'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Due Vs Collected Center'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Due Vs Collected Officer'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Loan Officer Performance Summary Period'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Loan Officer Performance Summary Cumulative'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Loan Classification Product'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Balance Outstanding By Source Of Funds'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Balance Outstanding'; 
+        	
+        	UPDATE report SET report_name='Loan Classification by Product' WHERE report_name='Loan Classification Product';
+        	UPDATE report SET report_name='Due Vs Collected by Branch'  WHERE report_name='Due Vs Collected Branch'; 
+        	UPDATE report SET report_name='Due Vs Collected by Center' WHERE report_name='Due Vs Collected Center'; 
+        	UPDATE report SET report_name='Due Vs Collected by Officer' WHERE report_name='Due Vs Collected Officer';
+        	UPDATE report SET report_name='Loan Officer Details' WHERE report_name='Loan Officer Detailed';   
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+            	alter table report drop column is_dw;
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>
