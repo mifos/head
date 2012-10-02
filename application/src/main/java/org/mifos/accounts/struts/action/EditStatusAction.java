@@ -99,7 +99,7 @@ public class EditStatusAction extends BaseAction {
         }
         actionForm.setLastPaymentDate(lastPaymentDate);
 
-        if (accountBO.isLoanAccount()) {
+        if (accountBO.isLoanAccount() || accountBO.isGroupLoanAccount()) {
             // NOTE - not using dto values at present but available when ui is refactored away from jsp
             AccountStatusDto accountStatuses = this.loanAccountServiceFacade.retrieveAccountStatuses(accountId.longValue());
 
@@ -247,7 +247,7 @@ public class EditStatusAction extends BaseAction {
 
         checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
 
-        if (accountBO.isLoanAccount()) {
+        if (accountBO.isLoanAccount() || accountBO.isGroupLoanAccount()) {
             initializeLoanQuestionnaire(accountBO.getGlobalAccountNum(), newStatusId != null ? newStatusId.toString() : null);
             loanQuestionnaire.saveResponses(request, editStatusActionForm, accountId);
 

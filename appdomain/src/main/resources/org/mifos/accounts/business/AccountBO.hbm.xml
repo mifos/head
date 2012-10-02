@@ -170,7 +170,6 @@
                 <one-to-many class="org.mifos.accounts.loan.business.LoanBO"></one-to-many>
             </set>
 
-            <property name="groupLoan" column="group_loan" type="boolean"/>
             <property name="recurMonth" column="recur_month" type="short" />
             <property name="monthWeek" column="month_week"
                 type="org.mifos.application.meeting.util.helpers.WeekDayUserType" />
@@ -588,7 +587,8 @@ having max(cs.installment_id) > max(cfs.installment_id)
         from org.mifos.accounts.business.AccountBO account
         left join account.customer
         where account.customer.customerId=:customerId
-        and (account.accountType.accountTypeId=:loanAccountTypeId or account.accountType.accountTypeId=:savingsAccountTypeId)
+        and (account.accountType.accountTypeId=:loanAccountTypeId or account.accountType.accountTypeId=:savingsAccountTypeId
+        or account.accountType.accountTypeId=:groupLoanAccountTypeId)
         and account.globalAccountNum=:searchString ]]>
     </query>
 

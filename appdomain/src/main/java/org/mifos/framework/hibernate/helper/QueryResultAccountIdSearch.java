@@ -55,6 +55,7 @@ public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {
                         query = session.getNamedQuery(NamedQueryConstants.ACCOUNT_LIST_ID_SEARCH);
                         query.setInteger("customerId", customerId).setShort("loanAccountTypeId",
                                 CustomerSearchConstants.LOAN_TYPE);
+                        query.setShort("groupLoanAccountTypeId",CustomerSearchConstants.GROUP_LOAN_TYPE);
                         query.setShort("savingsAccountTypeId", CustomerSearchConstants.SAVINGS_TYPE);
                         query.setString("searchString", searchString);
                         List<?> accountNumAndTypeId = query.list();
@@ -94,6 +95,12 @@ public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {
         } else if (accountTypeId != null && customerLevel == CustomerLevel.CENTER.getValue()
                 && accountTypeId == CustomerSearchConstants.SAVINGS_TYPE) {
             return (short) 8;
+        } else if (accountTypeId != null && customerLevel == CustomerLevel.GROUP.getValue()
+                && accountTypeId == CustomerSearchConstants.GROUP_LOAN_TYPE) {
+            return (short) 9;
+        } else if (accountTypeId != null && customerLevel == CustomerLevel.CLIENT.getValue()
+                && accountTypeId == CustomerSearchConstants.GROUP_LOAN_TYPE) {
+            return (short) 10;
         } else {
             return null; // or exception?
         }

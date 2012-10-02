@@ -945,11 +945,11 @@
    </changeSet>
    <changeSet id="MIFOS_5628_1" author="Kamil Kalfas">
        <sql endDelimiter=";">
-             alter table loan_account add group_loan boolean default 0;
+		   INSERT INTO account_type(account_type_id, lookup_id, description) VALUES(5, 126, 'Group Loan Account');
        </sql>
        <rollback>
            <sql endDelimiter=";">
-             alter table loan_account drop column group_loan;
+           DELETE FROM account_type WHERE account_type_id=5;
            </sql>
        </rollback>
    </changeSet>

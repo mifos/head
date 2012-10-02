@@ -25,8 +25,15 @@ public class LoanAccountSearchResultDto implements Serializable {
     private Short loanOfficerId;
     private String loanGlobalAccountNum;
     private String status;
+    private boolean isGroupLoan;
     
-	public Short getOfficeId() {
+	public boolean isGroupLoan() {
+        return isGroupLoan;
+    }
+    public void setGroupLoan(boolean isGroupLoan) {
+        this.isGroupLoan = isGroupLoan;
+    }
+    public Short getOfficeId() {
 		return officeId;
 	}
 	public void setOfficeId(Short officeId) {

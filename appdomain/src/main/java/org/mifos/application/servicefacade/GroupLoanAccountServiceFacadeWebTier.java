@@ -214,7 +214,7 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             creationDate = loanAccountInfo.getGroupLoanAccountDetails().getDisbursementDate().toDateMidnight().toDateTime();
         }
         CreationDetail creationDetail = new CreationDetail(creationDate, Integer.valueOf(user.getUserId()));
-        LoanBO loan = LoanBO.openStandardLoanAccount(loanAccountDetail.getLoanProduct(), loanAccountDetail.getCustomer(), repaymentDayMeeting,
+        LoanBO loan = LoanBO.openGroupLoanAccount(loanAccountDetail.getLoanProduct(), loanAccountDetail.getCustomer(), repaymentDayMeeting,
                 loanSchedule, loanAccountDetail.getAccountState(), loanAccountDetail.getFund(), overridenDetail, configuration, installmentRange, amountRange,
                 creationDetail, createdBy);
         loan.setBusinessActivityId(loanAccountInfo.getGroupLoanAccountDetails().getLoanPurposeId());

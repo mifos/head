@@ -226,6 +226,71 @@ explanation of the license and how it is applied.
 									height="10"></td>
 							</tr>
 						</table>
+						<!-- group loans -->
+                        <table width="96%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td width="63%" align="left" valign="top"
+                                    class="tableContentLightBlue">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td width="63%"><span class="fontnormalbold"> <mifos:mifoslabel
+                                            name="${ConfigurationConstants.LOAN}" /> </span> <span
+                                            class="fontnormal"></span></td>
+                                    </tr>
+                                </table>
+                                <span class="fontnormal"></span>
+                                <table width="95%" border="0" align="center" cellpadding="0"
+                                    cellspacing="0">
+                                    <c:forEach items="${clientInformationDto.loanAccountsInUse}"
+                                        var="loan">
+                                        <tr>
+                                            <td>
+                                            <table width="100%" border="0" cellspacing="0"
+                                                cellpadding="0">
+                                                <tr>
+                                                    <td width="65%"><span class="fontnormal"> 
+                                                    <c:url value="viewLoanAccountDetails.ftl" var="viewLoanAccountDetailsUrl" >
+                                                        <c:param name="globalAccountNum" value="${loan.globalAccountNum}" />
+                                                        <c:param name="customerId" value="${clientInformationDto.clientDisplay.customerId}" />
+                                                        <c:param name="recordOfficeId" value="${UserContext.branchId}" />
+                                                        <c:param name="recordLoanOfficerId" value="${UserContext.id}" />
+                                                        <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+                                                    </c:url >
+                                                    <html-el:link styleId="viewClientDetails.link.viewLoanAccount"
+                                                        href="${viewLoanAccountDetailsUrl}">
+                                                        <c:out value="${loan.prdOfferingName}" />, <mifos:mifoslabel name="client.acc" bundle="ClientUIResources" /><c:out
+                                                            value="${loan.globalAccountNum}" />
+                                                    </html-el:link> </span></td>
+                                                    <td width="35%"><span class="fontnormal"> <mifoscustom:MifosImage
+                                                        id="${loan.accountStateId}" moduleName="org.mifos.accounts.loan.util.resources.loanImages" />
+                                                    <c:out value="${loan.accountStateName}" /> </span></td>
+                                                </tr>
+                                            </table>
+                                            <c:if
+                                                test="${loan.accountStateId==5 || loan.accountStateId==9}">
+                                                <span class="fontnormal"> <mifos:mifoslabel
+                                                    name="loan.outstandingbalance" isColonRequired="yes"/> <fmt:formatNumber
+                                                    value="${loan.outstandingBalance}" /><br>
+                                                <mifos:mifoslabel name="loan.amount_due" isColonRequired="yes"/> <fmt:formatNumber
+                                                    value="${loan.totalAmountDue}" /> </span>
+                                            </c:if></td>
+                                        </tr>
+                                        <tr>
+                                            <td><img src="pages/framework/images/trans.gif" width="5"
+                                                height="20"></td>
+                                        </tr>
+                                    </c:forEach>
+                                </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table width="50%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td><img src="pages/framework/images/trans.gif" width="10"
+                                    height="10"></td>
+                            </tr>
+                        </table>
 					</c:if> <c:if
 						test="${!empty clientInformationDto.savingsAccountsInUse}">
 						<table width="96%" border="0" cellspacing="0" cellpadding="0">

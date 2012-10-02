@@ -45,9 +45,16 @@ public class GroupSearchResultDto implements Serializable {
     private List<String> loanGlobalAccountNum = new ArrayList<String>();
     private List<String> savingsGlobalAccountNum = new ArrayList<String>();
     private String status;
+    private boolean isGroupLoan;
     
     
-	public Short getOfficeId() {
+	public boolean isGroupLoan() {
+        return isGroupLoan;
+    }
+    public void setGroupLoan(boolean isGroupLoan) {
+        this.isGroupLoan = isGroupLoan;
+    }
+    public Short getOfficeId() {
 		return officeId;
 	}
 	public void setOfficeId(Short officeId) {

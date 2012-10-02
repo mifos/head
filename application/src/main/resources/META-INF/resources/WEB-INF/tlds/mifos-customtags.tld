@@ -64,6 +64,11 @@
         	<required>false</required>
         	<rtexprvalue>true</rtexprvalue>
         </attribute>
+        <attribute>
+            <name>individualAccountLink</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 	
 	<!-- Mifos Image tag.This is different from the one

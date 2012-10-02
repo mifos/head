@@ -65,6 +65,9 @@ public class CustomerSearchDto implements DataTransferObject {
     private short loanOffcerGlobalNum;
     private String loanGlobalAccountNumber;
     private String savingsGlobalAccountNumber;
+    private boolean groupLoan;
+    
+    
 
     /**
      * @return Returns the savingsGlobalAccountNumber.

@@ -31,6 +31,15 @@
             <actionParam name="memberAccountId" value="loanAccountId" valueType="method"/>
          </linkDetails>
     </column>
+    <column label="Individual account" value="show" valueType="text" columnType="link">
+         <columnDetails  rowStyle="drawtablerow" colWidth="15"/>
+         <linkDetails action="groupIndividualLoanAccountAction.do">
+            <actionParam name="method" value="get" valueType="text"/>
+            <actionParam name="globalAccountNum" value="loanGlobalAccountNum" valueType="method"/>
+            <actionParam name="randomNUm" valueType="inbuilt"/>
+            <actionParam name="currentFlowKey" valueType="inbuilt"/>
+         </linkDetails>
+    </column>
   </row>
 
 </tableInfo>

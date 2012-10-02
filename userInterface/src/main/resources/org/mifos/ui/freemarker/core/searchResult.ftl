@@ -123,7 +123,11 @@
 								<span>
 								[#list client.loanGlobalAccountNum as loan]
 									<span>
+									[#if loan.accountStatusId == 5]
+										<a href='groupIndividualLoanAccountAction.do?method=get&globalAccountNum=${loan}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${loan}</a>
+									[#else]
 										<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${loan}</a>
+									[/#if]
 									</span>
 								[/#list]
 								</span>
@@ -205,7 +209,11 @@
 								<span>
 								[#list group.loanGlobalAccountNum as loan]
 									<span>
+									[#if loan.accountStatusId == 5]
+										<a href='viewGroupLoanAccountDetails.do?globalAccountNum=${loan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${loan}</a>
+									[#else]
 										<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${loan}</a>
+									[/#if]
 									</span>
 								[/#list]
 								</span>
@@ -300,10 +308,17 @@
 									[@spring.message '${ConfigurationConstants.LOAN}' /]
 								</span>
 								<span class='headingblue' style='font-size: 12px;'>
+									[#if loan.accountStatusId == 5]
+										<a href='groupIndividualLoanAccountAction.do?method=get&globalAccountNum=${loan.loanGlobalAccountNum}&recordOfficeId=${loan.branchId}&
+											 recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomnum=${Session.randomNUm?if_exists?c}'>
+										Account # ${loan.loanGlobalAccountNum}
+									</a>
+									[#else]
 									<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan.loanGlobalAccountNum}&recordOfficeId=${loan.branchId}&
 											 recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomnum=${Session.randomNUm?if_exists?c}'>
 										Account # ${loan.loanGlobalAccountNum}
 									</a>
+									[/#if]
 								</span>
 							</div>
 							<div>

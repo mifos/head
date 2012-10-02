@@ -3,7 +3,9 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.mifos.accounts.servicefacade.UserContextFactory;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerSearchDto;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.office.persistence.OfficeDao;
@@ -159,7 +161,8 @@ public class CustomerSearchServiceFacadeWebTier implements
         		centerSearchResultDto.setStatus(customerSearchDto.getStatus());
         		
         		customerHierarchyDto.getCenters().add(centerSearchResultDto);
-        	} else if ( customerSearchDto.getLoanGlobalAccountNumber() != null && (customerSearchDto.getCustomerType() == 5 || customerSearchDto.getCustomerType() == 4) ) { 
+        	} else if ( customerSearchDto.getLoanGlobalAccountNumber() != null && (customerSearchDto.getCustomerType() == 5 || customerSearchDto.getCustomerType() == 4 
+        	        || customerSearchDto.getCustomerType() == 9) || customerSearchDto.getCustomerType() == 10) { 
         		
         		LoanAccountSearchResultDto loanAccountSearchResultDto = new LoanAccountSearchResultDto();
         		
@@ -174,6 +177,17 @@ public class CustomerSearchServiceFacadeWebTier implements
         		
         		loanAccountSearchResultDto.setLoanOfficerName(customerSearchDto.getLoanOfficerName());
         		loanAccountSearchResultDto.setLoanOfficerId(customerSearchDto.getLoanOffcerGlobalNum());
+        		//new group loan group account
+        		if (customerSearchDto.getCustomerType() == 9) {
+        			loanAccountSearchResultDto.setGroupLoan(Boolean.TRUE);
+        			loanAccountSearchResultDto.setAccountStatusId(AccountTypes.GROUP_LOAN_ACCOUNT.getValue());
+        		} 
+        		//new group loan client account
+        		else if (customerSearchDto.getCustomerType() == 10) {
+        		    loanAccountSearchResultDto.setGroupLoan(Boolean.TRUE);
+        		    loanAccountSearchResultDto.setAccountStatusId(AccountTypes.GROUP_LOAN_ACCOUNT.getValue());
+        		    loanAccountSearchResultDto.setAccountStatusId(CustomerLevel.CLIENT.getValue());
+        		}
         		
         		if ( customerSearchDto.getClientGlobalCustNum() != null){
             		loanAccountSearchResultDto.setCenterName(customerSearchDto.getClientName());
@@ -182,7 +196,7 @@ public class CustomerSearchServiceFacadeWebTier implements
             		loanAccountSearchResultDto.setClientGlobalCustNum(customerSearchDto.getCenterGlobalCustNum());
             		loanAccountSearchResultDto.setGroupName(customerSearchDto.getGroupName());
             		loanAccountSearchResultDto.setGroupGlobalCustNum(customerSearchDto.getGroupGlobalCustNum());
-        		} else if( customerSearchDto.getCustomerType() == 5 ) {
+        		} else if( customerSearchDto.getCustomerType() == 5  || customerSearchDto.getCustomerType() == 9) {
                     loanAccountSearchResultDto.setGroupName(customerSearchDto.getCenterName());
                     loanAccountSearchResultDto.setGroupGlobalCustNum(customerSearchDto.getCenterGlobalCustNum());
                     loanAccountSearchResultDto.setCenterName(customerSearchDto.getGroupName());
