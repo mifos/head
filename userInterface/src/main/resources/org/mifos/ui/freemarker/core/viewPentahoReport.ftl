@@ -121,8 +121,7 @@
 			        <script>
 $(document).ready(function() {
 	$.datepicker.setDefaults($.datepicker.regional[""]);
-    $("#${param.paramName}_Date").datepicker({
-		dateFormat: 'dd/mm/yy',	
+    $("#${param.paramName}_Date").datepicker({	
         showOn: "button",
         buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
 		buttonImageOnly: true
@@ -192,6 +191,15 @@ $(document).ready(function() {
 		    	[@form.submitButton label="widget.form.buttonLabel.submit" id="input.submit" attributes="onClick='selectAllOptions();'" /]
 		    	<input id="input.cancel" type="submit" class="cancel" value="[@spring.message "widget.form.buttonLabel.cancel" /]" name="CANCEL" />
 		    </div>
+		    [#if Session.isDW == "true"]
+		    <div class="row">
+		    	[#if Session.dwNotRun == "true"]
+		    		<span>[@spring.message "etlDoesntRun"/] </span>
+		    	[#else]
+		    		<span>[@spring.message "lastSuccessfullRunETL"/] ${pentahoReportFormBean.etlLastUpdate?datetime} </span>
+		    	[/#if]
+		    </div>
+		    [/#if]
 		</form>
 	</div>
 	

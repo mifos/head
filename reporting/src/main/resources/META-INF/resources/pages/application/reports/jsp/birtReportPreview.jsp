@@ -144,6 +144,21 @@ explanation of the license and how it is applied.
 									    <c:out value="${category.reportCategoryName}" />
                                     </td>
 								</tr>
+								<tr>
+	                                <td>
+	                                     <mifos:mifoslabel name="reports.isDW" />:
+	                                </td>
+	                                <td> 
+	                                <c:choose>
+	                                <c:when test="${birtReportsUploadActionForm.isDW == true}" >
+	                                	<c:out value="Yes" />
+	                                </c:when> 
+	                                <c:otherwise>
+	                                	<c:out value="No" />
+	                                </c:otherwise>
+									</c:choose>
+                                    </td>
+								</tr>
 							    <tr>
 									<td>
 										<a href="#"><mifos:mifoslabel name="reports.ReportTemplate" /></a>

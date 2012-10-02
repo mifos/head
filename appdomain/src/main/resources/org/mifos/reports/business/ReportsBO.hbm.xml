@@ -16,6 +16,7 @@
         <property name="activityId" column="activity_id" type="short" />
         <property name="reportName" column="report_name" type="string" />
         <property name="reportIdentifier" column="report_identifier" type="string" />
+        <property name="isDW" column="is_dw" type="boolean" />
         <many-to-one name="reportsCategoryBO"
             column="report_category_id"
             class="org.mifos.reports.business.ReportsCategoryBO"

@@ -19,6 +19,7 @@
  */
 package org.mifos.reports.pentaho;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -49,4 +50,10 @@ public interface PentahoReportsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     boolean checkAccessToReport(Integer reportId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    Date getEtlLastUpdateDate(HttpServletRequest request);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    boolean isDW(Integer reportId);
 }

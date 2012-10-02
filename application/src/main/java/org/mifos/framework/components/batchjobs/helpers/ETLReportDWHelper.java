@@ -58,6 +58,7 @@ public class ETLReportDWHelper extends TaskHelper {
             }
             try {
             	boolean hasErrors = false;
+            	boolean notRun = true;
             	cmd = javaHome +" "+ cmd +" "+ dsDW.getUsername() + " " + dsDW.getPassword() + " " + dsDW.getUrl();
                 Process p = Runtime.getRuntime().exec(cmd);
                 BufferedReader reader = new BufferedReader (new InputStreamReader(p.getInputStream()));
@@ -67,13 +68,18 @@ public class ETLReportDWHelper extends TaskHelper {
 				}
 				File file = new File(pathToLog);
 				PrintWriter fw = new PrintWriter(file);
-                while ((line = reader.readLine ()) != null) {
+                while ((line = reader.readLine()) != null) {
                 	fw.println(line);
                 	if (line.matches("^ERROR.*")) {
                 		hasErrors = true;
                 	}
+                	notRun=false;
                 }
                 fw.close();
+                if (notRun) {
+                	errors.add("Data Warehouse is not configured properly");
+            		throw new BatchJobException("Data warehouse database", errors);
+                }
                 if (hasErrors) {
                 	errors.add("ETL error, for more details see log file: "+pathToLog);
                 	throw new BatchJobException("ETL error", errors);
