@@ -27,6 +27,7 @@ function doCheck(box)
 {
 var arrElements = document.getElementsByTagName("input");
 var myname= box.id;
+var mynameforrelation = box.id;
 var mylength=myname.length;
 var elementCache =new Array();
 var allChecked=true;	
@@ -168,7 +169,15 @@ var index=0;
 
 
 
-   }   
+   }
+
+    //add filter for 'Can make payment to the account using Saving Account Transfer'
+    if (mynameforrelation == "5_1_6" && !(box.checked)) {
+        document.getElementById('5_1_11').checked = false;
+    }
+    else if (mynameforrelation == '5_1_11' && box.checked) {
+        document.getElementById('5_1_6').checked = true;
+    }
 
 }
 

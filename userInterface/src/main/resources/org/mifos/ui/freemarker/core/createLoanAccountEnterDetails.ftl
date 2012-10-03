@@ -28,6 +28,7 @@
                          
 <span id="page.id" title="LoanCreationDetail"></span>
 [@i18n.formattingInfo /]
+<script type="text/javascript" src="pages/js/singleitem.js"></script>
 
 [#if customerSearchFormBean.redoLoanAccount]
 <p class="red standout" style="margin-bottom: 5px;">[@spring.message "redoLoanAccount.wizard.highlightedNote" /]</p>
@@ -176,7 +177,7 @@
     		<td>&nbsp;</td>
     		<td>[@form.input path="loanAccountFormBean.clientAmount[${index}]"  id="clientAmount[${index}]" attributes="class='amountfield separatedNumber' "/]</td>
     		<td>&nbsp;</td>
-    		<td>[@form.singleSelectWithPrompt path="loanAccountFormBean.clientLoanPurposeId[${index}]" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" attributes="class=trigger"/]</td>
+    		<td>[@form.singleSelectWithPrompt path="loanAccountFormBean.clientLoanPurposeId[${index}]" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" attributes="class=trigger noAutoSelect" /]</td>
     	</tr>
     	[#assign index = index + 1]
     	[/#list]
@@ -289,14 +290,14 @@
     </div>
     <div class="row">
         [@form.label "fundId" loanAccountFormBean.sourceOfFundsMandatory][@spring.message "createLoanAccount.sourceOfFund" /][/@form.label]
-        [@form.singleSelectWithPrompt path="loanAccountFormBean.fundId" options=loanProductReferenceData.fundOptions selectPrompt="selectPrompt" /]
+        [@form.singleSelectWithPrompt path="loanAccountFormBean.fundId" options=loanProductReferenceData.fundOptions selectPrompt="selectPrompt" attributes="class='noAutoSelect'" /]
     </div>
 
 	[#if loanProductReferenceData.glimApplicable]
 	[#else]
     <div class="row">
         [@form.label "loanPurposeId" loanAccountFormBean.purposeOfLoanMandatory][@spring.message "createLoanAccount.purposeOfLoan" /][/@form.label]
-        [@form.singleSelectWithPrompt path="loanAccountFormBean.loanPurposeId" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" /]
+        [@form.singleSelectWithPrompt path="loanAccountFormBean.loanPurposeId" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" attributes="class='noAutoSelect'"/]
     </div>
     [/#if]
     
@@ -304,7 +305,7 @@
     [#else]
     <div class="row">
         [@form.label "collateralTypeId" false][@spring.message "createLoanAccount.collateralType" /][/@form.label]
-        [@form.singleSelectWithPrompt path="loanAccountFormBean.collateralTypeId" options=loanProductReferenceData.collateralOptions selectPrompt="selectPrompt" /]
+        [@form.singleSelectWithPrompt path="loanAccountFormBean.collateralTypeId" options=loanProductReferenceData.collateralOptions selectPrompt="selectPrompt" attributes="class='noAutoSelect'" /]
     </div>
     
     <div class="row">
@@ -336,7 +337,7 @@
 					[@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmountOrRate[${index}]" attributes="disabled='disabled'"/]							        	
 		        [/#if]
 		        
-		        <span style="margin-left: 20px;">
+		        <span style="margin-left: 4px;">
 		        [#if defaultFee.feeFrequency.oneTime]
 		        	[@spring.message "createLoanAccount.periodicity"/] ${defaultFee.feeFrequencyType}
 		        [#else]
@@ -349,10 +350,10 @@
 		        [/#if]
 		        
 		       	[#if defaultFee.rateBasedFee]
-		        	<span style="position:relative; left: -116px; top: 15px">[@spring.message "createLoanAccount.formula"/] ${defaultFee.feeFormula.name}</span>
+		        	<span style="position:relative; left: -119px; top: 15px">[@spring.message "createLoanAccount.formula"/] ${defaultFee.feeFormula.name}</span>
 		       	[/#if]
 		       	</span>
-		       	<div style="position:relative; left: 650px; top: -25px; height: 2px;">[@spring.formCheckbox "loanAccountFormBean.defaultFeeSelected[${index}]"/]Check to remove</div>
+		       	<div style="position:relative; left: 655px; top: -25px; height: 2px;">[@spring.formCheckbox "loanAccountFormBean.defaultFeeSelected[${index}]"/]Check to remove</div>
 		       	[@spring.formHiddenInput "loanAccountFormBean.defaultFeeId[${index}]" /]
 		    </div>
      		[#assign index = index + 1]	    	
@@ -400,19 +401,19 @@
     <div class="additional-fees">
 	    <div class="row">
 			[@form.label "selectedFeeId0" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
-	    	[@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[0]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" id="selectedFeeId0" /]
+	    	[@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[0]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" id="selectedFeeId0" attributes="class='noAutoSelect'" /]
 	    	<span style="margin-left: 10px;">[@spring.message "createLoanAccount.feeAmount" /]</span>
 	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[0]" id="selectedFeeId0Amount" attributes="style='margin-left: 20px;' class='separatedNumber'"/]
 	    </div>
 	    <div class="row">
 			[@form.label "selectedFeeId1" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
-	    	[@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[1]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" id="selectedFeeId1" /]
+	    	[@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[1]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" id="selectedFeeId1" attributes="class='noAutoSelect'" /]
 	    	<span style="margin-left: 10px;">[@spring.message "createLoanAccount.feeAmount" /]</span>
 	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[1]" id="selectedFeeId1Amount" attributes="style='margin-left: 20px;' class='separatedNumber'"/]
 	    </div>
 	    <div class="row">
 			[@form.label "selectedFeeId2" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
-	    	[@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[2]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" id="selectedFeeId2" /]
+	    	[@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[2]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" id="selectedFeeId2" attributes="class='noAutoSelect'" /]
 	    	<span style="margin-left: 10px;">[@spring.message "createLoanAccount.feeAmount" /]</span>
 	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[2]" id="selectedFeeId2Amount" attributes="style='margin-left: 20px;' class='separatedNumber'"/]
 	    </div>

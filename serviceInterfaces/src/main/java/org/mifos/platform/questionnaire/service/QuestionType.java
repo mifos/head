@@ -24,5 +24,5 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("type")
 public enum QuestionType {
-    INVALID, FREETEXT, NUMERIC, MULTI_SELECT, SINGLE_SELECT, DATE, SMART_SELECT
+    INVALID, FREETEXT, NUMERIC, MULTI_SELECT, SINGLE_SELECT, DATE, SMART_SELECT, SMART_SINGLE_SELECT
 }

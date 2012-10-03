@@ -20,7 +20,10 @@
 
 package org.mifos.security.rolesandpermission.business.service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -28,9 +31,12 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
+import org.mifos.security.rolesandpermission.business.ActivityRestrictionTypeEntity;
+import org.mifos.security.rolesandpermission.business.RoleActivityRestrictionBO;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.UserContext;
+import org.mifos.security.util.helpers.ActivityRestrictionType;
 
 public class RolesPermissionsBusinessService implements BusinessService {
 
@@ -64,6 +70,30 @@ public class RolesPermissionsBusinessService implements BusinessService {
     public RoleBO getRole(Short roleId) throws ServiceException {
         try {
             return rolesPermissionsPersistence.getRole(roleId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
+    
+    public BigDecimal getRoleActivityRestrictionAmountValueByRestrictionTypeId(Short roleId,
+            Short activityRestrictionTypeId) throws ServiceException {        
+        try {
+            RoleBO roleBO = rolesPermissionsPersistence.getRole(roleId);
+            Set<RoleActivityRestrictionBO> restrictions = roleBO.getRestrictions();
+            for (RoleActivityRestrictionBO restrictionBO : restrictions){
+                if ( restrictionBO.getActivityRestrictionType().getId().equals(ActivityRestrictionType.MAX_LOAN_AMOUNT_FOR_APPROVE.getValue())){
+                    return restrictionBO.getRestrictionAmountValue();
+                }
+            }
+            return null;
+        } catch (PersistenceException e){
+            throw new ServiceException(e);
+        }
+    }
+    
+    public List<ActivityRestrictionTypeEntity> getActivityRestrictionTypes() throws ServiceException {
+        try {
+            return rolesPermissionsPersistence.getActivitiesRestrictionTypes();
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

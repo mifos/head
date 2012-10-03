@@ -57,6 +57,8 @@ public interface SecurityConstants {
     // Activity not allowd key
 
     String KEY_ACTIVITY_NOT_ALLOWED = "error.activity.not.allowed";
+    
+    String KEY_ACTIVITY_APPROVE_LOAN_NOT_ALLOWED = "error.activity.not.allowed.approve.loan";
 
     String KEY_SHUTDOWN_TIMEOUT_INVALID = "error.shutdown.timeout.invalid";
 
@@ -106,6 +108,13 @@ public interface SecurityConstants {
     short ROLES_EDIT_ROLES = 24;
 
     short ROLES_DELETE_ROLES = 25;
+    
+    //Accounting management
+    short ACCOUNTING_CREATE_GLTRANSACTION = 280; 
+    short ACCOUNTING_CREATE_JVTRANSACTION = 281;
+    short ACCOUNTING_CREATE_OPENBALANCE = 282; 
+    short ACCOUNTING_CREATE_VIEWTRANSACTIONS = 283; 
+    short ACCOUNTING_CREATE_MISPROCESSING = 284; 
 
     // Client attributes management
     short EDIT_CLIENTNAME_HIERARCHY_GROUPLOANALLOWED = 28;
@@ -367,6 +376,8 @@ public interface SecurityConstants {
     short KENDRA_MEETING = 177;
 
     short LOAN_CAN_REPAY_LOAN = 178;
+    
+    short LOAN_CAN_TRANSFER_FROM_SAVINGS_ACCOUNT = 282;
 
     short SAVINGS_CANWAIVE_DUEAMOUNT = 187;
 
@@ -383,6 +394,8 @@ public interface SecurityConstants {
     short CAN_ENTER_COLLECTION_SHEET_DATA = 197;
 
     short REPORTS_MANAGEMENT = 141;
+    
+    short QUESTION_MANAGMENT = 294;
 
     // FIXME: both use the same ID? Is this a mistake?
     short ADMINISTER_REPORTPARAMS = 142;

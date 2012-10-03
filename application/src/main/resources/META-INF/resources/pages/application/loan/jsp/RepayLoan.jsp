@@ -147,6 +147,17 @@ explanation of the license and how it is applied.
 									</mifos:select>
 								</td>
 							</tr>
+                            <tr id="repayLoan.row.savingsForTransfer">
+                                <td align="right" class="fontnormal"><mifos:mifoslabel
+                                    name="accounts.account_for_transfer" mandatory="yes" isColonRequired="Yes" /></td>
+    
+                                <td class="fontnormal"><mifos:select
+                                    name="repayLoanActionForm" styleId="repayLoan.input.accountForTransfer" property="accountForTransfer">
+                                    <c:forEach var="acc" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountsForTransfer')}" >
+                                        <html-el:option value="${acc.id}">${acc.displayValue}</html-el:option>
+                                    </c:forEach>
+                                </mifos:select></td>
+                            </tr>
 							<tr>
 								<td align="right" class="fontnormal">
 									<span id="RepayLoan.label.receiptId">
@@ -178,6 +189,21 @@ explanation of the license and how it is applied.
 								</td>
 							</tr>
 							<tr>
+							<td align="left">
+								<c:choose>
+								<c:when test="${repayLoanActionForm.truePrintReceipt}">
+									<input id="accounts.printReceipt" type="checkbox" name="printReceipt" checked="yes" value="true">
+								</c:when>
+								<c:otherwise>
+									<input id="accounts.printReceipt" type="checkbox" name="printReceipt" value="true">
+								</c:otherwise>
+								</c:choose>
+								
+								<span id="payment.label.printReceipt">
+								<mifos:mifoslabel name="accounts.check_to_print_payment_receipt"/></span>
+							</td>
+						</tr>
+							<tr>
 								<td align="center">
 									<html-el:submit styleId="RepayLoan.button.reviewTransaction" styleClass="buttn" >
 										<mifos:mifoslabel name="loan.reviewtransaction" />
@@ -201,6 +227,7 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="repaymentAmount" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'totalRepaymentAmount')}" />
 			<html-el:hidden property="waivedAmount" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'waivedRepaymentAmount')}" />
 			<html-el:hidden property="waiverInterest" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'waiverInterest')}" />
-		</html-el:form>
+		    <html-el:hidden property="transferPaymentTypeId" />
+        </html-el:form>
 	</tiles:put>
 </tiles:insert>

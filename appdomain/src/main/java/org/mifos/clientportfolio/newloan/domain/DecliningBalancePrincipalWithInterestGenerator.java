@@ -30,7 +30,7 @@ public class DecliningBalancePrincipalWithInterestGenerator implements Principal
 		LocalDate disbursalDateWithLocalDate=loanInterestCalculationDetails.getDisbursementDate();
 		DateTime disbursalDate=disbursalDateWithLocalDate.toDateTimeAtStartOfDay();
 		List<DateTime> dates=loanInterestCalculationDetails.getLoanScheduleDates();
-		if(dates.size() > 0){ //check whether loanscheduledDates are there
+		if(dates.size() > 1){ //check whether loanscheduledDates are there
 			DateTime firstRepaymentDay=dates.get(0);
 
 			long  differenceOfTwoDatesinMilliseconds=(firstRepaymentDay.toDate().getTime()-disbursalDate.toDate().getTime());

@@ -36,6 +36,8 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 		<span id="page.id" title="CreateMultipleLoanAccountsSearchResults"></span>
+		<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="pages/js/singleitem.js"></script>
 		<mifos:NumberFormattingInfo />
 
 
@@ -233,7 +235,7 @@ explanation of the license and how it is applied.
 															value="${clientDetail.defaultNoOfInstall}" /></span></td>
 												<td width="20%" valign="top" class="drawtablerow"><mifos:select
 														property="clientDetails[${loopStatus.index}].businessActivity"
-														style="width:136px;">
+														style="width:136px;" styleClass="noAutoSelect">
 														<c:forEach var="BusinessActivity"
 															items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}">
 															<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>

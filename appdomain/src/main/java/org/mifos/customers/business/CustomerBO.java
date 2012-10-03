@@ -1224,9 +1224,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public void clearCustomerFlagsIfApplicable(CustomerStatus oldStatus, CustomerStatus newStatus) {
         if (checkStatusChangeCancelToPartial(oldStatus, newStatus)) {
-            if (!isBlackListed()) {
-                this.customerFlags.clear();
-            }
+            this.customerFlags.clear();
         }
     }
 
@@ -1304,6 +1302,13 @@ public abstract class CustomerBO extends AbstractBusinessObject {
             throw new CustomerException(CustomerConstants.INVALID_PARENT);
         }
     }
+    
+    public boolean isTopOfHierarchy() {
+    	if (this.parentCustomer == null) {
+    		return true;
+    	}
+    	return false;
+    }
 
     public boolean hasMeetingDifferentTo(MeetingBO groupMeeting) {
         MeetingBO customerMeeting = getCustomerMeetingValue();
@@ -1340,5 +1345,32 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
         return new CustomerDto(getCustomerId(), getDisplayName(), getGlobalCustNum(), statusId, customerLevelId,
                 getVersionNo(), getOfficeId(), personnelId);
+    }
+    /**
+     * Checks if any account (either savings or loan) is in 'active' state
+     * @return true if any of customer's accounts is in active state
+     */
+    public boolean isAnyAccountActive(){
+        boolean activeAccountExits=false;
+        for (AccountBO account : getAccounts()) {
+            activeAccountExits=account.isActiveLoanAccount() || account.isActiveSavingsAccount();
+            if(activeAccountExits){
+                break;
+            }           
+        }
+        return activeAccountExits;
+    }
+    
+    /**
+     * Checks if there are any active periodic fees for customer.
+     * @return true if at least one active and periodic fee is found, otherwise false
+     */
+    public boolean isAnyPeriodicFeeActive() {
+    	for (AccountBO account : getAccounts()) {
+    		if(!account.isAnyPeriodicFeeActive()) {
+    			return true;
+    		}
+    	}
+    	return false;
     }
 }

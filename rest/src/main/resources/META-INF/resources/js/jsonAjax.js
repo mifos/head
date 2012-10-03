@@ -58,3 +58,23 @@ function postDataPretty() {
           error: function() {$('#restdata').html('failed');}
         });
 }
+function postDataBasic() {
+	var resturl = $('#resturl').val(),
+		username = $('#username').val(),
+		password = $('#password').val();
+	$.ajax({
+		url: resturl,
+		username: username,
+		password: password,
+		type: 'POST',
+		contentType: "application/json",
+		dataType: 'json',
+		data: $('#data').val(),
+        success: function(data) {
+            $('#restdata').html('');
+            $('#restdata').html(JSON.stringify(data));
+        },
+        error: function() {$('#restdata').html('failed');}
+		
+	});
+}

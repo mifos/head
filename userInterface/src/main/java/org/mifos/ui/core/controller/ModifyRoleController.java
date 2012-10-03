@@ -51,7 +51,7 @@ public class ModifyRoleController {
          try {
             this.rolesPermissionServiceFacade.updateRole(Short.parseShort(request.getParameter("roleId")), userContext.getId(), request.getParameter("roleName"), activityList);
         } catch (Exception e) {
-            modelAndView.addObject("errorMessage", "An error has occured. Please try again.");
+            modelAndView.addObject("errorMessage", "An error has occurred. Please try again.");
         }*/
         modelAndView.addObject("roles",rolesPermissionServiceFacade.retrieveAllRoles());
         return modelAndView;

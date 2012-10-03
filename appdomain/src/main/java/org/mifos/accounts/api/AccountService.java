@@ -27,6 +27,7 @@ import java.util.Locale;
 import org.mifos.accounts.business.AccountOverpaymentEntity;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
+import org.mifos.dto.domain.AccountTrxDto;
 import org.mifos.dto.domain.OverpaymentDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -51,6 +52,16 @@ public interface AccountService {
      * @param accountPaymentParametersDtoList a list of loan payment parameters
      */
     void makePayments(List<AccountPaymentParametersDto> accountPaymentParametersDtoList) throws Exception;
+    
+    /**
+     * Added for undo full import payments
+     * Make multiple loan account payments within a single transaction.
+     *
+     * @param accountPaymentParametersDtoList a list of loan payment parameters
+     * @return 
+     */
+    List<AccountTrxDto> makePaymentsForImport(List<AccountPaymentParametersDto> accountPaymentParametersDtoList) throws Exception;
+    
 
     /**
      * Disburse multiple loan accounts within a single transaction.

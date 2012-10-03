@@ -442,4 +442,19 @@ public class AdminPage extends MifosPage {
         waitForPageToLoad();
         return new UploadQuestionGroupPage(selenium);
     }
+    /**
+     * Navigate to first step of importing loan accounts data.
+     * @return
+     */
+    public ImportLoansPage navigateToImportLoansPage() {
+        selenium.click("admin.link.importLoans");
+        waitForPageToLoad();
+        return new ImportLoansPage(selenium);
+    }
+    
+    public ImportSavingsPage navigateToImportSavingPage(){
+        selenium.click("admin.link.importSavings");
+        waitForPageToLoad();
+        return new ImportSavingsPage(selenium);
+    }
 }

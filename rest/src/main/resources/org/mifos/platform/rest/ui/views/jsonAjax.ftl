@@ -34,10 +34,15 @@
 
 <input id='resturl' type='text' value='account/savings/deposit/num-000100000000006.json?amount=10' placeholder='Enter REST API URL..' size='100' ></input>
 <br>
+<input id='username' type='text' value='' placeholder='(optional)Enter password' size='25' ></input>
+<br>
+<input id='password' type='text' value='' placeholder='(optional)Enter password' size='25' ></input>
+<br/>
 <input type='button' id='getJSON' value='GET' onclick="loadJSON()" ></input>
 <input type='button' id='getJSONPretty' value='GET (pretty)' onclick="loadPrettyJSON()" ></input>
 <input type='button' id='postData' value='POST' onclick="postData()" ></input>
 <input type='button' id='postDataPetty' value='POST(pretty)' onclick="postDataPretty()" ></input>
+<input type='button' id='postDataBasic' value='POST(basic auth)' onclick="postDataBasic()" ></input>
 <br><br>
 <input type='text' id='data' name='data' size='100'></input>
 <br><br>

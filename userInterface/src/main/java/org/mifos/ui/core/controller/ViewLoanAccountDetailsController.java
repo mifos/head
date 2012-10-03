@@ -12,20 +12,24 @@ import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.config.servicefacade.dto.AccountingConfigurationDto;
+import org.mifos.dto.domain.AdminDocumentDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.OriginalScheduleInfoDto;
+import org.mifos.dto.screen.AccountPaymentDto;
 import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.reports.admindocuments.AdminDocumentsServiceFacade;
 import org.mifos.ui.core.controller.util.helpers.SitePreferenceHelper;
 import org.mifos.ui.core.controller.util.helpers.UrlHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import freemarker.ext.servlet.IncludePage;
@@ -47,6 +51,9 @@ public class ViewLoanAccountDetailsController {
     
 	@Autowired
 	private ConfigurationServiceFacade configurationServiceFacade;
+
+	@Autowired
+	private AdminDocumentsServiceFacade adminDocumentsServiceFacade;
     
     private final SitePreferenceHelper sitePreferenceHelper = new SitePreferenceHelper();
     
@@ -126,6 +133,44 @@ public class ViewLoanAccountDetailsController {
         return modelAndView;
     }
     
+    @RequestMapping(value = "/viewLoanAccountPayments", method=RequestMethod.GET)
+    public ModelAndView showLoanAccountPayments(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam String globalAccountNum){
+        ModelAndView modelAndView = new ModelAndView("viewLoanAccountPayments");
+        List<AccountPaymentDto> loanAccountPayments = loanAccountServiceFacade.getLoanAccountPayments(globalAccountNum);
+        for (AccountPaymentDto accountPaymentDto : loanAccountPayments){
+            List<AdminDocumentDto> adminDocuments = adminDocumentsServiceFacade.getAdminDocumentsForAccountPayment(accountPaymentDto.getPaymentId());
+            if (adminDocuments != null && !adminDocuments.isEmpty()){
+                accountPaymentDto.setAdminDocuments(adminDocuments);
+            }
+        }
+
+        modelAndView.addObject("loanAccountPayments", loanAccountPayments);
+
+        return modelAndView;
+    }
+    
+    @RequestMapping(value = "/printPaymentReceipt", method=RequestMethod.GET)
+    public ModelAndView showLastPaymentReceipt(HttpServletRequest request, HttpServletResponse response, @RequestParam (required=false) String globalAccountNum){
+        ModelAndView modelAndView = new ModelAndView("printPaymentReceipt");
+        String gan = null;
+        if(globalAccountNum==null) {
+            gan = request.getSession().getAttribute("globalAccountNum").toString();
+        } else {
+            gan = globalAccountNum;
+        }
+        AccountPaymentDto loanAccountPayment = loanAccountServiceFacade.getLoanAccountPayments(gan).get(0);
+            List<AdminDocumentDto> adminDocuments = adminDocumentsServiceFacade.getAdminDocumentsForAccountPayment(loanAccountPayment.getPaymentId());
+            if (adminDocuments != null && !adminDocuments.isEmpty()){
+                loanAccountPayment.setAdminDocuments(adminDocuments);
+            }
+
+        modelAndView.addObject("loanAccountPayment", loanAccountPayment);
+        modelAndView.addObject("globalAccountNum", gan);
+        
+        return modelAndView;
+    }
+
     @RequestMapping(value = "/viewLoanAccountNextInstallmentDetails", method=RequestMethod.GET)
     public ModelAndView showLoanAccountNextInstallmentDetails(HttpServletRequest request, HttpServletResponse response){
         ModelAndView modelAndView =new ModelAndView();

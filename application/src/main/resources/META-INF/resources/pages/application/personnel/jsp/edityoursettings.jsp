@@ -29,6 +29,8 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".noorangetab">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="edityoursettings"></span>
+	<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="pages/js/singleitem.js"></script>
 	
 		<script language="javascript">
   function goToCancelPage(){
@@ -154,7 +156,7 @@ explanation of the license and how it is applied.
 
 
 
-									<mifos:select property="maritalStatus" value="${form.maritalStatus}">
+									<mifos:select property="maritalStatus" value="${form.maritalStatus}" styleClass="noAutoSelect">
 											<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusList')}"
 											var="maritalStatus">
 											<html-el:option value="${maritalStatus.id}">${maritalStatus.name}</html-el:option>

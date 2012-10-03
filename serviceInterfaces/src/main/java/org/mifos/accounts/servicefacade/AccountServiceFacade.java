@@ -55,7 +55,7 @@ public interface AccountServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     void makePayment(AccountPaymentParametersDto accountPaymentParametersDto);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MAKE_PAYMENT_TO_ACCOUNT_USING_SAVINGS_TRANSFER') and hasRole('Can repay loan')")
     void makePaymentFromSavingsAcc(AccountPaymentParametersDto accountPaymentParametersDto, String savingsAccGlobalNumber);
 
     @PreAuthorize("isFullyAuthenticated()")
@@ -69,4 +69,7 @@ public interface AccountServiceFacade {
     
     @PreAuthorize("isFullyAuthenticated()")
     Date retrieveLatPaymentDate(String globalAccountNum);
+    
+    Integer getAccountTrxnById(Integer id);
+    
 }

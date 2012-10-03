@@ -167,7 +167,7 @@ public class ImportTransactionsAction extends BaseAction {
             }
         }
 
-        this.importTransactionsServiceFacade.saveImportedFileName(importTransactionsFileName);
+        this.importTransactionsServiceFacade.saveImportedFileName(importTransactionsFileName, importPluginClassname, importResult.getTrxIdsToUndo());
 
         logger.info(importResult.getNumberRowSuccessfullyParsed() + " transaction(s) imported from "+ importTransactionsFileName + ".");
 

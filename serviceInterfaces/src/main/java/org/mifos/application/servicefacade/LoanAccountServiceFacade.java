@@ -54,6 +54,7 @@ import org.mifos.dto.domain.LoanRepaymentScheduleItemDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.dto.domain.OriginalScheduleInfoDto;
 import org.mifos.dto.domain.OverpaymentDto;
+import org.mifos.dto.screen.AccountPaymentDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.dto.screen.ExpectedPaymentDto;
@@ -78,7 +79,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     @PreAuthorize("isFullyAuthenticated()")
     AccountStatusDto retrieveAccountStatuses(Long loanAccountId);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasPermission(#updateStatus, 'MAX_LOAN_AMOUNT_FOR_APPROVE')")
     String updateLoanAccountStatus(AccountUpdateStatus updateStatus, Date transactionDate);
 
     @PreAuthorize("isFullyAuthenticated()")
@@ -159,6 +160,9 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     void makeEarlyRepayment(RepayLoanInfoDto repayLoanInfoDto);
 
     @PreAuthorize("isFullyAuthenticated()")
+    void makeEarlyRepaymentFromSavings(RepayLoanInfoDto repayLoanInfoDto, String savingsAccGlobalNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
     LoanInformationDto retrieveLoanInformation(String globalAccountNum);
 
     @PreAuthorize("isFullyAuthenticated()")
@@ -186,9 +190,12 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CAN_APPROVE_LOANS_IN_BULK', 'ROLE_CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS')")
     ChangeAccountStatusDto retrieveLoanOfficerDetailsForBranch(Short officeId);
 
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_APPROVE_LOANS_IN_BULK')")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_APPROVE_LOANS_IN_BULK') and hasPermission(#accountsForUpdate, 'MAX_LOAN_AMOUNT_FOR_APPROVE')")
     List<String> updateSeveralLoanAccountStatuses(List<AccountUpdateStatus> accountsForUpdate, Date transactionDate);
-
+    
+    @PreAuthorize("isFullyAuthenticated() and hasPermission(#accountForUpdate, 'MAX_LOAN_AMOUNT_FOR_APPROVE')")
+    String updateSingleLoanAccountStatus(AccountUpdateStatus accountForUpdate, Date transactionDate);
+    
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_REVERSE_LOAN_DISBURSAL')")
     List<LoanActivityDto> retrieveLoanPaymentsForReversal(String globalAccountNum);
 
@@ -249,4 +256,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
 
     @PreAuthorize("isFullyAuthenticated()")
     List<ApplicableCharge> getApplicablePenalties(Integer accountId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<AccountPaymentDto> getLoanAccountPayments(String globalAccountNum);
 }

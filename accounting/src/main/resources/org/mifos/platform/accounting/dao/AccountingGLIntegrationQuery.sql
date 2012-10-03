@@ -76,8 +76,8 @@ ELSE concat('Unknown Financial Action:', fintrxn.fin_action_id)  /*shouldnt ever
 END) as "vouchertype",
 
 gl.glcode_value as "glcode", coa.coa_name as "glname",
-sum((case fintrxn.debit_credit_flag when 0 then abs(fintrxn.posted_amount) else 0 end )) as "debit",
-sum((case fintrxn.debit_credit_flag when 0 then 0 else abs(fintrxn.posted_amount) end )) as "credit"
+sum( case when fintrxn.debit_credit_flag = 0 then abs(fintrxn.posted_amount) else 0 end ) as "debit",
+sum( case when fintrxn.debit_credit_flag = 1 then abs(fintrxn.posted_amount) else 0 end ) as "credit"
 
 from financial_trxn fintrxn
 inner join gl_code gl on gl.glcode_id = fintrxn.glcode_id
@@ -85,6 +85,7 @@ inner join coa on coa.glcode_id = gl.glcode_id
 inner join account_trxn atrxn on atrxn.account_trxn_id = fintrxn.account_trxn_id
 inner join account a on a.account_id = atrxn.account_id
 inner join office o on o.office_id = a.office_id
-where fintrxn.posted_date between date(?) and date(?)
+inner join loan_account l on l.account_id = atrxn.account_id 
+where fintrxn.posted_date between date(?) and date(?) and l.parent_account_id is null
 group by branchname, voucherdate, vouchertype, glcode, glname
 order by branchname, voucherdate, vouchertype, glcode, glname) tally;

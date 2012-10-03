@@ -22,8 +22,12 @@ package org.mifos.accounts.api;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.servicefacade.AccountServiceFacade;
+import org.mifos.dto.domain.AccountTrxDto;
 import org.mifos.dto.domain.ParseResultDto;
 import org.mifos.dto.domain.UserReferenceDto;
 
@@ -34,6 +38,7 @@ public abstract class TransactionImport {
     private AccountService accountService;
     private CustomerSearchService customerSearchService;
     private UserReferenceDto userReferenceDto;
+    private AccountServiceFacade accountServiceFacade;
 
     /**
      * Parses transaction import data and return an object encapsulating parse
@@ -51,6 +56,14 @@ public abstract class TransactionImport {
      * {@link AccountService#makePayments(java.util.List)}.
      */
     public abstract void store(final InputStream input) throws Exception;
+    
+    /**
+     * Method created for undo full payments import used by Audi Plugin
+     * Parses transaction import data and call the API to transactions in the
+     * database. This method shall write to the database, e.g., may call
+     * {@link AccountService#makePayments(java.util.List)}.
+     */
+    public abstract List<AccountTrxDto> storeForUndoImport(final InputStream input) throws Exception;
 
     /**
      * @return friendly name for this implementation
@@ -114,4 +127,13 @@ public abstract class TransactionImport {
     public int getSuccessfullyParsedRows() {
         return -1;
     }
+
+    public AccountServiceFacade getAccountServiceFacade() {
+        return accountServiceFacade;
+    }
+
+    public void setAccountServiceFacade(final AccountServiceFacade accountServiceFacade) {
+        this.accountServiceFacade = accountServiceFacade;
+    }
+    
 }

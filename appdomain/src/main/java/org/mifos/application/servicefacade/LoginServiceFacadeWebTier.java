@@ -20,10 +20,13 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.mifos.accounts.servicefacade.UserContextFactory;
+import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.config.Localization;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelService;
@@ -31,6 +34,7 @@ import org.mifos.customers.personnel.exceptions.PersonnelException;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.ChangePasswordRequest;
 import org.mifos.dto.domain.LoginDto;
+import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
@@ -50,6 +54,9 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
     private final PersonnelService personnelService;
     private final PersonnelDao personnelDao;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+    
+    private static final String COUNTRY_CODE = "Localization.CountryCode";
+    private static final String LANGUAGE_CODE = "Localization.LanguageCode";
 
     @Autowired
     public LoginServiceFacadeWebTier(PersonnelService personnelService, PersonnelDao personnelDao) {
@@ -57,6 +64,9 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
         this.personnelDao = personnelDao;
     }
 
+    @Autowired
+    private PersonnelServiceFacade personnelServiceFacade;
+    
     @Override
     public LoginDto login(String username, String password) {
 
@@ -64,9 +74,20 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
         if (user == null) {
             throw new UsernameNotFoundException(LoginConstants.KEYINVALIDUSER);
         }
-
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
+        List<ValueListElement> localeList = personnelServiceFacade.getDisplayLocaleList();
+        Locale preferredLocale = new Locale(configMgr.getString(LANGUAGE_CODE), configMgr.getString(COUNTRY_CODE));
+        String listElement = "[" + preferredLocale.toString() + "]";
         Short localeId = user.getPreferredLocale();
-        Locale preferredLocale = Localization.getInstance().getLocaleById(localeId);
+        
+        for (ValueListElement element : localeList) {
+            if (element.getName().contains(listElement)) {
+                localeId = element.getId().shortValue();
+                break;
+            }
+        }
+        
+        user.setPreferredLocale(localeId);
         UserContext userContext = new UserContext();
         userContext.setPreferredLocale(preferredLocale);
         userContext.setLocaleId(localeId);

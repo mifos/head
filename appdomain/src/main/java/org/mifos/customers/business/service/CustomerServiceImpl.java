@@ -29,6 +29,7 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
@@ -949,8 +950,10 @@ public class CustomerServiceImpl implements CustomerService {
 
         GroupBO receivingGroup = (GroupBO) customerDao.findCustomerById(groupId);
         client.validateReceivingGroup(receivingGroup);
-        client.validateNoActiveAccountExist();
+        client.validateForActiveAccounts();
+        client.validateForPeriodicFees();
 
+        	
         CustomerBO oldParent = client.getParentCustomer();
 
         try {
@@ -1155,7 +1158,7 @@ public class CustomerServiceImpl implements CustomerService {
             if (account instanceof LoanBO && lsimEnabled) {
                 // do not change schedules when LSIm is on for loan accounts
             } else {
-                account.handleChangeInMeetingSchedule(workingDays, orderedUpcomingHolidays);
+                account.handleChangeInMeetingSchedule(workingDays, orderedUpcomingHolidays, customer.isTopOfHierarchy());
                 customerDao.save(account);
             }
         }
@@ -1170,7 +1173,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         if (client.hasActiveLoanAccounts()) {
             throw new BusinessRuleException(CustomerConstants.CLIENT_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
-        }
+        }    
 
         if (client.getParentCustomer() != null) {
 
@@ -1217,7 +1220,17 @@ public class CustomerServiceImpl implements CustomerService {
     private boolean customerIsMemberOfAnyExistingGlimLoanAccount(CustomerBO customerToRemoveFromGroup, CustomerBO customerWithActiveAccounts) {
 
         List<AccountBO> activeLoanAccounts = customerDao.findGLIMLoanAccountsApplicableTo(customerToRemoveFromGroup.getCustomerId(), customerWithActiveAccounts.getCustomerId());
-
+        
+        
+        for (int i = activeLoanAccounts.size() -1 ; i >=0; i--) {
+            AccountBO glim = activeLoanAccounts.get(i);
+            if (glim.getAccountState().isLoanClosedObligationsMet() || 
+                    glim.getAccountState().isLoanClosedWrittenOff() ||
+                    glim.getAccountState().isLoanClosedReschedule() ||
+                    glim.getAccountState().isLoanCanceled()) {
+                activeLoanAccounts.remove(i);
+            }
+        }
         return !activeLoanAccounts.isEmpty();
     }
 

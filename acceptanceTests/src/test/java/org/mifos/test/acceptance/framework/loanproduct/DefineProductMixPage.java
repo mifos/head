@@ -35,10 +35,16 @@ public class DefineProductMixPage extends MifosPage {
     }
 
     public ClientsAndAccountsHomepage createOneMixAndNavigateToClientsAndAccounts(String prod1, String prod2) {
-        selenium.select("productTypeId", "Loan");
-        waitForPageToLoad();
-        selenium.select("productId", prod1);
-        waitForPageToLoad();
+        if (selenium.getSelectedLabel("productTypeId").equalsIgnoreCase("--Select--")) {
+            selenium.select("productTypeId", "Loan");
+            waitForPageToLoad();
+        }
+
+        if (selenium.getSelectedLabel("productId").equalsIgnoreCase("--Select--")) {
+            selenium.select("productId", prod1);
+            waitForPageToLoad();
+        }
+        
         if (!Arrays.asList(selenium.getSelectOptions("notAllowed")).contains(prod2))
         {
             selenium.select("allowed", prod2);

@@ -22,6 +22,7 @@ package org.mifos.security.rolesandpermission.struts.action;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,8 +38,10 @@ import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
+import org.mifos.dto.domain.ActivityRestrictionDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -93,7 +96,7 @@ public class RolesPermissionsAction extends BaseAction {
                 RolesAndPermissionConstants.ACTIVITYLIST, request);
         RolesPermissionsActionForm rolesPermissionsActionForm = (RolesPermissionsActionForm) form;
         rolesPermissionServiceFacade.createRole(userContext.getId(), rolesPermissionsActionForm.getName(),
-                getActivityIds(getActivities(activities,rolesPermissionsActionForm.getActivities())));
+                getActivityIds(getActivities(activities,rolesPermissionsActionForm.getActivities())), rolesPermissionsActionForm.getActivityRestrictionDtoToPersistList());
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 
@@ -103,8 +106,15 @@ public class RolesPermissionsAction extends BaseAction {
         RolesPermissionsActionForm rolesPermissionsActionForm = (RolesPermissionsActionForm) form;
         SessionUtils.setCollectionAttribute(RolesAndPermissionConstants.ACTIVITYLIST,
                 ((RolesPermissionsBusinessService) getService()).getActivities(), request);
-        RoleBO role = ((RolesPermissionsBusinessService) getService()).getRole(Short.valueOf(rolesPermissionsActionForm
-                .getId()));
+        Short roleId = Short.valueOf(rolesPermissionsActionForm
+                .getId());
+        RoleBO role = ((RolesPermissionsBusinessService) getService()).getRole(roleId);
+        List<ActivityRestrictionDto> activityRestrictionDtoList = rolesPermissionServiceFacade.getRoleActivitiesRestrictions(roleId);
+        Map<Short, ActivityRestrictionDto> activityRestrictionDtoMap = new HashMap<Short, ActivityRestrictionDto>();
+        for (ActivityRestrictionDto activityRestrictionDto : activityRestrictionDtoList){
+            activityRestrictionDtoMap.put(activityRestrictionDto.getActivityRestrictionTypeId(), activityRestrictionDto);
+        }
+        rolesPermissionsActionForm.setActivityRestrictionDtoMap(activityRestrictionDtoMap);
         rolesPermissionsActionForm.setName(role.getName());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, role, request);
         return mapping.findForward(ActionForwards.manage_success.toString());
@@ -119,7 +129,8 @@ public class RolesPermissionsAction extends BaseAction {
         List<ActivityEntity> activities = (List<ActivityEntity>) SessionUtils.getAttribute(
                 RolesAndPermissionConstants.ACTIVITYLIST, request);
         rolesPermissionServiceFacade.updateRole(Short.parseShort(rolesPermissionsActionForm.getId()), userContext.getId(),
-                rolesPermissionsActionForm.getName(), getActivityIds(getActivities(activities, rolesPermissionsActionForm.getActivities())));
+                rolesPermissionsActionForm.getName(), getActivityIds(getActivities(activities, rolesPermissionsActionForm.getActivities())),
+                rolesPermissionsActionForm.getActivityRestrictionDtoToPersistList());
         // MIFOS-3530: update all currently logged users
         for (String loggedUser : getLoggedUsers(request)) {
             this.authenticationAuthorizationServiceFacade.reloadUserDetailsForSecurityContext(loggedUser);
@@ -173,6 +184,23 @@ public class RolesPermissionsAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.cancel_success.toString());
     }
+    
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        ActionForwards actionForward = ActionForwards.viewRoles_success;
+        String method = (String) request.getAttribute("methodCalled");
+        if (method != null) {
+            if (Methods.update.toString().equals(method)) {
+                actionForward = ActionForwards.manage_success;
+            } else if (Methods.create.toString().equals(method)){
+            	actionForward = ActionForwards.load_success;
+            } else {
+                actionForward = ActionForwards.valueOf(method+"_success");
+            }
+        }
+        return mapping.findForward(actionForward.toString());
+    }
 
     @Override
     protected boolean skipActionFormToBusinessObjectConversion(String method) {
@@ -213,7 +241,9 @@ public class RolesPermissionsAction extends BaseAction {
 
     private void doCleanUp(RolesPermissionsActionForm form) {
         form.getActivities().clear();
+        form.resetActivityRestriction();
         form.setName(null);
+        form.setId(null);
     }
 
 }

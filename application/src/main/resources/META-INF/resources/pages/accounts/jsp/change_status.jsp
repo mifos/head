@@ -23,6 +23,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
@@ -36,6 +37,8 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="ChangeStatus"></span>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<script language="javascript">
+			const APPROVAL_ID = 3;
+
 			function goToCancelPage(form, input){
 				switch(input){
 				case 'loan':
@@ -51,7 +54,8 @@ explanation of the license and how it is applied.
 				form.submit();
  			 }
  			function checkStatusForTransactionDate(i) {
- 			    if (i==7 || i==8) {
+ 			    var form = document.getElementsByName("editStatusActionForm")[0];
+ 				if (i==7 || i==8 || (i==APPROVAL_ID && form.allowBackDatedApprovals.value == 'true')) {
  			        document.getElementById("statusChangeTransactionDateLabelDiv").style.display = "block";
  			        document.getElementById("statusChangeTransactionDateInputDiv").style.display = "block";
  			    }
@@ -77,6 +81,7 @@ explanation of the license and how it is applied.
 		<html-el:form action="editStatusAction.do?method=preview" onsubmit="return validateMyForm(transactionDate,transactionDateFormat,transactionDateYY)">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'editAccountStatusDocumentsList')}" var="adminDoc" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -217,12 +222,34 @@ explanation of the license and how it is applied.
 							</td>
 						</tr>
 					</table>
+					<table>
+						<tr>
+							<td>
+								<span class="fontnormalbold"> 
+									<c:if test="${fn:length(adminDoc) > 0}">
+										<mifos:mifoslabel name="reports.administrativedocuments" /> :&nbsp
+									</c:if>
+								</span>
+							</td>
+						</tr>
+						<c:forEach var="adminDoc" items="${adminDoc}">
+							<tr>
+								<td>
+								<html-el:link styleId="loanaccountdetail.link.viewAdminReport"
+									href="executeAdminDocument.ftl?adminDocumentId=${adminDoc.admindocId}&entityId=${BusinessKey.globalAccountNum}">
+									<c:out value="${adminDoc.adminDocumentName}" />
+								</html-el:link>	  	
+								</td>
+							</tr>	
+						</c:forEach>			
+					</table>
 					<br>
 					<br>
 					</td>
 				</tr>
 			</table>
 			<html-el:hidden property="globalAccountNum" value="${sessionScope.editStatusActionForm.globalAccountNum}" />
+            <html-el:hidden property="allowBackDatedApprovals" />
 		</html-el:form>
 		<script language="javascript">
 				if(editStatusActionForm.newStatusId.length != undefined){

@@ -29,10 +29,9 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<tiles:insert definition=".create">
-	<tiles:put name="body" type="string">
-	<span id="page.id" title="CreateNewOffice"></span>
-	
+
+	<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="pages/js/singleitem.js"></script>
 
 		<script language="javascript">
 	function goToCancelPage(){
@@ -49,6 +48,11 @@ explanation of the license and how it is applied.
   }
 </script>
     <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+    
+<tiles:insert definition=".create">
+<tiles:put name="body" type="string">
+    <span id="page.id" title="CreateNewOffice"></span>  
+   
 		<html-el:form action="/offAction.do?method=preview">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>

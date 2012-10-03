@@ -28,6 +28,7 @@ import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.business.FeeStatusEntity;
+import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
@@ -74,7 +75,9 @@ public interface FeeDao {
     
     List<Short> getAllUsedLoansWithAttachedFee();
     
-    void remove(FeeBO fee, boolean isInProducts, boolean isFeeAppliedToLoan) throws Exception;
+    void remove(FeeBO fee, boolean isInProducts, boolean isFeeAppliedToLoan, boolean remove) throws Exception;
 
 	Short findFeeInSchedule(Short feeId);
+	
+	RateFeeBO findRateFeeById(Short feeId);
 }

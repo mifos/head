@@ -23,6 +23,7 @@ package org.mifos.accounts.struts.action;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,16 +51,24 @@ import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.AccountingRules;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
+import org.mifos.reports.admindocuments.business.AdminDocumentBO;
+import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.access.AccessDeniedException;
 
 public class EditStatusAction extends BaseAction {
 
@@ -76,6 +85,7 @@ public class EditStatusAction extends BaseAction {
         actionForm.setFlagId(null);
         actionForm.setQuestionGroups(null);
         actionForm.setTransactionDate(DateUtils.makeDateAsSentFromBrowser());
+        actionForm.setAllowBackDatedApprovals(AccountingRules.isBackDatedApprovalAllowed());
 
         request.getSession().removeAttribute(Constants.BUSINESS_KEY);
         UserContext userContext = getUserContext(request);
@@ -101,6 +111,25 @@ public class EditStatusAction extends BaseAction {
             editStatusActionForm.setGlobalAccountNum(loanAccount.getGlobalAccountNum());
             editStatusActionForm.setAccountName(loanAccount.getLoanOffering().getPrdOfferingName());
             editStatusActionForm.setInput("loan");
+            
+            if(loanAccount.getAccountState().getId().equals(Short.valueOf("2"))) {
+                List<AdminDocumentBO> allAdminDocuments = legacyAdminDocumentDao.getAllActiveAdminDocuments();
+                List<AdminDocumentBO> loanAdminDocuments = new ArrayList();
+                for(AdminDocumentBO adminDocumentBO : allAdminDocuments) {
+                    List<AdminDocAccStateMixBO> admindoclist = legacyAdminDocAccStateMixDao.getMixByAdminDocuments(adminDocumentBO.getAdmindocId());
+                    if (!loanAdminDocuments.contains(adminDocumentBO) && admindoclist.size() > 0 
+                            && admindoclist.get(0).getAccountStateID().getPrdType().getProductTypeID().equals(loanAccount.getType().getValue().shortValue())){
+                        for(AdminDocAccStateMixBO admindoc : admindoclist) {
+                            if(admindoc.getAccountStateID().getId().shortValue()==loanAccount.getAccountState().getId().shortValue()) {
+                                loanAdminDocuments.add(adminDocumentBO);
+                            }
+                        }
+                    }
+                }
+                SessionUtils.setCollectionAttribute("editAccountStatusDocumentsList", loanAdminDocuments, request);
+            } else {
+                SessionUtils.setCollectionAttribute("editAccountStatusDocumentsList", null, request);
+            }
         } if (accountBO.isSavingsAccount()) {
 
             // NOTE - not using dto values at present but available when ui is refactored away from jsp
@@ -210,6 +239,12 @@ public class EditStatusAction extends BaseAction {
             newStatusId = getShortValue(editStatusActionForm.getNewStatusId());
         }
 
+        Date trxnDate = editStatusActionForm.getTransactionDateValue(userContext.getPreferredLocale());
+        if (editStatusActionForm.getNewStatusId().equals(AccountState.LOAN_APPROVED) &&
+                !AccountingRules.isBackDatedApprovalAllowed()) {
+            trxnDate = new DateTimeService().getCurrentJavaDateTime();
+        }
+
         checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
 
         if (accountBO.isLoanAccount()) {
@@ -225,8 +260,17 @@ public class EditStatusAction extends BaseAction {
             for(LoanBO individual : individualLoans) {
             	updateStatus.add(new AccountUpdateStatus(individual.getAccountId().longValue(), newStatusId, flagId, updateComment));
             }
-                
-            this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(updateStatus, editStatusActionForm.getTransactionDateValue(userContext.getPreferredLocale()));
+            
+            try {
+                if (individualLoans.size() == 0) {
+                    this.loanAccountServiceFacade.updateSingleLoanAccountStatus(updateStatus.get(0), trxnDate);
+                } 
+                else {
+                	this.loanAccountServiceFacade.updateSeveralLoanAccountStatuses(updateStatus, trxnDate);
+                }
+            } catch (AccessDeniedException e) {
+                throw new ServiceException(SecurityConstants.KEY_ACTIVITY_APPROVE_LOAN_NOT_ALLOWED);
+            }
             
             return mapping.findForward(ActionForwards.loan_detail_page.toString());
         } if (accountBO.isSavingsAccount()) {

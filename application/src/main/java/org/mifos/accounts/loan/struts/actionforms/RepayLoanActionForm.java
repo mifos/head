@@ -25,6 +25,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -49,6 +50,26 @@ public class RepayLoanActionForm extends BaseActionForm {
     private String paymentTypeId;
     private boolean waiverInterest;
     private java.util.Date lastPaymentDate;
+    private Short transferPaymentTypeId;
+    private String accountForTransfer;
+    private boolean printReceipt;
+    private boolean truePrintReceipt = false;
+    
+    public boolean getTruePrintReceipt() {
+        return this.truePrintReceipt;
+    }
+    
+    public void setTruePrintReceipt(boolean truePrintReceipt) {
+        this.truePrintReceipt = truePrintReceipt;
+    }
+    
+    public boolean getPrintReceipt() {
+        return this.printReceipt;
+    }
+    
+    public void setPrintReceipt(boolean printReceipt) {
+        this.printReceipt = printReceipt;
+    }
 
     public RepayLoanActionForm() {
         waiverInterest = true;
@@ -102,6 +123,26 @@ public class RepayLoanActionForm extends BaseActionForm {
         this.receiptDate = receiptDate;
     }
 
+    public Short getTransferPaymentTypeId() {
+        return transferPaymentTypeId;
+    }
+
+    public void setTransferPaymentTypeId(Short transferPaymentTypeId) {
+        this.transferPaymentTypeId = transferPaymentTypeId;
+    }
+
+    public String getAccountForTransfer() {
+        return accountForTransfer;
+    }
+
+    public void setAccountForTransfer(String accountForTransfer) {
+        this.accountForTransfer = accountForTransfer;
+    }
+
+    public boolean isSavingsTransfer() {
+        return transferPaymentTypeId != null && transferPaymentTypeId.equals(Short.parseShort(paymentTypeId));
+    }
+
     @Override
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String method = request.getParameter("method");
@@ -110,6 +151,7 @@ public class RepayLoanActionForm extends BaseActionForm {
                 && !method.equals("previous") && !method.equals("cancel")) {
             errors.add(super.validate(mapping, request));
             validateDateOfPayment(errors);
+            validateTransfer(errors);
         }
 
         if (!errors.isEmpty()) {
@@ -149,6 +191,14 @@ public class RepayLoanActionForm extends BaseActionForm {
         return locale;
     }
 
+    private void validateTransfer(ActionErrors errors) {
+        if (paymentTypeId != null && paymentTypeId.equals(String.valueOf(transferPaymentTypeId)) &&
+                StringUtils.isBlank(accountForTransfer)) {
+            errors.add(AccountConstants.NO_ACCOUNT_FOR_TRANSFER, new ActionMessage(
+                    AccountConstants.NO_ACCOUNT_FOR_TRANSFER));
+        }
+    }
+
     private void validateDateOfPayment(ActionErrors errors) {
         String fieldName = "accounts.date_of_trxn";
         ActionErrors validationErrors = validateDate(getDateOfPayment(), getLocalizedMessage(fieldName));
@@ -180,8 +230,7 @@ public class RepayLoanActionForm extends BaseActionForm {
             }
         } else {
             errors = new ActionErrors();
-            errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
-                            fieldName));
+            errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY, fieldName));
         }
         return errors;
     }
@@ -189,18 +238,18 @@ public class RepayLoanActionForm extends BaseActionForm {
     public ActionErrors validatePaymentDate(String transactionDate, String fieldName) {
         ActionErrors errors = null;
         if (transactionDate != null && !transactionDate.equals("")) {
-	        try {
-	            if (lastPaymentDate != null && dateFallsBeforeDate(getDateAsSentFromBrowser(transactionDate), lastPaymentDate)) {
-	                errors = new ActionErrors();
-	                errors.add(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
-	                        new ActionMessage(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
-	                                fieldName));
-	            }
-	        } catch (InvalidDateException ide) {
-	            errors = new ActionErrors();
-	            errors.add(AccountConstants.ERROR_INVALIDDATE, new ActionMessage(AccountConstants.ERROR_INVALIDDATE,
-	                    fieldName));
-	        }
+            try {
+                if (lastPaymentDate != null
+                        && dateFallsBeforeDate(getDateAsSentFromBrowser(transactionDate), lastPaymentDate)) {
+                    errors = new ActionErrors();
+                    errors.add(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT, new ActionMessage(
+                            AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT, fieldName));
+                }
+            } catch (InvalidDateException ide) {
+                errors = new ActionErrors();
+                errors.add(AccountConstants.ERROR_INVALIDDATE, new ActionMessage(AccountConstants.ERROR_INVALIDDATE,
+                        fieldName));
+            }
         }
         return errors;
     }

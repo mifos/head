@@ -191,6 +191,10 @@ public class AccountingRules {
     public static Short getDigitsAfterDecimal() {
         return MifosConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL);
     }
+    
+    public static Boolean getSimpleAccountingStatus() {
+        return MifosConfigurationManager.getInstance().getBoolean(AccountingRulesConstants.ENABLE_SIMPLE_ACCOUNTING);
+    }
 
     public static Short getDigitsAfterDecimal(final MifosCurrency currency) {
         if (currency == null) return getDigitsAfterDecimal();
@@ -282,6 +286,16 @@ public class AccountingRules {
     public static boolean isBackDatedTxnAllowed() {
         MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
         return cm.getBoolean(AccountingRulesConstants.BACKDATED_TRANSACTIONS_ALLOWED);
+    }
+
+    public static boolean isBackDatedApprovalAllowed() {
+        MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
+        return cm.getBoolean(AccountingRulesConstants.BACKDATED_APPROVALS_ALLOWED);
+    }
+
+    public static boolean isOverdueInterestPaidFirst() {
+        MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
+        return cm.getBoolean(AccountingRulesConstants.OVERDUE_INTEREST_PAID_FIRST);
     }
 
     public static Boolean isMultiCurrencyEnabled() {

@@ -75,6 +75,13 @@
     <query name="getAllApplicableFeesForLoanCreation">
         <![CDATA[from FeeBO as fees where fees.feeStatus.id=:active and fees.categoryType.id =:category]]>
     </query>
+    
+    <query name="findRateFeeById">
+    	<![CDATA[
+    		from org.mifos.accounts.fees.business.RateFeeBO rateFee where rateFee.feeId=:feeId
+		]]>
+    </query>
+    
     <sql-query name="findFeeAppliedToLoan">
     	<return-scalar column="fee_id" type="short"/>
     	<![CDATA[select fee_id from prd_offering_fees where fee_id=:FEEID]]>

@@ -175,6 +175,11 @@ public class CustomPropertiesHelper {
     public void setInitialRoundOffMultiple(String initialRoundOffMultiple) {
         selenium.open(UPDATE_PAGE + "?AccountingRules.InitialRoundOffMultiple=" + initialRoundOffMultiple);
     }
+    
+    public void setOverdueInterestPaidFirst(String overdueInterestPaidFirst) {
+        selenium.open(UPDATE_PAGE + "?OverdueInterestPaidFirst=" + overdueInterestPaidFirst);
+    }
+    
 
     /**
      * Set order of products a transaction import
@@ -198,5 +203,9 @@ public class CustomPropertiesHelper {
 
     public void setClientPendingApprovalStateEnabled(String enabled){
         selenium.open(UPDATE_PAGE + "?ProcessFlow.ClientPendingApprovalStateEnabled=" + enabled);
+    }
+
+    public void setAllowBackdatedApproval(boolean allow) {
+        selenium.open(UPDATE_PAGE + "?BackDatedApprovalsAllowed?=" + allow);
     }
 }

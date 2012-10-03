@@ -29,12 +29,14 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.tags.XmlBuilder;
@@ -49,6 +51,16 @@ import org.mifos.security.util.UserContext;
 public class LoanRepaymentTag extends BodyTagSupport {
     Locale locale = null;
 
+    private String memberGlobalNum;
+
+    public String getMemberGlobalNum() {
+        return memberGlobalNum;
+    }
+
+    public void setMemberGlobalNum(String memberGlobalNum) {
+        this.memberGlobalNum = memberGlobalNum;
+    }
+
     @Override
     public int doStartTag() throws JspException {
         boolean twoTables = false;
@@ -59,7 +71,12 @@ public class LoanRepaymentTag extends BodyTagSupport {
             String currentFlowKey = (String) pageContext.getRequest().getAttribute(Constants.CURRENTFLOWKEY);
             HttpSession session = pageContext.getSession();
             FlowManager flowManager = (FlowManager) session.getAttribute(Constants.FLOWMANAGER);
+
             loanBO = (LoanBO) flowManager.getFromFlow(currentFlowKey, Constants.BUSINESS_KEY);
+            if (StringUtils.isNotBlank(memberGlobalNum)) {
+                loanBO = loanBO.findMemberByGlobalNum(memberGlobalNum);
+            }
+
             Date viewDate = getViewDate(currentFlowKey, flowManager);
             Money totalPrincipal = new Money(loanBO.getCurrency(), "0");
             Money totalInterest = new Money(loanBO.getCurrency(), "0");
@@ -296,7 +313,8 @@ public class LoanRepaymentTag extends BodyTagSupport {
 
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
         html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getEffectiveInterestPaid().toString()) :
-                ConversionUtil.formatNumber(installment.getEffectiveInterestDue().toString())));
+                ConversionUtil.formatNumber(installment.getEffectiveInterestDue().toString()) + ( 
+                AccountingRules.isOverdueInterestPaidFirst() ? " ("+ConversionUtil.formatNumber((installment.getInterestPaid().add(installment.getExtraInterestPaid())).toString())+")" : "")));
         html.endTag("td");
 
         html.startTag("td", "width", "10%", "align", "right", "class", "drawtablerow");

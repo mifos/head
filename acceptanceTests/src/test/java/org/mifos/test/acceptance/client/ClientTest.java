@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.client;
 
 import static java.util.Arrays.asList;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +47,7 @@ import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.DefineAcceptedPaymentTypesPage;
 import org.mifos.test.acceptance.framework.admin.DefineHiddenMandatoryFieldsPage;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.admin.ManageRolePage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPage;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIParameters;
@@ -64,13 +66,19 @@ import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
+import org.mifos.test.acceptance.framework.group.CancelReason;
 import org.mifos.test.acceptance.framework.group.GroupCloseReason;
 import org.mifos.test.acceptance.framework.group.GroupStatus;
+import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
@@ -83,12 +91,14 @@ import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
@@ -116,6 +126,7 @@ public class ClientTest extends UiTestCaseBase {
     private SavingsAccountHelper savingsAccountHelper;
     private SavingsProductHelper savingsProductHelper;
     private FeeTestHelper feeTestHelper;
+    private LoanTestHelper loanTestHelper;
 
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
@@ -127,6 +138,7 @@ public class ClientTest extends UiTestCaseBase {
     private String questionGroupTitle;
     private String question1 = "663q1";
     private String question2 = "663q2";
+    private DateTime targetTime;
     private static final String question3 = "663q3";
     private static final String question4 = "663q4";
     private static final String question5 = "663q5";
@@ -156,11 +168,12 @@ public class ClientTest extends UiTestCaseBase {
         savingsProductHelper = new SavingsProductHelper(selenium);
         
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009, 7, 11, 12, 0, 0, 0);
+        targetTime = new DateTime(2009, 7, 11, 12, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
         
         feeTestHelper = new FeeTestHelper(dataSetup, navigationHelper);
+        loanTestHelper = new LoanTestHelper(selenium);
     }
 
     @AfterMethod(alwaysRun = true)
@@ -1291,4 +1304,321 @@ public class ClientTest extends UiTestCaseBase {
         clientParams.setSpouseLastName("fatherLastName");
         return clientParams;
     }
+
+    //http://mifosforge.jira.com/browse/MIFOS-4643
+    /**
+     * Creates new client, tests status changes and verifies blacklisted flag.
+     * @see http://mifosforge.jira.com/browse/MIFOS-4643
+     */
+    @Test(enabled=true)
+    public void changeClientStatusAndVerifyBlacklistedFlag(){
+        //Constant values
+        String STATUS_PENDING_APPROVAL="Application Pending Approval";
+        int numberOfBlackFlags = 1;
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer","MyOfficeDHMFT");
+        //verify new client's status
+        clientDetailsPage.verifyStatus(STATUS_PENDING_APPROVAL);
+        //change client status to PARTIAL APPLICATION and check
+        clientDetailsPage = changeClientStatusToPartialAndVerify(clientDetailsPage);
+        //change client status to CANCELED with reason REJECTED and check
+        clientDetailsPage=changeClientStatusToCancelWithReason("CancelWithReasonRejected", CancelReason.CLIENT_REJECTED, clientDetailsPage);
+        clientDetailsPage.verifyCancellationReason(CancelReason.CLIENT_REJECTED.getPurposeText());
+        //change client status to PARTIAL APPLICATION again and check
+        clientDetailsPage=changeClientStatusToPartialAndVerify(clientDetailsPage);
+        //change client status to CANCELED with reason BLACKLISTED and check for text and flag image
+        clientDetailsPage=changeClientStatusToCancelWithReason("CancelWithReasonBlacklisted",
+                CancelReason.CLIENT_BLACKLISTED, clientDetailsPage);
+        clientDetailsPage.verifyCancellationReason(CancelReason.CLIENT_BLACKLISTED.getPurposeText());
+        clientDetailsPage.verifyElementExistence("viewClientDetails.img.blackFlag");
+        //next is sequence of status changing and verifying that there is always one and only one blackflag image
+        CancelReason reasonArray[]={CancelReason.CLIENT_REJECTED, CancelReason.CLIENT_DUPLICATE,
+                CancelReason.CLIENT_OTHER, CancelReason.CLIENT_WITHDRAW, CancelReason.CLIENT_BLACKLISTED
+        };
+        for (CancelReason cancelReason : reasonArray) {
+            clientDetailsPage = changeBackToPartialApplication(numberOfBlackFlags,
+            clientDetailsPage);
+            clientDetailsPage=changeClientStatusToCancelWithReason("CancelWithBlackFlag",
+                    cancelReason,clientDetailsPage);
+            clientDetailsPage.verifyNumberOfBlackflags(numberOfBlackFlags);
+        }
+    }
+
+    private ClientViewDetailsPage changeBackToPartialApplication(
+            int numberOfBlackFlags,
+            ClientViewDetailsPage clientDetailsPage){
+        ClientViewDetailsPage newClientDetailsPage = changeClientStatusToPartialAndVerify(clientDetailsPage);
+        newClientDetailsPage.verifyNumberOfBlackflags(numberOfBlackFlags);
+        return clientDetailsPage;
+        }
+
+    private ClientViewDetailsPage changeClientStatusToPartialAndVerify(ClientViewDetailsPage clientDetailsPage) {
+        String STATUS_PARTIAL_APPLICATION="Partial Application";
+        //change status
+        ClientViewDetailsPage newClientDetailsPage=clientTestHelper.changeCustomerStatus(clientDetailsPage,ClientStatus.PARTIAL);
+        //verify
+        newClientDetailsPage.verifyStatus(STATUS_PARTIAL_APPLICATION);
+        return clientDetailsPage;
+        }
+    private ClientViewDetailsPage changeClientStatusToCancelWithReason(String note, CancelReason reason, ClientViewDetailsPage clientDetailsPage){
+        String STATUS_CANCELLED="Cancelled";
+        //prepare parameters
+        EditCustomerStatusParameters statusParameters=new EditCustomerStatusParameters();
+        statusParameters.setClientStatus(ClientStatus.CANCELLED);
+        statusParameters.setNote(note);
+        statusParameters.setCancelReason(reason);
+        //change status
+        ClientViewDetailsPage newClientDetailsPage=clientTestHelper.changeCustomerStatus(clientDetailsPage.getHeading(), statusParameters);
+        //verify that status has changed
+        newClientDetailsPage.verifyStatus(STATUS_CANCELLED);
+        return clientDetailsPage;
+    }
+
+    /**
+     * Creates six clients with different loan/savings accounts and tries to add them
+     * to two groups: one with inactive account and one with active account
+     * @throws UnsupportedEncodingException
+     * @see http://mifosforge.jira.com/browse/MIFOS-4272
+     */
+    @Test(enabled=true)
+    public void addClientsWithAccountsToGroups() throws UnsupportedEncodingException{
+        //prepare strings (I/A means that client loan/savings account is inactive/active)
+        String groupInactiveAccountName="4272_groupInactive_"+StringUtil.getRandomString(8);
+        String groupActiveAccountName="4272_groupActive_"+StringUtil.getRandomString(8);
+        String clientKeys[]={"NoAccount", "ILoan", "ISaving", "IMultiple", "ALoan", "ASaving", "AMultiple"};
+        String savingsProductNameForGroups="4272_SPFG"+StringUtil.getRandomString(8);
+        Map<String,GroupViewDetailsPage> groups=new HashMap<String, GroupViewDetailsPage>();
+        Map<String,String> clients=new HashMap<String, String>();
+        //create savings product for groups
+        prepareNewSavingsProductForGroups(savingsProductNameForGroups);
+        //prepare groups: create, activate, add accounts
+        prepareGroupsForAddClientsWithAccountsToGroups(groupInactiveAccountName, groupActiveAccountName, groups, savingsProductNameForGroups);
+        //prepare clients: create and activate
+        prepareClientsForAddClientsWithAccountsToGroups(clientKeys, clients);
+        //case a: add clients with innactive accounts to group with active accounts and group with active account
+        for(int i=0; i<=3; i++){
+            String clientName=clients.get(clientKeys[i]);
+            addClientToGroupAndVerify(groupInactiveAccountName,clientName);
+            clientTestHelper.deleteClientGroupMembership(clientName, "MIFOS-4272");
+            addClientToGroupAndVerify(groupActiveAccountName, clientName);            
+        }
+        //case b: add clients with active account to group with innactive accounts and group with active accounts
+        for(int i=4; i<clientKeys.length; i++){
+            String clientName=clients.get(clientKeys[i]);
+            clientTestHelper.addClientToGroupWithErrorActiveAccountExists(clientName, groupInactiveAccountName);
+            clientTestHelper.addClientToGroupWithErrorActiveAccountExists(clientName, groupActiveAccountName);
+        }
+    }
+
+    private void addClientToGroupAndVerify(
+            String groupName, String clientName) {
+        clientTestHelper.addClientToGroup(clientName, groupName);
+        ClientViewDetailsPage cvdp=clientTestHelper.navigateToClientViewDetailsPage(clientName);
+        cvdp.verifyGroupMembership(groupName);
+    }
+
+    private void prepareNewSavingsProductForGroups(
+            String savingsProductNameForGroups) {
+        SavingsProductParameters productParameters=
+                savingsProductHelper.getGenericSavingsProductParameters(targetTime, SavingsProductParameters.VOLUNTARY, SavingsProductParameters.GROUPS);
+        productParameters.setProductInstanceName(savingsProductNameForGroups);
+        productParameters.setShortName(StringUtil.getRandomString(8));
+        savingsProductHelper.createSavingsProduct(productParameters);
+    }
+
+    private void prepareClientsForAddClientsWithAccountsToGroups(String[] clientKeys,
+            Map<String, String> clients) throws UnsupportedEncodingException {
+        DateTime today=new DateTime();
+        if(today.getDayOfWeek()==7){
+            today=today.plusDays(1); //skip Sunday
+        }
+        String frequency="1";
+        String meetingPlace="Gniezno";
+        MeetingParameters.WeekDay weekDay= MeetingParameters.WeekDay.findByInt(today.getDayOfWeek()+1); //+1 because ISO week begins with Monday=1 and Mifos week begin with Sunday=1
+        String savingsProduct="MonthlyClientSavingsAccount";
+        String office="MyOfficeDHMFT";
+        String loanOfficer="loan officer";
+        String loanProduct="Flat Interest Loan Product With Fee";
+        for(int i=0; i<clientKeys.length; i++){
+            ClientViewDetailsPage cvdp=clientTestHelper.createClientWithCustomMFIInformation(
+                    loanOfficer,office,frequency,weekDay,meetingPlace);
+            cvdp=clientTestHelper.changeCustomerStatus(cvdp, ClientStatus.ACTIVE);
+            clients.put(clientKeys[i], cvdp.getHeading());
+        }
+        addLoanToCustomer(clients.get("ILoan"),false,loanProduct,today);
+        addLoanToCustomer(clients.get("ALoan"),true,loanProduct,today);
+        addSavingsToCustomer(clients.get("ISaving"), false, savingsProduct);
+        addSavingsToCustomer(clients.get("ASaving"), true, savingsProduct);
+        addLoanToCustomer(clients.get("IMultiple"),false, loanProduct,today);
+        addSavingsToCustomer(clients.get("IMultiple"), false, savingsProduct);
+        addLoanToCustomer(clients.get("AMultiple"),false, loanProduct,today);
+        addSavingsToCustomer(clients.get("AMultiple"), true, savingsProduct);
+    }
+
+    private void prepareGroupsForAddClientsWithAccountsToGroups(String groupInactiveAccountName, String groupActiveAccountName,
+            Map<String, GroupViewDetailsPage> groups, String savingsProductNameForGroups) {
+        String center="Default Center";
+        groups.put(groupInactiveAccountName, null);
+        groups.put(groupActiveAccountName, null);
+        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
+        EditCustomerStatusParameters customerStatusParameters=new EditCustomerStatusParameters();
+        customerStatusParameters.setNote("MIFOS-4272: activate groups");
+        for (String groupKey : groups.keySet()) {
+            groupParams.setGroupName(groupKey);
+            groupTestHelper.createNewGroupPartialApplication(center, groupParams);
+            customerStatusParameters.setGroupStatus(GroupStatus.PENDING_APPROVAL);
+            groupTestHelper.changeGroupStatus(groupKey, customerStatusParameters);
+            customerStatusParameters.setGroupStatus(GroupStatus.ACTIVE);
+            groups.put(groupKey, groupTestHelper.changeGroupStatus(groupKey, customerStatusParameters));
+        }
+        addSavingsToCustomer(groupInactiveAccountName, false, savingsProductNameForGroups);
+        addSavingsToCustomer(groupActiveAccountName, true, savingsProductNameForGroups);
+    }
+
+    private LoanAccountPage addLoanToCustomer(String searchString, boolean active,String loanProduct,DateTime date) throws UnsupportedEncodingException{
+        CreateLoanAccountSearchParameters searchParameters= new CreateLoanAccountSearchParameters();
+        CreateLoanAccountSubmitParameters submitParameters= new CreateLoanAccountSubmitParameters();
+        submitParameters.setAmount("1000");
+        submitParameters.setDd(String.valueOf(date.getDayOfMonth()));
+        submitParameters.setMm(String.valueOf(date.getMonthOfYear()));
+        submitParameters.setYy(String.valueOf(date.getYear()));
+        searchParameters.setLoanProduct(loanProduct);
+        searchParameters.setSearchString(searchString);
+        LoanAccountPage lap=loanTestHelper.createLoanAccount(searchParameters, submitParameters);
+        if(active){
+            loanTestHelper.activateLoanAccount(lap.getAccountId());
+            loanTestHelper.disburseLoan(date);
+        }
+        return lap;
+    }
+
+    private void addSavingsToCustomer(String searchString, boolean active, String savingsProduct){
+        CreateSavingsAccountSubmitParameters submitParametes=new CreateSavingsAccountSubmitParameters();
+        submitParametes.setAmount("10");
+        CreateSavingsAccountSearchParameters searchParameters= new CreateSavingsAccountSearchParameters();
+        searchParameters.setSavingsProduct(savingsProduct);
+        searchParameters.setSearchString(searchString);
+        SavingsAccountDetailPage sadp = savingsAccountHelper.createSavingsAccount(searchParameters, submitParametes);
+        if(active){
+            savingsAccountHelper.activateSavingsAccount(sadp.getAccountId());
+        }
+    }
+    
+    @Test(enabled=true)
+    public void moveClientToGroupWithDifferentMeetingFrequencyTest(){
+        //Given
+    	String startGroupName = "GroupWeekly";
+    	String destinationGroupName = "MonthlyGroup";
+    	
+    	//client
+        CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = clientParams();
+        clientParams.setFirstName("John");
+        clientParams.setLastName("DoeTest");
+        ClientViewDetailsPage clientPage = clientTestHelper.createNewClient(startGroupName, clientParams);
+    	
+        
+        //When     
+        clientPage.navigateToEditRemoveGroupMembership()
+        	.searchGroup(destinationGroupName)
+        	.selectGroupToAdd(destinationGroupName)
+        	.submitAddGroup();
+        
+        
+        //Then
+        clientPage.verifyGroupMembership(destinationGroupName);
+    }
+    
+    @Test(enabled=true)
+
+    public void checkPermissionToEditClientInPendingApprovalState() {
+    	String firstName = "Edit";
+    	String lastName = "Permission";
+    	
+    	DefineHiddenMandatoryFieldsPage mandatoryFieldsPage = navigationHelper.navigateToAdminPage().navigateToDefineHiddenMandatoryFields();
+    	mandatoryFieldsPage.uncheckMandatoryCitizenShip();
+        mandatoryFieldsPage.uncheckMandatoryEthnicity();
+        mandatoryFieldsPage.uncheckMandatoryMaritalStatus();
+        mandatoryFieldsPage.submit();
+       
+        CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = clientParams();
+    	clientParams.setFirstName(firstName);
+    	clientParams.setLastName(lastName);
+    	ClientViewDetailsPage clientPage = clientTestHelper.createNewClient("group1", clientParams);
+    	clientPage.editPersonalInformation().submitAndNavigateToViewDetailsPage(clientParams);
+    	
+    	CustomerChangeStatusPage changeStatusPage = clientPage.navigateToCustomerChangeStatusPage();
+    	EditCustomerStatusParameters parameters = new EditCustomerStatusParameters();
+        parameters.setClientStatus(ClientStatus.PARTIAL);
+        parameters.setNote("test");
+        changeStatusPage.setChangeStatusParametersAndSubmit(parameters);
+
+        ManageRolePage manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
+        manageRolePage.disablePermission("3");
+        manageRolePage.enablePermission("3_0_0");
+        manageRolePage.enablePermission("3_0_2");
+        manageRolePage.enablePermission("3_0_3");
+        manageRolePage.submitAndGotoViewRolesPage();
+        HomePage homePage = navigationHelper.navigateToHomePage();
+        SearchResultsPage searchResultsPage = homePage.search(firstName+" "+lastName);
+        
+        ClientViewDetailsPage viewDetailsPage = searchResultsPage.navigateToClientViewDetailsPage("link="+firstName+" "+lastName+"*");
+        Assert.assertTrue(viewDetailsPage.editPersonalInformation().isAccessDeniedDisplayed());
+        
+        manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
+        manageRolePage.enablePermission("3");
+        manageRolePage.submitAndGotoViewRolesPage();
+    }
+
+    public void verifyCustomerScheduleAfterMovingClientToGroupWithDifferentMeetingFrequency(){
+	    //Given
+	    String startGroupName = "GroupWeekly";
+	    String destinationGroupName = "MonthlyGroup";
+	    String clientName = "DoeTest2";
+	
+	    //define declining balance monthly loan product
+	    DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
+	    navigationHelper.navigateToAdminPage().
+	    defineLoanProduct(formParameters);
+	          
+	    //client
+	    CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = clientParams();
+	    clientParams.setFirstName("John");
+	    clientParams.setLastName(clientName);
+    	ClientViewDetailsPage clientPage = clientTestHelper.createNewClient(startGroupName, clientParams);
+    	clientTestHelper.changeCustomerStatus(clientPage, ClientStatus.ACTIVE);
+    	
+    	
+    	//When
+    	CreateLoanAccountSearchParameters loanFormParameters = new CreateLoanAccountSearchParameters();
+        loanFormParameters.setSearchString(clientName);
+        loanFormParameters.setLoanProduct("productMonthly*");
+    	
+    	clientPage.navigateToEditRemoveGroupMembership()
+    		.searchGroup(destinationGroupName)
+    		.selectGroupToAdd(destinationGroupName)
+    		.submitAddGroup()
+    		.navigateToClientsAndAccountsPageUsingHeaderTab()
+    		.navigateToCreateLoanAccountUsingLeftMenu()
+    		.searchAndNavigateToCreateLoanAccountPage(loanFormParameters);
+   
+        
+    	//Then
+        //get current month
+        int currentMonth = targetTime.getMonthOfYear();
+        
+        //get disbursement month
+        int disbursementMonth = Integer.parseInt(selenium.getValue(
+        		"id=disbursementDateMM"));
+
+        //disbursement date should be set to next month
+        //check if its a last month
+        if(currentMonth == 12) {
+        	currentMonth = 1;
+        }
+        else {
+        	currentMonth++;
+        }
+        
+        Assert.assertEquals(currentMonth, disbursementMonth);
+    	}
+
 }

@@ -192,10 +192,10 @@ explanation of the license and how it is applied.
 														</tr>
 														<c:forEach items="${loanPrd.loanAmountFromLoanCycle}" var="loanAmountFromLoanCycle">
 														<tr>	
-															<td class="fontnormal" width="10%"><fmt:formatNumber value="${loanAmountFromLoanCycle.rangeIndex}"type="number"/></td>
-															<td class="fontnormal" width="30%" align="right"><fmt:formatNumber value="${loanAmountFromLoanCycle.minLoanAmountString}"type="number"/></td>
-															<td class="fontnormal" width="30%" align="right"><fmt:formatNumber value="${loanAmountFromLoanCycle.maxLoanAmountString}" type="number"/></td>
-															<td class="fontnormal" width="30%" align="right"><fmt:formatNumber value="${loanAmountFromLoanCycle.defaultLoanAmountString}" type="number"/></td>																													
+															<td class="fontnormal" width="10%"><fmt:formatNumber value="${loanAmountFromLoanCycle.rangeIndex}" type="number" /></td>
+															<td class="fontnormal" width="30%" align="right"><fmt:formatNumber value="${loanAmountFromLoanCycle.minLoanAmountString}" type="number" /></td>
+															<td class="fontnormal" width="30%" align="right"><fmt:formatNumber value="${loanAmountFromLoanCycle.maxLoanAmountString}" type="number" /></td>
+															<td class="fontnormal" width="30%" align="right"><fmt:formatNumber value="${loanAmountFromLoanCycle.defaultLoanAmountString}" type="number" /></td>																													
 														</tr>
 														</c:forEach>
 													</table>
@@ -406,7 +406,7 @@ explanation of the license and how it is applied.
 																</tr>	
 																	<c:forEach items="${loanPrd.noOfInstallSameForAllLoan}" var="noOfInstallSameForAllLoan">					
 																<tr>																														
-																	<td class="fontnormal" width="20%"> <fmt:formatNumber value="${noOfInstallSameForAllLoan.minNoOfInstall}" type="number"/></td>
+								451,									<td class="fontnormal" width="20%"> <fmt:formatNumber value="${noOfInstallSameForAllLoan.minNoOfInstall}" type="number"/></td>
 																	<td class="fontnormal" width="20%"> <fmt:formatNumber value="${noOfInstallSameForAllLoan.maxNoOfInstall}" type="number"/></td>
 																	<td class="fontnormal" width="20%"> <fmt:formatNumber value="${noOfInstallSameForAllLoan.defaultNoOfInstall}" type="number"/></td>																															
 																</tr>																
@@ -448,8 +448,8 @@ explanation of the license and how it is applied.
 																</tr>
 																<c:forEach items="${loanPrd.noOfInstallFromLoanCycle}" var="noOfInstallFromLoanCycle">
 																<tr>	
-																	<td class="fontnormal" width="10%"><fmt:formatNumber value="${noOfInstallFromLoanCycle.rangeIndex}"type="number"/></td>
-																	<td class="fontnormal" width="30%" ><fmt:formatNumber value="${noOfInstallFromLoanCycle.minNoOfInstall}"type="number"/></td>
+																	<td class="fontnormal" width="10%"><fmt:formatNumber value="${noOfInstallFromLoanCycle.rangeIndex}" type="number"/></td>
+																	<td class="fontnormal" width="30%" ><fmt:formatNumber value="${noOfInstallFromLoanCycle.minNoOfInstall}" type="number"/></td>
 																	<td class="fontnormal" width="30%" ><fmt:formatNumber value="${noOfInstallFromLoanCycle.maxNoOfInstall}" type="number"/></td>
 																	<td class="fontnormal" width="30%" ><fmt:formatNumber value="${noOfInstallFromLoanCycle.defaultNoOfInstall}" type="number"/></td>																													
 																</tr>

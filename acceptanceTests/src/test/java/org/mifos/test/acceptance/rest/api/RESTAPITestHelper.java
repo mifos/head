@@ -80,6 +80,7 @@ public class RESTAPITestHelper {
         public static final String DUE = "/due";
         public static final String DEPOSIT = "/deposit";
         public static final String WITHDRAW = "/withdraw";
+        public static final String CREATE = "/create";
     }
 
     public RESTAPITestHelper(Selenium selenium) {
@@ -105,10 +106,30 @@ public class RESTAPITestHelper {
         Thread.sleep(1000);
         return selenium.getText("restdata");
     }
+    
+    public String getJSONFromUI(String inUrl) throws InterruptedException {
+        String url = String.format("%s.json", inUrl);
+        selenium.type("resturl", url);
+        selenium.click("getJSON");
+        Thread.sleep(1000);
+        return selenium.getText("restdata");
+    }
 
     public String postJSONFromUI(String type, String by, String value, String data) throws InterruptedException {
         String result;
         String url = String.format("%s/%s-%s.json", type, by, value);
+        if(data.charAt(0) == '?') {
+            // query string
+            result = postJSONFromUI(url + data, "");
+        } else {
+            result = postJSONFromUI(url, data);
+        }
+        return result;
+    }
+    
+    public String postJSONFromUI(String type, String value, String data) throws InterruptedException {
+        String result;
+        String url = String.format("%s%s.json", type, value);
         if(data.charAt(0) == '?') {
             // query string
             result = postJSONFromUI(url + data, "");
@@ -130,6 +151,18 @@ public class RESTAPITestHelper {
         String type = apiType.replace('/', '-');
         String value = apiValue.replace('/', '-');
         String path = String.format("/dataSets/rest/%s-%s-%s.json", type, by, value);
+        ClassPathResource resource = new ClassPathResource(path);
+        File file = resource.getFile();
+        if (file == null) {
+            throw new FileNotFoundException("Couldn't find file");
+        }
+        return FileUtil.readAsString(file);
+    }
+    
+    public String getJSONFromDataSet(String apiType, String apiValue) throws IOException {
+        String type = apiType.replace('/', '-');
+        String value = apiValue.replace('/', '-');
+        String path = String.format("/dataSets/rest/%s%s.json", type, value);
         ClassPathResource resource = new ClassPathResource(path);
         File file = resource.getFile();
         if (file == null) {

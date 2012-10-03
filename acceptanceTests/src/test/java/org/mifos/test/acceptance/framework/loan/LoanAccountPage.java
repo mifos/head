@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
@@ -115,9 +116,13 @@ public class LoanAccountPage extends MifosPage {
                 
                 selenium.click(xpath + "/a");
                 waitForPageToLoad();
-                
+                selenium.click("loanRepayment.link.original_schedule");
+                waitForPageToLoad();
+
                 Assert.assertTrue(selenium.isElementPresent("originalInstallments"));
                 
+                selenium.click("loanRepayment.button.return");
+                waitForPageToLoad();
                 selenium.click("loanRepayment.button.return");
                 waitForPageToLoad();
             }
@@ -309,11 +314,19 @@ public class LoanAccountPage extends MifosPage {
         waitForPageToLoad();
         return new ViewRepaymentSchedulePage(selenium);
     }
-    
-    public ViewOriginalSchedulePage navigateToIndividualSchedulePage(int row) {
+
+    public ViewRepaymentSchedulePage navigateToIndividualRepaymentSchedulePage(int row) {
+        selenium.click("//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + (row + 2) + "]/td[6]/a");
+        waitForPageToLoad();
+        return new ViewRepaymentSchedulePage(selenium);
+    }
+
+    public ViewOriginalSchedulePage navigateToIndividualOriginalSchedulePage(int row) {
         selenium.click("//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + row + "]/td[6]/a");
         waitForPageToLoad();
-        
+        selenium.click("loanRepayment.link.original_schedule");
+        waitForPageToLoad();
+
         return new ViewOriginalSchedulePage(selenium);
     }
 
@@ -610,6 +623,9 @@ public class LoanAccountPage extends MifosPage {
     	Assert.assertTrue(selenium.isTextPresent(msg), "not found: " + msg);
     }
     
-
+    public void verifyLastNoteDate(LocalDate date) {
+        String noteDateString = selenium.getText("//td[@id='recentNotes']/span[1]").trim().replace(":", "");
+        Assert.assertEquals(noteDateString, date.toString("dd/MM/yyyy"));
+    }
 }
 

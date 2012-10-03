@@ -33,6 +33,7 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.platform.accounting.AccountingDto;
@@ -88,20 +89,31 @@ public class AccountingServiceTest {
         Assert.assertTrue("Date should be set to 20101012", output.contains("<DATE>20101012</DATE>"));
     }
 
+    @SuppressWarnings("serial")
     @Test
     public void testGetExports() {
         LocalDate finTrxnStartDate = new LocalDate(2011,1,4);
+        List<LocalDate> dateList = new ArrayList<LocalDate>() {{ add(new LocalDate().minusDays(1)); add(new LocalDate().minusDays(2));
+            add(new LocalDate().minusDays(3)); add(new LocalDate().minusDays(4)); add(new LocalDate().minusDays(5)); 
+            add(new LocalDate().minusDays(5)); add(new LocalDate().minusDays(6)); add(new LocalDate().minusDays(7)); 
+            add(new LocalDate().minusDays(8)); add(new LocalDate().minusDays(9));
+            }};
+        List<LocalDate> dateList2 = new ArrayList<LocalDate>() {{ add(new LocalDate().minusDays(10)); add(new LocalDate().minusDays(11));
+            add(new LocalDate().minusDays(12)); add(new LocalDate().minusDays(13)); add(new LocalDate().minusDays(14)); 
+            }};
+        Integer offset = 0;
         when(cacheManager.isAccountingDataAlreadyInCache(any(String.class))).thenReturn(false);
         when(accountingDao.getStartDateOfFinancialTransactions()).thenReturn(finTrxnStartDate);
+        when(accountingDao.getTenTxnDate(finTrxnStartDate, new LocalDate().minusDays(1), offset)).thenReturn(dateList);
         Assert.assertEquals(38, Days.daysBetween(finTrxnStartDate, new LocalDate()).getDays());
         Assert.assertEquals(10,accountingService.getLastTenExports(0).size());
-        // Start from previous day
         Assert.assertTrue(accountingService.getLastTenExports(0).get(0).getStartDate().equals("2011-02-10"));
-        Assert.assertEquals(10,accountingService.getLastTenExports(10).size());
-        Assert.assertEquals(10,accountingService.getLastTenExports(20).size());
-        Assert.assertEquals(8,accountingService.getLastTenExports(30).size());
-        Assert.assertTrue(accountingService.getLastTenExports(30).get(7).getStartDate().equals("2011-01-04"));
-        Assert.assertEquals(0,accountingService.getLastTenExports(40).size());
+        // Start from previous day
+        offset +=10;
+        when(accountingDao.getTenTxnDate(finTrxnStartDate, new LocalDate().minusDays(1), offset)).thenReturn(dateList2);
+        Assert.assertEquals(5,accountingService.getLastTenExports(10).size());
+        Assert.assertTrue(accountingService.getLastTenExports(10).get(4).getStartDate().equals(new LocalDate().minusDays(14).toString()));
+        Assert.assertEquals(0,accountingService.getLastTenExports(20).size());
     }
 
 

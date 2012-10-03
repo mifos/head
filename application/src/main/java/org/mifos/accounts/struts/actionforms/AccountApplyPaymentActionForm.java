@@ -33,6 +33,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.joda.time.LocalDate;
@@ -46,7 +47,9 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.UserContext;
 
 public class AccountApplyPaymentActionForm extends BaseActionForm {
@@ -90,6 +93,26 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     private String accountForTransfer;
 
     private Short transferPaymentTypeId;
+    
+    private boolean printReceipt;
+    
+    private boolean truePrintReceipt = false;
+    
+    public boolean getTruePrintReceipt() {
+        return this.truePrintReceipt;
+    }
+    
+    public void setTruePrintReceipt(boolean truePrintReceipt) {
+        this.truePrintReceipt = truePrintReceipt;
+    }
+    
+    public boolean getPrintReceipt() {
+        return this.printReceipt;
+    }
+    
+    public void setPrintReceipt(boolean printReceipt) {
+        this.printReceipt = printReceipt;
+    }
 
     public boolean amountCannotBeZero() {
         return this.amountCannotBeZero;
@@ -132,6 +155,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
             String accountType = (String) request.getSession().getAttribute(Constants.ACCOUNT_TYPE);
             validateAccountType(errors, accountType);
             validateAmount(errors);
+            validateModeOfPaymentSecurity(request, errors);
         }
         if (!errors.isEmpty()) {
             request.setAttribute(Globals.ERROR_KEY, errors);
@@ -140,6 +164,14 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         return errors;
     }
 
+    private void validateModeOfPaymentSecurity(HttpServletRequest request, ActionErrors errors){
+        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+        if(getPaymentTypeId().equals("4") && !ActivityMapper.getInstance().isModeOfPaymentSecurity(userContext)){
+            errors.add(AccountConstants.LOAN_TRANSFER_PERMISSION, new ActionMessage(AccountConstants.LOAN_TRANSFER_PERMISSION,
+                    getLocalizedMessage("accounts.mode_of_payment_permission")));
+        }
+    }
+    
     private void validateTransfer(ActionErrors errors) {
         if (paymentTypeId.equals(String.valueOf(transferPaymentTypeId))
                 && StringUtils.isBlank(accountForTransfer)) {
@@ -263,12 +295,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     }
 
     public String getReceiptDate() {
-        if (StringUtils.isNotBlank(receiptDateDD) && StringUtils.isNotBlank(receiptDateMM)
-                && StringUtils.isNotBlank(receiptDateYY)) {
-
-            return receiptDateDD + "/" + receiptDateMM + "/" + receiptDateYY;
-        }
-        return null;
+        return compileDateString(receiptDateDD, receiptDateMM, receiptDateYY);
     }
 
     public void setReceiptDate(String receiptDate) throws InvalidDateException {
@@ -295,23 +322,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     }
 
     public String getTransactionDate() {
-        if (StringUtils.isNotBlank(transactionDateDD) && StringUtils.isNotBlank(transactionDateMM)
-                && StringUtils.isNotBlank(transactionDateYY)) {
-            String transactionDate = "";
-            if (transactionDateDD.length() < 2) {
-                transactionDate = transactionDate + "0" + transactionDateDD;
-            } else {
-                transactionDate = transactionDate + transactionDateDD;
-            }
-            if (transactionDateMM.length() < 2) {
-                transactionDate = transactionDate + "/" + "0" + transactionDateMM;
-            } else {
-                transactionDate = transactionDate + "/" + transactionDateMM;
-            }
-            transactionDate = transactionDate + "/" + transactionDateYY;
-            return transactionDate;
-        }
-        return null;
+        return compileDateString(transactionDateDD, transactionDateMM, transactionDateYY);
     }
 
     public void setTransactionDate(String receiptDate) throws InvalidDateException {
@@ -348,6 +359,8 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     protected void clear() throws InvalidDateException {
         this.amount = null;
         this.paymentTypeId = null;
+        this.printReceipt = false;
+        this.truePrintReceipt = false;
         setReceiptDate(null);
         this.receiptId = null;
     }

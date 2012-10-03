@@ -53,6 +53,10 @@ public class ApplyPaymentPage extends MifosPage {
 
         selenium.select("applypayment.input.paymentType", "value=" + params.getPaymentTypeValue());
 
+        if (params.getPaymentType().equals(PaymentParameters.TRANSFER)) {
+            selenium.select("applypayment.input.accountForTransfer", "value=" + params.getSavingsAccountGlobalNum());
+        }
+
         this.typeTextIfNotEmpty("applypayment.input.receiptId", params.getReceiptId());
 
         this.typeTextIfNotEmpty("receiptDateDD", params.getReceiptDateDD());

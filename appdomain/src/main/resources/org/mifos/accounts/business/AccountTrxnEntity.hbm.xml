@@ -134,4 +134,10 @@
             </set>
         </joined-subclass>
     </class>
+    <sql-query name="countRelatedTransactions">
+    	<![CDATA[
+    	select count(*) from account_trxn
+    	where related_trxn_id = :trxn_id
+    	]]>
+    </sql-query>
 </hibernate-mapping>

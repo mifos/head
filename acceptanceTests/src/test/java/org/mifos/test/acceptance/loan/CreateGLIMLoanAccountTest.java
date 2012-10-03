@@ -319,9 +319,9 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
                 .clickPreviewAndGoToReviewLoanAccountPage()
                 .submitForApprovalAndNavigateToConfirmationPage()
                 .navigateToLoanAccountDetailsPage();
-        
+
         loanAccountPage.verifyGLIMIndividualScheduleLinks(3, true);
-        
+
         EditLoanAccountStatusParameters statusParams = new EditLoanAccountStatusParameters();
         statusParams.setNote("GLIM test");
         statusParams.setStatus(EditLoanAccountStatusParameters.APPROVED);
@@ -356,6 +356,11 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyGLIMIndividualScheduleLinks(3, false);
         totalGroupLoanEqualSumOfindividual(loanAccountPage, 3, 1.0);
         
+        String[] expectedPrincipalAmounts = new String[] { "24.9", "249.2", "249.2" };
+        String[] expectedInterestAmounts = new String[] { "46", "460.3", "460.3" };
+        String[] expectedFeeAmounts = new String[] { "0.5", "4.8", "4.8" };
+        verifyProRatedGLIMPayments(loanAccountPage, 3, expectedPrincipalAmounts, expectedInterestAmounts, expectedFeeAmounts);
+
         loanTestHelper.repayLoan(loanId);
         loanAccountPage.verifyGLIMIndividualScheduleLinks(3, false);
         totalGroupLoanEqualSumOfindividual(loanAccountPage, 3, 1.0);
@@ -378,7 +383,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         originalSchedulePage.returnToRepaymentSchedule().navigateToLoanAccountPage();
         
         for(int i = 0; i < count; ++i) {
-            ViewOriginalSchedulePage individualSchedulePage = page.navigateToIndividualSchedulePage(i + 2);
+            ViewOriginalSchedulePage individualSchedulePage = page.navigateToIndividualOriginalSchedulePage(i + 2);
             double[][] individual = individualSchedulePage.getInstallments(delta);
             individualSchedulePage.returnToLoanAccountDetail();
             
@@ -395,6 +400,17 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
             Assert.assertEquals(installments[i][1], 0, delta);
             Assert.assertEquals(installments[i][2], 0, delta);
             Assert.assertEquals(installments[i][3], 0, delta);
+        }
+    }
+
+    private void verifyProRatedGLIMPayments(LoanAccountPage loanAccountPage, int count, String[] expectedPrincipalAmounts, String[] expectedInterestAmounts,
+            String[] expectedFeeAmounts) {
+        for (int i = 0; i < count; i++) {
+            ViewRepaymentSchedulePage repaymentSchedulePage = loanAccountPage.navigateToIndividualRepaymentSchedulePage(i);
+            repaymentSchedulePage.verifyInstallmentAmount(ViewRepaymentSchedulePage.FIRST_ROW, ViewRepaymentSchedulePage.PRINCIPAL_COLUMM, expectedPrincipalAmounts[i]);
+            repaymentSchedulePage.verifyInstallmentAmount(ViewRepaymentSchedulePage.FIRST_ROW, ViewRepaymentSchedulePage.INTEREST_COLUMN, expectedInterestAmounts[i]);
+            repaymentSchedulePage.verifyInstallmentAmount(ViewRepaymentSchedulePage.FIRST_ROW, ViewRepaymentSchedulePage.FEE_COLUMN, expectedFeeAmounts[i]);
+            loanAccountPage = repaymentSchedulePage.navigateToLoanAccountPage();
         }
     }
 }

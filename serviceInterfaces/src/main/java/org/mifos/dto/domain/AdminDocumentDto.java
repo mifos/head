@@ -49,4 +49,19 @@ public class AdminDocumentDto {
     public boolean isActive() {
         return this.active;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean isEqual = false;
+        if (obj instanceof AdminDocumentDto) {
+            isEqual = this.id.equals(((AdminDocumentDto)obj).getId());
+        }
+        return isEqual;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id.intValue();
+    }
+
 }

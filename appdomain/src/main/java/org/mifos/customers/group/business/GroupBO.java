@@ -228,7 +228,7 @@ public class GroupBO extends CustomerBO {
         }
 
         if (isSameCenter(toCenter)) {
-            throw new CustomerException(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER);
+            throw new CustomerException(CustomerConstants.ERRORS_SAME_CENTER_TRANSFER);
         }
 
         if (!toCenter.isActive()) {
@@ -247,7 +247,10 @@ public class GroupBO extends CustomerBO {
         }
         return isSame;
     }
-
+    /**
+     * Checks if group and its members have active loan/savings account.
+    * @throws CustomerException
+    */
     public void validateNoActiveAccountsExist() throws CustomerException {
         if (this.isAnyLoanAccountOpen() || this.isAnySavingsAccountOpen()) {
             throw new CustomerException(CustomerConstants.ERRORS_HAS_ACTIVE_ACCOUNT);

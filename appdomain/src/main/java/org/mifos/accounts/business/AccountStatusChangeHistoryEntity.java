@@ -51,12 +51,17 @@ public class AccountStatusChangeHistoryEntity extends AbstractEntity {
 
     public AccountStatusChangeHistoryEntity(AccountStateEntity oldStatus, AccountStateEntity newStatus,
             PersonnelBO personnel, AccountBO account) {
+        this(oldStatus, newStatus, personnel, account, new DateTimeService().getCurrentJavaDateTime());
+    }
+
+    public AccountStatusChangeHistoryEntity(AccountStateEntity oldStatus, AccountStateEntity newStatus,
+            PersonnelBO personnel, AccountBO account, Date createdDate) {
         accountStatusChangeId = null;
         this.oldStatus = oldStatus;
         this.newStatus = newStatus;
         this.personnel = personnel;
         this.account = account;
-        this.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
+        this.createdDate = createdDate;
     }
 
     public AccountBO getAccount() {

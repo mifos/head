@@ -61,6 +61,18 @@ public class EditUserDataPage extends MifosPage {
         selectValueIfNotZero("level", parameters.getUserLevel());
         typeTextIfNotEmpty("edit_user.input.userPassword", parameters.getPassword());
         typeTextIfNotEmpty("edit_user.input.passwordRepeat", parameters.getPasswordRepeat());
+        
+        //we can add or remove 'Admin' role
+        if (parameters.getRole() != null) {
+        	if(parameters.getRole().equals("Admin")) {
+        		selenium.select("name=id", "label=Admin");
+        		selenium.click("rolelist.button.add");
+        	}
+        	else if (parameters.getRole().equals("")) {
+        		selenium.select("name=personnelRoles", "label=Admin");
+        		selenium.click("rolelist.button.remove");
+        	}
+        }
     }
 
     public EditUserPreviewDataPage submitAndGotoEditUserPreviewDataPage(CreateUserParameters parameters) {

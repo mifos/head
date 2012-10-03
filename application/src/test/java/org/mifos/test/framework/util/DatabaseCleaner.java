@@ -30,7 +30,7 @@ public class DatabaseCleaner {
 
 //    private final JdbcTemplate template;
 @SuppressWarnings("PMD")
-    public DatabaseCleaner(final DriverManagerDataSource dataSource) {
+    public DatabaseCleaner(final DriverManagerDataSource dataSource, final DriverManagerDataSource dataSourcePentahoDW) {
 //        template = new JdbcTemplate(dataSource);
     }
 

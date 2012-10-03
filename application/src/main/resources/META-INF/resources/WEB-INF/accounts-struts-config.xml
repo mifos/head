@@ -44,6 +44,16 @@
                    type="org.mifos.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm"/>
         <form-bean name="reverseloandisbactionform"
                    type="org.mifos.accounts.loan.struts.actionforms.ReverseLoanDisbursalActionForm"/>
+        <form-bean name="generalledgeractionform"
+			type="org.mifos.accounting.struts.actionform.GeneralLedgerActionForm" />
+		<form-bean name="journalvoucheractionform"
+			type="org.mifos.accounting.struts.actionform.JournalVoucherActionForm" />
+		<form-bean name="viewgltransactionsactionform"
+			type="org.mifos.accounting.struts.actionform.ViewGlTransactionsActionForm" />
+		<form-bean name="openbalanceactionform"
+			type="org.mifos.accounting.struts.actionform.OpenBalanceActionForm" />
+		<form-bean name="processaccountingtransactionsactionform"
+			type="org.mifos.accounting.struts.actionform.ProcessAccountingTransactionsActionForm" />
     </form-beans>
 
     <action-mappings>
@@ -100,6 +110,7 @@
             <forward name="update_success" path="/loanAccountAction.do?method=get"/>
             <forward name="update_failure" path="/pages/application/loan/jsp/Review_RepayLoan.jsp"/>
             <forward name="preview_failure" path="/pages/application/loan/jsp/RepayLoan.jsp"/>
+            <forward name="printPaymentReceipt" path="printPaymentReceipt.ftl" redirect="true"/>
         </action>
         <!-- Ends-->
         <!-- New Account Action  -->
@@ -173,6 +184,7 @@
             <forward name="applyPayment_success" path="/customerAccountAction.do?method=load"/>
             <forward name="applyPayment_failure" path="/pages/accounts/jsp/reviewapplypayment.jsp"/>
             <forward name="loan_detail_page" path="/loanAccountAction.do?method=get"/>
+            <forward name="printPaymentReceipt" path="printPaymentReceipt.ftl" redirect="true"/>
         </action>
         <!--  redo loan -->
         <action path="/loanAccountAction" type="org.mifos.accounts.loan.struts.action.LoanAccountAction"
@@ -282,6 +294,86 @@
             <forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp"/>
             <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp"/>
         </action>
+        
+        <!-- Simple Accounting Action classes  -->
+        <action path="/generalledgeraction"
+			type="org.mifos.accounting.struts.action.GeneralLedgerAction" name="generalledgeractionform"
+			parameter="method" validate="true"
+			input="/pages/application/loan/jsp/generalLedgerTransaction.jsp"
+			scope="session">
+			<forward name="load_success"
+				path="/pages/application/loan/jsp/generalLedgerTransaction.jsp" />
+			<forward name="preview_success"
+				path="/pages/application/loan/jsp/generalLedgerTransactionStatus.jsp" />
+			<forward name="submit_success" path="/generalledgeraction.do?method=load" />
+			<forward name="previous_success"
+				path="/pages/application/loan/jsp/generalLedgerTransaction.jsp" />
+		  <!-- <forward name="cancel_success" path="/AdminAction.do?method=load" />   -->
+		 <forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" /> 
+		</action>
+		<action path="/journalvoucheraction"
+			type="org.mifos.accounting.struts.action.JournalVoucherAction" name="journalvoucheractionform"
+			parameter="method" validate="true"
+			input="/pages/application/loan/jsp/journalVoucher.jsp" scope="session">
+			<forward name="load_success"
+				path="/pages/application/loan/jsp/journalVoucher.jsp" />
+			<forward name="preview_success"
+				path="/pages/application/loan/jsp/journalVoucherTransactionStatus.jsp" />
+			<forward name="submit_success" path="/journalvoucheraction.do?method=load" />
+			<forward name="previous_success"
+				path="/pages/application/loan/jsp/journalVoucher.jsp" />
+			<!-- <forward name="cancel_success" path="/AdminAction.do?method=load" /> -->
+<forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" />
+		</action>
+
+		<action path="/openbalanceaction"
+			type="org.mifos.accounting.struts.action.OpenBalanceAction" name="openbalanceactionform"
+			parameter="method" validate="true"
+			input="/pages/application/loan/jsp/openBalanceTransaction.jsp" scope="session">
+			<forward name="load_success"
+				path="/pages/application/loan/jsp/openBalanceTransaction.jsp" />
+			<forward name="preview_success"
+				path="/pages/application/loan/jsp/openBalanceTransactionStatus.jsp" />
+			<forward name="submit_success" path="/openbalanceaction.do?method=load" />
+			<forward name="previous_success"
+				path="/pages/application/loan/jsp/openBalanceTransaction.jsp" />
+			<forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" />
+			<!-- <forward name="cancel_success" path="/AdminAction.do?method=load" /> -->
+		</action>
+
+		<action path="/viewgltransactionsaction"
+			type="org.mifos.accounting.struts.action.ViewGlTransactionsAction"
+			name="viewgltransactionsactionform" parameter="method" validate="true"
+			input="/pages/application/loan/jsp/viewGlTransactions.jsp" scope="session">
+			<forward name="load_success"
+				path="/pages/application/loan/jsp/viewGlTransactions.jsp" />
+			<forward name="submit_success"
+				path="/pages/application/loan/jsp/showViewGlTransactions.jsp" />
+				<!-- <forward name="cancel_success" path="/AdminAction.do?method=load" /> -->
+			<forward name="cancel_success" path="/FinancialAccountingAction.do?method=load" />
+		</action>
+
+		<action path="/processaccountingtransactionsaction"
+			type="org.mifos.accounting.struts.action.ProcessAccountingTransactionsAction"
+			name="processaccountingtransactionsactionform" parameter="method"
+			validate="true"
+			input="/pages/application/loan/jsp/processAccountingTransactions.jsp"
+			scope="session">
+			<forward name="load_success"
+				path="/pages/application/loan/jsp/processAccountingTransactions.jsp" />
+			<forward name="submit_success"
+				path="/pages/application/loan/jsp/processAccountingTransactionsStatus.jsp" />
+		</action>
+		
+		<action path="/yearEndProcessAction"
+			type="org.mifos.accounting.struts.action.YearEndProcessAction"
+			parameter="method"
+			validate="true"
+			input="/mifos-webapp/src/main/resources/META-INF/resources/pages/application/financialaccounting/jsp/financialAccounting.jsp"
+			scope="session">
+			<forward name="load_success"
+				path="/pages/application/loan/jsp/yearEndProcess.jsp" />
+		</action>
     </action-mappings>
 
 <!-- 
@@ -302,4 +394,7 @@
     <!-- Change Account Status resources -->
     <message-resources key="accountStatusUIResources"
                        parameter="org.mifos.config.localizedResources.AccountStatusUIResources"></message-resources>
+    <!-- SimpleAccounting UI Resources -->
+	<message-resources key="simpleAccountingUIResources"
+		parameter="org.mifos.config.localizedResources.SimpleAccountingUIResources" />
 </struts-config>

@@ -346,7 +346,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
 
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "load");
-        addRequestParameter("officeId", "3");
+        addRequestParameter("officeId", "1");
         actionPerform();
         SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, weeklyMeeting, request);
 

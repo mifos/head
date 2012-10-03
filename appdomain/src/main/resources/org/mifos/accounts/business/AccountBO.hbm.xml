@@ -165,6 +165,11 @@
                 class="org.mifos.accounts.loan.business.LoanBO" not-null="false">
             </many-to-one>
 
+            <set name="memberAccounts" cascade="all" lazy="true" access="field">
+                <key column="parent_account_id" />
+                <one-to-many class="org.mifos.accounts.loan.business.LoanBO"></one-to-many>
+            </set>
+
             <property name="recurMonth" column="recur_month" type="short" />
             <property name="monthWeek" column="month_week"
                 type="org.mifos.application.meeting.util.helpers.WeekDayUserType" />
@@ -265,6 +270,14 @@
             and accountTrxn.actionDate <= date(:ACTION_DATE)
         ]]>
     </query>
+    
+    <query name="accounts.getFirstMeetingDateForCustomer">
+    	<![CDATA[
+    		select min(accountTrxn.actionDate)
+            from org.mifos.customers.business.CustomerScheduleEntity accountTrxn
+            where accountTrxn.customer.customerId = :CUSTOMER_ID
+    	]]>
+    </query>
 
     <query name="accounts.getApplicableSavingsProductOfferings">
         <![CDATA[select prdOffering.prdOfferingId as prdOfferingId,
@@ -304,6 +317,21 @@
             group by account.accountId]]>
     </query>
 
+	<query name="accounts.findAllParentLoans">
+		<![CDATA[from org.mifos.accounts.loan.business.LoanBO account
+			where
+			account.memberAccounts is not empty
+			and account.accountState.id in (5,9)
+			group by account.accountId
+			order by account.accountId
+		]]>
+	</query>
+    <query name="accounts.countAllParentLoans">
+        <![CDATA[select count(*) from org.mifos.accounts.loan.business.LoanBO account
+            where
+            account.memberAccounts is not empty
+            and account.accountState.id in (5,9)]]>
+    </query>
     <query name="accounts.retrieveLastTrxn">
         <![CDATA[from org.mifos.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn
             where  savingsTrxn.accountTrxnId = (select max(savingsTrxn1.accountTrxnId)
@@ -466,11 +494,11 @@
                 join customer c on c.customer_id = a.customer_id
                 where c.status_id in (3,9,13)
                 and a.account_state_id = 11
-                and (select max(cs.installment_id) from customer_schedule cs
+                and (select ifnull(max(cs.installment_id), 0) from customer_schedule cs
                     where cs.account_id = a.account_id
                     and cs.action_date <= date(:DATE)) + 4 >
 
-                    (select max(cs2.installment_id) from customer_schedule cs2
+                    (select ifnull(max(cs2.installment_id), 0) from customer_schedule cs2
                     where cs2.account_id = a.account_id)
             ]]>
     </sql-query>
@@ -1002,4 +1030,25 @@ select coll.*,
         FROM account_custom_field a join account b on a.account_id = b.account_id
         where a.field_id in (:CUSTOM_FIELD_ID) order by b.account_id]]>
     </sql-query>
+    
+    <query name="accounts.countGLIMAccountsWithIncorrectNumberOfInstallmentsOnIndividualLoans">
+        <![CDATA[select count(distinct parent) from org.mifos.accounts.loan.business.LoanBO account
+            left join account.parentAccount as parent
+            where
+            account.accountActionDates.size != parent.accountActionDates.size
+            and account.parentAccount.accountState.id in (3,4,5,9)
+        ]]>
+    </query>
+    
+    <query name="accounts.findGLIMAccountsWithIncorrectNumberOfInstallmentsOnIndividualLoans">
+        <![CDATA[select parent from org.mifos.accounts.loan.business.LoanBO account
+            left join account.parentAccount as parent
+            where
+            account.accountActionDates.size != parent.accountActionDates.size
+            and account.parentAccount.accountState.id in (3,4,5,9)
+    		group by account.parentAccount
+            order by account.parentAccount.id
+        ]]>
+    </query>
+    
 </hibernate-mapping>

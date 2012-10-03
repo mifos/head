@@ -24,6 +24,7 @@ import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.ViewSystemUsersPage;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterChooseOfficePage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
@@ -62,7 +63,6 @@ public class NavigationHelper {
         HomePage homePage = navigateToHomePage();
         AdminPage adminPage = homePage.navigateToAdminPage();
         adminPage.verifyPage();
-
         return adminPage;
     }
 
@@ -79,6 +79,14 @@ public class NavigationHelper {
         AdminPage adminPage = homePage.navigateToAdminPage();
         adminPage.verifyPage();
         return adminPage;
+    }
+    
+    public HomePage navigateToHomePageAsNewUser(String userName, String oldPassword) {
+    	LoginPage loginPage = new AppLauncher(selenium).launchMifos();
+    	loginPage.verifyPage();
+    	HomePage homePage = loginPage.loginSuccessfulAsWithChnagePasw(userName, oldPassword);
+    	homePage.verifyPage();
+    	return homePage;
     }
 
     public LoanAccountPage navigateToLoanAccountPage(String loanAccountID) {
@@ -116,7 +124,14 @@ public class NavigationHelper {
 
         return centerDetailsPage;
     }
+    
+    public ViewSystemUsersPage navigateToFindUserPage() {
+        AdminPage adminPage = navigateToAdminPage();
+        ViewSystemUsersPage findUserPage = adminPage.navigateToViewSystemUsersPage();
 
+        return findUserPage;
+    }
+    
     public LoanProductDetailsPage navigateToLoanProductDetailsPage(String loanProduct)
     {
         ViewLoanProductsPage loanProductsPage = navigateToLoanProductsPage();

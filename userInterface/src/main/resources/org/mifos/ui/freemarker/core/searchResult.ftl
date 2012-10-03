@@ -21,7 +21,7 @@
 [#include "layout.ftl"]
 [@clientLeftPane "ClientsAndAccounts"]
 [#if customerHierarchy??]
-	[@widget.mainCustomerSearchResultDataTable customerHierarchy.size /]
+	[@widget.mainCustomerSearchResultDataTable customerHierarchy.size?c /]
 [#else]
 	[@widget.mainCustomerSearchResultDataTable 0 /]
 [/#if]

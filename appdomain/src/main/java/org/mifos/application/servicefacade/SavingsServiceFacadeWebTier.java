@@ -33,6 +33,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -78,6 +79,7 @@ import org.mifos.accounts.util.helpers.AccountPaymentData;
 import org.mifos.accounts.util.helpers.AccountSearchResultsDto;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
+import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.persistence.HolidayDao;
@@ -148,6 +150,10 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.schedule.ScheduledDateGeneration;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.ScheduledEventFactory;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
@@ -746,7 +752,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
         LocalDate closureDate = closeAccountDto.getDateOfWithdrawal();
 
-        // Assumption that all previous interest postings occured correctly
+        // Assumption that all previous interest postings occurred correctly
         InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory
                 .createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
         LocalDate nextPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
@@ -985,24 +991,38 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         AccountState savingsAccountState = AccountState.fromShort(openingBalanceSavingsAccount.getAccountState());
         Money recommendedOrMandatory = new Money(savingsProduct.getCurrency(),
                 openingBalanceSavingsAccount.getRecommendedOrMandatoryAmount());
-        Money openingBalance = new Money(savingsProduct.getCurrency(), openingBalanceSavingsAccount.getOpeningBalance());
+        Money openingBalance = new Money(savingsProduct.getCurrency(), new BigDecimal(0));
+        
 
         LocalDate activationDate = openingBalanceSavingsAccount.getActivationDate();
 
         CalendarEvent calendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
 
-        SavingsAccountActivationDetail activationDetails = SavingsBO.determineAccountActivationDetails(customer,
+        SavingsAccountActivationDetail activationDetails = SavingsBO.generateAccountActivationDetails(customer,
                 savingsProduct, recommendedOrMandatory, savingsAccountState, calendarEvents, activationDate);
 
         SavingsBO savingsAccount = SavingsBO.createOpeningBalanceIndividualSavingsAccount(customer, savingsProduct,
                 recommendedOrMandatory, savingsAccountState, createdDate, createdById, activationDetails, createdBy,
                 openingBalance);
-
+        savingsAccount.setGlobalAccountNum(openingBalanceSavingsAccount.getAccountNumber());
+        savingsAccount.setSavingsBalance(openingBalance);
+        DateTimeService dateTimeService = new DateTimeService();
+        savingsAccount.setDateTimeService(dateTimeService);
+        openingBalance = new Money(savingsProduct.getCurrency(), openingBalanceSavingsAccount.getOpeningBalance());
+        if(savingsAccountState.isActiveLoanAccountState()) {
+            savingsAccount.resetRecommendedAmountOnFutureInstallments();
+        }
         try {
+            if(openingBalance.isGreaterThanZero()){
+                PaymentData paymentData = new PaymentData(openingBalance, createdBy, Short.valueOf("1"), activationDate.toDateMidnight().toDate());
+                paymentData.setCustomer(customer);
+                savingsAccount.applyPayment(paymentData);
+            }
             this.transactionHelper.startTransaction();
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.flushSession();
-            savingsAccount.generateSystemId(createdBy.getOffice().getGlobalOfficeNum());
+            //savingsAccount.generateSystemId(createdBy.getOffice().getGlobalOfficeNum());
+            
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.commitTransaction();
             return savingsAccount.getGlobalAccountNum();
@@ -1022,7 +1042,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             List<QuestionGroupDetail> questionGroups) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+        UserContext userContext = toUserContext(user);
+        
         LocalDate createdDate = new LocalDate();
         Integer createdById = user.getUserId();
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(createdById.shortValue());
@@ -1056,6 +1077,13 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                         activeAndOnHoldClients);
             }
 
+            try {
+                personnelDao.checkAccessPermission(userContext, savingsAccount.getOfficeId(), savingsAccount.getCustomer()
+                        .getLoanOfficerId());
+            } catch (AccountException e) {
+                throw new MifosRuntimeException("Access denied!", e);
+            }
+            
             this.transactionHelper.startTransaction();
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.flushSession();

@@ -220,7 +220,12 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
         CenterBO center = CenterBO.createNew(userContext, centerName, mfiJoiningDate, meeting, loanOfficer,
                 centerOffice, centerAddress, externalId, new DateMidnight().toDateTime());
-
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, center.getOfficeId(), center.getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException("Access denied!", e);
+        }
         this.customerService.createCenter(center, meeting, feesForCustomerAccount);
 
         return new CustomerDetailsDto(center.getCustomerId(), center.getGlobalCustNum());
@@ -944,6 +949,12 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         return this.officeDao.findOfficeById(officeId).getOfficeName();
     }
 
+    @Override
+    public List<CustomerDetailDto> retrieveGroupForPentahoReport(Short loanOfficerId){
+        PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(loanOfficerId);
+        return this.customerDao.findGroupsUnderUser(loanOfficer);
+    }
+    
     @Override
     public UserDetailDto retrieveUsersDetails(Short userId) {
         return this.personnelDao.findPersonnelById(userId).toDto();

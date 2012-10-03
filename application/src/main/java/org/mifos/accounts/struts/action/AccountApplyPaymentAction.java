@@ -35,6 +35,7 @@ import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -52,13 +53,14 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class AccountApplyPaymentAction extends BaseAction {
 
     private AccountService accountService = null;
-
+    
     public AccountApplyPaymentAction() throws Exception {
         accountService = ApplicationContextProvider.getBean(AccountService.class);
     }
@@ -80,6 +82,8 @@ public class AccountApplyPaymentAction extends BaseAction {
         actionForm.setReceiptId(null);
         actionForm.setPaymentTypeId(null);
         actionForm.setTransactionDate(DateUtils.makeDateAsSentFromBrowser());
+        actionForm.setPrintReceipt(false);
+        actionForm.setTruePrintReceipt(false);
 
         final AccountReferenceDto accountReferenceDto = new AccountReferenceDto(Integer.valueOf(actionForm.getAccountId()));
         AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(
@@ -110,6 +114,12 @@ public class AccountApplyPaymentAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        
+        //workaround for checkbox problem
+        AccountApplyPaymentActionForm accountApplyPaymentActionForm = (AccountApplyPaymentActionForm) form;
+        accountApplyPaymentActionForm.setTruePrintReceipt(accountApplyPaymentActionForm.getPrintReceipt());
+        accountApplyPaymentActionForm.setPrintReceipt(false);
+        
         return mapping.findForward(ActionForwards.previous_success.toString());
     }
 
@@ -147,8 +157,17 @@ public class AccountApplyPaymentAction extends BaseAction {
         } else {
             this.accountServiceFacade.makePayment(accountPaymentParametersDto);
         }
-
-        return mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
+        
+        request.getSession().setAttribute("globalAccountNum", ((AccountApplyPaymentActionForm) form).getGlobalAccountNum());
+        
+        ActionForward findForward;
+        if(actionForm.getPrintReceipt()){
+            findForward = mapping.findForward(getForward("PRINT"));
+        }
+        else {
+            findForward = mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
+        }
+        return findForward;
 
     }
 
@@ -206,6 +225,8 @@ public class AccountApplyPaymentAction extends BaseAction {
     private String getForward(String input) {
         if (input.equals(Constants.LOAN)) {
             return ActionForwards.loan_detail_page.toString();
+        } else if (input.equals("PRINT")) {
+            return ActionForwards.printPaymentReceipt.toString();
         }
 
         return "applyPayment_success";
@@ -216,6 +237,12 @@ public class AccountApplyPaymentAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
         String forward = null;
+        
+        //workaround for checkbox problem
+        AccountApplyPaymentActionForm accountApplyPaymentActionForm = (AccountApplyPaymentActionForm) form;     
+        accountApplyPaymentActionForm.setTruePrintReceipt(accountApplyPaymentActionForm.getPrintReceipt());
+        accountApplyPaymentActionForm.setPrintReceipt(false);    
+        
         if (method != null) {
             forward = method + "_failure";
         }

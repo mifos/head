@@ -7,6 +7,7 @@
 
     <bean id="testDatabase" class="org.mifos.framework.persistence.TestDatabase">
         <property name="integrationDataSource" ref="integrationDataSource" />
+        <property name="integrationDataSourcePentahoDW" ref="integrationDataSourcePentahoDW" />
     </bean>
 
     <bean id="integrationDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -16,9 +17,14 @@
         <property name="username" value="${integration.database.user}" />
         <property name="password" value="${integration.database.password}" />
     </bean>
+    
+    <bean id="integrationDataSourcePentahoDW" parent="integrationDataSource">
+		<property name="url" value="jdbc:mysql://${integration.database.host}:${integration.database.port}/${integration.database.dbPentahoDW}?${integration.database.params.spring}"/>
+	</bean>
 
     <bean id="databaseCleaner" class="org.mifos.test.framework.util.DatabaseCleaner">
         <constructor-arg ref="integrationDataSource" />
+        <constructor-arg ref="integrationDataSourcePentahoDW" />
     </bean>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">

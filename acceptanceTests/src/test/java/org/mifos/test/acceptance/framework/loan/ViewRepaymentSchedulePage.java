@@ -31,6 +31,13 @@ import com.thoughtworks.selenium.Selenium;
 
 public class ViewRepaymentSchedulePage extends AbstractPage {
 
+    public static final int FIRST_ROW = 4;
+
+    public static final int PRINCIPAL_COLUMM = 4;
+    public static final int INTEREST_COLUMN = 5;
+    public static final int FEE_COLUMN = 6;
+    public static final int PENALTY_COLUMN = 7;
+
     String scheduleTable = "//td[@class='drawtablerow']/parent::tr/parent::tbody/parent::table";
     String scheduleDate = "scheduleViewDate";
     String viewScheduleButton = "viewScheduleButton";
@@ -270,5 +277,17 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
     
     public void verifyRepaymentScheduleTablePenalties(int row, int column, String value) {
         Assert.assertEquals(selenium.getTable("installments." + row + "." + column), value);
+    }
+    
+    public void verifyRepaymentScheduleTableInterest(int row, int column, String value) {
+        Assert.assertEquals(selenium.getTable("installments." + row + "." + column), value);
+    }
+    
+    public void verifyRepaymentScheduleTableAfterPayInterest(int row, int column, String value) {
+        Assert.assertEquals(selenium.getTable("repaymentScheduleTable." + row + "." + column), value);
+    }
+    
+    public void verifyRepaymentScheduleTableAfterPayPrincipal(int row, int column, String value) {
+        Assert.assertEquals(selenium.getTable("repaymentScheduleTable." + row + "." + column), value);
     }
 }

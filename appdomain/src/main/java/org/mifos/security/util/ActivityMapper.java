@@ -172,6 +172,12 @@ public class ActivityMapper {
         parseActionSecurity(getNotesSecurity());
         parseActionSecurity(getMultipleLoanAccountsCreationSecurity());
         parseActionSecurity(getReverseLoanDisbursalSecurity());
+        parseActionSecurity(getGeneralLedgerActionSecurity()); 
+        parseActionSecurity(getJournalVoucherActionSecurity()); 
+        parseActionSecurity(getOpenBalanceActionSecurity()); 
+        parseActionSecurity(getViewGlTransactionsActionSecurity());
+        parseActionSecurity(getProcessAccountingTransactionsActionSecurity()); 
+        parseActionSecurity(getYearEndProcessActionSecurity()); 
         parseActionSecurity(getReportsSecurity());
         parseActionSecurity(getReportsDataSourceSecurity());
         parseActionSecurity(getReportsParamsSecurity());
@@ -189,7 +195,7 @@ public class ActivityMapper {
         parseActionSecurity(getReportsCategorySecurity());
         parseActionSecurity(getBirtAdminDocumentUploadSecurity());
         parseActionSecurity(getImportTransactionsSecurity());
-
+        parseActionSecurity(getFinancialAccountingSecurity());
         parseActionSecurity(getMigrateSecurity());
     }
 
@@ -453,6 +459,64 @@ public class ActivityMapper {
         security.allow("validate", SecurityConstants.VIEW);
         return security;
     }
+    
+    private ActionSecurity getGeneralLedgerActionSecurity() {
+        ActionSecurity security = new ActionSecurity("generalledgeraction");
+        security.allow("load", SecurityConstants.ACCOUNTING_CREATE_GLTRANSACTION);
+        security.allow("loadOffices", SecurityConstants.VIEW);
+        security.allow("loadMainAccounts", SecurityConstants.VIEW);
+        security.allow("loadAccountHeads", SecurityConstants.VIEW);
+        security.allow("cancel", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("submit", SecurityConstants.VIEW);
+        return security;
+    }
+    
+    private ActionSecurity getJournalVoucherActionSecurity() {
+        ActionSecurity security = new ActionSecurity("journalvoucheraction");
+        security.allow("load", SecurityConstants.ACCOUNTING_CREATE_JVTRANSACTION);
+        security.allow("loadOffices", SecurityConstants.VIEW);
+        security.allow("loadCreditAccount", SecurityConstants.VIEW);
+        security.allow("cancel", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("submit", SecurityConstants.VIEW);
+        return security;
+    }
+    
+    private ActionSecurity getOpenBalanceActionSecurity() {
+        ActionSecurity security = new ActionSecurity("openbalanceaction");
+        security.allow("load", SecurityConstants.ACCOUNTING_CREATE_OPENBALANCE);
+        security.allow("loadOffices", SecurityConstants.VIEW);
+        security.allow("loadOpenBalance", SecurityConstants.VIEW);
+        security.allow("cancel", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("submit", SecurityConstants.VIEW);
+        return security;
+    }
+    
+    private ActionSecurity getViewGlTransactionsActionSecurity() {
+        ActionSecurity security = new ActionSecurity("viewgltransactionsaction");
+        security.allow("load", SecurityConstants.ACCOUNTING_CREATE_VIEWTRANSACTIONS);
+        security.allow("submit", SecurityConstants.VIEW);
+        return security;
+    }
+    
+    private ActionSecurity getProcessAccountingTransactionsActionSecurity() {
+        ActionSecurity security = new ActionSecurity("processaccountingtransactionsaction");
+        security.allow("load", SecurityConstants.ACCOUNTING_CREATE_MISPROCESSING);
+        security.allow("process", SecurityConstants.VIEW);
+        return security;
+    }
+    
+    private ActionSecurity getYearEndProcessActionSecurity() {
+        ActionSecurity security = new ActionSecurity("yearEndProcessAction");
+        security.allow("load", SecurityConstants.VIEW);
+        return security;
+    }
+
 
     private ActionSecurity getMultipleLoanAccountsCreationSecurity() {
         ActionSecurity security = new ActionSecurity("multipleloansaction");
@@ -575,14 +639,14 @@ public class ActivityMapper {
         security.allow("create", SecurityConstants.VIEW);
         security.allow("loadMeeting", SecurityConstants.MEETING_CREATE_CLIENT_MEETING);
         security.allow("get", SecurityConstants.VIEW);
-        security.allow("editPersonalInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+        security.allow("editPersonalInfo", SecurityConstants.VIEW);
         security.allow("editFamilyInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
         security.allow("editAddFamilyRow", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
         security.allow("editDeleteFamilyRow", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
         security.allow("previewEditFamilyInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
         security.allow("previewEditPersonalInfo", SecurityConstants.VIEW);
         security.allow("prevEditPersonalInfo", SecurityConstants.VIEW);
-        security.allow("updatePersonalInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+        security.allow("updatePersonalInfo", SecurityConstants.VIEW);
         security.allow("editMfiInfo", SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
         security.allow("previewEditMfiInfo", SecurityConstants.VIEW);
         security.allow("prevEditMfiInfo", SecurityConstants.VIEW);
@@ -1005,7 +1069,11 @@ public class ActivityMapper {
         security.allow("load", SecurityConstants.VIEW);
         return security;
     }
-
+    private ActionSecurity getFinancialAccountingSecurity() {
+        ActionSecurity security = new ActionSecurity("FinancialAccountingAction");
+        security.allow("load", SecurityConstants.VIEW);
+        return security;
+    }
     private void addCustomerSearchMappings() {
         activityMap.put("/CustomerSearchAction-load", SecurityConstants.VIEW);
         activityMap.put("/CustomerSearchAction-search", SecurityConstants.SEARCH);
@@ -1608,6 +1676,11 @@ public class ActivityMapper {
         }
 
         return activityAllowed;
+    }
+    
+    public boolean isModeOfPaymentSecurity(UserContext userContext) {
+        return legacyRolesPermissionsDao.isActivityAllowed(userContext,
+                new ActivityContext(SecurityConstants.LOAN_CAN_TRANSFER_FROM_SAVINGS_ACCOUNT, userContext.getBranchId()));
     }
 
      public boolean isEditPhoneNumberPermitted(UserContext useContext, Short officeId){

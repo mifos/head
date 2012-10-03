@@ -26,6 +26,7 @@ import java.util.List;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
+import org.mifos.reports.admindocuments.business.AdminDocAccActionMixBO;
 import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
 
 public class LegacyAdminDocAccStateMixDao extends LegacyGenericDao {
@@ -38,6 +39,13 @@ public class LegacyAdminDocAccStateMixDao extends LegacyGenericDao {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("admindocId", admindocId);
         return executeNamedQuery(NamedQueryConstants.GET_MIX_BY_ADMINISTRATIVE_DOCUMENT, queryParameters);
+
+    }
+
+    public List<AdminDocAccActionMixBO> getAccActionMixByAdminDocument(Short admindocId) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("admindocId", admindocId);
+        return executeNamedQuery(NamedQueryConstants.GET_ACC_ACTION_MIX_BY_ADMINISTRATIVE_DOCUMENT_ID, queryParameters);
 
     }
 

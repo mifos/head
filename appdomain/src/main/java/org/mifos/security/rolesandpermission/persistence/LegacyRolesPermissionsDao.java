@@ -55,6 +55,8 @@ import org.mifos.security.activity.ActivityGeneratorException;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
+import org.mifos.security.rolesandpermission.business.ActivityRestrictionTypeEntity;
+import org.mifos.security.rolesandpermission.business.RoleActivityRestrictionBO;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
@@ -102,6 +104,40 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
             throw new SecurityException(SecurityConstants.GENERALERROR, he);
         }
         return roles;
+    }
+    
+    public RoleActivityRestrictionBO getRoleActivityRestrictionByType(short roleId, short activityRestrictionTypeId) throws PersistenceException{
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("roleId", roleId);
+        queryParameters.put("activityRestrictionTypeId", activityRestrictionTypeId);
+        return (RoleActivityRestrictionBO) execUniqueResultNamedQuery(NamedQueryConstants.GET_ROLE_ACTIVITY_RESTRICTION_FOR_GIVEN_TYPEID, queryParameters);
+    }
+    
+    public RoleActivityRestrictionBO getActivityRestrictionById(Integer activityRestrictionId) throws PersistenceException{
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("id", activityRestrictionId);
+        return (RoleActivityRestrictionBO) execUniqueResultNamedQuery(NamedQueryConstants.GET_ACTIVITY_RESTRICTION_FOR_GIVEN_ID, queryParameters);
+    }
+    
+    public List<RoleActivityRestrictionBO> getRoleActivitiesRestrictions(short roleId) throws PersistenceException{
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("roleId", roleId);
+        return (List<RoleActivityRestrictionBO>) executeNamedQuery(NamedQueryConstants.GET_ROLE_ACTIVITIES_RESTRICTIONS, queryParameters);
+    }
+    
+    public List<ActivityRestrictionTypeEntity> getActivitiesRestrictionTypes() throws PersistenceException{
+        try {
+            Query query = getSession().getNamedQuery(NamedQueryConstants.GET_ALL_ACTIVITY_RESTRICTION_TYPES);
+            return query.list();
+        } catch (HibernateException e){
+            throw new PersistenceException(e);
+        }
+    }
+    
+    public ActivityRestrictionTypeEntity getActivityRestrictionTypeEntity(Short id) throws PersistenceException{
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("id", id);
+        return (ActivityRestrictionTypeEntity) execUniqueResultNamedQuery(NamedQueryConstants.GET_ACTIVITY_RESTRICTION_TYPE_BY_ID, queryParameters);
     }
 
     /**
@@ -322,6 +358,18 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
         StaticHibernateUtil.commitTransaction();
         return lookUpId;
     }
+    
+    public int createActivityForQuestionGroup(short parentActivity, String lookUpDescription)
+            throws HibernateException, PersistenceException, ServiceException, ActivityGeneratorException {
+        StaticHibernateUtil.startTransaction();
+        int lookUpId = createLookUpValue(DynamicLookUpValueCreationTypes.QuestionGroup, lookUpDescription);
+        insertLookUpValueLocale(lookUpId, lookUpDescription);
+        ActivityEntity activityEntity = createActivityEntity(parentActivity, lookUpId);
+        RoleBO role = getPersistentObject(RoleBO.class, RolesAndPermissionConstants.ADMIN_ROLE);
+        role.getActivities().add(activityEntity);
+        StaticHibernateUtil.commitTransaction();
+        return lookUpId;
+    }
 
     private ActivityEntity createActivityEntity(short parentActivity, int lookUpId) throws ServiceException,
             ActivityGeneratorException, PersistenceException {
@@ -374,6 +422,19 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
         int newActivityId = activityId - 1;
 
         return newActivityId;
+    }
+    
+    public void updateLookUpValue(Short activityId, String inputCategoryName) {
+        ActivityEntity activityEntity = null;
+        try {
+            activityEntity = getPersistentObject(ActivityEntity.class, activityId);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+        if (activityEntity != null) {
+            LookUpValueEntity lookUpValueEntity = activityEntity.getDescriptionLookupValues();
+            ApplicationContextProvider.getBean(MessageLookup.class).updateLookupValue(lookUpValueEntity, inputCategoryName);
+        }
     }
 
     public ActivityEntity getActivityEntity(int lookUpId) throws PersistenceException {

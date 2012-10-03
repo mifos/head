@@ -9,7 +9,6 @@ import org.mifos.application.servicefacade.ClientServiceFacade;
 import org.mifos.application.servicefacade.GroupServiceFacade;
 import org.mifos.config.servicefacade.ConfigurationServiceFacade;
 import org.mifos.dto.domain.CenterInformationDto;
-import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.GroupInformationDto;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -55,8 +54,8 @@ public class ViewCustomerDetailsController {
 
         modelAndView.addObject("clientInformationDto", clientInformationDto);
 
-        MandatoryHiddenFieldsDto mandatoryHiddenFieldsDto = this.adminServiceFacade.retrieveHiddenMandatoryFields();
-        boolean isPhotoFieldHidden = mandatoryHiddenFieldsDto.isHideSystemPhoto();
+        
+        boolean isPhotoFieldHidden = this.adminServiceFacade.isHiddenMandatoryField("photo");
         modelAndView.addObject("isPhotoFieldHidden", isPhotoFieldHidden);
 
         modelAndView.addObject("currentPageUrl", UrlHelper.constructCurrentPageUrl(request));

@@ -191,6 +191,14 @@ public class Installment implements Comparable<Installment> {
         recordCurrentPayment();
         return amount;
     }
+    
+    public BigDecimal payInterest(BigDecimal amount, Date transactionDate) {
+        currentPayment.setPaidDate(transactionDate);
+        amount = payInterest(amount, currentPayment);
+        amount = payExtraInterest(amount, currentPayment);
+        recordCurrentPayment();
+        return amount;
+    }
 
     private BigDecimal payMiscPenalty(BigDecimal amount, InstallmentPayment installmentPayment) {
         BigDecimal payable = NumberUtils.min(amount, getMiscPenaltyDue());

@@ -95,6 +95,17 @@
          <put name="menutitle" value="Reports" />
         <put name="search" value="/pages/framework/jsp/nomenureport.jsp" />
     </definition>
+    <!-- This tile is for financial Accounting -->
+     <definition name=".financialAccountingLayout" extends=".mainLayout">
+        <put name="body" value="" />
+        <put name="menu" value=".financialAccountingsearch" />
+         <put name="header" value="/pages/framework/jsp/financialaccountingheader.jsp" />
+    </definition>
+
+     <definition name=".financialAccountingsearch" extends=".searchmenu">
+         <put name="menutitle" value="FinancialAccounting Tasks" />
+        <put name="search" value="/pages/framework/jsp/nomenureport.jsp" />
+    </definition>
 
       <definition name=".reportRender" extends=".mainLayout">
         <put name="body" value="" />

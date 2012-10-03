@@ -417,7 +417,7 @@ public class AccountBO extends AbstractBusinessObject {
         this.personnel = personnel;
     }
 
-    protected void setClosedDate(final Date closedDate) {
+    public void setClosedDate(final Date closedDate) {
         this.closedDate = (Date) (closedDate == null ? null : closedDate.clone());
     }
 
@@ -545,10 +545,23 @@ public class AccountBO extends AbstractBusinessObject {
         buildFinancialEntries(new LinkedHashSet<AccountTrxnEntity>(reversedTrxns));
     }
 
-    public final void handleChangeInMeetingSchedule(final List<Days> workingDays, final List<Holiday> holidays)
+    /*
+     * There are two different strategies for updating customers schedule:
+	 * 1) for customers being at the top of hierarchy
+     * 2) for customers who are switching their membership
+	 * customerTopOfHierarchy parameter specifies it
+     */
+    public final void handleChangeInMeetingSchedule(final List<Days> workingDays, final List<Holiday> holidays, boolean customerTopOfHierarchy)
             throws AccountException {
         // find the installment to update
-        AccountActionDateEntity nextInstallment = findInstallmentToUpdate();
+    	AccountActionDateEntity nextInstallment;
+    	
+        if(customerTopOfHierarchy) {
+    		nextInstallment = findInstallmentToUpdate();
+        }
+        else {
+        	nextInstallment = findInstallmentToUpdateFromNow();
+        }
         if (nextInstallment != null) {
             regenerateFutureInstallments(nextInstallment, workingDays, holidays);
         }
@@ -596,6 +609,38 @@ public class AccountBO extends AbstractBusinessObject {
         return installment;
     }
 
+    /*
+     * similar to findInstallmentToUpdate excepts this one
+     * finds and updates all installments that are after current date
+     * which is proper for switching client to different group
+     * but is NOT proper for Customer being at the top of the customer hierarchy
+     * (in that case findInstallmentToUpdate is the right one)
+     */
+    private AccountActionDateEntity findInstallmentToUpdateFromNow() {
+        List<AccountActionDateEntity> allInstallments = getAllInstallments();
+        if (allInstallments.size() == 0) {
+            return null;
+        }
+
+        LocalDate currentDate = new LocalDate();
+
+        int installmentIndex = 0;
+        AccountActionDateEntity installment = allInstallments.get(installmentIndex);
+
+        // update all installments that are after current date
+        while (installment != null && currentDate.isAfter(new LocalDate(installment.getActionDate().getTime()))) {
+
+            ++installmentIndex;
+            // if we've iterated over all the installments, then just return null
+            if (installmentIndex == allInstallments.size()) {
+                installment = null;
+            } else {
+                installment = allInstallments.get(installmentIndex);
+            }
+        }
+        return installment;
+    }
+    
     public void changeStatus(final AccountState newStatus, final Short flagId, final String comment, PersonnelBO loggedInUser) throws AccountException {
         changeStatus(newStatus.getValue(), flagId, comment, loggedInUser, getDateTimeService().getCurrentJavaDateTime());
     }
@@ -635,8 +680,9 @@ public class AccountBO extends AbstractBusinessObject {
                         AccountStateFlagEntity.class, flagId);
             }
 
+            Date statusChangeDate = (argumentDate == null) ? new DateTimeService().getCurrentJavaDateTime() : argumentDate;
             AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(this
-                    .getAccountState(), accountStateEntity, loggedInUser, this);
+                    .getAccountState(), accountStateEntity, loggedInUser, this, statusChangeDate);
             AccountNotesEntity accountNotesEntity = new AccountNotesEntity(transactionDate, comment, loggedInUser, this);
             this.addAccountStatusChangeHistory(historyEntity);
             this.setAccountState(accountStateEntity);
@@ -738,7 +784,7 @@ public class AccountBO extends AbstractBusinessObject {
 
         return amount;
     }
-
+    
     public double getLastPmntAmnt() {
         if (null != accountPayments && accountPayments.size() > 0) {
             return findMostRecentPaymentByPaymentDate().getAmount().getAmountDoubleValue();
@@ -961,7 +1007,7 @@ public class AccountBO extends AbstractBusinessObject {
         if (accountActionDates!= null && !accountActionDates.isEmpty()) {
             for (AccountActionDateEntity accountAction : accountActionDates) {
             	LocalDate installmentDate = new LocalDate(accountAction.getActionDate());
-                if (asOf.isAfter(installmentDate) && !accountAction.isPaid()) {
+                if (asOf.isAfter(installmentDate) && !accountAction.isPaid() || asOf.isEqual(installmentDate)) {
                     installmentsInArrears.add(accountAction);
                 }
             }
@@ -1140,7 +1186,12 @@ public class AccountBO extends AbstractBusinessObject {
                 // must be >= creation date for other accounts
                 return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(this.getCreatedDate())) >= 0;
             } else if (meetingDate != null) {
-                    return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(meetingDate)) >= 0;
+                if (this instanceof LoanBO) {
+                    Date startDate = (this.getAccountApprovalDate() != null ? this.getAccountApprovalDate() : this.getCreatedDate());
+                    return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(startDate)) >= 0 &&
+                        trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(meetingDate)) >= 0;
+                }
+                return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(meetingDate)) >= 0;
             }
             return false;
     }
@@ -1156,14 +1207,14 @@ public class AccountBO extends AbstractBusinessObject {
         return true;
     }
 
-    public boolean isTrxnDateValid(final Date trxnDate, Date lastCustomerMeetingDate, boolean repaymentIndependentOfMeetingEnabled) {
+    public boolean isTrxnDateValid(final Date trxnDate, Date meetingDate, boolean repaymentIndependentOfMeetingEnabled) {
         boolean isTrxnDateAfterMonthClosingDay = true;
     	
     	if (getConfigurationPersistence().isMonthClosingDaySet()){
         	isTrxnDateAfterMonthClosingDay = isTrxnDateAfterMonthClosingDate(trxnDate);
         }
     	if (AccountingRules.isBackDatedTxnAllowed()) {
-            return isTrxnDateAfterMonthClosingDay && isTrxnDateBeforePreviousMeetingDateAllowed(trxnDate, lastCustomerMeetingDate, repaymentIndependentOfMeetingEnabled);
+            return isTrxnDateAfterMonthClosingDay && isTrxnDateBeforePreviousMeetingDateAllowed(trxnDate, meetingDate, repaymentIndependentOfMeetingEnabled);
         }
         return isTrxnDateAfterMonthClosingDay && trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
     }
@@ -1538,6 +1589,14 @@ public class AccountBO extends AbstractBusinessObject {
         }
         return periodicFeeList;
     }
+    
+    public boolean isAnyPeriodicFeeActive() {
+    	List<AccountFeesEntity> periodicFeeList = getPeriodicFeeList();
+    	if(periodicFeeList.isEmpty()) {
+    		return true;
+    	}
+    	return false;
+    }
 
     protected void deleteFutureInstallments() throws AccountException {
         List<AccountActionDateEntity> futureInstllments = getApplicableIdsForFutureInstallments();
@@ -1749,7 +1808,7 @@ public class AccountBO extends AbstractBusinessObject {
         }
     }
 
-    private void setFlag(final AccountStateFlagEntity accountStateFlagEntity) {
+    public void setFlag(final AccountStateFlagEntity accountStateFlagEntity) {
         Iterator iter = this.getAccountFlags().iterator();
         while (iter.hasNext()) {
             AccountFlagMapping currentFlag = (AccountFlagMapping) iter.next();
@@ -1899,4 +1958,12 @@ public class AccountBO extends AbstractBusinessObject {
         currentDateCalendar = new GregorianCalendar(year, month, day + numberOfDays);
         changeActionDateOfFirstInstallment(currentDateCalendar, getAccountActionDates());
     }
+    /**
+    * Check if account is active savings account
+    * @return true if account is savings account and is in active state
+    */
+    public boolean isActiveSavingsAccount(){
+        return AccountState.fromShort(accountState.getId()).isActiveSavingsAccountState();
+    }
+
 }

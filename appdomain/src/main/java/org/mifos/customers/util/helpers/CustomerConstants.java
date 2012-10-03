@@ -31,6 +31,7 @@ public interface CustomerConstants {
     String PERSONNEL_NAME = "personnelName";
     String GLOBAL_CUST_NUM = "globalCustNum";
     String BLANK = " ";
+    String CUSTOMER_NAME = "customerName";
 
     /*
      * Like CustomerStatus.CENTER_ACTIVE.getValue() but usable in case
@@ -47,6 +48,9 @@ public interface CustomerConstants {
     short TRAINED_NO = 2;
     String TRAINED_DATE = "trainedDate";
 
+    String CLIENT_STATUS = "CLIENT_STATUS";
+    String CLIENT_STATUS_PARTIAL = "Partial Application";
+    String LOAN_OFFICER_ID = "LOAN_OFFICER_ID";
     short All_CATEGORY_ID = 1;
 
     /** Exceptions */
@@ -248,7 +252,8 @@ public interface CustomerConstants {
     String ERRORS_SAME_BRANCH_TRANSFER = "errors.Customer.sameBranchTransfer";
     String ERRORS_TRANSFER_IN_INACTIVE_OFFICE = "errors.Customer.officeInactive";
     String ERRORS_INTRANSFER_PARENT_INACTIVE = "errors.Customer.parentInactive";
-    String ERRORS_SAME_PARENT_TRANSFER = "errors.Customer.sameParentTransferException";
+    String ERRORS_SAME_GROUP_TRANSFER = "errors.Customer.sameGroupTransferException";
+    String ERRORS_SAME_CENTER_TRANSFER = "errors.Customer.sameCenterTransferException";
     String ERRORS_HAS_ACTIVE_ACCOUNT = "errors.Customer.hasActiveAccount";
     String ERRORS_CHILDREN_HAS_ACTIVE_ACCOUNT = "errors.Customer.clientHasActiveAccount";
     String ERRORS_MEETING_FREQUENCY_MISMATCH = "errors.Customer.meetingFrequencyMismatch";

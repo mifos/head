@@ -38,6 +38,8 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="CreateClientPersonalInfo"></span>	
+		<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="pages/js/singleitem.js"></script>
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
 		<script language="javascript" src="pages/application/client/js/client.js"></script>
 		<script language="javascript">
@@ -320,7 +322,7 @@ explanation of the license and how it is applied.
 										name="client.Salutation" mandatory="yes"
 										bundle="ClientUIResources"></mifos:mifoslabel></td>
 									<td width="83%">
-									 <mifos:select	name="clientCustActionForm"	property="clientName.salutation" size="1">
+									 <mifos:select	name="clientCustActionForm"	property="clientName.salutation" size="1" styleClass="noAutoSelect">
 										<c:forEach var="salutationEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'salutationEntity')}" >
 											<html-el:option value="${salutationEntityList.id}">${salutationEntityList.name}</html-el:option>
 										</c:forEach>
@@ -386,7 +388,7 @@ explanation of the license and how it is applied.
 									    bundle="ClientUIResources"></mifos:mifoslabel></td>
 
 									<td><mifos:select name="clientCustActionForm" keyhm="Client.MaritalStatus" onchange="MaritalStatusSelected()"
-										property="clientDetailView.maritalStatus" size="1">
+										property="clientDetailView.maritalStatus" size="1" styleClass="noAutoSelect">
 										<c:forEach var="maritalStatusEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusEntity')}" >
 											<html-el:option value="${maritalStatusEntityList.id}">${maritalStatusEntityList.name}</html-el:option>
 										</c:forEach>
@@ -405,7 +407,7 @@ explanation of the license and how it is applied.
 										name="${ConfigurationConstants.CITIZENSHIP}" ></mifos:mifoslabel></td>
 									<td> <mifos:select keyhm="Client.Citizenship"
 										name="clientCustActionForm"
-										property="clientDetailView.citizenship" size="1">
+										property="clientDetailView.citizenship" size="1" styleClass="noAutoSelect">
 										<c:forEach var="citizenshipEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'citizenshipEntity')}" >
 											<html-el:option value="${citizenshipEntityList.id}">${citizenshipEntityList.name}</html-el:option>
 										</c:forEach>
@@ -418,7 +420,7 @@ explanation of the license and how it is applied.
 										name="${ConfigurationConstants.ETHNICITY}" bundle="ClientUIResources"></mifos:mifoslabel></td>
 									<td><mifos:select keyhm="Client.Ethnicity"
 										name="clientCustActionForm"
-										property="clientDetailView.ethnicity" size="1">
+										property="clientDetailView.ethnicity" size="1" styleClass="noAutoSelect">
 										<c:forEach var="ethnicityEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ethnicityEntity')}" >
 											<html-el:option value="${ethnicityEntityList.id}">${ethnicityEntityList.name}</html-el:option>
 										</c:forEach>
@@ -432,7 +434,7 @@ explanation of the license and how it is applied.
 
 									<td><mifos:select keyhm="Client.EducationLevel"
 										name="clientCustActionForm"
-										property="clientDetailView.educationLevel" size="1">
+										property="clientDetailView.educationLevel" size="1" styleClass="noAutoSelect">
 										<c:forEach var="educationLevelEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'educationLevelEntity')}" >
 											<html-el:option value="${educationLevelEntityList.id}">${educationLevelEntityList.name}</html-el:option>
 										</c:forEach>
@@ -443,7 +445,7 @@ explanation of the license and how it is applied.
 									<td align="right"><mifos:mifoslabel keyhm="Client.BusinessActivities"
 										name="client.BusinessActivities" bundle="ClientUIResources"></mifos:mifoslabel></td>
 									<td><mifos:select name="clientCustActionForm" keyhm="Client.BusinessActivities"
-										property="clientDetailView.businessActivities" size="1">
+										property="clientDetailView.businessActivities" size="1" styleClass="noAutoSelect">
 										<c:forEach var="businessActivitiesEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'businessActivitiesEntity')}" >
 											<html-el:option value="${businessActivitiesEntityList.id}">${businessActivitiesEntityList.name}</html-el:option>
 										</c:forEach>
@@ -468,7 +470,7 @@ explanation of the license and how it is applied.
 										name="${ConfigurationConstants.HANDICAPPED}"></mifos:mifoslabel></td>
 									<td> <mifos:select keyhm="Client.Handicapped"
 										name="clientCustActionForm"
-										property="clientDetailView.handicapped" size="1">
+										property="clientDetailView.handicapped" size="1" styleClass="noAutoSelect">
 										<c:forEach var="handicappedEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'handicappedEntity')}" >
 											<html-el:option value="${handicappedEntityList.id}">${handicappedEntityList.name}</html-el:option>
 										</c:forEach>

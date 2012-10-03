@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.loan;
 
 import org.apache.commons.lang.StringUtils;
 import org.testng.Assert;
+import org.joda.time.LocalDate;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
@@ -72,6 +73,15 @@ public class AccountChangeStatusPage extends MifosPage {
         selenium.check("name=newStatusId value=" + editAccountStatusParameters.getAccountStatus().getId());
         selenium.fireEvent("name=newStatusId value=" + editAccountStatusParameters.getAccountStatus().getId(), "click");
 
+        if (editAccountStatusParameters.getTrxnDate() != null) {
+            LocalDate trxnDate = editAccountStatusParameters.getTrxnDate();
+            selenium.type("transactionDateDD", String.valueOf(trxnDate.getDayOfMonth()));
+            selenium.fireEvent("transactionDateDD", "blur");
+            selenium.type("transactionDateMM", String.valueOf(trxnDate.getMonthOfYear()));
+            selenium.fireEvent("transactionDateMM", "blur");
+            selenium.type("transactionDateYY", String.valueOf(trxnDate.getYear()));
+            selenium.fireEvent("transactionDateYY", "blur");
+        }
         selenium.type("change_status.input.note", editAccountStatusParameters.getNote());
     }
 

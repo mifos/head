@@ -35,6 +35,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.webflow.execution.repository.FlowExecutionRestorationFailureException;
+import org.mifos.reports.pentaho.util.JNDIException;
 
 public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
 
@@ -43,7 +44,9 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
     @Override
     protected ModelAndView doResolveException(HttpServletRequest request,  HttpServletResponse response, Object handler, Exception ex) {
         ModelAndView modelAndView = checkForAccessDenied(ex, request);
-
+        if (modelAndView == null) {
+        	modelAndView = checkForPageJndiException(ex, request);
+    	}
         if ( modelAndView == null ){
         	modelAndView = checkForPageExpiredException(ex, request);
         }
@@ -119,6 +122,18 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
             return checkForPageExpiredException((Exception) ex.getCause(), request);
         }
 
+    	return null;
+    }
+    
+    private ModelAndView checkForPageJndiException(Exception ex, HttpServletRequest request) {
+    	if (ex instanceof JNDIException) {
+    		ModelAndView modelAndView = null;
+    		String viewName = determineViewName(ex, request);
+    		if (viewName != null){
+    			modelAndView = getModelAndView(viewName, ex, request);
+    		}
+    		return modelAndView;
+    	}
     	return null;
     }
 

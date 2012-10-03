@@ -142,6 +142,24 @@ explanation of the license and how it is applied.
 									<td><html-el:text styleId="111"
 										property="adminiDocumentTitle" maxlength="200"/> </td>
 								</tr>
+								<tr class="fontnormal">
+									<td align="right"><mifos:mifoslabel
+										name="reports.labelReportStatus" mandatory="yes"/>
+									</td>
+									<td>
+									    <select style="width:136px;" name="isActive">
+									      <option value="-1" selected>
+									      	<mifos:mifoslabel name="select" bundle="UIResources"/>
+									      </option>
+									      <option <c:if test="${birtAdminDocumentUploadActionForm.isActive eq '1'}">selected="true"</c:if> value="1">
+									      	<mifos:mifoslabel name="reports.active"/>
+									      </option>  
+									      <option <c:if test="${birtAdminDocumentUploadActionForm.isActive eq '0'}">selected="true"</c:if> value="0">
+									      	<mifos:mifoslabel name="reports.inactive"/>
+									      </option>  
+									    </select>
+									</td>
+								</tr>
 							    <tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
 										name="reports.accountType" mandatory="yes"/>
@@ -150,8 +168,9 @@ explanation of the license and how it is applied.
 										<mifos:select property="accountTypeId"
 											onchange="return populateParent(this)" >
 												<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ProductTypeList')}" var="producttype">
-													<html-el:option value="${producttype.productTypeID}">${producttype.name}</html-el:option>
+													<html-el:option value="${producttype.productTypeID}">${producttype.name} <mifos:mifoslabel name="reports.administrativedocument"/></html-el:option>
 												</c:forEach>
+												<html-el:option value="3"><mifos:mifoslabel name="reports.paymentReceipts" mandatory="no"/></html-el:option>
 										</mifos:select>
 									</td>
 								</tr>
@@ -186,7 +205,6 @@ explanation of the license and how it is applied.
                                         <input type="file" value="" name="file"/>
                                     </td>
 								</tr>
-								<input type="hidden" name="isActive"  value="1" />
 						  </table><br>	
 						 <table width="90%" border="0" cellpadding="0" cellspacing="0">
 										<tr>

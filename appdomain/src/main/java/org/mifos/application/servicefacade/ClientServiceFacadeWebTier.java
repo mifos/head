@@ -63,7 +63,6 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -430,10 +429,16 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
                 if (ClientRules.isFamilyDetailsRequired()) {
                     client.setFamilyAndNameDetailSets(clientCreationDetail.getFamilyNames(), clientCreationDetail.getFamilyDetails());
                 }
-
+                
+                try {
+                    personnelDao.checkAccessPermission(userContext, client.getOfficeId(), client.getLoanOfficerId());
+                } catch (AccountException e) {
+                    throw new MifosRuntimeException("Access denied!", e);
+                }
                 this.customerService.createClient(client, clientMeeting, feesForCustomerAccount, selectedOfferings);
             }
 
+                        
             clientPhotoService.create(client.getCustomerId().longValue(), clientCreationDetail.getPicture());
 
             return new CustomerDetailsDto(client.getCustomerId(), client.getGlobalCustNum());
@@ -556,7 +561,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     }
 
     @Override
-    public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId) {
+    public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId, String clientStatus, short loanOfficerId) {
 
         ClientDropdownsDto clientDropdowns = retrieveClientDropdownData();
 
@@ -576,7 +581,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     }
 
     @Override
-    public void updateClientPersonalInfo(ClientPersonalInfoUpdate personalInfo) {
+    public void updateClientPersonalInfo(ClientPersonalInfoUpdate personalInfo, String clientStatus, short loanOfficerId) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);

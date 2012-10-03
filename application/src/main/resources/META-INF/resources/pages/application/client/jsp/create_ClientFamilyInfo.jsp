@@ -182,8 +182,9 @@ explanation of the license and how it is applied.
 							<table>
                                 <c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsMandatory')}">
                                     <tr class="fontnormalboldorange">
-                                        <td>
+                                        <td colspan="2">
                                             <mifos:mifoslabel name="client.FamilyDetailsOptional" bundle="ClientUIResources"/>
+                                            <br /><br />
                                         </td>
                                     </tr>
                                 </c:if>
@@ -229,6 +230,13 @@ explanation of the license and how it is applied.
 																		</mifos:mifoslabel>
 														</span>
 														</td>
+														<%-- Second Last Name --%>
+														<td class="paddingL10">
+															<span id="create_ClientFamilyInfo.label.familySecondLastName">
+																<mifos:mifoslabel keyhm="Client.SpouseFatherSecondLastName"
+																	name="client.FamilySecondLastName" bundle="ClientUIResources"></mifos:mifoslabel>
+														</span>
+														</td>
 														<td class="paddingL10" width="70%">
 														<span id="create_ClientFamilyInfo.label.familyDateOfBirth">
 															<mifos:mifoslabel	name="client.FamilyDateOfBirth" mandatory="yes" 
@@ -253,7 +261,7 @@ explanation of the license and how it is applied.
 													<tr>
 													<td></td>
 													<td></td>
-													<td></td><td></td>
+													<td></td><td></td><td></td>
 													<td class="paddingL10"><font size="-2">(DD /MM /YYYY)</font> </td>
 													<td></td>
 													<td></td>
@@ -283,6 +291,10 @@ explanation of the license and how it is applied.
 															<td class="paddingL10">
 																<mifos:mifosalphanumtext name="clientCustActionForm" property="familyLastName[${row}]">																	
 																</mifos:mifosalphanumtext>								
+															</td>
+															<td class="paddingL10">
+																<mifos:mifosalphanumtext keyhm="Client.SpouseFatherSecondLastName" name="clientCustActionForm" property="familySecondLastName[${row}]" >
+																</mifos:mifosalphanumtext>							
 															</td>															
 															<td class="paddingL10" width="90px">
 															<table> 

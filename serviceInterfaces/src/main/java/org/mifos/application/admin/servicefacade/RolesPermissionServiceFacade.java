@@ -22,7 +22,9 @@ package org.mifos.application.admin.servicefacade;
 
 import java.util.List;
 
+import org.mifos.dto.domain.ActivityRestrictionDto;
 import org.mifos.dto.screen.ListElement;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @SuppressWarnings("PMD")
@@ -35,11 +37,30 @@ public interface RolesPermissionServiceFacade {
     void createRole(Short userId, String name, List<Short> ActivityIds) throws Exception;
 
     @PreAuthorize("isFullyAuthenticated()")
+    void createRole(Short userId, String name, List<Short> ActivityIds, List<ActivityRestrictionDto> activityRestrictionDtoList) throws Exception;
+    
+    @PreAuthorize("isFullyAuthenticated()")
     void updateRole(Short roleId, Short userId, String name, List<Short> ActivityIds) throws Exception;
 
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateRole(Short roleId, Short userId, String name, List<Short> ActivityIds, List<ActivityRestrictionDto> activityRestrictions) throws Exception;
+    
     @PreAuthorize("isFullyAuthenticated()")
     void deleteRole(Integer versionNo, Short roleId) throws Exception;
 
     @PreAuthorize("isFullyAuthenticated()")
     boolean hasUserAccessForActivity(Short activityID) throws Exception;
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    List<ActivityRestrictionDto> getRoleActivitiesRestrictions(Short roleId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    int calculateDynamicActivityId() throws Exception;
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    int createActivityForQuestionGroup(short parentActivity, String lookUpDescription) throws Exception;
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateLookUpValue(int newActivityId, String activityNameHead, String title) throws PersistenceException;
+
 }

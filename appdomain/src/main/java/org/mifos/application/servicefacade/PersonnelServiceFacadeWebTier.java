@@ -633,21 +633,22 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (id != null) {
             Short newLocaleId = id;
-            assert Localization.getInstance().getLocaleById(newLocaleId) != null;
-            user.setPreferredLocaleId(newLocaleId);
-            try {
-                this.transactionHelper.startTransaction();
-                PersonnelBO p = this.personnelDao.findPersonnelById((short) user.getUserId());
-                p.setPreferredLocale(newLocaleId);
-                this.personnelDao.update(p);
-                this.transactionHelper.commitTransaction();
-                UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
-                userContext.setLocaleId(newLocaleId);
-            } catch (Exception e) {
-                this.transactionHelper.rollbackTransaction();
-                throw new MifosRuntimeException(e);
+            if(Localization.getInstance().getLocaleById(newLocaleId) != null) {
+                user.setPreferredLocaleId(newLocaleId);
+                try {
+                    this.transactionHelper.startTransaction();
+                    PersonnelBO p = this.personnelDao.findPersonnelById((short) user.getUserId());
+                    p.setPreferredLocale(newLocaleId);
+                    this.personnelDao.update(p);
+                    this.transactionHelper.commitTransaction();
+                    UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+                    userContext.setLocaleId(newLocaleId);
+                } catch (Exception e) {
+                    this.transactionHelper.rollbackTransaction();
+                    throw new MifosRuntimeException(e);
+                }
+                ApplicationContextProvider.getBean(MessageLookup.class).updateLabelCache();
             }
-            ApplicationContextProvider.getBean(MessageLookup.class).updateLabelCache();
         }
         return user.getPreferredLocaleId();
     }

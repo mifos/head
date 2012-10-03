@@ -754,11 +754,17 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    private void validateForActiveAccounts() throws CustomerException {
-        if (isAnyLoanAccountOpen() || isAnySavingsAccountOpen()) {
+    public void validateForActiveAccounts() throws CustomerException {
+        if (isAnyAccountActive()) {
             throw new CustomerException(ClientConstants.ERRORS_ACTIVE_ACCOUNTS_PRESENT,
-                    new Object[] { ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.GROUP) });
+            		new Object[] { ApplicationContextProvider.getBean(MessageLookup.class).lookupLabel(ConfigurationConstants.GROUP) });
         }
+    }
+    
+    public void validateForPeriodicFees() throws CustomerException {
+    	if (isAnyPeriodicFeeActive()) {
+    		throw new CustomerException(ClientConstants.ERRORS_ACTIVE_PERIODIC_FEES_PRESENT);
+    	}
     }
 
     private void validateBranchTransfer(final OfficeBO officeToTransfer) throws CustomerException {
@@ -792,7 +798,7 @@ public class ClientBO extends CustomerBO {
 
     public void validateIsSameGroup(Integer groupId) throws CustomerException {
         if (isSameGroup(groupId)) {
-            throw new CustomerException(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER);
+            throw new CustomerException(CustomerConstants.ERRORS_SAME_GROUP_TRANSFER);
         }
     }
 
@@ -802,11 +808,6 @@ public class ClientBO extends CustomerBO {
         }
 
         validateForGroupStatus(toGroup.getStatus());
-        validateForActiveAccounts();
-        if (getCustomerMeeting() != null && toGroup.getCustomerMeeting() != null) {
-            validateMeetingRecurrenceForTransfer(getCustomerMeeting().getMeeting(), toGroup.getCustomerMeeting()
-                    .getMeeting());
-        }
     }
 
     private void validateForGroupStatus(final CustomerStatus groupStatus) throws CustomerException {

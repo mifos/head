@@ -184,4 +184,11 @@ public class GroupViewDetailsPage extends MifosPage {
         waitForPageToLoad();
         return new ViewQuestionResponseDetailPage(selenium);
     }
+    /**
+	 * Assert that number of blackflag images is equal to expected number.
+	 * @param expectedNumber expected number of blackflag images
+	 */
+	public void verifyNumberOfBlackFlags(int expectedNumber) {
+		Assert.assertEquals(selenium.getXpathCount("//span[contains(@id,'viewgroupdetails.img.blackflag')]"),expectedNumber);
+	}
 }

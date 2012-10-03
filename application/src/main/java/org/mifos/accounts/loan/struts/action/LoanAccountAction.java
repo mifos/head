@@ -345,7 +345,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         if (null != administrativeDocumentsIsEnabled && administrativeDocumentsIsEnabled.intValue() == 1) {
             SessionUtils.setCollectionAttribute(AdminDocumentsContants.ADMINISTRATIVEDOCUMENTSLIST,
-                    legacyAdminDocumentDao.getAllAdminDocuments(), request);
+                    legacyAdminDocumentDao.getAllActiveAdminDocuments(), request);
 
             SessionUtils.setCollectionAttribute(AdminDocumentsContants.ADMINISTRATIVEDOCUMENTSACCSTATEMIXLIST,
                     legacyAdminDocAccStateMixDao.getAllMixedAdminDocuments(), request);
@@ -436,6 +436,16 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         }
 
         OriginalScheduleInfoDto originalSchedule = this.loanServiceFacade.retrieveOriginalLoanSchedule(loanId);
+
+        String memberAccountIdParam = request.getParameter("memberAccountId");
+        if (StringUtils.isNotBlank(memberAccountIdParam)) {
+            Integer memberId = Integer.valueOf(memberAccountIdParam);
+            LoanBO member = loan.findMemberById(memberId);
+            if (member != null) {
+                SessionUtils.setAttribute(CustomerConstants.CUSTOMER_NAME, member.getCustomer().getDisplayName(), request);
+                SessionUtils.setAttribute(CustomerConstants.GLOBAL_CUST_NUM, member.getCustomer().getGlobalCustNum(), request);
+            }
+        }
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         SessionUtils.setAttribute(Constants.ORIGINAL_SCHEDULE_AVAILABLE, originalSchedule.hasOriginalInstallments(), request);
@@ -882,7 +892,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             List<LoanBO> individualLoans = loanBusinessService.findIndividualLoans(Integer.valueOf(
                     loanBO.getAccountId()).toString());
             handleIndividualLoans(loanBO, loanAccountActionForm, isRepaymentIndepOfMeetingEnabled,
-                    loanAccountDetailsList, individualLoans);
+                    loanAccountDetailsList, individualLoans, getUserContext(request).getPreferredLocale());
             request.setAttribute(CUSTOMER_ID, loanBO.getCustomer().getCustomerId().toString());
         }
 
@@ -895,7 +905,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     void handleIndividualLoans(final LoanBO loanBO, final LoanAccountActionForm loanAccountActionForm,
                                final boolean isRepaymentIndepOfMeetingEnabled, final List<LoanAccountDetailsDto> loanAccountDetailsList,
-                               final List<LoanBO> individualLoans) throws AccountException, ServiceException {
+                               final List<LoanBO> individualLoans, final Locale locale) throws AccountException, ServiceException {
         List<Integer> foundLoans = new ArrayList<Integer>();
         for (final LoanAccountDetailsDto loanAccountDetail : loanAccountDetailsList) {
             Predicate predicate = new Predicate() {
@@ -913,7 +923,12 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 //                        loanAccountDetail);
             } else {
                 foundLoans.add(individualLoan.getAccountId());
-                glimLoanUpdater.updateIndividualLoan(loanAccountDetail, individualLoan);
+                try {
+                    glimLoanUpdater.updateIndividualLoan(
+                            loanAccountActionForm.getDisbursementDateValue(locale), loanAccountActionForm.getNoOfInstallmentsValue(),loanAccountDetail, individualLoan);
+                } catch (InvalidDateException e) {
+                    e.printStackTrace();
+                }
             }
         }
         for (LoanBO loan : individualLoans) {

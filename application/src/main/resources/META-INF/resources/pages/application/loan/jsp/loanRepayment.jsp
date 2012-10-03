@@ -67,14 +67,34 @@ explanation of the license and how it is applied.
                                             <c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.preferredLocale)}" />
                                         </c:otherwise>
                                 </c:choose>
+                                <br />
+                                <c:if test="${not empty param.memberAccountId}">
+                                    <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerName')}" var="customerName" />
+                                    <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'globalCustNum')}" var="globalCustNum" />
+                                    <br />
+                                    <span class="heading">
+                                        <c:out value="${globalCustNum}"/>&nbsp;-&nbsp;<c:out value="${customerName}"/>
+                                    </span>
+                                </c:if>
 							</td>
 							<td>
                             <c:choose>
                                 <c:when test="${originalScheduleIsAvailable}">
-                                    <html-el:link styleId="loanRepayment.link.original_schedule"
-                                    href="loanAccountAction.do?method=viewOriginalSchedule&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-                                        <mifos:mifoslabel name="loan.view_original_schedule" />
-                                    </html-el:link>
+                                    <c:choose>
+                                        <c:when test="${not empty param.memberAccountId}">
+                                            <!-- Schedule for individual loan -->
+                                            <html-el:link styleId="loanRepayment.link.original_schedule"
+                                                href="loanAccountAction.do?method=viewOriginalSchedule&accountId=${param.memberAccountId}&globalAccountNum=${param.memberGlobalNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&parentLoanGlobalAccountNum=${BusinessKey.accountId}">
+                                                <mifos:mifoslabel name="loan.view_original_schedule" />
+                                            </html-el:link>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <html-el:link styleId="loanRepayment.link.original_schedule"
+                                            href="loanAccountAction.do?method=viewOriginalSchedule&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+                                                <mifos:mifoslabel name="loan.view_original_schedule" />
+                                            </html-el:link>
+                                        </c:otherwise>
+                                    </c:choose>
 								</c:when>
 							</c:choose>
 							 </td>
@@ -135,7 +155,7 @@ explanation of the license and how it is applied.
 				</c:if>	
 					
 
-								<loanfn:getLoanRepaymentTable />
+					<loanfn:getLoanRepaymentTable memberGlobalNum="${param.memberGlobalNum}"/>
 					
 					<table width="100%" border="0" cellpadding="1" cellspacing="0">
 					<tr valign="top">

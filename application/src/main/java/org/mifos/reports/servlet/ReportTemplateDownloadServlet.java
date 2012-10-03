@@ -33,10 +33,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.admin.business.service.ViewOrganizationSettingsServiceFacadeWebTier;
+import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.reports.admindocuments.business.AdminDocumentBO;
-import org.mifos.reports.admindocuments.struts.action.BirtAdminDocumentUploadAction;
 import org.mifos.reports.business.ReportsBO;
 
 public class ReportTemplateDownloadServlet extends HttpServlet {
@@ -53,7 +52,7 @@ public class ReportTemplateDownloadServlet extends HttpServlet {
 		}
 
 		File dir = new File(
-				ApplicationContextProvider.getBean(ViewOrganizationSettingsServiceFacadeWebTier.class).getUploadStorageDirectory(),
+				ApplicationContextProvider.getBean(ViewOrganizationSettingsServiceFacade.class).getUploadStorageDirectory(),
 				realPath);
 		String reportFileName = "";
 		if (isReportAnAdminDocument) {

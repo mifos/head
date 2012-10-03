@@ -70,6 +70,13 @@ public class Schedule {
         }
         return amount;
     }
+    
+    public BigDecimal payOverDueInstallments(Date transactionDate, BigDecimal amount) {
+        for (Installment dueInstallment : getInstallmentsOnOrBefore(transactionDate)) {
+            amount = dueInstallment.payInterest(amount, transactionDate);
+        }
+        return amount;
+    }
 
     public void adjustFutureInstallments(BigDecimal balance, Date transactionDate) {
         List<Installment> futureInstallments = getInstallmentsAfter(transactionDate);
@@ -212,6 +219,18 @@ public class Schedule {
                 }
             }
         }
+    }
+    
+    public BigDecimal getExtraInterest(Date transactionDate) {
+        BigDecimal extraInterest = BigDecimal.ZERO;
+        for (Installment installment : installments.values()) {
+            if (installment.isPrincipalDue()) {
+                BigDecimal principalDue = installment.getPrincipalDue();
+                long duration = getDaysInBetween(transactionDate, installment.fromDateForOverdueComputation());
+                extraInterest = extraInterest.add(computeInterest(principalDue, duration));
+            }
+        }
+        return extraInterest;
     }
 
     private void setExtraInterest(Installment installment, Installment nextInstallment, BigDecimal principalDue, long duration) {

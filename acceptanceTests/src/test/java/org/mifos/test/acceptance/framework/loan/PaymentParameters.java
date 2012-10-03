@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.loan;
 public class PaymentParameters {
     public static final String CASH = "Cash";
     public static final String CHEQUE = "Cheque";
+    public static final String TRANSFER = "Transfer from savings";
 
     private String transactionDateDD;
     private String transactionDateMM;
@@ -36,6 +37,8 @@ public class PaymentParameters {
     private String receiptDateDD;
     private String receiptDateMM;
     private String receiptDateYYYY;
+
+    private String savingsAccountGlobalNum;
 
     public String getTransactionDateDD() {
         return this.transactionDateDD;
@@ -91,7 +94,12 @@ public class PaymentParameters {
     public void setReceiptDateYYYY(String receiptDateYYYY) {
         this.receiptDateYYYY = receiptDateYYYY;
     }
-
+    public String getSavingsAccountGlobalNum() {
+        return savingsAccountGlobalNum;
+    }
+    public void setSavingsAccountGlobalNum(String savingsAccountGlobalNum) {
+        this.savingsAccountGlobalNum = savingsAccountGlobalNum;
+    }
     /**
      * Maps the method of payment string to a value that's used to choose the right element in the drop-down box.
      */
@@ -99,6 +107,7 @@ public class PaymentParameters {
     public int getPaymentTypeValue() {
         if (CASH.equals(paymentType)) { return 1; }
         if (CHEQUE.equals(paymentType)) { return 3; }
+        if (TRANSFER.equals(paymentType)) { return 4; }
 
         return -1;
     }

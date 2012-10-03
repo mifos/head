@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,16 +70,21 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
+import org.mifos.dto.domain.PaymentDto;
+import org.mifos.dto.domain.SavingsAccountDetailDto;
+import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.validations.Errors;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -145,6 +151,21 @@ public class LoanAccountServiceFacadeWebTierTest {
     @Mock
     private ConfigurationPersistence configurationPersistence;
 
+    @Mock
+    private ClientServiceFacade clientServiceFacade;
+
+    @Mock
+    private SavingsServiceFacade savingsServiceFacade;
+
+    @Mock
+    private SavingsAccountDetailDto savingsAccountDetailDto;
+    
+    @Mock
+    private PaymentDto withdrawal;
+
+    @Mock
+    private HibernateTransactionHelper hibernateTransactionHelper;
+
     private MifosCurrency rupee;
 
     private UserContext userContext;
@@ -153,7 +174,9 @@ public class LoanAccountServiceFacadeWebTierTest {
     public void setupAndInjectDependencies() {
         loanAccountServiceFacade = new LoanAccountServiceFacadeWebTier(officeDao, loanProductDao, customerDao, personnelDao,
                 fundDao, loanDao, accountService, scheduleCalculatorAdaptor, loanBusinessService, loanScheduleService,
-                installmentsValidator, holidayServiceFacade, monthClosingServiceFacade, customerPersistence, configurationPersistence);
+                installmentsValidator, holidayServiceFacade, monthClosingServiceFacade, customerPersistence, configurationPersistence,
+                clientServiceFacade, savingsServiceFacade);
+        ((LoanAccountServiceFacadeWebTier) loanAccountServiceFacade).setTransactionHelper(hibernateTransactionHelper);
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         userContext = TestUtils.makeUser();
     }
@@ -164,7 +187,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
         when(loanDao.findById(0)).thenReturn(loanBO);
         java.sql.Date date = new java.sql.Date(new Date().getTime());
-        when(customerPersistence.getLastMeetingDateForCustomer(2)).thenReturn(date);
+        when(customerDao.getFirstMeetingDateForCustomer(2)).thenReturn(date);
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
         when(loanBO.getCurrency()).thenReturn(rupee);
         boolean waiveInterest = true;
@@ -186,6 +209,54 @@ public class LoanAccountServiceFacadeWebTierTest {
     }
 
     @Test
+    public void testMakeEarlyRepaymentFromSavings() throws AccountException, PersistenceException {
+        final String savingsAccGlobalNum = "0001-00000009";
+        setMifosUserFromContext();
+        when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
+        when(loanDao.findById(0)).thenReturn(loanBO);
+        final java.sql.Date date = new java.sql.Date(new Date().getTime());
+        when(customerDao.getFirstMeetingDateForCustomer(2)).thenReturn(date);
+        when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
+        when(loanBO.getCurrency()).thenReturn(rupee);
+        boolean waiveInterest = true;
+        when(loanBO.isInterestWaived()).thenReturn(waiveInterest);
+        when(loanBO.getOfficeId()).thenReturn((short)1);
+        when(loanBO.getCustomer()).thenReturn(customer);
+        when(loanBO.isTrxnDateValid(date, date, false)).thenReturn(true);
+        when(customer.getLoanOfficerId()).thenReturn((short)1);
+        when(customer.getCustomerId()).thenReturn(2);
+        when(savingsServiceFacade.retrieveSavingsAccountDetails(savingsAccGlobalNum)).thenReturn(savingsAccountDetailDto);
+        when(savingsAccountDetailDto.getCustomerId()).thenReturn(2);
+        when(savingsAccountDetailDto.getAccountId()).thenReturn(1);
+        String paymentMethod = "4";
+        String receiptNumber = "001";
+        when(savingsServiceFacade.withdraw(any(SavingsWithdrawalDto.class), eq(true))).thenReturn(withdrawal);
+        when(withdrawal.getPaymentId()).thenReturn(1);
+        
+        loanAccountServiceFacade.makeEarlyRepaymentFromSavings(new RepayLoanInfoDto("1", "100", receiptNumber, date,
+                paymentMethod, (short) 1, waiveInterest, date,BigDecimal.TEN,BigDecimal.ZERO), savingsAccGlobalNum);
+
+        ArgumentCaptor<SavingsWithdrawalDto> withdrawal = ArgumentCaptor.forClass(SavingsWithdrawalDto.class);
+        verify(savingsServiceFacade).withdraw(withdrawal.capture(), eq(true));
+        final Long savingsId = savingsAccountDetailDto.getAccountId().longValue();
+        final Long customerId = savingsAccountDetailDto.getCustomerId().longValue();
+        final LocalDate trxnDate = new LocalDate(date);
+        final LocalDate receiptDate = new LocalDate(date);
+        final Double amount = Double.parseDouble("100");
+        final Integer modeOfPayment = 4;
+        assertEquals(withdrawal.getValue().getAmount(), amount);
+        assertEquals(withdrawal.getValue().getSavingsId(), savingsId);
+        assertEquals(withdrawal.getValue().getCustomerId(), customerId);
+        assertEquals(withdrawal.getValue().getDateOfWithdrawal(), trxnDate);
+        assertEquals(withdrawal.getValue().getDateOfReceipt(), receiptDate);
+        assertEquals(withdrawal.getValue().getModeOfPayment(), modeOfPayment);
+        assertEquals(withdrawal.getValue().getPreferredLocale(), userContext.getPreferredLocale());
+
+        verify(loanBO).makeEarlyRepayment(new Money(rupee, "100"), date, receiptNumber, date,
+                paymentMethod, (short) 1, waiveInterest, new Money(rupee, BigDecimal.ZERO), 1);
+    }
+
+    @Test
     public void testMakeEarlyRepaymentForNotWaiverInterestLoanProduct() throws AccountException, PersistenceException {
     	setMifosUserFromContext();
         when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
@@ -201,7 +272,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanBO.getDetailsOfNextInstallment()).thenReturn(loanScheduleEntity);
         java.sql.Date date = mock(java.sql.Date.class);
         when(loanBO.isTrxnDateValid(date, date, false)).thenReturn(true);
-        when(customerPersistence.getLastMeetingDateForCustomer(2)).thenReturn(date);
+        when(customerDao.getFirstMeetingDateForCustomer(2)).thenReturn(date);
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
         String paymentMethod = "Cash";
         String receiptNumber = "001";
@@ -221,7 +292,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanDao.findById(0)).thenReturn(loanBO);
         boolean actualWaiveInterestValue = false;
         java.sql.Date date = mock(java.sql.Date.class);
-        when(customerPersistence.getLastMeetingDateForCustomer(2)).thenReturn(date);
+        when(customerDao.getFirstMeetingDateForCustomer(2)).thenReturn(date);
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
         when(loanBO.isInterestWaived()).thenReturn(actualWaiveInterestValue);
         when(loanBO.getOfficeId()).thenReturn((short)1);

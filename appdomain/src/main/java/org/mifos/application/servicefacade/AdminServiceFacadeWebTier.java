@@ -330,7 +330,27 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         }
     	return newMessage;
     }
-
+    
+    /**
+     * fieldName is taken from field_configuration table
+     */
+    @Override
+    public boolean isHiddenMandatoryField(String fieldName) {
+    	boolean isThatField = false;
+    	try {
+    	List<FieldConfigurationEntity> confFieldList = legacyFieldConfigurationDao
+                .getAllConfigurationFieldList();
+    	for (FieldConfigurationEntity field : confFieldList) {
+    		if (field.getFieldName().equalsIgnoreCase(fieldName)) {
+    			isThatField = true;
+    		}
+    	}
+    	} catch (PersistenceException e) {
+    		throw new MifosRuntimeException(e);
+    	}
+    	return isThatField;
+    }
+    
     @Override
     public MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields() {
 
@@ -1403,4 +1423,13 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     public Locale retreiveLocaleFromConfiguration() {
         return Localization.getInstance().getConfiguredLocale();
     }
+
+    /**
+     * method created for MIFOS-5729 
+     * should be used to resolve similar issues with Can define hidden/mandatory fields permission
+     */
+	@Override
+	public MandatoryHiddenFieldsDto retrieveHiddenMandatoryFieldsToRead() {
+		return retrieveHiddenMandatoryFields();
+	}
 }

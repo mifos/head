@@ -30,6 +30,9 @@ explanation of the license and how it is applied.
 
 <!-- Tile  definitions -->
 <tiles:insert definition=".withoutmenu">
+	<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="pages/js/singleitem.js"></script>
+	
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="createnewcenter"></span>
 	
@@ -500,7 +503,7 @@ explanation of the license and how it is applied.
 												<mifos:mifoslabel name="Center.FeeType" bundle="CenterUIResources" />
 											</td>
 											<td width="17%" class="fontnormal">
-												<mifos:select name="centerCustActionForm" property='selectedFee[${ctr2}].feeId' onchange="displayAmount('selectedFee[${ctr2}].feeId', 'selectedFee[${ctr2}].amount' )">
+												<mifos:select name="centerCustActionForm" property='selectedFee[${ctr2}].feeId' onchange="displayAmount('selectedFee[${ctr2}].feeId', 'selectedFee[${ctr2}].amount' )" styleClass="noAutoSelect">
 													<c:forEach var="feeList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" >
 														<html-el:option value="${feeList.feeId}">${feeList.feeName}</html-el:option>
 													</c:forEach>

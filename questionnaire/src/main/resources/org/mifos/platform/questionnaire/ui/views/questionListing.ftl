@@ -24,6 +24,7 @@
 [#assign multiSelect][@spring.message "questionnaire.quesiton.choices.multiselect"/][/#assign]
 [#assign singleSelect][@spring.message "questionnaire.quesiton.choices.singleselect"/][/#assign]
 [#assign smartSelect][@spring.message "questionnaire.quesiton.choices.smartselect"/][/#assign]
+[#assign smartSingleSelect][@spring.message "questionnaire.quesiton.choices.smartsingleselect"/][/#assign]
 <div class="question_list">
     <table class="table_common " id="questions.table" name="questions.table">
       <thead>
@@ -38,7 +39,7 @@
       [#list questionDefinition.questions as question]
         <tr>
             <td class="title">${question.text}</td>
-            <td class="ans_type">${{"freeText":freeText, "date":date, "number":number, "multiSelect":multiSelect, "singleSelect":singleSelect, "smartSelect":smartSelect}[question.type]}</td>
+            <td class="ans_type">${{"freeText":freeText, "date":date, "number":number, "multiSelect":multiSelect, "singleSelect":singleSelect, "smartSelect":smartSelect, "smartSingleSelect":smartSingleSelect}[question.type]}</td>
             <td class="choices">
               [#if question.commaSeparateChoices?has_content]
                 ${question.commaSeparateChoices}

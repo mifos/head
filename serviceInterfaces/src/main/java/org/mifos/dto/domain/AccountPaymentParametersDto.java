@@ -89,6 +89,12 @@ public class AccountPaymentParametersDto {
             BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDto paymentType, String comment) {
         this(userMakingPayment, account, paymentAmount, paymentDate, paymentType, comment, null, null, null);
     }
+    
+    public AccountPaymentParametersDto(UserReferenceDto userMakingPayment, AccountReferenceDto account,
+            BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDto paymentType, String comment, String receiptId) {
+        this(userMakingPayment, account, paymentAmount, paymentDate, paymentType, comment, null, receiptId, null);
+    }
+
 
     /**
      * Instantiates a new account payment parameters dto.

@@ -201,6 +201,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setSections(mapToSections(questionGroupDetail));
         questionGroup.setEventSources(mapEventSourceDtoToEntity(questionGroupDetail.getEventSources()));
         questionGroup.setEditable(questionGroupDetail.isEditable());
+        questionGroup.setActivityId(questionGroupDetail.getActivityId());
         return questionGroup;
     }
 
@@ -424,6 +425,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setTitle(questionGroupDto.getTitle());
         questionGroup.setState(questionGroupDto.isActive() ? QuestionGroupState.ACTIVE : QuestionGroupState.INACTIVE);
         questionGroup.setSections(mapToSectionsFromDtos(questionGroupDto.getSections()));
+        questionGroup.setActivityId(questionGroupDto.getActivityId());
         return questionGroup;
     }
 
@@ -638,7 +640,8 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
                 makeEntry(AnswerType.SINGLESELECT, QuestionType.SINGLE_SELECT),
                 makeEntry(AnswerType.CHOICE, QuestionType.SINGLE_SELECT),
                 makeEntry(AnswerType.SMARTSELECT, QuestionType.SMART_SELECT),
-                makeEntry(AnswerType.MULTISELECT, QuestionType.MULTI_SELECT));
+                makeEntry(AnswerType.MULTISELECT, QuestionType.MULTI_SELECT),
+                makeEntry(AnswerType.SMARTSINGLESELECT, QuestionType.SMART_SINGLE_SELECT));
     }
 
     private void populateQuestionToAnswerTypeMap() {
@@ -648,7 +651,8 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
                 makeEntry(QuestionType.NUMERIC, AnswerType.NUMBER),
                 makeEntry(QuestionType.SINGLE_SELECT, AnswerType.SINGLESELECT),
                 makeEntry(QuestionType.SMART_SELECT, AnswerType.SMARTSELECT),
-                makeEntry(QuestionType.MULTI_SELECT, AnswerType.MULTISELECT));
+                makeEntry(QuestionType.MULTI_SELECT, AnswerType.MULTISELECT),
+                makeEntry(QuestionType.SMART_SINGLE_SELECT, AnswerType.SMARTSINGLESELECT));
     }
 
 }

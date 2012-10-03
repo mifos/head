@@ -25,6 +25,7 @@
 [#assign multiSelect][@spring.message "questionnaire.quesiton.choices.multiselect"/][/#assign]
 [#assign singleSelect][@spring.message "questionnaire.quesiton.choices.singleselect"/][/#assign]
 [#assign smartSelect][@spring.message "questionnaire.quesiton.choices.smartselect"/][/#assign]
+[#assign smartSingleSelect][@spring.message "questionnaire.quesiton.choices.smartsingleselect"/][/#assign]
 [@adminLeftPaneLayout]
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
     <script type="text/javascript" src="pages/questionnaire/js/viewQuestionDetail.js"></script>
@@ -55,7 +56,7 @@
                             [@spring.message "questionnaire.question"/]: ${question.text}
                         </li>
                         <li>
-                            [@spring.message "questionnaire.answer.type"/]: ${{"freeText":freeText, "date":date, "number":number, "multiSelect":multiSelect, "singleSelect":singleSelect, "smartSelect":smartSelect}[question.type]}
+                            [@spring.message "questionnaire.answer.type"/]: ${{"freeText":freeText, "date":date, "number":number, "multiSelect":multiSelect, "singleSelect":singleSelect, "smartSelect":smartSelect, "smartSingleSelect":smartSingleSelect}[question.type]}
                         </li>
                         [#if question.smartSelect]
                         <li>
