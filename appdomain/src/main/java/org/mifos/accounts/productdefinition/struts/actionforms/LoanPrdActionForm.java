@@ -2915,7 +2915,7 @@ public class LoanPrdActionForm extends BaseActionForm {
             addError(errors, ProductDefinitionConstants.ERRORMINIMUMINSTALLMENT,
                     ProductDefinitionConstants.ERRORMINIMUMINSTALLMENT, error, rownum);
         }
-        if (Double.valueOf(minNoOfInstall) < 1) {
+        if (minNoOfInstall == null ||  Double.valueOf(minNoOfInstall) < 1) {
             addError(errors, ProductDefinitionConstants.ERRORMINIMUMINSTALLMENT,
                     ProductDefinitionConstants.ERRORMINIMUMINSTALLMENT, error, rownum);
         }        
