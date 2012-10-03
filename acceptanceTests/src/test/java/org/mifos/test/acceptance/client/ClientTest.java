@@ -365,6 +365,21 @@ public class ClientTest extends UiTestCaseBase {
         viewDetailsPage.verifySpouseFather("FatherFirstnameTest FatherLastNameTest");
         ClientNotesPage seeAllNotes = viewDetailsPage.navigateToAllNotesPage();
         seeAllNotes.verifySeeAllNotesTitle("client1 lastname");
+        
+        // extension to verify MIFOS-5685
+        applicationDatabaseOperation.updateGLIM(1);
+        applicationDatabaseOperation.updateLSIM(1);
+        seeAllNotes.navigateBack();
+        editPersonalInfoPage = viewDetailsPage.editPersonalInformation();
+        parameters2.setDateOfBirthYYYY("1961");
+        parameters2.setDateOfBirthMM("07");
+        parameters2.setDateOfBirthDD("02");
+        viewDetailsPage = editPersonalInfoPage.submitAndNavigateToViewDetailsPage(parameters2);
+        viewDetailsPage.verifyDateOfBirth("02", "07", "1961");
+        seeAllNotes = viewDetailsPage.navigateToAllNotesPage();
+        seeAllNotes.verifySeeAllNotesTitle("client1 lastname");
+        applicationDatabaseOperation.updateGLIM(0);
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
