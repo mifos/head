@@ -51,8 +51,16 @@ public class GroupIndividualLoanDto implements Comparable<GroupIndividualLoanDto
 
     @Override
     public int compareTo(GroupIndividualLoanDto o) {
-        return getAccountId().compareTo(o.getAccountId());
+        return this.getAccountId().compareTo(o.getAccountId());
     }
     
+    @Override
+    public boolean equals(Object obj) {
+        return (this == obj);
+    }
     
+    @Override
+    public int hashCode() {
+        return Integer.valueOf(accountId).hashCode();
+    }
 }

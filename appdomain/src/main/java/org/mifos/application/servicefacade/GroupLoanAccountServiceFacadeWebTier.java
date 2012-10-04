@@ -221,7 +221,6 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
         loan.setExternalId(loanAccountInfo.getGroupLoanAccountDetails().getExternalId());
         loan.setCollateralNote(loanAccountInfo.getGroupLoanAccountDetails().getCollateralNotes());
         loan.setCollateralTypeId(loanAccountInfo.getGroupLoanAccountDetails().getCollateralTypeId());
-        loan.setGroupLoan(Boolean.TRUE);
         if (isBackdatedLoan) {
             loan.markAsCreatedWithBackdatedPayments();
         }

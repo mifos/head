@@ -223,9 +223,6 @@ public class LoanBO extends AccountBO implements Loan {
     private WeekDay monthWeek;
     private RankOfDay monthRank;
 
-    //new group loan account
-    private Boolean groupLoan;
-    
     // associations
     private List<LoanActivityEntity> loanActivityDetails;
     private List<AccountOverpaymentEntity> accountOverpayments;
@@ -268,7 +265,6 @@ public class LoanBO extends AccountBO implements Loan {
         this.maxMinInterestRate = null;
         this.maxMinNoOfInstall = null;
         this.performanceHistory = null;
-        this.groupLoan = false;
     }
 
     /**
@@ -294,7 +290,7 @@ public class LoanBO extends AccountBO implements Loan {
     // opening balance loan constructor
     public LoanBO(LoanOfferingBO loanProduct, CustomerBO customer, AccountState loanState, LoanProductOverridenDetail overridenDetail,
             MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanScheduleConfiguration configuration,
-            InstallmentRange installmentRange, AmountRange loanAmountRange, CreationDetail creationDetail, Boolean groupLoan) {
+            InstallmentRange installmentRange, AmountRange loanAmountRange, CreationDetail creationDetail) {
         super(AccountTypes.LOAN_ACCOUNT, loanState, customer, loanSchedule.getRoundedLoanSchedules(), creationDetail);
         this.parentAccount = null; // used for GLIM loans and will be set in factory method for this.
         this.performanceHistory = new LoanPerformanceHistoryEntity(this);
@@ -347,13 +343,12 @@ public class LoanBO extends AccountBO implements Loan {
         }
 
         this.memberAccounts = new LinkedHashSet<LoanBO>();
-        this.groupLoan = groupLoan;
     }
     
     //create new Group Loan Account
     public LoanBO(LoanOfferingBO loanProduct, CustomerBO customer, AccountState loanState, LoanProductOverridenDetail overridenDetail,
             MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanScheduleConfiguration configuration,
-            InstallmentRange installmentRange, AmountRange loanAmountRange, CreationDetail creationDetail, Boolean groupLoan, AccountTypes type) {
+            InstallmentRange installmentRange, AmountRange loanAmountRange, CreationDetail creationDetail, AccountTypes type) {
         super(type, loanState, customer, loanSchedule.getRoundedLoanSchedules(), creationDetail);
         this.parentAccount = null; // used for GLIM loans and will be set in factory method for this.
         this.performanceHistory = new LoanPerformanceHistoryEntity(this);
@@ -406,7 +401,6 @@ public class LoanBO extends AccountBO implements Loan {
         }
 
         this.memberAccounts = new LinkedHashSet<LoanBO>();
-        this.groupLoan = groupLoan;
     }
     
 
@@ -416,7 +410,7 @@ public class LoanBO extends AccountBO implements Loan {
             InstallmentRange installmentRange, AmountRange loanAmountRange,
             CreationDetail creationDetail, PersonnelBO createdBy) {
 
-        LoanBO standardLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail, Boolean.FALSE);
+        LoanBO standardLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail);
 
         standardLoan.setFund(fund);
         standardLoan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(standardLoan.getAccountState(), standardLoan.getAccountState(), createdBy, standardLoan));
@@ -429,7 +423,7 @@ public class LoanBO extends AccountBO implements Loan {
             InstallmentRange installmentRange, AmountRange loanAmountRange,
             CreationDetail creationDetail, PersonnelBO createdBy) {
 
-        LoanBO standardLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail, Boolean.FALSE, AccountTypes.GROUP_LOAN_ACCOUNT);
+        LoanBO standardLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail, AccountTypes.GROUP_LOAN_ACCOUNT);
 
         standardLoan.setFund(fund);
         standardLoan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(standardLoan.getAccountState(), standardLoan.getAccountState(), createdBy, standardLoan));
@@ -441,7 +435,7 @@ public class LoanBO extends AccountBO implements Loan {
             LoanScheduleConfiguration configuration, InstallmentRange installmentRange, AmountRange loanAmountRange, CreationDetail creationDetail, PersonnelBO createdBy) {
 
         AccountState loanState = AccountState.LOAN_PENDING_APPROVAL;
-        LoanBO groupMemberLoan = new LoanBO(loanProduct, member, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail, Boolean.FALSE);
+        LoanBO groupMemberLoan = new LoanBO(loanProduct, member, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail, AccountTypes.GROUP_LOAN_ACCOUNT);
         groupMemberLoan.setParentAccount(parentLoan);
         groupMemberLoan.markAsIndividualLoanAccount();
         groupMemberLoan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(groupMemberLoan.getAccountState(), groupMemberLoan.getAccountState(), createdBy, groupMemberLoan));
@@ -453,7 +447,7 @@ public class LoanBO extends AccountBO implements Loan {
             LoanScheduleConfiguration configuration, InstallmentRange installmentRange, AmountRange loanAmountRange, CreationDetail creationDetail, PersonnelBO createdBy, Boolean groupLoan) {
 
         AccountState loanState = AccountState.LOAN_PENDING_APPROVAL;
-        LoanBO standardLoan = new LoanBO(loanProduct, member, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail, groupLoan, AccountTypes.GROUP_LOAN_ACCOUNT);
+        LoanBO standardLoan = new LoanBO(loanProduct, member, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail, AccountTypes.GROUP_LOAN_ACCOUNT);
         
         standardLoan.setParentAccount(parentLoan);
         standardLoan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(standardLoan.getAccountState(), standardLoan.getAccountState(), createdBy, standardLoan));
@@ -946,14 +940,6 @@ public class LoanBO extends AccountBO implements Loan {
             }
         }
         return amount;
-    }
-
-    public Boolean getGroupLoan() {
-        return groupLoan;
-    }
-
-    public void setGroupLoan(Boolean groupLoan) {
-        this.groupLoan = groupLoan;
     }
 
     /**

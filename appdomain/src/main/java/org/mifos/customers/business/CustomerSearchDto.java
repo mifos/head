@@ -56,6 +56,7 @@ public class CustomerSearchDto implements DataTransferObject {
     private short customerStatus;
     private String loanOfficerName;
     private Collection loanGlobalAccountNum;
+    private Collection groupLoanGlobalAccountNum;
     private Collection savingsGlobalAccountNum;
     private short customerType;
 
@@ -64,11 +65,8 @@ public class CustomerSearchDto implements DataTransferObject {
     private short branchGlobalNum;
     private short loanOffcerGlobalNum;
     private String loanGlobalAccountNumber;
+    private String groupLoanGlobalAccountNumber;
     private String savingsGlobalAccountNumber;
-    private boolean groupLoan;
-    
-    
-
     /**
      * @return Returns the savingsGlobalAccountNumber.
      */
@@ -449,6 +447,22 @@ public class CustomerSearchDto implements DataTransferObject {
      */
     public void setCustomerId(int customerId) {
         this.customerId = customerId;
+    }
+
+    public Collection getGroupLoanGlobalAccountNum() {
+        return groupLoanGlobalAccountNum;
+    }
+
+    public void setGroupLoanGlobalAccountNum(Collection groupLoanGlobalAccountNum) {
+        this.groupLoanGlobalAccountNum = groupLoanGlobalAccountNum;
+    }
+
+    public String getGroupLoanGlobalAccountNumber() {
+        return groupLoanGlobalAccountNumber;
+    }
+
+    public void setGroupLoanGlobalAccountNumber(String groupLoanGlobalAccountNumber) {
+        this.groupLoanGlobalAccountNumber = groupLoanGlobalAccountNumber;
     }
 
 }

@@ -493,6 +493,8 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         List<CustomerFlagDto> customerFlags = customerDao.getCustomerFlagDto(client.getCustomerFlags());
 
         List<LoanDetailDto> loanDetail = customerDao.getLoanDetailDto(client.getOpenLoanAccounts());
+        
+        List<LoanDetailDto> groupLoanDetail = customerDao.getLoanDetailDto(client.getOpenGroupLoanAccounts());
 
         List<SavingsDetailDto> savingsDetail = customerDao.getSavingsDetailDto(clientId, userContext);
 
@@ -522,7 +524,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         List<SurveyDto> customerSurveys = new ArrayList<SurveyDto>();
 
         return new ClientInformationDto(clientDisplay, customerAccountSummary, clientPerformanceHistory, clientAddress,
-                recentCustomerNotes, customerFlags, loanDetail, savingsDetail, customerMeeting, activeSurveys, customerSurveys,
+                recentCustomerNotes, customerFlags, loanDetail, groupLoanDetail, savingsDetail, customerMeeting, activeSurveys, customerSurveys,
                 closedLoanAccounts, closedSavingsAccounts);
     }
 

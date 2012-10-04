@@ -688,18 +688,6 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                     test="${loanInformationDto.accountStateId==3 || loanInformationDto.accountStateId==4}">
                                     <tr>
                                         <td class="paddingL10"><span class="fontnormal8pt">
-                                        <c:url value="loanDisbursementAction.do" var="loanDisbursementActionLoadMethodUrl" >
-                                            <c:param name="method" value="load" />
-                                            <c:param name="accountId" value="${loanInformationDto.accountId}" />
-                                            <c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}" />
-                                            <c:param name="prdOfferingName" value="${loanInformationDto.prdOfferingName}" />
-                                            <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-                                            <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-                                        </c:url >
-                                        <html-el:link styleId="loanaccountdetail.link.disburseLoan"
-                                            href="${loanDisbursementActionLoadMethodUrl}">
-                                            <mifos:mifoslabel name="loan.disburseloan" />
-                                        </html-el:link> <br>
                                         </span></td>
                                     </tr>
                                 </c:when>

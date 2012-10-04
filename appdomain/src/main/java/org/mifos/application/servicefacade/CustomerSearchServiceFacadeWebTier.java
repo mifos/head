@@ -101,6 +101,9 @@ public class CustomerSearchServiceFacadeWebTier implements
         		for (Object savingGlobalAccount : customerSearchDto.getSavingsGlobalAccountNum()){
         			clientSearchResultDto.getSavingsGlobalAccountNum().add((String) savingGlobalAccount);
         		}
+        		for (Object groupLoanAccount: customerSearchDto.getGroupLoanGlobalAccountNum()) {
+        		    clientSearchResultDto.getGroupLoanGlobalAccountNum().add((String) groupLoanAccount);
+        		}
         		
         		clientSearchResultDto.setStatus(customerSearchDto.getStatus());
         		
@@ -133,6 +136,9 @@ public class CustomerSearchServiceFacadeWebTier implements
         		for (Object savingGlobalAccount : customerSearchDto.getSavingsGlobalAccountNum()){
         			groupSearchResultDto.getSavingsGlobalAccountNum().add((String) savingGlobalAccount);
         		}
+                for (Object groupLoanAccount: customerSearchDto.getGroupLoanGlobalAccountNum()) {
+                    groupSearchResultDto.getGroupLoanGlobalAccountNum().add((String) groupLoanAccount);
+                }
         		
         		groupSearchResultDto.setStatus(customerSearchDto.getStatus());
         		
@@ -177,17 +183,11 @@ public class CustomerSearchServiceFacadeWebTier implements
         		
         		loanAccountSearchResultDto.setLoanOfficerName(customerSearchDto.getLoanOfficerName());
         		loanAccountSearchResultDto.setLoanOfficerId(customerSearchDto.getLoanOffcerGlobalNum());
-        		//new group loan group account
-        		if (customerSearchDto.getCustomerType() == 9) {
+        		//new group loan group or client account
+        		if (customerSearchDto.getCustomerType() == 9 || customerSearchDto.getCustomerType() == 10) {
         			loanAccountSearchResultDto.setGroupLoan(Boolean.TRUE);
         			loanAccountSearchResultDto.setAccountStatusId(AccountTypes.GROUP_LOAN_ACCOUNT.getValue());
         		} 
-        		//new group loan client account
-        		else if (customerSearchDto.getCustomerType() == 10) {
-        		    loanAccountSearchResultDto.setGroupLoan(Boolean.TRUE);
-        		    loanAccountSearchResultDto.setAccountStatusId(AccountTypes.GROUP_LOAN_ACCOUNT.getValue());
-        		    loanAccountSearchResultDto.setAccountStatusId(CustomerLevel.CLIENT.getValue());
-        		}
         		
         		if ( customerSearchDto.getClientGlobalCustNum() != null){
             		loanAccountSearchResultDto.setCenterName(customerSearchDto.getClientName());

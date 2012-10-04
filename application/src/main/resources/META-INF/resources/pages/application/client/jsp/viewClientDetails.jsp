@@ -226,6 +226,8 @@ explanation of the license and how it is applied.
 									height="10"></td>
 							</tr>
 						</table>
+					</c:if> 
+					<c:if test="${!empty clientInformationDto.groupLoanAccountsInUse}">
 						<!-- group loans -->
                         <table width="96%" border="0" cellspacing="0" cellpadding="0">
                             <tr>
@@ -233,7 +235,10 @@ explanation of the license and how it is applied.
                                     class="tableContentLightBlue">
                                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                     <tr>
-                                        <td width="63%"><span class="fontnormalbold"> <mifos:mifoslabel
+                                        <td width="63%"><span class="fontnormalbold"> 
+                                        <mifos:mifoslabel
+                                            name="${ConfigurationConstants.GROUP}" />&nbsp
+                                        <mifos:mifoslabel
                                             name="${ConfigurationConstants.LOAN}" /> </span> <span
                                             class="fontnormal"></span></td>
                                     </tr>
@@ -241,7 +246,7 @@ explanation of the license and how it is applied.
                                 <span class="fontnormal"></span>
                                 <table width="95%" border="0" align="center" cellpadding="0"
                                     cellspacing="0">
-                                    <c:forEach items="${clientInformationDto.loanAccountsInUse}"
+                                    <c:forEach items="${clientInformationDto.groupLoanAccountsInUse}"
                                         var="loan">
                                         <tr>
                                             <td>
@@ -249,7 +254,8 @@ explanation of the license and how it is applied.
                                                 cellpadding="0">
                                                 <tr>
                                                     <td width="65%"><span class="fontnormal"> 
-                                                    <c:url value="viewLoanAccountDetails.ftl" var="viewLoanAccountDetailsUrl" >
+                                                    <c:url value="groupIndividualLoanAccountAction.do" var="viewLoanAccountDetailsUrl" >
+                                                    	<c:param name="method" value="get"/>
                                                         <c:param name="globalAccountNum" value="${loan.globalAccountNum}" />
                                                         <c:param name="customerId" value="${clientInformationDto.clientDisplay.customerId}" />
                                                         <c:param name="recordOfficeId" value="${UserContext.branchId}" />
@@ -291,7 +297,8 @@ explanation of the license and how it is applied.
                                     height="10"></td>
                             </tr>
                         </table>
-					</c:if> <c:if
+					</c:if>
+					<c:if
 						test="${!empty clientInformationDto.savingsAccountsInUse}">
 						<table width="96%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
