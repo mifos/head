@@ -16,13 +16,13 @@
             <evaluate expression="loanRepaymentController.retrievePaymentTypes()" result="loanRepaymentFormBean.allowedPaymentTypes" />
         </on-entry>
         <transition on="detailsEntered" to="reviewLoanRepaymentDetails" bind="true" validate="true" />
-        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate" />
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="preserve" />
     </view-state>
 
     <view-state id="reviewLoanRepaymentDetails" view="reviewLoanRepaymentDetails" model="loanRepaymentFormBean">
         <transition on="submit" to="submitPayment" bind="true" validate="true" />
         <transition on="back" to="enterLoanRepaymentDetails" />
-        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate" />
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="preserve" />
     </view-state>
 
     <action-state id="submitPayment">
@@ -32,8 +32,7 @@
         <transition on="printPaymentReceipt" to="printPaymentReceipt" />
     </action-state>
     
+    <view-state id="cancel" view="externalRedirect:contextRelative:/loanAccountAction.do?globalAccountNum=${flowScope.loanAccountNumber}&amp;randomNUm=-2&amp;method=get" />
     <view-state id="printPaymentReceipt" view="externalRedirect:contextRelative:/printPaymentReceipt.ftl?globalAccountNum=${flowScope.loanAccountNumber}" />
     <view-state id="success" view="externalRedirect:contextRelative:/loanAccountAction.do?globalAccountNum=${flowScope.loanAccountNumber}&amp;randomNUm=-2&amp;method=get" />
-    <end-state id="cancel" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
-
 </flow>
