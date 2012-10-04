@@ -98,7 +98,7 @@
                             <input id="selectAll1" type="checkbox" name="selectAll1" onchange="javascript:selectAll(this)"/>
                         </span>
                         <span class="span-9">
-                            <strong>[@spring.message "systemAdministration.batchjobs.scheduledTasks"/]</strong>
+                            <strong>[@spring.message "systemAdministration.batchjobs.selectAll"/]</strong>
                         </span>
                     </div>
                     <div class="clear">&nbsp;</div>
