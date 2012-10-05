@@ -267,8 +267,8 @@ public class GroupTest extends UiTestCaseBase {
         groupViewDetailsPage.navigateToGroupsCenter(newCenterName);
     }
 
-    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui"}, enabled=false) //TODO http://mifosforge.jira.com/browse/MIFOS-5081
-    // http://mifosforge.jira.com/browse/MIFOSTEST-682
+    //https://mifosforge.jira.com/browse/MIFOS-5850
+    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui"}, enabled=true)
     // questions dispear from database before this test (another test must delete questions)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createGroupWithQuestionGroup() throws Exception {
@@ -295,7 +295,7 @@ public class GroupTest extends UiTestCaseBase {
     	questionGroupTestHelper.createQuestionGroup(questionGroupParams2);
         CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
         groupParams.setGroupName("GroupTest");
-        String centerName = "MyCenter1233171688286";
+        String centerName = "WeeklyMeetingCenter";
         String qG_1 = "CreateGroupQG";
         String qG_2 = "CreateGroupQG2";
         QuestionResponseParameters responseParams = getQuestionResponseParametersForGroupCreation("answer1");
@@ -336,11 +336,11 @@ public class GroupTest extends UiTestCaseBase {
         QuestionResponseParameters responseParams = new QuestionResponseParameters();
         responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "24/01/2011");
         //responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray", "first");
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "text");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "text");
 
         //responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "24/01/2011");
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "text2");
-        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "red");
+        //responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "text2");
+        //responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "red");
         //responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[2].valuesAsArray", "february:feb");
 
         responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "24/01/2011");
