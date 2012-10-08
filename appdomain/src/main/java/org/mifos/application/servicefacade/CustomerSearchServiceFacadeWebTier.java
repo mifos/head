@@ -1,7 +1,8 @@
 package org.mifos.application.servicefacade;
 
 import java.util.List;
-
+import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerSearchDto;
@@ -26,6 +27,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class CustomerSearchServiceFacadeWebTier implements
 		CustomerSearchServiceFacade {
 
+    @Autowired
+    LoanDao loanDao;
+    
+    @Autowired
+    SavingsDao savingsDao;
+    
 	@Autowired
 	CustomerServiceFacade customerServiceFacade;
 	
@@ -93,11 +100,17 @@ public class CustomerSearchServiceFacadeWebTier implements
         		clientSearchResultDto.setLoanOfficerName(customerSearchDto.getLoanOfficerName());
         		clientSearchResultDto.setLoanOfficerId(customerSearchDto.getLoanOffcerGlobalNum());
         		
-        		for (Object loanGlobalAccount : customerSearchDto.getLoanGlobalAccountNum()){
-        			clientSearchResultDto.getLoanGlobalAccountNum().add((String) loanGlobalAccount);
-        		}
+                for (Object loanGlobalAccount : customerSearchDto.getLoanGlobalAccountNum()) {
+                    String accountStr = (String)loanGlobalAccount;
+                    clientSearchResultDto.getLoanGlobalAccountNum().add(accountStr);
+                    clientSearchResultDto.getLoanGlobalAccountStateIds().put(accountStr,
+                            loanDao.findByGlobalAccountNum(accountStr).getAccountState().getId());
+                }
         		for (Object savingGlobalAccount : customerSearchDto.getSavingsGlobalAccountNum()){
-        			clientSearchResultDto.getSavingsGlobalAccountNum().add((String) savingGlobalAccount);
+        		    String accountStr = (String)savingGlobalAccount;
+        			clientSearchResultDto.getSavingsGlobalAccountNum().add(accountStr);
+                    clientSearchResultDto.getSavingsGlobalAccountStateIds().put(accountStr,
+                            savingsDao.findBySystemId(accountStr).getState().getValue());   
         		}
         		
         		clientSearchResultDto.setStatus(customerSearchDto.getStatus());
@@ -126,10 +139,16 @@ public class CustomerSearchServiceFacadeWebTier implements
         		groupSearchResultDto.setLoanOfficerId(customerSearchDto.getLoanOffcerGlobalNum());
         		
         		for (Object loanGlobalAccount : customerSearchDto.getLoanGlobalAccountNum()){
-        			groupSearchResultDto.getLoanGlobalAccountNum().add((String) loanGlobalAccount);
+        		    String accountStr = (String) loanGlobalAccount;
+        			groupSearchResultDto.getLoanGlobalAccountNum().add(accountStr);
+        			groupSearchResultDto.getLoanGlobalAccountStateIds().put(accountStr,
+                            loanDao.findByGlobalAccountNum(accountStr).getAccountState().getId());
         		}
         		for (Object savingGlobalAccount : customerSearchDto.getSavingsGlobalAccountNum()){
-        			groupSearchResultDto.getSavingsGlobalAccountNum().add((String) savingGlobalAccount);
+                    String accountStr = (String)savingGlobalAccount;
+                    groupSearchResultDto.getSavingsGlobalAccountNum().add(accountStr);
+                    groupSearchResultDto.getSavingsGlobalAccountStateIds().put(accountStr,
+                            savingsDao.findBySystemId(accountStr).getState().getValue());   
         		}
         		
         		groupSearchResultDto.setStatus(customerSearchDto.getStatus());
@@ -153,7 +172,10 @@ public class CustomerSearchServiceFacadeWebTier implements
         		centerSearchResultDto.setLoanOfficerId(customerSearchDto.getLoanOffcerGlobalNum());
         		
         		for (Object savingGlobalAccount : customerSearchDto.getSavingsGlobalAccountNum()){
-        			centerSearchResultDto.getSavingsGlobalAccountNum().add((String) savingGlobalAccount);
+                    String accountStr = (String)savingGlobalAccount;
+                    centerSearchResultDto.getSavingsGlobalAccountNum().add(accountStr);
+                    centerSearchResultDto.getSavingsGlobalAccountStateIds().put(accountStr,
+                            savingsDao.findBySystemId(accountStr).getState().getValue()); 
         		}
         		
         		centerSearchResultDto.setStatus(customerSearchDto.getStatus());
