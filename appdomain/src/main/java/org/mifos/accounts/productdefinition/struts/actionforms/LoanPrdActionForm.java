@@ -1987,10 +1987,8 @@ public class LoanPrdActionForm extends BaseActionForm {
             addError(errors, "startdate", ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION);
         }
         if (oldStartDate != null && changedStartDate != null) {
-            if (DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime()).compareTo(
-                    DateUtils.getCurrentDateWithoutTimeStamp()) <= 0
-                    && (DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime())
-                            .compareTo(DateUtils.getDateWithoutTimeStamp(changedStartDate.getTime())) != 0)) {
+            if (DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime())
+                            .compareTo(DateUtils.getDateWithoutTimeStamp(changedStartDate.getTime())) != 0) {
                 addError(errors, "startDate", ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION);
             }
         } else if (changedStartDate != null
@@ -2012,9 +2010,8 @@ public class LoanPrdActionForm extends BaseActionForm {
             addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATE);
         }
         if (startingDate != null
-                && ((DateUtils.getDateWithoutTimeStamp(startingDate.getTime()).compareTo(
-                        DateUtils.getCurrentDateWithoutTimeStamp()) < 0) || (DateUtils.getDateWithoutTimeStamp(
-                        startingDate.getTime()).compareTo(DateUtils.getCurrentDateOfNextYearWithOutTimeStamp()) > 0))) {
+                && (DateUtils.getDateWithoutTimeStamp(
+                        startingDate.getTime()).compareTo(DateUtils.getCurrentDateOfNextYearWithOutTimeStamp()) > 0)) {
             addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATE);
         }
         logger.debug("validateStartDate method of Loan Product Action form method called :" + startDate);
@@ -2037,8 +2034,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         if (startingDate != null && endingDate != null && startingDate.compareTo(endingDate) >= 0) {
             addError(errors, "endDate", ProductDefinitionConstants.INVALIDENDDATE);
         }
-        logger
-                .debug("validateEndDate method of Loan Product Action form method called :" + startDate + "---"
+        logger.debug("validateEndDate method of Loan Product Action form method called :" + startDate + "---"
                         + endDate);
     }
 
