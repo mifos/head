@@ -267,13 +267,14 @@ public class GroupTest extends UiTestCaseBase {
         groupViewDetailsPage.navigateToGroupsCenter(newCenterName);
     }
 
-    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui"}, enabled=false) //TODO http://mifosforge.jira.com/browse/MIFOS-5081
+    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui"}, enabled=true)
     // http://mifosforge.jira.com/browse/MIFOSTEST-682
     // questions dispear from database before this test (another test must delete questions)
+    // https://mifosforge.jira.com/browse/MIFOS-5850
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createGroupWithQuestionGroup() throws Exception {
         //Given
-
+    	
     	CreateQuestionGroupParameters questionGroupParams = new CreateQuestionGroupParameters();
     	questionGroupParams.setTitle("CreateGroupQG");
     	questionGroupParams.setAppliesTo("Create Group");
@@ -293,13 +294,15 @@ public class GroupTest extends UiTestCaseBase {
     	questionGroupParams2.addExistingQuestion("Sec 2", "MultiSelect");
     	questionGroupParams2.addExistingQuestion("Sec 2", "Text");
     	questionGroupTestHelper.createQuestionGroup(questionGroupParams2);
+    	
         CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
         groupParams.setGroupName("GroupTest");
-        String centerName = "MyCenter1233171688286";
+        String centerName = "Default Center";
         String qG_1 = "CreateGroupQG";
         String qG_2 = "CreateGroupQG2";
         QuestionResponseParameters responseParams = getQuestionResponseParametersForGroupCreation("answer1");
         QuestionResponseParameters responseParams2 = getQuestionResponseParametersForGroupCreation("answer2");
+        
         List<CreateQuestionParameters> questionsList = new ArrayList<CreateQuestionParameters>();
         questionsList.add(newFreeTextQuestionParameters("new question 1"));
         questionsList.add(newFreeTextQuestionParameters("new question 2"));
@@ -308,11 +311,13 @@ public class GroupTest extends UiTestCaseBase {
         String[] deactivateArray = {"new question 3", "SingleSelect", "ToBeDisabled"};
         String[] deactivatedGroupArray = {"MultiSelect", "DateQuestion"};
         List<String> deactivateList = Arrays.asList(deactivateArray);
+        
         //When / Then
         GroupViewDetailsPage groupViewDetailsPage = groupTestHelper.createGroupWithQuestionGroupsEdited(
                 groupParams, centerName, responseParams, responseParams2);
         groupViewDetailsPage.navigateToViewAdditionalInformationPage().navigateBack();
         QuestionGroupTestHelper questionTestHelper = new QuestionGroupTestHelper(selenium);
+        
         questionTestHelper.addNewQuestionsToQuestionGroup(qG_1, questionsList);
         questionTestHelper.markQuestionsAsInactive(deactivateList);
         questionTestHelper.markQuestionGroupAsInactive(qG_2);
@@ -322,25 +327,26 @@ public class GroupTest extends UiTestCaseBase {
         responsePage.verifyQuestionsDoesnotappear(deactivateArray);
         responsePage.verifyQuestionsDoesnotappear(deactivatedGroupArray);
         responsePage.verifyQuestionsExists(newActiveQuestions);
+        
         groupViewDetailsPage = navigationHelper.navigateToGroupViewDetailsPage(groupParams.getGroupName());
         ViewQuestionResponseDetailPage responseDetailsPage = groupViewDetailsPage
                 .navigateToViewAdditionalInformationPage();
         responseDetailsPage.verifyQuestionsDoesnotappear(deactivateArray);
         QuestionnairePage questionnairePage = responseDetailsPage.navigateToEditSection("0");
         questionnairePage.verifyField("details[0].sectionDetails[0].questions[0].value", "");
-        questionnairePage.verifyField("details[0].sectionDetails[0].questions[1].value", "");
-        questionGroupTestHelper.markQuestionGroupAsInactive(qG_1);
+        questionnairePage.verifyField("details[0].sectionDetails[0].questions[1].value", ""); 
+        questionGroupTestHelper.markQuestionGroupAsInactive(qG_1); 
     }
 
     private QuestionResponseParameters getQuestionResponseParametersForGroupCreation(String answer) {
         QuestionResponseParameters responseParams = new QuestionResponseParameters();
         responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "24/01/2011");
         //responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray", "first");
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "text");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "text");
 
         //responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "24/01/2011");
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "text2");
-        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "red");
+        //responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "text2");
+        //responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "red");
         //responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[2].valuesAsArray", "february:feb");
 
         responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "24/01/2011");
