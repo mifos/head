@@ -43,7 +43,7 @@
 	[/#list]
 	</ul>
 [#else]
-	<p></p>
+	<p>[@spring.message "fundTransfer.noValidAccount" /]</p>
 [/#if]
 <br />
 
