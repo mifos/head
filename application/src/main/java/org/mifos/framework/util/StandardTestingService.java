@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import javax.servlet.ServletContext;
 
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
@@ -287,6 +288,12 @@ public class StandardTestingService implements TestingService {
     @Override
     public void setBackDatedTransactionsAllowed(boolean flag) {
         MifosConfigurationManager.getInstance().setProperty("BackDatedTransactionsAllowed", flag);
+    }
+    
+    @Override
+    public void setBackDatedLoanProductCreationAllowed(boolean flag) {
+        MifosConfigurationManager.getInstance().setProperty(
+                LoanConstants.BACK_DATED_LOAN_PRODUCT_CREATION, flag);
     }
 
     @Override
