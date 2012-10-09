@@ -151,12 +151,16 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
     @Deprecated
     protected PrdOfferingBO(final UserContext userContext, final String prdOfferingName, final String prdOfferingShortName,
             final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
-            final String description) throws ProductDefinitionException {
+            final String description, boolean validateStartDate) throws ProductDefinitionException {
         super(userContext);
         logger.debug("creating product offering");
         validateUserContext(userContext);
         vaildate(prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate);
-        validateStartDateAgainstCurrentDate(startDate);
+        
+        if (validateStartDate) {
+            validateStartDateAgainstCurrentDate(startDate);
+        }
+        
         validateEndDateAgainstCurrentDate(startDate, endDate);
         validateDuplicateProductOfferingName(prdOfferingName);
         validateDuplicateProductOfferingShortName(prdOfferingShortName);
@@ -178,6 +182,13 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
             throw new ProductDefinitionException(e);
         }
         logger.debug("creating product offering done");
+    }
+    
+    @Deprecated
+    protected PrdOfferingBO(final UserContext userContext, final String prdOfferingName, final String prdOfferingShortName,
+            final ProductCategoryBO prdCategory, final PrdApplicableMasterEntity prdApplicableMaster, final Date startDate, final Date endDate,
+            final String description) throws ProductDefinitionException {
+        this(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, endDate, description, true);
     }
 
     public Short getPrdOfferingId() {
@@ -363,7 +374,11 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         logger.debug("getting the Product status for prdouct offering with start date :" + startDate
                 + " and product Type :" + prdType.getProductTypeID());
         PrdStatus prdStatus = null;
-        if (startDate.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) == 0) {
+        if (!prdType.getProductTypeID().equals(ProductType.LOAN.getValue()) && 
+                startDate.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) == 0) {
+            prdStatus = getActivePrdStatus(prdType);
+        } else if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue()) &&
+                startDate.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) <= 0) {
             prdStatus = getActivePrdStatus(prdType);
         } else {
             prdStatus = getInActivePrdStatus(prdType);

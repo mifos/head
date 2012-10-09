@@ -393,7 +393,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             throws ProductDefinitionException {
 
         super(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, endDate,
-                description);
+                description, false);
         logger.debug("building Loan offering");
         validate(gracePeriodType, gracePeriodDuration, interestTypes, maxInterestRate, minInterestRate,
                 defInterestRate, loanCounter, intDedDisbursement, prinDueLastInst, funds, fees, penalties, meeting,
