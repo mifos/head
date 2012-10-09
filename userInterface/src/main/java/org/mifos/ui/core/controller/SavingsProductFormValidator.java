@@ -32,24 +32,24 @@ import org.springframework.validation.FieldError;
 import java.util.Date;
 import java.math.BigDecimal;
 
-@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity", "PMD.ExcessiveMethodLength"})
+@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.NPathComplexity", "PMD.ExcessiveMethodLength" })
 public class SavingsProductFormValidator implements Validator {
-    final private LazyBindingErrorProcessor errorProcessor;   
+    final private LazyBindingErrorProcessor errorProcessor;
     @Autowired
     final private ConfigurationServiceFacade configurationServiceFacade;
-    
-    public SavingsProductFormValidator(LazyBindingErrorProcessor errorProcessor, ConfigurationServiceFacade configurationServiceFacade) {
+
+    public SavingsProductFormValidator(LazyBindingErrorProcessor errorProcessor,
+            ConfigurationServiceFacade configurationServiceFacade) {
         this.errorProcessor = errorProcessor;
         this.configurationServiceFacade = configurationServiceFacade;
     }
-
 
     @Override
     public boolean supports(Class<?> clazz) {
         return SavingsProductFormBean.class.isAssignableFrom(clazz);
     }
 
-    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
+    @SuppressWarnings({ "ThrowableInstanceNeverThrown" })
     @Override
     public void validate(Object target, Errors errors) {
 
@@ -59,7 +59,7 @@ public class SavingsProductFormValidator implements Validator {
             errors.reject("NotEmpty.generalDetails.name");
         }
         if (formBean.getGeneralDetails().getDescription().length() > 200) {
-        	errors.reject("Size.generalDetails.description");
+            errors.reject("Size.generalDetails.description");
         }
 
         if (formBean.getGeneralDetails().getShortName().trim().isEmpty()) {
@@ -70,46 +70,44 @@ public class SavingsProductFormValidator implements Validator {
             errors.reject("NotEmpty.generalDetails.selectedCategory");
         }
 
-        if (null == formBean.getGeneralDetails().getStartDateDay() ||
-                1 > formBean.getGeneralDetails().getStartDateDay() ||
-                31 < formBean.getGeneralDetails().getStartDateDay()) {
+        if (null == formBean.getGeneralDetails().getStartDateDay()
+                || 1 > formBean.getGeneralDetails().getStartDateDay()
+                || 31 < formBean.getGeneralDetails().getStartDateDay()) {
             errors.reject("Min.generalDetails.startDateDay");
         }
 
-        if (null == formBean.getGeneralDetails().getStartDateMonth() ||
-                1 > formBean.getGeneralDetails().getStartDateMonth() ||
-                12 < formBean.getGeneralDetails().getStartDateMonth()) {
+        if (null == formBean.getGeneralDetails().getStartDateMonth()
+                || 1 > formBean.getGeneralDetails().getStartDateMonth()
+                || 12 < formBean.getGeneralDetails().getStartDateMonth()) {
             errors.reject("Min.generalDetails.startDateMonth");
         }
 
-
-        if (null == formBean.getGeneralDetails().getStartDateAsDateTime() ||
-                !(formBean.getGeneralDetails().getStartDateYear().length() == 4)) {
+        if (null == formBean.getGeneralDetails().getStartDateAsDateTime()
+                || !(formBean.getGeneralDetails().getStartDateYear().length() == 4)) {
             errors.reject("Min.generalDetails.startDate");
         } else {
             MutableDateTime nextYear = new MutableDateTime();
             nextYear.setDate(new Date().getTime());
             nextYear.addYears(1);
 
-            if (formBean.getGeneralDetails().getStartDateAsDateTime() != null &&
-                    formBean.getGeneralDetails().getStartDateAsDateTime().compareTo(nextYear) > 0) {
+            if (formBean.getGeneralDetails().getStartDateAsDateTime() != null
+                    && formBean.getGeneralDetails().getStartDateAsDateTime().compareTo(nextYear) > 0) {
                 errors.reject("Min.generalDetails.startDate");
             }
         }
 
-        if ((null != formBean.getGeneralDetails().getEndDateDay() ||
-                null != formBean.getGeneralDetails().getEndDateMonth() ||
-                null != formBean.getGeneralDetails().getEndDateMonth()) &&
-                formBean.getGeneralDetails().getEndDateAsDateTime() == null) {
-                errors.reject("Min.generalDetails.endDate");
-        }
-
-        if (formBean.getGeneralDetails().getStartDateAsDateTime() != null &&
-                formBean.getGeneralDetails().getEndDateAsDateTime() != null &&
-                formBean.getGeneralDetails().getStartDateAsDateTime().compareTo(formBean.getGeneralDetails().getEndDateAsDateTime()) > 0) {
+        if ((null != formBean.getGeneralDetails().getEndDateDay()
+                || null != formBean.getGeneralDetails().getEndDateMonth() || null != formBean.getGeneralDetails()
+                .getEndDateMonth()) && formBean.getGeneralDetails().getEndDateAsDateTime() == null) {
             errors.reject("Min.generalDetails.endDate");
         }
 
+        if (formBean.getGeneralDetails().getStartDateAsDateTime() != null
+                && formBean.getGeneralDetails().getEndDateAsDateTime() != null
+                && formBean.getGeneralDetails().getStartDateAsDateTime()
+                        .compareTo(formBean.getGeneralDetails().getEndDateAsDateTime()) > 0) {
+            errors.reject("Min.generalDetails.endDate");
+        }
 
         if (formBean.getGeneralDetails().getSelectedApplicableFor().trim().isEmpty()) {
             errors.reject("NotEmpty.generalDetails.selectedApplicableFor");
@@ -117,106 +115,131 @@ public class SavingsProductFormValidator implements Validator {
 
         if (formBean.getSelectedDepositType().trim().isEmpty()) {
             errors.reject("NotEmpty.savingsProduct.selectedDepositType");
-        } else if (formBean.isMandatory() && (null == formBean.getAmountForDeposit() || formBean.getAmountForDeposit() <= 0)) {
+        } else if (formBean.isMandatory()
+                && (null == formBean.getAmountForDeposit() || formBean.getAmountForDeposit() <= 0)) {
             errors.reject("Min.savingsProduct.amountForDesposit");
         }
 
         if (formBean.isGroupSavingAccount() && formBean.getSelectedGroupSavingsApproach().trim().isEmpty()) {
             errors.reject("NotEmpty.savingsProduct.selectedGroupSavingsApproach");
         }
-        
-        if (!formBean.isInterestRateZero()){
-            if (null == formBean.getInterestRate() ||
-                    formBean.getInterestRate().doubleValue() < 1.0 ||
-                    formBean.getInterestRate().doubleValue() > 100.0 ||
-                    errorProcessor.getRejectedValue("interestRate") != null) {
+
+        if (!formBean.isInterestRateZero()) {
+            if (null == formBean.getInterestRate() || formBean.getInterestRate().doubleValue() < 1.0
+                    || formBean.getInterestRate().doubleValue() > 100.0
+                    || errorProcessor.getRejectedValue("interestRate") != null) {
                 if (errorProcessor.getTarget() == null) {
                     errors.reject("NotNull.savingsProduct.interestRate");
-                }
-                else {
-                    BindException bindException = new BindException(errorProcessor.getTarget(), errorProcessor.getObjectName());
-                    bindException.addError(new FieldError(errorProcessor.getObjectName(), "interestRate", errorProcessor.getRejectedValue("interestRate"),
-                            true, new String[] {"NotNull.savingsProduct.interestRate"}, null, null));
+                } else {
+                    BindException bindException = new BindException(errorProcessor.getTarget(),
+                            errorProcessor.getObjectName());
+                    bindException.addError(new FieldError(errorProcessor.getObjectName(), "interestRate",
+                            errorProcessor.getRejectedValue("interestRate"), true,
+                            new String[] { "NotNull.savingsProduct.interestRate" }, null, null));
                     errors.addAllErrors(bindException);
                 }
             }
-        
+
             if (formBean.getSelectedInterestCalculation().trim().isEmpty()) {
                 errors.reject("NotEmpty.savingsProduct.selectedInterestCalculation");
             }
-        
-            if (null == formBean.getInterestCalculationFrequency() || formBean.getInterestCalculationFrequency() < 1 ||
-                    errorProcessor.getRejectedValue("interestCalculationFrequency") != null) {
+
+            if (null == formBean.getInterestCalculationFrequency() || formBean.getInterestCalculationFrequency() < 1
+                    || errorProcessor.getRejectedValue("interestCalculationFrequency") != null) {
                 if (errorProcessor.getTarget() == null) {
                     errors.reject("NotNull.savingsProduct.interestCalculationFrequency");
-                }
-                else {
-                    BindException bindException = new BindException(errorProcessor.getTarget(), errorProcessor.getObjectName());
-                    bindException.addError(new FieldError(errorProcessor.getObjectName(), "interestCalculationFrequency", errorProcessor.getRejectedValue("interestCalculationFrequency"),
-                            true, new String[] {"NotNull.savingsProduct.interestCalculationFrequency"}, null, null));
+                } else {
+                    BindException bindException = new BindException(errorProcessor.getTarget(),
+                            errorProcessor.getObjectName());
+                    bindException.addError(new FieldError(errorProcessor.getObjectName(),
+                            "interestCalculationFrequency", errorProcessor
+                                    .getRejectedValue("interestCalculationFrequency"), true,
+                            new String[] { "NotNull.savingsProduct.interestCalculationFrequency" }, null, null));
                     errors.addAllErrors(bindException);
                 }
             }
-        
-            if (null == formBean.getInterestPostingMonthlyFrequency() || formBean.getInterestPostingMonthlyFrequency() < 1 ||
-                    errorProcessor.getRejectedValue("interestPostingMonthlyFrequency") != null) {
+
+            if (null == formBean.getInterestPostingMonthlyFrequency()
+                    || formBean.getInterestPostingMonthlyFrequency() < 1
+                    || errorProcessor.getRejectedValue("interestPostingMonthlyFrequency") != null) {
                 if (errorProcessor.getTarget() == null) {
                     errors.reject("Min.savingsProduct.interestPostingMonthlyFrequency");
-                }
-                else {
-                    BindException bindException = new BindException(errorProcessor.getTarget(), errorProcessor.getObjectName());
-                    bindException.addError(new FieldError(errorProcessor.getObjectName(), "interestPostingMonthlyFrequency", errorProcessor.getRejectedValue("interestPostingMonthlyFrequency"),
-                            true, new String[] {"Min.savingsProduct.interestPostingMonthlyFrequency"}, null, null));
+                } else {
+                    BindException bindException = new BindException(errorProcessor.getTarget(),
+                            errorProcessor.getObjectName());
+                    bindException.addError(new FieldError(errorProcessor.getObjectName(),
+                            "interestPostingMonthlyFrequency", errorProcessor
+                                    .getRejectedValue("interestPostingMonthlyFrequency"), true,
+                            new String[] { "Min.savingsProduct.interestPostingMonthlyFrequency" }, null, null));
                     errors.addAllErrors(bindException);
                 }
             }
-        } 
-        
+        }
+
         BigDecimal minBalanceForInterestCalculation;
         try {
-            minBalanceForInterestCalculation = BigDecimal.valueOf(Double.valueOf(formBean.getMinBalanceRequiredForInterestCalculation()));
-        }
-        catch (NumberFormatException e) {
+            minBalanceForInterestCalculation = BigDecimal.valueOf(Double.valueOf(formBean
+                    .getMinBalanceRequiredForInterestCalculation()));
+        } catch (NumberFormatException e) {
             minBalanceForInterestCalculation = new BigDecimal("-1");
         }
         if (minBalanceForInterestCalculation.compareTo(BigDecimal.ZERO) < 0) {
             errors.reject("Min.savingsProduct.balanceRequiredForInterestCalculation");
         }
-    
+
         if (formBean.getSelectedPrincipalGlCode().trim().isEmpty()) {
             errors.reject("NotEmpty.savingsProduct.selectedPrincipalGlCode");
         }
-    
+
         if (formBean.getSelectedInterestGlCode().trim().isEmpty()) {
             errors.reject("NotEmpty.savingsProduct.selectedInterestGlCode");
         }
         Short digsAfterDec = configurationServiceFacade.getAccountingConfiguration().getDigitsAfterDecimal();
         Short digsBeforeDec = configurationServiceFacade.getAccountingConfiguration().getDigitsBeforeDecimal();
-        int dot = formBean.getMaxWithdrawalAmount().toString().lastIndexOf(".");
-        int max = digsAfterDec + digsBeforeDec + dot;
-        int withdrawalLength = formBean.getMaxWithdrawalAmount().toString().length();
-        int depositLength = formBean.getAmountForDeposit().toString().length();
-        if (formBean.getMaxWithdrawalAmount().toString().lastIndexOf(0, dot) > digsBeforeDec) {
-			errors.reject("MaxDigitsBefore.savingProduct.withdrawal" , new String [] {digsBeforeDec.toString()} , null);       	
-        }
-        if (formBean.getMaxWithdrawalAmount().toString().lastIndexOf(dot, withdrawalLength) > digsAfterDec) {
-    		errors.reject("MaxDigitsAfter.savingProduct.withdrawal" , new String [] {digsAfterDec.toString()} , null);
-        }
-        if (withdrawalLength > max) {
-        	errors.reject("MaxDigitsNumber.savingProduct.withdrawal" , new String [] {String.valueOf(max)} , null);
+
+        Double maxWithdrawalObj = formBean.getMaxWithdrawalAmount();
+        String maxWithrawalString;
+
+        if (maxWithdrawalObj == null) {
+            maxWithrawalString = "";
+        } else {
+            maxWithrawalString = maxWithdrawalObj.toString();
         }
         
-        if (formBean.getAmountForDeposit().toString().lastIndexOf(0, dot) > digsBeforeDec) {
-			errors.reject("MaxDigitsBefore.savingProduct.deposit" , new String [] {digsBeforeDec.toString()} , null);       	
+        int dot = maxWithrawalString.lastIndexOf(".");
+        int max = digsAfterDec + digsBeforeDec + dot;
+
+        int withdrawalLength = maxWithrawalString.length();
+        int depositLength = maxWithrawalString.length();
+        if (maxWithrawalString.lastIndexOf(0, dot) > digsBeforeDec) {
+            errors.reject("MaxDigitsBefore.savingProduct.withdrawal", new String[] { digsBeforeDec.toString() }, null);
         }
-        if (formBean.getAmountForDeposit().toString().lastIndexOf(dot, depositLength) > digsAfterDec) {
-    		errors.reject("MaxDigitsAfter.savingProduct.deposit" , new String [] {digsAfterDec.toString()} , null);
+        if (maxWithrawalString.lastIndexOf(dot, withdrawalLength) > digsAfterDec) {
+            errors.reject("MaxDigitsAfter.savingProduct.withdrawal", new String[] { digsAfterDec.toString() }, null);
         }
-        if (depositLength > max) {
-        	errors.reject("MaxDigitsNumber.savingProduct.deposit" , new String [] {String.valueOf(max)} , null);
+        if (withdrawalLength > max) {
+            errors.reject("MaxDigitsNumber.savingProduct.withdrawal", new String[] { String.valueOf(max) }, null);
         }
 
-         
+        Double amountForDepositObj = formBean.getAmountForDeposit();
+        String amountForDepositString;
+
+        if (amountForDepositObj == null) {
+            amountForDepositString = "";
+        } else {
+            amountForDepositString = amountForDepositObj.toString();
+        }
+
+        if (amountForDepositString.lastIndexOf(0, dot) > digsBeforeDec) {
+            errors.reject("MaxDigitsBefore.savingProduct.deposit", new String[] { digsBeforeDec.toString() }, null);
+        }
+        if (amountForDepositString.lastIndexOf(dot, depositLength) > digsAfterDec) {
+            errors.reject("MaxDigitsAfter.savingProduct.deposit", new String[] { digsAfterDec.toString() }, null);
+        }
+        if (depositLength > max) {
+            errors.reject("MaxDigitsNumber.savingProduct.deposit", new String[] { String.valueOf(max) }, null);
+        }
+
     }
 
 }
