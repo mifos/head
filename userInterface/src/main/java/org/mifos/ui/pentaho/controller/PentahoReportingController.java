@@ -142,6 +142,8 @@ public class PentahoReportingController {
         	form.setEtlLastUpdate(this.pentahoReportsService.getEtlLastUpdateDate(request));
         	if (form.getEtlLastUpdate().equals(new Date(0))) {
         		request.getSession().setAttribute("dwNotRun", "true");
+        	} else {
+        	    request.getSession().setAttribute("dwNotRun", "false");
         	}
         	request.getSession().setAttribute("isDW", "true");
         } else {

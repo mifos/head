@@ -116,7 +116,7 @@ function fnEditTransaction(form) {
 							</table>
 
 
-					<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="bluetableborder">
+					<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="burlywoodborder">
 							<tr>
 								<td align="left" valign="top" class="paddingleftCreates">
 

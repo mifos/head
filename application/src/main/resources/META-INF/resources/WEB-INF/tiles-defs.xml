@@ -103,7 +103,7 @@
     </definition>
 
      <definition name=".financialAccountingsearch" extends=".searchmenu">
-         <put name="menutitle" value="FinancialAccounting Tasks" />
+        <put name="menutitle" value="Financial Accounting Tasks" />
         <put name="search" value="/pages/framework/jsp/nomenureport.jsp" />
     </definition>
 
