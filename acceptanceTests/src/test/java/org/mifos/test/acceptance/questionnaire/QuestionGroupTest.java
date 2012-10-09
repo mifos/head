@@ -44,6 +44,7 @@ import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataP
 import org.mifos.test.acceptance.framework.client.QuestionGroup;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
@@ -65,6 +66,7 @@ import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionGroupsPa
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.OfficeHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.util.StringUtil;
@@ -99,6 +101,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private static final int CREATE_OFFICE_QUESTION_GROUP_ID = 12;
     private static final String CLIENT = "WeeklyClient Wednesday";
     private Map<Integer, QuestionGroup> questionGroupInstancesOfClient;
+	private LoanTestHelper loanTestHelper;
     private static final List<String> charactersList = new ArrayList<String>(Arrays.asList("عربية", "有", "òèßñ"));
     private static final String noNumber = "qwerty";
     private static final List<String> EMPTY_LIST = new ArrayList<String>();
@@ -117,6 +120,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         super.setUp();
         officeHelper = new OfficeHelper(selenium);
         appLauncher = new AppLauncher(selenium);
+        loanTestHelper = new LoanTestHelper(selenium);
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         clientTestHelper = new ClientTestHelper(selenium);
         questionGroupInstancesOfClient = new HashMap<Integer, QuestionGroup>();
@@ -456,6 +460,13 @@ public class QuestionGroupTest extends UiTestCaseBase {
             answers.put("Number", "22");
             questionGroupInstancesOfClient = clientViewDetailsPage.getQuestionGroupInstances();
             questionGroupTestHelper.editResponses(clientViewDetailsPage, latestInstanceId(questionGroupInstancesOfClient), answers);
+            
+            // extension MIFOS-5821
+        	CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        	searchParameters.setSearchString("Client - Mary Monthly");
+        	searchParameters.setLoanProduct("MonthlyClientFlatLoanThirdFridayOfMonth");
+           	loanTestHelper.createDefaultLoanAccount(searchParameters);                
+
         } finally {
             questionGroupTestHelper.markQuestionGroupAsInactive(testQuestionGroup);
             questionGroupTestHelper.markQuestionGroupAsInactive("CreateOffice");
