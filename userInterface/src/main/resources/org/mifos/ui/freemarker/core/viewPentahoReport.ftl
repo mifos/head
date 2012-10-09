@@ -187,12 +187,14 @@ $(document).ready(function() {
                     </div>
 	    		</div>
 		    [/#list]
+		    </br>
 		    <div class="row">
 		    	[@form.submitButton label="widget.form.buttonLabel.submit" id="input.submit" attributes="onClick='selectAllOptions();'" /]
 		    	<input id="input.cancel" type="submit" class="cancel" value="[@spring.message "widget.form.buttonLabel.cancel" /]" name="CANCEL" />
 		    </div>
 		    [#if Session.isDW == "true"]
 		    <div class="row">
+		    	</br>
 		    	[#if Session.dwNotRun == "true"]
 		    		<span>[@spring.message "etlDoesntRun"/] </span>
 		    	[#else]
