@@ -183,7 +183,7 @@ public class ConfigurationPersistence extends LegacyGenericDao {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(KEY_QUERY_PARAMETER, key);
 		try {
-			return (ConfigurationKeyValue) execUniqueResultNamedQuery(
+			return (ConfigurationKeyValue) execUniqueResultNamedQueryWithoutFlush(
 					NamedQueryConstants.GET_CONFIGURATION_KEYVALUE_BY_KEY,
 					queryParameters);
 		} catch (PersistenceException e) {
