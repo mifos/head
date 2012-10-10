@@ -492,8 +492,17 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage = loanTestHelper.createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);
         loanAccountPage.verifyNumberOfInstallments("26", "52", "52");
         String loan1ID = loanAccountPage.getAccountId();
-        loanTestHelper.repayLoan(loan1ID);
+        loanTestHelper.repayLoan(loan1ID);        
         loanTestHelper.createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);
+        
+        //extension MIFOSTEST-1186
+        loanAccountPage.navigateToViewLoanAccountActivityPage();
+        loanAccountPage.verifyPage("ViewLoanAccountActivity");
+        Assert.assertEquals(selenium.getTable("accountActivityTable.2.1"), "Loan Disbursal");
+        Assert.assertEquals(selenium.getTable("accountActivityTable.2.2"), "5,000");
+        Assert.assertEquals(selenium.getTable("accountActivityTable.2.11"), "5,288");               
+        loanAccountPage.navigateBack();
+        
         loanAccountPage.verifyNumberOfInstallments("20", "30", "30");
         String loan2ID = loanAccountPage.getAccountId();
         loanTestHelper.repayLoan(loan2ID);
