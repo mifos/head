@@ -60,9 +60,6 @@ explanation of the license and how it is applied.
 							</html-el:link><br>
 							<br>
 							<font class="fontnormalRedBold"><span id="viewOffices.error.message"><html-el:errors bundle="OfficeResources" /></span></font>
-						    <c:set var="regional" />
-							<c:set var="divisional" />
-							<c:set var="area" />
 							 
 							<c:forEach var="headOffice" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'headOfficeList')}">
 									<span class="fontnormalbold">
@@ -78,6 +75,9 @@ explanation of the license and how it is applied.
 							<c:if test="${ !empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'regionalOfficeList')}">
 								<c:set var="regionalConfig" scope="request" value="true" ></c:set>
 							</c:if>
+       
+                            <c:set var="regional" />
+                            <c:set var="regionalParentOffice" />
 
 							<c:choose>
 								<c:when test="${empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'regionalOfficeList') && regionalConfig == 'true' }">
@@ -101,7 +101,7 @@ explanation of the license and how it is applied.
 									<table width="95%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td width="61%"><span class="fontnormalbold">
-												<span class="fontnormalbold"><c:out value="${office.level.name}" /></span></span></td>
+												<span class="fontnormalbold"><mifos:mifoslabel name="Office.labelRegionalOffice" bundle="OfficeUIResources" /></span></span></td>
 											<td width="39%" align="right">
 												<html-el:link styleId="viewOffices.link.newRegionalOffice" 
 													href="offAction.do?method=load&officeLevel=${OfficeLevel.REGIONALOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
@@ -111,7 +111,18 @@ explanation of the license and how it is applied.
 											</td>
 										</tr>
 									</table>
+                                    <br/>
 									<c:forEach var="regionalOffice" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'regionalOfficeList')}">
+                                        <c:if test="${ !empty regionalParentOffice  && regionalParentOffice != regionalOffice.parentOfficeName}">
+                                            <br/>
+                                            <c:set var="regionalParentOffice" value="${regionalOffice.parentOfficeName}" />
+                                            <span class="fontnormal"><c:out value="${regionalOffice.parentOfficeName}" /></span>
+                                        </c:if>
+                                        <c:if test="${empty regionalParentOffice}">
+                                            <span class="fontnormal"><c:out value="${regionalOffice.parentOfficeName}" /></span>
+                                            <c:set var="regionalParentOffice" value="${regionalOffice.parentOfficeName}" />
+                                            <c:set var="regional" value="${regionalOffice.parentOfficeName}" />
+                                        </c:if>
 										<span class="fontnormalbold"> </span>
 										<table width="90%" border="0" cellspacing="0" cellpadding="0">
 											<tr class="fontnormal">
@@ -129,10 +140,14 @@ explanation of the license and how it is applied.
 									</c:forEach>
 								</c:otherwise>
 							</c:choose>
+                            <br/>
 
 							<c:if test="${ !empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'divisionalOfficeList')}">
 							     <c:set var="subRegionalConfig" scope="request" value="true" ></c:set>
 							</c:if>
+       
+                            <c:set var="divisional" />
+                            <c:set var="divisionalParentOffice" /> 
 
 							 <c:choose>
 								<c:when test="${empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'divisionalOfficeList') && subRegionalConfig == 'true' }">
@@ -167,8 +182,18 @@ explanation of the license and how it is applied.
 											</html-el:link></td>
 										</tr>
 									</table>
-										
+									<br/>	
 									<c:forEach var="divisionalOffice" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'divisionalOfficeList')}">
+                                        <c:if test="${ !empty divisionalParentOffice  && divisionalParentOffice != divisionalOffice.parentOfficeName}">
+                                            <br/>
+                                            <c:set var="divisionalParentOffice" value="${divisionalOffice.parentOfficeName}" />
+                                            <span class="fontnormal"><c:out value="${divisionalOffice.parentOfficeName}" /></span>
+                                        </c:if>
+                                        <c:if test="${empty divisionalParentOffice}">
+                                            <span class="fontnormal"><c:out value="${divisionalOffice.parentOfficeName}" /></span>
+                                            <c:set var="divisionalParentOffice" value="${divisionalOffice.parentOfficeName}" />
+                                            <c:set var="divisional" value="${divisionalOffice.parentOfficeName}" />
+                                        </c:if>
 										<span class="fontnormalbold"> </span>
 										<table width="90%" border="0" cellspacing="0" cellpadding="0">
 											<tr class="fontnormal">
@@ -189,10 +214,14 @@ explanation of the license and how it is applied.
 									</c:forEach>
 								</c:otherwise>
 							</c:choose> 
+                            <br/>
 		
 							<c:if test="${ !empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areaOfficeList')}">
 							     <c:set var="areaConfig" scope="request" value="true" />
 							</c:if>
+       
+                            <c:set var="area" />
+                            <c:set var="areaParentOffice" /> 
 												
 							<c:choose>
 								<c:when test="${empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areaOfficeList') && areaConfig == 'true'}">
@@ -230,8 +259,18 @@ explanation of the license and how it is applied.
 											</td>
 										</tr>
 									</table>
-									
+									<br/>
 									<c:forEach var="areaOffice" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areaOfficeList')}">
+                                        <c:if test="${ !empty areaParentOffice  && areaParentOffice != areaOffice.parentOfficeName}">
+                                            <br/>
+                                            <c:set var="areaParentOffice" value="${areaOffice.parentOfficeName}" />
+                                            <span class="fontnormal"><c:out value="${areaOffice.parentOfficeName}" /></span>
+                                        </c:if>
+                                        <c:if test="${empty areaParentOffice}">
+                                            <span class="fontnormal"><c:out value="${areaOffice.parentOfficeName}" /></span>
+                                            <c:set var="areaParentOffice" value="${areaOffice.parentOfficeName}" />
+                                            <c:set var="area" value="${areaOffice.parentOfficeName}" />
+                                        </c:if>
 										<span class="fontnormalbold"> </span>
 										<table width="90%" border="0" cellspacing="0" cellpadding="0">
 											<tr class="fontnormal">
@@ -251,10 +290,10 @@ explanation of the license and how it is applied.
 									</c:forEach>
 								</c:otherwise>
 							</c:choose> 
+							<br/>
 							
-							
-							<c:set var="parentOffice" /> 
 							<c:set var="branch" />
+                            <c:set var="branchParentOffice" /> 
 							
 							<c:choose>
 								<c:when test="${empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'branchOfficeList')}">
@@ -291,17 +330,18 @@ explanation of the license and how it is applied.
 											</td>
 										</tr>
 									</table>
+                                    <br/>
 									<c:forEach var="branchOffice" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'branchOfficeList')}" varStatus="counter">
-										<c:if test="${ !empty parentOffice  && parentOffice != branchOffice.parentOfficeName}">
-											<br>
-											<c:set var="parentOffice" value="${branchOffice.parentOfficeName}" />
-											<span class="fontnormal"><c:out value="${branchOffice.parentOfficeName}" /></span>
-										</c:if>
-										<c:if test="${empty parentOffice}">
-											<span class="fontnormal"><c:out value="${branchOffice.parentOfficeName}" /></span>
-											<c:set var="parentOffice" value="${branchOffice.parentOfficeName}" />
-											<c:set var="branch" value="${branchOffice.parentOfficeName}" />
-										</c:if>
+										<c:if test="${ !empty branchParentOffice  && branchParentOffice != branchOffice.parentOfficeName}">
+                                            <br/>
+                                            <c:set var="branchParentOffice" value="${branchOffice.parentOfficeName}" />
+                                            <span class="fontnormal"><c:out value="${branchOffice.parentOfficeName}" /></span>
+                                        </c:if>
+                                        <c:if test="${empty branchParentOffice}">
+                                            <span class="fontnormal"><c:out value="${branchOffice.parentOfficeName}" /></span>
+                                            <c:set var="branchParentOffice" value="${branchOffice.parentOfficeName}" />
+                                            <c:set var="branch" value="${branchOffice.parentOfficeName}" />
+                                        </c:if>
 										<table width="90%" border="0" cellspacing="0" cellpadding="0">
 											<tr class="fontnormal">
 												<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
