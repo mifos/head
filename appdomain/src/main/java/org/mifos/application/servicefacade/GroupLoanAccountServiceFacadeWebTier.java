@@ -3,6 +3,7 @@ package org.mifos.application.servicefacade;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -22,7 +23,6 @@ import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.MaxMinLoanAmount;
 import org.mifos.accounts.loan.business.MaxMinNoOfInstall;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
@@ -50,10 +50,8 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.clientportfolio.loan.service.RecurringSchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateGroupLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
-import org.mifos.clientportfolio.newloan.applicationservice.GroupMemberAccountDto;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanAccountCashFlow;
 import org.mifos.clientportfolio.newloan.domain.CreationDetail;
-import org.mifos.clientportfolio.newloan.domain.GroupMemberLoanDetail;
 import org.mifos.clientportfolio.newloan.domain.LoanAccountDetail;
 import org.mifos.clientportfolio.newloan.domain.LoanProductOverridenDetail;
 import org.mifos.clientportfolio.newloan.domain.LoanSchedule;
@@ -574,7 +572,7 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
         while(itr.hasNext()) {
             LoanBO memberAccount = itr.next();
             if(itr.hasNext()) {
-                BigDecimal currentAmount = amount.divide(memberAccount.calcFactorOfEntireLoan());
+                BigDecimal currentAmount = amount.divide(memberAccount.calcFactorOfEntireLoan(), RoundingMode.HALF_UP);
                 memberAccountDtos.add(new GroupIndividualLoanDto(memberAccount.getGlobalAccountNum(), currentAmount, memberAccount.getAccountId()));
                 amountSpent = amountSpent.add(currentAmount);
             } else {

@@ -26,9 +26,14 @@ import static org.mifos.framework.util.helpers.DateUtils.getDateAsSentFromBrowse
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -36,7 +41,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.joda.time.LocalDate;
@@ -102,23 +106,24 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     private boolean truePrintReceipt = false;
        
     //Group Loan
-    private List<String> individualValues = new ArrayList<String>();
+    //key memeber account global num
+    //value amount
+    private Map<Integer,String> individualValues = new HashMap<Integer, String>();
     
-
-    public String getIndividualValues(int index) {
-        return individualValues.get(index);
-    }
-    
-    public void setIndividualValues(int index, String value) {
-        individualValues.set(index, value);
-    }
-    
-    public List<String> getIndividualValues() {
+    public Map<Integer, String> getIndividualValues() {
         return individualValues;
     }
 
-    public void setIndividualValues(List<String> individualValues) {
+    public void setIndividualValues(Map<Integer, String> individualValues) {
         this.individualValues = individualValues;
+    }
+    
+    public void setUpdateIndividualValues(String accountId, String value) {
+        individualValues.put(Integer.valueOf(accountId), value);
+    }
+    
+    public String getIndividualValues(Integer accountId) {
+        return individualValues.get(accountId);
     }
 
     public boolean getTruePrintReceipt() {

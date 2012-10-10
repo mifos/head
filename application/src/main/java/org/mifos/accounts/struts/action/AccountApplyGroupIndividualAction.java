@@ -21,12 +21,6 @@
 package org.mifos.accounts.struts.action;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +30,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.api.AccountService;
-import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.servicefacade.AccountPaymentDto;
 import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
@@ -45,13 +38,11 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.GroupLoanAccountServiceFacade;
-import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
-import org.mifos.dto.domain.GroupIndividualLoanDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -65,21 +56,19 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
-public class AccountApplyGroupPaymentAction extends BaseAction {
+public class AccountApplyGroupIndividualAction extends BaseAction {
 
     private AccountService accountService = null;
     private GroupLoanAccountServiceFacade groupLoanService;
-    private LoanAccountServiceFacade loanService;
     
-    public AccountApplyGroupPaymentAction() throws Exception {
+    public AccountApplyGroupIndividualAction() throws Exception {
         accountService = ApplicationContextProvider.getBean(AccountService.class);
         groupLoanService = ApplicationContextProvider.getBean(GroupLoanAccountServiceFacade.class);
-        loanService = ApplicationContextProvider.getBean(LoanAccountServiceFacade.class);
     }
 
     @Deprecated
     // For unit testing
-    public AccountApplyGroupPaymentAction(AccountServiceFacade accountServiceFacade,
+    public AccountApplyGroupIndividualAction(AccountServiceFacade accountServiceFacade,
             LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao) {
         this.accountServiceFacade = accountServiceFacade;
         this.legacyAcceptedPaymentTypeDao = legacyAcceptedPaymentTypeDao;
@@ -113,34 +102,6 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
-    @TransactionDemarcate(joinToken = true)
-    public ActionForward divide(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
-        actionForm.getIndividualValues().clear();
-        
-        List<GroupIndividualLoanDto> memberAccounts = groupLoanService.getMemberLoansAndDefaultPayments(Integer.valueOf(actionForm.getAccountId()), new BigDecimal(actionForm.getAmount()));
-        List<String> memberAccountsNumbers = new ArrayList<String>();
-                    
-        for(int i = 0 ; i < memberAccounts.size() ; i++) {
-            memberAccountsNumbers.add(memberAccounts.get(i).getGlobalAccountNum());
-            actionForm.getIndividualValues().put(memberAccounts.get(i).getAccountId(), String.valueOf(memberAccounts.get(i).getDefaultAmount().doubleValue()));
-        }
-        
-        List<LoanBO> memberInfos = getMemberAccountsInformation(actionForm.getAccountId());
-        SessionUtils.setCollectionAttribute("memberInfos", memberInfos, request);
-        SessionUtils.setCollectionAttribute("memberAccounts", memberAccountsNumbers, request);
-        
-        return mapping.findForward("divide");
-    }
-
-    private List<LoanBO> getMemberAccountsInformation(String accountId) {
-        List<LoanBO> membersInfo = new ArrayList<LoanBO>();
-        for (LoanBO memberAcc : loanDao.findById(Integer.valueOf(accountId)).getMemberAccounts()) {
-            membersInfo.add(memberAcc);
-        }
-        return membersInfo;
-    }
     
     void setValuesInSession(HttpServletRequest request, AccountApplyPaymentActionForm actionForm, AccountPaymentDto accountPaymentDto) throws PageExpiredException {
         SessionUtils.setAttribute(Constants.ACCOUNT_VERSION, accountPaymentDto.getVersion(), request);
@@ -153,18 +114,6 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        AccountApplyPaymentActionForm accountApplyPaymentActionForm = (AccountApplyPaymentActionForm) form;
-        
-        Double oldAmmount = Double.valueOf(accountApplyPaymentActionForm.getAmount());
-        Double newAmounts = 0.0;
-        for(String amount : accountApplyPaymentActionForm.getIndividualValues().values()) {
-            newAmounts += Double.valueOf(amount);
-        }
-        
-        if (!oldAmmount.equals(newAmounts)) {
-            accountApplyPaymentActionForm.setAmount(newAmounts.toString());
-        }
-        
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
@@ -186,37 +135,35 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
+        Integer accountId = Integer.valueOf(actionForm.getAccountId());
         String paymentType = request.getParameter(Constants.INPUT);
         UserReferenceDto userReferenceDto = new UserReferenceDto(userContext.getId());
-        
-        AccountPaymentDto accountPaymentDto = null;
-        for (Map.Entry<Integer, String> accountValue : actionForm.getIndividualValues().entrySet()) {
-            accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(accountValue.getKey(), paymentType,
-                    userContext.getLocaleId(), userReferenceDto, actionForm.getTrxnDate());
+        AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(accountId, paymentType,
+                userContext.getLocaleId(), userReferenceDto, actionForm.getTrxnDate());
 
-            validateAccountPayment(accountPaymentDto, accountValue.getKey(), request);
-            validateAmount(accountPaymentDto, accountValue.getValue());
+        validateAccountPayment(accountPaymentDto, accountId, request);
+        validateAmount(accountPaymentDto, actionForm.getAmount());
 
-            PaymentTypeDto paymentTypeDto;
-            if (accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT) ||
-                    accountPaymentDto.getAccountType().equals(AccountTypeDto.GROUP_LOAN_ACCOUNT)) {
-                paymentTypeDto = getLoanPaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
-            } else {
-                paymentTypeDto = getFeePaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
-            }
-            
-            AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(userReferenceDto,
-                    new AccountReferenceDto(accountValue.getKey()), new BigDecimal(accountValue.getValue()), actionForm.getTrxnDateAsLocalDate(),
-                    paymentTypeDto, AccountConstants.NO_COMMENT, actionForm.getReceiptDateAsLocalDate(),
-                    actionForm.getReceiptId(), accountPaymentDto.getCustomerDto());
-    
-            if (paymentTypeDto.getValue().equals(this.legacyAcceptedPaymentTypeDao.getSavingsTransferId())) {
-                this.accountServiceFacade.makePaymentFromSavingsAcc(accountPaymentParametersDto,
-                        actionForm.getAccountForTransfer());
-            } else {
-                this.accountServiceFacade.makePayment(accountPaymentParametersDto);
-            }
+        PaymentTypeDto paymentTypeDto;
+        String amount = actionForm.getAmount();
+        if (accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT)) {
+            paymentTypeDto = getLoanPaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
+        } else {
+            paymentTypeDto = getFeePaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
         }
+
+        AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(userReferenceDto,
+                new AccountReferenceDto(accountId), new BigDecimal(amount), actionForm.getTrxnDateAsLocalDate(),
+                paymentTypeDto, AccountConstants.NO_COMMENT, actionForm.getReceiptDateAsLocalDate(),
+                actionForm.getReceiptId(), accountPaymentDto.getCustomerDto());
+
+        if (paymentTypeDto.getValue().equals(this.legacyAcceptedPaymentTypeDao.getSavingsTransferId())) {
+            this.accountServiceFacade.makePaymentFromSavingsAcc(accountPaymentParametersDto,
+                    actionForm.getAccountForTransfer());
+        } else {
+            this.accountServiceFacade.makePayment(accountPaymentParametersDto);
+        }
+        
         request.getSession().setAttribute("globalAccountNum", ((AccountApplyPaymentActionForm) form).getGlobalAccountNum());
         
         ActionForward findForward;
@@ -234,8 +181,7 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
         if (new BigDecimal(amount).compareTo(BigDecimal.ZERO) <= 0) {
             throw new ApplicationException("errors.invalid_amount_according_to_due");
         }
-        if (!accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT) &&
-                !accountPaymentDto.getAccountType().equals(AccountTypeDto.GROUP_LOAN_ACCOUNT)) {
+        if (!accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT)) {
             if (new BigDecimal(amount).compareTo(new BigDecimal(accountPaymentDto.getTotalPaymentDue())) > 0) {
                 throw new ApplicationException("errors.invalid_amount_according_to_due");
             }
@@ -243,7 +189,13 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
     }
 
     private void validateAccountPayment(AccountPaymentDto accountPaymentDto, Integer accountId, HttpServletRequest request) throws Exception {
+        checkVersion(request, accountPaymentDto.getVersion());
         checkPermission(accountId);
+    }
+
+    private void checkVersion(HttpServletRequest request, int accountVersion) throws Exception {
+        Integer savedAccountVersion = (Integer) SessionUtils.getAttribute(Constants.ACCOUNT_VERSION, request);
+        checkVersionMismatch(savedAccountVersion, accountVersion);
     }
 
     private void checkPermission(Integer accountId) throws CustomerException {

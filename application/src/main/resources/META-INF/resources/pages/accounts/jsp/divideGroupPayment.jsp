@@ -49,30 +49,80 @@ explanation of the license and how it is applied.
 	}
 </SCRIPT>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
-		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+		<form name="goBackToLoanAccountDetails" method="get" action ="viewGroupLoanAccountDetails.ftl">
 			<input type="hidden" name='globalAccountNum' value="${param.globalAccountNum}"/>
 		</form>
 		<html-el:form method="post"
-			action="/applyGroupPaymentAction.do?method=divide"
+			action="/applyGroupPaymentAction.do?method=preview"
 			focus="paymentTypeId">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'AccountType')}" var="AccountType" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'AccountId')}" var="AccountId" />
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'memberAccounts')}" var="memberAccounts" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'memberInfos')}" var="memberAccounts" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-					<table width="96%" border="0" cellpadding="0" cellspacing="0">
-						<c:forEach items="${memberAccounts}" var="member" varStatus="rowId">
+			<table width="96%" border="0" cellpadding="3" cellspacing="0">
+				<tr>
+					<td width="100%" colspan="2" class="headingorange"><span
+						class="heading"><c:out value="${param.prdOfferingName}" /> # <c:out
+						value="${param.globalAccountNum}" /> - </span> <mifos:mifoslabel
+						name="accounts.apply.payment.divide" bundle="accountsUIResources" /></td>
+				</tr>
+				<tr>
+					<td><font class="fontnormalRedBold"> <span id="reviewapplypayment.error.message"><html-el:errors
+						bundle="accountsUIResources" /> </font></td>
+				</tr>
+				<tr>
+					<td colspan="2" class="fontnormal"><mifos:mifoslabel
+						name="accounts.apply.payment.divide.amount" bundle="accountsUIResources"/></td>
+				</tr>
+				<tr>
+					<td colspan="2" class="blueline"><img src="pages/framework/images/trans.gif"
+						width="10" height="5"></td>
+				</tr>
+			</table>			
+			<table width="96%" border="0" cellpadding="0" cellspacing="0">
+					<c:set value="${applyPaymentActionForm.individualValues}" var="memberIdsAndValues"/>
 							<tr>
 								<td>
-								     ${member}
-								</td>
-								<td>
-									<html-el:text property="individualValues[${rowId.count-1}]" styleClass="separatedNumber"
-										styleId="applypayment.input.amount"
-										name="applyPaymentActionForm" />
-									
+									<table width="96%" border="0" cellspacing="0" cellpadding="1">
+									<c:forEach items="${memberAccounts}" var="member" varStatus="rowId">
+									<c:if test="${rowId.count -1 == 0}">
+										<tr>
+										<td width="2%"></td>
+											<td align="center" class="fontnormalbold" colspan="2" width="5%">
+												<mifos:mifoslabel name="accounts.acc_owner"/>
+											</td>
+											<td align="left" class="fontnormalbold" colspan="1" width="20%">
+												<mifos:mifoslabel name="accounts.amount"/>
+											</td>
+										<td></td>
+										</tr>
+									</c:if>
+									<tr>
+										<td align="right" class="fontnormal" width="15%"> 
+										<span class="paddingright03">${rowId.count}.</span>
+										</td>
+										<td align="right" class="fontnormal" width="5%">
+											<span class="paddingright20"><mifos:mifoslabel name="accounts.apply.payment.client" 
+													bundle="accountsUIResources"/></span> <br/>
+											<mifos:mifoslabel name="accounts.apply.payment.account" 
+													bundle="accountsUIResources"/>
+										</td>
+										<td align=center class="fontnormal" width="5%">
+											<c:out value="${member.customer.displayName}" /> <br/>
+											<c:out value="${member.globalAccountNum}" />
+										</td>
+										<td align="left" colspan="1" width="5%">
+										<c:set value="${member.accountId}" var="accId"/>
+											<html-el:text property="updateIndividualValues(${accId})" styleClass="separatedNumber"
+												styleId="applypayment.input.amount" value="${memberIdsAndValues[accId]}"
+												name="individualValues.value[${rowId.count-1}]" />
+										</td>
+										<td width="2%"></td>
+									</tr>
+									</c:forEach>
+									</table>
 								</td>
 							</tr>
-						</c:forEach>
 					</table>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>

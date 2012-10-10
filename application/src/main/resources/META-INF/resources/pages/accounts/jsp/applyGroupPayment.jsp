@@ -117,7 +117,7 @@ explanation of the license and how it is applied.
 								mandatory="yes" name="accounts.amount" isColonRequired="Yes" /></span></td>
 							<td width="76%">
 							<c:choose>
-								<c:when test="${AccountType=='LOAN_ACCOUNT'}">
+								<c:when test="${AccountType=='LOAN_ACCOUNT' || AccountType=='GROUP_LOAN_ACCOUNT' }">
 								<html-el:text property="amount" styleClass="separatedNumber"
 								styleId="applypayment.input.amount"
 								name="applyPaymentActionForm" />
@@ -188,37 +188,15 @@ explanation of the license and how it is applied.
 							</td>
 						</tr>
 						<tr>
-							<td align="center"><c:choose>
-								<c:when
-									test="${(AccountType!='LOAN_ACCOUNT') && (applyPaymentActionForm.amount == '0.0'||applyPaymentActionForm.amount=='0')}">
-									<html-el:submit styleId="applypayment.button.submit" styleClass="disabledbuttn" disabled="true"
-										property="Preview">
+							<td align="center">
+									<html-el:submit styleId="applypayment.button.reviewTransaction" styleClass="buttn submit"  property="accounts.apply.payment.confirm">
 										<mifos:mifoslabel name="accounts.reviewtransaction">
 										</mifos:mifoslabel>
 									</html-el:submit>
-								</c:when>
-								<c:otherwise>
-									<html-el:submit styleId="applypayment.button.reviewTransaction" styleClass="buttn submit"  property="Preview">
-										<mifos:mifoslabel name="accounts.reviewtransaction">
-										</mifos:mifoslabel>
-									</html-el:submit>
-								</c:otherwise>
-							</c:choose> &nbsp; <c:choose>
-								<c:when test="${param.input == 'loan'}">
 									<html-el:button styleId="applypayment.button.cancel" styleClass="cancelbuttn" property="Cancel"
 										onclick="ViewLoanDetails()">
 										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
 									</html-el:button>
-
-								</c:when>
-								<c:otherwise>
-									<html-el:button styleId="applypayment.button.cancel" styleClass="cancelbuttn" property="Cancel"
-										onclick="ViewDetails()">
-										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
-									</html-el:button>
-
-								</c:otherwise>
-							</c:choose></td>
 						</tr>
 					</table>
 					</td>

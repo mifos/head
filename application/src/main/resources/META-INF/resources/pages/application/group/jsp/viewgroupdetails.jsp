@@ -225,14 +225,25 @@ explanation of the license and how it is applied.
 											<table width="100%" border="0" cellspacing="0"
 												cellpadding="0">
 												<tr>
-
 													<td width="65%"><span class="fontnormal"> 
-													<c:url value="viewLoanAccountDetails.ftl" var="viewLoanAccountDetailsUrl" >
-														<c:param name="globalAccountNum" value="${loan.globalAccountNum}" />
-														<c:param name="customerId" value="${groupInformationDto.groupDisplay.customerId}" />
-														<c:param name="recordOfficeId" value="${param.recordOfficeId}" />
-														<c:param name="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
-													</c:url >
+													<c:choose>
+														<c:when test="${loan.accountTypeId == 5}">
+															<c:url value="viewGroupLoanAccountDetails.ftl" var="viewLoanAccountDetailsUrl" >
+																<c:param name="globalAccountNum" value="${loan.globalAccountNum}" />
+																<c:param name="customerId" value="${groupInformationDto.groupDisplay.customerId}" />
+																<c:param name="recordOfficeId" value="${param.recordOfficeId}" />
+																<c:param name="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
+															</c:url >
+														</c:when>
+														<c:otherwise>
+															<c:url value="viewLoanAccountDetails.ftl" var="viewLoanAccountDetailsUrl" >
+																<c:param name="globalAccountNum" value="${loan.globalAccountNum}" />
+																<c:param name="customerId" value="${groupInformationDto.groupDisplay.customerId}" />
+																<c:param name="recordOfficeId" value="${param.recordOfficeId}" />
+																<c:param name="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
+															</c:url >
+														</c:otherwise>
+													</c:choose>
 													<html-el:link styleId="viewgroupdetails.link.viewLoanAccount"
 														href="${viewLoanAccountDetailsUrl}">
 														<c:out value="${loan.prdOfferingName}" />, <mifos:mifoslabel name="Group.acc" bundle="GroupUIResources" /><c:out

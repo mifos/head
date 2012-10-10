@@ -158,7 +158,6 @@ public class GroupLoanAccountAction extends AccountAppAction{
         }
 
         List<ValueListElement> allLoanPurposes = this.loanProductDao.findAllLoanPurposes();
-//        List<BusinessActivityEntity> loanPurposes = (List<BusinessActivityEntity>)masterDataService.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES, getUserContext(request).getLocaleId());
         SessionUtils.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES, allLoanPurposes, request);
 
         if (null != loanIndividualMonitoringIsEnabled && 0 != loanIndividualMonitoringIsEnabled.intValue()

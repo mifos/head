@@ -198,7 +198,7 @@ public class ActivityMapper {
         parseActionSecurity(getReportsCategorySecurity());
         parseActionSecurity(getBirtAdminDocumentUploadSecurity());
         parseActionSecurity(getImportTransactionsSecurity());
-
+        parseActionSecurity(getAccountGroupIndividualPaymentSecurity());
         parseActionSecurity(getMigrateSecurity());
     }
 
@@ -766,8 +766,12 @@ public class ActivityMapper {
         ActionSecurity security = new ActionSecurity("applyGroupPaymentAction");
         security.allow("load", SecurityConstants.VIEW);
         security.allow("divide", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("applyPayment", SecurityConstants.VIEW);
         return security;
     }
+    
     private ActionSecurity getGroupIndividualLoanAccountSecurity() {
         ActionSecurity security = new ActionSecurity("groupIndividualLoanAccountAction");
         security.allow("get", SecurityConstants.VIEW);
@@ -1087,6 +1091,12 @@ public class ActivityMapper {
 
     private ActionSecurity getAdminActionSecurity() {
         ActionSecurity security = new ActionSecurity("AdminAction");
+        security.allow("load", SecurityConstants.VIEW);
+        return security;
+    }
+    
+    private ActionSecurity getAccountGroupIndividualPaymentSecurity() {
+        ActionSecurity security = new ActionSecurity("applyIndividualPayment");
         security.allow("load", SecurityConstants.VIEW);
         return security;
     }
@@ -1639,7 +1649,7 @@ public class ActivityMapper {
 
     private short getActivityIdForPayment(AccountTypes accountTypes, CustomerLevel customerLevel) {
         short activityId = -1;
-        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
+        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT) || accountTypes.equals(AccountTypes.GROUP_LOAN_ACCOUNT) ) {
             activityId = SecurityConstants.LOAN_MAKE_PAYMENT_TO_ACCOUNT;
         } else if (accountTypes.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
             if (customerLevel.equals(CustomerLevel.CENTER)) {

@@ -625,7 +625,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                     test="${loanInformationDto.accountStateId=='5' ||loanInformationDto.accountStateId=='6' || loanInformationDto.accountStateId=='7' || loanInformationDto.accountStateId=='8' || loanInformationDto.accountStateId=='9'}">
                                     <span class="fontnormal8pt"> <c:if
                                         test="${(loanInformationDto.accountStateId=='5' || loanInformationDto.accountStateId=='9')}">
-                                        <c:url value="applyPaymentAction.do" var="applyPaymentActionMethodUrl" >
+                                        <c:url value="applyIndividualPayment.do" var="applyPaymentActionMethodUrl" >
                                             <c:param name="method" value="load" />
                                             <c:param name="input" value="loan" />
                                             <c:param name="prdOfferingName" value="${loanInformationDto.prdOfferingName}" />

@@ -187,17 +187,7 @@
             <forward name="printPaymentReceipt" path="printPaymentReceipt.ftl" redirect="true"/>
         </action>
         <!--  redo loan -->
-        <action path="/groupLoanAccountAction" type="org.mifos.accounts.loan.struts.action.GroupLoanAccountAction"
-                name="loanAccountActionForm" parameter="method"
-                input="/groupLoanAccountAction.do?method=validate" scope="session" validate="true" >
-                <forward name="get_success" path="/pages/application/loan/jsp/groupLoanAccountDetail.jsp"/>
-        </action>
-        <action path="/applyGroupPaymentAction" type="org.mifos.accounts.struts.action.AccountApplyGroupPaymentAction"
-                name="applyPaymentActionForm" parameter="method"
-                input="/applyGroupPaymentAction.do?method=validate" scope="session" validate="true">
-                <forward name="load_success" path="/pages/accounts/jsp/applyGroupPayment.jsp"/>
-                <forward name="divide" path="/pages/accounts/jsp/divideGroupPayment.jsp"/>
-        </action>
+
         <action path="/loanAccountAction" type="org.mifos.accounts.loan.struts.action.LoanAccountAction"
                 name="loanAccountActionForm" parameter="method"
                 input="/loanAccountAction.do?method=validate" scope="session" validate="true" >
@@ -388,6 +378,27 @@
                 name="loanAccountActionForm" parameter="method"
                 input="/groupIndividualLoanAccountAction.do?method=validate" scope="session" validate="true" >
                 <forward name="get_success" path="/pages/application/loan/jsp/groupIndividualLoanAccountDetails.jsp"/>
+        </action>
+        <action path="/applyIndividualPayment" type="org.mifos.accounts.struts.action.AccountApplyGroupIndividualAction"
+            name="applyPaymentActionForm" parameter="method"
+            input="/applyIndividualPayment.do?method=validate" scope="session" validate="true">
+         	<forward name="load_success" path="/pages/accounts/jsp/applypayment.jsp"/>
+        </action>        
+        <action path="/groupLoanAccountAction" type="org.mifos.accounts.loan.struts.action.GroupLoanAccountAction"
+               name="loanAccountActionForm" parameter="method"
+               input="/groupLoanAccountAction.do?method=validate" scope="session" validate="true" >
+        	<forward name="get_success" path="/pages/application/loan/jsp/groupLoanAccountDetail.jsp"/>
+        </action>
+        <action path="/applyGroupPaymentAction" type="org.mifos.accounts.struts.action.AccountApplyGroupPaymentAction"
+                name="applyPaymentActionForm" parameter="method"
+                input="/applyGroupPaymentAction.do?method=validate" scope="session" validate="true">
+            <forward name="load_success" path="/pages/accounts/jsp/applyGroupPayment.jsp"/>
+            <forward name="divide" path="/pages/accounts/jsp/divideGroupPayment.jsp"/>
+            <forward name="preview_success" path="/pages/accounts/jsp/previewApplyGroupPayment.jsp"/>
+            <forward name="preview_failure" path="/pages/accounts/jsp/applyGroupPayment.jsp"/>
+            <forward name="previous_success" path="/pages/accounts/jsp/applyGroupPayment.jsp"/>
+            <forward name="applyPayment_success" path="/customerAccountAction.do?method=load"/>
+            <forward name="applyPayment_failure" path="/pages/accounts/jsp/previewApplyGroupPayment.jsp"/>
         </action>
        <!-- Group Loan end -->
     </action-mappings>
