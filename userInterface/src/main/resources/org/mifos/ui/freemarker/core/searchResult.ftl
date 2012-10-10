@@ -71,6 +71,7 @@
 			</thead>
 			[#if customerHierarchy?has_content]
 			<tbody>
+				
 				[#assign index = startIndex /]
 				[#list customerHierarchy.clients as client]
 					<tr>
@@ -109,7 +110,8 @@
 								<span>
 								[#list client.savingsGlobalAccountNum as saving]
 									<span>
-										<a href='viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${saving}</a>
+										<a href='viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
+										[@mifostag.MifosImage id='${client.savingsGlobalAccountStateIds[saving]}' moduleName='org.mifos.accounts.util.resources.accountsImages' /]Account # ${saving}</a>
 									</span>
 								[/#list]
 								</span>
@@ -123,7 +125,8 @@
 								<span>
 								[#list client.loanGlobalAccountNum as loan]
 									<span>
-										<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${loan}</a>
+										<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
+										[@mifostag.MifosImage id='${client.loanGlobalAccountStateIds[loan]}' moduleName='org.mifos.accounts.util.resources.accountsImages' /]Account # ${loan}</a>
 									</span>
 								[/#list]
 								</span>
@@ -164,6 +167,7 @@
 							<div>
 								[@spring.message '${ConfigurationConstants.GROUP}' /]
 								<span class='headingblue' style='font-size: 12px;'>
+								
 									<a href='viewGroupDetails.ftl?globalCustNum=${group.groupGlobalCustNum}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
 										${group.groupName}[@spring.message 'label.colon' /] [@spring.message 'ID' /] ${group.groupGlobalCustNum}
 									</a>
@@ -191,7 +195,8 @@
 								<span>
 								[#list group.savingsGlobalAccountNum as saving]
 									<span>
-										<a href='viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&method=get&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${saving}</a>
+										<a href='viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&method=get&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
+										[@mifostag.MifosImage id='${group.savingsGlobalAccountStateIds[saving]}' moduleName='org.mifos.accounts.util.resources.accountsImages' /]Account # ${saving}</a>
 									</span>
 								[/#list]
 								</span>
@@ -205,7 +210,8 @@
 								<span>
 								[#list group.loanGlobalAccountNum as loan]
 									<span>
-										<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${loan}</a>
+										<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
+										[@mifostag.MifosImage id='${group.loanGlobalAccountStateIds[loan]}' moduleName='org.mifos.accounts.util.resources.accountsImages' /]Account # ${loan}</a>
 									</span>
 								[/#list]
 								</span>
@@ -268,7 +274,8 @@
 								<span>
 								[#list center.savingsGlobalAccountNum as saving]
 									<span>
-									<a href='viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${center.branchId}&recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>${saving}</a>
+										<a href='viewSavingsAccountDetails.ftl?globalAccountNum=${saving}&recordOfficeId=${center.branchId}&recordLoanOfficerId=${center.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>
+										[@mifostag.MifosImage id='${center.savingsGlobalAccountStateIds[saving]}' moduleName='org.mifos.accounts.util.resources.accountsImages' /]Account # ${saving}</a>
 									</span>
 								[/#list]
 								</span>

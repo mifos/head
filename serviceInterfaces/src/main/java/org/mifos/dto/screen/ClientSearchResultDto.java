@@ -22,6 +22,7 @@ package org.mifos.dto.screen;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @SuppressWarnings("PMD")
@@ -47,6 +48,8 @@ public class ClientSearchResultDto implements Serializable {
     private Short loanOfficerId;
     private List<String> loanGlobalAccountNum = new ArrayList<String>();
     private List<String> savingsGlobalAccountNum = new ArrayList<String>();
+    private HashMap<String, Short> loanGlobalAccountStateIds = new HashMap<String, Short>();
+    private HashMap<String, Short> savingsGlobalAccountStateIds = new HashMap<String, Short>();
     private String status;
     
 
@@ -146,5 +149,18 @@ public class ClientSearchResultDto implements Serializable {
 	public void setLoanOfficerId(Short loanOfficerId) {
 		this.loanOfficerId = loanOfficerId;
 	}
+    public HashMap<String, Short> getLoanGlobalAccountStateIds() {
+        return loanGlobalAccountStateIds;
+    }
+    public void setLoanGlobalAccountStateIds(HashMap<String, Short> loanGlobalAccountStateIds) {
+        this.loanGlobalAccountStateIds = loanGlobalAccountStateIds;
+    }
+    public HashMap<String, Short> getSavingsGlobalAccountStateIds() {
+        return savingsGlobalAccountStateIds;
+    }
+    public void setSavingsGlobalAccountStateIds(HashMap<String, Short> savingsGlobalAccountStateIds) {
+        this.savingsGlobalAccountStateIds = savingsGlobalAccountStateIds;
+    }
+
     
 }
