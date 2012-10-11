@@ -138,13 +138,11 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             CustomerDto customer = account.getCustomer().toCustomerDto();
 
             List<SavingsDetailDto> savingsInUse = clientServiceFacade.retrieveSavingsInUseForClient(customer.getCustomerId());
-            List<ListItem<String>> accountsForTransfer = new ArrayList<ListItem<String>>();
+            List<SavingsDetailDto> accountsForTransfer = new ArrayList<SavingsDetailDto>();
             if (savingsInUse != null) {
                 for (SavingsDetailDto savingsAccount : savingsInUse) {
                     if (savingsAccount.getAccountStateId().equals(AccountState.SAVINGS_ACTIVE.getValue())) {
-                        ListItem<String> listItem = new ListItem<String>(savingsAccount.getGlobalAccountNum(),
-                                savingsAccount.getGlobalAccountNum() + " - " + savingsAccount.getPrdOfferingName());
-                        accountsForTransfer.add(listItem);
+                        accountsForTransfer.add(savingsAccount);
                     }
                 }
             }
