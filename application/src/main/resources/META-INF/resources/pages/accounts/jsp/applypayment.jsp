@@ -148,7 +148,10 @@ explanation of the license and how it is applied.
                             <td class="fontnormal"><mifos:select
                                 name="applyPaymentActionForm" styleId="applypayment.input.accountForTransfer" property="accountForTransfer">
                                 <c:forEach var="acc" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountsForTransfer')}" >
-                                    <html-el:option value="${acc.id}">${acc.displayValue}</html-el:option>
+                                    <html-el:option value="${acc.globalAccountNum}">${acc.globalAccountNum}; ${acc.prdOfferingName}; ${acc.savingsType}; 
+                                        <mifos:mifoslabel name="accounts.balance"/>: ${acc.savingsBalance};
+                                        <mifos:mifoslabel name="Savings.maxAmountPerWithdrawl"/>: ${acc.maxWithdrawalAmount}
+                                    </html-el:option>
                                 </c:forEach>
                             </mifos:select></td>
                         </tr>

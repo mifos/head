@@ -21,6 +21,7 @@
 package org.mifos.customers.persistence;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,11 +41,13 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
@@ -103,6 +106,7 @@ import org.mifos.dto.screen.GroupDisplayDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.HibernateSearchException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -666,6 +670,8 @@ public class CustomerDaoHibernate implements CustomerDao {
         Money savingsBalance;
         String lookupName;
         Short currency;
+        BigDecimal maxWithdrawalAmount;
+        String savingsType;
 
         MifosCurrency mifosCurrency = Money.getDefaultCurrency();
 
@@ -678,9 +684,18 @@ public class CustomerDaoHibernate implements CustomerDao {
             // TODO - use default currency or retrieved currency?
             currency = (Short) savingsDetail[4];
             savingsBalance = new Money(mifosCurrency, (BigDecimal) savingsDetail[5]);
-
-            savingsDetails.add(new SavingsDetailDto(globalAccountNum, prdOfferingName, accountStateId,
-                    accountStateName, savingsBalance.toString()));
+            
+            try {
+				SavingsBO savingsBO = (SavingsBO) new AccountBusinessService().findBySystemId(globalAccountNum);
+				maxWithdrawalAmount = savingsBO.getSavingsOffering().getMaxAmntWithdrawl().getAmount().setScale(2, RoundingMode.HALF_UP);
+				savingsType = savingsBO.getSavingsOffering().getSavingsType().getName();
+				
+				savingsDetails.add(new SavingsDetailDto(globalAccountNum, prdOfferingName, accountStateId,
+	                    accountStateName, savingsBalance.toString(),maxWithdrawalAmount, savingsType));
+			} catch (ServiceException e) {
+				e.printStackTrace();
+			}
+            
         }
         return savingsDetails;
     }
