@@ -20,7 +20,6 @@
 package org.mifos.dto.domain;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
@@ -32,8 +31,6 @@ public class SavingsDetailDto implements Serializable {
     private final String accountStateName;
     private final String savingsBalance;
     private final Short prdOfferingId;
-    private final BigDecimal maxWithdrawalAmount;
-    private final String savingsType;
 
     public SavingsDetailDto(final String globalAccountNum, final String prdOfferingName, final Short accountStateId,
             final String accountStateName, final String outstandingBalance) {
@@ -43,8 +40,6 @@ public class SavingsDetailDto implements Serializable {
         this.accountStateId = accountStateId;
         this.accountStateName = accountStateName;
         this.savingsBalance = outstandingBalance;
-        this.maxWithdrawalAmount = null;
-        this.savingsType = null;
     }
 
     private SavingsDetailDto(Short prdOfferingId, String prdOfferingName) {
@@ -54,20 +49,6 @@ public class SavingsDetailDto implements Serializable {
         this.accountStateId = null;
         this.accountStateName = null;
         this.savingsBalance = null;
-        this.maxWithdrawalAmount = null;
-        this.savingsType = null;
-    }
-    
-    public SavingsDetailDto(final String globalAccountNum, final String prdOfferingName, final Short accountStateId,
-            final String accountStateName, final String outstandingBalance, final BigDecimal maxWithdrawalAmount, final String savingsType) {
-        this.prdOfferingId = null;
-        this.globalAccountNum = globalAccountNum;
-        this.prdOfferingName = prdOfferingName;
-        this.accountStateId = accountStateId;
-        this.accountStateName = accountStateName;
-        this.savingsBalance = outstandingBalance;
-        this.maxWithdrawalAmount = maxWithdrawalAmount;
-        this.savingsType = savingsType;
     }
 
     public String getGlobalAccountNum() {
@@ -96,13 +77,5 @@ public class SavingsDetailDto implements Serializable {
 
     public Short getPrdOfferingId() {
         return this.prdOfferingId;
-    }
-
-    public BigDecimal getMaxWithdrawalAmount() {
-	    return maxWithdrawalAmount;
-    }
-
-    public String getSavingsType() {
-        return savingsType;
     }
 }
