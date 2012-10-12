@@ -1103,11 +1103,18 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-48
-    @Test(enabled=false)  //blocked by http://mifosforge.jira.com/browse/MIFOS-4272 - ldomzalski
+    //https://mifosforge.jira.com/browse/MIFOS-5843
+    @Test(enabled=true)
     public void removeClientWithLoanFromGroup() throws Exception {
         // Given
-        String clientName = "client1 lastname";
-        String groupName = navigationHelper.navigateToClientViewDetailsPage(clientName).getGroupMembership();
+    	String clientName = "Stu1233266309851 Client1233266309851";
+    	
+    	CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
+    	searchParams.setSearchString(clientName);
+    	searchParams.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
+		loanTestHelper.createAndActivateDefaultLoanAccount(searchParams );
+    	
+    	String groupName = navigationHelper.navigateToClientViewDetailsPage(clientName).getGroupMembership();
         SavingsProductParameters params = savingsProductHelper.
                 getGenericSavingsProductParameters(new DateTime(2009, 7, 13, 12, 0, 0, 0),
                         SavingsProductParameters.MANDATORY,SavingsProductParameters.GROUPS);
