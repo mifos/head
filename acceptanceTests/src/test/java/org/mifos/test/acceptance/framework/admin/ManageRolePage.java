@@ -62,4 +62,12 @@ public class ManageRolePage  extends MifosPage {
         Assert.assertEquals(2,selenium.getXpathCount("//input[@id='" + permisson + "']/parent::td/following-sibling::td/span[text()='" + description + "']"));
         return this;
     }
+    
+    public ManageRolePage verifyAmountTextField() {
+        selenium.click("managerole.button.submit");
+        selenium.waitForPageToLoad("30000");
+        Assert.assertTrue(selenium.isTextPresent("Please specify correct Maximum loan amount"));
+        return this;
+    }
+    
 }

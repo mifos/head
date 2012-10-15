@@ -100,6 +100,12 @@ public class LoanAccountPage extends MifosPage {
         Assert.assertEquals(selenium.getText("xpath=//table[@id='loanAccountDetailsView'][1]/tbody[1]/tr[" + (index+1) + "]/td[5]"), purpose);
     }
 
+    public void verifyLoanAmountPermissionError() {
+        selenium.click("change_status_preview.button.submit");
+        selenium.waitForPageToLoad("30000");
+        Assert.assertTrue(selenium.isTextPresent("User does not have permission to approve loans of this value"));
+    }
+    
     public void verifyGLIMPurpose(String[] purpose) {
         for (int i = 0; i < purpose.length; i++){
             verifyGLIMPurpose(purpose[i], i + 1);
