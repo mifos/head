@@ -1987,7 +1987,12 @@ public class LoanPrdActionForm extends BaseActionForm {
             addError(errors, "startdate", ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION);
         }
         if (oldStartDate != null && changedStartDate != null) {
-            if (DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime()).compareTo(
+            if (LoanOfferingBO.isBackDatedLoanProductCreationAllowed()
+                    && DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime())
+                            .compareTo(DateUtils.getDateWithoutTimeStamp(changedStartDate.getTime())) != 0) {
+                addError(errors, "startDate", ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION);
+            } else if (!LoanOfferingBO.isBackDatedLoanProductCreationAllowed()
+                    && DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime()).compareTo(
                     DateUtils.getCurrentDateWithoutTimeStamp()) <= 0
                     && (DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime())
                             .compareTo(DateUtils.getDateWithoutTimeStamp(changedStartDate.getTime())) != 0)) {
@@ -2009,12 +2014,23 @@ public class LoanPrdActionForm extends BaseActionForm {
         try {
             startingDate = getStartDateValue(getUserContext(request).getPreferredLocale());
         } catch (InvalidDateException ide) {
-            addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATE);
+            
+            if (LoanOfferingBO.isBackDatedLoanProductCreationAllowed()) {
+                addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATEWITHBACKDATE);
+            } else {
+                addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATE);
+            }
         }
-        if (startingDate != null
+        if (LoanOfferingBO.isBackDatedLoanProductCreationAllowed()
+                && (startingDate != null
+                && (DateUtils.getDateWithoutTimeStamp(
+                        startingDate.getTime()).compareTo(DateUtils.getCurrentDateOfNextYearWithOutTimeStamp()) > 0))) {
+            addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATEWITHBACKDATE);
+        } else if (!LoanOfferingBO.isBackDatedLoanProductCreationAllowed()
+                && (startingDate != null
                 && ((DateUtils.getDateWithoutTimeStamp(startingDate.getTime()).compareTo(
                         DateUtils.getCurrentDateWithoutTimeStamp()) < 0) || (DateUtils.getDateWithoutTimeStamp(
-                        startingDate.getTime()).compareTo(DateUtils.getCurrentDateOfNextYearWithOutTimeStamp()) > 0))) {
+                        startingDate.getTime()).compareTo(DateUtils.getCurrentDateOfNextYearWithOutTimeStamp()) > 0)))) {
             addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATE);
         }
         logger.debug("validateStartDate method of Loan Product Action form method called :" + startDate);
@@ -2037,8 +2053,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         if (startingDate != null && endingDate != null && startingDate.compareTo(endingDate) >= 0) {
             addError(errors, "endDate", ProductDefinitionConstants.INVALIDENDDATE);
         }
-        logger
-                .debug("validateEndDate method of Loan Product Action form method called :" + startDate + "---"
+        logger.debug("validateEndDate method of Loan Product Action form method called :" + startDate + "---"
                         + endDate);
     }
 

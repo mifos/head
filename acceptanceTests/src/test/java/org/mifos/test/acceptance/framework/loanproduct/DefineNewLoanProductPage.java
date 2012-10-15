@@ -960,4 +960,8 @@ public class DefineNewLoanProductPage extends AbstractPage {
     public void verifyErrorInForm(String error) {
         Assert.assertTrue(selenium.isTextPresent(error));
     }
+
+    public void fillStartDate(String yyyy, String mm, String dd) {
+        selenium.type("startDate", dd + "/" + mm + "/" + yyyy);
+    }
 }

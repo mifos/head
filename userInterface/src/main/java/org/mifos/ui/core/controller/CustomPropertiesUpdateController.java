@@ -71,6 +71,8 @@ public class CustomPropertiesUpdateController extends AbstractController {
 
             handleBackDatedTransactionsAllowed(request, model);
 
+            handleBackDatedLoanProductCreationAllowed(request, model);
+            
             handleOverdueInterestPaidFirst(request, model);
             
             model.put("request", request);
@@ -127,7 +129,16 @@ public class CustomPropertiesUpdateController extends AbstractController {
             model.put("clientRulesResult", "backDatedTransactionsAllowed: " + backDatedTransactionsAllowed);
         }
     }
-
+    
+    private void handleBackDatedLoanProductCreationAllowed(HttpServletRequest request, Map<String, Object> model) {
+        String backDatedLoanProductCreationAllowed = request.getParameter("BackDatedLoanProductCreationAllowed");
+        if (StringUtils.isNotBlank(backDatedLoanProductCreationAllowed)) {
+            boolean allowed=Boolean.valueOf(backDatedLoanProductCreationAllowed);
+            testingService.setBackDatedLoanProductCreationAllowed(allowed);
+            model.put("clientRulesResult", "backDatedLoanProductCreationAllowed: " + backDatedLoanProductCreationAllowed);
+        }
+    }
+    
     private void handleMinMaxClientAge(HttpServletRequest request, HttpServletResponse response,
             List<String> errorMessages, Map<String, Object> model) {
         String minimumAge = request.getParameter("ClientRules.MinimumAgeForNewClients");
