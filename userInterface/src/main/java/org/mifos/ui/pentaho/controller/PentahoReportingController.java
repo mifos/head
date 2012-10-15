@@ -20,6 +20,7 @@
 package org.mifos.ui.pentaho.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,6 +68,11 @@ public class PentahoReportingController {
         this.pentahoReportsService = pentahoReportsService;
     }
 
+    @RequestMapping(value = "/execPentahoReport.ftl", method = RequestMethod.GET)
+    public ModelAndView redirectToReportsPage() {
+        return new ModelAndView("redirect:" + REPORTS_MAIN_URL);
+    }
+    
     @RequestMapping(value = "/execPentahoReport.ftl", method = RequestMethod.POST)
     public ModelAndView executeReport(final HttpServletRequest request, HttpServletResponse response,
             @RequestParam(value = CANCEL_PARAM, required = false) String cancel,
@@ -78,6 +84,7 @@ public class PentahoReportingController {
 
         ModelAndView mav = null;
         Integer reportId = pentahoReportFormBean.getReportId();
+
         if (StringUtils.isNotBlank(cancel)) {
             mav = new ModelAndView("redirect:" + REPORTS_MAIN_URL);
         } else if (bindingResult.hasErrors()) {
@@ -96,11 +103,18 @@ public class PentahoReportingController {
                 mav = new ModelAndView("viewPentahoReport");
                 initFormBean(pentahoReportFormBean, reportId, request);
             } else {
-                response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getFilename() + "\"");
-                response.setContentType(report.getContentType());
-                response.setContentLength(report.getContentSize());
-
-                response.getOutputStream().write(report.getContent());
+                if (report.getContentType().equalsIgnoreCase("text/html")) {
+                    HashMap<String, String> modelMap = new HashMap<String, String> ();
+                    modelMap.put("reportContent", new String(report.getContent()));
+                    mav = new ModelAndView("viewHtmlReport", modelMap);
+                }
+                else {
+                    response.setHeader("Content-Disposition", "attachment; filename=\""
+                            + report.getFilename() + "\"");
+                    response.setContentType(report.getContentType());
+                    response.setContentLength(report.getContentSize());
+                    response.getOutputStream().write(report.getContent());
+                }
             }
         }
         return mav;
@@ -153,7 +167,14 @@ public class PentahoReportingController {
 
     @ModelAttribute("report_id")
     private Integer getReportId(HttpServletRequest request) {
-        return Integer.parseInt(request.getParameter(REPORT_ID_PARAM));
+        Integer id = null;
+        String idStr = request.getParameter(REPORT_ID_PARAM);
+        
+        if (idStr != null && !idStr.isEmpty()) {
+            id = Integer.parseInt(idStr);
+        }
+        
+        return id;
     }
     
 	@RequestMapping(value = "/viewPentahoReport.ftl", method = RequestMethod.POST)

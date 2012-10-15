@@ -233,7 +233,13 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
 
     @Override
     public String getReportName(Integer reportId) {
-        return this.reportsPersistence.getReport((short) reportId.intValue()).getReportName();
+        String name = null;
+        
+        if (reportId != null) {
+            name = this.reportsPersistence.getReport((short) reportId.intValue()).getReportName();
+        }
+        
+        return name;
     }
 
     @Override
