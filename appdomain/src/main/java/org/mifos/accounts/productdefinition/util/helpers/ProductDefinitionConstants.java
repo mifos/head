@@ -191,6 +191,7 @@ public interface ProductDefinitionConstants {
     String DUPLPRDINSTNAME = "errors.duplprdinstname";
     String DUPLPRDINSTSHORTNAME = "errors.duplprdinstshortname";
     String INVALIDSTARTDATE = "errors.startdateexception";
+    String INVALIDSTARTDATEWITHBACKDATE = "errors.startdatewithbackdateexception";
     String INVALIDENDDATE = "errors.enddateexception";
     String STARTDATEUPDATEEXCEPTION = "errors.startdateupdateexception";
     String ERRORMAXPENALTYRATE = "errors.maxpenaltyrate";

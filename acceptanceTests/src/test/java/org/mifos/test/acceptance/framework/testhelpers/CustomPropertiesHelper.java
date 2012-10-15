@@ -208,4 +208,8 @@ public class CustomPropertiesHelper {
     public void setAllowBackdatedApproval(boolean allow) {
         selenium.open(UPDATE_PAGE + "?BackDatedApprovalsAllowed?=" + allow);
     }
+    
+    public void setBackDatedLoanProductCreationAllowed(boolean allow) {
+        selenium.open(UPDATE_PAGE + "?BackDatedLoanProductCreationAllowed=" + allow);
+    }
 }

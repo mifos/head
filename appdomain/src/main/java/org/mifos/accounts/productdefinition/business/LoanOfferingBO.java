@@ -46,6 +46,7 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.productdefinition.LoanAmountCalculation;
 import org.mifos.accounts.productdefinition.LoanInstallmentCalculation;
@@ -65,6 +66,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.dto.domain.LoanProductRequest;
@@ -393,7 +395,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             throws ProductDefinitionException {
 
         super(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, endDate,
-                description);
+                description, !isBackDatedLoanProductCreationAllowed());
         logger.debug("building Loan offering");
         validate(gracePeriodType, gracePeriodDuration, interestTypes, maxInterestRate, minInterestRate,
                 defInterestRate, loanCounter, intDedDisbursement, prinDueLastInst, funds, fees, penalties, meeting,
@@ -544,6 +546,13 @@ public class LoanOfferingBO extends PrdOfferingBO {
         return defInterestRate;
     }
 
+    public static boolean isBackDatedLoanProductCreationAllowed() {
+        MifosConfigurationManager configurationManager = 
+                MifosConfigurationManager.getInstance();
+        return configurationManager.getBoolean(
+                LoanConstants.BACK_DATED_LOAN_PRODUCT_CREATION, false);
+    }
+    
     /**
      * @deprecated - feature is removed
      */

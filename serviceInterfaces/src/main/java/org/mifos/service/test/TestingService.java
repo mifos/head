@@ -60,4 +60,5 @@ public interface TestingService {
     void runAllBatchJobs(ServletContext servletContext);
     void setClientNameSequence(String[] nameSequence);
     void setOverdueInterestPaidFirst(boolean flag);
+    void setBackDatedLoanProductCreationAllowed(boolean flag);
 }
