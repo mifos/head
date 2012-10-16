@@ -138,17 +138,9 @@ public class PentahoReportingController {
         Map <String, AbstractPentahoParameter> selectedValues = form.getAllParameteres();
         boolean update=false;
         List<AbstractPentahoParameter> params = this.pentahoReportsService.getParametersForReport(reportId, request, selectedValues, update);
-        if (this.pentahoReportsService.isDW(reportId)) {
-        	form.setEtlLastUpdate(this.pentahoReportsService.getEtlLastUpdateDate(request));
-        	if (form.getEtlLastUpdate().equals(new Date(0))) {
-        		request.getSession().setAttribute("dwNotRun", "true");
-        	} else {
-        	    request.getSession().setAttribute("dwNotRun", "false");
-        	}
-        	request.getSession().setAttribute("isDW", "true");
-        } else {
-        	request.getSession().setAttribute("isDW", "false");
-        }
+        
+        setDWValuesIntoForm(reportId, request, form);
+        
         form.setReportParameters(params);
     }
 
@@ -180,7 +172,23 @@ public class PentahoReportingController {
 				.getParametersForReport(getReportId(request), request, selectedValues,
 						update);
 
+		setDWValuesIntoForm(getReportId(request), request, formBean);
+		
 		formBean.setReportParameters(params);
 
 	}
+	
+    private void setDWValuesIntoForm(Integer reportId, HttpServletRequest request, PentahoReportFormBean formBean) {
+        if (this.pentahoReportsService.isDW(reportId)) {
+            formBean.setEtlLastUpdate(this.pentahoReportsService.getEtlLastUpdateDate(request));
+            if (formBean.getEtlLastUpdate().equals(new Date(0))) {
+                request.getSession().setAttribute("dwNotRun", "true");
+            } else {
+                request.getSession().setAttribute("dwNotRun", "false");
+            }
+            request.getSession().setAttribute("isDW", "true");
+        } else {
+            request.getSession().setAttribute("isDW", "false");
+        }
+    }
 }
