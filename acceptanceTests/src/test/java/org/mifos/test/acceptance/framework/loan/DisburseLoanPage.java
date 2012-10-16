@@ -114,7 +114,27 @@ public class DisburseLoanPage extends MifosPage {
         Assert.assertEquals(RepayLoanParameters.CHEQUE,modesOfPayment[2]);
         Assert.assertEquals(RepayLoanParameters.VOUCHER,modesOfPayment[3]);
     }
-
+    
+    public void verifyDisbursalDateIsFutureDate(DisburseLoanParameters params){
+    	fillForm(params);
+    	
+        selenium.click("DisburseLoan.button.reviewTransaction");
+        waitForPageToLoad();
+        Assert.assertTrue(selenium.isTextPresent("Date of transaction can not be a future date"));
+    }
+    
+    public void verifyDisbursalDateIsPriorToClientMeetingSchedule(DisburseLoanParameters params){
+    	fillForm(params);
+    	
+        selenium.click("DisburseLoan.button.reviewTransaction");
+        waitForPageToLoad();
+        selenium.click("Review_loanDisbursement.button.submit");
+        waitForPageToLoad();
+        Assert.assertTrue(selenium.isTextPresent("Date of transaction is invalid. It can not be prior to last meeting date of the customer."));
+        selenium.click("Review_loanDisbursement.button.edit");
+        waitForPageToLoad();
+    }
+    
     public HomePage navigateToHomePage() {
         selenium.click("id=header.link.home");
         waitForPageToLoad();
