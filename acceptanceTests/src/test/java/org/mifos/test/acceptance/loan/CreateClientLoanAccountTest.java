@@ -25,6 +25,9 @@ import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.account.AccountStatus;
+import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
+import org.mifos.test.acceptance.framework.admin.ManageRolePage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
@@ -105,6 +108,55 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true) //https://mifosforge.jira.com/browse/MIFOSTEST-1185
+    public void approveLoanAmountByDifferentLoanAmountRangesTest() throws Exception {
+        // When
+        ManageRolePage manageRolePage = new ManageRolePage(selenium);
+        manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");//.
+        manageRolePage.enablePermission("activityRestrictionCheckbox1");
+        manageRolePage.typeText("restrictionValue(1)", "asdf");
+        manageRolePage.verifyAmountTextField();
+        manageRolePage.typeText("restrictionValue(1)", "5,000");
+        manageRolePage.enablePermission("activityRestrictionCheckbox1");    	
+        manageRolePage.submitAndGotoViewRolesPage();
+    	
+        //Then
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setLoanProduct("Flat Interest Loan Product With Fee");
+        searchParameters.setSearchString("ClientWithLoan 20110221");
+            	
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAmount("6000");
+	    
+        LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
+            
+        String loanAccountId = loanAccountPage.getAccountId();
+        EditAccountStatusParameters editAccountStatusParameters = new EditAccountStatusParameters();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.LOAN_APPROVED);
+        editAccountStatusParameters.setNote("Approve test");
+		
+        loanAccountPage.navigateToEditAccountStatus().setChangeStatusParametersAndSubmit(editAccountStatusParameters);
+        loanAccountPage.verifyLoanAmountPermissionError();
+        
+        editAccountStatusParameters.setAccountStatus(AccountStatus.LOAN_PARTIAL);
+        searchParameters.setSearchString(loanAccountId);
+        loanAccountPage = loanTestHelper.navigateToLoanAccountPage(searchParameters);
+        loanAccountPage.navigateToEditAccountStatus().setChangeStatusParametersAndSubmit(editAccountStatusParameters).submitAndNavigateToLoanAccountPage();		
+        //When
+        manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
+        manageRolePage.disablePermission("activityRestrictionCheckbox1");
+        manageRolePage.typeText("restrictionValue(1)", "");
+        manageRolePage.submitAndGotoViewRolesPage();
+        //Then
+        loanAccountPage = loanTestHelper.navigateToLoanAccountPage(searchParameters);
+        editAccountStatusParameters.setAccountStatus(AccountStatus.LOAN_PENDING_APPROVAL);
+        loanAccountPage.navigateToEditAccountStatus().setChangeStatusParametersAndSubmit(editAccountStatusParameters).submitAndNavigateToLoanAccountPage();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.LOAN_APPROVED);
+        loanAccountPage.navigateToEditAccountStatus().setChangeStatusParametersAndSubmit(editAccountStatusParameters).submitAndNavigateToLoanAccountPage();
+    }	
+    
+    
     @Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "smoke", "no_db_unit"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newWeeklyClientLoanAccountWithQuestionGroups() throws Exception {
