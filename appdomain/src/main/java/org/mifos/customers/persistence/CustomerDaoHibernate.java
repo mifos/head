@@ -670,7 +670,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         String lookupName;
         Short currency;
         BigDecimal maxWithdrawalAmount;
-        String savingsType;
+        String savingsType = "";
 
         MifosCurrency mifosCurrency = Money.getDefaultCurrency();
 
@@ -687,7 +687,9 @@ public class CustomerDaoHibernate implements CustomerDao {
             try {
 				SavingsBO savingsBO = (SavingsBO) new AccountBusinessService().findBySystemId(globalAccountNum);
 				maxWithdrawalAmount = savingsBO.getSavingsOffering().getMaxAmntWithdrawl().getAmount();
-				savingsType = savingsBO.getSavingsOffering().getSavingsType().getName();
+				if(savingsBO.getSavingsOffering().getSavingsType().getLookUpValue() != null) {
+					savingsType = savingsBO.getSavingsOffering().getSavingsType().getName();
+				}
 				
 				savingsDetails.add(new SavingsDetailDto(globalAccountNum, prdOfferingName, accountStateId,
 	                    accountStateName, savingsBalance.toString(),maxWithdrawalAmount, savingsType));
