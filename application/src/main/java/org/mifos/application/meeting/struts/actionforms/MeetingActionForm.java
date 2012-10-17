@@ -66,6 +66,8 @@ public class MeetingActionForm extends BaseActionForm {
 
     private String input;
 
+    private String meetingStartDate;
+
     public String getInput() {
         return input;
     }
@@ -171,8 +173,7 @@ public class MeetingActionForm extends BaseActionForm {
     }
 
     public RecurrenceType getRecurrenceType() {
-        return StringUtils.isNotBlank(getFrequency()) ? RecurrenceType.fromInt(Short.valueOf(getFrequency()))
-                : null;
+        return StringUtils.isNotBlank(getFrequency()) ? RecurrenceType.fromInt(Short.valueOf(getFrequency())) : null;
     }
 
     public boolean isMonthlyOnDate() {
@@ -197,13 +198,11 @@ public class MeetingActionForm extends BaseActionForm {
     }
 
     public RankOfDay getMonthRankValue() {
-        return StringUtils.isNotBlank(getMonthRank()) ? RankOfDay.getRankOfDay(Short.valueOf(getMonthRank()))
-                : null;
+        return StringUtils.isNotBlank(getMonthRank()) ? RankOfDay.getRankOfDay(Short.valueOf(getMonthRank())) : null;
     }
 
     public WeekDay getMonthWeekValue() {
-        return StringUtils.isNotBlank(getMonthWeek()) ? WeekDay.getWeekDay(Short.valueOf(getMonthWeek()))
-                : null;
+        return StringUtils.isNotBlank(getMonthWeek()) ? WeekDay.getWeekDay(Short.valueOf(getMonthWeek())) : null;
     }
 
     public Integer getMeetingIdValue() {
@@ -278,5 +277,13 @@ public class MeetingActionForm extends BaseActionForm {
 
     public void setMeetingId(String meetingId) {
         this.meetingId = meetingId;
+    }
+
+    public String getMeetingStartDate() {
+        return meetingStartDate;
+    }
+
+    public void setMeetingStartDate(String meetingStartDate) {
+        this.meetingStartDate = meetingStartDate;
     }
 }

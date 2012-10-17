@@ -1127,7 +1127,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         try {
             if (oldMeeting.isWeekly()) {
-
+                oldMeeting.setMeetingStartDate(updatedDetails.getMeetingStartDate());
                 WeekDay dayOfWeek = updatedDetails.getMeetingDetails().getWeekDay();
                 isRegenerationOfSchedulesRequired = oldMeeting.isDayOfWeekDifferent(dayOfWeek);
                 oldMeeting.update(dayOfWeek.getValue(), updatedDetails.getMeetingPlace());
