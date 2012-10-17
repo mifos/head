@@ -267,7 +267,7 @@ public class GroupTest extends UiTestCaseBase {
         groupViewDetailsPage.navigateToGroupsCenter(newCenterName);
     }
 
-    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui"}, enabled=true)
+    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui", "no_db_unit"}, enabled=true)
     // http://mifosforge.jira.com/browse/MIFOSTEST-682
     // questions dispear from database before this test (another test must delete questions)
     // https://mifosforge.jira.com/browse/MIFOS-5850
