@@ -113,6 +113,11 @@ public class SavingsPaymentTest extends UiTestCaseBase {
         paymentParams.setTransactionDateDD("13");
         paymentParams.setTransactionDateMM("03");
         paymentParams.setTransactionDateYYYY("2011");
+        paymentParams.setSavingsAccountBalance(String.valueOf(SAVINGS_START_BALANCE));
+        paymentParams.setSavingsAccountMaxWithdrawalAmount(String.valueOf(0));
+        paymentParams.setSavingsAccountType("Voluntary");
+        paymentParams.setSavingsAccountName("MonthlyClientSavingsAccount");
+        
         ApplyPaymentConfirmationPage paymentConfirmationPage = applyPaymentPage
                 .submitAndNavigateToApplyPaymentConfirmationPage(paymentParams);
 
@@ -158,6 +163,11 @@ public class SavingsPaymentTest extends UiTestCaseBase {
         paymentParams.setTransactionDateDD("13");
         paymentParams.setTransactionDateMM("03");
         paymentParams.setTransactionDateYYYY("2011");
+        paymentParams.setSavingsAccountBalance(String.valueOf(SAVINGS_START_BALANCE));
+        paymentParams.setSavingsAccountMaxWithdrawalAmount(String.valueOf(0));
+        paymentParams.setSavingsAccountType("Voluntary");
+        paymentParams.setSavingsAccountName("MonthlyClientSavingsAccount");
+        
         try {
             applyPaymentPage.submitAndNavigateToApplyPaymentConfirmationPage(paymentParams);
         } catch (AssertionError e) {
