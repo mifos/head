@@ -39,6 +39,10 @@ public class PaymentParameters {
     private String receiptDateYYYY;
 
     private String savingsAccountGlobalNum;
+    private String savingsAccountName;
+    private String savingsAccountBalance;
+    private String savingsAccountType;
+    private String savingsAccountMaxWithdrawalAmount;
 
     public String getTransactionDateDD() {
         return this.transactionDateDD;
@@ -100,6 +104,31 @@ public class PaymentParameters {
     public void setSavingsAccountGlobalNum(String savingsAccountGlobalNum) {
         this.savingsAccountGlobalNum = savingsAccountGlobalNum;
     }
+    public String getSavingsAccountName() {
+		return savingsAccountName;
+	}
+	public void setSavingsAccountName(String savingsAccountName) {
+		this.savingsAccountName = savingsAccountName;
+	}
+	public String getSavingsAccountBalance() {
+		return savingsAccountBalance;
+	}
+	public void setSavingsAccountBalance(String savingsAccountBalance) {
+		this.savingsAccountBalance = savingsAccountBalance;
+	}
+	public String getSavingsAccountType() {
+		return savingsAccountType;
+	}
+	public void setSavingsAccountType(String savingsAccountType) {
+		this.savingsAccountType = savingsAccountType;
+	}
+	public String getSavingsAccountMaxWithdrawalAmount() {
+		return savingsAccountMaxWithdrawalAmount;
+	}
+	public void setSavingsAccountMaxWithdrawalAmount(
+			String savingsAccountMaxWithdrawalAmount) {
+		this.savingsAccountMaxWithdrawalAmount = savingsAccountMaxWithdrawalAmount;
+	}
     /**
      * Maps the method of payment string to a value that's used to choose the right element in the drop-down box.
      */
