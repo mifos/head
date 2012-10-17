@@ -106,13 +106,12 @@ public class SavingsPaymentTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanGlobalNum);
 
         ApplyPaymentPage applyPaymentPage = loanAccountPage.navigateToApplyPayment();
-        PaymentParameters paymentParams = new PaymentParameters();
-        paymentParams.setAmount(String.valueOf(amount));
+        PaymentParameters paymentParams = new PaymentParameters();       
+        paymentParams = loanTestHelper.setPaymentParams(String.valueOf(amount), new DateTime(2011, 3, 13, 0, 0, 0, 0));
         paymentParams.setPaymentType(PaymentParameters.TRANSFER);
         paymentParams.setSavingsAccountGlobalNum(savingsGlobalNum);
-        paymentParams.setTransactionDateDD("13");
-        paymentParams.setTransactionDateMM("03");
-        paymentParams.setTransactionDateYYYY("2011");
+        paymentParams.setSavingsAccountBalance(String.valueOf(SAVINGS_START_BALANCE));
+        
         ApplyPaymentConfirmationPage paymentConfirmationPage = applyPaymentPage
                 .submitAndNavigateToApplyPaymentConfirmationPage(paymentParams);
 
@@ -152,12 +151,11 @@ public class SavingsPaymentTest extends UiTestCaseBase {
         
         ApplyPaymentPage applyPaymentPage = loanAccountPage.navigateToApplyPayment();
         PaymentParameters paymentParams = new PaymentParameters();
-        paymentParams.setAmount(String.valueOf(TRANSFER_AMOUNT));
+        paymentParams = loanTestHelper.setPaymentParams(String.valueOf(TRANSFER_AMOUNT), new DateTime(2011, 3, 13, 0, 0, 0, 0));
         paymentParams.setPaymentType(PaymentParameters.TRANSFER);
         paymentParams.setSavingsAccountGlobalNum(savingsGlobalNum);
-        paymentParams.setTransactionDateDD("13");
-        paymentParams.setTransactionDateMM("03");
-        paymentParams.setTransactionDateYYYY("2011");
+        paymentParams.setSavingsAccountBalance(String.valueOf(SAVINGS_START_BALANCE));
+        
         try {
             applyPaymentPage.submitAndNavigateToApplyPaymentConfirmationPage(paymentParams);
         } catch (AssertionError e) {

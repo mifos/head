@@ -612,6 +612,9 @@ public class LoanTestHelper {
         paymentParameters.setTransactionDateMM(mm);
         paymentParameters.setTransactionDateYYYY(yyyy);
         paymentParameters.setPaymentType(PaymentParameters.CASH);
+        paymentParameters.setSavingsAccountMaxWithdrawalAmount(String.valueOf(0));
+        paymentParameters.setSavingsAccountType("Voluntary");
+        paymentParameters.setSavingsAccountName("MonthlyClientSavingsAccount");
         return paymentParameters;
     }
 
