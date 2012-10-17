@@ -170,7 +170,7 @@ function goToCancelPage(customerLevel){
 							<td width="59%" align="left" valign="top"
 								style="border: 1px solid #CECECE;">
 
-							<div id="weekDIV" style="height:40px; width:380px; "><mifos:mifoslabel
+							<div id="weekDIV" style="height:70px; width:380px; "><mifos:mifoslabel
 								name="meeting.labelRecurWeeks" bundle="MeetingResources" />
 							<table border="0" cellspacing="0" cellpadding="2">
 								<tr class="fontnormal">
@@ -183,6 +183,23 @@ function goToCancelPage(customerLevel){
 													<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
 											</c:forEach>
 										</mifos:select>
+										<br />
+										<span id="createcustomermeeting.label.meetingStartDate">
+											<mifos:mifoslabel name="meeting.meetingStartDateLabel"  bundle="MeetingResources" />
+										</span>
+										<mifos:mifosalphanumtext property="meetingStartDate" size="15"/>
+										<script>
+$(document).ready(function() {
+	$.datepicker.setDefaults($.datepicker.regional[""]);
+	$("input[name=meetingStartDate]").datepicker({
+		dateFormat: 'dd/mm/yy',	
+        showOn: "button",
+        buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
+		buttonImageOnly: true
+    });
+  }
+);
+										</script>
 									</td>
 								</tr>
 							</table>
