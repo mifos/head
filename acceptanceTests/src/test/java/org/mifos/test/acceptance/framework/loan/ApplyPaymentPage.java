@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import java.math.BigDecimal;
+
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.testng.Assert;
 
@@ -55,6 +57,23 @@ public class ApplyPaymentPage extends MifosPage {
 
         if (params.getPaymentType().equals(PaymentParameters.TRANSFER)) {
             selenium.select("applypayment.input.accountForTransfer", "value=" + params.getSavingsAccountGlobalNum());
+            String [] savingsAccountForTransferDetails = 
+                    selenium.getSelectedLabel("applypayment.input.accountForTransfer").split("; ");
+
+            String savingsAccountGlobalNum = savingsAccountForTransferDetails[0];
+            String savingsAccountName = savingsAccountForTransferDetails[1];
+            String savingsAccountType = savingsAccountForTransferDetails[2];
+            BigDecimal savingsAccountBalance = 
+                    new BigDecimal(savingsAccountForTransferDetails[3].split(": ")[1].replaceAll(",", ""));
+            BigDecimal savingsAccountMaxAmountPerWithdrawal = 
+                    new BigDecimal(savingsAccountForTransferDetails[4].split(": ")[1].replaceAll(",", ""));
+          
+            Assert.assertEquals(savingsAccountGlobalNum, params.getSavingsAccountGlobalNum());
+            Assert.assertEquals(savingsAccountName, params.getSavingsAccountName());
+            Assert.assertEquals(savingsAccountType, params.getSavingsAccountType());
+            Assert.assertEquals(savingsAccountBalance, new BigDecimal(params.getSavingsAccountBalance()));
+            Assert.assertEquals(savingsAccountMaxAmountPerWithdrawal, 
+                                new BigDecimal(params.getSavingsAccountMaxWithdrawalAmount()));
         }
 
         this.typeTextIfNotEmpty("applypayment.input.receiptId", params.getReceiptId());
@@ -73,4 +92,5 @@ public class ApplyPaymentPage extends MifosPage {
         Assert.assertEquals(modesOfPayment[2], RepayLoanParameters.CHEQUE);
         Assert.assertEquals(modesOfPayment[3], RepayLoanParameters.VOUCHER);
     }
+
 }
