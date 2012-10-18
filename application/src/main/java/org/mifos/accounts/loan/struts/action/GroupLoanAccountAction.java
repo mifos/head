@@ -28,20 +28,25 @@ import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.business.AccountOverpaymentEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
@@ -55,7 +60,9 @@ import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFac
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.application.servicefacade.GroupLoanAccountServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.OriginalScheduleInfoHelper;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
@@ -72,6 +79,8 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.platform.validations.ErrorEntry;
+import org.mifos.platform.validations.Errors;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
 import org.mifos.security.util.UserContext;
 
@@ -82,7 +91,6 @@ public class GroupLoanAccountAction extends AccountAppAction{
 
     private final LoanBusinessService loanBusinessService;
     private final ConfigurationPersistence configurationPersistence;
-
 
     public static final String CUSTOMER_ID = "customerId";
     public static final String ACCOUNT_ID = "accountId";
@@ -208,6 +216,48 @@ public class GroupLoanAccountAction extends AccountAppAction{
         loanAccountActionForm.initializeInstallments(installments);
         return mapping.findForward(ActionForwards.get_success.toString());
     }
+    
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward getLoanRepaymentSchedule(final ActionMapping mapping,
+                                                  final ActionForm form, final HttpServletRequest request,
+                                                  @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        
+        LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
+        UserContext userContext = getUserContext(request);
+        Integer grouploanId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
+        Locale locale = userContext.getPreferredLocale();
+        Date viewDate = loanAccountActionForm.getScheduleViewDateValue(locale);
+        
+        LoanBO groupLoan = getLoan(grouploanId);
+        groupLoan.updateDetails(userContext);
+        Errors errors = loanBusinessService.computeExtraInterest(groupLoan, viewDate);
+        if (errors.hasErrors()) {
+            loanAccountActionForm.resetScheduleViewDate();
+        }
+        
+        List<LoanBO> membersAccount = this.loanDao.findIndividualLoans(grouploanId);
+        List<Integer> membersAccountIds = getMembersAccountId(membersAccount);
+        OriginalScheduleInfoDto generatedSchedule = OriginalScheduleInfoHelper.sumRepaymentSchedule(getMembersSchedule(membersAccountIds));
+        SessionUtils.setAttribute(Constants.ORIGINAL_SCHEDULE_AVAILABLE, generatedSchedule.hasOriginalInstallments(), request);
+        SessionUtils.setAttribute("isNewGropLoan", Boolean.TRUE, request);
+        String forward = errors.hasErrors() ? ActionForwards.getLoanRepaymentScheduleFailure.toString() : ActionForwards.getLoanRepaymentSchedule.toString();
+        addErrors(request, getActionErrors(errors));
+        return mapping.findForward(forward);
+    }
+
+    private List<Integer> getMembersAccountId(List<LoanBO> membersAccount){
+        List<Integer> ids = new ArrayList<Integer>();
+            for (LoanBO member : membersAccount) { 
+                ids.add(member.getAccountId());
+            }
+        return ids;
+    }
+    
+    private List<OriginalScheduleInfoDto> getMembersSchedule(List<Integer> membersIds) {
+        List<OriginalScheduleInfoDto> membersSchedule = new ArrayList<OriginalScheduleInfoDto>();
+            membersSchedule.add(this.loanServiceFacade.retrieveOriginalLoanSchedule(membersIds.get(0)));
+        return membersSchedule;
+    }
 
     private void setOverpayments(HttpServletRequest request, LoanBO loan) throws PageExpiredException {
         List<AccountOverpaymentEntity> overpayments = new ArrayList<AccountOverpaymentEntity>();
@@ -267,5 +317,20 @@ public class GroupLoanAccountAction extends AccountAppAction{
         return loanDao.findById(loanId);
     }
 
+    private ActionErrors getActionErrors(Errors errors) {
+        ActionErrors actionErrors = new ActionErrors();
+        if (errors.hasErrors()) {
+            for (ErrorEntry errorEntry : errors.getErrorEntries()) {
+                ActionMessage actionMessage;
+                if (errorEntry.hasErrorArgs()) {
+                    actionMessage = new ActionMessage(errorEntry.getErrorCode(), errorEntry.getArgs().toArray());
+                } else {
+                    actionMessage = new ActionMessage(errorEntry.getErrorCode(), errorEntry.getFieldName());
+                }
+                actionErrors.add(errorEntry.getErrorCode(), actionMessage);
+            }
+        }
+        return actionErrors;
+    }
 
 }

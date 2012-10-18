@@ -76,6 +76,12 @@ public class RepaymentScheduleInstallment implements Serializable {
     }
 
     public RepaymentScheduleInstallment() {
+        this.principal = new Money(Money.getDefaultCurrency(), new Double(0.0));
+        this.interest = new Money(Money.getDefaultCurrency(), new Double(0.0));
+        this.fees = new Money(Money.getDefaultCurrency(), new Double(0.0));
+        this.miscFees = new Money(Money.getDefaultCurrency(), new Double(0.0));
+        this.miscPenalty = new Money(Money.getDefaultCurrency(), new Double(0.0));
+        this.totalValue = new Money(Money.getDefaultCurrency(), new Double(0.0));
     }
 
     public void setInstallment(Integer installment) {

@@ -37,6 +37,7 @@ explanation of the license and how it is applied.
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'originalScheduleIsAvailable')}"
 		                                                var="originalScheduleIsAvailable" />
+        <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isNewGropLoan')}" var="isNewGropLoan"/>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -155,7 +156,7 @@ explanation of the license and how it is applied.
 				</c:if>	
 					
 
-					<loanfn:getLoanRepaymentTable memberGlobalNum="${param.memberGlobalNum}"/>
+					<loanfn:getLoanRepaymentTable memberGlobalNum="${param.memberGlobalNum}" isNewGropLoan="${isNewGropLoan}"/>
 					
 					<table width="100%" border="0" cellpadding="1" cellspacing="0">
 					<tr valign="top">

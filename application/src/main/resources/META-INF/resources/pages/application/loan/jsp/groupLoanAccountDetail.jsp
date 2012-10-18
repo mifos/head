@@ -159,7 +159,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<td width="33%" class="headingorange"><mifos:mifoslabel
 								name="loan.acc_summary" /></td>
 							<td width="33%" align="right" class="fontnormal"><html-el:link styleId="loanaccountdetail.link.viewRepaymentSchedule"
-								href="viewLoanAccountRepaymentSchedule.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								href="groupLoanAccountAction.do?method=getLoanRepaymentSchedule&globalAccountNum=${loanInformationDto.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&accountId=${loanInformationDto.accountId}">
 								<mifos:mifoslabel name="loan.view_schd" />
 							</html-el:link></td>
 						</tr>

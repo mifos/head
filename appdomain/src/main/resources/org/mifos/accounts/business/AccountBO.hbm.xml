@@ -1050,5 +1050,11 @@ select coll.*,
             order by account.parentAccount.id
         ]]>
     </query>
+    <query name="LoanBO.getMemberDetails">
+        <![CDATA[from org.mifos.accounts.loan.business.LoanBO account 
+            where account.parentAccount.accountId=:ACCOUNT_ID
+        ]]>
+    </query>
+    
     
 </hibernate-mapping>

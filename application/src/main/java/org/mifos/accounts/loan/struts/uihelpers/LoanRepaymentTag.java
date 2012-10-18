@@ -21,15 +21,20 @@
 package org.mifos.accounts.loan.struts.uihelpers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Hibernate;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -39,6 +44,7 @@ import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ConversionUtil;
@@ -52,6 +58,15 @@ public class LoanRepaymentTag extends BodyTagSupport {
     Locale locale = null;
 
     private String memberGlobalNum;
+    private Boolean isNewGropLoan;
+    
+    public Boolean getIsNewGropLoan() {
+        return isNewGropLoan;
+    }
+
+    public void setIsNewGropLoan(Boolean isNewGropLoan) {
+        this.isNewGropLoan = isNewGropLoan;
+    }
 
     public String getMemberGlobalNum() {
         return memberGlobalNum;
@@ -71,12 +86,12 @@ public class LoanRepaymentTag extends BodyTagSupport {
             String currentFlowKey = (String) pageContext.getRequest().getAttribute(Constants.CURRENTFLOWKEY);
             HttpSession session = pageContext.getSession();
             FlowManager flowManager = (FlowManager) session.getAttribute(Constants.FLOWMANAGER);
-
             loanBO = (LoanBO) flowManager.getFromFlow(currentFlowKey, Constants.BUSINESS_KEY);
+            
             if (StringUtils.isNotBlank(memberGlobalNum)) {
                 loanBO = loanBO.findMemberByGlobalNum(memberGlobalNum);
             }
-
+            
             Date viewDate = getViewDate(currentFlowKey, flowManager);
             Money totalPrincipal = new Money(loanBO.getCurrency(), "0");
             Money totalInterest = new Money(loanBO.getCurrency(), "0");
@@ -87,7 +102,14 @@ public class LoanRepaymentTag extends BodyTagSupport {
              * LoanBO loanBO = (LoanBO) pageContext.getRequest().getAttribute( Constants.BUSINESS_KEY);
              */
             List<AccountActionDateEntity> list = new ArrayList<AccountActionDateEntity>();
-            list.addAll(loanBO.getAccountActionDates());
+            if (isNewGropLoan) {
+                List<LoanBO> memberAccounts = getMemberScheduleDetails(loanBO.getAccountId());
+                list.addAll(generateGroupSchedule(memberAccounts, loanBO));
+            }
+            else {
+                list.addAll(loanBO.getAccountActionDates());
+            }
+            
             UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USER_CONTEXT_KEY);
             locale = userContext.getPreferredLocale();
             if (list.size() != 0) {
@@ -122,6 +144,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
                 htmlHeader1.endTag("td");
                 htmlHeader1.endTag("tr");
 
+                
                 for (AccountActionDateEntity acctDate : list) {
                     LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) acctDate;
                     totalPrincipal = totalPrincipal.add(loanScheduleEntity.getPrincipal());
@@ -282,6 +305,97 @@ public class LoanRepaymentTag extends BodyTagSupport {
             throw new JspException(e);
         }
         return SKIP_BODY;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<LoanBO> getMemberScheduleDetails(Integer parentId) {
+        Session hibSession = StaticHibernateUtil.getSessionTL();
+        Query query = hibSession.getNamedQuery("LoanBO.getMemberDetails");
+        query.setParameter("ACCOUNT_ID", parentId);
+        return (List<LoanBO>)query.list();
+    }
+    
+    private List<AccountActionDateEntity> generateGroupSchedule(List<LoanBO> memberAccounts, LoanBO parent) {
+        Money principal = new Money(Money.getDefaultCurrency(), 0.0), principalPaid = new Money(Money.getDefaultCurrency(), 0.0),
+                interest = new Money(Money.getDefaultCurrency(), 0.0), interestPaid = new Money(Money.getDefaultCurrency(), 0.0),
+                penalty = new Money(Money.getDefaultCurrency(), 0.0), penaltyPaid = new Money(Money.getDefaultCurrency(), 0.0),
+                extraInterest = new Money(Money.getDefaultCurrency(), 0.0),extraInterestPaid = new Money(Money.getDefaultCurrency(), 0.0),
+                miscFee = new Money(Money.getDefaultCurrency(), 0.0), miscFeePaid = new Money(Money.getDefaultCurrency(), 0.0),
+                miscPenalty = new Money(Money.getDefaultCurrency(), 0.0), miscPenaltyPaid = new Money(Money.getDefaultCurrency(), 0.0);
+         
+        List<List<AccountActionDateEntity>> accActionList = new ArrayList<List<AccountActionDateEntity>>();
+        for (LoanBO memberLoan : memberAccounts) {
+            accActionList.add(new ArrayList<AccountActionDateEntity>(memberLoan.getAccountActionDates()));
+        }
+        
+        List<AccountActionDateEntity> newGroupSchedule = copyAndSetToZeroSchedule(principal, principalPaid, interest, interestPaid, penalty,
+                extraInterest, extraInterestPaid, miscFee, miscFeePaid, miscPenalty, penaltyPaid, miscPenaltyPaid, new ArrayList<AccountActionDateEntity>(parent.getAccountActionDates()));
+        
+        for (List<AccountActionDateEntity> accList : accActionList) {
+            for (int i = 0; i < accList.size(); i++) {
+                LoanScheduleEntity schedule = (LoanScheduleEntity) accList.get(i);
+                LoanScheduleEntity newSchedule = (LoanScheduleEntity) newGroupSchedule.get(i);
+                
+                principal = principal.add(schedule.getPrincipal());
+                newSchedule.setPrincipal(newSchedule.getPrincipal().add(principal));
+                principal = new Money(Money.getDefaultCurrency(), 0.0);
+                principalPaid = principalPaid.add(schedule.getPrincipalPaid());
+                newSchedule.setPrincipalPaid(newSchedule.getPrincipalPaid().add(principalPaid));
+                principalPaid = new Money(Money.getDefaultCurrency(), 0.0);
+                interest = interest.add(schedule.getInterest());
+                newSchedule.setInterest(newSchedule.getInterest().add(interest));
+                interest = new Money(Money.getDefaultCurrency(), 0.0);
+                interestPaid = interestPaid.add(schedule.getInterestPaid());
+                newSchedule.setInterestPaid(newSchedule.getInterestPaid().add(interestPaid));
+                interestPaid = new Money(Money.getDefaultCurrency(), 0.0);
+                penalty = penalty.add(schedule.getPenalty());
+                newSchedule.setPenalty(newSchedule.getPenalty().add(penaltyPaid));
+                penalty = new Money(Money.getDefaultCurrency(), 0.0);
+                penaltyPaid = penaltyPaid.add(schedule.getPenaltyPaid());
+                newSchedule.setPenaltyPaid(newSchedule.getPenaltyPaid().add(penaltyPaid));
+                penaltyPaid = new Money(Money.getDefaultCurrency(), 0.0);
+                extraInterest = extraInterest.add(schedule.getExtraInterest());
+                newSchedule.setExtraInterest(newSchedule.getExtraInterest().add(extraInterest));
+                extraInterest = new Money(Money.getDefaultCurrency(), 0.0);
+                extraInterestPaid = extraInterestPaid.add(schedule.getExtraInterestPaid());
+                newSchedule.setExtraInterestPaid(newSchedule.getExtraInterestPaid().add(extraInterestPaid));
+                extraInterestPaid = new Money(Money.getDefaultCurrency(), 0.0);
+                miscFee = miscFee.add(schedule.getMiscFee());
+                newSchedule.setMiscFee(newSchedule.getMiscFee().add(miscFee));
+                miscFee = new Money(Money.getDefaultCurrency(), 0.0);
+                miscFeePaid = miscFeePaid.add(schedule.getMiscFeePaid());
+                newSchedule.setMiscFeePaid(newSchedule.getMiscFeePaid().add(miscFeePaid));
+                miscFeePaid = new Money(Money.getDefaultCurrency(), 0.0);
+                miscPenalty = miscPenalty.add(schedule.getMiscPenalty());
+                newSchedule.setMiscPenalty(newSchedule.getMiscPenalty().add(miscPenalty));
+                miscPenalty = new Money(Money.getDefaultCurrency(), 0.0);
+                miscPenaltyPaid = miscPenaltyPaid.add(schedule.getMiscPenaltyPaid());
+                newSchedule.setMiscPenaltyPaid(newSchedule.getMiscPenaltyPaid().add(miscPenaltyPaid));
+                miscPenaltyPaid = new Money(Money.getDefaultCurrency(), 0.0);
+            }
+        }   
+        return newGroupSchedule;
+    }
+
+    private List<AccountActionDateEntity> copyAndSetToZeroSchedule(Money principal, Money principalPaid, Money interest, Money interestPaid, Money penalty,
+            Money extraInterest, Money extraInterestPaid, Money miscFee, Money miscFeePaid, Money miscPenalty,
+            Money penaltyPaid, Money miscPenaltyPaid, List<AccountActionDateEntity> accActionList) {
+        for(AccountActionDateEntity element : accActionList) {
+            LoanScheduleEntity schedule = (LoanScheduleEntity) element;
+            schedule.setPrincipal(principal);
+            schedule.setPrincipalPaid(principalPaid);
+            schedule.setInterest(interest);
+            schedule.setInterestPaid(interestPaid);
+            schedule.setPenalty(penalty);
+            schedule.setPrincipalPaid(penaltyPaid);
+            schedule.setExtraInterest(extraInterest);
+            schedule.setExtraInterestPaid(extraInterestPaid);
+            schedule.setMiscFee(miscFee);
+            schedule.setMiscFeePaid(miscFeePaid);
+            schedule.setMiscPenalty(miscPenalty);
+            schedule.setMiscPenaltyPaid(miscPenaltyPaid);
+        }
+        return accActionList;
     }
 
     private Date getViewDate(String currentFlowKey, FlowManager flowManager) throws PageExpiredException {

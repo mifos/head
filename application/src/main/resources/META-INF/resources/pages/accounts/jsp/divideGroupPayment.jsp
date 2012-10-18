@@ -35,7 +35,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="ApplyPayment"></span>
+	<span id="page.id" title="DivideGroupPayment"></span>
 	<mifos:NumberFormattingInfo />
     <span id="transfer.id" title="${applyPaymentActionForm.transferPaymentTypeId}"></span>
 <SCRIPT>

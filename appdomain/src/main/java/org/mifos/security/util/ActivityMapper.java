@@ -759,6 +759,7 @@ public class ActivityMapper {
     private ActionSecurity getGroupLoanAccountSecurity() {
         ActionSecurity security = new ActionSecurity("groupLoanAccountAction");
         security.allow("get", SecurityConstants.VIEW);
+        security.allow("getLoanRepaymentSchedule", SecurityConstants.VIEW);
         return security;
     }
     
