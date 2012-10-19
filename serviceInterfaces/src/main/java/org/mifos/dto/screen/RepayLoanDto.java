@@ -22,16 +22,17 @@ package org.mifos.dto.screen;
 
 import java.util.List;
 
-import org.mifos.application.servicefacade.ListItem;
+import org.mifos.dto.domain.SavingsDetailDto;
 
 public class RepayLoanDto {
 
     private final String earlyRepaymentMoney;
     private final String waivedRepaymentMoney;
     private final boolean waiverInterest;
-    private final List<ListItem<String>> savingsAccountsForTransfer;
+    private final List<SavingsDetailDto> savingsAccountsForTransfer;
 
-    public RepayLoanDto(String earlyRepaymentMoney, String waivedRepaymentMoney, boolean waiverInterest, List<ListItem<String>> savingsAccountsForTransfer) {
+    public RepayLoanDto(String earlyRepaymentMoney, String waivedRepaymentMoney, boolean waiverInterest, 
+    		List<SavingsDetailDto> savingsAccountsForTransfer) {
         this.earlyRepaymentMoney = earlyRepaymentMoney;
         this.waivedRepaymentMoney = waivedRepaymentMoney;
         this.waiverInterest = waiverInterest;
@@ -50,7 +51,7 @@ public class RepayLoanDto {
         return waiverInterest;
     }
 
-    public List<ListItem<String>> getSavingsAccountsForTransfer() {
+    public List<SavingsDetailDto> getSavingsAccountsForTransfer() {
         return savingsAccountsForTransfer;
     }
 }
