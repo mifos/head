@@ -51,7 +51,9 @@
             "prdOfferingName": "Savings A",
             "accountStateName": "Active",
             "accountStateId": 16,
-            "savingsBalance": "10.0"
+            "savingsBalance": "10.0",
+            "maxWithdrawalAmount": 1000,
+            "savingsType": "Voluntary"
         },
         {
             "globalAccountNum": "000100000000007",
@@ -59,7 +61,9 @@
             "prdOfferingName": "Savings B",
             "accountStateName": "Active",
             "accountStateId": 16,
-            "savingsBalance": "95.0"
+            "savingsBalance": "95.0",
+            "maxWithdrawalAmount": 1000,
+            "savingsType": "Mandatory"
         }
     ],
     "customerSurveys": [],
