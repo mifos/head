@@ -20,8 +20,11 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import java.math.BigDecimal;
+
 import org.apache.commons.lang.StringUtils;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -38,7 +41,24 @@ public class RepayLoanPage extends MifosPage {
     public RepayLoanConfirmationPage submitAndNavigateToRepayLoanConfirmationPage(RepayLoanParameters params) {
         selenium.select("RepayLoan.input.modeOfRepayment", "value=" + params.getModeOfRepaymentValue());
         if(params.getModeOfRepayment().equals(RepayLoanParameters.TRANSFER_FROM_SAVINGS)){
-            selenium.select("repayLoan.input.accountForTransfer", "value=" + params.getAccountForTransfer());
+            selenium.select("repayLoan.input.accountForTransfer", "value=" + params.getAccountForTransferGlobalNum());
+            String [] savingsAccountForTransferDetails = 
+                    selenium.getSelectedLabel("repayLoan.input.accountForTransfer").split("; ");
+            
+            String savingsAccountGlobalNum = savingsAccountForTransferDetails[0];
+            String savingsAccountName = savingsAccountForTransferDetails[1];
+            String savingsAccountType = savingsAccountForTransferDetails[2];
+            BigDecimal savingsAccountBalance = 
+                    new BigDecimal(savingsAccountForTransferDetails[3].split(": ")[1].replaceAll(",", ""));
+            BigDecimal savingsAccountMaxAmountPerWithdrawal = 
+                    new BigDecimal(savingsAccountForTransferDetails[4].split(": ")[1].replaceAll(",", ""));
+                    
+            Assert.assertEquals(savingsAccountGlobalNum, params.getAccountForTransferGlobalNum());
+            Assert.assertEquals(savingsAccountName, params.getAccountForTransferName());
+            Assert.assertEquals(savingsAccountType, params.getAccountForTransferType());
+            Assert.assertEquals(savingsAccountBalance, new BigDecimal(params.getAccountForTransferBalance()));
+            Assert.assertEquals(savingsAccountMaxAmountPerWithdrawal, 
+                                new BigDecimal(params.getAccountForTransferMaxWithdrawalAmount()));
         }
         this.typeTextIfNotEmpty("RepayLoan.input.receiptId", params.getReceiptId());
 
