@@ -31,7 +31,11 @@ public class RepayLoanParameters {
     private String receiptDateDD;
     private String receiptDateMM;
     private String receiptDateYYYY;
-    private String accountForTransfer;
+    private String accountForTransferGlobalNum;
+    private String accountForTransferName;
+    private String accountForTransferBalance;
+    private String accountForTransferType;
+    private String accountForTransferMaxWithdrawalAmount;
 
     public String getModeOfRepayment() {
         return this.modeOfRepayment;
@@ -63,12 +67,36 @@ public class RepayLoanParameters {
     public void setReceiptDateYYYY(String receiptDateYYYY) {
         this.receiptDateYYYY = receiptDateYYYY;
     }
-    
-    public String getAccountForTransfer() {
-        return this.accountForTransfer;
+    public String getAccountForTransferGlobalNum() {
+        return accountForTransferGlobalNum;
+         }
+    public void setAccountForTransferGlobalNum(String accountForTransferGlobalNum) {
+        this.accountForTransferGlobalNum = accountForTransferGlobalNum;
     }
-    public void setAccountForTransfer(String accountForTransfer) {
-        this.accountForTransfer = accountForTransfer;
+    public String getAccountForTransferName() {
+        return accountForTransferName;
+    }
+    public void setAccountForTransferName(String accountForTransferName) {
+        this.accountForTransferName = accountForTransferName;
+    }
+    public String getAccountForTransferBalance() {
+        return accountForTransferBalance;
+    }
+    public void setAccountForTransferBalance(String accountForTransferBalance) {
+        this.accountForTransferBalance = accountForTransferBalance;
+    }
+    public String getAccountForTransferType() {
+        return accountForTransferType;
+    }
+    public void setAccountForTransferType(String accountForTransferType) {
+        this.accountForTransferType = accountForTransferType;
+    }
+    public String getAccountForTransferMaxWithdrawalAmount() {
+        return accountForTransferMaxWithdrawalAmount;
+    }
+    public void setAccountForTransferMaxWithdrawalAmount(
+            String accountForTransferMaxWithdrawalAmount) {
+        this.accountForTransferMaxWithdrawalAmount = accountForTransferMaxWithdrawalAmount;
     }
 
     /**

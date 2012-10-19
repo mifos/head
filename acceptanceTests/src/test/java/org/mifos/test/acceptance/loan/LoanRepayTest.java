@@ -85,7 +85,11 @@ public class LoanRepayTest extends UiTestCaseBase {
         
         RepayLoanParameters repayLoanParameters = new RepayLoanParameters();
         repayLoanParameters.setModeOfRepayment(RepayLoanParameters.TRANSFER_FROM_SAVINGS);
-        repayLoanParameters.setAccountForTransfer(savingAccountWithInsufficentBalance);  
+        repayLoanParameters.setAccountForTransferGlobalNum(savingAccountWithInsufficentBalance);
+        repayLoanParameters.setAccountForTransferBalance(String.valueOf(0));
+        repayLoanParameters.setAccountForTransferMaxWithdrawalAmount(String.valueOf(0));
+        repayLoanParameters.setAccountForTransferName("MonthlyClientSavingsAccount");
+        repayLoanParameters.setAccountForTransferType("Voluntary");
         
         String errors = navigationHelper
                 .navigateToLoanAccountPage(loanToRepay)
