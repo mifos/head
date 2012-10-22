@@ -41,6 +41,10 @@ public class CreateMeetingPage extends MifosPage {
         selectValueIfNotZero("weekDay", parameters.getWeekDay().getId());
         typeTextIfNotEmpty("createmeeting.input.weekFrequency", parameters.getWeekFrequency());
         typeTextIfNotEmpty("createmeeting.input.meetingPlace", parameters.getMeetingPlace());
+        String meetingStartDate = parameters.getMeetingStartDate();
+        if (meetingStartDate != null) {
+            typeText("meetingStartDate", meetingStartDate);
+        }
         selenium.click("createmeeting.button.save");
         waitForPageToLoad();
         return new CreateCenterEnterDataPage(selenium);
