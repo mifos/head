@@ -1,14 +1,13 @@
 package org.mifos.application.servicefacade;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.List;
 
 import org.mifos.clientportfolio.newloan.applicationservice.CreateGroupLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanAccountCashFlow;
 import org.mifos.dto.domain.GroupIndividualLoanDto;
-import org.mifos.dto.domain.OriginalScheduleInfoDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
+import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 
 public interface GroupLoanAccountServiceFacade {
@@ -24,5 +23,7 @@ public interface GroupLoanAccountServiceFacade {
     List<String> getListOfMemberGlobalAccountNumbers(Integer parentAccountId);
     
     List<GroupIndividualLoanDto> getMemberLoansAndDefaultPayments(Integer parentAccountId, BigDecimal amount);
+
+    LoanInformationDto retrieveLoanInformation(String globalAccountNum);
     
 }

@@ -77,7 +77,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 
 			<c:set value="${requestScope.backPageUrl}" var="backPageUrl"/>
             <c:if test="${ empty requestScope.backPageUrl}">
-            	<c:set value="viewLoanAccountDetails.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}" var="backPageUrl"/>
+            	<c:set value="viewGroupLoanAccountDetails.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}" var="backPageUrl"/>
             </c:if>
 
 			<html-el:hidden property="currentFlowKey"

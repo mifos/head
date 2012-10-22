@@ -29,6 +29,7 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -51,11 +52,11 @@ import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountOverpaymentEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateFlagEntity;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.business.AccountTrxnEntity;
-import org.mifos.accounts.business.AccountPenaltiesEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
@@ -130,6 +131,7 @@ import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.util.helpers.LoanActivityDtoDataComperable;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
 import org.mifos.clientportfolio.loan.service.MonthlyOnDayOfMonthSchedule;
 import org.mifos.clientportfolio.loan.service.MonthlyOnWeekOfMonthSchedule;
@@ -269,11 +271,13 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade {
 
+    private static final String LOAN_DISBUTSAL = "Loan Disbursal";
+    private static final String ACTIVITY = "Member activity:";
+    
     private final OfficeDao officeDao;
     private final LoanProductDao loanProductDao;
     private final CustomerDao customerDao;
@@ -1399,10 +1403,23 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
             loanActivityViewSet.add(loanActivity.toDto());
         }
+        //only for new group loan account
+        if (loan.isGroupLoanAccount()) {
+            List<LoanBO> members = new ArrayList<LoanBO>(loan.getMemberAccounts());
+            for (LoanBO member : members) {
+                for (LoanActivityEntity accActivity : member.getLoanActivityDetails()) {
+                    if (!accActivity.getComments().equals(LOAN_DISBUTSAL)) {
+                        loanActivityViewSet.add(accActivity.toDto());
+                    }
+                }
+            }
+            Collections.sort(loanActivityViewSet, new LoanActivityDtoDataComperable());
+            Collections.reverse(loanActivityViewSet);
+        }
 
         return loanActivityViewSet;
     }
-
+    
     @Override
     public LoanInstallmentDetailsDto retrieveInstallmentDetails(Integer accountId) {
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

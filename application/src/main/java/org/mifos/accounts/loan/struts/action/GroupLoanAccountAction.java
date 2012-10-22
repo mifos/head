@@ -22,6 +22,7 @@ package org.mifos.accounts.loan.struts.action;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.ADMINISTRATIVE_DOCUMENT_IS_ENABLED;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.CUSTOM_FIELDS;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_ALL_ACTIVITY_VIEW;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECENTACCOUNTACTIVITIES;
 import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
@@ -71,6 +72,7 @@ import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.LoanInformationDto;
+import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
@@ -98,24 +100,27 @@ public class GroupLoanAccountAction extends AccountAppAction{
 
     private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator;
     private QuestionGroupFilterForLoan questionGroupFilter;
+    private GroupLoanAccountServiceFacade groupLoanAccountServiceFacade;
 
     public GroupLoanAccountAction() {
         this(new ConfigurationBusinessService(), ApplicationContextProvider.getBean(LoanBusinessService.class), new GlimLoanUpdater(),
                 new LoanPrdBusinessService(),
-                new ConfigurationPersistence(), new AccountBusinessService());
+                new ConfigurationPersistence(), new AccountBusinessService(), ApplicationContextProvider.getBean(GroupLoanAccountServiceFacade.class));
     }
 
     public GroupLoanAccountAction(final ConfigurationBusinessService configService,
                              final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater,
                              final LoanPrdBusinessService loanPrdBusinessService,
                              final ConfigurationPersistence configurationPersistence,
-                             final AccountBusinessService accountBusinessService) {
+                             final AccountBusinessService accountBusinessService,
+                             final GroupLoanAccountServiceFacade groupLoanAccountServiceFacade) {
         super(accountBusinessService);
 
         this.loanBusinessService = loanBusinessService;
         this.configurationPersistence = configurationPersistence;
         this.questionGroupFilter = new QuestionGroupFilterForLoan();
         this.questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
+        this.groupLoanAccountServiceFacade = groupLoanAccountServiceFacade;
     }
 
     QuestionnaireFlowAdapter getCreateLoanQuestionnaire() {
@@ -133,8 +138,12 @@ public class GroupLoanAccountAction extends AccountAppAction{
         UserContext userContext = getUserContext(request);
 
         LoanInformationDto loanInformationDto;
+        List<LoanInformationDto> memberloanInformationDtos = new ArrayList<LoanInformationDto>();
         try {
-            loanInformationDto = this.loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
+            loanInformationDto = this.groupLoanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
+            for (LoanBO member : loanDao.findByGlobalAccountNum(globalAccountNum).getMemberAccounts()) {
+                memberloanInformationDtos.add(this.loanAccountServiceFacade.retrieveLoanInformation(member.getGlobalAccountNum()));
+            }
         }
         catch (MifosRuntimeException e) {
             if (e.getCause() instanceof ApplicationException) {
@@ -185,6 +194,10 @@ public class GroupLoanAccountAction extends AccountAppAction{
         SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
         // inject preferred date
         List<LoanActivityDto> activities = loanInformationDto.getRecentAccountActivity();
+        for(LoanInformationDto memberDto: memberloanInformationDtos) {
+            List<LoanActivityDto> recentAccountActivity = memberDto.getRecentAccountActivity();
+            activities.addAll(recentAccountActivity);
+        }
         for (LoanActivityDto activity : activities) {
             activity.setUserPrefferedDate(DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), activity.getActionDate().toString()));
         }
@@ -205,8 +218,6 @@ public class GroupLoanAccountAction extends AccountAppAction{
 
         }
         
-        // John W - temporarily put back because needed in applychargeaction - update
-        // keithW - and for recentAccountNotes
         LoanBO loan = getLoan(loanInformationDto.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         setCurrentPageUrl(request, loan);
@@ -245,6 +256,19 @@ public class GroupLoanAccountAction extends AccountAppAction{
         return mapping.findForward(forward);
     }
 
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward getAllActivity(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form,
+                                        final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
+            throws Exception {
+
+        String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
+
+        List<LoanActivityDto> allLoanAccountActivities = this.loanAccountServiceFacade.retrieveAllLoanAccountActivities(globalAccountNum);
+
+        SessionUtils.setCollectionAttribute(LOAN_ALL_ACTIVITY_VIEW, allLoanAccountActivities, request);
+        return mapping.findForward(MethodNameConstants.GETALLACTIVITY_SUCCESS);
+    }
+    
     private List<Integer> getMembersAccountId(List<LoanBO> membersAccount){
         List<Integer> ids = new ArrayList<Integer>();
             for (LoanBO member : membersAccount) { 
