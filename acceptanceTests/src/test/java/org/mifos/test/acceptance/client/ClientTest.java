@@ -1107,13 +1107,23 @@ public class ClientTest extends UiTestCaseBase {
     @Test(enabled=true)
     public void removeClientWithLoanFromGroup() throws Exception {
         // Given
-    	String clientName = "Stu1233266309851 Client1233266309851";
+    	String clientName = clientTestHelper.createClientAndVerify("loan officer", "MyOfficeDHMFT").getHeading();
+    	clientTestHelper.activateClient(clientName);
     	
-    	CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
+        // Then
+        clientTestHelper.addClientToGroup(clientName, "groupWithoutLoan");
+
+        CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
     	searchParams.setSearchString(clientName);
     	searchParams.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
-		loanTestHelper.createAndActivateDefaultLoanAccount(searchParams );
-    	
+		
+		CreateLoanAccountSubmitParameters submitLoanAccountParameters = new CreateLoanAccountSubmitParameters();
+		submitLoanAccountParameters.setDd("22");
+		submitLoanAccountParameters.setMm("01");
+		submitLoanAccountParameters.setYy("2010");
+		String loanAccounntID = loanTestHelper.createLoanAccount(searchParams, submitLoanAccountParameters ).getAccountId();
+		loanTestHelper.activateLoanAccount(loanAccounntID);
+		
     	String groupName = navigationHelper.navigateToClientViewDetailsPage(clientName).getGroupMembership();
         SavingsProductParameters params = savingsProductHelper.
                 getGenericSavingsProductParameters(new DateTime(2009, 7, 13, 12, 0, 0, 0),
