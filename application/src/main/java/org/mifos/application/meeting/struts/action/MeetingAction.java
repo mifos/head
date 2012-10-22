@@ -20,6 +20,8 @@
 
 package org.mifos.application.meeting.struts.action;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +51,7 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -169,6 +172,11 @@ public class MeetingAction extends BaseAction {
             form.setFrequency(RecurrenceType.WEEKLY.getValue().toString());
             form.setWeekDay(meeting.getMeetingDetails().getWeekDay().getValue().toString());
             form.setRecurWeek(meeting.getMeetingDetails().getRecurAfter().toString());
+            Date meetingStartDate = meeting.getMeetingStartDate();
+            if (meetingStartDate != null) {
+                DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                form.setMeetingStartDate(df.format(meetingStartDate));
+            }
         } else if (meeting.isMonthly()) {
             form.setFrequency(RecurrenceType.MONTHLY.getValue().toString());
             if (meeting.isMonthlyOnDate()) {
@@ -187,7 +195,14 @@ public class MeetingAction extends BaseAction {
 
     private MeetingBO createMeeting(MeetingActionForm form) throws MeetingException {
         MeetingBO meeting = null;
-        Date startDate = new DateTimeService().getCurrentJavaDateTime();
+        Date startDate = null;
+        
+        if (form.getMeetingStartDate() == null || form.getMeetingStartDate().isEmpty()) {
+            startDate = new DateTimeService().getCurrentJavaDateTime();
+        } else {
+            startDate = DateUtils.getDate(form.getMeetingStartDate());
+        }
+        
         if (form.getRecurrenceType().equals(RecurrenceType.WEEKLY)) {
             meeting = new MeetingBO(form.getWeekDayValue(), form.getRecurWeekValue(), startDate,
                     MeetingType.CUSTOMER_MEETING, form.getMeetingPlace());
@@ -233,5 +248,6 @@ public class MeetingAction extends BaseAction {
         form.setRecurMonth(null);
         form.setMeetingPlace(null);
         form.setInput(null);
+        form.setMeetingStartDate(null);
     }
 }

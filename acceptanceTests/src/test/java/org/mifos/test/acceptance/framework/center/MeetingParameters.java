@@ -70,6 +70,7 @@ public class MeetingParameters {
     WeekDay weekDay;
     String weekFrequency;
     String meetingPlace;
+    private String meetingStartDate;
 
     public WeekDay getWeekDay() {
         return this.weekDay;
@@ -93,5 +94,13 @@ public class MeetingParameters {
 
     public void setMeetingPlace(String meetingPlace) {
         this.meetingPlace = meetingPlace;
+    }
+
+    public String getMeetingStartDate() {
+        return meetingStartDate;
+    }
+
+    public void setMeetingStartDate(String meetingStartDate) {
+        this.meetingStartDate = meetingStartDate;
     }
 }
