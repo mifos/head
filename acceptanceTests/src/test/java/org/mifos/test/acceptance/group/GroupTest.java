@@ -335,7 +335,8 @@ public class GroupTest extends UiTestCaseBase {
         QuestionnairePage questionnairePage = responseDetailsPage.navigateToEditSection("0");
         questionnairePage.verifyField("details[0].sectionDetails[0].questions[0].value", "");
         questionnairePage.verifyField("details[0].sectionDetails[0].questions[1].value", ""); 
-        questionGroupTestHelper.markQuestionGroupAsInactive(qG_1); 
+        questionGroupTestHelper.markQuestionGroupAsInactive(qG_1);
+        questionTestHelper.markQuestionAsActive("SingleSelect");
     }
 
     private QuestionResponseParameters getQuestionResponseParametersForGroupCreation(String answer) {
