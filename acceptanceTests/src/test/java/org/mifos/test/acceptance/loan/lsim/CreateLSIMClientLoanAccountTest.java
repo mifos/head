@@ -132,10 +132,16 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     // https://mifosforge.jira.com/browse/MIFOS-5852
     @Test(enabled=true)
     public void newMonthlyClientLoanAccountWithMeetingOnSameWeekAndWeekday() throws Exception {
-        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        //Given
+    	DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2010, 5, 22, 10, 55, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        
+    	//Then
+    	CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Monthly3rdFriday");
         searchParameters.setLoanProduct("MonthlyClientFlatLoanThirdFridayOfMonth");
-        expectedDate = "11-Mar-2010";
+        expectedDate = "08-Jul-2010";
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("2765.0");
