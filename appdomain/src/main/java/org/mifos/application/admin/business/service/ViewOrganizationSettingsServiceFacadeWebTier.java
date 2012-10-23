@@ -122,6 +122,9 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         accountingRules.setProperty("minIndebtednessRatio", AccountingRules.getMinIndebtednessRatio().toString());
         accountingRules.setProperty("maxIndebtednessRatio", AccountingRules.getMaxIndebtednessRatio().toString());
         accountingRules.setProperty("digitsAfterDecimalForCashFlow", AccountingRules.getDigitsAfterDecimalForCashFlowValidations().toString());
+        accountingRules.setProperty("GLNamesMode", String.valueOf(AccountingRules.getGlNamesMode()));
+        accountingRules.setProperty("simpleAccountingModule", booleanToYesNo(AccountingRules.getSimpleAccountingStatus()));
+        accountingRules.setProperty("overdueInterestPaidFirst", booleanToYesNo(AccountingRules.isOverdueInterestPaidFirst()));
 
         return accountingRules;
     }
@@ -182,6 +185,7 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         misc.setProperty("collectionSheetAdvanceDays", "1");
 
         misc.setProperty("backDatedTransactions", booleanToYesNo(AccountingRules.isBackDatedTxnAllowed()));
+        misc.setProperty("backDatedApprovals", booleanToYesNo(AccountingRules.isBackDatedApprovalAllowed()));
         ConfigurationBusinessService cbs = new ConfigurationBusinessService();
         misc.setProperty("glim", booleanToYesNo(cbs.isGlimEnabled()));
         misc.setProperty("lsim", booleanToYesNo(cbs.isRepaymentIndepOfMeetingEnabled()));

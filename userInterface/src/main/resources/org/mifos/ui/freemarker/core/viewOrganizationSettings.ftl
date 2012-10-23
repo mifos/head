@@ -64,6 +64,19 @@
                 <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.minIndebtednessRatio"/]</span>:&nbsp;<span class="fontnormal">${properties.minIndebtednessRatio}</span></div>
                 <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maxIndebtednessRatio"/]</span>:&nbsp;<span class="fontnormal">${properties.maxIndebtednessRatio}</span></div>
                 <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.digitsAfterDecimalForCashFlow"/]</span>:&nbsp;<span class="fontnormal">${properties.digitsAfterDecimalForCashFlow}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.GLNamesMode"/]</span>:<span class="fontnormal">
+                [#if properties.GLNamesMode == "1"]
+                    [@spring.message "organizationSettings.viewOrganizationSettings.GLNamesMode.GLNameDashGLMode"/]
+                [#elseif properties.GLNamesMode == "2"]
+                    [@spring.message "organizationSettings.viewOrganizationSettings.GLNamesMode.GLNameGLModeInBrackets"/]
+                [#elseif properties.GLNamesMode == "3"]
+                    [@spring.message "organizationSettings.viewOrganizationSettings.GLNamesMode.GLNameOnly"/]
+                [#elseif properties.GLNamesMode == "4"]
+                    [@spring.message "organizationSettings.viewOrganizationSettings.GLNamesMode.GLCodeOnly"/]
+                [/#if]
+                </span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.simpleAccountingModule"/]</span>:&nbsp;<span class="fontnormal">${properties.simpleAccountingModule}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.overdueInterestPaidFirst"/]</span>:&nbsp;<span class="fontnormal">${properties.overdueInterestPaidFirst}</span></div>
             </div>
        </p>
 
@@ -111,6 +124,7 @@
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.sessiontimeout"/]</span>:&nbsp;<span class="fontnormal">${properties.sessionTimeout}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdaysinadvancethecollectionsheetshouldbegenerated"/]</span>:&nbsp;<span class="fontnormal">${properties.collectionSheetAdvanceDays}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.backdatedtransactionsallowed"/]</span>:&nbsp;<span class="fontnormal">${properties.backDatedTransactions}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.backdatedapprovalsallowed"/]</span>:&nbsp;<span class="fontnormal">${properties.backDatedApprovals}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.glim"/]</span>:&nbsp;<span class="fontnormal">${properties.glim}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.lsim"/]</span>:&nbsp;<span class="fontnormal">${properties.lsim}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maxPointsPerPPISurvey"/]</span>:&nbsp;<span class="fontnormal">${properties.maxPointsPerPPISurvey}</span></div>
