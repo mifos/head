@@ -81,12 +81,13 @@ public class LoanRepaymentTag extends BodyTagSupport {
         boolean twoTables = false;
         XmlBuilder html = new XmlBuilder();
         LoanBO loanBO = null;
-
+        
         try {
             String currentFlowKey = (String) pageContext.getRequest().getAttribute(Constants.CURRENTFLOWKEY);
             HttpSession session = pageContext.getSession();
             FlowManager flowManager = (FlowManager) session.getAttribute(Constants.FLOWMANAGER);
             loanBO = (LoanBO) flowManager.getFromFlow(currentFlowKey, Constants.BUSINESS_KEY);
+            
             
             if (StringUtils.isNotBlank(memberGlobalNum)) {
                 loanBO = loanBO.findMemberByGlobalNum(memberGlobalNum);
@@ -215,7 +216,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
                 while (index <= list.size() - 1 && toContinue
                         && !installment.getTotalDueWithFees().equals(installment.getTotalScheduleAmountWithFees())) {
 
-                    html1.append(createInstallmentRow(installment, true));
+                    html1.append(createInstallmentRow(installment, true, isNewGropLoan));
                     html2.append(createRunningBalanceRow(installment, totalPrincipal, totalInterest, totalFees, totalPenalties));
                     totalPrincipal = totalPrincipal.subtract(installment.getPrincipalPaid());
                     totalInterest = totalInterest.subtract(installment.getEffectiveInterestPaid());
@@ -246,7 +247,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
                             && !installment.isPaid()
                             && installment.getActionDate().getTime() <= viewDate.getTime()) {
                         index++;
-                        html1.append(createInstallmentRow(installment, false));
+                        html1.append(createInstallmentRow(installment, false, isNewGropLoan));
                         installment = (LoanScheduleEntity) list.get(index);
                     }
                 }
@@ -264,13 +265,13 @@ public class LoanRepaymentTag extends BodyTagSupport {
                     html1.endTag("tr");
                     while (index < list.size() - 1) {
                         index++;
-                        html1.append(createInstallmentRow(installment, false));
+                        html1.append(createInstallmentRow(installment, false, isNewGropLoan));
                         installment = (LoanScheduleEntity) list.get(index);
                     }
                 }
                 // append the last transaction
                 if (!installment.isPaid()) {
-                    html1.append(createInstallmentRow(installment, false));
+                    html1.append(createInstallmentRow(installment, false, isNewGropLoan));
                 }
 
                 if (twoTables) {
@@ -404,7 +405,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
         return new DateTime(viewDate).withTime(23, 59, 59, 0).toDate();
     }
 
-    XmlBuilder createInstallmentRow(LoanScheduleEntity installment, boolean isPaymentMade) {
+    XmlBuilder createInstallmentRow(LoanScheduleEntity installment, boolean isPaymentMade, boolean isNewGropLoan) {
         XmlBuilder html = new XmlBuilder();
         html.startTag("tr");
 
@@ -422,35 +423,76 @@ public class LoanRepaymentTag extends BodyTagSupport {
         html.endTag("td");
 
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
-        html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getPrincipalPaid().toString()) : ConversionUtil.formatNumber(installment.getPrincipalDue().toString())));
+        if (isNewGropLoan) {
+            html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getPrincipalPaid().toString()) : 
+                ConversionUtil.formatNumber(installment.getPrincipalDue().toString())+ "(" + ConversionUtil.formatNumber(installment.getPrincipalPaid().toString()) +")"));
+        }
+        else
+        {
+            html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getPrincipalPaid().toString()) : ConversionUtil.formatNumber(installment.getPrincipalDue().toString())));
+        }
         html.endTag("td");
 
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
-        html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getEffectiveInterestPaid().toString()) :
+        if (isNewGropLoan) {
+            html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getEffectiveInterestPaid().toString()) :
                 ConversionUtil.formatNumber(installment.getEffectiveInterestDue().toString()) + ( 
                 AccountingRules.isOverdueInterestPaidFirst() ? " ("+ConversionUtil.formatNumber((installment.getInterestPaid().add(installment.getExtraInterestPaid())).toString())+")" : "")));
+        }
+        else 
+        {
+            html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getEffectiveInterestPaid().toString()) :
+                ConversionUtil.formatNumber(installment.getEffectiveInterestDue().toString()) + ( 
+                AccountingRules.isOverdueInterestPaidFirst() ? " ("+ConversionUtil.formatNumber((installment.getInterestPaid().add(installment.getExtraInterestPaid())).toString())+")" : "")));
+        }
+
         html.endTag("td");
 
         html.startTag("td", "width", "10%", "align", "right", "class", "drawtablerow");
-        html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getTotalFeeAmountPaidWithMiscFee().toString()) : ConversionUtil.formatNumber(installment
+        if (isNewGropLoan) {
+            html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getTotalFeeAmountPaidWithMiscFee().toString()) : 
+                ConversionUtil.formatNumber(installment.getTotalFeeDueWithMiscFeeDue().toString()) + "(" +ConversionUtil.formatNumber(installment.getTotalFeeAmountPaidWithMiscFee().toString()) +")"));
+        }
+        else {
+            html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getTotalFeeAmountPaidWithMiscFee().toString()) : ConversionUtil.formatNumber(installment
                 .getTotalFeeDueWithMiscFeeDue().toString())));
+        }
         html.endTag("td");
         
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
-        html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getTotalPenaltyPaid().toString()) :
-                ConversionUtil.formatNumber(installment.getPenaltyDue().toString())));
+        if (isNewGropLoan) {
+            html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getTotalPenaltyPaid().toString()) :
+                ConversionUtil.formatNumber(installment.getPenaltyDue().toString()) + "(" + ConversionUtil.formatNumber(installment.getTotalPenaltyPaid().toString()) + ")" ));
+        }
+        else
+        {
+            html.text((isPaymentMade ? ConversionUtil.formatNumber(installment.getTotalPenaltyPaid().toString()) :
+                ConversionUtil.formatNumber(installment.getPenaltyDue().toString())));  
+        }
         html.endTag("td");
 
         html.startTag("td", "width", "12%", "align", "right", "class", "drawtablerow");
-        html.text((isPaymentMade ? ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalPaid().add(installment.getEffectiveInterestPaid()).add(
-                installment.getTotalFeeAmountPaidWithMiscFee()).add(installment.getTotalPenaltyPaid()))) : ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalDue().add(
-                installment.getEffectiveInterestDue()).add(installment.getTotalFeeDueWithMiscFeeDue()).add(
-                installment.getPenaltyDue())))));
+        if (isNewGropLoan) {
+            html.text((isPaymentMade ? ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalPaid().add(installment.getEffectiveInterestPaid()).add(
+                    installment.getTotalFeeAmountPaidWithMiscFee()).add(installment.getTotalPenaltyPaid()))) : ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalDue().add(
+                    installment.getEffectiveInterestDue()).add(installment.getTotalFeeDueWithMiscFeeDue()).add(
+                    installment.getPenaltyDue()))) + "(" + ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalPaid().add(installment.getEffectiveInterestPaid()).add(
+                            installment.getTotalFeeAmountPaidWithMiscFee()).add(installment.getTotalPenaltyPaid()))) + ")"));
+        }
+        else 
+        {
+            html.text((isPaymentMade ? ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalPaid().add(installment.getEffectiveInterestPaid()).add(
+                    installment.getTotalFeeAmountPaidWithMiscFee()).add(installment.getTotalPenaltyPaid()))) : ConversionUtil.formatNumber(String.valueOf(installment.getPrincipalDue().add(
+                    installment.getEffectiveInterestDue()).add(installment.getTotalFeeDueWithMiscFeeDue()).add(
+                    installment.getPenaltyDue())))));
+        }
+
         html.endTag("td");
 
         html.endTag("tr");
         return html;
     }
+    
 
     XmlBuilder createRunningBalanceRow(LoanScheduleEntity installment, Money totalPrincipal, Money totalInterest,
             Money totalFees, Money totalPenalties) {
