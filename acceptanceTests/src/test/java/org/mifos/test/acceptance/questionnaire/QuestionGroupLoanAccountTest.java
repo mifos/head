@@ -123,11 +123,11 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
 
             QuestionResponsePage questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanDisbursal(loan1ID, disburseLoanParameters);
             questionResponsePage.populateAnswers(questionResponseParameters);
-            questionResponsePage = questionResponsePage
-                    .continueAndNavigateToDisburseLoanConfirmationPage()
-                    .navigateToEditAdditionalInformation();
-            questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "blue");
-            questionResponsePage.populateAnswers(questionResponseParameters);
+            //questionResponsePage = questionResponsePage
+            //        .continueAndNavigateToDisburseLoanConfirmationPage()
+            //        .navigateToEditAdditionalInformation();
+            //questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "blue");
+            //questionResponsePage.populateAnswers(questionResponseParameters);
             questionResponsePage
                     .continueAndNavigateToDisburseLoanConfirmationPage()
                     .submitAndNavigateToLoanAccountPage();
@@ -137,8 +137,8 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
             createQuestionParameters.setText("createdByverifyCapturingResponsesDuringLoanDisburse");
             List<CreateQuestionParameters> newQuestionList = new ArrayList<CreateQuestionParameters>();
             newQuestionList.add(createQuestionParameters);
-            String[] questionsExist = {"Date", "FreeText", "SingleSelect", "createdByverifyCapturingResponsesDuringLoanDisburse"};
-            String[] questionsInactive = {"ToBeDisabled"};
+            String[] questionsExist = {"Date", "FreeText" };
+            String[] questionsInactive = {"SingleSelect", "createdByverifyCapturingResponsesDuringLoanDisburse"};
             Map<String, String> questionsAndAnswers = new HashMap<String, String>();
 
             questionsAndAnswers.put("MultiSelect", "three");
