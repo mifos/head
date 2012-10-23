@@ -129,4 +129,7 @@ public interface CenterServiceFacade {
     
     @PreAuthorize("isFullyAuthenticated()")
     List<CustomerDetailDto> retrieveGroupForPentahoReport(Short loanOfficerId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    List<CustomerDetailDto> retrieveCustomersUnderBranch(Short branchId);
 }
