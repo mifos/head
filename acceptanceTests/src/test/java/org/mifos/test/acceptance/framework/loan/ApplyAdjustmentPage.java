@@ -46,6 +46,11 @@ public class ApplyAdjustmentPage extends AbstractPage {
         return submitAdjustment();
     }
     
+    public LoanAccountPage fillAdjustmentFieldsWithoutRevertingAndSubmit(String adjustmentAmount) {
+        applyAdjustmentWithoutReverting(adjustmentAmount);
+        return submitAdjustment();
+    }
+    
     public LoanAccountPage submitAdjustment() {
         selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
@@ -60,6 +65,12 @@ public class ApplyAdjustmentPage extends AbstractPage {
             selenium.click("applyadjustment.button.submit");
             waitForPageToLoad();
         }
+    }
+    
+    private void applyAdjustmentWithoutReverting(String adjustmentAmount) {
+        selenium.type("applyadjustment.input.note", "testNotes paid Amount: " + adjustmentAmount);
+        selenium.click("applyadjustment.button.submit");
+        waitForPageToLoad();
     }
 
     public ApplyAdjustmentPage verifyAdjustBackdatedPermission() {
