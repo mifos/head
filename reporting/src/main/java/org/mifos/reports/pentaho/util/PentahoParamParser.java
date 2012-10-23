@@ -240,7 +240,7 @@ public class PentahoParamParser {
                 result.put(key, value);
             }
         } else if (parameterIsCenter(paramDefEntry.getName())) {
-            String keyValue = searchKey("(.*officer$)|(.*officer_id$)|(selected_office$)|(.*BRANCH_NAME.*)", selectedValues,
+            String keyValue = searchKey("(.*officer$)|(.*officer_id$)", selectedValues,
                     paramDefEntry.getName());
             if (!keyValue.equals("")) {
                 id = (String) selectedValues.get(keyValue).getParamValue();
@@ -261,11 +261,35 @@ public class PentahoParamParser {
                     }
                 }
             } else {
-                ParameterValues paramValues = paramDefEntry.getValues(paramContext);
-                for (int i = 0; i < paramValues.getRowCount(); i++) {
-                    String key = String.valueOf(paramValues.getKeyValue(i));
-                    String value = String.valueOf(paramValues.getTextValue(i));
-                    result.put(key, value);
+                keyValue = searchKey("(selected_office$)|(.*BRANCH_NAME.*)", selectedValues,
+                        paramDefEntry.getName());
+                
+                if (!keyValue.equals("")) {
+                    id = (String) selectedValues.get(keyValue).getParamValue();
+                    if (!id.equals("-1")) {
+                        List<CustomerDetailDto> customerList = ApplicationContextProvider
+                                .getBean(CenterServiceFacade.class).retrieveCustomersUnderBranch(new Short(id));
+                        for (CustomerDetailDto office : customerList) {
+                            String key = office.getCustomerId().toString();
+                            String value = office.getDisplayName();
+                            result.put(key, value);
+                        }
+                    } else {
+                        ParameterValues paramValues = paramDefEntry.getValues(paramContext);
+                        for (int i = 0; i < paramValues.getRowCount(); i++) {
+                            String key = String.valueOf(paramValues.getKeyValue(i));
+                            String value = String.valueOf(paramValues.getTextValue(i));
+                            result.put(key, value);
+                        }
+                    }
+                } else {
+                
+                    ParameterValues paramValues = paramDefEntry.getValues(paramContext);
+                    for (int i = 0; i < paramValues.getRowCount(); i++) {
+                        String key = String.valueOf(paramValues.getKeyValue(i));
+                        String value = String.valueOf(paramValues.getTextValue(i));
+                        result.put(key, value);
+                    }
                 }
             }
             String key = "-1";

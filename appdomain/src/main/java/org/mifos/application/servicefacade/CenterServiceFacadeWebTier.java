@@ -72,6 +72,7 @@ import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelNotesEntity;
+import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
@@ -148,6 +149,9 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     
     @Autowired
     private LoanDao loanDao;
+    
+    @Autowired
+    private PersonnelBusinessService personnelBusinessService;
 
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
@@ -1016,4 +1020,22 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     private String getMeetingRecurrence(MeetingBO meeting, UserContext userContext) {
         return meeting != null ? new MeetingHelper().getMessageWithFrequency(meeting, userContext) : null;
     }
+
+    @Override
+    public List<CustomerDetailDto> retrieveCustomersUnderBranch(Short branchId) {
+        List<CustomerDetailDto> customers =null;
+        try {
+            customers = new ArrayList<CustomerDetailDto>();
+            List<PersonnelBO> officers = personnelBusinessService.getActiveLoanOfficersUnderOffice(branchId);
+            for(PersonnelBO officer : officers) {
+                customers.addAll(retrieveCustomersUnderUser(officer.getPersonnelId()));
+            }
+            
+        } catch (ServiceException e) {
+            
+        }
+        return customers;
+    }
+    
+    
 }
