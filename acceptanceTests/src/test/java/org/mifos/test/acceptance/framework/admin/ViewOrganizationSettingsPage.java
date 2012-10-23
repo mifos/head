@@ -109,7 +109,8 @@ public class ViewOrganizationSettingsPage extends MifosPage {
         return new String[] { "Maximum Interest: 999.0", "Minimum Interest: 0.0",
                 "Number of digits before decimal: 14", "Number of digits after decimal for interest: 5",
                 "Number of digits before decimal for interest: 10", "Number of interest days: 365",
-                "Currency Rounding Mode: HALF_UP", "Initial Rounding Mode: HALF_UP", "Final Rounding Mode: CEILING" };
+                "Currency Rounding Mode: HALF_UP", "Initial Rounding Mode: HALF_UP", "Final Rounding Mode: CEILING", 
+                "GL names mode: GL Code - GL Name", "Simple accounting module: No", "Overdue interest paid first: No" };
     }
 
     public String[] getDefaultCurrencies() {
@@ -138,7 +139,8 @@ public class ViewOrganizationSettingsPage extends MifosPage {
     public String[] getDefaultMiscellaneous() {
         return new String[] { "Session timeout: 30",
                 "Number of days in advance the collection sheet should be generated: 1",
-                "Back dated transactions allowed: Yes", "Group loan with individual monitoring (GLIM): No",
+                "Back dated transactions allowed: Yes", "Back dated approvals allowed: Yes",
+                "Group loan with individual monitoring (GLIM): No",
                 "Loan schedule independent of meeting (LSIM): No" };
     }
 
