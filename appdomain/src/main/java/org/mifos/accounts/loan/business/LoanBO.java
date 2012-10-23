@@ -3796,14 +3796,20 @@ public class LoanBO extends AccountBO implements Loan {
     public void adjustLastPayment(final String adjustmentComment, PersonnelBO loggedInUser) throws AccountException {
         if (isAdjustPossibleOnLastTrxn()) {
             logger.debug("Adjustment is possible hence attempting to adjust.");
-            adjustPayment(getLastPmntToBeAdjusted(), loggedInUser, adjustmentComment);
+            AccountPaymentEntity lastPmntToBeAdjusted = getLastPmntToBeAdjusted();
+            Money equalizingPaymentAmount = lastPmntToBeAdjusted.getAmount();
+            short equalizingPaymentTypeId = lastPmntToBeAdjusted.getPaymentType().getId();
+            Date equalizingPaymentDate = lastPmntToBeAdjusted.getPaymentDate();
+            
+            adjustPayment(lastPmntToBeAdjusted, loggedInUser, adjustmentComment);
             if (hasMemberAccounts()) {
                 for (LoanBO memberAccount : this.memberAccounts) {
                     memberAccount.setUserContext(this.userContext);
                     memberAccount.adjustLastPayment(adjustmentComment, loggedInUser);
                 }
                 //MIFOS-5742: equalizing payment made to solve the problem with adjusting very small payment on GLIM account
-                PaymentData equalizingPaymentData = new PaymentData(getLastPmntToBeAdjusted().getAmount(), loggedInUser, getLastPmntToBeAdjusted().getPaymentType().getId(), getLastPmntToBeAdjusted().getPaymentDate());
+                PaymentData equalizingPaymentData = 
+                        new PaymentData(equalizingPaymentAmount, loggedInUser, equalizingPaymentTypeId, equalizingPaymentDate);
                 BigDecimal installmentsPaid = findNumberOfPaidInstallments();
                 applyPaymentToMemberAccounts(equalizingPaymentData, installmentsPaid);
             }
