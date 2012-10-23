@@ -1584,8 +1584,15 @@ public class ClientTest extends UiTestCaseBase {
         manageRolePage.submitAndGotoViewRolesPage();
     }
 
-    public void verifyCustomerScheduleAfterMovingClientToGroupWithDifferentMeetingFrequency(){
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyCustomerScheduleAfterMovingClientToGroupWithDifferentMeetingFrequency() throws Exception {
 	    //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = 
+                new DateTimeUpdaterRemoteTestingService(selenium);   
+        DateTime oldTime = targetTime;
+        targetTime = new DateTime(2012, 1, 2, 12, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        
 	    String startGroupName = "GroupWeekly";
 	    String destinationGroupName = "MonthlyGroup";
 	    String clientName = "DoeTest2";
@@ -1635,6 +1642,8 @@ public class ClientTest extends UiTestCaseBase {
         }
         
         Assert.assertEquals(currentMonth, disbursementMonth);
+        targetTime = oldTime;
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     	}
 
 }
