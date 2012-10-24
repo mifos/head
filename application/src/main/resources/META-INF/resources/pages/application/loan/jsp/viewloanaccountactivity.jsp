@@ -107,7 +107,7 @@ explanation of the license and how it is applied.
 				<tr>
 					<td align="center">
 					   <html-el:button styleId="viewloanaccountactivity.button.return" property="returnToAccountDetailsbutton"
-					       onclick="javascript:fun_return(this.form)"
+					       onclick="javascript:fun_return(this.form, ${param.accountStateId})"
 						     styleClass="buttn" >
 						<mifos:mifoslabel name="loan.returnToAccountDetails"/>
 						</html-el:button>
