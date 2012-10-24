@@ -1406,7 +1406,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             loanActivityViewSet.add(loanActivity.toDto());
         }
         //only for new group loan account
-        if (loan.isGroupLoanAccount() && null != loan.getParentAccount()) {
+        if (loan.isGroupLoanAccount() && null == loan.getParentAccount()) {
             Money interestOutstanding = loanAccountActivityDetails.get(0).getInterestOutstanding();
             Money principalOutstanding = loanAccountActivityDetails.get(0).getPrincipalOutstanding();
             Money feeOutstanding = loanAccountActivityDetails.get(0).getFeeOutstanding();
