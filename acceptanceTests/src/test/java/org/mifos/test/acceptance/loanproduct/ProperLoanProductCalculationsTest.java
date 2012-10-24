@@ -45,14 +45,15 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
     private LoanProductTestHelper loanProductTestHelper;
     private LoanTestHelper loanTestHelper;
     private CustomPropertiesHelper  customPropertiesHelper;
-
+    private DateTime targetTime;
+    
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @BeforeMethod
     @Override
     public void setUp() throws Exception {
         super.setUp();
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009, 7, 1, 12, 0, 0, 0);
+        targetTime = new DateTime(2009, 7, 1, 12, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
@@ -112,6 +113,12 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyProperInterestAndPaymentMonthlyFlatProduct() throws Exception {
+        
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime oldTime = targetTime;
+        targetTime = new DateTime(2011, 2, 21, 12, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getMonthlyLoanProductParameters();
         String productName = "LoanProduct" + StringUtil.getRandomString(5);
         productParams.setOfferingName(productName);
@@ -133,6 +140,9 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         loanAccountPage.verifyFeesOriginal("0");
         loanAccountPage.verifyPenaltyOriginal("0");
         loanAccountPage.verifyTotalOriginalLoan("24827.0");
+        
+        targetTime = oldTime;
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
 
     /**
@@ -174,6 +184,12 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyProperInterestAndPaymentMonthlyDecliningFixedProduct() throws Exception {
+        
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime oldTime = targetTime;
+        targetTime = new DateTime(2011, 2, 21, 12, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getMonthlyLoanProductParameters();
         String productName = "LoanProduct" + StringUtil.getRandomString(5);
         productParams.setOfferingName(productName);
@@ -195,6 +211,9 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         loanAccountPage.verifyFeesOriginal("0");
         loanAccountPage.verifyPenaltyOriginal("0");
         loanAccountPage.verifyTotalOriginalLoan("72851.0");
+        
+        targetTime = oldTime;
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
 
     /**
