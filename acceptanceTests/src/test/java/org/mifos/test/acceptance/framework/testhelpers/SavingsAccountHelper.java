@@ -46,6 +46,7 @@ import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalConfi
 import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalPage;
 import org.mifos.test.acceptance.framework.savings.ViewDepositDueDetailsPage;
 import org.mifos.test.acceptance.framework.util.UiTestUtils;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -234,4 +235,29 @@ public class SavingsAccountHelper {
         ViewDepositDueDetailsPage viewDepositDueDetailsPage = savingsAccountDetailPage.navigateToViewDepositDueDetails();
         viewDepositDueDetailsPage.verifyTotalAmountDue(numberOfGroupMembers, amountPerMember);
     }
+    
+    public SavingsAccountDetailPage createAndActivateSavingAccountWithDefaultAmountOfDeposit(String clientName) {
+        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+        searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
+        searchParameters.setSearchString(clientName);
+        
+        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+        submitAccountParameters.setAmount("240.0");
+        
+        EditAccountStatusParameters editAccountStatusParameters = new EditAccountStatusParameters();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
+        editAccountStatusParameters.setNote("change status to active");
+        
+        String SavingsAccountId = createSavingsAccount(searchParameters, submitAccountParameters).getAccountId();
+        SavingsAccountDetailPage savingsAccountDetailPage = changeStatus(SavingsAccountId, editAccountStatusParameters);
+        
+        DepositWithdrawalSavingsParameters params = new DepositWithdrawalSavingsParameters();
+        params.setAmount("100");
+        params.setPaymentType("Cash");
+        params.setTrxnType("Deposit");
+        makeDepositOrWithdrawalOnSavingsAccount(SavingsAccountId, params);
+        
+        return savingsAccountDetailPage;
+    }
+    
 }

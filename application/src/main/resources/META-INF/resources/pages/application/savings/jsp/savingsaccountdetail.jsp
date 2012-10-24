@@ -104,7 +104,7 @@ explanation of the license and how it is applied.
 							<tr>
 								<td class="fontnormal">
 									<mifos:mifoslabel name="Savings.accountBalance" />:
-									<fmt:formatNumber value="${BusinessKey.savingsBalance.amount}" />
+									<span id="savingsaccountdetail.text.accountBalance"><fmt:formatNumber value="${BusinessKey.savingsBalance.amount}" /> </span>
 									<br>
 								</td>
 								<td align="right" valign="top" class="fontnormal">

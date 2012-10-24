@@ -19,6 +19,8 @@ import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.savings.DepositWithdrawalSavingsParameters;
+import org.mifos.test.acceptance.framework.savings.FundsParameters;
+import org.mifos.test.acceptance.framework.savings.SavingFundTransferEnterDetailsPage;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
@@ -187,4 +189,59 @@ public class SavingsPaymentTest extends UiTestCaseBase {
         .submitAndNavigateToApplyPaymentConfirmationPage(paymentParams)
         .submitAndNavigateToLoanAccountDetailsPage();
         }
+    
+    @Test(enabled=true)
+    //https://mifosforge.jira.com/browse/MIFOSTEST-1189
+    public void verifyAbilityToTransferFundsFromOneSavingAccountToAnotherSavingAccount() {
+        // Given
+        String TRANSFER_AMOUNT = "50";
+        String senderSavingsAccountId = savingsTestHelper
+            .createAndActivateSavingAccountWithDefaultAmountOfDeposit("Stu12332659912419 Client12332659912419").getAccountId();
+        String senderAccountBallance = navigationHelper.navigateToSavingsAccountDetailPage(senderSavingsAccountId).getAccountBallance();
+        
+        String receiverSavingsAccountId = savingsTestHelper
+            .createAndActivateSavingAccountWithDefaultAmountOfDeposit("Stu1233266299995 Client1233266299995").getAccountId();
+        String receiverAccountBallance = navigationHelper.navigateToSavingsAccountDetailPage(receiverSavingsAccountId).getAccountBallance();
+        
+        ManageRolePage manageRolePage = new ManageRolePage(selenium);
+        manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
+        
+        // When
+        if(manageRolePage.isPermissionEnable("6_15")) {
+            manageRolePage.disablePermission("6_15").submitAndGotoViewRolesPage();
+        }
+        //Then
+        SavingsAccountDetailPage savingAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage(senderSavingsAccountId);
+        savingAccountDetailPage.navigateToApplyTransferPage().verifyIsAccessDeniedMessageDisplayed();
+        
+        //When
+        manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
+        if(!manageRolePage.isPermissionEnable("6_15")) {
+            manageRolePage.enablePermission("6_15").submitAndGotoViewRolesPage();
+        }
+        
+        //Then
+        savingAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage(senderSavingsAccountId);
+        SavingFundTransferEnterDetailsPage savingFundTransferEnterDetailPage = savingAccountDetailPage
+            .navigateToApplyTransferPaymentPage("Stu1233266299995 Client1233266299995", receiverSavingsAccountId);
+        
+        FundsParameters params = new FundsParameters();
+        params.setTransactionDateDD("1c");
+        params.setTransactionDateMM("03");
+        params.setTransactionDateYYYY("2011");
+        savingFundTransferEnterDetailPage.submitWithWrongParams(params , "Date of transaction was invalid. Please enter a valid date.");
+        params.setTransactionDateDD("13");
+        savingFundTransferEnterDetailPage.submitWithWrongParams(params , "Please specify Amount.");
+        params.setAmount(TRANSFER_AMOUNT);
+        savingFundTransferEnterDetailPage.SubmitAndNavigateToSavingFundPreviewPage(params).submitAndNavigateToSavingDetailPage();        
+        
+        //Then
+        Assert.assertEquals( new Integer((Integer.parseInt(senderAccountBallance) - Integer.parseInt(TRANSFER_AMOUNT))).toString(),
+            savingAccountDetailPage.getAccountBallance() );
+        
+        savingAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage(receiverSavingsAccountId);
+        Assert.assertEquals( new Integer((Integer.parseInt(receiverAccountBallance) + Integer.parseInt(TRANSFER_AMOUNT))).toString(),
+            savingAccountDetailPage.getAccountBallance() );
+    }
+    
 }

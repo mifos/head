@@ -46,6 +46,10 @@ public class SavingsAccountDetailPage extends AbstractPage {
         return selenium.getText("savingsaccountdetail.text.totalAmountDue");
     }
 
+    public String getAccountBallance(){
+        return selenium.getText("savingsaccountdetail.text.accountBalance");
+    }
+    
     public void verifyTotalAmountDue(String totalAmountDue){
         Assert.assertEquals(getTotalAmountDue(), totalAmountDue);
     }
@@ -93,7 +97,13 @@ public class SavingsAccountDetailPage extends AbstractPage {
         waitForPageToLoad();
         return new SavingsCloseAccountPage(selenium);
     }
-
+    
+    public SavingsApplyTransferPage navigateToApplyTransferPage() {
+        selenium.click("savingsaccountdetail.link.applyTransfer");
+        waitForPageToLoad();
+        return new SavingsApplyTransferPage(selenium);
+    }	
+    	
     public AccountChangeStatusPage navigateToEditAccountStatus() {
         selenium.click("savingsaccountdetail.link.editAccountStatus");
         waitForPageToLoad();
@@ -110,6 +120,11 @@ public class SavingsAccountDetailPage extends AbstractPage {
         SavingsAdjustmentListPage adjustmentListPage = new SavingsAdjustmentListPage(selenium);
         adjustmentListPage.verifyPage();
         return adjustmentListPage.navigateToFirstAdjustment();
+    }
+    
+    public SavingFundTransferEnterDetailsPage navigateToApplyTransferPaymentPage(String clientName, String clientSavingAccountId) {
+        return navigateToApplyTransferPage().navigateToBeneficientSearch(clientName).customerSelect(clientName)
+            .navigateToSelectSavingAccount(clientSavingAccountId);
     }
 
     public AttachSurveyPage navigateToAttachSurveyPage() {
