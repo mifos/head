@@ -318,7 +318,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						<mifoscustom:mifostabletag source="recentAccountActivities"
 							scope="session" xmlFileName="RecentAccountActivity.xml"
 							moduleName="org/mifos/accounts/loan/util/resources" passLocale="true" />
-						<table width="96%" border="0" cellpadding="3" cellspacing="0">
+						<table width="96%" border="0" cellpadding="3" cellspacing="0" id="">
 							<tr>
 								<td colspan="3">&nbsp;</td>
 							</tr>
