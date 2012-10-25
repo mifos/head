@@ -249,10 +249,13 @@ public class GroupLoanAccountAction extends AccountAppAction{
         List<LoanBO> membersAccount = this.loanDao.findIndividualLoans(grouploanId);
         List<Integer> membersAccountIds = getMembersAccountId(membersAccount);
         OriginalScheduleInfoDto generatedSchedule = OriginalScheduleInfoHelper.sumRepaymentSchedule(getMembersSchedule(membersAccountIds));
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, groupLoan, request);
+        SessionUtils.setAttribute(Constants.VIEW_DATE, viewDate, request);
         SessionUtils.setAttribute(Constants.ORIGINAL_SCHEDULE_AVAILABLE, generatedSchedule.hasOriginalInstallments(), request);
         SessionUtils.setAttribute("isNewGropLoan", Boolean.TRUE, request);
         String forward = errors.hasErrors() ? ActionForwards.getLoanRepaymentScheduleFailure.toString() : ActionForwards.getLoanRepaymentSchedule.toString();
         addErrors(request, getActionErrors(errors));
+
         return mapping.findForward(forward);
     }
 
