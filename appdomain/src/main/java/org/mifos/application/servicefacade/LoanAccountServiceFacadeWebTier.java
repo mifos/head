@@ -131,6 +131,7 @@ import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.util.helpers.AccountPaymentDtoComperator;
 import org.mifos.application.util.helpers.LoanActivityEntityDataComperable;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
 import org.mifos.clientportfolio.loan.service.MonthlyOnDayOfMonthSchedule;
@@ -279,6 +280,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private static final String LOAN_REPAYMENT = "Loan Repayment";
     private static final String LOAN_ADJUSTED = "Loan Adjusted";
     private static final String PAYMENT_RCVD = "Payment rcvd.";
+    private static final Integer PARENT_LOAN = 1;
+    private static final Integer MEMBER_LOAN = 0;
+    private static final Integer OTHER_LOAN = -1;
     
     private final OfficeDao officeDao;
     private final LoanProductDao loanProductDao;
@@ -2993,8 +2997,37 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         for (AccountPaymentEntity accountPaymentEntity : loanAccountPaymentsEntities){
             loanAccountPayments.add(accountPaymentEntity.toScreenDto());
         }
+        
+        //for new group loan accounts
+        if (loanAccount.isGroupLoanAccount() && null == loanAccount.getParentAccount()) {
+            for (LoanBO member : loanAccount.getMemberAccounts()) {
+                for (AccountPaymentEntity accPayment : member.getAccountPayments()) {
+                    if (!accPayment.isLoanDisbursment()) {
+                        loanAccountPayments.add(accPayment.toScreenDto());
+                    }
+                }
+            }
+            Collections.sort(loanAccountPayments, new AccountPaymentDtoComperator());
+            Collections.reverse(loanAccountPayments);
+        }
 
         return loanAccountPayments;
+    }
+
+    @Override
+    public Integer getGroupLoanType(String globalAccountNum) {
+        Integer loanType;
+        LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
+        if (loan.isGroupLoanAccount() && null == loan.getParentAccount()) {
+            loanType = PARENT_LOAN;
+        }
+        else if (loan.isGroupLoanAccount()  && null != loan.getParentAccount()) {
+            loanType = MEMBER_LOAN;
+        }
+        else {
+            loanType = OTHER_LOAN;
+        }
+        return loanType;
     }
 
 }

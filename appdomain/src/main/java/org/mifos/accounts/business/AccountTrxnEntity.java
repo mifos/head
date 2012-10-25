@@ -238,4 +238,8 @@ public abstract class AccountTrxnEntity extends AbstractEntity {
         return getAccountActionEntity().getId().equals(
                 AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL.getValue());
     }
+    
+    public boolean isLoanDisbursal() {
+        return this.accountActionEntity.isLoanDisbursal();
+    }
 }

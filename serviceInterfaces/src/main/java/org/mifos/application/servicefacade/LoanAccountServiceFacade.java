@@ -259,4 +259,6 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
 
     @PreAuthorize("isFullyAuthenticated()")
     List<AccountPaymentDto> getLoanAccountPayments(String globalAccountNum);
+    
+    Integer getGroupLoanType(String globalAccountNum);
 }
