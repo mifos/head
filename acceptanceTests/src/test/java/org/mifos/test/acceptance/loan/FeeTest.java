@@ -28,6 +28,7 @@ import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
@@ -36,6 +37,7 @@ import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.TestDataSetup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -185,4 +187,27 @@ public class FeeTest extends UiTestCaseBase {
         
         
     }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void canApplyOneTimeFeeAfterPaymentsHaveBeenMade() throws Exception {
+        String client = "WeeklyClient Monday";
+        
+        DateTime currentTime = new DateTime();
+        new DateTimeUpdaterRemoteTestingService(selenium).setDateTime(currentTime);
+        
+        String dd = Integer.toString(currentTime.getDayOfMonth());
+        String mm = Integer.toString(currentTime.getMonthOfYear());
+        String yy = Integer.toString(currentTime.getYear());
+        applicationDatabaseOperation.updateLSIM(1);
+        
+        LoanAccountPage loanAccountPage = loanTestHelper.createActivateDisburstAndApplyPaymentForDefaultLoanAccount(
+                client, dd, mm, yy);
+        double feesBefore = Double.parseDouble(loanAccountPage.getFeesBalance());
+        
+        loanAccountPage = loanTestHelper.applyCharge("Misc Fees", "1");
+        double feesAfter = Double.parseDouble(loanAccountPage.getFeesBalance());
+        
+        Assert.assertEquals(feesBefore + 1.0, feesAfter);
+    }
+        
 }

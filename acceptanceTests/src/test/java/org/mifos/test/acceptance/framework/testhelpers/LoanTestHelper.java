@@ -962,7 +962,7 @@ public class LoanTestHelper {
     public void verifyNoPeriodicFeeRemovalLinkExists(int feeIndex) {
         LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
         loanAccountPage.verifyNoPeriodicFeeRemovalLinkExists(feeIndex);
-    }
+    } 
     
     public void verifyNoPeriodicFee(String expectedFee, int feeIndex) {
     	LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
@@ -989,5 +989,34 @@ public class LoanTestHelper {
     	
     }
     
-    
+    public LoanAccountPage createActivateDisburstAndApplyPaymentForDefaultLoanAccount(String clientName,
+            String dd, String mm, String yy) {
+
+        CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
+        searchParams.setSearchString(clientName);
+        searchParams.setLoanProduct("WeeklyClientFlatLoanWithNoFee");
+        
+        DisburseLoanParameters disburseParams = new DisburseLoanParameters();
+        disburseParams.setDisbursalDateDD(dd);
+        disburseParams.setDisbursalDateMM(mm);
+        disburseParams.setDisbursalDateYYYY(yy);
+        disburseParams.setPaymentType(PaymentParameters.CASH);
+        disburseParams.setAmount("10,000");
+        
+        LoanAccountPage loanAccountPage = createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);
+        String accountID = loanAccountPage.getAccountId();
+        
+        PaymentParameters paymentParams = new PaymentParameters();
+        paymentParams.setTransactionDateDD(dd);
+        paymentParams.setTransactionDateMM(mm);
+        paymentParams.setTransactionDateYYYY(yy);
+        paymentParams.setPaymentType(PaymentParameters.CASH);
+        paymentParams.setAmount("1");
+        paymentParams.setReceiptId("");
+        paymentParams.setReceiptDateDD("");
+        paymentParams.setReceiptDateMM("");
+        paymentParams.setReceiptDateYYYY("");
+        
+        return applyPayment(accountID, paymentParams);
+    }
 }
