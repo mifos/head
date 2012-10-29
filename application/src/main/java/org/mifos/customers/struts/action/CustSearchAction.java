@@ -355,7 +355,7 @@ public class CustSearchAction extends SearchAction {
         }
 
         if (actionForm.getInput() != null && actionForm.getInput().equals("loan")) {
-            QueryResult groupClients = new CustomerPersistence().searchGroupClient(searchString, userContext.getId());
+            QueryResult groupClients = new CustomerPersistence().searchGroupClient(searchString, userContext.getId(), false);
             SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, groupClients, request);
         } else if (actionForm.getInput() != null && actionForm.getInput().equals("savings")) {
             QueryResult customerForSavings = new CustomerPersistence().searchCustForSavings(searchString, userContext.getId());

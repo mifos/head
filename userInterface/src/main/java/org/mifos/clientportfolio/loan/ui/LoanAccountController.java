@@ -87,13 +87,13 @@ public class LoanAccountController {
         formBean.setRedoLoanAccount(true);
     }
 
-	public CustomerSearchResultsDto searchCustomers(CustomerSearchFormBean formBean) {
+	public CustomerSearchResultsDto searchCustomers(CustomerSearchFormBean formBean, boolean isNewGLIMCreation) {
 
         // Search result cap. This is needed until ajax search is implemented.
         Integer searchCap = 1000;
 
     	CustomerSearchDto customerSearchDto = new CustomerSearchDto(formBean.getSearchString(), Integer.valueOf(1), searchCap);
-    	List<CustomerSearchResultDto> pagedDetails = this.loanAccountServiceFacade.retrieveCustomersThatQualifyForLoans(customerSearchDto);
+    	List<CustomerSearchResultDto> pagedDetails = this.loanAccountServiceFacade.retrieveCustomersThatQualifyForLoans(customerSearchDto, isNewGLIMCreation);
 
     	//int firstResult = formBean.getPage() * formBean.getPageSize() - (formBean.getPageSize()-1);
 

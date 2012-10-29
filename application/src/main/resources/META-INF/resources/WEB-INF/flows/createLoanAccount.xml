@@ -17,14 +17,14 @@
 
     <view-state id="customerSearchStep" view="createLoanAccountCustomerSearch" model="customerSearchFormBean">
     	<transition on="searchTermEntered" to="selectCustomerStep" validate="true">
-            <evaluate expression="loanAccountController.searchCustomers(customerSearchFormBean)" result="flowScope.customerSearchResultsDto" />
+            <evaluate expression="loanAccountController.searchCustomers(customerSearchFormBean,false)" result="flowScope.customerSearchResultsDto" />
         </transition>
     	<transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/> 
     </view-state>
     
     <view-state id="selectCustomerStep" view="createLoanAccountSelectCustomer" model="customerSearchFormBean">
         <transition on="searchTermEntered" to="selectCustomerStep" validate="true">
-            <evaluate expression="loanAccountController.searchCustomers(customerSearchFormBean)" result="flowScope.customerSearchResultsDto" />
+            <evaluate expression="loanAccountController.searchCustomers(customerSearchFormBean,false)" result="flowScope.customerSearchResultsDto" />
         </transition>
         <transition on="customerSelected" to="handleSelectedCustomer"/>
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
