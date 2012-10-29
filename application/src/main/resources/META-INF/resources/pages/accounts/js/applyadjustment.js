@@ -1,8 +1,17 @@
-function fun_cancel(){
-	goBackToLoanAccountDetails.submit();
+function fun_cancel(form, typeOfGroupLoan){
+	if (typeOfGroupLoan === 'newGlim') {
+		form.action="viewGroupLoanAccountDetails.ftl";
+		form.method="get";
+		form.submit();
+	}
+	else 
+	{
+		goBackToLoanAccountDetails.submit();
+	}
+	
 }
 
-function fun_back(){
+function fun_back(typeOfGroupLoan){
 	goBackToAdjustmentDetails.submit();
 }
 

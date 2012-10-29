@@ -36,6 +36,9 @@ public class AdjustablePaymentDto implements Serializable {
     private Date paymentDate;
     private Date receiptDate;
     private String receiptId;
+    //globalAccNum used apply adjustemnt for 
+    //new group loan account
+    private String globalAccountNum;
 
     public AdjustablePaymentDto(final Integer paymentId, final Money amount, final String paymentType,
             final Date paymentDate, final Date receiptDate, final String receiptId) {
@@ -45,6 +48,18 @@ public class AdjustablePaymentDto implements Serializable {
         this.paymentDate = paymentDate;
         this.receiptDate = receiptDate;
         this.receiptId = receiptId;
+        this.globalAccountNum = null;
+    }
+    
+    public AdjustablePaymentDto(final Integer paymentId, final Money amount, final String paymentType,
+            final Date paymentDate, final Date receiptDate, final String receiptId, String globalAccountNum) {
+        this.paymentId = paymentId;
+        this.amount = amount;
+        this.paymentType = paymentType;
+        this.paymentDate = paymentDate;
+        this.receiptDate = receiptDate;
+        this.receiptId = receiptId;
+        this.globalAccountNum = globalAccountNum;
     }
 
     public Money getAmount() {
@@ -93,5 +108,13 @@ public class AdjustablePaymentDto implements Serializable {
 
     public void setReceiptId(String receiptId) {
         this.receiptId = receiptId;
+    }
+
+    public String getGlobalAccountNum() {
+        return globalAccountNum;
+    }
+
+    public void setGlobalAccountNum(String globalAccountNum) {
+        this.globalAccountNum = globalAccountNum;
     }
 }
