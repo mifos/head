@@ -2354,10 +2354,6 @@ public class LoanBO extends AccountBO implements Loan {
         updateLoanSummary(fee.getFeeId(), totalFeeAmountApplied);
         updateLoanActivity(fee.getFeeId(), totalFeeAmountApplied, fee.getFeeName() + AccountConstants.APPLIED);
     }
-
-    protected boolean canApplyMiscCharge(final Money charge) {
-        return !havePaymentsBeenMade() || MoneyUtils.isRoundedAmount(charge);
-    }
     
     public void applyPenalty(final Money charge, final int scheduleEntityId, final AccountPenaltiesEntity penaltiesEntity, final Date current) {
         LoanScheduleEntity loanScheduleEntity = new ArrayList<LoanScheduleEntity>(getLoanScheduleEntities()).get(scheduleEntityId - 1);
@@ -2383,11 +2379,6 @@ public class LoanBO extends AccountBO implements Loan {
     
     private void applyMiscCharge(final Short chargeType, final Money charge,
             final AccountActionDateEntity accountActionDateEntity) throws AccountException {
-
-        if (!canApplyMiscCharge(charge)) {
-            throw new AccountException(AccountExceptionConstants.CANT_APPLY_CHARGE_EXCEPTION);
-        }
-
         LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
         loanScheduleEntity.applyMiscCharge(chargeType, charge);
         updateLoanSummary(chargeType, charge);

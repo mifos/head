@@ -34,6 +34,8 @@ import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -44,6 +46,9 @@ import org.testng.annotations.Test;
 @Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class PenaltyTest extends UiTestCaseBase {
 
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
+    
     private LoanTestHelper loanTestHelper;
 
     @Override
@@ -139,5 +144,27 @@ public class PenaltyTest extends UiTestCaseBase {
         adjustmentPage.fillAdjustmentFieldsAndSubmit(payment).navigateToRepaymentSchedulePage();
         
         repaymentSchedulePage.verifyRepaymentScheduleTablePenalties(3, 6, penalty);
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void canApplyOneTimePenaltyAfterPaymentsHaveBeenMade() throws Exception {
+        String client = "WeeklyClient Monday";
+        
+        DateTime currentTime = new DateTime();
+        new DateTimeUpdaterRemoteTestingService(selenium).setDateTime(currentTime);
+        
+        String dd = Integer.toString(currentTime.getDayOfMonth());
+        String mm = Integer.toString(currentTime.getMonthOfYear());
+        String yy = Integer.toString(currentTime.getYear());
+        applicationDatabaseOperation.updateLSIM(1);
+        
+        LoanAccountPage loanAccountPage = loanTestHelper.createActivateDisburstAndApplyPaymentForDefaultLoanAccount(
+                client, dd, mm, yy);
+        double penaltyBefore = Double.parseDouble(loanAccountPage.getPenaltyBalance());
+        
+        loanAccountPage = loanTestHelper.applyCharge("Misc Penalty", "1");
+        double penaltyAfter = Double.parseDouble(loanAccountPage.getPenaltyBalance());
+        
+        Assert.assertEquals(penaltyBefore + 1.0, penaltyAfter);
     }
 }
