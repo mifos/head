@@ -129,7 +129,20 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="loan.apply_trans" />
 								</span>&nbsp;&nbsp;&nbsp;&nbsp;
 								<c:if test="${(BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9')}">
-									<html-el:link styleId="loanRepayment.link.applyPayment" href="applyPaymentAction.do?method=load&input=loan&prdOfferingName=${param.prdOfferingName}&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${BusinessKey.accountType.accountTypeId}&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}&accountStateId=${param.accountStateId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									<c:url value="applyPaymentAction.do" var="applyPaymentMethodUrl" >
+											<c:param name="method" value="load" />
+											<c:param name="input" value="loan" />
+											<c:param name="prdOfferingName" value="${param.prdOfferingName}" />
+											<c:param name="globalAccountNum" value="${param.globalAccountNum}" />
+											<c:param name="accountId" value="${param.accountId}" />
+											<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
+											<c:param name="recordOfficeId" value="${param.recordOfficeId}" />
+											<c:param name="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
+											<c:param name="accountStateId" value="${param.accountStateId}" />
+											<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+											<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />											
+									</c:url >	
+									<html-el:link styleId="loanRepayment.link.applyPayment" href="${applyPaymentMethodUrl}">
 										<mifos:mifoslabel name="loan.apply_payment" />
 									</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								</c:if>
@@ -144,7 +157,7 @@ explanation of the license and how it is applied.
 										</c:url >	
 									<c:choose>
 										<c:when test="${BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9'}">
-											<html-el:link styleId="loanRepayment.link.applyAdjustment" href="applyAdjustment.do?method=listPossibleAdjustments&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}"> 
+											<html-el:link styleId="loanRepayment.link.applyAdjustment" href="${applyAdjustmentLoadAdjustmentMethodUrl}}"> 
 												<mifos:mifoslabel name="loan.apply_adjustment" />
 											</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										</c:when>
