@@ -449,6 +449,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             }
         }
 
+        setSessionAtributeForGLIM(request, loan);
+        
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         SessionUtils.setAttribute(Constants.ORIGINAL_SCHEDULE_AVAILABLE, originalSchedule.hasOriginalInstallments(), request);
         SessionUtils.setAttribute(Constants.VIEW_DATE, viewDate, request);
@@ -627,6 +629,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 setWeeklySchedule(loanActionForm, meetingDetail);
             }
         }
+        setSessionAtributeForGLIM(request, loanBO);
         SessionUtils.setAttribute(LOANOFFERING, loanOffering, request);
         // Retrieve and set into the session all collateral types from the
         // lookup_value_locale table associated with the current user context
@@ -648,6 +651,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         setFormAttributes(loanBO, form, request);
         return mapping.findForward(ActionForwards.manage_success.toString());
+    }
+
+    private void setSessionAtributeForGLIM(final HttpServletRequest request, LoanBO loanBO) throws PageExpiredException {
+        if (loanBO.isGroupLoanAccount() &&  loanBO.getParentAccount() == null) {
+            SessionUtils.setAttribute("isGroupLoan", Boolean.TRUE, request);
+        } else {
+            SessionUtils.setAttribute("isGroupLoan", Boolean.FALSE, request);
+        }
     }
 
     private LoanBO getLoanBO(final HttpServletRequest request) throws PageExpiredException, ServiceException {
