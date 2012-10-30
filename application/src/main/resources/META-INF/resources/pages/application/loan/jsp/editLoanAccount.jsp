@@ -130,15 +130,21 @@ explanation of the license and how it is applied.
         <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
 	    <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" scope="session" />    
-		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+		<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoan')}" var="isGroupLoan" />
+		<c:if test="${isGroupLoan }">
+			<c:set value="viewGroupLoanAccountDetails.ftl" var="formAction" />
+		</c:if>
+		
+		<form name="goBackToLoanAccountDetails" method="get" action =${formAction}>
 			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
 		</form>   
 		<html-el:form action="/loanAccountAction.do?method=managePreview"
 			onsubmit="return (validateMyForm(disbursementDate,disbursementDateFormat,disbursementDateYY));">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanIndividualMonitoringIsEnabled')}"	var="loanIndividualMonitoringIsEnabled" />
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanaccountownerisagroup')}" var="loanaccountownerisagroup" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}" var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanaccountownerisagroup')}" var="loanaccountownerisagroup" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recurrenceId')}" var="recurrenceId" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recurrenceName')}" var="recurrenceName" />
 			<c:set value="${requestScope['accountState']}" var="accountState" />
