@@ -124,7 +124,8 @@ $(document).ready(function() {
     $("#${param.paramName}_Date").datepicker({	
         showOn: "button",
         buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
-		buttonImageOnly: true
+		buttonImageOnly: true,
+		dateFormat: 'dd/mm/yy'
     });
   }
 );
