@@ -43,7 +43,13 @@ explanation of the license and how it is applied.
 			}
 	</script>
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
-		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+
+		<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoan')}" var="isGroupLoan" />
+		<c:if test="${isGroupLoan }">
+			<c:set value="viewGroupLoanAccountDetails.ftl" var="formAction" />
+		</c:if>
+		<form name="goBackToLoanAccountDetails" method="get" action ="${formAction }">
 			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
 		</form>
 		<html-el:form  action="repayLoanAction.do?method=makeRepayment">
