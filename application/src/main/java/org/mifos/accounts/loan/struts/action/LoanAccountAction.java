@@ -240,12 +240,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         Integer accountId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
 
         LoanInstallmentDetailsDto loanInstallmentDetailsDto = this.loanAccountServiceFacade.retrieveInstallmentDetails(accountId);
-
+       
         SessionUtils.setAttribute(VIEW_UPCOMING_INSTALLMENT_DETAILS, loanInstallmentDetailsDto.getUpcomingInstallmentDetails(), request);
         SessionUtils.setAttribute(VIEW_OVERDUE_INSTALLMENT_DETAILS, loanInstallmentDetailsDto.getOverDueInstallmentDetails(), request);
         SessionUtils.setAttribute(TOTAL_AMOUNT_OVERDUE, loanInstallmentDetailsDto.getTotalAmountDue(), request);
         SessionUtils.setAttribute(NEXTMEETING_DATE, loanInstallmentDetailsDto.getNextMeetingDate(), request);
-
+        if (null == this.loanDao.findById(accountId).getParentAccount() &&  this.loanDao.findById(accountId).isGroupLoanAccount()) {
+            SessionUtils.setAttribute("isNewGlim", "isNewGlim", request);
+        }
         return mapping.findForward(VIEWINSTALLMENTDETAILS_SUCCESS);
     }
 

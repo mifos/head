@@ -1462,9 +1462,23 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             throw new MifosRuntimeException(e.getMessage(), e);
         }
         
-        InstallmentDetailsDto viewUpcomingInstallmentDetails = getUpcomingInstallmentDetails(loanBO.getDetailsOfNextInstallment(), loanBO.getCurrency());
-        InstallmentDetailsDto viewOverDueInstallmentDetails = getOverDueInstallmentDetails(loanBO.getDetailsOfInstallmentsInArrears(), loanBO.getCurrency());
-
+        InstallmentDetailsDto viewUpcomingInstallmentDetails;
+        InstallmentDetailsDto viewOverDueInstallmentDetails;
+        
+        if (loanBO.isGroupLoanAccount() || null == loanBO.getParentAccount()) {
+            List <AccountActionDateEntity> memberDetailsOfNextInstallment = new ArrayList<AccountActionDateEntity>();
+            List <List<AccountActionDateEntity>> memberDetailsOfInstallmentsInArrears = new ArrayList<List<AccountActionDateEntity>>();
+            for (LoanBO member: loanBO.getMemberAccounts()) {
+                memberDetailsOfNextInstallment.add(member.getDetailsOfNextInstallment());
+                memberDetailsOfInstallmentsInArrears.add(member.getDetailsOfInstallmentsInArrears());
+            }
+            viewUpcomingInstallmentDetails = getUpcomingInstallmentDetailsForGroupLoan(memberDetailsOfNextInstallment, loanBO.getCurrency());
+            viewOverDueInstallmentDetails = getOverDueInstallmentDetailsForGroupLoan(memberDetailsOfInstallmentsInArrears, loanBO.getCurrency());
+        }
+        else {
+            viewUpcomingInstallmentDetails = getUpcomingInstallmentDetails(loanBO.getDetailsOfNextInstallment(), loanBO.getCurrency());
+            viewOverDueInstallmentDetails = getOverDueInstallmentDetails(loanBO.getDetailsOfInstallmentsInArrears(), loanBO.getCurrency());
+        }
         Money upcomingInstallmentSubTotal = new Money(loanBO.getCurrency(), viewUpcomingInstallmentDetails.getSubTotal());
         Money overdueInstallmentSubTotal = new Money(loanBO.getCurrency(), viewOverDueInstallmentDetails.getSubTotal());
         Money totalAmountDue = upcomingInstallmentSubTotal.add(overdueInstallmentSubTotal);
@@ -1555,6 +1569,32 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         String zero = new Money(currency).toString();
         return new InstallmentDetailsDto(zero, zero, zero, zero, zero);
     }
+    
+    private InstallmentDetailsDto getUpcomingInstallmentDetailsForGroupLoan(
+            final List<AccountActionDateEntity> upcomingAccountActionDate, final MifosCurrency currency) {
+        if (upcomingAccountActionDate != null && !upcomingAccountActionDate.isEmpty()) {
+            Money subTotal = new Money(Money.getDefaultCurrency());
+            Money principalDue = new Money(Money.getDefaultCurrency());
+            Money interestDue = new Money(Money.getDefaultCurrency());
+            Money totalFeesDueWithMiscFee = new Money(Money.getDefaultCurrency());
+            Money penaltyDue = new Money(Money.getDefaultCurrency());
+            
+            for (AccountActionDateEntity accAction : upcomingAccountActionDate) {
+                LoanScheduleEntity upcomingInstallment = (LoanScheduleEntity) accAction;
+                principalDue = principalDue.add(upcomingInstallment.getPenaltyDue());
+                interestDue = interestDue.add(upcomingInstallment.getInterestDue());
+                totalFeesDueWithMiscFee = totalFeesDueWithMiscFee.add(upcomingInstallment.getTotalFeeDueWithMiscFeeDue());
+                penaltyDue = penaltyDue.add(upcomingInstallment.getPenaltyDue());
+                
+                subTotal = upcomingInstallment.getPrincipalDue().add(upcomingInstallment.getInterestDue())
+                        .add(upcomingInstallment.getTotalFeesDueWithMiscFee()).add(upcomingInstallment.getPenaltyDue());
+            }
+            return new InstallmentDetailsDto(principalDue.toString(), interestDue.toString(),
+                    totalFeesDueWithMiscFee.toString(), penaltyDue.toString(), subTotal.toString());
+        }
+        String zero = new Money(currency).toString();
+        return new InstallmentDetailsDto(zero, zero, zero, zero, zero);
+    }
 
     private InstallmentDetailsDto getOverDueInstallmentDetails(
             final List<AccountActionDateEntity> overDueInstallmentList, final MifosCurrency currency) {
@@ -1569,6 +1609,26 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             feesDue = feesDue.add(installment.getTotalFeeDueWithMiscFeeDue());
             penaltyDue = penaltyDue.add(installment.getPenaltyDue());
         }
+        Money subTotal = principalDue.add(interestDue).add(feesDue).add(penaltyDue);
+        return new InstallmentDetailsDto(principalDue.toString(), interestDue.toString(), feesDue.toString(), penaltyDue.toString(), subTotal.toString());
+    }
+    
+    //TODO
+    private InstallmentDetailsDto getOverDueInstallmentDetailsForGroupLoan(
+            final List<List<AccountActionDateEntity>> overDueInstallmentList, final MifosCurrency currency) {
+        Money principalDue = new Money(currency);
+        Money interestDue = new Money(currency);
+        Money feesDue = new Money(currency);
+        Money penaltyDue = new Money(currency);
+            for (List<AccountActionDateEntity> member : overDueInstallmentList) {
+                for (AccountActionDateEntity accountActionDate : member) {
+                    LoanScheduleEntity installment = (LoanScheduleEntity) accountActionDate;
+                    principalDue = principalDue.add(installment.getPrincipalDue());
+                    interestDue = interestDue.add(installment.getInterestDue());
+                    feesDue = feesDue.add(installment.getTotalFeeDueWithMiscFeeDue());
+                    penaltyDue = penaltyDue.add(installment.getPenaltyDue());
+                }
+            }
         Money subTotal = principalDue.add(interestDue).add(feesDue).add(penaltyDue);
         return new InstallmentDetailsDto(principalDue.toString(), interestDue.toString(), feesDue.toString(), penaltyDue.toString(), subTotal.toString());
     }
