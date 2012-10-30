@@ -110,7 +110,12 @@ public class EditStatusAction extends BaseAction {
             editStatusActionForm.setCurrentStatusId(loanAccount.getAccountState().getId().toString());
             editStatusActionForm.setGlobalAccountNum(loanAccount.getGlobalAccountNum());
             editStatusActionForm.setAccountName(loanAccount.getLoanOffering().getPrdOfferingName());
-            editStatusActionForm.setInput("loan");
+            
+            if (loanAccount.isGroupLoanAccount() && loanAccount.getParentAccount() == null) {
+                editStatusActionForm.setInput("grouploan");
+            } else {
+                editStatusActionForm.setInput("loan");
+            }
             
             if(loanAccount.getAccountState().getId().equals(Short.valueOf("2"))) {
                 List<AdminDocumentBO> allAdminDocuments = legacyAdminDocumentDao.getAllActiveAdminDocuments();
@@ -325,8 +330,10 @@ public class EditStatusAction extends BaseAction {
         EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
         String input = editStatusActionForm.getInput();
         String forward = null;
-        if (input.equals("loan")) {
+        if (input.equals("loan")) { 
             forward = ActionForwards.loan_detail_page.toString();
+        } else if (input.equals("grouploan")) {
+            forward = ActionForwards.group_loan_detail_page.toString();
         } else if (input.equals("savings")) {
             forward = ActionForwards.savings_details_page.toString();
         }

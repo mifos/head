@@ -38,6 +38,7 @@ public enum ActionForwards {
     update_success,
     update_failure,
     loan_detail_page,
+    group_loan_detail_page,
     account_details_page,
     savings_details_page,
     get_success,
