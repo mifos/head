@@ -358,6 +358,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         // keithW - and for recentAccountNotes
         LoanBO loan = getLoan(loanInformationDto.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+        LoanAccountAction.setSessionAtributeForGLIM(request, loan);
         setCurrentPageUrl(request, loan);
         setQuestionGroupInstances(request, loan);
         setOverpayments(request, loan);
@@ -431,6 +432,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         Date viewDate = loanAccountActionForm.getScheduleViewDateValue(locale);
 
         LoanBO loan = getLoan(loanId);
+        setSessionAtributeForGLIM(request, loan);
         loan.updateDetails(userContext);
         Errors errors = loanBusinessService.computeExtraInterest(loan, viewDate);
         if (errors.hasErrors()) {
@@ -449,8 +451,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             }
         }
 
-        setSessionAtributeForGLIM(request, loan);
-        
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         SessionUtils.setAttribute(Constants.ORIGINAL_SCHEDULE_AVAILABLE, originalSchedule.hasOriginalInstallments(), request);
         SessionUtils.setAttribute(Constants.VIEW_DATE, viewDate, request);
@@ -653,7 +653,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return mapping.findForward(ActionForwards.manage_success.toString());
     }
 
-    private void setSessionAtributeForGLIM(final HttpServletRequest request, LoanBO loanBO) throws PageExpiredException {
+    public static void setSessionAtributeForGLIM(final HttpServletRequest request, LoanBO loanBO)
+            throws PageExpiredException {
         if (loanBO.isGroupLoanAccount() &&  loanBO.getParentAccount() == null) {
             SessionUtils.setAttribute("isGroupLoan", Boolean.TRUE, request);
         } else {

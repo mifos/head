@@ -35,8 +35,8 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="ViewChangeLog"></span>
 	
 	<script>
-	function returnToDetails(){
-		loanAccountActionForm.action="viewLoanAccountDetails.ftl";
+	function returnToDetails(url){
+		loanAccountActionForm.action=url;
 		loanAccountActionForm.method="get";
 		loanAccountActionForm.submit();
 	}
@@ -84,11 +84,16 @@ explanation of the license and how it is applied.
 					</table>
 					<br>
 					<mifoscustom:mifostabletag moduleName="org/mifos/framework/components/audit/util/resources" scope="session" source="auditLogRecords" xmlFileName="AuditLog.xml" passLocale="true"/>
+							<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
+					<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoan')}" var="isGroupLoan" />
+					<c:if test="${isGroupLoan }">
+						<c:set value="viewGroupLoanAccountDetails.ftl" var="formAction" />
+					</c:if>
 					<br>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center"><html-el:button styleId="viewChangeLog.button.return" property="returnToAccountDetailsbutton"
-								onclick="returnToDetails()"
+								onclick="returnToDetails('${formAction }')"
 								styleClass="buttn">
 								<mifos:mifoslabel name="loan.returnToAccountDetails"
 									bundle="loanUIResources" />
