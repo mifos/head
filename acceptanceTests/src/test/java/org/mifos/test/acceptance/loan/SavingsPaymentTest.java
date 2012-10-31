@@ -197,11 +197,9 @@ public class SavingsPaymentTest extends UiTestCaseBase {
         String TRANSFER_AMOUNT = "50";
         String senderSavingsAccountId = savingsTestHelper
             .createAndActivateSavingAccountWithDefaultAmountOfDeposit("Stu12332659912419 Client12332659912419").getAccountId();
-        String senderAccountBallance = navigationHelper.navigateToSavingsAccountDetailPage(senderSavingsAccountId).getAccountBallance();
         
         String receiverSavingsAccountId = savingsTestHelper
             .createAndActivateSavingAccountWithDefaultAmountOfDeposit("Stu1233266299995 Client1233266299995").getAccountId();
-        String receiverAccountBallance = navigationHelper.navigateToSavingsAccountDetailPage(receiverSavingsAccountId).getAccountBallance();
         
         ManageRolePage manageRolePage = new ManageRolePage(selenium);
         manageRolePage = navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin");
@@ -233,15 +231,13 @@ public class SavingsPaymentTest extends UiTestCaseBase {
         params.setTransactionDateDD("13");
         savingFundTransferEnterDetailPage.submitWithWrongParams(params , "Please specify Amount.");
         params.setAmount(TRANSFER_AMOUNT);
-        savingFundTransferEnterDetailPage.SubmitAndNavigateToSavingFundPreviewPage(params).submitAndNavigateToSavingDetailPage();        
+        savingFundTransferEnterDetailPage.submitAndNavigateToSavingFundPreviewPage(params).submitAndNavigateToSavingDetailPage();        
         
         //Then
-        Assert.assertEquals( new Integer((Integer.parseInt(senderAccountBallance) - Integer.parseInt(TRANSFER_AMOUNT))).toString(),
-            savingAccountDetailPage.getAccountBallance() );
+        Assert.assertEquals("50", savingAccountDetailPage.getAccountBallance() );
         
         savingAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage(receiverSavingsAccountId);
-        Assert.assertEquals( new Integer((Integer.parseInt(receiverAccountBallance) + Integer.parseInt(TRANSFER_AMOUNT))).toString(),
-            savingAccountDetailPage.getAccountBallance() );
+        Assert.assertEquals( "150", savingAccountDetailPage.getAccountBallance() );
     }
     
 }
