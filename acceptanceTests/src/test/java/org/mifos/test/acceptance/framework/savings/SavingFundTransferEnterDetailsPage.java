@@ -35,7 +35,7 @@ public class SavingFundTransferEnterDetailsPage extends MifosPage {
         this.verifyPage("fundTransferEnterDetails");
     }
     
-    public SavingFundTrasferPreviewPage SubmitAndNavigateToSavingFundPreviewPage(FundsParameters params) {
+    public SavingFundTrasferPreviewPage submitAndNavigateToSavingFundPreviewPage(FundsParameters params) {
         verifyPage();
         fillForm(params);
     	

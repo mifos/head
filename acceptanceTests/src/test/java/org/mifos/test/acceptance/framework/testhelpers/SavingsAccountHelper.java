@@ -46,8 +46,6 @@ import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalConfi
 import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalPage;
 import org.mifos.test.acceptance.framework.savings.ViewDepositDueDetailsPage;
 import org.mifos.test.acceptance.framework.util.UiTestUtils;
-import org.testng.Assert;
-
 import com.thoughtworks.selenium.Selenium;
 
 /**
