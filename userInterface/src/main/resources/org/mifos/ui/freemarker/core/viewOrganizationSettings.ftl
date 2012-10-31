@@ -130,6 +130,7 @@
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdaysinadvancethecollectionsheetshouldbegenerated"/]</span>:&nbsp;<span class="fontnormal">${properties.collectionSheetAdvanceDays}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.backdatedtransactionsallowed"/]</span>:&nbsp;<span class="fontnormal">${properties.backDatedTransactions}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.backdatedapprovalsallowed"/]</span>:&nbsp;<span class="fontnormal">${properties.backDatedApprovals}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.backDatedLoanProductCreationAllowed"/]</span>:&nbsp;<span class="fontnormal">${properties.backDatedLoanProductCreationAllowed}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.glim"/]</span>:&nbsp;<span class="fontnormal">${properties.glim}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.lsim"/]</span>:&nbsp;<span class="fontnormal">${properties.lsim}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maxPointsPerPPISurvey"/]</span>:&nbsp;<span class="fontnormal">${properties.maxPointsPerPPISurvey}</span></div>
@@ -143,6 +144,7 @@
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.uploadStorageDirectory"/]</span>:&nbsp;<span class="fontnormal">${properties.uploadStorageDirectory}</span></div>
 	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.uploadQGDirectory"/]</span>:&nbsp;<span class="fontnormal">${properties.uploadQGDirectory}</span></div>
 	          	<div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.imageStorageDirectory"/]</span>:&nbsp;<span class="fontnormal">${properties.imageStorageDirectory}</span></div>
+	          	
 	          
 	            [#list pluginsPropsMap?keys as key]
 	                <div><span class="fontnormal">${key}</span>:&nbsp;<span class="fontnormal">${pluginsPropsMap[key]}</span></div>

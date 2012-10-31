@@ -32,6 +32,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.api.TransactionImport;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
@@ -189,7 +190,9 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         ConfigurationBusinessService cbs = new ConfigurationBusinessService();
         misc.setProperty("glim", booleanToYesNo(cbs.isGlimEnabled()));
         misc.setProperty("lsim", booleanToYesNo(cbs.isRepaymentIndepOfMeetingEnabled()));
-        
+        MifosConfigurationManager configurationManager = MifosConfigurationManager.getInstance();
+        misc.setProperty("backDatedLoanProductCreationAllowed", booleanToYesNo(
+                configurationManager.getBoolean(LoanConstants.BACK_DATED_LOAN_PRODUCT_CREATION)));
         return misc;
     }
 
