@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.loan;
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.admin.PenaltyFormParameters;
 import org.mifos.test.acceptance.framework.loan.AccountActivityPage;
 import org.mifos.test.acceptance.framework.loan.ApplyAdjustmentPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
@@ -33,8 +34,10 @@ import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.PenaltyHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
@@ -147,7 +150,7 @@ public class PenaltyTest extends UiTestCaseBase {
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void canApplyOneTimePenaltyAfterPaymentsHaveBeenMade() throws Exception {
+    private LoanAccountPage prepareLoanForPenaltyTest() throws Exception {
         String client = "WeeklyClient Monday";
         
         DateTime currentTime = new DateTime();
@@ -158,13 +161,47 @@ public class PenaltyTest extends UiTestCaseBase {
         String yy = Integer.toString(currentTime.getYear());
         applicationDatabaseOperation.updateLSIM(1);
         
-        LoanAccountPage loanAccountPage = loanTestHelper.createActivateDisburstAndApplyPaymentForDefaultLoanAccount(
-                client, dd, mm, yy);
+        return loanTestHelper.createActivateDisburstAndApplyPaymentForDefaultLoanAccount(client, dd, mm, yy);
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void canApplyOneTimePenaltyAfterPaymentsHaveBeenMade() throws Exception {
+
+        LoanAccountPage loanAccountPage = prepareLoanForPenaltyTest();
+        
         double penaltyBefore = Double.parseDouble(loanAccountPage.getPenaltyBalance());
         
         loanAccountPage = loanTestHelper.applyCharge("Misc Penalty", "1");
         double penaltyAfter = Double.parseDouble(loanAccountPage.getPenaltyBalance());
         
         Assert.assertEquals(penaltyBefore + 1.0, penaltyAfter);
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void canRemoveAutomaticPenaltyAfterPaymentHasBeenMade() throws Exception {
+        
+        LoanAccountPage loanAccountPage = prepareLoanForPenaltyTest();
+        String accountId = loanAccountPage.getAccountId();
+        
+        PenaltyHelper penaltyHelper = new PenaltyHelper(selenium);
+        
+        String penaltyName = "Penalty_" + StringUtil.getRandomString(6);
+        
+        penaltyHelper.createRatePenalty(penaltyName, PenaltyFormParameters.PERIOD_NONE, "",
+                PenaltyFormParameters.FREQUENCY_MONTHLY, "33.3", PenaltyFormParameters.FORMULA_OVERDUE_AMOUNT,
+                "0", "9999999");
+        ChargeParameters chargeParams = new ChargeParameters();
+        chargeParams.setType(penaltyName);
+        chargeParams.setAmount("");
+        
+        NavigationHelper navigationHelper = new NavigationHelper(selenium);
+        loanAccountPage = navigationHelper.navigateToLoanAccountPage(accountId);
+        loanTestHelper.applyChargeUsingFeeLabel(accountId, chargeParams);
+        
+        new DateTimeUpdaterRemoteTestingService(selenium).setDateTime(new DateTime().plusYears(1)); 
+        loanAccountPage = navigationHelper.navigateToLoanAccountPage(accountId);
+        loanAccountPage = loanAccountPage.removePenalty(1);
+        loanAccountPage.verifyNoPenaltyRemovalLinkExists(1);
+        
     }
 }
