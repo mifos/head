@@ -2926,11 +2926,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         String minNoOfInstall = mininst == null ? null : mininst.toString();
         String defNoOfInstall = definst == null ? null : definst.toString();
 
-        if (!StringUtils.isNotBlank(minNoOfInstall)) {
-            addError(errors, ProductDefinitionConstants.ERRORMINIMUMINSTALLMENT,
-                    ProductDefinitionConstants.ERRORMINIMUMINSTALLMENT, error, rownum);
-        }
-        if (minNoOfInstall == null ||  Double.valueOf(minNoOfInstall) < 1) {
+        if (!StringUtils.isNotBlank(minNoOfInstall) || Double.valueOf(minNoOfInstall) < 1) {
             addError(errors, ProductDefinitionConstants.ERRORMINIMUMINSTALLMENT,
                     ProductDefinitionConstants.ERRORMINIMUMINSTALLMENT, error, rownum);
         }        
