@@ -3621,10 +3621,6 @@ public class LoanBO extends AccountBO implements Loan {
             PenaltyBO penalty = getAccountPenaltyObject(penaltyId);
 
             if (!installmentIds.isEmpty()) {
-                if (havePaymentsBeenMade() && penalty.doesPenaltyInvolveFractionalAmounts()) {
-                    throw new AccountException(AccountExceptionConstants.CANT_REMOVE_PENALTY_EXCEPTION);
-                }
-
                 totalPenaltyAmount = totalPenaltyAmount.add(removePenaltyFromLoanScheduleEntity(installmentIds, penaltyId));
                 updateTotalPenaltyAmount(totalPenaltyAmount);
             }
