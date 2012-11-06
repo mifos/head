@@ -673,6 +673,7 @@ public class ActivityMapper {
     private ActionSecurity getApplyChargeSecurity() {
         ActionSecurity security = new ActionSecurity("applyChargeAction");
         security.allow("load", SecurityConstants.VIEW);
+        security.allow("divide", SecurityConstants.VIEW);
         security.allow("update", SecurityConstants.VIEW);
         return security;
     }
@@ -1521,7 +1522,7 @@ public class ActivityMapper {
 
     private short getActivityIdForApplyCharges(AccountTypes accountTypes, CustomerLevel customerLevel) {
         short activityId = -1;
-        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
+        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT) || accountTypes.equals(AccountTypes.GROUP_LOAN_ACCOUNT)) {
             activityId = SecurityConstants.LOAN_CAN_APPLY_CHARGES;
         } else if (accountTypes.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
             if (customerLevel.equals(CustomerLevel.CENTER)) {

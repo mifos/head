@@ -262,7 +262,7 @@
             <forward name="clientDetails_success" path="/customerAccountAction.do?method=load"/>
             <forward name="groupDetails_success" path="/customerAccountAction.do?method=load"/>
             <forward name="centerDetails_success" path="/customerAccountAction.do?method=load"/>
-
+            <forward name="divide" path="/pages/accounts/jsp/divideGroupCharges.jsp"/>
         </action>
 
         <action path="/multipleloansaction"

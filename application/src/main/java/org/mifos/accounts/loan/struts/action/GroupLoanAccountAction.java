@@ -201,6 +201,7 @@ public class GroupLoanAccountAction extends AccountAppAction{
         for (LoanActivityDto activity : activities) {
             activity.setUserPrefferedDate(DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), activity.getActionDate().toString()));
         }
+        SessionUtils.removeAttribute(RECENTACCOUNTACTIVITIES, request);
         SessionUtils.setCollectionAttribute(RECENTACCOUNTACTIVITIES, activities, request);
 
         request.setAttribute(CustomerConstants.SURVEY_KEY, loanInformationDto.getAccountSurveys());

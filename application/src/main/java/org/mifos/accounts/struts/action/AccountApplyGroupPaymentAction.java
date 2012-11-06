@@ -120,16 +120,13 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
         actionForm.getIndividualValues().clear();
         
         List<GroupIndividualLoanDto> memberAccounts = groupLoanService.getMemberLoansAndDefaultPayments(Integer.valueOf(actionForm.getAccountId()), new BigDecimal(actionForm.getAmount()));
-        List<String> memberAccountsNumbers = new ArrayList<String>();
                     
         for(int i = 0 ; i < memberAccounts.size() ; i++) {
-            memberAccountsNumbers.add(memberAccounts.get(i).getGlobalAccountNum());
             actionForm.getIndividualValues().put(memberAccounts.get(i).getAccountId(), String.valueOf(memberAccounts.get(i).getDefaultAmount().doubleValue()));
         }
         
         List<LoanBO> memberInfos = getMemberAccountsInformation(actionForm.getAccountId());
         SessionUtils.setCollectionAttribute("memberInfos", memberInfos, request);
-        SessionUtils.setCollectionAttribute("memberAccounts", memberAccountsNumbers, request);
         
         return mapping.findForward("divide");
     }

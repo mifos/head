@@ -23,7 +23,9 @@ package org.mifos.accounts.servicefacade;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
+import java.util.TreeMap;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
@@ -81,6 +83,7 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -533,8 +536,87 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     }
 
     @Override
+    /**
+     * do not use this method
+     * used and implemented in Audi Plugin
+     * @return null
+     */
     public Integer getAccountTrxnById(Integer id) {
         return null;
+    }
+    
+    @Override
+    public void applyGroupCharge(Map<Integer, String> idsAndValues, Short chargeId, boolean isPenaltyType) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+        TreeMap<Integer, String> idsAndValueAsTreeMap = new TreeMap<Integer, String>(idsAndValues);
+        
+        try {
+            AccountBO parentAccount = ((LoanBO)legacyAccountDao.getAccount(new AccountBusinessService().getAccount(idsAndValueAsTreeMap.firstKey()).getAccountId())).getParentAccount();
+            
+            for (Map.Entry<Integer, String> entry: idsAndValues.entrySet()) {
+                LoanBO individual = loanDao.findById(entry.getKey());
+                Double chargeAmount = Double.valueOf(entry.getValue());
+                individual.updateDetails(userContext);
+
+                if (isPenaltyType && !chargeId.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
+                    PenaltyBO penalty = this.penaltyDao.findPenaltyById(chargeId.intValue());
+                    individual.addAccountPenalty(new AccountPenaltiesEntity(individual, penalty, chargeAmount));
+                } else {
+                    FeeBO fee = this.feeDao.findById(chargeId);
+
+                    if (fee instanceof RateFeeBO) {
+                        individual.applyCharge(chargeId, chargeAmount);
+                    } else {
+                        Double radio = individual.getLoanAmount().getAmount().doubleValue()
+                                / ((LoanBO) parentAccount).getLoanAmount().getAmount().doubleValue();
+                        individual.applyCharge(chargeId, chargeAmount * radio);
+                    }
+                }
+            }
+            
+            Double chargeAmount  = sumCharge(idsAndValues);    
+                    
+            parentAccount.updateDetails(userContext);
+
+            CustomerLevel customerLevel = null;
+            if (parentAccount.isCustomerAccount()) {
+                customerLevel = parentAccount.getCustomer().getLevel();
+            }
+            if (parentAccount.getPersonnel() != null) {
+                checkPermissionForApplyCharges(parentAccount.getType(), customerLevel, userContext,
+                        parentAccount.getOffice().getOfficeId(), parentAccount.getPersonnel().getPersonnelId());
+            } else {
+                checkPermissionForApplyCharges(parentAccount.getType(), customerLevel, userContext,
+                        parentAccount.getOffice().getOfficeId(), userContext.getId());
+            }
+
+            this.transactionHelper.startTransaction();
+            
+            if(isPenaltyType && parentAccount instanceof LoanBO) {
+                PenaltyBO penalty = this.penaltyDao.findPenaltyById(chargeId.intValue());
+                ((LoanBO) parentAccount).addAccountPenalty(new AccountPenaltiesEntity(parentAccount, penalty, chargeAmount));
+            } else {
+                parentAccount.applyCharge(chargeId, chargeAmount);
+            }
+            
+            this.transactionHelper.commitTransaction();
+        } catch (ServiceException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } catch (ApplicationException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+        
+    }
+
+    private Double sumCharge(Map<Integer, String> idsAndValues) {
+        Double sum = 0.0;
+        for (Map.Entry<Integer, String> entry: idsAndValues.entrySet()) {
+            sum += Double.valueOf(entry.getValue());
+        }
+        return sum;
     }
 
 }

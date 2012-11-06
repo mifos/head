@@ -22,6 +22,7 @@ package org.mifos.accounts.servicefacade;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
@@ -71,5 +72,8 @@ public interface AccountServiceFacade {
     Date retrieveLatPaymentDate(String globalAccountNum);
     
     Integer getAccountTrxnById(Integer id);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    void applyGroupCharge(Map<Integer, String> idsAndValues, Short chargeId, boolean isPenaltyType);
     
 }
