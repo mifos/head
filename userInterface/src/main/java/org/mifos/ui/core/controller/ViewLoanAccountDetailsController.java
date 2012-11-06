@@ -144,7 +144,7 @@ public class ViewLoanAccountDetailsController {
                 accountPaymentDto.setAdminDocuments(adminDocuments);
             }
         }
-
+        modelAndView.addObject("loanType", loanAccountServiceFacade.getGroupLoanType(globalAccountNum));
         modelAndView.addObject("loanAccountPayments", loanAccountPayments);
 
         return modelAndView;

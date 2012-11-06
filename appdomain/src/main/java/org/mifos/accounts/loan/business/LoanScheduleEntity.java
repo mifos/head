@@ -142,7 +142,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return penaltyPaid.add(miscPenaltyPaid);
     }
 
-    void setPenaltyPaid(Money penaltyPaid) {
+    public void setPenaltyPaid(Money penaltyPaid) {
         this.penaltyPaid = penaltyPaid;
     }
 
@@ -158,7 +158,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return principalPaid;
     }
 
-    void setPrincipalPaid(Money principalPaid) {
+    public void setPrincipalPaid(Money principalPaid) {
         this.principalPaid = principalPaid;
     }
 

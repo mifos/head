@@ -47,10 +47,6 @@ explanation of the license and how it is applied.
 					}
 				}
 
-				function fun_submit(){
-					document.getElementsByName("charge")[0].value=document.getElementsByName("chargeAmount")[0].value;
-				}
-
 			function loadValues(current,passed)
 
 			{
@@ -108,9 +104,17 @@ explanation of the license and how it is applied.
 
 
 			}
+			
+			function actionPick(form,accType) {
+				if (accType === 'newGlim') {
+					form.action = "applyChargeAction.do?method=divide";
+				}
+				document.getElementsByName("charge")[0].value=document.getElementsByName("chargeAmount")[0].value;				
+			}
 
 	</script>
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'AccountType')}" var="AccountType" />
 		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
 			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
 		</form>
@@ -223,7 +227,7 @@ explanation of the license and how it is applied.
 						<tr>
 
 
-							<td align="center"><html-el:submit styleId="applyCharges.button.submit" styleClass="buttn submit">
+							<td align="center"><html-el:submit styleId="applyCharges.button.submit" styleClass="buttn submit" onclick="actionPick(this.form,'${AccountType}')">
 								<mifos:mifoslabel name="accounts.submit"></mifos:mifoslabel>
 							</html-el:submit> &nbsp;
 							 <html-el:button styleId="applyCharges.button.cancel" property="btn"  styleClass="cancelbuttn"

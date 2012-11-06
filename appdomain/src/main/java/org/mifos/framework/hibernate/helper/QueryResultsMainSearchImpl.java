@@ -53,6 +53,8 @@ public class QueryResultsMainSearchImpl extends QueryResultSearchDTOImpl {
                         CustomerSearchDto cs = ((CustomerSearchDto) record);
                         query1.setInteger("customerId", cs.getCustomerId()).setShort("accountTypeId", (short) 1);
                         cs.setLoanGlobalAccountNum(query1.list());
+                        query1.setShort("accountTypeId", (short) 5);
+                        cs.setGroupLoanGlobalAccountNum(query1.list());
                         query1.setShort("accountTypeId", (short) 2);
                         cs.setSavingsGlobalAccountNum(query1.list());
                         returnList.add(cs);

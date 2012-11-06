@@ -124,7 +124,7 @@ explanation of the license and how it is applied.
                                         <c:param name="accountId"
                                             value="${param.accountId}" />
                                         <c:param name="globalAccountNum"
-                                            value="${param.globalAccountNum}"  />
+                                            value="${possibleAdjustment.globalAccountNum}"  />
                                         <c:param name="prdOfferingName"
                                             value="${param.prdOfferingName}" />
                                         <c:param name="randomNUm"
@@ -143,7 +143,7 @@ explanation of the license and how it is applied.
                                         <c:param name="accountId"
                                             value="${param.accountId}" />
                                         <c:param name="globalAccountNum"
-                                            value="${param.globalAccountNum}" />
+                                            value="${possibleAdjustment.globalAccountNum}" />
                                         <c:param name="prdOfferingName"
                                             value="${param.prdOfferingName}" />
                                         <c:param name="randomNUm"

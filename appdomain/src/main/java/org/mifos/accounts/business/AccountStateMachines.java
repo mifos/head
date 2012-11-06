@@ -333,7 +333,7 @@ public class AccountStateMachines {
 
     public List<AccountStateEntity> getStatusList(AccountStateEntity accountStateEntity, AccountTypes accountTypes) {
         logger.debug("In AccountStateMachines::getStatusList()");
-        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
+        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT) || accountTypes.equals(AccountTypes.GROUP_LOAN_ACCOUNT)) {
             return statesViewMapForLoan.get(accountStateEntity.getId());
         } else if (accountTypes.equals(AccountTypes.SAVINGS_ACCOUNT)) {
             return statesViewMapForSavings.get(accountStateEntity.getId());

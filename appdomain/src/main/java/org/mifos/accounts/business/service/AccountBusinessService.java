@@ -143,7 +143,7 @@ public class AccountBusinessService implements BusinessService {
             AccountBO account = getlegacyAccountDao().getAccount(accountId);
             FeeCategory categoryType = getCategoryType(account.getCustomer());
 
-            if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+            if (account.getType() == AccountTypes.LOAN_ACCOUNT || account.getType() == AccountTypes.GROUP_LOAN_ACCOUNT) {
 
                 applicableChargeList = getLoanApplicableCharges(getlegacyAccountDao().getAllApplicableFees(
                         accountId, FeeCategory.LOAN), userContext, (LoanBO) account);

@@ -52,4 +52,5 @@ public class OriginalScheduleInfoDto implements DataTransferObject {
     public boolean hasOriginalInstallments() {
         return originalLoanScheduleInstallment != null && !originalLoanScheduleInstallment.isEmpty();
     }
+    
 }

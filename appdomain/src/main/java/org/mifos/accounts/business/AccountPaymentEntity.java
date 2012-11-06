@@ -246,6 +246,17 @@ public class AccountPaymentEntity extends AbstractEntity {
         }
         return savingsInterestPosting;
     }
+    
+    public boolean isLoanDisbursment() {
+        boolean loanDisbursment = false;
+        for (AccountTrxnEntity trxn : this.accountTrxns) {
+            if (trxn.isLoanDisbursal()) {
+                loanDisbursment = true;
+                break;
+            }
+        }
+        return loanDisbursment;
+    }
 
     public PaymentDto getOtherTransferPaymentDto() {
         return (otherTransferPayment == null) ? null :

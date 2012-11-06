@@ -22,7 +22,7 @@ package org.mifos.accounts.servicefacade;
 
 @SuppressWarnings("PMD")
 public enum AccountTypeDto {
-    LOAN_ACCOUNT(1), SAVINGS_ACCOUNT(2), CUSTOMER_ACCOUNT(3), INDIVIDUAL_LOAN_ACCOUNT(4);
+    LOAN_ACCOUNT(1), SAVINGS_ACCOUNT(2), CUSTOMER_ACCOUNT(3), INDIVIDUAL_LOAN_ACCOUNT(4), GROUP_LOAN_ACCOUNT(5);
 
     Short value;
 
