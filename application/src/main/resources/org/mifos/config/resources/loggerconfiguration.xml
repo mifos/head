@@ -35,6 +35,10 @@ how log4j is setting up logging. -->
     <category name="org.mifos.framework.persistence.DatabaseMigrator">
         <priority value="INFO"/>
     </category>
+    
+    <category name="org.mifos.db.populate.DefaultDatabaseLoader">
+        <priority value="INFO" />
+    </category>
 
     <root>
         <!-- Any log statement of level less than this priority will not be logged -->

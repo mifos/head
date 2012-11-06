@@ -13,6 +13,7 @@
         <constructor-arg index="3" value="${${mifos.mode}.database.host}" />
         <constructor-arg index="4" value="${${mifos.mode}.database.port}" />
         <constructor-arg index="5" value="${${mifos.mode}.database.dbPentahoDW}"/>
+        <constructor-arg index="6" value="${${mifos.mode}.database.params}"/>
     </bean>
 
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
