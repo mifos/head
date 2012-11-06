@@ -20,14 +20,21 @@
 
 package org.mifos.config;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Iterator;
 
 import org.mifos.config.exceptions.ConfigurationException;
+import javax.annotation.PostConstruct;
 
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
+
+import org.mifos.db.populate.DefaultDatabaseLoader;
 
 public class DatabaseConfiguration {
 
@@ -40,71 +47,41 @@ public class DatabaseConfiguration {
     private String password;
     private String dbName;
     private String dbPentahoDW;
+    private String params;
     
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public void setPort(String port) {
-        this.port = port;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setDbName(String dbName) {
-        this.dbName = dbName;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public String getPort() {
-        return port;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getDbName() {
-        return dbName;
-    }
-
-    public String getDbPentahoDW() {
-		return dbPentahoDW;
-	}
-
-	public void setDbPentahoDW(String dbPentahoDW) {
-		this.dbPentahoDW = dbPentahoDW;
-	}
-
-	public DatabaseConfiguration() { 
+    public DatabaseConfiguration() { 
         //Empty constructor required by Spring 
     }
     
-    public DatabaseConfiguration(final String user, final String password, final String dbName, final String host, final String port, final String dbPentahoDW)
-            throws ConfigurationException {
+    public DatabaseConfiguration(final String user, final String password, final String dbName, final String host,
+            final String port, final String dbPentahoDW, final String params) throws ConfigurationException {
         this.user = user;
         this.password = password;
         this.dbName = dbName;
         this.host = host;
         this.port = port;
         this.dbPentahoDW = dbPentahoDW;
+        this.params = params;
 
         readVCAPConfiguration();
     }
-
+    
+    @PostConstruct
+    public void init() throws SQLException, IOException {
+        Connection jdbcConnection = null;
+        try {
+        jdbcConnection = 
+                DriverManager.getConnection(String.format("jdbc:mysql://%s:%s/?%s", host, port, params), user, password);
+        DefaultDatabaseLoader defaultDatabaseLoader = new DefaultDatabaseLoader(jdbcConnection, dbName, dbPentahoDW);
+        defaultDatabaseLoader.createDatabase();
+        defaultDatabaseLoader.populateDatabase();
+        } finally {
+            if (jdbcConnection != null) {
+                jdbcConnection.close();
+            }
+        }
+    }
+    
     private void readVCAPConfiguration() throws ConfigurationException {
         final String vcapServicesVar = System.getenv(VCAP_SERVICES_VAR);
 
@@ -148,5 +125,61 @@ public class DatabaseConfiguration {
             this.password = credentialsJson.getString("password");
             this.dbPentahoDW=credentialsJson.getString("dbPentahoDW");
         }
+    }
+    
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setDbName(String dbName) {
+        this.dbName = dbName;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getDbName() {
+        return dbName;
+    }
+
+    public String getDbPentahoDW() {
+        return dbPentahoDW;
+    }
+
+    public void setDbPentahoDW(String dbPentahoDW) {
+        this.dbPentahoDW = dbPentahoDW;
+    }
+
+    public String getParams() {
+        return params;
+    }
+
+    public void setParams(String params) {
+        this.params = params;
     }
 }

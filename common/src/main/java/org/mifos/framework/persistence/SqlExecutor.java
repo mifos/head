@@ -63,6 +63,12 @@ public class SqlExecutor {
             conn.setAutoCommit(true);
         }
     }
+    
+    public static void executeMultipleFiles(InputStream[] streams, Connection conn) throws SQLException {
+        for(InputStream stream : streams) {
+            execute(stream, conn);
+        }
+    }
 
     /**
      * Closes the stream when done.
@@ -83,9 +89,12 @@ public class SqlExecutor {
             BufferedReader in = new BufferedReader(new InputStreamReader(stream, decoder));
             StringBuffer sql = new StringBuffer();
             String line;
+            boolean insideProcedure = false;
             while ((line = in.readLine()) != null) {
-                if (line.startsWith("//") || line.startsWith("--")) {
+                if (line.startsWith("//") || line.startsWith("--") || line.startsWith("DELIMITER")) {
                     continue;
+                } else if (line.startsWith("BEGIN") || line.startsWith("END */")) {
+                    insideProcedure = insideProcedure ^ true;
                 }
 
                 line = line.trim();
@@ -103,7 +112,7 @@ public class SqlExecutor {
                     sql.append("\n");
                 }
 
-                if (sql.length() > 0 && sql.charAt(sql.length() - 1) == ';') {
+                if (sql.length() > 0 && sql.charAt(sql.length() - 1) == ';' && !insideProcedure) {
                     statements.add(sql.substring(0, sql.length() - 1));
                     sql.setLength(0);
                 }
