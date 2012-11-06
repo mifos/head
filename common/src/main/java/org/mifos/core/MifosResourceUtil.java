@@ -63,6 +63,15 @@ public final class MifosResourceUtil {
     public static InputStream getSQLFileAsStream(String fileName) throws FileNotFoundException {
         return new FileInputStream(getFile("/sql/" + fileName));
     }
+    
+    public static InputStream[] getSQLFilesAsStreams(String[] fileNames) throws IOException {
+        InputStream[] streams = new InputStream[fileNames.length];
+        int index = 0;
+        for(String fileName : fileNames) {
+            streams[index++] = getClassPathResourceAsResource(fileName).getInputStream();
+        }
+        return streams;
+    }
 
     /**
      * Should be avoided, because an InputStream needs to be closed by somebody, more clear if caller creates the IS from a Resource.

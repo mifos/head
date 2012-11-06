@@ -34,4 +34,13 @@
         <property name="idleConnectionTestPeriod"
                   value="${integration.database.hibernate.c3p0.idle_test_period}"></property>
     </bean>
+    
+    <bean id="dbName" class="java.lang.String">
+        <constructor-arg value="${integration.database}"/>
+    </bean>
+    
+    <bean id="dbPentahoDW" class="java.lang.String">
+        <constructor-arg value="${integration.database.dbPentahoDW}"/>
+    </bean>
+    
 </beans>
