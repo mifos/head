@@ -150,15 +150,28 @@ explanation of the license and how it is applied.
                                 name="applyPaymentActionForm" styleId="applypayment.input.accountForTransfer" property="accountForTransfer">
                                 <c:forEach var="acc" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountsForTransfer')}" >
                                     <html-el:option value="${acc.globalAccountNum}">
-                                        ${acc.globalAccountNum}; ${acc.prdOfferingName}; ${acc.savingsType}; 
-                                        <mifos:mifoslabel name="accounts.balance"/>: 
-                                        <fmt:formatNumber value="${acc.savingsBalance}" />;
-                                        <mifos:mifoslabel name="Savings.maxAmountPerWithdrawl"/>: 
-                                        <fmt:formatNumber value="${acc.maxWithdrawalAmount}" />
+                                        ${acc.globalAccountNum} - ${acc.prdOfferingName}
                                     </html-el:option>
                                 </c:forEach>
                             </mifos:select></td>
                         </tr>
+                        <c:forEach var="acc" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountsForTransfer')}" >
+                            <tr class="${acc.globalAccountNum}" style="display:none">
+                                <td align="right" class="fontnormal"><mifos:mifoslabel
+                                name="accounts.type" isColonRequired="Yes" /></td>
+                                <td class="fontnormal">${acc.savingsType}</td>
+                            </tr>
+                            <tr class="${acc.globalAccountNum}" style="display:none">
+                                <td align="right" class="fontnormal"><mifos:mifoslabel
+                                name="accounts.balance" isColonRequired="Yes" /></td>
+                                <td class="fontnormal"><fmt:formatNumber value="${acc.savingsBalance}" /></td>
+                            </tr>
+                            <tr class="${acc.globalAccountNum}" style="display:none">
+                                <td align="right" class="fontnormal"><mifos:mifoslabel
+                                name="Savings.maxAmountPerWithdrawl" isColonRequired="Yes" /></td>
+                                <td class="fontnormal"><fmt:formatNumber value="${acc.maxWithdrawalAmount}" /></td>
+                            </tr>
+                        </c:forEach>
 						<tr>
 							<td align="right" class="fontnormal"><span id="applypayment.label.receiptId"><mifos:mifoslabel
 								name="accounts.receiptid" isColonRequired="Yes" /></span></td>

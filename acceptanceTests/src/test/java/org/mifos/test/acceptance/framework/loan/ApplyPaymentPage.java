@@ -58,15 +58,17 @@ public class ApplyPaymentPage extends MifosPage {
         if (params.getPaymentType().equals(PaymentParameters.TRANSFER)) {
             selenium.select("applypayment.input.accountForTransfer", "value=" + params.getSavingsAccountGlobalNum());
             String [] savingsAccountForTransferDetails = 
-                    selenium.getSelectedLabel("applypayment.input.accountForTransfer").split("; ");
+                    selenium.getSelectedLabel("applypayment.input.accountForTransfer").split(" - ");
 
             String savingsAccountGlobalNum = savingsAccountForTransferDetails[0];
             String savingsAccountName = savingsAccountForTransferDetails[1];
-            String savingsAccountType = savingsAccountForTransferDetails[2];
-            BigDecimal savingsAccountBalance = 
-                    new BigDecimal(savingsAccountForTransferDetails[3].split(": ")[1].replaceAll(",", ""));
-            BigDecimal savingsAccountMaxAmountPerWithdrawal = 
-                    new BigDecimal(savingsAccountForTransferDetails[4].split(": ")[1].replaceAll(",", ""));
+            
+            String savingsAccountType = selenium.getText(
+                    String.format("//table/tbody/tr[@class='%s'][1]/td[2]",savingsAccountGlobalNum));
+            BigDecimal savingsAccountBalance = new BigDecimal(selenium.getText(String.format(
+                    "//table/tbody/tr[@class='%s'][2]/td[2]", savingsAccountGlobalNum)).replaceAll(",", ""));
+            BigDecimal savingsAccountMaxAmountPerWithdrawal = new BigDecimal(selenium.getText(String.format(
+                    "//table/tbody/tr[@class='%s'][3]/td[2]", savingsAccountGlobalNum)).replaceAll(",", ""));
           
             Assert.assertEquals(savingsAccountGlobalNum, params.getSavingsAccountGlobalNum());
             Assert.assertEquals(savingsAccountName, params.getSavingsAccountName());
