@@ -358,6 +358,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         // keithW - and for recentAccountNotes
         LoanBO loan = getLoan(loanInformationDto.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+        LoanAccountAction.setSessionAtributeForGLIM(request, loan);
         setCurrentPageUrl(request, loan);
         setQuestionGroupInstances(request, loan);
         setOverpayments(request, loan);
@@ -431,6 +432,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         Date viewDate = loanAccountActionForm.getScheduleViewDateValue(locale);
 
         LoanBO loan = getLoan(loanId);
+        setSessionAtributeForGLIM(request, loan);
         loan.updateDetails(userContext);
         Errors errors = loanBusinessService.computeExtraInterest(loan, viewDate);
         if (errors.hasErrors()) {
@@ -627,6 +629,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 setWeeklySchedule(loanActionForm, meetingDetail);
             }
         }
+        setSessionAtributeForGLIM(request, loanBO);
         SessionUtils.setAttribute(LOANOFFERING, loanOffering, request);
         // Retrieve and set into the session all collateral types from the
         // lookup_value_locale table associated with the current user context
@@ -648,6 +651,15 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         setFormAttributes(loanBO, form, request);
         return mapping.findForward(ActionForwards.manage_success.toString());
+    }
+
+    public static void setSessionAtributeForGLIM(final HttpServletRequest request, LoanBO loanBO)
+            throws PageExpiredException {
+        if (loanBO.isGroupLoanAccount() &&  loanBO.getParentAccount() == null) {
+            SessionUtils.setAttribute("isGroupLoan", Boolean.TRUE, request);
+        } else {
+            SessionUtils.setAttribute("isGroupLoan", Boolean.FALSE, request);
+        }
     }
 
     private LoanBO getLoanBO(final HttpServletRequest request) throws PageExpiredException, ServiceException {

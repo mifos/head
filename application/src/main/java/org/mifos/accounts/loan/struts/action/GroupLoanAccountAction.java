@@ -221,6 +221,7 @@ public class GroupLoanAccountAction extends AccountAppAction{
         
         LoanBO loan = getLoan(loanInformationDto.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+        LoanAccountAction.setSessionAtributeForGLIM(request, loan);
         setCurrentPageUrl(request, loan);
         setQuestionGroupInstances(request, loan);
         setOverpayments(request, loan);
@@ -241,6 +242,7 @@ public class GroupLoanAccountAction extends AccountAppAction{
         Date viewDate = loanAccountActionForm.getScheduleViewDateValue(locale);
         
         LoanBO groupLoan = getLoan(grouploanId);
+        LoanAccountAction.setSessionAtributeForGLIM(request, groupLoan);
         groupLoan.updateDetails(userContext);
         Errors errors = loanBusinessService.computeExtraInterest(groupLoan, viewDate);
         if (errors.hasErrors()) {
