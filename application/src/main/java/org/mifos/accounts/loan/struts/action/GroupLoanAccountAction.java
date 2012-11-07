@@ -192,16 +192,13 @@ public class GroupLoanAccountAction extends AccountAppAction{
                 MasterConstants.COLLATERAL_TYPES).getCustomValueListElements(), request);
         SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION, loanBusinessService.getLastPaymentAction(loanInformationDto.getAccountId()), request);
         SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
-        // inject preferred date
+        
         List<LoanActivityDto> activities = loanInformationDto.getRecentAccountActivity();
-        for(LoanInformationDto memberDto: memberloanInformationDtos) {
-            List<LoanActivityDto> recentAccountActivity = memberDto.getRecentAccountActivity();
-            activities.addAll(recentAccountActivity);
-        }
         for (LoanActivityDto activity : activities) {
             activity.setUserPrefferedDate(DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), activity.getActionDate().toString()));
         }
-        SessionUtils.removeAttribute(RECENTACCOUNTACTIVITIES, request);
+        
+        SessionUtils.removeAttribute(RECENTACCOUNTACTIVITIES, request.getSession());
         SessionUtils.setCollectionAttribute(RECENTACCOUNTACTIVITIES, activities, request);
 
         request.setAttribute(CustomerConstants.SURVEY_KEY, loanInformationDto.getAccountSurveys());

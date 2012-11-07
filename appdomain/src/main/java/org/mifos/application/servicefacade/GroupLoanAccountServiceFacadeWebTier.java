@@ -61,6 +61,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.util.helpers.LoanActivityEntityDataComperable;
 import org.mifos.clientportfolio.loan.service.RecurringSchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateGroupLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
@@ -100,6 +101,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.cashflow.CashFlowService;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
@@ -702,7 +704,7 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
                                      loan.getMaxMinNoOfInstall().getMinNoOfInstall(), loan.getMaxMinNoOfInstall().getMaxNoOfInstall(),
                                      loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), collateralTypeName, loan.getCollateralNote(),loan.getExternalId(),
                                      accountFeesDtos, loan.getCreatedDate(), loanPerformanceHistory,
-                                     loan.getCustomer().isGroup(), getRecentActivityView(globalAccountNum), activeSurveys, accountSurveys,
+                                     loan.getCustomer().isGroup(), getRecentActivityViewForGroupLoan(globalAccountNum), activeSurveys, accountSurveys,
                                      loan.getCustomer().getDisplayName(), loan.getCustomer().getGlobalCustNum(), loan.getOffice().getOfficeName(), recentNoteDtos,
                                      accountPenaltiesDtos);
     }
@@ -800,10 +802,21 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             throw new MifosRuntimeException(e.toString());
         }
     }
-
-    private List<LoanActivityDto> getRecentActivityView(final String globalAccountNumber) {
+    
+    private List<LoanActivityDto> getRecentActivityViewForGroupLoan(final String globalAccountNumber) {
         LoanBO loanBO = loanDao.findByGlobalAccountNum(globalAccountNumber);
         List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
+        for (LoanBO member : loanBO.getMemberAccounts()) {
+            for (LoanActivityEntity memberActivEntity : member.getLoanActivityDetails()) {
+                if (!memberActivEntity.getComments().equalsIgnoreCase(Constants.TYPE_LOAN_DISBURSAL) &&
+                        !memberActivEntity.getComments().contains(Constants.TYPE_FEE_PENALTY_APPLIED)) {
+                    loanAccountActivityDetails.add(memberActivEntity);
+                }
+            }
+        }
+        Collections.sort(loanAccountActivityDetails, new LoanActivityEntityDataComperable());
+        Collections.reverse(loanAccountActivityDetails);
+        
         List<LoanActivityDto> recentActivityView = new ArrayList<LoanActivityDto>();
 
         int count = 0;
