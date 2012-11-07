@@ -33,13 +33,15 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="NextPaymentLoanAccount"></span>
 	<script>
-			function fun_return(form)
-					{
-						form.action="loanAccountAction.do?method=get";
-						form.submit();
-					}
+    function fun_return(form, isNewGlim){
+        if (isNewGlim == 'isNewGlim') {
+            form.action="viewGroupLoanAccountDetails.ftl";
+        }
+            form.submit();
+     }
 	</script>
 		<form method="get" action="viewLoanAccountDetails.ftl">			
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isNewGlim')}" var="isNewGlim"/>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -239,7 +241,8 @@ explanation of the license and how it is applied.
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td>
-							<input type="submit" id="nextPayment_loanAccount.button.back" name="returnToAccountDetailsbutton"	class="buttn" value="<mifos:mifoslabel name="loan.returnToAccountDetails" bundle="loanUIResources" />"/>
+							<input type="submit" id="nextPayment_loanAccount.button.back" name="returnToAccountDetailsbutton"	class="buttn" value="<mifos:mifoslabel name="loan.returnToAccountDetails" bundle="loanUIResources" />"
+							 onclick="javascript:fun_return(this.form,'${isNewGlim}')"/>
 							</td>
 						</tr>
 					</table>

@@ -53,17 +53,18 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     private String dueDate;
 
-    public static RepaymentScheduleInstallment createForScheduleCopy(Integer installmentNumber, String principal, String interest,
-                                                                     LocalDate dueDate, Locale locale, MifosCurrency currency) {
+    public static RepaymentScheduleInstallment createForScheduleCopy(Integer installmentNumber, String principal,
+            String interest, LocalDate dueDate, Locale locale, MifosCurrency currency) {
         Money feess = null;
         Money miscFeess = null;
         Money miscPenaltys = null;
-        return new RepaymentScheduleInstallment(installmentNumber, new java.sql.Date(dueDate.toDateMidnight().toDate().getTime()),
-                                                new Money(currency, principal), new Money(currency, interest), feess, miscFeess, miscPenaltys);
+        return new RepaymentScheduleInstallment(installmentNumber, new java.sql.Date(dueDate.toDateMidnight().toDate()
+                .getTime()), new Money(currency, principal), new Money(currency, interest), feess, miscFeess,
+                miscPenaltys);
     }
 
-    public RepaymentScheduleInstallment(int installment, Date dueDateValue, Money principal, Money interest, Money fees,
-                                        Money miscFees, Money miscPenalty) {
+    public RepaymentScheduleInstallment(int installment, Date dueDateValue, Money principal, Money interest,
+            Money fees, Money miscFees, Money miscPenalty) {
         this.installment = installment;
         this.principal = principal;
         this.interest = interest;
@@ -76,6 +77,13 @@ public class RepaymentScheduleInstallment implements Serializable {
     }
 
     public RepaymentScheduleInstallment() {
+    }
+
+    public RepaymentScheduleInstallment init() {
+        return new RepaymentScheduleInstallment(1, null, new Money(Money.getDefaultCurrency(), new Double(0.0)),
+                new Money(Money.getDefaultCurrency(), new Double(0.0)), new Money(Money.getDefaultCurrency(),
+                        new Double(0.0)), new Money(Money.getDefaultCurrency(), new Double(0.0)), new Money(
+                        Money.getDefaultCurrency(), new Double(0.0)));
     }
 
     public void setInstallment(Integer installment) {
@@ -205,7 +213,8 @@ public class RepaymentScheduleInstallment implements Serializable {
     }
 
     public boolean isTotalAmountLessThan(BigDecimal minInstallmentAmount) {
-        return minInstallmentAmount != null && (totalValue == null || totalValue.getAmount().doubleValue() < minInstallmentAmount.doubleValue());
+        return minInstallmentAmount != null
+                && (totalValue == null || totalValue.getAmount().doubleValue() < minInstallmentAmount.doubleValue());
     }
 
     public Money getFeesWithMiscFee() {

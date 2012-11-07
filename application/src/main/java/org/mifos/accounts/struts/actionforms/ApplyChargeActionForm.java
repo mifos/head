@@ -20,7 +20,9 @@
 
 package org.mifos.accounts.struts.actionforms;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -53,6 +55,24 @@ public class ApplyChargeActionForm extends BaseActionForm {
     private String charge;
 
     private String selectedChargeFormula;
+    
+    private Map<Integer,String> individualValues = new HashMap<Integer, String>();
+    
+    public Map<Integer, String> getIndividualValues() {
+        return individualValues;
+    }
+
+    public void setIndividualValues(Map<Integer, String> individualValues) {
+        this.individualValues = individualValues;
+    }
+    
+    public void setUpdateIndividualValues(String accountId, String value) {
+        individualValues.put(Integer.valueOf(accountId), value);
+    }
+    
+    public String getIndividualValues(Integer accountId) {
+        return individualValues.get(accountId);
+    }
 
     public String getAccountId() {
         return accountId;
@@ -165,7 +185,13 @@ public class ApplyChargeActionForm extends BaseActionForm {
 
         DoubleConversionResult conversionResult = null;
         String chargeAmount = getCharge();
-
+        if (StringUtils.isBlank(chargeAmount)) {
+            Double amount = 0.0;
+            for(Map.Entry<Integer, String> entry : individualValues.entrySet()) {
+                amount += Double.valueOf(entry.getValue());
+            }
+            chargeAmount = amount.toString();
+        }
         if (!StringUtils.isBlank(chargeAmount)) {
             if (isRateType()) {
                 conversionResult = validateInterest(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors);

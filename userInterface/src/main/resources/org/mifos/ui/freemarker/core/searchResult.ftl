@@ -118,12 +118,26 @@
 							[#if client.loanGlobalAccountNum?has_content]
 							<div>
 								<span class='fontnormalbold'>
-									[@spring.message '${ConfigurationConstants.LOAN}' /]:
+									[@spring.message '${ConfigurationConstants.LOAN}' /]: 
 								</span>
 								<span>
 								[#list client.loanGlobalAccountNum as loan]
 									<span>
 										<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${loan}</a>
+									</span>
+								[/#list]
+								</span>
+							</div>
+							[/#if]
+							[#if client.groupLoanGlobalAccountNum?has_content]
+							<div>
+								<span class='fontnormalbold'>
+									[@spring.message '${ConfigurationConstants.GROUP}' /] [@spring.message '${ConfigurationConstants.LOAN}' /]: 
+								</span>
+								<span>
+								[#list client.groupLoanGlobalAccountNum as gLoan]
+									<span>
+										<a href='groupIndividualLoanAccountAction.do?method=get&globalAccountNum=${gLoan}&recordOfficeId=${client.branchId}&recordLoanOfficerId=${client.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${gLoan}</a>
 									</span>
 								[/#list]
 								</span>
@@ -206,6 +220,20 @@
 								[#list group.loanGlobalAccountNum as loan]
 									<span>
 										<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${loan}</a>
+									</span>
+								[/#list]
+								</span>
+							</div>
+							[/#if]
+							[#if group.groupLoanGlobalAccountNum?has_content]
+							<div>
+								<span class='fontnormalbold'>
+									[@spring.message '${ConfigurationConstants.GROUP}' /] [@spring.message '${ConfigurationConstants.LOAN}' /]:  
+								</span>
+								<span>
+								[#list group.groupLoanGlobalAccountNum as gLoan]
+									<span>
+										<a href='viewGroupLoanAccountDetails.ftl?globalAccountNum=${gLoan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${gLoan}</a>
 									</span>
 								[/#list]
 								</span>
@@ -300,10 +328,25 @@
 									[@spring.message '${ConfigurationConstants.LOAN}' /]
 								</span>
 								<span class='headingblue' style='font-size: 12px;'>
-									<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan.loanGlobalAccountNum}&recordOfficeId=${loan.branchId}&
-											 recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomnum=${Session.randomNUm?if_exists?c}'>
-										Account # ${loan.loanGlobalAccountNum}
-									</a>
+								<!-- client new glim -->
+								[#if loan.accountStatusId == 5 && loan.clientGlobalCustNum?has_content]
+									<a href='groupIndividualLoanAccountAction.do?method=get&globalAccountNum=${loan.loanGlobalAccountNum}&recordOfficeId=${loan.branchId}&
+										 recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomnum=${Session.randomNUm?if_exists?c}'>
+									Account # ${loan.loanGlobalAccountNum}
+								</a>
+								<!-- group new glim-->
+								[#elseif loan.accountStatusId == 5 && !loan.clientGlobalCustNum?has_content]
+								<a href='viewGroupLoanAccountDetails.ftl?globalAccountNum=${loan.loanGlobalAccountNum}&recordOfficeId=${loan.branchId}&
+										 recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomnum=${Session.randomNUm?if_exists?c}'>
+									Account # ${loan.loanGlobalAccountNum}
+								</a>
+								[#else]
+								<!-- old accounts-->
+								<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan.loanGlobalAccountNum}&recordOfficeId=${loan.branchId}&
+										 recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomnum=${Session.randomNUm?if_exists?c}'>
+									Account # ${loan.loanGlobalAccountNum}
+								</a>
+								[/#if]
 								</span>
 							</div>
 							<div>

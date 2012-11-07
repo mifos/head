@@ -46,5 +46,10 @@ public interface LoanScheduleService {
     LoanSchedule generate(LoanOfferingBO loanProduct, CustomerBO customer, MeetingBO loanRepaymentMeeting,
             LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, 
             Short userBranchOfficeId, List<AccountFeesEntity> accountFees, LocalDate disbursementDate);
+    
+    LoanSchedule generateGroupLoanSchedule(LoanOfferingBO loanProduct, MeetingBO loanMeeting,
+            LoanSchedule originalSchedule, List<LoanSchedule> membersSchedule, LocalDate disbursementDate,
+            LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration,
+            Short userBranchOfficeId, CustomerBO customer, List<AccountFeesEntity> accountFees);
 
 }

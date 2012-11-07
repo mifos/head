@@ -383,6 +383,9 @@ public interface NamedQueryConstants {
     String SEARCH_GROUPS_FOR_LOAN_OFFICER = "Customer.get_loanofficer_groups";
     String GET_ACTIVE_LOAN_OFFICER_UNDER_USER = "get_active_loanofficers_under_office";
     String GET_ACTIVE_BRANCHES = "get_active_offices";
+    String SEARCH_GROUP_FOR_GROUP_LOAN_COUNT = "Customer.count_group_for_account";
+    String SEARCH_GROUP_FOR_GROUP_LOAN = "Customer.group_account_Search";
+
 
     String RETRIEVE_AUDIT_LOG_RECORD = "retrieveAuditLogRecords";
 

@@ -933,7 +933,7 @@
            </sql>
        </rollback>
    </changeSet>
-      <changeSet id="MIFOS_5702_2" author="Kamil Kalfas">
+   <changeSet id="MIFOS_5702_2" author="Kamil Kalfas">
        <sql endDelimiter=";">
              alter table imported_transactions_files add undoable boolean default 0;
        </sql>
@@ -1024,4 +1024,14 @@
             </sql>
         </rollback>
     </changeSet>
+   <changeSet id="MIFOS_5628_1" author="Kamil Kalfas">
+       <sql endDelimiter=";">
+		   INSERT INTO account_type(account_type_id, lookup_id, description) VALUES(5, 126, 'Group Loan Account');
+       </sql>
+       <rollback>
+           <sql endDelimiter=";">
+           DELETE FROM account_type WHERE account_type_id=5;
+           </sql>
+       </rollback>
+   </changeSet>
 </databaseChangeLog>

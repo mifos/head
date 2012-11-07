@@ -1874,6 +1874,10 @@ public class AccountBO extends AbstractBusinessObject {
     public boolean isLoanAccount() {
         return isOfType(LOAN_ACCOUNT);
     }
+    
+    public boolean isGroupLoanAccount() {
+        return isOfType(AccountTypes.GROUP_LOAN_ACCOUNT);
+    }
 
     public boolean isSavingsAccount() {
         return isOfType(SAVINGS_ACCOUNT);

@@ -31,6 +31,8 @@ public class LoanDetailDto implements Serializable {
     private final String accountStateName;
     private final String outstandingBalance;
     private final String totalAmountDue;
+    //account type for displaying new type of GLIM acc
+    private final Short accountTypeId;
 
     public LoanDetailDto(final String globalAccountNum, final String prdOfferingName, final Short accountStateId,
             final String accountStateName, final String outstandingBalance, final String totalAmountDue) {
@@ -40,6 +42,18 @@ public class LoanDetailDto implements Serializable {
         this.accountStateName = accountStateName;
         this.outstandingBalance = outstandingBalance;
         this.totalAmountDue = totalAmountDue;
+        this.accountTypeId = 0;
+    }
+    
+    public LoanDetailDto(final String globalAccountNum, final String prdOfferingName, final Short accountStateId,
+            final String accountStateName, final String outstandingBalance, final String totalAmountDue, final Short accountTypeId) {
+        this.globalAccountNum = globalAccountNum;
+        this.prdOfferingName = prdOfferingName;
+        this.accountStateId = accountStateId;
+        this.accountStateName = accountStateName;
+        this.outstandingBalance = outstandingBalance;
+        this.totalAmountDue = totalAmountDue;
+        this.accountTypeId = accountTypeId;
     }
 
     public String getGlobalAccountNum() {
@@ -64,5 +78,9 @@ public class LoanDetailDto implements Serializable {
 
     public String getTotalAmountDue() {
         return this.totalAmountDue;
+    }
+
+    public Short getAccountTypeId() {
+        return accountTypeId;
     }
 }

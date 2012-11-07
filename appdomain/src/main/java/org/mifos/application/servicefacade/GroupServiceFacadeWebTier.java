@@ -339,7 +339,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
         List<CustomerNoteDto> recentCustomerNotes = this.customerDao.getRecentCustomerNoteDto(groupId);
         List<CustomerPositionOtherDto> customerPositions = this.customerDao.getCustomerPositionDto(groupId, userContext);
         List<CustomerFlagDto> customerFlags = this.customerDao.getCustomerFlagDto(group.getCustomerFlags());
-        List<LoanDetailDto> loanDetail = this.customerDao.getLoanDetailDto(group.getOpenLoanAccounts());
+        List<LoanDetailDto> loanDetail = this.customerDao.getLoanDetailDto(group.getOpenLoanAccountsAndGroupLoans());
         List<SavingsDetailDto> savingsDetail = this.customerDao.getSavingsDetailDto(groupId, userContext);
 
         CustomerMeetingDto customerMeeting = this.customerDao.getCustomerMeetingDto(group.getCustomerMeeting(), userContext);

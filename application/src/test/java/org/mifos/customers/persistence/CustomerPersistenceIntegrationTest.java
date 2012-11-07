@@ -820,7 +820,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     public void testSearchGropAndClient() throws Exception {
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
         StaticHibernateUtil.flushSession();
-        QueryResult queryResult = new CustomerPersistence().searchGroupClient("C", Short.valueOf("1"));
+        QueryResult queryResult = new CustomerPersistence().searchGroupClient("C", Short.valueOf("1"), false);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         Assert.assertEquals(1, queryResult.get(0, 10).size());
@@ -834,7 +834,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, "1234", true,
                 new java.util.Date(), null, null, null, Short.valueOf("3"), center);
         StaticHibernateUtil.flushSession();
-        QueryResult queryResult = new CustomerPersistence().searchGroupClient("C", Short.valueOf("3"));
+        QueryResult queryResult = new CustomerPersistence().searchGroupClient("C", Short.valueOf("3"), false);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(0, queryResult.getSize());
         Assert.assertEquals(0, queryResult.get(0, 10).size());
@@ -848,7 +848,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, "1234", true,
                 new java.util.Date(), null, null, null, Short.valueOf("3"), center);
         StaticHibernateUtil.flushSession();
-        QueryResult queryResult = new CustomerPersistence().searchGroupClient("G", Short.valueOf("3"));
+        QueryResult queryResult = new CustomerPersistence().searchGroupClient("G", Short.valueOf("3"), false);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         Assert.assertEquals(1, queryResult.get(0, 10).size());

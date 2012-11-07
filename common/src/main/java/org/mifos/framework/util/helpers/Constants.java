@@ -124,4 +124,6 @@ public interface Constants {
     String ADJ_SPECIFIC = "adjustSpec";
 
     String ACCOUNTS_FOR_TRANSFER = "accountsForTransfer";
+    
+    String TYPE_OF_GROUP_LOAN = "typeOfGroupLoan";
 }
