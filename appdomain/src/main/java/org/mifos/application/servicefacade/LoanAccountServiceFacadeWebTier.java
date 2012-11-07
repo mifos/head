@@ -1465,7 +1465,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         InstallmentDetailsDto viewUpcomingInstallmentDetails;
         InstallmentDetailsDto viewOverDueInstallmentDetails;
         
-        if (loanBO.isGroupLoanAccount() || null == loanBO.getParentAccount()) {
+        if (loanBO.isGroupLoanAccount() && null == loanBO.getParentAccount()) {
             List <AccountActionDateEntity> memberDetailsOfNextInstallment = new ArrayList<AccountActionDateEntity>();
             List <List<AccountActionDateEntity>> memberDetailsOfInstallmentsInArrears = new ArrayList<List<AccountActionDateEntity>>();
             for (LoanBO member: loanBO.getMemberAccounts()) {
