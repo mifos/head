@@ -43,7 +43,6 @@ explanation of the license and how it is applied.
   }
 
 </script>
-
 		<html-el:form action="clientCustAction.do">
 		<c:set value="${requestScope.currentPageUrl}" var="currentPageUrl"/>
 		<c:if test="${currentPageUrl == null}">

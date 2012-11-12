@@ -66,7 +66,10 @@ import org.mifos.application.cashflow.struts.CashFlowCaptor;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.MeetingConstants;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.application.util.helpers.EntityType;
@@ -99,6 +102,8 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.util.Transformer;
+
+import com.ibm.icu.impl.InvalidFormatException;
 
 public class LoanAccountActionForm extends BaseActionForm implements QuestionResponseCapturer, CashFlowCaptor {
     public LoanAccountActionForm() {
@@ -1253,9 +1258,19 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
             } else {
                 if (getMonthType().equals("1")) {
                     // "10th day of the month"
+
                     if (StringUtils.isBlank(this.getMonthDay()) || StringUtils.isBlank(this.getDayRecurMonth())) {
                         addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
                     }
+                    short dayNumber =0;
+                    try{
+                    dayNumber = Short.parseShort(this.getMonthDay());
+                    }
+                    catch (NumberFormatException err){}
+                    if ((dayNumber < 1 || dayNumber > 31)) {
+                    	addError(errors, "", LoanExceptionConstants.REPAYMNETDAY_WRONGFORMAT, "");
+                    }
+                    
                 } else {
                     // "1st Monday of every month"
                     if (StringUtils.isBlank(this.getMonthRank()) || StringUtils.isBlank(this.getMonthWeek())

@@ -145,7 +145,7 @@ explanation of the license and how it is applied.
 			<c:set value="${requestScope['frequency']}" var="frequency" />
 
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-
+            
 			<td height="200" align="left" valign="top" bgcolor="#FFFFFF"
 				class="paddingleftmain">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -252,7 +252,8 @@ explanation of the license and how it is applied.
 								value="${sessionScope.loanAccountActionForm.maxNoInstallments}" />)
 							</td>
 						</tr>
-
+      
+                        
 						<tr class="fontnormal">
 							<td align="right" class="fontnormal"><span class="mandatorytext"></span>
 							<mifos:mifoslabel name="loan.proposed_date" mandatory="yes" />:&nbsp;
@@ -269,8 +270,9 @@ explanation of the license and how it is applied.
 							test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '1'}">
 							<tr class="fontnormal">
 									<td align="right" valign="top"><mifos:mifoslabel
-										name="meeting.labelRepaymentDay" mandatory="yes"
+										name='meeting.labelRepaymentDay' mandatory="yes"
 										bundle="MeetingResources">
+         
 									</mifos:mifoslabel></td>
 									<td align="left" valign="top"
 										style="border-top: 1px solid #CECECE; border-left: 1px solid #CECECE; border-right: 1px solid #CECECE;">
@@ -287,6 +289,7 @@ explanation of the license and how it is applied.
 									</table>
 									</td>
 								</tr>
+        
 							<tr class="fontnormal">
 									<td width="22%" align="right" valign="top">&nbsp;</td>
 									<td width="59%" align="left" valign="top"
@@ -296,16 +299,26 @@ explanation of the license and how it is applied.
 										name="meeting.labelRecurWeeks" bundle="MeetingResources" />
 
 
-
+                                    
+                                   
+                                    
 									<table border="0" cellspacing="0" cellpadding="2">
 										<tr class="fontnormal">
 											<td colspan="4"><mifos:mifoslabel
 												name="meeting.labelRecurEvery" bundle="MeetingResources" />
-
-
-											<mifos:mifosnumbertext styleId="loancreationdetails.input.weekFrequency" property="recurWeek" size="3"  maxlength="3"/> <span id="loancreationdetails.label.weekFrequency"><mifos:mifoslabel
+            
+            
+                                              <c:set var="GLIMEDIT_REPDAY" value="false"/>
+                                                <c:if test="${loanaccountownerisagroup == 'yes'}">
+                                                    <c:if test="${accountState == 'LOAN_APPROVED'}" >
+                                                    <c:set var="GLIMEDIT_REPDAY" value="true"/>
+                                                    </c:if>
+                                                </c:if>
+                                            
+											<mifos:mifosnumbertext styleId="loancreationdetails.input.weekFrequency" property="recurWeek" size="3"  maxlength="3" disabled="${GLIMEDIT_REPDAY}"/> 
+                                                <span id="loancreationdetails.label.weekFrequency"><mifos:mifoslabel
 												name="meeting.labelWeeks" bundle="MeetingResources" /></span> 
-												<mifos:select property="weekDay">
+												<mifos:select property="weekDay" disabled="${GLIMEDIT_REPDAY}"> 
 													<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
 															<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
 													</c:forEach>
@@ -475,7 +488,7 @@ explanation of the license and how it is applied.
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center"><html-el:submit styleId="editLoanAccount.button.preview" property="editDetailsBtn"
-								styleClass="buttn" >
+								styleClass="buttn" > 
 								<mifos:mifoslabel name="loan.preview" />
 							</html-el:submit> &nbsp; <html-el:button styleId="editLoanAccount.button.cancel" property="cancelButton"
 								onclick="javascript:fun_cancel()"
