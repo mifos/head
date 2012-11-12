@@ -874,7 +874,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         boolean isRepaymentIndepOfMeetingEnabled = configService.isRepaymentIndepOfMeetingEnabled();
 
         if (isRepaymentIndepOfMeetingEnabled) {
+        	try{
             newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(request, loanAccountActionForm, customer);
+        	}
+        	catch (MeetingException er){}
+        	catch  (InvalidDateException er){}
         }
 
         loanBO.setExternalId(loanAccountActionForm.getExternalId());
