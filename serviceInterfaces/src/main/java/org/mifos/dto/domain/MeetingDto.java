@@ -32,8 +32,17 @@ public class MeetingDto implements Serializable{
     private final String meetingPlace;
     private final MeetingTypeDto meetingType;
     private final MeetingDetailsDto meetingDetailsDto;
+    private String meetingSchedule;
 
-    public MeetingDto(LocalDate meetingStartDate, String meetingPlace, MeetingTypeDto meetingType, MeetingDetailsDto meetingDetailsDto) {
+    public String getMeetingSchedule() {
+        return meetingSchedule;
+    }
+
+    public void setMeetingSchedule(String meetingSchedule) {
+        this.meetingSchedule = meetingSchedule;
+    }
+
+	public MeetingDto(LocalDate meetingStartDate, String meetingPlace, MeetingTypeDto meetingType, MeetingDetailsDto meetingDetailsDto) {
         this.meetingStartDate = meetingStartDate;
         this.meetingPlace = meetingPlace;
         this.meetingType = meetingType;

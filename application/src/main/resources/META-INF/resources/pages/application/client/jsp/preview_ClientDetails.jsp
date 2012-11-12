@@ -71,6 +71,7 @@ explanation of the license and how it is applied.
 </script>
 		<html-el:form action="clientCustAction.do?method=create">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist')}" var="CenterHierarchyExist" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'meeting')}" var="meeting" />
 			<html-el:hidden property="input" value="create" />
 			<html-el:hidden property="status" value="" />
 			<!-- Body begins -->
@@ -530,25 +531,24 @@ explanation of the license and how it is applied.
 
 									</c:if> <span class="fontnormalbold"><mifos:mifoslabel
 										name="client.FormedBy" bundle="ClientUIResources"></mifos:mifoslabel></span>
-									<span class="fontnormal">
-									<c:forEach var="formedByLO" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'formedByLoanOfficers')}">
+										<span class="fontnormal">
+										<c:forEach var="formedByLO" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'formedByLoanOfficers')}">
 										<c:if test = "${formedByLO.personnelId == sessionScope.clientCustActionForm.formedByPersonnel}">
 											<c:out value="${formedByLO.displayName}"/><br>
 										</c:if>
 									</c:forEach>
 									</span><br>
 									<span class="fontnormalbold"><mifos:mifoslabel
-										name="client.MeetingSchedule" bundle="ClientUIResources"></mifos:mifoslabel></span>
-									<c:choose>
-										<c:when test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
-											<span class="fontnormal"><c:out
-												value="${customerfn:getMeetingSchedule(sessionScope.clientCustActionForm.parentCustomerMeeting.meeting,sessionScope.UserContext)}" />
+										name="client.MeetingSchedule" bundle="ClientUIResources"></mifos:mifoslabel></span>								
+										<c:choose>
+											<c:when test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">							
+											<span class="fontnormal" id="preview_ClientDetails.text.meetingSchedule"><c:out
+												value="${meeting.meetingSchedule}" /><br>
 											</span>
-											<br>
 											<span class="fontnormalbold"><mifos:mifoslabel
-												name="client.LocationOfMeeting" bundle="ClientUIResources"></mifos:mifoslabel></span><span
-												class="fontnormal"> <c:out
-												value="${sessionScope.clientCustActionForm.parentCustomerMeeting.meeting.meetingPlace}" /><br>
+												name="client.LocationOfMeeting" bundle="ClientUIResources"></mifos:mifoslabel></span>
+											<span class="fontnormal" id="preview_ClientDetails.text.meetingPlace"> <c:out
+												value="${meeting.meetingPlace}" /><br>
 											</span>
 										</c:when>
 										<c:otherwise>

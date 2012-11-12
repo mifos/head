@@ -58,6 +58,10 @@ public class GroupViewDetailsPage extends MifosPage {
         return selenium.getText("viewgroupdetails.text.meetingSchedule");
     }
 
+    public String getMeetingPlace(){
+        return selenium.getText("viewgroupdetails.text.meetingPlace");
+    }
+
     public String getCancelCloseReason(){
         return selenium.getText("viewgroupdetails.text.closeCancelReason");
     }

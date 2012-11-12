@@ -587,11 +587,11 @@ explanation of the license and how it is applied.
 												bundle="GroupUIResources" />&nbsp; <span id="viewgroupdetails.text.meetingSchedule"><c:out
 												value="${groupInformationDto.customerMeeting.meetingSchedule}" /></span></span>
 											<span class="fontnormal"><br></span>
-											</span> <span class="fontnormal"> <c:if
+											</span> <span id="viewgroupdetails.text.meetingPlace" class="fontnormal"> <c:if
 												test="${groupInformationDto.customerMeeting.meetingPlace!=null && !empty groupInformationDto.customerMeeting.meetingPlace}">
 												<c:out
 													value="${groupInformationDto.customerMeeting.meetingPlace}" />
-												<br>
+												</span><br><span id="viewgroupdetails.text.parentCustomerDisplayName" class="fontnormal">
 											</c:if> <c:out
 												value="${groupInformationDto.groupDisplay.parentCustomerDisplayName}" /><br>
 											</span></td>
