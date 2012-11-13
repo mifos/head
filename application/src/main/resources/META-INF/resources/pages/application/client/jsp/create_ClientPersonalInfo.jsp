@@ -90,6 +90,7 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="input" value="personalInfo" />
 			<html-el:hidden property="nextOrPreview" value="next" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist')}" var="CenterHierarchyExist" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'meeting')}" var="meeting" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -270,19 +271,18 @@ explanation of the license and how it is applied.
 												</c:otherwise>
 											</c:choose>
 											<tr>
-											<td class="fontnormal">
-											<span class="fontnormalbold"><mifos:mifoslabel
-												name="client.MeetingSchedule" bundle="ClientUIResources"></mifos:mifoslabel></span>
-											<span class="fontnormal"> <c:out
-												value="${customerfn:getMeetingSchedule(sessionScope.clientCustActionForm.parentCustomerMeeting.meeting,UserContext)}" />
-											<br>
-											</span> <span class="fontnormalbold"><mifos:mifoslabel
-												name="client.LocationOfMeeting" bundle="ClientUIResources"></mifos:mifoslabel></span>
-											<span class="fontnormal"> <c:out
-												value="${sessionScope.clientCustActionForm.parentCustomerMeeting.meeting.meetingPlace}" />
-											<br>
-											</span></td>
-
+												<td class="fontnormal">
+													<span class="fontnormalbold"><mifos:mifoslabel
+														name="client.MeetingSchedule" bundle="ClientUIResources"></mifos:mifoslabel></span>
+													<span class="fontnormal"><c:out
+														value="${meeting.meetingSchedule}" /><br>
+													</span>
+													<span class="fontnormalbold"><mifos:mifoslabel
+														name="client.LocationOfMeeting" bundle="ClientUIResources"></mifos:mifoslabel></span><span
+														class="fontnormal"> <c:out
+													value="${meeting.meetingPlace}" /><br>
+													</span>
+												</span></td>
 										</tr>
 
 

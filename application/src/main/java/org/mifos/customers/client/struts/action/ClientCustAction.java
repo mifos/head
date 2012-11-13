@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,6 +51,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
@@ -65,8 +67,11 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
+import org.mifos.customers.persistence.CustomerDaoHibernate;
 import org.mifos.customers.struts.action.CustAction;
+import org.mifos.customers.struts.uihelpers.CustomerUIHelperFn;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.AddressDto;
@@ -80,6 +85,7 @@ import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
+import org.mifos.dto.domain.MeetingTypeDto;
 import org.mifos.dto.domain.ProcessRulesDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.screen.ClientFamilyDetailDto;
@@ -148,12 +154,17 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
         if (clientFormCreationDto.getFormedByPersonnelId() != null) {
             actionForm.setFormedByPersonnel(clientFormCreationDto.getFormedByPersonnelId().toString());
+            
+            MeetingBO groupMeeting = customerDao.findCustomerById(Integer.valueOf(parentGroupId)).getCustomerMeetingValue();
+            clientFormCreationDto.getParentCustomerMeeting().setMeetingSchedule(CustomerUIHelperFn.getMeetingSchedule(groupMeeting, userContext));
+            SessionUtils.setAttribute("meeting", clientFormCreationDto.getParentCustomerMeeting(), request);
         }
         actionForm.setCenterDisplayName(clientFormCreationDto.getCenterDisplayName());
         actionForm.setGroupDisplayName(clientFormCreationDto.getGroupDisplayName());
         actionForm.setOfficeId(clientFormCreationDto.getOfficeId().toString());
         actionForm.setOfficeName(clientFormCreationDto.getOfficeName());
-
+        
+        
         if (clientFormCreationDto.getFormedByPersonnelId() != null) {
             actionForm.setLoanOfficerId(clientFormCreationDto.getFormedByPersonnelId().toString());
         }
@@ -184,6 +195,8 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setCollectionAttribute(ClientConstants.SAVINGS_OFFERING_LIST, clientFormCreationDto.getSavingsOfferings(), request);
         SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, ClientRules.getCenterHierarchyExists(), request);
         SessionUtils.setAttribute(ClientConstants.MAXIMUM_NUMBER_OF_FAMILY_MEMBERS, ClientRules.getMaximumNumberOfFamilyMembers(), request);
+
+        
         boolean isFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
         if (isFamilyDetailsRequired) {
@@ -197,6 +210,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
+      
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -293,6 +307,18 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         String pendingApprovalState = processRules.isClientPendingApprovalStateEnabled() ? CustomerConstants.YES : CustomerConstants.NO;
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, pendingApprovalState, request);
 
+        Short officeId = actionForm.getOfficeIdValue();
+        Short groupFlag = actionForm.getGroupFlagValue();
+        String parentGroupId = actionForm.getParentGroupId();
+        ClientFormCreationDto clientFormCreationDto = this.clientServiceFacade.retrieveClientFormCreationData(groupFlag, officeId, parentGroupId);
+        
+        if (clientFormCreationDto.getFormedByPersonnelId() != null) {
+        UserContext userContext = getUserContext(request);
+        MeetingBO groupMeeting = customerDao.findCustomerById(Integer.valueOf(parentGroupId)).getCustomerMeetingValue();
+        clientFormCreationDto.getParentCustomerMeeting().setMeetingSchedule(CustomerUIHelperFn.getMeetingSchedule(groupMeeting, userContext));     
+        SessionUtils.setAttribute("meeting", clientFormCreationDto.getParentCustomerMeeting(), request);
+        }
+        
         addWarningMessages(request, processRules);
         actionForm.setEditFamily("edit");
         actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth)));
@@ -952,6 +978,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.setTrainedDate(mfiInfoDto.getClientDetail().getTrainedDate());
 
         actionForm.setDateOfBirth(clientFromSession.getDateOfBirth());
+       
 
         ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, client, request);
