@@ -18,6 +18,13 @@ public class FeeDetailsPage extends MifosPage {
         return this;
     }
 
+    public EditFeePage navigateToEditFeePage() {
+    	verifyPage();
+    	selenium.click("link=*Edit fee information*");
+    	waitForPageToLoad();
+    	return new EditFeePage(selenium);
+    }
+    
     public void verifyFeeDetails(SubmitFormParameters formParameters) {
         this.verifyPage("FeeDetails");
         Assert.assertTrue(selenium.isTextPresent("Fee Applies To: " + formParameters.getFeeAppliesToName()));

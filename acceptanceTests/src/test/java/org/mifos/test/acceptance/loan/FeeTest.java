@@ -24,14 +24,19 @@ import org.joda.time.DateTime;
 import org.mifos.test.acceptance.admin.FeeTestHelper;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.admin.EditFeePage;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.TestDataSetup;
@@ -50,7 +55,9 @@ public class FeeTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
     private FeeTestHelper feeTestHelper;
     private TestDataSetup dataSetup;
-
+    private NavigationHelper navigationHelper;
+    private LoanProductTestHelper loanProductTestHelper;
+    
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
 
@@ -68,6 +75,8 @@ public class FeeTest extends UiTestCaseBase {
 
         loanTestHelper = new LoanTestHelper(selenium);
         feeTestHelper = new FeeTestHelper(dataSetup, new NavigationHelper(selenium));
+        navigationHelper = new NavigationHelper(selenium);
+        loanProductTestHelper = new LoanProductTestHelper(selenium);
     }
 
     @AfterMethod
@@ -209,5 +218,87 @@ public class FeeTest extends UiTestCaseBase {
         
         Assert.assertEquals(feesBefore + 1.0, feesAfter);
     }
+    
+    
+    //https://mifosforge.jira.com/browse/MIFOSTEST-1183
+    public void verifyAttachingFeeToLoanProduct() throws Exception {
+        EditFeePage.SubmitFormParameters feesParameters = new  EditFeePage.SubmitFormParameters();
+    	// Given
+        try {
+        feeTestHelper.createNoRateFee("OneTimeNoRateFee", FeesCreatePage.SubmitFormParameters.LOAN, "Upfront", 500);
+        feeTestHelper.createFixedFee("OneTimeWithPercentageFee", FeesCreatePage.SubmitFormParameters.LOAN, 
+            "Upfront", 500, FeesCreatePage.SubmitFormParameters.LOAN_AMOUNT);
+        feeTestHelper.createPeriodicFee("PeriodicTimeFee", FeesCreatePage.SubmitFormParameters.LOAN, 
+            FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 2, 500);
+        feeTestHelper.createPeriodicRateFee("PeriodicTimeWithPercentageFee", FeesCreatePage.SubmitFormParameters.LOAN,
+            FeesCreatePage.SubmitFormParameters.PERIODIC_FEE_FREQUENCY, 1, 10, FeesCreatePage.SubmitFormParameters.LOAN_AMOUNT);
+
+        feesParameters.setStatus(EditFeePage.SubmitFormParameters.ACTIVE);
+        feeTestHelper.editAndSubmitFeeWithParameters("OneTimeNoRateFee", feesParameters);
+        feeTestHelper.editAndSubmitFeeWithParameters("OneTimeWithPercentageFee", feesParameters);
+        feeTestHelper.editAndSubmitFeeWithParameters("PeriodicTimeFee", feesParameters);
+        feeTestHelper.editAndSubmitFeeWithParameters("PeriodicTimeWithPercentageFee", feesParameters);
         
+        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
+        productParams.setOfferingName("newLoanProductWith4Fees");
+        productParams.setOfferingShortName("NLP");
+        productParams.setDefaultInterestRate("15.3");
+        productParams.setMaxInterestRate("50");
+        productParams.setInterestTypes(DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE);
+        productParams.setDefaultLoanAmount("13333");
+        productParams.setDefInstallments("13");
+        productParams.setApplicableFor(DefineNewLoanProductPage.SubmitFormParameters.GROUPS);
+        productParams.addFee("OneTimeNoRateFee");
+        productParams.addFee("OneTimeWithPercentageFee");
+        productParams.addFee("PeriodicTimeFee");
+        productParams.addFee("PeriodicTimeWithPercentageFee");
+        loanProductTestHelper.defineNewLoanProduct(productParams); 
+
+        //When
+        String[] editableElements = {"amount","feeStatus"};
+        String[] nonEditableElements = {"feescreate.input.feeName", "feescreate.label.categoryType", "feescreate.button.feeFrequencyType",
+            "feescreate.label.customerCharge", "feescreate.label.glCode"};
+        navigationHelper.navigateToAdminPage().navigateToViewFeesPage().navigateToViewFeeDetailsPage("OneTimeNoRateFee")
+        .navigateToEditFeePage().verifyElementsArePresentAndEditable(editableElements).verifyAllElementsAreNotPresent(nonEditableElements);
+
+        feesParameters.setAmount("19.9");
+        feesParameters.setStatus(EditFeePage.SubmitFormParameters.INACTIVE);
+        feeTestHelper.editAndSubmitFeeWithParameters("OneTimeNoRateFee", feesParameters);
+        feeTestHelper.editAndSubmitFeeWithParameters("OneTimeWithPercentageFee", feesParameters);
+        feeTestHelper.editAndSubmitFeeWithParameters("PeriodicTimeFee", feesParameters);
+        feeTestHelper.editAndSubmitFeeWithParameters("PeriodicTimeWithPercentageFee", feesParameters);
+        
+        //Then
+        EditLoanProductPage editLoanProductPage = loanProductTestHelper
+            .navigateToViewLoanProductDetailsPage("newLoanProductWith4Fees").editLoanProduct();
+        String[] fees = {"OneTimeNoRateFee", "OneTimeWithPercentageFee", "PeriodicTimeFee", 
+        "PeriodicTimeWithPercentageFee"};
+        editLoanProductPage.verifyAllElementsAreNotPresent(fees);
+        
+        productParams.getFees().clear();
+        productParams.setIncludeInLoanCounter(true);
+        productParams.setFixedRepaymentSchedule(true);
+        productParams.setDescription("Edited Loan product");
+        editLoanProductPage.submitAndNavigateToEditLoanProductPreviewPage(productParams).submit();
+        
+        //When
+        feesParameters.setStatus(EditFeePage.SubmitFormParameters.ACTIVE);
+        feeTestHelper.editAndSubmitFeeWithParameters("OneTimeNoRateFee", feesParameters);
+        feeTestHelper.editAndSubmitFeeWithParameters("PeriodicTimeWithPercentageFee", feesParameters);
+        
+        //Then
+        editLoanProductPage = loanProductTestHelper
+                .navigateToViewLoanProductDetailsPage("newLoanProductWith4Fees").editLoanProduct();
+        
+        editLoanProductPage.verifyAllElementsArePresent(new String[] {"OneTimeNoRateFee", "PeriodicTimeWithPercentageFee"});
+        editLoanProductPage.verifyAllElementsAreNotPresent(new String[] {"OneTimeWithPercentageFee", "PeriodicTimeFee"});
+        } finally {
+        	feesParameters.setStatus(EditFeePage.SubmitFormParameters.INACTIVE);
+            feeTestHelper.editAndSubmitFeeWithParameters("OneTimeNoRateFee", feesParameters);
+            feeTestHelper.editAndSubmitFeeWithParameters("PeriodicTimeWithPercentageFee", feesParameters);
+            feeTestHelper.editAndSubmitFeeWithParameters("OneTimeNoRateFee", feesParameters);
+            feeTestHelper.editAndSubmitFeeWithParameters("PeriodicTimeWithPercentageFee", feesParameters);
+        }
+    }
+    
 }
