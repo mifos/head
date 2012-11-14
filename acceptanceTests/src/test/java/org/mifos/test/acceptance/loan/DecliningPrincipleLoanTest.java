@@ -28,6 +28,8 @@ import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
@@ -103,11 +105,43 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     public void verifyLoanPaymentAndAdjustment() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
         applicationDatabaseOperation.updateGapBetweenDisbursementAndFirstMeetingDate(2);
+        verifyEarlyWholePayment();
         verifyEarlyExcessPayment("000100000000025");
         verifyEarlyLessPayment("000100000000026");
         verifyLateExcessPayment("000100000000027");
         verifyLateLessPayment("000100000000028");
         verifyMultipleDue("000100000000029");
+    }
+    
+    private void verifyEarlyWholePayment() throws UnsupportedEncodingException {
+        DateTime testDateTime = new DateTime(2010, 10, 12, 0, 0, 0, 0);
+        loanTestHelper.setApplicationTime(testDateTime);
+        LoanAccountPage loanAccountPage = createAccountForEarlyWholePayment(testDateTime);
+        makePaymentAndVerifyPayment(loanAccountPage.getAccountId(), testDateTime, "1005", RepaymentScheduleData.EARLY_WHOLE_FIRST_PAYMENT);
+    }
+    
+    private LoanAccountPage createAccountForEarlyWholePayment(DateTime disbursalDate) {
+        String disbursalDateDay = String.valueOf(disbursalDate.getDayOfMonth());
+        String disbursalDateMonth = String.valueOf(disbursalDate.getMonthOfYear());
+        String disbursalDateYear = String.valueOf(disbursalDate.getYear());
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString(clientName);
+        searchParameters.setLoanProduct("WeeklyPawdepLoan");
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setNumberOfInstallments("1");
+        submitAccountParameters.setDd(disbursalDateDay);
+        submitAccountParameters.setMm(disbursalDateMonth);
+        submitAccountParameters.setYy(disbursalDateYear);
+        DisburseLoanParameters disburseParams = new DisburseLoanParameters();
+        disburseParams.setPaymentType(DisburseLoanParameters.CASH);
+        disburseParams.setDisbursalDateDD(disbursalDateDay);
+        disburseParams.setDisbursalDateMM(disbursalDateMonth);
+        disburseParams.setDisbursalDateYYYY(disbursalDateYear);
+        navigationHelper.navigateToHomePage();
+        return loanTestHelper.
+                createLoanAccount(searchParameters , submitAccountParameters).
+                changeAccountStatusToAccepted().
+                disburseLoan(disburseParams);
     }
 
 //    @Test(enabled = true)
