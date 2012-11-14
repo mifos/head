@@ -404,6 +404,13 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
 
         return errors;
     }
+    
+    public String getMeetingSchedule(){
+        return selenium.getText("create_ClientPersonalInfo.text.meetingSchedule");
+    }
 
+    public String getMeetingPlace(){
+        return selenium.getText("create_ClientPersonalInfo.text.meetingPlace");
+    }
 
 }
