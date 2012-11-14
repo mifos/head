@@ -150,6 +150,9 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         if(formParameters.getLoanPurpose() != null){
         	setLonaPurpose(formParameters.getLoanPurpose());
         }
+        if (formParameters.getNumberOfInstallments() != null) {
+            setInstallments(formParameters.getNumberOfInstallments());
+        }
         fillAdditionalFee(formParameters);
         submitAndWaitForPage();
     }
