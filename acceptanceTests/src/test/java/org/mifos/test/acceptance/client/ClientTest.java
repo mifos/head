@@ -417,7 +417,32 @@ public class ClientTest extends UiTestCaseBase {
         createClientPreviewDataPage.submitWithOneError("The combination of the specified Date of Birth and name " +
                 formParameters.getFirstName() + " " + formParameters.getLastName() + " already exists in the application. Please specify a different name.");
     }
-
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
+    public void createClientAssignedGroup() throws Exception {
+        GroupViewDetailsPage groupViewDetailsPage= navigationHelper.navigateToGroupViewDetailsPage("GroupWeekly");
+        String groupMeetingSchedule = groupViewDetailsPage.getMeetingSchedule();
+        String groupMeetingPlace = groupViewDetailsPage.getMeetingPlace();
+        
+        ClientsAndAccountsHomepage clientsAndAccountsHomepage = navigationHelper.navigateToClientsAndAccountsPage();
+        CreateClientEnterPersonalDataPage createClientEnterPersonalDataPage = clientsAndAccountsHomepage.navigateToCreateNewClientPage().selectGroup("GroupWeekly");
+        String clientMeetingSchedule = createClientEnterPersonalDataPage.getMeetingSchedule();
+        String clientMeetingPlace = createClientEnterPersonalDataPage.getMeetingPlace();
+        
+        Assert.assertEquals(groupMeetingSchedule, clientMeetingSchedule);
+        Assert.assertEquals(groupMeetingPlace, clientMeetingPlace);
+        
+        CreateClientEnterPersonalDataPage.SubmitFormParameters parameters = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        parameters = clientParams();
+        CreateClientPreviewDataPage createClientPreviewDataPage= createClientEnterPersonalDataPage.createWithoutSpouse(parameters).submitAndGotoCreateClientEnterMfiDataPage().navigateToPreview();
+        String clientPreviewMeetingSchedule = createClientPreviewDataPage.getMeetingSchedule();
+        String clientPreviewMeetingPlace = createClientPreviewDataPage.getMeetingPlace();
+        
+        Assert.assertEquals(groupMeetingSchedule, clientPreviewMeetingSchedule);
+        Assert.assertEquals(groupMeetingPlace, clientPreviewMeetingPlace);
+    }
+    
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private HomePage searchForClient(String clientName, HomePage homePage, int expectedNumberOfClients)
             throws Exception {

@@ -63,4 +63,12 @@ public class CreateClientPreviewDataPage extends MifosPage {
         }
         waitForPageToLoad();
     }
+    
+    public String getMeetingSchedule(){
+        return selenium.getText("preview_ClientDetails.text.meetingSchedule");
+    }
+
+    public String getMeetingPlace(){
+        return selenium.getText("preview_ClientDetails.text.meetingPlace");
+    }
 }

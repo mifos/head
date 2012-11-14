@@ -28,13 +28,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -67,6 +65,7 @@ import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.struts.action.CustAction;
+import org.mifos.customers.struts.uihelpers.CustomerUIHelperFn;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.AddressDto;
@@ -148,6 +147,10 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
         if (clientFormCreationDto.getFormedByPersonnelId() != null) {
             actionForm.setFormedByPersonnel(clientFormCreationDto.getFormedByPersonnelId().toString());
+            
+            MeetingBO groupMeeting = customerDao.findCustomerById(Integer.valueOf(parentGroupId)).getCustomerMeetingValue();
+            clientFormCreationDto.getParentCustomerMeeting().setMeetingSchedule(CustomerUIHelperFn.getMeetingSchedule(groupMeeting, userContext));
+            SessionUtils.setAttribute("meeting", clientFormCreationDto.getParentCustomerMeeting(), request);
         }
         actionForm.setCenterDisplayName(clientFormCreationDto.getCenterDisplayName());
         actionForm.setGroupDisplayName(clientFormCreationDto.getGroupDisplayName());
@@ -184,6 +187,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setCollectionAttribute(ClientConstants.SAVINGS_OFFERING_LIST, clientFormCreationDto.getSavingsOfferings(), request);
         SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, ClientRules.getCenterHierarchyExists(), request);
         SessionUtils.setAttribute(ClientConstants.MAXIMUM_NUMBER_OF_FAMILY_MEMBERS, ClientRules.getMaximumNumberOfFamilyMembers(), request);
+
         boolean isFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
         if (isFamilyDetailsRequired) {
@@ -197,6 +201,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
+      
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -293,6 +298,18 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         String pendingApprovalState = processRules.isClientPendingApprovalStateEnabled() ? CustomerConstants.YES : CustomerConstants.NO;
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, pendingApprovalState, request);
 
+        Short officeId = actionForm.getOfficeIdValue();
+        Short groupFlag = actionForm.getGroupFlagValue();
+        String parentGroupId = actionForm.getParentGroupId();
+        ClientFormCreationDto clientFormCreationDto = this.clientServiceFacade.retrieveClientFormCreationData(groupFlag, officeId, parentGroupId);
+        
+        if (clientFormCreationDto.getFormedByPersonnelId() != null) {
+            UserContext userContext = getUserContext(request);
+            MeetingBO groupMeeting = customerDao.findCustomerById(Integer.valueOf(parentGroupId)).getCustomerMeetingValue();
+            clientFormCreationDto.getParentCustomerMeeting().setMeetingSchedule(CustomerUIHelperFn.getMeetingSchedule(groupMeeting, userContext));     
+            SessionUtils.setAttribute("meeting", clientFormCreationDto.getParentCustomerMeeting(), request);
+        }
+        
         addWarningMessages(request, processRules);
         actionForm.setEditFamily("edit");
         actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth)));
