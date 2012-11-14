@@ -35,7 +35,9 @@ function fundTransfer() {
 
 	if ($(PAYMENT_TYPE_SELECT_ID).val() != transfer_id) {
 		$(SAVINGS_ACC_ROW_ID).hide();
-	}
+    } else if (previous != '\.') {
+        $(previous).show();
+    }
 
 	$(PAYMENT_TYPE_SELECT_ID).change(function() {
 		var val = $(this).val();
