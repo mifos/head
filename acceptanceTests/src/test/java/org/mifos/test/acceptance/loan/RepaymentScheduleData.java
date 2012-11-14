@@ -17,6 +17,9 @@ public class RepaymentScheduleData {
             {"2", "26-Oct-2010", "-", "217.9", "3.3", "100", "0", "321.2"},
             {"3", "02-Nov-2010", "-", "250.7", "2.3", "100", "0", "353"},
             {"4", "09-Nov-2010", "-", "252.1", "1.9", "100", "0", "354"}};
+    public static final String[][] EARLY_WHOLE_FIRST_PAYMENT = {{"Installments paid", "", "", "", "", ""},
+        {"1", "19-Oct-2010", "12-Oct-2010", "1,000", "5", "0", "0", "1,005"}
+    };
     public static final String[][] LATE_EXCESS_PAYMENT = {{"Installments paid", "", "", "", "", ""},
             {"1", "19-Oct-2010", "23-Oct-2010", "247.7", "5.3", "100", "0", "353"},
             {"2", "26-Oct-2010", "23-Oct-2010", "0", "1", "0", "0", "1"},
