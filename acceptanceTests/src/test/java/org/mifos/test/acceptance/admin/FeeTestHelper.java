@@ -1,6 +1,7 @@
 package org.mifos.test.acceptance.admin;
 
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.EditFeePage;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.admin.ViewFeesPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
@@ -25,7 +26,7 @@ public class FeeTestHelper {
         feeParameters.setCustomerCharge(payWhen);
         feeParameters.setRate(rateAmount);
         feeParameters.setFeeFormula(baseRate);
-        feeParameters.setGlCode("31301 -Fees");
+        feeParameters.setGlCode("31301 - Fees");
         dataSetup.createFee(feeParameters);
         return feeName;
     }
@@ -70,7 +71,10 @@ public class FeeTestHelper {
         return feeName;
     }
     
-    
+    public void editAndSubmitFeeWithParameters(String feeName, EditFeePage.SubmitFormParameters parameters) {
+        navigationHelper.navigateToAdminPage().navigateToViewFeesPage().navigateToViewFeeDetailsPage(feeName)
+        .navigateToEditFeePage().fillFormAndNavigateToEditFeePreviewPage(parameters).submitAndNavigateToPreviewFeesPage();
+    }
     
     public void defineFees(FeesCreatePage.SubmitFormParameters feeParameters) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();

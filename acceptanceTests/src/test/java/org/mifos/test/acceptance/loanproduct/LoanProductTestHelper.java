@@ -98,7 +98,7 @@ public class LoanProductTestHelper {
         editLoanProductPage.submitIncludeInLoanCounter(formParameters).submit();
     }
 
-    public void editLoanProduct(String loanProduct, String... questionGroup) {
+    public void editLoanProductIncludeQuestionsGroups(String loanProduct, String... questionGroup) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ViewLoanProductsPage viewLoanProducts = adminPage.navigateToViewLoanProducts();
         LoanProductDetailsPage loanProductDetailsPage = viewLoanProducts.viewLoanProductDetails(loanProduct);
@@ -107,6 +107,18 @@ public class LoanProductTestHelper {
         formParameters.setQuestionGroups(Arrays.asList(questionGroup));
         EditLoanProductPreviewPage editLoanProductPreviewPage = editLoanProductPage.submitQuestionGroupChanges(formParameters);
         editLoanProductPreviewPage.submit();
+    }
+    
+    public EditLoanProductPreviewPage editLoanProductWithParameters(String loanProduct, 
+            DefineNewLoanProductPage.SubmitFormParameters productParams) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        adminPage.navigateToViewLoanProducts().viewLoanProductDetails(loanProduct);
+        new DefineNewLoanProductPage().fillLoanParameters(productParams).submitPage();
+        return new EditLoanProductPreviewPage(selenium);
+    }
+    
+    public LoanProductDetailsPage navigateToViewLoanProductDetailsPage(String loanProduct) {
+    	return navigationHelper.navigateToAdminPage().navigateToViewLoanProducts().viewLoanProductDetails(loanProduct);
     }
     
     public LoanProductDetailsPage defineNewLoanProduct(DefineNewLoanProductPage.SubmitFormParameters productParams) {

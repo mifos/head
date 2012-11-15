@@ -170,7 +170,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         String answer = "01/01/2010";
         String choiceAnswer = "Choice2";
         questionGroupHelper.createQuestionGroup(questionGroupTitle, question1, question2, "Create Loan");
-        loanProductTestHelper.editLoanProduct("Flat Interest Loan Product With Fee", questionGroupTitle);
+        loanProductTestHelper.editLoanProductIncludeQuestionsGroups("Flat Interest Loan Product With Fee", questionGroupTitle);
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("client1 lastname");
         searchParameters.setLoanProduct("Flat Interest Loan Product With Fee");

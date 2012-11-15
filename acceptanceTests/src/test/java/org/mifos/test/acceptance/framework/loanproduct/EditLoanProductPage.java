@@ -29,6 +29,7 @@ import com.thoughtworks.selenium.Selenium;
 
 import java.util.List;
 
+@SuppressWarnings("PMD.CyclomaticComplexity")
 public class EditLoanProductPage extends MifosPage {
 
     String configureVariableInstalmentsCheckbox = "canConfigureVariableInstallments";
@@ -47,7 +48,119 @@ public class EditLoanProductPage extends MifosPage {
         verifyPage("EditLoanProduct");
         return this;
     }
-
+    
+    @SuppressWarnings("PMD")
+    public EditLoanProductPreviewPage submitAndNavigateToEditLoanProductPreviewPage(SubmitFormParameters parameters) {
+        typeTextIfNotEmpty("EditLoanProduct.input.name", parameters.getOfferingName());
+        typeTextIfNotEmpty("EditLoanProduct.input.shortName", parameters.getOfferingShortName());
+        typeTextIfNotEmpty("EditLoanProduct.input.description", parameters.getDescription());
+        selenium.select("prdCategory", "label=" + parameters.getCategory());
+        selenium.select("prdApplicableMaster", "value=" + parameters.getApplicableFor());
+        
+        selenium.click("name=loanAmtCalcType value=" + parameters.getCalculateLoanAmount());
+        
+        if(parameters.getCalculateLoanAmount() == SubmitFormParameters.SAME_FOR_ALL_LOANS) {
+        	typeTextIfNotEmpty("minLoanAmount", parameters.getMinLoanAmount().replaceAll(",", ""));
+        	typeTextIfNotEmpty("maxLoanAmount", parameters.getMaxLoanAmount().replaceAll(",", ""));
+        	typeTextIfNotEmpty("defaultLoanAmount", parameters.getDefaultLoanAmount().replaceAll(",", ""));
+        }
+        else if(parameters.getCalculateLoanAmount() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
+            for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
+                selenium.typeKeys("endRangeLoanAmt"+i, parameters.getLastAmountByLastLoanAmount(i-1).replaceAll(",", ""));
+                selenium.fireEvent("endRangeLoanAmt"+i, "blur");
+                typeTextIfNotEmpty("lastLoanMinLoanAmt"+i, parameters.getMinAmountByLastLoanAmount(i-1).replaceAll(",", ""));
+                typeTextIfNotEmpty("lastLoanMaxLoanAmt"+i, parameters.getMaxAmountByLastLoanAmount(i-1).replaceAll(",", ""));
+                typeTextIfNotEmpty("lastLoanDefaultLoanAmt"+i, parameters.getDefAmountByLastLoanAmount(i-1).replaceAll(",", ""));
+            }
+        }
+        else {
+            for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
+                typeTextIfNotEmpty("cycleLoanMinLoanAmt"+i, parameters.getMinCycleLoanAmount(i-1).replaceAll(",", ""));
+                typeTextIfNotEmpty("cycleLoanMaxLoanAmt"+i, parameters.getMaxCycleLoanAmount(i-1).replaceAll(",", ""));
+                typeTextIfNotEmpty("cycleLoanDefaultLoanAmt"+i, parameters.getDefCycleLoanAmount(i-1).replaceAll(",", ""));
+            }
+        }
+        
+        if(parameters.isInterestWaiver()){
+            selenium.check("EditLoanProduct.input.includeInterestWaiver");
+        }else{
+            selenium.uncheck("EditLoanProduct.input.includeInterestWaiver");
+        }
+        selenium.select("interestTypes", "value=" + parameters.getInterestTypes());
+        typeTextIfNotEmpty("EditLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
+        typeTextIfNotEmpty("EditLoanProduct.input.minInterestRate", parameters.getMinInterestRate());
+        typeTextIfNotEmpty("EditLoanProduct.input.defaultInterestRate", parameters.getDefaultInterestRate());
+        selenium.click("name=freqOfInstallments value=" + parameters.getFreqOfInstallments());
+        selenium.click("name=calcInstallmentType value=" + parameters.getCalculateInstallments());
+        if(parameters.getCalculateInstallments() == SubmitFormParameters.SAME_FOR_ALL_LOANS) {
+            typeTextIfNotEmpty("minNoInstallments", parameters.getMinInstallemnts());
+            typeTextIfNotEmpty("maxNoInstallments", parameters.getMaxInstallments());
+            typeTextIfNotEmpty("defNoInstallments", parameters.getDefInstallments());
+        }
+        else if(parameters.getCalculateInstallments() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
+            for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
+                selenium.typeKeys("endInstallmentRange"+i, parameters.getLastInstallmentByLastLoanAmount(i-1).replaceAll(",", ""));
+                selenium.fireEvent("endInstallmentRange"+i, "blur");
+                typeTextIfNotEmpty("minLoanInstallment"+i, parameters.getMinInstallmentByLastLoanAmount(i-1).replaceAll(",", ""));
+                typeTextIfNotEmpty("maxLoanInstallment"+i, parameters.getMaxInstallmentByLastLoanAmount(i-1).replaceAll(",", ""));
+                typeTextIfNotEmpty("defLoanInstallment"+i, parameters.getDefInstallmentByLastLoanAmount(i-1).replaceAll(",", ""));
+            }
+        }
+        else {
+            for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
+                typeTextIfNotEmpty("minCycleInstallment"+i, parameters.getMinCycleInstallment(i-1));
+                typeTextIfNotEmpty("maxCycleInstallment"+i, parameters.getMaxCycleInstallment(i-1));
+                typeTextIfNotEmpty("defCycleInstallment"+i, parameters.getDefCycleInstallment(i-1));
+            }
+        }
+        
+        fillFeesAndPenalties(parameters);
+        
+        selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodType());
+        selenium.fireEvent("gracePeriodType", "change");
+        if(parameters.getGracePeriodType()>1){
+            typeTextIfNotEmpty("gracePeriodDuration", parameters.getGracePeriodDuration());
+        }
+        selenium.select("interestGLCode", "label=" + parameters.getInterestGLCode());
+        selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());
+        selectQuestionGroups(parameters.getQuestionGroups());
+        
+        return editSubmit();
+    }
+    
+    private void fillFeesAndPenalties(SubmitFormParameters parameters) {
+    	if(parameters.getFees().size()>0){
+            for (int i=0;i<parameters.getFees().size();i++){
+                if(i==0){
+                	selenium.select("feeId", "label="+parameters.getFees().get(i));
+        		}else{
+        			selenium.addSelection("feeId", "label="+parameters.getFees().get(i));
+                }
+            }
+            selenium.click("LoanFeesList.button.add");
+        }
+        
+        if(parameters.getPenalties().size()>0){
+            for (int i=0;i<parameters.getPenalties().size();i++){
+                if(i==0){
+                	 selenium.select("penaltyId", "label="+parameters.getPenalties().get(i));
+                }else{
+                	selenium.addSelection("penaltyId", "label="+parameters.getPenalties().get(i));
+                }
+            }
+            selenium.click("LoanPenaltiesList.button.add");
+        }	
+    }
+    
+    private void selectQuestionGroups(List<String> questionGroups) {
+        if (CollectionUtils.isNotEmpty(questionGroups)) {
+            for (String questionGroup : questionGroups) {
+                selenium.addSelection("name=id", questionGroup);
+            }
+            selenium.click("SrcQGList.button.add");
+        }
+    }
+    
     public EditLoanProductPreviewPage submitDescriptionAndInterestChanges(SubmitFormParameters parameters) {
         selenium.type("EditLoanProduct.input.description", parameters.getDescription());
         selenium.type("EditLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());

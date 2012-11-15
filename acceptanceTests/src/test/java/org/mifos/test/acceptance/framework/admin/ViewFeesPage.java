@@ -35,6 +35,13 @@ public class ViewFeesPage extends MifosPage {
         return this;
     }
 
+    public FeeDetailsPage navigateToViewFeeDetailsPage(String feeProductName) {
+    	verifyPage();
+    	selenium.click("link=*" + feeProductName + "*");
+    	waitForPageToLoad();
+    	return new FeeDetailsPage(selenium);
+    }
+    
     public void verifyProductFees(String expectedCellData) {
         String eval = selenium.getEval("window.document.getElementById('productFeeTable').innerHTML.indexOf(\"" + expectedCellData + "\")!=-1");
         Assert.assertTrue(Boolean.parseBoolean(eval), "The client cell did not contain the expected data!");
