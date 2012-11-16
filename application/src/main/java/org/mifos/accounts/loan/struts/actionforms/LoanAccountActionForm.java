@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -1253,9 +1254,15 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
             } else {
                 if (getMonthType().equals("1")) {
                     // "10th day of the month"
+
                     if (StringUtils.isBlank(this.getMonthDay()) || StringUtils.isBlank(this.getDayRecurMonth())) {
                         addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
                     }
+                    short dayNumber = dayMonthParse();
+                    if ((dayNumber < 1 || dayNumber > 31)) {
+                    	addError(errors, "", LoanExceptionConstants.REPAYMENTDAY_WRONGFORMAT, "");
+                    }
+                    
                 } else {
                     // "1st Monday of every month"
                     if (StringUtils.isBlank(this.getMonthRank()) || StringUtils.isBlank(this.getMonthWeek())
@@ -1265,6 +1272,17 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                 }
             }
         }
+    }
+
+    private short dayMonthParse() {
+        short dayNumber;
+        try{
+            dayNumber = Short.parseShort(this.getMonthDay());
+        }
+        catch (NumberFormatException err){
+            dayNumber=0;
+        }    
+        return dayNumber;
     }
 
     private void validateIndividualLoanFieldsForGlim(ActionErrors errors, Locale locale, MifosCurrency currency) {
