@@ -151,6 +151,11 @@ public class CustomerAccountBO extends AccountBO {
             beginningFrom = validCustomerMeetingMatch.toDateMidnight().toDateTime();
         }
         
+        DateTime meetingStartDate = new DateTime(customer.getCustomerMeetingValue().getMeetingStartDate());
+        if (beginningFrom.isBefore(meetingStartDate)) {
+            beginningFrom = meetingStartDate;
+        }
+        
         createInitialSetOfCustomerScheduleEntities(customer, beginningFrom, applicableCalendarEvents, customerMeetingEvent);
 
         applyFeesToInitialSetOfInstallments(new ArrayList<AccountFeesEntity>(accountFees), customerMeetingEvent);

@@ -36,6 +36,7 @@ import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 
 public class MeetingActionForm extends BaseActionForm {
     private static final long serialVersionUID = 44l;
@@ -249,6 +250,15 @@ public class MeetingActionForm extends BaseActionForm {
         if (StringUtils.isBlank(getMeetingPlace())) {
             errors.add(MeetingConstants.INVALID_MEETINGPLACE, new ActionMessage(MeetingConstants.INVALID_MEETINGPLACE));
         }
+        
+        if (!StringUtils.isBlank(meetingStartDate)) {
+            try {
+                DateUtils.getDate(getMeetingStartDate());
+            } catch (RuntimeException ex) {
+                errors.add(MeetingConstants.INVALID_MEETINGDATE, new ActionMessage(MeetingConstants.INVALID_MEETINGDATE));
+            }
+        }
+        
         return errors;
     }
 
