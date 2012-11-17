@@ -578,8 +578,29 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationBusinessService().isRepaymentIndepOfMeetingEnabled();
 
             LoanDisbursementDateFactory loanDisbursementDateFactory = new LoanDisbursmentDateFactoryImpl();
-            LoanDisbursementDateFinder loanDisbursementDateFinder = loanDisbursementDateFactory.create(customer, loanProduct, isRepaymentIndependentOfMeetingEnabled, isLoanWithBackdatedPayments);
-            LocalDate nextPossibleDisbursementDate = loanDisbursementDateFinder.findClosestMatchingDateFromAndInclusiveOf(new LocalDate());
+            LoanDisbursementDateFinder loanDisbursementDateFinder = null;
+            LocalDate nextPossibleDisbursementDate = null;
+            MeetingBO customerMeeting = customer.getCustomerMeetingValue();
+            LocalDate dateToStart = new LocalDate();
+            
+            if (customerMeeting.isWeekly()) {
+                
+                LocalDate meetingStartDate = new LocalDate(customerMeeting.getMeetingStartDate());
+                
+                if (dateToStart.isBefore(meetingStartDate)) {
+                    dateToStart = meetingStartDate;
+                    loanDisbursementDateFinder = loanDisbursementDateFactory.create(customer, loanProduct, false, isLoanWithBackdatedPayments);
+                } else {
+                    loanDisbursementDateFinder = loanDisbursementDateFactory.create(
+                            customer, loanProduct, isRepaymentIndependentOfMeetingEnabled, isLoanWithBackdatedPayments);
+                }
+                
+                nextPossibleDisbursementDate = loanDisbursementDateFinder.findClosestMatchingDateFromAndInclusiveOf(dateToStart);  
+            } else {
+                loanDisbursementDateFinder = loanDisbursementDateFactory.create(
+                        customer, loanProduct, isRepaymentIndependentOfMeetingEnabled, isLoanWithBackdatedPayments);
+                nextPossibleDisbursementDate = loanDisbursementDateFinder.findClosestMatchingDateFromAndInclusiveOf(dateToStart);
+            }
 
             LoanAmountOption eligibleLoanAmount = loanProduct.eligibleLoanAmount(customer.getMaxLoanAmount(loanProduct), customer.getMaxLoanCycleForProduct(loanProduct));
             LoanOfferingInstallmentRange eligibleNoOfInstall = loanProduct.eligibleNoOfInstall(customer.getMaxLoanAmount(loanProduct), customer.getMaxLoanCycleForProduct(loanProduct));
