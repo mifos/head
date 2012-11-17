@@ -940,7 +940,8 @@
         							<pluginExecutionFilter>
         								<groupId>org.codehaus.mojo</groupId>
         								<artifactId>native2ascii-maven-plugin</artifactId>
-        								<versionRange>[1.0-alpha-1,)</versionRange>
+									<!-- We want 1.0-beta-1 instead of alpha so that we can build on Java 7, see http://jira.codehaus.org/browse/MOJO-1768 -->
+        								<versionRange>[1.0-beta-1,)</versionRange>
         								<goals>
         									<goal>native2ascii</goal>
         								</goals>
