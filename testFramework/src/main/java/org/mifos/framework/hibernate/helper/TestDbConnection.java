@@ -17,6 +17,7 @@ import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Executor;
 
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SQL", justification="This is a wrapper class so the bugs found are wrong")
 @SuppressWarnings("PMD")
@@ -270,4 +271,38 @@ public class TestDbConnection implements Connection {
     public boolean isWrapperFor(Class<?> aClass) throws SQLException {
         return connection.isWrapperFor(aClass);
     }
+
+    // --------------------------------------------------------------------
+    //   The following methods are here so that this compiles under 
+    //   Java 7 (JDBC 4.0) as well as Java 6 (JDBC 3.0).  Note that
+    //   we cannot make them use @Override nor delegate to the 
+    //   respective connection method, as that would break 
+    //   building this under Java 6 (JDBC 3.0).
+    //
+    //   TODO But is this class really needed?!
+    
+	// DON'T use @Override (see above)
+	public void setSchema(String schema) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	// DON'T use @Override (see above)
+	public String getSchema() throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	// DON'T use @Override (see above)
+	public void abort(Executor executor) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	// DON'T use @Override (see above)
+	public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	// DON'T use @Override (see above)
+	public int getNetworkTimeout() throws SQLException {
+		throw new UnsupportedOperationException();
+	}
 }
