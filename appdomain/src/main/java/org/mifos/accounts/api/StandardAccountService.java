@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.NonUniqueResultException;
@@ -156,7 +157,7 @@ public class StandardAccountService implements AccountService {
         try {
             transactionHelper.startTransaction();
             PaymentDto withdrawal = this.savingsServiceFacade.withdraw(savingsWithdrawalDto, true);
-            makePaymentNoCommit(accountPaymentParametersDto, withdrawal.getPaymentId());
+            makePaymentNoCommit(accountPaymentParametersDto, withdrawal.getPaymentId(), null);
             transactionHelper.commitTransaction();
         } catch (AccountException e) {
             transactionHelper.rollbackTransaction();
@@ -186,10 +187,10 @@ public class StandardAccountService implements AccountService {
 
     public void makePaymentNoCommit(AccountPaymentParametersDto accountPaymentParametersDto)
             throws PersistenceException, AccountException {
-        makePaymentNoCommit(accountPaymentParametersDto, null);
+        makePaymentNoCommit(accountPaymentParametersDto, null, null);
     }
 
-    public void makePaymentNoCommit(AccountPaymentParametersDto accountPaymentParametersDto, Integer savingsPaymentId)
+    public void makePaymentNoCommit(AccountPaymentParametersDto accountPaymentParametersDto, Integer savingsPaymentId, AccountPaymentEntity parentPayment)
             throws PersistenceException, AccountException {
     	
         final int accountId = accountPaymentParametersDto.getAccountId();
@@ -240,9 +241,24 @@ public class StandardAccountService implements AccountService {
         }
         paymentData.setComment(accountPaymentParametersDto.getComment());
         paymentData.setOverpaymentAmount(overpaymentAmount);
-
-        account.applyPayment(paymentData);
-
+        
+        if (account instanceof LoanBO && ((LoanBO)account).getParentAccount() != null && account.isGroupLoanAccount()) {
+            paymentData.setParentPayment(parentPayment);
+        }
+        
+        AccountPaymentEntity paymentEntity = account.applyPayment(paymentData);
+        
+        if (account instanceof LoanBO && ((LoanBO)account).getParentAccount() == null && account.isGroupLoanAccount()) {
+            for (Map.Entry<Integer, String> member : accountPaymentParametersDto.getMemberInfo().entrySet()) {
+                
+                AccountBO memberAcc = this.legacyAccountDao.getAccount(member.getKey());
+                AccountPaymentParametersDto memberAccountPaymentParametersDto = new AccountPaymentParametersDto(accountPaymentParametersDto.getUserMakingPayment(),
+                        new AccountReferenceDto(memberAcc.getAccountId()), new BigDecimal(member.getValue()), accountPaymentParametersDto.getPaymentDate(), accountPaymentParametersDto.getPaymentType(),
+                        accountPaymentParametersDto.getComment(), accountPaymentParametersDto.getReceiptDate(), accountPaymentParametersDto.getReceiptId(), memberAcc.getCustomer().toCustomerDto());
+                makePaymentNoCommit(memberAccountPaymentParametersDto, savingsPaymentId, paymentEntity);
+            }
+        }
+        
         this.legacyAccountDao.createOrUpdate(account);
     }
     
