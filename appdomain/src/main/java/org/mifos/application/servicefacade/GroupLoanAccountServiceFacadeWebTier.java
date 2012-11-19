@@ -704,7 +704,7 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
                                      loan.getMaxMinNoOfInstall().getMinNoOfInstall(), loan.getMaxMinNoOfInstall().getMaxNoOfInstall(),
                                      loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), collateralTypeName, loan.getCollateralNote(),loan.getExternalId(),
                                      accountFeesDtos, loan.getCreatedDate(), loanPerformanceHistory,
-                                     loan.getCustomer().isGroup(), getRecentActivityViewForGroupLoan(globalAccountNum), activeSurveys, accountSurveys,
+                                     loan.getCustomer().isGroup(), getRecentActivityView(globalAccountNum), activeSurveys, accountSurveys,
                                      loan.getCustomer().getDisplayName(), loan.getCustomer().getGlobalCustNum(), loan.getOffice().getOfficeName(), recentNoteDtos,
                                      accountPenaltiesDtos);
     }
@@ -803,31 +803,20 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
         }
     }
     
-    private List<LoanActivityDto> getRecentActivityViewForGroupLoan(final String globalAccountNumber) {
-        LoanBO loanBO = loanDao.findByGlobalAccountNum(globalAccountNumber);
-        List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
-        for (LoanBO member : loanBO.getMemberAccounts()) {
-            for (LoanActivityEntity memberActivEntity : member.getLoanActivityDetails()) {
-                if (!memberActivEntity.getComments().equalsIgnoreCase(Constants.TYPE_LOAN_DISBURSAL) &&
-                        !memberActivEntity.getComments().contains(Constants.TYPE_FEE_PENALTY_APPLIED)) {
-                    loanAccountActivityDetails.add(memberActivEntity);
-                }
-            }
-        }
-        Collections.sort(loanAccountActivityDetails, new LoanActivityEntityDataComperable());
-        Collections.reverse(loanAccountActivityDetails);
-        
-        List<LoanActivityDto> recentActivityView = new ArrayList<LoanActivityDto>();
-
-        int count = 0;
-        for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
-            recentActivityView.add(getLoanActivityView(loanActivity));
-            if (++count == 3) {
-                break;
-            }
-        }
-        return recentActivityView;
-    }
+    private List<LoanActivityDto> getRecentActivityView(final String globalAccountNumber) {
+         LoanBO loanBO = loanDao.findByGlobalAccountNum(globalAccountNumber);
+         List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
+         List<LoanActivityDto> recentActivityView = new ArrayList<LoanActivityDto>();
+ 
+         int count = 0;
+         for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
+             recentActivityView.add(getLoanActivityView(loanActivity));
+             if (++count == 3) {
+                 break;
+             }
+         }
+         return recentActivityView;
+     }
 
     private LoanActivityDto getLoanActivityView(final LoanActivityEntity loanActivity) {
         LoanActivityDto loanActivityDto = new LoanActivityDto();

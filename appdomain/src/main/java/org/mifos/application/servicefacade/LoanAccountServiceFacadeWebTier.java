@@ -1409,43 +1409,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
             loanActivityViewSet.add(loanActivity.toDto());
         }
-        //only for new group loan account
-        if (loan.isGroupLoanAccount() && null == loan.getParentAccount()) {
-            Money interestOutstanding = loanAccountActivityDetails.get(0).getInterestOutstanding();
-            Money principalOutstanding = loanAccountActivityDetails.get(0).getPrincipalOutstanding();
-            Money feeOutstanding = loanAccountActivityDetails.get(0).getFeeOutstanding();
-            Money penaltyOutstanding =  loanAccountActivityDetails.get(0).getPenaltyOutstanding();
-            List<LoanBO> members = new ArrayList<LoanBO>(loan.getMemberAccounts());
-            loanAccountActivityDetails = new ArrayList<LoanActivityEntity>();
-            for (LoanBO member : members) {
-                for (LoanActivityEntity accActivity : member.getLoanActivityDetails()) {
-                    if (!accActivity.getComments().equals(LOAN_DISBURSAL)) {
-                        loanAccountActivityDetails.add(accActivity);
-                    }
-                }
-            }
-            Collections.sort(loanAccountActivityDetails, new LoanActivityEntityDataComperable());
-               
-            for (LoanActivityEntity accActivity : loanAccountActivityDetails) {
-                if (accActivity.getComments().equals(PAYMENT_RCVD) || accActivity.getComments().equals(LOAN_REPAYMENT)) {
-                    interestOutstanding = interestOutstanding.subtract(accActivity.getInterest());
-                    principalOutstanding = principalOutstanding.subtract(accActivity.getPrincipal());
-                    feeOutstanding = feeOutstanding.subtract(accActivity.getFee());
-                    penaltyOutstanding = penaltyOutstanding.subtract(accActivity.getPenalty());
-                    loanActivityViewSet.add(accActivity.sumGroupToDto(interestOutstanding, principalOutstanding, feeOutstanding, penaltyOutstanding));
-                }
-                else if (accActivity.getComments().equals(LOAN_ADJUSTED)) {
-                    interestOutstanding = interestOutstanding.add(accActivity.getInterest());
-                    principalOutstanding = principalOutstanding.add(accActivity.getPrincipal());
-                    feeOutstanding = feeOutstanding.add(accActivity.getFee());
-                    penaltyOutstanding = penaltyOutstanding.add(accActivity.getPenalty());
-                    loanActivityViewSet.add(accActivity.sumGroupToDto(interestOutstanding, principalOutstanding, feeOutstanding, penaltyOutstanding));
-                }
-                
-            }
-            Collections.reverse(loanActivityViewSet);
-        }
-        
         return loanActivityViewSet;
     }
     
