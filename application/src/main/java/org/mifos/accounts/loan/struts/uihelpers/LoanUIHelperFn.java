@@ -74,8 +74,14 @@ public class LoanUIHelperFn {
                 accountState)) {
             return false;
         }
-        if (Arrays.asList(AccountState.LOAN_APPROVED, AccountState.LOAN_ACTIVE_IN_BAD_STANDING,
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING).contains(accountState)) {
+        if (Arrays.asList(AccountState.LOAN_ACTIVE_IN_BAD_STANDING,
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING).contains(accountState)){
+            return Arrays.asList("clientDetails.loanAmount",
+                    "clientDetails.clientId",
+                    "repaymentDay"
+                    ).contains(fieldName);
+        }
+        else if (accountState.equals(AccountState.LOAN_APPROVED)) {
             // disabling only the GLIM parts of the loan
             return Arrays.asList("clientDetails.loanAmount", "clientDetails.clientId"
             // ,"noOfInstallments",
