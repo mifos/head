@@ -48,6 +48,10 @@ public class LoanAccountPage extends MifosPage {
         this.verifyPage("LoanAccountDetail");
     }
 
+    public void verifyFrequencyInstallments(String expectedFrequency){
+        Assert.assertEquals(selenium.getText("LoanAccountDetail.text.freq_of_inst"), expectedFrequency);
+    }
+    
     public void verifyFeeExists(String expectedFee) {
         Assert.assertEquals(selenium.getText("LoanAccountDetail.text.loanFees"), expectedFee);
     }
