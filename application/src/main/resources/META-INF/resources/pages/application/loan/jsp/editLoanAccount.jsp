@@ -303,9 +303,9 @@ explanation of the license and how it is applied.
 												name="meeting.labelRecurEvery" bundle="MeetingResources" />
 
 
-											<mifos:mifosnumbertext styleId="loancreationdetails.input.weekFrequency" property="recurWeek" size="3"  maxlength="3"/> <span id="loancreationdetails.label.weekFrequency"><mifos:mifoslabel
+											<mifos:mifosnumbertext styleId="loancreationdetails.input.weekFrequency" property="recurWeek" size="3"  maxlength="3" disabled="${loanfn:isDisabledWhileEditingGlim('repaymentDay',accountState)}"/> <span id="loancreationdetails.label.weekFrequency"><mifos:mifoslabel
 												name="meeting.labelWeeks" bundle="MeetingResources" /></span> 
-												<mifos:select property="weekDay">
+												<mifos:select property="weekDay" disabled="${loanfn:isDisabledWhileEditingGlim('repaymentDay',accountState)}"> 
 													<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
 															<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
 													</c:forEach>
