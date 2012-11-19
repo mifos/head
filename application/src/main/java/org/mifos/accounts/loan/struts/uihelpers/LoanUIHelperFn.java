@@ -85,6 +85,7 @@ public class LoanUIHelperFn {
                     // "collateralNotes",
                     // "customField","disbursementDate",
                     // "weekDayId", "ordinalOfMonth"
+                        ,"repaymentDay"
                     ).contains(fieldName);
         }
         return true;

@@ -365,8 +365,10 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<br>
 							<span class="fontnormalbold"> <mifos:mifoslabel
 								name="loan.repaymentRules" /> </span><br>
-							<mifos:mifoslabel name="loan.freq_of_inst" />:&nbsp;<c:out
-								value="${loanInformationDto.recurAfter}" />
+							<mifos:mifoslabel name="loan.freq_of_inst" />:&nbsp;
+                                <span id="LoanAccountDetail.text.freq_of_inst"><c:out
+								    value="${loanInformationDto.recurAfter}"  /> 
+                                </span> 
 							<c:choose>
 								<c:when
 									test="${loanInformationDto.recurrenceId == '1'}">
