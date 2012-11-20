@@ -51,8 +51,7 @@ explanation of the license and how it is applied.
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'adjAmount')}" var="adjAmount" />
 
             <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'adjustmentPaymentType')}" var="adjustmentPaymentType" />
-            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'typeOfGroupLoan')}" var="typeOfGroupLoan" />
-            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'redirectToParentAcc')}" var="redirectToParentAcc"/>
+            
             <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -247,7 +246,75 @@ explanation of the license and how it is applied.
                                     </c:otherwise>
 								</c:choose>
 					</table>	
-
+					
+				<%--	<table width="93%" border="0" cellpadding="3" cellspacing="0">
+						<tr class="fontnormal">
+							
+								
+								<c:choose>
+									<c:when test="${requestScope.method=='loadAdjustment'}">
+										<td width="27%" align="right" class="fontnormal">
+										<br>
+										<br>
+										<mifos:mifoslabel name="accounts.last_pmnt"/>:
+										<c:out value="${BusinessKey.lastPmntAmnt}"/>
+									</c:when>
+									<c:otherwise>
+										<td width="27%" align="right" class="fontnormalbold">
+										<mifos:mifoslabel name="accounts.amnt_tobe_adjusted" />:
+										<td >
+												
+											<c:out value="${BusinessKey.lastPmntAmnt}"/>
+										</td>	
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="${requestScope.method=='loadAdjustment' && sessionScope.applyAdjustmentActionForm.adjustcheckbox=='true'}">
+										<br>
+										<br>
+										<input id="applyadjustment.input.revertLastPayment" type="checkbox" name="adjustcheckbox" value="true" checked="true">
+										<span id="applyadjustment.label.revertLastPayment">
+										<mifos:mifoslabel name="accounts.chk_revert_last_pmnt" mandatory="yes"/></span>
+									</c:when>
+									<c:when test="${requestScope.method=='loadAdjustment'&& sessionScope.applyAdjustmentActionForm.adjustcheckbox=='false'}">
+										<br>
+										<br>
+										<input id="applyadjustment.input.revertLastPayment" type="checkbox" name="adjustcheckbox" value="true" >
+										<span id="applyadjustment.label.revertLastPayment">
+										<mifos:mifoslabel name="accounts.chk_revert_last_pmnt" mandatory="yes"/></span>
+									</c:when>
+								</c:choose>
+								<br>
+								<br>
+							</td>
+						</tr>	
+						<tr>	
+							
+			                	<c:choose>
+									<c:when test="${requestScope.method=='loadAdjustment'}">
+										<td width="5%" valign="top" align="right" class="fontnormal">
+											<span id="applyadjustment.label.note"><mifos:mifoslabel name="accounts.notes" mandatory="yes"/></span>:
+											<br>
+			    			            </td>
+						                <td width="95%" class="fontnormal">
+										<html-el:textarea styleId="applyadjustment.input.note"
+											property="adjustmentNote" cols="37" style="width:320px; height:110px;">
+										</html-el:textarea>
+									</c:when>
+									<c:otherwise>
+										<td width="5%" valign="top" align="right" class="fontnormalbold">
+											<mifos:mifoslabel name="accounts.notes" />:
+											<br>
+			    			            </td>
+						                <td width="95%" class="fontnormal">
+										<c:out value="${sessionScope.applyAdjustmentActionForm.adjustmentNote}"/>
+									</c:otherwise>
+								</c:choose>
+			                	
+			                </td>
+						</tr>
+					</table>
+				--%>
 					<table width="750" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center" class="blueline">&nbsp;
@@ -284,7 +351,7 @@ explanation of the license and how it is applied.
 								</c:choose>
 
 								 &nbsp; 
-								<html-el:button styleId="applyadjustment.button.cancel" styleClass="cancelbuttn" onclick="javascript:fun_cancel(this.form,'${typeOfGroupLoan}')" property="cancel">
+								<html-el:button styleId="applyadjustment.button.cancel" styleClass="cancelbuttn" onclick="javascript:fun_cancel()" property="cancel">
 									<mifos:mifoslabel name="accounts.cancel">
 									</mifos:mifoslabel>
 								</html-el:button></td>
@@ -295,15 +362,7 @@ explanation of the license and how it is applied.
 			</table>
 			<br>
  			<html-el:hidden property="method" value="${requestScope.method}"/>
- 			<c:choose>
- 			    <c:when test="${null != typeOfGroupLoan}">
- 			        <html-el:hidden property="globalAccountNum" value="${redirectToParentAcc}"/>
- 			    </c:when>
- 			    <c:otherwise>
- 			        <html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>
- 			    </c:otherwise>
- 			</c:choose>
- 			
+ 			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>
  			<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/>
             <html-el:hidden property="paymentId"/>
 </html-el:form>

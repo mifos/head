@@ -138,12 +138,6 @@ public class ApplyAdjustment extends BaseAction {
             appAdjustActionForm.setPaymentId(null);
             SessionUtils.setAttribute(Constants.ADJUSTED_AMOUNT, accnt.getLastPmntAmntToBeAdjusted(), request);
         }
-        
-        if (((LoanBO)accnt).isGroupLoanAccount()) {
-            SessionUtils.setAttribute(Constants.TYPE_OF_GROUP_LOAN, "newGlim", request);
-            SessionUtils.setAttribute("redirectToParentAcc", ((LoanBO)accnt).getParentAccount().getGlobalAccountNum(), request);
-        }
-        
         populateForm(appAdjustActionForm, payment);
         return mapping.findForward("loadadjustment_success");
     }
@@ -162,30 +156,24 @@ public class ApplyAdjustment extends BaseAction {
             }
         }
         
+        List<AccountPaymentEntity> payments = accnt.getAccountPayments();
         ArrayList<AdjustablePaymentDto> adjustablePayments = new ArrayList<AdjustablePaymentDto>();
-        List<LoanBO> members = new ArrayList<LoanBO>();
-        if (((LoanBO)accnt).isGroupLoanAccount() && null == ((LoanBO)accnt).getParentAccount()) {
-                members.addAll(((LoanBO)accnt).getMemberAccounts());
+        
+        int i = 1;
+        for (AccountPaymentEntity payment : payments) {
+            //ommit disbursal payment
+            if (!payment.getAmount().equals(Money.zero()) && i != payments.size()) {
+                AdjustablePaymentDto adjustablePaymentDto = new AdjustablePaymentDto(payment.getPaymentId(), payment.getAmount(), 
+                        payment.getPaymentType().getName(), payment.getPaymentDate(), payment.getReceiptDate(), payment.getReceiptNumber());
+                
+                adjustablePayments.add(adjustablePaymentDto);
+                if (decliningRecalculation) {
+                    break; //only last payment
+                }
+            }           
+            i++;
         }
-        else {
-            members.add(((LoanBO)accnt));
-        }
-        for (LoanBO member : members) {
-            int i = 1;
-            for (AccountPaymentEntity payment : ((AccountBO)member).getAccountPayments()) {
-                //ommit disbursal payment
-                if (!payment.getAmount().equals(Money.zero()) && i != ((AccountBO)member).getAccountPayments().size()) {
-                    AdjustablePaymentDto adjustablePaymentDto = new AdjustablePaymentDto(payment.getPaymentId(), payment.getAmount(), 
-                            payment.getPaymentType().getName(), payment.getPaymentDate(), payment.getReceiptDate(), payment.getReceiptNumber(), member.getGlobalAccountNum());
-                    
-                    adjustablePayments.add(adjustablePaymentDto);
-                    if (decliningRecalculation) {
-                        break; //only last payment
-                    }
-                }           
-                i++;
-            }
-    }
+        
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
         SessionUtils.setAttribute(Constants.POSSIBLE_ADJUSTMENTS, adjustablePayments, request);
         request.setAttribute("method", "loadAdjustment");   
