@@ -22,4 +22,6 @@ package org.mifos.platform.questionnaire;
 
 public interface QGFlowsService {
     void applyToAllLoanProducts(Integer entityId);
+    boolean isAppliedToAllLoanProducts(Integer entityId);
+    void removeFromAllLoanProducts(Integer entityId);
 }

@@ -118,4 +118,17 @@ public class EditQuestionGroupPage extends CreateQuestionGroupRootPage {
 
         return new EditQuestionGroupPage(selenium);
     }
+
+    public boolean isApplayForAllLoansCheckboxChecked(){
+        return selenium.isChecked("applyToAllLoanProducts");
+    }
+
+    public void setApplayForAllLoansCheckbox(boolean val){
+        if (val){
+            selenium.check("applyToAllLoanProducts");
+        }
+        else{
+            selenium.uncheck("applyToAllLoanProducts");
+        }
+    }
 }

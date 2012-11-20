@@ -56,4 +56,49 @@ public class QGFlowsServiceImpl implements QGFlowsService {
             throw new SystemException(e);
         }
     }
+
+    @Override
+    public boolean isAppliedToAllLoanProducts(Integer questionGroupId) {
+        LoanPrdBusinessService loanPrdBusinessService = new LoanPrdBusinessService();
+
+        try {
+            List<LoanOfferingBO> offerings = loanPrdBusinessService.getAllLoanOfferings((short)1);
+            if (offerings.size() > 0) {
+                QuestionGroupReference questionGroupReference = new QuestionGroupReference();
+                questionGroupReference.setQuestionGroupId(questionGroupId);
+
+                for (LoanOfferingBO offering : offerings) {
+                    if(!offering.getQuestionGroups().contains(questionGroupReference))
+                        return false;
+                }
+            }
+        } catch (ServiceException e) {
+            throw new SystemException(e);
+        }
+        return true;
+    }
+
+    @Override
+    public void removeFromAllLoanProducts(Integer questionGroupId) {
+        LoanPrdBusinessService loanPrdBusinessService = new LoanPrdBusinessService();
+
+        try {
+            List<LoanOfferingBO> offerings = loanPrdBusinessService.getAllLoanOfferings((short)1);
+            if (offerings.size() > 0) {
+                QuestionGroupReference questionGroupReference = new QuestionGroupReference();
+                questionGroupReference.setQuestionGroupId(questionGroupId);
+
+                for (LoanOfferingBO offering : offerings) {
+                    offering.getQuestionGroups().remove(questionGroupReference);
+                    offering.save();
+                }
+
+                StaticHibernateUtil.commitTransaction();
+            }
+        } catch (ServiceException e) {
+            throw new SystemException(e);
+        } catch (ProductDefinitionException e) {
+            throw new SystemException(e);
+        }
+    }
 }
