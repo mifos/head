@@ -302,7 +302,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         try {
             AccountBO account = new AccountBusinessService().getAccount(accountId);
             
-            if (account instanceof LoanBO) {
+            if (account instanceof LoanBO && !account.isGroupLoanAccount()) {
                 List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(account.getAccountId());
 
                 if (individualLoans != null && individualLoans.size() > 0) {
@@ -664,15 +664,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                     PenaltyBO penalty = this.penaltyDao.findPenaltyById(chargeId.intValue());
                     individual.addAccountPenalty(new AccountPenaltiesEntity(individual, penalty, chargeAmount));
                 } else {
-                    FeeBO fee = this.feeDao.findById(chargeId);
-
-                    if (fee instanceof RateFeeBO) {
-                        individual.applyCharge(chargeId, chargeAmount);
-                    } else {
-                        Double radio = individual.getLoanAmount().getAmount().doubleValue()
-                                / ((LoanBO) parentAccount).getLoanAmount().getAmount().doubleValue();
-                        individual.applyCharge(chargeId, chargeAmount * radio);
-                    }
+                    individual.applyCharge(chargeId, chargeAmount);
                 }
             }
             
