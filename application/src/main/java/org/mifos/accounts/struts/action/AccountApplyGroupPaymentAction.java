@@ -184,36 +184,35 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
         String paymentType = request.getParameter(Constants.INPUT);
+        Integer accountId = Integer.valueOf(actionForm.getAccountId());
         UserReferenceDto userReferenceDto = new UserReferenceDto(userContext.getId());
         
-        AccountPaymentDto accountPaymentDto = null;
-        for (Map.Entry<Integer, String> accountValue : actionForm.getIndividualValues().entrySet()) {
-            accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(accountValue.getKey(), paymentType,
-                    userContext.getLocaleId(), userReferenceDto, actionForm.getTrxnDate());
+        AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(accountId, paymentType,
+                userContext.getLocaleId(), userReferenceDto, actionForm.getTrxnDate());
 
-            validateAccountPayment(accountPaymentDto, accountValue.getKey(), request);
-            validateAmount(accountPaymentDto, accountValue.getValue());
+        validateAccountPayment(accountPaymentDto, accountId, request);
+        validateAmount(accountPaymentDto, actionForm.getAmount());
 
-            PaymentTypeDto paymentTypeDto;
-            if (accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT) ||
-                    accountPaymentDto.getAccountType().equals(AccountTypeDto.GROUP_LOAN_ACCOUNT)) {
-                paymentTypeDto = getLoanPaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
-            } else {
-                paymentTypeDto = getFeePaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
-            }
-            
-            AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(userReferenceDto,
-                    new AccountReferenceDto(accountValue.getKey()), new BigDecimal(accountValue.getValue()), actionForm.getTrxnDateAsLocalDate(),
-                    paymentTypeDto, AccountConstants.NO_COMMENT, actionForm.getReceiptDateAsLocalDate(),
-                    actionForm.getReceiptId(), accountPaymentDto.getCustomerDto());
-    
-            if (paymentTypeDto.getValue().equals(this.legacyAcceptedPaymentTypeDao.getSavingsTransferId())) {
-                this.accountServiceFacade.makePaymentFromSavingsAcc(accountPaymentParametersDto,
-                        actionForm.getAccountForTransfer());
-            } else {
-                this.accountServiceFacade.makePayment(accountPaymentParametersDto);
-            }
+        PaymentTypeDto paymentTypeDto;
+        String amount = actionForm.getAmount();
+        if (accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT)) {
+            paymentTypeDto = getLoanPaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
+        } else {
+            paymentTypeDto = getFeePaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
         }
+
+        AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(userReferenceDto,
+                new AccountReferenceDto(accountId), new BigDecimal(amount), actionForm.getTrxnDateAsLocalDate(),
+                paymentTypeDto, AccountConstants.NO_COMMENT, actionForm.getReceiptDateAsLocalDate(),
+                actionForm.getReceiptId(), accountPaymentDto.getCustomerDto(), actionForm.getIndividualValues());
+
+        if (paymentTypeDto.getValue().equals(this.legacyAcceptedPaymentTypeDao.getSavingsTransferId())) {
+            this.accountServiceFacade.makePaymentFromSavingsAcc(accountPaymentParametersDto,
+                    actionForm.getAccountForTransfer());
+        } else {
+            this.accountServiceFacade.makePayment(accountPaymentParametersDto);
+        }
+        
         request.getSession().setAttribute("globalAccountNum", ((AccountApplyPaymentActionForm) form).getGlobalAccountNum());
         
         ActionForward findForward;

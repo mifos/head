@@ -192,16 +192,13 @@ public class GroupLoanAccountAction extends AccountAppAction{
                 MasterConstants.COLLATERAL_TYPES).getCustomValueListElements(), request);
         SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION, loanBusinessService.getLastPaymentAction(loanInformationDto.getAccountId()), request);
         SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
-        // inject preferred date
+        
         List<LoanActivityDto> activities = loanInformationDto.getRecentAccountActivity();
-        for(LoanInformationDto memberDto: memberloanInformationDtos) {
-            List<LoanActivityDto> recentAccountActivity = memberDto.getRecentAccountActivity();
-            activities.addAll(recentAccountActivity);
-        }
         for (LoanActivityDto activity : activities) {
             activity.setUserPrefferedDate(DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), activity.getActionDate().toString()));
         }
-        SessionUtils.removeAttribute(RECENTACCOUNTACTIVITIES, request);
+        
+        SessionUtils.removeAttribute(RECENTACCOUNTACTIVITIES, request.getSession());
         SessionUtils.setCollectionAttribute(RECENTACCOUNTACTIVITIES, activities, request);
 
         request.setAttribute(CustomerConstants.SURVEY_KEY, loanInformationDto.getAccountSurveys());
@@ -221,6 +218,7 @@ public class GroupLoanAccountAction extends AccountAppAction{
         
         LoanBO loan = getLoan(loanInformationDto.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+        LoanAccountAction.setSessionAtributeForGLIM(request, loan);
         setCurrentPageUrl(request, loan);
         setQuestionGroupInstances(request, loan);
         setOverpayments(request, loan);
@@ -241,6 +239,7 @@ public class GroupLoanAccountAction extends AccountAppAction{
         Date viewDate = loanAccountActionForm.getScheduleViewDateValue(locale);
         
         LoanBO groupLoan = getLoan(grouploanId);
+        LoanAccountAction.setSessionAtributeForGLIM(request, groupLoan);
         groupLoan.updateDetails(userContext);
         Errors errors = loanBusinessService.computeExtraInterest(groupLoan, viewDate);
         if (errors.hasErrors()) {

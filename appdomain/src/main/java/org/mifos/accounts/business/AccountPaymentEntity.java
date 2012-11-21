@@ -59,6 +59,7 @@ public class AccountPaymentEntity extends AbstractEntity {
     private PersonnelBO createdByUser;
     private String comment;
     private AccountPaymentEntity otherTransferPayment;
+    private AccountPaymentEntity parentPaymentId;
 
     private Set<AccountTrxnEntity> accountTrxns = new LinkedHashSet<AccountTrxnEntity>();
 
@@ -88,6 +89,21 @@ public class AccountPaymentEntity extends AbstractEntity {
         this.voucherNumber = null;
         this.checkNumber = null;
         this.otherTransferPayment = null;
+    }
+    
+    public AccountPaymentEntity(final AccountBO account, final Money amount, final String receiptNumber, final Date receiptDate,
+            final PaymentTypeEntity paymentType, final Date paymentDate, AccountPaymentEntity parentPaymentId) {
+        this.paymentDate = paymentDate;
+        this.account = account;
+        this.receiptNumber = receiptNumber;
+        this.paymentType = paymentType;
+        this.receiptDate = receiptDate;
+        this.amount = amount;
+        this.bankName = null;
+        this.voucherNumber = null;
+        this.checkNumber = null;
+        this.otherTransferPayment = null;
+        this.parentPaymentId = parentPaymentId;
     }
 
     public Integer getPaymentId() {
@@ -210,6 +226,14 @@ public class AccountPaymentEntity extends AbstractEntity {
 
     public void setAccount(AccountBO account) {
         this.account = account;
+    }
+
+    public AccountPaymentEntity getParentPaymentId() {
+        return parentPaymentId;
+    }
+
+    public void setParentPaymentId(AccountPaymentEntity parentPaymentId) {
+        this.parentPaymentId = parentPaymentId;
     }
 
     public boolean isSavingsDepositOrWithdrawal() {

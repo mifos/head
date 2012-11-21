@@ -1034,4 +1034,14 @@
            </sql>
        </rollback>
    </changeSet>
+   <changeSet id="MIFOS_5628_2" author="Kamil Kalfas">
+       <sql endDelimiter=";">
+           ALTER TABLE account_payment ADD parent_payment_id smallint;
+       </sql>
+       <rollback>
+           <sql endDelimiter=";">
+             ALTER TABLE account_payment DROP parent_payment_id;
+           </sql>
+       </rollback>
+   </changeSet>
 </databaseChangeLog>

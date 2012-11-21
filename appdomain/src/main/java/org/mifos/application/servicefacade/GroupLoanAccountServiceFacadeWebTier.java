@@ -61,6 +61,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.util.helpers.LoanActivityEntityDataComperable;
 import org.mifos.clientportfolio.loan.service.RecurringSchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateGroupLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
@@ -100,6 +101,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.cashflow.CashFlowService;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
@@ -800,21 +802,21 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             throw new MifosRuntimeException(e.toString());
         }
     }
-
+    
     private List<LoanActivityDto> getRecentActivityView(final String globalAccountNumber) {
-        LoanBO loanBO = loanDao.findByGlobalAccountNum(globalAccountNumber);
-        List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
-        List<LoanActivityDto> recentActivityView = new ArrayList<LoanActivityDto>();
-
-        int count = 0;
-        for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
-            recentActivityView.add(getLoanActivityView(loanActivity));
-            if (++count == 3) {
-                break;
-            }
-        }
-        return recentActivityView;
-    }
+         LoanBO loanBO = loanDao.findByGlobalAccountNum(globalAccountNumber);
+         List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
+         List<LoanActivityDto> recentActivityView = new ArrayList<LoanActivityDto>();
+ 
+         int count = 0;
+         for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
+             recentActivityView.add(getLoanActivityView(loanActivity));
+             if (++count == 3) {
+                 break;
+             }
+         }
+         return recentActivityView;
+     }
 
     private LoanActivityDto getLoanActivityView(final LoanActivityEntity loanActivity) {
         LoanActivityDto loanActivityDto = new LoanActivityDto();

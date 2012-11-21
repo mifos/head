@@ -75,16 +75,6 @@ public class AccountAppAction extends BaseAction {
         List<TransactionHistoryDto>  transactionHistoryDto = this.centerServiceFacade.retrieveAccountTransactionHistory(globalAccountNum);
         
         if  (accountBO.isGroupLoanAccount() && null == ((LoanBO)accountBO).getParentAccount()) {
-            for (LoanBO memberAcc: ((LoanBO)accountBO).getMemberAccounts()) {
-                List<TransactionHistoryDto> memberHistory = this.centerServiceFacade.retrieveAccountTransactionHistory(memberAcc.getGlobalAccountNum());
-                for (TransactionHistoryDto trxnDto : memberHistory) {
-                    if (!trxnDto.getType().equalsIgnoreCase(LOAN_DISBURSMENT)) {
-                        transactionHistoryDto.add(trxnDto);
-                    }
-                }
-            }
-            Collections.sort(transactionHistoryDto, new TransactionHistoryDtoComperator());
-            Collections.reverse(transactionHistoryDto);
             SessionUtils.setAttribute(Constants.TYPE_OF_GROUP_LOAN, "parentAcc", request);
         }
         else if (accountBO.isGroupLoanAccount() && null != ((LoanBO)accountBO).getParentAccount()) {

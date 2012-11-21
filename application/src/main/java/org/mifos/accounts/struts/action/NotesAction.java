@@ -56,7 +56,7 @@ public class NotesAction extends SearchAction {
         Integer accountId = Integer.valueOf(notesActionForm.getAccountId());
         AccountBO account = new AccountBusinessService().getAccount(accountId);
 
-        if (account.isLoanAccount()) {
+        if (account.isLoanAccount() || account.isGroupLoanAccount()) {
             LoanAccountDetailDto loanAccountDto = this.loanAccountServiceFacade.retrieveLoanAccountNotes(accountId.longValue());
 
             notesActionForm.setAccountTypeId(AccountTypes.LOAN_ACCOUNT.getValue().toString());
@@ -68,7 +68,7 @@ public class NotesAction extends SearchAction {
             notesActionForm.setAccountTypeId(AccountTypes.SAVINGS_ACCOUNT.getValue().toString());
             notesActionForm.setGlobalAccountNum(savingsAccountDto.getGlobalAccountNum());
         }
-
+        
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 

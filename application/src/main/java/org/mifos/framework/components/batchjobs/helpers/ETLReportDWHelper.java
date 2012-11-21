@@ -50,24 +50,29 @@ public class ETLReportDWHelper extends TaskHelper {
             String jarPath = configPath + "/ETL/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
             String javaHome = System.getProperty("java.home") + "/bin/java"; 
             String pathToLog = configPath + "/ETL/log"; 
-            String cmd = "-jar " + jarPath + " " + path + " false";   
+
             if (File.separatorChar == '\\') { // windows platform
                 javaHome=javaHome.replaceAll("/", "\\\\");
                 javaHome='"'+javaHome+'"';
-                cmd = cmd.replaceAll("/", "\\\\");
+                jarPath = jarPath.replaceAll("/", "\\\\");
+                path = path.replaceAll("/", "\\\\");
+                pathToLog = pathToLog.replaceAll("/", "\\\\");
             }
+            PrintWriter fw = null;
             try {
             	boolean hasErrors = false;
             	boolean notRun = true;
-            	cmd = javaHome +" "+ cmd +" "+ dsDW.getUsername() + " " + dsDW.getPassword() + " " + dsDW.getUrl();
-                Process p = Runtime.getRuntime().exec(cmd);
+            	ProcessBuilder processBuilder = new ProcessBuilder(javaHome, "-jar", jarPath, path, "false",
+            	        dsDW.getUsername(), dsDW.getPassword(), dsDW.getUrl());
+            	processBuilder.redirectErrorStream(true);
+                Process p = processBuilder.start();
                 BufferedReader reader = new BufferedReader (new InputStreamReader(p.getInputStream()));
                 String line =null;
 				if (new File(pathToLog).exists()) {
 					new File(pathToLog).delete();
 				}
 				File file = new File(pathToLog);
-				PrintWriter fw = new PrintWriter(file);
+				fw = new PrintWriter(file);
                 while ((line = reader.readLine()) != null) {
                 	fw.println(line);
                 	if (line.matches("^ERROR.*")) {
@@ -75,7 +80,6 @@ public class ETLReportDWHelper extends TaskHelper {
                 	}
                 	notRun=false;
                 }
-                fw.close();
                 if (notRun) {
                 	errors.add("Data Warehouse is not configured properly");
             		throw new BatchJobException("Data warehouse database", errors);
@@ -86,6 +90,10 @@ public class ETLReportDWHelper extends TaskHelper {
                 }
             } catch (IOException ex) {
             	throw new BatchJobException(ex.getCause());
+            } finally {
+                if (fw != null) {
+                    fw.close();
+                }
             }
 		} else {
 			errors.add("Data Warehouse is not configured");
