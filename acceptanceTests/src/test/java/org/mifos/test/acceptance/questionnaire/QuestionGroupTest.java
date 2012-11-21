@@ -96,6 +96,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private static final String SECTION_MISSING = "Please add at least one section.";
     private static final String QUESTION_MISSING = "Section should have at least one question.";
     public static final String APPLIES_TO_CREATE_CLIENT = "Create Client";
+    public static final String APPLIES_TO_CREATE_LOAN = "Create Loan";
     public static final String SECTION_DEFAULT = "Default";
     private static final String SECTION_MISC = "Misc";
     private static final int CREATE_OFFICE_QUESTION_GROUP_ID = 12;
@@ -161,6 +162,36 @@ public class QuestionGroupTest extends UiTestCaseBase {
             questionGroupTestHelper.markQuestionGroupAsInactive(qgTitle2);
             questionGroupTestHelper.markQuestionGroupAsInactive(qgTitle3);
         }
+    }
+    @Test(enabled=true)
+    public void createQuestionGroupForAllLoans() {
+        AdminPage adminPage = getAdminPage();
+        CreateQuestionGroupPage createQuestionGroupPage = getCreateQuestionGroupPage(adminPage);
+        String random = String.valueOf(Math.random());
+        CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
+        parameters.setTitle("QuestionGroupForAllLoans"+random);
+        parameters.setAppliesTo(APPLIES_TO_CREATE_LOAN);
+        parameters.setApplyToAllLoanProducts(true);
+        parameters.setAnswerEditable(false);
+        CreateQuestionParameters questionParameters = new CreateQuestionParameters();
+        questionParameters.setType("Free Text");
+        questionParameters.setText("QuestionForAllLoans"+random);
+        createQuestionGroupPage.setSection(SECTION_MISC);
+        createQuestionGroupPage.addNewQuestion(questionParameters);
+
+        createQuestionGroupPage.submit(parameters);
+        assertPage(AdminPage.PAGE_ID);
+        EditQuestionGroupPage editPage = questionGroupTestHelper.naviagateToEditQuestionGroup("QuestionGroupForAllLoans"+random);
+        if (!editPage.isApplayForAllLoansCheckboxChecked()){
+            Assert.fail();
+        }
+        editPage.setApplayForAllLoansCheckbox(false);
+        editPage.submit();
+        editPage  = questionGroupTestHelper.naviagateToEditQuestionGroup("QuestionGroupForAllLoans"+random);
+        if (editPage.isApplayForAllLoansCheckboxChecked()){
+            Assert.fail();
+        }
+        editPage.deactivate();
     }
     
     @Test(enabled = true)

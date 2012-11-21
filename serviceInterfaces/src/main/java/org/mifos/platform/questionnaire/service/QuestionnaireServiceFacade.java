@@ -85,5 +85,6 @@ public interface QuestionnaireServiceFacade {
     Integer createQuestion(QuestionDto questionDto);
 
     void applyToAllLoanProducts(Integer entityId);
+    void removeFromAllLoanProducts(Integer entityId);
     
 }

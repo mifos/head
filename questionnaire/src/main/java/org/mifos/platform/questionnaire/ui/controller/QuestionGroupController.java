@@ -131,9 +131,15 @@ public class QuestionGroupController extends QuestionnaireController {
                 else {
                     questionGroupId = questionnaireServiceFacade.createQuestionGroup(questionGroupForm.getQuestionGroupDetail());
                 }
-                if (containsCreateLoanEventSource(questionGroupForm.getEventSources()) && questionGroupForm.getApplyToAllLoanProducts()) {
-                    questionnaireServiceFacade.applyToAllLoanProducts(questionGroupId);
+                if (containsCreateLoanEventSource(questionGroupForm.getEventSources())){
+                    if (questionGroupForm.getApplyToAllLoanProducts()) {
+                        questionnaireServiceFacade.applyToAllLoanProducts(questionGroupId);
+                    }
+                    else if (!createMode){
+                        questionnaireServiceFacade.removeFromAllLoanProducts(questionGroupId);
+                    }
                 }
+
             }
             catch (AccessDeniedException e) {
                 constructAndLogSystemError(requestContext.getMessageContext(),

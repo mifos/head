@@ -63,6 +63,7 @@ public class QuestionGroupForm extends ScreenObject {
     public QuestionGroupForm(QuestionGroupDetail questionGroupDetail) {
         this.questionGroupDetail = questionGroupDetail;
         this.sections = initSections();
+        this.applyToAllLoanProducts=questionGroupDetail.isApplyToAllLoanProducts();
     }
 
     public QuestionGroupDetail getQuestionGroupDetail() {
@@ -461,6 +462,7 @@ public class QuestionGroupForm extends ScreenObject {
     public void setQuestionGroupDetail(QuestionGroupDetail questionGroupDetail) {
         this.questionGroupDetail = questionGroupDetail;
         this.sections = initSections();
+        this.applyToAllLoanProducts=questionGroupDetail.isApplyToAllLoanProducts();
     }
 
     private List<SectionDetailForm> initSections() {

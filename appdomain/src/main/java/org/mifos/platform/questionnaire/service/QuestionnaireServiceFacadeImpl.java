@@ -120,7 +120,10 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         if(!checkAccessToQuestionGroup(questionGroupId)) {
             throw new AccessDeniedException("Access denied");
         }
-        return questionnaireService.getQuestionGroup(questionGroupId);
+        QuestionGroupDetail questionGroupDetail = questionnaireService.getQuestionGroup(questionGroupId);
+        if (qgFlowsService!=null && qgFlowsService.isAppliedToAllLoanProducts(questionGroupDetail.getId()))
+            questionGroupDetail.setApplyToAllLoanProducts(true);
+        return questionGroupDetail;
     }
 
     @Override
@@ -257,6 +260,10 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         if (qgFlowsService != null) {
             qgFlowsService.applyToAllLoanProducts(entityId);
         }
+    }
+    @Override
+    public void removeFromAllLoanProducts(Integer entityId){
+        qgFlowsService.removeFromAllLoanProducts(entityId);
     }
 
     private EventSourceDto getEventSource(String event, String source) {

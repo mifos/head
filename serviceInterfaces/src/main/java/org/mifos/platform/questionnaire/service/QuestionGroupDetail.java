@@ -39,6 +39,7 @@ public class QuestionGroupDetail implements Serializable {
     private boolean editable;
     private boolean active;
     private boolean ppi;
+    private boolean applyToAllLoanProducts;
     private Short activityId;
 
     public QuestionGroupDetail() {
@@ -180,6 +181,14 @@ public class QuestionGroupDetail implements Serializable {
 
     public void setActivityId(Short activityId) {
         this.activityId = activityId;
+    }
+
+    public boolean isApplyToAllLoanProducts() {
+        return applyToAllLoanProducts;
+    }
+
+    public void setApplyToAllLoanProducts(boolean applyToAllLoanProducts) {
+        this.applyToAllLoanProducts = applyToAllLoanProducts;
     }
     
 }
