@@ -196,14 +196,18 @@ use "checkboxes" macro.
             [#list option.tags as tag]
                 [#assign id="${spring.status.expression}${option_index}${tag_index}"]
                 [#assign isSelected = spring.contains(spring.status.value?default([""]), option.value + ":" + tag)]
+                <li>
                 <input type="checkbox" id="${id}" name="${spring.status.expression}" value="${option.value?html}:${tag?html}"[#if isSelected] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
                 <label for="${id}" choice="${option.value}" tag="${tag}">${option.value?html}&nbsp;:&nbsp;${tag?html}</label>${separator}
+                </li>
             [/#list]
         [#else]
             [#assign id="${spring.status.expression}${option_index}"]
             [#assign isSelected = spring.contains(spring.status.value?default([""]), option.value)]
+            <li>
             <input type="checkbox" id="${id}" name="${spring.status.expression}" value="${option.value?html}"[#if isSelected] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
             <label for="${id}" choice="${option.value}" tag="">${option.value?html}</label>${separator}
+            </li>
         [/#if]
     [/#list]
     <input type="hidden" name="_${spring.status.expression}" value="on"/>
@@ -216,14 +220,18 @@ use "checkboxes" macro.
             [#list option.tags as tag]
                 [#assign id="${spring.status.expression}${option_index}${tag_index}"]
                 [#assign isSelected = spring.contains(spring.status.value?default([""]), option.value + ":" + tag)]
+                <li>
                 <input type="radio" id="${id}" name="${spring.status.expression}" value="${option.value?html}:${tag?html}"[#if isSelected] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
                 <label for="${id}" choice="${option.value}" tag="${tag}">${option.value?html}&nbsp;:&nbsp;${tag?html}</label>${separator}
+                </li>
             [/#list]
         [#else]
             [#assign id="${spring.status.expression}${option_index}"]
             [#assign isSelected = spring.contains(spring.status.value?default([""]), option.value)]
+            <li>
             <input type="radio" id="${id}" name="${spring.status.expression}" value="${option.value?html}"[#if isSelected] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
             <label for="${id}" choice="${option.value}" tag="">${option.value?html}</label>${separator}
+            </li>
         [/#if]
     [/#list]
     <input type="hidden" name="_${spring.status.expression}" value="on"/>
