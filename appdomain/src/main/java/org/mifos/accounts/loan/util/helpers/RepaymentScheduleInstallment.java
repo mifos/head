@@ -80,7 +80,7 @@ public class RepaymentScheduleInstallment implements Serializable {
     }
 
     public RepaymentScheduleInstallment init() {
-        return new RepaymentScheduleInstallment(1, null, new Money(Money.getDefaultCurrency(), new Double(0.0)),
+        return new RepaymentScheduleInstallment(1, new Date(), new Money(Money.getDefaultCurrency(), new Double(0.0)),
                 new Money(Money.getDefaultCurrency(), new Double(0.0)), new Money(Money.getDefaultCurrency(),
                         new Double(0.0)), new Money(Money.getDefaultCurrency(), new Double(0.0)), new Money(
                         Money.getDefaultCurrency(), new Double(0.0)));

@@ -1498,7 +1498,7 @@ public class ActivityMapper {
 
     private short getActivityIdForAddingNotes(AccountTypes accountTypes, CustomerLevel customerLevel) {
         short activityId = -1;
-        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
+        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT) || accountTypes.equals(AccountTypes.GROUP_LOAN_ACCOUNT)) {
             activityId = SecurityConstants.LOAN_CAN_ADD_NOTES_TO_LOAN;
         } else if (accountTypes.equals(AccountTypes.SAVINGS_ACCOUNT)) {
             activityId = SecurityConstants.SAVINGS_CAN_ADD_NOTES_TO_SAVINGS;

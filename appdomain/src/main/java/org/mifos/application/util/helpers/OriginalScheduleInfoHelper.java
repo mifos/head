@@ -53,10 +53,9 @@ public class OriginalScheduleInfoHelper {
         Date disburseDate = null;
         
         List<RepaymentScheduleInstallment> newRepayments = new ArrayList<RepaymentScheduleInstallment>();
-        RepaymentScheduleInstallment sumRepayment;
+        RepaymentScheduleInstallment sumRepayment = new RepaymentScheduleInstallment();
         for (OriginalScheduleInfoDto dto : originalScheduleInfoDtos) {
-            sumRepayment = new RepaymentScheduleInstallment();
-            sumRepayment.init();
+            sumRepayment = sumRepayment.init();
             Money dtoAmount = new Money(Money.getDefaultCurrency(), new Double(dto.getLoanAmount()));
             sumAmount = sumAmount.add(dtoAmount);
             for (RepaymentScheduleInstallment scheduleInstallment : dto.getOriginalLoanScheduleInstallment()) {

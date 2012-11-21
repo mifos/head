@@ -42,18 +42,17 @@ explanation of the license and how it is applied.
 	 goBackToAccountDetails.submit();
   }
   </script>
-<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
 <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoan')}" var="isGroupLoan" />
 <c:if test="${sessionScope.notesActionForm.accountTypeId == '1'}">
-	<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
+    <form name="goBackToAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+        <input type="hidden" name='globalAccountNum' value="${sessionScope.notesActionForm.globalAccountNum}"/>
+    </form>  
 </c:if>
 <c:if test="${sessionScope.notesActionForm.accountTypeId == '2'}">
-	<c:set value="viewSavingsAccountDetails.ftl" var="formAction" />
+    <form name="goBackToAccountDetails" method="get" action ="viewSavingsAccountDetails.ftl">
+        <input type="hidden" name='globalAccountNum' value="${sessionScope.notesActionForm.globalAccountNum}"/>
+    </form>  
 </c:if>
-<c:if test="${isGroupLoan }">
-	<c:set value="viewGroupLoanAccountDetails.ftl" var="formAction" />
-</c:if>
-<form name="goBackToAccountDetails" method="get" action ="${formAction }">
 <html-el:form action="notesAction.do?method=create">
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'AccountNotes')}"
 		   var="AccountNotes" />
