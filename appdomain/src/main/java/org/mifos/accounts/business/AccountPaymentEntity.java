@@ -61,6 +61,8 @@ public class AccountPaymentEntity extends AbstractEntity {
     private AccountPaymentEntity otherTransferPayment;
     private AccountPaymentEntity parentPaymentId;
 
+    //member payments from member loans from new group loan
+    private Set<AccountPaymentEntity> memberPayments = new LinkedHashSet<AccountPaymentEntity>(); 
     private Set<AccountTrxnEntity> accountTrxns = new LinkedHashSet<AccountTrxnEntity>();
 
     public static AccountPaymentEntity savingsInterestPosting(SavingsBO account, Money amount, Date paymentDate, PersonnelBO loggedInUser) {
@@ -178,6 +180,14 @@ public class AccountPaymentEntity extends AbstractEntity {
         this.otherTransferPayment = otherTransferPayment;
     }
 
+    public Set<AccountPaymentEntity> getMemberPayments() {
+        return memberPayments;
+    }
+
+    public void setMemberPayments(Set<AccountPaymentEntity> memberPayments) {
+        this.memberPayments = memberPayments;
+    }
+
     /**
      * Create reverse entries of all the transactions associated with this
      * payment and adds them to the set of transactions associated.
@@ -282,6 +292,10 @@ public class AccountPaymentEntity extends AbstractEntity {
         return loanDisbursment;
     }
 
+    public boolean hasParentPayment(){
+        return this.parentPaymentId != null;
+    }
+    
     public PaymentDto getOtherTransferPaymentDto() {
         return (otherTransferPayment == null) ? null :
             new PaymentDto(otherTransferPayment.getPaymentId(), otherTransferPayment.getAccount().getAccountId(),

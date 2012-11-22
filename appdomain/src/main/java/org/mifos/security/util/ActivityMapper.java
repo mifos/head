@@ -820,6 +820,7 @@ public class ActivityMapper {
         security.allow("loadAdjustmentWhenObligationMet", SecurityConstants.CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET);
         security.allow("listPossibleAdjustments", SecurityConstants.VIEW);
         security.allow("editAdjustment", SecurityConstants.VIEW);
+        security.allow("divide", SecurityConstants.VIEW);
         
         return security;
     }

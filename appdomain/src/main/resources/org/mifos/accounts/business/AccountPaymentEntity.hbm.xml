@@ -38,6 +38,11 @@
             lazy="no-proxy"/>
         <many-to-one name="parentPaymentId" column="parent_payment_id" class="org.mifos.accounts.business.AccountPaymentEntity" access="field" 
             lazy="no-proxy"/>
+            
+       	<set name="memberPayments" cascade="all" lazy="true" access="field">
+        	<key column="parent_payment_id" />
+           	<one-to-many class="org.mifos.accounts.business.AccountPaymentEntity"></one-to-many>
+       	</set>    
     </class>
     <query name="accountPayment.maxAccPayment">
         <![CDATA[from org.mifos.accounts.business.AccountPaymentEntity accpayment

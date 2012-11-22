@@ -7,8 +7,12 @@ function fun_back(){
 }
 
 function fn_submit(){
-	
-	if(document.getElementsByName("method")[0].value=='loadAdjustment'){
+	if(document.getElementsByName("method")[0].value=='loadAdjustment' && document.getElementsByName("typeOfGroupLoan")[0].value==='parentAcc'){
+		applyAdjustmentActionForm.method.value="divide";
+		applyAdjustmentActionForm.action="applyAdjustment.do?method=divide";
+		func_disableSubmitBtn("submit_btn");
+		return true;	
+	} else if(document.getElementsByName("method")[0].value=='loadAdjustment' || document.getElementsByName("method")[0].value=='divide'){
 
 /*		if(!document.getElementsByName("adjustcheckbox")[0].checked || trim(document.getElementsByName("adjustmentNote")[0].value)==''){
 		

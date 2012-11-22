@@ -864,7 +864,35 @@ public class AccountBO extends AbstractBusinessObject {
         }
         return result;
     }
-
+    
+    /**
+     *  For new group loan member payments, which are related to parent account payment by parentPaymentId. 
+     */
+    public AccountPaymentEntity findPaymentByParentPaymentId(final Integer parentPaymentId){
+        AccountPaymentEntity result = null;
+        for (AccountPaymentEntity payment : this.accountPayments) {
+            if (payment.hasParentPayment() && payment.getParentPaymentId().getPaymentId().equals(parentPaymentId)) {
+                result = payment;
+                break;
+            }
+        }
+        return result;
+    }
+    
+    /**
+     *  For new group loan member payments, which are related to parent account payment by parentPaymentId. 
+     */
+    public AccountPaymentEntity findParentPaymentByMemberPaymentId(final Integer memberPaymentId){
+        AccountPaymentEntity result = null;
+        for (AccountPaymentEntity payment : this.accountPayments) {
+            AccountPaymentEntity memberPayment = this.findPaymentById(memberPaymentId);
+            if (memberPayment.hasParentPayment()){
+                result = memberPayment.getParentPaymentId();
+            }
+        }
+        return result;
+    }
+    
     public AccountActionDateEntity getAccountActionDate(final Short installmentId) {
         if (null != accountActionDates && accountActionDates.size() > 0) {
             for (AccountActionDateEntity accntActionDate : accountActionDates) {
@@ -1879,6 +1907,16 @@ public class AccountBO extends AbstractBusinessObject {
         return isOfType(AccountTypes.GROUP_LOAN_ACCOUNT);
     }
 
+    // only for NOT-GLIM new group loans
+    public boolean isParentGroupLoanAccount(){
+        return this.isGroupLoanAccount() && ((LoanBO)this).hasMemberAccounts();
+    }
+    
+    // only for NOT-GLIM new group loans members
+    public boolean isGroupLoanAccountMember(){
+        return this.isGroupLoanAccount() && !((LoanBO)this).hasMemberAccounts();
+    }
+    
     public boolean isSavingsAccount() {
         return isOfType(SAVINGS_ACCOUNT);
     }

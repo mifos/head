@@ -93,6 +93,7 @@ import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.screen.AccountFeesDto;
 import org.mifos.dto.screen.AccountPenaltiesDto;
+import org.mifos.dto.screen.GroupLoanMemberAdjustmentDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.LoanPerformanceHistoryDto;
@@ -610,6 +611,43 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
         return memberAccountDtos;
     }
     
+    @Override
+    public List<GroupLoanMemberAdjustmentDto> retrieveMemberAdjustmentDtos(Integer parentAccountId, Integer parentPaymentId, BigDecimal newAmount) {
+        LoanBO parentLoanAccount = loanDao.findById(parentAccountId);
+        List<GroupLoanMemberAdjustmentDto> memberAdjustmentDtoList = new ArrayList<GroupLoanMemberAdjustmentDto>();  
+        
+        LoanBO memberAccount = null;
+        AccountPaymentEntity memberPayment = null;
+        BigDecimal currentAmount = null;
+        BigDecimal amountSpent = BigDecimal.ZERO;
+        
+        Iterator<LoanBO> itr = parentLoanAccount.getMemberAccounts().iterator();
+        while(itr.hasNext()) {
+            memberAccount = itr.next();
+            if(itr.hasNext()) {
+                currentAmount = newAmount.divide(memberAccount.calcFactorOfEntireLoan(), RoundingMode.HALF_UP);
+                memberPayment = memberAccount.findPaymentByParentPaymentId(parentPaymentId);
+                memberAdjustmentDtoList.add(new GroupLoanMemberAdjustmentDto(memberPayment.getPaymentId(), memberAccount.getAccountId(),
+                        memberPayment.getAmount().getAmount(), currentAmount, new LocalDate(memberPayment.getPaymentDate()),
+                        memberAccount.getGlobalAccountNum(), memberAccount.getCustomer().getGlobalCustNum(),
+                        memberAccount.getCustomer().getDisplayName()));
+                
+                amountSpent = amountSpent.add(currentAmount);
+            } else {
+                //last element
+                memberPayment = memberAccount.findPaymentByParentPaymentId(parentPaymentId);
+                memberAdjustmentDtoList.add(new GroupLoanMemberAdjustmentDto(memberPayment.getPaymentId(), memberAccount.getAccountId(),
+                        memberPayment.getAmount().getAmount(), newAmount.subtract(amountSpent), new LocalDate(memberPayment.getPaymentDate()),
+                        memberAccount.getGlobalAccountNum(), memberAccount.getCustomer().getGlobalCustNum(),
+                        memberAccount.getCustomer().getDisplayName()));
+            }
+        }
+        
+        Collections.sort(memberAdjustmentDtoList);
+        
+        return memberAdjustmentDtoList;
+    }
+
     @Override
     public LoanInformationDto retrieveLoanInformation(String globalAccountNum) {
 
