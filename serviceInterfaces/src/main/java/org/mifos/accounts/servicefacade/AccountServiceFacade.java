@@ -66,6 +66,9 @@ public interface AccountServiceFacade {
     void applyHistoricalAdjustment(String globalAccountNum, Integer paymentId, String adjustmentNote, Short personnelId, AdjustedPaymentDto adjustedPaymentDto);
     
     @PreAuthorize("isFullyAuthenticated()")
+    void applyMemberAccountHistoricalAdjustment(String memberGlobalAccountNum, Integer memberPaymentId, String adjustmentNote, Short personnelId, AdjustedPaymentDto adjustedPaymentDto);
+    
+    @PreAuthorize("isFullyAuthenticated()")
     List<ListItem<Short>> constructPaymentTypeListForLoanRepayment(Short localeId);
     
     @PreAuthorize("isFullyAuthenticated()")

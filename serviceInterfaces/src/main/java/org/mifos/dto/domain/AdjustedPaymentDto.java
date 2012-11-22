@@ -21,6 +21,7 @@ package org.mifos.dto.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class AdjustedPaymentDto implements Serializable {
 
@@ -30,6 +31,30 @@ public class AdjustedPaymentDto implements Serializable {
     private String amount;
     private Short paymentType;
     
+    private Integer accountId;
+    private List<AdjustedPaymentDto> memberPayments; 
+    
+    public AdjustedPaymentDto(final String amount, final Date paymentDate, final Short paymentType) {
+        this.paymentDate = (Date)paymentDate.clone();
+        this.amount = amount;
+        this.paymentType = paymentType;
+    }
+
+    public AdjustedPaymentDto(String amount, Date paymentDate,  Short paymentType, Integer accountId) {
+        this.paymentDate = (Date)paymentDate.clone();
+        this.amount = amount;
+        this.paymentType = paymentType;
+        this.accountId = accountId;
+    }
+    
+    public AdjustedPaymentDto(String amount, Date paymentDate, Short paymentType, Integer accountId,
+            List<AdjustedPaymentDto> memberPayments) {
+        this.paymentDate = (Date)paymentDate.clone();
+        this.amount = amount;
+        this.paymentType = paymentType;
+        this.accountId = accountId;
+        this.memberPayments = memberPayments;
+    }
     public Date getPaymentDate() {
         return (Date)paymentDate.clone();
     }
@@ -49,10 +74,20 @@ public class AdjustedPaymentDto implements Serializable {
         this.paymentType = paymentType;
     }
     
-    public AdjustedPaymentDto(final String amount, final Date paymentDate, final Short paymentType) {
-        this.amount = amount;
-        this.paymentDate = (Date)paymentDate.clone();
-        this.paymentType = paymentType;
+    public Integer getAccountId() {
+        return accountId;
+    }
+    
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
+    }
+    
+    public List<AdjustedPaymentDto> getMemberPayments() {
+        return memberPayments;
+    }
+    
+    public void setMemberPayments(List<AdjustedPaymentDto> memberPayments) {
+        this.memberPayments = memberPayments;
     }
     
 }

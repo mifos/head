@@ -23,10 +23,15 @@ package org.mifos.accounts.struts.actionforms;
 import static org.mifos.framework.util.helpers.DateUtils.getDateAsSentFromBrowser;
 
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -39,12 +44,15 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.dto.domain.AdjustedPaymentDto;
+import org.mifos.dto.screen.GroupLoanMemberAdjustmentDto;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
+
+import com.ibm.icu.math.BigDecimal;
 
 /**
  * This class is the action form for Applying adjustments.
@@ -57,6 +65,8 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
 
     private String adjustmentNote;
 
+    private Integer accountId;
+    
     private String globalAccountNum;
 
     private boolean adjustcheckbox;
@@ -81,6 +91,20 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
 
     private Date nextPaymentDate;
 
+    private List<GroupLoanMemberAdjustmentDto> memberAdjustmentDtoList;
+    
+    /**
+     * member adjustment new amounts
+     * Key - Member Account Id
+     * Value - Member New Amount
+     */
+    private Map<Integer, String> newAmounts = new HashMap<Integer, String>(); 
+    
+    /**
+     * NOT-GLIM new group loan member flag
+     */
+    private boolean groupLoanMember;
+    
     public Date getPreviousPaymentDate() {
         return previousPaymentDate;
     }
@@ -135,6 +159,14 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
 
     public void setAdjustmentNote(String adjustmentNote) {
         this.adjustmentNote = adjustmentNote;
+    }
+
+    public Integer getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
     }
 
     public String getGlobalAccountNum() {
@@ -194,6 +226,30 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
         this.transactionDateYY = transactionDateYY;
     }
 
+    public List<GroupLoanMemberAdjustmentDto> getMemberAdjustmentDtoList() {
+        return memberAdjustmentDtoList;
+    }
+
+    public void setMemberAdjustmentDtoList(List<GroupLoanMemberAdjustmentDto> memberAdjustmentDtoList) {
+        this.memberAdjustmentDtoList = memberAdjustmentDtoList;
+    }
+
+    public Map<Integer, String> getNewAmounts() {
+        return newAmounts;
+    }
+
+    public void setNewAmount(String accountId, String newAmount){
+        this.newAmounts.put(Integer.valueOf(accountId), newAmount);
+    }
+    
+    public boolean isGroupLoanMember() {
+        return groupLoanMember;
+    }
+
+    public void setGroupLoanMember(boolean groupLoanMemberFlag) {
+        this.groupLoanMember = groupLoanMemberFlag;
+    }
+
     protected Locale getUserLocale(HttpServletRequest request) {
         Locale locale = null;
         HttpSession session = request.getSession();
@@ -214,7 +270,6 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
     @Override
     public void reset(ActionMapping actionMapping, HttpServletRequest request) {
         this.adjustcheckbox = false;
-
     }
 
     @Override
@@ -331,8 +386,13 @@ public class ApplyAdjustmentActionForm extends BaseActionForm {
 
     public AdjustedPaymentDto getPaymentData() throws InvalidDateException {
         AdjustedPaymentDto adjustedPaymentDto = null;
-        if (adjustData) {
-            adjustedPaymentDto = new AdjustedPaymentDto(amount, getTrxnDate(), Short.parseShort(paymentType));
+        if (adjustData || isGroupLoanMember()) {
+            List<AdjustedPaymentDto> membersAdjustedPaymentDtoList = new ArrayList<AdjustedPaymentDto>();
+            for (Map.Entry<Integer, String> member : this.newAmounts.entrySet()) {
+                membersAdjustedPaymentDtoList.add(new AdjustedPaymentDto(member.getValue(), getTrxnDate(), Short.parseShort(paymentType), member.getKey()));
+            }
+            String newAmount = (adjustData) ? amount : BigDecimal.ZERO.toString(); 
+            adjustedPaymentDto = new AdjustedPaymentDto(newAmount, getTrxnDate(), Short.parseShort(paymentType), this.accountId, membersAdjustedPaymentDtoList);
         }
         return adjustedPaymentDto;
     }
