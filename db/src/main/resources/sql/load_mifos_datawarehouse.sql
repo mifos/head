@@ -28,16 +28,16 @@ CREATE TABLE `dim_customer` (
   `display_name` varchar(200) DEFAULT NULL,
   `customer_status` varchar(50) NOT NULL,
   `customer_level_id` smallint(6) NOT NULL,
-  `gender` varchar(15) DEFAULT NULL,
+  `gender` varchar(100) DEFAULT NULL,
   `date_of_birth` date DEFAULT NULL,
   `government_id` varchar(50) DEFAULT NULL,
   `num_children` smallint(6) DEFAULT NULL,
-  `business_activity` varchar(80) DEFAULT NULL,
-  `ethnicity` varchar(60) DEFAULT NULL,
-  `citizenship` varchar(60) DEFAULT NULL,
-  `handicapped` varchar(60) DEFAULT NULL,
-  `marital_status` varchar(60) DEFAULT NULL,
-  `education_level` varchar(60) DEFAULT NULL,
+  `business_activity` varchar(300) DEFAULT NULL,
+  `ethnicity` varchar(300) DEFAULT NULL,
+  `citizenship` varchar(300) DEFAULT NULL,
+  `handicapped` varchar(300) DEFAULT NULL,
+  `marital_status` varchar(300) DEFAULT NULL,
+  `education_level` varchar(300) DEFAULT NULL,
   `group_key` int(10) unsigned NOT NULL,
   `center_key` int(10) unsigned NOT NULL,
   `loan_officer_key` smallint(5) unsigned NOT NULL,
@@ -137,7 +137,7 @@ CREATE TABLE `dim_loan` (
   `loan_officer_key` smallint(5) unsigned NOT NULL,
   `branch_key` smallint(5) unsigned NOT NULL,
   `formed_by_loan_officer_key` smallint(5) unsigned NOT NULL,
-  `loan_status` varchar(50) NOT NULL,
+  `loan_status` varchar(100) NOT NULL,
   `disbursement_date` date DEFAULT NULL,
   `fund_id` smallint(6) DEFAULT NULL,
   `loan_amount` decimal(21,4) DEFAULT '0.0000',
@@ -147,7 +147,7 @@ CREATE TABLE `dim_loan` (
   `original_penalty` decimal(21,4) DEFAULT '0.0000',
   `no_of_installments` smallint(6) DEFAULT NULL,
   `meeting_recur_after` smallint(6) DEFAULT NULL,
-  `meeting_recurrence_name` varchar(20) DEFAULT NULL,
+  `meeting_recurrence_name` varchar(50) DEFAULT NULL,
   `valid_from` date NOT NULL DEFAULT '1900-01-01',
   `valid_to` date NOT NULL DEFAULT '2199-12-31',
   `last_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -470,9 +470,9 @@ DROP TABLE IF EXISTS `dw_fee`;
 CREATE TABLE `dw_fee` (
   `fee_id` smallint(6) NOT NULL,
   `fee_name` varchar(50) NOT NULL,
-  `category_type` varchar(30) NOT NULL,
-  `fee_frequency_type` varchar(30) NOT NULL,
-  `fee_payment` varchar(40) NOT NULL,
+  `category_type` varchar(100) NOT NULL,
+  `fee_frequency_type` varchar(100) NOT NULL,
+  `fee_payment` varchar(100) NOT NULL,
   PRIMARY KEY (`fee_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1308,16 +1308,16 @@ DROP TABLE IF EXISTS `stg_customer_type1_columns`;
 CREATE TABLE `stg_customer_type1_columns` (
   `customer_id` int(11) NOT NULL,
   `display_name` varchar(200) NOT NULL,
-  `gender` varchar(15) DEFAULT NULL,
+  `gender` varchar(100) DEFAULT NULL,
   `date_of_birth` date DEFAULT NULL,
   `government_id` varchar(50) DEFAULT NULL,
   `num_children` smallint(6) DEFAULT NULL,
-  `business_activity` varchar(80) DEFAULT NULL,
-  `ethnicity` varchar(60) DEFAULT NULL,
-  `citizenship` varchar(60) DEFAULT NULL,
-  `handicapped` varchar(60) DEFAULT NULL,
-  `marital_status` varchar(60) DEFAULT NULL,
-  `education_level` varchar(60) DEFAULT NULL,
+  `business_activity` varchar(300) DEFAULT NULL,
+  `ethnicity` varchar(300) DEFAULT NULL,
+  `citizenship` varchar(300) DEFAULT NULL,
+  `handicapped` varchar(300) DEFAULT NULL,
+  `marital_status` varchar(300) DEFAULT NULL,
+  `education_level` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`customer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1368,7 +1368,7 @@ CREATE TABLE `stg_loan_type1_columns` (
   `loan_original_penalty` decimal(21,4) DEFAULT NULL,
   `no_of_installments` smallint(6) DEFAULT NULL,
   `meeting_recur_after` smallint(6) DEFAULT NULL,
-  `meeting_recurrence_name` varchar(20) DEFAULT NULL,
+  `meeting_recurrence_name` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`loan_account_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
