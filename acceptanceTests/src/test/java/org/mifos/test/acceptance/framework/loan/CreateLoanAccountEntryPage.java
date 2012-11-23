@@ -515,4 +515,36 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     public void verifyDisbsursalDate(String dd, String mm, String yyyy) {
         Assert.assertEquals(selenium.getValue("disbursementDateDD") + "-" + selenium.getValue("disbursementDateMM") + "-" + selenium.getValue("disbursementDateYY") , dd+ "-" +mm+ "-"+yyyy);
     }
+    
+    public Boolean isAnswerExist(boolean option) {
+        boolean answer = false;
+
+        try {
+            if (option == true){
+                if (selenium.isElementPresent("//label[contains(.,'choiceTest13242')]")) answer = true;
+                else answer = false;
+                if (selenium.isElementPresent("//label[contains(.,'choiceTest34003')]") && answer == true) answer = true;
+                else answer = false;
+                if (selenium.isElementPresent("//label[contains(.,'tag')]") && answer == true) answer = true;
+                else answer = false;
+                if (selenium.isElementPresent("//label[contains(.,'tag1')]") && answer == true) answer = true;
+                else answer = false;
+            }
+            else{
+                if (selenium.isElementPresent("//li[@style='display: none;']/child::label[contains(.,'choiceTest34003')]")) answer = true;
+                else answer = false;
+                if (selenium.isElementPresent("//li[@style='display: none;']/child::label[contains(.,'tag1')]") && answer == true) answer = true;
+                else answer = false;
+                }
+            }catch (Exception e){
+            }
+        return answer;
+        }
+
+    public void setInputFilterChoices(String key){
+        selenium.focus("//*[contains(.,'DT_6245')]/following::input[1]");
+        selenium.mouseDown("//*[contains(.,'DT_6245')]/following::input[1]");
+        selenium.keyPress("//*[contains(.,'DT_6245')]/following::input[1]", key);
+        selenium.keyUp("//*[contains(.,'DT_6245')]/following::input[1]", key);
+    }
 }
