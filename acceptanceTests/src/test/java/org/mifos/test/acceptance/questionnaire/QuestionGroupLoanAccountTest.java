@@ -25,12 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Random;
 
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.account.AccountStatus;
 import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountPreviewPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
@@ -43,7 +45,9 @@ import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
+import org.mifos.test.acceptance.loan.QuestionGroupHelper;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
@@ -423,4 +427,49 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
             Assert.assertTrue(applicationDatabaseOperation.deosQuestionResponseForLoanExist(loanID, event, question, questions.get(question)), "Can't find question '" + question + "' and answer '" + questions.get(question) + "' in database");
         }
     }
+ 
+    @Test(enabled=true)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyKeyFinderInQuestionary (){
+        NavigationHelper navigationHelper = new NavigationHelper(selenium);
+        QuestionGroupHelper  questionGroupHelper = new QuestionGroupHelper(navigationHelper);
+        
+        Random random = new Random();
+        boolean keyUnpressed = true;
+        boolean keyPressed = false;
+        
+        String questionGroupTitle = "QG1" + random.nextInt(100);
+        String question1 = "DT_6245";
+        String choiceAnswer1 = "choiceTest13242";
+        String choiceAnswer2 = "choiceTest34003";
+        
+        List<String> tag1 = new ArrayList<String>();
+        List<String> tag2 = new ArrayList<String>();
+        tag1.add("tag");
+        tag2.add("tag1");
+        
+        questionGroupHelper.createQuestionGroupSmart(questionGroupTitle,"Create Loan", question1, choiceAnswer1, choiceAnswer2, tag1, tag2);
+        loanProductTestHelper.editLoanProductIncludeQuestionsGroups("ClientEmergencyLoan", questionGroupTitle);
+        
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("ClientWithLoan 20110221");
+        searchParameters.setLoanProduct("ClientEmergencyLoan");
+        
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAmount("1012.0");
+        
+        LoanTestHelper loanTestHelper = new LoanTestHelper(selenium);
+        CreateLoanAccountEntryPage createLoanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
+        
+        createLoanAccountEntryPage.submitAndNavigateToQuestionResponsePage();
+        searchParameters.setSearchString("ClientWithLoan 20110221");
+        
+        Assert.assertEquals((boolean)createLoanAccountEntryPage.isAnswerExist(keyUnpressed), true);
+        Assert.assertEquals((boolean)createLoanAccountEntryPage.isAnswerExist(keyPressed), false);
+        createLoanAccountEntryPage.setInputFilterChoices("2");
+        Assert.assertEquals((boolean)createLoanAccountEntryPage.isAnswerExist(keyPressed), true);
+        
+        navigationHelper.navigateToAdminPage().navigateToViewAllQuestions().navigateToQuestionDetail(question1).navigateToEditQuestionPage().deactivate();
+    }
 }
+

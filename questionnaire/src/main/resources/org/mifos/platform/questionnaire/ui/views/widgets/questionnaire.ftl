@@ -33,6 +33,7 @@ A widget to render the UI for collecting questionnaire responses.
 [#macro responseForm formBean formBeanName headerText=""]
     <STYLE TYPE="text/css"><!-- @import url(pages/css/datepicker/datepicker.css); --></STYLE>
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/widget.css); --></STYLE>
+    <script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
     <script src="pages/questionnaire/js/questionnaire.js" type="text/javascript"></script>
     <span id="page.id" title="questionnaire"></span>
     <div class="questionnaire-widget">
