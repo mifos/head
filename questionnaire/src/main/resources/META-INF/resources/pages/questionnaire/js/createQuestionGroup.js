@@ -76,4 +76,10 @@ $(document).ready(function () {
     });
 
     $("#eventSourceIds").change();
+    
+    $("input").keypress(function(e){
+        if ( e.which == 13 ){
+        	$("#_eventId_defineQuestionGroup").click();
+        }
+    });
 });
