@@ -1250,6 +1250,14 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                 if (StringUtils.isBlank(this.getRecurWeek()) || StringUtils.isBlank(this.getWeekDay())) {
                     addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
                 }
+                else {
+                    try{
+                        Short.parseShort(this.getRecurWeek());
+                    }
+                    catch (NumberFormatException e) {
+                        addError(errors, "", LoanExceptionConstants.REPAYMENTDAY_WRONGFORMAT, "");
+                    }
+                }
             } else {
                 if (getMonthType().equals("1")) {
                     // "10th day of the month"
