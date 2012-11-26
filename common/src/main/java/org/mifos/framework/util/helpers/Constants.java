@@ -129,4 +129,5 @@ public interface Constants {
     String TYPE_LOAN_DISBURSEMENT = "Loan Disbursement";
     String TYPE_FEE_PENALTY_APPLIED = "applied";
     String TYPE_LOAN_DISBURSAL = "Loan Disbursal";
+    String LOAD_GROUP_SUCCESS = "load_group_success";
 }

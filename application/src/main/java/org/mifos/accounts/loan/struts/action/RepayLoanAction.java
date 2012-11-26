@@ -22,22 +22,21 @@ package org.mifos.accounts.loan.struts.action;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.actionforms.RepayLoanActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -52,7 +51,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.UserContext;
-import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,6 +94,52 @@ public class RepayLoanAction extends BaseAction {
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, loanPaymentTypes, request);
         return mapping.findForward(Constants.LOAD_SUCCESS);
     }
+    
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward loadGroupRepayment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+                                       @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        logger.info("Loading repay group loan page");
+        RepayLoanActionForm actionForm = (RepayLoanActionForm) form;
+        actionForm.setReceiptNumber(null);
+        actionForm.setReceiptDate(null);
+        actionForm.setPaymentTypeId(null);
+        actionForm.setWaiverInterest(true);
+        actionForm.setDateOfPayment(DateUtils.makeDateAsSentFromBrowser());
+        actionForm.setTransferPaymentTypeId(this.legacyAcceptedPaymentTypeDao.getSavingsTransferId());
+        actionForm.setPrintReceipt(false);
+        actionForm.setTruePrintReceipt(false);
+        UserContext userContext = getUserContext(request);
+
+        LoanBO parent = loanDao.findByGlobalAccountNum(request.getParameter("globalAccountNum"));
+        RepayLoanDto parentRepayLoanDto  = this.loanAccountServiceFacade.retrieveLoanRepaymentDetails(parent.getGlobalAccountNum());
+        Map<String, Double> memberNumWithAmount = new HashMap<String, Double>();
+        Money earlyRepaymentMoney = new Money(parent.getCurrency());
+        Money waivedRepaymentMoney = new Money(parent.getCurrency());
+        for (LoanBO member : parent.getMemberAccounts()) {
+            RepayLoanDto memberRepayLoanDto = this.loanAccountServiceFacade.retrieveLoanRepaymentDetails(member.getGlobalAccountNum());
+            earlyRepaymentMoney = earlyRepaymentMoney.add(new Money(parent.getCurrency(), memberRepayLoanDto.getEarlyRepaymentMoney()));
+            waivedRepaymentMoney = waivedRepaymentMoney.add(new Money(parent.getCurrency(), memberRepayLoanDto.getWaivedRepaymentMoney()));
+            memberNumWithAmount.put(member.getAccountId().toString(), earlyRepaymentMoney.getAmount().doubleValue());
+        }
+        
+        java.util.Date lastPaymentDate = new java.util.Date(0);
+        AccountPaymentEntity lastPayment = parent.findMostRecentNonzeroPaymentByPaymentDate();
+        if(lastPayment != null){
+            lastPaymentDate = lastPayment.getPaymentDate();
+        }
+        actionForm.setLastPaymentDate(lastPaymentDate);
+
+        SessionUtils.setAttribute(LoanConstants.WAIVER_INTEREST, parentRepayLoanDto.shouldWaiverInterest(), request);
+        SessionUtils.setAttribute(LoanConstants.WAIVER_INTEREST_SELECTED, parentRepayLoanDto.shouldWaiverInterest(), request);
+        SessionUtils.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, earlyRepaymentMoney, request);
+        SessionUtils.setAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, waivedRepaymentMoney, request);
+        SessionUtils.setCollectionAttribute(Constants.ACCOUNTS_FOR_TRANSFER, parentRepayLoanDto.getSavingsAccountsForTransfer(), request);
+        SessionUtils.setMapAttribute(LoanConstants.MEMBER_LOAN_REPAYMENT, new HashMap<String, Double>(memberNumWithAmount), request);
+
+        List<PaymentTypeEntity> loanPaymentTypes = legacyAcceptedPaymentTypeDao.getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.loan_repayment.getValue());
+        SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, loanPaymentTypes, request);
+        return mapping.findForward(Constants.LOAD_GROUP_SUCCESS);
+    }
 
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
@@ -125,6 +169,47 @@ public class RepayLoanAction extends BaseAction {
             this.loanAccountServiceFacade.makeEarlyRepaymentFromSavings(repayLoanInfoDto, repayLoanActionForm.getAccountForTransfer());
         } else {
             this.loanAccountServiceFacade.makeEarlyRepayment(repayLoanInfoDto);
+        }
+
+        SessionUtils.removeAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request);
+        SessionUtils.removeAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, request);
+        SessionUtils.removeAttribute(Constants.ACCOUNTS_FOR_TRANSFER, request);
+        
+        request.getSession().setAttribute("globalAccountNum", globalAccountNum);
+        
+        if(repayLoanActionForm.getPrintReceipt()) {
+            return mapping.findForward(ActionForwards.printPaymentReceipt.toString());
+        }
+        return mapping.findForward(forward);
+    }
+    
+    public ActionForward makeGroupRepayment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        logger.info("Performing loan repayment");
+
+        UserContext userContext = getUserContext(request);
+
+        RepayLoanActionForm repayLoanActionForm = (RepayLoanActionForm) form;
+        Date receiptDate = null;
+        if (StringUtils.isNotEmpty(repayLoanActionForm.getReceiptDate())) {
+            receiptDate = repayLoanActionForm.getReceiptDateValue(userContext.getPreferredLocale());
+        }
+        String globalAccountNum = request.getParameter("globalAccountNum");
+
+        String forward = Constants.UPDATE_SUCCESS;
+        
+        BigDecimal totalRepaymentAmount =((Money) SessionUtils.getAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request)).getAmount();
+        BigDecimal waivedAmount = ((Money) SessionUtils.getAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, request)).getAmount();
+        RepayLoanInfoDto repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
+                repayLoanActionForm.getAmount(), repayLoanActionForm.getReceiptNumber(),
+                receiptDate, repayLoanActionForm.getPaymentTypeId(), userContext.getId(),
+                repayLoanActionForm.isWaiverInterest(),
+                repayLoanActionForm.getDateOfPaymentValue(userContext.getPreferredLocale()),totalRepaymentAmount,waivedAmount);
+
+        if (repayLoanActionForm.isSavingsTransfer()) {
+            this.loanAccountServiceFacade.makeEarlyRepaymentFromSavings(repayLoanInfoDto, repayLoanActionForm.getAccountForTransfer());
+        } else {
+            this.loanAccountServiceFacade.makeEarlyGroupRepayment(repayLoanInfoDto, (Map<String, Double>) SessionUtils.getAttribute(LoanConstants.MEMBER_LOAN_REPAYMENT, request));
         }
 
         SessionUtils.removeAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request);

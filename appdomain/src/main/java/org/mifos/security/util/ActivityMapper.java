@@ -796,9 +796,11 @@ public class ActivityMapper {
     private ActionSecurity getRepayLoanSecurity() {
         ActionSecurity security = new ActionSecurity("repayLoanAction");
         security.allow("loadRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+        security.allow("loadGroupRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
         security.allow("preview", SecurityConstants.LOAN_CAN_REPAY_LOAN);
         security.allow("previous", SecurityConstants.LOAN_CAN_REPAY_LOAN);
         security.allow("makeRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+        security.allow("makeGroupRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
         return security;
     }
 

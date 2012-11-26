@@ -132,7 +132,6 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.AccountPaymentDtoComperator;
-import org.mifos.application.util.helpers.LoanActivityEntityDataComperable;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
 import org.mifos.clientportfolio.loan.service.MonthlyOnDayOfMonthSchedule;
 import org.mifos.clientportfolio.loan.service.MonthlyOnWeekOfMonthSchedule;
@@ -1628,21 +1627,20 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             if (repayLoanInfoDto.isWaiveInterest() && !loan.isInterestWaived()) {
                 throw new BusinessRuleException(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED);
             }
-            Money earlyRepayAmount = new Money(loan.getCurrency(), repayLoanInfoDto.getEarlyRepayAmount());
             loanBusinessService.computeExtraInterest(loan, repayLoanInfoDto.getDateOfPayment());
             BigDecimal interestDueForCurrentInstallment =
                     interestDueForNextInstallment(repayLoanInfoDto.getTotalRepaymentAmount(),
                     repayLoanInfoDto.getWaivedAmount(),loan,repayLoanInfoDto.isWaiveInterest());
+            
+            org.mifos.dto.domain.AccountPaymentDto paymentDto = new org.mifos.dto.domain.AccountPaymentDto(Double.valueOf(repayLoanInfoDto.getEarlyRepayAmount()),
+                    repayLoanInfoDto.getDateOfPayment(), repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(), repayLoanInfoDto.getId());
+            
             if (repayLoanInfoDto.getSavingsPaymentId() != null){
-                loan.makeEarlyRepayment(earlyRepayAmount, repayLoanInfoDto.getDateOfPayment(),
-                        repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(),
-                        repayLoanInfoDto.getPaymentTypeId(), repayLoanInfoDto.getId(),
+                loan.makeEarlyRepayment(paymentDto, repayLoanInfoDto.getId(),
                         repayLoanInfoDto.isWaiveInterest(), new Money(loan.getCurrency(), interestDueForCurrentInstallment),
-                        repayLoanInfoDto.getSavingsPaymentId());
+                        repayLoanInfoDto.getSavingsPaymentId(),null);
             } else {
-                loan.makeEarlyRepayment(earlyRepayAmount, repayLoanInfoDto.getDateOfPayment(),
-                        repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(),
-                        repayLoanInfoDto.getPaymentTypeId(), repayLoanInfoDto.getId(),
+                loan.makeEarlyRepayment(paymentDto, repayLoanInfoDto.getId(),
                         repayLoanInfoDto.isWaiveInterest(), new Money(loan.getCurrency(), interestDueForCurrentInstallment));
             }
         } catch (AccountException e) {
@@ -3051,6 +3049,58 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             loanType = OTHER_LOAN;
         }
         return loanType;
+    }
+    
+    @Override
+    public void makeEarlyGroupRepayment(RepayLoanInfoDto repayLoanInfoDto, Map<String, Double> memberNumWithAmount) {
+       
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+        
+        LoanBO parentLoan = this.loanDao.findByGlobalAccountNum(repayLoanInfoDto.getGlobalAccountNum());
+        
+        try {
+            personnelDao.checkAccessPermission(userContext, parentLoan.getOfficeId(), parentLoan.getCustomer().getLoanOfficerId());
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
+        monthClosingServiceFacade.validateTransactionDate(repayLoanInfoDto.getDateOfPayment());
+
+        if (!isTrxnDateValid(parentLoan.getAccountId(), repayLoanInfoDto.getDateOfPayment())) {
+            throw new BusinessRuleException("errors.invalidTxndate");
+        }
+        
+        try {
+                if (repayLoanInfoDto.isWaiveInterest() && !parentLoan.isInterestWaived()) {
+                    throw new BusinessRuleException(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED);
+                }
+                loanBusinessService.computeExtraInterest(this.loanDao.findByGlobalAccountNum(parentLoan.getGlobalAccountNum()), repayLoanInfoDto.getDateOfPayment());
+                BigDecimal interestDueForCurrentInstallment =
+                        interestDueForNextInstallment(repayLoanInfoDto.getTotalRepaymentAmount(),
+                        repayLoanInfoDto.getWaivedAmount(),parentLoan,repayLoanInfoDto.isWaiveInterest());
+                
+                org.mifos.dto.domain.AccountPaymentDto paymentDto = new org.mifos.dto.domain.AccountPaymentDto(repayLoanInfoDto.getTotalRepaymentAmount().doubleValue(),
+                        repayLoanInfoDto.getDateOfPayment(), repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(), repayLoanInfoDto.getId(), memberNumWithAmount);
+                
+                if (repayLoanInfoDto.getSavingsPaymentId() != null){
+                    parentLoan.makeEarlyRepayment(paymentDto, repayLoanInfoDto.getId(),
+                            repayLoanInfoDto.isWaiveInterest(), new Money(parentLoan.getCurrency(), interestDueForCurrentInstallment),
+                            repayLoanInfoDto.getSavingsPaymentId(),null);
+                } else {
+                    parentLoan.makeEarlyRepayment(paymentDto, repayLoanInfoDto.getId(),
+                            repayLoanInfoDto.isWaiveInterest(), new Money(parentLoan.getCurrency(), interestDueForCurrentInstallment));
+                }
+            } catch (AccountException e) {
+                throw new BusinessRuleException(e.getKey(), e);
+        }
+        
+    }
+
+    // TODO Auto-generated method stub
+    @Override
+    public void makeEarlyGroupRepaymentFromSavings(RepayLoanInfoDto repayLoanInfoDto, String savingsAccGlobalNum,
+            Map<String, Double> memberNumWithAmount) {
+        
     }
 
 }

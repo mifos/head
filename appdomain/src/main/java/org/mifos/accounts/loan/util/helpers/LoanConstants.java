@@ -222,4 +222,5 @@ public interface LoanConstants {
 
     String CANNOT_VIEW_REPAYMENT_SCHEDULE = "cannot.view.repayment.schedule";
     String QUESTION_GROUP_INSTANCES = "questionGroupInstances";
+    String MEMBER_LOAN_REPAYMENT = "memberRepayLoanDto";
 }

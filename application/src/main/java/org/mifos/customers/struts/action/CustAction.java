@@ -57,6 +57,7 @@ public class CustAction extends SearchAction {
         List<ClosedAccountDto> allClosedAccounts = this.centerServiceFacade.retrieveAllClosedAccounts(customerId);
 
         List<AccountBO> loanAccountsList = new CustomerPersistence().getAllClosedAccount(customerId, AccountTypes.LOAN_ACCOUNT.getValue());
+        loanAccountsList.addAll( new CustomerPersistence().getAllClosedAccount(customerId, AccountTypes.GROUP_LOAN_ACCOUNT.getValue()));
         List<AccountBO> savingsAccountList = new CustomerPersistence().getAllClosedAccount(customerId,AccountTypes.SAVINGS_ACCOUNT.getValue());
         SessionUtils.setCollectionAttribute(AccountConstants.CLOSEDLOANACCOUNTSLIST, loanAccountsList, request);
         SessionUtils.setCollectionAttribute(AccountConstants.CLOSEDSAVINGSACCOUNTSLIST, savingsAccountList, request);

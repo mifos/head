@@ -106,6 +106,7 @@
                 parameter="method" scope="session" name="repayLoanActionForm" validate="true"
                 input="/repayLoanAction.do?method=validate">
             <forward name="load_success" path="/pages/application/loan/jsp/RepayLoan.jsp"/>
+            <forward name="load_group_success" path="/pages/application/loan/jsp/RepayLoan.jsp"/>
             <forward name="preview_success" path="/pages/application/loan/jsp/Review_RepayLoan.jsp"/>
             <forward name="previous_success" path="/pages/application/loan/jsp/RepayLoan.jsp"/>
             <forward name="update_success" path="/loanAccountAction.do?method=get"/>
