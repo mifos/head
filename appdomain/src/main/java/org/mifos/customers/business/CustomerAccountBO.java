@@ -84,6 +84,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
+import org.mifos.schedule.internal.DailyScheduledEvent;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
@@ -142,8 +143,14 @@ public class CustomerAccountBO extends AccountBO {
             LocalDate parentCustomerActiviationDate = new LocalDate(upmostParent.getCustomerActivationDate());
             LocalDate childCustomerActiviationDate = new LocalDate(customer.getCustomerActivationDate());
 
-            LocalDate validCustomerMeetingMatch = new LocalDate(customerMeetingEvent.nearestMatchNotTakingIntoAccountScheduleFrequency(parentCustomerActiviationDate.toDateMidnight().toDateTime()));
-            
+            LocalDate validCustomerMeetingMatch = null;
+            if (customerMeetingEvent instanceof DailyScheduledEvent) {
+                validCustomerMeetingMatch = new LocalDate(parentCustomerActiviationDate.toDateMidnight().toDateTime());
+            } else {
+                validCustomerMeetingMatch = new LocalDate(customerMeetingEvent.nearestMatchNotTakingIntoAccountScheduleFrequency(
+                        parentCustomerActiviationDate.toDateMidnight().toDateTime()));
+            }
+
             while (childCustomerActiviationDate.isAfter(validCustomerMeetingMatch)) {
                 validCustomerMeetingMatch = new LocalDate(customerMeetingEvent.rollFrowardDateByFrequency(validCustomerMeetingMatch.toDateMidnight().toDateTime()));
             }

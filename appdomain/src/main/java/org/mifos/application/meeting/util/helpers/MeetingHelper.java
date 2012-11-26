@@ -37,8 +37,11 @@ public class MeetingHelper {
     public String getMessage(MeetingBO meeting, UserContext userContext) {
         String key;
         Object[] args = new Object[3];
-        if (meeting.isWeekly()) {
-                key = MeetingConstants.WEEK_SCHEDULE;
+        if (meeting.isDaily()) {
+            key = MeetingConstants.DAY_SCHEDULE;
+            args[0] = meeting.getMeetingDetails().getRecurAfter();
+        } else if (meeting.isWeekly()) {
+            key = MeetingConstants.WEEK_SCHEDULE;
             args[0] = meeting.getMeetingDetails().getRecurAfter();
             WeekDay weekDay = meeting.getMeetingDetails().getMeetingRecurrence().getWeekDayValue();
             String weekdayName = ApplicationContextProvider.getBean(MessageLookup.class).lookup(weekDay.getPropertiesKey());

@@ -68,6 +68,8 @@ public class MeetingActionForm extends BaseActionForm {
     private String input;
 
     private String meetingStartDate;
+    
+    private String recurDay;
 
     public String getInput() {
         return input;
@@ -245,6 +247,8 @@ public class MeetingActionForm extends BaseActionForm {
             validateWeeklyMeeting(errors);
         } else if (getRecurrenceType().equals(RecurrenceType.MONTHLY)) {
             validateMonthlyMeeting(errors);
+        } else if (getRecurrenceType().equals(RecurrenceType.DAILY)) {
+            validateDailyMeeting(errors);
         }
 
         if (StringUtils.isBlank(getMeetingPlace())) {
@@ -262,6 +266,13 @@ public class MeetingActionForm extends BaseActionForm {
         return errors;
     }
 
+    private void validateDailyMeeting(ActionErrors errors) {
+        String rday = getRecurDay();
+        if (rday == null || StringUtils.isBlank(rday)) {
+            errors.add(MeetingConstants.INVALID_RECURAFTER, new ActionMessage(MeetingConstants.INVALID_RECURAFTER));
+        }
+    }
+    
     private void validateWeeklyMeeting(ActionErrors errors) {
         if (getWeekDayValue() == null || getRecurWeekValue() == null) {
             errors.add(MeetingConstants.ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER, new ActionMessage(
@@ -295,5 +306,17 @@ public class MeetingActionForm extends BaseActionForm {
 
     public void setMeetingStartDate(String meetingStartDate) {
         this.meetingStartDate = meetingStartDate;
+    }
+
+    public String getRecurDay() {
+        return recurDay;
+    }
+    
+    public Short getRecurDayShort() {
+        return getShortValue(recurDay);
+    }
+
+    public void setRecurDay(String recurDay) {
+        this.recurDay = recurDay;
     }
 }

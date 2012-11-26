@@ -52,6 +52,10 @@ public class RecurrenceTypeEntity extends AbstractEntity {
         return recurrenceName;
     }
 
+    public boolean isDaily() {
+        return recurrenceId.equals(RecurrenceType.DAILY.getValue());
+    }
+    
     public boolean isWeekly() {
         return recurrenceId.equals(RecurrenceType.WEEKLY.getValue());
     }

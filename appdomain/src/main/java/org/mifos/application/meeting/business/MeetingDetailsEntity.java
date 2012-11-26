@@ -105,6 +105,10 @@ public class MeetingDetailsEntity extends AbstractEntity {
     public RecurrenceType getRecurrenceTypeEnum() {
         return recurrenceType.asEnum();
     }
+    
+    public boolean isDaily() {
+        return getRecurrenceType().isDaily();
+    }
 
     public boolean isWeekly() {
         return getRecurrenceType().isWeekly();

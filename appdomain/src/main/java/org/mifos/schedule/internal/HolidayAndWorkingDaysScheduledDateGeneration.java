@@ -21,6 +21,7 @@
 package org.mifos.schedule.internal;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -56,9 +57,14 @@ public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDa
     public List<DateTime> generateScheduledDates(final int occurences, final DateTime lastScheduledDate,
             final ScheduledEvent scheduledEvent, boolean isCustomerSchedule) {
 
-        DateTime matchingDayOfWeekDate = scheduledEvent.nearestMatchingDateBeginningAt(lastScheduledDate);
-        if (isCustomerSchedule) {
-            matchingDayOfWeekDate = scheduledEvent.nearestMatchNotTakingIntoAccountScheduleFrequency(lastScheduledDate);    
+        DateTime matchingDayOfWeekDate = lastScheduledDate;
+        boolean isDailyMeeting = scheduledEvent instanceof DailyScheduledEvent;
+        
+        if (!isDailyMeeting) {
+            matchingDayOfWeekDate = scheduledEvent.nearestMatchingDateBeginningAt(lastScheduledDate);
+            if (isCustomerSchedule) {
+                matchingDayOfWeekDate = scheduledEvent.nearestMatchNotTakingIntoAccountScheduleFrequency(lastScheduledDate);    
+            }
         }
 
         List<DateTime> scheduledDates = new ArrayList<DateTime>();
@@ -73,19 +79,24 @@ public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDa
             withoutAdjustment = scheduledEvent.nextEventDateAfter(withoutAdjustment);
             scheduledWithoutAdjustments.add(withoutAdjustment);
         }
-
+        
+        HashSet<DateTime> generatedDates = new HashSet<DateTime>();
         DateTime latestGeneratedDate = scheduledWithoutAdjustments.get(0);
         for (int i = 0; i < occurences; i++) {
-
+            
             DateAdjustmentStrategy workingDay = new BasicWorkingDayStrategy(workingDays);
             DateTime adjustedForWorkingDay = workingDay.adjust(latestGeneratedDate);
 
+            while (isDailyMeeting && generatedDates.contains(adjustedForWorkingDay)) {
+                adjustedForWorkingDay = workingDay.adjust(adjustedForWorkingDay.plusDays(1));
+            }
+            
             DateAdjustmentStrategy holidayAdjustment = new BasicHolidayStrategy(upcomingHolidays, workingDays,
                     scheduledEvent);
             DateTime adjustedForHolidays = holidayAdjustment.adjust(adjustedForWorkingDay);
-
+            
+            generatedDates.add(adjustedForHolidays);
             scheduledDates.add(adjustedForHolidays);
-
             latestGeneratedDate = scheduledEvent.nextEventDateAfter(scheduledWithoutAdjustments.get(i));
         }
 

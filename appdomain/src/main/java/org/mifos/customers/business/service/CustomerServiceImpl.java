@@ -1132,6 +1132,9 @@ public class CustomerServiceImpl implements CustomerService {
                 isRegenerationOfSchedulesRequired = oldMeeting.isDayOfWeekDifferent(dayOfWeek);
                 oldMeeting.update(dayOfWeek.getValue(), updatedDetails.getMeetingPlace());
                 oldMeeting.update(dayOfWeek, updatedDetails.getMeetingPlace());
+            } else if (oldMeeting.isDaily()) {
+                isRegenerationOfSchedulesRequired = false;
+                oldMeeting.update(updatedDetails.getMeetingPlace());
             } else if (oldMeeting.isMonthlyOnDate()) {
                 isRegenerationOfSchedulesRequired = oldMeeting.isDayOfMonthDifferent(updatedDetails.getMeetingDetails().getDayNumber());
                 oldMeeting.update(updatedDetails.getMeetingDetails().getDayNumber(), updatedDetails.getMeetingPlace());

@@ -65,8 +65,14 @@ public class MeetingFactory {
                         .getMeetingStartDate().toDateMidnight().toDate(), MeetingType.CUSTOMER_MEETING, meetingDto
                         .getMeetingPlace());
             }
-
-            return meeting;
+            
+            if (meetingDetailsDto.getRecurrenceTypeId().equals(new Integer(
+                    RecurrenceType.DAILY.getValue().shortValue()))) {
+                meeting = new MeetingBO(meetingDetailsDto.getEvery().shortValue(),
+                        meetingDto.getMeetingStartDate().toDateTimeAtStartOfDay().toDate(),
+                        MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
+            }
+            return meeting; 
         } catch (MeetingException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }

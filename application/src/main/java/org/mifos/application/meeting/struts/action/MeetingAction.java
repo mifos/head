@@ -177,6 +177,14 @@ public class MeetingAction extends BaseAction {
                 DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                 form.setMeetingStartDate(df.format(meetingStartDate));
             }
+        } else if (meeting.isDaily()) {
+            form.setFrequency(RecurrenceType.DAILY.getValue().toString());
+            form.setRecurDay(meeting.getMeetingDetails().getRecurAfter().toString());
+            Date meetingStartDate = meeting.getMeetingStartDate();
+            if (meetingStartDate != null) {
+                DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                form.setMeetingStartDate(df.format(meetingStartDate));
+            }
         } else if (meeting.isMonthly()) {
             form.setFrequency(RecurrenceType.MONTHLY.getValue().toString());
             if (meeting.isMonthlyOnDate()) {
@@ -203,10 +211,12 @@ public class MeetingAction extends BaseAction {
         } else {
             startDate = DateUtils.getDate(form.getMeetingStartDate());
         }
-        
+
         if (form.getRecurrenceType().equals(RecurrenceType.WEEKLY)) {
             meeting = new MeetingBO(form.getWeekDayValue(), form.getRecurWeekValue(), startDate,
                     MeetingType.CUSTOMER_MEETING, form.getMeetingPlace());
+        } else if (form.getRecurrenceType().equals(RecurrenceType.DAILY)) {
+            meeting = new MeetingBO(form.getRecurDayShort(), startDate, MeetingType.CUSTOMER_MEETING, form.getMeetingPlace());
         } else if (form.isMonthlyOnDate()) {
             meeting = new MeetingBO(form.getMonthDayValue(), form.getDayRecurMonthValue(), startDate,
                     MeetingType.CUSTOMER_MEETING, form.getMeetingPlace());
@@ -250,5 +260,6 @@ public class MeetingAction extends BaseAction {
         form.setMeetingPlace(null);
         form.setInput(null);
         form.setMeetingStartDate(null);
+        form.setRecurDay(null);
     }
 }

@@ -42,18 +42,26 @@ function showMeetingFrequency(){
 	if (document.meetingActionForm.frequency[0].checked == true){
 		document.getElementById("weekDIV").style.display = "block";
 		fraq[1].disabled=true;
+		fraq[2].disabled=true;
 		document.getElementById("months").style.color="gray";
 		document.getElementById("monthDIV").style.display = "none";
 		document.getElementsByName("recurWeek")[0].disabled=true;
-		}
-	else if (document.meetingActionForm.frequency[1].checked == true){
-	
+		document.getElementById("dayDIV").style.display = "none";
+	} else if (document.meetingActionForm.frequency[2].checked == true) {
+		document.getElementById("weekDIV").style.display = "none";
+		document.getElementById("monthDIV").style.display = "none";
+		document.getElementById("dayDIV").style.display = "block";
+		document.getElementById("days").style.color="gray";
+		document.getElementsByName("recurDay")[0].disabled=true;
 		fraq[0].disabled=true;
-				document.getElementById("weeks").style.color="gray";
-		
+		fraq[1].disabled=true;
+	} else if (document.meetingActionForm.frequency[1].checked == true){
+		fraq[0].disabled=true;
+		fraq[2].disabled=true;
+		document.getElementById("weeks").style.color="gray";
 		document.getElementById("weekDIV").style.display = "none";
 		document.getElementById("monthDIV").style.display = "block";
-		
+		document.getElementById("dayDIV").style.display = "none";
 			//get the month type
 			if(document.getElementsByName("monthType")[0].checked == true)
 			{
@@ -157,9 +165,13 @@ function goToCancelPage(customerLevel){
 										onclick="showMeetingFrequency();" /> <SPAN id="weeks"> <mifos:mifoslabel
 										name="meeting.labelWeeks" bundle="MeetingResources" /> </SPAN>
 									</td>
-									<td width="55%"><html-el:radio property="frequency" value="2"
+									<td width="24%"><html-el:radio property="frequency" value="2"
 										onclick="showMeetingFrequency();" /> <SPAN id="months"> <mifos:mifoslabel
 										name="meeting.labelMonths" bundle="MeetingResources" /> </SPAN>
+									</td>
+									<td width="24%"><html-el:radio property="frequency" value="3"
+										onclick="showMeetingFrequency();" /> <span id="days"><mifos:mifoslabel
+										name="meeting.labelDays" bundle="MeetingResources" /></span>
 									</td>
 								</tr>
 							</table>
@@ -170,7 +182,7 @@ function goToCancelPage(customerLevel){
 							<td width="59%" align="left" valign="top"
 								style="border: 1px solid #CECECE;">
 
-							<div id="weekDIV" style="height:70px; width:380px; "><mifos:mifoslabel
+							<div id="weekDIV" style="height:40px; width:380px; "><mifos:mifoslabel
 								name="meeting.labelRecurWeeks" bundle="MeetingResources" />
 							<table border="0" cellspacing="0" cellpadding="2">
 								<tr class="fontnormal">
@@ -184,22 +196,6 @@ function goToCancelPage(customerLevel){
 											</c:forEach>
 										</mifos:select>
 										<br />
-										<span id="createcustomermeeting.label.meetingStartDate">
-											<mifos:mifoslabel name="meeting.meetingStartDateLabel"  bundle="MeetingResources" />
-										</span>
-										<mifos:mifosalphanumtext property="meetingStartDate" size="15"/>
-										<script>
-$(document).ready(function() {
-	$.datepicker.setDefaults($.datepicker.regional[""]);
-	$("input[name=meetingStartDate]").datepicker({
-		dateFormat: 'dd/mm/yy',	
-        showOn: "button",
-        buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
-		buttonImageOnly: true
-    });
-  }
-);
-										</script>
 									</td>
 								</tr>
 							</table>
@@ -248,7 +244,20 @@ $(document).ready(function() {
 								</tr>
 							</table>
 							</div>
-
+							<div id="dayDIV" style="height:30px; width:450px; ">
+										<table border="0" cellspacing="0" cellpadding="2">
+											<tr class="fontnormal">
+												<td colspan="4">
+												<mifos:mifoslabel name="meeting.labelRecurEvery" bundle="MeetingResources"/>
+												<mifos:mifosnumbertext styleId="createmeeting.input.dayFrequency" property="recurDay" size="3" maxlength="3" />
+												<span id="createcustomermeeting.label.dayFrequency">
+													<mifos:mifoslabel name="meeting.labelDays" bundle="MeetingResources" />
+												</span>
+												<br />
+												</td>
+											</tr>
+										</table>
+									</div>
 							</td>
 						</tr>
 						<tr class="fontnormal">
@@ -261,6 +270,7 @@ $(document).ready(function() {
 								mandatory="yes" /></td>
 							<td><html-el:text property="meetingPlace" maxlength="200"/></td>
 						</tr>
+						
 					<!-- Start Add group membership -->	
 						<c:if test="${BusinessKey.customerLevel.client}">
 							<tr class="fontnormal">

@@ -80,6 +80,9 @@ public class CreationMeetingDto {
         if (recurrenceType.equals(RecurrenceType.WEEKLY.getValue())) {
             meeting = new MeetingBO(getWeekDay(), getRecurAfter(), getMeetingStartDate().toDateMidnight().toDate(),
                     MeetingType.CUSTOMER_MEETING, getMeetingPlace());
+        } else if (recurrenceType.equals(RecurrenceType.DAILY.getValue())) {
+            meeting = new MeetingBO(getRecurAfter(), getMeetingStartDate().toDateTimeAtStartOfDay().toDate(),
+                    MeetingType.CUSTOMER_MEETING, getMeetingPlace());
         } else {
             meeting = new MeetingBO(getWeekDay(), getRankOfDay(), getRecurAfter(), getMeetingStartDate()
                     .toDateMidnight().toDate(), MeetingType.CUSTOMER_MEETING, getMeetingPlace());

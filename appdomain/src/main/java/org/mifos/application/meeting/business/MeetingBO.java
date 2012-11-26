@@ -114,6 +114,11 @@ public class MeetingBO extends AbstractBusinessObject {
         this(RecurrenceType.WEEKLY, null, weekDay, null, recurAfter, startDate, meetingType, meetingPlace);
     }
 
+    public MeetingBO(final Short recurAfter, Date startDate, MeetingType meetingType, String meetingPlace)
+            throws MeetingException {
+        this(RecurrenceType.DAILY, null, null, null, recurAfter, startDate, meetingType, meetingPlace);
+    }
+    
     public MeetingBO(final MeetingTemplate template) throws MeetingException {
         this(template.getReccurenceType(), template.getDateNumber(), template.getWeekDay(), template.getRankType(),
                 template.getRecurAfter(), template.getStartDate(), template.getMeetingType(), template
@@ -209,6 +214,10 @@ public class MeetingBO extends AbstractBusinessObject {
     public boolean isMonthly() {
         return getMeetingDetails().isMonthly();
     }
+    
+    public boolean isDaily() {
+        return getMeetingDetails().isDaily();
+    }
 
     public void update(final WeekDay weekDay, final String meetingPlace) throws MeetingException {
         validateMeetingPlace(meetingPlace);
@@ -228,6 +237,11 @@ public class MeetingBO extends AbstractBusinessObject {
         this.meetingPlace = meetingPlace;
     }
 
+    public void update(final String meetingPlace) throws MeetingException {
+        validateMeetingPlace(meetingPlace);
+        this.meetingPlace = meetingPlace;
+    }
+    
     private void validateFields(final RecurrenceType recurrenceType, final Date startDate, final MeetingType meetingType,
             final String meetingPlace) throws MeetingException {
         if (recurrenceType == null) {

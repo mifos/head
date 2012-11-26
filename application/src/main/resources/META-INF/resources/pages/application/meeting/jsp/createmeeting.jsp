@@ -37,14 +37,28 @@ explanation of the license and how it is applied.
 		<script>
 function showMeetingFrequency(){
 	if (document.meetingActionForm.frequency[0].checked == true){
+		document.getElementById("dayDIV").style.display = "none";
 		document.getElementById("weekDIV").style.display = "block";
 		document.getElementById("monthDIV").style.display = "none";
+		document.getElementById("meetingStartDateLabelDIV").style.display = "block";
+		document.getElementById("meetingStartDateButtonDIV").style.display = "block";
+		
 		}
 	else if (document.meetingActionForm.frequency[1].checked == true){
+		document.getElementById("dayDIV").style.display = "none";
 		document.getElementById("weekDIV").style.display = "none";
 		document.getElementById("monthDIV").style.display = "block";
+		document.getElementById("meetingStartDateLabelDIV").style.display = "none";
+		document.getElementById("meetingStartDateButtonDIV").style.display = "none";
 		if(document.meetingActionForm.monthType[0].checked == false && document.meetingActionForm.monthType[1].checked == false)
 			document.getElementsByName("monthType")[0].checked=true;
+	}
+	else {
+		document.getElementById("weekDIV").style.display = "none";
+		document.getElementById("monthDIV").style.display = "none";
+		document.getElementById("dayDIV").style.display = "block";
+		document.getElementById("meetingStartDateLabelDIV").style.display = "block";
+		document.getElementById("meetingStartDateButtonDIV").style.display = "block";
 	}
 }
 
@@ -122,9 +136,12 @@ function goToCancelPage(){
 											<td width="24%"><html-el:radio styleId="createmeeting.input.frequencyWeeks" property="frequency" value="1"
 												onclick="showMeetingFrequency();" /> <span id="createmeeting.label.frequencyWeeks"><mifos:mifoslabel
 												name="meeting.labelWeeks" bundle="MeetingResources" /></span></td>
-											<td width="55%"><html-el:radio styleId="createmeeting.input.frequencyMonths" property="frequency" value="2"
+											<td width="24%"><html-el:radio styleId="createmeeting.input.frequencyMonths" property="frequency" value="2"
 												onclick="showMeetingFrequency();" /> <span id="createmeeting.label.frequencyMonths"><mifos:mifoslabel
 												name="meeting.labelMonths" bundle="MeetingResources" /></span></td>
+											<td width="24%"><html-el:radio styleId="createmeeting.input.frequencyDays" property="frequency" value="3"
+												onclick="showMeetingFrequency();" /> <span id="createmeeting.label.frequencyDays"><mifos:mifoslabel
+												name="meeting.labelDays" bundle="MeetingResources" /></span></td>
 										</tr>
 									</table>
 									</td>
@@ -134,10 +151,8 @@ function goToCancelPage(){
 									<td width="59%" align="left" valign="top"
 										style="border: 1px solid #CECECE;">
 
-									<div id="weekDIV" style="height:70px; width:420px; "><mifos:mifoslabel
+									<div id="weekDIV" style="height:40px; width:420px; "><mifos:mifoslabel
 										name="meeting.labelRecurWeeks" bundle="MeetingResources" />
-
-
 
 									<table border="0" cellspacing="0" cellpadding="2">
 										<tr class="fontnormal">
@@ -157,22 +172,7 @@ function goToCancelPage(){
 													</c:forEach>
 												</mifos:select>
 												<br />
-												<span id="createcustomermeeting.label.meetingStartDate">
-													<mifos:mifoslabel name="meeting.meetingStartDateLabel"  bundle="MeetingResources" />
-												</span>
-												<mifos:mifosalphanumtext property="meetingStartDate" size="15"/>
-												<script>
-$(document).ready(function() {
-	$.datepicker.setDefaults($.datepicker.regional[""]);
-	$("input[name=meetingStartDate]").datepicker({
-		dateFormat: 'dd/mm/yy',	
-        showOn: "button",
-        buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
-		buttonImageOnly: true
-    });
-  }
-);
-												</script>
+
 												</td>
 										</tr>
 									</table>
@@ -213,7 +213,20 @@ $(document).ready(function() {
 										</tr>
 									</table>
 									</div>
-
+									<div id="dayDIV" style="height:30px; width:450px; ">
+										<table border="0" cellspacing="0" cellpadding="2">
+											<tr class="fontnormal">
+												<td colspan="4">
+												<mifos:mifoslabel name="meeting.labelRecurEvery" bundle="MeetingResources"/>
+												<mifos:mifosnumbertext styleId="createmeeting.input.dayFrequency" property="recurDay" size="3" maxlength="3" />
+												<span id="createcustomermeeting.label.dayFrequency">
+													<mifos:mifoslabel name="meeting.labelDays" bundle="MeetingResources" />
+												</span>
+												<br />
+												</td>
+											</tr>
+										</table>
+									</div>
 									</td>
 								</tr>
 								<tr class="fontnormal">
@@ -226,7 +239,36 @@ $(document).ready(function() {
 										mandatory="yes" /></span></td>
 									<td><html-el:text styleId="createmeeting.input.meetingPlace" property="meetingPlace" maxlength="200"/></td>
 								</tr>
-
+								
+								<tr class="fontnormal">
+								
+									<td align="right">
+										<div id="meetingStartDateLabelDIV">
+											<span id="createcustomermeeting.label.meetingStartDate">
+												<mifos:mifoslabel name="meeting.meetingStartDateLabel"  bundle="MeetingResources" />
+											</span>
+										</div>
+									</td>
+									<td>
+										<div id="meetingStartDateButtonDIV">
+											<mifos:mifosalphanumtext property="meetingStartDate" size="15"/>
+											<script>
+												
+$(document).ready(function() {
+	$.datepicker.setDefaults($.datepicker.regional[""]);
+	$("input[name=meetingStartDate]").datepicker({
+		dateFormat: 'dd/mm/yy',	
+        showOn: "button",
+        buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
+		buttonImageOnly: true
+    });
+  }
+);
+											</script>
+										</div>
+									</td>
+								</tr>
+								
 							</table>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
