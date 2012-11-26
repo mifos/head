@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.MessageLookup;
@@ -48,6 +49,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.customers.personnel.business.PersonnelDetailsEntity;
@@ -665,58 +667,95 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         // Yesterday as current date because upcoming meetings should include current day
         DateTime currentDate = new DateTime().minusDays(1);
 
-        try {
-            if (ClientRules.getCenterHierarchyExists()) {
-                for (CustomerDetailDto center : this.customerDao.findActiveCentersUnderUser(personnel)){
-                    CustomerBO centerBO = this.customerDao.findCustomerById(center.getCustomerId());
-                    DateTime nextMeeting = new DateTime(centerBO.getCustomerMeetingValue().getNextScheduleDateAfterRecurrenceWithoutAdjustment(currentDate.toDate()));
-                    if ( Days.daysBetween(day, nextMeeting).getDays() == 0 ){
-                        CenterDescriptionDto centerDescription = new CenterDescriptionDto();
-                        centerDescription.setId(center.getCustomerId());
-                        centerDescription.setDisplayName(center.getDisplayName());
-                        centerDescription.setGlobalCustNum(center.getGlobalCustNum());
-                        centerDescription.setSearchId(center.getSearchId());
-                        hierarchy.getCenters().add(centerDescription);
-                    }
+        if (ClientRules.getCenterHierarchyExists()) {
+            for (CustomerDetailDto center : this.customerDao.findActiveCentersUnderUser(personnel)){
+                CustomerBO centerBO = this.customerDao.findCustomerById(center.getCustomerId());
+                
+                if (isCustomerHavingMeetingOnDay(centerBO, day, currentDate)){
+                    CenterDescriptionDto centerDescription = new CenterDescriptionDto();
+                    centerDescription.setId(center.getCustomerId());
+                    centerDescription.setDisplayName(center.getDisplayName());
+                    centerDescription.setGlobalCustNum(center.getGlobalCustNum());
+                    centerDescription.setSearchId(center.getSearchId());
+                    hierarchy.getCenters().add(centerDescription);
                 }
             }
+        }
 
-            allGroups:
-            for (CustomerDetailDto group : this.customerDao.findGroupsUnderUser(personnel)){
-                CustomerBO groupBO = this.customerDao.findCustomerById(group.getCustomerId());
-                DateTime nextMeeting = new DateTime(groupBO.getCustomerMeetingValue().getNextScheduleDateAfterRecurrenceWithoutAdjustment(currentDate.toDate()));
-                if ( Days.daysBetween(day, nextMeeting).getDays() == 0 ){
-                    GroupDescriptionDto groupDescription = new GroupDescriptionDto();
-                    groupDescription.setId(group.getCustomerId());
-                    groupDescription.setDisplayName(group.getDisplayName());
-                    groupDescription.setGlobalCustNum(group.getGlobalCustNum());
-                    groupDescription.setSearchId(group.getSearchId());
+        allGroups:
+        for (CustomerDetailDto group : this.customerDao.findGroupsUnderUser(personnel)){
+            CustomerBO groupBO = this.customerDao.findCustomerById(group.getCustomerId());
 
-                    for (ClientBO client : this.customerDao.findActiveClientsUnderParent(group.getSearchId(), personnel.getOffice().getOfficeId())) {
-                        ClientDescriptionDto clientDescription = new ClientDescriptionDto();
-                        clientDescription.setId(client.getCustomerId());
-                        clientDescription.setDisplayName(client.getDisplayName());
-                        clientDescription.setGlobalCustNum(client.getGlobalCustNum());
-                        clientDescription.setSearchId(client.getSearchId());
-                        groupDescription.getClients().add(clientDescription);
-                    }
+            if (isCustomerHavingMeetingOnDay(groupBO, day, currentDate)){
+                GroupDescriptionDto groupDescription = new GroupDescriptionDto();
+                groupDescription.setId(group.getCustomerId());
+                groupDescription.setDisplayName(group.getDisplayName());
+                groupDescription.setGlobalCustNum(group.getGlobalCustNum());
+                groupDescription.setSearchId(group.getSearchId());
 
-                    for (CenterDescriptionDto center : hierarchy.getCenters()) {
-                        if (group.getSearchId().startsWith(center.getSearchId())) {
-                            center.getGroups().add(groupDescription);
-                            continue allGroups;
-                        }
-                    }
-                    hierarchy.getGroups().add(groupDescription);
+                for (ClientBO client : this.customerDao.findActiveClientsUnderParent(group.getSearchId(), personnel.getOffice().getOfficeId())) {
+                    ClientDescriptionDto clientDescription = new ClientDescriptionDto();
+                    clientDescription.setId(client.getCustomerId());
+                    clientDescription.setDisplayName(client.getDisplayName());
+                    clientDescription.setGlobalCustNum(client.getGlobalCustNum());
+                    clientDescription.setSearchId(client.getSearchId());
+                    groupDescription.getClients().add(clientDescription);
                 }
+
+                for (CenterDescriptionDto center : hierarchy.getCenters()) {
+                    if (group.getSearchId().startsWith(center.getSearchId())) {
+                        center.getGroups().add(groupDescription);
+                        continue allGroups;
+                    }
+                }
+                hierarchy.getGroups().add(groupDescription);
             }
-        } catch (MeetingException e) {
-            e.printStackTrace();
         }
 
         return hierarchy;
     }
 
+    private boolean isCustomerHavingMeetingOnDay(CustomerBO customerBO, DateTime day, DateTime currentDate) {
+        boolean isMeetingOnDay = false;
+        
+        if (customerBO.getCustomerMeetingValue().isDaily()) {
+            List<DateTime> actionDates = customerDao.getAccountActionDatesForCustomer(customerBO.getCustomerId());
+            if (isDateInList(actionDates, day)) {
+                isMeetingOnDay = true;
+            }
+        } else {
+            try {
+                DateTime nextMeeting = new DateTime(customerBO.getCustomerMeetingValue().getNextScheduleDateAfterRecurrenceWithoutAdjustment(
+                        currentDate.toDate()));
+                if (Days.daysBetween(day, nextMeeting).getDays() == 0) {
+                    isMeetingOnDay = true;
+                }
+            } catch (MeetingException e) {
+                e.printStackTrace();
+            }
+        }
+        return isMeetingOnDay;
+    }
+    
+    /*
+     * Assumes that datesList is sorted in reverse chronological order (i.e. oldest date is last)
+     */
+    private boolean isDateInList(final List<DateTime> datesList, final DateTime dateToFind) {
+        boolean isInList = false;
+        
+        for (DateTime date : datesList) {
+            if (date.isBefore(dateToFind)) {
+                break;
+            }
+            if (Days.daysBetween(date, dateToFind).getDays() == 0) {
+                isInList = true;
+                break;
+            }
+        }
+        
+        return isInList;
+    }
+    
     @Override
     public List<PersonnelDto> retrieveActiveLoanOfficersUnderOffice(Short officeId) {
         List<PersonnelBO> personnelList;

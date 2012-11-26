@@ -103,7 +103,8 @@ public interface NamedQueryConstants {
     String GET_VERY_POOR_DROP_OUT_CLIENTS_COUNT_UNDER_OFFICE = "Customers.getVeryPoorDropOutClientsCountUnderOffice";
     String GET_ON_HOLD_CLIENTS_COUNT_UNDER_OFFICE = "Customers.getOnHoldClientsCountUnderOffice";
     String GET_VERY_POOR_ON_HOLD_CLIENTS_COUNT_UNDER_OFFICE = "Customers.getVeryPoorOnHoldClientsCountUnderOffice";
-
+    String GET_ACTION_DATES_FOR_CUSTOMER = "Customer.getActionDatesForCustomer";
+    
     // Apply Adjustment
     String RETRIEVE_MAX_ACCPAYMENT = "accountPayment.maxAccPayment";
     String RETRIEVE_ALL_ACCPAYMENT = "accountPayment.allAccPayment";

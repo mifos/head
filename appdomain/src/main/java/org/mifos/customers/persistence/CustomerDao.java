@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -239,4 +240,6 @@ public interface CustomerDao {
 	Date getLastMeetingDateForCustomer(Integer customerId);
 	
 	Date getFirstMeetingDateForCustomer(Integer customerId);
+	
+	List<DateTime> getAccountActionDatesForCustomer(Integer customerId);
 }

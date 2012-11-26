@@ -39,6 +39,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
+import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -49,6 +50,7 @@ import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -105,6 +107,7 @@ import org.mifos.dto.screen.GroupDisplayDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.HibernateSearchException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
@@ -1704,5 +1707,22 @@ public class CustomerDaoHibernate implements CustomerDao {
     @Override
     public void save(AccountCheckListBO accountCheckListBO) {
         this.genericDao.createOrUpdate(accountCheckListBO);
+    }
+
+    @Override
+    public List<DateTime> getAccountActionDatesForCustomer(Integer customerId) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("customerId", customerId);
+        
+        List<java.sql.Date> queryList = (List<java.sql.Date>) genericDao.executeNamedQuery(
+                NamedQueryConstants.GET_ACTION_DATES_FOR_CUSTOMER, queryParameters);
+        
+        List<DateTime> dateList =  new ArrayList<DateTime>();
+        
+        for (java.sql.Date sqlDate : queryList) {
+            dateList.add(new DateTime(sqlDate));
+        }
+        
+        return dateList;
     }
 }

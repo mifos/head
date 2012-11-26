@@ -1842,5 +1842,12 @@
             <![CDATA[from org.mifos.customers.business.CustomerBO customer
             where customer.customerAddressDetail.address.phoneNumberStripped=:phoneNumberStripped]]>
         </query>
+	<sql-query name="Customer.getActionDatesForCustomer">
+        <![CDATA[
+			select action_date from customer_schedule
+			where customer_id = :customerId
+			order by action_date desc;
+        ]]>
+    </sql-query>
 
 </hibernate-mapping>
