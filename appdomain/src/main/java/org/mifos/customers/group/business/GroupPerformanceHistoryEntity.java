@@ -400,7 +400,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
     public void updateOnFullRepayment(LoanBO loan) throws AccountException {
         setLastGroupLoanAmount(loan.getLoanAmount());
         try {
-            if (configService.isGlimEnabled()) {
+            if (configService.isGlimEnabled() && !loan.isGroupLoanAccount()) {
                 CollectionUtils.forAllDo(accountBusinessService.getCoSigningClientsForGlim(loan.getAccountId()),
                         new UpdateClientPerfHistoryForGroupLoanOnRepayment(loan));
             }

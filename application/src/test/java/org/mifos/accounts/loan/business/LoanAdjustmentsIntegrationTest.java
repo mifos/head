@@ -64,6 +64,7 @@ import org.mifos.domain.builders.FeeBuilder;
 import org.mifos.domain.builders.GroupBuilder;
 import org.mifos.domain.builders.LoanProductBuilder;
 import org.mifos.domain.builders.MeetingBuilder;
+import org.mifos.dto.domain.AccountPaymentDto;
 import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.dto.domain.CreateAccountPenaltyDto;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -335,7 +336,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void makeEarlyPayment(LoanBO loan) throws AccountException {
-        loan.makeEarlyRepayment(loan.getEarlyRepayAmount(), new DateTimeService().getCurrentJavaDateTime(), null, null, "1", testUser().getPersonnelId(), false, new Money(loan.getCurrency(), "0"));
+        loan.makeEarlyRepayment(new AccountPaymentDto(loan.getEarlyRepayAmount().getAmount().doubleValue(), new DateTimeService().getCurrentJavaDateTime(), "", null, (short)1), testUser().getPersonnelId(), false, new Money(loan.getCurrency(), "0"));
         StaticHibernateUtil.flushSession();
     }
 

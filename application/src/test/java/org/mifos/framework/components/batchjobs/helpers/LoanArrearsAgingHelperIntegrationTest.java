@@ -45,7 +45,6 @@ import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
-import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -391,8 +390,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         Money totalAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "" + loanAmount
                 + totalInterest);
         String receiptNumber = "1";
-        loan.makeEarlyRepayment(totalAmount, dateTime.toDate(), receiptNumber, dateTime.toDate(), PaymentTypes.CASH.getValue().toString(),
-                loan.getPersonnel().getPersonnelId(), false, new Money(loan.getCurrency(), "0"));
+        loan.makeEarlyRepayment(null, loan.getPersonnel().getPersonnelId(), false, new Money(loan.getCurrency(), "0"));
 
         //jpw runLoanArrearsThenLoanArrearsAging();
 
@@ -425,8 +423,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         Money totalAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "" + loanAmount
                 + 0);
         String receiptNumber = "1";
-        loan.makeEarlyRepayment(totalAmount, dateTime.toDate(), receiptNumber, dateTime.toDate(), PaymentTypes.CASH.getValue().toString(),
-                loan.getPersonnel().getPersonnelId(), true, new Money(loan.getCurrency(), "0"));
+        loan.makeEarlyRepayment(null, loan.getPersonnel().getPersonnelId(), true, new Money(loan.getCurrency(), "0"));
 
         //jpw runLoanArrearsThenLoanArrearsAging();
 

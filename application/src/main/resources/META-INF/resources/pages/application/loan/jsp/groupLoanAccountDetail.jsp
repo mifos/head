@@ -793,7 +793,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								</c:when>
 							</c:choose> 
 						<c:url value="repayLoanAction.do" var="repayLoanActionLoadRepaymentMethodUrl" >
-							<c:param name="method" value="loadRepayment" />
+							<c:param name="method" value="loadGroupRepayment" />
 							<c:param name="accountId" value="${loanInformationDto.accountId}" />
 							<c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}" />
 							<c:param name="prdOfferingName" value="${loanInformationDto.prdOfferingName}" />

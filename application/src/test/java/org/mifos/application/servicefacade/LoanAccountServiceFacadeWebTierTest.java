@@ -25,7 +25,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -69,6 +68,7 @@ import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.dto.domain.AccountPaymentDto;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.domain.PaymentDto;
 import org.mifos.dto.domain.SavingsAccountDetailDto;
@@ -199,12 +199,11 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(customer.getCustomerId()).thenReturn(2);
         String paymentMethod = "Cash";
         String receiptNumber = "001";
-
+        org.mifos.dto.domain.AccountPaymentDto paymentDto = new org.mifos.dto.domain.AccountPaymentDto(new Double(100), date, receiptNumber, date, Short.valueOf((short)1));
         loanAccountServiceFacade.makeEarlyRepayment(new RepayLoanInfoDto("1", "100", receiptNumber, date,
                 paymentMethod, (short) 1, waiveInterest, date,BigDecimal.TEN,BigDecimal.ZERO));
 
-        verify(loanBO).makeEarlyRepayment(new Money(rupee, "100"), date, receiptNumber, date,
-                paymentMethod, (short) 1, waiveInterest, new Money(rupee, BigDecimal.ZERO));
+        verify(loanBO).makeEarlyRepayment(paymentDto, (short) 1, waiveInterest, new Money(rupee, BigDecimal.ZERO));
         verify(loanBusinessService).computeExtraInterest(loanBO, date);
     }
 
@@ -244,6 +243,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         final LocalDate receiptDate = new LocalDate(date);
         final Double amount = Double.parseDouble("100");
         final Integer modeOfPayment = 4;
+        AccountPaymentDto paymentDto = new AccountPaymentDto(amount, date, receiptNumber, date, Short.valueOf((short)1));
         assertEquals(withdrawal.getValue().getAmount(), amount);
         assertEquals(withdrawal.getValue().getSavingsId(), savingsId);
         assertEquals(withdrawal.getValue().getCustomerId(), customerId);
@@ -251,9 +251,9 @@ public class LoanAccountServiceFacadeWebTierTest {
         assertEquals(withdrawal.getValue().getDateOfReceipt(), receiptDate);
         assertEquals(withdrawal.getValue().getModeOfPayment(), modeOfPayment);
         assertEquals(withdrawal.getValue().getPreferredLocale(), userContext.getPreferredLocale());
-
-        verify(loanBO).makeEarlyRepayment(new Money(rupee, "100"), date, receiptNumber, date,
-                paymentMethod, (short) 1, waiveInterest, new Money(rupee, BigDecimal.ZERO), 1);
+        
+        verify(loanBO).makeEarlyRepayment(paymentDto, (short) 1, waiveInterest, new Money(rupee, BigDecimal.ZERO),
+                1,null);
     }
 
     @Test
@@ -276,12 +276,12 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
         String paymentMethod = "Cash";
         String receiptNumber = "001";
-
-        loanAccountServiceFacade.makeEarlyRepayment(new RepayLoanInfoDto("1", "100", receiptNumber, date, paymentMethod, (short) 1,
+        AccountPaymentDto paymentDto = new AccountPaymentDto(new Double(100), date, receiptNumber, date, Short.valueOf((short)1));
+        loanAccountServiceFacade.makeEarlyRepayment(new RepayLoanInfoDto("1", "100.0", receiptNumber, date, paymentMethod, (short) 1,
                 waiveInterest, date,BigDecimal.ZERO,BigDecimal.ZERO));
 
         short userId = (short) 1;
-        verify(loanBO).makeEarlyRepayment(new Money(rupee, "100"), date, receiptNumber, date, paymentMethod, userId, waiveInterest, new Money(rupee, 100d));
+        verify(loanBO).makeEarlyRepayment(paymentDto, userId, waiveInterest, new Money(rupee, 100d));
         verify(loanBusinessService).computeExtraInterest(loanBO, date);
     }
 
@@ -304,7 +304,7 @@ public class LoanAccountServiceFacadeWebTierTest {
             loanAccountServiceFacade.makeEarlyRepayment(new RepayLoanInfoDto("1", "100", "001", mock(java.sql.Date.class),
                     "Cash", (short) 1, true, date,BigDecimal.ZERO,BigDecimal.ZERO));
         } catch (BusinessRuleException e) {
-            verify(loanBO, never()).makeEarlyRepayment((Money) anyObject(), (Date) anyObject(), anyString(), (Date) anyObject(), anyString(), (Short) anyObject(), anyBoolean(), Matchers.<Money>anyObject());
+            verify(loanBO, never()).makeEarlyRepayment((AccountPaymentDto) anyObject(), (Short) anyObject(), anyBoolean(), Matchers.<Money>anyObject());
             verify(loanBO, never()).getCurrency();
             verify(loanBusinessService,never()).computeExtraInterest(eq(loanBO), Matchers.<Date>anyObject());
             assertThat(e.getMessageKey(), is(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED));

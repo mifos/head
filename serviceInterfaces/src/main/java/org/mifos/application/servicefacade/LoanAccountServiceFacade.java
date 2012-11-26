@@ -23,6 +23,7 @@ package org.mifos.application.servicefacade;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -261,4 +262,10 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     List<AccountPaymentDto> getLoanAccountPayments(String globalAccountNum);
     
     Integer getGroupLoanType(String globalAccountNum);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    void makeEarlyGroupRepayment(RepayLoanInfoDto repayLoanInfoDto, Map<String, Double> memberNumWithAmount);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void makeEarlyGroupRepaymentFromSavings(RepayLoanInfoDto repayLoanInfoDto, String savingsAccGlobalNum, Map<String, Double> memberNumWithAmount);
 }

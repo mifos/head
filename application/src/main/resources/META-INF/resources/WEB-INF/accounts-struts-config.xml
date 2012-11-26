@@ -81,6 +81,7 @@
             <forward name="previous_success" path="/pages/accounts/jsp/account_addnotes.jsp"/>
             <forward name="loan_detail_page" path="/loanAccountAction.do?method=get"/>
             <forward name="savings_details_page" path="/savingsAction.do?method=get"/>
+            <forward name="group_loan_detail_page" path="/groupLoanAccountAction.do?method=get"/>
             <forward name="preview_failure" path="/pages/accounts/jsp/account_addnotes.jsp"/>
             <forward name="create_failure" path="/pages/accounts/jsp/account_previewnotes.jsp"/>
         </action>
@@ -105,6 +106,7 @@
                 parameter="method" scope="session" name="repayLoanActionForm" validate="true"
                 input="/repayLoanAction.do?method=validate">
             <forward name="load_success" path="/pages/application/loan/jsp/RepayLoan.jsp"/>
+            <forward name="load_group_success" path="/pages/application/loan/jsp/RepayLoan.jsp"/>
             <forward name="preview_success" path="/pages/application/loan/jsp/Review_RepayLoan.jsp"/>
             <forward name="previous_success" path="/pages/application/loan/jsp/RepayLoan.jsp"/>
             <forward name="update_success" path="/loanAccountAction.do?method=get"/>

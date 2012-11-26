@@ -147,7 +147,7 @@ public class RepayLoanActionForm extends BaseActionForm {
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String method = request.getParameter("method");
         ActionErrors errors = new ActionErrors();
-        if (!method.equals("loadRepayment") && !method.equals("makeRepayment") && !method.equals("validate")
+        if (!method.equals("loadRepayment") && !method.equals("loadGroupRepayment") &&  !method.equals("makeRepayment") && !method.equals("validate")
                 && !method.equals("previous") && !method.equals("cancel")) {
             errors.add(super.validate(mapping, request));
             validateDateOfPayment(errors);

@@ -153,6 +153,7 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
+import org.mifos.dto.domain.AccountPaymentDto;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -1328,25 +1329,29 @@ public class LoanBO extends AccountBO implements Loan {
         return amount;
     }
 
-    public void makeEarlyRepayment(final Money totalAmount, final Date transactionDate, final String receiptNumber,
-            final Date receiptDate, final String paymentTypeId, final Short personnelId, boolean waiveInterest,
+    public void makeEarlyRepayment(AccountPaymentDto paymentDto, final Short personnelId, boolean waiveInterest,
             Money interestDue) throws AccountException {
-
-        makeEarlyRepayment(totalAmount, transactionDate, receiptNumber, receiptDate, paymentTypeId, personnelId,
-                waiveInterest, interestDue, null);
+        makeEarlyRepayment(paymentDto, personnelId, waiveInterest, interestDue, null, null);
 
     }
     
-    public void makeEarlyRepayment(final Money totalAmount, final Date transactionDate,
-                                   final String receiptNumber, final Date receiptDate,
-                                   final String paymentTypeId, final Short personnelId,
-                                   boolean waiveInterest, Money interestDue, Integer savingsPaymentId) throws AccountException {
+    public void makeEarlyRepayment(final AccountPaymentDto paymentDto, final Short personnelId,
+                                   boolean waiveInterest, Money interestDue,
+                                   Integer savingsPaymentId, AccountPaymentEntity parentPayment) throws AccountException {
         try {
             PersonnelBO currentUser = legacyPersonnelDao.getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
-            this.setUpdatedDate(transactionDate);
-            AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, totalAmount, receiptNumber,
-                    receiptDate, getPaymentTypeEntity(Short.valueOf(paymentTypeId)), transactionDate);
+            this.setUpdatedDate(paymentDto.getTransactionDate());
+            AccountPaymentEntity accountPaymentEntity;
+            if (this.isGroupLoanAccount() && null != this.getParentAccount()) {
+            accountPaymentEntity = new AccountPaymentEntity(this, new Money(getCurrency(),paymentDto.getTotalAmount()), paymentDto.getReceiptNumber(),
+                    paymentDto.getReceiptDate(), getPaymentTypeEntity(Short.valueOf(paymentDto.getPaymentTypeId())), paymentDto.getTransactionDate(),parentPayment);
+            }
+            else {
+                accountPaymentEntity = new AccountPaymentEntity(this, new Money(getCurrency(),paymentDto.getTotalAmount()), paymentDto.getReceiptNumber(),
+                        paymentDto.getReceiptDate(), getPaymentTypeEntity(Short.valueOf(paymentDto.getPaymentTypeId())), paymentDto.getTransactionDate());
+            }
+                
             if (savingsPaymentId != null) {
                 AccountPaymentEntity withdrawal = legacyAccountDao.findPaymentById(savingsPaymentId);
                 accountPaymentEntity.setOtherTransferPayment(withdrawal);
@@ -1362,7 +1367,7 @@ public class LoanBO extends AccountBO implements Loan {
                 getPerformanceHistory().setNoOfPayments(getPerformanceHistory().getNoOfPayments() + 1);
             }
             LoanActivityEntity loanActivity = buildLoanActivity(accountPaymentEntity.getAccountTrxns(), currentUser,
-                    AccountConstants.LOAN_REPAYMENT, transactionDate);
+                    AccountConstants.LOAN_REPAYMENT, paymentDto.getTransactionDate());
             addLoanActivity(loanActivity);
             buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 
@@ -1372,22 +1377,31 @@ public class LoanBO extends AccountBO implements Loan {
                     legacyPersonnelDao.getPersonnel(personnelId), this));
             setAccountState(legacyMasterDao.getPersistentObject(AccountStateEntity.class,
                     AccountStates.LOANACC_OBLIGATIONSMET));
-            setClosedDate(transactionDate);
+            setClosedDate(paymentDto.getTransactionDate());
 
             // Client performance entry
             updateCustomerHistoryOnRepayment();
             this.delete(loanArrearsAgingEntity);
             loanArrearsAgingEntity = null;
-            getlegacyLoanDao().createOrUpdate(this);
 
             // GLIM
-            if (hasMemberAccounts()) {
+            if (this.isGroupLoanAccount() && null == this.getParentAccount()){
+                for (Map.Entry<String, Double> entry : paymentDto.getMemberNumWithAmount().entrySet()) {
+                    AccountPaymentDto memberPayment = new AccountPaymentDto(entry.getValue(), paymentDto.getTransactionDate(), paymentDto.getReceiptNumber(), paymentDto.getReceiptDate(), paymentDto.getPaymentTypeId());
+                    legacyLoanDao.getAccount(Integer.valueOf(entry.getKey())).makeEarlyRepayment(memberPayment, personnelId, waiveInterest, interestDue,null,accountPaymentEntity);
+                }
+            } 
+            else if (hasMemberAccounts() && !this.isGroupLoanAccount()) {
                 for (LoanBO memberAccount : this.memberAccounts) {
                     BigDecimal fraction = memberAccount.calcFactorOfEntireLoan();
-                    memberAccount.makeEarlyRepayment(totalAmount.divide(fraction), transactionDate, receiptNumber, receiptDate,
-                            paymentTypeId, personnelId, waiveInterest, interestDue, null);
+                    paymentDto.setTotalAmount(new BigDecimal(paymentDto.getTotalAmount()).divide(fraction).doubleValue());
+                    memberAccount.makeEarlyRepayment(paymentDto, personnelId, waiveInterest, interestDue,
+                            null,null);
                 }
             }
+            this.legacyAccountDao.createOrUpdate(accountPaymentEntity);
+            this.legacyAccountDao.createOrUpdate(this);
+            
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
