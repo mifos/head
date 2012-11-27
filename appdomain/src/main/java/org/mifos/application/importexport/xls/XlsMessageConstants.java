@@ -50,7 +50,7 @@ public enum XlsMessageConstants {
             "admin.importexport.xls.error.monthlyMeetingNotEmpty"), INCOMPLETE_MEETING_DATA(
             "admin.importexport.xls.error.incompleteMeetingData"), LOAN_OFFICER_FOR_GROUP_CLIENT(
             "admin.importexport.xls.error.loanOfficerForGroupClient"), MEETING_FOR_GROUP(
-            "admin.importexport.xls.error.meetingForGroup"),
+            "admin.importexport.xls.error.meetingForGroup"),ACTIVE_STATUS_FOR_ACTIVATION_DATE("admin.importexport.xls.error.invalidStatus"),
 
     SPOUSE("admin.importexport.xls.spouse"), FATHER("admin.importexport.xls.father"),
 

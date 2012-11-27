@@ -155,7 +155,7 @@ public class ImportClientsServiceFacadeWebTier implements ImportClientsServiceFa
             /* Status */
             CustomerStatus clientStatus = CustomerStatus.fromInt(clientCreationDetail.getClientStatus());
             CustomerStatus finalStatus = clientStatus;
-            if (clientStatus == CustomerStatus.CLIENT_ACTIVE) {
+            if (clientStatus == CustomerStatus.CLIENT_ACTIVE && clientCreationDetail.getActivationDate()==null) {
                 clientStatus = CustomerStatus.CLIENT_PENDING;
             }
             /* Address */
@@ -215,6 +215,10 @@ public class ImportClientsServiceFacadeWebTier implements ImportClientsServiceFa
                         clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity,
                         clientDetailEntity, associatedOfferings, clientCreationDetail.getExternalId(), address,
                         lastSearchIdCustomerValue);
+
+                if (clientCreationDetail.getActivationDate() != null){
+                    client.setCustomerActivationDate(clientCreationDetail.getActivationDate().toDateMidnight().toDate());
+                }
             }
             // global id
             if (importedClient.getClientGlobalNum() != null) {
@@ -290,7 +294,13 @@ public class ImportClientsServiceFacadeWebTier implements ImportClientsServiceFa
                         client.addCustomerHierarchy(hierarchy);
                     }
 
-                    client.setCustomerActivationDate(dateTimeService.getCurrentJavaDateTime());
+                    if (client.getCustomerActivationDate() != null)
+                    {
+                        client.setCustomerActivationDate(client.getCustomerActivationDate());
+                    }
+                    else{
+                        client.setCustomerActivationDate(dateTimeService.getCurrentJavaDateTime());
+                    }
                     customerAccount.createSchedulesAndFeeSchedulesForFirstTimeActiveCustomer(client, accountFees,
                             meeting, applicableCalendarEvents, new DateTime(client.getCustomerActivationDate()));
                     
