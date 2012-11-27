@@ -59,12 +59,16 @@ public class PentahoReportLocator {
     private static String getPathToUploadedReport(String reportFileName) {
         String uploadsDir = MifosConfigurationManager.getInstance().getString("GeneralConfig.UploadStorageDirectory",
                 "$HOME/.mifos/uploads");
+        StringBuilder sb ;
         if (File.separatorChar == '\\') { // windows platform
             uploadsDir = uploadsDir.replaceAll("/", "\\\\");
+            sb = new StringBuilder("file:/");
+        }
+        else {
+            sb= new StringBuilder("file://");
         }
 
         uploadsDir = uploadsDir.replace("$HOME", System.getProperty("user.home"));
-        StringBuilder sb = new StringBuilder("file://");
         sb.append(uploadsDir);
 
         if (!uploadsDir.endsWith(File.separator)) {
