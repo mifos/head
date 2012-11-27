@@ -391,6 +391,8 @@ explanation of the license and how it is applied.
 													<mifos:mifoslabel name="product.week" bundle="ProductDefUIResources" />
 												</c:if> <c:if test="${loanPrd.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId eq 2}">
 													<mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" />
+												</c:if> <c:if test="${loanPrd.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId eq 3}">
+													<mifos:mifoslabel name="product.day" bundle="ProductDefUIResources" />
 												</c:if> <br> 
 												<%--<mifos:mifoslabel name="product.maxinst" bundle="ProductDefUIResources" />: <fmt:formatNumber value="${loanPrd.maxNoInstallments}" /><br> <mifos:mifoslabel name="product.mininst" bundle="ProductDefUIResources" />: <fmt:formatNumber
 													value="${loanPrd.minNoInstallments}" /><br> <mifos:mifoslabel name="product.definst" bundle="ProductDefUIResources" />: <fmt:formatNumber value="${loanPrd.defNoInstallments}" />

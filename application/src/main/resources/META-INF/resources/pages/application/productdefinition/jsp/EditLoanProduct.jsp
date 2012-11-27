@@ -723,12 +723,18 @@ explanation of the license and how it is applied.
 												<span id="EditLoanProduct.label.frequencyWeeks">
 												<mifos:mifoslabel
 												name="product.weeks" bundle="ProductDefUIResources" /></span></td>
-											<td width="55%"><html-el:radio styleId="EditLoanProduct.input.frequencyMonths"
+											<td width="24%"><html-el:radio styleId="EditLoanProduct.input.frequencyMonths"
 												property="freqOfInstallments" value="2"
 												onclick="showMeetingFrequency();" /> 
 												<span id="EditLoanProduct.label.frequencyMonths">
 												<mifos:mifoslabel
 												name="product.months" bundle="ProductDefUIResources" /></span></td>
+											<td width="24%"><html-el:radio styleId="EditLoanProduct.input.frequencyDays"
+												property="freqOfInstallments" value="3"
+												onclick="showMeetingFrequency();" /> 
+												<span id="EditLoanProduct.label.frequencyDays">
+												<mifos:mifoslabel
+												name="product.days" bundle="ProductDefUIResources" /></span></td>
 										</tr>
 									</table>
 									</td>
@@ -747,6 +753,8 @@ explanation of the license and how it is applied.
 											<td><span id="week"> <mifos:mifoslabel
 												name="product.week" bundle="ProductDefUIResources" /> </span> <span
 												id="month"> <mifos:mifoslabel name="product.month"
+												bundle="ProductDefUIResources" /> </span>
+												<span id="day"> <mifos:mifoslabel name="product.day"
 												bundle="ProductDefUIResources" /> </span></td>
 										</tr>
 									</table>

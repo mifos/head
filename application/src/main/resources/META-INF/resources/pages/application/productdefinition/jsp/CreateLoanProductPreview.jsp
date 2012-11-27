@@ -650,6 +650,10 @@ explanation of the license and how it is applied.
 										test="${sessionScope.loanproductactionform.freqOfInstallments eq 2}">
 										<mifos:mifoslabel name="product.month"
 											bundle="ProductDefUIResources" />
+									</c:if> <c:if
+										test="${sessionScope.loanproductactionform.freqOfInstallments eq 3}">
+										<mifos:mifoslabel name="product.day"
+											bundle="ProductDefUIResources" />
 									</c:if> </span> <br>
 									<!--
 									        <mifos:mifoslabel name="product.maxinst" bundle="ProductDefUIResources" />

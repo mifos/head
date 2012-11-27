@@ -31,10 +31,15 @@ $(document).ready(function() {
 function showMeetingFrequency(){
     if (document.getElementsByName("freqOfInstallments")[1].checked == true){
         document.getElementById("week").style.display = "none";
+        document.getElementById("day").style.display = "none";
         document.getElementById("month").style.display = "block";
-    }
-    else {
+    } else if (document.getElementsByName("freqOfInstallments")[2].checked == true) {
+        document.getElementById("week").style.display = "none";
+        document.getElementById("day").style.display = "block";
+        document.getElementById("month").style.display = "none";
+    } else {
         document.getElementById("week").style.display = "block";
+        document.getElementById("day").style.display = "none";
         document.getElementsByName("freqOfInstallments")[0].checked = true;
         document.getElementById("month").style.display = "none";
     }

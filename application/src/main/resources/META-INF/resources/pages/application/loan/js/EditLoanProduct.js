@@ -46,13 +46,17 @@ function fnCancel(form) {
 }
 function showMeetingFrequency(){
     if (document.getElementsByName("freqOfInstallments")[1].checked == true){
-        document.getElementsByName("week")[0].style.display = "none";
-        document.getElementsByName("month")[0].style.display = "block";
-    }
-    else {
-        document.getElementsByName("week")[0].style.display = "block";
-        document.getElementsByName("freqOfInstallments")[0].checked = true;
-        document.getElementsByName("month")[0].style.display = "none";
+    	document.getElementById("day").style.display = "none";
+        document.getElementById("week").style.display = "none";
+        document.getElementById("month").style.display = "block";
+    } else if (document.getElementsByName("freqOfInstallments")[2].checked == true) {
+    	document.getElementById("day").style.display = "block";
+        document.getElementById("week").style.display = "none";
+        document.getElementById("month").style.display = "none";
+    } else {
+    	document.getElementById("day").style.display = "none";
+        document.getElementById("week").style.display = "block";
+        document.getElementById("month").style.display = "none";
     }
 }
 function fnIntDesbr() {
