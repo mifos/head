@@ -72,6 +72,7 @@ import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
+import org.mifos.framework.util.helpers.DateUtils;
 
 public class XlsClientsImporter implements MessageSourceAware {
 
@@ -366,6 +367,12 @@ public class XlsClientsImporter implements MessageSourceAware {
                         if (!StringUtils.isBlank(groupGlobalNum) && !StringUtils.isBlank(loanOfficer)) {
                             throw new CellException(getMessage(XlsMessageConstants.LOAN_OFFICER_FOR_GROUP_CLIENT));
                         }
+                        
+                        currentCell = XlsImportConstants.ACTIVATION_DATE_CELL;
+                        final LocalDate activationDate = DateUtils.getLocalDateFromDate(getCellDateValue(row, currentCell));
+                        if (activationDate != null && !status.equals(getMessage(XlsMessageConstants.ACTIVE))) {
+                            throw new CellException(getMessage(XlsMessageConstants.ACTIVE_STATUS_FOR_ACTIVATION_DATE));
+                        }
 
                         /* Meeting data */
 
@@ -555,7 +562,6 @@ public class XlsClientsImporter implements MessageSourceAware {
                         final List<ClientNameDetailDto> familyNames = null;
                         final List<ClientFamilyDetailDto> familyDetails = null;
                         final List<Short> selectedSavingsProducts = null;
-                        final LocalDate activationDate = new LocalDate();
                         /* Final dto */
                         final ClientCreationDetail clientCreationDetail = new ClientCreationDetail(selectedSavingsProducts,
                                 clientName, statusId, mfiJoiningDate, externalId, addressDto, formedBy, dateOfBirth,

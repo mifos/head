@@ -457,4 +457,10 @@ public class AdminPage extends MifosPage {
         waitForPageToLoad();
         return new ImportSavingsPage(selenium);
     }
+    
+    public ClientDataImportPage navigateToClientDataImportPage(){
+        selenium.click("admin.link.importClients");
+        waitForPageToLoad();
+        return new ClientDataImportPage(selenium);
+    }
 }
