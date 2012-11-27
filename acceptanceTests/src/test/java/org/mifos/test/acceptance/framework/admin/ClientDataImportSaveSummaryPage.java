@@ -1,0 +1,24 @@
+package org.mifos.test.acceptance.framework.admin;
+
+import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
+
+import com.thoughtworks.selenium.Selenium;
+
+public class ClientDataImportSaveSummaryPage extends MifosPage {
+    public ClientDataImportSaveSummaryPage(Selenium selenium) {
+        super(selenium);
+    }
+
+    public void verifyPage() {
+        verifyPage("ImportClientSaved");
+    }
+
+    public void verifySuccesString(String succesNumber) {
+        Assert.assertTrue(selenium.isTextPresent("Clients successfully saved: "+succesNumber));
+    }
+
+    public void verifyErrorString(String errorNumber) {
+        Assert.assertTrue(selenium.isTextPresent("Ignored rows: "+errorNumber));
+    }
+}

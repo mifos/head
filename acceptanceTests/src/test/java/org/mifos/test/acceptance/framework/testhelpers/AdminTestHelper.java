@@ -22,6 +22,8 @@ package org.mifos.test.acceptance.framework.testhelpers;
 
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.ChecklistDetailsPage;
+import org.mifos.test.acceptance.framework.admin.ClientDataImportPage;
+import org.mifos.test.acceptance.framework.admin.ClientDataImportReviewPage;
 import org.mifos.test.acceptance.framework.admin.CustomizeTextAddPage;
 import org.mifos.test.acceptance.framework.admin.CustomizeTextViewPage;
 import org.mifos.test.acceptance.framework.admin.DefineChecklistParameters;
@@ -130,6 +132,15 @@ public class AdminTestHelper {
         ImportSavingsPage selectFilePage=adminPage.navigateToImportSavingPage();
         selectFilePage.verifyPage();
         ImportSavingsReviewPage reviewPage =selectFilePage.submitToReview(importFile);
+        reviewPage.verifyPage();
+        return reviewPage;
+    }
+    
+    public ClientDataImportReviewPage loadClientDataImportFileAndSubmitForReview(String importFile) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ClientDataImportPage selectFilePage=adminPage.navigateToClientDataImportPage();
+        selectFilePage.verifyPage();
+        ClientDataImportReviewPage reviewPage =selectFilePage.submitToReview(importFile);
         reviewPage.verifyPage();
         return reviewPage;
     }
