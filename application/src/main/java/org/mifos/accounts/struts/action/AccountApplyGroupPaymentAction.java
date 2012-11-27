@@ -42,6 +42,7 @@ import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.GroupLoanAccountServiceFacade;
@@ -66,7 +67,11 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class AccountApplyGroupPaymentAction extends BaseAction {
-
+    
+    private final static String ZERO_PAYMENT = "0.0";
+    private final static String LOAN_TYPE = "loanType";
+    private final static String PARENT = "parent";
+    private final static String MEMBER = "member";
     private AccountService accountService = null;
     private GroupLoanAccountServiceFacade groupLoanService;
     private LoanAccountServiceFacade loanService;
@@ -103,13 +108,19 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
                 accountReferenceDto.getAccountId(), request.getParameter(Constants.INPUT), userContext.getLocaleId(),
                 new UserReferenceDto(userContext.getId()), DateUtils.getCurrentJavaDateTime());
         
-
-        
         setValuesInSession(request, actionForm, accountPaymentDto);
         actionForm.setLastPaymentDate(accountPaymentDto.getLastPaymentDate());
         actionForm.setAmount(accountPaymentDto.getTotalPaymentDue());
         actionForm.setTransferPaymentTypeId(this.legacyAcceptedPaymentTypeDao.getSavingsTransferId());
-       
+        
+        LoanBO loan = loanDao.findById(accountReferenceDto.getAccountId());
+        if (loan.isGroupLoanAccountParent()) {
+            SessionUtils.setAttribute(LOAN_TYPE, PARENT, request);
+        }
+        else if (loan.isGroupLoanAccountMember()) {
+            SessionUtils.setAttribute(LOAN_TYPE, MEMBER, request);
+        }
+
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -154,14 +165,15 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
         
         Double oldAmmount = Double.valueOf(accountApplyPaymentActionForm.getAmount());
         Double newAmounts = 0.0;
-        for(String amount : accountApplyPaymentActionForm.getIndividualValues().values()) {
-            newAmounts += Double.valueOf(amount);
+        if (!accountApplyPaymentActionForm.getIndividualValues().isEmpty()) {
+            for(String amount : accountApplyPaymentActionForm.getIndividualValues().values()) {
+                newAmounts += Double.valueOf(amount);
+            }
+            
+            if (!oldAmmount.equals(newAmounts)) {
+                accountApplyPaymentActionForm.setAmount(newAmounts.toString());
+            }
         }
-        
-        if (!oldAmmount.equals(newAmounts)) {
-            accountApplyPaymentActionForm.setAmount(newAmounts.toString());
-        }
-        
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
@@ -200,11 +212,23 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
         } else {
             paymentTypeDto = getFeePaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
         }
-
-        AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(userReferenceDto,
-                new AccountReferenceDto(accountId), new BigDecimal(amount), actionForm.getTrxnDateAsLocalDate(),
-                paymentTypeDto, AccountConstants.NO_COMMENT, actionForm.getReceiptDateAsLocalDate(),
-                actionForm.getReceiptId(), accountPaymentDto.getCustomerDto(), actionForm.getIndividualValues());
+        AccountPaymentParametersDto accountPaymentParametersDto;
+        if (isGroupParentAccount(accountId)) {
+            accountPaymentParametersDto = new AccountPaymentParametersDto(userReferenceDto,
+                    new AccountReferenceDto(accountId), new BigDecimal(amount), actionForm.getTrxnDateAsLocalDate(),
+                    paymentTypeDto, AccountConstants.NO_COMMENT, actionForm.getReceiptDateAsLocalDate(),
+                    actionForm.getReceiptId(), accountPaymentDto.getCustomerDto(), actionForm.getIndividualValues());
+        }
+        else if (isGroupMemberAccount(accountId)) {
+            accountPaymentParametersDto = preparePaymentParametersDto(accountId, userReferenceDto, amount,
+                    actionForm, paymentTypeDto, userContext, paymentType);
+        }
+        else {
+            accountPaymentParametersDto = new AccountPaymentParametersDto(userReferenceDto,
+                    new AccountReferenceDto(accountId), new BigDecimal(amount), actionForm.getTrxnDateAsLocalDate(),
+                    paymentTypeDto, AccountConstants.NO_COMMENT, actionForm.getReceiptDateAsLocalDate(),
+                    actionForm.getReceiptId(), accountPaymentDto.getCustomerDto());
+        }
 
         if (paymentTypeDto.getValue().equals(this.legacyAcceptedPaymentTypeDao.getSavingsTransferId())) {
             this.accountServiceFacade.makePaymentFromSavingsAcc(accountPaymentParametersDto,
@@ -222,8 +246,42 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
         else {
             findForward = mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
         }
+        
         return findForward;
+    }
+    
+    private boolean isGroupParentAccount(Integer accountId) {
+        return this.loanDao.findById(accountId).isGroupLoanAccountParent();
+    }
+    
+    private boolean isGroupMemberAccount(Integer accountId) {
+        return this.loanDao.findById(accountId).isGroupLoanAccountMember();
+    }
+    
+    private AccountPaymentParametersDto preparePaymentParametersDto(Integer accountId, UserReferenceDto userReferenceDto, String amount,
+            AccountApplyPaymentActionForm actionForm, PaymentTypeDto paymentTypeDto, UserContext userContext, String paymentType) throws InvalidDateException {
 
+        LoanBO acctualMemberAccount = loanDao.findById(accountId);
+        LoanBO parrentAccount = acctualMemberAccount.getParentAccount();
+        Integer parentAccountId = parrentAccount.getAccountId();
+        
+        AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(parentAccountId, paymentType,
+                userContext.getLocaleId(), userReferenceDto, actionForm.getTrxnDate());
+        
+        HashMap<Integer, String> individualValues = new HashMap<Integer, String>();
+        for (LoanBO member : loanDao.findIndividualLoans(parentAccountId)) {
+            if (member.getAccountId().equals(acctualMemberAccount.getAccountId())){
+                individualValues.put(member.getAccountId(), amount);
+            }
+            else {
+                individualValues.put(member.getAccountId(), ZERO_PAYMENT);
+            }
+        }
+        
+        return new AccountPaymentParametersDto(userReferenceDto,
+                new AccountReferenceDto(parentAccountId), new BigDecimal(amount), actionForm.getTrxnDateAsLocalDate(),
+                paymentTypeDto, AccountConstants.NO_COMMENT, actionForm.getReceiptDateAsLocalDate(),
+                actionForm.getReceiptId(), accountPaymentDto.getCustomerDto(), individualValues);
     }
 
     private void validateAmount(AccountPaymentDto accountPaymentDto, String amount) throws ApplicationException {

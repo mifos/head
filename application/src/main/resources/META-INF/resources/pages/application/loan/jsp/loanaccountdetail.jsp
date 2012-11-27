@@ -97,6 +97,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								value="${loanInformationDto.prdOfferingName}" />&nbsp;# <span id="loanaccountdetail.text.loanid"><c:out
 								value="${loanInformationDto.globalAccountNum}" /></span> <br>
 							</td>
+                            <c:choose>
+                            <c:when test="${!loanAccount.groupLoanAccountMember}">
 							<td width="38%" rowspan="2" align="right" valign="top"
 								class="fontnormal"><c:if
 								test="${loanInformationDto.accountStateId != 6 and loanInformationDto.accountStateId != 7 and loanInformationDto.accountStateId !=8 and loanInformationDto.accountStateId !=10}">
@@ -106,6 +108,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								</html-el:link>
 							</c:if><br>
 							</td>
+							</c:when>
+							</c:choose>
 						</tr>
 					</table>
 					<table width="100%" border="0" cellpadding="3" cellspacing="0">
@@ -328,6 +332,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						<tr>
 							<td width="69%" class="headingorange"><mifos:mifoslabel
 								name="loan.acc_details" /></td>
+                            <c:choose>
+                            <c:when test="${!loanAccount.groupLoanAccountMember}">
 							<td width="31%" align="right" valign="top" class="fontnormal"><c:if
 								test="${loanInformationDto.accountStateId != 6 && loanInformationDto.accountStateId != 7 && loanInformationDto.accountStateId !=8 && loanInformationDto.accountStateId !=10}">
 								<html-el:link styleId="loanaccountdetail.link.editAccountInformation"
@@ -335,6 +341,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									<mifos:mifoslabel name="loan.edit_acc_info" />
 								</html-el:link>
 							</c:if></td>
+							</c:when>
+							</c:choose>
 						</tr>
 						<tr>
 							<td height="23" colspan="2" class="fontnormal"><span
@@ -642,6 +650,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                         <c:set target="${urlMap}" property="${loanInformationDto.officeName}" value="custSearchAction.do?method=getOfficeHomePage&officeId=${loanInformationDto.officeId}"/>
                                         <c:set target="${urlMap}" property="${loanInformationDto.customerName}" value="clientCustAction.do?method=get&globalCustNum=${loanInformationDto.globalCustNum}"/>
                                         <c:set target="${urlMap}" property="${loanInformationDto.prdOfferingName}" value="viewLoanAccountDetails.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}"/>
+                                        <c:choose>
+                                        <c:when test="${!loanAccount.groupLoanAccountMember}">
                                         <c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaireMethodUrl" >
                                             <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
                                             <c:param name="entityId" value="${loanInformationDto.accountId}" />
@@ -652,6 +662,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                         <a id="loanaccountdetail.link.questionGroups" href="${viewAndEditQuestionnaireMethodUrl}">
                                             <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
                                         </a> <br/>
+                                        </c:when>
+                                        </c:choose>
                                            <c:url value="viewAndEditQuestionnaire.ftl" var="viewAndEditQuestionnaireForClosedLoanResponsesLinkMethodUrl" >
                                             <c:param name="creatorId" value="${sessionScope.UserContext.id}" />
                                             <c:param name="entityId" value="${loanInformationDto.accountId}" />
@@ -708,11 +720,32 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 											<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
 											<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
 											</c:url >
-										<html-el:link styleId="loanaccountdetail.link.applyPayment"
-											href="${applyPaymentActionMethodUrl}">
-											<mifos:mifoslabel name="loan.apply_payment" />
-										</html-el:link>
-
+                                         <c:url value="applyGroupPaymentAction.do" var="applyGroupPaymentActionMethodUrl" >
+                                                <c:param name="method" value="load" />
+                                                <c:param name="input" value="loan" />
+                                                <c:param name="prdOfferingName" value="${loanInformationDto.prdOfferingName}" />
+                                                <c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}" />
+                                                <c:param name="accountId" value="${loanInformationDto.accountId}" />
+                                                <c:param name="accountType" value="${loanInformationDto.accountTypeId}" />
+                                                <c:param name="recordOfficeId" value="${loanInformationDto.officeId}" />
+                                                <c:param name="recordLoanOfficerId" value="${loanInformationDto.personnelId}" />
+                                                <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+                                                <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+                                                </c:url >
+                                        <c:choose>
+                                          <c:when test="${loanAccount.parentGroupLoanAccount || loanAccount.groupLoanAccountMember }">
+                                            <html-el:link styleId="loanaccountdetail.link.applyPayment"
+                                                href="${applyGroupPaymentActionMethodUrl}">
+                                                <mifos:mifoslabel name="loan.apply_payment" />
+                                            </html-el:link>
+                                          </c:when>
+                                          <c:otherwise>
+                                            <html-el:link styleId="loanaccountdetail.link.applyPayment"
+                                                href="${applyPaymentActionMethodUrl}">
+                                                <mifos:mifoslabel name="loan.apply_payment" />
+                                            </html-el:link>
+                                          </c:otherwise>
+                                        </c:choose>
                                         <c:if test="${loanInformationDto.interestType == 2 || loanInformationDto.interestType == 4}">
         									<c:url value="customLoanRepayment.ftl" var="customLoanRepaymentMethodUrl" >
         										<c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}" />
@@ -899,6 +932,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								height="8"></td>
 						</tr>
 					</table>
+                        <c:choose>
+                        <c:when test="${!loanAccount.groupLoanAccountMember}">
 						<table width="100%" border="0" cellpadding="2" cellspacing="0"
 							class="bluetableborder">
 							<tr>
@@ -947,11 +982,13 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 					                    <c:param name="source" value="Loan" />
 					                    <c:param name="backPageUrl" value="${currentPageUrl}" />
 			                  	 	</c:url >
-									<a id="loanaccountdetail.link.attachSurvey" href="${questionnaireUrl}">
-										<mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources" />
-									</a><br>
+                                    <a id="loanaccountdetail.link.attachSurvey" href="${questionnaireUrl}">
+                                        <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources" />
+                                    </a><br>
 								</span>
 						</table>
+			             </c:when>
+						</c:choose>
 						<table width="95%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td><img src="pages/framework/images/trans.gif" width="7"

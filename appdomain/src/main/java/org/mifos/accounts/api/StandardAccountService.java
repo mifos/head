@@ -197,7 +197,6 @@ public class StandardAccountService implements AccountService {
         final AccountBO account = this.legacyAccountDao.getAccount(accountId);
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(mifosUser);
-        
         try {
             personnelDao.checkAccessPermission(userContext, account.getOfficeId(), account.getCustomer().getLoanOfficerId());
         } catch (AccountException e) {
@@ -242,7 +241,7 @@ public class StandardAccountService implements AccountService {
         paymentData.setComment(accountPaymentParametersDto.getComment());
         paymentData.setOverpaymentAmount(overpaymentAmount);
         
-        if (account instanceof LoanBO && ((LoanBO)account).getParentAccount() != null && account.isGroupLoanAccount()) {
+        if (account instanceof LoanBO && account.isGroupLoanAccountMember()) {
             paymentData.setParentPayment(parentPayment);
         }
         
