@@ -33,7 +33,7 @@ public class LoanDecliningInterestAnnualPeriodCalculatorFactory {
         case WEEKLY:
             return new LoanDecliningInterestAnnualPeriodCalculatorForWeeklyRecurrence();
         case DAILY:
-            throw new BusinessRuleException(AccountConstants.NOT_SUPPORTED_DURATION_TYPE);
+            return new LoanDecliningInterestAnnualPeriodCalculatorForDailyRecurrence();
         default:
             throw new BusinessRuleException(AccountConstants.NOT_SUPPORTED_DURATION_TYPE);
         }

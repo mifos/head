@@ -231,6 +231,8 @@
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.week(s)"/]</span>
 	    		<input type="radio" id="loancreationdetails.input.frequencyMonths" name="repaymentFrequency" disabled=disabled/>
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
+	    		<input type="radio" id="loancreationdetails.input.frequencyDays" name="repaymentFrequency" disabled=disabled/>
+	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.day(s)"/]</span>
 		    	<div id="week" id="weekDIV" style="margin-left: 306px; margin-bottom: 5px; margin-top: 5px; border: 1px solid grey; padding-left: 4px;">
 		    		<div style="margin-top: 2px; margin-bottom: 2px;">[@spring.message "manageLoanProducts.defineLoanProduct.ifweeks,specifythefollowing" /]</div>
 			        [@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /]
@@ -239,12 +241,15 @@
 			        [@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentDayOfWeek" options=loanProductReferenceData.daysOfTheWeekOptions id="weekDay" /]
 		    	</div>
     		</div>
-    		[#else]
+    		[/#if]
+    		[#if loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceTypeId == 2]
     		<div class="row">
-	    		<input type="radio" id="loancreationdetails.input.frequencyWeeks" name="repaymentFrequency" disabled=disabled />
+	    		<input type="radio" id="loancreationdetails.input.frequencyWeeks" name="repaymentFrequency" checked=checked />
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.week(s)"/]</span>
-	    		<input type="radio" id="loancreationdetails.input.frequencyMonths" name="repaymentFrequency" checked=checked />
+	    		<input type="radio" id="loancreationdetails.input.frequencyMonths" name="repaymentFrequency" disabled=disabled/>
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
+	    		<input type="radio" id="loancreationdetails.input.frequencyDays" name="repaymentFrequency" disabled=disabled/>
+	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.day(s)"/]</span>
 	    		<div id="montlycontainer" style="margin-left: 306px; margin-bottom: 5px; margin-top: 5px; border: 1px solid grey; padding-left: 4px;">
 			    	<div id="monthlyoption1">
 			    		<div style="margin-top: 2px; margin-bottom: 2px;">[@spring.message "manageLoanProducts.defineLoanProduct.ifmonths,specifythefollowing" /]</div>
@@ -276,6 +281,22 @@
 			    	</div>
 			    </div>
 	    	</div>
+    		[/#if]
+    		[#if loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceTypeId == 3]
+    		<div class="row">
+	    		<input type="radio" id="loancreationdetails.input.frequencyWeeks" name="repaymentFrequency" disabled=disabled />
+	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.week(s)"/]</span>
+	    		<input type="radio" id="loancreationdetails.input.frequencyMonths" name="repaymentFrequency" disabled=disabled/>
+	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
+	    		<input type="radio" id="loancreationdetails.input.frequencyDays" name="repaymentFrequency" checked=checked/>
+	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.day(s)"/]</span>
+		    	<div id="day" id="dayDIV" style="margin-left: 306px; margin-bottom: 5px; margin-top: 5px; border: 1px solid grey; padding-left: 4px;">
+		    		<div style="margin-top: 2px; margin-bottom: 2px;">[@spring.message "manageLoanProducts.defineLoanProduct.ifdays,specifythefollowing" /]</div>
+			        [@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /]
+			        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="loancreationdetails.input.dayFrequency" attributes="size=3 maxlength=2"/]
+			        <span id="dayLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.day(s)" /]</span>
+		    	</div>
+    		</div>
     		[/#if]
     [/#if]
     

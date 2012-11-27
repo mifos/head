@@ -31,6 +31,7 @@ import org.joda.time.LocalDate;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
+import org.mifos.clientportfolio.loan.service.DailySchedule;
 import org.mifos.clientportfolio.loan.service.MonthlyOnDayOfMonthSchedule;
 import org.mifos.clientportfolio.loan.service.MonthlyOnWeekOfMonthSchedule;
 import org.mifos.clientportfolio.loan.service.RecurringSchedule;
@@ -166,6 +167,8 @@ public class LoanAccountController {
                 } else if (dateInformationIsAvailable(dayOfMonth)) {
                     formBean.setDayOfMonthDetails(dayOfMonth, recursEvery);
                 }
+            } else if (recurrenceType == 3) {
+                formBean.setRepaymentRecursEvery(recursEvery);
             }
     	}
 
@@ -444,6 +447,8 @@ public class LoanAccountController {
             }
         } else if (formBean.isWeekly()) {
             recurringSchedule = new WeeklySchedule(formBean.getRepaymentRecursEvery(), formBean.getRepaymentDayOfWeek());
+        } else {
+            recurringSchedule = new DailySchedule(formBean.getRepaymentRecursEvery());
         }
         return recurringSchedule;
     }

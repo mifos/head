@@ -374,6 +374,10 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									test="${loanInformationDto.recurrenceId == '1'}">
 									<mifos:mifoslabel name="loan.week(s)" />
 								</c:when>
+								<c:when
+									test="${loanInformationDto.recurrenceId == '3'}">
+									<mifos:mifoslabel name="loan.day(s)" />
+								</c:when>
 								<c:otherwise>
 									<mifos:mifoslabel name="loan.month(s)" />
 								</c:otherwise>

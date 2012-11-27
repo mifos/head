@@ -14,6 +14,7 @@ import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.internal.DailyScheduledEvent;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 
 public class AnyScheduledEventLoanInstallmentGenerator implements LoanInstallmentGenerator {
@@ -35,7 +36,12 @@ public class AnyScheduledEventLoanInstallmentGenerator implements LoanInstallmen
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             List<Holiday> holidays = new ArrayList<Holiday>();
 
-            LocalDate startFromMeetingDate = actualDisbursementDate.plusDays(1);
+            LocalDate startFromMeetingDate = null;
+            if (scheduledEvent instanceof DailyScheduledEvent) {
+                startFromMeetingDate = actualDisbursementDate.plusDays(scheduledEvent.getEvery());
+            } else {
+                startFromMeetingDate = actualDisbursementDate.plusDays(1);
+            }
 
             holidays = holidayDao.findAllHolidaysFromDateAndNext(officeId, startFromMeetingDate.toString());
 

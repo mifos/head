@@ -125,4 +125,9 @@ public class CreateLoanSchedule implements RecurringSchedule {
     public List<CreateAccountFeeDto> getAccountFeeEntities() {
         return accountFeeEntities;
     }
+
+    @Override
+    public boolean isDaily() {
+        return this.recurringSchedule.isDaily();
+    }
 }

@@ -297,4 +297,9 @@ public class CreationLoanAccountDto implements RecurringSchedule {
         return this.recurringSchedule.getWeek();
     }
 
+    @Override
+    public boolean isDaily() {
+        return recurringSchedule.isDaily();
+    }
+
 }

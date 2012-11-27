@@ -25,6 +25,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -60,11 +61,14 @@ public class LoanDurationInAccountingYearsCalculatorFactoryTest {
         // verification
         assertThat(loanDurationCalculator, is(instanceOf(LoanDurationInAccountingYearsCalculatorFactoryForMonthlyRecurrence.class)));
     }
-
-    @Test(expected = BusinessRuleException.class)
-    public void shouldThrowRuntimeExceptionForDecliningPbInterestType() {
+    
+    @Test
+    public void shouldUseDailyCalculator() {
 
         // exercise test
-        loanDurationCalculatorFactory.create(RecurrenceType.DAILY);
+        LoanDurationInAccountingYearsCalculator loanDurationCalculator = loanDurationCalculatorFactory.create(RecurrenceType.DAILY);
+
+        // verification
+        assertThat(loanDurationCalculator, is(instanceOf(LoanDurationInAccountingYearsCalculatorFactoryForDailyRecurrence.class)));
     }
 }

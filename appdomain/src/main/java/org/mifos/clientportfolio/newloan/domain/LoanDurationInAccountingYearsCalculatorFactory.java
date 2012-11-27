@@ -33,7 +33,7 @@ public class LoanDurationInAccountingYearsCalculatorFactory {
         case WEEKLY:
             return new LoanDurationInAccountingYearsCalculatorFactoryForWeeklyRecurrence();
         case DAILY:
-            throw new BusinessRuleException(AccountConstants.NOT_SUPPORTED_DURATION_TYPE);
+            return new LoanDurationInAccountingYearsCalculatorFactoryForDailyRecurrence();
         default:
             throw new BusinessRuleException(AccountConstants.NOT_SUPPORTED_DURATION_TYPE);
         }

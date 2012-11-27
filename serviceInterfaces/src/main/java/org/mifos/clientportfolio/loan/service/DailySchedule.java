@@ -1,17 +1,13 @@
 package org.mifos.clientportfolio.loan.service;
 
-public class MonthlyOnWeekOfMonthSchedule implements RecurringSchedule {
+public class DailySchedule implements RecurringSchedule {
 
     private final Integer recursEvery;
-    private final Integer weekOfMonth;
-    private final Integer dayOfWeek;
-
-    public MonthlyOnWeekOfMonthSchedule(Integer recursEvery, Integer weekOfMonth, Integer dayOfWeek) {
+    
+    public DailySchedule(Integer recursEvery) {
         this.recursEvery = recursEvery;
-        this.weekOfMonth = weekOfMonth;
-        this.dayOfWeek = dayOfWeek;
     }
-
+    
     @Override
     public boolean isWeekly() {
         return false;
@@ -19,7 +15,7 @@ public class MonthlyOnWeekOfMonthSchedule implements RecurringSchedule {
 
     @Override
     public boolean isMonthly() {
-        return true;
+        return false;
     }
 
     @Override
@@ -29,26 +25,27 @@ public class MonthlyOnWeekOfMonthSchedule implements RecurringSchedule {
 
     @Override
     public boolean isMonthlyOnWeekAndDayOfMonth() {
-        return true;
+        return false;
     }
 
     @Override
     public Integer getEvery() {
-        return this.recursEvery;
+        return recursEvery;
     }
 
     @Override
     public Integer getDay() {
-        return this.dayOfWeek;
+        return null;
     }
 
     @Override
     public Integer getWeek() {
-        return this.weekOfMonth;
+        return null;
     }
 
     @Override
     public boolean isDaily() {
-        return false;
+        return true;
     }
+
 }
