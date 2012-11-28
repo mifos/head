@@ -180,10 +180,10 @@ public class RepaymentScheduleData {
             {"5", "16-Nov-2010", "-", "201.7", "2.8", "100", "0", "304.5"}};
     public static final String[][] ACCOUNT_SUMMARY_REPAYMENT_ONE = {{"", "Original Loan", "Amount paid", "Loan balance"},
             {"Principal", "1,000", "1,000", "0"},
-            {"Interest", "-0.5", "0", "-0.5"}, //0
+            {"Interest", "-0.5", "0", "0"}, //0
             {"Fees", "100", "100", "0"},
             {"Penalty", "0", "0", "0"},
-            {"Total", "1,099.5", "1,100", "-0.5"}}; //0
+            {"Total", "1,099.5", "1,100", "0"}};
     public static final String[][] ACCOUNT_SUMMARY_ADJUSTMENT_ONE = {{"", "Original Loan", "Amount paid", "Loan balance"},
             {"Principal", "1,000","0", "1,000"},
             {"Interest",  "14.5",  "0", "14.5"}, //0
@@ -192,14 +192,21 @@ public class RepaymentScheduleData {
             {"Total",  "1,514.5",   "0", "1,514.5"}};
     public static final String[][] ACCOUNT_SUMMARY_REPAYMENT_TWO = {{"", "Original Loan", "Amount paid", "Loan balance"},
             {"Principal", "1,000", "1,000", "0"},
-            {"Interest", "11.8", "15.8", "-4"}, //14.5
+            {"Interest", "11.8", "15.8", "0"}, //14.5
             {"Fees", "400", "400", "0"},
             {"Penalty", "0", "0", "0"},
-            {"Total", "1,411.8", "1,415.8", "-4"}}; //14.5
+            {"Total", "1,411.8", "1,415.8", "0"}}; //14.5
     public static final String[][] ACCOUNT_SUMMARY_ADJUSTMENT_TWO = {{"", "Original Loan", "Amount paid", "Loan balance"},
             {"Principal", "1,000", "197.7", "802.3"},
-            {"Interest", "11", "5.3", "5.7"}, //14.5
+            {"Interest", "14.5", "5.3", "12.7"},
             {"Fees", "500", "200", "300"},
             {"Penalty", "0", "0", "0"},
-            {"Total", "1,511", "403", "1,108"}}; //less total balance
+            {"Total", "1,514.5", "403", "1,115"}};
+    public static final String[][] ACCOUNT_SUMMARY_OVERDUE_REPAYMENT = {
+            { "", "Original Loan", "Amount paid", "Loan balance" },            
+            {"Principal", "1,000", "1,000", "0"},
+            {"Interest", "12", "119.8", "0"},
+            {"Fees", "0", "0", "0"},
+            {"Penalty", "0", "0", "0"},
+            {"Total", "1,012", "1,119.8", "0"}};
 }

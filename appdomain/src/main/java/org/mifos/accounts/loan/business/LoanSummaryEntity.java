@@ -21,6 +21,7 @@
 package org.mifos.accounts.loan.business;
 
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
 
@@ -162,7 +163,20 @@ public class LoanSummaryEntity extends AbstractEntity {
         if (loanIsWrittenOffOrRescheduled()) {
             return new Money(this.getOriginalPrincipal().getCurrency());
         }
-        return getOriginalInterest().subtract(getInterestPaid());
+        if (loan.isDecliningBalanceInterestRecalculation()) {
+            Money extraInterest = new Money(loan.getCurrency());
+            for (LoanScheduleEntity loanScheduleEntity : loan.getLoanScheduleEntities()) {
+                extraInterest = extraInterest.add(loanScheduleEntity.getExtraInterest());
+            }
+            Money interestDue = getOriginalInterest().subtract(getInterestPaid()).add(extraInterest);
+            if (Money.round(interestDue, interestDue.getCurrency().getRoundingAmount(),
+                    AccountingRules.getCurrencyRoundingMode()).isZero()) {
+                interestDue = Money.zero();
+            }
+            return interestDue;
+        } else {
+            return getOriginalInterest().subtract(getInterestPaid());
+        }
     }
 
     public Money getPenaltyDue() {

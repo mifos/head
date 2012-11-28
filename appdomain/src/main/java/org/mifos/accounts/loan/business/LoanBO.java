@@ -1960,8 +1960,9 @@ public class LoanBO extends AccountBO implements Loan {
                          */
                         
                         if (installment.isPaid()) {
-                            increaseInterest = increaseInterest.add(installment.getInterestDue()).
-                                    add(loanReverseTrxn.getInterestAmount());
+                            increaseInterest = increaseInterest.add(
+                                    installment.getInterestDue().add(installment.getExtraInterestDue())).add(
+                                    loanReverseTrxn.getInterestAmount());
                             increaseFees = increaseFees.add(installment.getTotalFeesDue());
                             if (!this.noOfInstallments.equals(numberOfInstalments)) {
                             increaseFees = increaseFees.add(installment.getMiscFeeDue()).
@@ -2215,9 +2216,14 @@ public class LoanBO extends AccountBO implements Loan {
             }
         }
 
+        Money interestOutstanding = loanSummary.getOriginalInterest().subtract(loanSummary.getInterestPaid());
+        if (isDecliningBalanceInterestRecalculation()) {
+            for (LoanScheduleEntity loanScheduleEntity : getLoanScheduleEntities()) {
+                interestOutstanding = interestOutstanding.add(loanScheduleEntity.getExtraInterest());
+            }
+        }
         return new LoanActivityEntity(this, personnel, comments, principal, loanSummary.getOriginalPrincipal()
-                .subtract(loanSummary.getPrincipalPaid()), interest, loanSummary.getOriginalInterest().subtract(
-                loanSummary.getInterestPaid()), fees,
+                .subtract(loanSummary.getPrincipalPaid()), interest, interestOutstanding, fees,
                 loanSummary.getOriginalFees().subtract(loanSummary.getFeesPaid()), penalty, loanSummary
                         .getOriginalPenalty().subtract(loanSummary.getPenaltyPaid()), activityDate);
     }
