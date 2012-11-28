@@ -1671,6 +1671,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         UserContext userContext = new UserContextFactory().create(mifosUser);
 
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        if (loan.isDecliningBalanceInterestRecalculation()) {
+            loanBusinessService.computeExtraInterest(loan, DateUtils.getCurrentDateWithoutTimeStamp());
+        }
 
         try {
             personnelDao.checkAccessPermission(userContext, loan.getOfficeId(), loan.getCustomer().getLoanOfficerId());

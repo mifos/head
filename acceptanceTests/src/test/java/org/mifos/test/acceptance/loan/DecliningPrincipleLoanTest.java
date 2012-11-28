@@ -114,7 +114,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         verifyLateExcessPayment("000100000000027");
         verifyLateLessPayment("000100000000028");
         verifyMultipleDue("000100000000029");
-        verifyOverduePayment();
+        verifyOverdue();
     }
     
     private void verifyEarlyWholePayment() throws UnsupportedEncodingException {
@@ -258,7 +258,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         makePaymentAndVerifyPayment(accountID, paymentDate, "280", RepaymentScheduleData.EARLY_EXCESS_FIRST_PAYMENT);
     }
     
-    private void verifyOverduePayment() throws UnsupportedEncodingException {
+    private void verifyOverdue() throws UnsupportedEncodingException {
         propertiesHelper.setOverdueInterestPaidFirst("true");
         DateTime testDateTime = new DateTime(2010, 10, 12, 0, 0, 0, 0);
         loanTestHelper.setApplicationTime(testDateTime);
@@ -272,10 +272,20 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
                 .changeAccountStatusToAccepted().disburseLoan(disburseParams);
         String accountId = loanAccountPage.getAccountId();
         loanTestHelper.setApplicationTime(testDateTime.plusMonths(6));
-        navigationHelper.navigateToLoanAccountPage(accountId);
-        loanTestHelper.makePayment(testDateTime.plusMonths(6), "1119.8").verifyAccountSummary(
-                RepaymentScheduleData.ACCOUNT_SUMMARY_OVERDUE_REPAYMENT);
+        verifyOverdueSummary(accountId);
+        verifyOverduePayment(accountId, testDateTime);
         propertiesHelper.setOverdueInterestPaidFirst("false");
+    }
+    
+    private void verifyOverdueSummary(String accountId) throws UnsupportedEncodingException {
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(accountId);
+        loanAccountPage.verifyAccountSummary(RepaymentScheduleData.ACCOUNT_SUMMARY_OVERDUE);
+    }
+    
+    private void verifyOverduePayment(String accountId, DateTime disbursementDate) throws UnsupportedEncodingException {
+        navigationHelper.navigateToLoanAccountPage(accountId);
+        loanTestHelper.makePayment(disbursementDate.plusMonths(6), "1119.8").verifyAccountSummary(
+                RepaymentScheduleData.ACCOUNT_SUMMARY_OVERDUE_REPAYMENT);
     }
 
     private String makePaymentAndVerifyPayment(String accountId, DateTime paymentDate, String paymentAmount, String[][] expectedSchedule) throws UnsupportedEncodingException {
