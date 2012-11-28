@@ -62,7 +62,7 @@ public class SavingsScheduleEntity extends AccountActionDateEntity {
         return deposit;
     }
 
-    void setDeposit(Money deposit) {
+    public void setDeposit(Money deposit) {
         this.deposit = deposit;
     }
 

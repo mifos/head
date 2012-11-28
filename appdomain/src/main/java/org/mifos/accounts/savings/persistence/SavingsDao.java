@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
@@ -62,6 +63,10 @@ public interface SavingsDao {
 
     List<Integer> retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(LocalDate interestPostingDate);
 
+    List<SavingsScheduleEntity> retrieveAllCustomerSchedules(Integer savingAccountId, Integer customerId);
+
+    void updateSavingScheduleEntity(List<SavingsScheduleEntity> savingScheduleList);
+    
     SavingsBO findBySystemId(String globalAccountNum);
 
     NotesSearchResultsDto searchNotes(NoteSearchDto noteSearch);

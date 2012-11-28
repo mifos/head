@@ -38,12 +38,15 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.persistence.SavingsDao;
+import org.mifos.accounts.savings.persistence.SavingsDaoHibernate;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
@@ -58,6 +61,7 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -102,7 +106,7 @@ public class ClientBO extends CustomerBO {
 
     //internal business attributes
     private ClientPerformanceHistoryEntity clientPerformanceHistory;
-
+    private SavingsServiceFacade savingsServiceFacade = ApplicationContextProvider.getBean(SavingsServiceFacade.class);
 
     public static ClientBO createNewInGroupHierarchy(UserContext userContext, String clientName,
             CustomerStatus clientStatus, DateTime mfiJoiningDate, CustomerBO group, PersonnelBO formedBy,
@@ -1148,8 +1152,13 @@ public class ClientBO extends CustomerBO {
     }
 
     public void removeGroupMembership() {
+        for(SavingsBO savingAccount : this.getActiveCustomerHierarchy().getParentCustomer().getOpenSavingAccounts()){
+            if(savingAccount.isMandatory() && savingAccount.isGroupModelWithIndividualAccountability()) {
+                 //Get all schedule accounts and set their deposits to zero
+                 this.savingsServiceFacade.updateCustomerSchedules(savingAccount.getAccountId(), customerDetail.getCustomerId());
+            }
+        }
+
         this.groupFlag = YesNoFlag.NO.getValue();
     }
-
-
 }

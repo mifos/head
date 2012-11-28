@@ -1188,9 +1188,23 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-52
-    @Test(enabled=false)  //blocked by http://mifosforge.jira.com/browse/MIFOS-4272 - ldomzalski
+    // https://mifosforge.jira.com/browse/MIFOS-5844
+    @Test(enabled=true)
     public void removeClientWithSavingsFromGroupWithSavingsCheckGroupCalculation() throws Exception {
-        String clientName = "client1 lastname";
+        //Given
+        SavingsProductParameters savingsProductParameters = savingsProductHelper.
+            getGenericSavingsProductParameters(new DateTime(2009, 7, 13, 12, 0, 0, 0),
+            SavingsProductParameters.MANDATORY,SavingsProductParameters.GROUPS);
+        savingsProductParameters.setProductInstanceName("MandatoryGroupSavingProduct");
+        savingsProductParameters.setShortName("M-45");
+        savingsProductParameters.setAmountAppliesTo(SavingsProductParameters.PER_INDIVIDUAL);
+        savingsProductHelper.createSavingsProduct(savingsProductParameters);
+
+        String clientName = clientTestHelper.createClientAndVerify("loan officer", "MyOfficeDHMFT").getHeading();
+        clientTestHelper.activateClient(clientName);
+
+        clientTestHelper.addClientToGroup(clientName, "groupWithoutLoan");
+
         String groupName = navigationHelper.navigateToClientViewDetailsPage(clientName).getGroupMembership();
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
@@ -1202,13 +1216,13 @@ public class ClientTest extends UiTestCaseBase {
         // When
         searchParameters.setSearchString(clientName);
         searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
-        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
-                .getAccountId();
-        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+        String savingsId = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters).getAccountId();
 
         searchParameters.setSearchString(groupName);
-        searchParameters.setSavingsProduct("MandGroupSavingsPerIndiv1MoPost");
-        savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
+        searchParameters.setSavingsProduct("MandatoryGroupSavingProduct");
+        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+
+        savingsId = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters)
                 .getAccountId();
         savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
 
