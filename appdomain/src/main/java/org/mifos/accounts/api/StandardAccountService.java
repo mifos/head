@@ -23,6 +23,7 @@ package org.mifos.accounts.api;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -52,6 +53,7 @@ import org.mifos.application.admin.servicefacade.MonthClosingServiceFacade;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.application.servicefacade.GroupLoanAccountServiceFacade;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.Localization;
@@ -67,6 +69,7 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.AccountTrxDto;
+import org.mifos.dto.domain.GroupIndividualLoanDto;
 import org.mifos.dto.domain.OverpaymentDto;
 import org.mifos.dto.domain.PaymentDto;
 import org.mifos.dto.domain.PaymentTypeDto;
@@ -99,7 +102,8 @@ public class StandardAccountService implements AccountService {
     private HibernateTransactionHelper transactionHelper;
     private MonthClosingServiceFacade monthClosingServiceFacade;
     private SavingsServiceFacade savingsServiceFacade;
-
+    private GroupLoanAccountServiceFacade groupLoanAccountServiceFacade;
+    
     private LegacyMasterDao legacyMasterDao;
 
     @Autowired
@@ -107,7 +111,8 @@ public class StandardAccountService implements AccountService {
                                   LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence, PersonnelDao personnelDao,
                                   CustomerDao customerDao, LoanBusinessService loanBusinessService,
                                   HibernateTransactionHelper transactionHelper, LegacyMasterDao legacyMasterDao,
-                                  MonthClosingServiceFacade monthClosingServiceFacade, SavingsServiceFacade savingsServiceFacade) {
+                                  MonthClosingServiceFacade monthClosingServiceFacade, SavingsServiceFacade savingsServiceFacade,
+                                  GroupLoanAccountServiceFacade groupLoanAccountServiceFacade) {
         this.legacyAccountDao = legacyAccountDao;
         this.legacyLoanDao = legacyLoanDao;
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
@@ -118,6 +123,7 @@ public class StandardAccountService implements AccountService {
         this.legacyMasterDao = legacyMasterDao;
         this.monthClosingServiceFacade = monthClosingServiceFacade;
         this.savingsServiceFacade = savingsServiceFacade;
+        this.groupLoanAccountServiceFacade = groupLoanAccountServiceFacade;
     }
 
     @Override
@@ -205,6 +211,17 @@ public class StandardAccountService implements AccountService {
 
         monthClosingServiceFacade.validateTransactionDate(accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate());
         
+        /**
+         * Handle member payment if parent payment data not provided.
+         * Situation may occur when payment is executed directly on group member account (e.g. from transaction import).
+         * Loan Group Member payments should be posted after parent payment.
+         */
+        if (account.isGroupLoanAccountMember() && parentPayment == null){
+            AccountPaymentParametersDto parentPaymentParametersDto = this.createParentLoanPaymentData(account, accountPaymentParametersDto);
+            makePaymentNoCommit(parentPaymentParametersDto, savingsPaymentId, null);
+            return;
+        }
+        
         PersonnelBO loggedInUser = ApplicationContextProvider.getBean(LegacyPersonnelDao.class).findPersonnelById(accountPaymentParametersDto.getUserMakingPayment().getUserId());
         List<InvalidPaymentReason> validationErrors = validatePayment(accountPaymentParametersDto);
         if (!(account instanceof CustomerAccountBO) && validationErrors.contains(InvalidPaymentReason.INVALID_DATE)) {
@@ -247,18 +264,66 @@ public class StandardAccountService implements AccountService {
         
         AccountPaymentEntity paymentEntity = account.applyPayment(paymentData);
         
-        if (account instanceof LoanBO && ((LoanBO)account).getParentAccount() == null && account.isGroupLoanAccount()) {
-            for (Map.Entry<Integer, String> member : accountPaymentParametersDto.getMemberInfo().entrySet()) {
+        handleParentGroupLoanPayment(account, accountPaymentParametersDto, savingsPaymentId, paymentEntity);
+        
+        this.legacyAccountDao.createOrUpdate(account);
+    }
+    
+    /**
+     * Handles parent NOT-GLIM group loan payment.
+     */
+    private void handleParentGroupLoanPayment(AccountBO account, AccountPaymentParametersDto parentPaymentParametersDto, Integer savingsPaymentId, AccountPaymentEntity paymentEntity) 
+            throws PersistenceException, AccountException{
+        if (account instanceof LoanBO && account.isParentGroupLoanAccount()) {
+            if (parentPaymentParametersDto.getMemberInfo() == null || parentPaymentParametersDto.getMemberInfo().isEmpty()){
+                createMembersLoanPaymentsData(parentPaymentParametersDto);
+            }
+            for (Map.Entry<Integer, String> member : parentPaymentParametersDto.getMemberInfo().entrySet()) {
                 
                 AccountBO memberAcc = this.legacyAccountDao.getAccount(member.getKey());
-                AccountPaymentParametersDto memberAccountPaymentParametersDto = new AccountPaymentParametersDto(accountPaymentParametersDto.getUserMakingPayment(),
-                        new AccountReferenceDto(memberAcc.getAccountId()), new BigDecimal(member.getValue()), accountPaymentParametersDto.getPaymentDate(), accountPaymentParametersDto.getPaymentType(),
-                        accountPaymentParametersDto.getComment(), accountPaymentParametersDto.getReceiptDate(), accountPaymentParametersDto.getReceiptId(), memberAcc.getCustomer().toCustomerDto());
+                AccountPaymentParametersDto memberAccountPaymentParametersDto = new AccountPaymentParametersDto(parentPaymentParametersDto.getUserMakingPayment(),
+                        new AccountReferenceDto(memberAcc.getAccountId()), new BigDecimal(member.getValue()), parentPaymentParametersDto.getPaymentDate(), parentPaymentParametersDto.getPaymentType(),
+                        parentPaymentParametersDto.getComment(), parentPaymentParametersDto.getReceiptDate(), parentPaymentParametersDto.getReceiptId(), memberAcc.getCustomer().toCustomerDto());
                 makePaymentNoCommit(memberAccountPaymentParametersDto, savingsPaymentId, paymentEntity);
             }
         }
+    }
+    
+    /**
+     * Create default members payments data. 
+     */
+    private void createMembersLoanPaymentsData(AccountPaymentParametersDto parentPaymentParametersDto){
+        List<GroupIndividualLoanDto> membersPayments = this.groupLoanAccountServiceFacade.getMemberLoansAndDefaultPayments(
+                parentPaymentParametersDto.getAccountId(),
+                parentPaymentParametersDto.getPaymentAmount());
         
-        this.legacyAccountDao.createOrUpdate(account);
+        parentPaymentParametersDto.setMemberInfo(new HashMap<Integer, String>());
+        
+        for (GroupIndividualLoanDto memberPayment : membersPayments){
+            parentPaymentParametersDto.getMemberInfo().put(memberPayment.getAccountId(), memberPayment.getDefaultAmount().toString());
+        }
+    }
+    
+    /**
+     * Create parent payment data with member payment data. 
+     * 
+     */
+    private AccountPaymentParametersDto createParentLoanPaymentData(AccountBO memberAccount, AccountPaymentParametersDto memberPaymentParametersDto){
+        AccountPaymentParametersDto parentPaymentParametersDto = new AccountPaymentParametersDto(memberPaymentParametersDto.getUserMakingPayment(),
+                new AccountReferenceDto(((LoanBO)memberAccount).getParentAccount().getAccountId()), memberPaymentParametersDto.getPaymentAmount(), memberPaymentParametersDto.getPaymentDate(), memberPaymentParametersDto.getPaymentType(),
+                memberPaymentParametersDto.getComment(), memberPaymentParametersDto.getReceiptDate(), memberPaymentParametersDto.getReceiptId(), memberAccount.getCustomer().toCustomerDto());
+        
+        Map<Integer, String> membersPaymentsData = new HashMap<Integer, String>();
+        
+        for (AccountBO member : ((LoanBO)memberAccount).getParentAccount().getMemberAccounts()){
+            if (member.getAccountId().equals(memberPaymentParametersDto.getAccountId())){
+                membersPaymentsData.put(member.getAccountId(), memberPaymentParametersDto.getPaymentAmount().toString());
+            } else {
+                membersPaymentsData.put(member.getAccountId(), BigDecimal.ZERO.toString());
+            }
+        }
+        parentPaymentParametersDto.setMemberInfo(membersPaymentsData);
+        return parentPaymentParametersDto;
     }
     
     /**
@@ -321,6 +386,16 @@ public class StandardAccountService implements AccountService {
 
         monthClosingServiceFacade.validateTransactionDate(accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate());
         
+        /**
+         * Handle member payment if parent payment data not provided.
+         * Situation may occur when payment is executed directly on group member account (e.g. from transaction import).
+         * Loan Group Member payments should be posted after parent payment.
+         */
+        if (account.isGroupLoanAccountMember()){
+            AccountPaymentParametersDto parentPaymentParametersDto = this.createParentLoanPaymentData(account, accountPaymentParametersDto);
+            return makeImportedPayments(parentPaymentParametersDto, savingsPaymentId);
+        }
+        
         PersonnelBO loggedInUser = ApplicationContextProvider.getBean(LegacyPersonnelDao.class).findPersonnelById(accountPaymentParametersDto.getUserMakingPayment().getUserId());
         List<InvalidPaymentReason> validationErrors = validatePayment(accountPaymentParametersDto);
         if (!(account instanceof CustomerAccountBO) && validationErrors.contains(InvalidPaymentReason.INVALID_DATE)) {
@@ -357,7 +432,10 @@ public class StandardAccountService implements AccountService {
         paymentData.setComment(accountPaymentParametersDto.getComment());
         paymentData.setOverpaymentAmount(overpaymentAmount);
 
-        account.applyPayment(paymentData);
+        AccountPaymentEntity paymentEntity = account.applyPayment(paymentData);
+        
+        handleParentGroupLoanPayment(account, accountPaymentParametersDto, savingsPaymentId, paymentEntity);
+        
         this.legacyAccountDao.createOrUpdate(account);
         
         return account;
