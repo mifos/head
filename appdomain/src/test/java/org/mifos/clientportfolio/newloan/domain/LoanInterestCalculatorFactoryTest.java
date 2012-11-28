@@ -72,13 +72,13 @@ public class LoanInterestCalculatorFactoryTest {
     }
 
     @Test
-    public void shouldUseNullLoanInterestCalculatorForDecliningPbInterestType() {
+    public void shouldUseDecliningBalanceLoanInterestCalculatorForDecliningPbInterestType() {
 
         // exercise test
         LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(InterestType.DECLINING_PB, false);
 
         // verification
-        assertThat(loanInterestCalculator, is(instanceOf(NullLoanInterestCalculator.class)));
+        assertThat(loanInterestCalculator, is(instanceOf(DecliningBalanceLoanInterestCalculator.class)));
     }
 
     @Test(expected = MifosRuntimeException.class)

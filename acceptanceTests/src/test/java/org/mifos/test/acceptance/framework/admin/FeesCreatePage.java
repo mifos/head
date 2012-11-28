@@ -50,6 +50,7 @@ public class FeesCreatePage extends AbstractPage {
         private int calculateType;
         public static final String LOAN = "Loans";
         public static final String LOAN_AMOUNT = "Loan Amount";
+        public static final String LOAN_AMOUNT_INTEREST = "Loan Amount+Interest";
         
 
         public String getFeeFormula() {
