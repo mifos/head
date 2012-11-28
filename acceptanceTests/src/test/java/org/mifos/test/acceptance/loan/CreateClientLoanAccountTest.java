@@ -21,12 +21,14 @@
 package org.mifos.test.acceptance.loan;
 
 import org.joda.time.DateTime;
+import org.mifos.test.acceptance.admin.FeeTestHelper;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.account.AccountStatus;
 import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
+import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.admin.ManageRolePage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
@@ -58,6 +60,8 @@ import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.mifos.test.acceptance.util.TestDataSetup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -67,6 +71,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
 
@@ -78,11 +83,14 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
     private LoanProductTestHelper loanProductTestHelper;
     private NavigationHelper navigationHelper;
+    private FeeTestHelper feeTestHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
     private Random random;
     public static final String DATE = "Date";
     public static final String SINGLE_SELECT = "Single Select";
@@ -98,6 +106,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         loanTestHelper = new LoanTestHelper(selenium);
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
+        feeTestHelper = new FeeTestHelper(new TestDataSetup(selenium, applicationDatabaseOperation), navigationHelper);
         questionGroupHelper = new QuestionGroupHelper(navigationHelper);
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         random = new Random();
@@ -696,5 +705,36 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     private void verifyFirstInstallmentAndDisbursalDateOnPreviewPage(){
         Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[4]/div[2]"), ("02-May-2011"));
         Assert.assertEquals(selenium.getTable("installments.1.1"), ("09-May-2011"));
+    }
+    
+    public void createDecliningBalanceIRLoanWithFees() throws SQLException {
+        int interestRate = 25;
+        int loanAmount = 120;
+        int numberOfInstallments = 6;
+        feeTestHelper.createNoRateFee("fixedFee5629", FeesCreatePage.SubmitFormParameters.LOAN, "Upfront", 5);
+        feeTestHelper.createPeriodicRateFee("periodicFee5629", FeesCreatePage.SubmitFormParameters.LOAN,
+                FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 1, 4,
+                FeesCreatePage.SubmitFormParameters.LOAN_AMOUNT_INTEREST);
+        SubmitFormParameters dbIrLoanProductParams = loanProductTestHelper.defineLoanProductParameters(
+                numberOfInstallments, loanAmount, interestRate,
+                DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION);
+        dbIrLoanProductParams.setOfferingName("DbIrProduct5629");
+        loanProductTestHelper.defineNewLoanProduct(dbIrLoanProductParams);
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Client1233266063395");
+        searchParameters.setLoanProduct("DbIrProduct5629");
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAdditionalFee1("periodicFee5629");
+        submitAccountParameters.setAdditionalFee2("fixedFee5629");
+        ViewRepaymentSchedulePage schedulePage = loanTestHelper
+                .createLoanAccount(searchParameters, submitAccountParameters).navigateToRepaymentSchedulePage();
+        String[] expectedInterestAmounts = { "0.6", "0.5", "0.4", "0.3", "0.2", "0.7" };
+        String[] expectedFeeAmounts = { "9.9", "4.9", "4.9", "4.9", "4.9", "4.8" };
+        for (int i = 0; i < numberOfInstallments; i++) {
+            schedulePage.verifyInstallmentAmount(ViewRepaymentSchedulePage.FIRST_ROW + i,
+                    ViewRepaymentSchedulePage.INTEREST_COLUMN, expectedInterestAmounts[i]);
+            schedulePage.verifyInstallmentAmount(ViewRepaymentSchedulePage.FIRST_ROW + i,
+                    ViewRepaymentSchedulePage.FEE_COLUMN, expectedFeeAmounts[i]);
+        }
     }
 }
