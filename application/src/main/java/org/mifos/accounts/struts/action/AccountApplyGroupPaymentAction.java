@@ -196,7 +196,13 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
         String paymentType = request.getParameter(Constants.INPUT);
-        Integer accountId = Integer.valueOf(actionForm.getAccountId());
+        Integer accountId;
+        if (actionForm.getAccountId().isEmpty() || actionForm.getAccountId() == null) {
+            accountId = loanDao.findByGlobalAccountNum(actionForm.getGlobalAccountNum()).getAccountId();
+        }
+        else {
+            accountId = Integer.valueOf(actionForm.getAccountId());
+        }
         UserReferenceDto userReferenceDto = new UserReferenceDto(userContext.getId());
         
         AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(accountId, paymentType,

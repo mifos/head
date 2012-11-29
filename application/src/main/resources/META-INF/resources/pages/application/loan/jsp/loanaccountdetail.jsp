@@ -833,15 +833,35 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
 							<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
 						</c:url >
+                        <c:url value="repayLoanAction.do" var="repayLoanActionLoadGroupRepaymentMethodUrl" >
+                            <c:param name="method" value="loadGroupRepayment" />
+                            <c:param name="accountId" value="${loanInformationDto.accountId}" />
+                            <c:param name="globalAccountNum" value="${loanInformationDto.globalAccountNum}" />
+                            <c:param name="prdOfferingName" value="${loanInformationDto.prdOfferingName}" />
+                            <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+                            <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+                        </c:url >
 							<c:choose>
 								<c:when
 									test="${ loanInformationDto.accountStateId=='9' || loanInformationDto.accountStateId=='5'}">
 									<span class="fontnormal8pt"> 
-									<html-el:link styleId="loanaccountdetail.link.repayLoan"
-										href="${repayLoanActionLoadRepaymentMethodUrl}">
-										<mifos:mifoslabel name="loan.repay" />
-										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-									</html-el:link><br>
+                                    <c:choose>
+                                        <c:when test="${loanAccount.groupLoanAccountMember || loanAccount.parentGroupLoanAccount}">
+                                            <html-el:link styleId="loanaccountdetail.link.repayLoan"
+                                                href="${repayLoanActionLoadGroupRepaymentMethodUrl}">
+                                                <mifos:mifoslabel name="loan.repay" />
+                                                <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+                                            </html-el:link><br>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <html-el:link styleId="loanaccountdetail.link.repayLoan"
+                                                href="${repayLoanActionLoadRepaymentMethodUrl}">
+                                                <mifos:mifoslabel name="loan.repay" />
+                                                <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+                                            </html-el:link><br>
+                                        </c:otherwise>
+                                    </c:choose>
+
 									</span>
 								</c:when>
 							</c:choose></td>

@@ -27,7 +27,7 @@ public class AccountPaymentDto {
         this.totalAmount = totalAmount;
         this.transactionDate = (Date)transactionDate.clone();
         this.receiptNumber = receiptNumber;
-        this.receiptDate = (Date)receiptDate.clone();
+        this.receiptDate = null != receiptDate ?  (Date)receiptDate.clone() : null;
         this.paymentTypeId = paymentTypeId;
         this.memberNumWithAmount = memberNumWithAmount;
     }

@@ -54,6 +54,9 @@ explanation of the license and how it is applied.
 		<form name="goBackToLoanAccountDetails" method="get" action ="${formAction }">
 			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
 		</form>
+        <c:if test="${BusinessKey.groupLoanAccountMember}">
+            <c:set value="repayLoanAction.do?method=makeGroupMemberRepayment" var="makeGroupRepayment" />
+        </c:if>
 		<html-el:form  action="${makeGroupRepayment}">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 				<table width="95%" border="0" cellpadding="0" cellspacing="0">

@@ -66,6 +66,7 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.dto.domain.AccountPaymentDto;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.AccountTrxDto;
@@ -258,7 +259,7 @@ public class StandardAccountService implements AccountService {
         paymentData.setComment(accountPaymentParametersDto.getComment());
         paymentData.setOverpaymentAmount(overpaymentAmount);
         
-        if (account instanceof LoanBO && account.isGroupLoanAccountMember()) {
+        if (account instanceof LoanBO && account.isGroupLoanAccountMember() && parentPayment != null) {
             paymentData.setParentPayment(parentPayment);
         }
         
@@ -281,10 +282,19 @@ public class StandardAccountService implements AccountService {
             for (Map.Entry<Integer, String> member : parentPaymentParametersDto.getMemberInfo().entrySet()) {
                 
                 AccountBO memberAcc = this.legacyAccountDao.getAccount(member.getKey());
-                AccountPaymentParametersDto memberAccountPaymentParametersDto = new AccountPaymentParametersDto(parentPaymentParametersDto.getUserMakingPayment(),
-                        new AccountReferenceDto(memberAcc.getAccountId()), new BigDecimal(member.getValue()), parentPaymentParametersDto.getPaymentDate(), parentPaymentParametersDto.getPaymentType(),
-                        parentPaymentParametersDto.getComment(), parentPaymentParametersDto.getReceiptDate(), parentPaymentParametersDto.getReceiptId(), memberAcc.getCustomer().toCustomerDto());
-                makePaymentNoCommit(memberAccountPaymentParametersDto, savingsPaymentId, paymentEntity);
+                if (!parentPaymentParametersDto.getMemberAccountIdToRepay().equals(memberAcc.getAccountId())) {
+                    AccountPaymentParametersDto memberAccountPaymentParametersDto = new AccountPaymentParametersDto(parentPaymentParametersDto.getUserMakingPayment(),
+                            new AccountReferenceDto(memberAcc.getAccountId()), new BigDecimal(member.getValue()), parentPaymentParametersDto.getPaymentDate(), parentPaymentParametersDto.getPaymentType(),
+                            parentPaymentParametersDto.getComment(), parentPaymentParametersDto.getReceiptDate(), parentPaymentParametersDto.getReceiptId(), memberAcc.getCustomer().toCustomerDto());
+                    makePaymentNoCommit(memberAccountPaymentParametersDto, savingsPaymentId, paymentEntity);
+                }
+                else    
+                {
+                    AccountPaymentDto paymentDto = new AccountPaymentDto(Double.valueOf(member.getValue()), parentPaymentParametersDto.getPaymentDate().toDateMidnight().toDate(), parentPaymentParametersDto.getReceiptId(),
+                            parentPaymentParametersDto.getReceiptDate().toDateMidnight().toDate(), parentPaymentParametersDto.getPaymentType().getValue());
+                    
+                    ((LoanBO)memberAcc).makeEarlyRepayment(paymentDto, parentPaymentParametersDto.getUserMakingPayment().getUserId(), parentPaymentParametersDto.getRepayLoanInfoDto().isWaiveInterest(), new Money(account.getCurrency(),parentPaymentParametersDto.getInterestDueForCurrentInstalmanet()));  
+                }
             }
         }
     }

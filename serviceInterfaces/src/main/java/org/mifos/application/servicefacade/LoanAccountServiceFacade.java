@@ -265,7 +265,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     
     @PreAuthorize("isFullyAuthenticated()")
     void makeEarlyGroupRepayment(RepayLoanInfoDto repayLoanInfoDto, Map<String, Double> memberNumWithAmount);
-
+    
     @PreAuthorize("isFullyAuthenticated()")
-    void makeEarlyGroupRepaymentFromSavings(RepayLoanInfoDto repayLoanInfoDto, String savingsAccGlobalNum, Map<String, Double> memberNumWithAmount);
+    BigDecimal calculateInterestDueForCurrentInstalmanet(RepayLoanInfoDto repayLoanInfoDto);
 }

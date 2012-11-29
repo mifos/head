@@ -801,6 +801,7 @@ public class ActivityMapper {
         security.allow("previous", SecurityConstants.LOAN_CAN_REPAY_LOAN);
         security.allow("makeRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
         security.allow("makeGroupRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+        security.allow("makeGroupMemberRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
         return security;
     }
 
