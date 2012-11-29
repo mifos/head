@@ -51,6 +51,7 @@ import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
+import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -124,6 +125,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private ClientPhotoService clientPhotoService;
+
+    @Autowired
+    private SavingsServiceFacade savingsServiceFacade;
 
     private MifosConfigurationHelper configurationHelper = new DefaultMifosConfigurationHelper();
 
@@ -1190,6 +1194,15 @@ public class CustomerServiceImpl implements CustomerService {
                 // not glim - then disallow removing client from group with active account
                 throw new BusinessRuleException(CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
             }
+            
+            //Recalculate Group Savings schedules
+            for(SavingsBO savingAccount : client.getParentCustomer().getOpenSavingAccounts()){
+                if(savingAccount.isMandatory() && savingAccount.isGroupModelWithIndividualAccountability()) {
+                     //Get all schedule accounts and set their deposits to zero
+                     this.savingsServiceFacade.updateCustomerSchedules(savingAccount.getAccountId(), client.getCustomerId());
+                }
+            }
+
         }
 
         try {

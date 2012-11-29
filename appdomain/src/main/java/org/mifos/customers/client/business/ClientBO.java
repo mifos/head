@@ -1152,13 +1152,6 @@ public class ClientBO extends CustomerBO {
     }
 
     public void removeGroupMembership() {
-        for(SavingsBO savingAccount : this.getActiveCustomerHierarchy().getParentCustomer().getOpenSavingAccounts()){
-            if(savingAccount.isMandatory() && savingAccount.isGroupModelWithIndividualAccountability()) {
-                 //Get all schedule accounts and set their deposits to zero
-                 this.savingsServiceFacade.updateCustomerSchedules(savingAccount.getAccountId(), customerDetail.getCustomerId());
-            }
-        }
-
         this.groupFlag = YesNoFlag.NO.getValue();
     }
 }
