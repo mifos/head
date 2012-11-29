@@ -160,6 +160,7 @@ import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
@@ -1735,5 +1736,10 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             }
         }
         return negativeBalance;
+    }
+
+    @Override
+    public void updateCustomerSchedules(Integer savingAccountId, Integer customerId) {
+        savingsDao.updateSavingScheduleEntity(savingsDao.retrieveAllCustomerSchedules(savingAccountId, customerId));
     }
 }
