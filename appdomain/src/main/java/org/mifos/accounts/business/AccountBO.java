@@ -1917,6 +1917,11 @@ public class AccountBO extends AbstractBusinessObject {
         return this.isGroupLoanAccount() && !((LoanBO)this).hasMemberAccounts();
     }
     
+    // only for NOT-GLIM new group loans members
+    public boolean isGroupLoanAccountParent(){
+        return this.isGroupLoanAccount() && ((LoanBO)this).hasMemberAccounts();
+    }
+    
     public boolean isSavingsAccount() {
         return isOfType(SAVINGS_ACCOUNT);
     }

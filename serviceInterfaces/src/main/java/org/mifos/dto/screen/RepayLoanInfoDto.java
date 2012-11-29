@@ -2,6 +2,7 @@ package org.mifos.dto.screen;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.Map;
 
 public class RepayLoanInfoDto {
     private final String globalAccountNum;
@@ -14,7 +15,7 @@ public class RepayLoanInfoDto {
     private final Date dateOfPayment;
     private final BigDecimal waivedAmount;
     private final BigDecimal totalRepaymentAmount;
-    
+    private  Map<String, Double> memberValues;
     private Integer savingsPaymentId;
 
     @SuppressWarnings("PMD.ExcessiveParameterList")
@@ -79,5 +80,9 @@ public class RepayLoanInfoDto {
 
     public void setSavingsPaymentId(Integer savingsPaymentId) {
         this.savingsPaymentId = savingsPaymentId;
+    }
+
+    public Map<String, Double> getMembersValue() {
+        return memberValues;
     }
 }

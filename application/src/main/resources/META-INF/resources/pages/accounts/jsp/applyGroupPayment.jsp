@@ -47,16 +47,25 @@ explanation of the license and how it is applied.
 	function ViewLoanDetails(){
 		goBackToLoanAccountDetails.submit();
 	}
+    
+    function changeAction(form, loanType) {
+    	if (loanType === "parent") {
+            form.action = "applyGroupPaymentAction.do?method=divide";
+        }
+        else if (loanType === "member") {
+            form.action = "applyGroupPaymentAction.do?method=preview";
+        }
+    }
 </SCRIPT>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<form name="goBackToLoanAccountDetails" method="get" action ="viewGroupLoanAccountDetails.ftl">
 			<input type="hidden" name='globalAccountNum' value="${param.globalAccountNum}"/>
 		</form>
-		<html-el:form method="post"
-			action="/applyGroupPaymentAction.do?method=divide"
+		<html-el:form method="post" action="/applyGroupPaymentAction.do?method=divide"
 			focus="paymentTypeId">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'AccountType')}" var="AccountType" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'AccountId')}" var="AccountId" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanType')}" var="loanType" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -189,7 +198,7 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 							<td align="center">
-									<html-el:submit styleId="applypayment.button.reviewTransaction" styleClass="buttn submit"  property="accounts.apply.payment.confirm">
+									<html-el:submit styleId="applypayment.button.reviewTransaction" styleClass="buttn submit"  property="accounts.apply.payment.confirm" onclick="changeAction(this.form,'${loanType}')">
 										<mifos:mifoslabel name="accounts.reviewtransaction">
 										</mifos:mifoslabel>
 									</html-el:submit>

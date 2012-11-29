@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.joda.time.LocalDate;
+import org.mifos.dto.screen.RepayLoanInfoDto;
 
 /**
  * The Class AccountPaymentParametersDto is a data transfer
@@ -78,6 +79,10 @@ public class AccountPaymentParametersDto {
     /** ids and amounts of payment for member accounts*/
     private Map<Integer, String> memberInfo;
     
+    /** member accountId which oen should be repay*/
+    private Integer memberAccountIdToRepay;
+    private RepayLoanInfoDto repayLoanInfoDto;
+    private BigDecimal interestDueForCurrentInstalmanet;
     /**
      * Instantiates a new account payment parameters dto.
      *
@@ -308,4 +313,29 @@ public class AccountPaymentParametersDto {
     public void setMemberInfo(Map<Integer, String> memberInfo) {
         this.memberInfo = memberInfo;
     }
+
+    public Integer getMemberAccountIdToRepay() {
+        return memberAccountIdToRepay;
+    }
+
+    public void setMemberAccountIdToRepay(Integer memberAccountIdToRepay) {
+        this.memberAccountIdToRepay = memberAccountIdToRepay;
+    }
+
+    public RepayLoanInfoDto getRepayLoanInfoDto() {
+        return repayLoanInfoDto;
+    }
+
+    public void setRepayLoanInfoDto(RepayLoanInfoDto repayLoanInfoDto) {
+        this.repayLoanInfoDto = repayLoanInfoDto;
+    }
+
+    public BigDecimal getInterestDueForCurrentInstalmanet() {
+        return interestDueForCurrentInstalmanet;
+    }
+
+    public void setInterestDueForCurrentInstalmanet(BigDecimal interestDueForCurrentInstalmanet) {
+        this.interestDueForCurrentInstalmanet = interestDueForCurrentInstalmanet;
+    }
+    
 }

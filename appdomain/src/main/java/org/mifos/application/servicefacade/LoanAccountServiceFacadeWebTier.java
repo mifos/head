@@ -275,10 +275,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade {
 
-    private static final String LOAN_DISBURSAL = "Loan Disbursal";
-    private static final String LOAN_REPAYMENT = "Loan Repayment";
-    private static final String LOAN_ADJUSTED = "Loan Adjusted";
-    private static final String PAYMENT_RCVD = "Payment rcvd.";
     private static final Integer PARENT_LOAN = 1;
     private static final Integer MEMBER_LOAN = 0;
     private static final Integer OTHER_LOAN = -1;
@@ -1627,15 +1623,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             if (repayLoanInfoDto.isWaiveInterest() && !loan.isInterestWaived()) {
                 throw new BusinessRuleException(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED);
             }
-            loanBusinessService.computeExtraInterest(loan, repayLoanInfoDto.getDateOfPayment());
-            BigDecimal interestDueForCurrentInstallment =
-                    interestDueForNextInstallment(repayLoanInfoDto.getTotalRepaymentAmount(),
-                    repayLoanInfoDto.getWaivedAmount(),loan,repayLoanInfoDto.isWaiveInterest());
+            BigDecimal interestDueForCurrentInstallment = calculateInterestDueForCurrentInstalmanet(repayLoanInfoDto);
             
             org.mifos.dto.domain.AccountPaymentDto paymentDto = new org.mifos.dto.domain.AccountPaymentDto(Double.valueOf(repayLoanInfoDto.getEarlyRepayAmount()),
                     repayLoanInfoDto.getDateOfPayment(), repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(), repayLoanInfoDto.getId());
             
             if (repayLoanInfoDto.getSavingsPaymentId() != null){
+                paymentDto.setMemberNumWithAmount(repayLoanInfoDto.getMembersValue());
                 loan.makeEarlyRepayment(paymentDto, repayLoanInfoDto.getId(),
                         repayLoanInfoDto.isWaiveInterest(), new Money(loan.getCurrency(), interestDueForCurrentInstallment),
                         repayLoanInfoDto.getSavingsPaymentId(),null);
@@ -3074,10 +3068,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 if (repayLoanInfoDto.isWaiveInterest() && !parentLoan.isInterestWaived()) {
                     throw new BusinessRuleException(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED);
                 }
-                loanBusinessService.computeExtraInterest(this.loanDao.findByGlobalAccountNum(parentLoan.getGlobalAccountNum()), repayLoanInfoDto.getDateOfPayment());
-                BigDecimal interestDueForCurrentInstallment =
-                        interestDueForNextInstallment(repayLoanInfoDto.getTotalRepaymentAmount(),
-                        repayLoanInfoDto.getWaivedAmount(),parentLoan,repayLoanInfoDto.isWaiveInterest());
+                BigDecimal interestDueForCurrentInstallment = calculateInterestDueForCurrentInstalmanet(repayLoanInfoDto);
                 
                 org.mifos.dto.domain.AccountPaymentDto paymentDto = new org.mifos.dto.domain.AccountPaymentDto(repayLoanInfoDto.getTotalRepaymentAmount().doubleValue(),
                         repayLoanInfoDto.getDateOfPayment(), repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(), repayLoanInfoDto.getId(), memberNumWithAmount);
@@ -3095,12 +3086,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
         
     }
-
-    // TODO Auto-generated method stub
     @Override
-    public void makeEarlyGroupRepaymentFromSavings(RepayLoanInfoDto repayLoanInfoDto, String savingsAccGlobalNum,
-            Map<String, Double> memberNumWithAmount) {
-        
+    public BigDecimal calculateInterestDueForCurrentInstalmanet(RepayLoanInfoDto repayLoanInfoDto) {
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(repayLoanInfoDto.getGlobalAccountNum());
+        loanBusinessService.computeExtraInterest(loan, repayLoanInfoDto.getDateOfPayment());
+        BigDecimal interestDueForCurrentInstallment =
+                interestDueForNextInstallment(repayLoanInfoDto.getTotalRepaymentAmount(),
+                repayLoanInfoDto.getWaivedAmount(),loan,repayLoanInfoDto.isWaiveInterest());
+        return interestDueForCurrentInstallment;
     }
 
 }

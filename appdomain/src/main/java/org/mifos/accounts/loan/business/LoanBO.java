@@ -1385,7 +1385,7 @@ public class LoanBO extends AccountBO implements Loan {
             loanArrearsAgingEntity = null;
 
             // GLIM
-            if (this.isGroupLoanAccount() && null == this.getParentAccount()){
+            if (this.isGroupLoanAccountParent()){
                 for (Map.Entry<String, Double> entry : paymentDto.getMemberNumWithAmount().entrySet()) {
                     AccountPaymentDto memberPayment = new AccountPaymentDto(entry.getValue(), paymentDto.getTransactionDate(), paymentDto.getReceiptNumber(), paymentDto.getReceiptDate(), paymentDto.getPaymentTypeId());
                     legacyLoanDao.getAccount(Integer.valueOf(entry.getKey())).makeEarlyRepayment(memberPayment, personnelId, waiveInterest, interestDue,null,accountPaymentEntity);
