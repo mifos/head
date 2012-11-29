@@ -173,5 +173,8 @@ public interface SavingsServiceFacade {
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
     List<AdjustableSavingsPaymentDto> retrievePaymentsForAdjustment(Integer accountId);
 
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateCustomerSchedules(Integer savingAccountId, Integer customerId);
+    
     void putSavingsBusinessKeyInSession(String globalAccountNum, HttpServletRequest request);
 }

@@ -37,6 +37,7 @@ import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.savings.business.SavingsActivityEntity;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.NamedQueryConstants;
@@ -44,6 +45,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.NoteSearchDto;
 import org.mifos.dto.screen.NotesSearchResultsDto;
@@ -330,4 +332,32 @@ public class SavingsDaoHibernate implements SavingsDao {
             this.baseDao.delete(activity);
         }
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<SavingsScheduleEntity> retrieveAllCustomerSchedules(Integer savingAccountId, 
+        Integer customerId) {
+
+        List<SavingsScheduleEntity> customerSchedules = new ArrayList<SavingsScheduleEntity>();
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("account_id", findById(savingAccountId));
+        queryParameters.put("customer_id", this.baseDao.getSession().get(CustomerBO.class, customerId) );
+        List<SavingsScheduleEntity> queryResult = (List<SavingsScheduleEntity>) this.baseDao.executeNamedQuery
+            (NamedQueryConstants.SAVING_SCHEDULE_GET_ALL_CUSTOMER_SCHEDULES, queryParameters);
+        if (queryResult != null) {
+            customerSchedules = new ArrayList<SavingsScheduleEntity>(queryResult);
+        }
+
+        return customerSchedules;
+    }
+
+    @Override
+    public void updateSavingScheduleEntity(
+        List<SavingsScheduleEntity> savingScheduleList) {
+         for(SavingsScheduleEntity savingsScheduleEntity : savingScheduleList) {
+             savingsScheduleEntity.setDeposit(Money.zero());
+             this.baseDao.createOrUpdate(savingsScheduleEntity);
+         }
+    }
+    
 }

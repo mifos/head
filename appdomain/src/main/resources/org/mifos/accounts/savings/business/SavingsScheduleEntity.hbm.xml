@@ -35,4 +35,10 @@
         ]]>
     </query>
 
+    <query name="savingsScheduleEntity.getAllCustomerSchedules">
+        <![CDATA[ from org.mifos.accounts.savings.business.SavingsScheduleEntity savingSchedule
+                where savingSchedule.account = (:account_id) and savingSchedule.customer = (:customer_id)
+        ]]>
+        
+    </query>
 </hibernate-mapping>
