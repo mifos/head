@@ -61,3 +61,7 @@ Defined in org.mifos.application.meeting.util.helpers.RecurrencyType
 [#macro recurringFrequencyMonth]
 	[@spring.message "ftl.macro.lookup.recurrenceFrequency.month" /]
 [/#macro]
+
+[#macro recurringFrequencyDay]
+	[@spring.message "ftl.macro.lookup.recurrenceFrequency.day" /]
+[/#macro]

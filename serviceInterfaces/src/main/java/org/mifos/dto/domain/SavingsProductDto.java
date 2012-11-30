@@ -38,7 +38,7 @@ public class SavingsProductDto implements Serializable {
     private final BigDecimal interestRate;
     private final Integer interestCalculationFrequency;
     private final Integer interestCalculationFrequencyPeriod;
-    private final Integer interestPostingMonthlyFrequency;
+    private final Integer interestPostingFrequency;
     private final BigDecimal minBalanceForInterestCalculation;
     private final Integer depositGlCode;
     private String depositGlCodeValue;
@@ -46,6 +46,7 @@ public class SavingsProductDto implements Serializable {
     private final Integer interestGlCode;
     private String interestGlCodeValue;
     private String interestGlCodeName;
+    private boolean dailyPosting;
 
     /**
      * minimal legal constructor for create savings products request
@@ -53,8 +54,9 @@ public class SavingsProductDto implements Serializable {
     public SavingsProductDto(ProductDetailsDto productDetailsDto, boolean groupSavingsAccount,
             Integer depositType, Integer groupSavingsType, Double amountForDeposit, Double maxWithdrawal,
             BigDecimal interestRate, Integer interestCalculationType, Integer interestCalculationFrequency,
-            Integer interestCalculationFrequencyPeriod, Integer interestPostingMonthlyFrequency,
-            BigDecimal minBalanceForInterestCalculation, Integer depositGlCode, Integer interestGlCode) {
+            Integer interestCalculationFrequencyPeriod, Integer interestPostingFrequency,
+            BigDecimal minBalanceForInterestCalculation, Integer depositGlCode, Integer interestGlCode,
+            boolean isDailyPosting) {
         this.productDetails = productDetailsDto;
         this.groupMandatorySavingsAccount = groupSavingsAccount;
         this.depositType = depositType;
@@ -65,10 +67,11 @@ public class SavingsProductDto implements Serializable {
         this.interestCalculationType = interestCalculationType;
         this.interestCalculationFrequency = interestCalculationFrequency;
         this.interestCalculationFrequencyPeriod = interestCalculationFrequencyPeriod;
-        this.interestPostingMonthlyFrequency = interestPostingMonthlyFrequency;
+        this.interestPostingFrequency = interestPostingFrequency;
         this.minBalanceForInterestCalculation = minBalanceForInterestCalculation;
         this.depositGlCode = depositGlCode;
         this.interestGlCode = interestGlCode;
+        this.dailyPosting = isDailyPosting;
     }
 
     public String getDepositGlCodeName() {
@@ -127,8 +130,8 @@ public class SavingsProductDto implements Serializable {
         return this.interestCalculationFrequencyPeriod;
     }
 
-    public Integer getInterestPostingMonthlyFrequency() {
-        return this.interestPostingMonthlyFrequency;
+    public Integer getInterestPostingFrequency() {
+        return this.interestPostingFrequency;
     }
 
     public BigDecimal getMinBalanceForInterestCalculation() {
@@ -166,4 +169,9 @@ public class SavingsProductDto implements Serializable {
     public void setOpenSavingsAccountsExist(boolean openSavingsAccountsExist) {
         this.openSavingsAccountsExist = openSavingsAccountsExist;
     }
+
+    public boolean isDailyPosting() {
+        return dailyPosting;
+    }
+
 }

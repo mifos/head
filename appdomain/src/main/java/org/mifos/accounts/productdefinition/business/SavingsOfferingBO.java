@@ -381,12 +381,13 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         PrdOfferingMeetingEntity interestCalculationPeriod = getTimePerForInstcalc();
         PrdOfferingMeetingEntity interestPosting = getFreqOfPostIntcalc();
 
-
         SavingsProductDto savingsProductDto = new SavingsProductDto(details, groupSavingsAccount, this.savingsType.getId().intValue(), groupSavingsType,
                 this.recommendedAmount.getAmountDoubleValue(), this.maxAmntWithdrawl.getAmountDoubleValue(),
                 BigDecimal.valueOf(this.interestRate), this.interestCalcType.getId().intValue(), interestCalculationPeriod.getMeeting().getRecurAfter().intValue(),
                 interestCalculationPeriod.getMeeting().getRecurrenceType().getValue().intValue(), interestPosting.getMeeting().getRecurAfter().intValue(),
-                this.minAmntForInt.getAmount(), this.depositGLCode.getGlcodeId().intValue(), this.interestGLCode.getGlcodeId().intValue());
+                this.minAmntForInt.getAmount(), this.depositGLCode.getGlcodeId().intValue(), this.interestGLCode.getGlcodeId().intValue(),
+                interestPosting.getMeeting().isDaily());
+        
         savingsProductDto.setDepositGlCodeValue(this.depositGLCode.getGlcode());
         savingsProductDto.setInterestGlCodeValue(this.interestGLCode.getGlcode());
         savingsProductDto.setDepositGlCodeName(this.depositGLCode.getAssociatedCOA().getAccountName());

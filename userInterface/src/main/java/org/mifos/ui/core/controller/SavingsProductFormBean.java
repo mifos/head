@@ -66,8 +66,10 @@ public class SavingsProductFormBean {
 
     @Min(value=1)
     @NotNull
-    private Integer interestPostingMonthlyFrequency;
+    private Integer interestPostingFrequency;
 
+    private boolean isDaily;
+    
     private String minBalanceRequiredForInterestCalculation;
 
     // accounting details
@@ -97,8 +99,8 @@ public class SavingsProductFormBean {
             this.setInterestCalculationFrequency(1);
         }
         
-        if (this.getInterestPostingMonthlyFrequency() == null || this.getInterestPostingMonthlyFrequency() == 0){
-            this.setInterestPostingMonthlyFrequency(1);
+        if (this.getInterestPostingFrequency() == null || this.getInterestPostingFrequency() == 0){
+            this.setInterestPostingFrequency(1);
         }
     }
     
@@ -238,12 +240,12 @@ public class SavingsProductFormBean {
         this.frequencyPeriodOptions = frequencyPeriodOptions;
     }
 
-    public Integer getInterestPostingMonthlyFrequency() {
-        return this.interestPostingMonthlyFrequency;
+    public Integer getInterestPostingFrequency() {
+        return this.interestPostingFrequency;
     }
 
-    public void setInterestPostingMonthlyFrequency(Integer interestPostingMonthlyFrequency) {
-        this.interestPostingMonthlyFrequency = interestPostingMonthlyFrequency;
+    public void setInterestPostingFrequency(Integer interestPostingFrequency) {
+        this.interestPostingFrequency = interestPostingFrequency;
     }
 
     public String getMinBalanceRequiredForInterestCalculation() {
@@ -277,4 +279,14 @@ public class SavingsProductFormBean {
     public void setInterestRateZero(boolean interestRateZero) {
         this.interestRateZero = interestRateZero;
     }
+
+    public boolean getIsDaily() {
+        return isDaily;
+    }
+
+    public void setIsDaily(boolean isDaily) {
+        this.isDaily = isDaily;
+    }
+
+
 }

@@ -126,7 +126,12 @@
 	                    <div class="span-20 ">
 	                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.frequencyofInterestpostingtoaccounts" /]
 	                                        :&nbsp;</span>
-	                        <span class="span-4">${savingsProduct.interestPostingMonthlyFrequency?string.number} [@spring.message "manageProducts.defineSavingsProducts.month(s)" /]</span>
+	                        <span class="span-4">${savingsProduct.interestPostingFrequency?string.number} 
+	                        	[#if savingsProduct.isDaily]
+	                        		[@spring.message "manageProducts.defineSavingsProducts.day(s)" /]</span>
+	                       		[#else] 		
+	                        		[@spring.message "manageProducts.defineSavingsProducts.month(s)" /]</span>
+	                        	[/#if]
 	                    </div>
 	                    <div class="span-20 ">
 	                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.minimumbalancerequiredforInterestcalculation" /]

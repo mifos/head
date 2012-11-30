@@ -74,8 +74,12 @@
     <div class="row">
         <div class="attribute">[@spring.message "createSavingsAccount.productSummary.interestPostingFrequency"/]</div>
         <div class="value">
-            ${savingsAccountFormBean.product.savingsProductDetails.interestPostingMonthlyFrequency}
-            [@lookup.recurringFrequencyMonth /]
+            ${savingsAccountFormBean.product.savingsProductDetails.interestPostingFrequency}
+            [#if savingsAccountFormBean.product.savingsProductDetails.dailyPosting]
+           		[@lookup.recurringFrequencyDay /]
+            [#else]
+            	[@lookup.recurringFrequencyMonth /]
+            [/#if]
         </div>
     </div>
     <div class="row">

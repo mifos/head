@@ -117,8 +117,17 @@ public class SavingsProductAssembler {
             Integer every = savingsProductRequest.getInterestCalculationFrequency();
             MeetingBO interestCalculationMeeting = new MeetingBO(recurrence, every.shortValue(), new Date(), MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD);
 
-            Integer interestPostingEveryMonthFreq = savingsProductRequest.getInterestPostingMonthlyFrequency();
-            MeetingBO interestPostingMeeting = new MeetingBO(RecurrenceType.MONTHLY, interestPostingEveryMonthFreq.shortValue(), new Date(), MeetingType.SAVINGS_INTEREST_POSTING);
+            Integer interestPostingEveryMonthFreq = savingsProductRequest.getInterestPostingFrequency();
+            RecurrenceType interestPostingRecurrenceType = null;
+            
+            if (savingsProductRequest.isDailyPosting()) {
+                interestPostingRecurrenceType = RecurrenceType.DAILY;
+            } else {
+                interestPostingRecurrenceType = RecurrenceType.MONTHLY;
+            }
+            
+            MeetingBO interestPostingMeeting = new MeetingBO(interestPostingRecurrenceType, interestPostingEveryMonthFreq.shortValue(),
+                    new Date(), MeetingType.SAVINGS_INTEREST_POSTING);
 
             Money minAmountForCalculation = new Money(Money.getDefaultCurrency(), savingsProductRequest.getMinBalanceForInterestCalculation());
 

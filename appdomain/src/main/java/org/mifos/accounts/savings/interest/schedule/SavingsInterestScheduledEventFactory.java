@@ -36,7 +36,9 @@ public class SavingsInterestScheduledEventFactory {
             }
             break;
         case SAVINGS_INTEREST_POSTING:
-            scheduledEvent = new MonthlyOnLastDayOfMonthInterestScheduledEvent(meeting.getRecurAfter());
+            if (meeting.isMonthly()) {
+                scheduledEvent = new MonthlyOnLastDayOfMonthInterestScheduledEvent(meeting.getRecurAfter());
+            } 
             break;
         default:
             break;

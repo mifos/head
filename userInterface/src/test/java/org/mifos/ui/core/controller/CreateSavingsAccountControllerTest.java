@@ -114,7 +114,7 @@ public class CreateSavingsAccountControllerTest {
         SavingsProductDto savingsProductDetails = new SavingsProductDto(productsDetailDto, groupSavingsAccount, 
                 depositType, groupSavingsType, amountForDeposit, maxWithdrawal, interestRate, interestCalculationType, 
                 interestCalculationFrequency, interestCalculationFrequencyPeriod, interestPostingMonthlyFrequency, 
-                minBalanceForInterestCalculation, depositGlCode, interestGlCode);
+                minBalanceForInterestCalculation, depositGlCode, interestGlCode, false);
         SavingsProductReferenceDto savingsProductReference = new SavingsProductReferenceDto(
                 interestCalculationOptions, savingsProductDetails, true);
         

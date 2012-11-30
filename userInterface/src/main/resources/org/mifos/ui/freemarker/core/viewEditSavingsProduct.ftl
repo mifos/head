@@ -169,7 +169,12 @@
             </div>
             <div>
                 <span>[@spring.message "manageSavngsProducts.editsavingsproduct.frequencyofInterestpostingtoaccounts" /]</span>
-                <span>${savingsProductDetails.interestPostingMonthlyFrequency} [@spring.message "manageProducts.defineSavingsProducts.month(s)" /]</span>
+                <span>${savingsProductDetails.interestPostingFrequency} 
+                [#if savingsProductDetails.dailyPosting]
+                	[@spring.message "manageProducts.defineSavingsProducts.day(s)" /]</span>
+                [#else]
+                	[@spring.message "manageProducts.defineSavingsProducts.month(s)" /]</span>
+                [/#if]
             </div>
             <div>
                 <span>[@spring.message "manageSavngsProducts.editsavingsproduct.minimumbalancerequiredforInterestcalculation" /]</span>
