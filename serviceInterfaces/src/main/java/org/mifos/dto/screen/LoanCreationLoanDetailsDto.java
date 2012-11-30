@@ -87,6 +87,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     private final List<FeeDto> additionalFees;
     private final Integer gracePeriodInInstallments;
     private final ApplicationConfigurationDto appConfig;
+    private final boolean isGroupLoanWithMembersEnabled;
 
     public LoanCreationLoanDetailsDto(boolean isRepaymentIndependentOfMeetingEnabled,
             MeetingDto loanOfferingMeetingDetail, MeetingDto customerMeetingDetail,
@@ -99,7 +100,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
             LinkedHashMap<String, String> daysOfTheWeekOptions, LinkedHashMap<String, String> weeksOfTheMonthOptions, 
             boolean variableInstallmentsAllowed, boolean fixedRepaymentSchedule, Integer minGapInDays, Integer maxGapInDays, BigDecimal minInstallmentAmount, boolean compareCashflowEnabled,
             boolean isGlimEnabled, boolean isGroup, List<LoanAccountDetailsDto> clientDetails, ApplicationConfigurationDto appConfig,
-            List<PenaltyDto> defaultPenalties, Map<String, String> disbursalPaymentTypes, Map<String, String> repaymentPaymentTypes) {
+            List<PenaltyDto> defaultPenalties, Map<String, String> disbursalPaymentTypes, Map<String, String> repaymentPaymentTypes, boolean isGroupLoanWithMembersEnabled) {
         this.repaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
         this.loanOfferingMeetingDetail = loanOfferingMeetingDetail;
         this.customerMeetingDetail = customerMeetingDetail;
@@ -143,6 +144,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 		this.additionalFeeOptions = additionalFeeOptions;
         this.disbursalPaymentTypes = disbursalPaymentTypes;
         this.repaymentPaymentTypes = repaymentPaymentTypes;
+        this.isGroupLoanWithMembersEnabled = isGroupLoanWithMembersEnabled;
     }
 
     public Integer getGracePeriodInInstallments() {
@@ -344,4 +346,10 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     public Map<String, String> getRepaymentPaymentTypes() {
         return repaymentPaymentTypes;
     }
+
+    public boolean isGroupLoanWithMembersEnabled() {
+        return isGroupLoanWithMembersEnabled;
+    }
+    
+    
 }

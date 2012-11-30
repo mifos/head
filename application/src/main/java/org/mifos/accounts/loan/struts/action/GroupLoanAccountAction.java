@@ -177,8 +177,8 @@ public class GroupLoanAccountAction extends AccountAppAction{
         List<ValueListElement> allLoanPurposes = this.loanProductDao.findAllLoanPurposes();
         SessionUtils.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES, allLoanPurposes, request);
 
-        if (null != loanIndividualMonitoringIsEnabled && 0 != loanIndividualMonitoringIsEnabled.intValue()
-                && loanInformationDto.isGroup()) {
+        if ((null != loanIndividualMonitoringIsEnabled && 0 != loanIndividualMonitoringIsEnabled.intValue()
+                && loanInformationDto.isGroup() ) || loanInformationDto.isGroupLoanWithMembersEnabled()) {
 
             List<LoanAccountDetailsDto> loanAccountDetails = this.loanAccountServiceFacade.retrieveLoanAccountDetails(loanInformationDto);
             addEmptyBuisnessActivities(loanAccountDetails);
