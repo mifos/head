@@ -74,7 +74,7 @@
     </div>
 </div>
 <br />
-[#if loanProductReferenceData.glimApplicable]
+[#if loanProductReferenceData.glimApplicable || (loanProductReferenceData.group && loanProductReferenceData.groupLoanWithMembersEnabled)]
 <table style="margin-bottom: 15px;">
 		<thead>
 		<tr>

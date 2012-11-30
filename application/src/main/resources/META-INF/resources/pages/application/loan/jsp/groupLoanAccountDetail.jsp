@@ -408,7 +408,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 				<!-- GLIM Loan Account Details -->
 				<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountDetailsView')}"
 				var="loanAccountDetailsView" />
-					<c:if test="${loanInformationDto.group == true}">
+					<c:if test="${loanInformationDto.group == true || loanInformationDto.groupLoanWithMembersEnabled == true}">
 						<c:if test="${loanAccountDetailsView != null}">
 							<table width="96%" border="0" cellpadding="0" cellspacing="0">
 								<tr>

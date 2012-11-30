@@ -173,9 +173,11 @@ public class LoanAccountController {
     	    formBean.setMaxGapInDays(dto.getMaxGapInDays());
     	    formBean.setMinInstallmentAmount(dto.getMinInstallmentAmount());
     	}
-
     	formBean.setGlimApplicable(dto.isGlimApplicable());
-    	if (dto.isGlimApplicable()) {
+        if (dto.isGroup()){
+            formBean.setGroupLoanWithMembersEnabled(dto.isGroupLoanWithMembersEnabled());
+        }
+    	if (dto.isGlimApplicable() || (dto.isGroup() && dto.isGroupLoanWithMembersEnabled())) {
     	    List<LoanAccountDetailsDto> clientData = dto.getClientDetails();
     	    String[] clientGlobalIdArray = new String[clientData.size()];
     	    int index = 0;

@@ -44,12 +44,6 @@
                 </menuitem>
                 <menuitem>
                     <displayname>
-                        <namefragment>label.openNewGroupLoanAccount</namefragment>
-                    </displayname>
-                    <linkvalue>createGroupLoanAccount.ftl</linkvalue>
-                </menuitem>
-                <menuitem>
-                    <displayname>
                         <namefragment>label.openNewSavingsAccount</namefragment>
                     </displayname>
                     <linkvalue>createSavingsAccount.ftl</linkvalue>
@@ -127,12 +121,6 @@
                     <!-- 
                     <linkvalue>custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan</linkvalue>
                      -->
-                </menuitem>
-                <menuitem>
-                    <displayname>
-                        <namefragment>label.openNewGroupLoanAccount</namefragment>
-                    </displayname>
-                    <linkvalue>createGroupLoanAccount.ftl</linkvalue>
                 </menuitem>
                 <menuitem>
                     <displayname>

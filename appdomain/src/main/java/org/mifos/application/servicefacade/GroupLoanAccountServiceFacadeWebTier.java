@@ -728,6 +728,7 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
             }
         }
         
+        Boolean groupLoanWithMembers = AccountingRules.isGroupLoanWithMembers();
         return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, accountStateId,
                                      accountStateName, disbursed, accountFlagNames, loan.getDisbursementDate(), loan.isRedone(),
                                      loan.getBusinessActivityId(), loan.getAccountId(),gracePeriodTypeName, interestType, interestTypeName,
@@ -744,7 +745,7 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
                                      accountFeesDtos, loan.getCreatedDate(), loanPerformanceHistory,
                                      loan.getCustomer().isGroup(), getRecentActivityView(globalAccountNum), activeSurveys, accountSurveys,
                                      loan.getCustomer().getDisplayName(), loan.getCustomer().getGlobalCustNum(), loan.getOffice().getOfficeName(), recentNoteDtos,
-                                     accountPenaltiesDtos);
+                                     accountPenaltiesDtos, groupLoanWithMembers);
     }
     
     private LoanSummaryDto generateGroupLoanSummaryDto(ArrayList<LoanBO> memberAccounts) {

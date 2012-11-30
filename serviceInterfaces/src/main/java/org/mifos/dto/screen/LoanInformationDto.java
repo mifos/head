@@ -82,6 +82,9 @@ public class LoanInformationDto implements Serializable {
     private final Boolean activeSurveys;
     private final List<SurveyDto> accountSurveys;
     private boolean disbursed;
+    
+    // Group Loan Account with members specific
+    private boolean groupLoanWithMembersEnabled;
 
 
     public LoanInformationDto(String prdOfferingName, String globalAccountNum, Short accountStateId, String accountStateName, boolean disbursed,
@@ -95,7 +98,7 @@ public class LoanInformationDto implements Serializable {
                               Set<AccountFeesDto> accountFees, Date createdDate, LoanPerformanceHistoryDto performanceHistory, boolean group,
                               List<LoanActivityDto> recentAccountActivities, final Boolean activeSurveys, final List<SurveyDto> accountSurveys,
                               String customerName, String globalCustNum, String officeName, List<CustomerNoteDto> recentNoteDtos,
-                              final Set<AccountPenaltiesDto> accountPenalties) {
+                              final Set<AccountPenaltiesDto> accountPenalties, boolean groupLoanWithMembersEnabled) {
 
         this.prdOfferingName = prdOfferingName;
         this.globalAccountNum = globalAccountNum;
@@ -147,6 +150,7 @@ public class LoanInformationDto implements Serializable {
         this.globalCustNum = globalCustNum;
         this.officeName = officeName;
         this.recentNoteDtos = recentNoteDtos;
+        this.groupLoanWithMembersEnabled = groupLoanWithMembersEnabled;
     }
 
     public String getPrdOfferingName() {
@@ -339,6 +343,14 @@ public class LoanInformationDto implements Serializable {
 
     public Set<AccountPenaltiesDto> getAccountPenalties() {
         return accountPenalties;
+    }
+
+    public boolean isGroupLoanWithMembersEnabled() {
+        return groupLoanWithMembersEnabled;
+    }
+
+    public void setGroupLoanWithMembersEnabled(boolean groupLoanWithMembersEnabled) {
+        this.groupLoanWithMembersEnabled = groupLoanWithMembersEnabled;
     }
     
 }

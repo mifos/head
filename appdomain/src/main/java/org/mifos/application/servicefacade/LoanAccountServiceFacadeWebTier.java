@@ -454,14 +454,15 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         final boolean isGroup = customer.isGroup();
         final boolean isGlimEnabled = configurationPersistence.isGlimEnabled();
         final boolean isLsimEnabled = configurationPersistence.isRepaymentIndepOfMeetingEnabled();
-
+        final boolean isGroupLoanWithMembersEnabled = AccountingRules.isGroupLoanWithMembers();
+        
         List<PrdOfferingDto> loanProductDtos = retrieveActiveLoanProductsApplicableForCustomer(customer, isLsimEnabled);
 
         LoanCreationGlimDto loanCreationGlimDto = null;
         List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
 
         Errors errors = new Errors();
-        if (isGroup && isGlimEnabled) {
+        if (isGroup && (isGlimEnabled || isGroupLoanWithMembersEnabled)) {
             final List<ValueListElement> loanPurposes = loanProductDao.findAllLoanPurposes();
             final List<ClientBO> activeClientsOfGroup = customerDao.findActiveClientsUnderGroup(customer);
             loanCreationGlimDto = new LoanCreationGlimDto(loanPurposes);
@@ -661,10 +662,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             // GLIM specific
             final boolean isGroup = customer.isGroup();
             final boolean isGlimEnabled = configurationPersistence.isGlimEnabled();
+            
+            //Group Loan Account with members specific
+            final boolean isGroupLoanWithMembersEnabled = AccountingRules.isGroupLoanWithMembers();
 
             List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
 
-            if (isGroup && isGlimEnabled) {
+            if (isGroup && (isGlimEnabled || isGroupLoanWithMembersEnabled)) {
                 final List<ClientBO> activeClientsOfGroup = customerDao.findActiveClientsUnderGroup(customer);
 
                 if (activeClientsOfGroup == null || activeClientsOfGroup.isEmpty()) {
@@ -713,7 +717,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                     BigDecimal.valueOf(eligibleLoanAmount.getMaxLoanAmount()), BigDecimal.valueOf(eligibleLoanAmount.getMinLoanAmount()), defaultInterestRate, maxInterestRate, minInterestRate,
                     eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue(), nextPossibleDisbursementDate,
                     daysOfTheWeekOptions, weeksOfTheMonthOptions, variableInstallmentsAllowed, fixedRepaymentSchedule, minGapInDays, maxGapInDays, minInstallmentAmount, compareCashflowEnabled,
-                    isGlimEnabled, isGroup, clientDetails, appConfig, defaultPenalties, disbursalPaymentTypes, repaymentpaymentTypes);
+                    isGlimEnabled, isGroup, clientDetails, appConfig, defaultPenalties, disbursalPaymentTypes, repaymentpaymentTypes, isGroupLoanWithMembersEnabled);
 
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);
@@ -1803,7 +1807,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                                      accountFeesDtos, loan.getCreatedDate(), loanPerformanceHistory,
                                      loan.getCustomer().isGroup(), getRecentActivityView(globalAccountNum), activeSurveys, accountSurveys,
                                      loan.getCustomer().getDisplayName(), loan.getCustomer().getGlobalCustNum(), loan.getOffice().getOfficeName(), recentNoteDtos,
-                                     accountPenaltiesDtos);
+                                     accountPenaltiesDtos, AccountingRules.isGroupLoanWithMembers());
     }
 
     private String getMeetingRecurrence(MeetingBO meeting, UserContext userContext) {
