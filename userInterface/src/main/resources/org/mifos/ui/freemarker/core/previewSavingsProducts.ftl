@@ -126,7 +126,7 @@
 	                    <div class="span-20 ">
 	                                    <span class="span-8 fontBold">[@spring.message "manageSavngsProducts.previewSavingsProducts.frequencyofInterestpostingtoaccounts" /]
 	                                        :&nbsp;</span>
-	                        <span class="span-4">${savingsProduct.interestPostingFrequency?string.number} 
+	                        <span class="span-4">${savingsProduct.interestPostingMonthlyFrequency?string.number} 
 	                        	[#if savingsProduct.isDaily]
 	                        		[@spring.message "manageProducts.defineSavingsProducts.day(s)" /]</span>
 	                       		[#else] 		

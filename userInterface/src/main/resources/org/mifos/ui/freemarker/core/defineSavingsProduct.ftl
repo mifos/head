@@ -187,7 +187,7 @@
 	            <div class="span-20 ">
 	                <span class="  span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.frequencyofInterestpostingtoaccounts" /]:</span>
 	                <span class="span-9">
-	                    [@spring.formInput "savingsProduct.interestPostingFrequency" /]&nbsp;&nbsp;
+	                    [@spring.formInput "savingsProduct.interestPostingMonthlyFrequency" /]&nbsp;&nbsp;
 	                   	<span class="rightAlign">
 			                [#assign dailyPosting][@spring.message "manageProducts.defineSavingsProducts.day(s)"/][/#assign]
 							[#assign monthlyPosting][@spring.message "manageProducts.defineSavingsProducts.month(s)"/][/#assign]

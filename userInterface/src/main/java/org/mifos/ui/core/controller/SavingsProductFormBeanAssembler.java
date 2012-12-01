@@ -154,7 +154,7 @@ public class SavingsProductFormBeanAssembler {
         return new SavingsProductDto(productDetails, formBean.isGroupSavingAccount(),
                 depositType, groupSavingsType, amountForDeposit, maxWithdrawal,
                 interestRate, interestCalculationType, formBean.getInterestCalculationFrequency(), interestCalculationFrequencyPeriod,
-                formBean.getInterestPostingFrequency(), minBalanceForInterestCalculation, depositGlCode, interestGlCode, formBean.getIsDaily());
+                formBean.getInterestPostingMonthlyFrequency(), minBalanceForInterestCalculation, depositGlCode, interestGlCode, formBean.getIsDaily());
     }
 
     public void setProductBeanAssembler(GeneralProductBeanAssembler productBeanAssembler) {

@@ -158,7 +158,7 @@ public class SavingsProductFormValidator implements Validator {
                 }
             }
         
-            if (null == formBean.getInterestPostingFrequency() || formBean.getInterestPostingFrequency() < 1 ||
+            if (null == formBean.getInterestPostingMonthlyFrequency() || formBean.getInterestPostingMonthlyFrequency() < 1 ||
                     errorProcessor.getRejectedValue("interestPostingMonthlyFrequency") != null) {
                 if (errorProcessor.getTarget() == null) {
                     errors.reject("Min.savingsProduct.interestPostingMonthlyFrequency");
