@@ -153,7 +153,7 @@ public class PenaltyTest extends UiTestCaseBase {
     private LoanAccountPage prepareLoanForPenaltyTest() throws Exception {
         String client = "WeeklyClient Monday";
         
-        DateTime currentTime = new DateTime();
+        DateTime currentTime = new DateTime().withYear(2012).withDayOfMonth(3).withMonthOfYear(12);
         new DateTimeUpdaterRemoteTestingService(selenium).setDateTime(currentTime);
         
         String dd = Integer.toString(currentTime.getDayOfMonth());
