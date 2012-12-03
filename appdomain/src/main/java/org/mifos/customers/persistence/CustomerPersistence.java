@@ -440,9 +440,10 @@ public class CustomerPersistence extends LegacyGenericDao {
                     words.add("");
                 }
             }
-            paramList.add(typeNameValue("String", "SEARCH_STRING1", words.get(0)));
-            paramList.add(typeNameValue("String", "SEARCH_STRING2", words.get(1)));
-            paramList.add(typeNameValue("String", "SEARCH_STRING3", words.get(2)));
+
+            paramList.add(typeNameValue("String", "SEARCH_STRING1", "%"+words.get(0)+"%"));
+            paramList.add(typeNameValue("String", "SEARCH_STRING2", "%"+words.get(1)+"%"));
+            paramList.add(typeNameValue("String", "SEARCH_STRING3", "%"+words.get(2)+"%"));
         } else {
             paramList.add(typeNameValue("String", "SEARCH_STRING1", searchString));
             paramList.add(typeNameValue("String", "SEARCH_STRING2", ""));
