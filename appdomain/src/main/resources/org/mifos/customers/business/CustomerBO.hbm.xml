@@ -780,24 +780,19 @@
                    left join c.personnel as per
                            left join c.nameDetailSet as cnd
                    where (
-                         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID)
-                         or :USERLEVEL_ID!=:LOID)
-                         and c.office.officeId=:OFFICEID
-                         and ((c.customerLevel.id !=:LEVELID and c.displayName like :SEARCH_STRING)
-                              or (c.customerLevel.id =:LEVELID
-
-
-                              and (c.firstName like :SEARCH_STRING
-                              or c.lastName like :SEARCH_STRING
-                              or c.secondLastName like :SEARCH_STRING
-                              or c.displayName like :SEARCH_STRING
-                                      or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2)
-                              or (
-                                          cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
-                                          c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
-                              )
-
-                               )
+                         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID)
+                         and c.office.officeId=:OFFICEID and 
+                         ((c.customerLevel.id !=:LEVELID and c.displayName like :SEARCH_STRING) or
+                             (c.customerLevel.id =:LEVELID and 
+                                (c.firstName like :SEARCH_STRING
+                                 or c.lastName like :SEARCH_STRING
+                                 or c.secondLastName like :SEARCH_STRING
+                                 or c.displayName like :SEARCH_STRING
+                                 or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
+                                 or (c.firstName like :SEARCH_STRING1 and c.firstName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
+                                 or (cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
+                                )
+                             )
                          ) ]]>
     </query>
     <query name="Customer.cust_search">
@@ -809,24 +804,21 @@
                    left join c.personnel as per
                            left join c.nameDetailSet as cnd
                    where (
-                         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID)
-                         or :USERLEVEL_ID!=:LOID)
-                         and c.office.officeId=:OFFICEID
-                         and ((c.customerLevel.id !=:LEVELID and c.displayName like :SEARCH_STRING)
-                              or (c.customerLevel.id =:LEVELID
-
-
-                              and (c.firstName like :SEARCH_STRING
-                              or c.lastName like :SEARCH_STRING
-                              or c.secondLastName like :SEARCH_STRING
-                              or c.displayName like :SEARCH_STRING
-                                      or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2)
-                                      or (
-                                          cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
-                                          c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
-                              )
-                                      )
-                         ) order by c.customerLevel.id,c.lastName,c.firstName]]>
+                         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID)
+                         and c.office.officeId=:OFFICEID and 
+                         ((c.customerLevel.id !=:LEVELID and c.displayName like :SEARCH_STRING) or
+                             (c.customerLevel.id =:LEVELID and 
+                                (c.firstName like :SEARCH_STRING
+                                 or c.lastName like :SEARCH_STRING
+                                 or c.secondLastName like :SEARCH_STRING
+                                 or c.displayName like :SEARCH_STRING
+                                 or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
+                                 or (c.firstName like :SEARCH_STRING1 and c.firstName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
+                                 or (cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
+                                )
+                             )
+                         )
+                         order by c.customerLevel.id,c.lastName,c.firstName]]>
     </query>
     <query name="Customer.cust_search_noofficeid">
                    <![CDATA[select distinct c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum from
@@ -835,22 +827,23 @@
                     left join pa.parentCustomer as papa
                     left join c.office as off
                     left join c.personnel as per
-                            left join c.nameDetailSet as cnd
+                    left join c.nameDetailSet as cnd
                     where (
                             ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID))
-                         and (off.searchId like :OFFICE_SEARCH_ID)
-                         and (
-                               (c.customerLevel.id in (2,3)  and c.displayName like :SEARCH_STRING)
-                               or (c.customerLevel.id =:LEVELID and
-                               (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING
-                                          or c.displayName like :SEARCH_STRING
-                                   or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2)
-                               or (
-                                          cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
-                                          c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
-                               ))
-                               )
-                             )
+                            and (off.searchId like :OFFICE_SEARCH_ID) and 
+                                ((c.customerLevel.id in (2,3)  and c.displayName like :SEARCH_STRING) or 
+                                (c.customerLevel.id =:LEVELID and
+                                    (c.firstName like :SEARCH_STRING 
+                                    or c.lastName like :SEARCH_STRING 
+                                    or c.secondLastName like :SEARCH_STRING
+                                    or c.displayName like :SEARCH_STRING
+                                    or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
+                                    or (c.firstName like :SEARCH_STRING1 and c.firstName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
+                                    or (cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
+                                    )
+                                )
+                                )
+                           )
                     order by c.customerLevel.id,c.lastName,c.firstName]]>
     </query>
     <query name="Customer.cust_count_search_noofficeid">
@@ -862,19 +855,20 @@
                             left join c.nameDetailSet as cnd
                     where (
                             ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID))
-                         and (off.searchId like :OFFICE_SEARCH_ID)
-                         and (
-                               (c.customerLevel.id in (2,3)  and c.displayName like :SEARCH_STRING)
-                               or (c.customerLevel.id =:LEVELID and
-                               (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING
-                                          or c.displayName like :SEARCH_STRING
-                                   or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2)
-                               or (
-                                          cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
-                                          c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
-                               ))
-                               )
-                             )
+                            and (off.searchId like :OFFICE_SEARCH_ID) and 
+                                ((c.customerLevel.id in (2,3)  and c.displayName like :SEARCH_STRING) or 
+                                (c.customerLevel.id =:LEVELID and
+                                    (c.firstName like :SEARCH_STRING 
+                                    or c.lastName like :SEARCH_STRING 
+                                    or c.secondLastName like :SEARCH_STRING
+                                    or c.displayName like :SEARCH_STRING
+                                    or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
+                                    or (c.firstName like :SEARCH_STRING1 and c.firstName like :SEARCH_STRING2 and c.lastName like :SEARCH_STRING3)
+                                    or (cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
+                                    )
+                                )
+                                )
+                           )
                     ]]>
     </query>
 
