@@ -71,6 +71,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
         applicationDatabaseOperation.updateLSIM(0);
         applicationDatabaseOperation.updateGapBetweenDisbursementAndFirstMeetingDate(1);
+        propertiesHelper.setOverdueInterestPaidFirst("false");
     }
 
     @Override
@@ -86,6 +87,16 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
         loanTestHelper.setApplicationTime(systemDateTime);
         dataSetup.addDecliningPrincipalBalance();
+        setDefaultProperties();
+    }
+
+    private void setDefaultProperties() {
+        propertiesHelper.setDigitsAfterDecimal(1);
+        propertiesHelper.setCurrencyRoundingMode(CustomPropertiesHelper.ROUNDING_MODE_HALF_UP);
+        propertiesHelper.setInitialRoundingMode(CustomPropertiesHelper.ROUNDING_MODE_HALF_UP);
+        propertiesHelper.setFinalRoundingMode(CustomPropertiesHelper.ROUNDING_MODE_CEILING);
+        propertiesHelper.setInitialRoundOffMultiple("1");
+        propertiesHelper.setFinalRoundOffMultiple("1");
     }
 
     
@@ -274,7 +285,6 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         loanTestHelper.setApplicationTime(testDateTime.plusMonths(6));
         verifyOverdueSummary(accountId);
         verifyOverduePayment(accountId, testDateTime);
-        propertiesHelper.setOverdueInterestPaidFirst("false");
     }
     
     private void verifyOverdueSummary(String accountId) throws UnsupportedEncodingException {
