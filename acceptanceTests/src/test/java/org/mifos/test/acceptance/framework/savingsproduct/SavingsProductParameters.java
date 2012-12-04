@@ -39,7 +39,8 @@ public class SavingsProductParameters {
     private String frequencyOfInterestPostings;
     private String glCodeForDeposit;
     private String glCodeForInterest;
-
+    private boolean dailyPosting;
+    
     // constants:
     // product category
     public static final int OTHER = 2;
@@ -167,4 +168,11 @@ public class SavingsProductParameters {
     public int getAmountAppliesTo() {
         return amountAppliesTo;
     }
+    public boolean isDailyPosting() {
+        return dailyPosting;
+    }
+    public void setDailyPosting(boolean dailyPosting) {
+        this.dailyPosting = dailyPosting;
+    }
+
 }

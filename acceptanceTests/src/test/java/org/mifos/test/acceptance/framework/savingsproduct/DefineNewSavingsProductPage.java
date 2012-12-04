@@ -204,7 +204,9 @@ public class DefineNewSavingsProductPage extends MifosPage {
         selectValueIfNotZero("selectedFequencyPeriod", productParameters.getDaysOrMonthsForInterestCalculation());
 
         selenium.type("interestPostingMonthlyFrequency", productParameters.getFrequencyOfInterestPostings());
-
+        if (productParameters.isDailyPosting()) {
+            selenium.check("//*[@id=\"isDaily0\"]");
+        }
    }
    
    public void fillFormAccounting(SavingsProductParameters productParameters){

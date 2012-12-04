@@ -169,6 +169,19 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         createSavingAccountWithCreatedProduct("DefineNewSavingsProductTestCenter", params.getProductInstanceName(), "7777.8");
     }
 
+    public void createSavingsProductWithDailyInterestPosting() throws Exception {
+        SavingsProductParameters params = savingsProductHelper.
+                getMandatoryClientsMinimumBalanceSavingsProductParameters(new DateTime());
+
+        String productName = StringUtil.getRandomString(4);
+        params.setShortName(productName);
+        params.setDailyPosting(true);
+        DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
+        
+        confirmationPage.navigateToSavingsProductDetails();
+        createSavingAccountWithCreatedProduct("DefineNewSavingsProduct TestClient", params.getProductInstanceName(), "248");
+    }
+    
     private SavingsAccountDetailPage createSavingAccountWithCreatedProduct(String client, String productName, String amount){
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         searchParameters.setSearchString(client);
