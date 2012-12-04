@@ -87,19 +87,8 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
         loanTestHelper.setApplicationTime(systemDateTime);
         dataSetup.addDecliningPrincipalBalance();
-        setDefaultProperties();
     }
 
-    private void setDefaultProperties() {
-        propertiesHelper.setDigitsAfterDecimal(1);
-        propertiesHelper.setCurrencyRoundingMode(CustomPropertiesHelper.ROUNDING_MODE_HALF_UP);
-        propertiesHelper.setInitialRoundingMode(CustomPropertiesHelper.ROUNDING_MODE_HALF_UP);
-        propertiesHelper.setFinalRoundingMode(CustomPropertiesHelper.ROUNDING_MODE_CEILING);
-        propertiesHelper.setInitialRoundOffMultiple("1");
-        propertiesHelper.setFinalRoundOffMultiple("1");
-    }
-
-    
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     @Test(enabled=true)
     public void verifyDecliningPrincipleLoan() throws Exception {
@@ -282,7 +271,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
                 loanTestHelper.createLoanAccount(clientName, "WeeklyPawdepLoan")
                 .changeAccountStatusToAccepted().disburseLoan(disburseParams);
         String accountId = loanAccountPage.getAccountId();
-        loanTestHelper.setApplicationTime(testDateTime.plusMonths(6));
+        loanTestHelper.setApplicationTime(testDateTime.plusWeeks(5));
         verifyOverdueSummary(accountId);
         verifyOverduePayment(accountId, testDateTime);
     }
@@ -294,7 +283,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     
     private void verifyOverduePayment(String accountId, DateTime disbursementDate) throws UnsupportedEncodingException {
         navigationHelper.navigateToLoanAccountPage(accountId);
-        loanTestHelper.makePayment(disbursementDate.plusMonths(6), "1119.8").verifyAccountSummary(
+        loanTestHelper.makePayment(disbursementDate.plusWeeks(5), "1023.5").verifyAccountSummary(
                 RepaymentScheduleData.ACCOUNT_SUMMARY_OVERDUE_REPAYMENT);
     }
 

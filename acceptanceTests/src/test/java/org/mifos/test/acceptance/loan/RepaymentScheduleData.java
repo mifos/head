@@ -205,15 +205,15 @@ public class RepaymentScheduleData {
     public static final String[][] ACCOUNT_SUMMARY_OVERDUE = {
             { "", "Original Loan", "Amount paid", "Loan balance" },            
             {"Principal", "1,000", "0", "1,000"},
-            {"Interest", "12", "0", "119.8"},
+            {"Interest", "12", "0", "23.5"},
             {"Fees", "0", "0", "0"},
             {"Penalty", "0", "0", "0"},
-            {"Total", "1,012", "0", "1,119.8"}};
+            {"Total", "1,012", "0", "1,023.5"}};
     public static final String[][] ACCOUNT_SUMMARY_OVERDUE_REPAYMENT = {
             { "", "Original Loan", "Amount paid", "Loan balance" },            
             {"Principal", "1,000", "1,000", "0"},
-            {"Interest", "12", "119.8", "0"},
+            {"Interest", "12", "23.5", "0"},
             {"Fees", "0", "0", "0"},
             {"Penalty", "0", "0", "0"},
-            {"Total", "1,012", "1,119.8", "0"}};
+            {"Total", "1,012", "1,023.5", "0"}};
 }
