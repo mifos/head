@@ -282,7 +282,7 @@ public class StandardAccountService implements AccountService {
             for (Map.Entry<Integer, String> member : parentPaymentParametersDto.getMemberInfo().entrySet()) {
                 
                 AccountBO memberAcc = this.legacyAccountDao.getAccount(member.getKey());
-                if (!parentPaymentParametersDto.getMemberAccountIdToRepay().equals(memberAcc.getAccountId())) {
+                if (null == parentPaymentParametersDto.getMemberAccountIdToRepay() || !parentPaymentParametersDto.getMemberAccountIdToRepay().equals(memberAcc.getAccountId())) {
                     AccountPaymentParametersDto memberAccountPaymentParametersDto = new AccountPaymentParametersDto(parentPaymentParametersDto.getUserMakingPayment(),
                             new AccountReferenceDto(memberAcc.getAccountId()), new BigDecimal(member.getValue()), parentPaymentParametersDto.getPaymentDate(), parentPaymentParametersDto.getPaymentType(),
                             parentPaymentParametersDto.getComment(), parentPaymentParametersDto.getReceiptDate(), parentPaymentParametersDto.getReceiptId(), memberAcc.getCustomer().toCustomerDto());
@@ -291,7 +291,7 @@ public class StandardAccountService implements AccountService {
                 else    
                 {
                     AccountPaymentDto paymentDto = new AccountPaymentDto(Double.valueOf(member.getValue()), parentPaymentParametersDto.getPaymentDate().toDateMidnight().toDate(), parentPaymentParametersDto.getReceiptId(),
-                            parentPaymentParametersDto.getReceiptDate().toDateMidnight().toDate(), parentPaymentParametersDto.getPaymentType().getValue());
+                            reciptDateNullValidation(parentPaymentParametersDto.getReceiptDate()), parentPaymentParametersDto.getPaymentType().getValue());
                     
                     ((LoanBO)memberAcc).makeEarlyRepayment(paymentDto, parentPaymentParametersDto.getUserMakingPayment().getUserId(), parentPaymentParametersDto.getRepayLoanInfoDto().isWaiveInterest(), new Money(account.getCurrency(),parentPaymentParametersDto.getInterestDueForCurrentInstalmanet()));  
                 }
@@ -299,6 +299,9 @@ public class StandardAccountService implements AccountService {
         }
     }
     
+    private Date reciptDateNullValidation(LocalDate reciptDate){
+        return null == reciptDate ? null : reciptDate.toDateMidnight().toDate();
+    }
     /**
      * Create default members payments data. 
      */
