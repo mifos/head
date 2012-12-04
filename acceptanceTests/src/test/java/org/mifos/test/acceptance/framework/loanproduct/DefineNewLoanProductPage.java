@@ -83,6 +83,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         // freq of installments
         public static final int WEEKS = 1;
         public static final int MONTHS = 2;
+        public static final int DAYS = 3;
 
         // grace period type
         public static final int NONE = 1;

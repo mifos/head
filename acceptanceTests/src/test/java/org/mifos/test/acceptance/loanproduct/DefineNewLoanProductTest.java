@@ -196,5 +196,13 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         Assert.assertEquals("0", selenium.getTable("accountActivityTable.2.10").trim());
         
     }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createDailyLoanProduct() throws Exception {
+        SubmitFormParameters formParameters = FormParametersHelper.getDailyLoanProductParameters();
+        new NavigationHelper(selenium).navigateToAdminPage().
+                verifyPage().
+                defineLoanProduct(formParameters);
+    }
 }
 

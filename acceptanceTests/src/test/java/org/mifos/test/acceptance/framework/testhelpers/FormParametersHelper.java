@@ -140,4 +140,12 @@ public class FormParametersHelper {
         formParameters.setGlCode("31301 - Fees");
         return formParameters;
     }
+    
+    public static DefineNewLoanProductPage.SubmitFormParameters getDailyLoanProductParameters() {
+        DefineNewLoanProductPage.SubmitFormParameters params = getWeeklyLoanProductParameters();
+        params.setFreqOfInstallments(DefineNewLoanProductPage.SubmitFormParameters.DAYS);
+        params.setOfferingName("productDaily" + StringUtil.getRandomString(4));
+        params.setDescription("daily");
+        return params;
+    }
 }
