@@ -223,10 +223,19 @@
 	                <span class="  span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.frequencyofInterestpostingtoaccounts" /]:</span>
 	                <span class="span-9">
                     [#if savingsProduct.notUpdateable && savingsProduct.interestRate > 0]
-	                    [@spring.formInput "savingsProduct.interestPostingMonthlyFrequency", "disabled=disabled"/]&nbsp;&nbsp;[@spring.message "manageProducts.defineSavingsProducts.month(s)" /]
+	                    [@spring.formInput "savingsProduct.interestPostingMonthlyFrequency", "disabled=disabled"/]&nbsp;&nbsp;
+	                    [#if savingsProduct.isDaily]
+	                    	[@spring.message "manageProducts.defineSavingsProducts.day(s)" /]</span>
+	                    [#else] 		
+	                        [@spring.message "manageProducts.defineSavingsProducts.month(s)" /]</span>
+	                    [/#if]
                     [#else]
-	                    [@spring.formInput "savingsProduct.interestPostingMonthlyFrequency" /]&nbsp;&nbsp;[@spring.message "manageProducts.defineSavingsProducts.month(s)" /]
+	                    [@spring.formInput "savingsProduct.interestPostingMonthlyFrequency" /]&nbsp;&nbsp;
+	                    	[#assign dailyPosting][@spring.message "manageProducts.defineSavingsProducts.day(s)"/][/#assign]
+							[#assign monthlyPosting][@spring.message "manageProducts.defineSavingsProducts.month(s)"/][/#assign]
+							[@form.boolRadioButtons "savingsProduct.isDaily", {"true":dailyPosting, "false":monthlyPosting},'','' /] 
                     [/#if]
+
 	                </span>
 	            </div>
 	            <div class="span-20 ">
