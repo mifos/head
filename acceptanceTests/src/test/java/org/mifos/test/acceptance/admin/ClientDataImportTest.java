@@ -5,7 +5,6 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.ClientDataImportReviewPage;
 import org.mifos.test.acceptance.framework.admin.ClientDataImportSaveSummaryPage;
 import org.mifos.test.acceptance.framework.testhelpers.AdminTestHelper;
-import org.mifos.test.acceptance.framework.testhelpers.OfficeHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
