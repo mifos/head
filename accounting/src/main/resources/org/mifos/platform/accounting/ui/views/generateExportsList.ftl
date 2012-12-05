@@ -36,7 +36,7 @@
                 </td>
                 [#else]
                 <td class="drawtablerow" colspan=2>
-                    <a href='renderAccountingData.ftl?fromDate=${instance.startDate}&toDate=${instance.endDate}' title='[@spring.message "accounting.viewaccountingexports.notgenerated"/]'>
+                    <a id=render.date=${instance.startDate} href='renderAccountingData.ftl?fromDate=${instance.startDate}&toDate=${instance.endDate}' title='[@spring.message "accounting.viewaccountingexports.notgenerated"/]'>
                         [@spring.message "accounting.viewaccountingexports.exportandview"/]
                     </a>
                 </td>

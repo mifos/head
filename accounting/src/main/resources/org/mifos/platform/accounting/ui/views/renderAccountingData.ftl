@@ -44,7 +44,7 @@
 
 
         <div id='table'>
-            <table>
+            <table id='table.details'>
                 <tr>
                   <td colspan='7'>
                       <div align='right'>

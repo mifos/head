@@ -85,7 +85,7 @@ inner join coa on coa.glcode_id = gl.glcode_id
 inner join account_trxn atrxn on atrxn.account_trxn_id = fintrxn.account_trxn_id
 inner join account a on a.account_id = atrxn.account_id
 inner join office o on o.office_id = a.office_id
-inner join loan_account l on l.account_id = atrxn.account_id 
+left join loan_account l on l.account_id = atrxn.account_id 
 where fintrxn.posted_date between date(?) and date(?) and l.parent_account_id is null
 group by branchname, voucherdate, vouchertype, glcode, glname
 order by branchname, voucherdate, vouchertype, glcode, glname) tally;

@@ -46,6 +46,12 @@ public class ViewAccountingExportsPage extends MifosPage {
         selenium.isTextPresent("NO DATA");
         return this;
     }
+    
+    public ViewAccountingDataDetailPage navigateToViewAccountingDataDetail(String date){
+        selenium.click("render.date="+date);
+        waitForPageToLoad();
+        return new ViewAccountingDataDetailPage(selenium);
+    }
 
     public ViewAccountingExportsPage clickCancel() {
         selenium.click("cancel");
