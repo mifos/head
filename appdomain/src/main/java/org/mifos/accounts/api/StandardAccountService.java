@@ -282,7 +282,8 @@ public class StandardAccountService implements AccountService {
             for (Map.Entry<Integer, String> member : parentPaymentParametersDto.getMemberInfo().entrySet()) {
                 
                 AccountBO memberAcc = this.legacyAccountDao.getAccount(member.getKey());
-                if (null == parentPaymentParametersDto.getMemberAccountIdToRepay() || !parentPaymentParametersDto.getMemberAccountIdToRepay().equals(memberAcc.getAccountId())) {
+                if (null == parentPaymentParametersDto.getMemberAccountIdToRepay() || 
+                        (null != parentPaymentParametersDto.getMemberAccountIdToRepay()&& !parentPaymentParametersDto.getMemberAccountIdToRepay().equals(memberAcc.getAccountId()))) {
                     AccountPaymentParametersDto memberAccountPaymentParametersDto = new AccountPaymentParametersDto(parentPaymentParametersDto.getUserMakingPayment(),
                             new AccountReferenceDto(memberAcc.getAccountId()), new BigDecimal(member.getValue()), parentPaymentParametersDto.getPaymentDate(), parentPaymentParametersDto.getPaymentType(),
                             parentPaymentParametersDto.getComment(), parentPaymentParametersDto.getReceiptDate(), parentPaymentParametersDto.getReceiptId(), memberAcc.getCustomer().toCustomerDto());

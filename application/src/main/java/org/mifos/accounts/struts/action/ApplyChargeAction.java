@@ -88,7 +88,7 @@ public class ApplyChargeAction extends BaseAction {
 
         SessionUtils.setCollectionAttribute(AccountConstants.APPLICABLE_CHARGE_LIST, applicableCharges, request);
         
-        if (null == loan.getParentAccount() && loan.isGroupLoanAccount()) {
+        if (null != loan && (null == loan.getParentAccount() && loan.isGroupLoanAccount())) {
             SessionUtils.setAttribute(Constants.ACCOUNT_TYPE, "newGlim", request);
         }
         return mapping.findForward(ActionForwards.load_success.toString());
@@ -163,6 +163,9 @@ public class ApplyChargeAction extends BaseAction {
         if (method != null) {
             if (method.equals(Methods.update.toString())) {
                 forward = ActionForwards.update_failure.toString();
+            }
+            else if (method.equals(Methods.create.toString())) {
+                forward = "divide";
             }
         }
         return mapping.findForward(forward);
