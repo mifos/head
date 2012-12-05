@@ -21,11 +21,13 @@
 package org.mifos.test.acceptance.admin;
 
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.ViewAccountingDataDetailPage;
 import org.mifos.test.acceptance.framework.admin.ViewAccountingExportsPage;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,7 +36,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(singleThreaded = true, groups = {"admin", "acceptance","ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"admin", "acceptance","ui"})
 public class AccountingIntegrationTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -46,8 +48,9 @@ public class AccountingIntegrationTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "REST_API_20110912_dbunit.xml", dataSource, selenium);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011,2,19,13,0,0,0);
+        DateTime targetTime = new DateTime(2012, 12, 4, 13, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
 
@@ -69,6 +72,17 @@ public class AccountingIntegrationTest extends UiTestCaseBase {
         viewAccountingExportsPage.clickSubmit();
         viewAccountingExportsPage.verifyPage();
         viewAccountingExportsPage.verifyNoExportPresent();
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyAccountingExportsSavignsAccount() throws Exception{
+        AdminPage adminPage = loginAndGoToAdminPage();
+        ViewAccountingExportsPage viewAccountingExportsPage = adminPage.navigateToViewAccountingExports();
+        viewAccountingExportsPage = viewAccountingExportsPage.clickClearExports().clickSubmit();
+        ViewAccountingDataDetailPage viewAccountingDataDetail = viewAccountingExportsPage.navigateToViewAccountingDataDetail("2011-09-12");
+        if (!viewAccountingDataDetail.verifyIfListContains("Mandatory Savings Accounts")){
+            Assert.fail("Accounting Export Details should contain Mandatory Savings Accounts row.");
+        }
     }
 
     private AdminPage loginAndGoToAdminPage() {
