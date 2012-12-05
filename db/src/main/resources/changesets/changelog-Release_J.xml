@@ -1035,18 +1035,8 @@
        </rollback>
    </changeSet>
    <changeSet id="MIFOS_5628_2" author="Kamil Kalfas">
+   <validCheckSum>3:da48c239134061ccee86edf4ab390b9f</validCheckSum>
        <sql endDelimiter=";">
-           ALTER TABLE account_payment ADD parent_payment_id smallint;
-       </sql>
-       <rollback>
-           <sql endDelimiter=";">
-             ALTER TABLE account_payment DROP parent_payment_id;
-           </sql>
-       </rollback>
-   </changeSet>
-   <changeSet id="MIFOS_5628_3" author="Kamil Kalfas">
-       <sql endDelimiter=";">
-           ALTER TABLE account_payment DROP parent_payment_id;
            ALTER TABLE account_payment ADD parent_payment_id int;
        </sql>
        <rollback>
