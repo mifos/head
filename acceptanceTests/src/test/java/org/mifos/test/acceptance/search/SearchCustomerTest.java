@@ -3,6 +3,7 @@ package org.mifos.test.acceptance.search;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
+import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -25,6 +26,7 @@ public class SearchCustomerTest extends SearchTestBase {
     @AfterMethod
     public void tearDown() {
         (new MifosPage(selenium)).logout();
+        new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
