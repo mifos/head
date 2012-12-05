@@ -213,7 +213,8 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
 
         PaymentTypeDto paymentTypeDto;
         String amount = actionForm.getAmount();
-        if (accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT)) {
+        if (accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT) ||
+                accountPaymentDto.getAccountType().equals(AccountTypeDto.GROUP_LOAN_ACCOUNT)) {
             paymentTypeDto = getLoanPaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
         } else {
             paymentTypeDto = getFeePaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
