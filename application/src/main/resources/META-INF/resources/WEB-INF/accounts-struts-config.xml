@@ -403,6 +403,7 @@
                 input="/applyGroupPaymentAction.do?method=validate" scope="session" validate="true">
             <forward name="load_success" path="/pages/accounts/jsp/applyGroupPayment.jsp"/>
             <forward name="divide" path="/pages/accounts/jsp/divideGroupPayment.jsp"/>
+            <forward name="divide_failure" path="/pages/accounts/jsp/divideGroupPayment.jsp"/>
             <forward name="preview_success" path="/pages/accounts/jsp/previewApplyGroupPayment.jsp"/>
             <forward name="preview_failure" path="/pages/accounts/jsp/applyGroupPayment.jsp"/>
             <forward name="previous_success" path="/pages/accounts/jsp/applyGroupPayment.jsp"/>

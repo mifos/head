@@ -164,6 +164,9 @@ public class ApplyChargeAction extends BaseAction {
             if (method.equals(Methods.update.toString())) {
                 forward = ActionForwards.update_failure.toString();
             }
+            else if (method.equals(Methods.create.toString())) {
+                forward = "divide";
+            }
         }
         return mapping.findForward(forward);
     }
