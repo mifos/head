@@ -50,4 +50,7 @@ public class FinancialActionCache {
         return financialAction;
     }
 
+    public static void clear() {
+        financialCacheRepository.clear();
+    }
 }

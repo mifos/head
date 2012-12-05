@@ -29,9 +29,14 @@ import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.codehaus.jackson.map.util.Named;
 import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
@@ -55,6 +60,7 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
@@ -374,6 +380,17 @@ public class LegacyAccountDao extends LegacyGenericDao {
         }
 
     }
+    
+    public List<COABO> getCOAlist() {
+        Query topLevelAccounts = getSession().getNamedQuery(NamedQueryConstants.GET_TOP_LEVEL_ACCOUNTS);
+        return topLevelAccounts.list();
+    }
+    
+    public List<COABO> getCOAChildList(int id) {
+        Query accounts = getSession().getNamedQuery(NamedQueryConstants.GET_CHILD_ACCOUNTS);
+        accounts.setInteger("id", id);
+        return accounts.list();
+    }
 
     public String dumpChartOfAccounts() throws ConfigurationException {
         XMLConfiguration config = new XMLConfiguration();
@@ -423,10 +440,10 @@ public class LegacyAccountDao extends LegacyGenericDao {
     /**
      * @see #addGeneralLedgerAccount(String, String, String, GLCategoryType)
      */
-    private COABO addGeneralLedgerAccount(String name, String glcode, Short parent_id, GLCategoryType categoryType) {
+    public COABO addGeneralLedgerAccount(String name, String glcode, Short parent_id, GLCategoryType categoryType) {
         Short id = getAccountIdFromGlCode(glcode);
         if (id != null) {
-            throw new RuntimeException("An account already exists with glcode: " + glcode + ". id was " + id);
+            throw new MifosRuntimeException("An account already exists with glcode: " + glcode + ". id was " + id);
         }
 
         GLCodeEntity glCodeEntity = new GLCodeEntity(null, glcode);
@@ -441,19 +458,34 @@ public class LegacyAccountDao extends LegacyGenericDao {
             if (null == parent_id) {
                 coaHierarchyEntity = new COAHierarchyEntity(newAccount, null);
             } else {
-                parentCOA = (COABO) StaticHibernateUtil.getSessionTL().load(COABO.class, parent_id);
+                parentCOA = (COABO) StaticHibernateUtil.getSessionTL().load(COABO.class, parent_id.shortValue());
                 coaHierarchyEntity = new COAHierarchyEntity(newAccount, parentCOA.getCoaHierarchy());
             }
 
             createOrUpdate(coaHierarchyEntity);
             newAccount.setCoaHierarchy(coaHierarchyEntity);
-
+            StaticHibernateUtil.commitTransaction();
             return newAccount;
         } catch (PersistenceException e) {
             throw new RuntimeException(e);
         }
     }
 
+    public int getCountForGlCode(Short glCodeId) throws PersistenceException {
+        Session session = StaticHibernateUtil.getSessionTL();
+
+        int count = -1;
+        try {
+            Query query = session.getNamedQuery(NamedQueryConstants.COUNT_GL_CODE_REFERENCES);
+            query.setShort("glCodeId", glCodeId);
+            count = (Integer) query.uniqueResult();
+        } catch (HibernateException ex) {
+            throw new PersistenceException(ex);
+        }
+        
+        return count;
+    }
+    
     /**
      * A "category" is a top-level general ledger account. Use this method to fetch a single, specific category from the
      * database.
@@ -590,5 +622,66 @@ public class LegacyAccountDao extends LegacyGenericDao {
 
     public void updatePayment(AccountPaymentEntity payment) {
         StaticHibernateUtil.getSessionTL().update(payment);
+    }
+    
+    public void deleteLedgerAccount(Short accountId) throws PersistenceException {
+        Session session = StaticHibernateUtil.getSessionTL();
+        Transaction transaction = session.beginTransaction();
+        try {
+
+            COABO coa = (COABO) session.load(COABO.class, accountId);
+            COABO parent = coa.getCoaHierarchy().getParentAccount().getCoa();
+
+            Short parentId = parent.getAccountId();
+            Short glCodeId = coa.getAssociatedGlcode().getGlcodeId();
+            
+            Query query = session.getNamedQuery(NamedQueryConstants.REMOVE_COA_PARENT);
+            query.setShort("coa_id", coa.getAccountId().shortValue());
+            query.setShort("parent_id", parentId);
+            query.executeUpdate();
+            
+            query = session.getNamedQuery(NamedQueryConstants.REMOVE_COA);
+            query.setShort("coa_id", coa.getAccountId().shortValue());
+            query.executeUpdate();
+            
+            query = session.getNamedQuery(NamedQueryConstants.REMOVE_GLCODE);
+            query.setShort("glcode_id", glCodeId);
+            query.executeUpdate();
+            
+            transaction.commit();
+            session.flush();
+
+        } catch (HibernateException e) {
+            transaction.rollback();
+            throw new PersistenceException(e);
+        }
+    }
+
+    public void updateLedgerAccount(COABO coaBo, String accountName, String glCode, String parentGlCode) throws PersistenceException {
+        Session session = StaticHibernateUtil.getSessionTL();
+        Transaction transaction = session.beginTransaction();
+        
+        try {
+            Short newParentId = getAccountIdFromGlCode(parentGlCode);
+                    
+            coaBo.setAccountName(accountName);
+            GLCodeEntity glCodeEntity = coaBo.getAssociatedGlcode();
+           
+            createOrUpdate(coaBo);
+            
+            glCodeEntity.setGlcode(glCode);
+            createOrUpdate(glCodeEntity);
+            
+            Query query = session.getNamedQuery(NamedQueryConstants.SET_COA_PARENT);
+            query.setShort("parentId", newParentId);
+            query.setShort("id", coaBo.getAccountId());
+            query.executeUpdate();
+            
+            transaction.commit();
+        } catch (HibernateException ex) {
+            transaction.rollback();
+            throw new PersistenceException(ex);
+        }
+        
     }
 }

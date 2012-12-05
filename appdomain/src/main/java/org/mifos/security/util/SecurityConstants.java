@@ -500,4 +500,6 @@ public interface SecurityConstants {
 
     /** Penalties */
     short LOAN_REMOVE_PENALTY_TYPE_ATTACHED_TO_ACCOUNT = 249;
+    
+    short CAN_MODIFY_CHART_OF_ACCOUNTS = 300;
 }

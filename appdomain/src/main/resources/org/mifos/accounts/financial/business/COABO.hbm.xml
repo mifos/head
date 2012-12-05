@@ -57,6 +57,19 @@
             glCode.glcode
         ]]>
     </query>
+        <query name="COABO.getChildAccounts"><![CDATA[
+        select coa
+        from org.mifos.accounts.financial.business.COABO coa,
+             org.mifos.accounts.financial.business.COAHierarchyEntity hierarchy,
+             org.mifos.accounts.financial.business.GLCodeEntity glCode
+        where
+            coa.accountId = hierarchy.accountId and
+            hierarchy.parentAccount = :id and
+            coa.associatedGlcode = glCode.glcodeId
+        order by
+            glCode.glcode
+        ]]>
+    </query>
     <query name="COABO.getAccountIdForGLCode"><![CDATA[
         select coa.accountId
         from org.mifos.accounts.financial.business.COABO coa,
@@ -71,6 +84,94 @@
             from  org.mifos.accounts.financial.business.COABO coa
         ]]>
     </query>
+	<sql-query name="COABO.removeCOAparent">
+	    <![CDATA[
+			DELETE FROM coahierarchy WHERE coa_id = :coa_id AND parent_coaid = :parent_id
+        ]]>
+	</sql-query>
+	<sql-query name="COABO.removeCOA">
+	    <![CDATA[
+			DELETE FROM coa WHERE coa_id = :coa_id
+        ]]>
+	</sql-query>
+	<sql-query name="COABO.removeGlCode">
+	    <![CDATA[
+			DELETE FROM gl_code WHERE glcode_id = :glcode_id
+        ]]>
+	</sql-query>
+	<sql-query name="COABO.countGLCodes">
+		<return-scalar column="count" type="int"/>
+	<![CDATA[
+	
+	SELECT COUNT(*) count FROM (
+		
+		SELECT DEPOSIT_GLCODE_ID
+		FROM savings_offering
+		WHERE DEPOSIT_GLCODE_ID = :glCodeId
+		
+		UNION ALL
+		
+		SELECT INTEREST_GLCODE_ID
+		FROM savings_offering
+		WHERE INTEREST_GLCODE_ID = :glCodeId
+		
+		UNION ALL 
+		
+		SELECT GLCODE_ID
+		FROM program
+		WHERE GLCODE_ID = :glCodeId
+		
+		UNION ALL
+		
+		SELECT GLCODE_ID
+		FROM prd_offering
+		WHERE GLCODE_ID = :glCodeId
+		
+		UNION ALL
+		
+		SELECT PRINCIPAL_GLCODE_ID
+		FROM loan_offering
+		WHERE PRINCIPAL_GLCODE_ID = :glCodeId
+		
+		UNION ALL
+		
+		SELECT INTEREST_GLCODE_ID
+		FROM loan_offering
+		WHERE INTEREST_GLCODE_ID = :glCodeId
+		
+		UNION ALL
+		
+		SELECT PENALTIES_GLCODE_ID
+		FROM loan_offering
+		WHERE PENALTIES_GLCODE_ID = :glCodeId
+		
+		UNION ALL
+		
+		SELECT glcode_id
+		FROM penalty
+		WHERE glcode_id = :glCodeId
+		
+		UNION ALL
+		
+		SELECT GLCODE_ID
+		FROM financial_trxn
+		WHERE GLCODE_ID = :glCodeId
+		
+		UNION ALL
+		
+		SELECT GLCODE_ID
+		FROM fees
+		WHERE GLCODE_ID = :glCodeId
+		
+	) as total
 
-
+	]]>
+	</sql-query>
+	<sql-query name="COA.updateParent">
+		 <![CDATA[
+			UPDATE coahierarchy
+			SET parent_coaid = :parentId
+			WHERE coa_id = :id
+        ]]>
+	</sql-query>
 </hibernate-mapping>

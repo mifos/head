@@ -56,6 +56,8 @@
 
     <bean id="clientServiceFacade" class="org.mifos.application.servicefacade.ClientServiceFacadeWebTier" />
     
+    <bean id="coaServiceFacade" class="org.mifos.application.servicefacade.CoaServiceFacadeWebTier" />
+    
     <!-- Client photo service o -->
     <bean class="org.mifos.framework.image.service.ClientPhotoServiceConfiguration" />
 

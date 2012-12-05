@@ -486,6 +486,7 @@ public interface NamedQueryConstants {
     String GET_TOP_LEVEL_ACCOUNTS = "COABO.getTopLevelAccounts";
     String GET_ACCOUNT_ID_FOR_GL_CODE = "COABO.getAccountIdForGLCode";
     String GET_ALL_COA = "COABO.getAllCoa";
+    String GET_CHILD_ACCOUNTS =  "COABO.getChildAccounts";
 
     // Administrative documents
 
@@ -553,4 +554,11 @@ public interface NamedQueryConstants {
 
     // Payment types
     String GET_TRANSFER_PAYMENT_TYPE_ID = "paymentType.getTransferId";
+    
+    // COA
+    String COUNT_GL_CODE_REFERENCES = "COABO.countGLCodes";
+    String REMOVE_COA_PARENT = "COABO.removeCOAparent";
+    String REMOVE_COA = "COABO.removeCOA";
+    String REMOVE_GLCODE = "COABO.removeGlCode";
+    String SET_COA_PARENT = "COA.updateParent";
 }

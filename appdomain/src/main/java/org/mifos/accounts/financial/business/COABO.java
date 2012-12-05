@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.admin.servicefacade.CoaDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 
 /**
@@ -298,6 +299,21 @@ public class COABO extends AbstractBusinessObject {
 		public int compare(final COABO coa1, final COABO coa2) {
             return coa1.getAssociatedGlcode().getGlcode().compareTo(coa2.getAssociatedGlcode().getGlcode());
         }
+    }
+    
+    public CoaDto toDto() {
+        CoaDto dto = new CoaDto();
+        dto.setAccountId(accountId);
+        dto.setAccountName(accountName);
+        dto.setGlCodeString(this.associatedGlcode.getGlcode());
+        COAHierarchyEntity parentHierarchy = coaHierarchy.getParentAccount();
+        
+        if (parentHierarchy != null) {
+            COABO parent = parentHierarchy.getCoa();
+            dto.setParentGlCode(parent.getGlCode());
+        }
+        
+        return dto;
     }
 
 }

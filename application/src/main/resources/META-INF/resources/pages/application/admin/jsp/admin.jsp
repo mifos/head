@@ -192,6 +192,12 @@ explanation of the license and how it is applied.
                                 <a id="admin.link.monthClosing" href="monthClosing.ftl"><mifos:mifoslabel name="admin.monthClosing" /></a>
                             </td>
                         </tr>
+                        <tr class="fontnormal">
+                            <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                            <td width="97%">
+                                <a id="admin.link.coaAdmin" href="coaAdmin.ftl"><mifos:mifoslabel name="admin.chartofaccounts" /></a>
+                            </td>
+                        </tr>
                         <!--<tr class="fontnormal">
 			<td align="center" colspan="2">
 			 	<div id="accountDetailsId">

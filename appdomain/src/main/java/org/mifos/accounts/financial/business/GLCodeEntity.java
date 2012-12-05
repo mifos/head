@@ -82,7 +82,7 @@ public class GLCodeEntity extends AbstractEntity {
         this.glcodeId = glcodeId;
     }
 
-    protected void setGlcode(String glcode) {
+    public void setGlcode(String glcode) {
         this.glcode = glcode;
     }
 

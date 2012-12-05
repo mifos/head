@@ -67,7 +67,7 @@ public class ChartOfAccountsCache {
         return glAccount;
     }
 
-    public void clear() {
+    public static void clear() {
         cache.clear();
     }
 }
