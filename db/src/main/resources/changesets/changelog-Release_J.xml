@@ -1035,7 +1035,7 @@
        </rollback>
    </changeSet>
    <changeSet id="MIFOS_5628_2" author="Kamil Kalfas">
-   <validCheckSum>3:da48c239134061ccee86edf4ab390b9f</validCheckSum>
+   <validCheckSum>3:cf70722aa160cda0e8e3696e69ddc287</validCheckSum>
        <sql endDelimiter=";">
            ALTER TABLE account_payment ADD parent_payment_id int;
        </sql>
