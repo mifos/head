@@ -173,6 +173,11 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     public Money getPenalty() {
         return penalty;
     }
+    
+    public Money getPrincipalPlusInterestDue()
+    {
+        return principal.subtract(principalPaid).add(getEffectiveInterestDue());
+    }
 
     public Set<AccountFeesActionDetailEntity> getAccountFeesActionDetails() {
         return accountFeesActionDetails;

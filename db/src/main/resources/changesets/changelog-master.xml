@@ -11,4 +11,5 @@
     <include file="changesets/changelog-Release_H.xml"/>
     <include file="changesets/changelog-Release_I.xml"/>
     <include file="changesets/changelog-Release_J.xml"/>
+    <include file="changesets/changelog-Release_K.xml"/>
 </databaseChangeLog>

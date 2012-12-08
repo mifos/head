@@ -67,7 +67,12 @@ public class RatePenaltyBO extends PenaltyBO {
     public boolean isOverduePrincipal() {
         return getFormula().getPenaltyFormula().getValue().equals(PenaltyFormula.OVERDUE_PRINCIPAL.getValue());
     }
-
+    
+    public boolean isOverduePrincipalPlusInterest()
+    {
+        return getFormula().getPenaltyFormula().getValue().equals(PenaltyFormula.OVERDUE_PRINCIPAL_PLUS_INTEREST.getValue());
+    }
+    
     public Double getRate() {
         return rate;
     }
