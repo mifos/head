@@ -72,7 +72,10 @@ public interface NamedQueryConstants {
     String PRDSRCFUNDS = "product.srcfund";
 
     // for Loan accounts
+    String GET_ALL_LOANS_TO_BE_PAID_CURRENT_WEEK ="loan.getAllLoansToBePaidCurrentWeek";
     String GET_COSIGNING_CLIENTS_FOR_GLIM = "loan.getCosigningLoansOfClientsForGlim";
+    String GET_ALL_WAITING_FOR_APPROVAL_LOANS = "loan.getAllWaitingForApprovalLoans";
+    String GET_ALL_BAD_STANDING_LOANS = "loan.getAllBadStandingLoans";
     String RETRIEVE_TOTAL_LOAN_FOR_CUSTOMER = "loan.retrieveTotalLoanForCustomer";
 
     // for Savings accounts
@@ -85,6 +88,8 @@ public interface NamedQueryConstants {
     String ACCOUNT_GETALLLOANBYCUSTOMER = "accounts.GetAllLoanByCustomer";
 
     // for Customer Search
+    String GET_ALL_BORROWERS = "Customer.getAllBorrowers";
+    String GET_ALL_BORROWERS_GROUP = "Customer.getAllBorrowersGroup";
     String GET_ACTIVE_CLIENTS_COUNT_UNDER_OFFICE = "Customer.getActiveClientsCountUnderOffice";
     String GET_ACTIVE_OR_HOLD_CLIENTS_COUNT_UNDER_OFFICE = "Customer.getActiveOrHoldClientsCountUnderOffice";
     String GET_VERY_POOR_ACTIVE_OR_HOLD_CLIENTS_COUNT_UNDER_OFFICE = "Customer.getVeryPoorActiveOrHoldClientsCountUnderOffice";

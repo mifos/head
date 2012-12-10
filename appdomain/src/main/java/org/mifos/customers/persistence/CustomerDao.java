@@ -89,6 +89,10 @@ public interface CustomerDao {
     GroupBO findGroupBySystemId(String globalCustNum);
 
     CenterBO findCenterBySystemId(String globalCustNum);
+    
+    List<ClientBO> findAllBorrowers();
+    
+    List<GroupBO> findAllBorrowersGroup();
 
     List<ClientBO> findActiveClientsUnderGroup(CustomerBO customer);
 
@@ -161,6 +165,12 @@ public interface CustomerDao {
     int countOfClients();
 
     int countOfGroups();
+    
+    int countOfActiveClients();
+
+    int countOfActiveGroups();
+    
+    int countOfActiveCenters();
 
     int retrieveLastSearchIdValueForNonParentCustomersInOffice(Short officeIdValue);
 
