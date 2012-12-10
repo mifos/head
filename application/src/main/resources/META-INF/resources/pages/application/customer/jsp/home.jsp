@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 			
 				<table width="95%" border="0" cellpadding="0" cellspacing="0">
 					<tr>
-						<td width="70%" height="24" align="left" valign="top"
+						<td width="40%" height="24" align="left" valign="top"
 							class="paddingL10">
 							<table width="96%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
@@ -133,6 +133,75 @@ explanation of the license and how it is applied.
 								</tr>
 							</table>
 						</td>
+      
+                        <!-- MIFOS- 5756 Dashboard with statistics -->
+                        <td width="40%" align="right" height="25" valign="top" class="paddingL10"> 
+                        <c:set var="dashboard" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'dashboard')}" />
+                        <table width="60%" border="0" cellpadding="2" cellspacing="1" 
+                        class="bluetableborder">
+                        <tr>
+                            <td class="bluetablehead05"><span class="fontnormalbold">
+                                <mifos:mifoslabel name="CustomerSearch.dashboardTitle"/>:</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="paddingL10"><span class="fontnormal">
+                            <mifos:mifoslabel name="CustomerSearch.dashboardBorrowers"/>:
+                             <c:out
+                                value="${dashboard.borrowersCount}" />
+                            </span></td>
+                        </tr>
+                         <tr>
+                            <td class="paddingL10"><span class="fontnormal">
+                            <mifos:mifoslabel name="CustomerSearch.dashboardBorrowersGroup"/>:
+                             <c:out
+                                value="${dashboard.borrowersGroupCount}" />
+                            </span></td>
+                         </tr>
+                         <tr>
+                            <td class="paddingL10"><span class="fontnormal">
+                            <mifos:mifoslabel name="CustomerSearch.dashboardActiveCenters"/>:
+                             <c:out 
+                             value="${dashboard.activeCentersCount}" />
+                            </span></td>
+                         </tr>
+                         <tr>
+                            <td class="paddingL10"><span class="fontnormal">
+                            <mifos:mifoslabel name="CustomerSearch.dashboardActiveGroups"/>:
+                             <c:out
+                                value="${dashboard.activeGroupsCount}" />
+                            </span></td>
+                         </tr>
+                         <tr>
+                            <td class="paddingL10"><span class="fontnormal">
+                            <mifos:mifoslabel name="CustomerSearch.dashboardActiveClients"/>:
+                             <c:out
+                                value="${dashboard.activeClientsCount}" />
+                            </span></td>
+                         </tr>
+                         <tr>
+                            <td class="paddingL10"><span class="fontnormal">
+                            <mifos:mifoslabel name="CustomerSearch.dashboardLoansWaitingForApproval"/>:
+                            <c:out value="${dashboard.waitingForApprovalLoansCount}"/>
+                            </span></td>
+                         </tr>
+                         <tr>
+                            <td class="paddingL10"><span class="fontnormal">
+                            <mifos:mifoslabel name="CustomerSearch.dashboardLoansInArrears"/>:
+                             <c:out
+                                value="${dashboard.loansInArrearsCount}" />
+                            </span></td>
+                         </tr>
+                         <tr>
+                            <td class="paddingL10"><span class="fontnormal">
+                            <mifos:mifoslabel name="CustomerSearch.dashboardCurrWeekPaidLoans"/>:
+                             <c:out
+                                value="${dashboard.loansToBePaidCurrentWeek}" />
+                                </span></td>
+                        </tr>
+
+                    </table>
+                        </td>
 					</tr>
 				</table>
 				<html-el:hidden property="officeId" value="0"/>

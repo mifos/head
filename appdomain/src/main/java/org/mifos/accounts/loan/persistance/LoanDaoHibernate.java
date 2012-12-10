@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.savings.persistence.GenericDao;
@@ -83,5 +85,45 @@ public class LoanDaoHibernate implements LoanDao {
         }
 
         return individualLoans;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<LoanBO> findAllLoansWaitingForApproval() {
+        List<LoanBO> inapprovedLoansList = new ArrayList<LoanBO>();
+        Map<String, Integer> queryParameters = new HashMap<String, Integer>();
+        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.GET_ALL_WAITING_FOR_APPROVAL_LOANS, queryParameters);
+        if (queryResult != null) {
+            inapprovedLoansList.addAll(queryResult);
+        }
+        return inapprovedLoansList;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<LoanBO> findAllBadStandingLoans() {
+        List<LoanBO> badStandingLoans = new ArrayList<LoanBO>();
+        Map<String, Integer> queryParameters = new HashMap<String, Integer>();
+        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.GET_ALL_BAD_STANDING_LOANS, queryParameters);
+        if (queryResult != null) {
+            badStandingLoans.addAll(queryResult);
+        }
+        return badStandingLoans;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<LoanBO> findLoansToBePaidCurrentWeek() {
+        List<LoanBO> loans = new ArrayList<LoanBO>();
+        Map<String, String> queryParameters = new HashMap<String, String>();
+        LocalDate lDate = new LocalDate();
+        queryParameters.put("START_DATE", lDate.toString("yyyy-MM-dd"));
+        lDate=lDate.plusWeeks(1);
+        queryParameters.put("END_DATE",lDate.toString("yyyy-MM-dd"));
+        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.GET_ALL_LOANS_TO_BE_PAID_CURRENT_WEEK, queryParameters);
+        if (queryResult != null) {
+            loans.addAll(queryResult);
+        }
+        return loans;
     }
 }
