@@ -1,5 +1,6 @@
 package org.mifos.accounts.loan.persistance;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.savings.persistence.GenericDao;
@@ -125,5 +125,30 @@ public class LoanDaoHibernate implements LoanDao {
             loans.addAll(queryResult);
         }
         return loans;
+    }
+
+    @Override
+    public int countAllBadStandingLoans() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.COUNT_ALL_BAD_STANDING_LOANS, queryParameters);
+        return ((BigInteger) queryResult.get(0)).intValue();
+    }
+
+    @Override
+    public int countAllLoansWaitingForApproval() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.COUNT_ALL_WAITING_FOR_APPROVAL_LOANS, queryParameters);
+        return ((BigInteger) queryResult.get(0)).intValue();
+    }
+
+    @Override
+    public int countLoansToBePaidCurrentWeek() {
+        Map<String, String> queryParameters = new HashMap<String, String>();
+        LocalDate lDate = new LocalDate();
+        queryParameters.put("START_DATE", lDate.toString("yyyy-MM-dd"));
+        lDate=lDate.plusWeeks(1);
+        queryParameters.put("END_DATE",lDate.toString("yyyy-MM-dd"));
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.COUNT_ALL_LOANS_TO_BE_PAID_CURRENT_WEEK, queryParameters);
+        return ((BigInteger) queryResult.get(0)).intValue();
     }
 }
