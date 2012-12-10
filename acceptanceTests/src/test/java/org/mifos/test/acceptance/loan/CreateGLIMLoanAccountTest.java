@@ -73,6 +73,10 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         applicationDatabaseOperation.updateGLIM(1);
         loanTestHelper = new LoanTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
+        
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011, 03, 1, 13, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
 
     @AfterMethod
@@ -193,9 +197,6 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
     @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void checkGLIMLoanCreatedBySaveForLater() throws Exception {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011, 03, 1, 13, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         loanTestHelper.createLoanAccountForMultipleClientsInGroup(false);
     }
 
@@ -238,9 +239,6 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled = true)
     public void newWeeklyGLIMAccount() throws Exception {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011, 03, 1, 13, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Default Group");
@@ -327,10 +325,6 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled=true)
     public void checkGLIMAccountEmptyPurpose() throws Exception {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011, 03, 1, 13, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Default Group");
         searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
