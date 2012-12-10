@@ -92,6 +92,10 @@ public interface CustomerDao {
     
     List<ClientBO> findAllBorrowers();
     
+    int countAllBorrowers();
+    
+    int countAllBorrowersGroup();
+    
     List<GroupBO> findAllBorrowersGroup();
 
     List<ClientBO> findActiveClientsUnderGroup(CustomerBO customer);

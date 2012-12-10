@@ -78,6 +78,10 @@ public interface NamedQueryConstants {
     String GET_ALL_BAD_STANDING_LOANS = "loan.getAllBadStandingLoans";
     String RETRIEVE_TOTAL_LOAN_FOR_CUSTOMER = "loan.retrieveTotalLoanForCustomer";
 
+    String COUNT_ALL_LOANS_TO_BE_PAID_CURRENT_WEEK ="loan.countAllLoansToBePaidCurrentWeek";
+    String COUNT_ALL_WAITING_FOR_APPROVAL_LOANS = "loan.countAllWaitingForApprovalLoans";
+    String COUNT_ALL_BAD_STANDING_LOANS = "loan.countAllBadStandingLoans";
+    
     // for Savings accounts
     String RETRIEVE_TOTAL_SAVINGS_FOR_CUSTOMER = "savings.retrieveTotalSavingsForCustomer";
 
@@ -90,6 +94,8 @@ public interface NamedQueryConstants {
     // for Customer Search
     String GET_ALL_BORROWERS = "Customer.getAllBorrowers";
     String GET_ALL_BORROWERS_GROUP = "Customer.getAllBorrowersGroup";
+    String COUNT_ALL_BORROWERS = "Customer.countAllBorrowers";
+    String COUNT_ALL_BORROWERS_GROUP = "Customer.countAllBorrowersGroup";
     String GET_ACTIVE_CLIENTS_COUNT_UNDER_OFFICE = "Customer.getActiveClientsCountUnderOffice";
     String GET_ACTIVE_OR_HOLD_CLIENTS_COUNT_UNDER_OFFICE = "Customer.getActiveOrHoldClientsCountUnderOffice";
     String GET_VERY_POOR_ACTIVE_OR_HOLD_CLIENTS_COUNT_UNDER_OFFICE = "Customer.getVeryPoorActiveOrHoldClientsCountUnderOffice";

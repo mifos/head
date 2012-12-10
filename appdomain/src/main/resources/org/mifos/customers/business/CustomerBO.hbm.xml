@@ -1859,6 +1859,22 @@
             inner join loan_account l on a.account_id = l.account_id)
             AND c.customer_level_id=2
     </sql-query>
+    
+    <sql-query name="Customer.countAllBorrowers">
+    <![CDATA[SELECT count(*) FROM customer c 
+            WHERE c.customer_id in (Select Distinct customer_id 
+            FROM account a
+            inner join loan_account l on a.account_id = l.account_id and l.parent_account_id is null)
+            AND c.customer_level_id=1
+    ]]>
+    </sql-query>
+    <sql-query name="Customer.countAllBorrowersGroup">
+            SELECT count(*) FROM customer c 
+            WHERE c.customer_id in (Select Distinct customer_id 
+            FROM account a
+            inner join loan_account l on a.account_id = l.account_id)
+            AND c.customer_level_id=2
+    </sql-query>
 
         <query name="Customer.findCustomersWithGivenPhoneNumber">
             <![CDATA[from org.mifos.customers.business.CustomerBO customer

@@ -20,45 +20,29 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
         this.customerDao=customerDao;
         this.loanDao=loanDao;
     }
-
-    private int getNumberOfBorrowers() {
-        return getBorrowers().size();
-    }
     
-    private int getNumberOfGroupBorrowers() {
-        return getBorrowersGroup().size();
-    }
-
-    
-    private int getNumberOfWaitingForApprovalLoans() {
-        return getWaitingForApprovalLoans().size();
-    }
-
-    private int getNumberOfLoansInArrears() {
-        return getLoansInArrears().size();
-    }
-
-    private List<ClientBO> getBorrowers(){
+    @Override
+    public List<ClientBO> getBorrowers(){
         return customerDao.findAllBorrowers();
     }
     
-    private List<GroupBO> getBorrowersGroup(){
+    @Override
+    public List<GroupBO> getBorrowersGroup(){
         return customerDao.findAllBorrowersGroup();
     }
     
-    private List<LoanBO> getWaitingForApprovalLoans() {
+    @Override
+    public List<LoanBO> getWaitingForApprovalLoans() {
         return loanDao.findAllLoansWaitingForApproval();
     }
 
-    private List<LoanBO> getLoansInArrears() {
+    @Override
+    public List<LoanBO> getLoansInArrears() {
         return loanDao.findAllBadStandingLoans();
     }
     
-    private int getNumberOfLoansToBePaidCurrentWeek(){
-        return getLoansToBePaidCurrentWeek().size();
-    }
-    
-    private List<LoanBO> getLoansToBePaidCurrentWeek(){
+    @Override
+    public List<LoanBO> getLoansToBePaidCurrentWeek(){
         return loanDao.findLoansToBePaidCurrentWeek();
     }
 
@@ -66,18 +50,18 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
     public DashboardDto getDashboardDto() {
         DashboardDto dashboardDto = new DashboardDto();
 
-        dashboardDto.setBorrowersCount(getNumberOfBorrowers());
-        dashboardDto.setBorrowersGroupCount(getNumberOfGroupBorrowers());
+        dashboardDto.setBorrowersCount(customerDao.countAllBorrowers());
+        dashboardDto.setBorrowersGroupCount(customerDao.countAllBorrowersGroup());
         
         dashboardDto.setActiveClientsCount(customerDao.countOfActiveClients());
         dashboardDto.setActiveGroupsCount(customerDao.countOfActiveGroups());
         dashboardDto.setActiveCentersCount(customerDao.countOfActiveCenters());
         
-        dashboardDto.setWaitingForApprovalLoansCount(getNumberOfWaitingForApprovalLoans());
+        dashboardDto.setWaitingForApprovalLoansCount(loanDao.countAllLoansWaitingForApproval());
         
-        dashboardDto.setLoansInArrearsCount(getNumberOfLoansInArrears());
+        dashboardDto.setLoansInArrearsCount(loanDao.countAllBadStandingLoans());
         
-        dashboardDto.setLoansToBePaidCurrentWeek(getNumberOfLoansToBePaidCurrentWeek());
+        dashboardDto.setLoansToBePaidCurrentWeek(loanDao.countLoansToBePaidCurrentWeek());
         
         return dashboardDto;
     }
