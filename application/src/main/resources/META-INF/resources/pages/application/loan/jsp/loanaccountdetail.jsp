@@ -162,10 +162,22 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						<tr>
 							<td width="33%" class="headingorange"><mifos:mifoslabel
 								name="loan.acc_summary" /></td>
-							<td width="33%" align="right" class="fontnormal"><html-el:link styleId="loanaccountdetail.link.viewRepaymentSchedule"
-								href="viewLoanAccountRepaymentSchedule.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-								<mifos:mifoslabel name="loan.view_schd" />
-							</html-el:link></td>
+							<td width="33%" align="right" class="fontnormal">
+							<c:choose>
+							<c:when test="${loanAccount.parentGroupLoanAccount || loanAccount.groupLoanAccountMember }">
+								<html-el:link styleId="loanaccountdetail.link.viewRepaymentSchedule"
+									href="groupLoanAccountAction.do?method=getLoanRepaymentSchedule&globalAccountNum=${loanInformationDto.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&accountId=${loanInformationDto.accountId}">
+									<mifos:mifoslabel name="loan.view_schd" />
+								</html-el:link>
+							</c:when>
+							<c:otherwise>
+								<html-el:link styleId="loanaccountdetail.link.viewRepaymentSchedule"
+									href="viewLoanAccountRepaymentSchedule.ftl?globalAccountNum=${loanInformationDto.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									<mifos:mifoslabel name="loan.view_schd" />
+								</html-el:link>
+							</c:otherwise>
+							</c:choose>
+							</td>
 						</tr>
 					</table>
 
