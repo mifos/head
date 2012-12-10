@@ -1323,6 +1323,16 @@ public class CustomerDaoHibernate implements CustomerDao {
 
         return ((Long) queryResult.get(0)).intValue();
     }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public int countOfActiveClients() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+
+        List queryResult = this.genericDao.executeNamedQuery("countOfActiveClients", queryParameters);
+
+        return ((Long) queryResult.get(0)).intValue();
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -1330,6 +1340,26 @@ public class CustomerDaoHibernate implements CustomerDao {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
 
         List queryResult = this.genericDao.executeNamedQuery("countOfGroups", queryParameters);
+
+        return ((Long) queryResult.get(0)).intValue();
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public int countOfActiveGroups() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+
+        List queryResult = this.genericDao.executeNamedQuery("countOfActiveGroups", queryParameters);
+
+        return ((Long) queryResult.get(0)).intValue();
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public int countOfActiveCenters() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+
+        List queryResult = this.genericDao.executeNamedQuery("countOfActiveCenters", queryParameters);
 
         return ((Long) queryResult.get(0)).intValue();
     }
@@ -1724,5 +1754,29 @@ public class CustomerDaoHibernate implements CustomerDao {
         }
         
         return dateList;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<ClientBO> findAllBorrowers() {
+        List<ClientBO> borrowers = new ArrayList<ClientBO>();
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        List<ClientBO> queryList = (List<ClientBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_ALL_BORROWERS,queryParameters);
+        if (queryList !=null){
+            borrowers.addAll(queryList);
+        }
+        return borrowers;
+    }
+    
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<GroupBO> findAllBorrowersGroup() {
+        List<GroupBO> borrowers = new ArrayList<GroupBO>();
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        List<GroupBO> queryList = (List<GroupBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_ALL_BORROWERS_GROUP,queryParameters);
+        if (queryList !=null){
+            borrowers.addAll(queryList);
+        }
+        return borrowers;
     }
 }

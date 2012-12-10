@@ -36,4 +36,10 @@ public interface LoanDao {
     List<SurveyDto> getAccountSurveyDto(Integer accountId);
 
     List<LoanBO> findIndividualLoans(Integer accountId);
+    
+    List<LoanBO> findAllBadStandingLoans();
+    
+    List<LoanBO> findAllLoansWaitingForApproval();
+    
+    List<LoanBO> findLoansToBePaidCurrentWeek();
 }

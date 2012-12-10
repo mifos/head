@@ -135,4 +135,6 @@
     
     <bean id="adminDocumentsServiceFacade" class="org.mifos.reports.admindocuments.service.AdminDocumentsServiceImpl" />
     
+    <bean id="dashboardServiceFacade" class="org.mifos.application.servicefacade.DashboardServiceFacadeWebTier" />
+    
 </beans>
