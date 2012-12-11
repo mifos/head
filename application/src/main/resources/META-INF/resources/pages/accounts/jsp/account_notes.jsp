@@ -27,10 +27,17 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-
+<SCRIPT>
+    function backToLoanDetails(){
+    	goBackToLoanAccountDetails.submit();
+    }
+</SCRIPT>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
  <span id="page.id" title="AccountNotes"></span> 
+<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+    <input type="hidden" name='globalAccountNum' value="${param.globalAccountNum}"/>
+</form>
 <html-el:form action="notesAction.do">
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
@@ -82,7 +89,7 @@ explanation of the license and how it is applied.
                 </td>
               </tr>
             </table>
-			<html-el:button property="backButton" styleId="viewnotes.button.back" styleClass="buttn" onclick="window.location.href='${backPageUrl}'">
+			<html-el:button property="backButton" styleId="viewnotes.button.back" styleClass="buttn" onclick="backToLoanDetails()">
 				<mifos:mifoslabel name="button.back" bundle ="UIResources"></mifos:mifoslabel>
 			</html-el:button>
             <br>

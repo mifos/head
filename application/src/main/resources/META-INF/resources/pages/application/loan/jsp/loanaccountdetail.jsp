@@ -416,24 +416,43 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 				<!-- GLIM Loan Account Details -->
 				<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountDetailsView')}"
 				var="loanAccountDetailsView" />
-					<c:if test="${loanInformationDto.group == true}">
+					<c:if test="${loanInformationDto.group == true || loanInformationDto.groupLoanWithMembersEnabled == true}">
 						<c:if test="${loanAccountDetailsView != null}">
 							<table width="96%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td valign="top">
-                                        <c:choose>
-                                            <c:when test="${loanInformationDto.disbursed == true}">
-                                                <mifoscustom:mifostabletag source="loanAccountDetailsView" scope="session"
-                                                  xmlFileName="LoanAccountDetails.xml" moduleName="org/mifos/accounts/loan/util/resources"
-                                                  passLocale="true" randomNUm="${sessionScope.randomNUm}"
-                                                  currentFlowKey="${requestScope.currentFlowKey}" />
-                                            </c:when>
-                                            <c:otherwise>
-                                                <mifoscustom:mifostabletag source="loanAccountDetailsView" scope="session"
-                                                  xmlFileName="LoanAccountDetails.xml" moduleName="org/mifos/accounts/loan/util/resources"
-                                                  passLocale="true"/>
-                                            </c:otherwise>
-                                        </c:choose>
+                                   <c:choose>
+                                        <c:when test="${loanInformationDto.groupLoanWithMembersEnabled == true}">
+                                            <c:choose>
+	                                            <c:when test="${loanInformationDto.disbursed == true}">
+	                                                <mifoscustom:mifostabletag source="loanAccountDetailsView" scope="session"
+	                                                  xmlFileName="GroupLoanAccountDetails.xml" moduleName="org/mifos/accounts/loan/util/resources"
+	                                                  passLocale="true" randomNUm="${sessionScope.randomNUm}"
+	                                                  currentFlowKey="${requestScope.currentFlowKey}" />
+	                                            </c:when>
+	                                            <c:otherwise>
+	                                                <mifoscustom:mifostabletag source="loanAccountDetailsView" scope="session"
+	                                                  xmlFileName="GroupLoanAccountDetails.xml" moduleName="org/mifos/accounts/loan/util/resources"
+	                                                  passLocale="true"/>
+	                                            </c:otherwise>
+                                            </c:choose>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:choose>
+	                                            <c:when test="${loanInformationDto.disbursed == true}">
+	                                                <mifoscustom:mifostabletag source="loanAccountDetailsView" scope="session"
+	                                                  xmlFileName="LoanAccountDetails.xml" moduleName="org/mifos/accounts/loan/util/resources"
+	                                                  passLocale="true" randomNUm="${sessionScope.randomNUm}"
+	                                                  currentFlowKey="${requestScope.currentFlowKey}" />
+	                                            </c:when>
+	                                            <c:otherwise>
+	                                                <mifoscustom:mifostabletag source="loanAccountDetailsView" scope="session"
+	                                                  xmlFileName="LoanAccountDetails.xml" moduleName="org/mifos/accounts/loan/util/resources"
+	                                                  passLocale="true"/>
+	                                            </c:otherwise>
+                                            </c:choose>
+                                        </c:otherwise>
+                                    </c:choose>
                                     </td>
 								</tr>
 							</table>

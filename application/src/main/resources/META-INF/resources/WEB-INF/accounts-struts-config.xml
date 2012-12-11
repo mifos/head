@@ -394,7 +394,7 @@
         <action path="/groupLoanAccountAction" type="org.mifos.accounts.loan.struts.action.GroupLoanAccountAction"
                name="loanAccountActionForm" parameter="method"
                input="/groupLoanAccountAction.do?method=validate" scope="session" validate="true" >
-        	<forward name="get_success" path="/pages/application/loan/jsp/groupLoanAccountDetail.jsp"/>
+            <forward name="get_success" path="/pages/application/loan/jsp/loanaccountdetail.jsp"/>
             <forward name="getLoanRepaymentSchedule" path="/pages/application/loan/jsp/loanRepayment.jsp"/>
             <forward name="getAllActivity_success" path="/pages/application/loan/jsp/viewloanaccountactivity.jsp"/>
         </action>
