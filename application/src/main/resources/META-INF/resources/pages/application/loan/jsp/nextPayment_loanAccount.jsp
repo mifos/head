@@ -33,11 +33,8 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="NextPaymentLoanAccount"></span>
 		<form method="get" action="viewLoanAccountDetails.ftl">			
-<<<<<<< HEAD
-=======
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isNewGlim')}" var="isNewGlim"/>
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
->>>>>>> MIFOS-5628 Fixed page expire issue
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
