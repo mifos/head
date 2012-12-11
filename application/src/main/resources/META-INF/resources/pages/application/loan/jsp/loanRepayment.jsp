@@ -120,9 +120,52 @@ explanation of the license and how it is applied.
 					<table width="100%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td bgcolor="#F0D4A5" style="padding-left:10px; padding-bottom:3px;">
-								<span class="fontnormalbold">
-									<mifos:mifoslabel name="loan.apply_trans" />
-								</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<span class="fontnormalbold">
+							<mifos:mifoslabel name="loan.apply_trans" />
+							</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<c:choose>
+								<c:when test="${BusinessKey.parentGroupLoanAccount || BusinessKey.groupLoanAccountMember }">
+									<c:url value="applyGroupPaymentAction.do" var="applyGroupPaymentActionMethodUrl" >										<
+											<c:param name="method" value="load" />
+											<c:param name="input" value="loan" />
+											<c:param name="prdOfferingName" value="${param.prdOfferingName}" />
+											<c:param name="globalAccountNum" value="${param.globalAccountNum}" />
+											<c:param name="accountId" value="${param.accountId}" />
+											<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
+											<c:param name="recordOfficeId" value="${param.recordOfficeId}" />
+											<c:param name="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
+											<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+											<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+									</c:url >
+									<html-el:link styleId="loanaccountdetail.link.applyPayment"
+										href="${applyGroupPaymentActionMethodUrl}">
+										<mifos:mifoslabel name="loan.apply_payment" />
+									</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									
+											<c:url value="applyAdjustment.do" var="applyAdjustmentLoadAdjustmentMethodUrl" >
+												<c:param name="method" value="listPossibleAdjustments" />
+												<c:param name="accountId" value="${param.accountId}" />
+												<c:param name="globalAccountNum" value="${param.globalAccountNum}" />
+												<c:param name="prdOfferingName" value="${param.prdOfferingName}" />
+												<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+												<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+											</c:url >
+									<c:choose>
+										<c:when
+											test="${(BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9' || BusinessKey.accountState.id=='6') }">
+												<html-el:link styleId="loanaccountdetail.link.applyAdjustment"
+												href="${applyAdjustmentLoadAdjustmentMethodUrl}">
+												<mifos:mifoslabel name="loan.apply_adjustment" />
+												</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										</c:when>
+									</c:choose>
+									<html-el:link styleId="loanaccountdetail.link.applyCharges"
+											href="applyChargeAction.do?method=load&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+											<mifos:mifoslabel name="loan.apply_charges" />
+											</html-el:link><br>
+										
+								</c:when>
+								<c:otherwise>
 								<c:if test="${(BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9')}">
 									<c:url value="applyPaymentAction.do" var="applyPaymentMethodUrl" >
 											<c:param name="method" value="load" />
@@ -162,6 +205,8 @@ explanation of the license and how it is applied.
 								<html-el:link styleId="loanRepayment.link.applyCharges" href="applyChargeAction.do?method=load&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="loan.apply_charges" />
 								</html-el:link>
+								</c:otherwise>
+							</c:choose>
 							</td>
 						</tr>
 					</table>
