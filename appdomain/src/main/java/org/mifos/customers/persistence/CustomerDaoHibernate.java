@@ -21,6 +21,7 @@
 package org.mifos.customers.persistence;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -1778,5 +1779,19 @@ public class CustomerDaoHibernate implements CustomerDao {
             borrowers.addAll(queryList);
         }
         return borrowers;
+    }
+
+    @Override
+    public int countAllBorrowers() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.COUNT_ALL_BORROWERS, queryParameters);
+        return ((BigInteger) queryResult.get(0)).intValue();
+    }
+
+    @Override
+    public int countAllBorrowersGroup() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.COUNT_ALL_BORROWERS_GROUP, queryParameters);
+        return ((BigInteger) queryResult.get(0)).intValue();
     }
 }
