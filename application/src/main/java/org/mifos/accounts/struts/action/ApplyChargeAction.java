@@ -175,6 +175,12 @@ public class ApplyChargeAction extends BaseAction {
         if (accountTypeCustomerLevel.getAccountType().equals(AccountTypes.LOAN_ACCOUNT.getValue())) {
             return "loanDetails_success";
         }
+        else if (accountTypeCustomerLevel.getAccountType().equals(AccountTypes.GROUP_LOAN_ACCOUNT.getValue()) && accountTypeCustomerLevel.getCustomerLevelId().equals(CustomerLevel.CLIENT.getValue())) {
+            return "groupIndividualLoan_sucess";
+        }
+        else if (accountTypeCustomerLevel.getAccountType().equals(AccountTypes.GROUP_LOAN_ACCOUNT.getValue()) && accountTypeCustomerLevel.getCustomerLevelId().equals(CustomerLevel.GROUP.getValue())) {
+            return "groupLoan_sucess";
+        }
         if (accountTypeCustomerLevel.getCustomerLevelId().equals(CustomerLevel.CLIENT.getValue())) {
             return "clientDetails_success";
         } else if (accountTypeCustomerLevel.getCustomerLevelId().equals(CustomerLevel.GROUP.getValue())) {
