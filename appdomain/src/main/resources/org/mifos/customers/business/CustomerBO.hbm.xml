@@ -1891,5 +1891,20 @@
 			order by action_date desc;
         ]]>
     </sql-query>
+    <query name="Customer.getUploadedFile">
+        <![CDATA[
+            from ClientFileEntity cf where cf.fileId=:fileId
+        ]]>
+    </query>
+    <query name="Customer.getClientAllUploadedFiles">
+        <![CDATA[
+            from ClientFileEntity cf where cf.clientId=:clientId order by cf.fileInfo.name desc
+        ]]>
+    </query>
+    <query name="Customer.getClientUploadedFileByName">
+        <![CDATA[
+            from ClientFileEntity cf join cf.fileInfo where cf.clientId = :clientId and cf.fileInfo.name=:fileName
+        ]]>
+    </query>
 
 </hibernate-mapping>

@@ -163,6 +163,9 @@ public interface NamedQueryConstants {
     String GET_LOAN_SUMMARY_CURRENCIES_FOR_GROUP = "Customer.getLoanSummaryCurrenciesForGroup";
     String GET_TOTAL_AMOUNT_FOR_ALL_CLIENTS_OF_GROUP = "Customer.getTotalAmountForAllClientsOfGroup";
     String GET_ALL_BASIC_GROUP_INFO = "Customer.getAllBasicGroupInfo";
+    String GET_UPLOADED_FILE = "Customer.getUploadedFile";
+    String GET_CLIENT_ALL_UPLOADED_FILES = "Customer.getClientAllUploadedFiles";
+    String GET_CLIENT_UPLOADED_FILE_BY_NAME = "Customer.getClientUploadedFileByName";
 
     /* Office Queries */
     String OFFICE_GET_SEARCHID = "office.getOfficeSearchId";

@@ -110,6 +110,7 @@ import org.mifos.framework.components.fieldConfiguration.business.FieldConfigura
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.fileupload.domain.ClientFileEntity;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -1793,5 +1794,29 @@ public class CustomerDaoHibernate implements CustomerDao {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.COUNT_ALL_BORROWERS_GROUP, queryParameters);
         return ((BigInteger) queryResult.get(0)).intValue();
+    }
+
+    @Override
+    public ClientFileEntity getUploadedFile(Long fileId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("fileId", fileId);
+        return (ClientFileEntity) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_UPLOADED_FILE, queryParameters);
+    }
+    
+    @Override
+    public List<ClientFileEntity> getClientAllUploadedFiles(Integer clientId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("clientId", clientId);
+        Object result =  this.genericDao.executeNamedQuery(NamedQueryConstants.GET_CLIENT_ALL_UPLOADED_FILES, queryParameters);
+        return (List<ClientFileEntity>) result;
+    }
+    
+    @Override
+    public ClientFileEntity getClientUploadedFileByName(Integer clientId, String fileName) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("clientId", clientId);
+        queryParameters.put("fileName", fileName);
+        Object result = ((Object[])this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_CLIENT_UPLOADED_FILE_BY_NAME, queryParameters))[0];
+        return (ClientFileEntity) result;
     }
 }

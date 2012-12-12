@@ -262,6 +262,9 @@
 
         <mapping class="org.mifos.framework.image.domain.ImageInfo" />
         <mapping class="org.mifos.framework.image.domain.ClientPhoto" />
+        
+        <mapping class="org.mifos.framework.fileupload.domain.FileInfoEntity" />
+        <mapping class="org.mifos.framework.fileupload.domain.ClientFileEntity" />
 
     </session-factory>
 

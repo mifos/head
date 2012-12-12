@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <changeSet id="MIFOS-5739" author="Pawel Reise" context="expansion">
+        <sql endDelimiter=";">
+            create table file_info (
+                file_info_id bigint auto_increment not null,
+                name varchar(255) not null,
+                content_type varchar(255) not null,
+                size integer not null,
+                description text,
+                upload_date datetime not null,
+                primary key(file_info_id)
+            ) engine=innodb character set utf8;
+            create table client_file (
+                file_id bigint auto_increment not null,
+                client_id integer,
+                file_info bigint,
+                primary key(file_id),
+                foreign key(file_info)
+                    references file_info(file_info_id),
+                foreign key(client_id)
+                    references customer(customer_id)
+            ) engine=innodb character set utf8;
+        </sql>
+        <rollback>
+            drop table client_file;
+            drop table file_info;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

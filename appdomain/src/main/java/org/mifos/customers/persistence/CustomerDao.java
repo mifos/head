@@ -62,6 +62,7 @@ import org.mifos.dto.screen.ClientDisplayDto;
 import org.mifos.dto.screen.GroupDisplayDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
+import org.mifos.framework.fileupload.domain.ClientFileEntity;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.security.util.UserContext;
 
@@ -256,4 +257,10 @@ public interface CustomerDao {
 	Date getFirstMeetingDateForCustomer(Integer customerId);
 	
 	List<DateTime> getAccountActionDatesForCustomer(Integer customerId);
+	
+	ClientFileEntity getUploadedFile(Long fileId);
+		
+	List<ClientFileEntity> getClientAllUploadedFiles(Integer clientId);
+	
+	ClientFileEntity getClientUploadedFileByName(Integer clientId, String fileName);
 }
