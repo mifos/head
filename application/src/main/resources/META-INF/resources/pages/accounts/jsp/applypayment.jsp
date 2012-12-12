@@ -210,7 +210,7 @@ explanation of the license and how it is applied.
 						<tr>
 							<td align="center"><c:choose>
 								<c:when
-									test="${(AccountType!='LOAN_ACCOUNT') && (applyPaymentActionForm.amount == '0.0'||applyPaymentActionForm.amount=='0')}">
+									test="${(AccountType!='LOAN_ACCOUNT' && AccountType!='GROUP_LOAN_ACCOUNT') && (applyPaymentActionForm.amount == '0.0'||applyPaymentActionForm.amount=='0')}">
 									<html-el:submit styleId="applypayment.button.submit" styleClass="disabledbuttn" disabled="true"
 										property="Preview">
 										<mifos:mifoslabel name="accounts.reviewtransaction">

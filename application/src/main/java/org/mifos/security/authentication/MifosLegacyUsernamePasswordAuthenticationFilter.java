@@ -37,6 +37,7 @@ import org.apache.struts.Globals;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.NewLoginServiceFacade;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.config.SitePreferenceType;
 import org.mifos.core.MifosRuntimeException;
@@ -165,7 +166,9 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
             
             request.getSession(false).setAttribute(Constants.FLOWMANAGER, flowManager);
             request.getSession(false).setAttribute(Constants.RANDOMNUM, new Random().nextLong());
-
+            
+            boolean flag= AccountingRules.getSimpleAccountingStatus();
+            request.getSession(false).setAttribute("accountingActivationStatus", flag);
             LoginDto loginActivity = loginServiceFacade.login(username, password);
             
             PersonnelBO user =  ApplicationContextProvider.getBean(LegacyPersonnelDao.class).findPersonnelById(loginActivity.getUserId());

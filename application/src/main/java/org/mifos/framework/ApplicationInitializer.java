@@ -91,6 +91,7 @@ import org.mifos.framework.image.service.ImageStorageManager;
 import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyCompositeUserType;
 import org.mifos.security.authorization.HierarchyManager;
@@ -455,7 +456,10 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     } catch(AccountException e) {
                         logger.info("Failed to fix loan: " + fixLoan.getGlobalAccountNum());
                         StaticHibernateUtil.rollbackTransaction();
-                    } finally {
+                    } catch(NullPointerException e) {
+                        logger.info("Failed to fix loan: " + fixLoan.getGlobalAccountNum());
+                        StaticHibernateUtil.rollbackTransaction();
+                    }finally {
                         StaticHibernateUtil.clearSession();
                     }
                 }
@@ -857,10 +861,12 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     
     private void copyResources(ServletContext sc) throws IOException {
         URL protocol = ETLReportDWHelper.class.getClassLoader().getResource("sql/release-upgrades.txt");
+        ConfigurationLocator configurationLocator = new ConfigurationLocator();
+    	String configPath = configurationLocator.getConfigurationDirectory();
         try {
         if(protocol.getProtocol().equals("jar")){
-        String destinationDirectoryForJobs = System.getProperty("user.home")+"/.mifos/ETL/MifosDataWarehouseETL";
-        String destinationDirectoryForJar = System.getProperty("user.home")+"/.mifos/ETL/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
+        String destinationDirectoryForJobs = configPath+"/ETL/MifosDataWarehouseETL";
+        String destinationDirectoryForJar = configPath+"/ETL/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
         String pathFromJar ="/WEB-INF/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
         String pathFromJobs = "/WEB-INF/MifosDataWarehouseETL/";
         if(File.separatorChar == '\\'){
@@ -881,8 +887,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             logger.info("Copy file: "+fullPath+" to: "+directory);
         } 
         } catch (NullPointerException e) {
-                String destinationDirectoryForJobs = System.getProperty("user.home")+"/.mifos/ETL/MifosDataWarehouseETL";
-                String destinationDirectoryForJar = System.getProperty("user.home")+"/.mifos/ETL/";
+                String destinationDirectoryForJobs = configPath+"/ETL/MifosDataWarehouseETL";
+                String destinationDirectoryForJar = configPath+"/ETL/";
                 String pathFromJar =sc.getRealPath("/")+"/WEB-INF/mifos-etl-plugin-1.0-SNAPSHOT.one-jar.jar";
                 String pathFromJobs = sc.getRealPath("/")+"/WEB-INF/MifosDataWarehouseETL/";
                 if(File.separatorChar == '\\'){

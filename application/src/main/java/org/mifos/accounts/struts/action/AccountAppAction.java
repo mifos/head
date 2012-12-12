@@ -20,6 +20,8 @@
 
 package org.mifos.accounts.struts.action;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +36,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.util.helpers.TransactionHistoryDtoComperator;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.util.helpers.CenterConstants;
@@ -47,6 +50,8 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.UserContext;
 
 public class AccountAppAction extends BaseAction {
+    private static final String LOAN_DISBURSMENT = "Loan Disbursement";
+    
     private AccountBusinessService accountBusinessService;
 
     public AccountAppAction() {
@@ -66,12 +71,17 @@ public class AccountAppAction extends BaseAction {
     public ActionForward getTrxnHistory(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String globalAccountNum = request.getParameter("globalAccountNum");
-
-        List<TransactionHistoryDto> transactionHistoryDto = this.centerServiceFacade.retrieveAccountTransactionHistory(globalAccountNum);
-
-        SessionUtils.setCollectionAttribute(SavingsConstants.TRXN_HISTORY_LIST, transactionHistoryDto, request);
-
         AccountBO accountBO = getAccountBusinessService().findBySystemId(globalAccountNum);
+        List<TransactionHistoryDto>  transactionHistoryDto = this.centerServiceFacade.retrieveAccountTransactionHistory(globalAccountNum);
+        
+        if  (accountBO.isGroupLoanAccount() && null == ((LoanBO)accountBO).getParentAccount()) {
+            SessionUtils.setAttribute(Constants.TYPE_OF_GROUP_LOAN, "parentAcc", request);
+        }
+        else if (accountBO.isGroupLoanAccount() && null != ((LoanBO)accountBO).getParentAccount()) {
+            SessionUtils.setAttribute(Constants.TYPE_OF_GROUP_LOAN, "memberAcc", request);
+        }
+        
+        SessionUtils.setCollectionAttribute(SavingsConstants.TRXN_HISTORY_LIST, transactionHistoryDto, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
         request.setAttribute("GlNamesMode", AccountingRules.getGlNamesMode());
         return mapping.findForward("getTransactionHistory_success");

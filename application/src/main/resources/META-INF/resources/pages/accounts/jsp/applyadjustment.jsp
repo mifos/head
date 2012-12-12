@@ -49,8 +49,8 @@ explanation of the license and how it is applied.
         
 		<html-el:form method="post" action="applyAdjustment.do" onsubmit="return fn_submit();">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'adjAmount')}" var="adjAmount" />
-
             <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'adjustmentPaymentType')}" var="adjustmentPaymentType" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'typeOfGroupLoan')}" var="typeOfGroupLoan" />
             
             <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -362,6 +362,7 @@ explanation of the license and how it is applied.
 			</table>
 			<br>
  			<html-el:hidden property="method" value="${requestScope.method}"/>
+ 			<html-el:hidden property="typeOfGroupLoan" value="${typeOfGroupLoan}"/>
  			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>
  			<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/>
             <html-el:hidden property="paymentId"/>

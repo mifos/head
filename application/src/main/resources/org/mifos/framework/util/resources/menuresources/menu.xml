@@ -122,7 +122,6 @@
                     <linkvalue>custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan</linkvalue>
                      -->
                 </menuitem>
-
                 <menuitem>
                     <displayname>
                         <namefragment>label.createMultipleLoanAccounts</namefragment>

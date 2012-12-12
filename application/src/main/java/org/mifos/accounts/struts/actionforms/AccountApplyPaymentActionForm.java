@@ -24,16 +24,23 @@ import static org.mifos.framework.util.helpers.DateUtils.dateFallsBeforeDate;
 import static org.mifos.framework.util.helpers.DateUtils.getDateAsSentFromBrowser;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.joda.time.LocalDate;
@@ -97,7 +104,28 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     private boolean printReceipt;
     
     private boolean truePrintReceipt = false;
+       
+    //Group Loan
+    //key memeber account global num
+    //value amount
+    private Map<Integer,String> individualValues = new HashMap<Integer, String>();
     
+    public Map<Integer, String> getIndividualValues() {
+        return individualValues;
+    }
+
+    public void setIndividualValues(Map<Integer, String> individualValues) {
+        this.individualValues = individualValues;
+    }
+    
+    public void setUpdateIndividualValues(String accountId, String value) {
+        individualValues.put(Integer.valueOf(accountId), value);
+    }
+    
+    public String getIndividualValues(Integer accountId) {
+        return individualValues.get(accountId);
+    }
+
     public boolean getTruePrintReceipt() {
         return this.truePrintReceipt;
     }
@@ -146,22 +174,65 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String methodCalled = request.getParameter(MethodNameConstants.METHOD);
         ActionErrors errors = new ActionErrors();
+        boolean groupLoanWithMembers = AccountingRules.isGroupLoanWithMembers();
 
-        if (methodCalled != null && methodCalled.equals("preview")) {
-            validateTransfer(errors);
-            validateTransactionDate(errors);
-            validatePaymentType(errors);
-            validateReceiptDate(errors);
-            String accountType = (String) request.getSession().getAttribute(Constants.ACCOUNT_TYPE);
-            validateAccountType(errors, accountType);
-            validateAmount(errors);
-            validateModeOfPaymentSecurity(request, errors);
-        }
-        if (!errors.isEmpty()) {
-            request.setAttribute(Globals.ERROR_KEY, errors);
-            request.setAttribute("methodCalled", methodCalled);
+        if (groupLoanWithMembers) {
+            if (methodCalled != null && methodCalled.equals("divide")) {
+                validateTransfer(errors);
+                validateTransactionDate(errors);
+                validatePaymentType(errors);
+                validateReceiptDate(errors);
+                String accountType = (String) request.getSession().getAttribute(Constants.ACCOUNT_TYPE);
+                validateAccountType(errors, accountType);
+                validateAmount(errors);
+                validateModeOfPaymentSecurity(request, errors);
+            }
+            if (methodCalled != null && methodCalled.equals("preview")) {
+                validateHashMap(errors);
+            }
+            if (!errors.isEmpty()) {
+                request.setAttribute(Globals.ERROR_KEY, errors);
+                if (methodCalled.equals("divide")) {
+                    request.setAttribute("methodCalled", "preview");
+                } else if (methodCalled.equals("preview")) {
+                    request.setAttribute("methodCalled", "divide");
+                }
+                else {
+                    request.setAttribute("methodCalled", methodCalled);
+                }
+            }
+        } else {
+            if (methodCalled != null && methodCalled.equals("preview")) {
+                validateTransfer(errors);
+                validateTransactionDate(errors);
+                validatePaymentType(errors);
+                validateReceiptDate(errors);
+                String accountType = (String) request.getSession().getAttribute(Constants.ACCOUNT_TYPE);
+                validateAccountType(errors, accountType);
+                validateAmount(errors);
+                validateModeOfPaymentSecurity(request, errors);
+            }
+            if (!errors.isEmpty()) {
+                request.setAttribute(Globals.ERROR_KEY, errors);
+                request.setAttribute("methodCalled", methodCalled);
+            }
         }
         return errors;
+    }
+    private void validateHashMap(ActionErrors errors) {
+        MifosCurrency currency = null;
+        if (getCurrencyId() != null && AccountingRules.isMultiCurrencyEnabled()) {
+            currency = AccountingRules.getCurrencyByCurrencyId(getCurrencyId());
+        }
+
+        ArrayList<String> mapValue = new ArrayList<String>(individualValues.values());
+        for (int i=0; i<individualValues.size(); i++){
+            DoubleConversionResult conversionResult = validateAmount(mapValue.get(i), currency , AccountConstants.ACCOUNT_AMOUNT, errors, "");
+            if (amountCannotBeZero() && conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+                addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
+                        getLocalizedMessage(AccountConstants.ACCOUNT_AMOUNT));
+            }
+        }
     }
 
     private void validateModeOfPaymentSecurity(HttpServletRequest request, ActionErrors errors){

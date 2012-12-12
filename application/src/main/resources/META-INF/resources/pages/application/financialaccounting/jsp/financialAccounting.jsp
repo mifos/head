@@ -28,7 +28,8 @@ explanation of the license and how it is applied.
 <tiles:put name="body" type="string">
 <span id="page.id" title="financialAccounting"></span>
 
-<html-el:form action="/FinancialAccountingAction.do">
+<html-el:form action="/FinancialAccountingAction.do" style="padding-left:10px; padding-top:5px;">
+
 <table width="95%" border="0" cellpadding="0" cellspacing="0">
 
 				<tr>
@@ -42,6 +43,7 @@ explanation of the license and how it is applied.
 				</tr>
 
 			</table>
+   <br/>
 <span class="fontnormalbold"><mifos:mifoslabel name="financialAccounting.accounting" bundle="FinancialAccountingUIResources" /></span><br>
 <table>
 

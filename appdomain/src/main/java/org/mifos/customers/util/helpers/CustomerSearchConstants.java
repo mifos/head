@@ -69,5 +69,6 @@ public interface CustomerSearchConstants {
 
     short LOAN_TYPE = (short) 1;
     short SAVINGS_TYPE = (short) 2;
+    short GROUP_LOAN_TYPE = (short) 5;
 
 }

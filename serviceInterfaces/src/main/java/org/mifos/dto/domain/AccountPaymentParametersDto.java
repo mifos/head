@@ -20,11 +20,13 @@
 
 package org.mifos.dto.domain;
 
-import org.joda.time.LocalDate;
-
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+
+import org.joda.time.LocalDate;
+import org.mifos.dto.screen.RepayLoanInfoDto;
 
 /**
  * The Class AccountPaymentParametersDto is a data transfer
@@ -74,7 +76,13 @@ public class AccountPaymentParametersDto {
     /** Optional payment options */
     private Set<PaymentOptions> paymentOptions;
 
-
+    /** ids and amounts of payment for member accounts*/
+    private Map<Integer, String> memberInfo;
+    
+    /** member accountId which oen should be repay*/
+    private Integer memberAccountIdToRepay;
+    private RepayLoanInfoDto repayLoanInfoDto;
+    private BigDecimal interestDueForCurrentInstalmanet;
     /**
      * Instantiates a new account payment parameters dto.
      *
@@ -143,6 +151,43 @@ public class AccountPaymentParametersDto {
         this.receiptDate = receiptDate;
         this.receiptId = receiptId;
         this.customer = customer;
+    }
+    @SuppressWarnings("PMD.ExcessiveParameterList")
+    public AccountPaymentParametersDto(UserReferenceDto userMakingPayment, AccountReferenceDto account,
+            BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDto paymentType, String comment,
+            LocalDate receiptDate, String receiptId, CustomerDto customer, Map<Integer, String> memberInfo) {
+        super();
+        if (null == userMakingPayment) {
+            throw new IllegalArgumentException("userMakingPayment cannot be null");
+        }
+        this.userMakingPayment = userMakingPayment;
+
+        if (null == account) {
+            throw new IllegalArgumentException("account cannot be null");
+        }
+        this.account = account;
+
+        if (null == paymentAmount) {
+            throw new IllegalArgumentException("paymentAmount cannot be null");
+        }
+        this.paymentAmount = paymentAmount;
+
+        if (null == paymentDate) {
+            throw new IllegalArgumentException("paymentDate cannot be null");
+        }
+        this.paymentDate = paymentDate;
+
+        this.paymentType = paymentType;
+
+        if (null == comment) {
+            throw new IllegalArgumentException("comment cannot be null");
+        }
+        this.comment = comment;
+
+        this.receiptDate = receiptDate;
+        this.receiptId = receiptId;
+        this.customer = customer;
+        this.memberInfo = memberInfo;
     }
 
     /**
@@ -260,4 +305,37 @@ public class AccountPaymentParametersDto {
         }
         paymentOptions.add(option);
     }
+    
+    public Map<Integer, String> getMemberInfo() {
+        return memberInfo;
+    }
+
+    public void setMemberInfo(Map<Integer, String> memberInfo) {
+        this.memberInfo = memberInfo;
+    }
+
+    public Integer getMemberAccountIdToRepay() {
+        return memberAccountIdToRepay;
+    }
+
+    public void setMemberAccountIdToRepay(Integer memberAccountIdToRepay) {
+        this.memberAccountIdToRepay = memberAccountIdToRepay;
+    }
+
+    public RepayLoanInfoDto getRepayLoanInfoDto() {
+        return repayLoanInfoDto;
+    }
+
+    public void setRepayLoanInfoDto(RepayLoanInfoDto repayLoanInfoDto) {
+        this.repayLoanInfoDto = repayLoanInfoDto;
+    }
+
+    public BigDecimal getInterestDueForCurrentInstalmanet() {
+        return interestDueForCurrentInstalmanet;
+    }
+
+    public void setInterestDueForCurrentInstalmanet(BigDecimal interestDueForCurrentInstalmanet) {
+        this.interestDueForCurrentInstalmanet = interestDueForCurrentInstalmanet;
+    }
+    
 }

@@ -93,7 +93,7 @@
     </definition>
 
      <definition name=".reportsearch" extends=".searchmenu">
-         <put name="menutitle" value="@@@Reports^^^" />
+        <put name="menutitle" value="@@@Reports^^^" />
         <put name="search" value="/pages/framework/jsp/nomenureport.jsp" />
     </definition>
      <!-- This tile is for financial Accounting -->
@@ -104,14 +104,14 @@
     </definition>
 
      <definition name=".financialAccountingsearch" extends=".searchmenu">
-         <put name="menutitle" value="@@@FinancialAccounting Tasks^^^" />
+        <put name="menutitle" value="@@@Financial Accounting Tasks^^^" />
         <put name="search" value="/pages/framework/jsp/nomenureport.jsp" />
     </definition>
     
 
       <definition name=".reportRender" extends=".mainLayout">
         <put name="body" value="" />
-         <put name="header" value="/pages/framework/jsp/reportsheader.jsp" />
+        <put name="header" value="/pages/framework/jsp/reportsheader.jsp" />
     </definition>
 
 </tiles-definitions>

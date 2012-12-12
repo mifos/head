@@ -933,7 +933,7 @@
            </sql>
        </rollback>
    </changeSet>
-      <changeSet id="MIFOS_5702_2" author="Kamil Kalfas">
+   <changeSet id="MIFOS_5702_2" author="Kamil Kalfas">
        <sql endDelimiter=";">
              alter table imported_transactions_files add undoable boolean default 0;
        </sql>
@@ -953,4 +953,96 @@
             </sql>
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS_5838_1" author="Jakub Podeszwik">
+    	<validCheckSum>3:1c2a19edbf586d09a51c7b904f209fa1</validCheckSum>
+    	<validCheckSum>3:c7a441af8081f4f3ec675b6a7a5eb56a</validCheckSum>
+       <sql endDelimiter=";">
+			drop table if exists temporary_account_ids;
+			create table temporary_account_ids (account_id INT(11));
+			
+			insert into temporary_account_ids (account_id) 
+			select a.account_id
+			from account a
+			inner join (select ls6.account_id, sum(ls6.interest) as interestsum, sum(ls6.principal) as principalsum from loan_schedule ls6 group by ls6.account_id) as ls5
+			on a.account_id=ls5.account_id
+			inner join loan_summary ls
+			on ls.account_id=a.account_id
+			where ls.orig_principal-ls5.principalsum > 1
+			and a.account_state_id in (5,9);
+			
+			update loan_schedule as target
+			inner join (select lsu1.orig_principal, lsu1.orig_interest, lsu1.account_id from loan_summary lsu1) as ls2
+			on target.account_id=ls2.account_id
+			inner join (select ls6.account_id, max(ls6.installment_id) as instno, sum(ls6.interest) as interestsum, sum(ls6.principal) as principalsum from loan_schedule ls6 group by ls6.account_id) as ls5
+			on target.account_id=ls5.account_id
+			set target.interest=target.interest+(ls2.orig_interest-ls5.interestsum),
+			target.principal=target.principal+(ls2.orig_principal-ls5.principalsum)
+			where target.installment_id=ls5.instno
+			and target.account_id in ( select * from temporary_account_ids );
+			
+			update loan_schedule as target
+			inner join temporary_account_ids tai
+			on target.account_id = tai.account_id
+			set target.principal_paid=target.principal_paid+(target.interest_paid-target.interest),
+			target.interest_paid=target.interest
+			where target.interest_paid > target.interest;
+			
+			drop table if exists temporary_account_ids;
+       </sql>
+       <rollback>
+           <sql endDelimiter=";">
+             drop table if exists temporary_account_ids;
+           </sql>
+       </rollback>
+   </changeSet>
+   <changeSet id="MIFOS-5828_1" author="Lukasz Wyszomirski" context="expansion">
+        <sql endDelimiter=";">
+        	ALTER TABLE report ADD is_dw boolean default 0; 
+        	
+        	UPDATE report SET is_dw=1 WHERE report_name='Loan Officer Detailed';
+        	UPDATE report SET report_category_id=8 WHERE report_name='Loan Officer Detailed';
+        	UPDATE report SET is_dw=1 WHERE report_name='MFI Progress'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Funds Movement'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Due Vs Collected Branch'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Due Vs Collected Center'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Due Vs Collected Officer'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Loan Officer Performance Summary Period'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Loan Officer Performance Summary Cumulative'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Loan Classification Product'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Balance Outstanding By Source Of Funds'; 
+        	UPDATE report SET is_dw=1 WHERE report_name='Balance Outstanding'; 
+        	
+        	UPDATE report SET report_name='Loan Classification by Product' WHERE report_name='Loan Classification Product';
+        	UPDATE report SET report_name='Due Vs Collected by Branch'  WHERE report_name='Due Vs Collected Branch'; 
+        	UPDATE report SET report_name='Due Vs Collected by Center' WHERE report_name='Due Vs Collected Center'; 
+        	UPDATE report SET report_name='Due Vs Collected by Officer' WHERE report_name='Due Vs Collected Officer';
+        	UPDATE report SET report_name='Loan Officer Details' WHERE report_name='Loan Officer Detailed';   
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+            	alter table report drop column is_dw;
+            </sql>
+        </rollback>
+    </changeSet>
+   <changeSet id="MIFOS_5628_1" author="Kamil Kalfas">
+       <sql endDelimiter=";">
+		   INSERT INTO account_type(account_type_id, lookup_id, description) VALUES(5, 126, 'Group Loan Account');
+       </sql>
+       <rollback>
+           <sql endDelimiter=";">
+           DELETE FROM account_type WHERE account_type_id=5;
+           </sql>
+       </rollback>
+   </changeSet>
+   <changeSet id="MIFOS_5628_2" author="Kamil Kalfas">
+   <validCheckSum>3:cf70722aa160cda0e8e3696e69ddc287</validCheckSum>
+       <sql endDelimiter=";">
+           ALTER TABLE account_payment ADD parent_payment_id int;
+       </sql>
+       <rollback>
+           <sql endDelimiter=";">
+             ALTER TABLE account_payment DROP parent_payment_id;
+           </sql>
+       </rollback>
+   </changeSet>
 </databaseChangeLog>

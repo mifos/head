@@ -39,7 +39,9 @@
     <bean id="loanPrdBusinessService" class="org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService" />
 
     <bean id="loanAccountServiceFacade" class="org.mifos.application.servicefacade.LoanAccountServiceFacadeWebTier" />
-
+    
+    <bean id="groupLoanAccountServiceFacade" class="org.mifos.application.servicefacade.GroupLoanAccountServiceFacadeWebTier" />
+    
     <bean id="collectionSheetService" class="org.mifos.application.servicefacade.CollectionSheetServiceImpl"/>
 
     <bean id="saveCollectionSheetAssembler" class="org.mifos.application.servicefacade.SaveCollectionSheetAssembler"/>

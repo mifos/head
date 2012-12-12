@@ -20,10 +20,14 @@
 
 package org.mifos.accounts.servicefacade;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
+import java.util.TreeMap;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
@@ -39,6 +43,7 @@ import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.penalties.business.PenaltyBO;
 import org.mifos.accounts.penalties.persistence.PenaltyDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
@@ -81,6 +86,7 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -294,7 +300,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         try {
             AccountBO account = new AccountBusinessService().getAccount(accountId);
             
-            if (account instanceof LoanBO) {
+            if (account instanceof LoanBO && !account.isGroupLoanAccount()) {
                 List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(account.getAccountId());
 
                 if (individualLoans != null && individualLoans.size() > 0) {
@@ -411,6 +417,52 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         return new UserContextFactory().create(user);
     }
 
+    /**
+     * adjustment for member account payment has to be handled along with parent account payments and other members payments.
+     * This method prepares data and run applyHistoricalAdjustment so adjustment will be made for parent payment context.
+     */
+    @Override
+    @PreAuthorize("isFullyAuthenticated()")
+    public void applyMemberAccountHistoricalAdjustment(String memberGlobalAccountNum, Integer memberPaymentId, String adjustmentNote,
+            Short personnelId, AdjustedPaymentDto adjustedPaymentDto) {
+        
+        try {
+            LoanBO memberAccount = (LoanBO) accountBusinessService.findBySystemId(memberGlobalAccountNum);
+            LoanBO parentAccount = memberAccount.getParentAccount();
+            
+            if (parentAccount == null){
+                throw new AccountException(LoanExceptionConstants.NO_PARENT_ACCOUNT_EXCEPTION);
+            }
+            
+            AccountPaymentEntity parentPaymentEntity = memberAccount.findParentPaymentByMemberPaymentId(memberPaymentId);
+            List<AdjustedPaymentDto> membersAdjustedPaymentDtoList = new ArrayList<AdjustedPaymentDto>();
+            
+            for (AccountPaymentEntity memberPayment : parentPaymentEntity.getMemberPayments()){
+                if (memberPayment.getAccount().getAccountId().equals(memberAccount.getAccountId())){
+                    membersAdjustedPaymentDtoList.add(new AdjustedPaymentDto(adjustedPaymentDto.getAmount(), adjustedPaymentDto.getPaymentDate(),
+                            adjustedPaymentDto.getPaymentType(), memberAccount.getAccountId()));
+                } else {
+                    membersAdjustedPaymentDtoList.add(new AdjustedPaymentDto(memberPayment.getAmount().getAmount().toString(), adjustedPaymentDto.getPaymentDate(),
+                            adjustedPaymentDto.getPaymentType(), memberPayment.getAccount().getAccountId()));
+                }
+                
+            }
+            
+            BigDecimal parentAmountSubstraction = memberAccount.findPaymentById(memberPaymentId).getAmount().getAmount().subtract((new BigDecimal(adjustedPaymentDto.getAmount())));
+            String newParentAmount = parentPaymentEntity.getAmount().getAmount().subtract(parentAmountSubstraction).toString();
+            AdjustedPaymentDto parentAdjustedPaymentDto = new AdjustedPaymentDto(newParentAmount, adjustedPaymentDto.getPaymentDate(), 
+                    adjustedPaymentDto.getPaymentType(), parentAccount.getAccountId(), membersAdjustedPaymentDtoList);
+            
+            this.applyHistoricalAdjustment(parentAccount.getGlobalAccountNum(), parentPaymentEntity.getPaymentId(), adjustmentNote, personnelId, parentAdjustedPaymentDto);
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        } catch (AccountException e) {
+            throw new MifosRuntimeException(e);
+        }
+        
+        
+    }
+
     @Override
     public void applyHistoricalAdjustment(String globalAccountNum, Integer paymentId, String adjustmentNote,
             Short personnelId, AdjustedPaymentDto adjustedPaymentDto) {        
@@ -447,7 +499,15 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             AccountPaymentEntity adjustedPayment = null;
             Integer adjustedId;
             Stack<PaymentData> paymentsToBeReapplied = new Stack<PaymentData>();
-
+            
+            Map<Integer, Stack<PaymentData>> memberPaymentsToBeReappliedMap = new HashMap<Integer, Stack<PaymentData>>();
+            if (accountBO.isGroupLoanAccount()){
+                for (LoanBO memberAccount : ((LoanBO)accountBO).getMemberAccounts()){
+                    Stack<PaymentData> memberPaymentsToBeReapplied = new Stack<PaymentData>();
+                    memberPaymentsToBeReappliedMap.put(memberAccount.getAccountId(), memberPaymentsToBeReapplied);
+                }
+            }
+            
             do {
                 adjustedPayment = accountBO.getLastPmntToBeAdjusted();
 
@@ -465,6 +525,15 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                     paymentData.setOtherTransferPayment(adjustedPayment.getOtherTransferPayment());
 
                     paymentsToBeReapplied.push(paymentData);
+                    
+                    // handling new Group Loan Members payments
+                    for (AccountPaymentEntity memberAdjustedPayment : adjustedPayment.getMemberPayments()){
+                        PaymentData memberPaymentData = memberAdjustedPayment.getAccount().createPaymentData(memberAdjustedPayment.getAmount(), adjustedPayment.getPaymentDate(), 
+                                adjustedPayment.getReceiptNumber(), adjustedPayment.getReceiptDate(), adjustedPayment.getPaymentType().getId(), 
+                                paymentCreator);
+                        memberPaymentsToBeReappliedMap.get(memberAdjustedPayment.getAccount().getAccountId()).push(memberPaymentData);
+                    }
+                    
                 }
 
                 transactionHelper.flushAndClearSession();
@@ -472,7 +541,17 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                 accountBO = accountBusinessService.findBySystemId(globalAccountNum);
                 accountBO.setUserContext(getUserContext());
                 accountBO.adjustLastPayment(adjustmentNote, personnelBO);
+                
                 legacyAccountDao.createOrUpdate(accountBO);
+                
+                //adjust New Group Loan member payments
+                if (accountBO.isGroupLoanAccount()){
+                    for (LoanBO memberAccount : ((LoanBO)accountBO).getMemberAccounts()){
+                        memberAccount.setUserContext(getUserContext());
+                        memberAccount.adjustLastPayment(adjustmentNote, personnelBO);
+                        legacyAccountDao.createOrUpdate(memberAccount);
+                    }
+                }
                 transactionHelper.flushSession();
             } while (!accountPaymentEntity.getPaymentId().equals(adjustedId));
 
@@ -493,6 +572,22 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                 
                 accountBO.applyPayment(paymentData);
                 legacyAccountDao.createOrUpdate(accountBO);
+                transactionHelper.flushSession();
+                // handling new Group Loan Members payments
+                if (accountBO.isGroupLoanAccount()){
+                    for (AdjustedPaymentDto adjustedMemberPayment : adjustedPaymentDto.getMemberPayments()){
+                        AccountBO memberAccount = ((LoanBO)accountBO).findMemberById(adjustedMemberPayment.getAccountId());
+                        
+                        Money memberAmount = new Money(memberAccount.getCurrency(), adjustedMemberPayment.getAmount());
+                        
+                        PaymentData memberPaymentData = memberAccount.createPaymentData(memberAmount, adjustedPaymentDto.getPaymentDate(), 
+                                accountPaymentEntity.getReceiptNumber(), accountPaymentEntity.getReceiptDate(), adjustedPaymentDto.getPaymentType(), 
+                                paymentCreator);
+                        memberPaymentData.setParentPayment(accountBO.getLastPmnt());
+                        memberAccount.applyPayment(memberPaymentData);
+                        legacyAccountDao.createOrUpdate(memberAccount);
+                    }
+                }
             }
 
             while (!paymentsToBeReapplied.isEmpty()) {
@@ -504,6 +599,15 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                 accountBO.applyPayment(paymentData);
                 legacyAccountDao.createOrUpdate(accountBO);
                 transactionHelper.flushSession();
+                
+                if (accountBO.isGroupLoanAccount()){
+                    for (LoanBO memberAccount : ((LoanBO)accountBO).getMemberAccounts()){
+                        PaymentData memberPaymentData = memberPaymentsToBeReappliedMap.get(memberAccount.getAccountId()).pop();
+                        memberPaymentData.setParentPayment(accountBO.getLastPmnt());
+                        memberAccount.applyPayment(memberPaymentData);
+                        legacyAccountDao.createOrUpdate(memberAccount);
+                    }
+                }
             }
 
             transactionHelper.commitTransaction();
@@ -531,8 +635,79 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     }
 
     @Override
+    /**
+     * do not use this method
+     * used and implemented in Audi Plugin
+     * @return null
+     */
     public Integer getAccountTrxnById(Integer id) {
         return null;
+    }
+    
+    @Override
+    public void applyGroupCharge(Map<Integer, String> idsAndValues, Short chargeId, boolean isPenaltyType) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+        TreeMap<Integer, String> idsAndValueAsTreeMap = new TreeMap<Integer, String>(idsAndValues);
+        
+        try {
+            AccountBO parentAccount = ((LoanBO)legacyAccountDao.getAccount(new AccountBusinessService().getAccount(idsAndValueAsTreeMap.firstKey()).getAccountId())).getParentAccount();
+            
+            for (Map.Entry<Integer, String> entry: idsAndValues.entrySet()) {
+                LoanBO individual = loanDao.findById(entry.getKey());
+                Double chargeAmount = Double.valueOf(entry.getValue());
+                individual.updateDetails(userContext);
+
+                if (isPenaltyType && !chargeId.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
+                    PenaltyBO penalty = this.penaltyDao.findPenaltyById(chargeId.intValue());
+                    individual.addAccountPenalty(new AccountPenaltiesEntity(individual, penalty, chargeAmount));
+                } else {
+                    individual.applyCharge(chargeId, chargeAmount);
+                }
+            }
+            
+            Double chargeAmount  = sumCharge(idsAndValues);    
+                    
+            parentAccount.updateDetails(userContext);
+
+            CustomerLevel customerLevel = null;
+            if (parentAccount.isCustomerAccount()) {
+                customerLevel = parentAccount.getCustomer().getLevel();
+            }
+            if (parentAccount.getPersonnel() != null) {
+                checkPermissionForApplyCharges(parentAccount.getType(), customerLevel, userContext,
+                        parentAccount.getOffice().getOfficeId(), parentAccount.getPersonnel().getPersonnelId());
+            } else {
+                checkPermissionForApplyCharges(parentAccount.getType(), customerLevel, userContext,
+                        parentAccount.getOffice().getOfficeId(), userContext.getId());
+            }
+
+            this.transactionHelper.startTransaction();
+            
+            if(isPenaltyType && parentAccount instanceof LoanBO) {
+                PenaltyBO penalty = this.penaltyDao.findPenaltyById(chargeId.intValue());
+                ((LoanBO) parentAccount).addAccountPenalty(new AccountPenaltiesEntity(parentAccount, penalty, chargeAmount));
+            } else {
+                parentAccount.applyCharge(chargeId, chargeAmount);
+            }
+            
+            this.transactionHelper.commitTransaction();
+        } catch (ServiceException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } catch (ApplicationException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+        
+    }
+
+    private Double sumCharge(Map<Integer, String> idsAndValues) {
+        Double sum = 0.0;
+        for (Map.Entry<Integer, String> entry: idsAndValues.entrySet()) {
+            sum += Double.valueOf(entry.getValue());
+        }
+        return sum;
     }
 
 }

@@ -29,6 +29,7 @@ import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.helpers.Money;
@@ -38,13 +39,13 @@ public class ScheduleCalculatorAdaptor {
 
     private ScheduleCalculator scheduleCalculator;
     private ScheduleMapper scheduleMapper;
-    private ConfigurationPersistence configurationPersistence;
+    private ConfigurationBusinessService configurationBusinessService;
 
     @Autowired
-    public ScheduleCalculatorAdaptor(ScheduleCalculator scheduleCalculator, ScheduleMapper scheduleMapper, ConfigurationPersistence configurationPersistence) {
+    public ScheduleCalculatorAdaptor(ScheduleCalculator scheduleCalculator, ScheduleMapper scheduleMapper, ConfigurationBusinessService configurationBusinessService) {
         this.scheduleCalculator = scheduleCalculator;
         this.scheduleMapper = scheduleMapper;
-        this.configurationPersistence = configurationPersistence;
+        this.configurationBusinessService = configurationBusinessService;
     }
 
     public void applyPayment(LoanBO loanBO, Money amount, Date paymentDate, PersonnelBO personnel, AccountPaymentEntity accountPaymentEntity) {
@@ -55,8 +56,7 @@ public class ScheduleCalculatorAdaptor {
     }
 
     public void computeExtraInterest(LoanBO loan, Date asOfDate) {
-    	int recalculateInterest = configurationPersistence.getConfigurationValueInteger(RECALCULATE_INTEREST);
-       	if(recalculateInterest==1 && loan.isDecliningBalanceEqualPrincipleCalculation()){
+       	if(configurationBusinessService.isRecalculateInterestEnabled() && loan.isDecliningBalanceEqualPrincipleCalculation()){
        		Schedule schedule = scheduleMapper.mapToSchedule(new ArrayList<LoanScheduleEntity>(loan.getLoanScheduleEntities()),
             loan.getDisbursementDate(), getDailyInterest(loan.getInterestRate()), loan.getLoanAmount().getAmount());
             scheduleCalculator.computeExtraInterest(schedule, asOfDate);

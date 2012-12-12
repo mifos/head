@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<tableInfo>
+  <headerDetails  headerStyle="drawtablerowbold"/>
+  <row totWidth="100">
+    <column label="Client ID" value="clientId" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="10"/>
+    </column>
+    <column label="Client Name" value="clientName" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="22"/>
+    </column>       
+    <column label="Government ID" value="govermentId" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="10"/>
+    </column>
+    <column label="Loan amount" value="loanAmount" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="15"/>
+    </column>
+    <column label="Loan purpose" value="businessActivityName" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="15"/>
+    </column>
+    <column label="Individual schedule" value="show" valueType="text" columnType="link">
+         <columnDetails  rowStyle="drawtablerow" colWidth="11"/>
+         <linkDetails action="viewLoanAccountRepaymentSchedule.ftl">
+            <actionParam name="accountId" value="parentAccountId" valueType="method"/>
+            <actionParam name="globalAccountNum" value="parentLoanGlobalAccountNum" valueType="method"/>
+            <actionParam name="individual" value="" valueType="text"/>
+            <actionParam name="randomNUm" valueType="inbuilt"/>
+            <actionParam name="currentFlowKey" valueType="inbuilt"/>
+            <actionParam name="memberGlobalNum" value="loanGlobalAccountNum" valueType="method"/>
+            <actionParam name="memberAccountId" value="loanAccountId" valueType="method"/>
+         </linkDetails>
+    </column>
+    <column label="Individual account" value="show" valueType="text" columnType="link">
+         <columnDetails  rowStyle="drawtablerow" colWidth="15"/>
+         <linkDetails action="groupIndividualLoanAccountAction.do">
+            <actionParam name="method" value="get" valueType="text"/>
+            <actionParam name="globalAccountNum" value="loanGlobalAccountNum" valueType="method"/>
+            <actionParam name="randomNUm" valueType="inbuilt"/>
+            <actionParam name="currentFlowKey" valueType="inbuilt"/>
+         </linkDetails>
+    </column>
+  </row>
+
+</tableInfo>

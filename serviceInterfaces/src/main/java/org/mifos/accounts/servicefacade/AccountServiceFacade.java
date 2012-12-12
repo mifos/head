@@ -22,6 +22,7 @@ package org.mifos.accounts.servicefacade;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
@@ -65,11 +66,17 @@ public interface AccountServiceFacade {
     void applyHistoricalAdjustment(String globalAccountNum, Integer paymentId, String adjustmentNote, Short personnelId, AdjustedPaymentDto adjustedPaymentDto);
     
     @PreAuthorize("isFullyAuthenticated()")
+    void applyMemberAccountHistoricalAdjustment(String memberGlobalAccountNum, Integer memberPaymentId, String adjustmentNote, Short personnelId, AdjustedPaymentDto adjustedPaymentDto);
+    
+    @PreAuthorize("isFullyAuthenticated()")
     List<ListItem<Short>> constructPaymentTypeListForLoanRepayment(Short localeId);
     
     @PreAuthorize("isFullyAuthenticated()")
     Date retrieveLatPaymentDate(String globalAccountNum);
     
     Integer getAccountTrxnById(Integer id);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    void applyGroupCharge(Map<Integer, String> idsAndValues, Short chargeId, boolean isPenaltyType);
     
 }

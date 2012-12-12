@@ -20,7 +20,10 @@
 
 package org.mifos.accounts.struts.actionforms;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,6 +37,8 @@ import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.AccountingRules;
+import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -53,6 +58,24 @@ public class ApplyChargeActionForm extends BaseActionForm {
     private String charge;
 
     private String selectedChargeFormula;
+    
+    private Map<Integer,String> individualValues = new HashMap<Integer, String>();
+    
+    public Map<Integer, String> getIndividualValues() {
+        return individualValues;
+    }
+
+    public void setIndividualValues(Map<Integer, String> individualValues) {
+        this.individualValues = individualValues;
+    }
+    
+    public void setUpdateIndividualValues(String accountId, String value) {
+        individualValues.put(Integer.valueOf(accountId), value);
+    }
+    
+    public String getIndividualValues(Integer accountId) {
+        return individualValues.get(accountId);
+    }
 
     public String getAccountId() {
         return accountId;
@@ -93,7 +116,6 @@ public class ApplyChargeActionForm extends BaseActionForm {
     public void setSelectedChargeFormula(String selectedChargeFormula) {
         this.selectedChargeFormula = selectedChargeFormula;
     }
-
     /*
      * Extract the <isRateType> boolean value from the chargeType (see note above about chargeType)
      */
@@ -122,21 +144,63 @@ public class ApplyChargeActionForm extends BaseActionForm {
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         Locale locale = getUserContext(request).getPreferredLocale();
         ActionErrors errors = new ActionErrors();
-        String methodCalled = request.getParameter(Methods.method.toString());
-        if (null != methodCalled) {
-            if ((Methods.update.toString()).equals(methodCalled)) {
+        
+        String methodCalled = request.getParameter(MethodNameConstants.METHOD);
+        
+        boolean groupLoanWithMembers = AccountingRules.isGroupLoanWithMembers();
+
+        if (groupLoanWithMembers) {
+            if (methodCalled != null && methodCalled.equals("divide")) {
                 if (StringUtils.isNotBlank(selectedChargeFormula)) {
                     validateRate(errors, request);
                 }
                 validateAmount(errors, locale);
-               
+            }
+            if (methodCalled != null && methodCalled.equals("update")) {
+                validateHashMap(errors);
+            }
+
+            if (!errors.isEmpty()) {
+                request.setAttribute(Globals.ERROR_KEY, errors);
+
+                if (methodCalled.equals("divide")) {
+                    request.setAttribute("methodCalled", "update");
+                } else if (methodCalled.equals("update")) {
+                    request.setAttribute("methodCalled", "create");
+                } else {
+                    request.setAttribute("methodCalled", methodCalled);
+                }
+
+            }
+        } else {
+            if (null != methodCalled) {
+                if ((Methods.update.toString()).equals(methodCalled)) {
+                    if (StringUtils.isNotBlank(selectedChargeFormula)) {
+                        validateRate(errors, request);
+                    }
+                    validateAmount(errors, locale);
+
+                }
+            }
+            if (!errors.isEmpty()) {
+                request.setAttribute(Globals.ERROR_KEY, errors);
+                request.setAttribute("methodCalled", methodCalled);
             }
         }
-        if (!errors.isEmpty()) {
-            request.setAttribute(Globals.ERROR_KEY, errors);
-            request.setAttribute("methodCalled", methodCalled);
-        }
         return errors;
+        
+        
+    }
+    
+    private void validateHashMap(ActionErrors errors) {
+        ArrayList<String> mapValue = new ArrayList<String>(individualValues.values());
+        for (int i=0; i<individualValues.size(); i++){
+            DoubleConversionResult conversionResult = validateAmount(mapValue.get(i), getChargeCurrency() , AccountConstants.ACCOUNT_AMOUNT, errors, "");
+            if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+                addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
+                        getLocalizedMessage(AccountConstants.ACCOUNT_AMOUNT));
+            }
+        }
     }
 
     protected void validateRate(ActionErrors errors, HttpServletRequest request) {
@@ -165,7 +229,13 @@ public class ApplyChargeActionForm extends BaseActionForm {
 
         DoubleConversionResult conversionResult = null;
         String chargeAmount = getCharge();
-
+        if (StringUtils.isBlank(chargeAmount)) {
+            Double amount = 0.0;
+            for(Map.Entry<Integer, String> entry : individualValues.entrySet()) {
+                amount += Double.valueOf(entry.getValue());
+            }
+            chargeAmount = amount.toString();
+        }
         if (!StringUtils.isBlank(chargeAmount)) {
             if (isRateType()) {
                 conversionResult = validateInterest(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors);

@@ -1133,7 +1133,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             for (LoanBO loan : loanAccounts) {
                 loanDetail.add(new LoanDetailDto(loan.getGlobalAccountNum(), loan.getLoanOffering()
                         .getPrdOfferingName(), loan.getAccountState().getId(), loan.getAccountState().getName(), loan
-                        .getLoanSummary().getOutstandingBalance().toString(), loan.getTotalAmountDue().toString()));
+                        .getLoanSummary().getOutstandingBalance().toString(), loan.getTotalAmountDue().toString(), loan.getAccountType().getAccountTypeId()));
             }
             return loanDetail;
         }

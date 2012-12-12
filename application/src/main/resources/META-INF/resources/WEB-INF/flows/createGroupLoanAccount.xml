@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <var name="customerSearchFormBean" class="org.mifos.clientportfolio.loan.ui.CustomerSearchFormBean" />
+    <var name="selectProductFormBean" class="org.mifos.clientportfolio.loan.ui.SelectProductFormBean" />
+    <var name="loanAccountFormBean" class="org.mifos.clientportfolio.loan.ui.LoanAccountFormBean" />
+    <var name="loanAccountQuestionGroupFormBean" class="org.mifos.clientportfolio.loan.ui.LoanAccountQuestionGroupFormBean" />
+    <var name="cashFlow" class="org.mifos.platform.cashflow.ui.model.CashFlowForm"/>
+    <var name="cashFlowSummaryFormBean" class="org.mifos.clientportfolio.loan.ui.CashFlowSummaryFormBean" />
+    <var name="loanScheduleFormBean" class="org.mifos.clientportfolio.loan.ui.LoanScheduleFormBean" />
+
+    <decision-state id="isCustomerSearchRequiredStep">
+        <if test="requestParameters.customerId == null" then="customerSearchStep" else="handleSelectedCustomer" />
+    </decision-state>
+
+    <view-state id="customerSearchStep" view="createLoanAccountCustomerSearch" model="customerSearchFormBean">
+        <transition on="searchTermEntered" to="selectCustomerStep" validate="true">
+            <evaluate expression="loanAccountController.searchCustomers(customerSearchFormBean, true)" result="flowScope.customerSearchResultsDto" />
+        </transition>
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/> 
+    </view-state>
+    
+    <view-state id="selectCustomerStep" view="createLoanAccountSelectCustomer" model="customerSearchFormBean">
+        <transition on="searchTermEntered" to="selectCustomerStep" validate="true">
+            <evaluate expression="loanAccountController.searchCustomers(customerSearchFormBean, true)" result="flowScope.customerSearchResultsDto" />
+        </transition>
+        <transition on="customerSelected" to="handleSelectedCustomer"/>
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+    
+    <action-state id="handleSelectedCustomer">
+        <set name="flowScope.customerId" value="requestParameters.customerId" type="int" />
+        <transition to="selectLoanProductStep"/>
+    </action-state>
+
+    <view-state id="selectLoanProductStep" view="createLoanAccountSelectProduct" model="selectProductFormBean">
+        <on-entry>
+            <evaluate expression="loanAccountController.retrieveLoanProducts(flowScope.customerId, messageContext)" result="flowScope.loanCreationProductDetailsDto" />
+        </on-entry>
+        <transition on="productSelected" to="enterAccountDetailsStep">
+            <set name="flowScope.productId" value="requestParameters.productId" type="int"/>
+        </transition>
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+    
+     <view-state id="enterAccountDetailsStep" view="createLoanAccountEnterDetails" model="loanAccountFormBean">
+        <on-entry>
+            <evaluate expression="loanAccountController.retrieveLoanCreationDetails(flowScope.customerId, flowScope.productId, loanAccountFormBean)" result="flowScope.loanProductReferenceData" />
+        </on-entry>
+        <transition on="newProductSelected" to="enterAccountDetailsStep" validate="false">
+            <set name="flowScope.productId" value="requestParameters.productId" type="int"/>
+        </transition>
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+        <transition on="detailsEntered" to="checkIfQuestionGroupsExistForLoanCreation" />
+    </view-state>
+    
+    <!-- when editing, dont go through question groups step and just use data already in form bean -->
+    <view-state id="editAccountDetailsStep" view="createLoanAccountEnterDetails" model="loanAccountFormBean">
+        <transition on="newProductSelected" to="enterAccountDetailsStep" validate="false">
+            <set name="flowScope.productId" value="requestParameters.productId" type="int"/>
+        </transition>
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+        <transition on="detailsEntered" to="checkIfCompareForCashFlowIsEnabledForLoanCreation" />
+    </view-state>
+    
+    <decision-state id="checkIfQuestionGroupsExistForLoanCreation">
+        <on-entry>
+            <evaluate expression="loanAccountController.loadQuestionGroups(flowScope.productId, loanAccountQuestionGroupFormBean)"/>
+        </on-entry>
+        <if test="loanAccountQuestionGroupFormBean.questionGroups.size() > 0" then="answerQuestionGroupStep" else="checkIfCompareForCashFlowIsEnabledForLoanCreation"/>
+    </decision-state>
+    
+    <view-state id="answerQuestionGroupStep" view="createLoanAccountQuestionnaire" model="loanAccountQuestionGroupFormBean">
+        <transition on="questionsAnswered" to="checkIfCompareForCashFlowIsEnabledForLoanCreation" validate="true" />
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+    
+    <decision-state id="checkIfCompareForCashFlowIsEnabledForLoanCreation">
+        <on-entry>
+            <evaluate expression="loanAccountController.isCompareForCashFlowEnabled(flowScope.productId)" result="flowScope.cashFlowEnabled" />
+        </on-entry>
+        <if test="flowScope.cashFlowEnabled" then="captureCashFlowDetails" else="calculateAndReviewLoanSchedule"/>
+    </decision-state>
+    
+    <view-state id="captureCashFlowDetails" view="createLoanAccountCashFlow" model="cashFlow">
+        <on-entry>
+            <evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean, true)" result="flowScope.loanScheduleReferenceData"/>
+            <evaluate expression="loanAccountController.retrieveCashFlowSettings(flowScope.loanScheduleReferenceData, flowScope.productId)" result="flowScope.cashFlowSettings"/>
+            <evaluate expression="cashFlowController.retrieveCashFlowForm(flowScope.cashFlowSettings)" result="flowScope.cashFlow"/>
+        </on-entry>
+        
+        <transition on="capture" to="summaryOfCashflow" validate="true">
+            <evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean, true)" result="flowScope.loanScheduleReferenceData"/>
+            <evaluate expression="cashFlowController.retrieveMonthlyCashflowDetails(flowScope.cashFlow, flowScope.loanScheduleReferenceData.disbursementDate, flowScope.loanScheduleReferenceData.loanAmount)" result="flowScope.monthlyCashFlowDetails"/>
+            <evaluate expression="loanAccountController.retrieveCashflowSummaryDetails(cashFlowSummaryFormBean, flowScope.cashFlowSettings, flowScope.monthlyCashFlowDetails, flowScope.loanScheduleReferenceData, flowScope.productId, loanAccountFormBean)" result="flowScope.cashflowSummaryDetails"/>
+        </transition>
+        <transition on="cancel" to="cancel" bind="false" validate="false" history="invalidate"/>
+    </view-state>
+    
+    <view-state id="editCashflow" view="createLoanAccountCashFlow" model="cashFlow">
+        <transition on="capture" to="summaryOfCashflow" validate="true">
+            <evaluate expression="cashFlowController.retrieveMonthlyCashflowDetails(flowScope.cashFlow, flowScope.loanScheduleReferenceData.disbursementDate, flowScope.loanScheduleReferenceData.loanAmount)" result="flowScope.monthlyCashFlowDetails"/>
+            <evaluate expression="loanAccountController.recalculateCashflowSummaryDetails(cashFlowSummaryFormBean, flowScope.cashFlowSettings, flowScope.monthlyCashFlowDetails, flowScope.loanScheduleReferenceData, flowScope.productId)" result="flowScope.cashflowSummaryDetails"/>
+        </transition>
+        <transition on="cancel" to="cancel" bind="false" validate="false" history="invalidate"/>
+    </view-state>
+    
+    <view-state id="calculateAndReviewLoanSchedule" view="createloanAccountReviewLoanSchedule" model="loanScheduleFormBean">
+        <on-entry>
+            <evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean, true)" result="flowScope.loanScheduleReferenceData"/>
+        </on-entry>
+        <transition on="validate" to="reviewLoanSchedule" validate="true"/>
+        <transition on="preview" to="previewStep" />
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+    
+    <view-state id="reviewLoanSchedule" view="createloanAccountReviewLoanSchedule" model="loanScheduleFormBean">
+        <transition on="validate" to="reviewLoanSchedule" validate="true"/>
+        <transition on="preview" to="previewStep" />
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+    
+    <view-state id="summaryOfCashflow" view="createloanAccountReviewLoanSchedule" model="cashFlowSummaryFormBean">
+        <transition on="editCashflow" to="editCashflow" validate="false"/>
+        <transition on="validate" to="summaryOfCashflow" validate="true" />
+        <transition on="preview" to="previewStep" validate="true" />
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+    
+    <view-state id="previewStep" view="createLoanAccountPreview">
+        <transition on="editAccountDetails" to="editAccountDetailsStep" validate="false" bind="false"/>
+        <transition on="editLoanSchedule" to="chooseCorrectViewForEditLoanSchedule" validate="false" bind="false"/>
+        <transition on="editQuestionGroups" to="answerQuestionGroupStep" validate="false" bind="false"/>
+        
+        <transition on="saveForLater" to="confirmation">
+            <evaluate expression="cashFlowController.transformCashFlow(flowScope.cashFlow)" result="flowScope.loanAccountCashFlow" />
+            <evaluate expression="groupLoanAccountController.saveLoanApplicationForLater(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean)" result="flowScope.loanCreationResultDto" />
+        </transition>
+        
+        <transition on="submit" to="confirmation">
+            <set name="flowScope.accountStateId" value="requestParameters.accountState" type="int"/>
+            <evaluate expression="cashFlowController.transformCashFlow(flowScope.cashFlow)" result="flowScope.loanAccountCashFlow" />
+            <evaluate expression="groupLoanAccountController.saveGroupLoanApplication(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean)" result="flowScope.loanCreationResultDto" />
+        </transition>
+        
+        <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
+
+        <transition on-exception="org.mifos.service.BusinessRuleException" to="enterAccountDetailsStep" />
+    </view-state>
+    
+    <decision-state id="chooseCorrectViewForEditLoanSchedule">
+        <if test="flowScope.cashFlowEnabled" then="summaryOfCashflow" else="reviewLoanSchedule"/>
+    </decision-state>
+    
+    <end-state id="confirmation" view="createLoanAccountConfirmation"/>
+    <end-state id="cancel" view="externalRedirect:contextRelative:/clientsAndAccounts.ftl"/>
+</flow>

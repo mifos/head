@@ -21,6 +21,7 @@ package org.mifos.ui.pentaho.controller;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +40,9 @@ public class PentahoReportFormBean implements Serializable {
     private String outputType;
     private Map<String, String> allowedOutputTypes;
     private boolean inError = false;
+    private Date etlLastUpdate;
 
-    private List<PentahoDateParameter> reportDateParams = new ArrayList<PentahoDateParameter>();
+	private List<PentahoDateParameter> reportDateParams = new ArrayList<PentahoDateParameter>();
     private List<PentahoInputParameter> reportInputParams = new ArrayList<PentahoInputParameter>();
     private List<PentahoSingleSelectParameter> reportSingleSelectParams = new ArrayList<PentahoSingleSelectParameter>();
     private List<PentahoMultiSelectParameter> reportMultiSelectParams = new ArrayList<PentahoMultiSelectParameter>();
@@ -163,4 +165,14 @@ public class PentahoReportFormBean implements Serializable {
             this.reportMultiSelectParams.add((PentahoMultiSelectParameter) param);
         }
     }
+
+	public Date getEtlLastUpdate() {
+		return (Date)etlLastUpdate.clone();
+	}
+
+	public void setEtlLastUpdate(Date etlLastUpdate) {
+		this.etlLastUpdate = (Date)etlLastUpdate.clone();
+	}
+    
+    
 }

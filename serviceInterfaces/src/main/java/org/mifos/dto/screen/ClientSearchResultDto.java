@@ -47,13 +47,20 @@ public class ClientSearchResultDto implements Serializable {
     private String loanOfficerName;
     private Short loanOfficerId;
     private List<String> loanGlobalAccountNum = new ArrayList<String>();
+    private List<String> groupLoanGlobalAccountNum = new ArrayList<String>();
     private List<String> savingsGlobalAccountNum = new ArrayList<String>();
     private HashMap<String, Short> loanGlobalAccountStateIds = new HashMap<String, Short>();
     private HashMap<String, Short> savingsGlobalAccountStateIds = new HashMap<String, Short>();
     private String status;
     
 
-	public Short getOfficeId() {
+	public List<String> getGroupLoanGlobalAccountNum() {
+        return groupLoanGlobalAccountNum;
+    }
+    public void setGroupLoanGlobalAccountNum(List<String> groupLoanGlobalAccountNum) {
+        this.groupLoanGlobalAccountNum = groupLoanGlobalAccountNum;
+    }
+    public Short getOfficeId() {
 		return officeId;
 	}
 	public void setOfficeId(Short officeId) {

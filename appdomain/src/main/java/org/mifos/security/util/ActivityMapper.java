@@ -156,6 +156,8 @@ public class ActivityMapper {
         parseActionSecurity(getRepayLoanSecurity());
         parseActionSecurity(getCustomerSecurity());
         parseActionSecurity(getLoanAccountSecurity());
+        parseActionSecurity(getGroupAccountApplyPaymentSecurity());
+        parseActionSecurity(getGroupIndividualLoanAccountSecurity());
         parseActionSecurity(getAccountApplyPaymentSecurity());
         parseActionSecurity(getLoanDisbursementSecurity());
         parseActionSecurity(getSavingsDepositWithdrawalSecurity());
@@ -196,6 +198,7 @@ public class ActivityMapper {
         parseActionSecurity(getBirtAdminDocumentUploadSecurity());
         parseActionSecurity(getImportTransactionsSecurity());
         parseActionSecurity(getFinancialAccountingSecurity());
+        parseActionSecurity(getAccountGroupIndividualPaymentSecurity());
         parseActionSecurity(getMigrateSecurity());
     }
 
@@ -670,6 +673,7 @@ public class ActivityMapper {
     private ActionSecurity getApplyChargeSecurity() {
         ActionSecurity security = new ActionSecurity("applyChargeAction");
         security.allow("load", SecurityConstants.VIEW);
+        security.allow("divide", SecurityConstants.VIEW);
         security.allow("update", SecurityConstants.VIEW);
         return security;
     }
@@ -750,9 +754,28 @@ public class ActivityMapper {
         security.allow("showPreview", SecurityConstants.VIEW);
         security.allow("viewOriginalSchedule", SecurityConstants.VIEW);
         security.allow("viewAndEditAdditionalInformation", SecurityConstants.VIEW);
+        security.allow("getDetails", SecurityConstants.VIEW);
+        security.allow("getGroupLoanAccountDetails", SecurityConstants.VIEW);
+        security.allow("getGroupLoanRepaymentSchedule", SecurityConstants.VIEW);
         return security;
     }
 
+    private ActionSecurity getGroupAccountApplyPaymentSecurity() {
+        ActionSecurity security = new ActionSecurity("applyGroupPaymentAction");
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("divide", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("applyPayment", SecurityConstants.VIEW);
+        return security;
+    }
+    
+    private ActionSecurity getGroupIndividualLoanAccountSecurity() {
+        ActionSecurity security = new ActionSecurity("groupIndividualLoanAccountAction");
+        security.allow("get", SecurityConstants.VIEW);
+        return security;
+    }
+    
     private ActionSecurity getCustomerSecurity() {
         ActionSecurity security = new ActionSecurity("customerAction");
         security.allow("forwardWaiveChargeDue", SecurityConstants.VIEW);
@@ -767,9 +790,12 @@ public class ActivityMapper {
     private ActionSecurity getRepayLoanSecurity() {
         ActionSecurity security = new ActionSecurity("repayLoanAction");
         security.allow("loadRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+        security.allow("loadGroupRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
         security.allow("preview", SecurityConstants.LOAN_CAN_REPAY_LOAN);
         security.allow("previous", SecurityConstants.LOAN_CAN_REPAY_LOAN);
         security.allow("makeRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+        security.allow("makeGroupRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+        security.allow("makeGroupMemberRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
         return security;
     }
 
@@ -791,6 +817,7 @@ public class ActivityMapper {
         security.allow("loadAdjustmentWhenObligationMet", SecurityConstants.CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET);
         security.allow("listPossibleAdjustments", SecurityConstants.VIEW);
         security.allow("editAdjustment", SecurityConstants.VIEW);
+        security.allow("divide", SecurityConstants.VIEW);
         
         return security;
     }
@@ -1069,11 +1096,19 @@ public class ActivityMapper {
         security.allow("load", SecurityConstants.VIEW);
         return security;
     }
+
     private ActionSecurity getFinancialAccountingSecurity() {
         ActionSecurity security = new ActionSecurity("FinancialAccountingAction");
         security.allow("load", SecurityConstants.VIEW);
         return security;
     }
+    
+    private ActionSecurity getAccountGroupIndividualPaymentSecurity() {
+        ActionSecurity security = new ActionSecurity("applyIndividualPayment");
+        security.allow("load", SecurityConstants.VIEW);
+        return security;
+    }
+
     private void addCustomerSearchMappings() {
         activityMap.put("/CustomerSearchAction-load", SecurityConstants.VIEW);
         activityMap.put("/CustomerSearchAction-search", SecurityConstants.SEARCH);
@@ -1460,7 +1495,7 @@ public class ActivityMapper {
 
     private short getActivityIdForAddingNotes(AccountTypes accountTypes, CustomerLevel customerLevel) {
         short activityId = -1;
-        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
+        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT) || accountTypes.equals(AccountTypes.GROUP_LOAN_ACCOUNT)) {
             activityId = SecurityConstants.LOAN_CAN_ADD_NOTES_TO_LOAN;
         } else if (accountTypes.equals(AccountTypes.SAVINGS_ACCOUNT)) {
             activityId = SecurityConstants.SAVINGS_CAN_ADD_NOTES_TO_SAVINGS;
@@ -1492,7 +1527,7 @@ public class ActivityMapper {
 
     private short getActivityIdForApplyCharges(AccountTypes accountTypes, CustomerLevel customerLevel) {
         short activityId = -1;
-        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
+        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT) || accountTypes.equals(AccountTypes.GROUP_LOAN_ACCOUNT)) {
             activityId = SecurityConstants.LOAN_CAN_APPLY_CHARGES;
         } else if (accountTypes.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
             if (customerLevel.equals(CustomerLevel.CENTER)) {
@@ -1622,7 +1657,7 @@ public class ActivityMapper {
 
     private short getActivityIdForPayment(AccountTypes accountTypes, CustomerLevel customerLevel) {
         short activityId = -1;
-        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
+        if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT) || accountTypes.equals(AccountTypes.GROUP_LOAN_ACCOUNT) ) {
             activityId = SecurityConstants.LOAN_MAKE_PAYMENT_TO_ACCOUNT;
         } else if (accountTypes.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
             if (customerLevel.equals(CustomerLevel.CENTER)) {

@@ -57,4 +57,5 @@ public interface LoanExceptionConstants {
     String CUSTOMER_EXTERNAL_ID_FIELD = "errors.externalid";
     String REPAYMENTDAYISREQUIRED = "errors.repaymentDayIsRequired";
     String REPAYMENTDAY_WRONGFORMAT = "errors.repaymentDayWrongFormat";
+    String NO_PARENT_ACCOUNT_EXCEPTION = "errors.loan.does.not.have.parent.account";
 }

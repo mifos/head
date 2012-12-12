@@ -26,13 +26,17 @@ import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.mifos.application.admin.servicefacade.BatchjobsDto;
+import org.mifos.application.admin.servicefacade.BatchjobsServiceFacade;
 import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
 import org.mifos.core.MifosRuntimeException;
@@ -84,7 +88,10 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
     private RolesPermissionServiceFacade rolesPermissionService;
     private LegacyAdminDocumentDao legacyAdminDocumentDao;
     private ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade;
-
+    
+    @Autowired
+    private BatchjobsServiceFacade batchjobsServiceFacade;
+    
     @Autowired
     public PentahoReportsServiceImpl(RolesPermissionServiceFacade rolesPermissionService,
             LegacyAdminDocumentDao legacyAdminDocumentDao,
@@ -353,4 +360,28 @@ public class PentahoReportsServiceImpl implements PentahoReportsServiceFacade {
         }
         return result;
     }
+
+	@Override
+	@PreAuthorize("isFullyAuthenticated()")
+	public Date getEtlLastUpdateDate(HttpServletRequest request) {
+		ServletContext context = request.getSession().getServletContext();
+		Date lastSucessfulRunEtl = null;
+		try {
+			List<BatchjobsDto> batchjobs = batchjobsServiceFacade.getBatchjobs(context);
+			for ( BatchjobsDto batchjob : batchjobs ) {
+				if(batchjob.getName().equals("ETLReportDWTaskJob")) {
+					lastSucessfulRunEtl = batchjob.getLastSuccessfulRun();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lastSucessfulRunEtl;
+	}
+	
+	@Override
+	public boolean isDW(Integer reportId) {
+		ReportsBO reports = this.reportsPersistence.getReport(new Short(reportId.toString()));
+		return reports.getIsDW();
+	}
 }

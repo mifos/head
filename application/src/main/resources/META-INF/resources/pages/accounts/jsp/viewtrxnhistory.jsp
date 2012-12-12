@@ -39,7 +39,13 @@ explanation of the license and how it is applied.
 		customerAccountActionForm.action="customerAccountAction.do?method=load";
 		customerAccountActionForm.submit();
 	}
-	function ViewLoanDetails(form){
+	function ViewLoanDetails(form, typeOfGroupLoan){
+		if (typeOfGroupLoan === 'parentAcc') {
+			  form.action="viewLoanAccountDetails.ftl";
+		}
+		if (typeOfGroupLoan === 'memberAcc') {
+			form.action="groupIndividualLoanAccountAction.do?";
+		}
 		form.submit();
 	}
 
@@ -47,6 +53,10 @@ explanation of the license and how it is applied.
 	<form method="get" action="viewLoanAccountDetails.ftl" >
 	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'typeOfGroupLoan')}" var="typeOfGroupLoan" />
+	<c:if test="${typeOfGroupLoan == 'memberAcc'}">
+	   <html-el:hidden property="method" value="get" />
+	</c:if>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td class="bluetablehead05">
@@ -110,7 +120,7 @@ explanation of the license and how it is applied.
 					<c:choose>
 					<c:when test="${param.input == 'LoanDetails'}">
 					<html-el:button styleId="viewtrxnhistory.button.back" property="returnToAccountDetailsbutton"
-					       onclick="javascript:ViewLoanDetails(this.form)"
+					       onclick="javascript:ViewLoanDetails(this.form, '${typeOfGroupLoan}')"
 						     styleClass="buttn">
 								<mifos:mifoslabel name="accounts.returndetails" />
 						</html-el:button>

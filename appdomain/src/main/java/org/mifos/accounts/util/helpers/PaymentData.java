@@ -53,6 +53,7 @@ public class PaymentData {
      * towards and any installments in arrears.
      */
     private List<AccountPaymentData> accountPayments;
+    private AccountPaymentEntity parentPayment;
 
     public static PaymentData createPaymentData(Money totalAmount, PersonnelBO personnel, Short paymentTypeId,
             Date transactionDate) {
@@ -75,7 +76,7 @@ public class PaymentData {
         this.paymentTypeId = paymentTypeId;
         this.transactionDate = transactionDate;
     }
-
+    
     public List<AccountPaymentData> getAccountPayments() {
         return accountPayments;
     }
@@ -151,4 +152,13 @@ public class PaymentData {
     public void setOtherTransferPayment(AccountPaymentEntity otherTransferPayment) {
         this.otherTransferPayment = otherTransferPayment;
     }
+
+    public AccountPaymentEntity getParentPayment() {
+        return parentPayment;
+    }
+
+    public void setParentPayment(AccountPaymentEntity parentPayment) {
+        this.parentPayment = parentPayment;
+    }
+
 }

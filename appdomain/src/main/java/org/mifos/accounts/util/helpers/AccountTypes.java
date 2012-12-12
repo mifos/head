@@ -21,7 +21,7 @@
 package org.mifos.accounts.util.helpers;
 
 public enum AccountTypes {
-    LOAN_ACCOUNT(1), SAVINGS_ACCOUNT(2), CUSTOMER_ACCOUNT(3), INDIVIDUAL_LOAN_ACCOUNT(4);
+    LOAN_ACCOUNT(1), SAVINGS_ACCOUNT(2), CUSTOMER_ACCOUNT(3), INDIVIDUAL_LOAN_ACCOUNT(4), GROUP_LOAN_ACCOUNT(5);
 
     Short value;
 

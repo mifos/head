@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -128,6 +129,24 @@ public abstract class LegacyGenericDao {
         }
     }
 
+    public Object execUniqueResultNamedQueryWithoutFlush(final String queryName, final Map<String, ?> queryParameters)
+            throws PersistenceException {
+        try {
+            Session sess = getSession();
+            sess.setFlushMode(FlushMode.MANUAL);
+        	Query query = getSession().getNamedQuery(queryName);
+            logger.debug("The query object for the query with the name  " + queryName + " has been obtained");
+            query.setProperties(queryParameters);
+            Object returnObject = query.uniqueResult();
+            sess.setFlushMode(FlushMode.AUTO);
+            return returnObject;
+        } catch (GenericJDBCException gje) {
+            throw new ConnectionNotFoundException(gje);
+        } catch (Exception e) {
+            throw new PersistenceException(e);
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     public <T extends Object> T execUniqueResultNamedQueryWithResultTransformer(final String queryName,
             final Map<String, ?> queryParameters,

@@ -127,6 +127,9 @@ public class LoanAccountFormBean implements Serializable {
     private Number[] clientAmount = new Number[1];
     private Integer[] clientLoanPurposeId = new Integer[] {0};
     
+    // Group Loan Account with members specific
+    private boolean groupLoanWithMembersEnabled;
+    
     // fees
     private List<FeeDto> defaultFees;
     private List<FeeDto> additionalFees;
@@ -181,7 +184,7 @@ public class LoanAccountFormBean implements Serializable {
             }
         }
         
-        if (this.glimApplicable) {
+        if (this.glimApplicable || this.groupLoanWithMembersEnabled) {
             int index = 0;
             int selectedCount = 0;
                 for (Boolean clientSelected : this.clientSelectForGroup) {
@@ -1245,5 +1248,13 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setLocale(Locale default1) {
         this.locale = default1;
+    }
+
+    public boolean isGroupLoanWithMembersEnabled() {
+        return groupLoanWithMembersEnabled;
+    }
+
+    public void setGroupLoanWithMembersEnabled(boolean isGroupLoanWithMembersEnabled) {
+        this.groupLoanWithMembersEnabled = isGroupLoanWithMembersEnabled;
     }
 }

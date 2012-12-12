@@ -133,7 +133,7 @@ public class BirtReportsUploadAction extends BaseAction {
         uploadFile(formFile);
 
         ReportsBO reportBO = createOrUpdateReport(category, newActivityId, uploadForm.getReportTitle(), Short
-                .valueOf(uploadForm.getIsActive()), formFile.getFileName());
+                .valueOf(uploadForm.getIsActive()), formFile.getFileName(), uploadForm.getIsDW());
 
         allowActivityPermission(reportBO, newActivityId);
         request.setAttribute("report", reportBO);
@@ -344,12 +344,13 @@ public class BirtReportsUploadAction extends BaseAction {
     }
 
     private ReportsBO createOrUpdateReport(ReportsCategoryBO category, int newActivityId, String reportTitle,
-            Short isActive, String fileName) throws PersistenceException {
+            Short isActive, String fileName, Boolean isDW) throws PersistenceException {
         ReportsBO reportBO = new ReportsBO();
         reportBO.setReportName(reportTitle);
         reportBO.setReportsCategoryBO(category);
         reportBO.setActivityId((short) newActivityId);
         reportBO.setIsActive(isActive);
+        reportBO.setIsDW(isDW);
 
         ReportsJasperMap reportsJasperMap = reportBO.getReportsJasperMap();
         reportsJasperMap.setReportJasper(fileName);

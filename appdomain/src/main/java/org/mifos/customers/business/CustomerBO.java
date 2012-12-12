@@ -740,11 +740,33 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
         return loanAccounts;
     }
+    
+    //method returns also new kind of group loan account
+    //for group details
+    public List<LoanBO> getOpenLoanAccountsAndGroupLoans() {
+        List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
+        for (AccountBO account : getAccounts()) {
+            if ((account.isLoanAccount() || account.isGroupLoanAccount()) && account.isOpen()) {
+                loanAccounts.add((LoanBO) account);
+            }
+        }
+        return loanAccounts;
+    }
 
     public List<LoanBO> getOpenIndividualLoanAccounts() {
         List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
         for (AccountBO account : getAccounts()) {
             if (account.isOfType(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT) && account.isOpen()) {
+                loanAccounts.add((LoanBO) account);
+            }
+        }
+        return loanAccounts;
+    }
+    
+    public List<LoanBO> getOpenGroupLoanAccounts() {
+        List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
+        for (AccountBO account : getAccounts()) {
+            if (account.isOfType(AccountTypes.GROUP_LOAN_ACCOUNT) && account.isOpen()) {
                 loanAccounts.add((LoanBO) account);
             }
         }
@@ -763,7 +785,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public boolean isAnyLoanAccountOpen() {
         for (AccountBO account : getAccounts()) {
-            if (account.isLoanAccount() && account.isOpen()) {
+            if ((account.isLoanAccount() || account.isGroupLoanAccount()) && account.isOpen()) {
                 return true;
             }
         }

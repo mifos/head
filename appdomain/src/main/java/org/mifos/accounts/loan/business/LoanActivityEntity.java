@@ -182,6 +182,27 @@ public class LoanActivityEntity extends AbstractEntity {
 
         return loanActivityDto;
     }
+    
+    public LoanActivityDto sumGroupToDto(Money interestOutstanding, Money principalOutstanding, Money feeOutstanding, Money penaltyOutstanding) {
+        LoanActivityDto loanActivityDto = new LoanActivityDto();
+        loanActivityDto.setId(this.account.getAccountId());
+        loanActivityDto.setActionDate(this.trxnCreatedDate);
+        loanActivityDto.setActivity(this.comments);
+        loanActivityDto.setPrincipal(removeSign(this.principal).toString());
+        loanActivityDto.setInterest(removeSign(this.interest).toString());
+        loanActivityDto.setPenalty(removeSign(this.penalty).toString());
+        loanActivityDto.setFees(removeSign(this.fee).toString());
+        Money total = removeSign(this.fee).add(removeSign(this.penalty)).add(removeSign(this.principal)).add(removeSign(this.interest));
+        loanActivityDto.setTotal(total.toString());
+        loanActivityDto.setTotalValue(total.getAmount().doubleValue());
+        loanActivityDto.setTimeStamp(this.trxnCreatedDate);
+        loanActivityDto.setRunningBalanceInterest(interestOutstanding.toString());
+        loanActivityDto.setRunningBalancePrinciple(principalOutstanding.toString());
+        loanActivityDto.setRunningBalanceFees(feeOutstanding.toString());
+        loanActivityDto.setRunningBalancePenalty(penaltyOutstanding.toString());
+        loanActivityDto.setRunningBalancePrincipleWithInterestAndFees(principalOutstanding.add(interestOutstanding).add(feeOutstanding).toString());
+        return loanActivityDto;
+    }
 
     private Money removeSign(final Money amount) {
         if (amount != null && amount.isLessThanZero()) {

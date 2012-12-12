@@ -35,7 +35,8 @@ explanation of the license and how it is applied.
 		<SCRIPT SRC="pages/application/loan/js/PreviewLoanAccount.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 	    <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" scope="session" />    
-		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+		<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
+		<form name="goBackToLoanAccountDetails" method="get" action ="${formAction }">
 			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
 		</form> 
 		<html-el:form method="post" action="/loanAccountAction.do?method=update"

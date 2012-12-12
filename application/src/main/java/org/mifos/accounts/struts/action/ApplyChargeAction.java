@@ -21,7 +21,10 @@
 
 package org.mifos.accounts.struts.action;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +33,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
@@ -37,19 +41,26 @@ import org.mifos.accounts.struts.actionforms.ApplyChargeActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.application.servicefacade.GroupLoanAccountServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.dto.domain.ApplicableCharge;
+import org.mifos.dto.domain.GroupIndividualLoanDto;
 import org.mifos.dto.screen.AccountTypeCustomerLevelDto;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class ApplyChargeAction extends BaseAction {
 
+    private GroupLoanAccountServiceFacade groupLoanService;
+    
+    public ApplyChargeAction() {
+        this.groupLoanService = ApplicationContextProvider.getBean(GroupLoanAccountServiceFacade.class);
+    }
+    
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
@@ -63,8 +74,8 @@ public class ApplyChargeAction extends BaseAction {
 
         Integer accountId = Integer.valueOf(request.getParameter("accountId"));
         List<ApplicableCharge> applicableCharges = this.accountServiceFacade.getApplicableFees(accountId);
-        
-        if (this.loanDao.findById(accountId) != null) {
+        LoanBO loan = loanDao.findById(accountId);
+        if (loan != null) {
             for(int i = applicableCharges.size() - 1; i >= 0 ; --i) {
                 if(applicableCharges.get(i).getFeeId().equals(AccountConstants.MISC_PENALTY)) {
                     applicableCharges.remove(i);
@@ -76,24 +87,58 @@ public class ApplyChargeAction extends BaseAction {
         }
 
         SessionUtils.setCollectionAttribute(AccountConstants.APPLICABLE_CHARGE_LIST, applicableCharges, request);
-
+        
+        if (null != loan && (null == loan.getParentAccount() && loan.isGroupLoanAccount())) {
+            SessionUtils.setAttribute(Constants.ACCOUNT_TYPE, "newGlim", request);
+        }
         return mapping.findForward(ActionForwards.load_success.toString());
     }
-
+    
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward divide(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        ApplyChargeActionForm chargeForm = (ApplyChargeActionForm) form;
+        chargeForm.getIndividualValues().clear();
+        
+        List<GroupIndividualLoanDto> memberAccounts = groupLoanService.getMemberLoansAndDefaultPayments(Integer.valueOf(chargeForm.getAccountId()), new BigDecimal(chargeForm.getCharge()));
+                    
+        for(int i = 0 ; i < memberAccounts.size() ; i++) {
+            chargeForm.getIndividualValues().put(memberAccounts.get(i).getAccountId(), String.valueOf(memberAccounts.get(i).getDefaultAmount().doubleValue()));
+        }
+        
+        List<LoanBO> memberInfos = getMemberAccountsInformation(chargeForm.getAccountId());
+        SessionUtils.setCollectionAttribute("memberInfos", memberInfos, request);
+        return mapping.findForward("divide");
+    }
+    
+    private List<LoanBO> getMemberAccountsInformation(String accountId) {
+        List<LoanBO> membersInfo = new ArrayList<LoanBO>();
+        for (LoanBO memberAcc : loanDao.findById(Integer.valueOf(accountId)).getMemberAccounts()) {
+            membersInfo.add(memberAcc);
+        }
+        return membersInfo;
+    }
+    
     @TransactionDemarcate(validateAndResetToken = true)
-    @CloseSession
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         ApplyChargeActionForm applyChargeActionForm = (ApplyChargeActionForm) form;
 
         Short feeId = Short.valueOf(applyChargeActionForm.getFeeId());
-        Double chargeAmount = getDoubleValue(request.getParameter("charge"));
+        Double chargeAmount = 0.0;
 
-        Integer accountId = Integer.valueOf(applyChargeActionForm.getAccountId());
-        this.accountServiceFacade.applyCharge(accountId, feeId, chargeAmount, applyChargeActionForm.isPenaltyType());
+        AccountBO account = new AccountBusinessService().getAccount(Integer.valueOf(applyChargeActionForm.getAccountId()));
+        
+        if (null == ((LoanBO)account).getParentAccount() && account.isGroupLoanAccount()) {
+            this.accountServiceFacade.applyGroupCharge(applyChargeActionForm.getIndividualValues(), feeId, applyChargeActionForm.isPenaltyType());
+        }
+        else {
+            chargeAmount = getDoubleValue(request.getParameter("charge"));
+            this.accountServiceFacade.applyCharge(account.getAccountId(), feeId, chargeAmount, applyChargeActionForm.isPenaltyType());
+        }
 
-        AccountTypeCustomerLevelDto accountTypeCustomerLevel = accountServiceFacade.getAccountTypeCustomerLevelDto(accountId);
+        AccountTypeCustomerLevelDto accountTypeCustomerLevel = accountServiceFacade.getAccountTypeCustomerLevelDto(account.getAccountId());
 
         return mapping.findForward(getDetailAccountPage(accountTypeCustomerLevel));
     }
@@ -119,6 +164,9 @@ public class ApplyChargeAction extends BaseAction {
             if (method.equals(Methods.update.toString())) {
                 forward = ActionForwards.update_failure.toString();
             }
+            else if (method.equals(Methods.create.toString())) {
+                forward = "divide";
+            }
         }
         return mapping.findForward(forward);
     }
@@ -126,6 +174,12 @@ public class ApplyChargeAction extends BaseAction {
     private String getDetailAccountPage(AccountTypeCustomerLevelDto accountTypeCustomerLevel) {
         if (accountTypeCustomerLevel.getAccountType().equals(AccountTypes.LOAN_ACCOUNT.getValue())) {
             return "loanDetails_success";
+        }
+        else if (accountTypeCustomerLevel.getAccountType().equals(AccountTypes.GROUP_LOAN_ACCOUNT.getValue()) && accountTypeCustomerLevel.getCustomerLevelId().equals(CustomerLevel.CLIENT.getValue())) {
+            return "groupIndividualLoan_sucess";
+        }
+        else if (accountTypeCustomerLevel.getAccountType().equals(AccountTypes.GROUP_LOAN_ACCOUNT.getValue()) && accountTypeCustomerLevel.getCustomerLevelId().equals(CustomerLevel.GROUP.getValue())) {
+            return "groupLoan_sucess";
         }
         if (accountTypeCustomerLevel.getCustomerLevelId().equals(CustomerLevel.CLIENT.getValue())) {
             return "clientDetails_success";

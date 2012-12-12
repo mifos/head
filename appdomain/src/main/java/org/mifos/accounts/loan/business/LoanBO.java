@@ -153,6 +153,7 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
+import org.mifos.dto.domain.AccountPaymentDto;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -345,6 +346,65 @@ public class LoanBO extends AccountBO implements Loan {
 
         this.memberAccounts = new LinkedHashSet<LoanBO>();
     }
+    
+    //create new Group Loan Account
+    public LoanBO(LoanOfferingBO loanProduct, CustomerBO customer, AccountState loanState, LoanProductOverridenDetail overridenDetail,
+            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanScheduleConfiguration configuration,
+            InstallmentRange installmentRange, AmountRange loanAmountRange, CreationDetail creationDetail, AccountTypes type) {
+        super(type, loanState, customer, loanSchedule.getRoundedLoanSchedules(), creationDetail);
+        this.parentAccount = null; // used for GLIM loans and will be set in factory method for this.
+        this.performanceHistory = new LoanPerformanceHistoryEntity(this);
+
+        this.loanOffering = loanProduct;
+        this.customer = customer;
+        this.loanAmount = overridenDetail.getLoanAmount();
+        this.noOfInstallments = Integer.valueOf(overridenDetail.getNumberOfInstallments()).shortValue();
+        this.gracePeriodDuration = Integer.valueOf(overridenDetail.getGraceDuration()).shortValue();
+        this.disbursementDate = overridenDetail.getDisbursementDate().toDateMidnight().toDate();
+
+        List<AccountFeesEntity> accountFeeEntities = overridenDetail.getAccountFeeEntities();
+        for (AccountFeesEntity accountFeesEntity : accountFeeEntities) {
+            accountFeesEntity.setAccount(this);
+        }
+        this.accountFees = new HashSet<AccountFeesEntity>(accountFeeEntities);
+        
+        List<AccountPenaltiesEntity> accountPenaltyEntities = overridenDetail.getAccountPenaltyEntities();
+        for(AccountPenaltiesEntity accountPenaltyEntity : accountPenaltyEntities) {
+            accountPenaltyEntity.setAccount(this);
+        }
+        this.loanAccountPenalties = new HashSet<AccountPenaltiesEntity>(accountPenaltyEntities);
+
+        // inherit properties from loan product
+        this.interestType = new InterestTypesEntity(loanProduct.getInterestType());
+        this.interestRate = overridenDetail.getInterestRate();
+        this.gracePeriodType = new GracePeriodTypeEntity(loanProduct.getGraceType());
+
+        this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
+        this.accountOverpayments = new ArrayList<AccountOverpaymentEntity>();
+        this.rawAmountTotal = loanSchedule.getRawAmount();
+        this.loanSummary = buildLoanSummary();
+
+        this.maxMinNoOfInstall = new MaxMinNoOfInstall(installmentRange.getMinNoOfInstall(), installmentRange.getMaxNoOfInstall(), this);
+        this.maxMinLoanAmount = new MaxMinLoanAmount(loanAmountRange.getMaxLoanAmount(), loanAmountRange.getMinLoanAmount(), this);
+        this.maxMinInterestRate = new MaxMinInterestRate(loanProduct.getMaxInterestRate(), loanProduct.getMinInterestRate(), this);
+
+        // legacy
+        this.intrestAtDisbursement = Short.valueOf("0"); // false
+        this.gracePeriodPenalty = Short.valueOf("0"); // is this used
+        this.loanBalance = overridenDetail.getLoanAmount(); // whats this used for? remaining balance?
+        try {
+            if (configuration.isLoanScheduleIndependentOfCustomerMeetingEnabled()) {
+                this.loanMeeting = repaymentDayMeeting;
+            } else {
+                this.loanMeeting = buildLoanMeeting(customer.getCustomerMeetingValue(), loanProduct.getLoanOfferingMeetingValue(), disbursementDate);
+            }
+        } catch (AccountException e) {
+            throw new BusinessRuleException(e.getKey());
+        }
+
+        this.memberAccounts = new LinkedHashSet<LoanBO>();
+    }
+    
 
     public static LoanBO openStandardLoanAccount(LoanOfferingBO loanProduct, CustomerBO customer,
             MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, AccountState loanState, FundBO fund,
@@ -358,17 +418,42 @@ public class LoanBO extends AccountBO implements Loan {
         standardLoan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(standardLoan.getAccountState(), standardLoan.getAccountState(), createdBy, standardLoan));
         return standardLoan;
     }
+    
+    public static LoanBO openGroupLoanAccount(LoanOfferingBO loanProduct, CustomerBO customer,
+            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, AccountState loanState, FundBO fund,
+            LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration,
+            InstallmentRange installmentRange, AmountRange loanAmountRange,
+            CreationDetail creationDetail, PersonnelBO createdBy) {
+
+        LoanBO standardLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail, AccountTypes.GROUP_LOAN_ACCOUNT);
+
+        standardLoan.setFund(fund);
+        standardLoan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(standardLoan.getAccountState(), standardLoan.getAccountState(), createdBy, standardLoan));
+        return standardLoan;
+    }
 
     public static LoanBO openGroupMemberLoanAccount(LoanBO parentLoan, LoanOfferingBO loanProduct, ClientBO member,
             MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanProductOverridenDetail overridenDetail,
             LoanScheduleConfiguration configuration, InstallmentRange installmentRange, AmountRange loanAmountRange, CreationDetail creationDetail, PersonnelBO createdBy) {
 
         AccountState loanState = AccountState.LOAN_PENDING_APPROVAL;
-        LoanBO groupMemberLoan = new LoanBO(loanProduct, member, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail);
+        LoanBO groupMemberLoan = new LoanBO(loanProduct, member, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail, AccountTypes.GROUP_LOAN_ACCOUNT);
         groupMemberLoan.setParentAccount(parentLoan);
         groupMemberLoan.markAsIndividualLoanAccount();
         groupMemberLoan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(groupMemberLoan.getAccountState(), groupMemberLoan.getAccountState(), createdBy, groupMemberLoan));
         return groupMemberLoan;
+    }
+    
+    public static LoanBO openGroupLoanForAccount(LoanBO parentLoan, LoanOfferingBO loanProduct, ClientBO member,
+            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanProductOverridenDetail overridenDetail,
+            LoanScheduleConfiguration configuration, InstallmentRange installmentRange, AmountRange loanAmountRange, CreationDetail creationDetail, PersonnelBO createdBy, Boolean groupLoan) {
+
+        AccountState loanState = AccountState.LOAN_PENDING_APPROVAL;
+        LoanBO standardLoan = new LoanBO(loanProduct, member, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail, AccountTypes.GROUP_LOAN_ACCOUNT);
+        
+        standardLoan.setParentAccount(parentLoan);
+        standardLoan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(standardLoan.getAccountState(), standardLoan.getAccountState(), createdBy, standardLoan));
+        return standardLoan;
     }
 
     private void markAsIndividualLoanAccount() {
@@ -1244,25 +1329,29 @@ public class LoanBO extends AccountBO implements Loan {
         return amount;
     }
 
-    public void makeEarlyRepayment(final Money totalAmount, final Date transactionDate, final String receiptNumber,
-            final Date receiptDate, final String paymentTypeId, final Short personnelId, boolean waiveInterest,
+    public void makeEarlyRepayment(AccountPaymentDto paymentDto, final Short personnelId, boolean waiveInterest,
             Money interestDue) throws AccountException {
-
-        makeEarlyRepayment(totalAmount, transactionDate, receiptNumber, receiptDate, paymentTypeId, personnelId,
-                waiveInterest, interestDue, null);
+        makeEarlyRepayment(paymentDto, personnelId, waiveInterest, interestDue, null, null);
 
     }
     
-    public void makeEarlyRepayment(final Money totalAmount, final Date transactionDate,
-                                   final String receiptNumber, final Date receiptDate,
-                                   final String paymentTypeId, final Short personnelId,
-                                   boolean waiveInterest, Money interestDue, Integer savingsPaymentId) throws AccountException {
+    public void makeEarlyRepayment(final AccountPaymentDto paymentDto, final Short personnelId,
+                                   boolean waiveInterest, Money interestDue,
+                                   Integer savingsPaymentId, AccountPaymentEntity parentPayment) throws AccountException {
         try {
             PersonnelBO currentUser = legacyPersonnelDao.getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
-            this.setUpdatedDate(transactionDate);
-            AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, totalAmount, receiptNumber,
-                    receiptDate, getPaymentTypeEntity(Short.valueOf(paymentTypeId)), transactionDate);
+            this.setUpdatedDate(paymentDto.getTransactionDate());
+            AccountPaymentEntity accountPaymentEntity;
+            if (this.isGroupLoanAccount() && null != this.getParentAccount()) {
+            accountPaymentEntity = new AccountPaymentEntity(this, new Money(getCurrency(),paymentDto.getTotalAmount()), paymentDto.getReceiptNumber(),
+                    paymentDto.getReceiptDate(), getPaymentTypeEntity(Short.valueOf(paymentDto.getPaymentTypeId())), paymentDto.getTransactionDate(),parentPayment);
+            }
+            else {
+                accountPaymentEntity = new AccountPaymentEntity(this, new Money(getCurrency(),paymentDto.getTotalAmount()), paymentDto.getReceiptNumber(),
+                        paymentDto.getReceiptDate(), getPaymentTypeEntity(Short.valueOf(paymentDto.getPaymentTypeId())), paymentDto.getTransactionDate());
+            }
+                
             if (savingsPaymentId != null) {
                 AccountPaymentEntity withdrawal = legacyAccountDao.findPaymentById(savingsPaymentId);
                 accountPaymentEntity.setOtherTransferPayment(withdrawal);
@@ -1278,7 +1367,7 @@ public class LoanBO extends AccountBO implements Loan {
                 getPerformanceHistory().setNoOfPayments(getPerformanceHistory().getNoOfPayments() + 1);
             }
             LoanActivityEntity loanActivity = buildLoanActivity(accountPaymentEntity.getAccountTrxns(), currentUser,
-                    AccountConstants.LOAN_REPAYMENT, transactionDate);
+                    AccountConstants.LOAN_REPAYMENT, paymentDto.getTransactionDate());
             addLoanActivity(loanActivity);
             buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 
@@ -1288,22 +1377,31 @@ public class LoanBO extends AccountBO implements Loan {
                     legacyPersonnelDao.getPersonnel(personnelId), this));
             setAccountState(legacyMasterDao.getPersistentObject(AccountStateEntity.class,
                     AccountStates.LOANACC_OBLIGATIONSMET));
-            setClosedDate(transactionDate);
+            setClosedDate(paymentDto.getTransactionDate());
 
             // Client performance entry
             updateCustomerHistoryOnRepayment();
             this.delete(loanArrearsAgingEntity);
             loanArrearsAgingEntity = null;
-            getlegacyLoanDao().createOrUpdate(this);
 
             // GLIM
-            if (hasMemberAccounts()) {
+            if (this.isGroupLoanAccountParent()){
+                for (Map.Entry<String, Double> entry : paymentDto.getMemberNumWithAmount().entrySet()) {
+                    AccountPaymentDto memberPayment = new AccountPaymentDto(entry.getValue(), paymentDto.getTransactionDate(), paymentDto.getReceiptNumber(), paymentDto.getReceiptDate(), paymentDto.getPaymentTypeId());
+                    legacyLoanDao.getAccount(Integer.valueOf(entry.getKey())).makeEarlyRepayment(memberPayment, personnelId, waiveInterest, interestDue,null,accountPaymentEntity);
+                }
+            } 
+            else if (hasMemberAccounts() && !this.isGroupLoanAccount()) {
                 for (LoanBO memberAccount : this.memberAccounts) {
                     BigDecimal fraction = memberAccount.calcFactorOfEntireLoan();
-                    memberAccount.makeEarlyRepayment(totalAmount.divide(fraction), transactionDate, receiptNumber, receiptDate,
-                            paymentTypeId, personnelId, waiveInterest, interestDue, null);
+                    paymentDto.setTotalAmount(new BigDecimal(paymentDto.getTotalAmount()).divide(fraction).doubleValue());
+                    memberAccount.makeEarlyRepayment(paymentDto, personnelId, waiveInterest, interestDue,
+                            null,null);
                 }
             }
+            this.legacyAccountDao.createOrUpdate(accountPaymentEntity);
+            this.legacyAccountDao.createOrUpdate(this);
+            
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
@@ -1870,7 +1968,7 @@ public class LoanBO extends AccountBO implements Loan {
                         .getPaymentTypeId()), paymentData.getTransactionDate());
         accountPayment.setCreatedByUser(paymentData.getPersonnel());
         accountPayment.setComment(paymentData.getComment());
-
+        accountPayment.setParentPaymentId(paymentData.getParentPayment());
         //for savings transfers
         AccountPaymentEntity otherTransferPayment = paymentData.getOtherTransferPayment();
         if (otherTransferPayment != null) {
@@ -3714,38 +3812,39 @@ public class LoanBO extends AccountBO implements Loan {
      * 
      */
     private void applyPaymentToMemberAccounts(PaymentData paymentData, BigDecimal installmentsPaid) throws AccountException {
-        
-        for (LoanBO memberAccount : getMemberAccounts()) {
-            if(validateNoOfInstallments(memberAccount)) {
-                BigDecimal memberPaid = memberAccount.findNumberOfPaidInstallments();
-                List<LoanScheduleEntity> memberInstallments = memberAccount.getLoanInstallments();
-                Money memberPaymentAmount = new Money(getCurrency());
-                int currentPayment;
-                
-                //Full payments for installments that are expected to be paid fully
-                for(currentPayment = memberPaid.intValue(); currentPayment < installmentsPaid.intValue() ; currentPayment++) {
-                    memberPaymentAmount = memberPaymentAmount.add(memberInstallments.get(currentPayment).getAmountToBePaidToGetExpectedProportion(BigDecimal.ONE));
-                }
-                
-                BigDecimal afterComa = installmentsPaid.subtract(new BigDecimal(installmentsPaid.intValue()));
-                //If there is fraction in number of installments to be paid
-                if(afterComa.compareTo(BigDecimal.ZERO)==1) {
-                    memberPaymentAmount = memberPaymentAmount.add(memberInstallments.get(currentPayment).getAmountToBePaidToGetExpectedProportion(afterComa));
-                }
-                
-                //It prevents member account to be closed before parent due to small last payments in parent account. Member accounts will remain in minimalPayment unpaid until last payment for parent account will be submitted
-                if(getState().compareTo(AccountState.LOAN_CLOSED_OBLIGATIONS_MET)!=0 && memberPaymentAmount.subtract((memberAccount.getTotalRepayableAmount())).isTinyAmount()) {
-                    Double minimalPayment = Math.pow(10.0, (double)-AccountingRules.getDigitsAfterDecimal());
-                    memberPaymentAmount = memberPaymentAmount.subtract(new Money(getCurrency(), minimalPayment));
-                }
-                
-                memberPaymentAmount = MoneyUtils.currencyRound(memberPaymentAmount);
-                       
-                PaymentData memberPayment = new PaymentData(memberPaymentAmount, paymentData.getPersonnel(),
-                        paymentData.getPaymentTypeId(), paymentData.getTransactionDate());
-                
-                if(!memberPaymentAmount.isTinyAmount() && !memberPaymentAmount.isLessThanZero()) {
-                    memberAccount.applyPayment(memberPayment);
+        if(!isGroupLoanAccount()) {
+            for (LoanBO memberAccount : getMemberAccounts()) {
+                if(validateNoOfInstallments(memberAccount)) {
+                    BigDecimal memberPaid = memberAccount.findNumberOfPaidInstallments();
+                    List<LoanScheduleEntity> memberInstallments = memberAccount.getLoanInstallments();
+                    Money memberPaymentAmount = new Money(getCurrency());
+                    int currentPayment;
+                    
+                    //Full payments for installments that are expected to be paid fully
+                    for(currentPayment = memberPaid.intValue(); currentPayment < installmentsPaid.intValue() ; currentPayment++) {
+                        memberPaymentAmount = memberPaymentAmount.add(memberInstallments.get(currentPayment).getAmountToBePaidToGetExpectedProportion(BigDecimal.ONE));
+                    }
+                    
+                    BigDecimal afterComa = installmentsPaid.subtract(new BigDecimal(installmentsPaid.intValue()));
+                    //If there is fraction in number of installments to be paid
+                    if(afterComa.compareTo(BigDecimal.ZERO)==1) {
+                        memberPaymentAmount = memberPaymentAmount.add(memberInstallments.get(currentPayment).getAmountToBePaidToGetExpectedProportion(afterComa));
+                    }
+                    
+                    //It prevents member account to be closed before parent due to small last payments in parent account. Member accounts will remain in minimalPayment unpaid until last payment for parent account will be submitted
+                    if(getState().compareTo(AccountState.LOAN_CLOSED_OBLIGATIONS_MET)!=0 && memberPaymentAmount.subtract((memberAccount.getTotalRepayableAmount())).isTinyAmount()) {
+                        Double minimalPayment = Math.pow(10.0, (double)-AccountingRules.getDigitsAfterDecimal());
+                        memberPaymentAmount = memberPaymentAmount.subtract(new Money(getCurrency(), minimalPayment));
+                    }
+                    
+                    memberPaymentAmount = MoneyUtils.currencyRound(memberPaymentAmount);
+                           
+                    PaymentData memberPayment = new PaymentData(memberPaymentAmount, paymentData.getPersonnel(),
+                            paymentData.getPaymentTypeId(), paymentData.getTransactionDate());
+                    
+                    if(!memberPaymentAmount.isTinyAmount() && !memberPaymentAmount.isLessThanZero()) {
+                        memberAccount.applyPayment(memberPayment);
+                    }
                 }
             }
         }
@@ -3789,14 +3888,20 @@ public class LoanBO extends AccountBO implements Loan {
     public void adjustLastPayment(final String adjustmentComment, PersonnelBO loggedInUser) throws AccountException {
         if (isAdjustPossibleOnLastTrxn()) {
             logger.debug("Adjustment is possible hence attempting to adjust.");
-            adjustPayment(getLastPmntToBeAdjusted(), loggedInUser, adjustmentComment);
+            AccountPaymentEntity lastPmntToBeAdjusted = getLastPmntToBeAdjusted();
+            Money equalizingPaymentAmount = lastPmntToBeAdjusted.getAmount();
+            short equalizingPaymentTypeId = lastPmntToBeAdjusted.getPaymentType().getId();
+            Date equalizingPaymentDate = lastPmntToBeAdjusted.getPaymentDate();
+            
+            adjustPayment(lastPmntToBeAdjusted, loggedInUser, adjustmentComment);
             if (hasMemberAccounts()) {
                 for (LoanBO memberAccount : this.memberAccounts) {
                     memberAccount.setUserContext(this.userContext);
                     memberAccount.adjustLastPayment(adjustmentComment, loggedInUser);
                 }
                 //MIFOS-5742: equalizing payment made to solve the problem with adjusting very small payment on GLIM account
-                PaymentData equalizingPaymentData = new PaymentData(getLastPmntToBeAdjusted().getAmount(), loggedInUser, getLastPmntToBeAdjusted().getPaymentType().getId(), getLastPmntToBeAdjusted().getPaymentDate());
+                PaymentData equalizingPaymentData = 
+                        new PaymentData(equalizingPaymentAmount, loggedInUser, equalizingPaymentTypeId, equalizingPaymentDate);
                 BigDecimal installmentsPaid = findNumberOfPaidInstallments();
                 applyPaymentToMemberAccounts(equalizingPaymentData, installmentsPaid);
             }
@@ -3907,8 +4012,6 @@ public class LoanBO extends AccountBO implements Loan {
             }
         }
         applyAllPenaltiesToMemberAccounts();
-        
-        applyRoundingOnInstallments(getLoanInstallments(), getLoanInstallments());
 
         List<AccountPaymentEntity> parentPayments = getAccountPayments();
 

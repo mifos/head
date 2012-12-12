@@ -59,7 +59,10 @@ public class AccountPaymentEntity extends AbstractEntity {
     private PersonnelBO createdByUser;
     private String comment;
     private AccountPaymentEntity otherTransferPayment;
+    private AccountPaymentEntity parentPaymentId;
 
+    //member payments from member loans from new group loan
+    private Set<AccountPaymentEntity> memberPayments = new LinkedHashSet<AccountPaymentEntity>(); 
     private Set<AccountTrxnEntity> accountTrxns = new LinkedHashSet<AccountTrxnEntity>();
 
     public static AccountPaymentEntity savingsInterestPosting(SavingsBO account, Money amount, Date paymentDate, PersonnelBO loggedInUser) {
@@ -88,6 +91,21 @@ public class AccountPaymentEntity extends AbstractEntity {
         this.voucherNumber = null;
         this.checkNumber = null;
         this.otherTransferPayment = null;
+    }
+    
+    public AccountPaymentEntity(final AccountBO account, final Money amount, final String receiptNumber, final Date receiptDate,
+            final PaymentTypeEntity paymentType, final Date paymentDate, AccountPaymentEntity parentPaymentId) {
+        this.paymentDate = paymentDate;
+        this.account = account;
+        this.receiptNumber = receiptNumber;
+        this.paymentType = paymentType;
+        this.receiptDate = receiptDate;
+        this.amount = amount;
+        this.bankName = null;
+        this.voucherNumber = null;
+        this.checkNumber = null;
+        this.otherTransferPayment = null;
+        this.parentPaymentId = parentPaymentId;
     }
 
     public Integer getPaymentId() {
@@ -162,6 +180,14 @@ public class AccountPaymentEntity extends AbstractEntity {
         this.otherTransferPayment = otherTransferPayment;
     }
 
+    public Set<AccountPaymentEntity> getMemberPayments() {
+        return memberPayments;
+    }
+
+    public void setMemberPayments(Set<AccountPaymentEntity> memberPayments) {
+        this.memberPayments = memberPayments;
+    }
+
     /**
      * Create reverse entries of all the transactions associated with this
      * payment and adds them to the set of transactions associated.
@@ -212,6 +238,14 @@ public class AccountPaymentEntity extends AbstractEntity {
         this.account = account;
     }
 
+    public AccountPaymentEntity getParentPaymentId() {
+        return parentPaymentId;
+    }
+
+    public void setParentPaymentId(AccountPaymentEntity parentPaymentId) {
+        this.parentPaymentId = parentPaymentId;
+    }
+
     public boolean isSavingsDepositOrWithdrawal() {
         return isSavingsDeposit() || isSavingsWithdrawal();
     }
@@ -246,7 +280,22 @@ public class AccountPaymentEntity extends AbstractEntity {
         }
         return savingsInterestPosting;
     }
+    
+    public boolean isLoanDisbursment() {
+        boolean loanDisbursment = false;
+        for (AccountTrxnEntity trxn : this.accountTrxns) {
+            if (trxn.isLoanDisbursal()) {
+                loanDisbursment = true;
+                break;
+            }
+        }
+        return loanDisbursment;
+    }
 
+    public boolean hasParentPayment(){
+        return this.parentPaymentId != null;
+    }
+    
     public PaymentDto getOtherTransferPaymentDto() {
         return (otherTransferPayment == null) ? null :
             new PaymentDto(otherTransferPayment.getPaymentId(), otherTransferPayment.getAccount().getAccountId(),

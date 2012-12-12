@@ -633,3 +633,6 @@ select {
 .no-list-style{
     list-style : none;
 }
+.paddingright20{
+padding-right: 20px;
+}

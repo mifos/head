@@ -42,6 +42,7 @@ public class ReportsBO extends AbstractBusinessObject {
     private Short activityId;
     private Short isActive;
     public static final Short ACTIVE = Short.valueOf("1");
+    private Boolean isDW;
 
     public Short getReportId() {
         return reportId;
@@ -102,5 +103,14 @@ public class ReportsBO extends AbstractBusinessObject {
     public void setIsActive(Short isActive) {
         this.isActive = isActive;
     }
+
+	public Boolean getIsDW() {
+		return isDW;
+	}
+
+	public void setIsDW(Boolean isDW) {
+		this.isDW = isDW;
+	}
+  
 
 }

@@ -53,4 +53,5 @@ public class OriginalScheduleInfoDto implements Serializable {
     public boolean hasOriginalInstallments() {
         return originalLoanScheduleInstallments != null && !originalLoanScheduleInstallments.isEmpty();
     }
+    
 }

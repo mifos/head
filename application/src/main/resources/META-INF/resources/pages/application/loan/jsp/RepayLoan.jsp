@@ -50,7 +50,9 @@ explanation of the license and how it is applied.
 
 		<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
-		<form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+		
+		<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
+		<form name="goBackToLoanAccountDetails" method="get" action ="${formAction }">
 			<input type="hidden" name='globalAccountNum' value="${param.globalAccountNum}"/>
 		</form>
 		<html-el:form action="repayLoanAction.do?method=preview&globalAccountNum=${param.globalAccountNum}"

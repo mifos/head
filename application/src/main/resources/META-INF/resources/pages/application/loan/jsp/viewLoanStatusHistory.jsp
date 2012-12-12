@@ -27,9 +27,9 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <script language="javascript">
-	function fun_return(form)
+	function fun_return(form, url)
 		{
-			form.action="viewLoanAccountDetails.ftl";
+			form.action=url;
 			form.method="get";
 			form.submit();
 		}
@@ -64,10 +64,11 @@ explanation of the license and how it is applied.
 					<customtable:mifostabletag source="statusHistory" scope="session"
 						xmlFileName="LoanStatusChangeHistory.xml" moduleName="org/mifos/accounts/loan/util/resources"
 						passLocale="true" /> <br>
+					<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center"><html-el:button styleId="viewLoanStatusHistory.button.return" property="btn"
-								onclick="fun_return(this.form);" styleClass="buttn">
+								onclick="fun_return(this.form, '${formAction }');" styleClass="buttn">
 								<mifos:mifoslabel name="Account.returnToAccountDetails"
 									bundle="accountsUIResources" />
 							</html-el:button></td>

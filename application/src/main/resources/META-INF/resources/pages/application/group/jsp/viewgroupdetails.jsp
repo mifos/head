@@ -203,7 +203,6 @@ explanation of the license and how it is applied.
 						</c:if>
 					</table>
 
-
 					<c:if test="${!empty groupInformationDto.loanAccountsInUse}">
 						<table width="96%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
@@ -226,14 +225,13 @@ explanation of the license and how it is applied.
 											<table width="100%" border="0" cellspacing="0"
 												cellpadding="0">
 												<tr>
-
 													<td width="65%"><span class="fontnormal"> 
-													<c:url value="viewLoanAccountDetails.ftl" var="viewLoanAccountDetailsUrl" >
-														<c:param name="globalAccountNum" value="${loan.globalAccountNum}" />
-														<c:param name="customerId" value="${groupInformationDto.groupDisplay.customerId}" />
-														<c:param name="recordOfficeId" value="${param.recordOfficeId}" />
-														<c:param name="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
-													</c:url >
+															<c:url value="viewLoanAccountDetails.ftl" var="viewLoanAccountDetailsUrl" >
+																<c:param name="globalAccountNum" value="${loan.globalAccountNum}" />
+																<c:param name="customerId" value="${groupInformationDto.groupDisplay.customerId}" />
+																<c:param name="recordOfficeId" value="${param.recordOfficeId}" />
+																<c:param name="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
+															</c:url >
 													<html-el:link styleId="viewgroupdetails.link.viewLoanAccount"
 														href="${viewLoanAccountDetailsUrl}">
 														<c:out value="${loan.prdOfferingName}" />, <mifos:mifoslabel name="Group.acc" bundle="GroupUIResources" /><c:out

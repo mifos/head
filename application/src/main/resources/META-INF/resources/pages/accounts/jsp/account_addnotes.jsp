@@ -25,7 +25,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -37,16 +37,16 @@ function goToCancelPage(){
 	goBackToAccountDetails.submit();
   }
 </script>
+	<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
 	<c:if test="${sessionScope.notesActionForm.accountTypeId == '1'}">
-		<form name="goBackToAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
-			<input type="hidden" name='globalAccountNum' value="${sessionScope.notesActionForm.globalAccountNum}"/>
-		</form>  
+		<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
 	</c:if>
 	<c:if test="${sessionScope.notesActionForm.accountTypeId == '2'}">
-		<form name="goBackToAccountDetails" method="get" action ="viewSavingsAccountDetails.ftl">
+		<c:set value="viewSavingsAccountDetails.ftl" var="formAction" />
+	</c:if>
+		<form name="goBackToAccountDetails" method="get" action ="${formAction }">
 			<input type="hidden" name='globalAccountNum' value="${sessionScope.notesActionForm.globalAccountNum}"/>
 		</form>  
-	</c:if>
 		<html-el:form
 			action="notesAction.do?method=preview&globalAccountNum=${sessionScope.notesActionForm.globalAccountNum}">
 

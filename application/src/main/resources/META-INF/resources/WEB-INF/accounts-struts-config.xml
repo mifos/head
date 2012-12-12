@@ -79,7 +79,7 @@
             <forward name="search_success" path="/pages/accounts/jsp/account_notes.jsp"/>
             <forward name="preview_success" path="/pages/accounts/jsp/account_previewnotes.jsp"/>
             <forward name="previous_success" path="/pages/accounts/jsp/account_addnotes.jsp"/>
-            <forward name="loan_detail_page" path="/loanAccountAction.do?method=get"/>
+            <forward name="loan_detail_page" path="/loanAccountAction.do?method=getDetails"/>
             <forward name="savings_details_page" path="/savingsAction.do?method=get"/>
             <forward name="preview_failure" path="/pages/accounts/jsp/account_addnotes.jsp"/>
             <forward name="create_failure" path="/pages/accounts/jsp/account_previewnotes.jsp"/>
@@ -95,7 +95,7 @@
             <forward name="preview_success" path="/pages/application/loan/jsp/Review_loanDisbursement.jsp"/>
             <forward name="preview_failure" path="/pages/application/loan/jsp/DisburseLoan.jsp"/>
             <forward name="previous_success" path="/pages/application/loan/jsp/DisburseLoan.jsp"/>
-            <forward name="update_success" path="/loanAccountAction.do?method=get"/>
+            <forward name="update_success" path="/loanAccountAction.do?method=getDetails"/>
             <forward name="update_failure" path="/pages/application/loan/jsp/Review_loanDisbursement.jsp"/>
             <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
         </action>
@@ -105,9 +105,10 @@
                 parameter="method" scope="session" name="repayLoanActionForm" validate="true"
                 input="/repayLoanAction.do?method=validate">
             <forward name="load_success" path="/pages/application/loan/jsp/RepayLoan.jsp"/>
+            <forward name="load_group_success" path="/pages/application/loan/jsp/RepayLoan.jsp"/>
             <forward name="preview_success" path="/pages/application/loan/jsp/Review_RepayLoan.jsp"/>
             <forward name="previous_success" path="/pages/application/loan/jsp/RepayLoan.jsp"/>
-            <forward name="update_success" path="/loanAccountAction.do?method=get"/>
+            <forward name="update_success" path="/loanAccountAction.do?method=getDetails"/>
             <forward name="update_failure" path="/pages/application/loan/jsp/Review_RepayLoan.jsp"/>
             <forward name="preview_failure" path="/pages/application/loan/jsp/RepayLoan.jsp"/>
             <forward name="printPaymentReceipt" path="printPaymentReceipt.ftl" redirect="true"/>
@@ -120,7 +121,7 @@
             <forward name="remove_group_charges" path="/customerAccountAction.do?method=load"/>
             <forward name="remove_center_charges" path="/customerAccountAction.do?method=load"/>
             <forward name="remove_client_charges" path="/customerAccountAction.do?method=load"/>
-            <forward name="remove_success" path="/loanAccountAction.do?method=get"/>
+            <forward name="remove_success" path="/loanAccountAction.do?method=getDetails"/>
             <forward name="removeFees_Client_failure"
                      path="/pages/application/client/jsp/view_clientchargesdetail.jsp"/>
             <forward name="removeFees_Group_failure" path="/pages/application/group/jsp/view_groupchargesdetail.jsp"/>
@@ -137,10 +138,11 @@
                 input="/pages/accounts/jsp/applyadjustment.jsp" scope="session">
             <forward name="loadadjustment_success" path="/pages/accounts/jsp/applyadjustment.jsp"/>
             <forward name="loadadjustments_success" path="/pages/accounts/jsp/listAdjustments.jsp"/>
+            <forward name="divideadjustment_success" path="/pages/accounts/jsp/dividegroupadjustment.jsp"/>
             <forward name="loadAdjustment_failure" path="/pages/accounts/jsp/applyadjustment.jsp"/>
             <forward name="previewadj_success" path="/pages/accounts/jsp/applyadjustment.jsp"/>
-            <forward name="canceladj_success" path="/loanAccountAction.do?method=get"/>
-            <forward name="applyadj_success" path="/loanAccountAction.do?method=get"/>
+            <forward name="canceladj_success" path="/loanAccountAction.do?method=getDetails"/>
+            <forward name="applyadj_success" path="/loanAccountAction.do?method=getDetails"/>
             <forward name="previewAdjustment_failure" path="/pages/accounts/jsp/applyadjustment.jsp"/>
             <forward name="cancelAdjustment_failure" path="/pages/accounts/jsp/applyadjustment.jsp"/>
             <forward name="applyAdjustment_failure" path="/pages/accounts/jsp/applyadjustment.jsp"/>
@@ -183,13 +185,16 @@
             <forward name="previous_success" path="/pages/accounts/jsp/applypayment.jsp"/>
             <forward name="applyPayment_success" path="/customerAccountAction.do?method=load"/>
             <forward name="applyPayment_failure" path="/pages/accounts/jsp/reviewapplypayment.jsp"/>
-            <forward name="loan_detail_page" path="/loanAccountAction.do?method=get"/>
+            <forward name="loan_detail_page" path="/loanAccountAction.do?method=getDetails"/>
             <forward name="printPaymentReceipt" path="printPaymentReceipt.ftl" redirect="true"/>
         </action>
         <!--  redo loan -->
+
         <action path="/loanAccountAction" type="org.mifos.accounts.loan.struts.action.LoanAccountAction"
                 name="loanAccountActionForm" parameter="method"
                 input="/loanAccountAction.do?method=validate" scope="session" validate="true" >
+            <forward name="get" path="/loanAccountAction.do?method=get"/>
+            <forward name="getGroupLoanAccountDetails" path="/loanAccountAction.do?method=getGroupLoanAccountDetails"/>
             <forward name="viewInstmentDetails_success" path="/pages/application/loan/jsp/nextPayment_loanAccount.jsp"/>
             <forward name="getInstallmentDetails_failure"
                      path="/pages/application/loan/jsp/nextPayment_loanAccount.jsp"/>
@@ -211,14 +216,14 @@
             <forward name="manage_success" path="/pages/application/loan/jsp/editLoanAccount.jsp"/>
             <forward name="managepreview_success" path="/pages/application/loan/jsp/editPreviewLoanAccount.jsp"/>
             <forward name="managepreview_failure" path="/pages/application/loan/jsp/editLoanAccount.jsp"/>
-            <forward name="update_success" path="/loanAccountAction.do?method=get"/>
+            <forward name="update_success" path="/loanAccountAction.do?method=getDetails"/>
             <forward name="update_failure" path="/pages/application/loan/jsp/editPreviewLoanAccount.jsp"/>
             <forward name="manageprevious_success" path="/pages/application/loan/jsp/editLoanAccount.jsp"/>
             <forward name="loan_detail_page" path="/loanAccountAction.do?method=get"/>
 
             <!--  Audit Log -->
             <forward name="viewLoanChangeLog" path="/pages/application/loan/jsp/viewChangeLog.jsp"/>
-            <forward name="cancelLoanChangeLog" path="/loanAccountAction.do?method=get"/>
+            <forward name="cancelLoanChangeLog" path="/loanAccountAction.do?method=getDetails"/>
             
             <forward name="viewAndEditAdditionalInformation" path="/viewAndEditQuestionnaire.ftl"/>
         </action>
@@ -241,7 +246,7 @@
                 input="/editStatusAction.do?method=validate" validate="true"
                 scope="session">
             <forward name="load_success" path="/pages/accounts/jsp/change_status.jsp"/>
-            <forward name="loan_detail_page" path="/loanAccountAction.do?method=get"/>
+            <forward name="loan_detail_page" path="/loanAccountAction.do?method=getDetails"/>
             <forward name="savings_details_page" path="/savingsAction.do?method=get"/>
             <forward name="preview_success" path="/pages/accounts/jsp/change_status_preview.jsp"/>
             <forward name="previous_success" path="/pages/accounts/jsp/change_status.jsp"/>
@@ -261,7 +266,9 @@
             <forward name="clientDetails_success" path="/customerAccountAction.do?method=load"/>
             <forward name="groupDetails_success" path="/customerAccountAction.do?method=load"/>
             <forward name="centerDetails_success" path="/customerAccountAction.do?method=load"/>
-
+            <forward name="divide" path="/pages/accounts/jsp/divideGroupCharges.jsp"/>
+            <forward name="groupLoan_sucess" path="/loanAccountAction.do?method=getGroupLoanAccountDetails"/>
+            <forward name="groupIndividualLoan_sucess" path="/groupIndividualLoanAccountAction.do?method=get"/>
         </action>
 
         <action path="/multipleloansaction"
@@ -374,6 +381,32 @@
 			<forward name="load_success"
 				path="/pages/application/loan/jsp/yearEndProcess.jsp" />
 		</action>
+		
+		<!-- Group Loan -->
+       <action path="/groupIndividualLoanAccountAction" type="org.mifos.accounts.loan.struts.action.GroupIndividualLoanAccountAction"
+                name="loanAccountActionForm" parameter="method"
+                input="/groupIndividualLoanAccountAction.do?method=validate" scope="session" validate="true" >
+                <forward name="get_success" path="/pages/application/loan/jsp/loanaccountdetail.jsp"/>
+        </action>
+        <action path="/applyIndividualPayment" type="org.mifos.accounts.struts.action.AccountApplyGroupIndividualAction"
+            name="applyPaymentActionForm" parameter="method"
+            input="/applyIndividualPayment.do?method=validate" scope="session" validate="true">
+         	<forward name="load_success" path="/pages/accounts/jsp/applypayment.jsp"/>
+        </action>        
+        <action path="/applyGroupPaymentAction" type="org.mifos.accounts.struts.action.AccountApplyGroupPaymentAction"
+                name="applyPaymentActionForm" parameter="method"
+                input="/applyGroupPaymentAction.do?method=validate" scope="session" validate="true">
+            <forward name="load_success" path="/pages/accounts/jsp/applyGroupPayment.jsp"/>
+            <forward name="divide" path="/pages/accounts/jsp/divideGroupPayment.jsp"/>
+            <forward name="divide_failure" path="/pages/accounts/jsp/divideGroupPayment.jsp"/>
+            <forward name="preview_success" path="/pages/accounts/jsp/previewApplyGroupPayment.jsp"/>
+            <forward name="preview_failure" path="/pages/accounts/jsp/applyGroupPayment.jsp"/>
+            <forward name="previous_success" path="/pages/accounts/jsp/applyGroupPayment.jsp"/>
+            <forward name="applyPayment_success" path="/customerAccountAction.do?method=load"/>
+            <forward name="applyPayment_failure" path="/pages/accounts/jsp/previewApplyGroupPayment.jsp"/>
+            <forward name="loan_detail_page" path="/groupLoanAccountAction.do?method=get"/>
+        </action>
+       <!-- Group Loan end -->
     </action-mappings>
 
 <!-- 

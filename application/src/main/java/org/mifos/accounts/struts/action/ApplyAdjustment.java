@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.struts.action;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -37,11 +38,17 @@ import org.mifos.accounts.business.AdjustablePaymentDto;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.accounts.struts.actionforms.ApplyAdjustmentActionForm;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.application.servicefacade.GroupLoanAccountServiceFacade;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.AdjustedPaymentDto;
+import org.mifos.dto.domain.GroupIndividualLoanDto;
+import org.mifos.dto.screen.AccountPaymentDto;
+import org.mifos.dto.screen.GroupLoanMemberAdjustmentDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -59,6 +66,12 @@ import org.mifos.security.util.UserContext;
  */
 public class ApplyAdjustment extends BaseAction {
    
+    private GroupLoanAccountServiceFacade groupLoanService;
+    
+    public ApplyAdjustment() {
+        this.groupLoanService = ApplicationContextProvider.getBean(GroupLoanAccountServiceFacade.class);
+    }
+
     @Override
     protected BusinessService getService() throws ServiceException {
         return new AccountBusinessService();
@@ -138,14 +151,29 @@ public class ApplyAdjustment extends BaseAction {
             appAdjustActionForm.setPaymentId(null);
             SessionUtils.setAttribute(Constants.ADJUSTED_AMOUNT, accnt.getLastPmntAmntToBeAdjusted(), request);
         }
+        
+        if (accnt.isParentGroupLoanAccount()) {
+            SessionUtils.setAttribute(Constants.TYPE_OF_GROUP_LOAN, "parentAcc", request);
+        } else if (accnt.isGroupLoanAccountMember()){
+            appAdjustActionForm.setGroupLoanMember(Boolean.TRUE);
+        }
+        
         populateForm(appAdjustActionForm, payment);
         return mapping.findForward("loadadjustment_success");
     }
 
     @TransactionDemarcate(joinToken = true)
+    public ActionForward loanGroupAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        
+        return mapping.findForward("loadgroupadjustment_success");
+    }
+    
+    @TransactionDemarcate(joinToken = true)
     public ActionForward listPossibleAdjustments(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+        this.resetActionFormFields(appAdjustActionForm);
         AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
         
         boolean decliningRecalculation = false;
@@ -230,10 +258,37 @@ public class ApplyAdjustment extends BaseAction {
             }
         }
         
+        if ( appAdjustActionForm.getNewAmounts() != null && !appAdjustActionForm.getNewAmounts().isEmpty()){
+            Double newAmount = 0.0;
+            for (String memberNewAmount : appAdjustActionForm.getNewAmounts().values()){
+                newAmount += Double.valueOf(memberNewAmount);
+            }
+            appAdjustActionForm.setAmount(newAmount.toString());
+        }
+        
         request.setAttribute("method", "previewAdjustment");
         return mapping.findForward("previewadj_success");
     }
 
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward divide(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        ApplyAdjustmentActionForm applyAdjustmentActionForm = (ApplyAdjustmentActionForm) form;
+        Integer parentAccountId = getBizService().findBySystemId(applyAdjustmentActionForm.getGlobalAccountNum()).getAccountId();
+        Integer parentPaymentId = applyAdjustmentActionForm.getPaymentId();
+        BigDecimal newAmount = new BigDecimal(applyAdjustmentActionForm.getAmount());
+        
+        if (applyAdjustmentActionForm.getAdjustcheckbox()){
+            newAmount = BigDecimal.ZERO;
+        }
+        
+        List<GroupLoanMemberAdjustmentDto> memberAdjustmentDtoList = this.groupLoanService.retrieveMemberAdjustmentDtos(parentAccountId, parentPaymentId, newAmount);
+        
+        applyAdjustmentActionForm.setMemberAdjustmentDtoList(memberAdjustmentDtoList);
+        
+        return mapping.findForward("divideadjustment_success");
+    }
+    
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
     public ActionForward applyAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -250,8 +305,13 @@ public class ApplyAdjustment extends BaseAction {
                         appAdjustActionForm.getAdjustmentNote(), userContext.getId());
             } else {
                 AdjustedPaymentDto adjustedPaymentDto = appAdjustActionForm.getPaymentData();
-                accountServiceFacade.applyHistoricalAdjustment(appAdjustActionForm.getGlobalAccountNum(), paymentId,
-                        appAdjustActionForm.getAdjustmentNote(), userContext.getId(), adjustedPaymentDto);
+                if (appAdjustActionForm.isGroupLoanMember()){
+                    accountServiceFacade.applyMemberAccountHistoricalAdjustment(appAdjustActionForm.getGlobalAccountNum(), paymentId,
+                    appAdjustActionForm.getAdjustmentNote(), userContext.getId(), adjustedPaymentDto);
+                } else {
+                    accountServiceFacade.applyHistoricalAdjustment(appAdjustActionForm.getGlobalAccountNum(), paymentId,
+                            appAdjustActionForm.getAdjustmentNote(), userContext.getId(), adjustedPaymentDto);
+                }
             }
         } catch (MifosRuntimeException e) {
             request.setAttribute("method", "previewAdjustment");
@@ -282,6 +342,7 @@ public class ApplyAdjustment extends BaseAction {
     private void resetActionFormFields(ApplyAdjustmentActionForm appAdjustActionForm) {
         appAdjustActionForm.setAdjustmentNote(null);
         appAdjustActionForm.setPaymentId(null);
+        appAdjustActionForm.setGroupLoanMember(Boolean.FALSE);
     }
 
     @Override
@@ -301,6 +362,11 @@ public class ApplyAdjustment extends BaseAction {
             form.setPaymentType(String.valueOf(payment.getPaymentType().getId()));
             form.setAmount(payment.getAmount().toString());
             form.setTrxnDate(payment.getPaymentDate());
+            form.setAccountId(payment.getAccount().getAccountId());
         }
+        if (form.getMemberAdjustmentDtoList()!= null){
+            form.getMemberAdjustmentDtoList().clear();
+        }
+        form.getNewAmounts().clear();
     }
 }

@@ -165,7 +165,7 @@
                 class="org.mifos.accounts.loan.business.LoanBO" not-null="false">
             </many-to-one>
 
-            <set name="memberAccounts" cascade="all" lazy="true" access="field">
+            <set name="memberAccounts" cascade="all" lazy="true" access="field" order-by="account_id asc">
                 <key column="parent_account_id" />
                 <one-to-many class="org.mifos.accounts.loan.business.LoanBO"></one-to-many>
             </set>
@@ -175,7 +175,6 @@
                 type="org.mifos.application.meeting.util.helpers.WeekDayUserType" />
             <property name="monthRank" column="month_rank"
                 type="org.mifos.application.meeting.util.helpers.RankOfDayUserType" />
-
         </joined-subclass>
         <!-- This is for savings account-->
         <joined-subclass name="org.mifos.accounts.savings.business.SavingsBO"
@@ -588,7 +587,8 @@ having max(cs.installment_id) > max(cfs.installment_id)
         from org.mifos.accounts.business.AccountBO account
         left join account.customer
         where account.customer.customerId=:customerId
-        and (account.accountType.accountTypeId=:loanAccountTypeId or account.accountType.accountTypeId=:savingsAccountTypeId)
+        and (account.accountType.accountTypeId=:loanAccountTypeId or account.accountType.accountTypeId=:savingsAccountTypeId
+        or account.accountType.accountTypeId=:groupLoanAccountTypeId)
         and account.globalAccountNum=:searchString ]]>
     </query>
 
@@ -1050,6 +1050,12 @@ select coll.*,
             order by account.parentAccount.id
         ]]>
     </query>
+    <query name="LoanBO.getMemberDetails">
+        <![CDATA[from org.mifos.accounts.loan.business.LoanBO account 
+            where account.parentAccount.accountId=:ACCOUNT_ID
+        ]]>
+    </query>
+    
     
     <query name="loan.getAllBadStandingLoans">
         <![CDATA[ 

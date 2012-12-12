@@ -105,14 +105,14 @@
 <br/>
 <br/>
 
-[#if loanProductReferenceData.glimApplicable]
+[#if loanProductReferenceData.glimApplicable || (loanProductReferenceData.group && loanProductReferenceData.groupLoanWithMembersEnabled)]
 <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.accountDetail.glim.individualdetails.header" /]</span></p>
 [#else]
 <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.accountDetail.header" /]</span></p>
 [/#if]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
     <fieldset>
-    [#if loanProductReferenceData.glimApplicable]
+    [#if loanProductReferenceData.glimApplicable || (loanProductReferenceData.group && loanProductReferenceData.groupLoanWithMembersEnabled)]
     <script type="text/javascript">
     	function calculateTotalLoanAmount() {
     		$(document).ready(function () {

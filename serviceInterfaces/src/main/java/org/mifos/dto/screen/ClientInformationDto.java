@@ -49,6 +49,7 @@ public class ClientInformationDto implements Serializable {
     private final List<CustomerNoteDto> recentCustomerNotes;
     private final List<CustomerFlagDto> customerFlags;
     private final List<LoanDetailDto> loanAccountsInUse;
+    private final List<LoanDetailDto> groupLoanAccountsInUse;
     private final List<SavingsDetailDto> savingsAccountsInUse;
     private final CustomerMeetingDto customerMeeting;
     private final Boolean activeSurveys;
@@ -61,7 +62,7 @@ public class ClientInformationDto implements Serializable {
             final CustomerAccountSummaryDto customerAccountSummary,
             final ClientPerformanceHistoryDto clientPerformanceHistory, final CustomerAddressDto address,
             final List<CustomerNoteDto> recentCustomerNotes, final List<CustomerFlagDto> customerFlags,
-            final List<LoanDetailDto> loanAccountsInUse, final List<SavingsDetailDto> savingsAccountsInUse,
+            final List<LoanDetailDto> loanAccountsInUse, List<LoanDetailDto> groupLoanAccountsInUse, final List<SavingsDetailDto> savingsAccountsInUse,
             final CustomerMeetingDto customerMeeting, final Boolean activeSurveys,
             final List<SurveyDto> customerSurveys) {
         this.clientDisplay = clientDisplay;
@@ -71,6 +72,7 @@ public class ClientInformationDto implements Serializable {
         this.recentCustomerNotes = recentCustomerNotes;
         this.customerFlags = customerFlags;
         this.loanAccountsInUse = loanAccountsInUse;
+        this.groupLoanAccountsInUse = groupLoanAccountsInUse;
         this.savingsAccountsInUse = savingsAccountsInUse;
         this.customerMeeting = customerMeeting;
         this.activeSurveys = activeSurveys;
@@ -86,6 +88,7 @@ public class ClientInformationDto implements Serializable {
     		final List<CustomerNoteDto> recentCustomerNotes,
     		final List<CustomerFlagDto> customerFlags,
     		final List<LoanDetailDto> loanAccountsInUse,
+    		List<LoanDetailDto> groupLoanAccountsInUse,
     		final List<SavingsDetailDto> savingsAccountsInUse,
     		final CustomerMeetingDto customerMeeting, Boolean activeSurveys,
     		final List<SurveyDto> customerSurveys,
@@ -98,6 +101,7 @@ public class ClientInformationDto implements Serializable {
 		this.recentCustomerNotes = recentCustomerNotes;
 		this.customerFlags = customerFlags;
 		this.loanAccountsInUse = loanAccountsInUse;
+		this.groupLoanAccountsInUse = groupLoanAccountsInUse;
 		this.savingsAccountsInUse = savingsAccountsInUse;
 		this.customerMeeting = customerMeeting;
 		this.activeSurveys = activeSurveys;
@@ -157,4 +161,9 @@ public class ClientInformationDto implements Serializable {
 	public List<SavingsDetailDto> getClosedSavingsAccounts() {
 		return closedSavingsAccounts;
 	}
+
+    public List<LoanDetailDto> getGroupLoanAccountsInUse() {
+        return groupLoanAccountsInUse;
+    }
+	
 }
