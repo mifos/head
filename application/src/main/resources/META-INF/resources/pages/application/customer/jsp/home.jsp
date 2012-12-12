@@ -146,14 +146,18 @@ explanation of the license and how it is applied.
                         </tr>
                         <tr>
                             <td class="paddingL10"><span class="fontnormal">
-                            <mifos:mifoslabel name="CustomerSearch.dashboardBorrowers"/>:
+                            <c:url value="viewTotalBorrowersDBDetails.ftl" var="viewTotalBorrowersDBDetailsUrl" />
+                            <a href="${viewTotalBorrowersDBDetailsUrl}">
+                            <mifos:mifoslabel name="CustomerSearch.dashboardBorrowers"/>:</a>
                              <c:out
                                 value="${dashboard.borrowersCount}" />
                             </span></td>
                         </tr>
                          <tr>
                             <td class="paddingL10"><span class="fontnormal">
-                            <mifos:mifoslabel name="CustomerSearch.dashboardBorrowersGroup"/>:
+                            <c:url value="viewTotalBorrowersGroupDBDetails.ftl" var="viewTotalBorrowersGroupDBDetailsUrl" />
+                            <a href="${viewTotalBorrowersGroupDBDetailsUrl}">
+                            <mifos:mifoslabel name="CustomerSearch.dashboardBorrowersGroup"/>:</a>
                              <c:out
                                 value="${dashboard.borrowersGroupCount}" />
                             </span></td>
@@ -181,20 +185,25 @@ explanation of the license and how it is applied.
                          </tr>
                          <tr>
                             <td class="paddingL10"><span class="fontnormal">
-                            <mifos:mifoslabel name="CustomerSearch.dashboardLoansWaitingForApproval"/>:
+                            <c:url value="viewWaitingForApprovalLoansDBDetails.ftl" var="viewWaitingForApprovalLoansDBDetailsUrl" />
+                            <a href="${viewWaitingForApprovalLoansDBDetailsUrl}">
+                            <mifos:mifoslabel name="CustomerSearch.dashboardLoansWaitingForApproval"/>:</a>
                             <c:out value="${dashboard.waitingForApprovalLoansCount}"/>
                             </span></td>
                          </tr>
                          <tr>
                             <td class="paddingL10"><span class="fontnormal">
-                            <mifos:mifoslabel name="CustomerSearch.dashboardLoansInArrears"/>:
+                            <c:url value="viewBadStandingLoansDBDetails.ftl" var="viewBadStandingLoansDBDetailsUrl" />
+                            <a href="${viewBadStandingLoansDBDetailsUrl}">
+                            <mifos:mifoslabel name="CustomerSearch.dashboardLoansInArrears"/>:</a>
                              <c:out
                                 value="${dashboard.loansInArrearsCount}" />
                             </span></td>
                          </tr>
                          <tr>
                             <td class="paddingL10"><span class="fontnormal">
-                            <mifos:mifoslabel name="CustomerSearch.dashboardCurrWeekPaidLoans"/>:
+                            <c:url value="viewLoansToBePaidCurrWeekDBDetails.ftl" var="viewLoansToBePaidCurrWeekDBDetailsUrl" />
+                            <a href="${viewLoansToBePaidCurrWeekDBDetailsUrl}" ><mifos:mifoslabel name="CustomerSearch.dashboardCurrWeekPaidLoans"/>:</a>
                              <c:out
                                 value="${dashboard.loansToBePaidCurrentWeek}" />
                                 </span></td>
