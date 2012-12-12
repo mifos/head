@@ -1844,27 +1844,30 @@
          from org.mifos.customers.business.CustomerBO as customer where customer.customerLevel.id =2 and customer.customerStatus in (9, 10) order by customer.customerId]]>
     </query>
     
-    <sql-query name="Customer.getAllBorrowers">
-    <![CDATA[SELECT * FROM customer c 
-            WHERE c.customer_id in (Select Distinct customer_id 
-            FROM account a
-            inner join loan_account l on a.account_id = l.account_id and l.parent_account_id is null)
-            AND c.customer_level_id=1
-    ]]>
-    </sql-query>
-    <sql-query name="Customer.getAllBorrowersGroup">
-            SELECT * FROM customer c 
-            WHERE c.customer_id in (Select Distinct customer_id 
-            FROM account a
-            inner join loan_account l on a.account_id = l.account_id)
-            AND c.customer_level_id=2
-    </sql-query>
+    <query name="Customer.getAllBorrowers">
+        <![CDATA[
+                from org.mifos.customers.client.business.ClientBO c
+                WHERE c.customerId in (Select Distinct loan.customer.customerId 
+                FROM org.mifos.accounts.loan.business.LoanBO loan
+                WHERE loan.parentAccount is null AND loan.accountState.id in (5,9))
+        ]]>
+    </query>
+    
+    <query name="Customer.getAllBorrowersGroup">
+        <![CDATA[
+                from org.mifos.customers.group.business.GroupBO c
+                WHERE c.customerId in (Select Distinct loan.customer.customerId 
+                FROM org.mifos.accounts.loan.business.LoanBO loan
+                WHERE loan.parentAccount is null AND loan.accountState.id in (5,9))
+        ]]>
+    </query>
     
     <sql-query name="Customer.countAllBorrowers">
     <![CDATA[SELECT count(*) FROM customer c 
             WHERE c.customer_id in (Select Distinct customer_id 
             FROM account a
-            inner join loan_account l on a.account_id = l.account_id and l.parent_account_id is null)
+            inner join loan_account l on a.account_id = l.account_id and l.parent_account_id is null
+            WHERE a.account_state_id in (5,9))
             AND c.customer_level_id=1
     ]]>
     </sql-query>
@@ -1872,7 +1875,8 @@
             SELECT count(*) FROM customer c 
             WHERE c.customer_id in (Select Distinct customer_id 
             FROM account a
-            inner join loan_account l on a.account_id = l.account_id)
+            inner join loan_account l on a.account_id = l.account_id 
+            WHERE a.account_state_id in (5,9))
             AND c.customer_level_id=2
     </sql-query>
 

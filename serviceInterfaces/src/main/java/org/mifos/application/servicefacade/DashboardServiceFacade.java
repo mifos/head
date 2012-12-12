@@ -8,6 +8,8 @@ public interface DashboardServiceFacade {
 
     DashboardDto getDashboardDto();
     
+    String[] getHeaders();
+    
     List<?> getBorrowers();
     List<?> getBorrowersGroup();
     List<?> getWaitingForApprovalLoans();

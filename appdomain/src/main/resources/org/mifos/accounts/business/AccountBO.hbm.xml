@@ -1059,22 +1059,23 @@ select coll.*,
         ]]>
     </query>
     
-    <sql-query name="loan.getAllLoansToBePaidCurrentWeek">
-        <![CDATA[SELECT * FROM
-                loan_account a
-                inner join loan_schedule s on a.account_id = s.account_id
-                WHERE s.action_date BETWEEN :START_DATE AND :END_DATE 
-                GROUP BY a.account_id
+    <query name="loan.getAllLoansToBePaidCurrentWeek">
+        <![CDATA[Select loan from org.mifos.accounts.loan.business.LoanBO loan 
+                 left join loan.accountActionDates actionDates
+                 WHERE actionDates.actionDate BETWEEN :START_DATE AND :END_DATE 
+                 AND loan.parentAccount is null
+
         ]]>
-    </sql-query>
+    </query>
     
-     <sql-query name="loan.getAllWaitingForApprovalLoans">
-    <![CDATA[SELECT *
-                FROM account a 
-                inner join loan_account l on a.account_id = l.account_id 
-                WHERE a.account_state_id=2 and l.parent_account_id is null;
+     <query name="loan.getAllWaitingForApprovalLoans">
+    <![CDATA[
+                from org.mifos.accounts.loan.business.LoanBO loan 
+                WHERE loan.accountState.description = 'Application pending approval'
+                AND loan.parentAccount is null
+                GROUP BY loan.accountId
         ]]>
-    </sql-query> 
+    </query> 
     
     <sql-query name="loan.countAllBadStandingLoans">
         <![CDATA[ SELECT count(*)
@@ -1085,11 +1086,11 @@ select coll.*,
     </sql-query>
     
     <sql-query name="loan.countAllLoansToBePaidCurrentWeek">
-        <![CDATA[SELECT count(*) FROM
+        <![CDATA[SELECT count(distinct a.account_id) FROM
                 loan_account a
                 inner join loan_schedule s on a.account_id = s.account_id
                 WHERE s.action_date BETWEEN :START_DATE AND :END_DATE 
-                GROUP BY a.account_id
+                AND a.parent_account_id is null
         ]]>
     </sql-query>
     

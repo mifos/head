@@ -36,6 +36,7 @@ public class LoanAccountDetailsDto implements Serializable {
     private String loanAmount;
     private String businessActivity;
     private String businessActivityName;
+    private String accountState;
     
     private String loanAccountId;
     private String loanGlobalAccountNum;
@@ -170,6 +171,14 @@ public class LoanAccountDetailsDto implements Serializable {
 
     public void setParentLoanAccountId(Integer parentLoanAccountId) {
         this.parentLoanAccountId = parentLoanAccountId;
+    }
+
+    public String getAccountState() {
+        return accountState;
+    }
+
+    public void setAccountState(String accountState) {
+        this.accountState = accountState;
     }
 
     public boolean isEmpty() {
