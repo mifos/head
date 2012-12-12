@@ -305,6 +305,11 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
                 "file:$MIFOS_CONF/uploads/questionGroups");        
         return uploadsQGDir;
     }
+    
+    public String getClientStorageDirectory() {
+        return getUploadStorageDirectory().endsWith(File.separator) ? getUploadStorageDirectory() + "clients"
+                : getUploadStorageDirectory() + File.separator + "clients";
+    }
        
     private Properties getGeneralConfig() {
     	
