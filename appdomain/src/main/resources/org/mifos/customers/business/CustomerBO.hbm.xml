@@ -1973,6 +1973,7 @@
 			order by action_date desc;
         ]]>
     </sql-query>
+
     <query name="Customer.getUploadedFile">
         <![CDATA[
             from ClientFileEntity cf where cf.fileId=:fileId
@@ -1988,5 +1989,51 @@
             from ClientFileEntity cf join cf.fileInfo where cf.clientId = :clientId and cf.fileInfo.name=:fileName
         ]]>
     </query>
-
+    
+     <query name="Customer.getAllActiveClients">
+        <![CDATA[
+                from org.mifos.customers.client.business.ClientBO customer
+                WHERE customer.customerStatus.description='Customer was Active'
+        ]]>
+    </query>
+    
+    <query name="Customer.getActiveClientsUnderLoanOff">
+        <![CDATA[
+                from org.mifos.customers.client.business.ClientBO customer
+                WHERE customer.customerStatus.description='Customer was Active'
+                AND customer.personnel.personnelId=:ID
+        ]]>
+    </query>
+    
+    <query name="Customer.getAllActiveGroups">
+        <![CDATA[
+                from org.mifos.customers.group.business.GroupBO customer
+                WHERE customer.customerStatus.description='Customer was Active'
+        ]]>
+    </query>
+    
+    <query name="Customer.getActiveGroupsUnderLoanOff">
+        <![CDATA[
+                from org.mifos.customers.client.business.ClientBO c
+                WHERE c.customerStatus.description='Customer was Active'
+                AND c.personnel.personnelId=:ID
+        ]]>
+    </query>
+    
+    <query name="Customer.getAllActiveCenters">
+        <![CDATA[
+                from org.mifos.customers.center.business.CenterBO customer
+                WHERE customer.customerStatus.description='Customer was Active'
+        ]]>
+    </query>
+    
+    <query name="Customer.getActiveCentersUnderLoanOff">
+        <![CDATA[
+                from org.mifos.customers.center.business.CenterBO c
+                WHERE c.customerStatus.description='Customer was Active'
+                AND c.personnel.personnelId=:ID
+        ]]>
+    </query>
+    
+>>>>>>> MIFOS-5756: Added links to view metric details of active clients,groups,centers
 </hibernate-mapping>

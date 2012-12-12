@@ -10,6 +10,9 @@ public interface DashboardServiceFacade {
     
     String[] getHeaders();
     
+    List<?> getActiveClients();
+    List<?> getActiveGroups();
+    List<?> getActiveCenters();
     List<?> getBorrowers();
     List<?> getBorrowersGroup();
     List<?> getWaitingForApprovalLoans();

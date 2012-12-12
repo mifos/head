@@ -59,6 +59,30 @@ public class DashboardDetailsController {
         return modelAndView;
     }
     
+    @RequestMapping(value = "/viewActiveClientsDBDetails", method=RequestMethod.GET)
+    public ModelAndView showActiveClients(HttpServletRequest request, HttpServletResponse response){
+        ModelAndView modelAndView = getLoanModelAndView();
+        List<DashboardDetailDto> loans = (List<DashboardDetailDto>) dashboardServiceFacade.getActiveClients();
+        modelAndView.addObject("dashboardDetails", loans);
+        return modelAndView;
+    }
+    
+    @RequestMapping(value = "/viewActiveGroupsDBDetails", method=RequestMethod.GET)
+    public ModelAndView showActiveGroups(HttpServletRequest request, HttpServletResponse response){
+        ModelAndView modelAndView = getLoanModelAndView();
+        List<DashboardDetailDto> loans = (List<DashboardDetailDto>) dashboardServiceFacade.getActiveGroups();
+        modelAndView.addObject("dashboardDetails", loans);
+        return modelAndView;
+    }
+    
+    @RequestMapping(value = "/viewActiveCentersDBDetails", method=RequestMethod.GET)
+    public ModelAndView showActiveCenters(HttpServletRequest request, HttpServletResponse response){
+        ModelAndView modelAndView = getLoanModelAndView();
+        List<DashboardDetailDto> loans = (List<DashboardDetailDto>) dashboardServiceFacade.getActiveCenters();
+        modelAndView.addObject("dashboardDetails", loans);
+        return modelAndView;
+    }
+    
     private ModelAndView getLoanModelAndView(){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("viewDashboardDetails");

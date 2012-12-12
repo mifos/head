@@ -7,6 +7,7 @@ import java.util.Locale;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.config.Localization;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerDao;
@@ -73,6 +74,45 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
         }
         else {
             detailDtoList = groupBOtoDashboardDetailDtos(customerDao.findBorrowersGroupUnderLoanOfficer(loanOfficerId));
+        }
+        return detailDtoList;
+    }
+    
+    @Override
+    public List<DashboardDetailDto> getActiveClients(){
+        List<DashboardDetailDto> detailDtoList;
+        Short loanOfficerId = getLoanOfficerId();
+        if (loanOfficerId == null){
+            detailDtoList = clientBOtoDashboardDetailDtos(customerDao.findAllActiveClients());
+        }
+        else {
+            detailDtoList = clientBOtoDashboardDetailDtos(customerDao.findActiveClientsUnderLoanOfficer(loanOfficerId));
+        }
+        return detailDtoList;
+    }
+    
+    @Override
+    public List<DashboardDetailDto> getActiveGroups(){
+        List<DashboardDetailDto> detailDtoList;
+        Short loanOfficerId = getLoanOfficerId();
+        if (loanOfficerId == null){
+            detailDtoList = groupBOtoDashboardDetailDtos(customerDao.findAllActiveGroups());
+        }
+        else {
+            detailDtoList = groupBOtoDashboardDetailDtos(customerDao.findActiveGroupsUnderLoanOfficer(loanOfficerId));
+        }
+        return detailDtoList;
+    }
+    
+    @Override
+    public List<DashboardDetailDto> getActiveCenters(){
+        List<DashboardDetailDto> detailDtoList;
+        Short loanOfficerId = getLoanOfficerId();
+        if (loanOfficerId == null){
+            detailDtoList = centerBOtoDashboardDetailDtos(customerDao.findAllActiveCenters());
+        }
+        else {
+            detailDtoList = centerBOtoDashboardDetailDtos(customerDao.findActiveCentersUnderLoanOfficer(loanOfficerId));
         }
         return detailDtoList;
     }
@@ -176,6 +216,22 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
             dto.setLoanOfficer(groupBO.getPersonnel().getDisplayName());
             dto.setBalance(groupBO.getLoanBalance(Money.getDefaultCurrency()).toString());
             dto.setDisplayName(groupBO.getDisplayName());
+            groupDtoList.add(dto);
+        }
+        return groupDtoList;
+    }
+    
+    private List<DashboardDetailDto> centerBOtoDashboardDetailDtos(List<CenterBO> centerBOList){
+        List<DashboardDetailDto> groupDtoList = new ArrayList<DashboardDetailDto>();
+        DashboardDetailDto dto;
+        for (CenterBO centerBO : centerBOList){
+            dto = new DashboardDetailDto();
+            dto.setGlobalNumber(centerBO.getGlobalCustNum());
+            dto.setState(centerBO.getCustomerStatus().getDescription());
+            dto.setUrl("viewCenterDetails.ftl?globalCustNum="+dto.getGlobalNumber());
+            dto.setLoanOfficer(centerBO.getPersonnel().getDisplayName());
+            dto.setBalance(centerBO.getLoanBalance(Money.getDefaultCurrency()).toString());
+            dto.setDisplayName(centerBO.getDisplayName());
             groupDtoList.add(dto);
         }
         return groupDtoList;

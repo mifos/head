@@ -190,6 +190,18 @@ public interface CustomerDao {
     int countOfActiveGroupsUnderLoanOfficer(Short loanOffID);
     
     int countOfActiveCentersUnderLoanOfficer(Short loanOffID);
+    
+    List<ClientBO> findAllActiveClients();
+
+    List<GroupBO> findAllActiveGroups();
+    
+    List<CenterBO> findAllActiveCenters();
+    
+    List<ClientBO> findActiveClientsUnderLoanOfficer(Short loanOffID);
+
+    List<GroupBO> findActiveGroupsUnderLoanOfficer(Short loanOffID);
+    
+    List<CenterBO> findActiveCentersUnderLoanOfficer(Short loanOffID);
 
     int retrieveLastSearchIdValueForNonParentCustomersInOffice(Short officeIdValue);
 

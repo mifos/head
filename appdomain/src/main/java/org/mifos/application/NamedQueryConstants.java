@@ -100,6 +100,12 @@ public interface NamedQueryConstants {
     // for Customer Search
     String GET_ALL_BORROWERS = "Customer.getAllBorrowers";
     String GET_ALL_BORROWERS_GROUP = "Customer.getAllBorrowersGroup";
+    String GET_ALL_ACTIVE_CLIENTS = "Customer.getAllActiveClients";
+    String GET_ALL_ACTIVE_GROUPS = "Customer.getAllActiveGroups";
+    String GET_ALL_ACTIVE_CENTERS = "Customer.getAllActiveCenters";
+    String GET_ACTIVE_CLIENTS_UNDER_LOANOFF = "Customer.getActiveClientsUnderLoanOff";
+    String GET_ACTIVE_GROUPS_UNDER_LOANOFF = "Customer.getActiveGroupsUnderLoanOff";
+    String GET_ACTIVE_CENTERS_UNDER_LOANOFF = "Customer.getActiveCentersUnderLoanOff";
     String COUNT_ALL_BORROWERS = "Customer.countAllBorrowers";
     String COUNT_ALL_BORROWERS_GROUP = "Customer.countAllBorrowersGroup";
     String GET_BORROWERS_UNDER_LOANOFF = "Customer.getBorrowersUnderLoanOfficerID";
