@@ -233,7 +233,7 @@
 								<span>
 								[#list group.groupLoanGlobalAccountNum as gLoan]
 									<span>
-										<a href='viewGroupLoanAccountDetails.ftl?globalAccountNum=${gLoan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${gLoan}</a>
+										<a href='viewLoanAccountDetails.ftl?globalAccountNum=${gLoan}&recordOfficeId=${group.branchId}&recordLoanOfficerId=${group.loanOfficerId?if_exists}&randomNUm=${Session.randomNUm?if_exists?c}'>Account # ${gLoan}</a>
 									</span>
 								[/#list]
 								</span>
@@ -336,7 +336,7 @@
 								</a>
 								<!-- group new glim-->
 								[#elseif loan.accountStatusId == 5 && !loan.clientGlobalCustNum?has_content]
-								<a href='viewGroupLoanAccountDetails.ftl?globalAccountNum=${loan.loanGlobalAccountNum}&recordOfficeId=${loan.branchId}&
+								<a href='viewLoanAccountDetails.ftl?globalAccountNum=${loan.loanGlobalAccountNum}&recordOfficeId=${loan.branchId}&
 										 recordLoanOfficerId=${loan.loanOfficerId?if_exists}&randomnum=${Session.randomNUm?if_exists?c}'>
 									Account # ${loan.loanGlobalAccountNum}
 								</a>

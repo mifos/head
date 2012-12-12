@@ -65,10 +65,6 @@ explanation of the license and how it is applied.
 						xmlFileName="LoanStatusChangeHistory.xml" moduleName="org/mifos/accounts/loan/util/resources"
 						passLocale="true" /> <br>
 					<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
-					<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoan')}" var="isGroupLoan" />
-					<c:if test="${isGroupLoan }">
-						<c:set value="viewGroupLoanAccountDetails.ftl" var="formAction" />
-					</c:if>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center"><html-el:button styleId="viewLoanStatusHistory.button.return" property="btn"

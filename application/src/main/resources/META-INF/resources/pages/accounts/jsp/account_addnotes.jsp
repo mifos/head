@@ -38,15 +38,11 @@ function goToCancelPage(){
   }
 </script>
 	<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
-	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoan')}" var="isGroupLoan" />
 	<c:if test="${sessionScope.notesActionForm.accountTypeId == '1'}">
 		<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
 	</c:if>
 	<c:if test="${sessionScope.notesActionForm.accountTypeId == '2'}">
 		<c:set value="viewSavingsAccountDetails.ftl" var="formAction" />
-	</c:if>
-	<c:if test="${isGroupLoan }">
-		<c:set value="viewGroupLoanAccountDetails.ftl" var="formAction" />
 	</c:if>
 		<form name="goBackToAccountDetails" method="get" action ="${formAction }">
 			<input type="hidden" name='globalAccountNum' value="${sessionScope.notesActionForm.globalAccountNum}"/>

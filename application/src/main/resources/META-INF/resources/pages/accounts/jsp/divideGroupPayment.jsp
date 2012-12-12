@@ -49,9 +49,6 @@ explanation of the license and how it is applied.
 	}
 </SCRIPT>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
-		<form name="goBackToLoanAccountDetails" method="get" action ="viewGroupLoanAccountDetails.ftl">
-			<input type="hidden" name='globalAccountNum' value="${param.globalAccountNum}"/>
-		</form>
 		<html-el:form method="post"
 			action="/applyGroupPaymentAction.do?method=preview"
 			focus="paymentTypeId">

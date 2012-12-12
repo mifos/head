@@ -41,7 +41,7 @@ explanation of the license and how it is applied.
 	}
 	function ViewLoanDetails(form, typeOfGroupLoan){
 		if (typeOfGroupLoan === 'parentAcc') {
-			  form.action="viewGroupLoanAccountDetails.ftl";
+			  form.action="viewLoanAccountDetails.ftl";
 		}
 		if (typeOfGroupLoan === 'memberAcc') {
 			form.action="groupIndividualLoanAccountAction.do?";

@@ -85,10 +85,6 @@ explanation of the license and how it is applied.
 					<br>
 					<mifoscustom:mifostabletag moduleName="org/mifos/framework/components/audit/util/resources" scope="session" source="auditLogRecords" xmlFileName="AuditLog.xml" passLocale="true"/>
 							<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
-					<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoan')}" var="isGroupLoan" />
-					<c:if test="${isGroupLoan }">
-						<c:set value="viewGroupLoanAccountDetails.ftl" var="formAction" />
-					</c:if>
 					<br>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>

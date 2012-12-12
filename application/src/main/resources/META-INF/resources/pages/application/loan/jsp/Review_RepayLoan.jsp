@@ -48,7 +48,6 @@ explanation of the license and how it is applied.
 		<c:set value="repayLoanAction.do?method=makeRepayment" var="makeGroupRepayment" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoan')}" var="isGroupLoan" />
 		<c:if test="${isGroupLoan }">
-			<c:set value="viewGroupLoanAccountDetails.ftl" var="formAction" />
 			<c:set value="repayLoanAction.do?method=makeGroupRepayment" var="makeGroupRepayment" />
 		</c:if>
 		<form name="goBackToLoanAccountDetails" method="get" action ="${formAction }">
