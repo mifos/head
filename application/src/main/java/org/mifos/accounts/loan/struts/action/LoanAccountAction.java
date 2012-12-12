@@ -1350,7 +1350,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
         ActionForward forward = null;
-        if (loanDao.findByGlobalAccountNum(globalAccountNum).isGroupLoanAccount()) {
+        if (loanDao.findByGlobalAccountNum(globalAccountNum).isParentGroupLoanAccount()) {
             forward = mapping.findForward("getGroupLoanAccountDetails");
         }
         else {

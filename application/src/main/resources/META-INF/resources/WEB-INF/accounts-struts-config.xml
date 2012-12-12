@@ -404,7 +404,7 @@
             <forward name="previous_success" path="/pages/accounts/jsp/applyGroupPayment.jsp"/>
             <forward name="applyPayment_success" path="/customerAccountAction.do?method=load"/>
             <forward name="applyPayment_failure" path="/pages/accounts/jsp/previewApplyGroupPayment.jsp"/>
-            <forward name="loan_detail_page" path="/groupLoanAccountAction.do?method=get"/>
+            <forward name="loan_detail_page" path="/loanAccountAction.do?method=getDetails"/>
         </action>
        <!-- Group Loan end -->
     </action-mappings>
