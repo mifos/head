@@ -19,11 +19,6 @@
  */
 function fun_return(form, accTyp)
 {
-	if (accTyp == 5) {
-		form.action="viewGroupLoanAccountDetails.ftl";
-	}
-	else {
-		form.action="viewLoanAccountDetails.ftl";
-	}
+	form.action="viewLoanAccountDetails.ftl";
 	form.submit();
 }
