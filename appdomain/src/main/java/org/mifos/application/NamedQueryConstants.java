@@ -73,14 +73,20 @@ public interface NamedQueryConstants {
 
     // for Loan accounts
     String GET_ALL_LOANS_TO_BE_PAID_CURRENT_WEEK ="loan.getAllLoansToBePaidCurrentWeek";
+    String GET_LOANS_TO_BE_PAID_CURRENT_WEEK_UNDER_LOANOFF ="loan.getLoansToBePaidCurrentWeekUnderLoanOfficer";
     String GET_COSIGNING_CLIENTS_FOR_GLIM = "loan.getCosigningLoansOfClientsForGlim";
     String GET_ALL_WAITING_FOR_APPROVAL_LOANS = "loan.getAllWaitingForApprovalLoans";
     String GET_ALL_BAD_STANDING_LOANS = "loan.getAllBadStandingLoans";
+    String GET_WAITING_FOR_APPROVAL_LOANS_UNDER_LOANOFF = "loan.getWaitingForApprovalLoansUnderLoanOfficer";
+    String GET_BAD_STANDING_LOANS_UNDER_LOANOFF = "loan.getBadStandingLoansUnderLoanOfficer";
     String RETRIEVE_TOTAL_LOAN_FOR_CUSTOMER = "loan.retrieveTotalLoanForCustomer";
 
     String COUNT_ALL_LOANS_TO_BE_PAID_CURRENT_WEEK ="loan.countAllLoansToBePaidCurrentWeek";
     String COUNT_ALL_WAITING_FOR_APPROVAL_LOANS = "loan.countAllWaitingForApprovalLoans";
     String COUNT_ALL_BAD_STANDING_LOANS = "loan.countAllBadStandingLoans";
+    String COUNT_LOANS_TO_BE_PAID_CURRENT_WEEK_UNDER_LOANOFF ="loan.countLoansToBePaidCurrentWeekLoansUnderLoanOfficer";
+    String COUNT_WAITING_FOR_APPROVAL_LOANS_UNDER_LOANOFF = "loan.countWaitingForApprovalLoansLoansUnderLoanOfficer";
+    String COUNT_BAD_STANDING_LOANS_UNDER_LOANOFF = "loan.countBadStandingLoansUnderLoanOfficer";
     
     // for Savings accounts
     String RETRIEVE_TOTAL_SAVINGS_FOR_CUSTOMER = "savings.retrieveTotalSavingsForCustomer";
@@ -96,6 +102,10 @@ public interface NamedQueryConstants {
     String GET_ALL_BORROWERS_GROUP = "Customer.getAllBorrowersGroup";
     String COUNT_ALL_BORROWERS = "Customer.countAllBorrowers";
     String COUNT_ALL_BORROWERS_GROUP = "Customer.countAllBorrowersGroup";
+    String GET_BORROWERS_UNDER_LOANOFF = "Customer.getBorrowersUnderLoanOfficerID";
+    String GET_BORROWERS_GROUP_UNDER_LOANOFF = "Customer.getBorrowersGroupUnderLoanOfficerID";
+    String COUNT_BORROWERS_UNDER_LOANOFF = "Customer.countBorrowersUnderLoanOfficerID";
+    String COUNT_BORROWERS_GROUP_UNDER_LOANOFF = "Customer.countBorrowersGroupUnderLoanOfficerID";
     String GET_ACTIVE_CLIENTS_COUNT_UNDER_OFFICE = "Customer.getActiveClientsCountUnderOffice";
     String GET_ACTIVE_OR_HOLD_CLIENTS_COUNT_UNDER_OFFICE = "Customer.getActiveOrHoldClientsCountUnderOffice";
     String GET_VERY_POOR_ACTIVE_OR_HOLD_CLIENTS_COUNT_UNDER_OFFICE = "Customer.getVeryPoorActiveOrHoldClientsCountUnderOffice";

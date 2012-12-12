@@ -1083,6 +1083,32 @@ select coll.*,
         ]]>
     </query> 
     
+    <query name="loan.getBadStandingLoansUnderLoanOfficer">
+        <![CDATA[ 
+                from org.mifos.accounts.loan.business.LoanBO loan 
+                WHERE loan.accountState.description = 'Active in bad standing'
+                AND loan.personnel.personnelId=:ID
+                GROUP BY loan.accountId
+        ]]>
+    </query>
+    
+    <query name="loan.getLoansToBePaidCurrentWeekUnderLoanOfficer">
+        <![CDATA[Select loan from org.mifos.accounts.loan.business.LoanBO loan 
+                 left join loan.accountActionDates actionDates
+                 WHERE actionDates.actionDate BETWEEN :START_DATE AND :END_DATE 
+                 AND loan.parentAccount is null AND loan.personnel.personnelId=:ID
+        ]]>
+    </query>
+    
+     <query name="loan.getWaitingForApprovalLoansUnderLoanOfficer">
+    <![CDATA[
+                from org.mifos.accounts.loan.business.LoanBO loan 
+                WHERE loan.accountState.description = 'Application pending approval'
+                AND loan.parentAccount is null AND loan.personnel.personnelId=:ID
+                GROUP BY loan.accountId
+        ]]>
+    </query>  
+    
     <sql-query name="loan.countAllBadStandingLoans">
         <![CDATA[ SELECT count(*)
                 FROM account a 
@@ -1107,5 +1133,33 @@ select coll.*,
                 WHERE a.account_state_id=2 and l.parent_account_id is null;
         ]]>
     </sql-query> 
+    
+    <sql-query name="loan.countBadStandingLoansUnderLoanOfficer">
+        <![CDATA[ SELECT count(*)
+                FROM account a 
+                inner join loan_account l on a.account_id = l.account_id 
+                WHERE a.account_state_id=9 and l.parent_account_id is null
+                AND a.personnel_id=:ID
+        ]]>
+    </sql-query>
+    
+    <sql-query name="loan.countLoansToBePaidCurrentWeekLoansUnderLoanOfficer">
+        <![CDATA[SELECT count(distinct a.account_id) FROM
+                loan_account a
+                inner join loan_schedule s on a.account_id = s.account_id
+                inner join account acc on acc.account_id = a.account_id
+                WHERE s.action_date BETWEEN :START_DATE AND :END_DATE 
+                AND a.parent_account_id is null AND acc.personnel_id=:ID
+        ]]>
+    </sql-query>
+    
+     <sql-query name="loan.countWaitingForApprovalLoansLoansUnderLoanOfficer">
+        <![CDATA[SELECT count(*)
+                FROM account a 
+                inner join loan_account l on a.account_id = l.account_id 
+                WHERE a.account_state_id=2 and l.parent_account_id is null
+                AND a.personnel_id=:ID
+        ]]>
+    </sql-query>  
     
 </hibernate-mapping>

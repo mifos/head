@@ -93,11 +93,19 @@ public interface CustomerDao {
     
     List<ClientBO> findAllBorrowers();
     
+    List<ClientBO> findBorrowersUnderLoanOfficer(Short loanOffID);
+    
     int countAllBorrowers();
     
     int countAllBorrowersGroup();
     
+    int countBorrowersUnderLoanOfficer(Short loanOffID);
+    
+    int countBorrowersGroupUnderLoanOfficer(Short loanOffID);
+    
     List<GroupBO> findAllBorrowersGroup();
+    
+    List<GroupBO> findBorrowersGroupUnderLoanOfficer(Short loanOffID);
 
     List<ClientBO> findActiveClientsUnderGroup(CustomerBO customer);
 
@@ -176,6 +184,12 @@ public interface CustomerDao {
     int countOfActiveGroups();
     
     int countOfActiveCenters();
+    
+    int countOfActiveClientsUnderLoanOfficer(Short loanOffID);
+
+    int countOfActiveGroupsUnderLoanOfficer(Short loanOffID);
+    
+    int countOfActiveCentersUnderLoanOfficer(Short loanOffID);
 
     int retrieveLastSearchIdValueForNonParentCustomersInOffice(Short officeIdValue);
 

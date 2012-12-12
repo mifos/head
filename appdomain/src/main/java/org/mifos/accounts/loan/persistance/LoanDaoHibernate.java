@@ -151,4 +151,72 @@ public class LoanDaoHibernate implements LoanDao {
         List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.COUNT_ALL_LOANS_TO_BE_PAID_CURRENT_WEEK, queryParameters);
         return ((BigInteger) queryResult.get(0)).intValue();
     }
+
+    @Override
+    public List<LoanBO> findBadStandingLoansUnderLoanOfficer(Short loanOfficerId) {
+        List<LoanBO> badStandingLoans = new ArrayList<LoanBO>();
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        queryParameters.put("ID",loanOfficerId);
+        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.GET_BAD_STANDING_LOANS_UNDER_LOANOFF, queryParameters);
+        if (queryResult != null) {
+            badStandingLoans.addAll(queryResult);
+        }
+        return badStandingLoans;
+    }
+
+    @Override
+    public int countBadStandingLoansUnderLoanOfficer(Short loanOfficerId) {
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        queryParameters.put("ID",loanOfficerId);
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.COUNT_BAD_STANDING_LOANS_UNDER_LOANOFF, queryParameters);
+        return ((BigInteger) queryResult.get(0)).intValue();
+    }
+
+    @Override
+    public List<LoanBO> findLoansWaitingForApprovalUnderLoanOfficer(Short loanOfficerId) {
+        List<LoanBO> inapprovedLoansList = new ArrayList<LoanBO>();
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        queryParameters.put("ID",loanOfficerId);
+        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.GET_WAITING_FOR_APPROVAL_LOANS_UNDER_LOANOFF, queryParameters);
+        if (queryResult != null) {
+            inapprovedLoansList.addAll(queryResult);
+        }
+        return inapprovedLoansList;
+    }
+
+    @Override
+    public int countLoansWaitingForApprovalUnderLoanOfficer(Short loanOfficerId) {
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        queryParameters.put("ID",loanOfficerId);
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.COUNT_WAITING_FOR_APPROVAL_LOANS_UNDER_LOANOFF, queryParameters);
+        return ((BigInteger) queryResult.get(0)).intValue();
+    }
+
+    @Override
+    public List<LoanBO> findLoansToBePaidCurrentWeekUnderLoanOfficer(Short loanOfficerId) {
+        List<LoanBO> loans = new ArrayList<LoanBO>();
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        LocalDate lDate = new LocalDate();
+        queryParameters.put("START_DATE", lDate.toDateTimeAtStartOfDay().toDate());
+        lDate=lDate.plusWeeks(1);
+        queryParameters.put("END_DATE",lDate.toDateTimeAtStartOfDay().toDate());
+        queryParameters.put("ID",loanOfficerId);
+        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.GET_LOANS_TO_BE_PAID_CURRENT_WEEK_UNDER_LOANOFF,queryParameters);
+        if (queryResult != null){
+            loans.addAll(queryResult);
+        }
+        return loans;
+    }
+
+    @Override
+    public int countLoansToBePaidCurrentWeekUnderLoanOfficer(Short loanOfficerId) {
+        Map<String, String> queryParameters = new HashMap<String, String>();
+        LocalDate lDate = new LocalDate();
+        queryParameters.put("START_DATE", lDate.toString("yyyy-MM-dd"));
+        lDate=lDate.plusWeeks(1);
+        queryParameters.put("END_DATE",lDate.toString("yyyy-MM-dd"));
+        queryParameters.put("ID",loanOfficerId.toString());
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.COUNT_LOANS_TO_BE_PAID_CURRENT_WEEK_UNDER_LOANOFF, queryParameters);
+        return ((BigInteger) queryResult.get(0)).intValue();
+    }
 }
