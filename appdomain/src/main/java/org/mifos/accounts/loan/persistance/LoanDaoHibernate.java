@@ -115,11 +115,11 @@ public class LoanDaoHibernate implements LoanDao {
     @SuppressWarnings("unchecked")
     public List<LoanBO> findLoansToBePaidCurrentWeek() {
         List<LoanBO> loans = new ArrayList<LoanBO>();
-        Map<String, String> queryParameters = new HashMap<String, String>();
+        Map<String, Date> queryParameters = new HashMap<String, Date>();
         LocalDate lDate = new LocalDate();
-        queryParameters.put("START_DATE", lDate.toString("yyyy-MM-dd"));
+        queryParameters.put("START_DATE", lDate.toDateTimeAtStartOfDay().toDate());
         lDate=lDate.plusWeeks(1);
-        queryParameters.put("END_DATE",lDate.toString("yyyy-MM-dd"));
+        queryParameters.put("END_DATE",lDate.toDateTimeAtStartOfDay().toDate());
         List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.GET_ALL_LOANS_TO_BE_PAID_CURRENT_WEEK, queryParameters);
         if (queryResult != null) {
             loans.addAll(queryResult);
