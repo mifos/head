@@ -39,13 +39,25 @@ public interface LoanDao {
     
     List<LoanBO> findAllBadStandingLoans();
     
+    List<LoanBO> findBadStandingLoansUnderLoanOfficer(Short loanOfficerId);
+    
     int countAllBadStandingLoans();
+    
+    int countBadStandingLoansUnderLoanOfficer(Short loanOfficerId);
     
     List<LoanBO> findAllLoansWaitingForApproval();
     
+    List<LoanBO> findLoansWaitingForApprovalUnderLoanOfficer(Short loanOfficerId);
+    
     int countAllLoansWaitingForApproval();
+    
+    int countLoansWaitingForApprovalUnderLoanOfficer(Short loanOfficerId);
     
     List<LoanBO> findLoansToBePaidCurrentWeek();
     
+    List<LoanBO> findLoansToBePaidCurrentWeekUnderLoanOfficer(Short loanOfficerId);
+    
     int countLoansToBePaidCurrentWeek();
+    
+    int countLoansToBePaidCurrentWeekUnderLoanOfficer(Short loanOfficerId);
 }
