@@ -723,6 +723,14 @@ explanation of the license and how it is applied.
                                         <mifos:mifoslabel name="client.ViewQuestionGroupForClosedClientResponsesLink" bundle="ClientUIResources" />
                                     </a> <br>
                                 </c:if>
+                                <c:url value="viewUploadedFiles.ftl" var="viewUploadedFiles" >
+                                    <c:param name="entityId" value="${clientInformationDto.clientDisplay.customerId}" />
+                                    <c:param name="entityType" value="Client" />
+                                    <c:param name="backPageUrl" value="${currentPageUrl}" />
+                                </c:url>
+                                <a id="viewClientDetails.link.uploadedFiles" href="${viewUploadedFiles}" >
+                                    <mifos:mifoslabel name="client.UploadedFilesLink" bundle="ClientUIResources" />
+                                </a><br/>
 								<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=${clientInformationDto.clientDisplay.globalCustNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								    <mifos:mifoslabel name="client.HistoricalDataLink" bundle="ClientUIResources" />
 								</a> <br>
