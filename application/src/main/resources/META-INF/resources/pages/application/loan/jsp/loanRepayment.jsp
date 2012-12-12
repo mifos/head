@@ -32,10 +32,6 @@ explanation of the license and how it is applied.
 	<span id="page.id" title="LoanRepayment"></span>
 		<script type="text/javascript" src="pages/application/loan/js/loanRepayment.js"></script>
 		<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
-		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoan')}" var="isGroupLoan" />
-		<c:if test="${isGroupLoan }">
-			<c:set value="viewGroupLoanAccountDetails.ftl" var="formAction" />
-		</c:if>
 		<form method="get" action=${formAction}>
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />

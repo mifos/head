@@ -48,7 +48,7 @@ explanation of the license and how it is applied.
 					form.action="viewSavingsAccountDetails.ftl"
 					break;
 				case 'grouploan':
-					form.action="viewGroupLoanAccountDetails.ftl";
+					form.action="viewLoanAccountDetails.ftl";
 					break;
 				default:
 					form.action="clientsAndAccounts.ftl";

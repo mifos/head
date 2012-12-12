@@ -156,7 +156,6 @@ public class ActivityMapper {
         parseActionSecurity(getRepayLoanSecurity());
         parseActionSecurity(getCustomerSecurity());
         parseActionSecurity(getLoanAccountSecurity());
-        parseActionSecurity(getGroupLoanAccountSecurity());
         parseActionSecurity(getGroupAccountApplyPaymentSecurity());
         parseActionSecurity(getGroupIndividualLoanAccountSecurity());
         parseActionSecurity(getAccountApplyPaymentSecurity());
@@ -755,17 +754,12 @@ public class ActivityMapper {
         security.allow("showPreview", SecurityConstants.VIEW);
         security.allow("viewOriginalSchedule", SecurityConstants.VIEW);
         security.allow("viewAndEditAdditionalInformation", SecurityConstants.VIEW);
+        security.allow("getDetails", SecurityConstants.VIEW);
+        security.allow("getGroupLoanAccountDetails", SecurityConstants.VIEW);
+        security.allow("getGroupLoanRepaymentSchedule", SecurityConstants.VIEW);
         return security;
     }
 
-    private ActionSecurity getGroupLoanAccountSecurity() {
-        ActionSecurity security = new ActionSecurity("groupLoanAccountAction");
-        security.allow("get", SecurityConstants.VIEW);
-        security.allow("getLoanRepaymentSchedule", SecurityConstants.VIEW);
-        security.allow("getAllActivity", SecurityConstants.VIEW);
-        return security;
-    }
-    
     private ActionSecurity getGroupAccountApplyPaymentSecurity() {
         ActionSecurity security = new ActionSecurity("applyGroupPaymentAction");
         security.allow("load", SecurityConstants.VIEW);

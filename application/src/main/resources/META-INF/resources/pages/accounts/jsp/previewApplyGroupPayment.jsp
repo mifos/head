@@ -47,9 +47,6 @@ explanation of the license and how it is applied.
 		form.submit()
 	}
 </SCRIPT>
-		<form name="goBackToLoanAccountDetails" method="get" action ="viewGroupLoanAccountDetails.ftl">
-			<input type="hidden" name='globalAccountNum' value="${param.globalAccountNum}"/>
-		</form>
 		<html-el:form method="post" action="/applyGroupPaymentAction.do?method=applyPayment">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 

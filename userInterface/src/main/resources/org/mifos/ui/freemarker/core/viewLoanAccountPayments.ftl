@@ -97,12 +97,10 @@
 		</tbody>
 	</table>
 	[@widget.datatable "loanAccountPayments" /]
-	[#if loanType == -1]
+	[#if loanType == -1 || loanType == 1]
 	   [@form.returnToPage  "viewLoanAccountDetails.ftl?globalAccountNum=${RequestParameters.globalAccountNum}" "button.back" "loanaccountpayments.button.back"/]
     [#elseif loanType == 0]
         [@form.returnToPage  "groupIndividualLoanAccountAction.do?method=get&globalAccountNum=${RequestParameters.globalAccountNum}" "button.back" "loanaccountpayments.button.back"/]
-    [#elseif loanType == 1]
-        [@form.returnToPage  "viewGroupLoanAccountDetails.ftl?globalAccountNum=${RequestParameters.globalAccountNum}" "button.back" "loanaccountpayments.button.back"/]
     [/#if]
 </div>
 [/@clientLeftPane]
