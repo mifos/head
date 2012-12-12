@@ -2034,6 +2034,4 @@
                 AND c.personnel.personnelId=:ID
         ]]>
     </query>
-    
->>>>>>> MIFOS-5756: Added links to view metric details of active clients,groups,centers
 </hibernate-mapping>
