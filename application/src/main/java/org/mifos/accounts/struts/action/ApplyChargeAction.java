@@ -45,6 +45,7 @@ import org.mifos.application.servicefacade.GroupLoanAccountServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.api.CustomerLevel;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.dto.domain.GroupIndividualLoanDto;
 import org.mifos.dto.screen.AccountTypeCustomerLevelDto;
@@ -130,7 +131,7 @@ public class ApplyChargeAction extends BaseAction {
 
         AccountBO account = new AccountBusinessService().getAccount(Integer.valueOf(applyChargeActionForm.getAccountId()));
         
-        if (null == ((LoanBO)account).getParentAccount() && account.isGroupLoanAccount()) {
+        if (!(account instanceof CustomerAccountBO) && null == ((LoanBO)account).getParentAccount() && account.isGroupLoanAccount()) {
             this.accountServiceFacade.applyGroupCharge(applyChargeActionForm.getIndividualValues(), feeId, applyChargeActionForm.isPenaltyType());
         }
         else {
