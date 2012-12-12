@@ -1819,4 +1819,138 @@ public class CustomerDaoHibernate implements CustomerDao {
         Object result = ((Object[])this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_CLIENT_UPLOADED_FILE_BY_NAME, queryParameters))[0];
         return (ClientFileEntity) result;
     }
+    
+    public List<ClientBO> findBorrowersUnderLoanOfficer(Short loanOffID) {
+        List<ClientBO> borrowers = new ArrayList<ClientBO>();
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        queryParameters.put("ID", loanOffID);
+        List<ClientBO> queryList = (List<ClientBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_BORROWERS_UNDER_LOANOFF,queryParameters);
+        if (queryList !=null){
+            borrowers.addAll(queryList);
+        }
+        return borrowers;
+    }
+
+    @Override
+    public int countBorrowersUnderLoanOfficer(Short loanOffID) {
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        queryParameters.put("ID", loanOffID);
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.COUNT_BORROWERS_UNDER_LOANOFF, queryParameters);
+        return ((BigInteger) queryResult.get(0)).intValue();
+    }
+
+    @Override
+    public int countBorrowersGroupUnderLoanOfficer(Short loanOffID) {
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        queryParameters.put("ID", loanOffID);
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.COUNT_BORROWERS_GROUP_UNDER_LOANOFF, queryParameters);
+        return ((BigInteger) queryResult.get(0)).intValue();
+    }
+
+    @Override
+    public List<GroupBO> findBorrowersGroupUnderLoanOfficer(Short loanOffID) {
+        List<GroupBO> borrowers = new ArrayList<GroupBO>();
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        queryParameters.put("ID", loanOffID);
+        List<GroupBO> queryList = (List<GroupBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_BORROWERS_GROUP_UNDER_LOANOFF,queryParameters);
+        if (queryList !=null){
+            borrowers.addAll(queryList);
+        }
+        return borrowers;
+    }
+
+    @Override
+    public int countOfActiveClientsUnderLoanOfficer(Short loanOffID) {
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        queryParameters.put("ID", loanOffID);
+        List queryResult = this.genericDao.executeNamedQuery("countOfActiveClientsUnderLoanOfficerID", queryParameters);
+
+        return ((Long) queryResult.get(0)).intValue();
+    }
+
+    @Override
+    public int countOfActiveGroupsUnderLoanOfficer(Short loanOffID) {
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        queryParameters.put("ID", loanOffID);
+        List queryResult = this.genericDao.executeNamedQuery("countOfActiveGroupsUnderLoanOfficerID", queryParameters);
+
+        return ((Long) queryResult.get(0)).intValue();
+    }
+
+    @Override
+    public int countOfActiveCentersUnderLoanOfficer(Short loanOffID) {
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        queryParameters.put("ID", loanOffID);
+        List queryResult = this.genericDao.executeNamedQuery("countOfActiveCentersUnderLoanOfficerID", queryParameters);
+        return ((Long) queryResult.get(0)).intValue();
+    }
+
+    @Override
+    public List<ClientBO> findAllActiveClients() {
+        List<ClientBO> customers = new ArrayList<ClientBO>();
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        List<ClientBO> queryList = (List<ClientBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_ALL_ACTIVE_CLIENTS,queryParameters);
+        if (queryList !=null){
+            customers.addAll(queryList);
+        }
+        return customers;
+    }
+
+    @Override
+    public List<GroupBO> findAllActiveGroups() {
+        List<GroupBO> customers = new ArrayList<GroupBO>();
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        List<GroupBO> queryList = (List<GroupBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_ALL_ACTIVE_GROUPS,queryParameters);
+        if (queryList !=null){
+            customers.addAll(queryList);
+        }
+        return customers;
+    }
+
+    @Override
+    public List<CenterBO> findAllActiveCenters() {
+        List<CenterBO> customers = new ArrayList<CenterBO>();
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        List<CenterBO> queryList = (List<CenterBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_ALL_ACTIVE_CENTERS,queryParameters);
+        if (queryList !=null){
+            customers.addAll(queryList);
+        }
+        return customers;
+    }
+
+    @Override
+    public List<ClientBO> findActiveClientsUnderLoanOfficer(Short loanOffID) {
+        List<ClientBO> customers = new ArrayList<ClientBO>();
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        queryParameters.put("ID", loanOffID);
+        List<ClientBO> queryList = (List<ClientBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_ACTIVE_CLIENTS_UNDER_LOANOFF,queryParameters);
+        if (queryList !=null){
+            customers.addAll(queryList);
+        }
+        return customers;
+    }
+
+    @Override
+    public List<GroupBO> findActiveGroupsUnderLoanOfficer(Short loanOffID) {
+        List<GroupBO> customers = new ArrayList<GroupBO>();
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        queryParameters.put("ID", loanOffID);
+        List<GroupBO> queryList = (List<GroupBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_ACTIVE_GROUPS_UNDER_LOANOFF,queryParameters);
+        if (queryList !=null){
+            customers.addAll(queryList);
+        }
+        return customers;
+    }
+
+    @Override
+    public List<CenterBO> findActiveCentersUnderLoanOfficer(Short loanOffID) {
+        List<CenterBO> customers = new ArrayList<CenterBO>();
+        Map<String, Short> queryParameters = new HashMap<String, Short>();
+        queryParameters.put("ID", loanOffID);
+        List<CenterBO> queryList = (List<CenterBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_ACTIVE_CENTERS_UNDER_LOANOFF,queryParameters);
+        if (queryList !=null){
+            customers.addAll(queryList);
+        }
+        return customers;
+    }
 }

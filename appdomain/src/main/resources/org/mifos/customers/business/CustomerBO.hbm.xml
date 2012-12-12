@@ -644,6 +644,10 @@
     <query name="countOfActiveClients">
         <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client WHERE client.customerStatus.description='Customer Was Active']]>
     </query>
+    <query name="countOfActiveClientsUnderLoanOfficerID">
+        <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client WHERE client.customerStatus.description='Customer Was Active' 
+                 AND client.personnel.personnelId=:ID]]>
+    </query>
 
     <query name="countOfGroups">
         <![CDATA[select count(*) from org.mifos.customers.group.business.GroupBO as group]]>
@@ -653,8 +657,18 @@
         <![CDATA[select count(*) from org.mifos.customers.group.business.GroupBO as group WHERE group.customerStatus.description='Customer Was Active']]>
     </query>
     
+    <query name="countOfActiveGroupsUnderLoanOfficerID">
+        <![CDATA[select count(*) from org.mifos.customers.group.business.GroupBO as group WHERE group.customerStatus.description='Customer Was Active'
+                AND group.personnel.personnelId=:ID]]>
+    </query>
+    
      <query name="countOfActiveCenters">
         <![CDATA[select count(*) from org.mifos.customers.center.business.CenterBO as center WHERE center.customerStatus.description='Customer Was Active']]>
+    </query>
+    
+    <query name="countOfActiveCentersUnderLoanOfficerID">
+        <![CDATA[select count(*) from org.mifos.customers.center.business.CenterBO as center WHERE center.customerStatus.description='Customer Was Active'
+                AND center.personnel.personnelId=:ID]]>
     </query>
 
     <query name="Customer.getGroupCountByGroupNameAndOffice">
@@ -1881,12 +1895,32 @@
         ]]>
     </query>
     
+    <query name="Customer.getBorrowersUnderLoanOfficerID">
+        <![CDATA[
+                from org.mifos.customers.client.business.ClientBO c
+                WHERE c.customerId in (Select Distinct loan.customer.customerId 
+                FROM org.mifos.accounts.loan.business.LoanBO loan
+                WHERE loan.parentAccount is null AND loan.accountState.id in (5,9))
+                AND c.personnel.personnelId=:ID
+        ]]>
+    </query>
+    
     <query name="Customer.getAllBorrowersGroup">
         <![CDATA[
                 from org.mifos.customers.group.business.GroupBO c
                 WHERE c.customerId in (Select Distinct loan.customer.customerId 
                 FROM org.mifos.accounts.loan.business.LoanBO loan
                 WHERE loan.parentAccount is null AND loan.accountState.id in (5,9))
+        ]]>
+    </query>
+    
+    <query name="Customer.getBorrowersGroupUnderLoanOfficerID">
+        <![CDATA[
+                from org.mifos.customers.group.business.GroupBO c
+                WHERE c.customerId in (Select Distinct loan.customer.customerId 
+                FROM org.mifos.accounts.loan.business.LoanBO loan
+                WHERE loan.parentAccount is null AND loan.accountState.id in (5,9))
+                AND c.personnel.personnelId=:ID
         ]]>
     </query>
     
@@ -1899,6 +1933,17 @@
             AND c.customer_level_id=1
     ]]>
     </sql-query>
+    
+    <sql-query name="Customer.countBorrowersUnderLoanOfficerID">
+    <![CDATA[SELECT count(*) FROM customer c 
+            WHERE c.customer_id in (Select Distinct customer_id 
+            FROM account a
+            inner join loan_account l on a.account_id = l.account_id and l.parent_account_id is null
+            WHERE a.account_state_id in (5,9))
+            AND c.customer_level_id=1 AND c.loan_officer_id=:ID
+    ]]>
+    </sql-query>
+    
     <sql-query name="Customer.countAllBorrowersGroup">
             SELECT count(*) FROM customer c 
             WHERE c.customer_id in (Select Distinct customer_id 
@@ -1906,6 +1951,15 @@
             inner join loan_account l on a.account_id = l.account_id 
             WHERE a.account_state_id in (5,9))
             AND c.customer_level_id=2
+    </sql-query>
+    
+    <sql-query name="Customer.countBorrowersGroupUnderLoanOfficerID">
+            SELECT count(*) FROM customer c 
+            WHERE c.customer_id in (Select Distinct customer_id 
+            FROM account a
+            inner join loan_account l on a.account_id = l.account_id 
+            WHERE a.account_state_id in (5,9))
+            AND c.customer_level_id=2 AND c.loan_officer_id=:ID
     </sql-query>
 
         <query name="Customer.findCustomersWithGivenPhoneNumber">
@@ -1919,6 +1973,7 @@
 			order by action_date desc;
         ]]>
     </sql-query>
+
     <query name="Customer.getUploadedFile">
         <![CDATA[
             from ClientFileEntity cf where cf.fileId=:fileId
@@ -1934,5 +1989,51 @@
             from ClientFileEntity cf join cf.fileInfo where cf.clientId = :clientId and cf.fileInfo.name=:fileName
         ]]>
     </query>
-
+    
+     <query name="Customer.getAllActiveClients">
+        <![CDATA[
+                from org.mifos.customers.client.business.ClientBO customer
+                WHERE customer.customerStatus.description='Customer was Active'
+        ]]>
+    </query>
+    
+    <query name="Customer.getActiveClientsUnderLoanOff">
+        <![CDATA[
+                from org.mifos.customers.client.business.ClientBO customer
+                WHERE customer.customerStatus.description='Customer was Active'
+                AND customer.personnel.personnelId=:ID
+        ]]>
+    </query>
+    
+    <query name="Customer.getAllActiveGroups">
+        <![CDATA[
+                from org.mifos.customers.group.business.GroupBO customer
+                WHERE customer.customerStatus.description='Customer was Active'
+        ]]>
+    </query>
+    
+    <query name="Customer.getActiveGroupsUnderLoanOff">
+        <![CDATA[
+                from org.mifos.customers.client.business.ClientBO c
+                WHERE c.customerStatus.description='Customer was Active'
+                AND c.personnel.personnelId=:ID
+        ]]>
+    </query>
+    
+    <query name="Customer.getAllActiveCenters">
+        <![CDATA[
+                from org.mifos.customers.center.business.CenterBO customer
+                WHERE customer.customerStatus.description='Customer was Active'
+        ]]>
+    </query>
+    
+    <query name="Customer.getActiveCentersUnderLoanOff">
+        <![CDATA[
+                from org.mifos.customers.center.business.CenterBO c
+                WHERE c.customerStatus.description='Customer was Active'
+                AND c.personnel.personnelId=:ID
+        ]]>
+    </query>
+    
+>>>>>>> MIFOS-5756: Added links to view metric details of active clients,groups,centers
 </hibernate-mapping>

@@ -164,21 +164,27 @@ explanation of the license and how it is applied.
                          </tr>
                          <tr>
                             <td class="paddingL10"><span class="fontnormal">
-                            <mifos:mifoslabel name="CustomerSearch.dashboardActiveCenters"/>:
+                            <c:url value="viewActiveCentersDBDetails.ftl" var="viewActiveCentersDBDetailsUrl" />
+                            <a href="${viewActiveCentersDBDetailsUrl}">
+                            <mifos:mifoslabel name="CustomerSearch.dashboardActiveCenters"/>:</a>
                              <c:out 
                              value="${dashboard.activeCentersCount}" />
                             </span></td>
                          </tr>
                          <tr>
                             <td class="paddingL10"><span class="fontnormal">
-                            <mifos:mifoslabel name="CustomerSearch.dashboardActiveGroups"/>:
+                            <c:url value="viewActiveGroupsDBDetails.ftl" var="viewActiveGroupsDBDetailsUrl" />
+                            <a href="${viewActiveGroupsDBDetailsUrl}">
+                            <mifos:mifoslabel name="CustomerSearch.dashboardActiveGroups"/>:</a>
                              <c:out
                                 value="${dashboard.activeGroupsCount}" />
                             </span></td>
                          </tr>
                          <tr>
                             <td class="paddingL10"><span class="fontnormal">
-                            <mifos:mifoslabel name="CustomerSearch.dashboardActiveClients"/>:
+                            <c:url value="viewActiveClientsDBDetails.ftl" var="viewActiveClientsDBDetailsUrl" />
+                            <a href="${viewActiveClientsDBDetailsUrl}">
+                            <mifos:mifoslabel name="CustomerSearch.dashboardActiveClients"/>:</a>
                              <c:out
                                 value="${dashboard.activeClientsCount}" />
                             </span></td>
