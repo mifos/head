@@ -5,5 +5,4 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 public class FinancialAccountingActionForm extends BaseActionForm {
 
 
-
 }
