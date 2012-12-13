@@ -139,7 +139,7 @@ public class RepayLoanAction extends BaseAction {
             RepayLoanDto memberRepayLoanDto = this.loanAccountServiceFacade.retrieveLoanRepaymentDetails(member.getGlobalAccountNum());
             earlyRepaymentMoney = earlyRepaymentMoney.add(new Money(parent.getCurrency(), memberRepayLoanDto.getEarlyRepaymentMoney()));
             waivedRepaymentMoney = waivedRepaymentMoney.add(new Money(parent.getCurrency(), memberRepayLoanDto.getWaivedRepaymentMoney()));
-            memberNumWithAmount.put(member.getAccountId().toString(), earlyRepaymentMoney.getAmount().doubleValue());
+            memberNumWithAmount.put(member.getAccountId().toString(), Double.valueOf(memberRepayLoanDto.getEarlyRepaymentMoney()));
         }
         
         java.util.Date lastPaymentDate = new java.util.Date(0);

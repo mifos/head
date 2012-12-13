@@ -1213,7 +1213,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanInformationDto loanInformationDto;
         List<LoanInformationDto> memberloanInformationDtos = new ArrayList<LoanInformationDto>();
         try {
-            loanInformationDto = this.groupLoanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
+            loanInformationDto = this.loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
             for (LoanBO member : loanDao.findByGlobalAccountNum(globalAccountNum).getMemberAccounts()) {
                 memberloanInformationDtos.add(this.loanAccountServiceFacade.retrieveLoanInformation(member.getGlobalAccountNum()));
             }
