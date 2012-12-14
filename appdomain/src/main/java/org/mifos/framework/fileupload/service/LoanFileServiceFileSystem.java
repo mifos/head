@@ -6,19 +6,19 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
-import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.dto.screen.UploadedFileDto;
-import org.mifos.framework.fileupload.domain.ClientFileEntity;
 import org.mifos.framework.fileupload.domain.FileInfoEntity;
+import org.mifos.framework.fileupload.domain.LoanFileEntity;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class ClientFileServiceFileSystem implements ClientFileService {
-    private static final Logger logger = LoggerFactory.getLogger(ClientFileServiceFileSystem.class);
+public class LoanFileServiceFileSystem implements LoanFileService {
+    private static final Logger logger = LoggerFactory.getLogger(LoanFileServiceFileSystem.class);
 
     @Autowired
     private HibernateTransactionHelper hibernateTransactionHelper;
@@ -27,25 +27,25 @@ public class ClientFileServiceFileSystem implements ClientFileService {
     private GenericDao genericDao;
 
     @Autowired
-    private CustomerDao customerDao;
+    private LoanDao loanDao;
 
     @Autowired
     private ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade;
 
-    public boolean create(Integer clientId, InputStream in, UploadedFileDto uploadedFileDto) {
+    public boolean create(Integer accountId, InputStream in, UploadedFileDto uploadedFileDto) {
         try {
-            String storageDir = viewOrganizationSettingsServiceFacade.getClientStorageDirectory();
-            String fileDir = storageDir + File.separator + clientId.toString();
+            String storageDir = viewOrganizationSettingsServiceFacade.getLoanStorageDirectory();
+            String fileDir = storageDir + File.separator + accountId.toString();
             File file = new File(fileDir + File.separator + uploadedFileDto.getName());
             if (file.exists()) {
-                return update(clientId, in, uploadedFileDto);
+                return update(accountId, in, uploadedFileDto);
             }
             FileInfoEntity fileInfo = FileStorageManager.createFile(in, fileDir, uploadedFileDto);
             hibernateTransactionHelper.startTransaction();
-            ClientFileEntity clientFile = new ClientFileEntity();
-            clientFile.setClientId(clientId);
-            clientFile.setFileInfo(fileInfo);
-            genericDao.getSession().save(clientFile);
+            LoanFileEntity loanFile = new LoanFileEntity();
+            loanFile.setLoanId(accountId);
+            loanFile.setFileInfo(fileInfo);
+            genericDao.getSession().save(loanFile);
             hibernateTransactionHelper.commitTransaction();
         } catch (IOException e) {
             logger.error("Unable to persist", e);
@@ -57,16 +57,16 @@ public class ClientFileServiceFileSystem implements ClientFileService {
     }
 
     public UploadedFileDto read(Long fileId) {
-        ClientFileEntity clientFileEntity = customerDao.getUploadedFile(fileId);
-        return new UploadedFileDto(clientFileEntity.getFileId(), clientFileEntity.getFileInfo().getName(),
-                clientFileEntity.getFileInfo().getContentType(), clientFileEntity.getFileInfo().getSize(),
-                clientFileEntity.getFileInfo().getDescription(), clientFileEntity.getFileInfo().getUploadDate());
+        LoanFileEntity loanFileEntity = loanDao.getUploadedFile(fileId);
+        return new UploadedFileDto(loanFileEntity.getFileId(), loanFileEntity.getFileInfo().getName(),
+                loanFileEntity.getFileInfo().getContentType(), loanFileEntity.getFileInfo().getSize(),
+                loanFileEntity.getFileInfo().getDescription(), loanFileEntity.getFileInfo().getUploadDate());
     }
 
-    public List<UploadedFileDto> readAll(Integer clientId) {
-        List<ClientFileEntity> clientFileEntities = customerDao.getClientAllUploadedFiles(clientId);
+    public List<UploadedFileDto> readAll(Integer accountId) {
+        List<LoanFileEntity> loanFileEntities = loanDao.getLoanAllUploadedFiles(accountId);
         List<UploadedFileDto> uploadedFiles = new ArrayList<UploadedFileDto>();
-        for (ClientFileEntity entity : clientFileEntities) {
+        for (LoanFileEntity entity : loanFileEntities) {
             FileInfoEntity fileInfo = entity.getFileInfo();
             Long uploadFileId = entity.getFileId();
             String fileName = fileInfo.getName();
@@ -80,17 +80,17 @@ public class ClientFileServiceFileSystem implements ClientFileService {
         return uploadedFiles;
     }
 
-    public boolean update(Integer clientId, InputStream in, UploadedFileDto uploadedFileDto) {
-        ClientFileEntity clientFile = customerDao.getClientUploadedFileByName(clientId, uploadedFileDto.getName());
+    public boolean update(Integer accountId, InputStream in, UploadedFileDto uploadedFileDto) {
+        LoanFileEntity loanFile = loanDao.getLoanUploadedFileByName(accountId, uploadedFileDto.getName());
 
-        if (clientFile == null) {
-            return create(clientId, in, uploadedFileDto);
+        if (loanFile == null) {
+            return create(accountId, in, uploadedFileDto);
         }
 
         try {
-            String storageDir = viewOrganizationSettingsServiceFacade.getClientStorageDirectory();
-            String fileDir = storageDir + File.separator + clientId.toString();
-            FileInfoEntity updateFileInfo = FileStorageManager.updateFile(in, fileDir, clientFile.getFileInfo(),
+            String storageDir = viewOrganizationSettingsServiceFacade.getLoanStorageDirectory();
+            String fileDir = storageDir + File.separator + accountId.toString();
+            FileInfoEntity updateFileInfo = FileStorageManager.updateFile(in, fileDir, loanFile.getFileInfo(),
                     uploadedFileDto);
             if (updateFileInfo == null) {
                 return false;
@@ -107,29 +107,29 @@ public class ClientFileServiceFileSystem implements ClientFileService {
         return true;
     }
 
-    public boolean delete(Integer clientId, Long fileId) {
-        ClientFileEntity clientFile = customerDao.getUploadedFile(fileId);
-        FileInfoEntity fileInfo = clientFile.getFileInfo();
+    public boolean delete(Integer accountId, Long fileId) {
+        LoanFileEntity loanFile = loanDao.getUploadedFile(fileId);
+        FileInfoEntity fileInfo = loanFile.getFileInfo();
         hibernateTransactionHelper.startTransaction();
-        genericDao.getSession().delete(clientFile);
+        genericDao.getSession().delete(loanFile);
         hibernateTransactionHelper.commitTransaction();
-        return FileStorageManager.delete("/clients/" + clientId.toString() + "/" + fileInfo.getName());
+        return FileStorageManager.delete("/loans/" + accountId.toString() + "/" + fileInfo.getName());
     }
 
     public byte[] getData(UploadedFileDto uploadedFileDto) {
-        ClientFileEntity clientFile = customerDao.getUploadedFile(uploadedFileDto.getUploadedFileId());
-        if (clientFile == null || clientFile.getFileInfo() == null) {
+        LoanFileEntity loanFile = loanDao.getUploadedFile(uploadedFileDto.getUploadedFileId());
+        if (loanFile == null || loanFile.getFileInfo() == null) {
             return new byte[0];
         } else {
-            final String path = "/clients/" + clientFile.getClientId().toString() + "/"
-                    + clientFile.getFileInfo().getName();
+            final String path = "/loans/" + loanFile.getLoanId().toString() + "/"
+                    + loanFile.getFileInfo().getName();
             return FileStorageManager.getData(path);
         }
     }
 
-    public boolean checkIfFileExists(Integer clientId, String fileName) {
-        String storageDir = viewOrganizationSettingsServiceFacade.getClientStorageDirectory();
-        String fileDir = storageDir + File.separator + clientId.toString();
+    public boolean checkIfFileExists(Integer accountId, String fileName) {
+        String storageDir = viewOrganizationSettingsServiceFacade.getLoanStorageDirectory();
+        String fileDir = storageDir + File.separator + accountId.toString();
         File file = new File(fileDir + File.separator + fileName);
         if (file.exists()) {
             return true;

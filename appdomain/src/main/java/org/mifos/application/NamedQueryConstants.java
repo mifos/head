@@ -182,6 +182,8 @@ public interface NamedQueryConstants {
     String GET_UPLOADED_FILE = "Customer.getUploadedFile";
     String GET_CLIENT_ALL_UPLOADED_FILES = "Customer.getClientAllUploadedFiles";
     String GET_CLIENT_UPLOADED_FILE_BY_NAME = "Customer.getClientUploadedFileByName";
+    String GET_LOAN_ALL_UPLOADED_FILES = "Loan.getLoanAllUploadedFiles";
+    String GET_LOAN_UPLOADED_FILE_BY_NAME = "Loan.getLoanUploadedFileByName";
 
     /* Office Queries */
     String OFFICE_GET_SEARCHID = "office.getOfficeSearchId";

@@ -1168,4 +1168,20 @@ select coll.*,
         ]]>
     </sql-query>  
     
+    <query name="Loan.getUploadedFile">
+        <![CDATA[
+            from LoanFileEntity lf where lf.fileId=:fileId
+        ]]>
+    </query>
+    <query name="Loan.getLoanAllUploadedFiles">
+        <![CDATA[
+            from LoanFileEntity lf where lf.loanId=:loanId order by lf.fileInfo.uploadDate desc
+        ]]>
+    </query>
+    <query name="Loan.getLoanUploadedFileByName">
+        <![CDATA[
+            from LoanFileEntity lf join lf.fileInfo where lf.loanId = :loanId and lf.fileInfo.name=:fileName
+        ]]>
+    </query>
+    
 </hibernate-mapping>

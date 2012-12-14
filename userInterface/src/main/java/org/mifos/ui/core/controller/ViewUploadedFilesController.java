@@ -12,6 +12,8 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.screen.UploadedFileDto;
 import org.mifos.framework.fileupload.service.ClientFileService;
+import org.mifos.framework.fileupload.service.FileService;
+import org.mifos.framework.fileupload.service.LoanFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -27,12 +29,21 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @SessionAttributes("formBean")
 public class ViewUploadedFilesController {
+    
+    private enum EntityType {
+        CLIENT, LOAN
+    }
 
     private static final String REDIRECT_TO_UPLOADED_FILES_LIST = "redirect:/viewUploadedFiles.ftl?";
     private static final String UPLOADED_FILES_LIST_REQUEST_PARAMETERS = "entityId=%s&entityType=%s&backPageUrl=%s";
+    
+    private FileService fileService;
 
     @Autowired
     private ClientFileService clientFileService;
+    
+    @Autowired
+    private LoanFileService loanFileService;
 
     protected ViewUploadedFilesController() {
         // for spring autowiring
@@ -45,15 +56,16 @@ public class ViewUploadedFilesController {
 
     @RequestMapping(value = "/viewUploadedFiles", method = RequestMethod.GET)
     public ModelAndView showUploadedFiles(HttpServletRequest request, HttpServletResponse response) {
-        ModelAndView modelAndView = new ModelAndView("viewUploadedFiles");
-        modelAndView.addObject("entityId", request.getParameter("entityId"));
-        modelAndView.addObject("entityType", request.getParameter("entityType"));
-        modelAndView.addObject("backPageUrl", request.getParameter("backPageUrl"));
+        Integer entityId = Integer.parseInt(request.getParameter("entityId"));
+        EntityType entityType = EntityType.valueOf(request.getParameter("entityType"));
+        String backPageUrl = request.getParameter("backPageUrl");
+        setFileService(entityType);
+        
         List<UploadedFileDto> uploadedFiles = null;
 
         if (StringUtils.isNotBlank(request.getParameter("downloadFileId"))) {
             Long fileId = Long.parseLong(request.getParameter("downloadFileId"));
-            UploadedFileDto uploadedFileDto = clientFileService.read(fileId);
+            UploadedFileDto uploadedFileDto = fileService.read(fileId);
             response.setContentType(uploadedFileDto.getContentType());
             response.setContentLength(uploadedFileDto.getSize());
             response.setHeader("Content-Disposition", "attachment; filename=\"" + uploadedFileDto.getName() + "\"");
@@ -65,11 +77,15 @@ public class ViewUploadedFilesController {
         } else if (StringUtils.isNotBlank(request.getParameter("deleteFileId"))) {
             Long fileId = Long.parseLong(request.getParameter("deleteFileId"));
             Integer clientId = Integer.parseInt(request.getParameter("entityId"));
-            clientFileService.delete(clientId, fileId);
+            fileService.delete(clientId, fileId);
         }
 
-        uploadedFiles = clientFileService.readAll(Integer.parseInt(request.getParameter("entityId")));
+        uploadedFiles = fileService.readAll(Integer.parseInt(request.getParameter("entityId")));
 
+        ModelAndView modelAndView = new ModelAndView("viewUploadedFiles");
+        modelAndView.addObject("entityId", String.valueOf(entityId));
+        modelAndView.addObject("entityType", entityType.toString());
+        modelAndView.addObject("backPageUrl", backPageUrl);
         modelAndView.addObject("uploadedFiles", uploadedFiles);
         return modelAndView;
     }
@@ -90,6 +106,10 @@ public class ViewUploadedFilesController {
             @ModelAttribute("formBean") @Valid UploadedFileFormBean formBean, BindingResult result, SessionStatus status) {
 
         ModelAndView modelAndView = new ModelAndView("redirect:/home.ftl");
+        Integer entityId = Integer.parseInt(request.getParameter("entityId"));
+        EntityType entityType = EntityType.valueOf(request.getParameter("entityType"));
+        String backPageUrl = request.getParameter("backPageUrl");
+        setFileService(entityType);
 
         if (StringUtils.isNotBlank(request.getParameter("CANCEL"))) {
             String backUrl = REDIRECT_TO_UPLOADED_FILES_LIST
@@ -98,17 +118,16 @@ public class ViewUploadedFilesController {
             modelAndView.setViewName(backUrl);
             status.setComplete();
         } else {
-            modelAndView.addObject("entityId", request.getParameter("entityId"));
-            modelAndView.addObject("entityType", request.getParameter("entityType"));
-            modelAndView.addObject("backPageUrl", request.getParameter("backPageUrl"));
             if (result.hasErrors()) {
                 modelAndView.setViewName("uploadNewFile");
             } else {
                 modelAndView.setViewName("uploadNewFilePreview");
-                modelAndView.addObject("formBean", formBean);
-                modelAndView.addObject("fileExists", clientFileService.checkIfFileExists(
-                        Integer.parseInt(request.getParameter("entityId")), formBean.getFile().getOriginalFilename()));
+                modelAndView.addObject("fileExists", fileService.checkIfFileExists(entityId, formBean.getFile().getOriginalFilename()));
             }
+            modelAndView.addObject("formBean", formBean);
+            modelAndView.addObject("entityId", String.valueOf(entityId));
+            modelAndView.addObject("entityType", entityType.toString());
+            modelAndView.addObject("backPageUrl", backPageUrl);
         }
         return modelAndView;
     }
@@ -117,22 +136,38 @@ public class ViewUploadedFilesController {
     public ModelAndView formSubmit(HttpServletRequest request,
             @ModelAttribute("formBean") UploadedFileFormBean formBean, SessionStatus status) {
         ModelAndView modelAndView = new ModelAndView("redirect:/home.ftl");
+        Integer entityId = Integer.parseInt(request.getParameter("entityId"));
+        EntityType entityType = EntityType.valueOf(request.getParameter("entityType"));
+        String backPageUrl = request.getParameter("backPageUrl");
+        setFileService(entityType);
         try {
             if (!StringUtils.isNotBlank(request.getParameter("CANCEL"))) {
                 UploadedFileDto uploadedFileDto = new UploadedFileDto(formBean.getFile().getOriginalFilename(),
                         formBean.getFile().getContentType(), (int) formBean.getFile().getSize(),
                         formBean.getDescription());
-                clientFileService.create(Integer.parseInt(request.getParameter("entityId")), formBean.getFile()
-                        .getInputStream(), uploadedFileDto);
+                fileService.create(entityId, formBean.getFile().getInputStream(), uploadedFileDto);
             }
             String backUrl = REDIRECT_TO_UPLOADED_FILES_LIST
-                    + String.format(UPLOADED_FILES_LIST_REQUEST_PARAMETERS, request.getParameter("entityId"),
-                            request.getParameter("entityType"), request.getParameter("backPageUrl"));
+                    + String.format(UPLOADED_FILES_LIST_REQUEST_PARAMETERS, entityId.toString(),
+                            entityType.toString(), backPageUrl);
             modelAndView.setViewName(backUrl);
             status.setComplete();
         } catch (IOException e) {
             throw new MifosRuntimeException(e);
         }
         return modelAndView;
+    }
+    
+    private void setFileService(EntityType entityType) {
+        switch(entityType) {
+        case CLIENT:
+            fileService = clientFileService;
+            break;
+        case LOAN:
+            fileService = loanFileService;
+            break;
+        default:
+            break;
+        }
     }
 }

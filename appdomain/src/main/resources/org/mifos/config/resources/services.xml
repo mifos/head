@@ -141,4 +141,6 @@
 
     <bean id="clientFileService" class="org.mifos.framework.fileupload.service.ClientFileServiceFileSystem" />
     
+    <bean id="loanFileService" class="org.mifos.framework.fileupload.service.LoanFileServiceFileSystem" />
+    
 </beans>

@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.dto.domain.SurveyDto;
+import org.mifos.framework.fileupload.domain.LoanFileEntity;
 
 public interface LoanDao {
 
@@ -60,4 +61,10 @@ public interface LoanDao {
     int countLoansToBePaidCurrentWeek();
     
     int countLoansToBePaidCurrentWeekUnderLoanOfficer(Short loanOfficerId);
+    
+    LoanFileEntity getUploadedFile(Long fileId);
+    
+    List<LoanFileEntity> getLoanAllUploadedFiles(Integer accountId);
+    
+    LoanFileEntity getLoanUploadedFileByName(Integer accountId, String fileName);
 }

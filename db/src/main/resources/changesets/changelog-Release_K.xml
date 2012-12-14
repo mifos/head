@@ -29,4 +29,21 @@
             drop table file_info;
         </rollback>
     </changeSet>
+    <changeSet id="MIFOS-5739_2" author="Pawel Reise" context="expansion">
+        <sql endDelimiter=";">
+            create table loan_file (
+                file_id bigint auto_increment not null,
+                loan_id integer,
+                file_info bigint,
+                primary key(file_id),
+                foreign key(file_info)
+                    references file_info(file_info_id),
+                foreign key(loan_id)
+                    references account(account_id)
+            ) engine=innodb character set utf8;
+        </sql>
+        <rollback>
+            drop table loan_file;
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

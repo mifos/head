@@ -13,6 +13,7 @@ import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.dto.domain.SurveyDto;
+import org.mifos.framework.fileupload.domain.LoanFileEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoanDaoHibernate implements LoanDao {
@@ -218,5 +219,29 @@ public class LoanDaoHibernate implements LoanDao {
         queryParameters.put("ID",loanOfficerId.toString());
         List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.COUNT_LOANS_TO_BE_PAID_CURRENT_WEEK_UNDER_LOANOFF, queryParameters);
         return ((BigInteger) queryResult.get(0)).intValue();
+    }
+    
+    @Override
+    public LoanFileEntity getUploadedFile(Long fileId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("fileId", fileId);
+        return (LoanFileEntity) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_UPLOADED_FILE, queryParameters);
+    }
+    
+    @Override
+    public List<LoanFileEntity> getLoanAllUploadedFiles(Integer loanId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("loanId", loanId);
+        Object result =  this.genericDao.executeNamedQuery(NamedQueryConstants.GET_LOAN_ALL_UPLOADED_FILES, queryParameters);
+        return (List<LoanFileEntity>) result;
+    }
+    
+    @Override
+    public LoanFileEntity getLoanUploadedFileByName(Integer loanId, String fileName) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("loanId", loanId);
+        queryParameters.put("fileName", fileName);
+        Object result = ((Object[])this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_LOAN_UPLOADED_FILE_BY_NAME, queryParameters))[0];
+        return (LoanFileEntity) result;
     }
 }
