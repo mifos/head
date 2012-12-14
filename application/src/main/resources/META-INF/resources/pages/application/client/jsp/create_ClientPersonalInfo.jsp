@@ -54,6 +54,30 @@ explanation of the license and how it is applied.
 	clientCustActionForm.action="clientCustAction.do?method=previewPersonalInfo";
 	clientCustActionForm.submit();
   }
+  
+  function goToNextPage(){
+      clientCustActionForm.action="clientCustAction.do?method=next";
+      clientCustActionForm.submit();
+   }
+  
+   function addFile() {
+       var file = document.getElementById("create_ClientPersonalInfo.input.additionalfile");
+       var description = document.getElementById("create_ClientPersonalInfo.input.additionalfile.description");
+       if (file.value != null && file.value != "" && !document.getElementById(file.value)) {
+           clientCustActionForm.action = "clientCustAction.do?method=addFile";
+           clientCustActionForm.submit();
+           $("#filesToUpload").append(
+                   "<li id='" + file.value + "'><b>" + file.value + "</b><br/>" + description.value
+                           + "<br/><input type='button' value='X' onclick='deleteFile(\"" + file.value
+                           + "\")' />" + "<br/><br/></li>");
+       }
+   }
+
+   function deleteFile(name) {
+       $("#" + name.replace(/\./g, "\\.")).remove();
+       clientCustActionForm.action = "clientCustAction.do?method=deleteFile&fileName=" + name;
+       clientCustActionForm.submit();
+   }
 </script>
 
 <script language="javascript">
@@ -676,7 +700,75 @@ explanation of the license and how it is applied.
 							</table>
 							<br>
 							<!-- Address end -->
-							<!-- Custom Fields -->
+                            <!-- Attachements -->
+                            <table width="93%" border="0" cellpadding="3" cellspacing="0">
+                                <tr>
+                                    <td colspan="2" class="fontnormalbold">
+                                        <mifos:mifoslabel
+                                            name="client.Attachements"
+                                            bundle="ClientUIResources"></mifos:mifoslabel>
+                                    </td>
+                                </tr>
+                                <tr class="fontnormal">
+                                    <td width="17%" align="right" class="fontnormal">
+                                        <span>
+                                            <mifos:mifoslabel
+                                                    name="client.File"
+                                                    bundle="ClientUIResources"></mifos:mifoslabel>
+                                        </span>
+                                    </td>
+                                    <td width="83%"><mifos:file styleId="create_ClientPersonalInfo.input.additionalfile" 
+                                        keyhm="Client.File" property="selectedFile" maxlength="200"
+                                        onkeypress="return onKeyPressForFileComponent(this);" /></td>
+                                </tr>
+                                <tr class="fontnormal">
+                                    <td width="17%" align="right" class="fontnormal">
+                                    <span>
+                                        <mifos:mifoslabel
+                                                    name="client.description"
+                                                    bundle="ClientUIResources"></mifos:mifoslabel></span>
+                                    </td>
+                                    <td width="83%">
+                                        <mifos:mifosalphanumtext 
+                                            styleId="create_ClientPersonalInfo.input.additionalfile.description" 
+                                            name="clientCustActionForm"
+                                            property="selectedFileDescription" maxlength="1000" />
+                                    </td>
+                                </tr>
+                                <tr class="fontnormal">
+                                    <td width="17%" align="right" class="fontnormal">
+                                    </td>
+                                    <td width="83%">
+	                                    <html-el:button onclick="addFile()" property="addFileButton">
+	                                        <mifos:mifoslabel
+	                                                    name="client.addFile"
+	                                                    bundle="ClientUIResources"></mifos:mifoslabel>
+	                                    </html-el:button> 
+                                    </td>
+                                </tr>
+                                <tr class="fontnormal">
+                                    <td colspan="2">&nbsp;</td>
+                                </tr>
+                                <tr class="fontnormal">
+                                    <td class="fontnormal" colspan="2" style="padding-left: 150px; padding-bottom: 20px">
+                                        <ol id="filesToUpload">
+                                            <c:forEach var="fileToUpload" items="${sessionScope.clientCustActionForm.filesMetadata}">
+                                                <li id="${fileToUpload.name}">
+                                                    <b>${fileToUpload.name}</b><br/>
+                                                    ${fileToUpload.description}<br/>
+                                                    <input type="button" id=${fileToUpload.name} value="X" 
+                                                           onclick="deleteFile('${fileToUpload.name}')" />
+                                                    <br/><br/>
+                                                </li>
+                                            </c:forEach>
+                                        </ol>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br>
+                            <!-- Attachements end -->
+                            <!-- Custom Fields -->
+                            
 							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
@@ -794,7 +886,8 @@ explanation of the license and how it is applied.
 											</html-el:button>
 										</c:when>
 										<c:otherwise>
-											<html-el:submit styleId="create_ClientPersonalInfo.button.continue" styleClass="buttn">
+											<html-el:submit onclick="goToNextPage()" 
+											                styleId="create_ClientPersonalInfo.button.continue" styleClass="buttn">
 												<mifos:mifoslabel name="button.continue"
 													bundle="ClientUIResources"></mifos:mifoslabel>
 											</html-el:submit>

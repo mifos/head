@@ -91,6 +91,7 @@ import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.dto.screen.ClientPersonalInfoDto;
 import org.mifos.dto.screen.ClientPhotoDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
+import org.mifos.dto.screen.UploadedFileDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -202,6 +203,46 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
       
+        return mapping.findForward(ActionForwards.load_success.toString());
+    }
+    
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward addFile(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+                              @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        ClientCustActionForm actionForm = (ClientCustActionForm) form;
+        FormFile file = actionForm.getSelectedFile();
+        String fileName = actionForm.getSelectedFile().getFileName();
+        String fileContentType = actionForm.getSelectedFile().getContentType();
+        Integer fileSize = actionForm.getSelectedFile().getFileSize();
+        String fileDescription = actionForm.getSelectedFileDescription();
+        if (file != null) {
+            actionForm.getFiles().add(file);
+            actionForm.getFilesMetadata().add(
+                    new UploadedFileDto(fileName, fileContentType, fileSize, fileDescription));
+        }
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        return mapping.findForward(ActionForwards.load_success.toString());
+    }
+    
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward deleteFile(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+                              @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+        ClientCustActionForm actionForm = (ClientCustActionForm) form;
+        String fileName = request.getParameter("fileName");
+        if (fileName != null) {
+            int index = 0;
+            for(FormFile formFile : actionForm.getFiles()) {
+                if (formFile.getFileName().equals(fileName)) {
+                    index = actionForm.getFiles().indexOf(formFile);
+                    break;
+                }
+            }
+            if (index >= 0) {
+                actionForm.getFiles().remove(index);
+                actionForm.getFilesMetadata().remove(index);
+            }
+        }
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -518,6 +559,18 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
         CustomerDetailsDto clientDetails = this.clientServiceFacade.createNewClient(clientCreationDetail, meetingDto,
                 allowedSavingProducts);
+        
+        List<FormFile> formFiles = actionForm.getFiles();
+        List<UploadedFileDto> filesMetadata = actionForm.getFilesMetadata();
+        
+        for(int i=0; i<formFiles.size(); i++)
+        {
+            if (formFiles.get(i).getFileSize() != 0) {
+                InputStream inputStream = formFiles.get(i).getInputStream();
+                UploadedFileDto fileMetadata = filesMetadata.get(i);
+                clientServiceFacade.uploadFile(clientDetails.getId(), inputStream, fileMetadata);
+            }
+        }
 
         actionForm.setCustomerId(clientDetails.getId().toString());
         actionForm.setGlobalCustNum(clientDetails.getGlobalCustNum());

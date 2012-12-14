@@ -20,6 +20,7 @@
 
 package org.mifos.application.servicefacade;
 
+import java.io.InputStream;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,6 +43,7 @@ import org.mifos.dto.screen.ClientMfiInfoDto;
 import org.mifos.dto.screen.ClientPersonalInfoDto;
 import org.mifos.dto.screen.ClientPhotoDto;
 import org.mifos.dto.screen.ClientRemovalFromGroupDto;
+import org.mifos.dto.screen.UploadedFileDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ClientServiceFacade {
@@ -73,6 +75,8 @@ public interface ClientServiceFacade {
     @PreAuthorize("isFullyAuthenticated() and (hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO') or (hasRole('ROLE_CREATE_CLIENT_IN_SAVE_FOR_LATER_STATE') and hasPermission(#clientStatus, 'CLIENT_STATUS') and hasPermission(#loanOfficerId, 'LOAN_OFFICER_ID')))")
     void updateClientPersonalInfo(ClientPersonalInfoUpdate personalInfo, @SuppressWarnings("PMD") String clientStatus, @SuppressWarnings("PMD") short loanOfficerId);
 
+    @PreAuthorize("isFullyAuthenticated()")
+    void uploadFile(Integer clientId, InputStream in, UploadedFileDto uploadedFileDto);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO')")
     ClientFamilyInfoDto retrieveFamilyInfoForEdit(String globalCustNum);

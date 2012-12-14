@@ -56,6 +56,7 @@ import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.screen.ClientFamilyDetailDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
+import org.mifos.dto.screen.UploadedFileDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
@@ -92,6 +93,10 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
     private String deleteThisRow;
     private FormFile picture;
     private InputStream customerPicture;
+    private FormFile selectedFile;
+    private String selectedFileDescription;
+    private List<FormFile> files;
+    private List<UploadedFileDto> filesMetadata;
     private int age;
     private final List<Short> selectedOfferings;
     private List<ClientNameDetailDto> familyNames;
@@ -123,6 +128,9 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
 
         initializeFamilyMember();
         addFamilyMember();
+        
+        files = new ArrayList<FormFile>();
+        filesMetadata = new ArrayList<UploadedFileDto>();
     }
 
     public List<ClientFamilyDetailDto> getFamilyDetails() {
@@ -297,6 +305,39 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
 
     public InputStream getCustomerPicture() {
         return customerPicture;
+    }
+    
+    
+    public FormFile getSelectedFile() {
+        return selectedFile;
+    }
+    
+    public void setSelectedFile(FormFile file) {
+        this.selectedFile = file;
+    }
+    
+    public String getSelectedFileDescription() {
+        return selectedFileDescription;
+    }
+
+    public void setSelectedFileDescription(String fileDescription) {
+        this.selectedFileDescription = fileDescription;
+    }
+    
+    public List<FormFile> getFiles() {
+        return files;
+    }
+    
+    public void setFiles(List<FormFile> files) {
+        this.files = files;
+    }
+    
+    public List<UploadedFileDto> getFilesMetadata() {
+        return this.filesMetadata;
+    }
+    
+    public void setFilesMetadata(List<UploadedFileDto> filesMetadata) {
+        this.filesMetadata = filesMetadata;
     }
 
     public int getAge() {
@@ -1156,6 +1197,8 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
         for (int i = 0; i < getSelectedOfferings().size(); i++) {
             getSelectedOfferings().set(i, null);
         }
+        setFiles(new ArrayList<FormFile>());
+        setFilesMetadata(new ArrayList<UploadedFileDto>());
     }
 
     public void setLoanOfficerName(String loanOfficerName) {

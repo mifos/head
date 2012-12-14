@@ -1,5 +1,6 @@
 package org.mifos.dto.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ public class AccountPaymentDto {
     private String receiptNumber;
     private final Date receiptDate;
     private Short paymentTypeId;
-    private Map<String, Double> memberNumWithAmount;
+    private Map<String, AmountWithInterest> memberNumWithAmount;
     
     public AccountPaymentDto(Double totalAmount, Date transactionDate, String receiptNumber, Date receiptDate,
             Short paymentTypeId) {
@@ -23,7 +24,7 @@ public class AccountPaymentDto {
     }
     
     public AccountPaymentDto(Double totalAmount, Date transactionDate, String receiptNumber, Date receiptDate,
-            Short paymentTypeId, Map<String, Double> memberNumWithAmount) {
+            Short paymentTypeId, Map<String, AmountWithInterest> memberNumWithAmount) {
         this.totalAmount = totalAmount;
         this.transactionDate = (Date)transactionDate.clone();
         this.receiptNumber = receiptNumber;
@@ -70,11 +71,11 @@ public class AccountPaymentDto {
         this.paymentTypeId = paymentTypeId;
     }
 
-    public Map<String, Double> getMemberNumWithAmount() {
+    public Map<String, AmountWithInterest> getMemberNumWithAmount() {
         return memberNumWithAmount;
     }
 
-    public void setMemberNumWithAmount(Map<String, Double> memberNumWithAmount) {
+    public void setMemberNumWithAmount(Map<String, AmountWithInterest> memberNumWithAmount) {
         this.memberNumWithAmount = memberNumWithAmount;
     }
 
@@ -105,5 +106,27 @@ public class AccountPaymentDto {
         return true;
     }
     
-    
+    public static class AmountWithInterest {
+        private Double amount;
+        private BigDecimal interest;
+        public Double getAmount() {
+            return amount;
+        }
+        public void setAmount(Double amount) {
+            this.amount = amount;
+        }
+        public BigDecimal getInterest() {
+            return interest;
+        }
+        public void setInterest(BigDecimal interest) {
+            this.interest = interest;
+        }
+        
+        public AmountWithInterest(Double amount, BigDecimal interest) {
+            this.amount = amount;
+            this.interest = interest;
+        }
+        
+        
+    }
 }

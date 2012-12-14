@@ -667,6 +667,8 @@ public class ActivityMapper {
         security.allow("editPreviewEditFamilyInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
         security.allow("captureQuestionResponses", SecurityConstants.VIEW);
         security.allow("editQuestionResponses", SecurityConstants.VIEW);
+        security.allow("addFile", SecurityConstants.VIEW);
+        security.allow("deleteFile", SecurityConstants.VIEW);
         return security;
     }
 

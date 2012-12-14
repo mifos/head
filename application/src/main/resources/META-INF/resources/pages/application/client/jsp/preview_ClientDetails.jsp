@@ -389,6 +389,21 @@ explanation of the license and how it is applied.
 									</c:if>
 									<br>
 									</span> </td></tr>
+									
+                                    <tr><td class="fontnormal">
+                                       <b><mifos:mifoslabel
+                                            name="client.Attachements"
+                                            bundle="ClientUIResources"></mifos:mifoslabel></b>
+                                        <ol id="filesToUpload">
+		                                    <c:forEach var="fileToUpload" items="${sessionScope.clientCustActionForm.filesMetadata}">
+		                                        <li id="${fileToUpload.name}">
+		                                            <b>${fileToUpload.name}</b><br/>
+		                                            ${fileToUpload.description}<br/><br/>
+		                                        </li>
+		                                    </c:forEach>
+	                                    </ol>
+                                    </td></tr>
+									
 									<tr><td>									
 										<!-- Edit Button --> <html-el:button styleId="preview_ClientDetails.button.editPersonalInformation"
 											onclick="goToPersonalPage()" property="editButton"

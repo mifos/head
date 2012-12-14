@@ -1981,7 +1981,7 @@
     </query>
     <query name="Customer.getClientAllUploadedFiles">
         <![CDATA[
-            from ClientFileEntity cf where cf.clientId=:clientId order by cf.fileInfo.name desc
+            from ClientFileEntity cf where cf.clientId=:clientId order by cf.fileInfo.uploadDate desc
         ]]>
     </query>
     <query name="Customer.getClientUploadedFileByName">

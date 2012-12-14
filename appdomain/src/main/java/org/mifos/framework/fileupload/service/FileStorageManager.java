@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.mifos.dto.screen.UploadedFileDto;
 import org.mifos.framework.fileupload.domain.FileInfoEntity;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -18,25 +19,24 @@ public class FileStorageManager {
     private static final String BASE_DIR = "/uploads/";
     public static String location;
 
-    public static FileInfoEntity createFile(InputStream in, String fileDir, String contentType, String name,
-            String description) throws IOException {
+    public static FileInfoEntity createFile(InputStream in, String fileDir, UploadedFileDto uploadedFileDto) throws IOException {
         byte[] data = InputStreamUtils.getBytes(in);
 
-        File file = new File(fileDir + File.separator + name);
+        File file = new File(fileDir + File.separator + uploadedFileDto.getName());
         FileUtils.touch(file);
         FileUtils.writeByteArrayToFile(file, data);
 
         FileInfoEntity fileInfo = new FileInfoEntity();
-        fileInfo.setName(name);
-        fileInfo.setContentType(contentType);
+        fileInfo.setName(uploadedFileDto.getName());
+        fileInfo.setContentType(uploadedFileDto.getContentType());
         fileInfo.setSize(data.length);
-        fileInfo.setDescription(description);
+        fileInfo.setDescription(uploadedFileDto.getDescription());
         fileInfo.setUploadDate(DateUtils.getCurrentJavaDateTime());
         return fileInfo;
     }
 
     public static FileInfoEntity updateFile(InputStream in, String fileDir, FileInfoEntity fileInfo,
-            String contentType, String name, String description) throws IOException {
+            UploadedFileDto uploadedFileDto) throws IOException {
         String filePath = fileDir + File.separator + fileInfo.getName();
         byte[] data = InputStreamUtils.getBytes(in);
 
@@ -44,9 +44,9 @@ public class FileStorageManager {
         FileUtils.touch(file);
         FileUtils.writeByteArrayToFile(file, data);
 
-        fileInfo.setContentType(contentType);
-        fileInfo.setName(name);
-        fileInfo.setDescription(description);
+        fileInfo.setContentType(uploadedFileDto.getContentType());
+        fileInfo.setName(uploadedFileDto.getName());
+        fileInfo.setDescription(uploadedFileDto.getDescription());
         fileInfo.setSize(data.length);
         fileInfo.setUploadDate(DateUtils.getCurrentJavaDateTime());
         return fileInfo;

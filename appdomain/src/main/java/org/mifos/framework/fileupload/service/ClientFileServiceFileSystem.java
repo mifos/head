@@ -32,15 +32,15 @@ public class ClientFileServiceFileSystem implements ClientFileService {
     @Autowired
     private ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade;
 
-    public boolean create(Integer clientId, InputStream in, String contentType, String name, String description) {
+    public boolean create(Integer clientId, InputStream in, UploadedFileDto uploadedFileDto) {
         try {
             String storageDir = viewOrganizationSettingsServiceFacade.getClientStorageDirectory();
             String fileDir = storageDir + File.separator + clientId.toString();
-            File file = new File(fileDir + File.separator + name);
+            File file = new File(fileDir + File.separator + uploadedFileDto.getName());
             if (file.exists()) {
-                return update(clientId, in, contentType, name, description);
+                return update(clientId, in, uploadedFileDto);
             }
-            FileInfoEntity fileInfo = FileStorageManager.createFile(in, fileDir, contentType, name, description);
+            FileInfoEntity fileInfo = FileStorageManager.createFile(in, fileDir, uploadedFileDto);
             hibernateTransactionHelper.startTransaction();
             ClientFileEntity clientFile = new ClientFileEntity();
             clientFile.setClientId(clientId);
@@ -80,18 +80,18 @@ public class ClientFileServiceFileSystem implements ClientFileService {
         return uploadedFiles;
     }
 
-    public boolean update(Integer clientId, InputStream in, String contentType, String name, String description) {
-        ClientFileEntity clientFile = customerDao.getClientUploadedFileByName(clientId, name);
+    public boolean update(Integer clientId, InputStream in, UploadedFileDto uploadedFileDto) {
+        ClientFileEntity clientFile = customerDao.getClientUploadedFileByName(clientId, uploadedFileDto.getName());
 
         if (clientFile == null) {
-            return create(clientId, in, contentType, name, description);
+            return create(clientId, in, uploadedFileDto);
         }
 
         try {
             String storageDir = viewOrganizationSettingsServiceFacade.getClientStorageDirectory();
             String fileDir = storageDir + File.separator + clientId.toString();
             FileInfoEntity updateFileInfo = FileStorageManager.updateFile(in, fileDir, clientFile.getFileInfo(),
-                    contentType, name, description);
+                    uploadedFileDto);
             if (updateFileInfo == null) {
                 return false;
             }

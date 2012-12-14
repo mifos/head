@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.joda.time.DateTime;
@@ -154,6 +155,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.dto.domain.AccountPaymentDto;
+import org.mifos.dto.domain.AccountPaymentDto.AmountWithInterest;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -1386,9 +1388,9 @@ public class LoanBO extends AccountBO implements Loan {
 
             // GLIM
             if (this.isGroupLoanAccountParent()){
-                for (Map.Entry<String, Double> entry : paymentDto.getMemberNumWithAmount().entrySet()) {
-                    AccountPaymentDto memberPayment = new AccountPaymentDto(entry.getValue(), paymentDto.getTransactionDate(), paymentDto.getReceiptNumber(), paymentDto.getReceiptDate(), paymentDto.getPaymentTypeId());
-                    legacyLoanDao.getAccount(Integer.valueOf(entry.getKey())).makeEarlyRepayment(memberPayment, personnelId, waiveInterest, interestDue,null,accountPaymentEntity);
+                for (Entry<String, AmountWithInterest> entry : paymentDto.getMemberNumWithAmount().entrySet()) {
+                    AccountPaymentDto memberPayment = new AccountPaymentDto(entry.getValue().getAmount(), paymentDto.getTransactionDate(), paymentDto.getReceiptNumber(), paymentDto.getReceiptDate(), paymentDto.getPaymentTypeId());
+                    legacyLoanDao.getAccount(Integer.valueOf(entry.getKey())).makeEarlyRepayment(memberPayment, personnelId, waiveInterest, new Money(this.getCurrency(), entry.getValue().getInterest()),null,accountPaymentEntity);
                 }
             } 
             else if (hasMemberAccounts() && !this.isGroupLoanAccount()) {

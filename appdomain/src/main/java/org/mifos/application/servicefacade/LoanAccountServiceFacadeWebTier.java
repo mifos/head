@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -175,6 +176,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.dto.domain.AccountFeeScheduleDto;
+import org.mifos.dto.domain.AccountPaymentDto.AmountWithInterest;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
@@ -1658,7 +1660,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                     repayLoanInfoDto.getDateOfPayment(), repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(), repayLoanInfoDto.getId());
             
             if (repayLoanInfoDto.getSavingsPaymentId() != null){
-                paymentDto.setMemberNumWithAmount(repayLoanInfoDto.getMembersValue());
+                paymentDto.setMemberNumWithAmount(generateAmountWithInterest(null == repayLoanInfoDto.getMembersValue() ? new HashMap<String, Double>() : repayLoanInfoDto.getMembersValue(), repayLoanInfoDto));
                 loan.makeEarlyRepayment(paymentDto, repayLoanInfoDto.getId(),
                         repayLoanInfoDto.isWaiveInterest(), new Money(loan.getCurrency(), interestDueForCurrentInstallment),
                         repayLoanInfoDto.getSavingsPaymentId(),null);
@@ -3101,7 +3103,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 BigDecimal interestDueForCurrentInstallment = calculateInterestDueForCurrentInstalmanet(repayLoanInfoDto);
                 
                 org.mifos.dto.domain.AccountPaymentDto paymentDto = new org.mifos.dto.domain.AccountPaymentDto(repayLoanInfoDto.getTotalRepaymentAmount().doubleValue(),
-                        repayLoanInfoDto.getDateOfPayment(), repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(), repayLoanInfoDto.getId(), memberNumWithAmount);
+                        repayLoanInfoDto.getDateOfPayment(), repayLoanInfoDto.getReceiptNumber(), repayLoanInfoDto.getReceiptDate(), repayLoanInfoDto.getId(), generateAmountWithInterest(memberNumWithAmount,repayLoanInfoDto));
                 
                 if (repayLoanInfoDto.getSavingsPaymentId() != null){
                     parentLoan.makeEarlyRepayment(paymentDto, repayLoanInfoDto.getId(),
@@ -3116,6 +3118,21 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
         
     }
+    
+    private Map<String, AmountWithInterest> generateAmountWithInterest(Map<String,Double> memberNumWithAmount, RepayLoanInfoDto parentRLIDto) {
+        Map<String, AmountWithInterest> awi = new HashMap<String, AmountWithInterest>();
+        
+        for (Map.Entry<String, Double> entry : memberNumWithAmount.entrySet()) {
+            LoanBO loan = this.loanDao.findById(Integer.valueOf(entry.getKey()));
+            String globalAccountNum = loan.getGlobalAccountNum();
+            RepayLoanDto memberRLDto = retrieveLoanRepaymentDetails(globalAccountNum);
+            RepayLoanInfoDto memberRLIDto = new RepayLoanInfoDto(globalAccountNum, memberRLDto.getEarlyRepaymentMoney(), parentRLIDto.getReceiptNumber(), parentRLIDto.getReceiptDate(),
+                    parentRLIDto.getPaymentTypeId(), parentRLIDto.getId(), parentRLIDto.isWaiveInterest(), parentRLIDto.getDateOfPayment(), new BigDecimal(entry.getValue()), new BigDecimal(memberRLDto.getWaivedRepaymentMoney()));
+            awi.put(entry.getKey(), new org.mifos.dto.domain.AccountPaymentDto.AmountWithInterest(entry.getValue(), calculateInterestDueForCurrentInstalmanet(memberRLIDto)));
+        }
+        return awi;
+    }
+    
     @Override
     public BigDecimal calculateInterestDueForCurrentInstalmanet(RepayLoanInfoDto repayLoanInfoDto) {
         LoanBO loan = this.loanDao.findByGlobalAccountNum(repayLoanInfoDto.getGlobalAccountNum());
