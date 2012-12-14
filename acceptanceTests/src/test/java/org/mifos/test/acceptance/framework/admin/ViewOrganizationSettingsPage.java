@@ -110,7 +110,7 @@ public class ViewOrganizationSettingsPage extends MifosPage {
                 "Number of digits before decimal: 14", "Number of digits after decimal for interest: 5",
                 "Number of digits before decimal for interest: 10", "Number of interest days: 365",
                 "Currency Rounding Mode: HALF_UP", "Initial Rounding Mode: HALF_UP", "Final Rounding Mode: CEILING", 
-                "GL names mode: GL Code - GL Name", "Simple accounting module: No", "Overdue interest paid first: No" };
+                "GL names mode: GL Code - GL Name", "Simple accounting module: Yes", "Overdue interest paid first: No" };
     }
 
     public String[] getDefaultCurrencies() {
