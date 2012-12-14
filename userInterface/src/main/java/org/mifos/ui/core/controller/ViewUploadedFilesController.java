@@ -119,9 +119,11 @@ public class ViewUploadedFilesController {
         ModelAndView modelAndView = new ModelAndView("redirect:/home.ftl");
         try {
             if (!StringUtils.isNotBlank(request.getParameter("CANCEL"))) {
+                UploadedFileDto uploadedFileDto = new UploadedFileDto(formBean.getFile().getOriginalFilename(),
+                        formBean.getFile().getContentType(), (int) formBean.getFile().getSize(),
+                        formBean.getDescription());
                 clientFileService.create(Integer.parseInt(request.getParameter("entityId")), formBean.getFile()
-                        .getInputStream(), formBean.getFile().getContentType(), formBean.getFile()
-                        .getOriginalFilename(), formBean.getDescription());
+                        .getInputStream(), uploadedFileDto);
             }
             String backUrl = REDIRECT_TO_UPLOADED_FILES_LIST
                     + String.format(UPLOADED_FILES_LIST_REQUEST_PARAMETERS, request.getParameter("entityId"),

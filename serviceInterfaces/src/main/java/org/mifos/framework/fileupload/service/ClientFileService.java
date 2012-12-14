@@ -7,13 +7,13 @@ import org.mifos.dto.screen.UploadedFileDto;
 
 public interface ClientFileService {
 
-    boolean create(Integer clientId, InputStream in, String contentType, String name, String description);
+    boolean create(Integer clientId, InputStream in, UploadedFileDto uploadedFileDto);
 
     UploadedFileDto read(Long fileId);
     
     List<UploadedFileDto> readAll(Integer clientId);
 
-    boolean update(Integer clientId, InputStream in, String contentType, String name, String description);
+    boolean update(Integer clientId, InputStream in, UploadedFileDto uploadedFileDto);
 
     boolean delete(Integer clientId, Long fileId);
 

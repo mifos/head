@@ -21,6 +21,15 @@ public class UploadedFileDto implements Serializable {
         this.description = description;
         this.uploadDate = (Date)uploadDate.clone();
     }
+    
+    public UploadedFileDto(String name, String contentType, Integer size, String description) {
+        this.uploadedFileId = 0L;
+        this.name = name;
+        this.contentType = contentType;
+        this.size = size;
+        this.description = description;
+        this.uploadDate = new Date();
+    }
 
     public Long getUploadedFileId() {
         return uploadedFileId;
