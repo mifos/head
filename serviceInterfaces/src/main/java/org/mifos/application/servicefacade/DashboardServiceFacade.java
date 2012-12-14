@@ -8,7 +8,8 @@ public interface DashboardServiceFacade {
 
     DashboardDto getDashboardDto();
     
-    String[] getHeaders();
+    String[] getLoanHeaders();
+    String[] getCustomerHeaders();
     
     List<?> getActiveClients();
     List<?> getActiveGroups();
@@ -18,4 +19,5 @@ public interface DashboardServiceFacade {
     List<?> getWaitingForApprovalLoans();
     List<?> getLoansInArrears();
     List<?> getLoansToBePaidCurrentWeek();
+
 }

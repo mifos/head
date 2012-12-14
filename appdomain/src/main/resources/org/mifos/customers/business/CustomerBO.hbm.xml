@@ -2014,7 +2014,7 @@
     
     <query name="Customer.getActiveGroupsUnderLoanOff">
         <![CDATA[
-                from org.mifos.customers.client.business.ClientBO c
+                from org.mifos.customers.group.business.GroupBO c
                 WHERE c.customerStatus.description='Customer was Active'
                 AND c.personnel.personnelId=:ID
         ]]>
