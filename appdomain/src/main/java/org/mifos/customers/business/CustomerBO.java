@@ -725,7 +725,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         for (AccountBO account : getAccounts()) {
             if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
                 LoanBO loanBO = (LoanBO) account;
-                amount = amount.add(loanBO.getLoanBalance());
+                amount = amount.add(loanBO.getLoanSummary().getTotalAmntDue());
             }
         }
         return amount;

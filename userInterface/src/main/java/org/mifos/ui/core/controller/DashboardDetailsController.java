@@ -45,7 +45,7 @@ public class DashboardDetailsController {
     
     @RequestMapping(value = "/viewTotalBorrowersDBDetails", method=RequestMethod.GET)
     public ModelAndView showTotalBorowers(HttpServletRequest request, HttpServletResponse response){
-        ModelAndView modelAndView = getLoanModelAndView();
+        ModelAndView modelAndView = getCustomerModelAndView();
         List<DashboardDetailDto> loans = (List<DashboardDetailDto>) dashboardServiceFacade.getBorrowers();
         modelAndView.addObject("dashboardDetails", loans);
         return modelAndView;
@@ -53,7 +53,7 @@ public class DashboardDetailsController {
     
     @RequestMapping(value = "/viewTotalBorrowersGroupDBDetails", method=RequestMethod.GET)
     public ModelAndView showTotalBorowersGroup(HttpServletRequest request, HttpServletResponse response){
-        ModelAndView modelAndView = getLoanModelAndView();
+        ModelAndView modelAndView = getCustomerModelAndView();
         List<DashboardDetailDto> loans = (List<DashboardDetailDto>) dashboardServiceFacade.getBorrowersGroup();
         modelAndView.addObject("dashboardDetails", loans);
         return modelAndView;
@@ -61,7 +61,7 @@ public class DashboardDetailsController {
     
     @RequestMapping(value = "/viewActiveClientsDBDetails", method=RequestMethod.GET)
     public ModelAndView showActiveClients(HttpServletRequest request, HttpServletResponse response){
-        ModelAndView modelAndView = getLoanModelAndView();
+        ModelAndView modelAndView = getCustomerModelAndView();
         List<DashboardDetailDto> loans = (List<DashboardDetailDto>) dashboardServiceFacade.getActiveClients();
         modelAndView.addObject("dashboardDetails", loans);
         return modelAndView;
@@ -69,7 +69,7 @@ public class DashboardDetailsController {
     
     @RequestMapping(value = "/viewActiveGroupsDBDetails", method=RequestMethod.GET)
     public ModelAndView showActiveGroups(HttpServletRequest request, HttpServletResponse response){
-        ModelAndView modelAndView = getLoanModelAndView();
+        ModelAndView modelAndView = getCustomerModelAndView();
         List<DashboardDetailDto> loans = (List<DashboardDetailDto>) dashboardServiceFacade.getActiveGroups();
         modelAndView.addObject("dashboardDetails", loans);
         return modelAndView;
@@ -77,7 +77,7 @@ public class DashboardDetailsController {
     
     @RequestMapping(value = "/viewActiveCentersDBDetails", method=RequestMethod.GET)
     public ModelAndView showActiveCenters(HttpServletRequest request, HttpServletResponse response){
-        ModelAndView modelAndView = getLoanModelAndView();
+        ModelAndView modelAndView = getCustomerModelAndView();
         List<DashboardDetailDto> loans = (List<DashboardDetailDto>) dashboardServiceFacade.getActiveCenters();
         modelAndView.addObject("dashboardDetails", loans);
         return modelAndView;
@@ -86,8 +86,18 @@ public class DashboardDetailsController {
     private ModelAndView getLoanModelAndView(){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("viewDashboardDetails");
-        String[] tableHeaders = dashboardServiceFacade.getHeaders();
+        String[] tableHeaders = dashboardServiceFacade.getLoanHeaders();
         modelAndView.addObject("tableHeaders",tableHeaders);
+        modelAndView.addObject("type",'l');
+        return modelAndView;
+    }
+    
+    private ModelAndView getCustomerModelAndView(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("viewDashboardDetails");
+        String[] tableHeaders = dashboardServiceFacade.getCustomerHeaders();
+        modelAndView.addObject("tableHeaders",tableHeaders);
+        modelAndView.addObject("type",'c');
         return modelAndView;
     }
 }
