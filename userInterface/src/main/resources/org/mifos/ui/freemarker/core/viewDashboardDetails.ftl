@@ -31,6 +31,11 @@
                         <a href="${detail.url}">
                         ${detail.globalNumber}</a>
                     </td>
+                    [#if type == 'c']
+                        <td>
+                        ${detail.displayName}
+                        </td>
+                    [/#if]
                     <td>
                         ${detail.state}
                     </td>
@@ -40,9 +45,11 @@
                     <td>
                         ${detail.balance}
                     </td>
+                    [#if type == 'l']
                     <td>
                         ${detail.displayName}
                     </td>
+                    [/#if]
                 </tr>
         [/#list]
         </tbody>
