@@ -74,7 +74,8 @@
             "outstandingBalance": "101.0",
             "totalAmountDue": "10.0",
             "accountStateName": "Active in Good Standing",
-            "accountStateId": 5
+            "accountStateId": 5,
+            "accountTypeId":1
         },
         {
             "globalAccountNum": "000100000000005",
@@ -82,7 +83,8 @@
             "outstandingBalance": "1032.0",
             "totalAmountDue": "103.0",
             "accountStateName": "Active in Good Standing",
-            "accountStateId": 5
+            "accountStateId": 5,
+            "accountTypeId":1
         },
         {
 			"globalAccountNum": "000100000000008",
@@ -90,9 +92,11 @@
 			"outstandingBalance": "101.0",
 			"totalAmountDue": "10.0",
 			"accountStateName": "Application Approved",
-			"accountStateId": 3
+			"accountStateId": 3,
+			"accountTypeId":1
 		}
     ],
+    "groupLoanAccountsInUse":[],
     "clientDisplay": {
         "displayName": "Client REST API",
         "branchId": 2,
