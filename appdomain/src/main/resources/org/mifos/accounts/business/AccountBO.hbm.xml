@@ -1069,7 +1069,7 @@ select coll.*,
         <![CDATA[Select loan from org.mifos.accounts.loan.business.LoanBO loan 
                  left join loan.accountActionDates actionDates
                  WHERE actionDates.actionDate BETWEEN :START_DATE AND :END_DATE 
-                 AND loan.parentAccount is null
+                 AND loan.parentAccount is null AND loan.accountState.id in (3,5,9)
 
         ]]>
     </query>
@@ -1097,6 +1097,7 @@ select coll.*,
                  left join loan.accountActionDates actionDates
                  WHERE actionDates.actionDate BETWEEN :START_DATE AND :END_DATE 
                  AND loan.parentAccount is null AND loan.personnel.personnelId=:ID
+                 AND loan.accountState.id in (3,5,9)
         ]]>
     </query>
     
@@ -1121,8 +1122,10 @@ select coll.*,
         <![CDATA[SELECT count(distinct a.account_id) FROM
                 loan_account a
                 inner join loan_schedule s on a.account_id = s.account_id
+                inner join account acc on acc.account_id = a.account_id
                 WHERE s.action_date BETWEEN :START_DATE AND :END_DATE 
                 AND a.parent_account_id is null
+                AND acc.account_state_id in (3,5,9)
         ]]>
     </sql-query>
     
@@ -1150,6 +1153,7 @@ select coll.*,
                 inner join account acc on acc.account_id = a.account_id
                 WHERE s.action_date BETWEEN :START_DATE AND :END_DATE 
                 AND a.parent_account_id is null AND acc.personnel_id=:ID
+                AND acc.account_state_id in (3,5,9)
         ]]>
     </sql-query>
     
