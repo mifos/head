@@ -186,7 +186,7 @@ explanation of the license and how it is applied.
 								</c:if>
 								<c:if test="${param.lastPaymentAction != '10'}">
 										<c:url value="applyAdjustment.do" var="applyAdjustmentLoadAdjustmentMethodUrl" >
-											<c:param name="method" value="loadAdjustment" />
+											<c:param name="method" value="listPossibleAdjustments" />
 											<c:param name="accountId" value="${param.accountId}" />
 											<c:param name="globalAccountNum" value="${param.globalAccountNum}" />
 											<c:param name="prdOfferingName" value="${param.prdOfferingName}" />
@@ -195,7 +195,7 @@ explanation of the license and how it is applied.
 										</c:url >	
 									<c:choose>
 										<c:when test="${BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9'}">
-											<html-el:link styleId="loanRepayment.link.applyAdjustment" href="${applyAdjustmentLoadAdjustmentMethodUrl}}"> 
+											<html-el:link styleId="loanRepayment.link.applyAdjustment" href="${applyAdjustmentLoadAdjustmentMethodUrl}">
 												<mifos:mifoslabel name="loan.apply_adjustment" />
 											</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										</c:when>

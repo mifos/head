@@ -43,4 +43,7 @@ public interface ViewOrganizationSettingsServiceFacade {
     
     @PreAuthorize("isFullyAuthenticated()")
     String getClientStorageDirectory();
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    String getLoanStorageDirectory();
 }

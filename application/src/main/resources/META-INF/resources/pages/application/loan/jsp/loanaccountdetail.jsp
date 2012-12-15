@@ -702,6 +702,14 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                             <mifos:mifoslabel name="loan.ViewQuestionGroupForClosedLoanResponsesLink" />
                                             </a> <br>
                                         </c:if>
+                                        <c:url value="viewUploadedFiles.ftl" var="viewUploadedFiles" >
+                                            <c:param name="entityId" value="${loanInformationDto.accountId}" />
+                                            <c:param name="entityType" value="LOAN" />
+                                            <c:param name="backPageUrl" value="${currentPageUrl}" />
+                                        </c:url>
+                                        <a id="viewClientDetails.link.uploadedFiles" href="${viewUploadedFiles}" >
+                                            <mifos:mifoslabel name="client.UploadedFilesLink" bundle="ClientUIResources" />
+                                        </a><br/>
 									    <html-el:link styleId="loanaccountdetail.link.viewStatusHistory"
 								          href="loanAccountAction.do?method=viewStatusHistory&globalAccountNum=${loanInformationDto.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								          <mifos:mifoslabel name="loan.view_status_history" />

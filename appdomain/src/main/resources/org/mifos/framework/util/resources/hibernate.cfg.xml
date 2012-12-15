@@ -265,6 +265,7 @@
         
         <mapping class="org.mifos.framework.fileupload.domain.FileInfoEntity" />
         <mapping class="org.mifos.framework.fileupload.domain.ClientFileEntity" />
+        <mapping class="org.mifos.framework.fileupload.domain.LoanFileEntity" />
 
     </session-factory>
 

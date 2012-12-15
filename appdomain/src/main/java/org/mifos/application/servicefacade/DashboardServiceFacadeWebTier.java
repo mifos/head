@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.config.Localization;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -34,9 +35,9 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
     }
     
     @Override
-    public String[] getHeaders(){
+    public String[] getLoanHeaders(){
         String[] headers = new String[5];
-        Locale locale = Locale.UK;
+        Locale locale = getLocale();
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Locale prefferedLocale = Localization.getInstance().getLocaleById(user.getPreferredLocaleId());
         if (prefferedLocale!=null){
@@ -50,6 +51,35 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
         headers[3] = context.getMessage("DashboardDetail.Balance", null, locale);
         headers[4] = context.getMessage("DashboardDetail.ClientName", null, locale);
         return headers;
+    }
+    
+    @Override
+    public String[] getCustomerHeaders(){
+        String[] headers = new String[5];
+        Locale locale = getLocale();
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Locale prefferedLocale = Localization.getInstance().getLocaleById(user.getPreferredLocaleId());
+        if (prefferedLocale!=null){
+            locale = prefferedLocale;
+        }
+        ApplicationContext context 
+        = ApplicationContextHolder.getApplicationContext();
+        headers[0] = context.getMessage("DashboardDetail.GlobalNumber", null, locale);
+        headers[1] = context.getMessage("DashboardDetail.ClientName", null, locale);
+        headers[2] = context.getMessage("DashboardDetail.State", null, locale);
+        headers[3] = context.getMessage("DashboardDetail.LoanOfficer", null, locale);
+        headers[4] = context.getMessage("DashboardDetail.Balance", null, locale);
+        return headers;
+    }
+    
+    private Locale getLocale(){
+        Locale locale = Locale.UK;
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Locale prefferedLocale = Localization.getInstance().getLocaleById(user.getPreferredLocaleId());
+        if (prefferedLocale!=null){
+            locale = prefferedLocale;
+        }
+        return locale;
     }
     
     @Override
@@ -195,7 +225,7 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
         for (ClientBO clientBO : clientBOList){
             dto = new DashboardDetailDto();
             dto.setGlobalNumber(clientBO.getGlobalCustNum());
-            dto.setState(clientBO.getCustomerStatus().getDescription());
+            dto.setState(clientBO.getCustomerStatus().getName());
             dto.setLoanOfficer(clientBO.getPersonnel().getDisplayName());
             dto.setUrl("viewClientDetails.ftl?globalCustNum="+dto.getGlobalNumber());
             dto.setBalance(clientBO.getLoanBalance(Money.getDefaultCurrency()).toString());
@@ -211,7 +241,7 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
         for (GroupBO groupBO : groupBOList){
             dto = new DashboardDetailDto();
             dto.setGlobalNumber(groupBO.getGlobalCustNum());
-            dto.setState(groupBO.getCustomerStatus().getDescription());
+            dto.setState(groupBO.getCustomerStatus().getName());
             dto.setUrl("viewGroupDetails.ftl?globalCustNum="+dto.getGlobalNumber());
             dto.setLoanOfficer(groupBO.getPersonnel().getDisplayName());
             dto.setBalance(groupBO.getLoanBalance(Money.getDefaultCurrency()).toString());
@@ -227,7 +257,7 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
         for (CenterBO centerBO : centerBOList){
             dto = new DashboardDetailDto();
             dto.setGlobalNumber(centerBO.getGlobalCustNum());
-            dto.setState(centerBO.getCustomerStatus().getDescription());
+            dto.setState(centerBO.getCustomerStatus().getName());
             dto.setUrl("viewCenterDetails.ftl?globalCustNum="+dto.getGlobalNumber());
             dto.setLoanOfficer(centerBO.getPersonnel().getDisplayName());
             dto.setBalance(centerBO.getLoanBalance(Money.getDefaultCurrency()).toString());
@@ -246,7 +276,7 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
             dto.setUrl("viewLoanAccountDetails.ftl?globalAccountNum="+dto.getGlobalNumber());
             dto.setState(loanBO.getAccountState().getDescription());
             dto.setLoanOfficer(loanBO.getPersonnel().getDisplayName());
-            dto.setBalance(loanBO.getLoanBalance().toString());
+            dto.setBalance(loanBO.getLoanSummary().getTotalAmntDue().toString());
             dto.setDisplayName(loanBO.getCustomer().getDisplayName());
             loanDtoList.add(dto);
         }

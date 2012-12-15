@@ -310,6 +310,11 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         return getUploadStorageDirectory().endsWith(File.separator) ? getUploadStorageDirectory() + "clients"
                 : getUploadStorageDirectory() + File.separator + "clients";
     }
+    
+    public String getLoanStorageDirectory() {
+        return getUploadStorageDirectory().endsWith(File.separator) ? getUploadStorageDirectory() + "loans"
+                : getUploadStorageDirectory() + File.separator + "loans";
+    }
        
     private Properties getGeneralConfig() {
     	
