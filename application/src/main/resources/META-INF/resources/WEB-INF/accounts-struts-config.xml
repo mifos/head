@@ -83,6 +83,7 @@
             <forward name="savings_details_page" path="/savingsAction.do?method=get"/>
             <forward name="preview_failure" path="/pages/accounts/jsp/account_addnotes.jsp"/>
             <forward name="create_failure" path="/pages/accounts/jsp/account_previewnotes.jsp"/>
+            <forward name="group_loan_detail_page" path="/loanAccountAction.do?method=getDetails"/>
         </action>
         <!-- Ends-->
         <!-- Loan Disbursement-->

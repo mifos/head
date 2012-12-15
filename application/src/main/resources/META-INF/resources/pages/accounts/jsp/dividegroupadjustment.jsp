@@ -31,6 +31,13 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
 
+<SCRIPT>
+    function ViewLoanDetails(){
+    	goBackToLoanAccountDetails.submit();
+    }
+</SCRIPT>
+
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="ApplyAdjustment"></span>
@@ -156,7 +163,7 @@ explanation of the license and how it is applied.
 									</mifos:mifoslabel>
 								</html-el:submit>
 								 &nbsp; 
-								<html-el:button styleId="applyadjustment.button.cancel" styleClass="cancelbuttn" onclick="javascript:fun_cancel()" property="cancel">
+								<html-el:button styleId="applyadjustment.button.cancel" styleClass="cancelbuttn" onclick="ViewLoanDetails()" property="cancel">
 									<mifos:mifoslabel name="accounts.cancel">
 									</mifos:mifoslabel>
 								</html-el:button></td>

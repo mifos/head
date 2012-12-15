@@ -24,6 +24,7 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEE
 import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -1396,7 +1397,7 @@ public class LoanBO extends AccountBO implements Loan {
             else if (hasMemberAccounts() && !this.isGroupLoanAccount()) {
                 for (LoanBO memberAccount : this.memberAccounts) {
                     BigDecimal fraction = memberAccount.calcFactorOfEntireLoan();
-                    paymentDto.setTotalAmount(new BigDecimal(paymentDto.getTotalAmount()).divide(fraction).doubleValue());
+                    paymentDto.setTotalAmount(new BigDecimal(paymentDto.getTotalAmount()).divide(fraction,RoundingMode.HALF_UP).doubleValue());
                     memberAccount.makeEarlyRepayment(paymentDto, personnelId, waiveInterest, interestDue,
                             null,null);
                 }
