@@ -1168,7 +1168,7 @@ select coll.*,
         ]]>
     </sql-query>  
     
-    <query name="Loan.getUploadedFile">
+    <query name="Loan.getLoanUploadedFile">
         <![CDATA[
             from LoanFileEntity lf where lf.fileId=:fileId
         ]]>

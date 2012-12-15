@@ -110,7 +110,7 @@
 [#else]
 <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.accountDetail.header" /]</span></p>
 [/#if]
-<form action="${flowExecutionUrl}" method="post" class="two-columns">
+<form action="${flowExecutionUrl}" method="post" class="two-columns" enctype="multipart/form-data">
     <fieldset>
     [#if loanProductReferenceData.glimApplicable || (loanProductReferenceData.group && loanProductReferenceData.groupLoanWithMembersEnabled)]
     <script type="text/javascript">
@@ -439,7 +439,38 @@
 	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[2]" id="selectedFeeId2Amount" attributes="style='margin-left: 20px;' class='separatedNumber'"/]
 	    </div>
 	</div>
+	<div class="clear"/>  
+	<br/>
+
+    <p><div class="standout" id="attachements">[@spring.message "client.Attachements" /]</div></p>
+    <div class="attachements">
+        <div class="row">
+        [@form.label "selecttedFileLabel" false][@spring.message "upload.file" /][/@form.label]
+        [@spring.bind "loanAccountFormBean.selectedFile" /]
+        [@form.input path="loanAccountFormBean.selectedFile" fieldType="file" id="selectedFile"  /]
+        </div>
+        <div class="row">
+            [@form.label "selecttedFileDescriptionLabel" false][@spring.message "Description" /][/@form.label]
+            [@form.input path="loanAccountFormBean.selectedFileDescription" id="selectedFileDescription" /]
+        </div>
+        <div class="row">
+            [@form.simpleButton label="upload.addFile" id="addFileButton" webflowEvent="newFileSelected" attributes="style='margin-left: 305px;'"/]
+            <div class="clear"/>  
+            <br/>
+        </div>
+        <ol id="filesToUpload" style='margin-left: 305px;'>
+            [#list loanAccountFormBean.filesMetadata as fileMetadata]
+                <li id="${fileMetadata.name}">
+                    <b>${fileMetadata.name}</b><br/>
+                    ${fileMetadata.description}<br/>
+                    <input type="button" class="delete-file-button" value="X" />
+                    <br/><br/>
+                </li>
+            [/#list]
+        </ol>
+    </div>
     </fieldset>
+    
     <div class="row webflow-controls">
         [@form.submitButton label="widget.form.buttonLabel.continue" id="loancreationdetails.button.continue" webflowEvent="detailsEntered" /]
         [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
@@ -448,6 +479,7 @@
     [#list loanProductReferenceData.additionalFees as additionalFee]
     	<input type="hidden" id="hiddenFeeAmount${additionalFee.id}" value="${additionalFee.amountOrRate?string.number}" />
     [/#list]
+        <input type="hidden" id="flowExecutionUrl" value="${flowExecutionUrl}" />
 </form>
 
 <script type="text/javascript">
@@ -507,6 +539,22 @@ $(document).ready(function() {
                 }
            });
     });
+    
+    $('#addFileButton').click(function(){
+       var file = document.getElementById("selectedFile");
+       var description = document.getElementById("selectedFileDescription");
+       if (file.value != null && file.value != "" && !document.getElementById(file.value)) {
+           $(this).closest('form').attr("action", $('#flowExecutionUrl').val() + "&_eventId=newFileSelected#attachements");
+           $(this).closest('form').submit();
+       }
+    });
+    
+    $('.delete-file-button').click(function(){
+        var fileName = $(this).closest('li').attr('id');
+        $(this).closest('form').attr("action", $('#flowExecutionUrl').val() + "&_eventId=fileDeleted&fileToDelete=" + fileName + "#attachements");
+        $(this).closest('form').submit();
+    });
+    
 });
 </script>
 

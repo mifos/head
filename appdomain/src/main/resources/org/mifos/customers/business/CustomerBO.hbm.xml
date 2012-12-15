@@ -1974,7 +1974,7 @@
         ]]>
     </sql-query>
 
-    <query name="Customer.getUploadedFile">
+    <query name="Customer.getClientUploadedFile">
         <![CDATA[
             from ClientFileEntity cf where cf.fileId=:fileId
         ]]>

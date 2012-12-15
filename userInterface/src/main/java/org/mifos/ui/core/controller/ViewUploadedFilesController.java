@@ -70,7 +70,7 @@ public class ViewUploadedFilesController {
             response.setContentLength(uploadedFileDto.getSize());
             response.setHeader("Content-Disposition", "attachment; filename=\"" + uploadedFileDto.getName() + "\"");
             try {
-                response.getOutputStream().write(clientFileService.getData(uploadedFileDto));
+                response.getOutputStream().write(fileService.getData(uploadedFileDto));
             } catch (IOException e) {
                 throw new MifosRuntimeException(e);
             }

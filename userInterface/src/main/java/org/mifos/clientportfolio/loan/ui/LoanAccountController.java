@@ -20,6 +20,8 @@
 
 package org.mifos.clientportfolio.loan.ui;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +39,7 @@ import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.GroupMemberAccountDto;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanAccountCashFlow;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.CashFlowDto;
 import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.dto.domain.CreateAccountPenaltyDto;
@@ -57,6 +60,7 @@ import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.dto.screen.LoanInstallmentsDto;
 import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.dto.screen.SearchDetailsDto;
+import org.mifos.dto.screen.UploadedFileDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.validations.ErrorEntry;
 import org.mifos.service.BusinessRuleException;
@@ -65,6 +69,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 @SuppressWarnings("PMD")
 @Controller
@@ -72,6 +77,7 @@ public class LoanAccountController {
 
 	private final LoanAccountServiceFacade loanAccountServiceFacade;
     private final AdminServiceFacade adminServiceFacade;
+    private LoanCreationLoanDetailsDto dto;
 
 	@Autowired
     public LoanAccountController(LoanAccountServiceFacade loanAccountServiceFacade, AdminServiceFacade adminServiceFacade) {
@@ -118,10 +124,35 @@ public class LoanAccountController {
     }
 
     @SuppressWarnings("PMD")
-    public LoanCreationLoanDetailsDto retrieveLoanCreationDetails(int customerId, int productId, LoanAccountFormBean formBean) {
+    public LoanCreationLoanDetailsDto retrieveLoanCreationDetails(int customerId, int productId, String eventId, String fileToDelete, LoanAccountFormBean formBean) {
 
+        if ("newFileSelected".equals(eventId)) {
+            if (formBean.getSelectedFile() != null) {
+                CommonsMultipartFile file = formBean.getSelectedFile();
+                formBean.getFiles().add(file);
+                formBean.getFilesMetadata().add(
+                        new UploadedFileDto(file.getOriginalFilename(), file.getContentType(), (int) file.getSize(), formBean
+                                .getSelectedFileDescription()));
+            }
+            return dto;
+        } else if ("fileDeleted".equals(eventId)) {
+            if (fileToDelete != null) {
+                int index = 0;
+                for(CommonsMultipartFile formFile : formBean.getFiles()) {
+                    if (formFile.getOriginalFilename().equals(fileToDelete)) {
+                        index = formBean.getFiles().indexOf(formFile);
+                        break;
+                    }
+                }
+                if (index >= 0) {
+                    formBean.getFiles().remove(index);
+                    formBean.getFilesMetadata().remove(index);
+                }
+            }
+            return dto;
+        }
         MandatoryHiddenFieldsDto mandatoryHidden = this.adminServiceFacade.retrieveHiddenMandatoryFieldsToRead();
-    	LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue(), formBean.isRedoLoanAccount());
+    	dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue(), formBean.isRedoLoanAccount());
 
     	formBean.setLocale(Locale.getDefault());
     	
@@ -266,6 +297,11 @@ public class LoanAccountController {
 		Number[] selectedFeeAmount = new Number[3];
 		formBean.setSelectedFeeAmount(selectedFeeAmount);
         formBean.setAdditionalFees(dto.getAdditionalFees());
+        
+        if (formBean.getFiles() == null) {
+            formBean.setFiles(new ArrayList<CommonsMultipartFile>());
+            formBean.setFilesMetadata(new ArrayList<UploadedFileDto>());
+        }
 
     	return dto;
     }
@@ -667,6 +703,24 @@ public class LoanAccountController {
                         loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
             }
         }
+        
+        List<CommonsMultipartFile> formFiles = formBean.getFiles();
+        List<UploadedFileDto> filesMetadata = formBean.getFilesMetadata();
+        
+        for(int i=0; i<formFiles.size(); i++)
+        {
+            if (formFiles.get(i).getSize() != 0) {
+                InputStream inputStream;
+                try {
+                    inputStream = formFiles.get(i).getInputStream();
+                } catch (IOException e) {
+                    throw new MifosRuntimeException();
+                }
+                UploadedFileDto fileMetadata = filesMetadata.get(i);
+                loanAccountServiceFacade.uploadFile(loanCreationResultDto.getAccountId(), inputStream, fileMetadata);
+            }
+        }
+        
         return loanCreationResultDto;
     }
 

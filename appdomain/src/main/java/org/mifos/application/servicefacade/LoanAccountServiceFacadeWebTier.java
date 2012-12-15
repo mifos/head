@@ -24,6 +24,7 @@ import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
 import static org.mifos.framework.util.CollectionUtils.collect;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
@@ -240,6 +241,7 @@ import org.mifos.dto.screen.LoanSummaryDto;
 import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
+import org.mifos.dto.screen.UploadedFileDto;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -247,6 +249,7 @@ import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.fileupload.service.LoanFileService;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -321,6 +324,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private final InstallmentsValidator installmentsValidator;
     private final HolidayServiceFacade holidayServiceFacade;
 
+    @Autowired
+    private LoanFileService loanFileService;
+    
     @Autowired
     public LoanAccountServiceFacadeWebTier(OfficeDao officeDao, LoanProductDao loanProductDao, CustomerDao customerDao,
                                            PersonnelDao personnelDao, FundDao fundDao, LoanDao loanDao,
@@ -3141,6 +3147,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 interestDueForNextInstallment(repayLoanInfoDto.getTotalRepaymentAmount(),
                 repayLoanInfoDto.getWaivedAmount(),loan,repayLoanInfoDto.isWaiveInterest());
         return interestDueForCurrentInstallment;
+    }
+    
+    @Override
+    public void uploadFile(Integer accountId, InputStream in, UploadedFileDto uploadedFileDto) {
+        loanFileService.create(accountId, in, uploadedFileDto);
     }
 
 }

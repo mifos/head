@@ -1800,7 +1800,8 @@ public class CustomerDaoHibernate implements CustomerDao {
     public ClientFileEntity getUploadedFile(Long fileId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("fileId", fileId);
-        return (ClientFileEntity) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_UPLOADED_FILE, queryParameters);
+        return (ClientFileEntity) this.genericDao.executeUniqueResultNamedQuery(
+                NamedQueryConstants.GET_CLIENT_UPLOADED_FILE, queryParameters);
     }
     
     @Override

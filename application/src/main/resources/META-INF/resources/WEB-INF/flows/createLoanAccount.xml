@@ -47,19 +47,35 @@
     
      <view-state id="enterAccountDetailsStep" view="createLoanAccountEnterDetails" model="loanAccountFormBean">
         <on-entry>
-			<evaluate expression="loanAccountController.retrieveLoanCreationDetails(flowScope.customerId, flowScope.productId, loanAccountFormBean)" result="flowScope.loanProductReferenceData" />
+        <evaluate
+            expression="loanAccountController.retrieveLoanCreationDetails(flowScope.customerId, flowScope.productId, flowScope.eventId, flowScope.fileToDelete, loanAccountFormBean)"
+            result="flowScope.loanProductReferenceData" />
         </on-entry>
         <transition on="newProductSelected" to="enterAccountDetailsStep" validate="false">
             <set name="flowScope.productId" value="requestParameters.productId" type="int"/>
         </transition>
+        <transition on="newFileSelected" to="enterAccountDetailsStep" validate="false">
+            <set name="flowScope.eventId" value="requestParameters._eventId" type="string"/>
+        </transition>
+        <transition on="fileDeleted" to="enterAccountDetailsStep" validate="false">
+            <set name="flowScope.eventId" value="requestParameters._eventId" type="string"/>
+            <set name="flowScope.fileToDelete" value="requestParameters.fileToDelete" type="string"/>
+        </transition>
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
         <transition on="detailsEntered" to="checkIfQuestionGroupsExistForLoanCreation" />
-    </view-state>
+    </view-state> 
     
     <!-- when editing, dont go through question groups step and just use data already in form bean -->
     <view-state id="editAccountDetailsStep" view="createLoanAccountEnterDetails" model="loanAccountFormBean">
         <transition on="newProductSelected" to="enterAccountDetailsStep" validate="false">
             <set name="flowScope.productId" value="requestParameters.productId" type="int"/>
+        </transition>
+        <transition on="newFileSelected" to="enterAccountDetailsStep" validate="false">
+            <set name="flowScope.eventId" value="requestParameters._eventId" type="string"/>
+        </transition>
+        <transition on="fileDeleted" to="enterAccountDetailsStep" validate="false">
+            <set name="flowScope.eventId" value="requestParameters._eventId" type="string"/>
+            <set name="flowScope.fileToDelete" value="requestParameters.fileToDelete" type="string"/>
         </transition>
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
         <transition on="detailsEntered" to="checkIfCompareForCashFlowIsEnabledForLoanCreation" />

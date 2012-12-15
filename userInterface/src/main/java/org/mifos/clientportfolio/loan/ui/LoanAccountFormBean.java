@@ -37,6 +37,7 @@ import org.mifos.clientportfolio.newloan.applicationservice.VariableInstallmentW
 import org.mifos.clientportfolio.newloan.applicationservice.VariableInstallmentsFeeValidationServiceFacade;
 import org.mifos.dto.domain.FeeDto;
 import org.mifos.dto.domain.PenaltyDto;
+import org.mifos.dto.screen.UploadedFileDto;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.mifos.platform.validations.ErrorEntry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ import org.springframework.binding.message.MessageCriteria;
 import org.springframework.binding.validation.ValidationContext;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2", "DLS_DEAD_LOCAL_STORE"}, justification="should disable at filter level and also for pmd - not important for us")
@@ -153,6 +155,11 @@ public class LoanAccountFormBean implements Serializable {
     private int digitsAfterDecimalForMonetaryAmounts;
 
     private Locale locale;
+    
+    private CommonsMultipartFile selectedFile;
+    private String selectedFileDescription;
+    private List<CommonsMultipartFile> files;
+    private List<UploadedFileDto> filesMetadata;
 
     public Locale getLocale() {
         return locale;
@@ -1256,5 +1263,37 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setGroupLoanWithMembersEnabled(boolean isGroupLoanWithMembersEnabled) {
         this.groupLoanWithMembersEnabled = isGroupLoanWithMembersEnabled;
+    }
+
+    public CommonsMultipartFile getSelectedFile() {
+        return selectedFile;
+    }
+
+    public void setSelectedFile(CommonsMultipartFile selectedFile) {
+        this.selectedFile = selectedFile;
+    }
+
+    public String getSelectedFileDescription() {
+        return selectedFileDescription;
+    }
+
+    public void setSelectedFileDescription(String selectedDescription) {
+        this.selectedFileDescription = selectedDescription;
+    }
+
+    public List<CommonsMultipartFile> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<CommonsMultipartFile> files) {
+        this.files = files;
+    }
+
+    public List<UploadedFileDto> getFilesMetadata() {
+        return filesMetadata;
+    }
+
+    public void setFilesMetadata(List<UploadedFileDto> filesMetadata) {
+        this.filesMetadata = filesMetadata;
     }
 }

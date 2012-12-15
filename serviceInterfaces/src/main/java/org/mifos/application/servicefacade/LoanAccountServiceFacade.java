@@ -20,6 +20,7 @@
 
 package org.mifos.application.servicefacade;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -71,6 +72,7 @@ import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
+import org.mifos.dto.screen.UploadedFileDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.validations.Errors;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -268,4 +270,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     
     @PreAuthorize("isFullyAuthenticated()")
     BigDecimal calculateInterestDueForCurrentInstalmanet(RepayLoanInfoDto repayLoanInfoDto);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void uploadFile(Integer accountId, InputStream inputStream, UploadedFileDto fileMetadata);
 }
