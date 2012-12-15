@@ -110,6 +110,11 @@ public class OpenBalanceAction extends BaseAction {
 			
 			actionForm.setOpenBalance(openBalance.abs().toString());
 		}
+		if(balancesBO==null){
+			actionForm.setAmountAction(null);
+			actionForm.setOpenBalance(null);
+		}
+		
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 	

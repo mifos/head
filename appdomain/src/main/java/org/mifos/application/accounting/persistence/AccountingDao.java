@@ -27,14 +27,20 @@ import java.util.List;
 import org.mifos.application.accounting.business.FinancialYearBO;
 import org.mifos.application.accounting.business.GlBalancesBO;
 import org.mifos.application.accounting.business.GlMasterBO;
+import org.mifos.dto.domain.DynamicOfficeDto;
 import org.mifos.dto.domain.GLCodeDto;
+import org.mifos.dto.domain.GlDetailDto;
+import org.mifos.dto.domain.GlobalOfficeNumDto;
 import org.mifos.dto.domain.MisProcessingTransactionsDto;
 import org.mifos.dto.domain.OfficeGlobalDto;
+import org.mifos.dto.domain.RolesActivityDto;
 import org.mifos.dto.domain.RowCount;
+import org.mifos.dto.domain.ViewStageTransactionsDto;
 import org.mifos.dto.domain.ViewTransactionsDto;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public interface AccountingDao {
+
 
 	public List<GLCodeDto> findMainAccountCashGlCodes();
 
@@ -42,16 +48,17 @@ public interface AccountingDao {
 			String officeId, String glCodeValue,Integer financialYearId);
 
 	public List<GLCodeDto> findDebitAccounts();
-
+	public List<RolesActivityDto> findrolesActivity(int activityid);
 	public List<GLCodeDto> findCreditAccounts(String glCode);
-
 	public List<GLCodeDto> findMainAccountBankGlCodes();
+	public List<GLCodeDto> findMainAccountHeadGlCodes(String glname );
 
 	public List<GLCodeDto> findAccountHeadGlCodes(String glCode);
 
 	public List<OfficeGlobalDto> findOfficesWithGlobalNum(Short levelId);
 
 	public List<OfficeGlobalDto> findCustomersWithGlobalNum(Short levelId);
+	public List<GlobalOfficeNumDto>findGlobalDiplayNumandname(String officename);
 
 	public List<ViewTransactionsDto> findAccountingTransactions(Date toTrxnDate,Date fromTrxnDate,
 			int startRecord, int numberOfRecords);
@@ -83,5 +90,49 @@ public interface AccountingDao {
 	public List<GlBalancesBO> getResultantGlBalancesBO(GlBalancesBO glBalancesBO);
 	
 	public List<GlBalancesBO> getYearEndGlBalancesBOs(String querystring,int oldFinancialYearId );
+
+	List<ViewStageTransactionsDto> findStageAccountingTransactions(
+			String stage, int startRecord, int numberOfRecords);
+
+	List<RowCount> findTotalNumberOfStageRecords();
+
+	public void updateStage(int transactionNo, int stage);
+
+	public List<ViewStageTransactionsDto> findStagedAccountingTransactionOnId(
+			int transactionNo);
+
+	public List<GLCodeDto> findInterBankDebitAccounts();
+
+	public List<GLCodeDto> findAuditGlCodes();
+
+	public List<OfficeGlobalDto> findCustomersWithGlobalNum(
+			Short customerLevelId, String officeId);
+
+	public List<OfficeGlobalDto> findOfficesWithGlobalNum(Short officeLevelId,
+			String officeId);
+
+	public void addComments(String transactionId, String audit,
+			String auditComments);
+
+	public List<GlDetailDto> findChequeDetails(int transactionNo);
+
+	public List<ViewStageTransactionsDto> findStageAccountingTransactions(
+			Date date1, Date date2, int iPageNo, int noOfRecordsPerPage);
+
+	public List<RowCount> findTotalNumberOfStageRecords(Date date1, Date date2);
+
+	public List<DynamicOfficeDto> getListOfOffices(String officeId,
+			String officeLevelId);
+
+	public List<MisProcessingTransactionsDto> processMisPostings(Date lastProcessDate,
+			String officeId);
+
+	public String findLastProcessingUpdatedDate(String string, String globalOfficeNumber);
+
+	public void updateLastProcessUpdatedDate(Date lastProcessDate, String globalOfficeNumber);
+
+	public List<OfficeGlobalDto> findDynamicCustomersWithGlobalNum(
+			String officeId, String officLevelId);
+
 	
 }

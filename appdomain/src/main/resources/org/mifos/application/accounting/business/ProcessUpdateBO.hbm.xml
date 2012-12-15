@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+	<class name="org.mifos.application.accounting.business.ProcessUpdateBo"
+		table="acc_process_update">
+		<id name="processUpdateId" column="pud_id" type="integer"
+			access="field">
+			<generator class="native" />
+		</id>
+		<property name="globalOfficeNumber" column="branch_globaloffice_num" type="string" />
+		<property name="lastUpdateDate" column="last_update_date" type="date" />
+	</class>
+	
+	<query name="getLastProcessUpdateDate">
+        <![CDATA[from org.mifos.application.accounting.business.ProcessUpdateBo as processUpdate where processUpdate.globalOfficeNumber = :GLOBAL_OFFICE_NUMBER]]>
+	</query>
+	
+</hibernate-mapping>
