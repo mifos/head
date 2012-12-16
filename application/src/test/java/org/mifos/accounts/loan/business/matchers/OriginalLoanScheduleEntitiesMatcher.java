@@ -58,7 +58,7 @@ public class OriginalLoanScheduleEntitiesMatcher extends TypeSafeMatcher<Collect
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("LoanScheduleEntities did not match");
+        description.appendText("OriginalLoanScheduleEntities did not match");
     }
 
 }

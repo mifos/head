@@ -34,6 +34,7 @@ import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.loan.business.*;
+import org.mifos.accounts.loan.business.matchers.OriginalLoanFeeScheduleEntityMatcher;
 import org.mifos.accounts.loan.business.matchers.OriginalLoanScheduleEntitiesMatcher;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
@@ -387,7 +388,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(1, actual.size());
         Assert.assertEquals(1, fees.size());
         assertThat(actual, is(new OriginalLoanScheduleEntitiesMatcher(originalLoanScheduleEntities)));
-        assertThat(fees.get(0), is(scheduleEntityFee));
+        assertThat(fees.get(0), is(new OriginalLoanFeeScheduleEntityMatcher(scheduleEntityFee)));
     }
 
     @Test
