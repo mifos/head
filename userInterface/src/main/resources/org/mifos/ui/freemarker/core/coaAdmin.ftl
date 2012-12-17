@@ -40,18 +40,20 @@
 			$.get("coaAdminAjax.ftl", { id: id }, function(data) {
 					$('#' + itemId).append('<ul id="' + listId + '">');
 					$('#' + listId).hide();
-					$.each(data, function(key, val) {
+					var canModify = data.modifiable;
+					$.each(data.coaList, function(key, val) {
 						
 						var item = '<li id="item' + val.accountId + '"  class="coaItem">';
 						item += '<a onclick="getCoaList(' + val.accountId + ')">';
 						item += val.accountName + ': '+ val.glCodeString + ' </a>';
-						item += '<a href="defineNewCoa.ftl?parentId=' + val.accountId + '" class="coaAction"><b> Add </b></a>'; 
-
-						if (val.modifiable) {
-							item += '<a href="modifyCoa.ftl?id=' + val.accountId + '" class="coaAction"><b> Modify </b></a>'; 
-							item += '<a href="deleteCoa.ftl?id=' + val.accountId + '" class="coaAction"><b> Delete </b></a>'; 
+						if (canModify) {
+							item += '<a href="defineNewCoa.ftl?parentId=' + val.accountId + '" class="coaAction"><b> Add </b></a>'; 
+							
+							if (val.modifiable) {
+								item += '<a href="modifyCoa.ftl?id=' + val.accountId + '" class="coaAction"><b> Modify </b></a>'; 
+								item += '<a href="deleteCoa.ftl?id=' + val.accountId + '" class="coaAction"><b> Delete </b></a>'; 
+							}
 						}
-						
 						item += '</li>';
 						$('#' + listId).append(item);
 
@@ -70,9 +72,11 @@
         <p class="font15 orangeheading margin5top10bottom">[@spring.message "admin.chartofaccounts"/]</p>
       <ul id="coaMenu">
 	      [#list COAlist as coa]
-	      	<li id="item${coa.accountId}"  class="coaItem"> 
+	      	<li id="item${coa.accountId}"  class="coaItem">
 	      		<a onclick="getCoaList(${coa.accountId})"> ${coa.accountName}: ${coa.glCodeString} </a> 
-	      		<a href="defineNewCoa.ftl?parentId=${coa.accountId}" class="coaAction"><b>Add</b></a>
+	      		[#if canModifyCOA] 
+	      			<a href="defineNewCoa.ftl?parentId=${coa.accountId}" class="coaAction"><b>Add</b></a>
+	      		[/#if]
 	      	</li>
 	      [/#list]
       </ul>

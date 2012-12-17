@@ -1,8 +1,5 @@
 package org.mifos.ui.core.controller;
 
-import java.util.List;
-
-import org.mifos.application.admin.servicefacade.CoaDto;
 import org.mifos.application.admin.servicefacade.CoaServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,8 +25,11 @@ public class CoaAdminController {
     }
 
     @RequestMapping(value = "/coaAdminAjax", method = RequestMethod.GET)
-    public @ResponseBody List<CoaDto> getString(@RequestParam(value = "id", required=true) Short id) {
-        return coaServiceFacade.getList(id);
+    public @ResponseBody CoaListViewModel getString(@RequestParam(value = "id", required=true) Short id) {
+        CoaListViewModel coaListViewModel = new CoaListViewModel();
+        coaListViewModel.setCoaList(coaServiceFacade.getList(id));
+        coaListViewModel.setModifiable(coaServiceFacade.canModifyCOA());
+        return coaListViewModel;
     }
     
     @Autowired

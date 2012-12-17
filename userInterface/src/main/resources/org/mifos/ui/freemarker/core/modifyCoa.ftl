@@ -38,7 +38,7 @@
 			$.get("coaAdminAjax.ftl", { id: id }, function(data) {
 					$('#' + itemId).append('<ul id="' + listId + '">');
 					$('#' + listId).hide();
-					$.each(data, function(key, val) {
+					$.each(data.coaList, function(key, val) {
 						
 						var item = '<li id="item' + val.accountId + '">';
 						item += '<a onclick="getCoaList(' + val.accountId + ')">';
