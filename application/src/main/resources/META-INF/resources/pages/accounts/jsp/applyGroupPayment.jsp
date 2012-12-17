@@ -217,6 +217,7 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}" />
 			<html-el:hidden property="accountType" value="${AccountType}" />			
 			<html-el:hidden property="accountId" value="${AccountId}" />
+            <html-el:hidden property="memberType" value="${loanType}" />
 		</html-el:form>
 		<html-el:form action="customerAccountAction.do?method=load">
 			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
