@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.mifos.clientportfolio.loan.service.DailySchedule;
 import org.mifos.clientportfolio.loan.service.MonthlyOnDayOfMonthSchedule;
 import org.mifos.clientportfolio.loan.service.MonthlyOnWeekOfMonthSchedule;
 import org.mifos.clientportfolio.loan.service.RecurringSchedule;
@@ -30,6 +31,8 @@ public class LoanCreationHelper {
             }
         } else if (formBean.isWeekly()) {
             recurringSchedule = new WeeklySchedule(formBean.getRepaymentRecursEvery(), formBean.getRepaymentDayOfWeek());
+        } else {
+            recurringSchedule = new DailySchedule(formBean.getRepaymentRecursEvery());
         }
         return recurringSchedule;
     }
