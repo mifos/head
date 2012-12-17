@@ -43,7 +43,7 @@ explanation of the license and how it is applied.
   }
   </script>
 <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoan')}" var="isGroupLoan" />
-<c:if test="${sessionScope.notesActionForm.accountTypeId == '1'}">
+<c:if test="${sessionScope.notesActionForm.accountTypeId == '1' || sessionScope.notesActionForm.accountTypeId == '5'}">
     <form name="goBackToAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
         <input type="hidden" name='globalAccountNum' value="${sessionScope.notesActionForm.globalAccountNum}"/>
     </form>  

@@ -104,6 +104,8 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     private boolean printReceipt;
     
     private boolean truePrintReceipt = false;
+    
+    private String memberType;
        
     //Group Loan
     //key memeber account global num
@@ -531,5 +533,13 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 
     public void setTransferPaymentTypeId(Short transferPaymentTypeId) {
         this.transferPaymentTypeId = transferPaymentTypeId;
+    }
+
+    public String getMemberType() {
+        return memberType;
+    }
+
+    public void setMemberType(String memberType) {
+        this.memberType = memberType;
     }
 }

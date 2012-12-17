@@ -165,7 +165,10 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
         
         Double oldAmmount = Double.valueOf(accountApplyPaymentActionForm.getAmount());
         Double newAmounts = 0.0;
-        if (!accountApplyPaymentActionForm.getIndividualValues().isEmpty()) {
+        if (accountApplyPaymentActionForm.getMemberType().equals("member")){
+            accountApplyPaymentActionForm.setAmount(oldAmmount.toString());
+        }
+        else if (!accountApplyPaymentActionForm.getIndividualValues().isEmpty()) {
             for(String amount : accountApplyPaymentActionForm.getIndividualValues().values()) {
                 newAmounts += Double.valueOf(amount);
             }
