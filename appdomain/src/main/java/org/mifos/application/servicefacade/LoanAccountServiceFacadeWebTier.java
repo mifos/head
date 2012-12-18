@@ -470,15 +470,23 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
 
         Errors errors = new Errors();
+        List<ErrorEntry> errorEntry = new ArrayList<ErrorEntry>();
+        if (isGroup && isGlimEnabled && isGroupLoanWithMembersEnabled) {
+            String defaultMessage ="New Group Loan option is enabled in configuration file and also GLIM option is enabled in the database. Loan for Group will be created using new Group Loan approach. Please turn off GLIM option in database. If you want to create Loan for Group using old approach, then please disable AccountingRules.GroupLoanWithMembers option in configuration file and restart Mifos.";
+            errorEntry.add(new ErrorEntry("createLoanAccount.glim.and.new.glim.are.enabled", "activeClients2", defaultMessage));
+            errors.addErrors(errorEntry);
+        }
+        
         if (isGroup && (isGlimEnabled || isGroupLoanWithMembersEnabled)) {
             final List<ValueListElement> loanPurposes = loanProductDao.findAllLoanPurposes();
             final List<ClientBO> activeClientsOfGroup = customerDao.findActiveClientsUnderGroup(customer);
             loanCreationGlimDto = new LoanCreationGlimDto(loanPurposes);
 
             if (activeClientsOfGroup == null || activeClientsOfGroup.size() < 2) {
+                errorEntry.clear();
                 String defaultMessage = "Group loan is not allowed as there must be at least two active clients within the group when Group loan with individual monitoring (GLIM) is enabled";
-                ErrorEntry errorEntry  = new ErrorEntry("createLoanAccount.glim.invalid.less.than.two.active.clients.in.group", "activeClients", defaultMessage);
-                errors.addErrors(Arrays.asList(errorEntry));
+                errorEntry.add(new ErrorEntry("createLoanAccount.glim.invalid.less.than.two.active.clients.in.group", "activeClients", defaultMessage));
+                errors.addErrors(errorEntry);
                 loanProductDtos = new ArrayList<PrdOfferingDto>();
             } else {
 
