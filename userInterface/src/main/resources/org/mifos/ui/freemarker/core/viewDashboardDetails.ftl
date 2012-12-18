@@ -21,11 +21,10 @@
             </tr>
         </thead>
        <tbody>
-        
         [#list dashboardDetails as detail]
             <tr>    
                     <td>
-                    ${detail_index}
+                    ${detail_index+1}
                     </td>
                     <td>
                         <a href="${detail.url}">

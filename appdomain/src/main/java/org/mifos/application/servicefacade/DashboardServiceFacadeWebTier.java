@@ -48,7 +48,7 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
         headers[0] = context.getMessage("DashboardDetail.GlobalNumber", null, locale);
         headers[1] = context.getMessage("DashboardDetail.State", null, locale);
         headers[2] = context.getMessage("DashboardDetail.LoanOfficer", null, locale);
-        headers[3] = context.getMessage("DashboardDetail.Balance", null, locale);
+        headers[3] = context.getMessage("DashboardDetail.LoanBalance", null, locale);
         headers[4] = context.getMessage("DashboardDetail.ClientName", null, locale);
         return headers;
     }
@@ -68,7 +68,7 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
         headers[1] = context.getMessage("DashboardDetail.ClientName", null, locale);
         headers[2] = context.getMessage("DashboardDetail.State", null, locale);
         headers[3] = context.getMessage("DashboardDetail.LoanOfficer", null, locale);
-        headers[4] = context.getMessage("DashboardDetail.Balance", null, locale);
+        headers[4] = context.getMessage("DashboardDetail.LoanBalance", null, locale);
         return headers;
     }
     

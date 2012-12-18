@@ -1069,7 +1069,7 @@ select coll.*,
         <![CDATA[Select loan from org.mifos.accounts.loan.business.LoanBO loan 
                  left join loan.accountActionDates actionDates
                  WHERE actionDates.actionDate BETWEEN :START_DATE AND :END_DATE 
-                 AND loan.parentAccount is null AND loan.accountState.id in (3,5,9)
+                 AND loan.parentAccount is null AND loan.accountState.id in (5,9)
                  GROUP BY loan.accountId
 
         ]]>

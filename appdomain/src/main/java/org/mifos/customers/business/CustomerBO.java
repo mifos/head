@@ -723,7 +723,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     public Money getLoanBalance(MifosCurrency currency){
         Money amount = new Money(currency);
         for (AccountBO account : getAccounts()) {
-            if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+            if (account.isActiveLoanAccount()) {
                 LoanBO loanBO = (LoanBO) account;
                 amount = amount.add(loanBO.getLoanSummary().getTotalAmntDue());
             }

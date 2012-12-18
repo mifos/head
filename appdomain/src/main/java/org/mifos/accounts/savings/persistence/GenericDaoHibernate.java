@@ -65,7 +65,6 @@ public class GenericDaoHibernate implements GenericDao {
             throw new MifosRuntimeException(e);
         }
     }
-
     @SuppressWarnings("unchecked")
     @Override
     public final List<? extends Object> executeNamedQuery(final String queryName, final Map<String, ?> queryParameters) {
