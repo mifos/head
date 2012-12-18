@@ -21,3 +21,12 @@ h1
     font-weight: bold;
     text-decoration: none;
 }
+
+.coaA {
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.coaAction {
+	margin-left: 10px;
+}

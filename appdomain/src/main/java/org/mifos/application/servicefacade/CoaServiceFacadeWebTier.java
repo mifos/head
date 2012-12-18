@@ -18,6 +18,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 public class CoaServiceFacadeWebTier implements CoaServiceFacade {
 
@@ -29,6 +30,7 @@ public class CoaServiceFacadeWebTier implements CoaServiceFacade {
     public static final String CANNOT_MODIFY = "coa.cannotModify";
     public static final String PARENT_DOESNT_EXIST = "coa.parentDoesntExist";
     public static final String GLCODE_ALREADY_EXISTS = "coa.alreadyExists";
+    public static final String EMPTY_GLCODE = "coa.empty";
     
     private LegacyAccountDao legacyAccountDao;
     
@@ -160,6 +162,10 @@ public class CoaServiceFacadeWebTier implements CoaServiceFacade {
             Short parentId = legacyAccountDao.getAccountIdFromGlCode(coaDto.getParentGlCode());
             
             Short accountId = legacyAccountDao.getAccountIdFromGlCode(coaDto.getGlCodeString());
+            
+            if (!StringUtils.hasText(coaDto.getGlCodeString())) {
+                throw new BusinessRuleException(EMPTY_GLCODE);
+            }
             
             if (accountId != null && accountId != coaBo.getAccountId()) {
                 throw new BusinessRuleException(GLCODE_ALREADY_EXISTS);

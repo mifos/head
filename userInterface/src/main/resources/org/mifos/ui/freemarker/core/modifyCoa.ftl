@@ -41,8 +41,8 @@
 					$.each(data.coaList, function(key, val) {
 						
 						var item = '<li id="item' + val.accountId + '">';
-						item += '<a onclick="getCoaList(' + val.accountId + ')">';
-						item += val.accountName + ': '+ val.glCodeString + ' </a>';
+						item += '<a onclick="getCoaList(' + val.accountId + ')" class="coaA">';
+						item += val.glCodeString + ': '+ val.accountName + ' </a>';
 
 						item += '</li>';
 						$('#' + listId).append(item);
@@ -119,7 +119,7 @@
           <ul id="coaMenu">
 	      [#list COAlist as coa]
 	      	<li id="item${coa.accountId}"> 
-	      		<a onclick="getCoaList(${coa.accountId})"> ${coa.accountName}: ${coa.glCodeString} </a> 
+	      		<a class="coaA" onclick="getCoaList(${coa.accountId})"> ${coa.glCodeString}: ${coa.accountName} </a> 
 	      	</li>
 	      [/#list]
       </ul>

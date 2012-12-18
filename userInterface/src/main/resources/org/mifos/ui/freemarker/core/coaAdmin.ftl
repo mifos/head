@@ -44,8 +44,8 @@
 					$.each(data.coaList, function(key, val) {
 						
 						var item = '<li id="item' + val.accountId + '"  class="coaItem">';
-						item += '<a onclick="getCoaList(' + val.accountId + ')">';
-						item += val.accountName + ': '+ val.glCodeString + ' </a>';
+						item += '<a class="coaA" onclick="getCoaList(' + val.accountId + ')">';
+						item += val.glCodeString + ': ' + val.accountName + ' </a>';
 						if (canModify) {
 							item += '<a href="defineNewCoa.ftl?parentId=' + val.accountId + '" class="coaAction"><b> Add </b></a>'; 
 							
@@ -69,11 +69,11 @@
       <span id="page.id" title="coaAdmin"></span>
       [@widget.crumb url="admin.chartofaccounts" /]
     <div class="margin20lefttop">
-        <p class="font15 orangeheading margin5top10bottom">[@spring.message "admin.chartofaccounts"/]</p>
+        <p class="font15 orangeheading margin5top10bottom">[@spring.message "coa.coa"/]</p>
       <ul id="coaMenu">
 	      [#list COAlist as coa]
 	      	<li id="item${coa.accountId}"  class="coaItem">
-	      		<a onclick="getCoaList(${coa.accountId})"> ${coa.accountName}: ${coa.glCodeString} </a> 
+	      		<a class="coaA"  onclick="getCoaList(${coa.accountId})"> ${coa.glCodeString}: ${coa.accountName} </a> 
 	      		[#if canModifyCOA] 
 	      			<a href="defineNewCoa.ftl?parentId=${coa.accountId}" class="coaAction"><b>Add</b></a>
 	      		[/#if]
