@@ -6,7 +6,6 @@ import java.util.Locale;
 
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.config.Localization;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -48,7 +47,7 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
         headers[0] = context.getMessage("DashboardDetail.GlobalNumber", null, locale);
         headers[1] = context.getMessage("DashboardDetail.State", null, locale);
         headers[2] = context.getMessage("DashboardDetail.LoanOfficer", null, locale);
-        headers[3] = context.getMessage("DashboardDetail.Balance", null, locale);
+        headers[3] = context.getMessage("DashboardDetail.LoanBalance", null, locale);
         headers[4] = context.getMessage("DashboardDetail.ClientName", null, locale);
         return headers;
     }
@@ -68,7 +67,7 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
         headers[1] = context.getMessage("DashboardDetail.ClientName", null, locale);
         headers[2] = context.getMessage("DashboardDetail.State", null, locale);
         headers[3] = context.getMessage("DashboardDetail.LoanOfficer", null, locale);
-        headers[4] = context.getMessage("DashboardDetail.Balance", null, locale);
+        headers[4] = context.getMessage("DashboardDetail.LoanBalance", null, locale);
         return headers;
     }
     
@@ -83,110 +82,109 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
     }
     
     @Override
-    public List<DashboardDetailDto> getBorrowers(){
+    public List<DashboardDetailDto> getBorrowers(int position, int noOfObjects){
         List<DashboardDetailDto> detailDtoList;
         Short loanOfficerId = getLoanOfficerId();
         if (loanOfficerId == null){
-            detailDtoList = clientBOtoDashboardDetailDtos(customerDao.findAllBorrowers());
+            detailDtoList = clientBOtoDashboardDetailDtos(customerDao.findAllBorrowers(position,noOfObjects));
         }
         else {
-            detailDtoList = clientBOtoDashboardDetailDtos(customerDao.findBorrowersUnderLoanOfficer(loanOfficerId));
+            detailDtoList = clientBOtoDashboardDetailDtos(customerDao.findBorrowersUnderLoanOfficer(position,noOfObjects,loanOfficerId));
         }
         return detailDtoList;
     }
     
     @Override
-    public List<DashboardDetailDto> getBorrowersGroup(){
+    public List<DashboardDetailDto> getBorrowersGroup(int position,int noOfObjects){
         List<DashboardDetailDto> detailDtoList;
         Short loanOfficerId = getLoanOfficerId();
         if (loanOfficerId == null){
-            detailDtoList = groupBOtoDashboardDetailDtos(customerDao.findAllBorrowersGroup());
+            detailDtoList = groupBOtoDashboardDetailDtos(customerDao.findAllBorrowersGroup(position,noOfObjects));
         }
         else {
-            detailDtoList = groupBOtoDashboardDetailDtos(customerDao.findBorrowersGroupUnderLoanOfficer(loanOfficerId));
+            detailDtoList = groupBOtoDashboardDetailDtos(customerDao.findBorrowersGroupUnderLoanOfficer(position,noOfObjects,loanOfficerId));
         }
         return detailDtoList;
     }
     
     @Override
-    public List<DashboardDetailDto> getActiveClients(){
+    public List<DashboardDetailDto> getActiveClients(int position,int noOfObjects){
         List<DashboardDetailDto> detailDtoList;
         Short loanOfficerId = getLoanOfficerId();
         if (loanOfficerId == null){
-            detailDtoList = clientBOtoDashboardDetailDtos(customerDao.findAllActiveClients());
+            detailDtoList = clientBOtoDashboardDetailDtos(customerDao.findAllActiveClients(position,noOfObjects));
         }
         else {
-            detailDtoList = clientBOtoDashboardDetailDtos(customerDao.findActiveClientsUnderLoanOfficer(loanOfficerId));
+            detailDtoList = clientBOtoDashboardDetailDtos(customerDao.findActiveClientsUnderLoanOfficer(position,noOfObjects,loanOfficerId));
         }
         return detailDtoList;
     }
     
     @Override
-    public List<DashboardDetailDto> getActiveGroups(){
+    public List<DashboardDetailDto> getActiveGroups(int position,int noOfObjects){
         List<DashboardDetailDto> detailDtoList;
         Short loanOfficerId = getLoanOfficerId();
         if (loanOfficerId == null){
-            detailDtoList = groupBOtoDashboardDetailDtos(customerDao.findAllActiveGroups());
+            detailDtoList = groupBOtoDashboardDetailDtos(customerDao.findAllActiveGroups(position,noOfObjects));
         }
         else {
-            detailDtoList = groupBOtoDashboardDetailDtos(customerDao.findActiveGroupsUnderLoanOfficer(loanOfficerId));
+            detailDtoList = groupBOtoDashboardDetailDtos(customerDao.findActiveGroupsUnderLoanOfficer(position,noOfObjects,loanOfficerId));
         }
         return detailDtoList;
     }
     
     @Override
-    public List<DashboardDetailDto> getActiveCenters(){
+    public List<DashboardDetailDto> getActiveCenters(int position,int noOfObjects){
         List<DashboardDetailDto> detailDtoList;
         Short loanOfficerId = getLoanOfficerId();
         if (loanOfficerId == null){
-            detailDtoList = centerBOtoDashboardDetailDtos(customerDao.findAllActiveCenters());
+            detailDtoList = centerBOtoDashboardDetailDtos(customerDao.findAllActiveCenters(position,noOfObjects));
         }
         else {
-            detailDtoList = centerBOtoDashboardDetailDtos(customerDao.findActiveCentersUnderLoanOfficer(loanOfficerId));
+            detailDtoList = centerBOtoDashboardDetailDtos(customerDao.findActiveCentersUnderLoanOfficer(position,noOfObjects,loanOfficerId));
         }
         return detailDtoList;
     }
     
     @Override
-    public List<DashboardDetailDto> getWaitingForApprovalLoans() {
+    public List<DashboardDetailDto> getWaitingForApprovalLoans(int position,int noOfObjects) {
         List<DashboardDetailDto> detailDtoList;
         Short loanOfficerId = getLoanOfficerId();
         if (loanOfficerId == null){
-            detailDtoList = loanBOtoDashboardDetailDtos(loanDao.findAllLoansWaitingForApproval());
+            detailDtoList = loanBOtoDashboardDetailDtos(loanDao.findAllLoansWaitingForApproval(position,noOfObjects));
         }
         else {
-            detailDtoList = loanBOtoDashboardDetailDtos(loanDao.findLoansWaitingForApprovalUnderLoanOfficer(loanOfficerId));
+            detailDtoList = loanBOtoDashboardDetailDtos(loanDao.findLoansWaitingForApprovalUnderLoanOfficer(position,noOfObjects,loanOfficerId));
         }
         return detailDtoList;
     }
 
     @Override
-    public List<DashboardDetailDto> getLoansInArrears() {
+    public List<DashboardDetailDto> getLoansInArrears(int position,int noOfObjects) {
         List<DashboardDetailDto> detailDtoList;
         Short loanOfficerId = getLoanOfficerId();
         if (loanOfficerId == null){
-            detailDtoList = loanBOtoDashboardDetailDtos(loanDao.findAllBadStandingLoans());
+            detailDtoList = loanBOtoDashboardDetailDtos(loanDao.findAllBadStandingLoans(position,noOfObjects));
         }
         else {
-            detailDtoList = loanBOtoDashboardDetailDtos(loanDao.findBadStandingLoansUnderLoanOfficer(loanOfficerId));
+            detailDtoList = loanBOtoDashboardDetailDtos(loanDao.findBadStandingLoansUnderLoanOfficer(position,noOfObjects,loanOfficerId));
         }
         return detailDtoList;
     }
     
     @Override
-    public List<DashboardDetailDto> getLoansToBePaidCurrentWeek(){
+    public List<DashboardDetailDto> getLoansToBePaidCurrentWeek(int position,int noOfObjects){
         List<DashboardDetailDto> detailDtoList;
         Short loanOfficerId = getLoanOfficerId();
         if (loanOfficerId == null){
-            detailDtoList = loanBOtoDashboardDetailDtos(loanDao.findLoansToBePaidCurrentWeek());
+            detailDtoList = loanBOtoDashboardDetailDtos(loanDao.findLoansToBePaidCurrentWeek(position,noOfObjects));
         }
         else {
-            detailDtoList = loanBOtoDashboardDetailDtos(loanDao.findLoansToBePaidCurrentWeekUnderLoanOfficer(loanOfficerId));
+            detailDtoList = loanBOtoDashboardDetailDtos(loanDao.findLoansToBePaidCurrentWeekUnderLoanOfficer(position,noOfObjects,loanOfficerId));
         }
         return detailDtoList;
     }
 
-    
     @Override
     public DashboardDto getDashboardDto() {
         DashboardDto dashboardDto = new DashboardDto();
@@ -292,5 +290,109 @@ public class DashboardServiceFacadeWebTier implements DashboardServiceFacade {
             loanOfficerId = uId;
         }
         return loanOfficerId;
+    }
+
+    @Override
+    public int countBorrowers() {
+        Short loanOfficerId = getLoanOfficerId();
+        int val=-1;
+        if (loanOfficerId == null){
+            val=customerDao.countAllBorrowers();
+        }
+        else {
+            val=customerDao.countBorrowersUnderLoanOfficer(loanOfficerId);
+        }
+        return val;
+    }
+
+    @Override
+    public int countBorrowersGroup() {
+        Short loanOfficerId = getLoanOfficerId();
+        int val=-1;
+        if (loanOfficerId == null){
+            val=customerDao.countAllBorrowersGroup();
+        }
+        else {
+            val=customerDao.countBorrowersGroupUnderLoanOfficer(loanOfficerId);
+        }
+        return val;
+    }
+
+    @Override
+    public int countOfActiveClients() {
+        Short loanOfficerId = getLoanOfficerId();
+        int val=-1;
+        if (loanOfficerId == null){
+            val=customerDao.countOfActiveClients();
+        }
+        else {
+            val=customerDao.countOfActiveClientsUnderLoanOfficer(loanOfficerId);
+        }
+        return val;
+    }
+
+    @Override
+    public int countOfActiveGroups() {
+        Short loanOfficerId = getLoanOfficerId();
+        int val=-1;
+        if (loanOfficerId == null){
+            val=customerDao.countOfActiveGroups();
+        }
+        else {
+            val=customerDao.countOfActiveGroupsUnderLoanOfficer(loanOfficerId);
+        }
+        return val;
+    }
+
+    @Override
+    public int countOfActiveCenters() {
+        Short loanOfficerId = getLoanOfficerId();
+        int val=-1;
+        if (loanOfficerId == null){
+            val=customerDao.countOfActiveCenters();
+        }
+        else {
+            val=customerDao.countOfActiveCentersUnderLoanOfficer(loanOfficerId);
+        }
+        return val;
+    }
+
+    @Override
+    public int countLoansWaitingForApproval() {
+        Short loanOfficerId = getLoanOfficerId();
+        int val=-1;
+        if (loanOfficerId == null){
+            val=loanDao.countAllLoansWaitingForApproval();
+        }
+        else {
+            val=loanDao.countLoansWaitingForApprovalUnderLoanOfficer(loanOfficerId);
+        }
+        return val;
+    }
+
+    @Override
+    public int countBadStandingLoans() {
+        Short loanOfficerId = getLoanOfficerId();
+        int val=-1;
+        if (loanOfficerId == null){
+            val=loanDao.countAllBadStandingLoans();
+        }
+        else {
+            val=loanDao.countBadStandingLoansUnderLoanOfficer(loanOfficerId);
+        }
+        return val;
+    }
+
+    @Override
+    public int countLoansToBePaidCurrentWeek() {
+        Short loanOfficerId = getLoanOfficerId();
+        int val=-1;
+        if (loanOfficerId == null){
+            val=loanDao.countLoansToBePaidCurrentWeek();
+        }
+        else {
+            val=loanDao.countLoansToBePaidCurrentWeekUnderLoanOfficer(loanOfficerId);
+        }
+        return val;
     }
 }
