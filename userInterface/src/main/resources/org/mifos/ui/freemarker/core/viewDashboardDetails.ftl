@@ -1,9 +1,15 @@
 [#ftl]
 [#include "layout.ftl"]
 [@clientLeftPane "ClientsAndAccounts"]
+[#if dashboardDetails??]
+    [@widget.dashboard totalSize?c ajaxUrl/]
+[#else]
+    [@widget.dashboard 0 ajaxUrl/]
+[/#if]
 <span id="page.id" title="viewDashboardDetails"></span>
+
 <div class="content">
-    <table id="dashboardDetails" class="datatable">
+    <table id="dashboard" class="datatable">
         <thead>
             <tr>
                 <th>
@@ -21,10 +27,15 @@
             </tr>
         </thead>
        <tbody>
+       [#if iDisplayStart??]
+        [#assign index = iDisplayStart /]
+        [#else] [#assign index = 1 /]
+        [/#if]
         [#list dashboardDetails as detail]
             <tr>    
                     <td>
-                    ${detail_index+1}
+                    ${index?c}
+                    [#assign index = index + 1 /]
                     </td>
                     <td>
                         <a href="${detail.url}">
@@ -53,7 +64,6 @@
         [/#list]
         </tbody>
     </table>
-    [@widget.datatable "dashboardDetails" /]
     [@form.returnToPage  "home.ftl" "button.back" "dashboardDetails.backToHome"/]
 </div>
 [/@clientLeftPane]

@@ -60,6 +60,43 @@ $(document).ready(function() {
 });
 </script>
 [/#macro]
+[#macro dashboard deferLoadingDataSize ajaxUrl]
+<!-- Datatable -->
+<style type="text/css" title="currentStyle">
+    @import "pages/css/datatables/custom.css";
+    @import "pages/css/datatables/table_jui.css";
+</style>
+<script src="pages/js/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    var languageOptions = {
+        "sUrl": "jqueryDatatableMessages.ftl"
+        };
+    var options = {
+        "bPaginate": true,
+        "bLengthChange": true,
+        "bProcessing": true,
+        "bInfo": true,
+        "bAutoWidth": true,
+        "sPaginationType": "full_numbers",
+        "bServerSide": true,
+        [#if ajaxUrl??]
+        "sAjaxSource": "${ajaxUrl}",
+        [/#if]
+        "oLanguage": languageOptions,
+        "fnDrawCallback": function(){
+            $(".sorting_1").removeClass("sorting_1"); [#-- remove unnecessary class added by firefox  --]
+        },
+        [#if deferLoadingDataSize??]
+            "iDeferLoading": ${deferLoadingDataSize},
+        [/#if]
+        "sDom": '<ipl>rt<lip>'
+    };
+    $('#dashboard').dataTable(options);
+});
+</script>
+[/#macro]
+
 
 <!-- http://mifosforge.jira.com/browse/MIFOS-5457 -->
 [#macro mainCustomerSearchResultDataTable deferLoadingDataSize]

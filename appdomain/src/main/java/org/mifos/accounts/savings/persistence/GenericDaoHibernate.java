@@ -78,6 +78,23 @@ public class GenericDaoHibernate implements GenericDao {
             throw new MifosRuntimeException(e);
         }
     }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public final List<? extends Object> executeNamedQueryWithOffset(final String queryName, final Map<String, ?> queryParameters,int position,int noOfObjects) {
+
+        try {
+            Session session = getSession();
+            Query query = session.getNamedQuery(queryName);
+            query.setProperties(queryParameters);
+            query.setFirstResult(position);
+            query.setMaxResults(noOfObjects);
+            return query.list();
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     @Override
     public final int executeNamedQueryDelete(final String queryName, final Map<String, ?> queryParameters) {

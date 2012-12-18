@@ -11,13 +11,22 @@ public interface DashboardServiceFacade {
     String[] getLoanHeaders();
     String[] getCustomerHeaders();
     
-    List<?> getActiveClients();
-    List<?> getActiveGroups();
-    List<?> getActiveCenters();
-    List<?> getBorrowers();
-    List<?> getBorrowersGroup();
-    List<?> getWaitingForApprovalLoans();
-    List<?> getLoansInArrears();
-    List<?> getLoansToBePaidCurrentWeek();
+    int countBorrowers();
+    int countBorrowersGroup();
+    int countOfActiveClients();
+    int countOfActiveGroups();
+    int countOfActiveCenters();
+    int countLoansWaitingForApproval();
+    int countBadStandingLoans();
+    int countLoansToBePaidCurrentWeek();
+    
+    List<?> getActiveClients(int position,int noOfObjects);
+    List<?> getActiveGroups(int position,int noOfObjects);
+    List<?> getActiveCenters(int position,int noOfObjects);
+    List<?> getBorrowers(int position,int noOfObj);
+    List<?> getBorrowersGroup(int position,int noOfObjects);
+    List<?> getWaitingForApprovalLoans(int position,int noOfObjects);
+    List<?> getLoansInArrears(int position,int noOfObjects);
+    List<?> getLoansToBePaidCurrentWeek(int position,int noOfObjects);
 
 }
