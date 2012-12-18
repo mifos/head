@@ -1346,6 +1346,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return membersSchedule;
     }
     
+    @TransactionDemarcate(saveToken = true)
     public ActionForward getDetails(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
             @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);

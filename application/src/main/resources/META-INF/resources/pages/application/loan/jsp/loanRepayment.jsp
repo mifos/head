@@ -31,8 +31,7 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="LoanRepayment"></span>
 		<script type="text/javascript" src="pages/application/loan/js/loanRepayment.js"></script>
-		<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
-		<form method="get" action=${formAction}>
+		<form method="post" action="viewLoanAccountDetails.ftl">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'originalScheduleIsAvailable')}"
@@ -123,33 +122,51 @@ explanation of the license and how it is applied.
 							<span class="fontnormalbold">
 							<mifos:mifoslabel name="loan.apply_trans" />
 							</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                 <c:url value="applyGroupPaymentAction.do" var="applyGroupPaymentActionMethodUrl" >
+                                            <c:param name="method" value="load" />
+                                            <c:param name="input" value="loan" />
+                                            <c:param name="prdOfferingName" value="${param.prdOfferingName}" />
+                                            <c:param name="globalAccountNum" value="${param.globalAccountNum}" />
+                                            <c:param name="accountId" value="${param.accountId}" />
+                                            <c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
+                                            <c:param name="recordOfficeId" value="${param.recordOfficeId}" />
+                                            <c:param name="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
+                                            <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+                                            <c:param name="currentFlowKey" value="${currentFlowKey}" />
+                                    </c:url>
+                                    <c:url value="applyAdjustment.do" var="applyAdjustmentLoadAdjustmentMethodUrl" >
+                                                <c:param name="method" value="listPossibleAdjustments" />
+                                                <c:param name="accountId" value="${param.accountId}" />
+                                                <c:param name="globalAccountNum" value="${param.globalAccountNum}" />
+                                                <c:param name="prdOfferingName" value="${param.prdOfferingName}" />
+                                                <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+                                                <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
+                                    </c:url>
+                                    <c:url value ="applyChargeAction.do" var="applyChargeActionUrl">
+	                                    <c:param name="method" value="load"/>
+	                                    <c:param name="accountId" value="${param.accountId}"/>
+	                                    <c:param name="randomNUm" value="${sessionScope.randomNUm}"/>
+	                                    <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}"/>
+                                    </c:url>
+                                    <c:url value="applyPaymentAction.do" var="applyPaymentMethodUrl" >
+                                            <c:param name="method" value="load" />
+                                            <c:param name="input" value="loan" />
+                                            <c:param name="prdOfferingName" value="${param.prdOfferingName}" />
+                                            <c:param name="globalAccountNum" value="${param.globalAccountNum}" />
+                                            <c:param name="accountId" value="${param.accountId}" />
+                                            <c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
+                                            <c:param name="recordOfficeId" value="${param.recordOfficeId}" />
+                                            <c:param name="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
+                                            <c:param name="accountStateId" value="${param.accountStateId}" />
+                                            <c:param name="randomNUm" value="${sessionScope.randomNUm}" />
+                                            <c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />                                            
+                                    </c:url>
 							<c:choose>
 								<c:when test="${BusinessKey.parentGroupLoanAccount || BusinessKey.groupLoanAccountMember }">
-									<c:url value="applyGroupPaymentAction.do" var="applyGroupPaymentActionMethodUrl" >										<
-											<c:param name="method" value="load" />
-											<c:param name="input" value="loan" />
-											<c:param name="prdOfferingName" value="${param.prdOfferingName}" />
-											<c:param name="globalAccountNum" value="${param.globalAccountNum}" />
-											<c:param name="accountId" value="${param.accountId}" />
-											<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
-											<c:param name="recordOfficeId" value="${param.recordOfficeId}" />
-											<c:param name="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
-											<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-											<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-									</c:url >
 									<html-el:link styleId="loanaccountdetail.link.applyPayment"
 										href="${applyGroupPaymentActionMethodUrl}">
 										<mifos:mifoslabel name="loan.apply_payment" />
 									</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									
-											<c:url value="applyAdjustment.do" var="applyAdjustmentLoadAdjustmentMethodUrl" >
-												<c:param name="method" value="listPossibleAdjustments" />
-												<c:param name="accountId" value="${param.accountId}" />
-												<c:param name="globalAccountNum" value="${param.globalAccountNum}" />
-												<c:param name="prdOfferingName" value="${param.prdOfferingName}" />
-												<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-												<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-											</c:url >
 									<c:choose>
 										<c:when
 											test="${(BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9' || BusinessKey.accountState.id=='6') }">
@@ -160,39 +177,17 @@ explanation of the license and how it is applied.
 										</c:when>
 									</c:choose>
 									<html-el:link styleId="loanaccountdetail.link.applyCharges"
-											href="applyChargeAction.do?method=load&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+											href="${applyChargeActionUrl}">
 											<mifos:mifoslabel name="loan.apply_charges" />
 											</html-el:link><br>
-										
 								</c:when>
 								<c:otherwise>
 								<c:if test="${(BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9')}">
-									<c:url value="applyPaymentAction.do" var="applyPaymentMethodUrl" >
-											<c:param name="method" value="load" />
-											<c:param name="input" value="loan" />
-											<c:param name="prdOfferingName" value="${param.prdOfferingName}" />
-											<c:param name="globalAccountNum" value="${param.globalAccountNum}" />
-											<c:param name="accountId" value="${param.accountId}" />
-											<c:param name="accountType" value="${BusinessKey.accountType.accountTypeId}" />
-											<c:param name="recordOfficeId" value="${param.recordOfficeId}" />
-											<c:param name="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
-											<c:param name="accountStateId" value="${param.accountStateId}" />
-											<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-											<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />											
-									</c:url >	
 									<html-el:link styleId="loanRepayment.link.applyPayment" href="${applyPaymentMethodUrl}">
 										<mifos:mifoslabel name="loan.apply_payment" />
 									</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								</c:if>
 								<c:if test="${param.lastPaymentAction != '10'}">
-										<c:url value="applyAdjustment.do" var="applyAdjustmentLoadAdjustmentMethodUrl" >
-											<c:param name="method" value="listPossibleAdjustments" />
-											<c:param name="accountId" value="${param.accountId}" />
-											<c:param name="globalAccountNum" value="${param.globalAccountNum}" />
-											<c:param name="prdOfferingName" value="${param.prdOfferingName}" />
-											<c:param name="randomNUm" value="${sessionScope.randomNUm}" />
-											<c:param name="currentFlowKey" value="${requestScope.currentFlowKey}" />
-										</c:url >	
 									<c:choose>
 										<c:when test="${BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9'}">
 											<html-el:link styleId="loanRepayment.link.applyAdjustment" href="${applyAdjustmentLoadAdjustmentMethodUrl}">
