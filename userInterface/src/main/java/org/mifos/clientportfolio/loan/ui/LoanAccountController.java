@@ -112,13 +112,16 @@ public class LoanAccountController {
         LoanCreationProductDetailsDto loanProductDetails = this.loanAccountServiceFacade.retrieveGetProductDetailsForLoanAccountCreation(customerId);
         
         if (loanProductDetails.getErrors().hasErrors()) {
-          
-            ErrorEntry entry = loanProductDetails.getErrors().getErrorEntries().get(0);
-            MessageBuilder builder = new MessageBuilder().error().source(entry.getFieldName())
-            .codes(Arrays.asList(entry.getErrorCode()).toArray(new String[1]))
-            .defaultText(entry.getDefaultMessage());
-
-            messageContext.addMessage(builder.build());
+            
+            List<ErrorEntry> errorList = loanProductDetails.getErrors().getErrorEntries();
+            
+            for(int i=0; i<errorList.size(); i++){
+                MessageBuilder builder = new MessageBuilder().error().source(errorList.get(i).getFieldName())
+                .codes(Arrays.asList(errorList.get(i).getErrorCode()).toArray(new String[1]))
+                .defaultText(errorList.get(i).getDefaultMessage());
+                
+                messageContext.addMessage(builder.build());
+            }
         }
         return loanProductDetails;
     }
