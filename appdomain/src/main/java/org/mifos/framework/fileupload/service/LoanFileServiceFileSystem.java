@@ -113,7 +113,8 @@ public class LoanFileServiceFileSystem implements LoanFileService {
         hibernateTransactionHelper.startTransaction();
         genericDao.getSession().delete(loanFile);
         hibernateTransactionHelper.commitTransaction();
-        return FileStorageManager.delete("/loans/" + accountId.toString() + "/" + fileInfo.getName());
+        return FileStorageManager.delete(viewOrganizationSettingsServiceFacade.getLoanStorageDirectory()
+                + File.separator + accountId.toString() + "/" + fileInfo.getName());
     }
 
     public byte[] getData(UploadedFileDto uploadedFileDto) {
@@ -121,8 +122,8 @@ public class LoanFileServiceFileSystem implements LoanFileService {
         if (loanFile == null || loanFile.getFileInfo() == null) {
             return new byte[0];
         } else {
-            final String path = "/loans/" + loanFile.getLoanId().toString() + "/"
-                    + loanFile.getFileInfo().getName();
+            final String path = viewOrganizationSettingsServiceFacade.getLoanStorageDirectory() + File.separator
+                    + loanFile.getLoanId().toString() + File.separator + loanFile.getFileInfo().getName();
             return FileStorageManager.getData(path);
         }
     }

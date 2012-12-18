@@ -220,7 +220,6 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             actionForm.getFilesMetadata().add(
                     new UploadedFileDto(fileName, fileContentType, fileSize, fileDescription));
         }
-        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         return mapping.findForward(ActionForwards.load_success.toString());
     }
     
@@ -242,7 +241,6 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
                 actionForm.getFilesMetadata().remove(index);
             }
         }
-        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 

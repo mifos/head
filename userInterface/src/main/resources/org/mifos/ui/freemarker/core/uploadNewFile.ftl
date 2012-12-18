@@ -39,7 +39,7 @@
                             </span>
                             <span class="span-5">
                             [@spring.bind "formBean.description" /]
-                            <textarea name="${spring.status.expression}" rows="4" cols="50">${spring.status.value?if_exists}</textarea>
+                            <input name="${spring.status.expression}" value="${spring.status.value?if_exists}" size="40" maxlength="60" />
                             </span>
                         </div>
                     </div>

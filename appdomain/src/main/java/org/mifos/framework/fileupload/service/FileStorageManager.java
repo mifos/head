@@ -55,7 +55,7 @@ public class FileStorageManager {
     public static byte[] getData(String path) {
         byte[] data = null;
         try {
-            File file = new File(getStorageLocation() + path);
+            File file = new File(path);
             data = FileUtils.readFileToByteArray(file);
         } catch (IOException e) {
             logger.error("Error reading file " + path, e);
@@ -64,7 +64,7 @@ public class FileStorageManager {
     }
 
     public static boolean delete(String path) {
-        return FileUtils.deleteQuietly(new File(getStorageLocation() + path));
+        return FileUtils.deleteQuietly(new File(path));
     }
 
     public static void initStorage() {

@@ -45,6 +45,7 @@
 				<prop key="org.mifos.framework.exceptions.PageExpiredException">pageExpired</prop>
 				<prop key="org.springframework.webflow.execution.repository.FlowExecutionRestorationFailureException">pageExpired</prop>
 				<prop key="org.mifos.reports.pentaho.util.JNDIException">JNDIExceptionPage</prop>
+                <prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">maxUploadSizeExceeded</prop>
 			</props>
 		</property>
 		<property name="exceptionAttribute" value="exception" />
@@ -156,8 +157,8 @@
 	</bean>
 	
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <property name="maxUploadSize" value="1073741824"/>
-        <property name="maxInMemorySize" value="1073741824" />
+        <property name="maxUploadSize" value="2097152"/>
+        <property name="maxInMemorySize" value="2097152" />
     </bean>
 
 </beans>

@@ -40,7 +40,11 @@
             <tbody>
             [#list uploadedFiles as file]
                 <tr>
-                    <td>${file.name}</td>
+                    <td>
+                    [#if file.name?length > 30]${file.name?substring(0,30)}...
+                    [#else]${file.name}
+                    [/#if]
+                    </td>
                     <td>${file.size}</td>
                     <td>${file.uploadDate}</td>
                     <td>${file.description}</td>

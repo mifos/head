@@ -442,7 +442,7 @@
 	<div class="clear"/>  
 	<br/>
 
-    <p><div class="standout" id="attachements">[@spring.message "client.Attachements" /]</div></p>
+    <p><div class="standout" id="attachements">[@spring.message "client.Attachements" /] ( [@spring.message "upload.maxUploadSize" /] 2 MB )</div></p>
     <div class="attachements">
         <div class="row">
         [@form.label "selecttedFileLabel" false][@spring.message "upload.file" /][/@form.label]
@@ -451,7 +451,7 @@
         </div>
         <div class="row">
             [@form.label "selecttedFileDescriptionLabel" false][@spring.message "Description" /][/@form.label]
-            [@form.input path="loanAccountFormBean.selectedFileDescription" id="selectedFileDescription" /]
+            [@form.input path="loanAccountFormBean.selectedFileDescription" id="selectedFileDescription" attributes="maxlength='60' size='40'" /]
         </div>
         <div class="row">
             [@form.simpleButton label="upload.addFile" id="addFileButton" webflowEvent="newFileSelected" attributes="style='margin-left: 305px;'"/]

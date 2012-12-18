@@ -64,18 +64,15 @@ explanation of the license and how it is applied.
        var file = document.getElementById("create_ClientPersonalInfo.input.additionalfile");
        var description = document.getElementById("create_ClientPersonalInfo.input.additionalfile.description");
        if (file.value != null && file.value != "" && !document.getElementById(file.value)) {
-           clientCustActionForm.action = "clientCustAction.do?method=addFile";
+           clientCustActionForm.action = "clientCustAction.do?method=addFile#attachements";
            clientCustActionForm.submit();
-           $("#filesToUpload").append(
-                   "<li id='" + file.value + "'><b>" + file.value + "</b><br/>" + description.value
-                           + "<br/><input type='button' value='X' onclick='deleteFile(\"" + file.value
-                           + "\")' />" + "<br/><br/></li>");
        }
    }
 
    function deleteFile(name) {
-       $("#" + name.replace(/\./g, "\\.")).remove();
-       clientCustActionForm.action = "clientCustAction.do?method=deleteFile&fileName=" + name;
+       document.getElementById("create_ClientPersonalInfo.input.additionalfile").value='';
+       name = name.replace(/ /g, "%20");
+       clientCustActionForm.action = "clientCustAction.do?method=deleteFile&fileName=" + name + "#attachements";
        clientCustActionForm.submit();
    }
 </script>
@@ -701,12 +698,13 @@ explanation of the license and how it is applied.
 							<br>
 							<!-- Address end -->
                             <!-- Attachements -->
-                            <table width="93%" border="0" cellpadding="3" cellspacing="0">
+                            <table width="93%" border="0" cellpadding="3" cellspacing="0" id="attachements">
                                 <tr>
                                     <td colspan="2" class="fontnormalbold">
-                                        <mifos:mifoslabel
-                                            name="client.Attachements"
-                                            bundle="ClientUIResources"></mifos:mifoslabel>
+                                             <mifos:mifoslabel
+                                      name="client.Attachements" bundle="ClientUIResources"></mifos:mifoslabel>( 
+                                      <mifos:mifoslabel name="client.MaxUploadSize"
+                                      bundle="ClientUIResources"></mifos:mifoslabel> 2 MB )
                                     </td>
                                 </tr>
                                 <tr class="fontnormal">
@@ -732,7 +730,7 @@ explanation of the license and how it is applied.
                                         <mifos:mifosalphanumtext 
                                             styleId="create_ClientPersonalInfo.input.additionalfile.description" 
                                             name="clientCustActionForm"
-                                            property="selectedFileDescription" maxlength="1000" />
+                                            property="selectedFileDescription" maxlength="60" size="40" />
                                     </td>
                                 </tr>
                                 <tr class="fontnormal">

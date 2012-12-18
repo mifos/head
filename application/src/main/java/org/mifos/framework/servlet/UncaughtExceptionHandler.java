@@ -32,6 +32,7 @@ import org.mifos.rest.approval.service.RESTCallInterruptException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.webflow.execution.repository.FlowExecutionRestorationFailureException;
@@ -49,6 +50,9 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
     	}
         if ( modelAndView == null ){
         	modelAndView = checkForPageExpiredException(ex, request);
+        }
+        if ( modelAndView == null ) {
+            modelAndView = checkForMaxUploadSizeExceededException(ex, request);
         }
 
         if (request.getRequestURI().endsWith("json")) {
@@ -135,6 +139,18 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
     		return modelAndView;
     	}
     	return null;
+    }
+    
+    private ModelAndView checkForMaxUploadSizeExceededException(Exception ex, HttpServletRequest request) {
+        if (ex instanceof MaxUploadSizeExceededException) {
+            ModelAndView modelAndView = null;
+            String viewName = determineViewName(ex, request);
+            if (viewName != null){
+                modelAndView = getModelAndView(viewName, ex, request);
+            }
+            return modelAndView;
+        }
+        return null;
     }
 
 }

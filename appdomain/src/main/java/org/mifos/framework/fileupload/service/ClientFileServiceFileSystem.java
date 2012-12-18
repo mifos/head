@@ -113,7 +113,8 @@ public class ClientFileServiceFileSystem implements ClientFileService {
         hibernateTransactionHelper.startTransaction();
         genericDao.getSession().delete(clientFile);
         hibernateTransactionHelper.commitTransaction();
-        return FileStorageManager.delete("/clients/" + clientId.toString() + "/" + fileInfo.getName());
+        return FileStorageManager.delete(viewOrganizationSettingsServiceFacade.getClientStorageDirectory()
+                + File.separator + clientId.toString() + File.separator + fileInfo.getName());
     }
 
     public byte[] getData(UploadedFileDto uploadedFileDto) {
@@ -121,8 +122,8 @@ public class ClientFileServiceFileSystem implements ClientFileService {
         if (clientFile == null || clientFile.getFileInfo() == null) {
             return new byte[0];
         } else {
-            final String path = "/clients/" + clientFile.getClientId().toString() + "/"
-                    + clientFile.getFileInfo().getName();
+            final String path = viewOrganizationSettingsServiceFacade.getClientStorageDirectory() + File.separator
+                    + clientFile.getClientId().toString() + File.separator + clientFile.getFileInfo().getName();
             return FileStorageManager.getData(path);
         }
     }
