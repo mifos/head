@@ -12,6 +12,7 @@ public class UploadedFileDto implements Serializable {
     private final Integer size;
     private final String description;
     private final Date uploadDate;
+    private boolean existOnDisk;
     
     public UploadedFileDto(Long uploadedFileId, String name, String contentType, Integer size, String description, Date uploadDate) {
         this.uploadedFileId = uploadedFileId;
@@ -20,6 +21,7 @@ public class UploadedFileDto implements Serializable {
         this.size = size;
         this.description = description;
         this.uploadDate = (Date)uploadDate.clone();
+        this.existOnDisk = true;
     }
     
     public UploadedFileDto(String name, String contentType, Integer size, String description) {
@@ -29,6 +31,7 @@ public class UploadedFileDto implements Serializable {
         this.size = size;
         this.description = description;
         this.uploadDate = new Date();
+        this.existOnDisk = true;
     }
 
     public Long getUploadedFileId() {
@@ -53,6 +56,14 @@ public class UploadedFileDto implements Serializable {
 
     public Date getUploadDate() {
         return (Date)uploadDate.clone();
+    }
+
+    public boolean isExistOnDisk() {
+        return existOnDisk;
+    }
+
+    public void setExistOnDisk(boolean existOnDisk) {
+        this.existOnDisk = existOnDisk;
     }
 
 }

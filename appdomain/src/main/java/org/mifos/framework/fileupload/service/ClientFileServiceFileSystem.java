@@ -37,7 +37,7 @@ public class ClientFileServiceFileSystem implements ClientFileService {
             String storageDir = viewOrganizationSettingsServiceFacade.getClientStorageDirectory();
             String fileDir = storageDir + File.separator + clientId.toString();
             File file = new File(fileDir + File.separator + uploadedFileDto.getName());
-            if (file.exists()) {
+            if (file.exists() || customerDao.getClientUploadedFileByName(clientId, uploadedFileDto.getName()) != null) {
                 return update(clientId, in, uploadedFileDto);
             }
             FileInfoEntity fileInfo = FileStorageManager.createFile(in, fileDir, uploadedFileDto);
@@ -109,12 +109,16 @@ public class ClientFileServiceFileSystem implements ClientFileService {
 
     public boolean delete(Integer clientId, Long fileId) {
         ClientFileEntity clientFile = customerDao.getUploadedFile(fileId);
-        FileInfoEntity fileInfo = clientFile.getFileInfo();
-        hibernateTransactionHelper.startTransaction();
-        genericDao.getSession().delete(clientFile);
-        hibernateTransactionHelper.commitTransaction();
-        return FileStorageManager.delete(viewOrganizationSettingsServiceFacade.getClientStorageDirectory()
-                + File.separator + clientId.toString() + File.separator + fileInfo.getName());
+        if (clientFile != null) {
+            FileInfoEntity fileInfo = clientFile.getFileInfo();
+            hibernateTransactionHelper.startTransaction();
+            genericDao.getSession().delete(clientFile);
+            hibernateTransactionHelper.commitTransaction();
+            return FileStorageManager.delete(viewOrganizationSettingsServiceFacade.getClientStorageDirectory()
+                    + File.separator + clientId.toString() + File.separator + fileInfo.getName());
+        } else {
+            return false;
+        }
     }
 
     public byte[] getData(UploadedFileDto uploadedFileDto) {

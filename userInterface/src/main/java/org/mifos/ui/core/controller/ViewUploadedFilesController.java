@@ -81,6 +81,12 @@ public class ViewUploadedFilesController {
         }
 
         uploadedFiles = fileService.readAll(Integer.parseInt(request.getParameter("entityId")));
+        
+        for (UploadedFileDto uploadedFileDto : uploadedFiles) {
+            if (!fileService.checkIfFileExists(entityId, uploadedFileDto.getName())) {
+                uploadedFileDto.setExistOnDisk(false);
+            }
+        }
 
         ModelAndView modelAndView = new ModelAndView("viewUploadedFiles");
         modelAndView.addObject("entityId", String.valueOf(entityId));

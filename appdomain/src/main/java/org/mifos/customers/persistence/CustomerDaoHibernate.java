@@ -1817,8 +1817,11 @@ public class CustomerDaoHibernate implements CustomerDao {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("clientId", clientId);
         queryParameters.put("fileName", fileName);
-        Object result = ((Object[])this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_CLIENT_UPLOADED_FILE_BY_NAME, queryParameters))[0];
-        return (ClientFileEntity) result;
+        Object[] result = (Object[])this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_CLIENT_UPLOADED_FILE_BY_NAME, queryParameters);
+        if (result != null) {
+            return (ClientFileEntity) result[0];
+        }
+        return null;
     }
     
     public List<ClientBO> findBorrowersUnderLoanOfficer(int position,int noOfObjects,Short loanOffID) {

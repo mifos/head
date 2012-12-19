@@ -242,7 +242,10 @@ public class LoanDaoHibernate implements LoanDao {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("loanId", loanId);
         queryParameters.put("fileName", fileName);
-        Object result = ((Object[])this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_LOAN_UPLOADED_FILE_BY_NAME, queryParameters))[0];
-        return (LoanFileEntity) result;
+        Object[] result = ((Object[])this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_LOAN_UPLOADED_FILE_BY_NAME, queryParameters));
+        if (result != null) {
+            return (LoanFileEntity) result[0];
+        }
+        return null;
     }
 }

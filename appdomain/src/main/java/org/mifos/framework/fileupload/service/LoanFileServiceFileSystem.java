@@ -37,7 +37,7 @@ public class LoanFileServiceFileSystem implements LoanFileService {
             String storageDir = viewOrganizationSettingsServiceFacade.getLoanStorageDirectory();
             String fileDir = storageDir + File.separator + accountId.toString();
             File file = new File(fileDir + File.separator + uploadedFileDto.getName());
-            if (file.exists()) {
+            if (file.exists() || loanDao.getLoanUploadedFileByName(accountId, uploadedFileDto.getName()) != null) {
                 return update(accountId, in, uploadedFileDto);
             }
             FileInfoEntity fileInfo = FileStorageManager.createFile(in, fileDir, uploadedFileDto);
@@ -109,12 +109,16 @@ public class LoanFileServiceFileSystem implements LoanFileService {
 
     public boolean delete(Integer accountId, Long fileId) {
         LoanFileEntity loanFile = loanDao.getUploadedFile(fileId);
-        FileInfoEntity fileInfo = loanFile.getFileInfo();
-        hibernateTransactionHelper.startTransaction();
-        genericDao.getSession().delete(loanFile);
-        hibernateTransactionHelper.commitTransaction();
-        return FileStorageManager.delete(viewOrganizationSettingsServiceFacade.getLoanStorageDirectory()
-                + File.separator + accountId.toString() + "/" + fileInfo.getName());
+        if (loanFile != null) {
+            FileInfoEntity fileInfo = loanFile.getFileInfo();
+            hibernateTransactionHelper.startTransaction();
+            genericDao.getSession().delete(loanFile);
+            hibernateTransactionHelper.commitTransaction();
+            return FileStorageManager.delete(viewOrganizationSettingsServiceFacade.getLoanStorageDirectory()
+                    + File.separator + accountId.toString() + "/" + fileInfo.getName());
+        } else {
+            return false;
+        }
     }
 
     public byte[] getData(UploadedFileDto uploadedFileDto) {

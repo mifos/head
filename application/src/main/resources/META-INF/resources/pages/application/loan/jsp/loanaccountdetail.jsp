@@ -705,7 +705,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                                         <c:url value="viewUploadedFiles.ftl" var="viewUploadedFiles" >
                                             <c:param name="entityId" value="${loanInformationDto.accountId}" />
                                             <c:param name="entityType" value="LOAN" />
-                                            <c:param name="backPageUrl" value="${currentPageUrl}" />
+                                            <c:param name="backPageUrl" value="${backPageUrl}" />
                                         </c:url>
                                         <a id="viewClientDetails.link.uploadedFiles" href="${viewUploadedFiles}" >
                                             <mifos:mifoslabel name="client.UploadedFilesLink" bundle="ClientUIResources" />
