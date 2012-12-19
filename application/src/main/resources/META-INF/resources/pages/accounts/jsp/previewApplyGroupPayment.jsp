@@ -47,9 +47,11 @@ explanation of the license and how it is applied.
 		form.submit()
 	}
 </SCRIPT>
+        <form name="goBackToLoanAccountDetails" method="get" action ="viewLoanAccountDetails.ftl">
+           <input type="hidden" name='globalAccountNum' value="${param.globalAccountNum}"/>
+       </form>
 		<html-el:form method="post" action="/applyGroupPaymentAction.do?method=applyPayment">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
-
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
@@ -167,7 +169,7 @@ explanation of the license and how it is applied.
 								</c:when>
 								<c:otherwise>
 									<html-el:button styleId="reviewapplypayment.button.cancel" styleClass="cancelbuttn" property="Cancel"
-										onclick="ViewDetails()">
+										onclick="ViewLoanDetails()">
 										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
 									</html-el:button>
 

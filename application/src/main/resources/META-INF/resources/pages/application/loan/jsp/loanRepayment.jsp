@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="LoanRepayment"></span>
 		<script type="text/javascript" src="pages/application/loan/js/loanRepayment.js"></script>
-		<form method="post" action="viewLoanAccountDetails.ftl">
+		<form method="get" action="viewLoanAccountDetails.ftl">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'originalScheduleIsAvailable')}"
