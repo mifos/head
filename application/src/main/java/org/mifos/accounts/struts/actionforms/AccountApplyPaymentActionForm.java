@@ -179,7 +179,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         boolean groupLoanWithMembers = AccountingRules.isGroupLoanWithMembers();
 
         if (groupLoanWithMembers) {
-            if (methodCalled != null && methodCalled.equals("divide")) {
+            if (methodCalled != null && (methodCalled.equals("divide") || methodCalled.equals("preview"))) {
                 validateTransfer(errors);
                 validateTransactionDate(errors);
                 validatePaymentType(errors);
@@ -196,9 +196,11 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
                 request.setAttribute(Globals.ERROR_KEY, errors);
                 if (methodCalled.equals("divide")) {
                     request.setAttribute("methodCalled", "preview");
-                } else if (methodCalled.equals("preview")) {
+                } else if (methodCalled.equals("preview") && !individualValues.isEmpty()) {
                     request.setAttribute("methodCalled", "divide");
-                }
+                } else if (methodCalled.equals("preview") && individualValues.isEmpty()) {
+                    request.setAttribute("methodCalled", "preview");
+                } 
                 else {
                     request.setAttribute("methodCalled", methodCalled);
                 }
