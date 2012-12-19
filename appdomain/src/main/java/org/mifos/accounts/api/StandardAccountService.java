@@ -330,10 +330,12 @@ public class StandardAccountService implements AccountService {
         Map<Integer, String> membersPaymentsData = new HashMap<Integer, String>();
         
         for (AccountBO member : ((LoanBO)memberAccount).getParentAccount().getMemberAccounts()){
-            if (member.getAccountId().equals(memberPaymentParametersDto.getAccountId())){
-                membersPaymentsData.put(member.getAccountId(), memberPaymentParametersDto.getPaymentAmount().toString());
-            } else {
-                membersPaymentsData.put(member.getAccountId(), BigDecimal.ZERO.toString());
+            if (member.isActiveLoanAccount()) {
+                if (member.getAccountId().equals(memberPaymentParametersDto.getAccountId())){
+                    membersPaymentsData.put(member.getAccountId(), memberPaymentParametersDto.getPaymentAmount().toString());
+                } else {
+                    membersPaymentsData.put(member.getAccountId(), BigDecimal.ZERO.toString());
+                }
             }
         }
         parentPaymentParametersDto.setMemberInfo(membersPaymentsData);

@@ -36,12 +36,15 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.api.AccountService;
+import org.mifos.accounts.business.AccountTypeEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.servicefacade.AccountPaymentDto;
 import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -145,7 +148,9 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
     private List<LoanBO> getMemberAccountsInformation(String accountId) {
         List<LoanBO> membersInfo = new ArrayList<LoanBO>();
         for (LoanBO memberAcc : loanDao.findById(Integer.valueOf(accountId)).getMemberAccounts()) {
-            membersInfo.add(memberAcc);
+            if (memberAcc.isActiveLoanAccount()) {
+                membersInfo.add(memberAcc);
+            }
         }
         return membersInfo;
     }
