@@ -167,7 +167,7 @@ public class CoaServiceFacadeWebTier implements CoaServiceFacade {
                 throw new BusinessRuleException(EMPTY_GLCODE);
             }
             
-            if (accountId != null && accountId != coaBo.getAccountId()) {
+            if (accountId != null && !accountId.equals(coaBo.getAccountId())) {
                 throw new BusinessRuleException(GLCODE_ALREADY_EXISTS);
             }
             

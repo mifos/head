@@ -49,7 +49,7 @@
             	<span class="span-6 fontBold">[@spring.message "coa.coaName" /]</span>
             	<span class="span-4">${formBean.coaName}</span>
             </div>
-
+			<br />
 			<div class="span-20">
             	<span class="span-6 fontBold">[@spring.message "coa.glCode" /]</span>
             	<span class="span-4">${formBean.glCode}</span>
