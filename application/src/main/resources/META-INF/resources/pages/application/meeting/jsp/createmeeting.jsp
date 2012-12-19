@@ -36,29 +36,20 @@ explanation of the license and how it is applied.
 </script>
 		<script>
 function showMeetingFrequency(){
-	if (document.meetingActionForm.frequency[0].checked == true){
+	if (document.meetingActionForm.frequency[0].checked == true) {
 		document.getElementById("dayDIV").style.display = "none";
 		document.getElementById("weekDIV").style.display = "block";
-		document.getElementById("monthDIV").style.display = "none";
-		document.getElementById("meetingStartDateLabelDIV").style.display = "block";
-		document.getElementById("meetingStartDateButtonDIV").style.display = "block";
-		
-		}
-	else if (document.meetingActionForm.frequency[1].checked == true){
+		document.getElementById("monthDIV").style.display = "none";		
+	} else if (document.meetingActionForm.frequency[1].checked == true){
 		document.getElementById("dayDIV").style.display = "none";
 		document.getElementById("weekDIV").style.display = "none";
 		document.getElementById("monthDIV").style.display = "block";
-		document.getElementById("meetingStartDateLabelDIV").style.display = "none";
-		document.getElementById("meetingStartDateButtonDIV").style.display = "none";
 		if(document.meetingActionForm.monthType[0].checked == false && document.meetingActionForm.monthType[1].checked == false)
 			document.getElementsByName("monthType")[0].checked=true;
-	}
-	else {
+	} else {
 		document.getElementById("weekDIV").style.display = "none";
 		document.getElementById("monthDIV").style.display = "none";
 		document.getElementById("dayDIV").style.display = "block";
-		document.getElementById("meetingStartDateLabelDIV").style.display = "block";
-		document.getElementById("meetingStartDateButtonDIV").style.display = "block";
 	}
 }
 

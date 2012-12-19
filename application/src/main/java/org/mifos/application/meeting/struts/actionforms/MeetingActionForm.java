@@ -20,6 +20,10 @@
 
 package org.mifos.application.meeting.struts.actionforms;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -27,6 +31,9 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -254,16 +261,27 @@ public class MeetingActionForm extends BaseActionForm {
         if (StringUtils.isBlank(getMeetingPlace())) {
             errors.add(MeetingConstants.INVALID_MEETINGPLACE, new ActionMessage(MeetingConstants.INVALID_MEETINGPLACE));
         }
-        
-        if (!StringUtils.isBlank(meetingStartDate)) {
-            try {
-                DateUtils.getDate(getMeetingStartDate());
-            } catch (RuntimeException ex) {
-                errors.add(MeetingConstants.INVALID_MEETINGDATE, new ActionMessage(MeetingConstants.INVALID_MEETINGDATE));
-            }
-        }
-        
+        validateMeetingStartDate(errors);        
         return errors;
+    }
+    
+    private boolean isDateValid(String dateString) {
+        boolean isValid;
+
+        try {
+            DateUtils.getDate(dateString);
+            isValid = true;
+        } catch (RuntimeException ex) {
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    private void validateMeetingStartDate(ActionErrors errors) {
+        if (!StringUtils.isBlank(meetingStartDate) && !isDateValid(meetingStartDate)) {
+            errors.add(MeetingConstants.INVALID_MEETINGDATE, new ActionMessage(MeetingConstants.INVALID_MEETINGDATE));
+        }
     }
 
     private void validateDailyMeeting(ActionErrors errors) {
@@ -278,9 +296,20 @@ public class MeetingActionForm extends BaseActionForm {
             errors.add(MeetingConstants.ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER, new ActionMessage(
                     MeetingConstants.ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER));
         }
-    }
+        
+        if (!StringUtils.isBlank(meetingStartDate) && isDateValid(meetingStartDate)) {
+            DateTime startDate = new DateTime(DateUtils.getDate(getMeetingStartDate()));
 
+            if (startDate.getDayOfWeek() != WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(
+                    getWeekDayValue().getValue())) {
+                errors.add(MeetingConstants.INVALID_DAY_OF_WEEK_FOR_START_DATE, new ActionMessage(
+                        MeetingConstants.INVALID_DAY_OF_WEEK_FOR_START_DATE));               
+            }
+        }
+    }
+    
     private void validateMonthlyMeeting(ActionErrors errors) {
+
         if (StringUtils.isNotBlank(monthType) && monthType.equals(MeetingConstants.MONTHLY_ON_DATE)) {
             if (getMonthDayValue() == null || getDayRecurMonthValue() == null) {
                 errors.add(MeetingConstants.ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER, new ActionMessage(
@@ -290,6 +319,71 @@ public class MeetingActionForm extends BaseActionForm {
             errors.add(MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY, new ActionMessage(
                     MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY));
         }
+        if (!StringUtils.isBlank(meetingStartDate) && isDateValid(meetingStartDate)) {
+            DateTime startDate = new DateTime(DateUtils.getDate(getMeetingStartDate()));
+
+            if (getMonthDayValue() != null && getDayRecurMonthValue() != null)  {
+                if (startDate.getDayOfMonth() != getMonthDayValue()) {
+                    errors.add(MeetingConstants.INVALID_DAY_OF_MONTH_FOR_START_DATE, new ActionMessage(
+                            MeetingConstants.INVALID_DAY_OF_MONTH_FOR_START_DATE));
+                }
+            }  else if (getMonthRankValue() != null && getMonthWeekValue() != null) {
+
+                if (startDate.getDayOfWeek() != WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(
+                        getMonthWeekValue().getValue())) {
+                    errors.add(MeetingConstants.INVALID_DAY_OF_WEEK_FOR_START_DATE, new ActionMessage(
+                            MeetingConstants.INVALID_DAY_OF_WEEK_FOR_START_DATE));               
+                } else {
+                      
+                    if (!isMonthlyStartDateValid(startDate)) {
+                        errors.add(MeetingConstants.INVALID_WEEK_FOR_START_DATE, new ActionMessage(
+                                MeetingConstants.INVALID_WEEK_FOR_START_DATE)); 
+                    }
+                }
+            }
+        }
+    }
+    
+    private List<DateTime> getDatesInMonthForGivenWeekDay(DateTime startDate, int jodaWeekDay) {
+        
+        DateTime current = new DateTime(startDate).withYear(startDate.getYear())
+                .withMonthOfYear(startDate.getMonthOfYear()).withDayOfMonth(1).withDayOfWeek(jodaWeekDay);
+        
+        if (current.getMonthOfYear() != startDate.getMonthOfYear()) {
+            current = current.plusWeeks(1);
+        }
+        
+        List<DateTime> dateList = new ArrayList<DateTime>();
+        
+        while (current.getMonthOfYear() == startDate.getMonthOfYear()) {
+            dateList.add(current);
+            current = current.plusWeeks(1);
+        }
+        
+        return dateList;
+    }
+
+    private boolean isMonthlyStartDateValid(DateTime startDate) {
+        RankOfDay rank = getMonthRankValue();
+
+        boolean isValid = false;
+
+        List<DateTime> dates = getDatesInMonthForGivenWeekDay(startDate, WeekDay.
+                getJodaDayOfWeekThatMatchesMifosWeekDay(getMonthWeekValue().getValue()));
+
+        List<RankOfDay> ranks = RankOfDay.getRankOfDayList();
+        
+        if (dates.size() == 4 && rank == RankOfDay.LAST) {
+            rank = RankOfDay.FOURTH;
+        }
+        
+        for (int i = 0; i < dates.size(); ++i) {
+            if (rank == ranks.get(i) && startDate.equals(dates.get(rank.ordinal()))) {
+                isValid = true;
+            }
+        }
+        
+        return isValid;
     }
 
     public String getMeetingId() {
