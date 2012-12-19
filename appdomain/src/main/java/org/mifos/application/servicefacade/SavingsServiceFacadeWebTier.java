@@ -525,11 +525,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory
                 .createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
         LocalDate startOfPeriod = postingSchedule.findFirstDateOfPeriodForMatchingDate(interestPostingDate);
-        
-        if (savingsAccount.getInterestPostingMeeting().isDaily()) {
-            startOfPeriod = startOfPeriod.minusDays(1);
-        }
-        
         CalendarPeriod lastInterestPostingPeriod = new CalendarPeriod(startOfPeriod, interestPostingDate);
 
         InterestPostingPeriodResult interestPostingPeriodResult = determinePostingPeriodResult(
