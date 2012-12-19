@@ -27,7 +27,8 @@ public enum PenaltyFormula implements LocalizedTextLookup {
     OUTSTANDING_PRINCIPAL_AMOUNT(1, "PenaltyFormula-OutstandingPrincipalAmount"),
     OUTSTANDING_LOAN_AMOUNT(2, "PenaltyFormula-OutstandingLoanAmount"),
     OVERDUE_AMOUNT_DUE(3, "PenaltyFormula-OverdueAmountDue"),
-    OVERDUE_PRINCIPAL(4, "PenaltyFormula-OverduePrincipal");
+    OVERDUE_PRINCIPAL(4, "PenaltyFormula-OverduePrincipal"),
+    OVERDUE_PRINCIPAL_PLUS_INTEREST(5,"PenaltyFormula-OverduePrincipalPlusInterest");
 
     Short value;
     String messageKey;

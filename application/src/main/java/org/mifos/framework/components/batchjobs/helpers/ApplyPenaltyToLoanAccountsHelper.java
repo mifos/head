@@ -194,7 +194,9 @@ public class ApplyPenaltyToLoanAccountsHelper extends TaskHelper {
             charge = loanScheduleEntity.getTotalDue().multiply(radio);
         } else if (penalty.isOverduePrincipal()) {
             charge = loanScheduleEntity.getPrincipalDue().multiply(radio);
-        } else {
+        }  else if (penalty.isOverduePrincipalPlusInterest()) {
+            charge = loanScheduleEntity.getPrincipalPlusInterestDue().multiply(radio);
+        }  else {
             charge = Money.zero();
         }
 

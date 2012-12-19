@@ -157,6 +157,11 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     public Money getPrincipalPaid() {
         return principalPaid;
     }
+    
+    public Money getPrincipalPlusInterestDue()
+    {
+        return principal.subtract(principalPaid).add(getEffectiveInterestDue());
+    }
 
     public void setPrincipalPaid(Money principalPaid) {
         this.principalPaid = principalPaid;

@@ -78,4 +78,25 @@
            </sql>
        </rollback>
    </changeSet>
+   <changeSet id="MIFOS_5813" author="Natu Lauchande" context="expansion">
+        <sql endDelimiter=";">
+           insert into lookup_value(entity_id, lookup_name) SELECT entity_id, 'PenaltyFormula-OverduePrincipalPlusInterest' FROM lookup_entity WHERE entity_name LIKE 'PenaltyFormula';
+
+           insert into lookup_value_locale(locale_id, lookup_id) SELECT 1, lookup_id FROM lookup_value WHERE lookup_name LIKE 'PenaltyFormula-OverduePrincipalPlusInterest';
+
+           insert into penalty_formula(lookup_id) SELECT lookup_id FROM lookup_value WHERE lookup_name LIKE 'PenaltyFormula-OverduePrincipalPlusInterest';
+        </sql>
+        <rollback>
+           <sql endDelimiter=";">
+                delete from penalty_formula where lookup_id=(SELECT lookup_id FROM lookup_value WHERE lookup_name LIKE 'PenaltyFormula-OverduePrincipalPlusInterest');
+
+                delete from lookup_value_locale where locale_id=1 and lookup_id= SELECT  lookup_id FROM lookup_value WHERE lookup_name LIKE 'PenaltyFormula-OverduePrincipalPlusInterest';
+
+                delete from lookup_value where lookup_name like 'PenaltyFormula-OverduePrincipalPlusInterest';
+
+           </sql>
+        </rollback>
+    </changeSet>
+
+
 </databaseChangeLog>
