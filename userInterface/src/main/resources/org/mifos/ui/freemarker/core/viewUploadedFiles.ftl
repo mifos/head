@@ -55,7 +55,7 @@
                         [#if file.existOnDisk]
                             <a href="viewUploadedFiles.ftl?entityId=${entityId}&entityType=${entityType}&backPageUrl=${backPageUrl}&downloadFileId=${file.uploadedFileId}">Download</a>
                         [#else]
-                            <span class="red">File not found</span>
+                            <span class="red">[@spring.message "upload.fileNotFound" /]</span>
                         [/#if]
                     </td>
                 </tr>

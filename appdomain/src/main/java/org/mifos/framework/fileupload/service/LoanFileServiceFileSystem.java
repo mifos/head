@@ -115,7 +115,7 @@ public class LoanFileServiceFileSystem implements LoanFileService {
             genericDao.getSession().delete(loanFile);
             hibernateTransactionHelper.commitTransaction();
             return FileStorageManager.delete(viewOrganizationSettingsServiceFacade.getLoanStorageDirectory()
-                    + File.separator + accountId.toString() + "/" + fileInfo.getName());
+                    + File.separator + accountId.toString() + File.separator + fileInfo.getName());
         } else {
             return false;
         }
