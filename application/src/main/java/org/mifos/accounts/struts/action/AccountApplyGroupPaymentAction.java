@@ -285,11 +285,13 @@ public class AccountApplyGroupPaymentAction extends BaseAction {
         
         HashMap<Integer, String> individualValues = new HashMap<Integer, String>();
         for (LoanBO member : loanDao.findIndividualLoans(parentAccountId)) {
-            if (member.getAccountId().equals(acctualMemberAccount.getAccountId())){
-                individualValues.put(member.getAccountId(), amount);
-            }
-            else {
-                individualValues.put(member.getAccountId(), ZERO_PAYMENT);
+            if (member.isAccountActive()) {
+                if (member.getAccountId().equals(acctualMemberAccount.getAccountId())){
+                    individualValues.put(member.getAccountId(), amount);
+                }
+                else {
+                    individualValues.put(member.getAccountId(), ZERO_PAYMENT);
+                }
             }
         }
         
