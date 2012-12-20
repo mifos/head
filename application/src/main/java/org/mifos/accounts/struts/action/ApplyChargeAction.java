@@ -24,7 +24,6 @@ package org.mifos.accounts.struts.action;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +33,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
@@ -100,11 +101,21 @@ public class ApplyChargeAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ApplyChargeActionForm chargeForm = (ApplyChargeActionForm) form;
         chargeForm.getIndividualValues().clear();
-        
+        Short feeId = Short.valueOf(chargeForm.getFeeId());
+        FeeBO fee = feeDao.findById(feeId);
+        String amount;
         List<GroupIndividualLoanDto> memberAccounts = groupLoanService.getMemberLoansAndDefaultPayments(Integer.valueOf(chargeForm.getAccountId()), new BigDecimal(chargeForm.getCharge()));
-                    
-        for(int i = 0 ; i < memberAccounts.size() ; i++) {
-            chargeForm.getIndividualValues().put(memberAccounts.get(i).getAccountId(), String.valueOf(memberAccounts.get(i).getDefaultAmount().doubleValue()));
+        if (null == fee || fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {           
+            for(int i = 0 ; i < memberAccounts.size() ; i++) {
+                    amount = String.valueOf(memberAccounts.get(i).getDefaultAmount().doubleValue());
+                    chargeForm.getIndividualValues().put(memberAccounts.get(i).getAccountId(), amount);
+                }
+        }
+        else {
+            for(int i = 0 ; i < memberAccounts.size() ; i++) {
+                amount = chargeForm.getCharge();
+                chargeForm.getIndividualValues().put(memberAccounts.get(i).getAccountId(), amount);
+            }
         }
         
         List<LoanBO> memberInfos = getMemberAccountsInformation(chargeForm.getAccountId());
@@ -115,7 +126,9 @@ public class ApplyChargeAction extends BaseAction {
     private List<LoanBO> getMemberAccountsInformation(String accountId) {
         List<LoanBO> membersInfo = new ArrayList<LoanBO>();
         for (LoanBO memberAcc : loanDao.findById(Integer.valueOf(accountId)).getMemberAccounts()) {
-            membersInfo.add(memberAcc);
+            if (memberAcc.isAccountActive()) {
+                membersInfo.add(memberAcc);
+            }
         }
         return membersInfo;
     }

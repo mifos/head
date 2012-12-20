@@ -730,6 +730,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 					</table>
 					</td>
 					<td width="30%" align="left" valign="top" class="paddingleft1">
+					<c:if test="${!(loanInformationDto.accountStateId =='6' && loanAccount.groupLoanAccountMember)}">
 					<table width="100%" border="0" cellpadding="2" cellspacing="0"
 						class="orangetableborder">
 						<tr>
@@ -818,7 +819,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									<c:choose>
 
 										<c:when
-											test="${(loanInformationDto.accountStateId=='5' || loanInformationDto.accountStateId=='9' || loanInformationDto.accountStateId=='6') }">
+											test="${(loanInformationDto.accountStateId=='5' || loanInformationDto.accountStateId=='9' || (loanInformationDto.accountStateId=='6' && !loanAccount.groupLoanAccountMember)) }">
                                             <html-el:link styleId="loanaccountdetail.link.applyAdjustment"
                                                 href="${applyAdjustmentLoadAdjustmentMethodUrl}">
                                                 <mifos:mifoslabel name="loan.apply_adjustment" />
@@ -899,6 +900,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</c:choose></td>
 						<tr>
 					</table>
+					</c:if>
 					<table width="95%" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><img src="pages/framework/images/trans.gif" width="7"
