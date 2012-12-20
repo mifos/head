@@ -205,7 +205,8 @@ public class MeetingAction extends BaseAction {
         MeetingBO meeting = null;
         Date startDate = null;
         
-        if (form.getMeetingStartDate() == null || form.getMeetingStartDate().isEmpty()) {
+        if (form.getMeetingStartDate() == null || form.getMeetingStartDate().isEmpty()
+                || form.getRecurrenceType().equals(RecurrenceType.MONTHLY)) {
             startDate = new DateTimeService().getCurrentJavaDateTime();
         } else {
             startDate = DateUtils.getDate(form.getMeetingStartDate());
