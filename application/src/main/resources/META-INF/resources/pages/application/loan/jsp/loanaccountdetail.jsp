@@ -880,23 +880,20 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								<c:when
 									test="${ loanInformationDto.accountStateId=='9' || loanInformationDto.accountStateId=='5'}">
 									<span class="fontnormal8pt"> 
-                                    <c:choose>
-                                        <c:when test="${loanAccount.groupLoanAccountMember || loanAccount.parentGroupLoanAccount}">
+                                        <c:if test="${!loanAccount.groupLoanAccountMember && loanAccount.parentGroupLoanAccount}">
                                             <html-el:link styleId="loanaccountdetail.link.repayLoan"
                                                 href="${repayLoanActionLoadGroupRepaymentMethodUrl}">
                                                 <mifos:mifoslabel name="loan.repay" />
                                                 <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
                                             </html-el:link><br>
-                                        </c:when>
-                                        <c:otherwise>
+                                        </c:if>
+                                        <c:if test="${!loanAccount.groupLoanAccountMember && !loanAccount.parentGroupLoanAccount}">
                                             <html-el:link styleId="loanaccountdetail.link.repayLoan"
                                                 href="${repayLoanActionLoadRepaymentMethodUrl}">
                                                 <mifos:mifoslabel name="loan.repay" />
                                                 <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
                                             </html-el:link><br>
-                                        </c:otherwise>
-                                    </c:choose>
-
+                                        </c:if>
 									</span>
 								</c:when>
 							</c:choose></td>

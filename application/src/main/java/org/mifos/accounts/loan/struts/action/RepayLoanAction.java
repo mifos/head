@@ -215,21 +215,36 @@ public class RepayLoanAction extends BaseAction {
             receiptDate = repayLoanActionForm.getReceiptDateValue(userContext.getPreferredLocale());
         }
         String globalAccountNum = request.getParameter("globalAccountNum");
-
+        LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNum);
         String forward = Constants.UPDATE_SUCCESS;
         
         BigDecimal totalRepaymentAmount =((Money) SessionUtils.getAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request)).getAmount();
         BigDecimal waivedAmount = ((Money) SessionUtils.getAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, request)).getAmount();
-        RepayLoanInfoDto repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
-                repayLoanActionForm.getAmount(), repayLoanActionForm.getReceiptNumber(),
-                receiptDate, repayLoanActionForm.getPaymentTypeId(), userContext.getId(),
-                repayLoanActionForm.isWaiverInterest(),
-                repayLoanActionForm.getDateOfPaymentValue(userContext.getPreferredLocale()),totalRepaymentAmount,waivedAmount);
-
+        RepayLoanInfoDto repayLoanInfoDto = null;
+        Map<String, Double> memberRepayment = new HashMap<String, Double>();
+        
+        if (loan.isGroupLoanAccountParent()) {
+            memberRepayment = (Map<String, Double>) SessionUtils.getAttribute(LoanConstants.MEMBER_LOAN_REPAYMENT, request);
+            repayLoanInfoDto = new RepayLoanInfoDto(globalAccountNum,
+                    repayLoanActionForm.getAmount(), repayLoanActionForm.getReceiptNumber(),
+                    receiptDate, repayLoanActionForm.getPaymentTypeId(), userContext.getId(),
+                    repayLoanActionForm.isWaiverInterest(),
+                    repayLoanActionForm.getDateOfPaymentValue(userContext.getPreferredLocale()),totalRepaymentAmount,waivedAmount);
+        } 
+        else if (loan.isGroupLoanAccountMember()) {
+            repayLoanInfoDto = new RepayLoanInfoDto(loan.getParentAccount().getGlobalAccountNum(),
+                    repayLoanActionForm.getAmount(), repayLoanActionForm.getReceiptNumber(),
+                    receiptDate, repayLoanActionForm.getPaymentTypeId(), userContext.getId(),
+                    repayLoanActionForm.isWaiverInterest(),
+                    repayLoanActionForm.getDateOfPaymentValue(userContext.getPreferredLocale()),totalRepaymentAmount,waivedAmount);
+            memberRepayment.put(loan.getAccountId().toString(), Double.valueOf(repayLoanInfoDto.getEarlyRepayAmount()));
+        }
+        
         if (repayLoanActionForm.isSavingsTransfer()) {
             this.loanAccountServiceFacade.makeEarlyRepaymentFromSavings(repayLoanInfoDto, repayLoanActionForm.getAccountForTransfer());
         } else {
-            this.loanAccountServiceFacade.makeEarlyGroupRepayment(repayLoanInfoDto, (Map<String, Double>) SessionUtils.getAttribute(LoanConstants.MEMBER_LOAN_REPAYMENT, request));
+            
+            this.loanAccountServiceFacade.makeEarlyGroupRepayment(repayLoanInfoDto, memberRepayment);
         }
 
         SessionUtils.removeAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request);
@@ -328,6 +343,26 @@ public class RepayLoanAction extends BaseAction {
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         SessionUtils.setAttribute(LoanConstants.WAIVER_INTEREST_SELECTED, ((RepayLoanActionForm) form).isWaiverInterest(), request);
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        LoanBO acctualMemberAccount = loanDao.findByGlobalAccountNum(globalAccountNum);
+        if (acctualMemberAccount.isGroupLoanAccountMember()) {
+
+            boolean isLast = false;
+            Integer count = 0;
+            LoanBO parent = acctualMemberAccount.getParentAccount();
+                for (LoanBO member : parent.getMemberAccounts()) {
+                    if (!member.equals(acctualMemberAccount)) {
+                        if (!member.isActiveLoanAccount() && !member.equals(acctualMemberAccount)) {
+                            count ++;
+                        }
+                    }
+                }
+                if (count == parent.getMemberAccounts().size() - 1) {
+                    isLast = true;
+                }
+            
+            SessionUtils.setAttribute("isLastActiveMember", isLast, request);
+        }
         return mapping.findForward(Constants.PREVIEW_SUCCESS);
     }
 

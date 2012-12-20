@@ -47,15 +47,22 @@ explanation of the license and how it is applied.
 		<c:set value="viewLoanAccountDetails.ftl" var="formAction" />
 		<c:set value="repayLoanAction.do?method=makeRepayment" var="makeGroupRepayment" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoan')}" var="isGroupLoan" />
-		<c:if test="${isGroupLoan }">
-			<c:set value="repayLoanAction.do?method=makeGroupRepayment" var="makeGroupRepayment" />
-		</c:if>
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isLastActiveMember')}" var="isLastActiveMember" />
+        <c:if test="${isGroupLoan}">
+            <c:set value="repayLoanAction.do?method=makeGroupRepayment" var="makeGroupRepayment" />
+        </c:if>
+        <c:if test="${isLastActiveMember}">
+            <c:set value="repayLoanAction.do?method=makeGroupRepayment" var="makeGroupRepayment" />
+        </c:if>
+        <c:if test="${BusinessKey.groupLoanAccountMember && !isLastActiveMember}">
+            <c:set value="repayLoanAction.do?method=makeGroupMemberRepayment" var="makeGroupRepayment" />
+        </c:if>
+
+
 		<form name="goBackToLoanAccountDetails" method="get" action ="${formAction }">
 			<input type="hidden" name='globalAccountNum' value="${BusinessKey.globalAccountNum}"/>
 		</form>
-        <c:if test="${BusinessKey.groupLoanAccountMember}">
-            <c:set value="repayLoanAction.do?method=makeGroupMemberRepayment" var="makeGroupRepayment" />
-        </c:if>
+
 		<html-el:form  action="${makeGroupRepayment}">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 				<table width="95%" border="0" cellpadding="0" cellspacing="0">
