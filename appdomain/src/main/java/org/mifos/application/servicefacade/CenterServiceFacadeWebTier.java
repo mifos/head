@@ -605,7 +605,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     private CustomerRecentActivityDto getCustomerActivityView(CustomerActivityEntity customerActivityEntity) {
 
         CustomerRecentActivityDto customerRecentActivityDto = new CustomerRecentActivityDto();
-        String preferredDate = DateUtils.getUserLocaleDate(Locale.getDefault(), customerActivityEntity.getCreatedDate().toString());
+        String preferredDate = DateUtils.getUserLocaleDate(Locale.getDefault(), customerActivityEntity.getCreatedDate());
         customerRecentActivityDto.setUserPrefferedDate(preferredDate);
         customerRecentActivityDto.setActivityDate(customerActivityEntity.getCreatedDate());
         customerRecentActivityDto.setDescription(customerActivityEntity.getDescription());

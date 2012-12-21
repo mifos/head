@@ -209,9 +209,10 @@ explanation of the license and how it is applied.
 						</tr>
 						<c:forEach items="${recentActivities}"
 							var="recentActivities">
+							<fmt:formatDate value="${recentActivities.activityDate}" pattern="yyyy-MM-dd" var="activityDate" />
 							<tr>
 								<td width="11%" class="drawtablerow"><c:out
-									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,recentActivities.activityDate)}" /></td>
+									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,activityDate)}" /></td>
 								<td width="35%" class="drawtablerow"><c:out
 									value="${recentActivities.description}" /></td>
 								<td width="27%" align="right" class="drawtablerow">
