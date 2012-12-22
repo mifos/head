@@ -19,18 +19,18 @@ explanation of the license and how it is applied.
 --%>
 
 
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@taglib uri="/tags/mifos-html" prefix="mifos"%>
-<%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
-<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
-<%@taglib uri="/tags/date" prefix="date"%>
-<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
-<%@ taglib uri="/sessionaccess" prefix="session"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+	<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+		<%@taglib uri="/tags/mifos-html" prefix="mifos"%>
+			<%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
+				<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+					<%@taglib uri="/tags/date" prefix="date"%>
+						<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
+							<%@ taglib uri="/sessionaccess" prefix="session"%>
+								<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<head>
+									<head>
 
-<style>
+										<style>
 tr.even {
   background-color: #ddd;
 }
@@ -67,15 +67,18 @@ border-bottom : solid 1px #EAEBF4;
 }
 
 </style>
-</head>
-<tiles:insert definition=".financialAccountingLayout">
-<tiles:put name="body" type="string" >
-<!-- <span id="page.id" title="CustomerList"></span> -->
-<script src="pages/js/jquery/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="pages/js/separator.js"></script>
-<script type="text/javascript" src="pages/js/datePicker.js"></script>
-<link rel="stylesheet" type="text/css" href="pages/css/datepicker/calendar.css" />
-<script language="javascript">
+									</head>
+									<tiles:insert definition=".financialAccountingLayout">
+										<tiles:put name="body" type="string">
+											<!-- <span id="page.id" title="CustomerList"></span> -->
+											<script src="pages/js/jquery/jquery-1.4.2.min.js">
+											</script>
+											<script type="text/javascript" src="pages/js/separator.js">
+											</script>
+											<script type="text/javascript" src="pages/js/datePicker.js">
+											</script>
+											<link rel="stylesheet" type="text/css" href="pages/css/datepicker/calendar.css" />
+											<script language="javascript">
 function fnloadOffices(form) {
 
 	form.method.value="loadOffices";
@@ -120,65 +123,100 @@ function fnBankDetail(){
 }
 
 </script>
-<span id="page.id" title="simpleaccounting"></span>
-<mifos:NumberFormattingInfo /> 
-<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
-<fmt:setBundle basename="org.mifos.config.localizedResources.SimpleAccountingUIResources"/>
-<body onload="fnBankDetail()">
-<html-el:form action="/generalledgeraction.do">
+											<span id="page.id" title="simpleaccounting">
+											</span>
+											<mifos:NumberFormattingInfo />
+											<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}' />
+											<fmt:setBundle basename="org.mifos.config.localizedResources.SimpleAccountingUIResources" />
+											<body onload="fnBankDetail()">
 
-		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
+												<html-el:form action="/generalledgeraction.do">
 
-							<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
-									<tr>
-										<td align="center" class="heading">
+													<table width="100%" border="0" cellspacing="0" cellpadding="0">
+														<tr>
+
+															<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
+
+																<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+																	<tr>
+																		<td align="center" class="heading">
 											&nbsp;
 										</td>
-									</tr>
-							</table>
+																	</tr>
+																</table>
 
 
-					<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="burlywoodborder">
-							<tr>
-								<td align="left" valign="top" class="paddingleftCreates">
+																<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="bluetableborder">
+																	<tr>
+																		<td align="left" valign="top" class="paddingleftCreates">
 
-									<table width="93%" border="0" cellpadding="3" cellspacing="0">
-										<tr>
-											<td class="headingorange">
-												<span id="generalLedger.heading" class="heading"> <mifos:mifoslabel name="simpleAccounting.head" bundle="simpleAccountingUIResources"/> - </span>
-												<mifos:mifoslabel name="simpleAccounting.glaction" bundle="simpleAccountingUIResources" />
+																			<table width="93%" border="0" cellpadding="3" cellspacing="0">
+																				<tr>
+																					<td class="headingorange">
+																						<span id="generalLedger.heading" class="heading">
+																							<mifos:mifoslabel name="simpleAccounting.head" bundle="simpleAccountingUIResources" /> - </span>
+																						<mifos:mifoslabel name="simpleAccounting.glaction" bundle="simpleAccountingUIResources" />
 
-											</td>
-										</tr>
-										<tr>
-											<td class="fontnormal">
-												<br>
-												<span class="mandatorytext"> <font color="#FF0000">*</font> </span>
-												<mifos:mifoslabel name="simpleAccounting.mandatory" bundle="simpleAccountingUIResources"/>
-											</td>
-										</tr>
-									</table>
+																					</td>
+																				</tr>
+																				<tr>
+																					<font class="fontnormalRedBold">
+																						<span id="reviewapplypayment.error.message">
+																							<html-el:errors bundle="accountsUIResources" />
+																						</font>
+																						<td class="fontnormal">
+																							<br>
+																								<span class="mandatorytext">
+																									<font color="#FF0000">*</font>
+																								</span>
+																								<mifos:mifoslabel name="simpleAccounting.mandatory" bundle="simpleAccountingUIResources" />
+																							</td>
+																						</tr>
+																					</table>
 
-									<logic:messagesPresent>
-										<font class="fontnormalRedBold"><span id="BulkEntry.error.message"> <html-el:errors bundle="simpleAccountingUIResources" /> </span> </font>
-										<br>
-									</logic:messagesPresent>
-									<br>
+																					<logic:messagesPresent>
+
+																						<br>
+																						</logic:messagesPresent>
+																						<br>
 
 
-				<table width="93%" border="0" cellpadding="3" cellspacing="0">
-					<tr class="fontnormal">
-							<td align="right">
-			                   <mifos:mifoslabel name="simpleAccounting.trxnDate" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/>
-			                </td>
-			                <td align="left">
-			                     <mifos:mifosalphanumtext styleId= "createLoanProduct.input.prdOffering" property="trxnDate" size="8"/>
-							 &nbsp  <img src="pages/framework/images/mainbox/calendaricon.gif" onclick="displayDatePicker('trxnDate', this);"/>
-			                </td>
+																							<table width="93%" border="0" cellpadding="3" cellspacing="0">
+																								<tr class="fontnormal">
+																									<td align="right">
+																										<mifos:mifoslabel name="simpleAccounting.trxnDate" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources" />
+																									</td>
+																									<td align="left">
+																										<mifos:mifosalphanumtext styleId="createLoanProduct.input.prdOffering" property="trxnDate" size="8" />
+							 &nbsp  <img src="pages/framework/images/mainbox/calendaricon.gif" onclick="displayDatePicker('trxnDate', this);" />
+																									</td>
 
-					</tr>
+																								</tr>
+																								<tr class="fontnormal">
+																									<td align="right">
+																										<mifos:mifoslabel name="simpleAccounting.officeHeirarchy" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources" />
+																									</td>
+																									<td align="left">
+																										<mifos:select property="officeHierarchy" onchange="fnloadOffices(this.form)">
+																											<c:forEach items="${sessionScope.listOfOffices}" var="listOfOffice">
+																												<html-el:option value="${listOfOffice.officeId}">${listOfOffice.officeLevel}</html-el:option>
+																											</c:forEach>
+																										</mifos:select>
+																									</td>
+
+																									<td align="right">
+																										<mifos:mifoslabel name="simpleAccounting.office" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources" />
+																									</td>
+																									<td align="left">
+																										<mifos:select property="office">
+																											<c:forEach items="${sessionScope.DynamicOfficesOnHierarchy}" var="offices">
+																												<html-el:option value="${offices.globalOfficeNumber}">${offices.displayName}</html-el:option>
+																											</c:forEach>
+																										</mifos:select>
+																									</td>
+																									<!-- Office Hierarchy Hard coded
+			 </tr>
+
 					<tr class="fontnormal">
 						<td align="right"><mifos:mifoslabel name="simpleAccounting.officeHeirarchy" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
 						<td align="left">
@@ -202,117 +240,156 @@ function fnBankDetail(){
 					</td>
 			 </tr>
 
-			<tr class="fontnormal">
-			     <td width="15%" align="right"><mifos:mifoslabel name="simpleAccounting.trxnType" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
-							<td width="25%" align="left">
-								<mifos:select styleId="trxnTypeId" property="trxnType" onchange="fnloadMainAccounts(this.form)">
-								<html-el:option value="CR"><mifos:mifoslabel name="simpleAccounting.cashReceipt" bundle="simpleAccountingUIResources" /></html-el:option>
-								<html-el:option value="CP"><mifos:mifoslabel name="simpleAccounting.cashPayment" bundle="simpleAccountingUIResources" /></html-el:option>
-								<html-el:option value="BR"><mifos:mifoslabel name="simpleAccounting.bankReceipt" bundle="simpleAccountingUIResources" /></html-el:option>
-								<html-el:option value="BP"><mifos:mifoslabel name="simpleAccounting.bankPayment" bundle="simpleAccountingUIResources" /></html-el:option>
-								</mifos:select>
-							</td>
-			 <td width="15%" align="right"><mifos:mifoslabel name="simpleAccounting.mainAccount" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
-					<td width="25%" align="left">
-						<mifos:select property="mainAccount" onchange="fnloadAccountHeads(this.form)">
-				        <c:forEach items="${sessionScope.MainAccountGlCodes}" var="mainAccount">
-				            <html-el:option value="${mainAccount.glcode}">${mainAccount.glname}</html-el:option>
-				        </c:forEach>
-						</mifos:select>
-				</td>
-			</tr>
+ -->
 
-			<tr class="fontnormal">
+																									<tr class="fontnormal">
+																										<td width="15%" align="right">
+																											<mifos:mifoslabel name="simpleAccounting.trxnType" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources" />
+																										</td>
+																										<td width="25%" align="left">
+																											<mifos:select styleId="trxnTypeId" property="trxnType" onchange="fnloadMainAccounts(this.form)">
+																												<html-el:option value="CR">
+																													<mifos:mifoslabel name="simpleAccounting.cashReceipt" bundle="simpleAccountingUIResources" />
+																												</html-el:option>
+																												<html-el:option value="CP">
+																													<mifos:mifoslabel name="simpleAccounting.cashPayment" bundle="simpleAccountingUIResources" />
+																												</html-el:option>
+																												<html-el:option value="BR">
+																													<mifos:mifoslabel name="simpleAccounting.bankReceipt" bundle="simpleAccountingUIResources" />
+																												</html-el:option>
+																												<html-el:option value="BP">
+																													<mifos:mifoslabel name="simpleAccounting.bankPayment" bundle="simpleAccountingUIResources" />
+																												</html-el:option>
+																											</mifos:select>
+																										</td>
+																										<td width="15%" align="right">
+																											<mifos:mifoslabel name="simpleAccounting.mainAccount" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources" />
+																										</td>
+																										<td width="25%" align="left">
+																											<mifos:select property="mainAccount" onchange="fnloadAccountHeads(this.form)">
+																												<c:forEach items="${sessionScope.MainAccountGlCodes}" var="mainAccount">
+																													<html-el:option value="${mainAccount.glcode}">${mainAccount.glname}</html-el:option>
+																												</c:forEach>
+																											</mifos:select>
+																										</td>
+																									</tr>
 
-			<td align="right"><mifos:mifoslabel name="simpleAccounting.accountHead" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
-				<td align="left">
-					<mifos:select property="accountHead">
-				        <c:forEach items="${sessionScope.AccountHeadGlCodes}" var="accountHead">
-				            <html-el:option value="${accountHead.glcode}">${accountHead.glname}</html-el:option>
-				        </c:forEach>
-					</mifos:select>
-				</td>
+																									<tr class="fontnormal">
 
-				<td align="right"><mifos:mifoslabel name="simpleAccounting.amount" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
-				<td align="left">
-					  <html-el:text property="amount" styleClass="separatedNumber" styleId="simpleaccounting.input.amount"/>
-				</td>
+																										<td align="right">
+																											<mifos:mifoslabel name="simpleAccounting.accountHead" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources" />
+																										</td>
+																										<td align="left">
+																											<mifos:select property="accountHead">
+																												<c:forEach items="${sessionScope.AccountHeadGlCodes}" var="accountHead">
+																													<html-el:option value="${accountHead.glcode}">${accountHead.glname}</html-el:option>
+																												</c:forEach>
+																											</mifos:select>
+																										</td>
 
-			</tr>
+																										<td align="right">
+																											<mifos:mifoslabel name="simpleAccounting.amount" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources" />
+																										</td>
+																										<td align="left">
+																											<html-el:text property="amount" styleClass="separatedNumber" styleId="simpleaccounting.input.amount" />
+																										</td>
+																										<td align="right">
+																											<mifos:mifoslabel name="simpleAccounting.memberId" mandatory="no" isColonRequired="Yes" bundle="simpleAccountingUIResources" />
+																										</td>
+																										<td align="left">
+																											<html-el:text property="memberId" styleClass="separatedNumber" styleId="simpleaccounting.input.amount" />
+																										</td>
 
-		  <tr class="fontnormal">
-			<td align="center" colspan="4">
-				<div id="bankDetailsId">
-				<br>
-				  <table width="93%" border="0" cellpadding="3" cellspacing="0" class="burlywoodborder">
-				    <tr class="fontnormal">
-				      <td align="right"><mifos:mifoslabel name="simpleAccounting.chequeNo" mandatory="no" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
-				<td align="left">
-					<mifos:mifosnumbertext property="chequeNo" style="width:150px" maxlength="60" /></td>
-				<td align="right"><mifos:mifoslabel name="simpleAccounting.chequeDate" mandatory="no" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
-					<td align="left">
-						<date:datetag property="chequeDate" isDisabled="No" renderstyle="simple"/></td>
-			 </tr>
 
-				<tr class="fontnormal">
-			      <td align="right"><mifos:mifoslabel name="simpleAccounting.bankName" mandatory="no" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
-					<td align="left">
-						<mifos:mifosalphanumtext property="bankName" style="width:150px" maxlength="60" />
-					</td>
-			 <td align="right"><mifos:mifoslabel name="simpleAccounting.bankBranch" mandatory="no" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
-				 <td align="left">
-					<mifos:mifosalphanumtext property="bankBranch" style="width:150px" maxlength="60" />
-				</td>
 
-			       </tr>
-			  </table>
-		     <br>
-			  </div>
-			</td>
-			</tr>
-			<tr class="fontnormal">
-		   <td align="right"><mifos:mifoslabel name="simpleAccounting.trxnNotes" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources"/></td>
-		 <td align="left" colspan="3">
-		 <mifos:textarea property="notes" cols='68'></mifos:textarea>
-             </td>
-		</tr>
-		</table>
-			<br>
-			<table width="93%" border="0" cellpadding="0" cellspacing="0">
-										<tr>
-											<td align="center" class="blueline">
+																									</tr>
+
+																									<tr class="fontnormal">
+																										<td align="center" colspan="4">
+																											<div id="bankDetailsId">
+																												<br>
+																													<table width="93%" border="0" cellpadding="3" cellspacing="0" class="burlywoodborder">
+																														<tr class="fontnormal">
+																															<td align="right">
+																																<mifos:mifoslabel name="simpleAccounting.chequeNo" mandatory="no" isColonRequired="Yes" bundle="simpleAccountingUIResources" />
+																															</td>
+																															<td align="left">
+																																<mifos:mifosnumbertext property="chequeNo" style="width:150px" maxlength="60" />
+																															</td>
+																															<td align="right">
+																																<mifos:mifoslabel name="simpleAccounting.chequeDate" mandatory="no" isColonRequired="Yes" bundle="simpleAccountingUIResources" />
+																															</td>
+																															<td align="left">
+																																<date:datetag property="chequeDate" isDisabled="No" renderstyle="simple" />
+																															</td>
+																														</tr>
+
+																														<tr class="fontnormal">
+																															<td align="right">
+																																<mifos:mifoslabel name="simpleAccounting.bankName" mandatory="no" isColonRequired="Yes" bundle="simpleAccountingUIResources" />
+																															</td>
+																															<td align="left">
+																																<mifos:mifosalphanumtext property="bankName" style="width:150px" maxlength="60" />
+																															</td>
+																															<td align="right">
+																																<mifos:mifoslabel name="simpleAccounting.bankBranch" mandatory="no" isColonRequired="Yes" bundle="simpleAccountingUIResources" />
+																															</td>
+																															<td align="left">
+																																<mifos:mifosalphanumtext property="bankBranch" style="width:150px" maxlength="60" />
+																															</td>
+
+																														</tr>
+																													</table>
+																													<br>
+																													</div>
+																												</td>
+																											</tr>
+																											<tr class="fontnormal">
+																												<td align="right">
+																													<mifos:mifoslabel name="simpleAccounting.trxnNotes" mandatory="yes" isColonRequired="Yes" bundle="simpleAccountingUIResources" />
+																												</td>
+																												<td align="left" colspan="3">
+																													<mifos:textarea property="notes" cols='68'>
+																													</mifos:textarea>
+																												</td>
+																											</tr>
+																										</table>
+																										<br>
+																											<table width="93%" border="0" cellpadding="0" cellspacing="0">
+																												<tr>
+																													<td align="center" class="blueline">
 												&nbsp;
 											</td>
-										</tr>
-			</table>
+																												</tr>
+																											</table>
 
-					<html-el:hidden property="method" value="load" />
-					<html-el:hidden property="input" value="load" />
-				<br>
+																											<html-el:hidden property="method" value="load" />
+																											<html-el:hidden property="input" value="load" />
+																											<br>
 
-					<table width="93%" border="0" cellpadding="0" cellspacing="0">
-										<tr>
-											<td align="center">
-												 <html-el:submit styleId="simpleaccounting.button.submit" styleClass="buttn submit"  onclick="fnSubmit(this.form, this)">
-													<mifos:mifoslabel name="simpleAccounting.preview" bundle="simpleAccountingUIResources"/>
-											    </html-el:submit>
+																												<table width="93%" border="0" cellpadding="0" cellspacing="0">
+																													<tr>
+																														<td align="center">
+																															<html-el:submit styleId="simpleaccounting.button.submit" styleClass="buttn submit" onclick="fnSubmit(this.form, this)">
+																																<mifos:mifoslabel name="simpleAccounting.preview" bundle="simpleAccountingUIResources" />
+																															</html-el:submit>
 												&nbsp;
-												<html-el:button  styleId="bulkentry.button.cancel" property="cancel" styleClass="cancelbuttn"  onclick="fnCancel(this.form);">
-													<mifos:mifoslabel name="simpleAccounting.cancel" bundle="simpleAccountingUIResources"/>
-												</html-el:button>
-											</td>
-										</tr>
-									</table>
+												<html-el:button styleId="bulkentry.button.cancel" property="cancel" styleClass="cancelbuttn" onclick="fnCancel(this.form);">
+																																<mifos:mifoslabel name="simpleAccounting.cancel" bundle="simpleAccountingUIResources" />
+																															</html-el:button>
+																														</td>
+																													</tr>
+																												</table>
 
-<br>
-								</td>
-							</tr>
-						</table>
-						<br>
-					</td>
-				</tr>
-			</table>
-		</html-el:form>
-		</body>
-	</tiles:put>
-</tiles:insert>
+																												<br>
+																												</td>
+																											</tr>
+																										</table>
+																										<br>
+																										</td>
+																									</tr>
+																								</table>
+																							</html-el:form>
+																						</body>
+																					</tiles:put>
+																				</tiles:insert>

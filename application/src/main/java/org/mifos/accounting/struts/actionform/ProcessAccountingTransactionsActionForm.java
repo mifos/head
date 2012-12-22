@@ -48,6 +48,34 @@ public class ProcessAccountingTransactionsActionForm extends BaseActionForm {
 	private String lastProcessDateDD;
 	private String lastProcessDateMM;
 	private String lastProcessDateYY;
+	private String officeLevelId;
+	private String office;
+	private String officeHierarchy;
+
+
+	public String getOfficeHierarchy() {
+		return officeHierarchy;
+	}
+
+	public void setOfficeHierarchy(String officeHierarchy) {
+		this.officeHierarchy = officeHierarchy;
+	}
+
+	public String getOffice() {
+		return office;
+	}
+
+	public void setOffice(String office) {
+		this.office = office;
+	}
+
+	public String getOfficeLevelId() {
+		return officeLevelId;
+	}
+
+	public void setOfficeLevelId(String officeLevelId) {
+		this.officeLevelId = officeLevelId;
+	}
 
 	public String getGroupBy() {
 		return groupBy;
@@ -123,9 +151,12 @@ public class ProcessAccountingTransactionsActionForm extends BaseActionForm {
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		logger.debug("reset method called");
 		if (request.getParameter(SimpleAccountingConstants.METHOD).equals(
-				"load")) {
+				"load") || request.getParameter(SimpleAccountingConstants.METHOD).equalsIgnoreCase("loadLastUpdatedDate")) {
+
 			this.processTillDate = null;
 			this.groupBy = null;
+			this.office = null;
+			this.officeLevelId = null;
 			this.lastProcessDateDD = null;
 			this.lastProcessDateMM = null;
 			this.lastProcessDateYY = null;
@@ -266,4 +297,7 @@ public class ProcessAccountingTransactionsActionForm extends BaseActionForm {
 			errors = lastProcessDateValidate(errors, locale);
 		return errors;
 	}
+
+
+
 }

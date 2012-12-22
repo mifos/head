@@ -73,7 +73,13 @@ border-bottom : solid 1px #EAEBF4;
 <!-- <span id="page.id" title="CustomerList"></span> -->
 <script src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 <script language="javascript">
+$(document).ready(function() {
 
+if(false==${sessionScope.jvsave})
+{
+  document.getElementById("simpleaccounting.button.preview").style.backgroundColor="FF9933";
+  }
+ });
 
 function fnSubmit(form, buttonSubmit) {
 	buttonSubmit.disabled=true;
@@ -93,7 +99,12 @@ function fnEditTransaction(form) {
 	form.action="journalvoucheraction.do";
 	form.submit();
 }
+function fnSaveStage(form) {
 
+	form.method.value="saveStageSubmit";
+	form.action="journalvoucheraction.do";
+	form.submit();
+}
 </script>
 
 <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
@@ -241,13 +252,16 @@ function fnEditTransaction(form) {
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												 <html-el:submit styleId="simpleaccounting.button.preview" styleClass="buttn"  onclick="fnSubmit(this.form, this)">
-													<mifos:mifoslabel name="simpleAccounting.submit"/>
+												 <html-el:submit styleId="simpleaccounting.button.preview"   onclick="fnSubmit(this.form, this)">
+													<mifos:mifoslabel name="simpleAccounting.save"/>
 											    </html-el:submit>
 												&nbsp;
 												<html-el:button  styleId="bulkentry.button.cancel" property="cancel" styleClass="cancelbuttn"  onclick="fnCancel(this.form);">
 													<mifos:mifoslabel name="simpleAccounting.cancel"/>
 												</html-el:button>
+												<html-el:submit  styleId="bulkentry.button.savestage"  styleClass="buttn"  onclick="fnSaveStage(this.form);">
+													<mifos:mifoslabel name="simpleAccounting.saveStage"/>
+												</html-el:submit>
 											</td>
 										</tr>
 									</table>
