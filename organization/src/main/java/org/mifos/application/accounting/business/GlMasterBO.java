@@ -42,6 +42,10 @@ public class GlMasterBO extends AbstractBusinessObject{
    private List<GlDetailBO> glDetailBOList;
    private String status;
    private int transactionBy;
+   private int stage;
+   private String memberId;
+
+
 
 public GlMasterBO() {
 	   //default constructor for Hibernate
@@ -171,5 +175,18 @@ public int getTransactionBy() {
 public void setTransactionBy(int transactionBy) {
 	this.transactionBy = transactionBy;
 }
+public int getStage() {
+	return stage;
+}
 
+public void setStage(int stage) {
+	this.stage = stage;
+}
+public String getMemberId() {
+	return memberId;
+}
+
+public void setMemberId(String memberId) {
+	this.memberId = memberId;
+}
 }

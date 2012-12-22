@@ -145,7 +145,7 @@
         <!-- Financial Accounting action -->
         <action path="/FinancialAccountingAction" type="org.mifos.application.financialaccounting.struts.action.FinancialAccountingAction" name="financialAccountingActionForm"
                 parameter="method" input="/FinancialAccountingAction.do?method=validate" validate="false">
-            <forward name="load_success" path="/pages/application/financialaccounting/jsp/financialAccounting.jsp" />
+            <forward name="load_success" path="/pages/application/financialaccounting/jsp/financialAccounting.jsp"/>
         </action>
         <!-- Fee Action -->
         <action path="/feeaction" type="org.mifos.accounts.fees.struts.action.FeeAction" parameter="method"
