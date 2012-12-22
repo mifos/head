@@ -24,7 +24,8 @@
     <property name="status" type="string" column="status"></property>
     <property name="createdBy" type="short" column="created_by"></property>
     <property name="createdDate" type="date" column="created_date"></property>
-
+    <property name="stage" type="int" column="stage"></property>
+    <property name="memberId" type="string" column="member_id"></property>
 
     <bag name="glDetailBOList" cascade="all" table="acc_gldetail" lazy="false" >
             <key column="transaction_master_id" />

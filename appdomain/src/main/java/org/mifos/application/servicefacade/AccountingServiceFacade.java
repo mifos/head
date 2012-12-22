@@ -24,9 +24,14 @@ import java.util.List;
 
 import org.mifos.application.accounting.business.FinancialYearBO;
 import org.mifos.application.accounting.business.GlBalancesBO;
+import org.mifos.application.accounting.business.GlDetailBO;
 import org.mifos.application.accounting.business.GlMasterBO;
 import org.mifos.dto.domain.GLCodeDto;
+import org.mifos.dto.domain.GlDetailDto;
+import org.mifos.dto.domain.GlobalOfficeNumDto;
 import org.mifos.dto.domain.OfficeGlobalDto;
+import org.mifos.dto.domain.RolesActivityDto;
+import org.mifos.dto.domain.ViewStageTransactionsDto;
 import org.mifos.dto.domain.ViewTransactionsDto;
 import org.mifos.security.util.UserContext;
 
@@ -37,7 +42,8 @@ public interface AccountingServiceFacade {
 
 	List<OfficeGlobalDto> loadOfficesForLevel(Short officeLevelId);
 
-	GlBalancesBO loadExistedGlBalancesBO(Integer officeLevelId,String officeId,String glCodeValue,Integer finantialYearId);
+	GlBalancesBO loadExistedGlBalancesBO(Integer officeLevelId,
+			String officeId, String glCodeValue, Integer finantialYearId);
 
 	List<OfficeGlobalDto> loadCustomerForLevel(Short customerLevelId);
 
@@ -47,22 +53,32 @@ public interface AccountingServiceFacade {
 
 	List<GLCodeDto> loadCreditAccounts(String glCode);
 
+	List<GLCodeDto> findMainAccountHeadGlCodes(String glname);
+
+	List<GlobalOfficeNumDto> findGlobalDiplayNum(String officename);
+
 	List<GLCodeDto> mainAccountForBank();
+
+	List<RolesActivityDto> glloadRolesActivity();
+
+	List<RolesActivityDto> jvloadRolesActivity();
 
 	List<GLCodeDto> accountHead(String glCode);
 
-	List<ViewTransactionsDto> getAccountingTransactions(Date toTrxnDate,Date fromTrxnDate,
-			int startRecord, int numberOfRecords);
+	List<ViewTransactionsDto> getAccountingTransactions(Date toTrxnDate,
+			Date fromTrxnDate, int startRecord, int numberOfRecords);
 
-	int getNumberOfTransactions(Date toTrxnDate,Date fromTrxnDate);
+	int getNumberOfTransactions(Date toTrxnDate, Date fromTrxnDate);
 
 	String getLastProcessDate();
 
-	boolean processMisPostings(Date lastProcessDate, Date processTillDate,Short createdBy);
+	boolean processMisPostings(Date lastProcessDate, Date processTillDate,
+			Short createdBy);
 
 	FinancialYearBO getFinancialYear();
-	
-	FinancialYearBO updateFinancialYear(FinancialYearBO financialYearBO,UserContext userContext);
+
+	FinancialYearBO updateFinancialYear(FinancialYearBO financialYearBO,
+			UserContext userContext);
 
 	List<GLCodeDto> findTotalGlAccounts();
 
@@ -70,7 +86,53 @@ public interface AccountingServiceFacade {
 
 	boolean savingAccountingTransactions(GlMasterBO bo);
 
+	boolean savingStageAccountingTransactions(GlMasterBO bo);
+
 	boolean savingOpeningBalances(GlBalancesBO bo);
-	
-	public void processYearEndBalances(UserContext userContext,FinancialYearBO oldFinancialYearBO);
+
+	public void processYearEndBalances(UserContext userContext,
+			FinancialYearBO oldFinancialYearBO);
+
+	List<ViewStageTransactionsDto> getStageAccountingTransactions(
+			Object object, int iPageNo, int noOfRecordsPerPage);
+
+	List<ViewStageTransactionsDto> getStageAccountingTransactions(String stage,
+			int startRecord, int numberOfRecords);
+
+	int getNumberOfStageTransactions();
+
+	void approveStageAccountingTransactions(int transactionNo, int stage);
+
+	ViewStageTransactionsDto getstagedAccountingTransactions(int transactionNo);
+
+	List<GLCodeDto> loadInterOfficeDebitAccounts();
+
+	public List<GLCodeDto> auditAccountHeads();
+
+	public List<OfficeGlobalDto> loadCustomerForLevel(Short short1,
+			String fromOffice);
+
+	public List<OfficeGlobalDto> loadOfficesForLevel(Short valueOf, String fromOffice);
+
+	public void addAuditComments(String stageTransactionNo, String audit,
+			String auditComments);
+
+	public GlDetailDto getChequeDetails(int stageTransactionNo);
+
+	public List<ViewStageTransactionsDto> getStageAccountingTransactions(Date date,
+			Date date2, int iPageNo, int noOfRecordsPerPage);
+
+	public int getNumberOfStageTransactions(Date date, Date date2);
+
+	public List getOfficeDetails(String officeId, String officLevelId);
+
+	public boolean processMisPostings(Date lastProcessDate, Date processTillDate,
+			Short createdBy,String officeId);
+
+	public String getLastProcessUpdatedDate(String globalOfficeNumber);
+
+	public List<OfficeGlobalDto> loadDynamicCustomerForLevel(String officeId, String officLevelId);
+
+
+
 }

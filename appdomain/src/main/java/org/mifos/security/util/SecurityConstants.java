@@ -115,6 +115,14 @@ public interface SecurityConstants {
     short ACCOUNTING_CREATE_OPENBALANCE = 282; 
     short ACCOUNTING_CREATE_VIEWTRANSACTIONS = 283; 
     short ACCOUNTING_CREATE_MISPROCESSING = 284; 
+    short GENERAL_LEDGER_SAVE=300;
+    short JOURNALVOUCHER_SAVE=301;
+    short UPLOAD_XLSHEET=302;
+    short VIEW_STAGE_TRANSACTIONS=303;
+    short INTER_OFFICE_TRANSFERS=304;
+    short APPROVE_TRANSACTIONS=305;
+    short AUDIT_TRANSACTIONS=306;
+
 
     // Client attributes management
     short EDIT_CLIENTNAME_HIERARCHY_GROUPLOANALLOWED = 28;
@@ -501,5 +509,5 @@ public interface SecurityConstants {
     /** Penalties */
     short LOAN_REMOVE_PENALTY_TYPE_ATTACHED_TO_ACCOUNT = 249;
     
-    short CAN_MODIFY_CHART_OF_ACCOUNTS = 300;
+    short CAN_MODIFY_CHART_OF_ACCOUNTS = 307;
 }
