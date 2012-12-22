@@ -60,10 +60,13 @@ public class YearEndProcessAction extends BaseAction {
 	public boolean validateYearEndProcess(HttpServletRequest request,FinancialYearBO oldFinancialYearBO){
 		boolean flag=true;
 		Date currentDate=DateUtils.getCurrentDateWithoutTimeStamp();
+
+
 		if(currentDate.compareTo(oldFinancialYearBO.getFinancialYearEndDate())<=0){
 			flag=false;
 			storingSession(request,"OldFinancialYearEndDate",oldFinancialYearBO.getFinancialYearEndDate());
 		}
+
 		storingSession(request, "ValidateYearEndProcess", flag);
 		return flag;
 	}
