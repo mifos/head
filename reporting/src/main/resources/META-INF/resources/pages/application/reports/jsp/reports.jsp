@@ -120,6 +120,7 @@ explanation of the license and how it is applied.
 				  			</span>
 				  			<c:forEach var="report" items="${reportCategory.reportsSet}" >
 				  			 <c:choose>
+
 							 <c:when test="${report.reportsJasperMap.reportJasper != null && report.isActive == 1}">
 							 <%
 								if(isDisplay || !((ReportsBO)pageContext.getAttribute("report")).getReportsJasperMap().getReportJasper().endsWith(".jasper")) {

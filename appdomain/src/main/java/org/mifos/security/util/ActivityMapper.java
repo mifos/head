@@ -43,6 +43,7 @@ import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsD
  * Singleton.
  */
 public class ActivityMapper {
+
     private final short SAVING_CANCHANGESTATETO_PARTIALAPPLICATION = 140;
     private final short SAVING_CANCHANGESTATETO_PENDINGAPPROVAL = 180;
     private final short SAVING_CANCHANGESTATETO_CANCEL = 181;
@@ -200,6 +201,12 @@ public class ActivityMapper {
         parseActionSecurity(getFinancialAccountingSecurity());
         parseActionSecurity(getAccountGroupIndividualPaymentSecurity());
         parseActionSecurity(getMigrateSecurity());
+        parseActionSecurity(getAuditGLAuditActionSecurity());
+        parseActionSecurity(getApproveTransactionsActionSecurity());
+        parseActionSecurity(getInterOfficeTransferSecurity());
+        parseActionSecurity(getViewStageTransactionsActionSecurity());
+        parseActionSecurity(getImportClientDataActionSecurity());
+
     }
 
     private ActionSecurity getMigrateSecurity() {
@@ -209,6 +216,69 @@ public class ActivityMapper {
         security.allow("migrateAdditionalFields", SecurityConstants.VIEW);
         return security;
     }
+
+    private ActionSecurity getAuditGLAuditActionSecurity() {
+		ActionSecurity security = new ActionSecurity(
+				"audittransactionsaction");
+		security.allow("load", SecurityConstants.AUDIT_TRANSACTIONS);
+		security.allow("pickDate", SecurityConstants.VIEW);
+		security.allow("audit", SecurityConstants.VIEW);
+		security.allow("process", SecurityConstants.VIEW);
+		security.allow("cancel", SecurityConstants.VIEW);
+		return security;
+	}
+
+	private ActionSecurity getApproveTransactionsActionSecurity() {
+		ActionSecurity security = new ActionSecurity(
+				"approvetransactionsaction");
+		security.allow("approve", SecurityConstants.APPROVE_TRANSACTIONS);
+		security.allow("submit", SecurityConstants.VIEW);
+		security.allow("reject", SecurityConstants.VIEW);
+		security.allow("cancel", SecurityConstants.VIEW);
+
+		return security;
+	}
+
+	private ActionSecurity getInterOfficeTransferSecurity() {
+		ActionSecurity security = new ActionSecurity(
+				"interofficetransferaction");
+		security.allow("load", SecurityConstants.INTER_OFFICE_TRANSFERS);
+		security.allow("loadFromOffices", SecurityConstants.VIEW);
+		security.allow("loadToOffices", SecurityConstants.VIEW);
+		security.allow("loadCreditAccount", SecurityConstants.VIEW);
+		security.allow("cancel", SecurityConstants.VIEW);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("saveStageSubmit", SecurityConstants.VIEW);
+		security.allow("previous", SecurityConstants.VIEW);
+		security.allow("submit", SecurityConstants.VIEW);
+		return security;
+	}
+
+	private ActionSecurity getViewStageTransactionsActionSecurity() {
+		ActionSecurity security = new ActionSecurity(
+				"viewstagetransactionsaction");
+		security.allow("load", SecurityConstants.VIEW_STAGE_TRANSACTIONS);
+		security.allow("submit", SecurityConstants.VIEW);
+		security.allow("approve", SecurityConstants.VIEW);
+		security.allow("reject", SecurityConstants.VIEW);
+		security.allow("edit", SecurityConstants.VIEW);
+		security.allow("previous", SecurityConstants.VIEW);
+		security.allow("loadOffices", SecurityConstants.VIEW);
+		security.allow("loadMainAccounts", SecurityConstants.VIEW);
+		security.allow("loadAccountHeads", SecurityConstants.VIEW);
+		security.allow("preview", SecurityConstants.VIEW);
+
+		return security;
+	}
+
+	private ActionSecurity getImportClientDataActionSecurity() {
+		ActionSecurity security = new ActionSecurity("importClientDataAction");
+		security.allow("load", SecurityConstants.VIEW);
+		security.allow("uploadXLSData", SecurityConstants.VIEW);
+		security.allow("submit", SecurityConstants.VIEW);
+		security.allow("cancel", SecurityConstants.VIEW);
+		return security;
+	}
 
     private ActionSecurity getImportTransactionsSecurity() {
         final ActionSecurity security = new ActionSecurity("manageImportAction");
@@ -473,6 +543,7 @@ public class ActivityMapper {
         security.allow("preview", SecurityConstants.VIEW);
         security.allow("previous", SecurityConstants.VIEW);
         security.allow("submit", SecurityConstants.VIEW);
+        security.allow("saveStageSubmit", SecurityConstants.VIEW);
         return security;
     }
     
@@ -485,6 +556,7 @@ public class ActivityMapper {
         security.allow("preview", SecurityConstants.VIEW);
         security.allow("previous", SecurityConstants.VIEW);
         security.allow("submit", SecurityConstants.VIEW);
+        security.allow("saveStageSubmit", SecurityConstants.VIEW);
         return security;
     }
     
@@ -511,6 +583,8 @@ public class ActivityMapper {
         ActionSecurity security = new ActionSecurity("processaccountingtransactionsaction");
         security.allow("load", SecurityConstants.ACCOUNTING_CREATE_MISPROCESSING);
         security.allow("process", SecurityConstants.VIEW);
+        security.allow("loadLastUpdatedDate", SecurityConstants.VIEW);
+
         return security;
     }
     
@@ -1743,4 +1817,6 @@ public class ActivityMapper {
         
         return activityId;
     }
+
+
 }

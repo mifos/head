@@ -45,6 +45,18 @@ public class GlDetailBO {
 	   this.bankBranch=bankBranch;
      }
 
+   public GlDetailBO(int transactionId, String subAccount,BigDecimal transactionAmount,String amountAction,
+		   String chequeNo,Date chequeDate,String bankName,String bankBranch){
+	   this.transactionId = transactionId;
+	   this.subAccount=subAccount;
+	   this.transactionAmount=transactionAmount;
+	   this.amountAction=amountAction;
+	   this.chequeNo=chequeNo;
+	   this.chequeDate=chequeDate;
+	   this.bankName=bankName;
+	   this.bankBranch=bankBranch;
+     }
+
 public int getTransactionMasterId() {
 	return transactionMasterId;
 }
