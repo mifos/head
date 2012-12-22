@@ -52,7 +52,6 @@ import org.slf4j.LoggerFactory;
 
 public class MifosRequestProcessor extends TilesRequestProcessor {
     private static final Logger logger = LoggerFactory.getLogger(MifosRequestProcessor.class);
-
     private ActivityContext setActivityContextFromRequest(HttpServletRequest request, Short activityId) {
         HttpSession session = request.getSession();
         ActivityContext activityContext = (ActivityContext) session.getAttribute("ActivityContext");

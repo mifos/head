@@ -26,8 +26,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder.In;
-
+import org.mifos.application.accounting.business.CoaBranchBO;
 import org.mifos.application.accounting.business.FinancialYearBO;
 import org.mifos.application.accounting.business.GlBalancesBO;
 import org.mifos.application.accounting.business.GlDetailBO;
@@ -37,10 +36,16 @@ import org.mifos.application.accounting.persistence.AccountingDaoHibernate;
 import org.mifos.application.accounting.util.helpers.SimpleAccountingConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.dto.domain.CoaNamesDto;
+import org.mifos.dto.domain.DynamicOfficeDto;
 import org.mifos.dto.domain.GLCodeDto;
+import org.mifos.dto.domain.GlDetailDto;
+import org.mifos.dto.domain.GlobalOfficeNumDto;
 import org.mifos.dto.domain.MisProcessingTransactionsDto;
 import org.mifos.dto.domain.OfficeGlobalDto;
+import org.mifos.dto.domain.RolesActivityDto;
 import org.mifos.dto.domain.RowCount;
+import org.mifos.dto.domain.ViewStageTransactionsDto;
 import org.mifos.dto.domain.ViewTransactionsDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
@@ -57,6 +62,24 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 	private final HibernateTransactionHelper hibernateTransactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
 	@Override
+	public List<RolesActivityDto> glloadRolesActivity() {
+		List<RolesActivityDto> rolesactivityDtos = null;
+
+		rolesactivityDtos = accountingDao.findrolesActivity(302);
+
+		return rolesactivityDtos;
+	}
+
+	@Override
+	public List<RolesActivityDto> jvloadRolesActivity() {
+		List<RolesActivityDto> rolesactivityDtos = null;
+
+		rolesactivityDtos = accountingDao.findrolesActivity(303);
+
+		return rolesactivityDtos;
+	}
+
+	@Override
 	public List<OfficeGlobalDto> loadOfficesForLevel(Short officeLevelId) {
 		List<OfficeGlobalDto> detailsDtos = null;
 		detailsDtos = accountingDao.findOfficesWithGlobalNum(officeLevelId);
@@ -65,10 +88,10 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 	}
 
 	public GlBalancesBO loadExistedGlBalancesBO(Integer officeLevelId,
-			String officeId, String glCodeValue,Integer financialYearId) {
+			String officeId, String glCodeValue, Integer financialYearId) {
 		GlBalancesBO balancesBO = null;
 		List<GlBalancesBO> list = accountingDao.findExistedGlBalacesBOs(
-				officeLevelId, officeId, glCodeValue,financialYearId);
+				officeLevelId, officeId, glCodeValue, financialYearId);
 		if (list.size() > 0) {
 			balancesBO = list.get(0);
 		}
@@ -88,6 +111,13 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 		return accountingDtos;
 	}
 
+	public List<GlobalOfficeNumDto> findGlobalDiplayNum(String officename) {
+		List<GlobalOfficeNumDto> accountingDtos = null;
+		accountingDtos = accountingDao.findGlobalDiplayNumandname(officename);
+		return accountingDtos;
+
+	}
+
 	@Override
 	public List<GLCodeDto> loadDebitAccounts() {
 		List<GLCodeDto> accountingDtos = null;
@@ -99,6 +129,12 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 	public List<GLCodeDto> loadCreditAccounts(String glCode) {
 		List<GLCodeDto> accountingDtos = null;
 		accountingDtos = accountingDao.findCreditAccounts(glCode);
+		return accountingDtos;
+	}
+
+	public List<GLCodeDto> findMainAccountHeadGlCodes(String glname) {
+		List<GLCodeDto> accountingDtos = null;
+		accountingDtos = accountingDao.findMainAccountHeadGlCodes(glname);
 		return accountingDtos;
 	}
 
@@ -117,18 +153,18 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 	}
 
 	@Override
-	public List<ViewTransactionsDto> getAccountingTransactions(Date toTrxnDate,Date fromTrxnDate,
-			int startRecord, int numberOfRecords) {
+	public List<ViewTransactionsDto> getAccountingTransactions(Date toTrxnDate,
+			Date fromTrxnDate, int startRecord, int numberOfRecords) {
 		List<ViewTransactionsDto> accountingTransactions = null;
 		accountingTransactions = accountingDao.findAccountingTransactions(
-				toTrxnDate,fromTrxnDate, startRecord, numberOfRecords);
+				toTrxnDate, fromTrxnDate, startRecord, numberOfRecords);
 		return accountingTransactions;
 	}
 
-	public int getNumberOfTransactions(Date toTrxnDate,Date fromTrxnDate) {
+	public int getNumberOfTransactions(Date toTrxnDate, Date fromTrxnDate) {
 		int totalNumberOfRecords = 0;
-		List<RowCount> rowCountList = accountingDao
-				.findTotalNumberOfRecords(toTrxnDate,fromTrxnDate);
+		List<RowCount> rowCountList = accountingDao.findTotalNumberOfRecords(
+				toTrxnDate, fromTrxnDate);
 		if (rowCountList != null && rowCountList.size() > 0) {
 			totalNumberOfRecords = rowCountList.get(0)
 					.getTotalNumberOfRecords();
@@ -158,9 +194,7 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 			c.add(Calendar.DATE, 1);
 			Date newDate = c.getTime();
 			lastProcessDate = newDate;
-			processListOfTransactions(
-					accountingDao.processMisPostings(lastProcessDate),
-					createdBy);
+			processListOfTransactions(accountingDao.processMisPostings(lastProcessDate),createdBy);
 			accountingDao.updateLastProcessDate(lastProcessDate);
 		}
 		return flag;
@@ -179,7 +213,7 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 		GlMasterBO bo = new GlMasterBO();
 		List<GlDetailBO> glDetailBOList = new ArrayList<GlDetailBO>();
 		glDetailBOList.add(new GlDetailBO(dto.getGlCredit(), dto.getAmount(),
-				"credit", "", null, "", ""));
+				"credit", "", null, "", "",dto.getTransactionNotes()));
 		bo.setGlDetailBOList(glDetailBOList);
 		bo.setTransactionDate(dto.getPostedDate());
 		bo.setTransactionType(dto.getVoucherType());
@@ -194,7 +228,9 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 		bo.setStatus("");// default value
 		bo.setTransactionBy(1); // default value
 		bo.setCreatedBy(createdBy);
+		bo.setTransactionNarration(dto.getTransactionNotes());
 		bo.setCreatedDate(dto.getVoucherDate());
+		bo.setStage(0);
 		return bo;
 	}
 
@@ -208,38 +244,47 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 		}
 		return financialYearBO;
 	}
-	
+
 	@Override
-	public FinancialYearBO updateFinancialYear(FinancialYearBO oldFinancialYearBO,UserContext context) {
-		FinancialYearBO newFinancialYearBO=null;
-		accountingDao.savingFinancialYearBO(oldFinancialYearBO); //updating current financial year as Inactive
+	public FinancialYearBO updateFinancialYear(
+			FinancialYearBO oldFinancialYearBO, UserContext context) {
+		FinancialYearBO newFinancialYearBO = null;
+		accountingDao.savingFinancialYearBO(oldFinancialYearBO); // updating
+																	// current
+																	// financial
+																	// year as
+																	// Inactive
 		this.hibernateTransactionHelper.flushSession();
-		//creating new Finincial year
-		Calendar calendar=new GregorianCalendar();
-		newFinancialYearBO =new FinancialYearBO();
-		newFinancialYearBO.setFinancialYearStartDate(nextYear(oldFinancialYearBO.getFinancialYearStartDate(),calendar));
-		newFinancialYearBO.setFinancialYearEndDate(nextYear(oldFinancialYearBO.getFinancialYearEndDate(),calendar));
+		// creating new Finincial year
+		Calendar calendar = new GregorianCalendar();
+		newFinancialYearBO = new FinancialYearBO();
+		newFinancialYearBO.setFinancialYearStartDate(nextYear(
+				oldFinancialYearBO.getFinancialYearStartDate(), calendar));
+		newFinancialYearBO.setFinancialYearEndDate(nextYear(
+				oldFinancialYearBO.getFinancialYearEndDate(), calendar));
 		try {
-			newFinancialYearBO.setCreatedDate(DateUtils.getLocaleDate(context.getPreferredLocale(),
+			newFinancialYearBO.setCreatedDate(DateUtils.getLocaleDate(
+					context.getPreferredLocale(),
 					DateUtils.getCurrentDate(context.getPreferredLocale())));
 		} catch (InvalidDateException e) {
 			throw new MifosRuntimeException(e);
 		}
 		newFinancialYearBO.setCreatedBy(context.getId());
 		newFinancialYearBO.setStatus(SimpleAccountingConstants.ACTIVE);
-		
-		
+
 		calendar.setTime(newFinancialYearBO.getFinancialYearStartDate());
-		newFinancialYearBO.setFinancialYearId(Integer.parseInt(calendar.get(calendar.YEAR)+""+calendar.get(calendar.YEAR)));
-		newFinancialYearBO=accountingDao.savingFinancialYearBO(newFinancialYearBO);
+		newFinancialYearBO.setFinancialYearId(Integer.parseInt(calendar
+				.get(calendar.YEAR) + "" + calendar.get(calendar.YEAR)));
+		newFinancialYearBO = accountingDao
+				.savingFinancialYearBO(newFinancialYearBO);
 		this.hibernateTransactionHelper.flushSession();
 		return newFinancialYearBO;
 	}
-	
-	public Date nextYear(Date date,Calendar calendar){
-	      calendar.setTime(date);
-	      calendar.add(Calendar.YEAR, 1);
-	     return calendar.getTime();
+
+	public Date nextYear(Date date, Calendar calendar) {
+		calendar.setTime(date);
+		calendar.add(Calendar.YEAR, 1);
+		return calendar.getTime();
 	}
 
 	@Override
@@ -258,6 +303,14 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 			throw new MifosRuntimeException(e);
 		}
 		return financialYearBO;
+	}
+	@Override
+	public List getOfficeDetails(String officeId, String officeLevelId) {
+		List<DynamicOfficeDto> listOfOffices = null;
+
+		listOfOffices = accountingDao.getListOfOffices(officeId,officeLevelId);
+
+		return listOfOffices;
 	}
 
 	@Override
@@ -279,6 +332,39 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 		return flag;
 	}
 
+	public boolean savingStageAccountingTransactions(GlMasterBO bo) {
+		boolean flag = false;
+		this.hibernateTransactionHelper.startTransaction();
+		flag = accountingDao.savingGeneralLedgerTransaction(bo);
+		this.hibernateTransactionHelper.commitTransaction();
+
+		return flag;
+	}
+	@Override
+	public boolean savingCoaBranchTransactions(CoaBranchBO co) {
+		boolean flag = false;
+		// TODO Auto-generated method stub
+		this.hibernateTransactionHelper.startTransaction();
+		flag = accountingDao.savingCoaBranchTransaction(co);
+		return flag ;
+	}
+	/*@Override
+	boolean savingCoaBranchTransactions(CoaBranchBO bo) throws MifosRuntimeException {
+		boolean flag = false;
+
+		this.hibernateTransactionHelper.startTransaction();
+		flag = accountingDao.savingCoaBranchTransaction(bo);
+		//
+		if (flag == true) {
+			updateGlBalancesBO(bo., bo.getAmountAction(), bo);
+			updateGlBalancesBO(bo.getGlDetailBOList().get(0).getSubAccount(),
+					bo.getGlDetailBOList().get(0).getAmountAction(), bo);
+		}
+		//
+		this.hibernateTransactionHelper.commitTransaction();
+
+		return flag;
+	}*/
 	public boolean updateGlBalancesBO(String accountglCode, String action,
 			GlMasterBO bo) {
 		boolean flag = false;
@@ -287,10 +373,10 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 		balancesBOTemp.setOfficeLevel(bo.getFromOfficeLevel());
 		balancesBOTemp.setCreatedBy(bo.getCreatedBy());
 		balancesBOTemp.setCreatedDate(bo.getCreatedDate());
-		
-		FinancialYearBO financialYearBO=getFinancialYear();
-		if(financialYearBO!=null)
-		balancesBOTemp.setFinancialYearBO(financialYearBO);
+
+		FinancialYearBO financialYearBO = getFinancialYear();
+		if (financialYearBO != null)
+			balancesBOTemp.setFinancialYearBO(financialYearBO);
 		else
 			throw new MifosRuntimeException("no financial year defined");
 		balancesBOTemp.setGlCodeValue(accountglCode);
@@ -333,31 +419,40 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 		this.hibernateTransactionHelper.flushSession();
 		return flag;
 	}
-	
-	public void savingYearEndBalances(FinancialYearBO oldFinancialYearBO,FinancialYearBO newFinancialYearBO){
-        List<GlBalancesBO> assetsGlBalanceBOs;
-        List<GlBalancesBO> liabilitiesGlBalanceBOs;
-        assetsGlBalanceBOs=accountingDao.getYearEndGlBalancesBOs("ChartOfAccountsForMifos.YearEndProcessAssets",oldFinancialYearBO.getFinancialYearId());
-        liabilitiesGlBalanceBOs=accountingDao.getYearEndGlBalancesBOs("ChartOfAccountsForMifos.YearEndProcessLiabilities",oldFinancialYearBO.getFinancialYearId());
-        assetsGlBalanceBOs.addAll(liabilitiesGlBalanceBOs);
-        for(GlBalancesBO balancesBO:assetsGlBalanceBOs){
-        	balancesBO.setFinancialYearBO(newFinancialYearBO);
-        	savingOpeningBalances(balancesBO);
-        }
-		
+
+	public void savingYearEndBalances(FinancialYearBO oldFinancialYearBO,
+			FinancialYearBO newFinancialYearBO) {
+		List<GlBalancesBO> assetsGlBalanceBOs;
+		List<GlBalancesBO> liabilitiesGlBalanceBOs;
+		assetsGlBalanceBOs = accountingDao.getYearEndGlBalancesBOs(
+				"ChartOfAccountsForMifos.YearEndProcessAssets",
+				oldFinancialYearBO.getFinancialYearId());
+		liabilitiesGlBalanceBOs = accountingDao.getYearEndGlBalancesBOs(
+				"ChartOfAccountsForMifos.YearEndProcessLiabilities",
+				oldFinancialYearBO.getFinancialYearId());
+		assetsGlBalanceBOs.addAll(liabilitiesGlBalanceBOs);
+		for (GlBalancesBO balancesBO : assetsGlBalanceBOs) {
+			balancesBO.setFinancialYearBO(newFinancialYearBO);
+			savingOpeningBalances(balancesBO);
+		}
+
 	}
-	
-	public void processYearEndBalances(UserContext userContext,FinancialYearBO oldFinancialYearBO){
+
+	public void processYearEndBalances(UserContext userContext,
+			FinancialYearBO oldFinancialYearBO) {
 		this.hibernateTransactionHelper.startTransaction();
-		FinancialYearBO newFinancialYearBO=processingFinancialYear(userContext,oldFinancialYearBO);
-		savingYearEndBalances(oldFinancialYearBO,newFinancialYearBO);
+		FinancialYearBO newFinancialYearBO = processingFinancialYear(
+				userContext, oldFinancialYearBO);
+		savingYearEndBalances(oldFinancialYearBO, newFinancialYearBO);
 		this.hibernateTransactionHelper.commitTransaction();
 	}
-	
-	public FinancialYearBO processingFinancialYear(UserContext userContext,FinancialYearBO oldFinancialYearBO){
-		FinancialYearBO newFinancialYearBO=null;
+
+	public FinancialYearBO processingFinancialYear(UserContext userContext,
+			FinancialYearBO oldFinancialYearBO) {
+		FinancialYearBO newFinancialYearBO = null;
 		oldFinancialYearBO.setStatus(SimpleAccountingConstants.INACTIVE);
-		newFinancialYearBO=updateFinancialYear(oldFinancialYearBO,userContext);
+		newFinancialYearBO = updateFinancialYear(oldFinancialYearBO,
+				userContext);
 		return newFinancialYearBO;
 	}
 
@@ -390,4 +485,236 @@ public class AccountingServiceFacadeWebTier implements AccountingServiceFacade {
 				.add(result)));
 		return fromDatabase;
 	}
+
+	/*@Override
+	public List<ViewStageTransactionsDto> getStageAccountingTransactions(
+			Object object, int iPageNo, int noOfRecordsPerPage) {
+		// TODO Auto-generated method stub
+		return null;
+	}*/
+
+	// Hugo Technologies View Stage Transactions
+	@Override
+	public List<ViewStageTransactionsDto> getStageAccountingTransactions(
+			String stage, int startRecord, int numberOfRecords) {
+		List<ViewStageTransactionsDto> stageAccountingTransactions = null;
+		stageAccountingTransactions = accountingDao
+				.findStageAccountingTransactions(stage, startRecord,
+						numberOfRecords);
+		return stageAccountingTransactions;
+	}
+
+	@Override
+	public int getNumberOfStageTransactions() {
+		int totalNumberOfRecords = 0;
+		List<RowCount> rowCountList = accountingDao
+				.findTotalNumberOfStageRecords();
+		if (rowCountList != null && rowCountList.size() > 0) {
+			totalNumberOfRecords = rowCountList.get(0)
+					.getTotalNumberOfRecords();
+		}
+		return totalNumberOfRecords;
+	}
+
+	// Hugo Technologies approve stage transaction DAO
+	@Override
+	public void approveStageAccountingTransactions(int transactionNo, int stage) {
+
+		accountingDao.updateStage(transactionNo, stage);
+
+	}
+
+	// Hugo Technologies Edit Stage Transactions
+	@Override
+	public ViewStageTransactionsDto getstagedAccountingTransactions(
+			int transactionNo) {
+		ViewStageTransactionsDto viewStageTransactionsDto = null;
+		List<ViewStageTransactionsDto> stageAccountingTransactions = null;
+		stageAccountingTransactions = accountingDao
+				.findStagedAccountingTransactionOnId(transactionNo);
+		if (stageAccountingTransactions.size() > 0) {
+			viewStageTransactionsDto = stageAccountingTransactions.get(0);
+		}
+		return viewStageTransactionsDto;
+	}
+
+	@Override
+	public List<GLCodeDto> loadInterOfficeDebitAccounts() {
+		List<GLCodeDto> accountingDtos = null;
+		accountingDtos = accountingDao.findInterBankDebitAccounts();
+		return accountingDtos;
+
+	}
+
+	@Override
+	public List<GLCodeDto> auditAccountHeads() {
+		List<GLCodeDto> accountingDtos = null;
+		accountingDtos = accountingDao.findAuditGlCodes();
+		return accountingDtos;
+	}
+
+	@Override
+	public List<OfficeGlobalDto> loadCustomerForLevel(Short customerLevelId,
+			String officeId) {
+		List<OfficeGlobalDto> detailsDtos = null;
+		detailsDtos = accountingDao.findCustomersWithGlobalNum(customerLevelId,
+				officeId);
+		return detailsDtos;
+	}
+
+	@Override
+	public List<OfficeGlobalDto> loadOfficesForLevel(Short officeLevelId,
+			String officeId) {
+		List<OfficeGlobalDto> detailsDtos = null;
+		detailsDtos = accountingDao.findOfficesWithGlobalNum(officeLevelId,
+				officeId);
+
+		return detailsDtos;
+	}
+
+	@Override
+	public void addAuditComments(String transactionId, String audit,
+			String auditComments) {
+
+		accountingDao.addComments(transactionId, audit, auditComments);
+
+	}
+
+	@Override
+	public GlDetailDto getChequeDetails(int transactionNo) {
+		GlDetailDto glDetailDto = null;
+
+		List<GlDetailDto> listOfGlDetailDto = accountingDao.findChequeDetails(transactionNo);
+		if(listOfGlDetailDto.size()>0){
+			glDetailDto = listOfGlDetailDto.get(0);
+		}
+		return glDetailDto;
+	}
+
+	@Override
+	public List<ViewStageTransactionsDto> getStageAccountingTransactions(
+			Date date1, Date date2, int iPageNo, int noOfRecordsPerPage) {
+
+		List<ViewStageTransactionsDto> stageAccountingTransactions = null;
+		stageAccountingTransactions = accountingDao
+				.findStageAccountingTransactions(date1,date2, iPageNo,
+						noOfRecordsPerPage);
+		return stageAccountingTransactions;
+	}
+	@Override
+	public int getNumberOfStageTransactions(Date date1, Date date2) {
+		int totalNumberOfRecords = 0;
+		List<RowCount> rowCountList = accountingDao
+				.findTotalNumberOfStageRecords(date1,date2);
+		if (rowCountList != null && rowCountList.size() > 0) {
+			totalNumberOfRecords = rowCountList.get(0)
+					.getTotalNumberOfRecords();
+		}
+		return totalNumberOfRecords;
+	}
+
+	@Override
+	public boolean processMisPostings(Date lastProcessDate,
+			Date processTillDate, Short createdBy,String globalOfficeNumber) {
+		boolean flag = false;
+		while (lastProcessDate.compareTo(processTillDate) < 0) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(lastProcessDate);
+			c.add(Calendar.DATE, 1);
+			Date newDate = c.getTime();
+			lastProcessDate = newDate;
+			processListOfTransactions(
+					accountingDao.processMisPostings(lastProcessDate,globalOfficeNumber),
+					createdBy);
+			//accountingDao.updateLastProcessDate(lastProcessDate);
+			accountingDao.updateLastProcessUpdatedDate(lastProcessDate,globalOfficeNumber);
+		}
+		return flag;
+	}
+
+
+	@Override
+	public String getLastProcessUpdatedDate(String globalOfficeNumber) {
+		String lastProcessDate = null;
+		lastProcessDate = accountingDao
+				.findLastProcessingUpdatedDate("getLastProcessUpdateDate",globalOfficeNumber);
+		if (lastProcessDate == null) {
+			lastProcessDate = accountingDao
+					.findLastProcessingDateFirstTime("getStartDateByStatus");
+		}
+		return lastProcessDate;
+	}
+
+	@Override
+	public List<OfficeGlobalDto> loadDynamicCustomerForLevel(String officeId, String officLevelId) {
+		List<OfficeGlobalDto> detailsDtos = null;
+		detailsDtos = accountingDao.findDynamicCustomersWithGlobalNum(officeId,officLevelId);
+		return detailsDtos;
+	}
+
+	@Override
+		public List<GLCodeDto> coaBranchAccountHead() {
+			List<GLCodeDto> accountingDtos = null;
+			accountingDtos = accountingDao.findCoaBranchAccountHeadGlCodes();
+			return accountingDtos;
+		}
+
+	@Override
+		public List<GLCodeDto> loadRemainingCoaNames(String globalnumwithcoaname) {
+			List<GLCodeDto> detailsDtos = null;
+			detailsDtos = accountingDao.findRemainingCoaNames(globalnumwithcoaname);
+	
+			return detailsDtos;
+			
+		}
+
+	@Override
+		public int deleteGlobalNumRelatedCoaNames(String deletecoaname) {
+			int detailsDtos = 0;
+			detailsDtos = accountingDao.deletegGlobalNumCoaNames(deletecoaname);
+			return detailsDtos;
+		}
+
+	@Override
+	public List<CoaNamesDto> loadCoaNames(String globalnum) {
+		List<CoaNamesDto> detailsDtos = null;
+		detailsDtos = accountingDao.findCoaNames(globalnum);
+
+		return detailsDtos;
+	}
+
+
+	@Override
+		public List<GLCodeDto> loadCoaBranchNames(String coaName ) {
+			List<GLCodeDto> detailsDtos = null;
+			detailsDtos = accountingDao.findCoaBranchNames(coaName);
+	 
+			return detailsDtos;
+		}
+
+	@Override
+		public List<CoaNamesDto> loadCoaNamesWithGlcodeValues(String coaname) {
+			List<CoaNamesDto> detailsDtos = null;
+			detailsDtos = accountingDao.findCoaNamesWithGlcodeValues(coaname);
+	
+			return detailsDtos;
+		}
+
+	/*@Override
+	public List<ViewStageTransactionsDto> getConsolidatedTransactions(
+			String branchoffice, int startRecord, int numberOfRecords) {
+		List<ViewStageTransactionsDto> stageAccountingTransactions = null;
+		stageAccountingTransactions = accountingDao
+				.findConsolidatedAccountingTransactions(branchoffice, startRecord, numberOfRecords);
+		return stageAccountingTransactions;
+	}*/
+	@Override
+	public List<ViewStageTransactionsDto> getConsolidatedTransactions(
+			String branchoffice) {
+		List<ViewStageTransactionsDto> stageAccountingTransactions = null;
+		stageAccountingTransactions = accountingDao
+				.findConsolidatedAccountingTransactions(branchoffice);
+		return stageAccountingTransactions;
+	}
+
 }

@@ -27,9 +27,12 @@ public interface SimpleAccountingConstants {
 	String LOADACCOUNTHEADS = "loadAccountHeads";
 	String SUBMIT = "submit";
 	String PREVIEW = "preview";
+	String APPROVE ="approve";
+	String REJECT ="reject";
 	String PROCESS = "process";
 	String INACTIVE ="I";
 	String ACTIVE ="A";
+	String UPLOADXLSDATA="uploadXLSData";
 
 	// FIXME: add underbars for readability
 	String LOADSUCCESS = "load_success";
@@ -45,6 +48,7 @@ public interface SimpleAccountingConstants {
 	String INVALID_TRXN_DATE = "errors.invaliddate";
 	String MANDATORYFIELDS = "errors.mandatoryselect";
 	String MANDATORYENTER = "errors.mandatoryenter";
+	String ENTER_GRETERTHAN="errors.greterthan";
 	String INVALIDDATE = "errors.invaliddate";
 	String INVALID_FUTURE = "errors.invaliddatefuture";
 	String INVALID_PAST = "errors.invaliddatepast";
@@ -63,6 +67,8 @@ public interface SimpleAccountingConstants {
 	String CASHDATE = "simpleAccounting.chequeDate";
 	String OFFICE_HIERARCHY = "simpleAccounting.officeHeirarchy";
 	String OFFICE = "simpleAccounting.office";
+	String BRANCHOFFICE = "simpleAccounting.branchoffice";
+	String BRANCH_NAME="simpleAccounting.branch";
 	String MAIN_ACCOUNT = "simpleAccounting.mainAccount";
 	String DEBIT_ACCOUNT = "simpleAccounting.debitAccount";
 	String ACCOUNT_HEAD = "simpleAccounting.accountHead";
@@ -75,7 +81,25 @@ public interface SimpleAccountingConstants {
 	String BANK_BRANCH = "simpleAccounting.bankBranch";
 	String TRXN_NOTES = "simpleAccounting.trxnNotes";
 	String VOUCHER_NOTES = "simpleAccounting.voucherNotes";
-
 	String ERRORS_MUST_BE_GREATER_THAN_ZERO = "errors.mustBeGreaterThanZero";
+	String TRANSACTION_DATE_CELL="errors.celltransactiondate";
+	String TRANSACTION_TYPE_CELL="errors.cellTransactionType";
+	String OFFICE_LEVEL_CELL="errors.cellofficeLevel";
+	String OFFICE_NAME_CELL="errors.cellofficeName";
+	String MAIN_ACCOUNT_CELL="errors.cellmainAccount";
+	String ACCOUNT_HEAD_CELL="errors.cellccountHead";
+	String NARRATION_CELL="errors.cellnarration";
+	String CHEQUE_NO_CELL="errors.cellchequeNo";
+	String CHEQUE_DATE_CELL="errors.cellchequeDate";
+	String BANK_NAME_CELL="errors.cellbankName";
+	String AMOUNT_CELL="errors.cellamount";
+	String BANK_BRANCH_CELL="errors.cellbankBranch";
+	String BROWSE_XLSHEET="errors.browsexlsheet";
+	String VALID_XLSHEET="errors.validxlsheet";
+	String INVALID_CHEQUE_DATE = "error.invaliddate";
+	String AUDIT = "simpleAccounting.audit";
+	String AUDIT_COMMENTS = "simpleAccounting.auditComments";
+	String PICKDATE = "pickDate";
+
 
 }
