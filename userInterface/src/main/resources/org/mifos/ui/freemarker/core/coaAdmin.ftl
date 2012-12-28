@@ -47,11 +47,11 @@
 						item += '<a class="coaA" onclick="getCoaList(' + val.accountId + ')">';
 						item += val.glCodeString + ': ' + val.accountName + ' </a>';
 						if (canModify) {
-							item += '<a href="defineNewCoa.ftl?parentId=' + val.accountId + '" class="coaAction"><b> Add </b></a>'; 
+							item += '<a href="defineNewCoa.ftl?parentId=' + val.accountId + '" class="coaAction"><b>Add</b></a>'; 
 							
 							if (val.modifiable) {
-								item += '<a href="modifyCoa.ftl?id=' + val.accountId + '" class="coaAction"><b> Modify </b></a>'; 
-								item += '<a href="deleteCoa.ftl?id=' + val.accountId + '" class="coaAction"><b> Delete </b></a>'; 
+								item += '<a href="modifyCoa.ftl?id=' + val.accountId + '" class="coaAction"><b>Modify</b></a>'; 
+								item += '<a href="deleteCoa.ftl?id=' + val.accountId + '" class="coaAction"><b>Delete</b></a>'; 
 							}
 						}
 						item += '</li>';
