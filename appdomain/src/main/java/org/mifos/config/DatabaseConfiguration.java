@@ -67,9 +67,10 @@ public class DatabaseConfiguration {
     }
     
     @PostConstruct
-    public void init() throws SQLException, IOException {
+    public void init() throws SQLException, IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Connection jdbcConnection = null;
         try {
+        Class.forName("com.mysql.jdbc.Driver").newInstance();
         jdbcConnection = 
                 DriverManager.getConnection(String.format("jdbc:mysql://%s:%s/?%s", host, port, params), user, password);
         DefaultDatabaseLoader defaultDatabaseLoader = new DefaultDatabaseLoader(jdbcConnection, dbName, dbPentahoDW);
