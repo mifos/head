@@ -295,21 +295,33 @@ explanation of the license and how it is applied.
 									<div id="weekDIV" style="height:40px; width:380px; "><mifos:mifoslabel
 										name="meeting.labelRecurWeeks" bundle="MeetingResources" />
 
-
-
 									<table border="0" cellspacing="0" cellpadding="2">
 										<tr class="fontnormal">
 											<td colspan="4"><mifos:mifoslabel
 												name="meeting.labelRecurEvery" bundle="MeetingResources" />
 
 
-											<mifos:mifosnumbertext styleId="loancreationdetails.input.weekFrequency" property="recurWeek" size="3"  maxlength="3"/> <span id="loancreationdetails.label.weekFrequency"><mifos:mifoslabel
-												name="meeting.labelWeeks" bundle="MeetingResources" /></span> 
-												<mifos:select property="weekDay">
+                                              <c:set var="GLIMEDIT_REPDAY" value="false"/>
+                                                <c:if test="${loanaccountownerisagroup == 'yes'}">
+                                                    <c:if test="${accountState == 'LOAN_APPROVED' || accountState == 'LOAN_ACTIVE_IN_GOOD_STANDING' || accountState == LOAN_ACTIVE_IN_BAD_STANDING}" >
+                                                    <c:set var="GLIMEDIT_REPDAY" value="true"/>
+                                                    </c:if>
+                                                </c:if>
+                                                <mifos:mifosnumbertext styleId="loancreationdetails.input.weekFrequency" property="recurWeek" size="3"  maxlength="3" disabled="${GLIMEDIT_REPDAY}"/> 
+                                                <span id="loancreationdetails.label.weekFrequency"><mifos:mifoslabel
+                                                name="meeting.labelWeeks" bundle="MeetingResources" /></span> 
+                                                
+											<mifos:mifosnumbertext styleId="loancreationdetails.input.weekFrequency" property="recurWeek" size="3"  maxlength="3" disabled="${GLIMEDIT_REPDAY}"/>
+                                                <mifos:mifoslabel
+												name="meeting.labelWeeks" bundle="MeetingResources" />
+            
+                                                <span id="loancreationdetails.input.weekDay">
+												<mifos:select property="weekDay" disabled="${GLIMEDIT_REPDAY}"> 
 													<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
 															<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
 													</c:forEach>
-												</mifos:select></td>
+												</mifos:select></span></td>
+                                                
 										</tr>
 									</table>
 									</div>

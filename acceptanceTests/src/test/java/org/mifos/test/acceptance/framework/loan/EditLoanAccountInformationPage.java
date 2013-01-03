@@ -77,6 +77,12 @@ public class EditLoanAccountInformationPage extends MifosPage {
         }
         return this;
     }
+    public void setWeekFrequency(String weekFreq){
+        selenium.type("loancreationdetails.input.weekFrequency", weekFreq);
+    }
+    public void setDayOfMonth(String dayOfMonth){
+        selenium.type("loancreationdetails.input.dayOfMonth", dayOfMonth);
+    }
     
     public String getLoanAmount(){
     	return selenium.getValue("editLoanAccount.input.loanAmount");
@@ -104,6 +110,18 @@ public class EditLoanAccountInformationPage extends MifosPage {
     
     public String getGracePeriodForRepayments(){
     	return selenium.getValue("editLoanAccount.input.gracePeriod");
+    }
+    
+    
+    public void verifyRepaymentDayAccessibility(boolean shouldBe){
+        if (shouldBe!=selenium.isEditable("loancreationdetails.input.weekFrequency")){
+            if (shouldBe){
+                Assert.fail("Repayment field should be editable");
+            }
+            else {
+                Assert.fail("Repayment field should not be editable");
+            }
+        }
     }
     
     public void verifyAccountParams(CreateLoanAccountSubmitParameters accountSubmitParameters, EditLoanAccountInformationParameters editAccountParameters) {

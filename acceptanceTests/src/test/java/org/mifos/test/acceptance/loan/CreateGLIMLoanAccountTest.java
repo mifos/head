@@ -35,6 +35,7 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
@@ -237,13 +238,64 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled = true)
     public void newWeeklyGLIMAccount() throws Exception {
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011, 03, 1, 13, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Default Group");
         searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
         CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
         loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "301", "0012-Sheep Purchase");
         loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "401", "0012-Sheep Purchase");
-        loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPage();
+        
+        //MIFOS-5703
+        applicationDatabaseOperation.updateLSIM(1);
+        EditLoanAccountInformationPage editPage = loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPage()
+                .navigateToLoanAccountDetailsPage().navigateToEditAccountInformation();
+        editPage.verifyRepaymentDayAccessibility(true);
+        editPage.setWeekFrequency("5");
+        
+            
+        LoanAccountPage loanPage = editPage.submitAndNavigateToAccountInformationPreviewPage().submitAndNavigateToLoanAccountPage();
+        loanPage.verifyFrequencyInstallments("5");
+        
+        EditLoanAccountStatusParameters statusParams = new EditLoanAccountStatusParameters();
+        statusParams.setNote("GLIM test");
+        statusParams.setStatus(EditLoanAccountStatusParameters.APPROVED);
+        loanPage.changeAccountStatus(statusParams);
+        editPage = loanPage.navigateToEditAccountInformation();
+        editPage.verifyRepaymentDayAccessibility(false);
+        editPage.navigateBack();
+        
+        DisburseLoanParameters disburseParams = new DisburseLoanParameters();
+        disburseParams.setDisbursalDateDD("1");
+        disburseParams.setDisbursalDateMM("03");
+        disburseParams.setDisbursalDateYYYY("2011");
+        disburseParams.setPaymentType(DisburseLoanParameters.CASH);
+        loanPage.disburseLoan(disburseParams);
+        
+        editPage = loanPage.navigateToEditAccountInformation();
+        editPage.verifyRepaymentDayAccessibility(false);
+        applicationDatabaseOperation.updateLSIM(0);
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = true)
+    public void newMonthlyGLIMAccount() throws Exception {
+        applicationDatabaseOperation.updateLSIM(1);
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Default Group");
+        searchParameters.setLoanProduct("MonthlyGroupFlatLoan1stOfMonth");
+        CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
+        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "3010", "0012-Sheep Purchase");
+        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "4010", "0012-Sheep Purchase");
+        loanAccountEntryPage.setDisbursalDate("1", "3","2011");
+        EditLoanAccountInformationPage editPage = loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPage()
+                .navigateToLoanAccountDetailsPage().navigateToEditAccountInformation();
+        editPage.setDayOfMonth("56");
+        editPage.submitWithErrors();
+        editPage.verifyErrorInForm("Repayment day format is not valid");
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     @Test(enabled=true)
