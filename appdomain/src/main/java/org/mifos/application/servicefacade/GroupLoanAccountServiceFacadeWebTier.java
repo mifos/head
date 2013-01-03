@@ -626,7 +626,13 @@ public class GroupLoanAccountServiceFacadeWebTier implements GroupLoanAccountSer
         BigDecimal currentAmount = null;
         BigDecimal amountSpent = BigDecimal.ZERO;
         
-        Iterator<LoanBO> itr = parentLoanAccount.getMemberAccounts().iterator();
+        List<LoanBO> members = new ArrayList<LoanBO>(parentLoanAccount.getMemberAccounts());
+        for(int i = 0; i < members.size(); i++) {
+            if (!members.get(i).isAccountActive()) {
+                members.remove(i);
+            }
+        }
+        Iterator<LoanBO> itr = members.iterator();
         while(itr.hasNext()) {
             memberAccount = itr.next();
             if(itr.hasNext()) {

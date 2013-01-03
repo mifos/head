@@ -3896,17 +3896,36 @@ public class LoanBO extends AccountBO implements Loan {
             short equalizingPaymentTypeId = lastPmntToBeAdjusted.getPaymentType().getId();
             Date equalizingPaymentDate = lastPmntToBeAdjusted.getPaymentDate();
             
-            adjustPayment(lastPmntToBeAdjusted, loggedInUser, adjustmentComment);
+                adjustPayment(lastPmntToBeAdjusted, loggedInUser, adjustmentComment);
+                
             if (hasMemberAccounts()) {
                 for (LoanBO memberAccount : this.memberAccounts) {
-                    memberAccount.setUserContext(this.userContext);
-                    memberAccount.adjustLastPayment(adjustmentComment, loggedInUser);
-                }
+                    
+                        memberAccount.setUserContext(this.userContext);
+                        if (memberAccount.isGroupLoanAccountMember()) {
+                            memberAccount.adjustLastPaymentForMember(lastPmntToBeAdjusted, adjustmentComment, loggedInUser);
+                        }
+                        else {
+                            memberAccount.adjustLastPayment(adjustmentComment, loggedInUser);
+                        }
+                    }
                 //MIFOS-5742: equalizing payment made to solve the problem with adjusting very small payment on GLIM account
                 PaymentData equalizingPaymentData = 
                         new PaymentData(equalizingPaymentAmount, loggedInUser, equalizingPaymentTypeId, equalizingPaymentDate);
                 BigDecimal installmentsPaid = findNumberOfPaidInstallments();
                 applyPaymentToMemberAccounts(equalizingPaymentData, installmentsPaid);
+            }
+        } else if (this.parentAccount == null){ //MIFOS-5694: if member account has no payments it could mean that payment was made before 2.4.0, remove this condition when MIFOS-5692 is done 
+            throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
+        }
+    }
+    
+    private void adjustLastPaymentForMember(AccountPaymentEntity parentPayment, final String adjustmentComment, PersonnelBO loggedInUser) throws AccountException {
+        if (isAdjustPossibleOnLastTrxn()) {
+            logger.debug("Adjustment is possible hence attempting to adjust.");
+            AccountPaymentEntity lastPmntToBeAdjusted = getLastPmntToBeAdjusted();
+            if (lastPmntToBeAdjusted.hasParentPayment() && lastPmntToBeAdjusted.equals(parentPayment)) {
+                adjustPayment(lastPmntToBeAdjusted, loggedInUser, adjustmentComment);
             }
         } else if (this.parentAccount == null){ //MIFOS-5694: if member account has no payments it could mean that payment was made before 2.4.0, remove this condition when MIFOS-5692 is done 
             throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
