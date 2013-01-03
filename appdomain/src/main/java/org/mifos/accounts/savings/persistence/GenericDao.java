@@ -40,6 +40,8 @@ public interface GenericDao {
     List<? extends Object> executeNamedQuery(final String queryName, final Map<String, ?> queryParameters);
     
     List<? extends Object> executeNamedQueryWithOffset(final String queryName, final Map<String, ?> queryParameters,int position,int noOfObjects);
+    
+    List<? extends Object> executeNamedQueryWithOffsetAndOrderAppend(final String queryName, final Map<String, ?> queryParameters,int position,int noOfObjects);
 
     Object executeUniqueResultNamedQuery(final String queryName, final Map<String, ?> queryParameters);
 
