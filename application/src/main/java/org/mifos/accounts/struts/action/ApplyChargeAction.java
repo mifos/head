@@ -40,6 +40,7 @@ import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.ApplyChargeActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.GroupLoanAccountServiceFacade;
@@ -126,7 +127,7 @@ public class ApplyChargeAction extends BaseAction {
     private List<LoanBO> getMemberAccountsInformation(String accountId) {
         List<LoanBO> membersInfo = new ArrayList<LoanBO>();
         for (LoanBO memberAcc : loanDao.findById(Integer.valueOf(accountId)).getMemberAccounts()) {
-            if (memberAcc.isAccountActive()) {
+            if (memberAcc.isAccountActive() || memberAcc.isInState(AccountState.LOAN_APPROVED)) {
                 membersInfo.add(memberAcc);
             }
         }
