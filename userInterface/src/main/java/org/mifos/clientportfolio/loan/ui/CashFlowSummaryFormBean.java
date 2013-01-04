@@ -66,11 +66,11 @@ public class CashFlowSummaryFormBean implements BackdatedPaymentable {
     private BigDecimal cashFlowTotalBalance;
 
     // variable installments
-    @DateTimeFormat(style = "S-")
+    @DateTimeFormat(pattern="dd/MM/yyyy")
     private List<DateTime> installments = new ArrayList<DateTime>();
     private List<Number> installmentAmounts = new ArrayList<Number>();
     // loans backdated with payments
-    @DateTimeFormat(style = "S-")
+    @DateTimeFormat(pattern="dd/MM/yyyy")
     private List<DateTime> actualPaymentDates = new ArrayList<DateTime>();
     private List<Number> actualPaymentAmounts = new ArrayList<Number>();
     private List<Short> actualPaymentTypes = new ArrayList<Short>();
