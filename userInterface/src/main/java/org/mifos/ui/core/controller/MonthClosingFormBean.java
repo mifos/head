@@ -31,7 +31,7 @@ import java.util.Locale;
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EQ_UNUSUAL", justification="using commons equals builder")
 public class MonthClosingFormBean {
 
-    @DateTimeFormat(pattern="dd/MM/yyyy")
+    @DateTimeFormat(pattern="dd/MM/yy")
     private DateTime date;
 
     private Locale locale;
