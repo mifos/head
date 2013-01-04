@@ -2,9 +2,9 @@
 [#include "layout.ftl"]
 [@clientLeftPane "ClientsAndAccounts"]
 [#if dashboardDetails??]
-    [@widget.dashboard totalSize?c ajaxUrl/]
+    [@widget.dashboard totalSize?c ajaxUrl disableSorting/]
 [#else]
-    [@widget.dashboard 0 ajaxUrl/]
+    [@widget.dashboard 0 ajaxUrl disableSorting/]
 [/#if]
 <span id="page.id" title="viewDashboardDetails"></span>
 

@@ -60,7 +60,7 @@ $(document).ready(function() {
 });
 </script>
 [/#macro]
-[#macro dashboard deferLoadingDataSize ajaxUrl]
+[#macro dashboard deferLoadingDataSize ajaxUrl disableSortingColumns]
 <!-- Datatable -->
 <style type="text/css" title="currentStyle">
     @import "pages/css/datatables/custom.css";
@@ -75,8 +75,15 @@ $(document).ready(function() {
     var options = {
         "bPaginate": true,
         "bLengthChange": true,
+        "bFilter": false,
         "bProcessing": true,
         "bInfo": true,
+        "bSort": true,
+        [#if disableSortingColumns??]
+        "aoColumnDefs": [ {
+                    "bSortable": false, "aTargets": [ ${disableSortingColumns} ]}
+                    ],
+        [/#if]
         "bAutoWidth": true,
         "sPaginationType": "full_numbers",
         "bServerSide": true,

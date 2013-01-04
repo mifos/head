@@ -91,9 +91,9 @@ public interface CustomerDao {
 
     CenterBO findCenterBySystemId(String globalCustNum);
     
-    List<ClientBO> findAllBorrowers(int position, int numberOfObjects);
+    List<ClientBO> findAllBorrowers(int position, int numberOfObjects,String ordering);
     
-    List<ClientBO> findBorrowersUnderLoanOfficer(int position,int noOfObjects,Short loanOffID);
+    List<ClientBO> findBorrowersUnderLoanOfficer(int position,int noOfObjects,Short loanOffID,String ordering);
     
     int countAllBorrowers();
     
@@ -103,9 +103,9 @@ public interface CustomerDao {
     
     int countBorrowersGroupUnderLoanOfficer(Short loanOffID);
     
-    List<GroupBO> findAllBorrowersGroup(int position,int noOfObjects);
+    List<GroupBO> findAllBorrowersGroup(int position,int noOfObjects,String ordering);
     
-    List<GroupBO> findBorrowersGroupUnderLoanOfficer(int position,int noOfObjects,Short loanOffID);
+    List<GroupBO> findBorrowersGroupUnderLoanOfficer(int position,int noOfObjects,Short loanOffID,String ordering);
 
     List<ClientBO> findActiveClientsUnderGroup(CustomerBO customer);
 
@@ -191,17 +191,17 @@ public interface CustomerDao {
     
     int countOfActiveCentersUnderLoanOfficer(Short loanOffID);
     
-    List<ClientBO> findAllActiveClients(int position,int noOfObjects);
+    List<ClientBO> findAllActiveClients(int position,int noOfObjects,String ordering);
 
-    List<GroupBO> findAllActiveGroups(int position,int noOfObjects);
+    List<GroupBO> findAllActiveGroups(int position,int noOfObjects,String ordering);
     
-    List<CenterBO> findAllActiveCenters(int position,int noOfObjects);
+    List<CenterBO> findAllActiveCenters(int position,int noOfObjects,String ordering);
     
-    List<ClientBO> findActiveClientsUnderLoanOfficer(int position,int noOfObjects,Short loanOffID);
+    List<ClientBO> findActiveClientsUnderLoanOfficer(int position,int noOfObjects,Short loanOffID,String ordering);
 
-    List<GroupBO> findActiveGroupsUnderLoanOfficer(int position,int noOfObjects,Short loanOffID);
+    List<GroupBO> findActiveGroupsUnderLoanOfficer(int position,int noOfObjects,Short loanOffID,String ordering);
     
-    List<CenterBO> findActiveCentersUnderLoanOfficer(int position,int noOfObjects,Short loanOffID);
+    List<CenterBO> findActiveCentersUnderLoanOfficer(int position,int noOfObjects,Short loanOffID,String ordering);
 
     int retrieveLastSearchIdValueForNonParentCustomersInOffice(Short officeIdValue);
 
