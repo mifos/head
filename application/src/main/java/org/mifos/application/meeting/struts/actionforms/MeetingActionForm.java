@@ -254,16 +254,27 @@ public class MeetingActionForm extends BaseActionForm {
         if (StringUtils.isBlank(getMeetingPlace())) {
             errors.add(MeetingConstants.INVALID_MEETINGPLACE, new ActionMessage(MeetingConstants.INVALID_MEETINGPLACE));
         }
-        
-        if (!StringUtils.isBlank(meetingStartDate)) {
-            try {
-                DateUtils.getDate(getMeetingStartDate());
-            } catch (RuntimeException ex) {
-                errors.add(MeetingConstants.INVALID_MEETINGDATE, new ActionMessage(MeetingConstants.INVALID_MEETINGDATE));
-            }
-        }
-        
+        validateMeetingStartDate(errors);        
         return errors;
+    }
+    
+    private boolean isDateValid(String dateString) {
+        boolean isValid;
+
+        try {
+            DateUtils.getDate(dateString);
+            isValid = true;
+        } catch (RuntimeException ex) {
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    private void validateMeetingStartDate(ActionErrors errors) {
+        if (!StringUtils.isBlank(meetingStartDate) && !isDateValid(meetingStartDate)) {
+            errors.add(MeetingConstants.INVALID_MEETINGDATE, new ActionMessage(MeetingConstants.INVALID_MEETINGDATE));
+        }
     }
 
     private void validateDailyMeeting(ActionErrors errors) {
