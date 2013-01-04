@@ -54,9 +54,9 @@ public class LoanScheduleFormBean implements BackdatedPaymentable {
     @Autowired
     private transient LoanAccountController loanAccountController;
 
-    @DateTimeFormat(style = "S-")
+    @DateTimeFormat(pattern="dd/MM/yyyy")
     private List<DateTime> installments = new ArrayList<DateTime>();
-    @DateTimeFormat(style = "S-")
+    @DateTimeFormat(pattern="dd/MM/yyyy")
     private List<DateTime> actualPaymentDates = new ArrayList<DateTime>();
     private List<Number> installmentAmounts = new ArrayList<Number>();
     private List<Number> actualPaymentAmounts = new ArrayList<Number>();
